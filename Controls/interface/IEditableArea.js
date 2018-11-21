@@ -1,17 +1,17 @@
-define('Controls/interface/IEditAtPlace', [
+define('Controls/interface/IEditableArea', [
 ], function() {
 
    /**
     * Interface for components that have editing of input fields. The difference between {@link Controls/interface/IEditableList Controls/interface/IEditableList} and this interface is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
     *
-    * @interface Controls/interface/IEditAtPlace
+    * @interface Controls/interface/IEditableArea
     * @public
     * @author Зайцев А.С.
     * @see Controls/interface/IEditableList
     */
 
    /**
-    * @typedef {String} BeforeEditResult
+    * @typedef {String} BeforeBeginEditResult
     * @variant {String} Cancel Cancel start of editing.
     */
 
@@ -22,21 +22,21 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @event Controls/interface/IEditAtPlace#beforeEdit Happens before start of editing.
+    * @event Controls/interface/IEditableArea#beforeBeginEdit Happens before start of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {WS.Data/Entity/Record} editObject Editing record.
-    * @returns {BeforeEditResult}
+    * @returns {BeforeBeginEditResult}
     * @example
     * The following example creates EditAtPlace and shows how to handle the event.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace on:beforeEdit="beforeEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.EditAtPlace on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
-    *    beforeEditHandler: function(e, record) {
+    *    beforeBeginEditHandler: function(e, record) {
     *       if (this._editable === false) { //Let's say that we want to allow editing only in certain situations.
-    *          return 'Cancel';
+    *          return EditConstants.CANCEL;
     *       }
     *    }
     * </pre>
@@ -46,7 +46,7 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @event Controls/interface/IEditAtPlace#beforeEndEdit Happens before the end of editing.
+    * @event Controls/interface/IEditableArea#beforeEndEdit Happens before the end of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {WS.Data/Entity/Record} editObject Editing record.
     * @param {Boolean} commit If it is true editing ends with saving.
@@ -64,7 +64,7 @@ define('Controls/interface/IEditAtPlace', [
     *    beforeEndEditHandler: function(e, record, commit) {
     *       //Let's say that we want to allow saving only if the field "text" is not empty (in this example the exact same effect can be achieved through validation mechanism, but sometimes condition is more complicated).
     *       if (commit && record.get("text").length === 0) {
-    *          return 'Cancel';
+    *          return EditConstants.CANCEL;
     *       }
     *    }
     * </pre>
@@ -81,40 +81,40 @@ define('Controls/interface/IEditAtPlace', [
     *       }
     *    }
     * </pre>
-    * @see beforeEdit
+    * @see beforeBeginEdit
     * @see afterEndEdit
     * @see editObject
     */
 
    /**
-    * @event Controls/interface/IEditAtPlace#afterEndEdit Happens after the end of editing.
+    * @event Controls/interface/IEditableArea#afterEndEdit Happens after the end of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {WS.Data/Entity/Record} editObject Editing record.
     * @example
     * The following example shows how to hide and show an image based on the state of editing.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace on:beforeEdit="beforeEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.EditAtPlace on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
     *    <ws:if data="{{_imgVisible}}">
     *       <img src="/media/examples/frog.png" alt="Frog"/>
     *    </ws:if>
     * </pre>
     * JS:
     * <pre>
-    *    beforeEditHandler: function(e, record) {
+    *    beforeBeginEditHandler: function(e, record) {
     *       this._imgVisible = false;
     *    },
     *    afterEndEditHandler: function(e, record) {
     *       this._imgVisible = true;
     *    }
     * </pre>
-    * @see beforeEdit
+    * @see beforeBeginEdit
     * @see beforeEndEdit
     * @see editObject
     */
 
    /**
-    * @name Controls/interface/IEditAtPlace#toolbarVisibility
+    * @name Controls/interface/IEditableArea#toolbarVisibility
     * @cfg {Boolean} Determines whether buttons 'Save' and 'Cancel' should be displayed.
     * @default false
     * @example
@@ -124,13 +124,13 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @name Controls/interface/IEditAtPlace#style
+    * @name Controls/interface/IEditableArea#style
     * @cfg {String} Edit at place display style.
-    * @default default
+    * @default withoutBackground
     * @variant withBackground Background will be shown while editing.
-    * @variant default Default display style.
+    * @variant withoutBackground Background will not be shown while editing.
     * @remark
-    * You are not limited to these 2 styles, you can pass your own string. Then we will set class 'controls-EditAtPlaceV_isEditing_style_<your_class>' on the container of EditAtPlace and you can use it to write your own CSS.
+    * You are not limited to these 2 styles, you can pass your own string. Then we will set class 'controls-EditableArea_isEditing_style_<your_class>' on the container of EditAtPlace and you can use it to write your own CSS.
     * @example
     * <pre>
     *    <Controls.EditAtPlace style="withBackground" editObject="{{_editObject}}" />
@@ -138,7 +138,7 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @name Controls/interface/IEditAtPlace#editObject
+    * @name Controls/interface/IEditableArea#editObject
     * @cfg {WS.Data/Entity/Record} Record with initial data.
     * @example
     * <pre>
@@ -148,7 +148,7 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @name Controls/interface/IEditAtPlace#editWhenFirstRendered
+    * @name Controls/interface/IEditableArea#editWhenFirstRendered
     * @cfg {Boolean} Determines whether editing should start on first render.
     * @default false
     * @remark
@@ -160,7 +160,7 @@ define('Controls/interface/IEditAtPlace', [
     */
 
    /**
-    * @name Controls/interface/IEditAtPlace#content
+    * @name Controls/interface/IEditableArea#content
     * @cfg {Function} Template that will be used for editing.
     * @remark
     * If you want content to look exactly as {@link Controls/Input/Text Controls/Input/Text} then you should use {@link Controls/EditableArea/Templates/Editors/Base Controls/EditableArea/Templates/Editors/Base}. If for some reason it doesn't suit you then you can use your own template.
@@ -196,7 +196,7 @@ define('Controls/interface/IEditAtPlace', [
 
    /**
     * Starts editing.
-    * @function Controls/interface/IEditAtPlace#startEdit
+    * @function Controls/interface/IEditableArea#beginEdit
     * @example
     * The following example creates EditAtPlace and shows how to start editing.
     * WML:
@@ -206,7 +206,7 @@ define('Controls/interface/IEditAtPlace', [
     * JS:
     * <pre>
     *    foo: function() {
-    *       this._children.editAtPlace.startEdit();
+    *       this._children.editAtPlace.beginEdit();
     *    }
     * </pre>
     * @see commitEdit
@@ -215,7 +215,7 @@ define('Controls/interface/IEditAtPlace', [
 
    /**
     * Ends editing and discards changes.
-    * @function Controls/interface/IEditAtPlace#cancelEdit
+    * @function Controls/interface/IEditableArea#cancelEdit
     * @example
     * The following example creates EditAtPlace and shows how to end editing and discard changes.
     * WML:
@@ -228,13 +228,13 @@ define('Controls/interface/IEditAtPlace', [
     *       this._children.editAtPlace.cancelEdit();
     *    }
     * </pre>
-    * @see startEdit
+    * @see beginEdit
     * @see commitEdit
     */
 
    /**
     * Ends editing and commits changes.
-    * @function Controls/interface/IEditAtPlace#commitEdit
+    * @function Controls/interface/IEditableArea#commitEdit
     * @example
     * The following example creates EditAtPlace and shows how to end editing and commit changes.
     * WML:
@@ -247,7 +247,7 @@ define('Controls/interface/IEditAtPlace', [
     *       this._children.editAtPlace.commitEdit();
     *    }
     * </pre>
-    * @see startEdit
+    * @see beginEdit
     * @see cancelEdit
     */
 });
