@@ -61,16 +61,16 @@ define('Controls/Button/ButtonStyles',
     * @css @color_Link-additional4-text Color of button with style set to linkAdditional4.
     *
     * @css @color_Link-additional5-text Color of button with style set to linkAdditional5.
-    * @css @color_Link-Vdom-text_readOnly Color of button with any link (linkMain, linkMain2, linkMain3 linkAdditional, linkAdditional2, linkAdditional3, linkAdditional4, linkAdditional5) style and readOnly set to true.
+    * @css @color_Link__text_readOnly Color of button with any link (linkMain, linkMain2, linkMain3 linkAdditional, linkAdditional2, linkAdditional3, linkAdditional4, linkAdditional5) style and readOnly set to true.
     *
-    * @css @color_Button-Vdom-readOnly	Color of button with style set to buttonPrimary, buttonDefault, buttonAdd and readOnly set to true.
+    * @css @color_Button_readOnly	Color of button with style set to buttonPrimary, buttonDefault, buttonAdd and readOnly set to true.
     * @css @border-color_Button-Vdom-readOnly Border color of button with style set to buttonPrimary, buttonDefault, buttonAdd and readOnly set to true.
     *
-    * @css @min-width_Button-Vdom	Minimal width of button with style set to buttonPrimary, buttonDefault, buttonAdd.
+    * @css @min-width_Button	Minimal width of button with style set to buttonPrimary, buttonDefault, buttonAdd.
     * @css @box-shadow_Button Box shadow of button with style set to buttonPrimary, buttonDefault, buttonAdd.
     *
     * @css @box-shadow_Button_active Box shadow of button in active state with style set to buttonPrimary, buttonDefault, buttonAdd.
-    * @css @color_Button-Vdom-text_primary	Text color of button with style set to buttonPrimary or buttonAdd.
+    * @css @color_Button__text_primary	Text color of button with style set to buttonPrimary or buttonAdd.
     *
     * @css @border-color_Button_primary Border color of button with style set to buttonPrimary or buttonAdd.
     * @css @background_Button_primary Background color of button with style set to buttonPrimary or buttonAdd.
@@ -78,7 +78,7 @@ define('Controls/Button/ButtonStyles',
     * @css @border-color_Button_primary_hovered Border color of button in hovered state with style set to buttonPrimary or buttonAdd.
     * @css @background_Button_primary_active Background color of button in hovered state with style set to buttonPrimary or buttonAdd.
     *
-    * @css @color_Button-Vdom-text_default	Text color of button with style set to buttonDefault.
+    * @css @color_Button__text_default	Text color of button with style set to buttonDefault.
     * @css @border-color_Button Border color of button with style set to buttonDefault.
     *
     * @css @background_Button_default Background of button with style set to buttonDefault.
@@ -87,11 +87,11 @@ define('Controls/Button/ButtonStyles',
     * @css @background_Button_default_active Background color of button in hovered state with style set to buttonDefault.
     * @css @height_Button_m Height of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
     *
-    * @css @font-size_Button-Vdom_m Font size of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
+    * @css @font-size_Button_size_m Font size of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
     * @css @border-radius_Button_default Border radius of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
     *
-    * @css @border-width_Button-Vdom Border thickness of button with style set to buttonDefault, buttonPrimary or buttonAdd.
-    * @css @font-size_Button-Vdom_l Font size of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
+    * @css @thickness_Button__border Border thickness of button with style set to buttonDefault, buttonPrimary or buttonAdd.
+    * @css @font-size_Button_size_l Font size of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
     *
     * @css @height_Button_l Height of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
     * @css @border-radius_Button_l	Border radius of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.

@@ -57,12 +57,6 @@ define('Controls/Button', [
     * @variant button Default button.
     * @variant toolButton Toolbar button.
     * @default button
-    * @remark
-    * Sizes 's' and 'xl' don't supported by viewModes:
-    * <ul>
-    *     <li>button,</li>
-    *     <li>toolButton</li>
-    * </ul>
     * @example
     * Button with 'link' viewMode.
     * <pre>

@@ -7,7 +7,7 @@
 }
 
 .controls-Button_style-primary_viewMode-button {
-   color: @color_Button-Vdom-text_primary;
+   color: @color_Button__text_primary;
    border-color: @border-color_Button_primary;
    background: @background_Button_primary;
 }
@@ -30,7 +30,7 @@
 }
 
 .controls-Button_style-secondary_viewMode-button {
-   color: @color_Button-Vdom-text_default;
+   color: @color_Button__text_default;
    border-color: @border-color_Button;
    background: @background_Button_default;
 }
@@ -45,25 +45,25 @@
 }
 
 .controls-Button_viewMode-button_readOnly{
-   min-width: @min-width_Button-Vdom;
+   min-width: @min-width_Button;
    cursor: default;
-   color: @color_Button-Vdom-readOnly;
-   border-color: @border-color_Button-Vdom_readOnly;
+   color: @color_Button_readOnly;
+   border-color: @border-color_Button_readOnly;
 }
 
 .controls-Button_viewMode-button_size-m {
    height: @height_Button_m;
-   font-size: @font-size_Button-Vdom_m;
+   font-size: @font-size_Button_size_m;
    border-style: solid;
-   border-width: @border-width_Button-Vdom;
+   border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_default);
 }
 
 .controls-Button_viewMode-button_size-l {
-   font-size: @font-size_Button-Vdom_l;
+   font-size: @font-size_Button_size_l;
    border-style: solid;
-   height: @height_Button-Vdom_l;
-   border-width: @border-width_Button-Vdom;
+   height: @height_Button_size_l;
+   border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_l);
 }
 
@@ -73,7 +73,7 @@
 }
 
 .controls-Button__wrapper_viewMode-button_size-l {
-   padding: @padding_Button-Vdom-wrapper_l;
+   padding: @padding_Button__wrapper_l;
    .justify-content(center);
 }
 
@@ -413,12 +413,12 @@
 }
 
 .controls-Button_type-link_readOnly {
-   color: @color_Link-Vdom-text_readOnly;
+   color: @color_Link__text_readOnly;
 }
 
 .controls-Button_viewMode-button {
    cursor: pointer;
-   min-width: @min-width_Button-Vdom;
+   min-width: @min-width_Button;
    box-shadow: @box-shadow_Button;
 }
 
@@ -427,10 +427,10 @@
 }
 
 .controls-Button_viewMode-button_readOnly {
-   min-width: @min-width_Button-Vdom;
+   min-width: @min-width_Button;
    cursor: default;
-   color: @color_Button-Vdom-readOnly;
-   border-color: @border-color_Button-Vdom_readOnly;
+   color: @color_Button_readOnly;
+   border-color: @border-color_Button_readOnly;
 }
 
 .controls-Button_style-secondary_viewMode-Button_readOnly {
@@ -443,13 +443,13 @@
 
 .controls-Button__wrapper_viewMode-button_size-m {
    height: @height_Button_m;
-   font-size: @font-size_Button-Vdom_m;
+   font-size: @font-size_Button_size_m;
    .border-radius(@border-radius_Button_default);
 }
 
 .controls-Button__wrapper_viewMode-button_size-l {
-   font-size: @font-size_Button-Vdom_l;
-   height: @height_Button-Vdom_l;
+   font-size: @font-size_Button_size_l;
+   height: @height_Button_size_l;
    .border-radius(@border-radius_Button_l);
 }
 
@@ -484,7 +484,7 @@
 }
 
 .controls-Button__wrapper_type-button_size-l {
-   padding: @padding_Button-Vdom-wrapper_l;
+   padding: @padding_Button__wrapper_l;
    .justify-content(center);
 }
 .controls-Button__text_gap {

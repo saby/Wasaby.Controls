@@ -11,20 +11,21 @@
 @background_Button_default:               @background_Button;
 
 //default
+// @color_Link__text_readOnly
 @height_Button_m:                         @height_control_default;
-@font-size_Button-Vdom_m:                 @size_text_m;
-@border-width_Button-Vdom:                @thickness_border_default;
+@font-size_Button_size_m:                 @size_text_m;
+@thickness_Button__border:                @thickness_border_default;
 @border-radius_Button_default:            @height_Button_m/2;
-@font-size_Button-Vdom_l:                 @size_text_3xl;
-@height_Button-Vdom_l:                    48px;
-@border-radius_Button_l:                  @height_Button-Vdom_l/2; //
-@min-width_Button-Vdom:                   48px; //
+@font-size_Button_size_l:                 @size_text_3xl;
+@height_Button_size_l:                    48px;
+@border-radius_Button_l:                  @height_Button_size_l/2; //
+@min-width_Button:                   48px; //
 @box-shadow_Button:                       none;
 @box-shadow_Button_active:                none;
-@color_Button-Vdom-readOnly:              @color_text_disabled;
-@border-color_Button-Vdom_readOnly:       @color_text_disabled;
-@color_Button-Vdom-text_default:          @color_text_default;
-@color_Button-Vdom-text_primary:          @color_text_default;
+@color_Button_readOnly:              @color_text_disabled;
+@border-color_Button_readOnly:       @color_text_disabled;
+@color_Button__text_default:          @color_text_default;
+@color_Button__text_primary:          @color_text_default;
 
 @border-color_Button_primary:             @color_primaryV;
 @border-color_Button_primary_hovered:     @border-color_Button_primary;
@@ -36,8 +37,8 @@
 @color_Button-icon:                       @color_secondary;
 @color_Button-icon_primary:               @color_primaryV;
 
-@padding_Button-wrapper_default:          0 @spacing_default_l - @border-width_Button-Vdom;
-@padding_Button-Vdom-wrapper_l:           0 @spacing_default_xxl - @border-width_Button-Vdom;
+@padding_Button-wrapper_default:          0 @spacing_default_l - @thickness_Button__border;
+@padding_Button__wrapper_l:           0 @spacing_default_xxl - @thickness_Button__border;
 @spacing_Button-between-icon-text:         @spacing_default_s;
 
 //IconButtonBordered
@@ -48,15 +49,15 @@
 @border-radius-IconButton:               2px;
 @border-width-IconButton:                @thickness_border_default;
 @border-style-IconButton:                solid;
-@box-shadow-IconButton:                  @box_shadow_light;
-@border-color-IconButton:                @border_color_hovered;
+@box-shadow-IconButton:                  0px 1px 4px @color12;
+@border-color-IconButton:                @color13;
 @color-Button_type-IconButton_readOnly:  @color_text_disabled;
-@border-color-IconButton_readOnly:       @border_color_hovered;
+@border-color-IconButton_readOnly:       @color13;
 @color-IconButton__border_iconStyle-primary_hovered:          @color_border;
 @box-shadow-IconButton_activated:               none;
 
 //IconButton
-@background-color-IconButton:                     @background_color_additional;
+@background-color-IconButton:                     @color14;
 @background-color-IconButton_transparent:         transparent;
 @background-color-IconButton_hovered:             @background-color-IconButton;
 @background-color-IconButton_transparent_hovered: @background-color-IconButton_transparent;
@@ -68,7 +69,7 @@
 @font-size_Link-xl:                       @size_text_3xl;
 @color_Link-main-text:                         @color_link;
 @color_Link-main-text_hovered:                 @color_link-hover;
-@color_Link-Vdom-text_readOnly:                @color_text_disabled;
+@color_Link__text_readOnly:                @color_text_disabled;
 @color_Link-main-icon:                         @color_secondary;
 
 @color_Link_info:                               @color_unselected;
