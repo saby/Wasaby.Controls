@@ -14,6 +14,7 @@ define('Controls/Heading/Back', [
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
+    * @mixes Controls/interface/ITooltip
     * @control
     * @public
     * @author Михайловский Д.С.
@@ -27,7 +28,7 @@ define('Controls/Heading/Back', [
     * @cfg {String} Back heading display style.
     * @variant primary Primary display style.
     * @variant secondary Secondary display style.
-    * @default primaryN
+    * @default primary
     * @example
     * Back heading has default style.
     * <pre>
