@@ -1,7 +1,7 @@
-define('Controls/SelectedCollection/Popup',
+define('Controls/Selector/SelectedCollection/Popup',
    [
       'Core/Control',
-      'wml!Controls/SelectedCollection/Popup',
+      'wml!Controls/Selector/SelectedCollection/Popup',
       'css!Controls/Popup/Opener/InfoBox/InfoBox',
       'css!Controls/Popup/Opener/Previewer/PreviewerController'
    ],
