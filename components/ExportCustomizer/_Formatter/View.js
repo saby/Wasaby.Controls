@@ -607,7 +607,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred}
           */
          remove: function (fileUuid, historyInfo) {
-            return this._formatter ? this._callFormatterDelete(fileUuid, historyInfo) : Deferred.success();
+            return this._exportFormatter ? this._callFormatterDelete(fileUuid, historyInfo) : Deferred.success();
          },
 
          /**
@@ -621,7 +621,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
           * @return {Core/Deferred<string>}
           */
          endTransaction: function (isCommit, historyInfo, saving) {
-            if (!this._formatter) {
+            if (!this._exportFormatter) {
                return Deferred.success();
             }
             var promises = this._promises;
@@ -687,7 +687,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
             if (!values || typeof values !== 'object') {
                throw new Error('Object required');
             }
-            if (!this._formatter) {
+            if (!this._exportFormatter) {
                return;
             }
             var options = this._options;
