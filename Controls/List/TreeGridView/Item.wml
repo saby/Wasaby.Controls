@@ -9,7 +9,7 @@
          <div on:click="_onExpanderClick(itemData.dispItem)"
               class="{{itemData.prepareExpanderClasses(itemData, expanderIcon, expanderSize)}}"></div>
       </ws:if>
-      <ws:else data="{{!expanderSize}}">
+      <ws:else data="{{!expanderSize && expanderIcon !== 'none'}}">
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
