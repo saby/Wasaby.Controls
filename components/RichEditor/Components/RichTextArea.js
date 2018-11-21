@@ -4009,7 +4009,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isEmpty) {
                      var editor = this.getTinyEditor();
                      var $content = editor ? $(editor.getBody()) : this._inputControl;
-                     isEmpty = !$content.find('img,table').length && !$content.text();
+                     isEmpty = !$content.find('img,table').length && !$content.text().replace(/\uFEFF/, '');
                   }
                }
                else {
