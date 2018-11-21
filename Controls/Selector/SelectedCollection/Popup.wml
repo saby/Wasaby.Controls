@@ -1,7 +1,7 @@
 <div>
    <Controls.Heading caption="Выбрано" size="s" readOnly="{{true}}"/>
    <div>
-      <Controls.SelectedCollection
+      <Controls.Selector.SelectedCollection
               items="{{_options.items}}"
               displayProperty="{{_options.displayProperty}}"
               itemsLayout="twoColumns"
@@ -9,6 +9,6 @@
               on:crossClick="_crossClick()"
               on:itemClick="_itemClick()"
               attr:style="width: {{_options.width}}px">
-      </Controls.SelectedCollection>
+      </Controls.Selector.SelectedCollection>
    </div>
 </div>
