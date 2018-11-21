@@ -3264,7 +3264,7 @@ define('SBIS3.CONTROLS/ListView',
          },
 
          _onResizeHandlerInner: function(){
-            //this._getItemsContainer().children().length - нужна такая проверка, т.к. onResizeHandler может быть вызван до отрисовки записей
+            //this._getChildrenDOMItems().length - нужна такая проверка, т.к. onResizeHandler может быть вызван до отрисовки записей
             //в этом случае догружать записи пока рано.
             if (this.getItems() && this._getChildrenDOMItems().length){
                //Мог поменяться размер окна или смениться ориентация на планшете - тогда могут влезть еще записи, надо попробовать догрузить
