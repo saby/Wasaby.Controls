@@ -52,12 +52,16 @@ function coverFiles(files, replacer) {
             key = [rootDir, relPath].join(path.sep),
             coverData = cover[key];
         if (!coverData) {
-            let rawFile = fs.readFileSync(file, 'utf-8');
-            transformer(rawFile, file);
-            let coverState = instrumenter.lastFileCoverage();
-            Object.keys(coverState.s).forEach(key => coverState.s[key] = 0);
-            newCover[file] = coverState;
-            console.log('File ' + file.replace(__dirname, '').slice(1) + ' not using in tests')
+            try {
+                let rawFile = fs.readFileSync(file, 'utf-8');
+                transformer(rawFile, file);
+                let coverState = instrumenter.lastFileCoverage();
+                Object.keys(coverState.s).forEach(key => coverState.s[key] = 0);
+                newCover[file] = coverState;
+                console.log('File ' + file.replace(__dirname, '').slice(1) + ' not using in tests')
+            } catch (err) {
+                console.log('File ' + file.replace(__dirname, '').slice(1) + ' can\'t be instrumented, pls try later');
+            }
         } else {
             coverData['path'] = file;
             newCover[file] = coverData;

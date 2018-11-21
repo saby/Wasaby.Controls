@@ -3,9 +3,9 @@
    on:deactivated="_onDeactivatedHandler()"
 >
    <div
-      class="controls-EditAtPlaceV
-      {{_options.toolbarVisibility ? 'controls-EditAtPlaceV__withToolbar'}}
-      {{_isEditing ? 'controls-EditAtPlaceV_isEditing_style_' + (_options.style ? _options.style : 'default')}}"
+      class="controls-EditableArea
+      {{_options.toolbarVisibility ? 'controls-EditableArea__withToolbar'}}
+      {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}"
    >
       <ws:partial
          template="{{_options.content}}"
@@ -16,19 +16,21 @@
          isEditing="{{_isEditing}}"
       />
       <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
-         <div class="controls-EditAtPlaceV__Toolbar">
+         <div class="controls-EditableArea__Toolbar">
             <Controls.Button
                on:click="commitEdit()"
-               attr:class="controls-EditAtPlaceV__Toolbar__Button"
-               iconStyle="done"
+               attr:class="controls-EditableArea__Toolbar__Button"
+               viewMode="transparentQuickButton"
+               iconStyle="success"
                icon="icon-small icon-Yes"
-               style="iconButtonBordered"
+               style="secondary"
             />
             <Controls.Button
                on:click="cancelEdit()"
-               attr:class="controls-EditAtPlaceV__Toolbar__Button"
+               attr:class="controls-EditableArea__Toolbar__Button"
                icon="icon-small icon-Close"
-               style="iconButtonBordered"
+               viewMode="transparentQuickButton"
+               style="secondary"
             />
          </div>
       </ws:if>

@@ -1,11 +1,11 @@
 {
-  "Controls/EditAtPlace": {
-    "name": "Controls/EditAtPlace",
+  "Controls/EditableArea": {
+    "name": "Controls/EditableArea",
     "title": "Controller for editing of input fields.",
-    "className": "Controls/EditAtPlace",
+    "className": "Controls/EditableArea",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/EditAtPlace",
+    "fullname": "Controls/EditableArea",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",

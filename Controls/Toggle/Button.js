@@ -65,7 +65,7 @@ define('Controls/Toggle/Button', [
     */
    var stickyButton = [
       'toggledLink',
-      'quickButton'
+      'toolButton'
    ];
 
    var _private = {
@@ -73,6 +73,7 @@ define('Controls/Toggle/Button', [
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         self._transparent = options.transparent;
          self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
          self._state = (stickyButton.indexOf(self._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
          self._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');

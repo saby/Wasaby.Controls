@@ -6,11 +6,11 @@
                <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                   <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
                      <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                        <Controls.Popup.Manager>
+                        <Controls.Popup.Manager name="Manager">
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.DragNDrop.Container name="dragNDropContainer">
                                  <div>
-                                    <Controls.Popup.Manager.Container attr:id="popup"/>
+                                    <Controls.Popup.Manager.Container name="PopupContainer" attr:id="popup"/>
                                  </div>
                               </Controls.DragNDrop.Container>
                            </Controls.Application.TouchDetector>
