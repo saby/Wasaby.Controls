@@ -1,78 +1,86 @@
-//background
-@background_Button_primary:                            @background_Button;
-@background_Button_primary_hovered:                    @color8;
-@background_Button_primary_active:                     @color11;
-@background_Button-primary_readOnly:                   @background_Button;
-
-@background_Button:                                    transparent;
-@background_Button_hovered:                            @color9;
-@background_Button_active:                             @color10;
-
-@background_Button_default:                            @background_Button;
-@background_Button_default_active:                     @color10;
-@background_Button-default_readOnly:                   @background_Button;
-
-//default
-@height_Button_m:                                      @height_control_default;
+//default button
+//sizes
+@height_Button_size_m:                                 @height_control_default;
 @font-size_Button_size_m:                              @size_text_m;
-@thickness_Button__border:                             @thickness_border_default;
-@border-radius_Button_default:                         @height_Button_m/2;
-@font-size_Button_size_l:                              @size_text_3xl;
+@border-radius_Button_size_m:                          @height_Button_m/2;
+@padding_Button-wrapper_size_m:                        0 @spacing_default_l - @thickness_Button__border;
+
 @height_Button_size_l:                                 48px;
-@border-radius_Button_l:                               @height_Button_size_l/2;
+@font-size_Button_size_l:                              @size_text_3xl;
+@border-radius_Button_size_l:                          @height_Button_size_l/2;
+@padding_Button__wrapper_size_l:                       0 @spacing_default_xxl - @thickness_Button__border;
+
+//common
+@thickness_Button__border:                             @thickness_border_default;
 @min-width_Button:                                     48px;
 @box-shadow_Button:                                    none;
 @box-shadow_Button_active:                             none;
+@spacing_Button-between-icon-text:                     @spacing_default_s;
+
+//readOnly
 @color_Button_readOnly:                                @color_text_disabled;
 @border-color_Button_readOnly:                         @color_text_disabled;
-@color_Button__text_default:                           @color_text_default;
+
+//styles
+//primary
 @color_Button__text_primary:                           @color_text_default;
 
 @border-color_Button_primary:                          @color_primaryV;
 @border-color_Button_primary_hovered:                  @border-color_Button_primary;
-@border-color_Button:                                  @color_secondary;
-@border-color_Button_hovered:                          @border-color_Button;
 
-@color_Button-style-addButton-icon:                    @color_text_default;
+@background_Button_primary:                            @background_Button;
+@background_Button_primary_hovered:                    @color17;
+@background_Button_primary_active:                     @color20;
+@background_Button-primary_readOnly:                   @background_Button;
 
-@color_Button-icon:                                    @color_secondary;
-@color_Button-icon_primary:                            @color_primaryV;
+//secondary
+@color_Button__text_secondary:                         @color_text_default;
 
-@padding_Button-wrapper_default:                       0 @spacing_default_l - @thickness_Button__border;
-@padding_Button__wrapper_l:                            0 @spacing_default_xxl - @thickness_Button__border;
-@spacing_Button-between-icon-text:                     @spacing_default_s;
+@border-color_Button_secondary:                        @color_secondary;
+@border-color_Button_secondary_hovered:                @border-color_Button;
 
-//IconButtonBordered
-@height-IconButton_size-m:                             @height_control_default;
-@width-IconButton_size-m:                              @height-IconButton_size-m;
-@height-IconButton_size-l:                             28px;
-@width-IconButton_size-l:                              @height-IconButton_size-l;
-@border-radius-IconButton:                             2px;
-@border-width-IconButton:                              @thickness_border_default;
-@border-style-IconButton:                              solid;
-@box-shadow-IconButton:                                0px 1px 4px @color12;
-@border-color-IconButton:                              @color13;
-@color-Button_type-IconButton_readOnly:                @color_text_disabled;
-@border-color-IconButton_readOnly:                     @color13;
-@color-IconButton__border_iconStyle-primary_hovered:   @color_border;
-@box-shadow-IconButton_activated:                      none;
+@background_Button_secondary:                          @background_Button;
+@background_Button_secondary_hovered:                  @color18;
+@background_Button_secondary_active:                   @color19;
+@background_Button-secondary_readOnly:                 @background_Button;
 
-//IconButton
-@background-color-IconButton:                          @color14;
-@background-color-IconButton_transparent:              transparent;
-@background-color-IconButton_hovered:                  @background-color-IconButton;
-@background-color-IconButton_transparent_hovered:      @background-color-IconButton_transparent;
+//toolButton
+//sizes
+@height-ToolButton_size-m:                             @height_control_default;
+@width-ToolButton_size-m:                              @height-ToolButton_size-m;
+
+@height-ToolButton_size-l:                             28px;
+@width-ToolButton_size-l:                              @height-ToolButton_size-l;
+
+//common
+@border-radius-ToolButton:                             2px;
+@border-width-ToolButton:                              @thickness_border_default;
+@border-style-ToolButton:                              solid;
+@border-color-ToolButton:                              @color22;
+@border-color-ToolButton_readOnly:                     @color22;
+
+@box-shadow-ToolButton:                                0px 1px 4px @color21;
+@box-shadow-ToolButton_activated:                      none;
+
+@color-ToolButton_readOnly:                            @color_text_disabled;
+@color-ToolButton__border_iconStyle-secondary_hovered: @color_border;
+
+@background-color-ToolButton:                          @color23;
+@background-color-ToolButton_transparent:              transparent;
+@background-color-ToolButton_hovered:                  @background-color-ToolButton;
+@background-color-IconButton_transparent_hovered:      @background-color-ToolButton_transparent;
 
 //Link
+//sizes
 @font-size_Link-s:                                     @size_text_s;
 @font-size_Link-m:                                     @size_text_m;
 @font-size_Link-l:                                     @size_text_l;
 @font-size_Link-xl:                                    @size_text_3xl;
-@color_Link-main-text:                                 @color_link;
-@color_Link-main-text_hovered:                         @color_link-hover;
-@color_Link__text_readOnly:                            @color_text_disabled;
-@color_Link-main-icon:                                 @color_secondary;
 
+@color_Link-secondary_hovered:                         @color_link-hover;
+@color_Link_readOnly:                                  @color_text_disabled;
+
+//styles
 @color_Link_info:                                      @color_unselected;
 @color_Link_primary:                                   @color_primaryV;
 @color_Link_secondary:                                 @color_link;

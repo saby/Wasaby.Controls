@@ -30,18 +30,18 @@
 }
 
 .controls-Button_style-secondary_viewMode-button {
-   color: @color_Button__text_default;
-   border-color: @border-color_Button;
-   background: @background_Button_default;
+   color: @color_Button__text_secondary;
+   border-color: @border-color_Button_secondary;
+   background: @background_Button_secondary;
 }
 
 .controls-Button_style-secondary_viewMode-button:active {
-   border-color: @border-color_Button_hovered;
-   background: @background_Button_default_active;
+   border-color: @border-color_Button_secondary_hovered;
+   background: @background_Button_secondary_active;
 }
 
 .controls-Button_style-secondary_viewMode-button_readOnly {
-   background: @background_Button-default_readOnly;
+   background: @background_Button-secondary_readOnly;
 }
 
 .controls-Button_viewMode-button_readOnly{
@@ -52,11 +52,11 @@
 }
 
 .controls-Button_viewMode-button_size-m {
-   height: @height_Button_m;
+   height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
    border-style: solid;
    border-width: @thickness_Button__border;
-   .border-radius(@border-radius_Button_default);
+   .border-radius(@border-radius_Button_size_m);
 }
 
 .controls-Button_viewMode-button_size-l {
@@ -64,33 +64,33 @@
    border-style: solid;
    height: @height_Button_size_l;
    border-width: @thickness_Button__border;
-   .border-radius(@border-radius_Button_l);
+   .border-radius(@border-radius_Button_size_l);
 }
 
 .controls-Button__wrapper_viewMode-button_size-m {
-   padding: @padding_Button-wrapper_default;
+   padding: @padding_Button-wrapper_size_m;
    .justify-content(center);
 }
 
 .controls-Button__wrapper_viewMode-button_size-l {
-   padding: @padding_Button__wrapper_l;
+   padding: @padding_Button__wrapper_size_l;
    .justify-content(center);
 }
 
 .controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
-   color: @color_Button-icon;
+   color: @color_secondary;
 }
 
 .controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
-   color: @color_Button-icon_primary;
+   color: @color_primaryV;
 }
 
 .controls-Button__icon-secondary_iconStyle-default_viewMode-button {
-   color: @color_Button-icon;
+   color: @color_secondary;
 }
 
 .controls-Button__icon-primary_iconStyle-default_viewMode-button {
-   color: @color_Button-icon_primary;
+   color: @color_primaryV;
 }
 
 .controls-Button_viewMode-link_readOnly {
@@ -109,13 +109,13 @@
    }
 
    .controls-Button_style-secondary_viewMode-button:hover {
-      border-color: @border-color_Button_hovered;
-      background: @background_Button_hovered;
+      border-color: @border-color_Button_secondary_hovered;
+      background: @background_Button_secondary_hovered;
    }
 
    .controls-Button_style-secondary_viewMode-button:active {
-      border-color: @border-color_Button_hovered;
-      background: @background_Button_default_active;
+      border-color: @border-color_Button_secondary_hovered;
+      background: @background_Button_secondary_active;
    }
 
    .controls-Button_style-primary_viewMode-button:active {
@@ -144,18 +144,18 @@
    }
 
    .controls-Button_style-secondary_viewMode-toolButton:hover {
-      border-color: @color-IconButton__border_iconStyle-primary_hovered;
+      border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
    }
 
    .controls-Button_style-secondary_viewMode-toolButton:hover {
       .controls-Button__icon-secondary {
-         color: @color_Link-main-text_hovered;
+         color: @color_Link-secondary_hovered;
       }
    }
 
    .controls-Button_style-secondary_viewMode-link:hover {
       .controls-Button__icon-secondary {
-         color: @color_Link-main-text_hovered;
+         color: @color_Link-secondary_hovered;
       }
    }
 }
@@ -209,18 +209,18 @@
 }
 
 .controls-Button_viewMode-toolButton_withBackground {
-   background-color: @background-color-IconButton;
+   background-color: @background-color-ToolButton;
 }
 
 .controls-Button_viewMode-toolButton_transparent {
-   background-color: @background-color-IconButton_transparent;
+   background-color: @background-color-ToolButton_transparent;
 }
 
 .controls-Button_viewMode-toolButton, .controls-Button_viewMode-toolButton_readOnly {
-   border-radius: @border-radius-IconButton;
-   border-style: @border-style-IconButton;
-   border-width: @border-width-IconButton;
-   box-shadow: @box-shadow-IconButton;
+   border-radius: @border-radius-ToolButton;
+   border-style: @border-style-ToolButton;
+   border-width: @border-width-ToolButton;
+   box-shadow: @box-shadow-ToolButton;
 }
 
 .controls-Button_viewMode-toolButton {
@@ -228,27 +228,27 @@
 }
 
 .controls-Button_viewMode-toolButton_style-common {
-   border-color: @border-color-IconButton;
+   border-color: @border-color-ToolButton;
 }
 
 .controls-Button_viewMode-toolButton_size-m {
-   height: @height-IconButton_size-m;
-   min-width: @width-IconButton_size-m;
+   height: @height-ToolButton_size-m;
+   min-width: @width-ToolButton_size-m;
 }
 
 .controls-Button_viewMode-toolButton_size-l {
-   height: @height-IconButton_size-l;
-   min-width: @width-IconButton_size-l;
+   height: @height-ToolButton_size-l;
+   min-width: @width-ToolButton_size-l;
 }
 
 .controls-Button_viewMode-toolButton_readOnly {
-   color: @color-Button_type-IconButton_readOnly;
-   border-color: @border-color-IconButton_readOnly;
+   color: @color-ToolButton_readOnly;
+   border-color: @border-color-ToolButton_readOnly;
 }
 
 .ws-is-no-touch {
    .controls-Button_viewMode-toolButton:hover {
-      background-color: @background-color-IconButton_hovered;
+      background-color: @background-color-ToolButton_hovered;
    }
 
    .controls-Button_viewMode-toolButton_transparent:hover {
@@ -257,11 +257,11 @@
 }
 
 .controls-Button_viewMode-toolButton:active {
-   box-shadow: @box-shadow-IconButton_activated;
+   box-shadow: @box-shadow-ToolButton_activated;
 }
 
 .controls-Button_viewMode-toolButton_withBackground:active {
-   background-color: @background-color-IconButton_hovered;
+   background-color: @background-color-ToolButton_hovered;
 }
 
 .controls-Button_viewMode-toolButton_transparent:active {
@@ -289,7 +289,7 @@
 }
 
 .controls-Button_style-secondary_viewMode-link {
-   color: @color_Link-main-text;
+   color: @color_Link_secondary;
 }
 
 .controls-Button_style-success_viewMode-link {
@@ -323,14 +323,14 @@
 .ws-is-no-touch {
    .controls-Button_style-secondary_viewMode-link:hover {
       .controls-Button__icon-secondary_viewMode-link_iconStyle-default {
-         color: @color_Link-main-text_hovered;
+         color: @color_Link-secondary_hovered;
       }
-      color: @color_Link-main-text_hovered;
+      color: @color_Link-secondary_hovered;
    }
 }
 
 .controls-Button_type-link_readOnly {
-   color: @color_Link__text_readOnly;
+   color: @color_Link_readOnly;
 }
 
 .controls-Button_viewMode-button {
@@ -351,7 +351,7 @@
 }
 
 .controls-Button_style-secondary_viewMode-Button_readOnly {
-   background: @background_Button-default_readOnly;
+   background: @background_Button-secondary_readOnly;
 }
 
 .controls-Button_style-primary_viewMode-Button_readOnly {
@@ -359,27 +359,23 @@
 }
 
 .controls-Button__wrapper_viewMode-button_size-m {
-   height: @height_Button_m;
+   height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
-   .border-radius(@border-radius_Button_default);
+   .border-radius(@border-radius_Button_size_m);
 }
 
 .controls-Button__wrapper_viewMode-button_size-l {
    font-size: @font-size_Button_size_l;
    height: @height_Button_size_l;
-   .border-radius(@border-radius_Button_l);
-}
-
-.controls-Button__icon-primary-add_iconStyle-default {
-   color: @color_Button-style-addButton-icon;
+   .border-radius(@border-radius_Button_size_l);
 }
 
 .controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
-   color: @color_Button-icon;
+   color: @color_secondary;
 }
 
 .controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
-   color: @color_Button-icon_primary;
+   color: @color_primaryV;
 }
 
 .controls-Button_style-secondary_viewMode-link:active {
@@ -396,12 +392,12 @@
 }
 
 .controls-Button__wrapper_type-button_size-m {
-   padding: @padding_Button-wrapper_default;
+   padding: @padding_Button-wrapper_size_m;
    .justify-content(center);
 }
 
 .controls-Button__wrapper_type-button_size-l {
-   padding: @padding_Button__wrapper_l;
+   padding: @padding_Button__wrapper_size_l;
    .justify-content(center);
 }
 .controls-Button__text_gap {
@@ -412,14 +408,14 @@
       text-decoration: underline;
    }
    .controls-Label_underline_color-hovered:hover {
-      color: @color_Link-main-text_hovered;
+      color: @color_Link-secondary_hovered;
    }
 }
 .controls-Label_underline-hovered:active {
    text-decoration: underline;
 }
 .controls-Label_underline_color-hovered:active {
-   color: @color_Link-main-text_hovered;
+   color: @color_Link-secondary_hovered;
 }
 .controls-Label_underline_color-hovered {
    text-decoration: underline;
