@@ -40,7 +40,7 @@ define('Controls/Filter/Controller',
          prepareItems: function(filterButtonItems, fastFilterItems, prepareCallback) {
             Chain(filterButtonItems).each(function(buttonItem, index) {
                Chain(fastFilterItems).each(function(fastItem) {
-                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && getPropValue(fastItem, 'textValue') !== undefined) {
+                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                      prepareCallback(index, fastItem);
                   }
                });
