@@ -97,7 +97,9 @@
   ],
   "exclude": [
     "Controls/Input/RichArea",
-    "Controls/Input/RichArea/*"
+    "Controls/Input/RichArea/*",
+    "Controls/Input/RichEditor",
+    "Controls/Input/RichEditor/*"
   ],
   "output": "controls-input.package.js"
 }, {
@@ -106,6 +108,12 @@
     "Controls/Input/RichArea/*"
   ],
   "output": "controls-richarea.package.js"
+}, {
+  "include": [
+    "Controls/Input/RichEditor",
+    "Controls/Input/RichEditor/*"
+  ],
+  "output": "controls-richeditor.package.js"
 }, {
   "include": [
     "Controls/Label/*",
@@ -274,13 +282,23 @@
   ],
   "output": "controls-calendar.package.js"
 },
-  {
-    "include": [
-      "Controls/Search/*"
-    ],
-    "exclude": [
-      "Controls/Search/Misspell",
-      "wml!Controls/Search/Misspell"
-    ],
-    "output": "controls-search.package.js"
-  }]
+{
+  "include": [
+    "Controls/Search/*"
+  ],
+  "exclude": [
+    "Controls/Search/Misspell",
+    "wml!Controls/Search/Misspell"
+  ],
+  "output": "controls-search.package.js"
+}, {
+  "include": [
+    "Controls/EditableArea",
+    "Controls/EditableArea/*"
+  ],
+  "exclude": [
+    "Controls/EditableArea/Constants"
+  ],
+  "output": "controls-editablearea.package.js"
+}
+]

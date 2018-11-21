@@ -14,8 +14,7 @@ define('Controls-demo/Tabs/Buttons', [
    itemTemplate,
    mainTemplate,
    photoContent,
-   MemorySource,
-   cssButtons
+   MemorySource
 ) {
    'use strict';
     var TabButtonsDemo = Control.extend({
@@ -42,7 +41,8 @@ define('Controls-demo/Tabs/Buttons', [
                {
                   id: '1',
                   title: 'Done',
-                  align: 'left'
+                  align: 'left',
+                  isMainTab: true
                },
                {
                   id: '2',

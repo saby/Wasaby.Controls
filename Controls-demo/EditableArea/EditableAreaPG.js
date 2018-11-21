@@ -1,13 +1,13 @@
-define('Controls-demo/EditAtPlace/EditAtPlacePG', [
+define('Controls-demo/EditableArea/EditableAreaPG', [
    'Core/Control',
    'WS.Data/Entity/Record',
    'WS.Data/Source/Memory',
-   'wml!Controls-demo/EditAtPlace/EditAtPlacePG',
-   'json!Controls-demo/EditAtPlace/EAPConfig',
-   'wml!Controls-demo/EditAtPlace/resources/oneField',
-   'wml!Controls-demo/EditAtPlace/resources/twoFields',
+   'wml!Controls-demo/EditableArea/EditableAreaPG',
+   'json!Controls-demo/EditableArea/EAPConfig',
+   'wml!Controls-demo/EditableArea/resources/oneField',
+   'wml!Controls-demo/EditableArea/resources/twoFields',
    'Controls/EditableArea/Templates/Editors/Base',
-   'css!Controls-demo/EditAtPlace/EditAtPlacePG'
+   'css!Controls-demo/EditableArea/EditableAreaPG'
 ], function(
    Control,
    Record,
@@ -29,9 +29,9 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
          date: '29.08.18'
       }];
 
-   var EditAtPlacePG = Control.extend({
+   var EditableAreaPG = Control.extend({
       _template: template,
-      _content: 'Controls/EditAtPlace',
+      _content: 'Controls/EditableArea',
 
       _beforeMount: function() {
          this._key = 0;
@@ -55,8 +55,8 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
             },
             content: {
                enum: {
-                  'One field': 'wml!Controls-demo/EditAtPlace/resources/oneField',
-                  'Group of fields': 'wml!Controls-demo/EditAtPlace/resources/twoFields'
+                  'One field': 'wml!Controls-demo/EditableArea/resources/oneField',
+                  'Group of fields': 'wml!Controls-demo/EditableArea/resources/twoFields'
                },
                keyProperty: 'id',
                displayProperty: 'title',
@@ -72,14 +72,14 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
 
          this._editWhenFirstRendered = false;
          this._editObject = this._records[0];
-         this._contentTemplate = 'wml!Controls-demo/EditAtPlace/resources/oneField';
+         this._contentTemplate = 'wml!Controls-demo/EditableArea/resources/oneField';
 
          this._componentOptions = {
-            name: 'EditAtPlace',
+            name: 'EditableArea',
             style: '',
             toolbarVisibility: false,
             editWhenFirstRendered: false,
-            content: 'wml!Controls-demo/EditAtPlace/resources/oneField',
+            content: 'wml!Controls-demo/EditableArea/resources/oneField',
             editObject: this._records[0]
          };
 
@@ -109,5 +109,5 @@ define('Controls-demo/EditAtPlace/EditAtPlacePG', [
       }
    });
 
-   return EditAtPlacePG;
+   return EditableAreaPG;
 });

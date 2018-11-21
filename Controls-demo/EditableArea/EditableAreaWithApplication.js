@@ -1,6 +1,6 @@
-define('Controls-demo/EditAtPlace/EditAtPlaceWithApplication', [
+define('Controls-demo/EditableArea/EditableAreaWithApplication', [
    'Core/Control',
-   'wml!Controls-demo/EditAtPlace/EditAtPlaceWithApplication'
+   'wml!Controls-demo/EditableArea/EditableAreaWithApplication'
 ], function(Control, template) {
    'use strict';
 

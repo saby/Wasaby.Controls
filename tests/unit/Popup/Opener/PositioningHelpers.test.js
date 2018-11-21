@@ -184,8 +184,10 @@ define(
             });
             it('Check fixed state', function() {
                var itemConfig = {};
+               StickyController._private.getWindowWidth = () => 1000;
                StickyController.getDefaultConfig(itemConfig);
                assert.isTrue(itemConfig.position.position === 'fixed');
+               assert.equal(itemConfig.position.maxWidth, 1000);
 
                StickyController._checkContainer = () => { return false; };
                StickyController._elementCreated(itemConfig);
@@ -218,7 +220,8 @@ define(
                StickyController._isElementVisible = () => { return true; };
                let item = {
                   position: {},
-                  popupOptions : {}
+                  popupOptions : {},
+                  sizes: {}
                };
                let container = {
                   offsetWidth: 100,
@@ -226,6 +229,7 @@ define(
                };
                StickyController.elementCreated(item, container);
                assert.equal(typeof item.positionConfig, 'object'); //Конфиг сохранился
+               assert.equal(item.sizes.width, 100); //Конфиг сохранился
                var classes = item.popupOptions.className;
 
                StickyController.elementUpdated(item, container);
