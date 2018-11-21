@@ -517,6 +517,11 @@ define('SBIS3.CONTROLS/ComponentBinder',
             this._dateRangeRelationController.destroy();
             this._dateRangeRelationController = null;
          }
+         
+         if (this._filterController) {
+            this._filterController.destroy();
+            this._filterController = null;
+         }
          ComponentBinder.superclass.destroy.call(this);
       }
 

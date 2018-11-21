@@ -100,7 +100,8 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                  * Единовременно может быть отображено не более 7 пунктов меню.
                  */
             frequent: false,
-            additionalProperty: 'additional'
+            additionalProperty: 'additional',
+            unpinIfNotExist: true
          },
          _historyDeferred: null,
          _needToRedrawHistory: false,
@@ -119,6 +120,11 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
       show: function() {
          var self = this;
          if (this._needToReloadData()) {
+            //Необходимо перезапросить данные истории -> пересоздадим контроллер.
+            if (this._historyController) {
+               this._historyController.destroy();
+               this._historyController = null;
+            }
             this._getHistoryController().initRecordSet();
             this._historyDeferred = this._getHistoryController().getUnionIndexesList(self).addCallback(function(data) {
                self._getHistoryController().parseHistoryData(data); // считывает данные
@@ -152,7 +158,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
       _getHistoryController: function() {
          if (!this._historyController) {
             this._historyController = new HistoryController({
-               oldItems: dataUtils.clone(this._items || this._options.items),
+               oldItems: dataUtils.clone(this._options.items || this._items),
                historyId: this._options.historyId,
                pinned: this._options.pinned,
                frequent: this._options.frequent,
@@ -160,6 +166,7 @@ define('SBIS3.CONTROLS/Menu/SbisMenu', [
                additionalProperty: this._options.additionalProperty,
                subContainers: this._subContainers,
                parentProperty: this._options.parentProperty,
+               unpinIfNotExist: this._options.unpinIfNotExist,
                needHistoryId: true
             });
          }

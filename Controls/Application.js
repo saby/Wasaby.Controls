@@ -247,6 +247,16 @@ define('Controls/Application',
             }
          },
 
+         // Needed to immediately hide the infobox after its target or one
+         // of their parent components are hidden
+         // Will be removed:
+         // https://online.sbis.ru/opendoc.html?guid=1b793c4f-848a-4735-b96a-f0c1cf479fab
+         _forceCloseInfoBoxHandler: function() {
+            if (this._activeInfobox) {
+               this._activeInfobox = null;
+               this._children.infoBoxOpener.close(0);
+            }
+         },
 
          _openPreviewerHandler: function(event, config, type) {
             this._children.previewerOpener.open(config, type);
