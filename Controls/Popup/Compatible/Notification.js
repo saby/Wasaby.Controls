@@ -6,7 +6,6 @@ define('Controls/Popup/Compatible/Notification',
       'css!Controls/Popup/Compatible/Notification/Notification'
    ],
    function(CommandDispatcher, Control, template) {
-
       /**
        * Замена SBIS3.CONTROLS/NotificationPopup при открытии нотификационных окон через vdom механизм.
        */
@@ -74,10 +73,9 @@ define('Controls/Popup/Compatible/Notification',
          close: function() {
             var compoundContainer = this.getParent();
             var vdomNotificationTemplate = compoundContainer._logicParent;
-            vdomNotificationTemplate._notify('close', [], {bubbling: true})
+            vdomNotificationTemplate._notify('close', [], { bubbling: true });
          }
       });
 
       return Compatible;
-   }
-);
+   });
