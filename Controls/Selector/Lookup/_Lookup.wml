@@ -15,6 +15,7 @@
       filter="{{_options.filter}}"
       autoDropDown="{{_determineAutoDropDown()}}"
       layerName="Controls/Container/Suggest/__PopupLayer"
+      value="{{_options.value}}"
       attr:class="controls-Lookup__suggest">
    <Controls.Input.resources.InputRender.InputRender
          name="inputRender"

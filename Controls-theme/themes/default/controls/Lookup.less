@@ -1,16 +1,16 @@
-//icons
-@size_Lookup-icon:                             @size_icon_s;
-@padding_Lookup-icon:                          (@size_icon_m - @size_icon_s) / 2;
+//size
+@font-size_Lookup-showSelector:                @size_icon_s;
+@font-size_Lookup-clearRecords:                @size_icon_s;
+@line-height_Lookup-input-wrapper:             @height_control_default;
 
 //color
 @color_Lookup-showSelector:                    @color_secondary;
 @color_Lookup-showSelector-hovered:            @color_link-hover;
-@color_Lookup-clearRecords:                    #8991A9;
+@color_Lookup-clearRecords:                    @color_additional;
 @color_Lookup-clearRecords-hovered:            @color_link-hover;
-@color_LookupLink:                             #8991A9;
+@color_LookupLink:                             @color_additional;
 
 //spacing
-@spacing_Lookup-for-showSelector:              @size_icon_m;
-
-//size
-@line-height_Lookup-input-wrapper:             @height_control_default;
+@spacing_Lookup-between-showSelector-border:   @spacing_default_xs;
+@spacing_Lookup-between-clearRecords-border:   @spacing_default_xs;
+@spacing_Lookup-multiline-for-showSelector:    @font-size_Lookup-showSelector + 2 * @spacing_Lookup-between-showSelector-border;

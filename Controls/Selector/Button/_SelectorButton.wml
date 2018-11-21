@@ -10,11 +10,11 @@
               on:itemClick="_itemClickHandler()"
               on:crossClick="_crossClick()">
       </Controls.Selector.SelectedCollection>
-      <ws:if data="{{_options.multiSelect}}">
+      <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
                           attr:class="controls-SelectorButton_button-more"/>
       </ws:if>
-      <ws:if data="{{_options.items.getCount() > 1}}">
+      <ws:if data="{{_options.items.getCount() > 1 && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"/>
       </ws:if>
    </ws:if>

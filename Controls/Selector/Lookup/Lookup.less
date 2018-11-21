@@ -18,7 +18,7 @@
 
 .controls-Lookup__inputRender_multiLine .controls-InputRender__wrapper {
   display: inline-block;
-  width: ~"calc(100% - @{spacing_Lookup-for-showSelector})";
+  width: ~"calc(100% - @{spacing_Lookup-multiline-for-showSelector})";
 }
 
 .controls-Lookup__inputRender_content_width_custom .controls-InputRender__fieldWrapper {
@@ -42,18 +42,18 @@
 .controls-Lookup__afterFieldWrapper_multiLine {
   position: absolute;
   top: 0;
-  right: -@spacing_Lookup-for-showSelector;
+  right: -@spacing_Lookup-multiline-for-showSelector;
   justify-content: space-between;
   flex-flow: column;
 }
 
 .controls-Lookup__icon {
-  .icon-size-without-important();
-  padding: @padding_Lookup-icon;
   cursor: pointer;
 }
 
 .controls-Lookup__showSelector {
+  .icon-size-without-important(@font-size_Lookup-showSelector);
+  padding: @spacing_Lookup-between-showSelector-border;
   color: @color_Lookup-showSelector;
   &:hover {
     color: @color_Lookup-showSelector-hovered;
@@ -61,6 +61,8 @@
 }
 
 .controls-Lookup__clearRecords {
+  .icon-size-without-important(@font-size_Lookup-clearRecords);
+  padding: @spacing_Lookup-between-clearRecords-border;
   color: @color_Lookup-clearRecords;
   &:hover {
     color: @color_Lookup-clearRecords-hovered;

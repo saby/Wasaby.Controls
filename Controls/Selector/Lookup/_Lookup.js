@@ -128,7 +128,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
 
          if (newOptions.multiline) {
-            measurer.style.width = self._wrapperInputRender.offsetWidth + 'px';
+            measurer.style.width = DOMUtil.width(self._fieldWrapper) - SHOW_SELECTOR_WIDTH + 'px';
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
