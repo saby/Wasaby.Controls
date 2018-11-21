@@ -25,15 +25,25 @@
   "output": "controls-button.package.js"
 }, {
   "include": [
-    "Controls/Container/*",
-    "Controls/StickyHeader",
-    "Controls/StickyHeader/*"
+    "Controls/Container/*"
   ],
   "exclude": [
-    "Controls/Container/Scroll/Context"
+    "Controls/Container/Scroll/Context",
+    "Controls/Container/Async",
+    "Controls/Container/Async/*",
+    "Controls/Container/Scroll",
+    "Controls/Container/Scroll/*"
   ],
   "output": "controls-container.package.js"
 }, {
+  "include": [
+    "Controls/StickyHeader",
+    "Controls/StickyHeader/*",
+    "Controls/Container/Scroll",
+    "Controls/Container/Scroll/*"
+  ],
+  "output": "controls-container-scroll.package.js"
+},{
   "include": [
     "Controls/Controllers/*"
   ],
