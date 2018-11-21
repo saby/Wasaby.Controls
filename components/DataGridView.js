@@ -1168,11 +1168,9 @@ define('SBIS3.CONTROLS/DataGridView',
       },
 
       _redrawItems: function() {
-         DataGridView.superclass._redrawItems.apply(this, arguments);
          //FIXME в 3.7.4 поправить, не всегда надо перерисовывать, а только когда изменились колонки
-         //Необходимо перерисовывать футер и шапку после отрисовки списка, иначе resize будет вызываться до отрисовки списка,
-         //и скролл (подгрузка по скролу) будет некоректно пересчитываться
          this._redrawTheadAndTfoot();
+         DataGridView.superclass._redrawItems.apply(this, arguments);
       },
       _startEditOnItemClick: function(event, id, record, target, originalEvent) {
          var
