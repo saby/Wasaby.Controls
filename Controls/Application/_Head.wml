@@ -13,7 +13,6 @@
          lite: {{ _options.lite || false }}
       };
       window.buildnumber = '{{ _options.buildnumber }}';
-      window.themesActive = true;
    </script>
    <ws:if data="{{ _options.head }}">
       <ws:if data="{{ isArrayHead() }}">
