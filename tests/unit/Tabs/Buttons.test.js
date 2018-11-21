@@ -126,7 +126,7 @@ define([
                     selectedKey: '15',
                     keyProperty: 'karambola'
                 },
-                expected =  'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs_style_additional__item_state_selected controls-Tabs__item_state_selected',
+                expected =  'controls-Tabs__item controls-Tabs__item_align_left controls-Tabs_style_secondary__item_state_selected controls-Tabs__item_state_selected',
                 expected2 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default controls-Tabs__item_type_photo',
                 expected3 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default controls-Tabs__item_canShrink',
                 expected4 = 'controls-Tabs__item controls-Tabs__item_align_right controls-Tabs__item_state_default';
