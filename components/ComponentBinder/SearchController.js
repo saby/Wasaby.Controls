@@ -347,6 +347,8 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
          }
    
          this.subscribeTo(searchForm, 'onSearch', function(event, text, forced) {
+            var view = self._options.view;
+            
             /* Если у поля поиска есть автодополнение,
                то поиск надо запускать только по enter'у / выбору из автодополнения. */
             if(searchForm.getProperty('usePicker') && text) {
@@ -354,6 +356,11 @@ define('SBIS3.CONTROLS/ComponentBinder/SearchController',
                if( (!self._options.searchFormWithSuggest && (!forced || searchForm.isPickerVisible())) || (self._options.searchFormWithSuggest && forced) ) {
                   return;
                }
+            }
+            
+            //Не запускаем поиск, если уже происходит поиск с таким же фильтром
+            if (self._searchMode && view.isLoading() && view.getFilter()[self._options.searchParamName] === text) {
+               return;
             }
 
             if(self._options.keyboardLayoutRevert) {
