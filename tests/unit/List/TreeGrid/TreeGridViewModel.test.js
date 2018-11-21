@@ -17,6 +17,19 @@ define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], f
          treeGridViewModel.toggleExpanded();
          assert.isTrue(toggleExpandedCalled, 'Invalid call toggleExpanded on model instance.');
       });
+      it('setExpandedItems', function() {
+         treeGridViewModel._model._display = {
+            setFilter: function() {}
+         };
+         treeGridViewModel.setExpandedItems([]);
+         assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+
+         treeGridViewModel.setExpandedItems([1, 2]);
+         assert.deepEqual({
+            1: true,
+            2: true
+         }, treeGridViewModel._model._expandedItems);
+      });
       it('notify "onNodeRemoved"', function() {
          var
             notifiedOnNodeRemoved = false;
@@ -35,6 +48,27 @@ define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], f
          };
          treeGridViewModel.setRoot('testRoot');
          assert.isTrue(setRootCalled, 'Invalid call toggleExpanded on model instance.');
+      });
+      it('setExpandedItems', function() {
+
+         treeGridViewModel._model._expandedItems = null;
+
+         treeGridViewModel._model.setExpandedItems = function(expandedItems) {
+            treeGridViewModel._model._expandedItems = expandedItems;
+         };
+
+         treeGridViewModel.setExpandedItems({
+            '123': true,
+            '234': true
+         });
+         assert.deepEqual({
+            '123': true,
+            '234': true
+         }, treeGridViewModel._model._expandedItems);
+
+         treeGridViewModel.setExpandedItems({});
+         assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+
       });
    });
 });

@@ -8,6 +8,7 @@
                               on:itemClick="_onBreadCrumbsClick()" />
    <Controls.List.TreeControl root="{{_root}}"
                       scope="{{_options}}"
+                      name="treeControl"
                       viewName="{{_viewName}}"
                       swipeViewMode="{{_swipeViewMode}}"
                       viewModelConstructor="{{_viewModelConstructor}}"

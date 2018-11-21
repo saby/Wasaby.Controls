@@ -1,5 +1,10 @@
 <Controls.Application scope="{{_options}}" bodyClass="controls-default-bg">
-   <div>
-      <Controls-demo.RootRouter />
-   </div>
+   <ws:head>
+      <link rel="stylesheet" href="{{ linkResolver.resolveLink('SBIS3.CONTROLS/themes/' + _options.theme + '/' + _options.theme, 'css') }}"/>
+   </ws:head>
+   <ws:content>
+      <div>
+         <Controls-demo.RootRouter />
+      </div>
+   </ws:content>
 </Controls.Application>

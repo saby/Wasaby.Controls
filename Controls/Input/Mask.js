@@ -33,8 +33,6 @@ define('Controls/Input/Mask',
        * @author Миронов А.Ю.
        * @category Input
        * @demo Controls-demo/Input/Mask/Mask
-       *
-       * @author Журавлев М.С.
        */
 
       /**

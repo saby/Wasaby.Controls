@@ -29,7 +29,9 @@ define('Controls/Popup/Opener/Dialog',
           * Open dialog popup.
           * @function Controls/Popup/Opener/Dialog#open
           * @returns {Undefined}
-          * @param {Object} {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions} Dialog popup options.
+          * @param {Object} popupOptions Dialog popup options.
+          * @remark
+          * {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions}
           * @example
           * wml
           * <pre>

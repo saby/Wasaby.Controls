@@ -24,6 +24,11 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                   displayProperty: 'title',
                   selectedKey: 0
                },
+               viewMode: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
                size: {
                   keyProperty: 'id',
                   displayProperty: 'title',
@@ -41,7 +46,8 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                icon: 'icon-small icon-Add',
                iconStyle: 'default',
                caption: '',
-               style: 'iconButtonBordered',
+               style: 'secondary',
+               viewMode: 'toolButton',
                tooltip: '',
                name: 'Button'
 

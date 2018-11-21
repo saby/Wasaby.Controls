@@ -12,7 +12,6 @@ define('Controls/List/resources/utils/SearchItemsUtil', [
                   nodeProperty: cfg.nodeProperty,
                   unique: true,
                   filter: filter,
-                  sort: cfg.itemsSortMethod,
                   root: null
                };
             return new DisplaySearch(displayProperties);

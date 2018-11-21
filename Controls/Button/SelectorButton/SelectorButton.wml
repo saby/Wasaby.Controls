@@ -1,28 +1,14 @@
-<div class="controls-SelectorButton">
-   <ws:if data="{{_selectedItems && _selectedItems.getCount() !== 0}}">
-      <Controls.SelectedCollection
-              items="{{_selectedItems}}"
-              maxVisibleItems="{{_options.maxVisibleItems}}"
-              displayProperty="{{_options.displayProperty}}"
-              multiline="{{true}}"
-              clickable="{{true}}"
-              on:itemClick="_itemClickHandler()"
-              on:crossClick="_crossClick()">
-      </Controls.SelectedCollection>
-      <ws:if data="{{_options.multiSelect}}">
-         <Controls.Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
-                          attr:class="controls-SelectorButton_button-more"/>
-      </ws:if>
-      <ws:if data="{{_selectedItems.getCount() > 1}}">
-         <Controls.Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"/>
-      </ws:if>
-   </ws:if>
-   <ws:else>
-      <Controls.Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
-   </ws:else>
-   <Controls.Selector.Opener name="selectorOpener">
-      <ws:popupOptions>
-         <ws:eventHandlers onResult="{{_onResult}}"/>
-      </ws:popupOptions>
-   </Controls.Selector.Opener>
-</div>
+<Controls.Controllers.SelectedCollection
+      source="{{_options.source}}"
+      selectedKeys="{{_options.selectedKeys}}"
+      keyProperty="{{_options.keyProperty}}"
+      displayProperty="{{_options.displayProperty}}"
+      filter="{{_options.filter}}"
+      isCompoundTemplate="{{_options.isCompoundTemplate}}"
+      multiSelect="{{_options.multiSelect}}">
+
+   <ws:selectorTemplate templateName="{{_options.templateName}}" templateOptions="{{_options.templateOptions}}"/>
+   <ws:content>
+      <Controls.Button.SelectorButton._SelectorButton scope="{{_options}}"/>
+   </ws:content>
+</Controls.Controllers.SelectedCollection>

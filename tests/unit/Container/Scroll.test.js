@@ -153,6 +153,11 @@ define(
                result = Scroll._private.calcShadowPosition(0, 100, 200);
                assert.equal(result, 'bottom');
             });
+            it('Should hide bottom shadow if there is less than 1 pixel to the bottom.', function() {
+               // Prevent rounding errors in the scale do not equal 100%
+               result = Scroll._private.calcShadowPosition(99.234, 100, 200);
+               assert.notInclude(result, 'bottom');
+            });
             it('Тень сверху и снизу', function() {
                result = Scroll._private.calcShadowPosition(50, 100, 200);
                assert.equal(result, 'topbottom');

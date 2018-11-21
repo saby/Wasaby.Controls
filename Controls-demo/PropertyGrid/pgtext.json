@@ -110,18 +110,25 @@
             "type": "enum",
             "title": "Display style of button.",
             "enum": {
-              "iconButtonBordered": "Button display as icon with border.",
-              "linkMain": "Button display as main link style.",
-              "linkMain2": "Button display as first nonaccent link style.",
-              "linkMain3": "Button display as second nonaccent link style.",
-              "linkAdditional": "Button display as third nonaccent link style.",
-              "linkAdditional2": "Button display as first accent link style.",
-              "linkAdditional3": "Button display as second accent link style.",
-              "linkAdditional4": "Button display as third accent link style.",
-              "linkAdditional5": "Button display as fourth accent link style.",
-              "buttonPrimary": "Button display as primary contour button style.",
-              "buttonDefault": "Button display as default contour button style.",
-              "buttonAdd": "Button display as button with icon add style."
+              "secondary": "Button display as icon with border.",
+              "primary": "Button display as main link style.",
+              "success": "Button display as first nonaccent link style.",
+              "warning": "Button display as second nonaccent link style.",
+              "danger": "Button display as third nonaccent link style.",
+              "info": "Button display as first accent link style."
+            }
+          },
+          "transparent": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "viewMode": {
+            "type": "enum",
+            "title": "View mode of button.",
+            "enum": {
+              "link": "Button display as icon with border.",
+              "button": "Button display as main link style.",
+              "toolButton": "Button display as first nonaccent link style."
             }
           },
           "size": {
@@ -1054,10 +1061,16 @@
           "minSearchLength": {
             "type": "String"
           },
+          "maxVisibleItems": {
+            "type": "String"
+          },
           "autoDropDown": {
             "type": "Boolean"
           },
           "multiSelect": {
+            "type": "Boolean"
+          },
+          "multiline": {
             "type": "Boolean"
           },
           "readOnly": {

@@ -4,10 +4,10 @@
 define('Controls/Popup/Compatible/ManagerWrapper',
    [
       'Core/Control',
-      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
-      'css!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper'
+      'Controls/Popup/Compatible/ManagerWrapper/Controller',
+      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper'
    ],
-   function(Control, template) {
+   function(Control, Controller, template) {
       'use strict';
 
       var ManagerWrapper = Control.extend({
@@ -27,6 +27,10 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             }
          },
 
+         _afterMount: function() {
+            Controller.registerManager(this);
+         },
+
          _toggleWindowHandlers: function(subscribe) {
             var actionName = subscribe ? 'addEventListener' : 'removeEventListener';
             window[actionName]('scroll', this._scrollPage);
@@ -40,6 +44,25 @@ define('Controls/Popup/Compatible/ManagerWrapper',
 
          _eventRegistratorHandler: function(registratorName, event) {
             this._children[registratorName].start(event);
+         },
+
+         _scrollHandler: function() {
+            this.closePopups();
+         },
+
+         closePopups: function() {
+            var items = this.getItems();
+            var self = this;
+
+            // todo: Задача: научить Listener'ы, лежащие в старом окружени, регистрироваться в ManagerWrapper'e
+            // https://online.sbis.ru/opendoc.html?guid=cc63938a-8b0c-40f4-82f5-d920f7f2141c
+            items.forEach(function(item) {
+               self._children.Manager.remove(item.id);
+            });
+         },
+
+         getItems: function() {
+            return this._children.PopupContainer._popupItems;
          },
 
          _beforeUnmount: function() {

@@ -129,6 +129,11 @@ define('Controls/List/TreeControl', [
             this._root = newOptions.root;
             this._updatedRoot = true;
          }
+         if (newOptions.expandedItems !== this._options.expandedItems) {
+
+            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
+         }
       },
       _afterUpdate: function(oldOptions) {
          var
@@ -149,13 +154,23 @@ define('Controls/List/TreeControl', [
       },
       _onExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
+         e.stopImmediatePropagation();
       },
       _onLoadMoreClick: function(e, dispItem) {
          _private.loadMore(this, dispItem);
       },
       reload: function(filter) {
+         var
+            self = this,
+            result;
          _private.clearSourceControllers(this);
-         this._children.baseControl.reload(filter);
+         result = this._children.baseControl.reload(filter);
+         result.addCallback(function() {
+
+            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+            self._children.baseControl.getViewModel().setExpandedItems([]);
+         });
+         return result;
       },
       beginEdit: function(options) {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);
