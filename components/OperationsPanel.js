@@ -331,6 +331,7 @@ define('SBIS3.CONTROLS/OperationsPanel', [
          if(this.isVisible()){
             this._checkCapacity();
          }
+         OperationsPanel.superclass._onResizeHandler.apply(this, arguments);
       },
 
       /*

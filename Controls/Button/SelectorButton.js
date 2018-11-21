@@ -2,12 +2,11 @@ define('Controls/Button/SelectorButton', [
    'Core/Control',
    'wml!Controls/Button/SelectorButton/SelectorButton',
    'WS.Data/Chain',
-   'WS.Data/Collection/List',
    'Core/helpers/Object/isEqual',
    'Controls/Controllers/SourceController',
    'Core/core-merge',
    'css!Controls/Button/SelectorButton/SelectorButton'
-], function(Control, template, Chain, List, isEqual, SourceController, cMerge) {
+], function(Control, template, Chain, isEqual, SourceController, cMerge) {
    'use strict';
 
    /**

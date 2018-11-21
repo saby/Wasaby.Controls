@@ -9,6 +9,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
       'Core/EventBus',
       'Core/CommandDispatcher',
       'SBIS3.CONTROLS/ScrollContainer/ScrollWidthController',
+      'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'css!SBIS3.CONTROLS/ScrollContainer/ScrollContainer'
    ],
    function (CompoundControl,
@@ -20,7 +21,8 @@ define('SBIS3.CONTROLS/ScrollContainer', [
              constants,
              EventBus,
              CommandDispatcher,
-             ScrollWidthController
+             ScrollWidthController,
+             ManagerWrapperController
    ) {
       'use strict';
 
@@ -398,6 +400,7 @@ define('SBIS3.CONTROLS/ScrollContainer', [
                this._calcPagingSelectedKey(scrollTop);
             }
             this._toggleGradient();
+            ManagerWrapperController.scrollHandler();
          },
 
          _onMouseenter: function() {

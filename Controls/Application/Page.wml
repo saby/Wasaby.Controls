@@ -38,6 +38,7 @@
                                  on:mouseup="_mouseupPage()"
                                  on:openInfoBox="_openInfoBoxHandler()"
                                  on:closeInfoBox="_closeInfoBoxHandler()"
+                                 on:forceCloseInfoBox="_forceCloseInfoBoxHandler()"
                                  on:keyPress="_keyPressHandler()"
                                  on:mouseup="_mouseupPage()"
                                  on:openPreviewer="_openPreviewerHandler()"

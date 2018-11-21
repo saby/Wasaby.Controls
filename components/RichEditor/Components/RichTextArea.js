@@ -1128,7 +1128,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                                  onShow: isOldMSIE ? function () {
                                     // В MSIE только элементы ввода имеют событие paste, так что создадим временный инпут
                                     // 1176161556 https://online.sbis.ru/opendoc.html?guid=1d98ee3e-4672-4256-ac1f-a03898b56aab
-                                    oldMSIEInput = $('<input style="position:absolute; left:-10000px;" class="controls-RichEditor__pasteWithStyles-temporary" data-vdomignore="true" />').appendTo(self._container);
+                                    oldMSIEInput = $('<input style="position:absolute; left:-10000px; top:0;" class="controls-RichEditor__pasteWithStyles-temporary" data-vdomignore="true" />').appendTo(self._container);
                                     setTimeout(oldMSIEInput.focus.bind(oldMSIEInput), 100);
                                  } : null
                               }
@@ -1818,8 +1818,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   }
                }
                //TODO:https://github.com/tinymce/tinymce/issues/3104, восстанавливаю выделение тк оно теряется если после нжатия кнопки назад редактор стал пустым
-               if ((cConstants.browser.firefox || cConstants.browser.isIE) && command == 'undo' &&
-                  this._getTinyEditorValue() == '') {
+               if (BROWSER.isIE && command === 'undo' && !this._getTinyEditorValue()) {
                   selection.select(editor.getBody(), true);
                }
             },

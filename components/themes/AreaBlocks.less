@@ -41,4 +41,29 @@
       border-radius: @border-radius_Block;
       box-shadow: @box-shadow_Block;
    }
+
+   // TODO: Не понятно должно ли быть в блоках. Раскоментировать или перенести после обсуждения.
+   /*&Separator {
+      width: 100%;
+      height: @height_BlockSeparator;
+      background: @bg_BlockSeparator;
+   }*/
+
+   &Layout {
+      overflow: hidden;
+      background-color: @bg_BlockLayout;
+      & > .ws-BlockGroup {
+         margin-left: @margin_BlockGroup;
+         margin-right: @margin_BlockGroup;
+         &:first-of-type {
+            margin-top: @margin_BlockGroup;
+         }
+         &:last-of-type {
+            margin-bottom: @margin_BlockGroup;
+         }
+      }
+      &_detached {
+         padding-top: @spacing_Block;
+      }
+   }
 }

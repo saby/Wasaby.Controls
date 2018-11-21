@@ -20,6 +20,7 @@ define('Controls/interface/IFastFilter', [
     * @property {String} id Name of filter field.
     * @property {*} value Current filter field value.
     * @property {*} resetValue Value for reset.
+    * @property {*} textValue Text value of filter field. Used to display a textual representation of the filter.
     * @property {PropertiesFastFilter} properties Fast filter settings.
     */
 
