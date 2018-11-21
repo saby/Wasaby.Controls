@@ -1,0 +1,929 @@
+[
+  {
+    "include": [
+      "SBIS3.CONTROLS/Browser",
+      "SBIS3.CONTROLS/Browser/*",
+      "SBIS3.CONTROLS/SearchForm/*",
+      "SBIS3.CONTROLS/BreadCrumbs",
+      "SBIS3.CONTROLS/BreadCrumbs/*",
+      "SBIS3.CONTROLS/ComponentBinder",
+      "SBIS3.CONTROLS/ComponentBinder/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor/*"
+    ],
+    "output": "sbis3controls-browser.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Browser/ColumnsEditor",
+      "SBIS3.CONTROLS/Browser/ColumnsEditor/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-columnseditor.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/Button",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
+      "SBIS3.CONTROLS/Filter/Button/Line",
+      "SBIS3.CONTROLS/Filter/Button/Line/*",
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+      "SBIS3.CONTROLS/Filter/HistoryController"
+    ],
+    "exlucde": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-filterbutton.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/FastData",
+      "SBIS3.CONTROLS/Filter/FastData/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-fastfilter.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Filter/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/Filter/FastData",
+      "SBIS3.CONTROLS/Filter/FastData/*",
+      "SBIS3.CONTROLS/Filter/Button",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterButton",
+      "SBIS3.CONTROLS/Filter/Button/Line",
+      "SBIS3.CONTROLS/Filter/Button/Line/*",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate",
+      "tmpl!SBIS3.CONTROLS/Filter/Button/FilterLineTemplate",
+      "SBIS3.CONTROLS/Utils/FilterPanelUtils",
+      "SBIS3.CONTROLS/Filter/FilterPanel",
+      "SBIS3.CONTROLS/Filter/Panel/*",
+      "SBIS3.CONTROLS/Filter/Button/Utils/FilterToStringUtil",
+      "SBIS3.CONTROLS/Filter/HistoryController/FilterHistoryControllerUntil",
+      "SBIS3.CONTROLS/Filter/HistoryController"
+    ],
+    "output": "sbis3controls-filterpicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Button",
+      "SBIS3.CONTROLS/Button/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-buttons.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/CompositeViewMixin",
+      "SBIS3.CONTROLS/Mixins/CompositeViewMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-compositeviewmixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/DragNDropMixin",
+      "SBIS3.CONTROLS/Mixins/DragNDropMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-dragndropmixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/IconMixin",
+      "SBIS3.CONTROLS/Mixins/IconMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-iconmixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/ItemsControlMixin",
+      "SBIS3.CONTROLS/Mixins/ItemsControlMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-itemscontrolmixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/PopupMixin",
+      "SBIS3.CONTROLS/Mixins/PopupMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-popupmixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/SearchMixin",
+      "SBIS3.CONTROLS/Mixins/SearchMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-searchmixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Mixins/TreeMixin",
+      "SBIS3.CONTROLS/Mixins/TreeMixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-treemixin.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Tree/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/Tree/CompositeView",
+      "SBIS3.CONTROLS/Tree/CompositeView/*"
+    ],
+    "output": "sbis3controls-tree.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Tree/CompositeView",
+      "SBIS3.CONTROLS/Tree/CompositeView/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-treecompositeview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ListView",
+      "SBIS3.CONTROLS/ListView/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-listview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/DataGridView",
+      "SBIS3.CONTROLS/DataGridView/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-datagridview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/CompositeView",
+      "SBIS3.CONTROLS/CompositeView/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-compositeview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Accordion",
+      "SBIS3.CONTROLS/Accordion/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-accordion.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action",
+      "SBIS3.CONTROLS/Action/OpenDialog",
+      "SBIS3.CONTROLS/Action/OpenDialogAction",
+      "SBIS3.CONTROLS/Action/DialogActionBase",
+      "SBIS3.CONTROLS/Action/ActionBase",
+      "SBIS3.CONTROLS/Action/Utils/*",
+      "SBIS3.CONTROLS/Action/Mixin/*",
+      "SBIS3.CONTROLS/Action/Compatible/*",
+      "SBIS3.CONTROLS/Action/List/Mixin/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-action.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/List/Sum",
+      "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate",
+      "SBIS3.CONTROLS/Action/List/resources/SumDialogTemplate/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-actionsum.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/Save",
+      "SBIS3.CONTROLS/Action/Save/*",
+      "SBIS3.CONTROLS/Action/List/Save"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-actionsave.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Action/Selector/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog/*",
+      "SBIS3.CONTROLS/Action/resources/SelectionDialog",
+      "SBIS3.CONTROLS/Action/SelectorAction"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-actionselector.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Calendar",
+      "SBIS3.CONTROLS/Calendar/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-calendar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/CheckBox",
+      "SBIS3.CONTROLS/CheckBox/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-checkbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ColorPicker",
+      "SBIS3.CONTROLS/ColorPicker/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-colorpicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ComboBox",
+      "SBIS3.CONTROLS/ComboBox/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-combobox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Commands/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-commands.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Controllers/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-controllers.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/Box",
+      "SBIS3.CONTROLS/Date/Box/*",
+      "SBIS3.CONTROLS/Date/Picker",
+      "SBIS3.CONTROLS/Date/Picker/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-datepicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/TimeInterval",
+      "SBIS3.CONTROLS/Date/TimeInterval/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-datetimeinterval.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/Range",
+      "SBIS3.CONTROLS/Date/Range/*",
+      "SBIS3.CONTROLS/Date/RangeBig",
+      "SBIS3.CONTROLS/Date/RangeBig/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-daterange.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeChoose",
+      "SBIS3.CONTROLS/Date/RangeChoose/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-daterangechoose.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeBigChoose",
+      "SBIS3.CONTROLS/Date/RangeBigChoose/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils"
+    ],
+    "output": "sbis3controls-daterangebigchoose.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeBigChoose/resources/Utils"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-daterangebigchooseutils.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/RangeSlider",
+      "SBIS3.CONTROLS/Date/RangeSlider/*",
+      "SBIS3.CONTROLS/Date/RangeSliderBase",
+      "SBIS3.CONTROLS/Date/RangeSliderBase/*",
+      "SBIS3.CONTROLS/Date/RangeSliderBig",
+      "SBIS3.CONTROLS/Date/RangeSliderBig/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-dateslider.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/MonthView",
+      "SBIS3.CONTROLS/Date/MonthView/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-datemonthview.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/TimePicker",
+      "SBIS3.CONTROLS/Date/TimePicker/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-datetimepicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Date/MonthPicker",
+      "SBIS3.CONTROLS/Date/MonthPicker/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-datemonthpicker.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Dialog",
+      "SBIS3.CONTROLS/Dialog/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-dialog.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/DropdownList",
+      "SBIS3.CONTROLS/DropdownList/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-dropdownlist.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/EditAtPlace",
+      "SBIS3.CONTROLS/EditAtPlace/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-editatplace.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ExportCustomizer/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-exportcustomizer.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FieldLink",
+      "SBIS3.CONTROLS/FieldLink/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-fieldlink.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FloatArea",
+      "SBIS3.CONTROLS/FloatArea/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/FloatArea/FloatAreaSelector"
+
+    ],
+    "output": "sbis3controls-floatarea.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FormattedTextBox",
+      "SBIS3.CONTROLS/FormattedTextBox/*",
+      "SBIS3.CONTROLS/VdomPhoneTextBox",
+      "SBIS3.CONTROLS/VdomPhoneTextBox/*",
+      "SBIS3.CONTROLS/MoneyTextBox",
+      "SBIS3.CONTROLS/MoneyTextBox/*",
+      "SBIS3.CONTROLS/PhoneTextBox",
+      "SBIS3.CONTROLS/PhoneTextBox/*",
+      "SBIS3.CONTROLS/PasswordTextBox",
+      "SBIS3.CONTROLS/PasswordTextBox/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-specialtextbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/FormController",
+      "SBIS3.CONTROLS/FormController/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-formcontroller.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/HighCharts",
+      "SBIS3.CONTROLS/HighCharts/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-highcharts.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/HighChartsLight",
+      "SBIS3.CONTROLS/HighChartsLight/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-highchartslight.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/History/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-history.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Image",
+      "SBIS3.CONTROLS/Image/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-image.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ImportCustomizer/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-importcustomizer.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/InformationPopup",
+      "SBIS3.CONTROLS/InformationPopup/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-informationpopup.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Interfaces/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-interfaces.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Label",
+      "SBIS3.CONTROLS/Label/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-label.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Layouts/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-layouts.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Link",
+      "SBIS3.CONTROLS/Link/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-link.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Menu",
+      "SBIS3.CONTROLS/Menu/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-menu.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel",
+      "tmpl!SBIS3.CONTROLS/OperationsPanel/OperationsPanel",
+      "tmpl!SBIS3.CONTROLS/OperationsPanel/resources/ItemTemplate",
+      "SBIS3.CONTROLS/OperationsPanel/PanelButton/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel/Print*",
+      "SBIS3.CONTROLS/OperationsPanel/Unload*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel-print.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel/Delete",
+      "SBIS3.CONTROLS/OperationsPanel/Mark*",
+      "SBIS3.CONTROLS/OperationsPanel/Move*",
+      "SBIS3.CONTROLS/OperationsPanel/Sum"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel-baseoperations.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/OperationsPanel/Merge*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-operationspanel-merge.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Pager",
+      "SBIS3.CONTROLS/Pager/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-pager.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Paging",
+      "SBIS3.CONTROLS/Paging/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-paging.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Panel",
+      "SBIS3.CONTROLS/Panel/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-panel.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/PrintDialogTemplate",
+      "SBIS3.CONTROLS/PrintDialogTemplate/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-printdialogtemplate.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ProcessStateIndicator",
+      "SBIS3.CONTROLS/ProcessStateIndicator/*",
+      "SBIS3.CONTROLS/ProgressBar",
+      "SBIS3.CONTROLS/ProgressBar/*",
+      "SBIS3.CONTROLS/Slider",
+      "SBIS3.CONTROLS/Slider/*",
+      "SBIS3.CONTROLS/Spoiler",
+      "SBIS3.CONTROLS/Spoiler/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-processing.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Radio/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-radio.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SbisDropdownList",
+      "SBIS3.CONTROLS/SbisDropdownList/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-sbisdropdownlist.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/ScrollContainer",
+      "SBIS3.CONTROLS/ScrollContainer/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-scrollcontainer.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SelectorButton",
+      "SBIS3.CONTROLS/SelectorButton/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-selectorbutton.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Storages/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-storages.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/StylesPalette",
+      "SBIS3.CONTROLS/StylesPalette/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-stylespalette.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/StylesPanelNew",
+      "SBIS3.CONTROLS/StylesPanelNew/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-stylespanelnew.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/SubmitPopup",
+      "SBIS3.CONTROLS/SubmitPopup/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-submitpopup.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Suggest",
+      "SBIS3.CONTROLS/Suggest/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*",
+      "SBIS3.CONTROLS/Suggest/SuggestView",
+      "SBIS3.CONTROLS/Suggest/SuggestView/*",
+      "SBIS3.CONTROLS/Suggest/SuggestShowAll",
+      "SBIS3.CONTROLS/Suggest/SuggestShowAll/*"
+    ],
+    "output": "sbis3controls-suggest.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Switcher",
+      "SBIS3.CONTROLS/Switcher/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-switcher.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Tab/*",
+      "SBIS3.CONTROLS/SwitchableArea",
+      "SBIS3.CONTROLS/SwitchableArea/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-tab.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/TextArea",
+      "SBIS3.CONTROLS/TextArea/*",
+      "SBIS3.CONTROLS/TextBox",
+      "SBIS3.CONTROLS/TextBox/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-textbox.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/Toolbar",
+      "SBIS3.CONTROLS/Toolbar/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-toolbar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/UnitEditor",
+      "SBIS3.CONTROLS/UnitEditor/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-uniteditor.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/WaitIndicator",
+      "SBIS3.CONTROLS/WaitIndicator/*"
+    ],
+    "exclude": [
+      "css!SBIS3.CONTROLS*"
+    ],
+    "output": "sbis3controls-waitindicator.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar",
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/config",
+      "SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/resources/handlers",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RoundToolbar/RichEditorRoundToolbar"
+    ],
+    "output": "sbis3controls-richeditor-roundtoolbar.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor/Components/RichTextArea",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextAreaInner",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/RichTextArea",
+      "SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/smiles",
+
+      "SBIS3.CONTROLS/RichEditor/Components/ToolbarBase",
+      "css!SBIS3.CONTROLS/RichEditor/Components/ToolbarBase/RichEditorToolbarBase",
+
+      "SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
+      "SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/ImagePropertiesDialog/ImagePropertiesDialog",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel",
+      "css!SBIS3.CONTROLS/RichEditor/Components/RichTextArea/resources/ImageOptionsPanel/ImageOptionsPanel",
+      "css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/ImagePanel/ImagePanel"
+    ],
+    "output": "sbis3controls-richeditor-richtextarea.package.js"
+  },
+  {
+    "include": [
+      "SBIS3.CONTROLS/RichEditor",
+      "tmpl!SBIS3.CONTROLS/RichEditor/RichEditor",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/config",
+      "SBIS3.CONTROLS/RichEditor/Components/Toolbar/resources/handlers",
+      "tmpl!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar",
+      "css!SBIS3.CONTROLS/RichEditor/Components/Toolbar/RichEditorToolbar"
+    ],
+    "output": "sbis3controls-richeditor.package.js"
+  }
+]
