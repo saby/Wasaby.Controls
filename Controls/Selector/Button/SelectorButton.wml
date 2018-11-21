@@ -1,4 +1,4 @@
-<Controls.Controllers.SelectedCollection
+<Controls.Selector.SelectedCollection.Controller
       source="{{_options.source}}"
       selectedKeys="{{_options.selectedKeys}}"
       keyProperty="{{_options.keyProperty}}"
@@ -9,6 +9,6 @@
 
    <ws:selectorTemplate templateName="{{_options.templateName}}" templateOptions="{{_options.templateOptions}}"/>
    <ws:content>
-      <Controls.Button.SelectorButton._SelectorButton scope="{{_options}}"/>
+      <Controls.Selector.Button._SelectorButton scope="{{_options}}"/>
    </ws:content>
-</Controls.Controllers.SelectedCollection>
+</Controls.Selector.SelectedCollection.Controller>
