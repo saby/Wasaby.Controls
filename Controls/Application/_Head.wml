@@ -14,6 +14,7 @@
          lite: {{ _options.lite || false }}
       };
       window.buildnumber = '{{ _options.buildnumber }}';
+      window.themesActive = true;
    </script>
 
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
