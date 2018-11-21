@@ -1,4 +1,4 @@
-define('Controls/Heading/BackButton/BackStyles',
+define('Controls/Heading/Back/BackStyles',
    [
    ],
    function() {

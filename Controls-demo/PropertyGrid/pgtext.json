@@ -155,13 +155,13 @@
       }
     }
   },
-  "Controls/Heading/BackButton": {
-    "name": "Controls/Heading/BackButton",
+  "Controls/Heading/Back": {
+    "name": "Controls/Heading/Back",
     "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
-    "className": "Controls/Heading/BackButton",
+    "className": "Controls/Heading/Back",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Heading/BackButton",
+    "fullname": "Controls/Heading/Back",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
@@ -180,7 +180,7 @@
             "title": "Display style of back button.",
             "enum": {
               "secondary": "Button display as icon with border.",
-              "primaryN": "Button display as main link style."
+              "primary": "Button display as main link style."
             }
           },
           "size": {

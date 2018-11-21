@@ -284,22 +284,22 @@
         <div attr:class="test_element__wrapper">
             <div>
                 <span attr:class="test_element">l size</span>
-                <Controls.Heading.BackButton attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonDefault" style="primaryN" size="l" caption="Back"/>
-                <Controls.Heading.BackButton attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonPrimary" style="secondary" size="l" caption="Back"/>
+                <Controls.Heading.Back attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonDefault" style="primaryN" size="l" caption="Back"/>
+                <Controls.Heading.Back attr:class="test_element ControlsDemo-standartDemoHeader_BackButtonPrimary" style="secondary" size="l" caption="Back"/>
             </div>
         </div>
         <div attr:class="test_element__wrapper">
             <div>
                 <span attr:class="test_element">m size</span>
-                <Controls.Heading.BackButton attr:class="test_element" style="primaryN" size="m" caption="Back"/>
-                <Controls.Heading.BackButton attr:class="test_element" style="secondary" size="m" caption="Back"/>
+                <Controls.Heading.Back attr:class="test_element" style="primaryN" size="m" caption="Back"/>
+                <Controls.Heading.Back attr:class="test_element" style="secondary" size="m" caption="Back"/>
             </div>
         </div>
         <div attr:class="test_element__wrapper">
             <div>
                 <span attr:class="test_element">s size</span>
-                <Controls.Heading.BackButton attr:class="test_element" style="primaryN" size="s" caption="Back"/>
-                <Controls.Heading.BackButton attr:class="test_element" style="secondary" size="s" caption="Back"/>
+                <Controls.Heading.Back attr:class="test_element" style="primaryN" size="s" caption="Back"/>
+                <Controls.Heading.Back attr:class="test_element" style="secondary" size="s" caption="Back"/>
             </div>
         </div>
     </div>

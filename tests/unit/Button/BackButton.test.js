@@ -1,4 +1,4 @@
-define(['Controls/Heading/BackButton'], function(BackBtn) {
+define(['Controls/Heading/Back'], function(BackBtn) {
    'use strict';
    var separator;
    describe('Controls/Heading/BackButton', function() {
@@ -13,12 +13,8 @@ define(['Controls/Heading/BackButton'], function(BackBtn) {
                   stateStyle: 'test'
                },
                {
-                  optionStyle: 'primary',
-                  stateStyle: 'secondary'
-               },
-               {
                   optionStyle: 'default',
-                  stateStyle: 'primaryN'
+                  stateStyle: 'primary'
                }
             ];
          styles.forEach(function(setOfStyle) {

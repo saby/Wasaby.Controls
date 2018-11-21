@@ -14,7 +14,7 @@ define('Controls-demo/Buttons/BackButton/BackButtonDemoPG',
       var BackButtonDemo = Control.extend({
          _template: template,
          _metaData: null,
-         _content: 'Controls/Heading/BackButton',
+         _content: 'Controls/Heading/Back',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
