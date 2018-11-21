@@ -144,6 +144,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          elementUpdated: function(item, container) {
             if (this._isElementVisible(item.popupOptions.target)) {
                _private.updateClasses(item, item.positionConfig);
+               item.position = StickyStrategy.getPosition(item.positionConfig, _private._getTargetCoords(item, item.positionConfig.sizes));
 
                // In landscape orientation, the height of the screen is low when the keyboard is opened.
                // Open Windows are not placed in the workspace and chrome scrollit body.
