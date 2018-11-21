@@ -2,7 +2,6 @@
 @background-color_dialogTemplate-content:      @background-color_default;
 @background-color_dialogTemplate-top-area:     @background-color_default;
 @color_DialogTemplate-caption:                 @color_Heading_secondary;
-
 @margin-right_dialogTemplate_head:             48px; //TODO: заменить на @margin-left_dialogTemplate_caption+@width_closeButton
 @margin-left_dialogTemplate_caption:           @spacing_default_l;
 @height_dialogTemplate_caption:                44px;
@@ -11,24 +10,23 @@
 @font-size_dialogTemplate_head:                @size_Heading_l;
 
 //Confirmation Template
-@controls-InformationPopup-bg:                                @background-color_default;
-@controls-InformationPopup-default-status-border-color:       #0055BB;
-@controls-InformationPopup-success-status-border-color:       @color_success;
-@controls-InformationPopup-danger-status-border-color:        @color_danger;
-@controls-InformationPopup-warning-status-border-color:       @color_warning;
-@controls-InformationPopup-border-width:                      3px;
-@controls-InformationPopup-window-spacing:                    0 @spacing_default_m;
+@background-color_InformationPopup:          @background-color_default;
+@border-color_InformationPopup_default:      #0055BB;
+@border-color_InformationPopup_success:      @color_success;
+@border-color_InformationPopup_danger:       @color_danger;
+@border-color_InformationPopup_warning:      @color_warning;
+@spacing_InformationPopup-window:            0 @spacing_default_m;
+@border-width_InformationPopup:              3px;
+@shadow_InformationPopup:                    @size_shadow_default @color_shadow_secondary;
 
-@controls-panel-shadow:                            @size_shadow_default @color_shadow_secondary;
-
-@controls-SubmitPopup-border:                      @thickness_border_default solid @color_border_secondary;
-@controls-SubmitPopup-border-top:                  none;
-@controls-SubmitPopup-border-left:                 @controls-SubmitPopup-border;
-@controls-SubmitPopup-border-right:                @controls-SubmitPopup-border;
-@controls-SubmitPopup-border-bottom:               @controls-SubmitPopup-border;
-@controls-SubmitPopup-body-padding:                32px;
-@controls-SubmitPopup-footer-padding:              @spacing_default_xl;
-@controls-SubmitPopup-footer-bg:                   #F5F5F5;
-@controls-SubmitPopup-footer-border-top:           @thickness_border_default solid @color_border_input;
-@controls-SubmitPopup-size-big-width:              440px;
-@controls-SubmitPopup-size-standard-width:         350px;
+@border_SubmitPopup:                @thickness_border_default solid @color_border_secondary;
+@border-top_SubmitPopup:            none;
+@border-left_SubmitPopup:           @controls-SubmitPopup-border;
+@border-right_SubmitPopup:          @controls-SubmitPopup-border;
+@border-bottom_SubmitPopup:         @controls-SubmitPopup-border;
+@padding_SubmitPopup:                  32px;
+@padding_SubmitPopup-footer:           @spacing_default_xl;
+@background-color_SubmitPopup-footer:  #F5F5F5;
+@border-top_SubmitPopup-footer:        @thickness_border_default solid @color_border_input;
+@width_SubmitPopup-big:                440px;
+@width_SubmitPopup-standard:           350px;
