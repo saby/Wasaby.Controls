@@ -140,7 +140,7 @@ define('Controls/Filter/Controller',
 
          resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
             return _private.getHistoryItems(self, historyId).addCallback(function(historyItems) {
-               _private.setFilterItems(self, filterButtonItems, fastFilterItems);
+               _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
             });
          },

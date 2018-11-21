@@ -358,7 +358,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _headerMouseDown: function(event) {
             var dialogTemplate = this._children.DialogTemplate;
-            if (dialogTemplate) {
+
+            // Если мы кликнули в контрол в шапке - то работаем с этим контролом.
+            // d'n'd работает, когда кликнули непосредственно в шапку
+            var isClickedInControl = $(event.target).wsControl() !== this;
+            if (dialogTemplate && !isClickedInControl) {
                dialogTemplate._onMouseDown(new SyntheticEvent(event));
             }
          },

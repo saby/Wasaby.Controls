@@ -184,8 +184,10 @@ define(
             });
             it('Check fixed state', function() {
                var itemConfig = {};
+               StickyController._private.getWindowWidth = () => 1000;
                StickyController.getDefaultConfig(itemConfig);
                assert.isTrue(itemConfig.position.position === 'fixed');
+               assert.equal(itemConfig.position.maxWidth, 1000);
 
                StickyController._checkContainer = () => { return false; };
                StickyController._elementCreated(itemConfig);
@@ -204,6 +206,14 @@ define(
 
                StickyController._elementUpdated(itemConfig);
                assert.equal(itemConfig.popupState, undefined); //ничего не произошло, т.к. не было создания
+            });
+
+            it('Sticky initializing state', () => {
+               let itemConfig = {
+                  popupState: StickyController.POPUP_STATE_INITIALIZING
+               };
+               let destroyDef = StickyController._elementDestroyed(itemConfig);
+               assert.equal(destroyDef.isReady(), true);
             });
 
             it('Sticky updated classes', function() {

@@ -3,9 +3,15 @@
  */
 define('Controls-demo/Index', [
    'Core/Control',
+   'Controls/Application/LinkResolver',
+   'Core/cookie',
+   'Core/constants',
    'wml!Controls-demo/Index',
    'css!Controls-demo/Demo/Page'
 ], function (BaseControl,
+             LinkResolver,
+             cookie,
+             constants,
              template
 ) {
    'use strict';
@@ -19,6 +25,14 @@ define('Controls-demo/Index', [
          changeTheme: function(event, theme) {
             this._notify('themeChanged', [theme], {bubbling:true});
          },
+         _beforeMount: function() {
+            this.linkResolver = new LinkResolver(cookie.get('s3debug') === 'true',
+               constants.buildnumber,
+               constants.wsRoot,
+               constants.appRoot,
+               constants.resourceRoot
+               );
+         }
       });
 
    return ModuleClass;

@@ -165,10 +165,10 @@ module.exports = function(Component) {
       },
 
       // Демо-пример: Редактирование по месту в полях ввода
-      '/demo-ws4-edit-at-place': function(req, res) {
-         requirejs('Controls-demo/EditAtPlace/EditAtPlaceWithApplication');
+      '/demo-ws4-editable-area': function(req, res) {
+         requirejs('Controls-demo/EditableArea/EditableAreaWithApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Controls-demo/EditAtPlace/EditAtPlaceWithApplication',
+            application: 'Controls-demo/EditAtPlace/EditableAreaWithApplication',
             initDependencies: false
          }, []);
       },
