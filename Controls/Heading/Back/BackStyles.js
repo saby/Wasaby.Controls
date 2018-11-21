@@ -6,7 +6,6 @@ define('Controls/Heading/Back/BackStyles',
 
    /**
     *
-    * @mixin Controls/Heading/BackButton/BackStyles
     * @public
     *
     * @css @background-image-BackButton_style-primary_size-s Small default arrow image.
