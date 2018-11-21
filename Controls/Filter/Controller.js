@@ -37,15 +37,22 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
-            var historyItems = _private.cloneItems(filterButtonItems);
+         prepareItems: function(filterButtonItems, fastFilterItems, prepareCallback) {
             Chain(filterButtonItems).each(function(buttonItem, index) {
                Chain(fastFilterItems).each(function(fastItem) {
                   if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && getPropValue(fastItem, 'textValue') !== undefined) {
-                     setPropValue(historyItems[index], 'textValue', getPropValue(fastItem, 'textValue'));
+                     prepareCallback(index, fastItem);
                   }
                });
             });
+         },
+
+         prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
+            var historyItems = _private.cloneItems(filterButtonItems);
+            function setTextValue(index, item) {
+               setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
+            }
+            _private.prepareItems(filterButtonItems, fastFilterItems, setTextValue);
             return _private.minimizeFilterItems(historyItems);
          },
 
@@ -139,13 +146,10 @@ define('Controls/Filter/Controller',
          },
 
          setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
-            Chain(filterButtonItems).each(function(buttonItem) {
-               Chain(fastFilterItems).each(function(fastItem) {
-                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && getPropValue(fastItem, 'textValue')) {
-                     setPropValue(buttonItem, 'textValue', '');
-                  }
-               });
-            });
+            function clearTextValue(index) {
+               setPropValue(filterButtonItems[index], 'textValue', '');
+            }
+            _private.prepareItems(filterButtonItems, fastFilterItems, clearTextValue);
          },
 
          updateFilterItems: function(self, newItems) {
