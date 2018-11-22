@@ -3,7 +3,7 @@ define('Controls/Application/HeadDataContext', [
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
    'Core/cookie',
-   'Env/Request',
+   'View/Request',
    'Core/Themes/ThemesController'
 
 ], function(DataContext,
