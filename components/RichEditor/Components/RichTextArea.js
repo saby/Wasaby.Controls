@@ -342,6 +342,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                if (options.json) {
                   options.text = this._getTextFromJson(options.json, true);
                }
+               options.text = this._sanitizeClasses(options.text, true, options);
 
                if (options.singleLine) {
                   options.editorConfig.nowrap = true;
