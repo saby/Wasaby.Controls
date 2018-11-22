@@ -224,6 +224,16 @@ define('Controls/Popup/Compatible/Layer', [
       isNewEnvironment: function() {
          return !!(document && document.getElementsByTagName('html')[0].controlNodes);
       },
+      loadActivity: function(parallelDefRes, loadDepsDef, result) {
+         parallelDefRes.addCallbacks(function() {
+            finishLoad(loadDeferred, result);
+         }, function(e) {
+            IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
+            loadDepsDef.addCallback(function() {
+               finishLoad(loadDeferred, result);
+            });
+         });
+      },
       load: function(deps, force) {
          if (!this.isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости
             return (new Deferred()).callback();
@@ -231,6 +241,7 @@ define('Controls/Popup/Compatible/Layer', [
          if (!loadDeferred) {
             var mainDeferred;
             var loadDepsDef = new Deferred();
+            var self = this;
             loadDeferred = new Deferred();
 
             /*Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
@@ -307,23 +318,29 @@ define('Controls/Popup/Compatible/Layer', [
                Constants.userConfigSupport = true;
                loadDataProviders(parallelDef);
                parallelDefRes.addCallbacks(function() {
-                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addCallback(function() {
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
+                  }).addErrback(function(err) {
                      IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
                   });
-               }, function() {
-                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+               }, function(err) {
+                  IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addCallback(function() {
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
+                  }).addErrback(function(activityErr) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', activityErr);
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
                   });
+               });
+            } else {
+               parallelDefRes.addCallbacks(function() {
+                  self.loadActivity(parallelDefRes, loadDepsDef, result);
+               }, function(err) {
+                  IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
+                  self.loadActivity(parallelDefRes, loadDepsDef, result);
                });
             }
-            parallelDefRes.addCallbacks(function() {
-               finishLoad(loadDeferred, result);
-            }, function(e) {
-               IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
-               loadDepsDef.addCallback(function() {
-                  finishLoad(loadDeferred, result);
-               });
-            });
          }
 
          // возвращаем свой Deferred на каждый запрос, чтобы никто не мог
