@@ -4,13 +4,15 @@ define('Controls-demo/List/EditInPlace', [
    'WS.Data/Source/Memory',
    'WS.Data/Entity/Model',
    'Core/Deferred',
+   'Controls/EditableArea/Constants',
    'Controls/Validate/Validators/IsRequired',
    'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function (Control,
              template,
              MemorySource,
              Model,
-             Deferred
+             Deferred,
+             EditConstants
 ) {
    'use strict';
 
@@ -130,7 +132,7 @@ define('Controls-demo/List/EditInPlace', [
          }
          switch (options.item.get('id')) {
             case 1:
-               return 'Cancel';
+               return EditConstants.CANCEL;
             case 2:
                return {
                   item: new Model({
@@ -170,7 +172,7 @@ define('Controls-demo/List/EditInPlace', [
 
       _cancelItemAdd: function(e, options, isAdd) {
          if (isAdd) {
-            return 'Cancel';
+            return EditConstants.CANCEL;
          }
       },
 

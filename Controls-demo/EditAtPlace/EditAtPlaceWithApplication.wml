@@ -1,5 +1,0 @@
-<Controls.Application.ApplicationWrapper caption="EditAtPlace">
-   <ws:content>
-      <Controls-demo.EditAtPlace.EditAtPlace/>
-   </ws:content>
-</Controls.Application.ApplicationWrapper>
