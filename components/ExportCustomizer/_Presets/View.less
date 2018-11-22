@@ -1,10 +1,11 @@
 
 .controls-ExportCustomizer-Presets-View {
-   .flexbox();
+   display: flex;
+   justify-content: space-between;
 }
 
 .controls-ExportCustomizer-Presets-View__selector {
-   .flex-grow(1);
+   flex-grow: 1;
    max-width: ~"calc(100% - "@max-width_ExportCustomizer-Presets-View-offset~")";
    text-overflow: ellipsis;
 
@@ -53,7 +54,7 @@
 }
 
 .controls-ExportCustomizer-Presets-View__editor {
-   .flex-grow(1);
+   flex-grow: 1;
 }
 
 .controls-ExportCustomizer-Presets-View__input {
@@ -61,7 +62,7 @@
 }
 
 .controls-ExportCustomizer-Presets-View .controls-EditAtPlace__controlPanel {
-   .flex-shrink(0);
+   flex-shrink: 0;
    margin: @margin_ExportCustomizer-Presets-View-editor-panel;
 }
 
@@ -74,7 +75,7 @@
 }
 
 .controls-ExportCustomizer-Presets-View__action {
-   .flex-shrink(0);
+   flex-shrink: 0;
    margin: @margin_ExportCustomizer-Presets-View-action;
 }
 
