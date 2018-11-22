@@ -292,6 +292,77 @@ define(['Controls/Filter/Controller'], function(Filter) {
          }]);
       });
 
+      it('setFilterButtonItems', function() {
+         var fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetValue: ''
+         }];
+
+         var fbItems = [{
+            id: 'testId2',
+            value: '',
+            textValue: 'test2',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }];
+         Filter._private.setFilterButtonItems(fbItems, fastFilterItems);
+         assert.deepEqual(fbItems, [{
+            id: 'testId2',
+            value: '',
+            textValue: '',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }]);
+      });
+
+      it('prepareHistoryItems', function() {
+         var fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetValue: ''
+         }];
+
+         var fbItems = [{
+            id: 'testId2',
+            value: '',
+            textValue: '',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }];
+         var historyItems = Filter._private.prepareHistoryItems(fbItems, fastFilterItems);
+         assert.deepEqual(historyItems, [{
+            id: 'testId2',
+            value: '',
+            textValue: 'test2',
+            visibility: undefined
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            textValue: undefined,
+            visibility: undefined
+         }]);
+      });
+
    });
 
 });

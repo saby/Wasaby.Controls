@@ -1,7 +1,7 @@
-define('Controls/Button/SelectorButton/_SelectorButton', [
+define('Controls/Selector/Button/_SelectorButton', [
    'Core/Control',
-   'wml!Controls/Button/SelectorButton/_SelectorButton',
-   'css!Controls/Button/SelectorButton/SelectorButton'
+   'wml!Controls/Selector/Button/_SelectorButton',
+   'css!Controls/Selector/Button/SelectorButton'
 ], function(Control, template) {
    'use strict';
 

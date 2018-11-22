@@ -8,7 +8,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             bind:value="_value"
                             bind:selectedKeys="_selectedKeys"
                             source="{{_source}}"
@@ -25,9 +25,9 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" displayProperty="title"></ws:partial>
+                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" displayProperty="title"></ws:partial>
                         </ws:itemTemplate>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
             <div class="control-Lookup-demo-block">
@@ -36,7 +36,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             bind:value="_value2"
                             bind:selectedKeys="_selectedKeys2"
                             source="{{_source}}"
@@ -50,9 +50,9 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="bold"/>
+                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="bold"/>
                         </ws:itemTemplate>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
             <div class="control-Lookup-demo-block">
@@ -62,7 +62,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             name="lookup2"
                             bind:value="_value3"
                             bind:selectedKeys="_selectedKeys3"
@@ -77,9 +77,9 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="accent" size="l"/>
+                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="accent" size="l"/>
                         </ws:itemTemplate>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
             <div class="control-Lookup-demo-block">
@@ -88,7 +88,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             bind:value="_value4"
                             bind:selectedKeys="_selectedKeys4"
                             source="{{_source}}"
@@ -102,9 +102,9 @@
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
-                            <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="primary" size="l"/>
+                            <ws:partial template="wml!Controls/Selector/Lookup/itemTemplate" style="primary" size="l"/>
                         </ws:itemTemplate>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
             <div class="control-Lookup-demo-block">
@@ -113,7 +113,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             name="lookup"
                             bind:value="_value2"
                             bind:selectedKeys="_selectedKeys7"
@@ -124,13 +124,13 @@
                         <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:placeholder>
                             Выберите
-                            <Controls.Input.Lookup.Link caption="имя" on:click="showSelector()"/>
+                            <Controls.Selector.Lookup.Link caption="имя" on:click="showSelector()"/>
                         </ws:placeholder>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
         </div>
@@ -144,7 +144,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             bind:value="_value1"
                             bind:selectedKeys="_selectedKeys1"
                             source="{{_source}}"
@@ -157,7 +157,7 @@
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
             <div class="control-Lookup-demo-block">
@@ -166,7 +166,7 @@
                 </div>
                 <div>
                     base line test
-                    <Controls.Input.Lookup
+                    <Controls.Selector.Lookup
                             bind:value="_value1"
                             bind:selectedKeys="_selectedKeys6"
                             source="{{_source}}"
@@ -180,7 +180,7 @@
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
-                    </Controls.Input.Lookup>
+                    </Controls.Selector.Lookup>
                 </div>
             </div>
         </div>

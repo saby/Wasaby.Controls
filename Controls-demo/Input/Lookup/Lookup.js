@@ -5,7 +5,7 @@ define('Controls-demo/Input/Lookup/Lookup',
       'WS.Data/Source/Memory',
       'Controls-demo/Utils/MemorySourceFilter',
       'Controls-demo/Input/Lookup/LookupData',
-      'Controls/Input/Lookup',
+      'Controls/Selector/Lookup',
       'css!Controls-demo/Input/Lookup/Collection',
       'css!Controls-demo/Input/Lookup/Lookup'
    ],

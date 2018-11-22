@@ -1,10 +1,10 @@
-define('Controls/SelectedCollection',
+define('Controls/Selector/SelectedCollection',
    [
       'Core/Control',
-      'wml!Controls/SelectedCollection/SelectedCollection',
-      'wml!Controls/SelectedCollection/itemTemplate',
+      'wml!Controls/Selector/SelectedCollection/SelectedCollection',
+      'wml!Controls/Selector/SelectedCollection/ItemTemplate',
       'WS.Data/Chain',
-      'css!Controls/SelectedCollection/SelectedCollection'
+      'css!Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
    function(Control, template, ItemTemplate, Chain) {
@@ -13,9 +13,9 @@ define('Controls/SelectedCollection',
       /**
        * Control, that display collection of items.
        *
-       * @class Controls/SelectedCollection
+       * @class Controls/Selector/SelectedCollection
        * @extends Core/Control
-       * @mixes Controls/SelectedCollection/SelectedCollectionStyles
+       * @mixes Controls/Selector/SelectedCollection/SelectedCollectionStyles
        * @control
        * @public
        * @author Капустин И.А.

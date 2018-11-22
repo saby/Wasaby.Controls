@@ -1052,19 +1052,24 @@
       }
     }
   },
-  "Controls/Input/Lookup": {
-    "name": "Controls/Input/Lookup",
+  "Controls/Selector/Lookup": {
+    "name": "Controls/Selector/Lookup",
     "title": "Control \"Lookup\"",
-    "className": "Controls/Input/Lookup",
+    "className": "Controls/Selector/Lookup",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Lookup",
+    "fullname": "Controls/Selector/Lookup",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
           "placeholder": {
-            "type": "String"
+            "type": "function|String",
+            "title": "Input's placeholder text."
           },
           "minSearchLength": {
             "type": "String"
@@ -1085,20 +1090,52 @@
             "type": "Boolean"
           },
           "source": {
-            "type": "function"
+            "type": "Array"
           },
           "displayProperty": {
             "type": "enum",
+            "default": "title",
             "enum": {
-              "id": "",
-              "title": ""
+              "id": "id",
+              "title": "title"
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Selector/Button": {
+    "name": "Controls/Selector/Button",
+    "title": "Button link with the specified text, on clicking on which a selection window opens.",
+    "className": "Controls/Selector/Button",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Selector/Button",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "caption": {
+            "type": "String"
           },
-          "keyProperty": {
+          "maxVisibleItems": {
+            "type": "String"
+          },
+          "multiSelect": {
+            "type": "Boolean"
+          },
+          "readOnly": {
+            "type": "Boolean"
+          },
+          "source": {
+            "type": "Array"
+          },
+          "displayProperty": {
             "type": "enum",
+            "default": "title",
             "enum": {
-              "id": "",
-              "title": ""
+              "id": "id",
+              "title": "title"
             }
           }
         }
