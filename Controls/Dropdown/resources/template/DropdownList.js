@@ -41,7 +41,25 @@ define('Controls/Dropdown/resources/template/DropdownList',
             return 'controls-DropdownList__head-' + horizontalAlign.side;
          },
 
+         getSubMenuPosition: function(options, popupOptions) {
+            // The first level of the popup is always positioned on the right by standard
+            if (!options.rootKey) {
+               return {
+                  corner: {
+                     horizontal: 'right'
+                  },
+                  horizontalAlign: {
+                     side: 'right'
+                  }
+               };
+            }
+
+            // The others child menu levels are positioned in the same direction as the parent.
+            return popupOptions;
+         },
+
          getSubMenuOptions: function(options, popupOptions, event, item) {
+            var subMenuPosition = _private.getSubMenuPosition(options, popupOptions);
             return {
                templateOptions: {
                   items: options.items,
@@ -57,8 +75,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   dropdownClassName: options.dropdownClassName,
                   defaultItemTemplate: options.defaultItemTemplate
                },
-               corner: popupOptions.corner,
-               horizontalAlign: popupOptions.horizontalAlign,
+               corner: subMenuPosition.corner,
+               horizontalAlign: subMenuPosition.horizontalAlign,
                target: event.target
             };
          }
@@ -207,6 +225,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
+                  this._children.subDropdownOpener.close();
                case 'pinClicked':
                   this._notify('sendResult', [result]);
             }

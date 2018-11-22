@@ -5,10 +5,8 @@ define('Controls/Application/HeadDataContext', [
    'Core/cookie',
    'View/Runner/common',
    'Core/Themes/ThemesController',
-   'Core/Serializer',
-   'Core/IoC'
-
-], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer, IoC) {
+   'Core/Serializer'
+], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};

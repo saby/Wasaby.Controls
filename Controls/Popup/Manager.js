@@ -208,6 +208,7 @@ define('Controls/Popup/Manager',
                isModal: options.isModal,
                controller: controller,
                popupOptions: options,
+               sizes: {},
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };

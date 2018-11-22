@@ -39,16 +39,21 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _afterMount: function(opts) {
             var self = this,
-               notOrigin = this._children[opts.componentOpt.name]._notify;
-            this._children[opts.componentOpt.name]._notify = function(event, arg) {
-               self.myEvent += event + '\n';
-               if (event === opts.eventType) {
-                  opts.componentOpt[opts.nameOption] = arg[0];
-               }
-               notOrigin.apply(this, arguments);
-               self._forceUpdate();
-               self._children.PropertyGrid._forceUpdate();
-            };
+               container = this._children[opts.componentOpt.name]._container;
+
+            container.controlNodes.forEach(function(config) {
+               var notOrigin = config.control._notify;
+
+               config.control._notify = function(event, arg) {
+                  self.myEvent += event + '\n';
+                  if (event === opts.eventType) {
+                     opts.componentOpt[opts.nameOption] = arg[0];
+                  }
+                  notOrigin.apply(this, arguments);
+                  self._forceUpdate();
+                  self._children.PropertyGrid._forceUpdate();
+               };
+            });
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;

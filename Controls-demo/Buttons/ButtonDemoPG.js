@@ -45,9 +45,9 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                size: 'm',
                icon: 'icon-small icon-Add',
                iconStyle: 'default',
-               caption: '',
+               caption: 'Caption',
                style: 'secondary',
-               viewMode: 'toolButton',
+               viewMode: 'link',
                tooltip: '',
                name: 'Button'
 
