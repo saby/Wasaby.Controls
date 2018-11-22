@@ -488,6 +488,10 @@ define('Controls/Input/Base',
             }
          },
 
+         _focusInHandler: function() {
+            /* override */
+         },
+
          /**
           * Event handler focus out in native field.
           * @protected

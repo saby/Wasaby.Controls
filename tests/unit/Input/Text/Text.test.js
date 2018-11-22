@@ -22,6 +22,56 @@ define(
             };
          });
 
+         it('getDefault', function() {
+            Text.getDefaultTypes();
+            Text.getDefaultOptions();
+         });
+         describe('Click event', function() {
+            beforeEach(function() {
+               ctrl._beforeMount({
+                  value: 'test value'
+               });
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
+            });
+            it('The text is not selected.', function() {
+               ctrl._options.selectOnClick = false;
+
+               ctrl._children.input.selectionStart = 5;
+               ctrl._children.input.selectionEnd = 5;
+               ctrl._clickHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 5,
+                     end: 5
+                  }
+               }]);
+            });
+            it('The text is selected.', function() {
+               ctrl._options.selectOnClick = true;
+
+               ctrl._children.input.selectionStart = 5;
+               ctrl._children.input.selectionEnd = 5;
+               ctrl._clickHandler();
+
+               assert.deepEqual(calls, [
+                  {
+                     name: 'selection',
+                     value: {
+                        start: 5,
+                        end: 5
+                     }
+                  },
+                  {
+                     name: 'selection',
+                     value: {
+                        start: 0,
+                        end: 10
+                     }
+                  }]);
+            });
+         });
          it('The model belongs to the "Controls/Input/Text/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: ''

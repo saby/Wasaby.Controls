@@ -11,6 +11,7 @@
       on:input="_inputHandler()"
       on:change="_changeHandler()"
       on:select="_selectHandler()"
+      on:focusin="_focusInHandler()"
       on:focuout="_focusOutHandler()"
    />
    <ws:if data="{{!value}}">
