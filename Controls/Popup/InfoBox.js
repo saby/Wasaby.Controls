@@ -86,7 +86,8 @@ define('Controls/Popup/InfoBox',
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions
+                  contentTemplateOptions: self._options.templateOptions,
+                  float: self._options.float
                }
             };
          }
