@@ -1,6 +1,11 @@
-<Controls.List.BaseControl on:markedKeyChanged="_markedKeyChangedHandler()"
-                           on:itemMouseMove="_itemMouseMove()"
+<Controls.List.BaseControl on:itemMouseMove="_itemMouseMove()"
                            scope="{{_options}}"
                            name="baseControl">
-   <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" />
+   <ws:expanderTemplate>
+      <div on:click="_onExpanderClick(expanderTemplate.itemData.dispItem)"
+           class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>
+   </ws:expanderTemplate>
+   <ws:content>
+      <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"/>
+   </ws:content>
 </Controls.List.BaseControl>

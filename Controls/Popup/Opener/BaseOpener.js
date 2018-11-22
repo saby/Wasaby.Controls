@@ -154,7 +154,11 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _toggleIndicator: function(visible) {
-            if (this._useVDOM()) {
+            // Саггест сразу после вызова .open дестроится и дестроит за собой опенер.
+            // На момент когда мы скрываем индикатор - опенер задестроен и у него уже нет детей.
+            // В 611 делаю проверку на destroyed. В 700 уберу индикатор и этот код из опенера
+            // Задача: https://online.sbis.ru/opendoc.html?guid=fea22b7a-3a78-458c-be24-c8f7a4b04e38
+            if (this._useVDOM() && !this._destroyed) {
                this._children.LoadingIndicator.toggleIndicator(visible);
             }
          },

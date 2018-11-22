@@ -340,26 +340,15 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          });
 
          it('setExpandedItems', function() {
-            treeViewModel.setExpandedItems({});
+            treeViewModel.setExpandedItems([]);
             assert.deepEqual({}, treeViewModel._expandedItems);
 
-            treeViewModel.setExpandedItems({
-               1234: true,
-               324234: false
-            });
+            treeViewModel.setExpandedItems([1, 2]);
             assert.deepEqual({
-               1234: true,
-               324234: false
+               1: true,
+               2: true
             }, treeViewModel._expandedItems);
          });
-
-         it('getCurrent and toggleExpanded', function() {
-            assert.equal(undefined, treeViewModel._expandedItems['123'], 'Invalid value "_expandedItems" before call "toggleExpanded(123, true)".');
-            assert.isFalse(treeViewModel.getCurrent().isExpanded, 'Invalid value "getCurrent()" before call "toggleExpanded(123, true)".');
-
-         });
-
-
          it('onCollectionChange', function() {
             var
                removedItems1 = [

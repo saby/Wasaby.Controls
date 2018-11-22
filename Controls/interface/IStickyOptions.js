@@ -1,9 +1,9 @@
-define('Controls/interface/IStickyOpener', [], function() {
+define('Controls/interface/IStickyOptions', [], function() {
 
    /**
     * Sticky popup options.
     *
-    * @interface Controls/interface/IStickyOpener
+    * @interface Controls/interface/IStickyOptions
     * @public
     * @author Красильников А.С.
     */
@@ -32,7 +32,7 @@ define('Controls/interface/IStickyOpener', [], function() {
 
    /**
     * @cfg {PopupOptions[]} Sets the popup configuration.
-    * @name Controls/interface/IStickyOpener#popupOptions
+    * @name Controls/interface/IStickyOptions#popupOptions
     * @default {}
     * @remark
     * PopupOptions can be set both on the opener options and passed to the open method. PopupOptions passed to the open method will be merged with popupOptions declared on the open options.
@@ -80,7 +80,7 @@ define('Controls/interface/IStickyOpener', [], function() {
     */
 
    /**
-    * @name Controls/interface/IStickyOpener#eventHandlers
+    * @name Controls/interface/IStickyOptions#eventHandlers
     * @cfg {PopupOptions[]} Callback functions on popup events.
     * @variant onClose Callback function is called when popup is closed.
     * @variant onResult Callback function is called at the sendResult event in the popup template.

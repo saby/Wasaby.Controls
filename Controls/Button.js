@@ -3,12 +3,13 @@ define('Controls/Button', [
    'Controls/Button/Classes',
    'wml!Controls/Button/Button',
    'Controls/Button/validateIconStyle',
+   'Core/IoC',
    'css!theme?Controls/Button/Button'
-], function(Control, Classes, template, validateIconStyle) {
+], function(Control, Classes, template, validateIconStyle, IoC) {
    'use strict';
 
    /**
-    * This control native button or a elements enhanced with display styling.
+    * Graphical control element that provides the user a simple way to trigger an event.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
@@ -29,26 +30,22 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#style
     * @cfg {Enum} Button display style.
-    * @variant primary
-    * @variant success
-    * @variant warning
-    * @variant danger
-    * @variant info
-    * @variant secondary
-    * @variant default
+    * @variant primary The display style of the attracting attention button.
+    * @variant success The display style of the success button.
+    * @variant warning The display style of the warning button.
+    * @variant danger The display style of the danger button.
+    * @variant info The display style of the simple information button.
+    * @variant secondary The display style of the secondary button.
+    * @variant default The display style of button as default text.
     * @default secondary
     * @example
-    * Primary link button with xl size.
+    * Primary link button with 'primary' style.
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Quick button with m size.
+    * Toolbar button with 'danger' style.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
-    * </pre>
-    * Uncorrect button. ViewMode button doesn't support xl size.
-    * <pre>
-    *    <Controls.Button size="xl" caption="Send document" style="success" viewMode="button"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
     * @see Size
     */
@@ -56,30 +53,48 @@ define('Controls/Button', [
    /**
     * @name Controls/Button#viewMode
     * @cfg {Enum} Button view mode.
-    * @variant link
-    * @variant button
-    * @variant quickButton
+    * @variant link Decorated hyperlink.
+    * @variant button Default button.
+    * @variant toolButton Toolbar button.
     * @default button
     * @remark
     * Sizes 's' and 'xl' don't supported by viewModes:
     * <ul>
     *     <li>button,</li>
-    *     <li>quickButton</li>
+    *     <li>toolButton</li>
     * </ul>
     * @example
-    * Button with link viewMode.
+    * Button with 'link' viewMode.
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
     * </pre>
-    * Button with quickButton viewMode.
+    * Button with 'toolButton' viewMode.
     * <pre>
-    *    <Controls.Button caption="Send document" style="danger" viewMode="quickButton"/>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
     * </pre>
-    * Button with button viewMode.
+    * Button with 'button' viewMode.
     * <pre>
     *    <Controls.Button caption="Send document" style="success" viewMode="button"/>
     * </pre>
     * @see Size
+    */
+
+   /**
+    * @name Controls/Button#transparent
+    * @cfg {Boolean} Determines whether button having background.
+    * @variant true Button has transparent background.
+    * @variant false Button has default background for this viewmode and style.
+    * @default false
+    * @example
+    * Button has transparent background.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+    * </pre>
+    * Button hasn't transparent background.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+    * </pre>
+    * @see style
     */
 
    /**
@@ -91,18 +106,18 @@ define('Controls/Button', [
     * @variant xl Extra large button size.
     * @default m
     * @remark
-    * Button size is different for different button styles.
-    * Sizes 's' and 'xl' don't supported by styles:
+    * Button size is different for different button viewModes.
+    * Sizes 's' and 'xl' don't supported by viewModes:
     * <ul>
     *     <li>button,</li>
-    *     <li>quickButton</li>
+    *     <li>toolButton</li>
     * </ul>
     * @example
-    * L size of primary button.
+    * 'L' size of primary button.
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="button" size="l"/>
     * </pre>
-    * M size of primary button.
+    * Default size of primary button.
     * <pre>
     *    <Controls.Button caption="Send document" style="primary" viewMode="button"/>
     * </pre>
@@ -117,9 +132,9 @@ define('Controls/Button', [
     * @name Controls/Button#icon
     * @cfg {String} Button icon.
     * @default Undefined
-    * @remark Icon is given by css-rules, without color class.
+    * @remark  When you customize a button, use the icon style instead of the css-classes.
     * @example
-    * Button with style buttonPrimary and icon Add.
+    * Primary button with icon 'Add'.
     * <pre>
     *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
     * </pre>
@@ -133,7 +148,7 @@ define('Controls/Button', [
     * @variant success The display style of the success icon.
     * @variant warning The display style of the warning icon.
     * @variant danger The display style of the danger icon.
-    * @variant info The display style of the danger icon.
+    * @variant info The display style of the simple information icon.
     * @variant secondary The display style of the secondary icon.
     * @default secondary
     * @example
@@ -141,9 +156,9 @@ define('Controls/Button', [
     * <pre>
     *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
     * </pre>
-    * Primary button with done icon style.
+    * Primary button with 'success' icon style.
     * <pre>
-    *    <Controls.Button icon="icon-Add" iconStyle="done" style="primary" viewMode="button"/>
+    *    <Controls.Button icon="icon-Add" iconStyle="success" style="primary" viewMode="button"/>
     * </pre>
     * @see Icon
     */
@@ -152,7 +167,15 @@ define('Controls/Button', [
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         self._transparent = options.transparent;
          self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
+         if (self._viewMode === ('quickButton' || 'transparentQuickButton')) {
+            self._viewMode = 'toolButton';
+            IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+            if (self._viewMode === 'transparentQuickButton') {
+               self._transparent = true;
+            }
+         }
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;
          self._stringCaption = typeof options.caption === 'string';
@@ -189,7 +212,8 @@ define('Controls/Button', [
          style: 'secondary',
          viewMode: 'button',
          size: 'm',
-         iconStyle: 'secondary'
+         iconStyle: 'secondary',
+         transparent: true
       };
    };
 
