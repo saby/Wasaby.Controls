@@ -1,6 +1,6 @@
-<span attr:title="{{_options.tooltip}}" class="controls-ButtonBack">
-   <span class="controls-BackButton__wrapper controls-BackButton__wrapper_{{_options.size}}">
-      <div class="controls-BackButton_style-{{_style}} controls-BackButton_style-{{_style}}_size-{{_options.size}} controls-BackButton_size-{{_options.size}}"></div>
-      <span attr:class="controls-ButtonBack__caption controls-BackButton__caption_size-{{_options.size}} controls-BackButton__caption_style-{{_style}}">{{_options.caption}}</span>
+<span attr:title="{{_options.tooltip}}" class="controls-Back">
+   <span class="controls-Back__wrapper controls-Back__wrapper_{{_options.size}}">
+      <div class="controls-Back_style-{{_style}} controls-Back_style-{{_style}}_size-{{_options.size}} controls-Back_size-{{_options.size}}"></div>
+      <span attr:class="controls-Back__caption controls-Back__caption_size-{{_options.size}} controls-Back__caption_style-{{_style}}">{{_options.caption}}</span>
    </span>
 </span>

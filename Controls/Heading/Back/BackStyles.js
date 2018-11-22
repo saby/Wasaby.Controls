@@ -8,34 +8,35 @@ define('Controls/Heading/Back/BackStyles',
     *
     * @public
     *
-    * @css @background-image-BackButton_style-primary_size-s Small default arrow image.
-    * @css @background-image-BackButton_style-primary_size-m Medium default arrow image.
-    * @css @background-image-BackButton_style-primary_size-l Large default arrow image.
-    * @css @background-image-BackButton_style-secondary_size-s Small primary arrow image.
-    * @css @background-image-BackButton_style-secondary_size-m Medium primary arrow image.
-    * @css @background-image-BackButton_style-secondary_size-l Large primary arrow image.
-    * @css @background-image-BackButton_style-primary_size-s_hovered Small default arrow image in the hovered state.
-    * @css @background-image-BackButton_style-primary_size-m_hovered Medium default arrow image in the hovered state.
-    * @css @background-image-BackButton_style-primary_size-l_hovered Large default arrow image in the hovered state.
-    * @css @background-image-BackButton_style-secondary_size-s_hovered Small primary arrow image in the hovered state.
-    * @css @background-image-BackButton_style-secondary_size-m_hovered Medium primary arrow image in the hovered state.
-    * @css @background-image-BackButton_style-secondary_size-l_hovered Large primary arrow image in the hovered state.
-    * @css @color-BackButton__caption_style-primary Default caption color.
-    * @css @color-BackButton__caption_style-secondary Primary caption color.
-    * @css @color-BackButton__caption_style-primary_hovered Default caption color in hovered state.
-    * @css @color-BackButton__caption_style-secondary_hovered Primary caption color in hovered state.
+    * @css @background-image-BackButton_style-primary_size-s Arrow image of back heading with options size 's' and style 'primary'.
+    * @css @background-image-BackButton_style-primary_size-m Arrow image of back heading with options size 'm' and style 'primary'.
+    * @css @background-image-BackButton_style-primary_size-l Arrow image of back heading with options size 'l' and style 'primary'.
+    * @css @background-image-BackButton_style-secondary_size-s Arrow image of back heading with options size 's' and style 'secondary'.
+    * @css @background-image-BackButton_style-secondary_size-m Arrow image of back heading with options size 'm' and style 'secondary'.
+    * @css @background-image-BackButton_style-secondary_size-l Arrow image of back heading with options size 'l' and style 'secondary'.
+    * @css @background-image-BackButton_style-primary_size-s_hovered Arrow image of back heading in hovered state with options size 's' and style 'primary'.
+    * @css @background-image-BackButton_style-primary_size-m_hovered Arrow image of back heading in hovered state with options size 'm' and style 'primary'.
+    * @css @background-image-BackButton_style-primary_size-l_hovered Arrow image of back heading in hovered state with options size 'l' and style 'primary'.
+    * @css @background-image-BackButton_style-secondary_size-s_hovered Arrow image of back heading in hovered state with options size 's' and style 'secondary'.
+    * @css @background-image-BackButton_style-secondary_size-m_hovered Arrow image of back heading in hovered state with options size 'm' and style 'secondary'.
+    * @css @background-image-BackButton_style-secondary_size-l_hovered Arrow image of back heading in hovered state with options size 'l' and style 'secondary'.
+    * @css @color-BackButton__caption_style-primary Caption color of back heading with option style 'primary'.
+    * @css @color-BackButton__caption_style-secondary Caption color of back heading with option style 'secondary'.
+    * @css @color-BackButton__caption_style-primary_hovered Caption color of back heading in hovered state with option style 'primary'.
+    * @css @color-BackButton__caption_style-secondary_hovered Caption color of back heading in hovered state with option style 'secondary'.
     * @css @font-weight_Back Caption font thickness.
-    * @css @spacing-BackButton-between-icon-text Spacing between icon and text in small and medium size.
-    * @css @spacing-BackButton-between-icon-text_big Spacing between icon and text in large size.
-    * @css @width-BackButton__icon_size-l Large icon width.
-    * @css @height-BackButton__icon_size-l Large icon height.
-    * @css @width-BackButton__icon_size-m Medium icon width.
-    * @css @height-BackButton__icon_size-m Medium icon height.
-    * @css @width-BackButton__icon_size-s Small icon width.
-    * @css @height-BackButton__icon_size-s Small icon height.
-    * @css @height-BackButton Back button size.
-    * @css @font-size_BackButton__caption_size-l Large caption font size.
-    * @css @font-size_BackButton__caption_size-m Medium caption font size.
-    * @css @font-size_BackButton__caption_size-s Small caption font size.
+    * @css @spacing-BackButton-between-icon-text_size_s Spacing between icon and caption of back heading with option size 's'.
+    * @css @spacing-BackButton-between-icon-text_size_m Spacing between icon and caption of back heading with option size 'm'.
+    * @css @spacing-BackButton-between-icon-text_size_l Spacing between icon and caption of back heading with option size 'l'.
+    * @css @width-BackButton__icon_size-l Icon width of back heading with option size 'l'.
+    * @css @height-BackButton__icon_size-l Icon height of back heading with option size 'l'.
+    * @css @width-BackButton__icon_size-m Icon width of back heading with option size 'm'.
+    * @css @height-BackButton__icon_size-m Icon height of back heading with option size 'm'.
+    * @css @width-BackButton__icon_size-s Icon width of back heading with option size 's'.
+    * @css @height-BackButton__icon_size-s Icon height of back heading with option size 's'.
+    * @css @height-BackButton Height of back heading.
+    * @css @font-size_BackButton__caption_size-l Font size of back heading with option size 'l'.
+    * @css @font-size_BackButton__caption_size-m Font size of back heading with option size 'm'.
+    * @css @font-size_BackButton__caption_size-s Font size of back heading with option size 's'.
     */
 );
