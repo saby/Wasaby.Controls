@@ -192,10 +192,10 @@ define('SBIS3.CONTROLS/EditAtPlace/EditAtPlaceGroup',
          },
 
          setEnabled: function(enabled) {
-
+            var oldValue = this.isEnabled();
             EditAtPlaceGroup.superclass.setEnabled.call(this, enabled);
 
-            if (enabled !== this.isEnabled()) {
+            if (enabled !== oldValue) {
                var
                   self = this;
                this._iterateChildEditAtPlaces(function(child) {
