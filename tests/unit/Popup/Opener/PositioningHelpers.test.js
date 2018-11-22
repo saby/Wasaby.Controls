@@ -444,6 +444,28 @@ define(
                assert.isTrue(position.bottom === 0);
             });
 
+            it('stack shadow', function(){
+               let baseGetItemPosition = StackController._private.getItemPosition;
+               StackController._private.getItemPosition = (items) => {return (items.position)};
+               StackController._stack.add({containerWidth: 840, popupOptions: {className: ''}});
+               StackController._stack.add({position: {width: 720}, popupOptions: {className: ''}});
+               StackController._stack.add({containerWidth: 600, popupOptions: {className: ''}});
+               StackController._stack.add({position: {width: 600}, popupOptions: {className: ''}});
+               StackController._stack.add({position: {width: 840}, popupOptions: {className: ''}});
+               StackController._stack.add({containerWidth: 500, popupOptions: {className: ''}});
+               StackController._stack.add({containerWidth: 720, popupOptions: {className: ''}});
+               StackController._update();
+               assert.isTrue(StackController._stack.at(0).popupOptions.className.indexOf('controls-Stack__shadow')>=0);
+               assert.isTrue(StackController._stack.at(1).popupOptions.className.indexOf('controls-Stack__shadow')>=0);
+               assert.isTrue(StackController._stack.at(2).popupOptions.className.indexOf('controls-Stack__shadow')>=0);
+               assert.isTrue(StackController._stack.at(3).popupOptions.className.indexOf('controls-Stack__shadow')<0);
+               assert.isTrue(StackController._stack.at(4).popupOptions.className.indexOf('controls-Stack__shadow')<0);
+               assert.isTrue(StackController._stack.at(5).popupOptions.className.indexOf('controls-Stack__shadow')>=0);
+               assert.isTrue(StackController._stack.at(6).popupOptions.className.indexOf('controls-Stack__shadow')<0);
+               StackController._private.getItemPosition = baseGetItemPosition;
+            });
+
+
             it('stack default position', function() {
                StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                let itemConfig = {

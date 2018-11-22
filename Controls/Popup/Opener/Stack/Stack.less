@@ -9,10 +9,11 @@
       position: relative;
       border-left: @border-left_stackTemplate;
       box-sizing: border-box;
-      box-shadow: @controls-Popup-stack-shadow;
    }
 }
-
+.controls-Stack__shadow .controls-Popup__template {
+   box-shadow: @controls-Popup-stack-shadow;
+}
 .controls-Stack__waiting .controls-Popup__template {
    will-change: transform;
    transform: translateX(100%);
@@ -29,3 +30,4 @@
    transition: transform @controls-Popup-animate-duration linear;
    transform: translateX(100%);
 }
+

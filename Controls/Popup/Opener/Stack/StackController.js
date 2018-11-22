@@ -130,7 +130,7 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          elementCreated: function(item, container) {
             _private.prepareSizes(item, container);
-            this._stack.add(item, 0);
+            this._stack.add(item);
             if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                item.popupOptions.className += ' controls-Stack__open';
                item.popupState = BaseController.POPUP_STATE_CREATING;
@@ -174,8 +174,14 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          _update: function() {
             var maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            var cache = {};
             this._stack.each(function(item) {
                item.position = _private.getItemPosition(item);
+               var currentWidth = item.containerWidth || item.position.width;
+               if (!cache[currentWidth]) {
+                  cache[currentWidth] = 1;
+                  item.popupOptions.className += ' controls-Stack__shadow';
+               }
                if (StackStrategy.isMaximizedPanel(item)) {
                   _private.prepareMaximizedState(maxPanelWidth, item);
                }
