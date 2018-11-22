@@ -29,7 +29,11 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
             this._comboboxOptions = {
                selectedKey: this._selectedKey,
                displayProperty: 'title',
-               keyProperty: 'id'
+               keyProperty: 'id',
+               source: new Memory({
+                  idProperty: 'id',
+                  data: this._source
+               })
             };
             cMerge(this._comboboxOptions, opt);
          },
@@ -43,12 +47,6 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
             } else {
                this._notify('valueChanged', undefined);
             }
-         },
-         _comboBoxSource: function() {
-            return new Memory({
-               idProperty: 'id',
-               data: this._source
-            });
          }
       });
 
