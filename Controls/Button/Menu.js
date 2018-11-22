@@ -48,6 +48,7 @@ define('Controls/Button/Menu',
 
          _beforeUpdate: function(options) {
             this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            this._filter = options.filter;
          },
 
          _onItemClickHandler: function(event, result) {
