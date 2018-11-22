@@ -819,10 +819,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false,
+               var decoratedLinkService = cConstants.decoratedLinkService;
+               if (decoratedLinkService && typeof location === 'object') {
                   // В IE 11 нет location.origin
-                  (typeof location === 'object' ? location.origin || location.protocol + '//' + location.host : '') +
-                  (cConstants.decoratedLinkService || ''));
+                  decoratedLinkService = location.protocol + '//' + location.host + decoratedLinkService;
+               }
+               text = LinkWrap.wrapURLs(text, true, false, decoratedLinkService);
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
