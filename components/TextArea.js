@@ -209,9 +209,9 @@ define('SBIS3.CONTROLS/TextArea', [
          var carriageRegExp = /\r/g;
 
          /**
-          * Если текст в котором есть \r передать в textarea, то textarea вырежет \r.
-          * Из-за такого поведения текст переданный в textarea и текст в textarea будут разными, но визуально совпадать. https://jsfiddle.net/o0qpteaj/
-          * Поэтому перед сравнением вырезаем \r из обоих текстов, и только потом сравниваем их.
+          * Если текст в котором есть \r установить в DOM элемент textarea(в дальнейшем просто textarea), то textarea вырежет \r.
+          * Из-за такого поведения текст устанавливаемый в компонент и текст в textarea будут разными, но визуально совпадать. https://jsfiddle.net/o0qpteaj/
+          * Поэтому перед проверкой на изменение текста, мы должны вырезать \r из обоих текстов, и потом сравнивнить их.
           */
          oldText = oldText.replace(carriageRegExp, '');
          newText = newText.replace(carriageRegExp, '');
