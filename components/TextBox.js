@@ -470,9 +470,13 @@ define('SBIS3.CONTROLS/TextBox', [
          }
 
          // Установим текст только если значения различны и оба не пустые
-         if (text !== this._options.text && !(this._isEmptyValue(this._options.text) && !(text || '').length)) {
+         if (this._isTextChanged(text, this._options.text)) {
             this.setText(text);
          }
+      },
+
+      _isTextChanged: function(text1, text2) {
+         return text1 !== text2 && !(this._isEmptyValue(text2) && !(text1 || '').length);
       },
 
       /**

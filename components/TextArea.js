@@ -173,7 +173,7 @@ define('SBIS3.CONTROLS/TextArea', [
                text = text.trim();
             }
             //Установим текст только если значения различны и оба не пустые
-            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
+            if (self._isTextChanged(text, self._options.text)){
                self.setText(text);
             }
          });
@@ -203,6 +203,17 @@ define('SBIS3.CONTROLS/TextArea', [
                }
             }, 100)
          });
+      },
+
+      _isTextChanged: function(text1, text2) {
+         var carriageRegExp = /\r/g;
+
+         /**
+          * Если в качестве аргументов придет значение из textarea, и текст являющимся значением, которое проставлялось в
+          * textarea,будет содердать символы \r, то текста будут разными, потому что textarea вырезает \r. https://jsfiddle.net/o0qpteaj/
+          * Поэтому сравниваем без учета \r.
+          */
+         return text1.replace(carriageRegExp, '') !== text2.replace(carriageRegExp, '') && !(this._isEmptyValue(text2) && !(text1 || '').length);
       },
 
       init :function(){
