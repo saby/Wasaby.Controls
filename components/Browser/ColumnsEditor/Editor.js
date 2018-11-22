@@ -228,8 +228,9 @@ define('SBIS3.CONTROLS/Browser/ColumnsEditor/Editor',
             var allSources = hasEditorOptions ? [editorOptions, columnsConfig, defaults] : [columnsConfig, defaults];
             var edColfSources = hasEditorOptions ? [editorOptions, columnsConfig] : [columnsConfig];
             var edDefSources = hasEditorOptions ? [editorOptions, defaults] : [defaults];
+            // TODO NEW FLOATAREA. Нужно action
             this._areaContainer = new FloatArea({
-               opener: this,
+               opener: columnsConfig.opener || this,
                direction: 'left',
                animation: 'slide',
                isStack: true,
