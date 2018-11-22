@@ -77,8 +77,8 @@ define('Controls/Decorator/Highlight',
                 * The end of the word is separated by punctuation marks together with a whitespace character
                 * or the end of the line.
                 */
-               startSeparator = '^|\\s';
-               endSeparator = '[,.;!?:]*(?=\\s|$)';
+               startSeparator = '(?:^|\\s)["(\']*';
+               endSeparator = '[,.;!?:")\']*(?:\\s|$)';
             }
 
             /**

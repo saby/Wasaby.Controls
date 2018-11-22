@@ -172,6 +172,36 @@ define(
                      }
                   ]);
                });
+               it('The word is separated by double punctuation marks.', function() {
+                  ctrl._beforeMount({
+                     text: 'Lorem "ipsum", dolor sit amet, consectetur adipiscing elit. Ipsum???',
+                     highlight: 'ipsum',
+                     searchMode: 'word'
+                  });
+
+                  assert.deepEqual(ctrl._parsedText, [
+                     {
+                        type: 'text',
+                        value: 'Lorem "'
+                     },
+                     {
+                        type: 'highlight',
+                        value: 'ipsum'
+                     },
+                     {
+                        type: 'text',
+                        value: '", dolor sit amet, consectetur adipiscing elit. '
+                     },
+                     {
+                        type: 'highlight',
+                        value: 'Ipsum'
+                     },
+                     {
+                        type: 'text',
+                        value: '???'
+                     }
+                  ]);
+               });
             });
             describe('Substring search.', function() {
                it('The search substring is not in the text.', function() {
