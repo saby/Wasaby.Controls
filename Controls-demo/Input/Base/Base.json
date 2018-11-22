@@ -1,0 +1,82 @@
+{
+  "Controls/Input/Base": {
+    "name": "Controls/Input/Base",
+    "title": "Text input.",
+    "className": "Controls/Input/Base",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Base",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "type": "String",
+            "title": "Input's name control."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Input's placeholder text."
+          },
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "size": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "s": "s",
+              "m": "m",
+              "l": "l"
+            }
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of the field.",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "invalid": "invalid"
+            }
+          },
+          "fontStyle": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "default": "default",
+              "primary": "primary"
+            }
+          },
+          "tagStyle": {
+            "type": "enum",
+            "title": "Style of the tag (colored indicator shown at the top right corner of the field).",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "secondary": "secondary"
+            }
+          },
+          "textAlign": {
+            "type": "enum",
+            "title": "Horizontal alignment of the text in field.",
+            "enum": {
+              "left": "left",
+              "right": "right"
+            }
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          }
+        }
+      }
+    }
+  }
+}

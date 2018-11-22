@@ -1,4 +1,4 @@
-define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instance'], function(Search, Memory, cInstance) {
+define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Search, Memory, cInstance, RecordSet, Model) {
    
    var data = [
       {
@@ -52,13 +52,15 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
          var controller = getSearchController();
          var filterChanged = false;
          var itemsChanged = false;
+         var filter;
    
-         controller._notify = function(eventName) {
-            if (eventName = 'filterChanged') {
+         controller._notify = function(eventName, value) {
+            if (eventName === 'filterChanged') {
                filterChanged = true;
+               filter = value[0];
             }
    
-            if (eventName = 'itemsChanged') {
+            if (eventName === 'itemsChanged') {
                itemsChanged = true;
             }
          };
@@ -70,11 +72,35 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
          assert.isTrue(controller._viewMode === 'search');
+   
+   
+         var rs = new RecordSet({
+            rawData: [],
+            idProperty: 'id'
+         });
+         rs.setMetaData({
+            results: new Model({
+               rawData: {
+                  switchedStr: 'testStr'
+               }
+            })
+         });
+         var result = {
+            data: rs
+         };
+         var filter = {
+            test: 'test'
+         };
+         Search._private.searchCallback(controller, result, filter);
+         
+         assert.equal(controller._misspellValue, 'testStr');
+         assert.deepEqual(filter, {test: 'test'});
       });
    
       it('_private.abortCallback', function() {
          var controller = getSearchController();
          controller._viewMode = 'search';
+         controller._misspellValue = 'testStr';
          var filterChanged = false;
    
          controller._notify = function(eventName) {
@@ -89,6 +115,7 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
    
          assert.isTrue(filterChanged);
          assert.isFalse(controller._viewMode === 'search');
+         assert.equal(controller._misspellValue, '');
       });
    
       it('_private.needUpdateSearchController', function() {

@@ -8,9 +8,10 @@ define('Controls/Controllers/SourceController',
       'Controls/Controllers/QueryParamsController/Position',
       'WS.Data/Query/Query',
       'Core/Deferred',
+      'Core/core-clone',
       'require'
    ],
-   function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred) {
+   function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred, cClone) {
       var _private = {
          prepareSource: function(sourceOpt) {
             if (!cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')) {
@@ -86,6 +87,8 @@ define('Controls/Controllers/SourceController',
             resultParams.offset = navigParams.offset;
 
             if (navigParams.filter) {
+               //we can't modify original filter
+               resultParams.filter = cClone(resultParams.filter);
                navFilter = navigParams.filter;
                for (var i in navFilter) {
                   if (navFilter.hasOwnProperty(i)) {
@@ -144,7 +147,7 @@ define('Controls/Controllers/SourceController',
             this._loader = def;
             return def;
          },
-         
+
          cancelLoading: function() {
             if (this._loader && !this._loader.isReady()) {
                this._loader.cancel();

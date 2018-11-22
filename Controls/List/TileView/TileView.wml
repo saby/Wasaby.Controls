@@ -1,4 +1,4 @@
-<div class="controls-ListView controls-TileView">
+<div class="controls-ListView controls-TileView" name="tileContainer">
    <ws:if data="{{_listModel}}">
       <ws:partial
          template="wml!Controls/List/resources/For"

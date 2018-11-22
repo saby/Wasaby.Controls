@@ -1,6 +1,0 @@
-<div class="controls-Lookup__item__caption
-            controls-Lookup__item__caption-style-{{style}}
-            controls-Lookup__item__caption-size-{{size}}
-            {{clickable ? 'controls-Lookup__item__caption-clickable'}}">
-    {{item.get(displayProperty || 'title')}}
-</div>

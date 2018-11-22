@@ -1,8 +1,6 @@
 <div>
-   <script key="jquery-s" type="text/javascript" src="/cdn/jquery/3.3.1/jquery-min.js"  data-pack-name="skip"></script>
-   <script key="cookie-s" type="text/javascript" src="/cdn/jquery-cookie/04-04-2014/jquery-cookie-min.js"  data-pack-name="skip"></script>
    <script key="init_script">
-      require(['Core/app-init', 'Core/constants'], function(appinit, constants, rights){
+      require(['Core/app-init', 'Core/constants', 'is!browser?jquery'], function(appinit, constants, rights){
          constants.$body = $(document.body);
          constants.$window = $(window);
          appinit();

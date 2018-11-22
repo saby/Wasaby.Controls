@@ -4,14 +4,16 @@ define([
    'WS.Data/Entity/Model',
    'Core/Deferred',
    'WS.Data/Source/Memory',
-   'Controls/List/ListViewModel'
+   'Controls/List/ListViewModel',
+   'Controls/EditableArea/Constants'
 ], function(
    EditInPlace,
    RecordSet,
    Model,
    Deferred,
    Memory,
-   ListViewModel
+   ListViewModel,
+   EditConstants
 ) {
    describe('Controls.List.EditInPlace', function() {
       var eip, items, newItem, listModel, listModelWithGroups, data;
@@ -106,7 +108,7 @@ define([
          it('Cancel', function() {
             eip._notify = function(e) {
                if (e === 'beforeBeginEdit') {
-                  return 'Cancel';
+                  return EditConstants.CANCEL;
                }
             };
 
@@ -216,6 +218,29 @@ define([
             });
          });
 
+         it('Empty list', function(done) {
+            listModel.setItems(new RecordSet({
+               rawData: [],
+               idProperty: 'id'
+            }));
+            var source = new Memory({
+               idProperty: 'id',
+               data: listModel._items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source
+            });
+
+            eip.beginAdd().addCallback(function() {
+               assert.instanceOf(eip._editingItem, Model);
+               assert.equal(eip._editingItemData.index, 0);
+               assert.isTrue(eip._isAdd);
+               done();
+            });
+         });
+
          it('Object without item', function(done) {
             var source = new Memory({
                idProperty: 'id',
@@ -293,7 +318,7 @@ define([
          it('Cancel', function() {
             eip._notify = function(e) {
                if (e === 'beforeEndEdit') {
-                  return 'Cancel';
+                  return EditConstants.CANCEL;
                }
             };
 

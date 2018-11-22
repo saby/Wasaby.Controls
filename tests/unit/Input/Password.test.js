@@ -34,6 +34,35 @@ define(
                });
             });
          });
+
+         describe('_calculateType', function() {
+            var ctrl;
+            beforeEach(function() {
+               ctrl = new Password({});
+            });
+            it('Test1', function() {
+               ctrl._options.autocomplete = false;
+
+               assert.equal(ctrl._calculateType(), 'text');
+            });
+            it('Test2', function() {
+               ctrl._options.autocomplete = false;
+               ctrl._toggleVisibilityHandler();
+
+               assert.equal(ctrl._calculateType(), 'text');
+            });
+            it('Test3', function() {
+               ctrl._options.autocomplete = true;
+
+               assert.equal(ctrl._calculateType(), 'password');
+            });
+            it('Test4', function() {
+               ctrl._options.autocomplete = true;
+               ctrl._toggleVisibilityHandler();
+
+               assert.equal(ctrl._calculateType(), 'text');
+            });
+         });
       });
    }
 );

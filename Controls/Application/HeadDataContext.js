@@ -50,11 +50,12 @@ define('Controls/Application/HeadDataContext', [
          var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
-            var components = Object.keys(self.depComponentsMap);
+            var components = Object.keys(self.depComponentsMap),
+               files;
             if (self.isDebug) {
-               var files = {};
+               files = {};
             } else {
-               var files = depsCollector.collectDependencies(components);
+               files = depsCollector.collectDependencies(components);
                ThemesController.getInstance().initCss({
                   themedCss: files.css.themedCss,
                   simpleCss: files.css.simpleCss

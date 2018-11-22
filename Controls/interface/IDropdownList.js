@@ -5,6 +5,7 @@ define('Controls/interface/IDropdownList', [], function() {
     *
     * @interface Controls/interface/IDropdownList
     * @public
+    * @author Золотова Э.Е.
     */
 
    /**

@@ -12,7 +12,11 @@
                        nodeProperty="@parent"
                        rightTemplate="{{_rightTemplate ? _rightTemplateTpl : null}}"
                        keyProperty="id"
+                       selectedKeys="{{ _selectedKeys }}"
+                       excludedKeys="{{ _excludedKeys }}"
+                       selectedKeysCount="{{ _selectedKeysCount }}"
                        on:activated="_eventHandler()"
+                       on:selectedTypeChanged="_selectedTypeChangedHandler()"
                        on:deactivated="_eventHandler()"
                        on:itemClick="_eventHandler()"
                />

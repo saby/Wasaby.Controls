@@ -5,6 +5,7 @@ define('Controls/interface/IStackOptions', [], function() {
     *
     * @interface Controls/interface/IStackOptions
     * @public
+    * @author Красильников А.С.
     */
 
    /**
@@ -74,7 +75,7 @@ define('Controls/interface/IStackOptions', [], function() {
 
    /**
     * @name Controls/interface/IStackOptions#eventHandlers
-    * @cfg {EventHandlers[]} Callback functions on popup events.
+    * @cfg {PopupOptions[]} Callback functions on popup events.
     * @variant onClose Callback function is called when popup is closed.
     * @default {}
     * @remark

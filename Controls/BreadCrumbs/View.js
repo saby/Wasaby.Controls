@@ -25,6 +25,7 @@ define('Controls/BreadCrumbs/View', [
     * @mixes Controls/interface/IBreadCrumbs
     * @control
     * @private
+    * @author Зайцев А.С.
     */
 
    var BreadCrumbsView = Control.extend({

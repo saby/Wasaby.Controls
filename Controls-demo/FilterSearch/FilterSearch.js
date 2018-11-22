@@ -47,6 +47,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                id: 'owner',
                resetValue: '0',
                value: '0',
+               textValue: '',
                properties: {
                   keyProperty: 'owner',
                   displayProperty: 'title',
@@ -68,6 +69,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                id: 'owner',
                resetValue: '0',
                value: '0',
+               textValue: '',
                properties: {
                   keyProperty: 'owner',
                   displayProperty: 'title',
@@ -87,6 +89,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                id: 'department',
                resetValue: 'По департаменту',
                value: 'По департаменту',
+               textValue: '',
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',

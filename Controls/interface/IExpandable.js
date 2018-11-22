@@ -5,6 +5,7 @@ define('Controls/interface/IExpandable', [
     * Interface for components with switchable state of extensibility.
     * @interface Controls/interface/IExpandable
     * @public
+    * @author Сухоручкин А.С.
     */
 
    /**

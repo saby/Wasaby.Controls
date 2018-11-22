@@ -55,7 +55,7 @@ define('[SBIS3.CONTROLS/ListView/resources/VirtualScrollController', [
          });
          it('No intersection to top', function() {
             newState = controller._getDiff([0, 10], [20, 30]);
-            assert.deepEqual(newState, { add: [20, 30], remove: [0, 10], addPosition: 20 });
+            assert.deepEqual(newState, { add: [20, 30], remove: [0, 10], addPosition: 11 });
          });
          it('No intersection to bottom', function() {
             newState = controller._getDiff([20, 30], [0, 10]);

@@ -1,0 +1,46 @@
+.controls-Base__field {
+   flex-grow: 1;
+   position: relative;
+}
+
+.controls-Base__placeholder {
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   position: absolute;
+   pointer-events: none;
+}
+
+.controls-Base__field_readOnly {
+   .text-overflow();
+}
+
+.controls-Base__nativeField {
+   width: 100%;
+   height: 100%;
+   text-overflow: ellipsis;
+   /**
+    * Reset browser styles.
+    */
+   border: none;
+   font: inherit;
+   color: inherit;
+   text-align: inherit;
+   background: transparent;
+   .box-shadow(none);
+   &::-webkit-contacts-auto-fill-button {
+      display: none;
+   }
+   &::-ms-clear {
+      display: none;
+   }
+   &::-ms-reveal {
+      display: none;
+   }
+   /**
+    * In firefox, the field is not compressed unless you set a minimum width.
+    * https://jsfiddle.net/hr9mvn2o/
+    */
+   min-width: 0;
+}

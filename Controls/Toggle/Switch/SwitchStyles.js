@@ -8,6 +8,7 @@ define('Controls/Toggle/Switch/SwitchStyles',
     *
     * @mixin Controls/Toggle/Switch/SwitchStyles
     * @public
+    * @author Михайловский Д.С.
     *
     * @css @width_Switch Toggle width.
     * @css @height_Switch Toggle height.

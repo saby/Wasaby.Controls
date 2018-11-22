@@ -7,6 +7,7 @@
          resourceRoot: '{{_options.resourceRoot}}',
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
+         pageName: '{{ _options.pageName }}',
          staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }},
@@ -14,6 +15,12 @@
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>
+
+   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
+
+   <link rel="stylesheet" key="defaultcss"
+         href="{{ _options.linkResolver.resolveLink('Controls-theme/themes/default/default', 'css') }}"/>
+
    <ws:if data="{{ _options.head }}">
       <ws:if data="{{ isArrayHead() }}">
          <ws:for data="i in _options.head">
@@ -24,19 +31,7 @@
          <ws:partial template="{{ _options.head }}"/>
       </ws:else>
    </ws:if>
-   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
-   <ws:if data="{{_options.theme}}">
-      <!-- TODO Костыль, нужно подключать css самой темы, там могут быть подключены шрифты. Непонятно, какой путь до css -->
-      <ws:if data="{{isMultiThemes()}}">
-         <ws:for data="thInd, oneTheme in _options.theme">
-            <link rel="stylesheet" key="{{'theme_' + thInd}}"
-                  href="{{ _options.linkResolver.resolveLink('SBIS3.CONTROLS/themes/' + oneTheme + '/' + oneTheme, 'css') }}"/>
-         </ws:for>
-      </ws:if>
-      <ws:else>
-         <link rel="stylesheet" href="{{ _options.linkResolver.resolveLink('SBIS3.CONTROLS/themes/' + _options.theme + '/' + _options.theme, 'css') }}"/>
-      </ws:else>
-   </ws:if>
+
    <ws:for data="index, value in themedCss">
       <ws:if data="{{_options.theme}}">
          <ws:if data="{{isMultiThemes()}}">

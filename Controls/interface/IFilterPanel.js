@@ -5,6 +5,7 @@ define('Controls/interface/IFilterPanel', [], function() {
     *
     * @interface Controls/interface/IFilterPanel
     * @public
+    * @author Герасимов А.М.
     */
 
    /**
@@ -21,13 +22,12 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#orientation
-    * @cfg {String} Sets the display of the filter panel.
+    * @cfg {String} Sets the orientation of panel in one of two directions.
     * @variant vertical Vertical orientation of the panel. The history block is displayed below.
     * @variant horizontal Horizontal orientation of the panel. History block is displayed on the right.
     * @default vertical
     * @remark
-    * If there is no history in the panel, the component will be displayed in one column.
-    * When the panel is displayed in two columns, the history block is displayed on the right.
+    * If a “horizontal” value is specified, but there is no history in the panel, the component will be displayed in one column.
     * @example
     * In this example panel will be displayed in two column.
     * <pre>
@@ -42,37 +42,39 @@ define('Controls/interface/IFilterPanel', [], function() {
     */
 
    /**
-    * @name Controls/interface/IFilterPanel#title
-    * @cfg {String} Caption of filter panel.
+    * @name Controls/interface/IFilterPanel#headingCaption
+    * @cfg {String} Text heading.
     * @default "Selected"
     * @example
-    * In this example, the panel has the title "Sales"
+    * In this example, the panel has the caption "Sales"
     * <pre>
     *    <Controls.Filter.Button.Panel
     *          items={{_items}}
-    *          title="Sales">
+    *          headingCaption="Sales">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
     *    </Controls.Filter.Button.Panel>
     * </pre>
+    * @see Controls/Heading#caption
     */
 
    /**
-    * @name Controls/interface/IFilterPanel#headerStyle
-    * @cfg {String} Color of title in header of filter panel.
-    * @variant primary Primary color.
-    * @variant default Default color.
-    * @default primary
+    * @name Controls/interface/IFilterPanel#headingStyle
+    * @cfg {String} The heading style of the filter panel.
+    * @variant primary Primary heading style.
+    * @variant secondary Secondary heading style.
+    * @default secondary
     * @example
-    * In this example, the panel has a default color title.
+    * In this example, the panel has a primary heading style.
     * <pre>
     *    <Controls.Filter.Button.Panel
     *          items={{_items}}
-    *          headerStyle="default">
+    *          headingStyle="primary">
     *       <ws:itemTemplate templateName="wml!MyModule/mainBlockTemplate"/>
     *       <ws:additionalTemplate templateName="wml!MyModule/additionalBlockTemplate"/>
     *    </Controls.Filter.Button.Panel>
     * </pre>
+    * @see Controls/Heading#style
     */
 
    /**
@@ -127,10 +129,10 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplate
-    * @cfg {additionalTpl} Template for item render in block "Possible to select".
+    * @cfg {additionalTpl} Template for item render in the additional block.
     * @remark
-    * To display the filter in the "Possible to select" block, you need to specify in the settings item visibility: false.
-    * When specifying visibility = true, the filter will be displayed in the main block "Selected", but when the filter is reset, it will be displayed in the block "Possible to select"
+    * To display the filter in the additional block, you need to specify in the settings item visibility: false.
+    * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
     * @example
     * Example of setting options additionalTemplate
     * <pre>
@@ -195,11 +197,12 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render in block "Possible to select.
+    * @cfg {additionalTpl} Name of the item property that contains template for item render in the additional block. If not set, additionalTemplate is used instead.
     * @remark
-    * If not set, additionalTemplate is used instead.
+    * To display the filter in the additional block, you need to specify in the settings item visibility: false.
+    * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
     * @example
-    * In this example, the template for the "deleted" filter in the "Possible to select" block, will be loaded from the file MyModule/addTemplateDeleted.wml
+    * In this example, the template for the "deleted" filter in the additional block, will be loaded from the file MyModule/addTemplateDeleted.wml
     * <pre>
     *    <Controls.Filter.Button.Panel
     *       items={{_items}}
@@ -266,11 +269,12 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#itemTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render.
+    * @cfg {additionalTpl} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
     * @remark
-    * If not set, itemTemplate is used instead.
+    * To display in a string, that is formed by the values from items, you must make a bind:textValue="item.textValue".
+    * For proper display, templates for all items should be described.
     * @example
-    * In this example, the template for the "type" filter in the "Selected" block, will be loaded from the file Module/myTemplateForType.wml
+    * In this example, the template for the "type" filter in the main block, will be loaded from the file Module/myTemplateForType.wml
     * TMPL:
     * <pre>
     *    <Controls.Filter.Button.Panel
@@ -314,7 +318,7 @@ define('Controls/interface/IFilterPanel', [], function() {
    /**
     * @name Controls/interface/IFilterPanel#historyId
     * @cfg {String} Unique id for save history.
-    * @remark For the correct work of the history, you need to configure the structure of the application by the instruction https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ws4/components/filter-search/
+    * @remark For the correct work of the history mechanism, you need to configure the items property on the control by the <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>instruction</a>.
     */
 
 });

@@ -23,6 +23,7 @@ define('Controls/Input/Text',
        *
        * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IPaste
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
@@ -30,7 +31,7 @@ define('Controls/Input/Text',
        * @public
        * @demo Controls-demo/Input/Text/TextPG
        *
-       * @author Журавлев М.С.
+       * @author Колесова П.С.
        */
 
 

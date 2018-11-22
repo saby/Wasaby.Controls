@@ -335,10 +335,21 @@ function(cMerge,
             newCfg.dialogOptions.offset.y = cfg.verticalAlign.offset;
          }
 
-         if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
-            newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+         // Если задали direction, то берем его (для исключительных случаев, задавать его не должны, т.к. это старое api)
+         if (cfg.direction) {
+            newCfg.dialogOptions.direction = cfg.direction;
          } else {
-            newCfg.dialogOptions.direction = 'right';
+            // Пытаемся совместить старое и новое api
+            if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
+               newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+            } else {
+               // Для стека всегда значение left, иначе ломается анимация
+               if (cfg._type === 'stack') {
+                  newCfg.dialogOptions.direction = 'left';
+               } else {
+                  newCfg.dialogOptions.direction = 'right';
+               }
+            }
          }
          if (cfg.horizontalAlign && cfg.horizontalAlign.offset) {
             newCfg.dialogOptions.offset = newCfg.dialogOptions.offset || {};
@@ -353,7 +364,9 @@ function(cMerge,
          if (cfg.corner && cfg.corner.horizontal) {
             newCfg.dialogOptions.side = cfg.corner.horizontal;
          }
-
+         
+         newCfg.dialogOptions.title = cfg.title;
+         
          if (cfg.offset) {
             newCfg.dialogOptions.offset = cfg.offset;
          }
@@ -364,6 +377,26 @@ function(cMerge,
 
          if (cfg.className) {
             newCfg.dialogOptions.className = cfg.className;
+         }
+
+         if (cfg.hasOwnProperty('showOnControlsReady')) {
+            newCfg.dialogOptions.showOnControlsReady = cfg.showOnControlsReady;
+         } else {
+            newCfg.dialogOptions.showOnControlsReady = false;
+         }
+
+         if (cfg.hasOwnProperty('autoCloseOnHide')) {
+            newCfg.dialogOptions.autoCloseOnHide = cfg.autoCloseOnHide;
+         } else {
+            newCfg.dialogOptions.autoCloseOnHide = true;
+         }
+
+         if (cfg.minWidth) {
+            newCfg.dialogOptions.minWidth = cfg.minWidth;
+         }
+
+         if (cfg.maxWidth) {
+            newCfg.dialogOptions.maxWidth = cfg.maxWidth;
          }
 
          if (newCfg.target) {

@@ -1,9 +1,22 @@
 [{
   "include": [
-    "Controls/Application/*",
-    "Controls/Application"
+    "Controls/Application",
+    "Controls/Application/*"
+  ],
+  "exclude": [
+    "wml!Controls/Application/CompatibleScripts",
+    "Controls/Application/HeadDataContext",
+    "Controls/Application/AppData",
+    "Controls/Application/DepsCollector/DepsCollector"
   ],
   "output": "controls-application.package.js"
+}, {
+  "include": [
+    "Controls/Application/HeadDataContext",
+    "Controls/Application/AppData",
+    "Controls/Context/*"
+  ],
+  "output": "controls-context.package.js"
 }, {
   "include": [
     "Controls/Button/*",
@@ -21,15 +34,25 @@
   "output": "controls-operations.package.js"
 }, {
   "include": [
-    "Controls/Container/*",
-    "Controls/StickyHeader",
-    "Controls/StickyHeader/*"
+    "Controls/Container/*"
   ],
   "exclude": [
-    "Controls/Container/Scroll/Context"
+    "Controls/Container/Scroll/Context",
+    "Controls/Container/Async",
+    "Controls/Container/Async/*",
+    "Controls/Container/Scroll",
+    "Controls/Container/Scroll/*"
   ],
   "output": "controls-container.package.js"
 }, {
+  "include": [
+    "Controls/StickyHeader",
+    "Controls/StickyHeader/*",
+    "Controls/Container/Scroll",
+    "Controls/Container/Scroll/*"
+  ],
+  "output": "controls-container-scroll.package.js"
+},{
   "include": [
     "Controls/Controllers/*"
   ],
@@ -84,7 +107,9 @@
   ],
   "exclude": [
     "Controls/Input/RichArea",
-    "Controls/Input/RichArea/*"
+    "Controls/Input/RichArea/*",
+    "Controls/Input/RichEditor",
+    "Controls/Input/RichEditor/*"
   ],
   "output": "controls-input.package.js"
 }, {
@@ -93,6 +118,12 @@
     "Controls/Input/RichArea/*"
   ],
   "output": "controls-richarea.package.js"
+}, {
+  "include": [
+    "Controls/Input/RichEditor",
+    "Controls/Input/RichEditor/*"
+  ],
+  "output": "controls-richeditor.package.js"
 }, {
   "include": [
     "Controls/Label/*",
@@ -108,17 +139,25 @@
   ],
   "exclude": [
     "Controls/List/interface/*",
-    "Controls/List/resources/utils/CSSGridLayoutUtils",
     "wml!Controls/List/Grid/OldGridView",
     "wml!Controls/List/Grid/NewGridView",
-    "Controls/List/ItemActions/*",
+    "Controls/List/ItemActions/resources/*",
+    "Controls/List/ItemActions/ItemActionsControl",
     "Controls/List/Swipe/*",
     "Controls/List/Mover",
     "Controls/List/Remover",
     "Controls/List/DialogMover/*",
-    "Controls/List/DialogMover"
+    "Controls/List/DialogMover",
+    "Controls/List/Paging/*",
+    "Controls/List/Paging"
   ],
   "output": "controls-list.package.js"
+}, {
+  "include": [
+    "Controls/List/Paging/*",
+    "Controls/List/Paging"
+  ],
+  "output": "controls-paging.package.js"
 }, {
   "include": [
     "Controls/List/ItemActions/*",
@@ -252,4 +291,24 @@
     "Controls/Calendar/Utils"
   ],
   "output": "controls-calendar.package.js"
-}]
+},
+{
+  "include": [
+    "Controls/Search/*"
+  ],
+  "exclude": [
+    "Controls/Search/Misspell",
+    "wml!Controls/Search/Misspell"
+  ],
+  "output": "controls-search.package.js"
+}, {
+  "include": [
+    "Controls/EditableArea",
+    "Controls/EditableArea/*"
+  ],
+  "exclude": [
+    "Controls/EditableArea/Constants"
+  ],
+  "output": "controls-editablearea.package.js"
+}
+]

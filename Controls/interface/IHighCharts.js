@@ -5,6 +5,7 @@ define('Controls/interface/IHighCharts', [], function() {
     *
     * @interface Controls/interface/IHighCharts
     * @public
+    * @author Волоцкой В.Д.
     */
 
    /**
