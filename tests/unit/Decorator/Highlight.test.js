@@ -50,52 +50,6 @@ define(
             assert.equal(ctrl._template(tplOptions), template1());
          });
 
-         describe('Messages in the console.', function() {
-            beforeEach(function() {
-               var iLogger = IoC.resolve('ILogger');
-
-               iLogger.warn = ProxyCall.apply(iLogger.warn, 'warn', calls, true);
-               iLogger.error = ProxyCall.apply(iLogger.error, 'error', calls, true);
-            });
-
-            it('The highlight option equal ""', function() {
-               ctrl._beforeMount({
-                  text: 'text1',
-                  highlight: '',
-                  searchMode: 'substring'
-               });
-
-               assert.deepEqual(calls, [{
-                  name: 'warn',
-                  arguments: ['Controls/Decorator/Highlight', 'When searching there was a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.']
-               }]);
-            });
-            it('The highlight option equal "    "', function() {
-               ctrl._beforeMount({
-                  text: 'text1',
-                  highlight: '    ',
-                  searchMode: 'substring'
-               });
-
-               assert.deepEqual(calls, [{
-                  name: 'warn',
-                  arguments: ['Controls/Decorator/Highlight', 'When searching there was a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.']
-               }]);
-            });
-            it('The highlight option does not contain words in the "word" search mode', function() {
-               ctrl._beforeMount({
-                  text: 'text1',
-                  highlight: 'te xt',
-                  searchMode: 'word'
-               });
-
-               assert.deepEqual(calls, [{
-                  name: 'warn',
-                  arguments: ['Controls/Decorator/Highlight', 'When searching there was a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.']
-               }]);
-            });
-         });
-
          describe('The recalculation of the state depending on the values of options.', function() {
             var options;
 
@@ -221,78 +175,6 @@ define(
                      {
                         type: 'text',
                         value: 'm dolor sit amet, consectetur adipiscing elit.'
-                     }
-                  ]);
-               });
-            });
-            describe('Search a set of words.', function() {
-               it('The search set of words is not in the text.', function() {
-                  ctrl._beforeMount({
-                     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                     highlight: 'ipsumus dolorus',
-                     searchMode: 'setWords'
-                  });
-
-                  assert.deepEqual(ctrl._parsedText, [{
-                     type: 'text',
-                     value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                  }]);
-               });
-               it('The search set of words is in the text.', function() {
-                  ctrl._beforeMount({
-                     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                     highlight: 'ipsum dolor',
-                     searchMode: 'setWords'
-                  });
-
-                  assert.deepEqual(ctrl._parsedText, [
-                     {
-                        type: 'text',
-                        value: 'Lorem '
-                     },
-                     {
-                        type: 'highlight',
-                        value: 'ipsum dolor'
-                     },
-                     {
-                        type: 'text',
-                        value: ' sit amet, consectetur adipiscing elit.'
-                     }
-                  ]);
-               });
-            });
-            describe('Search a set of substring.', function() {
-               it('The search set of substrings is not in the text.', function() {
-                  ctrl._beforeMount({
-                     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                     highlight: 'psumus dolous',
-                     searchMode: 'setSubstrings'
-                  });
-
-                  assert.deepEqual(ctrl._parsedText, [{
-                     type: 'text',
-                     value: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.'
-                  }]);
-               });
-               it('The search set of substrings is in the text.', function() {
-                  ctrl._beforeMount({
-                     text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
-                     highlight: 'psum dolo',
-                     searchMode: 'setSubstrings'
-                  });
-
-                  assert.deepEqual(ctrl._parsedText, [
-                     {
-                        type: 'text',
-                        value: 'Lorem i'
-                     },
-                     {
-                        type: 'highlight',
-                        value: 'psum dolo'
-                     },
-                     {
-                        type: 'text',
-                        value: 'r sit amet, consectetur adipiscing elit.'
                      }
                   ]);
                });

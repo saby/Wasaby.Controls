@@ -42,21 +42,15 @@ define('Controls/Decorator/Highlight',
        * @cfg {String}
        * @variant word
        * @variant substring
-       * @variant setWords
-       * @variant setSubstrings
        */
 
       var _private = {
-         MINIMUM_WORD_LENGTH: 3,
+         MINIMUM_WORD_LENGTH: 2,
 
          separatorsRegExp: /\s+/g,
 
          isSearchByWords: function(searchMode) {
-            return searchMode === 'word' || searchMode === 'setWords';
-         },
-
-         isSearchBySet: function(searchMode) {
-            return searchMode === 'setWords' || searchMode === 'setSubstrings';
+            return searchMode === 'word';
          },
 
          isWord: function(value) {
@@ -70,18 +64,38 @@ define('Controls/Decorator/Highlight',
          calculateHighlightRegExp: function(highlightedWords, searchMode) {
             var startSeparator = '';
             var endSeparator = '';
-            var regExp;
 
-            regExp = highlightedWords.join('|');
+            /**
+             * The regular expression describes any word from the array.
+             */
+            var wordsRegExp = highlightedWords.join('|');
 
             if (_private.isSearchByWords(searchMode)) {
+               /**
+                * Words must be separated from each other.
+                * The beginning of the word is separated by a whitespace character or the start of the line.
+                * The end of the word is separated by punctuation marks together with a whitespace character
+                * or the end of the line.
+                */
                startSeparator = '^|\\s';
-               endSeparator = '\\s|$';
+               endSeparator = '[,.;!?:]?(?=\\s|$)';
             }
 
-            regExp = '(' + startSeparator + ')(' + regExp + ')(' + endSeparator + ')';
+            /**
+             * Add the beginning and end separated.
+             * Define substrings:
+             * $1 - start separator.
+             * $2 - search value for highlight.
+             * $3 - end separator.
+             */
+            var regExp = '(' + startSeparator + ')(' + wordsRegExp + ')(' + endSeparator + ')';
 
-            return new RegExp(regExp, 'ig');
+            /**
+             * Set global search case-insensitive.
+             */
+            regExp = new RegExp(regExp, 'ig');
+
+            return regExp;
          },
 
          iterator: function(regExp, value) {
@@ -187,9 +201,7 @@ define('Controls/Decorator/Highlight',
 
             _private.addText(parsedText, iterator);
 
-            if (_private.isSearchBySet(searchMode)) {
-               parsedText = _private.uniteToSet(parsedText);
-            }
+            parsedText = _private.uniteToSet(parsedText);
 
             return parsedText;
          }
@@ -220,9 +232,7 @@ define('Controls/Decorator/Highlight',
             class: descriptor(String),
             searchMode: descriptor(String).oneOf([
                'word',
-               'substring',
-               'setWords',
-               'setSubstrings'
+               'substring'
             ]),
             text: descriptor(String).required(),
             highlight: descriptor(String).required()
@@ -231,7 +241,7 @@ define('Controls/Decorator/Highlight',
 
       Highlight.getDefaultOptions = function() {
          return {
-            searchMode: 'setWords',
+            searchMode: 'substring',
             class: 'controls-Highlight_highlight'
          };
       };
