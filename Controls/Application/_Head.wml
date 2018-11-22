@@ -15,7 +15,7 @@
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>
-   <ws:if data="{{!_options.builder}}">
+   <ws:if data="{{!_options.compat}}">
       <script>
          window.themesActive = true;
       </script>

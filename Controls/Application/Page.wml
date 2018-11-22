@@ -14,7 +14,6 @@
    title="{{ title }}"
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
-   builder="{{_options.builder}}"
    viewport="{{ _options.viewport }}"
    servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
