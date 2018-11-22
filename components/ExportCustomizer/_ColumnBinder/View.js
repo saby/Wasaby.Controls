@@ -198,6 +198,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_ColumnBinder/View',
             //////////////////////////////////////////////////
             return this._columnsEditor.open(
                {
+                  opener: this,
                   columns: options.allFields,
                   selectedColumns: fieldIds || []
                },
