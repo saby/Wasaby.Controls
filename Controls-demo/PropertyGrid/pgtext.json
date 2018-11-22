@@ -166,6 +166,10 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
           "caption": {
             "type": "String",
             "title": "Back button text."

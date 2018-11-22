@@ -34,7 +34,8 @@ define('Controls-demo/Buttons/BackButton/BackButtonDemoPG',
                size: 'm',
                caption: 'Back',
                style: 'secondary',
-               name: 'BackButton'
+               name: 'BackButton',
+               tooltip: ''
 
             };
             this._metaData = config[this._content].properties['ws-config'].options;

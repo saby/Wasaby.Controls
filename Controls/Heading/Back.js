@@ -15,6 +15,7 @@ define('Controls/Heading/Back', [
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/interface/ITooltip
+    * @mixes Controls/Heading/Back/BackStyles
     * @control
     * @public
     * @author Михайловский Д.С.
