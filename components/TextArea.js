@@ -78,6 +78,8 @@ define('SBIS3.CONTROLS/TextArea', [
          //флаг что была инициализирован плагин автовысоты. Меняется отображение и поведение текстареи
          _autoHeightInitialized: false,
          _options: {
+            //https://online.sbis.ru/opendoc.html?guid=2e4bd800-a2a5-4fbc-ba96-fe9519784531
+            _fix1176237877: false,
             _isMultiline: true,
             _paddingClass: ' controls-TextArea_padding',
             compatiblePlaceholderTemplate: compatiblePlaceholderTemplate,
@@ -173,7 +175,7 @@ define('SBIS3.CONTROLS/TextArea', [
                text = text.trim();
             }
             //Установим текст только если значения различны и оба не пустые
-            if (text !== self._options.text && !(self._isEmptyValue(self._options.text) && !text.length)){
+            if (self._isTextChanged(text, self._options.text)){
                self.setText(text);
             }
          });
@@ -203,6 +205,22 @@ define('SBIS3.CONTROLS/TextArea', [
                }
             }, 100)
          });
+      },
+
+      _isTextChanged: function(oldText, newText) {
+         if (this._options._fix1176237877) {
+            var carriageRegExp = /\r/g;
+
+            /**
+             * Если текст в котором есть \r установить в DOM элемент textarea(в дальнейшем просто textarea), то textarea вырежет \r.
+             * Из-за такого поведения текст устанавливаемый в компонент и текст в textarea будут разными, но визуально совпадать. https://jsfiddle.net/o0qpteaj/
+             * Поэтому перед проверкой на изменение текста, мы должны вырезать \r из обоих текстов, и потом сравнивнить их.
+             */
+            oldText = oldText.replace(carriageRegExp, '');
+            newText = newText.replace(carriageRegExp, '');
+         }
+
+         return TextArea.superclass._isTextChanged.call(this, oldText, newText);
       },
 
       init :function(){
