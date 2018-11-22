@@ -9,8 +9,9 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Core/core-merge',
    'Controls/Utils/getWidth',
    'wml!Controls/Selector/SelectedCollection/CounterTemplate',
-   'Controls/Utils/tmplNotify'
-], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify) {
+   'Controls/Utils/tmplNotify',
+   'Controls/Utils/ToSourceModel'
+], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify, ToSourceModel) {
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -56,6 +57,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
          self._notify('textValueChanged', textValue);
       },
 
+      prepareItems: function(self) {
+         ToSourceModel(_private.getItems(self), self._options.source, self._options.keyProperty);
+      },
+
       addItem: function(self, item) {
          var
             selectedKeys = self._selectedKeys.slice(),
@@ -70,6 +75,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
                _private.getItems(self).assign([item]);
             }
 
+            _private.prepareItems(self);
             _private.notifyChanges(self, selectedKeys);
             _private.setSelectedKeys(self, selectedKeys);
          }
@@ -189,6 +195,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
 
          _private.getItems(this).assign(items);
+         _private.prepareItems(self);
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);
       },
