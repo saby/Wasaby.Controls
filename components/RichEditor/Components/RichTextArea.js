@@ -2457,6 +2457,22 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   this._hideImageOptionsPanel();
                }
             },
+
+            _onKeyDownDelete: function (evt) {
+               if (evt.key === 'Delete' || evt.keyCode === 46) {
+                  var editor = this._tinyEditor;
+                  var rng = editor.selection.getRng();
+                  if (!rng.collapsed) {
+                     // Если при выделении всего контента внутри него есть элементы <br data-mce-bogus="..." />, то tinymce в своём методе isEverythingSelected ошибочно определяет это выделение как не полное, поэтому удалим их
+                     // 1175954886 https://online.sbis.ru/opendoc.html?guid=116a3dd3-0182-4644-9bc7-11174a1d8208
+                     var brs = editor.$('br[data-mce-bogus]', rng.commonAncestorContainer);
+                     if (brs.length) {
+                        editor.undoManager.ignore(brs.remove.bind(brs));
+                     }
+                  }
+               }
+            },
+
             _onKeyUpDeleteImage: function (evt) {
                // При нажатии клавиши Del - удалить изображение, если оно выделено
                // 1174801418 https://online.sbis.ru/opendoc.html?guid=1473813c-1617-4a21-9890-cedd1c692bfd
@@ -2546,6 +2562,8 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                //При клике на изображение снять с него выделение
                this._bindImageEvent('click', this._onClickCallback);
                this._subscribeOnScroll();
+
+               this._inputControl.on('keydown', this._onKeyDownDelete);
 
                editor.on('keydown', this._onKeyDownHideImageOptionsPanel);
 
@@ -3261,6 +3279,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   '_onClickCallback',
                   '_hideImageOptionsPanel',
                   '_onKeyDownHideImageOptionsPanel',
+                  '_onKeyDownDelete',
                   '_onKeyUpDeleteImage',
                   '_onKeyUpSetLastRng',
                   '_onMouseUpCallback',
@@ -4009,7 +4028,7 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (isEmpty) {
                      var editor = this.getTinyEditor();
                      var $content = editor ? $(editor.getBody()) : this._inputControl;
-                     isEmpty = !$content.find('img,table').length && !$content.text();
+                     isEmpty = !$content.find('img,table').length && !$content.text().replace(/\uFEFF/, '');
                   }
                }
                else {
