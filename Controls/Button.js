@@ -20,6 +20,7 @@ define('Controls/Button', [
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
+    * @mixes Controls/Button/ButtonStyles
     * @control
     * @public
     * @author Михайловский Д.С.
