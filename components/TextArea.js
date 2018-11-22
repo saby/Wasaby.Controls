@@ -205,15 +205,18 @@ define('SBIS3.CONTROLS/TextArea', [
          });
       },
 
-      _isTextChanged: function(text1, text2) {
+      _isTextChanged: function(oldText, newText) {
          var carriageRegExp = /\r/g;
 
          /**
-          * Если в качестве аргументов придет значение из textarea, и текст являющимся значением, которое проставлялось в
-          * textarea,будет содердать символы \r, то текста будут разными, потому что textarea вырезает \r. https://jsfiddle.net/o0qpteaj/
-          * Поэтому сравниваем без учета \r.
+          * Если текст в котором есть \r передать в textarea, то textarea вырежет \r.
+          * Из-за такого поведения текст переданный в textarea и текст в textarea будут разными, но визуально совпадать. https://jsfiddle.net/o0qpteaj/
+          * Поэтому перед сравнением вырезаем \r из обоих текстов, и только потом сравниваем их.
           */
-         return text1.replace(carriageRegExp, '') !== text2.replace(carriageRegExp, '') && !(this._isEmptyValue(text2) && !(text1 || '').length);
+         oldText = oldText.replace(carriageRegExp, '');
+         newText = newText.replace(carriageRegExp, '');
+
+         return TextArea.superclass._isTextChanged.call(this, oldText, newText);
       },
 
       init :function(){

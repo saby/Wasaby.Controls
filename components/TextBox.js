@@ -475,8 +475,8 @@ define('SBIS3.CONTROLS/TextBox', [
          }
       },
 
-      _isTextChanged: function(text1, text2) {
-         return text1 !== text2 && !(this._isEmptyValue(text2) && !(text1 || '').length);
+      _isTextChanged: function(oldText, newText) {
+         return oldText !== newText && !(this._isEmptyValue(newText) && !(oldText || '').length);
       },
 
       /**
