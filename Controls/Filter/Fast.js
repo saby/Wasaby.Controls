@@ -115,6 +115,12 @@ define('Controls/Filter/Fast',
             _private.selectItem.apply(this, data);
             _private.notifyChanges(this, this._items);
             this._children.DropdownOpener.close();
+         },
+
+         setTextValue: function(item, textValue) {
+            if (getPropValue(item, 'textValue') !== undefined) {
+               setPropValue(item, 'textValue', textValue);
+            }
          }
       };
 
@@ -191,9 +197,7 @@ define('Controls/Filter/Fast',
                Chain(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
                      config.text = getPropValue(item, config.displayProperty);
-                     if (getPropValue(self._items.at(index), 'textValue') !== undefined) {
-                        setPropValue(self._items.at(index), 'textValue', getPropValue(item, config.displayProperty));
-                     }
+                     _private.setTextValue(self._items.at(index), getPropValue(item, config.displayProperty));
                   }
                });
             });
@@ -202,9 +206,7 @@ define('Controls/Filter/Fast',
          _reset: function(event, item, index) {
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);
-            if (getPropValue(this._items.at(index), 'textValue') !== undefined) {
-               setPropValue(this._items.at(index), 'textValue', '');
-            }
+            _private.setTextValue(this._items.at(index), '');
             _private.notifyChanges(this, this._items);
             this._setText();
          }
