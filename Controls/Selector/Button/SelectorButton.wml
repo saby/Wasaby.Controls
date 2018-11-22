@@ -1,0 +1,14 @@
+<Controls.Selector.SelectedCollection.Controller
+      source="{{_options.source}}"
+      selectedKeys="{{_options.selectedKeys}}"
+      keyProperty="{{_options.keyProperty}}"
+      displayProperty="{{_options.displayProperty}}"
+      filter="{{_options.filter}}"
+      isCompoundTemplate="{{_options.isCompoundTemplate}}"
+      multiSelect="{{_options.multiSelect}}">
+
+   <ws:selectorTemplate templateName="{{_options.templateName}}" templateOptions="{{_options.templateOptions}}"/>
+   <ws:content>
+      <Controls.Selector.Button._SelectorButton scope="{{_options}}"/>
+   </ws:content>
+</Controls.Selector.SelectedCollection.Controller>

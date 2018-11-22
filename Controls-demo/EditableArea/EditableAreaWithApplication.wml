@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="EditableArea">
+   <ws:content>
+      <Controls-demo.EditableArea.EditableArea/>
+   </ws:content>
+</Controls.Application.ApplicationWrapper>

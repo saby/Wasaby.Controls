@@ -2,12 +2,12 @@
  * Created by am.gerasimov on 31.05.2018.
  */
 define([
-   'Controls/Input/Lookup/_Lookup',
+   'Controls/Selector/Lookup/_Lookup',
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List'
 ], function(Lookup, Model, List) {
    
-   describe('Controls/Input/Lookup/_Lookup', function() {
+   describe('Controls/Selector/Lookup/_Lookup', function() {
       it('getAdditionalCollectionWidth', function() {
          var afterFieldWrapperWidth = 20;
          var fieldWrapper = {
