@@ -104,6 +104,19 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                this._savingDeferred = Deferred.success();
             },
 
+            init: function() {
+               EditInPlaceBaseController.superclass.init.apply(this, arguments);
+               if (this.getOpener() && this.getOpener().getTopParent()) {
+                  this._closeButton = this.getOpener().getTopParent()._container.closest('.ws-window').find('.ws-float-close');
+                  this._closeButtonPressedCb = this._closeButtonPressed.bind(this);
+                  this._closeButton.on('mousedown', this._closeButtonPressedCb);
+               }
+            },
+
+            _closeButtonPressed: function() {
+               this._isCloseButtonPressed = true;
+            },
+
             /**
              * Возвращает признак валидности данных изменяемой записи
              * @returns {boolean|*}
@@ -693,11 +706,13 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                   // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
                   // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
                   // или без завершать редактирование по месту)
-                  endEdit = !cInstance.instanceOfModule(focusedControl, 'Deprecated/Controls/CloseButton/CloseButton') && !focusedControl ||
-                     (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this));
+                  // isCloseButtonPressed: https://online.sbis.ru/opendoc.html?guid=e6e98641-8c5a-4b28-97a0-5c1caa0af1f2
+                  endEdit = !this._isCloseButtonPressed && (!cInstance.instanceOfModule(focusedControl, 'Deprecated/Controls/CloseButton/CloseButton') && !focusedControl ||
+                     (this._allowEndEdit(focusedControl) && this._isAnotherTarget(focusedControl, this)));
                if (endEdit) {
                   this.commitEdit();
                }
+               this._isCloseButtonPressed = false;
             },
             _allowEndEdit: function(control) {
                return !control.getContainer().closest('.' + this._options.notEndEditClassName).length;
@@ -724,6 +739,9 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
                }
             },
             destroy: function() {
+               if (this._closeButton) {
+                  this._closeButton.off('mousedown', this._closeButtonPressedCb);
+               }
                this.cancelEdit();
                this._destroyEip();
                EditInPlaceBaseController.superclass.destroy.apply(this, arguments);
