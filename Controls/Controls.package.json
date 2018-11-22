@@ -30,6 +30,8 @@
   "exclude": [
     "Controls/Container/Scroll/Context",
     "Controls/Container/Async",
+    "Controls/Container/LoadingIndicator",
+    "Controls/Container/LoadingIndicator/*",
     "Controls/Container/Async/*",
     "Controls/Container/Scroll",
     "Controls/Container/Scroll/*"
@@ -37,10 +39,19 @@
   "output": "controls-container.package.js"
 }, {
   "include": [
+    "Controls/Container/LoadingIndicator/*",
+    "Controls/Container/LoadingIndicator"
+  ],
+  "output": "controls-loading-indicator.package.js"
+}, {
+  "include": [
     "Controls/StickyHeader",
     "Controls/StickyHeader/*",
     "Controls/Container/Scroll",
     "Controls/Container/Scroll/*"
+  ],
+  "exclude": [
+    "Controls/Container/Scroll/Context"
   ],
   "output": "controls-container-scroll.package.js"
 },{
