@@ -72,8 +72,8 @@ define('Controls/List/BaseControl', [
             });
          } else {
             resDeferred.callback();
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          return resDeferred;
       },
 
@@ -737,10 +737,6 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      _onItemActionsClick: function(e, action, item) {
-         this._notify('itemActionsClick', [action, item]);
-      },
-
       _hoveredItemChanged: function(event, item) {
          this._notify('hoveredItemChanged', [item]);
       },
@@ -808,10 +804,6 @@ define('Controls/List/BaseControl', [
          if (this._options.itemsDragNDrop && this._isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
-      },
-
-      _markedKeyChangedHandler: function(event, item) {
-         this._notify('markedKeyChanged', [item]);
       }
    });
 

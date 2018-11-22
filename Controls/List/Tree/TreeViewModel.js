@@ -232,6 +232,9 @@ define('Controls/List/Tree/TreeViewModel', [
             current.shouldDrawExpander = _private.shouldDrawExpander;
             current.prepareExpanderClasses = _private.prepareExpanderClasses;
 
+            // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
+            current.expanderTemplate = this._options.expanderTemplate;
+
             if (!current.isGroup) {
                current.level = current.dispItem.getLevel();
             }
@@ -344,9 +347,6 @@ define('Controls/List/Tree/TreeViewModel', [
             this._notify('onListChange');
          },
 
-         setExpandedItems: function(expandedItems) {
-            this._expandedItems = expandedItems;
-         },
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);

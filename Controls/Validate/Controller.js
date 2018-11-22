@@ -5,7 +5,8 @@ define('Controls/Validate/Controller',
       'Core/IoC',
       'Core/ParallelDeferred',
       'Core/Deferred',
-      'wml!Controls/Validate/ErrorMessage'
+      'wml!Controls/Validate/ErrorMessage',
+      'css!Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
@@ -24,7 +25,6 @@ define('Controls/Validate/Controller',
           */
          openInfoBox: function(self) {
             if (self._validationResult && self._validationResult.length && !self._isOpened) {
-               
                self._isOpened = true;
                self._notify('openInfoBox', [{
                   target: self._container,

@@ -34,6 +34,7 @@ define('Controls/Popup/Opener/Confirmation',
 
          /**
           * Open confirmation popup.
+          * @function Controls/Popup/Opener/Confirmation#open
           * @param {Object} config Confirmation options.
           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
           * @remark

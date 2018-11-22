@@ -1,11 +1,11 @@
 define(
    [
-      'Controls/Button/SelectorButton/_SelectorButton',
+      'Controls/Selector/Button/_SelectorButton',
       'WS.Data/Collection/List',
       'Core/core-clone'
    ],
    function(SelectorButton, List, Clone) {
-      describe('Controls/Button/SelectorButton/_SelectorButton', function() {
+      describe('Controls/Selector/Button/_SelectorButton', function() {
          let config = {
             multiSelect: true,
             keyProperty: 'id',
