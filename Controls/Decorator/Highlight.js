@@ -78,7 +78,7 @@ define('Controls/Decorator/Highlight',
                 * or the end of the line.
                 */
                startSeparator = '^|\\s';
-               endSeparator = '[,.;!?:]?(?=\\s|$)';
+               endSeparator = '[,.;!?:]*(?=\\s|$)';
             }
 
             /**
