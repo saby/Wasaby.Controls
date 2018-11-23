@@ -40,8 +40,8 @@ define('Controls/Decorator/Highlight',
       /**
        * @name Controls/Decorator/Highlight#searchMode
        * @cfg {String}
-       * @variant word
-       * @variant substring
+       * @variant word The search is carried out by words. A word is a set of characters, length not less than 2. Words are separated by whitespace and punctuation.
+       * @variant substring The search is carried out by substrings.
        */
 
       var _private = {
@@ -180,7 +180,7 @@ define('Controls/Decorator/Highlight',
             }
 
             if (highlightedWords.length === 0) {
-               IoC.resolve('ILogger').warn('Controls/Decorator/Highlight', 'When searching there was a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
+               IoC.resolve('ILogger').warn('Controls/Decorator/Highlight', 'When searching there is a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
 
                return [{
                   type: 'text',
