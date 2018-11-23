@@ -16,6 +16,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
 
          _afterMount: function() {
             Controller.registerManager(this);
+
             // Add handlers to events when children are created
             if (window) {
                this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
