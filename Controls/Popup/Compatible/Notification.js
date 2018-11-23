@@ -6,7 +6,6 @@ define('Controls/Popup/Compatible/Notification',
       'css!Controls/Popup/Compatible/Notification/Notification'
    ],
    function(CommandDispatcher, Control, template) {
-
       /**
        * Замена SBIS3.CONTROLS/NotificationPopup при открытии нотификационных окон через vdom механизм.
        */
@@ -72,10 +71,11 @@ define('Controls/Popup/Compatible/Notification',
           * Прикладники обращаются к методу close для закрытия. Раньше они имели popup, а сейчас текущий компонент.
           */
          close: function() {
-            this._options._opener.close();
+            var compoundContainer = this.getParent();
+            var vdomNotificationTemplate = compoundContainer._logicParent;
+            vdomNotificationTemplate._notify('close', [], { bubbling: true });
          }
       });
 
       return Compatible;
-   }
-);
+   });

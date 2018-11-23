@@ -154,6 +154,7 @@ define('Controls/List/TreeControl', [
       },
       _onExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
+         e.stopImmediatePropagation();
       },
       _onLoadMoreClick: function(e, dispItem) {
          _private.loadMore(this, dispItem);

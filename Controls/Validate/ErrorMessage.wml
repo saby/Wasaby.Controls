@@ -1,5 +1,7 @@
-<ul>
+<div>
     <ws:for data="item in content" >
-        <li>{{item}}</li>
+        <div class="controls-ValidateController__errorMessage">
+        {{item}}
+        </div>
     </ws:for>
-</ul>
+</div>

@@ -1,5 +1,5 @@
 define([
-   'Controls/Controllers/SelectedCollection',
+   'Controls/Selector/SelectedCollection/Controller',
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List',
    'WS.Data/Source/Memory'
@@ -8,8 +8,8 @@ define([
    function getBaseSelectedCollection() {
       return {
          _selectedKeys: [],
-         _notify: function(){},
-         _forceUpdate: function(){
+         _notify: function() {},
+         _forceUpdate: function() {
             this.isUpdate = true;
          },
          _children: {},
@@ -20,7 +20,7 @@ define([
       }
    }
 
-   describe('Controls/Controllers/SelectedCollection', function() {
+   describe('Controls/Selector/SelectedCollection/Controller', function() {
       // Убираем работу с вертской
       if (typeof window === 'undefined') {
          SelectedCollection._private.getCounterWidth = function() {};
@@ -262,7 +262,7 @@ define([
          assert.equal(selectedCollection._items.getCount(), items.length);
       });
 
-      it('_showSelector', function() {
+      it('showSelector', function() {
          var
             templateOptions,
             isShowSelector = false,
@@ -278,7 +278,7 @@ define([
             }
          };
 
-         selectedCollection._showSelector({
+         selectedCollection.showSelector({
             selectedTab: 'Employees'
          });
 

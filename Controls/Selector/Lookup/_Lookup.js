@@ -1,17 +1,17 @@
-define('Controls/Input/Lookup/_Lookup', [
+define('Controls/Selector/Lookup/_Lookup', [
    'Core/Control',
-   'wml!Controls/Input/Lookup/_Lookup',
+   'wml!Controls/Selector/Lookup/_Lookup',
    'Controls/Input/resources/InputRender/BaseViewModel',
    'WS.Data/Chain',
    'Core/core-merge',
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
-   'Controls/SelectedCollection',
-   'wml!Controls/SelectedCollection/SelectedCollection',
-   'wml!Controls/Input/Lookup/resources/clearRecordsTemplate',
-   'wml!Controls/Input/Lookup/resources/showSelectorTemplate',
+   'Controls/Selector/SelectedCollection',
+   'wml!Controls/Selector/SelectedCollection/SelectedCollection',
+   'wml!Controls/Selector/Lookup/resources/clearRecordsTemplate',
+   'wml!Controls/Selector/Lookup/resources/showSelectorTemplate',
    'wml!Controls/Input/resources/input',
-   'css!theme?Controls/Input/Lookup/Lookup'
+   'css!theme?Controls/Selector/Lookup/Lookup'
 ], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate) {
    'use strict';
 
@@ -128,7 +128,7 @@ define('Controls/Input/Lookup/_Lookup', [
          });
 
          if (newOptions.multiline) {
-            measurer.style.width = self._wrapperInputRender.offsetWidth + 'px';
+            measurer.style.width = DOMUtil.width(self._fieldWrapper) - SHOW_SELECTOR_WIDTH + 'px';
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -140,7 +140,7 @@ define('Controls/Input/Lookup/_Lookup', [
          for (var index = itemsCount - 1; index >= 0 &&
             collectionItems[index].offsetTop === collectionItems[itemsCount - 1].offsetTop; index--) {
 
-            itemsSizes.push(Math.ceil(collectionItems[index].getBoundingClientRect().width));
+            itemsSizes.unshift(Math.ceil(collectionItems[index].getBoundingClientRect().width));
          }
 
          document.body.removeChild(measurer);
@@ -184,10 +184,6 @@ define('Controls/Input/Lookup/_Lookup', [
       _afterMount: function() {
          _private.initializeConstants();
          _private.initializeContainers(this);
-
-         if (!this._isEmpty()) {
-            this._forceUpdate();
-         }
       },
 
       _beforeUpdate: function(newOptions) {
@@ -260,7 +256,10 @@ define('Controls/Input/Lookup/_Lookup', [
 
       _choose: function(event, item) {
          this._notify('addItem', [item]);
-         _private.notifyValue(this, '');
+
+         if (this._simpleViewModel.getValue() !== '') {
+            _private.notifyValue(this, '');
+         }
 
          /* move focus to input after select, because focus will be lost after closing popup  */
          this.activate();
