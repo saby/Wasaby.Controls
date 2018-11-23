@@ -222,6 +222,7 @@ app.get('/:moduleName/*', function(req, res){
       };
    }
    process.domain.req = req;
+   process.domain.res = res;
 
    var tpl = require('wml!Controls/Application/Route');
    var originalUrl = req.originalUrl;

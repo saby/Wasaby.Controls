@@ -18,6 +18,11 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     * @author Кондаков Р.Н.
     */
    return function linkDecorate(value, parent) {
+      // Can't decorate without decoratedLink service address.
+      if (!cConstants.decoratedLinkService) {
+         return value;
+      }
+
       // Decorate tag "a" only.
       if (!Array.isArray(value) || Array.isArray(value[0]) || value[0] != 'a') {
          return value;
@@ -51,8 +56,9 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       linkAttrs.class = (linkAttrs.class ? linkAttrs.class + ' ' : '') + 'LinkDecorator__linkWrap';
       linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
 
-      var image = cConstants.decoratedLinkService ? ((typeof location === 'object' ? location.origin : '') + cConstants.decoratedLinkService) : '' +
-         '?method=LinkDecorator.DecorateAsSvg&params=' + encodeURIComponent(base64.encode('{"SourceLink":"' + linkAttrs.href + '"}')) + '&id=0&srv=1';
+      var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +
+         cConstants.decoratedLinkService + '?method=LinkDecorator.DecorateAsSvg&params=' +
+         encodeURIComponent(base64.encode('{"SourceLink":"' + linkAttrs.href + '"}')) + '&id=0&srv=1';
 
       return ['span',
          { 'class': 'LinkDecorator__wrap' },
