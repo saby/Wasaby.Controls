@@ -61,7 +61,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          var slr = new Serializer();
          try {
             this._deserialized = JSON.parse(str, slr.deserialize);
-         }catch(e){
+         } catch (e) {
             IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
          }
       },
