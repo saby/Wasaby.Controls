@@ -5,11 +5,11 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
+   'WS.Data/Chain',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
-   'css!theme?Controls/Explorer/Explorer',
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'
@@ -19,7 +19,8 @@ define('Controls/Explorer', [
    SearchGridViewModel,
    TreeGridViewModel,
    TreeTileViewModel,
-   tmplNotify
+   tmplNotify,
+   chain
 ) {
    'use strict';
 
@@ -49,7 +50,12 @@ define('Controls/Explorer', [
             }
          },
          dataLoadCallback: function(self, data) {
-            self._breadCrumbsItems = data.getMetaData().path;
+            var metaData = data.getMetaData();
+            if (metaData.path) {
+               self._breadCrumbsItems = chain(metaData.path).toArray();
+            } else {
+               self._breadCrumbsItems = null;
+            }
             self._forceUpdate();
             if (self._options.dataLoadCallback) {
                self._options.dataLoadCallback(data);
@@ -99,7 +105,6 @@ define('Controls/Explorer', [
       _viewModelConstructor: null,
       _leftPadding: null,
       constructor: function() {
-         this._breadCrumbsItems = [];
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          Explorer.superclass.constructor.apply(this, arguments);
       },
@@ -119,7 +124,7 @@ define('Controls/Explorer', [
          }
       },
       _onBreadCrumbsClick: function(event, item, setPreviousNode) {
-         _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
+         _private.setRoot(this, item.get(setPreviousNode ? this._options.parentProperty : this._options.keyProperty));
       },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);
