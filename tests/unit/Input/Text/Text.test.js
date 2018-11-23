@@ -53,6 +53,7 @@ define(
 
                ctrl._children.input.selectionStart = 5;
                ctrl._children.input.selectionEnd = 5;
+               ctrl._focusInHandler();
                ctrl._clickHandler();
 
                assert.deepEqual(calls, [

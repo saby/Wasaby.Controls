@@ -522,6 +522,10 @@ define('Controls/Input/Base',
             return this._children[this._fieldName];
          },
 
+         _getReadOnlyField: function() {
+            return this._children.readOnlyField;
+         },
+
          /**
           * Get the beginning and end of the selected portion of the field's text.
           * @return {Controls/Input/Base/Types/Selection.typedef}
@@ -562,7 +566,8 @@ define('Controls/Input/Base',
           * @private
           */
          _getTooltip: function() {
-            var hasFieldHorizontalScroll = this._hasHorizontalScroll(this._getField());
+            var valueDisplayElement = this._getField() || this._getReadOnlyField();
+            var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : '';
          },
