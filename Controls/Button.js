@@ -20,6 +20,7 @@ define('Controls/Button', [
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
+    * @mixes Controls/Button/ButtonStyles
     * @control
     * @public
     * @author Михайловский Д.С.
@@ -57,12 +58,6 @@ define('Controls/Button', [
     * @variant button Default button.
     * @variant toolButton Toolbar button.
     * @default button
-    * @remark
-    * Sizes 's' and 'xl' don't supported by viewModes:
-    * <ul>
-    *     <li>button,</li>
-    *     <li>toolButton</li>
-    * </ul>
     * @example
     * Button with 'link' viewMode.
     * <pre>

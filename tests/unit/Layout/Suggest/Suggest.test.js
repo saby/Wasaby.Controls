@@ -207,6 +207,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          self._options.searchParam = 'searchParam';
          self._options.autoDropDown = true;
          self._options.minSearchLength = 3;
+         self._options.readOnly = false;
          suggestComponent.saveOptions(self._options);
          suggestComponent._notify = function(event, val) {
             if (event === 'suggestStateChanged') {
@@ -226,7 +227,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
             
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
-               done();
+   
+               suggestComponent._close();
+               self._options.readOnly = true;
+               suggestComponent._inputActivated();
+               suggestComponent._dependenciesDeferred.addCallback(function() {
+                  assert.isFalse(suggestState);
+   
+                  suggestComponent._inputClicked();
+                  suggestComponent._dependenciesDeferred.addCallback(function() {
+                     assert.isFalse(suggestState);
+                     done();
+                  });
+               });
             });
          });
       });
