@@ -191,6 +191,7 @@ define('Controls/Application',
             }
 
             self.buildnumber = cfg.buildnumber || constants.buildnumber;
+
             // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
             self.appRoot = cfg.appRoot || context.AppData.appRoot || constants.appRoot;
             self.staticDomains = cfg.staticDomains || constants.staticDomains || '[]';
