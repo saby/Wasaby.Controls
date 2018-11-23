@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
    'Core/Control',
-   'tmpl!Controls-demo/PropertyGrid/DemoPG',
+   'wml!Controls-demo/Input/Lookup/LookupPropertyGrid',
    'WS.Data/Source/Memory',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls-demo/Input/Lookup/LookupData',
@@ -53,7 +53,9 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
             },
             lookupTemplate: {
                templateName: this._lookupTemplate
-            }
+            },
+            'itemTemplate.style': 'none',
+            'itemTemplate.size': 'm'
          };
 
          this._dataObject = {
@@ -66,16 +68,54 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
                placeholder: 'select',
                selectedKey: 1
             },
+            'itemTemplate.style': {
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKey: 0
+            },
+            'itemTemplate.size': {
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKey: 0
+            },
             source: {
                items: [
                   {id: '1', title: 'Names', items: this._sourceNames},
                   {id: '2', title: 'Cars', items: this._sourceCars}
                ],
                value: 'Names'
-            }
+            },
+            lookupTemplate: {items: [
+               {id: '1', title: 'Template with names', items: {
+                  templateName: this._lookupTemplate,
+                  templateOptions: {
+                     source: this._sourceNames
+                  }
+               }},
+               {id: '2', title: 'Template with cars', items: {
+                  templateName: this._lookupTemplate,
+                  templateOptions: {
+                     source: this._sourceCars
+                  }
+               }}
+            ], value: 'Template with names'}
          };
 
          this._metaData = config[this._content].properties['ws-config'].options;
+      },
+
+      _optionsChanged: function(event, config) {
+         var
+            options = config.componentOpt,
+            pgWrapper = this._children.pgWrapper,
+            propertyGrid = pgWrapper._children.PropertyGrid,
+            newItemTemplate = 'wml!Controls-demo/Input/Lookup/resources/ItemTemplate_' + options['itemTemplate.style'] + '_' + options['itemTemplate.size'];
+
+         if (options.itemTemplate !== newItemTemplate) {
+            require([newItemTemplate], function() {
+               propertyGrid._notify('itemsChanged', ['itemTemplate', newItemTemplate]);
+            });
+         }
       }
    });
 

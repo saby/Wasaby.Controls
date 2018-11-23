@@ -1,0 +1,12 @@
+<div class="controls-SelectedCollection__item controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}}">
+   <ws:partial template="{{contentTemplate}}"
+               item="{{item}}"
+               size="h"
+               clickable="{{clickable}}"
+               displayProperty="{{displayProperty}}"
+         />
+   <ws:if data="{{!readOnly}}">
+      <ws:partial template="{{crossTemplate}}"/>
+   </ws:if>
+   <ws:if data="{{readOnly && !isLastItem && itemsLayout !== 'twoColumns'}}">,</ws:if>
+</div>

@@ -1137,6 +1137,28 @@
           "source": {
             "type": "Array"
           },
+          "lookupTemplate": {
+            "type": "Array"
+          },
+          "itemTemplate.style": {
+            "type": "enum",
+            "default": "none",
+            "enum": {
+              "none": "none",
+              "bold": "bold",
+              "accent": "accent",
+              "primary": "primary"
+            }
+          },
+          "itemTemplate.size": {
+            "type": "enum",
+            "default": "m",
+            "enum": {
+              "m": "m",
+              "l": "l",
+              "h": "h"
+            }
+          },
           "displayProperty": {
             "type": "enum",
             "default": "title",

@@ -195,7 +195,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
 
          _private.getItems(this).assign(items);
-         _private.prepareItems(self);
+         _private.prepareItems(this);
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);
       },
