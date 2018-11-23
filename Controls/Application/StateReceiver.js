@@ -45,6 +45,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          common.componentOptsReArray.forEach(function(re) {
             serializedState = serializedState.replace(re.toFind, re.toReplace);
          });
+         serializedState = serializedState.replace(/\\"/g, '\\\\"');
          var addDeps = getDepsFromSerializer(slr);
          for (var dep in addDeps) {
             if (addDeps.hasOwnProperty(dep)) {
@@ -53,13 +54,16 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          }
 
          return {
-            serialized: JSON.stringify(serializedMap),
+            serialized: serializedState,
             additionalDeps: allAdditionalDeps
          };
       },
       deserialize: function(str) {
          var slr = new Serializer();
          try {
+            common.componentOptsReArray.forEach(function(re) {
+               str = str.replace(re.toReplace, re.toFind);
+            });
             this._deserialized = JSON.parse(str, slr.deserialize);
          } catch (e) {
             IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
@@ -72,6 +76,10 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             delete this._deserialized[key];
          }
          this.receivedStateObjectsArray[key] = inst;
+      },
+
+      unregister: function(key) {
+         delete this.receivedStateObjectsArray[key];
       }
    });
    return SRec;
