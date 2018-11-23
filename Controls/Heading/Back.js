@@ -51,11 +51,11 @@ define('Controls/Heading/Back', [
     * @example
     * Medium back button size.
     * <pre>
-    *    <Controls.Heading.BackButton/>
+    *    <Controls.Heading.Back/>
     * </pre>
     * Large back button size.
     * <pre>
-    *    <Controls.Heading.BackButton size="l"/>
+    *    <Controls.Heading.Back size="l"/>
     * </pre>
     */
 
@@ -64,7 +64,7 @@ define('Controls/Heading/Back', [
          if (options.style !== self._options.style) {
             if (options.style === 'default') {
                self._style = 'primary';
-               IoC.resolve('ILogger').error('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default');
+               IoC.resolve('ILogger').warn('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default');
             } else {
                self._style = options.style;
             }
