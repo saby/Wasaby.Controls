@@ -126,6 +126,28 @@ define('Controls/interface/IMenu', [], function() {
     */
 
    /**
+    * @name Controls/interface/IMenu#tooltip
+    * @cfg {String} Tooltip text.
+    * @example
+    * Button menu with tooltip 'Create task'
+    * <pre>
+    *    <Controls.Button.Menu icon="icon-Add" caption="Create" tooltip="Create task"/>
+    * </pre>
+    * @see Controls/Button#iconStyle
+    * @see icon
+    */
+
+   /**
+    * @name Controls/interface/IMenu#caption
+    * @cfg {String} Control caption text.
+    * @example
+    * Button menu with caption 'Create'.
+    * <pre>
+    *    <Controls.Button.Menu icon="icon-Add" caption="Create"/>
+    * </pre>
+    */
+
+   /**
     * @name Controls/interface/IMenu#keyProperty
     * @cfg {String} Name of the item property that uniquely identifies collection item.
     * @example
@@ -193,7 +215,7 @@ define('Controls/interface/IMenu', [], function() {
     * @name Controls/interface/IMenu#filter
     * @cfg {Object} Filter configuration - object with field names and their values.
     * @example
-    * In this example, 2 items will be displayed in the dropdown menu..
+    * In this example, 2 items will be displayed in the dropdown menu.
     * TMPL:
     * <pre>
     *    <Controls.Button.Menu
@@ -346,21 +368,13 @@ define('Controls/interface/IMenu', [], function() {
     *    this._source = new Memory({
     *      idProperty: 'id',
     *      data: [
-    *         {
-    *            id: '1',
-    *            title: 'Yaroslavl',
-    *            'parent@': true
-    *         },
-    *         {
-    *            id: '2',
-    *            title: 'Moscow',
-    *            'parent@': true
-    *         },
-    *         {
-    *            id: '3',
-    *            title: 'St-Petersburg',
-    *            'parent@': false
-    *         }
+    *          { id: 1, title: 'Sales of goods and services', parent: null, 'parent@': true },
+    *          { id: 2, title: 'Contract', parent: null, 'parent@': false },
+    *          { id: 3, title: 'Texture', parent: null, 'parent@': false },
+    *          { id: 4, title: 'Score', parent: null, 'parent@': false },
+    *          { id: 5, title: 'Act of reconciliation', parent: null, 'parent@': false },
+    *          { id: 6, title: 'Goods', parent: 1, 'parent@': false },
+    *          { id: 7, title: 'Finished products', parent: 1, 'parent@': false }
     *      ]
     *    });
     * </pre>
@@ -369,11 +383,68 @@ define('Controls/interface/IMenu', [], function() {
    /**
     * @name Controls/interface/IMenu#parentProperty
     * @cfg {String} Name of the field that contains item's parent identifier.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.Button.Menu
+    *       keyProperty="id"
+    *       source="{{_source}}"
+    *       parentProperty="parent"
+    *       nodeProperty="parent@"/>
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = new Memory ({
+    *       data: [
+    *          { id: 1, title: 'Sales of goods and services', parent: null, 'parent@': true },
+    *          { id: 2, title: 'Contract', parent: null, 'parent@': false },
+    *          { id: 3, title: 'Texture', parent: null, 'parent@': false },
+    *          { id: 4, title: 'Score', parent: null, 'parent@': false },
+    *          { id: 5, title: 'Act of reconciliation', parent: null, 'parent@': false },
+    *          { id: 6, title: 'Goods', parent: 1, 'parent@': false },
+    *          { id: 7, title: 'Finished products', parent: 1, 'parent@': false }
+    *       ],
+    *       idProperty: 'id'
+    *    )};
+    * </pre>
     */
 
    /**
     * @name Controls/interface/IMenu#navigation
-    * @cfg {String} Name of the field that contains item's parent identifier.
+    * @cfg {Object} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
+    * @example
+    * In this example, 2 items will be displayed in the dropdown menu.
+    * TMPL:
+    * <pre>
+    *    <Controls.Button.Menu
+    *       keyProperty="id"
+    *       source="{{_source}}"
+    *       navigation="{{_navigation}}"/>
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = new Memory ({
+    *       data: [
+    *          { id: 1, title: 'Sales of goods and services' },
+    *          { id: 2, title: 'Contract' },
+    *          { id: 3, title: 'Texture' },
+    *          { id: 4, title: 'Score' },
+    *          { id: 5, title: 'Act of reconciliation' },
+    *          { id: 6, title: 'Goods' },
+    *          { id: 7, title: 'Finished products' }
+    *       ],
+    *       idProperty: 'id'
+    *    )};
+    *    this._navigation = {
+            source: 'page',
+            view: 'page',
+            sourceConfig: {
+               pageSize: 2,
+               page: 0,
+               mode: 'totalCount'
+            }
+         };
+    * </pre>
     */
 
    /**
