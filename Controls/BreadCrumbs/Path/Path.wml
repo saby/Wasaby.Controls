@@ -2,9 +2,9 @@
     <div class="controls-BreadCrumbsPath__wrapper">
         <ws:if data="{{_options.items && _options.items.length}}">
             <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
-                <Controls.Heading.BackButton attr:class="controls-BreadCrumbsPath__backButton"
+                <Controls.Heading.Back attr:class="controls-BreadCrumbsPath__backButton"
                                       caption="{{_backButtonCaption}}"
-                                      style="primary"
+                                      style="secondary"
                                       on:click="_onBackButtonClick()"/>
                 <div class="controls-BreadCrumbsPath__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
                      on:click="_onArrowClick()"></div>

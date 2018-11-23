@@ -1,4 +1,4 @@
-<div class="controls-PopupContainer" id="popup" on:popupDestroyed="_popupDestroyed()">
+<div class="controls-PopupContainer" id="popup">
    <ws:for data="index, item in _popupItems">
       <ws:if data="{{index === _overlayId}}">
          <div class="controls-Container__overlay" on:mousedown="_overlayClickHandler()"
@@ -7,7 +7,7 @@
       <Controls.Container.PendingRegistrator name="{{item.id}}_registrator" attr:key="{{item.id}}">
          <Controls.Popup.Manager.Popup id="{{item.id}}" __key="{{item.id}}" name="{{item.id}}"
                                        on:deactivated="_popupDeactivated(item.id)"
-                                       on:popupClose="_popupClosed()"
+                                       on:activated="_popupActivated(item.id)"
                                        attr:class="controls-Container__popup
                 {{_popupItems.getCount() - 1 === index ? 'controls-Scroll_webkitOverflowScrollingTouch'}}
                 {{item.popupOptions.className}} {{item.position.hidden ? 'ws-invisible'}}"

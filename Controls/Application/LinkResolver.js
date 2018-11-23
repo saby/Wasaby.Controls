@@ -1,12 +1,6 @@
 define('Controls/Application/LinkResolver', ['Core/core-extend'], function(coreExtend) {
    'use strict';
 
-   // css link should look like:
-   // if it's release mode
-   // /**appRoot**/**resourceRoot**/path/to/file.min.v**buildnumber**.css
-   // and if it's debug mode
-   // /**appRoot**/**resourceRoot**/path/to/file.css
-
    function joinPaths(arr) {
       var arrRes = [];
       for (var i = 0; i < arr.length; i++) {

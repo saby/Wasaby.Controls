@@ -204,12 +204,12 @@ define('Controls/Container/Suggest/Layout',
             _private.updateSuggestState(this);
          },
          _inputActivated: function() {
-            if (this._options.autoDropDown) {
+            if (this._options.autoDropDown && !this._options.readOnly) {
                _private.open(this);
             }
          },
          _inputClicked: function() {
-            if (this._options.autoDropDown && !this._options.suggestState) {
+            if (this._options.autoDropDown && !this._options.suggestState &&  !this._options.readOnly) {
                _private.open(this);
             }
          },

@@ -191,7 +191,9 @@ define('Controls/Application',
             }
 
             self.buildnumber = cfg.buildnumber || constants.buildnumber;
-            self.appRoot = cfg.appRoot || constants.appRoot;
+
+            // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
+            self.appRoot = cfg.appRoot || context.AppData.appRoot || constants.appRoot;
             self.staticDomains = cfg.staticDomains || constants.staticDomains || '[]';
             if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
@@ -207,6 +209,7 @@ define('Controls/Application',
             self.lite = cfg.lite || false;
             self.servicesPath = cfg.servicesPath || constants.servicesPath || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
+            self.application = context.AppData.application;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug,
                self.buildnumber,
