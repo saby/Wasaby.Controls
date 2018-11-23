@@ -41,6 +41,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
          },
 
          _eventRegistratorHandler: function(registratorName, event) {
+            // vdom control used synthetic event
             this._children[registratorName].start(new SyntheticEvent(event));
          },
 
