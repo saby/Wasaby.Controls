@@ -15,6 +15,11 @@
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>
+   <ws:if data="{{!_options.compat}}">
+      <script>
+         window.themesActive = true;
+      </script>
+   </ws:if>
 
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
 

@@ -1,4 +1,4 @@
-<Controls.Controllers.SelectedCollection
+<Controls.Selector.SelectedCollection.Controller
       name="controller"
       source="{{_options.source}}"
       selectedKeys="{{_options.selectedKeys}}"
@@ -9,5 +9,5 @@
       isCompoundTemplate="{{_options.isCompoundTemplate}}"
       multiSelect="{{_options.multiSelect}}"
       attr:class="controls-Lookup">
-   <Controls.Input.Lookup._Lookup scope="{{_options}}"/>
-</Controls.Controllers.SelectedCollection>
+   <Controls.Selector.Lookup._Lookup scope="{{_options}}"/>
+</Controls.Selector.SelectedCollection.Controller>
