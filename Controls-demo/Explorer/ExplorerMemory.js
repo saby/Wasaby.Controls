@@ -1,9 +1,10 @@
 define('Controls-demo/Explorer/ExplorerMemory', [
    'WS.Data/Source/Memory',
    'WS.Data/Source/DataSet',
+   'WS.Data/Collection/RecordSet',
    'Core/Deferred',
    'Core/core-clone'
-], function(MemorySource, DataSet, Deferred, cClone) {
+], function(MemorySource, DataSet, RecordSet, Deferred, cClone) {
 
    'use strict';
 
@@ -24,7 +25,10 @@ define('Controls-demo/Explorer/ExplorerMemory', [
          currentNode = getById(items, currentNode.parent);
          path.unshift(currentNode);
       }
-      return path;
+      return new RecordSet({
+         rawData: path,
+         idProperty: 'id'
+      });
    }
 
    var
