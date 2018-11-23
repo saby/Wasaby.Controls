@@ -86,6 +86,8 @@ define('Controls/Tabs/Buttons', [
    /**
     * Controls are designed to give users a choice among two or more tabs.
     *
+    * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
+    *
     * @class Controls/Tabs/Buttons
     * @extends Core/Control
     * @mixes Controls/interface/ISingleSelectable
