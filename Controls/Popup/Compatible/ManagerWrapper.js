@@ -5,15 +5,18 @@ define('Controls/Popup/Compatible/ManagerWrapper',
    [
       'Core/Control',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
-      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper'
+      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
+      'Vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(Control, Controller, template) {
+   function(Control, Controller, template, SyntheticEvent) {
       'use strict';
 
       var ManagerWrapper = Control.extend({
          _template: template,
 
-         _beforeMount: function() {
+         _afterMount: function() {
+            Controller.registerManager(this);
+            // Add handlers to events when children are created
             if (window) {
                this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
                this._resizePage = this._eventRegistratorHandler.bind(this, 'resizeDetect');
@@ -25,10 +28,6 @@ define('Controls/Popup/Compatible/ManagerWrapper',
 
                this._toggleWindowHandlers(true);
             }
-         },
-
-         _afterMount: function() {
-            Controller.registerManager(this);
          },
 
          _toggleWindowHandlers: function(subscribe) {
@@ -43,7 +42,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
          },
 
          _eventRegistratorHandler: function(registratorName, event) {
-            this._children[registratorName].start(event);
+            this._children[registratorName].start(new SyntheticEvent(event));
          },
 
          _scrollHandler: function() {
