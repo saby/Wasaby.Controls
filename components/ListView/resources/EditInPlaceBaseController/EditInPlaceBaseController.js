@@ -106,6 +106,10 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
 
             init: function() {
                EditInPlaceBaseController.superclass.init.apply(this, arguments);
+               // Если фокус ушел на кнопку закрытия диалога, то редактирование по месту не должно реагировать на это, т.к.
+               // его и так завершат через finishChildPendingOperation (и туда попадет правильный аргумент - с сохранением
+               // или без завершать редактирование по месту)
+               // isCloseButtonPressed: https://online.sbis.ru/opendoc.html?guid=e6e98641-8c5a-4b28-97a0-5c1caa0af1f2
                if (this.getOpener() && this.getOpener().getTopParent()) {
                   this._closeButton = this.getOpener().getTopParent()._container.closest('.ws-window').find('.ws-float-close');
                   this._closeButtonPressedCb = this._closeButtonPressed.bind(this);
@@ -114,6 +118,7 @@ define('SBIS3.CONTROLS/ListView/resources/EditInPlaceBaseController/EditInPlaceB
             },
 
             _closeButtonPressed: function() {
+               // isCloseButtonPressed: https://online.sbis.ru/opendoc.html?guid=e6e98641-8c5a-4b28-97a0-5c1caa0af1f2
                this._isCloseButtonPressed = true;
             },
 
