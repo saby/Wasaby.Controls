@@ -10,7 +10,6 @@
    <ws:else>
       <div
          class="controls-EditableArea__Text
-                {{enabled ? 'controls-EditableArea__Text_enabled'}}
                 controls-EditableArea__Text_style_{{_options.style ? _options.style  : 'default'}}
                 controls-EditingTemplateText_size_{{_options.size ? _options.size : 'default'}}"
       >
