@@ -18,17 +18,15 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             Controller.registerManager(this);
 
             // Add handlers to events when children are created
-            if (window) {
-               this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
-               this._resizePage = this._eventRegistratorHandler.bind(this, 'resizeDetect');
-               this._mousemovePage = this._eventRegistratorHandler.bind(this, 'mousemoveDetect');
-               this._touchmovePage = this._eventRegistratorHandler.bind(this, 'touchmoveDetect');
-               this._touchendPage = this._eventRegistratorHandler.bind(this, 'touchendDetect');
-               this._mousedownPage = this._eventRegistratorHandler.bind(this, 'mousedownDetect');
-               this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
+            this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
+            this._resizePage = this._eventRegistratorHandler.bind(this, 'resizeDetect');
+            this._mousemovePage = this._eventRegistratorHandler.bind(this, 'mousemoveDetect');
+            this._touchmovePage = this._eventRegistratorHandler.bind(this, 'touchmoveDetect');
+            this._touchendPage = this._eventRegistratorHandler.bind(this, 'touchendDetect');
+            this._mousedownPage = this._eventRegistratorHandler.bind(this, 'mousedownDetect');
+            this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
 
-               this._toggleWindowHandlers(true);
-            }
+            this._toggleWindowHandlers(true);
          },
 
          _toggleWindowHandlers: function(subscribe) {
