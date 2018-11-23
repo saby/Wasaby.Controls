@@ -1,21 +1,16 @@
-<ws:if data="{{ !isLoading }}">
+<div>
    <ws:partial template="{{_options.content}}" on:toggleIndicator="_toggleIndicatorHandler()" attr:class="controls-loading-indicator_content"/>
-</ws:if>
-<ws:else>
-   <div>
-      <ws:partial template="{{_options.content}}" on:toggleIndicator="_toggleIndicatorHandler()" attr:class="controls-loading-indicator_content"/>
-      <ws:if data="{{ isLoading }}">
-         <div class="controls-loading-indicator
+   <ws:if data="{{ isLoading }}">
+      <div class="controls-loading-indicator
       {{isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local'}}
       {{useSpinner && message ? 'controls-loading-indicator_text'}}
       {{useSpinner && scroll ? 'controls-loading-indicator_scroll controls-loading-indicator_sided controls-loading-indicator_sided-' + scroll}}
       {{useSpinner && small ? 'controls-loading-indicator_small' + (small !== 'yes' ? ' controls-loading-indicator_sided controls-loading-indicator_sided-' + small : '')}}
       {{useSpinner && overlay ? 'controls-loading-indicator_overlay-' + overlay}}
       {{mods && mods.length ? 'controls-loading-indicator_mod-' + mods.join(' controls-loading-indicator_mod-') }}">
-            <ws:if data="{{useSpinner}}">
-               <div class="controls-loading-indicator-in">{{message}}</div>
-            </ws:if>
-         </div>
-      </ws:if>
-   </div>
-</ws:else>
+         <ws:if data="{{useSpinner}}">
+            <div class="controls-loading-indicator-in">{{message}}</div>
+         </ws:if>
+      </div>
+   </ws:if>
+</div>
