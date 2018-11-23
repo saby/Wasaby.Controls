@@ -207,6 +207,7 @@ define('Controls/Application',
             self.lite = cfg.lite || false;
             self.servicesPath = cfg.servicesPath || constants.servicesPath || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
+            self.application = context.AppData.application;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug,
                self.buildnumber,
