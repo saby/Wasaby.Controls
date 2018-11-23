@@ -84,7 +84,9 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             item.dragged = true;
             item.position.left = item.startPosition.left + offset.x;
             item.position.top = item.startPosition.top + offset.y;
-            this.prepareConfig(item, container);
+
+            // Take the size from cache, because they don't change when you move
+            _private.prepareConfig(item, item.sizes);
          },
 
          popupDragEnd: function(item) {
@@ -93,12 +95,14 @@ define('Controls/Popup/Opener/Dialog/DialogController',
 
          prepareConfig: function(cfg, container) {
             var sizes = this._getPopupSizes(cfg, container);
+            cfg.sizes = sizes;
             _private.prepareConfig(cfg, sizes);
          },
 
          needRecalcOnKeyboardShow: function() {
             return true;
-         }
+         },
+         _private: _private
       });
       return new DialogController();
    }

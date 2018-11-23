@@ -6,6 +6,7 @@ define('Controls/interface/IInputDropdown', [
     *
     * @interface Controls/interface/IInputDropdown
     * @public
+    * @author Золотова Э.Е.
     */
 
    /**

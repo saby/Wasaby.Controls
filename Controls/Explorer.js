@@ -81,7 +81,8 @@ define('Controls/Explorer', [
     * @extends Core/Control
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/interface/IMultiSelectable
+    * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -93,7 +94,7 @@ define('Controls/Explorer', [
     * @control
     * @public
     * @category List
-    * @author Сухоручкин А.С.
+    * @author Авраменко А.С.
     */
 
    var Explorer = Control.extend({
@@ -127,6 +128,18 @@ define('Controls/Explorer', [
       },
       _onBreadCrumbsClick: function(event, item, setPreviousNode) {
          _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
+      },
+      beginEdit: function(options) {
+         return this._children.treeControl.beginEdit(options);
+      },
+      beginAdd: function(options) {
+         return this._children.treeControl.beginAdd(options);
+      },
+      cancelEdit: function() {
+         return this._children.treeControl.cancelEdit();
+      },
+      commitEdit: function() {
+         return this._children.treeControl.commitEdit();
       },
       _notifyHandler: tmplNotify
    });

@@ -5,6 +5,7 @@ define('Controls/interface/IPromisedSelectable', [
     * Interface for item selection in lists where multiple items can be selected at a time and the number of selected items is unknown. This interface is suitable for trees or lists with infinite scrolling where user can select items which are not loaded yet (e.g. through operations panel).
     * @interface Controls/interface/IPromisedSelectable
     * @public
+    * @author Зайцев А.С.
     * @see Controls/interface/ISingleSelectable
     * @see Controls/interface/IMultiSelectable
     */

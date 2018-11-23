@@ -2,9 +2,10 @@ define('Controls/Dropdown/Opener',
    [
       'Controls/Popup/Opener/Sticky',
       'Core/core-merge',
-      'Controls/Utils/getZIndex'
+      'Controls/Utils/getZIndex',
+      'Core/IoC'
    ],
-   function(Sticky, coreMerge, getZIndex) {
+   function(Sticky, coreMerge, getZIndex, IoC) {
       /**
        * Opener for dropdown menu.
        *
@@ -85,22 +86,26 @@ define('Controls/Dropdown/Opener',
             }
             this.checkIcons(self, config);
          },
-         setPopupOptions: function(self, config) {
-            config.className = self._options.className;
-            config.template = 'Controls/Dropdown/resources/template/DropdownList';
-            config.closeByExternalClick = true;
+         setPopupOptions: function(self, popupOptions) {
+            //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
+            popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
+            if (self._options.className) {
+               IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
+            }
+            popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
+            popupOptions.closeByExternalClick = true;
          }
       };
 
       var DropdownOpener = Sticky.extend({
          _itemTemplateDeferred: undefined,
 
-         open: function(config, opener) {
-            _private.setTemplateOptions(this, config);
-            _private.setPopupOptions(this, config);
+         open: function(popupOptions, opener) {
+            _private.setTemplateOptions(this, popupOptions);
+            _private.setPopupOptions(this, popupOptions);
 
             // To place zIndex in the old environment
-            config.zIndex = getZIndex(this);
+            popupOptions.zIndex = getZIndex(this);
             DropdownOpener.superclass.open.apply(this, arguments);
          }
       });

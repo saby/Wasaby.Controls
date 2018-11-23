@@ -5,6 +5,7 @@ define('Controls/interface/IFilterButton', [
     * Provides a user interface for browsing and editing the filter fields.
     * @interface Controls/interface/IFilterButton
     * @public
+    * @author Герасимов А.М.
     */
 
    /**

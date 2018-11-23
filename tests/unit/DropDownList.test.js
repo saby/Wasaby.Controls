@@ -157,6 +157,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             var dropDownConfig, dropDownList;
 
             dropDownConfig = getDropDownConfig();
+            dropDownConfig.rootKey = 1;
             dropDownList = getDropDownListWithConfig(dropDownConfig);
             dropDownList._beforeMount(dropDownConfig);
 
@@ -183,11 +184,33 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             var inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
             assert.deepEqual(expectedConfig, inFactConfig);
 
+            dropDownList._options.rootKey = null;
+            expectedConfig.corner.horizontal = 'right';
+            expectedConfig.horizontalAlign.side = 'right';
 
+            inFactConfig = DropdownList._private.getSubMenuOptions(dropDownList._options, dropDownList._popupOptions, { target: "MyTarget"}, items.at(0));
+            assert.deepEqual(expectedConfig, inFactConfig);
          });
 
+         it('resultHandler itemClick', function() {
+            var dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            dropdownList._notify = function(event, data) {
+               if (event === 'sendResult') {
+                  assert.equal(data[0].action, 'itemClick');
+               }
+            };
+            dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
+            dropdownList.resultHandler({ action: 'itemClick' });
+         });
+         it('resultHandler pinClick', function() {
+            var dropdownList = getDropDownListWithConfig(getDropDownConfig());
+            dropdownList._notify = function(event, data) {
+               if (event === 'sendResult') {
+                  assert.equal(data[0].action, 'pinClicked');
+               }
+            };
+            dropdownList.resultHandler({ action: 'pinClicked' });
+         });
       });
-
    });
-
 });

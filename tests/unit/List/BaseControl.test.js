@@ -815,11 +815,27 @@ define([
             assert.equal(args[0], 2);
             assert.equal(args[1], 0);
          };
+         ctrl._children = {
+            selectionController: {
+               onCheckBoxClick: function(key, status) {
+                  assert.equal(key, 2);
+                  assert.equal(status, 0);
+               }
+            }
+         };
          ctrl._onCheckBoxClick({}, 2, 0);
          ctrl._notify = function(e, args) {
             assert.equal(e, 'checkboxClick');
             assert.equal(args[0], 1);
             assert.equal(args[1], 1);
+         };
+         ctrl._children = {
+            selectionController: {
+               onCheckBoxClick: function(key, status) {
+                  assert.equal(key, 1);
+                  assert.equal(status, 1);
+               }
+            }
          };
          ctrl._onCheckBoxClick({}, 1, 1);
       });

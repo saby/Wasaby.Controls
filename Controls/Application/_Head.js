@@ -4,7 +4,8 @@ define('Controls/Application/_Head',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
       'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController'
+      'Core/Themes/ThemesController',
+      'Controls/Application/HeadDataContext'
    ],
    function(Base, Deferred, template, HeadDataContext, ThemesController) {
       'use strict';
@@ -22,7 +23,7 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options, context, receivedState) {
-            ThemesController.getInstance().setUpdateCallback(this._forceUpdate);
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
             this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
             if (typeof window !== 'undefined') {
@@ -50,6 +51,11 @@ define('Controls/Application/_Head',
                return res;
             });
             return innerDef;
+         },
+         _beforeUpdate: function() {
+            var csses = ThemesController.getInstance().getCss();
+            this.themedCss = csses.themedCss;
+            this.simpleCss = csses.simpleCss;
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);

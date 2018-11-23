@@ -3,16 +3,12 @@ define('Controls/List/TreeControl', [
    'wml!Controls/List/TreeControl/TreeControl',
    'Controls/Controllers/SourceController',
    'Core/core-clone',
-   'WS.Data/Relation/Hierarchy',
-   'Controls/Utils/ArraySimpleValuesUtil',
    'Core/Deferred'
 ], function(
    Control,
    TreeControlTpl,
    SourceController,
    cClone,
-   HierarchyRelation,
-   ArraySimpleValuesUtil,
    Deferred
 ) {
    'use strict';
@@ -85,46 +81,6 @@ define('Controls/List/TreeControl', [
             }
          });
       },
-      getParentId: function(key, items, parentProperty) {
-         var item = items.getRecordById(key);
-
-         if (item) {
-            return item.get(parentProperty);
-         }
-      },
-      getAllParentsIds: function(hierarchyRelation, key, items) {
-         var
-            parentsIds = [],
-            parentId = _private.getParentId(key, items, hierarchyRelation.getParentProperty());
-
-         while (parentId) {
-            parentsIds.push(parentId);
-            parentId = _private.getParentId(parentId, items, hierarchyRelation.getParentProperty());
-         }
-
-         return parentsIds;
-      },
-      getAllChildren: function(hierarchyRelation, rootId, items) {
-         var
-            children = [];
-
-         hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
-            if (hierarchyRelation.isNode(child)) {
-               ArraySimpleValuesUtil.addSubArray(children, _private.getAllChildren(hierarchyRelation, child.getId(), items));
-            }
-            ArraySimpleValuesUtil.addSubArray(children, [child]);
-         });
-
-         return children;
-      },
-      getSelectedChildrenCount: function(hierarchyRelation, rootId, selectedKeys, items) {
-         return _private.getAllChildren(hierarchyRelation, rootId, items).reduce(function(acc, child) {
-            if (selectedKeys.indexOf(child.getId()) !== -1) {
-               return acc + 1;
-            }
-            return acc;
-         }, 0);
-      },
       onNodeRemoved: function(self, nodeId) {
          if (self._nodesSourceControllers[nodeId]) {
             self._nodesSourceControllers[nodeId].destroy();
@@ -157,13 +113,6 @@ define('Controls/List/TreeControl', [
          }
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
-      _beforeMount: function(cfg) {
-         this._hierarchyRelation = new HierarchyRelation({
-            idProperty: cfg.keyProperty,
-            parentProperty: cfg.parentProperty,
-            nodeProperty: cfg.nodeProperty
-         });
-      },
       _afterMount: function() {
          TreeControl.superclass._afterMount.apply(this, arguments);
          this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -179,6 +128,11 @@ define('Controls/List/TreeControl', [
          if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
             this._updatedRoot = true;
+         }
+         if (newOptions.expandedItems !== this._options.expandedItems) {
+
+            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+            this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
          }
       },
       _afterUpdate: function(oldOptions) {
@@ -200,13 +154,23 @@ define('Controls/List/TreeControl', [
       },
       _onExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
+         e.stopImmediatePropagation();
       },
       _onLoadMoreClick: function(e, dispItem) {
          _private.loadMore(this, dispItem);
       },
       reload: function(filter) {
+         var
+            self = this,
+            result;
          _private.clearSourceControllers(this);
-         this._children.baseControl.reload(filter);
+         result = this._children.baseControl.reload(filter);
+         result.addCallback(function() {
+
+            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+            self._children.baseControl.getViewModel().setExpandedItems([]);
+         });
+         return result;
       },
       beginEdit: function(options) {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);
@@ -221,36 +185,6 @@ define('Controls/List/TreeControl', [
 
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
-      },
-      _onCheckBoxClick: function(e, key, status) {
-         var
-            parents,
-            newSelectedKeys,
-            diff,
-            childrenIds;
-         if (status === true || status === null) {
-            parents = _private.getAllParentsIds(this._hierarchyRelation, key, this._options.items);
-            newSelectedKeys = this._options.selectedKeys.slice();
-            newSelectedKeys.splice(newSelectedKeys.indexOf(key), 1);
-            childrenIds = _private.getAllChildren(this._hierarchyRelation, key, this._options.items).map(function(child) {
-               return child.getId();
-            });
-            ArraySimpleValuesUtil.removeSubArray(newSelectedKeys, childrenIds);
-            for (var i = 0; i < parents.length; i++) {
-               // TODO: проверка на hasMore должна быть тут
-               if (_private.getSelectedChildrenCount(this._hierarchyRelation, parents[i], newSelectedKeys, this._options.items) === 0) {
-                  newSelectedKeys.splice(newSelectedKeys.indexOf(parents[i]), 1);
-               } else {
-                  break;
-               }
-            }
-            diff = ArraySimpleValuesUtil.getArrayDifference(this._options.selectedKeys, newSelectedKeys);
-            this._notify('selectedKeysChanged', [newSelectedKeys, diff.added, diff.removed]);
-         } else {
-            newSelectedKeys = this._options.selectedKeys.slice();
-            newSelectedKeys.push(key);
-            this._notify('selectedKeysChanged', [newSelectedKeys, [key], []]);
-         }
       },
 
       _markedKeyChangedHandler: function(event, key) {
@@ -293,8 +227,7 @@ define('Controls/List/TreeControl', [
    TreeControl.getDefaultOptions = function() {
       return {
          uniqueKeys: true,
-         filter: {},
-         multiSelectVisibility: 'hidden'
+         filter: {}
       };
    };
 

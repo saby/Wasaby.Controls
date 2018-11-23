@@ -1,0 +1,45 @@
+<div>
+   <h1>Markup</h1>
+   <div>
+      <div  class="ControlsDemo-Markup__block">
+         <Controls.Label name="myLabel1" caption="Ввести строковое представление json массива:" />
+         <Controls.Input.Text bind:value="strJson"
+                              attr:id="ControlsDemo-Markup__strJson"
+                              on:keydown="_applyJson()" />
+      </div>
+      <div class="ControlsDemo-Markup__block">
+         <Controls.Label name="myLabel2" caption="Добавить или изменить параметр резолвера, выбрать резолвер" />
+         <Controls.Input.Text bind:value="_newParamKey"
+                              attr:id="ControlsDemo-Markup__newParamKey"
+                              placeholder="ключ" />
+         <Controls.Input.Text bind:value="_newParamValue"
+                              attr:id="ControlsDemo-Markup__newParamValue"
+                              placeholder="значение" />
+         <Controls.Button
+               on:click="_applyNewResolverParam()"
+               attr:id="ControlsDemo-Markup__applyNewParam"
+               caption="Подтвердить" />
+         <Controls.Button.MenuButton source="{{ _resolversMemorySource }}"
+                                     caption="Выбор резолвера"
+                                     attr:id="ControlsDemo-Markup__resolverSelect"
+                                     keyProperty="id"
+                                     on:onMenuItemActivate="_updateResolver()"
+                                     style="linkAdditional4" />
+      </div>
+      <div class="ControlsDemo-Markup__block">
+         <Controls.Label name="myLabel3" caption="json массив: {{ strJson }}" />
+         <Controls.Label name="myLabel4" caption="резолвер: {{ tagResolverName }}" />
+         <Controls.Label name="myLabel5" caption="параметры резолвера: {{ objectToStr(resolverParams) }}" />
+         <Controls.Button on:click="_applyJson()"
+                          attr:id="ControlsDemo-Markup__finalApply"
+                          caption="Подтвердить все введённые данные" />
+      </div>
+      <div class="ControlsDemo-Markup__block">
+         <Controls.Label name="myLabel6" caption="Результат:" />
+         <Controls.Decorator.Markup value="{{ json }}"
+                                    attr:id="ControlsDemo-Markup__result"
+                                    tagResolver="{{ tagResolver }}"
+                                    resolverParams="{{ resolverParams }}" />
+      </div>
+   </div>
+</div>

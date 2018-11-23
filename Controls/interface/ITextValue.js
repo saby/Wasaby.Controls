@@ -5,6 +5,7 @@ define('Controls/interface/ITextValue', [], function() {
     *
     * @interface Controls/interface/ITextValue
     * @public
+    * @author Золотова Э.Е.
     */
 
    /**

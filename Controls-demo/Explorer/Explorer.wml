@@ -3,7 +3,8 @@
    <Controls.Button attr:class="demo-Explorer__viewButton" on:click="_changeViewMode()" style="linkMain" icon="icon-medium icon-primary {{_changeViewIcon}}"/>
    <Controls.Container.Scroll attr:class="demo-Explorer__scrollContainer">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-         <Controls.Container.TreeMultiSelector bind:selectedKeys="_selectedKeys" bind:excludedKeys="_excludedKeys" parentProperty="parent" nodeProperty="parent@">
+         <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys"
+                                           bind:excludedKeys="_excludedKeys">
             <Controls.List.Container>
                <Controls.List.MultiSelector>
                   <Controls.Explorer
@@ -32,7 +33,7 @@
                   </Controls.Explorer>
                </Controls.List.MultiSelector>
             </Controls.List.Container>
-         </Controls.Container.TreeMultiSelector>
+         </Controls.Container.MultiSelector>
       </Controls.Container.Data>
    </Controls.Container.Scroll>
 </div>

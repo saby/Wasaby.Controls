@@ -9,6 +9,7 @@ define('Controls/Toggle/RadioGroup/RadioGroupStyles',
     * Styles of circle in RadioButton and Switch.
     * @mixin Controls/Toggle/RadioGroup/RadioGroupStyles
     * @public
+    * @author Михайловский Д.С.
     *
     * @css @color_RadioItem_caption_selected Color of caption in selected state.
     * @css @color_RadioItem_caption_unselected_disabled	Color of caption in unselected and disabled state.

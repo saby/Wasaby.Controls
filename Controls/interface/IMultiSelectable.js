@@ -5,6 +5,7 @@ define('Controls/interface/IMultiSelectable', [
     * Interface for item selection in lists where multiple items can be selected at a time and the number of selected items is known. This interface is suitable for small lists where all items are always loaded.
     * @interface Controls/interface/IMultiSelectable
     * @public
+    * @author Герасимов А.М.
     * @see Controls/interface/ISingleSelectable
     * @see Controls/interface/IPromisedSelectable
     */

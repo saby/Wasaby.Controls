@@ -51,13 +51,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._selectedKeys = cClone(options.selectedKeys);
          this._excludedKeys = cClone(options.excludedKeys);
 
-         //TODO: нужно кидать исключение, если нет items
          this._items = cClone(options.items);
-
-         //excluded keys имеют смысл только когда выделено все, поэтому ситуацию, когда переданы оба массива считаем ошибочной
-         if (options.excludedKeys.length && !this._isAllSelection(this._getParams())) {
-            //TODO возможно надо кинуть здесь исключение
-         }
 
          Selection.superclass.constructor.apply(this, arguments);
       },
@@ -156,9 +150,8 @@ define('Controls/Controllers/Multiselect/Selection', [
             items: this._items
          })) {
             return this._items.getCount() - this._excludedKeys.length;
-         } else {
-            return this._selectedKeys.length;
          }
+         return this._selectedKeys.length;
       },
 
       /**

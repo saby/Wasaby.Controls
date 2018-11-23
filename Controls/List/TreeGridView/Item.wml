@@ -6,10 +6,9 @@
          </ws:for>
       </ws:if>
       <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
-         <div on:click="_onExpanderClick(itemData.dispItem)"
-              class="{{itemData.prepareExpanderClasses(itemData, expanderIcon, expanderSize)}}"></div>
+         <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}" expanderSize="{{expanderSize}}"/>
       </ws:if>
-      <ws:else data="{{!expanderSize}}">
+      <ws:else data="{{!expanderSize && expanderIcon !== 'none'}}">
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
@@ -49,7 +48,7 @@
    </ws:else>
 </ws:template>
 <ws:if data="{{itemData.isNotFullGridSupport}}">
-   <tr attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style || 'default'}}">
+   <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
          <td attr:class="{{itemData.getCurrentColumn().cellClasses}}
                          {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
@@ -64,7 +63,7 @@
    </tr>
 </ws:if>
 <ws:else>
-   <div attr:class="controls-Grid__row controls-ListView__itemV controls-Grid__row_{{itemData.style || 'default'}}">
+   <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}
                           {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}

@@ -50,14 +50,16 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   id: '4',
                   buttonIcon: 'icon-24 icon-Linked',
                   buttonStyle: 'secondary',
-                  buttonViewMode: 'quickButton',
+                  buttonViewMode: 'toolButton',
                   buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
                   title: 'Связанные документы',
                   '@parent': true,
                   parent: null
                },
                {
                   id: '5',
+                  buttonViewMode: 'icon',
                   icon: 'icon-Link',
                   title: 'Скопировать в буфер',
                   '@parent': false,

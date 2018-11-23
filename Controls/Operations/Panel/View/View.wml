@@ -1,6 +1,8 @@
 <div class="controls-operationsPanelV">
    <ws:if data="{{_options.multiSelectorVisibility}}">
-      <Controls.Operations.MultiSelector/>
+      <Controls.Operations.MultiSelector selectedKeys="{{ _options.selectedKeys }}"
+                                         excludedKeys="{{ _options.excludedKeys }}"
+                                         selectedKeysCount="{{ _options.selectedKeysCount }}" />
    </ws:if>
    <div class="controls-operationsPanelV__actions" name="toolbarBlock">
       <ws:if data="{{_toolbarSource}}">

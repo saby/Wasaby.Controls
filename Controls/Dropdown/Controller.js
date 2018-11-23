@@ -50,13 +50,14 @@ define('Controls/Dropdown/Controller',
        */
 
       var _private = {
-         loadItems: function(instance, source, selectedKeys, keyProperty, dataLoadCallback, filter) {
+         loadItems: function(instance, options) {
             instance._sourceController = new SourceController({
-               source: source
+               source: options.source,
+               navigation: options.navigation
             });
-            return instance._sourceController.load(filter).addCallback(function(items) {
+            return instance._sourceController.load(options.filter).addCallback(function(items) {
                instance._items = items;
-               _private.updateSelectedItems(instance, selectedKeys, keyProperty, dataLoadCallback);
+               _private.updateSelectedItems(instance, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                return items;
             });
          },
@@ -122,7 +123,7 @@ define('Controls/Dropdown/Controller',
                   this._items = receivedState;
                   _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else if (options.source) {
-                  return _private.loadItems(this, options.source, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
+                  return _private.loadItems(this, options);
                }
             }
          },
@@ -137,8 +138,9 @@ define('Controls/Dropdown/Controller',
                   /* source changed, items is not actual now */
                   this._items = null;
                } else {
+                  this._selectedItems = [];
                   var self = this;
-                  return _private.loadItems(this, newOptions.source, newOptions.selectedKeys, newOptions.keyProperty).addCallback(function() {
+                  return _private.loadItems(this, newOptions).addCallback(function() {
                      self._forceUpdate();
                   });
                }
@@ -173,7 +175,7 @@ define('Controls/Dropdown/Controller',
             }
 
             if (this._options.source && !this._items) {
-               _private.loadItems(this, this._options.source, this._options.selectedKeys, this._options.keyProperty, this._options.dataLoadCallBack, this._options.filter).addCallback(function(items) {
+               _private.loadItems(this, this._options).addCallback(function(items) {
                   itemsLoadCallback(items);
                   return items;
                });

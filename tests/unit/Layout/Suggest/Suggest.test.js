@@ -1,6 +1,6 @@
 define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Suggest, List, RecordSet, Model){
    
-   describe('Controls.Container.Suggest.Layout', function () {
+   describe('Controls.Container.Suggest.Layout', function() {
    
       var hasMoreTrue = {
          hasMore: true
@@ -186,6 +186,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isFalse(self._loading);
       });
    
+      it('Suggest::check footer template', function(done) {
+         var footerTpl;
+         
+         requirejs(['wml!Controls/Container/Suggest/Layout/footer'], function(result) {
+            footerTpl = result;
+            
+            assert.equal(footerTpl(), '<div class="controls-Suggest__footer"></div>');
+            assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore'}), '<div class="controls-Suggest__footer">testShowMore</div>');
+            assert.equal(footerTpl({showMoreButtonTemplate: 'testShowMore', showSelectorButtonTemplate: 'testShowSelector'}), '<div class="controls-Suggest__footer">testShowMoretestShowSelector</div>');
+            done();
+         });
+      });
+   
       it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {
          var self = getComponentObject();
          var suggestComponent = new Suggest();
@@ -194,6 +207,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          self._options.searchParam = 'searchParam';
          self._options.autoDropDown = true;
          self._options.minSearchLength = 3;
+         self._options.readOnly = false;
          suggestComponent.saveOptions(self._options);
          suggestComponent._notify = function(event, val) {
             if (event === 'suggestStateChanged') {
@@ -213,7 +227,19 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
             
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
-               done();
+   
+               suggestComponent._close();
+               self._options.readOnly = true;
+               suggestComponent._inputActivated();
+               suggestComponent._dependenciesDeferred.addCallback(function() {
+                  assert.isFalse(suggestState);
+   
+                  suggestComponent._inputClicked();
+                  suggestComponent._dependenciesDeferred.addCallback(function() {
+                     assert.isFalse(suggestState);
+                     done();
+                  });
+               });
             });
          });
       });

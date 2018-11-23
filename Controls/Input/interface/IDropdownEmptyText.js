@@ -6,6 +6,7 @@ define('Controls/Input/interface/IDropdownEmptyText', [
     *
     * @interface Controls/Input/interface/IDropdownEmptyText
     * @public
+    * @author Золотова Э.Е.
     */
 
    /**

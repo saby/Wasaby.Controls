@@ -8,6 +8,7 @@
    appRoot="{{ appRoot }}"
    lite="{{lite}}"
    RUMEnabled="{{ RUMEnabled }}"
+   pageName="{{ pageName }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
    title="{{ title }}"
@@ -39,6 +40,7 @@
                                  on:mouseup="_mouseupPage()"
                                  on:openInfoBox="_openInfoBoxHandler()"
                                  on:closeInfoBox="_closeInfoBoxHandler()"
+                                 on:forceCloseInfoBox="_forceCloseInfoBoxHandler()"
                                  on:keyPress="_keyPressHandler()"
                                  on:mouseup="_mouseupPage()"
                                  on:openPreviewer="_openPreviewerHandler()"
@@ -109,9 +111,7 @@
                                  </div>
                               </ws:else>
                               <Controls.Popup.Opener.Previewer name="previewerOpener"/>
-                              <ws:if data="{{ application && application.toLowerCase().indexOf('demo') === -1 }}">
-                                 <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" />
-                              </ws:if>
+                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                               <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>

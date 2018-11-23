@@ -22,6 +22,7 @@ define('Controls/Input/Number',
        * @extends Core/Control
        *
        * @mixes Controls/Input/interface/IInputTag
+       * @mixes Controls/Input/interface/IPaste
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputNumber
        * @mixes Controls/Input/interface/IInputPlaceholder
@@ -181,6 +182,11 @@ define('Controls/Input/Number',
          },
 
          _inputCompletedHandler: function(event, value) {
+            // Convert different interpretations of null(like -0, 0000, -000) to '0'.
+            if (this._options.precision === 0 && this._getNumericValue(value) === 0) {
+               value = '0';
+               this._numberViewModel.updateValue(value);
+            }
             this._notify('inputCompleted', [this._getNumericValue(value)]);
          },
 

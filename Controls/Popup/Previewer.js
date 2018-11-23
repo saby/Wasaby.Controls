@@ -2,9 +2,10 @@ define('Controls/Popup/Previewer',
    [
       'Core/Control',
       'wml!Controls/Popup/Previewer/Previewer',
+      'Core/helpers/Function/debounce',
       'Controls/Popup/Opener/Previewer'
    ],
-   function(Control, template, PreviewerOpener) {
+   function(Control, template, debounce, PreviewerOpener) {
 
       'use strict';
 
@@ -12,6 +13,7 @@ define('Controls/Popup/Previewer',
        * @class Controls/Popup/Previewer
        * @extends Core/Control
        * @public
+       * @author Красильников А.С.
        *
        * @name Controls/Popup/Previewer#content
        * @cfg {Content} The content to which the logic of opening and closing the mini card is added.
@@ -61,28 +63,34 @@ define('Controls/Popup/Previewer',
 
       var Previewer = Control.extend({
          _template: template,
+         _isPopupOpened: false,
 
          _isNewEnvironment: PreviewerOpener.isNewEnvironment,
 
          _beforeMount: function() {
             this._resultHandler = this._resultHandler.bind(this);
+            this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
          },
 
          _open: function(event) {
             var type = _private.getType(event.type);
 
-            if (this._isNewEnvironment()) {
-               this._close(event); // close opened popup to avoid jerking the content for repositioning
-               this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
-            } else {
-               this._children.openerPreviewer.open(_private.getCfg(this, event), type);
+            if (!this._isPopupOpened) {
+               if (this._isNewEnvironment()) {
+                  this._close(event); // close opened popup to avoid jerking the content for repositioning
+                  this._isPopupOpened = true;
+                  this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
+               } else {
+                  this._children.openerPreviewer.open(_private.getCfg(this, event), type);
+               }
             }
          },
 
          _close: function(event) {
             var type = _private.getType(event.type);
 
+            this._isPopupOpened = false;
             if (this._isNewEnvironment()) {
                this._notify('closePreviewer', [type], {bubbling: true});
             } else {
@@ -90,6 +98,11 @@ define('Controls/Popup/Previewer',
             }
          },
 
+         // Pointer action on hover with content and popup are executed sequentially.
+         // Collect in package and process the latest challenge
+         _debouncedAction: function(method, args) {
+            this[method].apply(this, args);
+         },
 
          _cancel: function(event, action) {
             if (this._isNewEnvironment()) {
@@ -106,18 +119,24 @@ define('Controls/Popup/Previewer',
             if (this._options.trigger === 'hover') {
                this._cancel(event, 'opening');
             } else {
-               this._open(event);
+               // Stop mousedown event for prevent closing popup by external click
+               if (this._isPopupOpened) {
+                  event.preventDefault();
+               } else {
+                  this._debouncedAction('_open', [event]);
+               }
             }
 
             event.stopPropagation();
          },
 
          _contentMouseenterHandler: function(event) {
-            this._open(event);
+            this._debouncedAction('_open', [event]);
+            this._cancel(event, 'closing');
          },
 
          _contentMouseleaveHandler: function(event) {
-            this._close(event);
+            this._debouncedAction('_close', [event]);
          },
 
          _previewerClickHandler: function(event) {
@@ -138,11 +157,11 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
                case 'mouseenter':
-                  this._cancel(event, 'closing');
+                  this._debouncedAction('_cancel', [event, 'closing']);
                   break;
                case 'mouseleave':
                   if (this._enableClose && (this._options.trigger === 'hover' || this._options.trigger === 'hoverAndClick')) {
-                     this._close(event, 'hover');
+                     this._debouncedAction('_close', [event]);
                   }
                   break;
                case 'mousedown':
@@ -155,7 +174,7 @@ define('Controls/Popup/Previewer',
       Previewer.getDefaultOptions = function() {
          return {
             trigger: 'hoverAndClick'
-         };   
+         };
       };
 
       return Previewer;
