@@ -216,8 +216,12 @@ define('SBIS3.CONTROLS/TextArea', [
              * Из-за такого поведения текст устанавливаемый в компонент и текст в textarea будут разными, но визуально совпадать. https://jsfiddle.net/o0qpteaj/
              * Поэтому перед проверкой на изменение текста, мы должны вырезать \r из обоих текстов, и потом сравнивнить их.
              */
-            oldText = oldText.replace(carriageRegExp, '');
-            newText = newText.replace(carriageRegExp, '');
+            if (typeof oldText === 'string') {
+               oldText = oldText.replace(carriageRegExp, '');
+            }
+            if (typeof newText === 'string') {
+               newText = newText.replace(carriageRegExp, '');
+            }
          }
 
          return TextArea.superclass._isTextChanged.call(this, oldText, newText);
