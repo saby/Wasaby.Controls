@@ -16,8 +16,6 @@
       </ws:for>
    </ws:if>
    <ws:if data="{{ receivedStateArr }}">
-      <ws:for data="key, value in receivedStateArr">
-         <script data-vdomignore="true">window['inline{{key}}']='{{__setHTMLUnsafe(value)}}';</script>
-      </ws:for>
+      <script data-vdomignore="true">window['receivedStates']='{{__setHTMLUnsafe(receivedStateArr)}}';</script>
    </ws:if>
 </div>
