@@ -439,5 +439,72 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
 
          });
       });
+      describe('expanderDisplayMode', function() {
+         var
+
+            // rawData without hasChildrenProperty and with child
+            rawData_1 = [
+               { id: 1, type: true, parent: null, hasChild: null },
+               { id: 11, type: true, parent: 1, hasChild: null },
+               { id: 2, type: true, parent: null, hasChild: null }
+            ],
+
+            // rawData without hasChildrenProperty and without child
+            rawData_2 = [
+               { id: 1, type: true, parent: null, hasChild: null },
+               { id: 2, type: true, parent: null, hasChild: null }
+            ],
+
+            // rawData with hasChildrenProperty and with child
+            rawData_3 = [
+               { id: 1, type: true, parent: null, hasChild: true },
+               { id: 2, type: true, parent: null, hasChild: false }
+            ],
+
+            // rawData with hasChildrenProperty and without child
+            rawData_4 = [
+               { id: 1, type: true, parent: null, hasChild: false },
+               { id: 11, type: true, parent: 1, hasChild: true },
+               { id: 2, type: true, parent: null, hasChild: false }
+            ];
+         function checkExpanderDisplayMode(params, result) {
+            var
+               items = new RecordSet({
+                  rawData: params.items,
+                  idProperty: 'id'
+               }),
+               model = new TreeViewModel({
+                  items: items,
+                  keyProperty: 'id',
+                  parentProperty: 'parent',
+                  nodeProperty: 'type',
+                  expanderDisplayMode: 'adaptive',
+                  hasChildrenProperty: params.hasChildrenProperty
+               });
+            assert.equal(model._thereIsChildItem, result);
+         }
+         it('Check "adaptive" mode for nodes with children. hasChildrenProperty option is undefined.', function() {
+            checkExpanderDisplayMode({
+               items: rawData_1
+            }, true);
+         });
+         it('Check "adaptive" mode for nodes without children. hasChildrenProperty option is undefined.', function() {
+            checkExpanderDisplayMode({
+               items: rawData_2
+            }, false);
+         });
+         it('Check "adaptive" mode for nodes with children. hasChildrenProperty option is set.', function() {
+            checkExpanderDisplayMode({
+               items: rawData_3,
+               hasChildrenProperty: 'hasChild'
+            }, true);
+         });
+         it('Check "adaptive" mode for nodes without children. hasChildrenProperty option is set.', function() {
+            checkExpanderDisplayMode({
+               items: rawData_4,
+               hasChildrenProperty: 'hasChild'
+            }, false);
+         });
+      });
    });
 });
