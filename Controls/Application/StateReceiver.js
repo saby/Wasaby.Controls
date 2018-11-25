@@ -1,6 +1,7 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
    'Core/Serializer',
-   'View/Runner/common'], function(extend, Serializer, common) {
+   'Core/IoC',
+   'View/Runner/common'], function(extend, Serializer, IoC, common) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -44,6 +45,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          common.componentOptsReArray.forEach(function(re) {
             serializedState = serializedState.replace(re.toFind, re.toReplace);
          });
+         serializedState = serializedState.replace(/\\"/g, '\\\\"');
          var addDeps = getDepsFromSerializer(slr);
          for (var dep in addDeps) {
             if (addDeps.hasOwnProperty(dep)) {
@@ -52,13 +54,17 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          }
 
          return {
-            serialized: JSON.stringify(serializedMap),
+            serialized: serializedState,
             additionalDeps: allAdditionalDeps
          };
       },
       deserialize: function(str) {
          var slr = new Serializer();
-         this._deserialized = JSON.parse(str, slr.deserialize);
+         try {
+            this._deserialized = JSON.parse(str, slr.deserialize);
+         } catch (e) {
+            IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
+         }
       },
 
       register: function(key, inst) {
@@ -67,6 +73,10 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             delete this._deserialized[key];
          }
          this.receivedStateObjectsArray[key] = inst;
+      },
+
+      unregister: function(key) {
+         delete this.receivedStateObjectsArray[key];
       }
    });
    return SRec;

@@ -110,18 +110,25 @@
             "type": "enum",
             "title": "Display style of button.",
             "enum": {
-              "iconButtonBordered": "Button display as icon with border.",
-              "linkMain": "Button display as main link style.",
-              "linkMain2": "Button display as first nonaccent link style.",
-              "linkMain3": "Button display as second nonaccent link style.",
-              "linkAdditional": "Button display as third nonaccent link style.",
-              "linkAdditional2": "Button display as first accent link style.",
-              "linkAdditional3": "Button display as second accent link style.",
-              "linkAdditional4": "Button display as third accent link style.",
-              "linkAdditional5": "Button display as fourth accent link style.",
-              "buttonPrimary": "Button display as primary contour button style.",
-              "buttonDefault": "Button display as default contour button style.",
-              "buttonAdd": "Button display as button with icon add style."
+              "secondary": "Button display as icon with border.",
+              "primary": "Button display as main link style.",
+              "success": "Button display as first nonaccent link style.",
+              "warning": "Button display as second nonaccent link style.",
+              "danger": "Button display as third nonaccent link style.",
+              "info": "Button display as first accent link style."
+            }
+          },
+          "transparent": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "viewMode": {
+            "type": "enum",
+            "title": "View mode of button.",
+            "enum": {
+              "link": "Button display as icon with border.",
+              "button": "Button display as main link style.",
+              "toolButton": "Button display as first nonaccent link style."
             }
           },
           "size": {
@@ -142,6 +149,51 @@
               "attention": "Icon has attention display style.",
               "error": "Icon has error display style.",
               "done": "Icon has done icon style."
+            }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Heading/Back": {
+    "name": "Controls/Heading/Back",
+    "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
+    "className": "Controls/Heading/Back",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Heading/Back",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "caption": {
+            "type": "String",
+            "title": "Back button text."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of back button.",
+            "enum": {
+              "secondary": "Button display as icon with border.",
+              "primary": "Button display as main link style."
+            }
+          },
+          "size": {
+            "type": "enum",
+            "title": "Size of the back button.",
+            "enum": {
+              "s": "Back button has s size.",
+              "m": "Back button has m size.",
+              "l": "Back button has l size."
             }
           }
         }
@@ -958,9 +1010,9 @@
               "horizontal": "Horizontal orientation of the panel. History block is displayed on the right."
             }
           },
-          "title": {
+          "headingCaption": {
             "default": "Отбираются",
-            "title": "Caption of filter panel.",
+            "title": "Text heading.",
             "type": "String"
           },
           "readOnly": {
@@ -1037,21 +1089,29 @@
       }
     }
   },
-  "Controls/Input/Lookup": {
-    "name": "Controls/Input/Lookup",
+  "Controls/Selector/Lookup": {
+    "name": "Controls/Selector/Lookup",
     "title": "Control \"Lookup\"",
-    "className": "Controls/Input/Lookup",
+    "className": "Controls/Selector/Lookup",
     "kind": "control",
     "isPublic": true,
-    "fullname": "Controls/Input/Lookup",
+    "fullname": "Controls/Selector/Lookup",
     "properties": {
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
           "placeholder": {
-            "type": "String"
+            "type": "function|String",
+            "title": "Input's placeholder text."
           },
           "minSearchLength": {
+            "type": "String"
+          },
+          "maxVisibleItems": {
             "type": "String"
           },
           "autoDropDown": {
@@ -1060,24 +1120,59 @@
           "multiSelect": {
             "type": "Boolean"
           },
+          "multiline": {
+            "type": "Boolean"
+          },
           "readOnly": {
             "type": "Boolean"
           },
           "source": {
-            "type": "function"
+            "type": "Array"
           },
           "displayProperty": {
             "type": "enum",
+            "default": "title",
             "enum": {
-              "id": "",
-              "title": ""
+              "id": "id",
+              "title": "title"
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Selector/Button": {
+    "name": "Controls/Selector/Button",
+    "title": "Button link with the specified text, on clicking on which a selection window opens.",
+    "className": "Controls/Selector/Button",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Selector/Button",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "caption": {
+            "type": "String"
           },
-          "keyProperty": {
+          "maxVisibleItems": {
+            "type": "String"
+          },
+          "multiSelect": {
+            "type": "Boolean"
+          },
+          "readOnly": {
+            "type": "Boolean"
+          },
+          "source": {
+            "type": "Array"
+          },
+          "displayProperty": {
             "type": "enum",
+            "default": "title",
             "enum": {
-              "id": "",
-              "title": ""
+              "id": "id",
+              "title": "title"
             }
           }
         }

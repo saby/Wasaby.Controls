@@ -18,7 +18,7 @@ define('Controls/TreeGrid', [
     * @extends Controls/Grid
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/interface/IMultiSelectable
+    * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter

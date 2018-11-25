@@ -41,7 +41,7 @@ define([
       });
 
       describe('_inputCompletedHandler', function() {
-         it('should update model', function() {
+         it('should update model and generate events', function() {
             const sandbox = sinon.sandbox.create(),
                component = calendarTestUtils.createComponent(DateTime, options),
                textValue = '01.12.2017',
@@ -54,6 +54,7 @@ define([
             assert.strictEqual(component._model.textValue, textValue);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
+            sinon.assert.calledWith(component._notify, 'inputCompleted');
 
             sandbox.restore();
          });
@@ -62,17 +63,21 @@ define([
       describe('_valueChangedHandler', function() {
          it('should update the model', function() {
             const sandbox = sinon.sandbox.create(),
+               event = {
+                  stopImmediatePropagation: sinon.fake()
+               },
                component = calendarTestUtils.createComponent(DateTime, options),
                textValue = '01.12.2017',
                value = new Date(2017, 11, 1);
 
             sandbox.stub(component, '_notify');
-            component._inputCompletedHandler(null, textValue);
+            component._valueChangedHandler(event, textValue);
 
             assert.strictEqual(component._model.value.getTime(), value.getTime());
             assert.strictEqual(component._model.textValue, textValue);
 
             sinon.assert.calledWith(component._notify, 'valueChanged');
+            sinon.assert.called(event.stopImmediatePropagation);
 
             sandbox.restore();
          });

@@ -104,6 +104,7 @@
  */
 .controls-InputRender__placeholder {
    .compatPlaceholder(@color_InputRender-placeholder);
+   display: none;
    padding-left: 1px; //Отступ в 1px нужен, чтобы плейсхолдер не наезжал на курсор
 }
 
@@ -125,7 +126,7 @@
  * placeholder-shown не поддерживается в IE.
  * На поле весит аттрибут required и когда значение в поле нет будет применяться псевдоэлемент invalid.
  */
-.controls-InputRender__content:invalid + .controls-InputRender__placeholder {
+.controls-InputRender__content_ie:invalid + .controls-InputRender__placeholder {
    display: inline-flex;
 }
 
@@ -173,21 +174,27 @@
 .controls-InputRender__tagStyle-success {
    border-right-color: @color_InputRender-tagStyle_success;
 }
+
 .controls-InputRender__tagStyle-primary {
    border-right-color: @color_InputRender-tagStyle_primaryV;
 }
+
 .controls-InputRender__tagStyle-danger {
    border-right-color: @color_InputRender-tagStyle_danger;
 }
+
 .controls-InputRender__tagStyle-info {
    border-right-color: @color_InputRender-tagStyle_info;
 }
+
 .controls-InputRender__tagStyle-warning {
    border-right-color: @color_InputRender-tagStyle_warning;
 }
+
 .controls-InputRender__tagStyle-secondary {
-  border-right-color: @color_InputRender-tagStyle_secondary;
+   border-right-color: @color_InputRender-tagStyle_secondary;
 }
+
 //Состояния
 .controls-Text-InputRender_state_default {
    border-color: @border-color_InputRender;
@@ -223,17 +230,17 @@
 }
 
 //Размеры
-.controls-InputRender_size_default_singleLine  {
+.controls-InputRender_size_default_singleLine {
    height: @height_InputRender_default;
    font-size: @font-size_InputRender_default;
 }
 
-.controls-InputRender_size_m_singleLine  {
+.controls-InputRender_size_m_singleLine {
    height: @height_InputRender_m;
    font-size: @font-size_InputRender_m;
 }
 
-.controls-InputRender_size_l_singleLine  {
+.controls-InputRender_size_l_singleLine {
    height: @height_InputRender_l;
    font-size: @font-size_InputRender_l;
 }

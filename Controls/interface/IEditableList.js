@@ -2,11 +2,12 @@ define('Controls/interface/IEditableList', [
 ], function() {
 
    /**
-    * Interface for lists that have editing. The difference between this interface and {@link Controls/EditingArea Controls/EditingArea} is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
+    * Interface for lists that have editing. The difference between this interface and {@link Controls/EditableArea Controls/EditableArea} is that the former is used in lists and the latter is used outside of them (e.g., in tabs).
     *
     * @interface Controls/interface/IEditableList
     * @public
-    * @see Controls/EditingArea
+    * @author Зайцев А.С.
+    * @see Controls/EditableArea
     */
 
    /**
@@ -56,7 +57,7 @@ define('Controls/interface/IEditableList', [
     * <pre>
     *    beforeBeginEditHandler: function(e, options) {
     *       if (options.item.getId() === 1) {
-    *          return 'Cancel';
+    *          return EditConstants.CANCEL;
     *       }
     *    }
     * </pre>
@@ -148,7 +149,7 @@ define('Controls/interface/IEditableList', [
     * <pre>
     *    beforeEndEditHandler: function(e, item, commit, isAdd) {
     *       if (!item.get('text').length) {
-    *          return 'Cancel';
+    *          return EditConstants.CANCEL;
     *       }
     *    }
     * </pre>

@@ -10,6 +10,13 @@
    font-size: @font-size_CloseButton_default;
 }
 
+//Icon has odd height, button has even height and chrome center align break down. Height is even for chrome.
+.ws-is-chrome {
+   .controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l {
+      height: @height_CloseButton_icon_l;
+   }
+}
+
 .controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l,
 .controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
    font-family: @font-family_CloseButton_default;

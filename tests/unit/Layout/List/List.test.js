@@ -1,4 +1,4 @@
-define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/RecordSet', 'Core/Deferred', 'Core/core-clone'], function(List, Memory, RecordSet, Deferred, clone) {
+define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/PrefetchProxy', 'WS.Data/Collection/RecordSet', 'Core/Deferred', 'Core/core-clone'], function(List, Memory, PrefetchProxy, RecordSet, Deferred, clone) {
    
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -8,7 +8,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
    
    
    describe('Controls.Container.List', function () {
-      var listLayout, listOptions, listSource, listSourceData, listSearchParam;
+      var listLayout, listLayoutWithPrefetch, listOptions, listSource, listSourceData, listSearchParam, listPrefetchSource, listOptionsWithPrefetch;
       
       var getFilledContext = function() {
          return {
@@ -46,6 +46,14 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
             data: listSourceData,
             idProperty: 'id'
          });
+         listPrefetchSource = new PrefetchProxy({
+            target: listSource,
+            data: {
+               query: new RecordSet({
+                  rawData: listSourceData
+               })
+            }
+         });
          listSearchParam = 'title';
          listOptions = {
             source: listSource,
@@ -63,8 +71,28 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
                }
             }
          };
+   
+         listOptionsWithPrefetch = {
+            source: listPrefetchSource,
+            searchParam: listSearchParam,
+            searchDelay: 0,
+            minSearchLength: 3,
+            filter: {},
+            navigation: {
+               source: 'page',
+               view: 'page',
+               sourceConfig: {
+                  pageSize: 10,
+                  page: 0,
+                  mode: 'totalCount'
+               }
+            }
+         };
          listLayout = new List(listOptions);
          listLayout.saveOptions(listOptions);
+   
+         listLayoutWithPrefetch = new List(listOptionsWithPrefetch);
+         listLayoutWithPrefetch.saveOptions(listOptionsWithPrefetch);
       });
       
       it('.updateFilter', function() {
@@ -94,13 +122,22 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Collection/
    
       it('.searchErrback', function() {
          var errbackCalled = false;
+         var errbackCalledWithPrefetch = false;
          listLayout._options.searchErrback = function() {
             errbackCalled = true;
+         };
+         listLayoutWithPrefetch._options.searchErrback = function() {
+            errbackCalledWithPrefetch = true;
          };
          List._private.searchErrback(listLayout, {});
          
          assert.deepEqual(null, listLayout._source._$data);
          assert.isTrue(errbackCalled);
+   
+         List._private.searchErrback(listLayoutWithPrefetch, {});
+   
+         assert.deepEqual(null, listLayoutWithPrefetch._source._$data);
+         assert.isTrue(errbackCalledWithPrefetch);
       });
    
       it('.searchCallback', function() {

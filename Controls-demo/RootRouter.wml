@@ -13,10 +13,8 @@
    <Controls.Container.Scroll attr:class="ControlsDemo-Page_scrollContainer">
       <Router.Route mask="app/:app">
          <ws:if data="{{content.app}}">
-            <Controls.Container.Async templateName="{{content.app}}">
-               <ws:partial attr:id="newListView" attr:class="ControlsDemo-Page_content"
-                        template="{{content.resolvedTemplate}}" />
-            </Controls.Container.Async>
+            <Controls.Container.Async templateName="{{content.app}}"
+                                      attr:id="newListView" attr:class="ControlsDemo-Page_content"/>
          </ws:if>
          <ws:else>
             <div>Не указан шаблон. Может быть перейти на

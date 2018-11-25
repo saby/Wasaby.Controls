@@ -1,5 +1,5 @@
 <div class="ws-flexbox">
-   <img class="controls-demo_MasterDetail_item-personPhoto" src="{{item.imgPath}}"/>
+   <img class="controls-demo_MasterDetail_item-personPhoto" src="{{item.img}}"/>
    <div>
       <div class="controls-demo_MasterDetail_item-personName">{{item.name}}</div>
       <div class="controls-demo_MasterDetail_item-task">

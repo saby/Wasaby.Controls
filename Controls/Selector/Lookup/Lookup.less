@@ -1,0 +1,90 @@
+.controls-Lookup {
+  max-width: 100%;
+  display: inline-block;
+}
+
+.controls-Lookup__suggest,
+.controls-Lookup__inputRender {
+  width: 100%;
+}
+
+.controls-Lookup__inputRender {
+  padding-right: 0;
+}
+
+.controls-Lookup__inputRender_fieldWrapper_hidden .controls-InputRender__fieldWrapper {
+  display: none;
+}
+
+.controls-Lookup__inputRender_multiLine .controls-InputRender__wrapper {
+  display: inline-block;
+  width: ~"calc(100% - @{spacing_Lookup-multiline-between-inputRenderWrapper-rightBorder})";
+}
+
+.controls-Lookup__inputRender_content_width_custom .controls-InputRender__fieldWrapper {
+  width: auto;
+}
+
+.controls-Lookup__inputRender_content_width_default .controls-InputRender__fieldWrapper {
+  line-height: @line-height_Lookup-input-wrapper;
+}
+
+.controls-Lookup__afterFieldWrapper {
+  display: inline-flex;
+  height: 100%;
+}
+
+.controls-Lookup__afterFieldWrapper_singleLine  {
+  margin-left: auto;
+  align-items: center;
+}
+
+.controls-Lookup__afterFieldWrapper_multiLine {
+  position: absolute;
+  top: 0;
+  right: -@spacing_Lookup-multiline-between-inputRenderWrapper-rightBorder;
+  justify-content: space-between;
+  flex-flow: column;
+}
+
+.controls-Lookup__icon {
+  cursor: pointer;
+}
+
+.controls-Lookup__showSelector {
+  .icon-size-without-important(@font-size_Lookup-showSelector);
+  padding: @spacing_Lookup-between-showSelector-border;
+  color: @color_Lookup-showSelector;
+  &:hover {
+    color: @color_Lookup-showSelector-hovered;
+  }
+}
+
+.controls-Lookup__clearRecords {
+  .icon-size-without-important(@font-size_Lookup-clearRecords);
+  padding: @spacing_Lookup-between-clearRecords-border;
+  color: @color_Lookup-clearRecords;
+  &:hover {
+    color: @color_Lookup-clearRecords-hovered;
+  }
+}
+
+.controls-Lookup__clearRecords_multiLine {
+  order: 1;
+}
+
+
+.controls-Lookup__collection_single {
+  .flex-shrink(1);
+}
+
+.controls-Lookup__collection_multi {
+  .flex-shrink(0);
+}
+
+.controls-Lookup-collection__measurer {
+  top: 0;
+  left: -9999px;
+  position: absolute;
+  backface-visibility: hidden;
+}

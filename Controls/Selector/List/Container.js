@@ -2,11 +2,10 @@ define('Controls/Selector/List/Container',
    [
       'Core/Control',
       'tmpl!Controls/Selector/List/Container',
-      'Controls/Utils/Toolbar',
-      'Controls/Container/MultiSelector/SelectionContextField',
+      'Controls/Utils/Toolbar'
    ],
    
-   function(Control, template, Toolbar, SelectionContextField) {
+   function(Control, template, Toolbar) {
       
       'use strict';
    
@@ -42,12 +41,12 @@ define('Controls/Selector/List/Container',
          },
    
          selectItem: function(self, itemClickResult) {
-            self._notify('listSelectionChange', itemClickResult, {bubbling: true});
+            self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
             self._notify('selectComplete', [true], {bubbling: true});
          },
    
          selectionChanged: function(self, itemClickResult) {
-            self._notify('listSelectionChange', itemClickResult, {bubbling: true});
+            self._notify('listSelectedKeysChanged', itemClickResult, {bubbling: true});
          },
    
          getItemActions: function(options) {
@@ -136,7 +135,7 @@ define('Controls/Selector/List/Container',
          
          _itemClick: function(event, item) {
             if (!this._ignoreItemClickEvent && !item.get(this._options.nodeProperty)) {
-               _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this.context.get('selection').selectedKeys);
+               _private.itemClick(this, item.get(this._options.keyProperty), this._options.multiSelect, this._options.selectedKeys);
             }
             this._ignoreItemClickEvent = false;
          },
@@ -147,7 +146,7 @@ define('Controls/Selector/List/Container',
    
          _itemActionsClick: function(event, action, item) {
             if (action.id === 'selector.action') {
-               var itemClickResult = _private.getItemClickResult(item.get(this._options.keyProperty), this.context.get('selection').selectedKeys, this._options.multiSelect);
+               var itemClickResult = _private.getItemClickResult(item.get(this._options.keyProperty), this._options.selectedKeys, this._options.multiSelect);
                _private.selectItem(this, itemClickResult);
             }
          }
@@ -155,12 +154,6 @@ define('Controls/Selector/List/Container',
       });
    
       Container._private = _private;
-   
-      Container.contextTypes = function() {
-         return {
-            selection: SelectionContextField
-         };
-      };
    
       Container.getDefaultOptions = function getDefaultOptions() {
          return {

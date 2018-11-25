@@ -15,6 +15,7 @@ define('Controls/History/Menu',
        * @extends Controls/Button/Menu
        * @control
        * @public
+       * @author Герасимов А.М.
        * @category Menu
        * @demo Controls-demo/Menu/MenuVdom
        */
@@ -60,7 +61,7 @@ define('Controls/History/Menu',
          },
          
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter)) {
+            if (!isEqual(this._options.filter, newOptions.filter) || this._options.source !== newOptions.source) {
                this._filter = _private.prepareFilter(newOptions.filter);
             }
          },

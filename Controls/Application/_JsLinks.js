@@ -3,7 +3,7 @@ define('Controls/Application/_JsLinks',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_JsLinks',
-      'Env/Request'
+      'View/Request'
    ],
 
    // Component for adding jsLinks into html. Waits for Application's content drawn,

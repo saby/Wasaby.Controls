@@ -16,6 +16,7 @@ define('Controls/Label',
        * @extends Core/Control
        * @public
        * @demo Controls-demo/Label/Label
+       * @author Журавлев М.С.
        */
 
       /**

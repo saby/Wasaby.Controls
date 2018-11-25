@@ -1,1 +1,3 @@
-<ws:partial template="{{ _options.content }}" on:validateCreated="onValidateCreated()" on:validateDestroyed="onValidateDestroyed()"/>
+<ws:partial template="{{ _options.content }}"
+            on:validateCreated="onValidateCreated()"
+            on:validateDestroyed="onValidateDestroyed()"/>

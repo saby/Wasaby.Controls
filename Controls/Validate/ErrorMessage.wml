@@ -1,0 +1,7 @@
+<div>
+    <ws:for data="item in content" >
+        <div class="controls-ValidateController__errorMessage">
+        {{item}}
+        </div>
+    </ws:for>
+</div>

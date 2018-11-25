@@ -1,7 +1,7 @@
 <Controls.Popup.Templates.Stack.StackTemplate on:selectedKeysChanged="_selectedKeysChanged()">
     <ws:topArea>
         <ws:if data="{{_options.multiSelect && _selectionChanged}}">
-            <Controls.Button style="buttonPrimary" caption="{[Выбрать]}" on:click="_closeSelectorBind()" attr:class="ControlsDemo-FlatListSelector-confirmButton"/>
+            <Controls.Button viewMode="button" style="primary" caption="{[Выбрать]}" on:click="_closeSelectorBind()" attr:class="ControlsDemo-FlatListSelector-confirmButton"/>
         </ws:if>
     </ws:topArea>
     <ws:contentArea>

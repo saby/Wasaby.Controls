@@ -105,6 +105,9 @@ define('Controls-demo/OperationsPanel/Panel', [
             data: DEMO_ITEMS
          });
          this._source = _private.getPanelSource(1);
+         this._selectedKeys = [];
+         this._excludedKeys = [];
+         this._selectedKeysCount = 0;
       },
       sourceChange: function(e, key) {
          this._sourceNumber = key;
@@ -112,6 +115,15 @@ define('Controls-demo/OperationsPanel/Panel', [
       },
       _reset: function() {
          this._eventName = '';
+      },
+      _selectedTypeChangedHandler: function(e, type) {
+         if (type === 'selectAll') {
+            this._selectedKeys = [null];
+         } else if (type === 'unselectAll') {
+            this._selectedKeys = [];
+         } else {
+            this._selectedKeys = this._selectedKeys.length ? [] : [null];
+         }
       },
 
       _eventHandler: function(e) {

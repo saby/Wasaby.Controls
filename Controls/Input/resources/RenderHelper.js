@@ -3,6 +3,21 @@ define('Controls/Input/resources/RenderHelper',
    function() {
       'use strict';
 
+      var _private = {
+         isCorrectlySplit: function(split, oldValue, newValue) {
+            return split.before + split.delete + split.after === oldValue && split.before + split.insert + split.after === newValue;
+         },
+
+         getSplitForAutoComplete: function(oldValue, newValue) {
+            return {
+               before: '',
+               insert: newValue,
+               delete: oldValue,
+               after: ''
+            };
+         }
+      };
+
       var RenderHelper = {
 
          /**
@@ -17,7 +32,7 @@ define('Controls/Input/resources/RenderHelper',
          getSplitInputValue: function(oldValue, newValue, caretPosition, selection, inputType) {
             var
                selectionLength = selection.selectionEnd - selection.selectionStart,
-               deleteValue, insertValue, beforeInsertValue, afterInsertValue;
+               deleteValue, insertValue, beforeInsertValue, afterInsertValue, result;
 
             if (inputType === 'insertFromDrop') {
                return {
@@ -29,27 +44,25 @@ define('Controls/Input/resources/RenderHelper',
             }
 
             afterInsertValue = newValue.substring(caretPosition);
-
-            if (inputType === 'insert') {
-               beforeInsertValue = oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength);
-
-               // AutoComplete completely replaces text, there is no value before the inserted substring
-               if (newValue.indexOf(beforeInsertValue) === -1) {
-                  beforeInsertValue = '';
-               }
-            } else {
-               beforeInsertValue = newValue.substring(0, caretPosition);
-            }
-
+            beforeInsertValue = inputType === 'insert'
+               ? oldValue.substring(0, oldValue.length - afterInsertValue.length - selectionLength)
+               : newValue.substring(0, caretPosition);
             insertValue = newValue.substring(beforeInsertValue.length, newValue.length - afterInsertValue.length);
             deleteValue = oldValue.substring(beforeInsertValue.length, oldValue.length - afterInsertValue.length);
 
-            return {
+            result = {
                before: beforeInsertValue,
                insert: insertValue,
                delete: deleteValue,
                after: afterInsertValue
             };
+
+            /**
+             * We can determine the correct split value only if there were user actions.
+             * If the value has been changed due to auto-complete, then user actions was not. Then the split value will be incorrect.
+             * In this case, return the split value for auto-complete.
+             */
+            return _private.isCorrectlySplit(result, oldValue, newValue) ? result : _private.getSplitForAutoComplete(oldValue, newValue);
          },
 
          /**

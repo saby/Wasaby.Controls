@@ -3,7 +3,7 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Env/Request',
+      'View/Request',
       'Core/Themes/ThemesController'
    ],
    function(Base, Deferred, template, Request, ThemesController) {
@@ -22,7 +22,7 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options) {
-            ThemesController.getInstance().setUpdateCallback(this._forceUpdate);
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
             if (typeof window !== 'undefined') {
                var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
@@ -49,6 +49,11 @@ define('Controls/Application/_Head',
                return res;
             });
             return innerDef;
+         },
+         _beforeUpdate: function() {
+            var csses = ThemesController.getInstance().getCss();
+            this.themedCss = csses.themedCss;
+            this.simpleCss = csses.simpleCss;
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);

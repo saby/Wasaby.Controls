@@ -5,6 +5,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
     *
     * @interface Controls/Input/interface/IInputNumber
     * @public
+    * @author Колесова П.С.
     */
 
    /**

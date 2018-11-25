@@ -8,11 +8,10 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
-   'View/Runner/requireHelper',
    'Core/IoC',
    'WS.Data/Source/SbisService',
    'WS.Data/Chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, requireHelper, IoC, SbisService, Chain) {
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
    'use strict';
 
    var loadDeferred;
@@ -133,11 +132,16 @@ define('Controls/Popup/Compatible/Layer', [
       // Получение данных из контекста
 
       var opt = document.querySelector('html').controlNodes;
-
-      for (var i = 0, len = opt.length; i < len; i++) {
-         if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
-            data = opt[i].control._getChildContext().userInfoField.userInfo;
-            break;
+      if (!opt) {
+         if (window.userInfo) {
+            data = window.userInfo;
+         }
+      } else {
+         for (var i = 0, len = opt.length; i < len; i++) {
+            if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
+               data = opt[i].control._getChildContext().userInfoField.userInfo;
+               break;
+            }
          }
       }
 
@@ -220,6 +224,16 @@ define('Controls/Popup/Compatible/Layer', [
       isNewEnvironment: function() {
          return !!(document && document.getElementsByTagName('html')[0].controlNodes);
       },
+      loadActivity: function(parallelDefRes, loadDepsDef, result) {
+         parallelDefRes.addCallbacks(function() {
+            finishLoad(loadDeferred, result);
+         }, function(e) {
+            IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
+            loadDepsDef.addCallback(function() {
+               finishLoad(loadDeferred, result);
+            });
+         });
+      },
       load: function(deps, force) {
          if (!this.isNewEnvironment() && !force) { // Для старого окружения не грузим слои совместимости
             return (new Deferred()).callback();
@@ -227,6 +241,7 @@ define('Controls/Popup/Compatible/Layer', [
          if (!loadDeferred) {
             var mainDeferred;
             var loadDepsDef = new Deferred();
+            var self = this;
             loadDeferred = new Deferred();
 
             /*Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
@@ -297,31 +312,35 @@ define('Controls/Popup/Compatible/Layer', [
             // var tempCompatVal = constants.compat;
             Constants.compat = true;
 
-            if (typeof window !== 'undefined') {
-               // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
-               if (requireHelper.defined('OnlineSbisRu/VDOM/MainPage/MainPage')) {
-                  Constants.systemExtensions = true;
-                  Constants.userConfigSupport = true;
-                  loadDataProviders(parallelDef);
-                  parallelDefRes.addCallbacks(function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-                     });
-                  }, function() {
-                     moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addErrback(function(err) {
-                        IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
-                     });
+            // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
+            if (window && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu) {
+               Constants.systemExtensions = true;
+               Constants.userConfigSupport = true;
+               loadDataProviders(parallelDef);
+               parallelDefRes.addCallbacks(function() {
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addCallback(function() {
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
+                  }).addErrback(function(err) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
                   });
-               }
-            }
-            parallelDefRes.addCallbacks(function() {
-               finishLoad(loadDeferred, result);
-            }, function(e) {
-               IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
-               loadDepsDef.addCallback(function() {
-                  finishLoad(loadDeferred, result);
+               }, function(err) {
+                  IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
+                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addCallback(function() {
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
+                  }).addErrback(function(activityErr) {
+                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', activityErr);
+                     self.loadActivity(parallelDefRes, loadDepsDef, result);
+                  });
                });
-            });
+            } else {
+               parallelDefRes.addCallbacks(function() {
+                  self.loadActivity(parallelDefRes, loadDepsDef, result);
+               }, function(err) {
+                  IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
+                  self.loadActivity(parallelDefRes, loadDepsDef, result);
+               });
+            }
          }
 
          // возвращаем свой Deferred на каждый запрос, чтобы никто не мог

@@ -2,7 +2,7 @@ define('Controls/Container/Async',
    [
       'Core/Control',
       'Core/Deferred',
-      'Env/Request',
+      'View/Request',
       'wml!Controls/Container/Async/Async',
       'View/Runner/requireHelper',
       'Core/IoC'
@@ -58,16 +58,21 @@ define('Controls/Container/Async',
             /*
              * It can work without Controls.Application
              * */
+
+            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
             var headData = Request.getCurrent().getStorage('HeadData');
 
-            if (headData && headData.pushDepComponent) {
+            if (self.optionsForComponent.resolvedTemplate && headData && headData.pushDepComponent) {
                if (options.templateName) {
                   headData.pushDepComponent(options.templateName, true);
                } else {
+                  self.error = 'Error loading ' + options.templateName;
                   IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
                }
+            } else if (!self.optionsForComponent.resolvedTemplate) {
+               self.error = 'Error loading ' + options.templateName;
+               IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
             }
-            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
          },
 
          _beforeUpdate: function(options) {

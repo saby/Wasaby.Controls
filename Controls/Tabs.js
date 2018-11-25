@@ -14,6 +14,7 @@ define('Controls/Tabs', [
     * @control
     * @public
     * @category List
+    * @author Михайловский Д.С.
     */
 
    var Tabs = Control.extend({

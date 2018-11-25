@@ -2,7 +2,7 @@ define('Controls/Application/startApplicationScript',
    [
       'Core/Control',
       'Core/Deferred',
-      'Env/Request',
+      'View/Request',
       'wml!Controls/Application/startApplicationScript'
    ],
 

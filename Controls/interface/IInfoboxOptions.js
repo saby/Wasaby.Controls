@@ -7,6 +7,7 @@ define('Controls/interface/IInfoboxOptions', [
     * @interface Controls/interface/IInfoboxOptions
     * @default {}
     * @public
+    * @author Красильников А.С.
     */
 
 

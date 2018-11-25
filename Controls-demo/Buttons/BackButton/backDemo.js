@@ -23,10 +23,10 @@ define('Controls-demo/Buttons/BackButton/backDemo', [
                idProperty: 'title',
                data: [
                   {
-                     title: 'default'
+                     title: 'primary'
                   },
                   {
-                     title: 'primary'
+                     title: 'secondary'
                   }
                ]
             });

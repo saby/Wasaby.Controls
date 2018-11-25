@@ -91,43 +91,49 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
 
       gultConfig = JSON.parse(gultConfig);
       gultConfig.modules.forEach((one) => {
-         if (!fs.existsSync(path.join(root, 'application', one.name))) {
-            let oldName = one.path.split('/');
-            oldName = oldName[oldName.length - 1];
-            //fs.symlinkSync(path.join(one.path), path.join(root, 'application', one.name), 'dir');
-            fs.renameSync(path.join(root, 'application', oldName), path.join(root, 'application', one.name));
+         let oldName = one.path.split('/');
+         oldName = oldName[oldName.length - 1];
+         if (one.name !== oldName) {
+            fs.renameSync(path.join(root, 'application', oldName), path.join(root, 'application', 'tempName'));
+            fs.renameSync(path.join(root, 'application', 'tempName'), path.join(root, 'application', one.name));
          }
       });
 
-      fs.symlinkSync(path.join(root, 'cdn'), path.join(root, 'application', 'cdn'));
-      var alljson = {links: {}, nodes: {}};
+      const allJson = {links: {}, nodes: {}};
+      const contents = { buildMode: '', modules: {} };
+      const bundles = {};
+
       gultConfig.modules.forEach((one) => {
          if (one.name.indexOf('WS.Core') === -1)
-      {
-         let fileName = path.join(root, 'application', one.name, 'module-dependencies.json');
-         if (fs.existsSync(fileName)) {
-            let oneJson = require(fileName);
+         {
+            let fileName = path.join(root, 'application', one.name, 'module-dependencies.json');
+            if (fs.existsSync(fileName)) {
+               let oneJson = require(fileName);
 
-            for (var i in oneJson.links) {
-               alljson.links[i] = oneJson.links[i];
-            }
+               for (let i in oneJson.links) {
+                  allJson.links[i] = oneJson.links[i];
+               }
 
-            for (var j in oneJson.nodes) {
-               alljson.nodes[j] = oneJson.nodes[j];
+               for (let j in oneJson.nodes) {
+                  allJson.nodes[j] = oneJson.nodes[j];
+               }
             }
          }
-      }
-   });
+      });
+
+      fs.writeFileSync(path.join(root, 'application', 'contents.js'),
+         'contents = ' + JSON.stringify(contents, '', 3)+';' );
+      fs.linkSync(path.join(root, 'application', 'contents.js'), path.join(root, 'application', 'contents.min.js'));
+      fs.writeFileSync(path.join(root, 'application', 'bundles.js'),
+         'bundles = ' + JSON.stringify(bundles, '', 3)+';' );
+
 
       if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
          fs.mkdirSync(path.join(root, 'application', 'resources'));
       }
 
       fs.writeFileSync(path.join(root, 'application', 'resources', 'module-dependencies.json'),
-         JSON.stringify(alljson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//i, ''));
-
-
-      //spawn('node',[ root+'/app2.js' ]);
+         JSON.stringify(allJson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//i, ''));
    });
 
 });

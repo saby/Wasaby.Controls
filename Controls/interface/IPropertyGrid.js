@@ -5,6 +5,7 @@ define('Controls/interface/IPropertyGrid', [
     * Provides a user interface for browsing and editing the properties of an object.
     * @interface Controls/interface/IPropertyGrid
     * @public
+    * @author Герасимов А.М.
     */
    
    /**

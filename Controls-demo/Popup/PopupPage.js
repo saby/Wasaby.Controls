@@ -12,10 +12,6 @@ define('Controls-demo/Popup/PopupPage',
       var PopupPage = Control.extend({
          _template: template,
 
-         constructor: function (cfg) {
-            PopupPage.superclass.constructor.call(this, cfg);
-         },
-
          openDialog: function () {
             this._children.dialog.open({
                opener: this._children.dialogButton
@@ -46,6 +42,15 @@ define('Controls-demo/Popup/PopupPage',
          openStack: function () {
             this._children.stack.open({
                opener: this._children.stackButton
+            });
+         },
+
+         openStackWithTemplateSizes: function () {
+            this._children.stack2.open({
+               opener: this._children.stackButton,
+               templateOptions: {
+                  width: '10000px'
+               }
             });
          },
 
@@ -84,6 +89,15 @@ define('Controls-demo/Popup/PopupPage',
          openStackWithFormController: function() {
             this._children.openStackWithFormController.open({
                opener: this._children.stackButton4
+            });
+         },
+
+         openIgnoreActivationStack: function() {
+            this._children.ignoreActivationStack.open({
+               opener: this._children.stackIgnoreButton,
+               templateOptions: {
+                  fakeOpener: this
+               }
             });
          },
 

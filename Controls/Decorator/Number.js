@@ -18,7 +18,7 @@ define('Controls/Decorator/Number',
        * @category Decorator
        * @demo Controls-demo/Decorators/Number/Number
        *
-       * @author Журавлев Максим Сергеевич
+       * @author Журавлев М.С.
        */
 
       /**

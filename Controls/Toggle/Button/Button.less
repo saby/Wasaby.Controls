@@ -1,9 +1,10 @@
 .controls-Button_viewMode-toggledLink, .controls-Button_viewMode-toggledLink_readOnly {
-   border: @border-width_ToggleButton solid;
+   border-style: solid;
+   border-width: @border-width_ToggleButton;
    border-radius: @border-radius-ToggleButton;
 }
 
-.controls-Button_viewMode-quickButton_toggle_on {
+.controls-Button_viewMode-toolButton_toggle_on {
    border-color: @border-color-IconButton_toggled;
 }
 
@@ -26,7 +27,7 @@
    background: @background_ToggleButton_readOnly;
 }
 
-.controls-Button_viewMode-quickButton_toggle_on {
+.controls-Button_viewMode-toolButton_toggle_on {
    box-shadow: none;
 }
 
@@ -70,15 +71,27 @@
    .justify-content(center);
 }
 
-.controls-Button_viewMode-quickButton_iconStyle-success_toggle_on {
-   border-color: @color-Icon_style_done;
+.controls-Button_viewMode-toolButton_iconStyle-success_toggle_on {
+   border-color: @color_success;
 }
 
-.controls-Button_viewMode-quickButton_iconStyle-warning_toggle_on {
+.controls-Button_viewMode-toolButton_iconStyle-warning_toggle_on {
    border-color: @color_warning;
 }
 
-.controls-Button_viewMode-quickButton_iconStyle-secondary_toggle_on {
+.controls-Button_viewMode-toolButton_iconStyle-danger_toggle_on {
+   border-color: @color_danger;
+}
+
+.controls-Button_viewMode-toolButton_iconStyle-info_toggle_on {
+   border-color: @color_info;
+}
+
+.controls-Button_viewMode-toolButton_iconStyle-primary_toggle_on {
+   border-color: @color_primaryV;
+}
+
+.controls-Button_viewMode-toolButton_iconStyle-secondary_toggle_on {
    border-color: @border-color-IconButton_toggled;
 }
 
@@ -88,7 +101,7 @@
    }
 }
 
-.controls-Button__icon-secondary_iconStyle-secondary_viewMode-quickButton_toggle_on {
+.controls-Button__icon-secondary_iconStyle-secondary_viewMode-toolButton_toggle_on {
    color: @color_ToggleButton_Link-main_hovered;
 }
 
@@ -118,7 +131,7 @@
 
 .ws-is-no-touch {
    .controls-Button_style-secondary_viewMode-toggledLink:hover {
-      .controls-Button__icon-secondary_toggle_on {
+      .controls-Button__icon-secondary {
          color: @color_ToggleButton_Link-main_hovered;
       }
    }
