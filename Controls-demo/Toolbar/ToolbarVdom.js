@@ -97,6 +97,32 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   title: 'Задача',
                   '@parent': false,
                   parent: '2'
+               },
+               {
+                  id: '11',
+                  icon: 'icon-medium icon-EmptyMessage',
+                  buttonStyle: 'secondary',
+                  showHeader: true,
+                  buttonViewMode: 'link',
+                  buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
+                  title: 'Обсудить',
+                  '@parent': true,
+                  parent: null
+               },
+               {
+                  id: '12',
+                  showType: 0,
+                  title: 'Видеозвонок',
+                  '@parent': false,
+                  parent: '11'
+               },
+               {
+                  id: '13',
+                  showType: 0,
+                  title: 'Сообщение',
+                  '@parent': false,
+                  parent: '11'
                }
             ];
             this._flatItems = [
