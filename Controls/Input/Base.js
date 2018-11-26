@@ -92,7 +92,7 @@ define('Controls/Input/Base',
                 * After calling setSelectionRange the select event is triggered and saved the selection in model.
                 * You do not need to do this because the model is now the actual selection.
                 */
-               self._skipSavingSelectionOnce = true;
+               self._skipSavingSelectionOnce++;
                field.setSelectionRange(selection.start, selection.end);
             }
          },
@@ -321,7 +321,7 @@ define('Controls/Input/Base',
           * @type {Boolean} Determines whether to skip once save the current field selection to the model.
           * @protected
           */
-         _skipSavingSelectionOnce: false,
+         _skipSavingSelectionOnce: 0,
 
          /**
           * @type {Controls/Utils/getTextWidth}
@@ -438,8 +438,8 @@ define('Controls/Input/Base',
           * @private
           */
          _selectHandler: function() {
-            if (this._skipSavingSelectionOnce) {
-               this._skipSavingSelectionOnce = false;
+            if (this._skipSavingSelectionOnce > 0) {
+               this._skipSavingSelectionOnce--;
             } else {
                this._viewModel.selection = this._getFieldSelection();
             }
@@ -458,6 +458,10 @@ define('Controls/Input/Base',
                selection, event.nativeEvent.inputType
             );
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
+
+            if (value !== model.displayValue) {
+               splitValue.before = model.displayValue.substring(0, model.displayValue.length - splitValue.after.length);
+            }
 
             _private.handleInput(this, splitValue, inputType);
 
