@@ -696,7 +696,8 @@ define('SBIS3.CONTROLS/DataGridView',
          // 2-ой раз при оживлении
          // Оба раза мы подготваливаем шапку и футер, строим для них вёрстку и компоненты внутри
          // Второй раз это делать не надо. Определяем это по тому, что есть element в конфиге, значит вёрстка уже построена и компонент просто оживляется на элементе.
-         if (!parsedCfg.element || (parsedCfg.element instanceof jQuery && !parsedCfg.element.length)) {
+         // Проверка на элемент такая, т.к. элемент может быть или jQuery элементом, или обычной DOM нодой.
+         if (!(parsedCfg.element instanceof Node) || (parsedCfg.element instanceof jQuery && !parsedCfg.element.length)) {
             newCfg._headData = prepareHeadData(newCfg);
             newCfg._footData = newCfg._headData;
          }
