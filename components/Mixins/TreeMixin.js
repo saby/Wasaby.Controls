@@ -934,7 +934,14 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), 0, this._limit);
             return this._callQuery(preparedFilter, this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
                if (this._isCursorNavigation() && this._options.saveReloadPosition && list.getCount()) {
-                  this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
+                  if (Object.prototype.toString.apply(this._options.navigation.config.field) === '[object Array]') {
+                     this._hierNodesCursor[id] = [];
+                     this._options.navigation.config.field.forEach(function(field) {
+                        this._hierNodesCursor[id].push(list.at(list.getCount() - 1).get(field));
+                     }.bind(this));
+                  } else {
+                     this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
+                  }
                }
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._options._folderOffsets[id] = 0;
@@ -1172,15 +1179,17 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       around: {
          _prepareAdditionalFilterForCursor: function(parentFn, filter, direction) {
             var
-               position = [],
+               position,
                nodeId = filter[this._options.parentProperty],
                fields = this._options.navigation.config.field instanceof Array ? this._options.navigation.config.field : [this._options.navigation.config.field];
             if (nodeId != this.getCurrentRoot() && !(typeof nodeId === 'undefined' && this.getCurrentRoot() === null) &&
                !(nodeId === null && typeof this.getCurrentRoot() === 'undefined')) {
-               if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
-                  position.push(this._hierNodesCursor[nodeId]);
+               if (this._hierNodesCursor[nodeId] instanceof Array) {
+                  position = this._hierNodesCursor[nodeId];
+               } else if (typeof this._hierNodesCursor[nodeId] !== 'undefined') {
+                  position = [this._hierNodesCursor[nodeId]];
                } else {
-                  position.push(null);
+                  position = [null];
                }
                return CursorListNavigationUtils.getNavigationParams(fields, position, direction || this._options.navigation.config.direction);
             } else {
