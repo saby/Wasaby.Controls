@@ -1,0 +1,13 @@
+[{
+   "modules": [
+      "SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter",
+      "SBIS3.CONTROLS/LongOperations/Registry"
+   ],
+   "include": [
+      "SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter",
+      "SBIS3.CONTROLS/LongOperations/Registry",
+      "SBIS3.CONTROLS/LongOperations/Registry*"
+   ],
+   "exclude": [],
+   "output": "SBIS3.CONTROLS/LongOperations/Registry"
+}]

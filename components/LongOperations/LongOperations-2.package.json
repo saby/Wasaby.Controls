@@ -7,11 +7,8 @@
       "SBIS3.CONTROLS/LongOperations/Tools/TabCalls",
       "SBIS3.CONTROLS/LongOperations/List/resources/model",
       "WS3LongOperations/LRSProducerLib",
-      "SBIS3.CONTROLS/LongOperations/History",
-      "SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter",
       "SBIS3.CONTROLS/LongOperations/List",
-      "SBIS3.CONTROLS/LongOperations/Popup",
-      "SBIS3.CONTROLS/LongOperations/Registry"
+      "SBIS3.CONTROLS/LongOperations/Popup"
    ],
    "include": [
       "SBIS3.CONTROLS/LongOperations/HistoryItem",
@@ -21,15 +18,10 @@
       "SBIS3.CONTROLS/LongOperations/Tools/TabCalls",
       "SBIS3.CONTROLS/LongOperations/List/resources/model",
       "WS3LongOperations/LRSProducerLib",
-      "SBIS3.CONTROLS/LongOperations/History",
-      "SBIS3.CONTROLS/LongOperations/History*",
-      "SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter",
       "SBIS3.CONTROLS/LongOperations/List",
       "SBIS3.CONTROLS/LongOperations/List*",
       "SBIS3.CONTROLS/LongOperations/Popup",
-      "SBIS3.CONTROLS/LongOperations/Popup*",
-      "SBIS3.CONTROLS/LongOperations/Registry",
-      "SBIS3.CONTROLS/LongOperations/Registry*"
+      "SBIS3.CONTROLS/LongOperations/Popup*"
    ],
    "exclude": [],
    "output": "SBIS3.CONTROLS/LongOperations/Popup"

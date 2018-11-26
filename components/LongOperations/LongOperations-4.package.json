@@ -1,0 +1,11 @@
+[{
+   "modules": [
+      "SBIS3.CONTROLS/LongOperations/History"
+   ],
+   "include": [
+      "SBIS3.CONTROLS/LongOperations/History",
+      "SBIS3.CONTROLS/LongOperations/History*"
+   ],
+   "exclude": [],
+   "output": "SBIS3.CONTROLS/LongOperations/History"
+}]
