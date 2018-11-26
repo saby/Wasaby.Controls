@@ -444,6 +444,11 @@ function(cMerge,
             cfg.maxHeight = dimensions.maxHeight ? parseInt(dimensions.maxHeight, 10) : undefined;
          }
 
+         if (!cfg.minHeight && dimensions.height) {
+            // дименшены задают высоту шаблона. если есть шапка, то нужно учесть и ее высоту
+            cfg.minHeight = parseInt(dimensions.height, 10) + (cfg.templateOptions.caption ? 40 : 0);
+         }
+
          cfg.minHeight = cfg.minHeight || cfg.maxHeight;
          cfg.maxHeight = cfg.maxHeight || cfg.minHeight;
 
