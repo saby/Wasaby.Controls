@@ -3,13 +3,11 @@ define('Controls/Input/RichEditor', [
    'wml!Controls/Input/RichEditor/RichEditor',
    'WS.Data/Source/Memory',
    'WS.Data/Collection/RecordSet',
-   'WS.Data/Chain',
    'Controls/Input/RichEditor/Toolbar/defaultToolbarButtonsList',
    'Core/core-clone',
    'Core/moduleStubs',
-   'css!Controls/Input/RichEditor/RichEditor',
-   'css!Controls/Input/RichEditor/Toolbar/Toolbar'
-], function(Control, template, Memory, RecordSet, Chain, defaultButtons, cClone, moduleStubs) {
+   'css!Controls/Input/RichEditor/RichEditor'
+], function(Control, template, Memory, RecordSet, defaultButtons, cClone, moduleStubs) {
    /**
     * Component RichEditor
     * Default rich editor with toolbar.

@@ -1,5 +1,5 @@
 define([
-   'Controls/EditAtPlace/EditAtPlaceTemplate'
+   'Controls/EditableArea/Templates/Editors/Base'
 ], function(
    EditAtPlaceTemplate
 ) {

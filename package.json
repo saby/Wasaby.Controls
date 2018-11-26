@@ -18,7 +18,8 @@
       "test": "node node_modules/ws-unit-testing/mocha --amd test-isolated",
       "test:debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
       "coverage": "node node_modules/ws-unit-testing/cover --amd test-isolated",
-      "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish ."
+      "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
+      "lintless": "stylelint \"Controls/**/*.less\""
    },
    "config": {
       "ws": "/",
@@ -55,7 +56,6 @@
       "report-dir": "./artifacts/coverage"
    },
    "dependencies": {
-      "Router": "git+https://github.com/saby/Router.git#rc-3.18.600",
       "typescript": "^2.9.1"
    },
    "devDependencies": {
@@ -76,9 +76,11 @@
       "progress": "^2.0.1",
       "requirejs": "2.1.18",
       "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.18.700",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#3.18.700/bugfix/deprecated",
-      "router": "git+https://github.com/saby/Router.git#rc-3.18.600",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#3.18.700/feature/marsh-data",
+      "Router": "git+https://github.com/saby/Router.git#rc-3.18.700",
       "serve-static": "1.11.x",
+      "stylelint": "^9.7.1",
+      "stylelint-config-standard": "^18.2.0",
       "typescript": "2.5.3",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.18.700",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"

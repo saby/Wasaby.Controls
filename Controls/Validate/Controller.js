@@ -5,7 +5,8 @@ define('Controls/Validate/Controller',
       'Core/IoC',
       'Core/ParallelDeferred',
       'Core/Deferred',
-      'wml!Controls/Validate/ErrorMessage'
+      'wml!Controls/Validate/ErrorMessage',
+      'css!Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
@@ -59,6 +60,7 @@ define('Controls/Validate/Controller',
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
+            this._notify('closeInfoBox', [this], { bubbling: true });
          },
          _validationResult: undefined,
 

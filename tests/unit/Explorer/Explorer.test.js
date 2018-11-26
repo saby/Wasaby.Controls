@@ -1,4 +1,14 @@
-define(['Controls/Explorer'], function(Explorer) {
+define([
+   'Controls/Explorer',
+   'Core/Deferred',
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Chain'
+], function(
+   Explorer,
+   Deferred,
+   RecordSet,
+   chain
+) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
          var
@@ -21,11 +31,13 @@ define(['Controls/Explorer'], function(Explorer) {
                }
             },
             testRoot = 'testRoot',
-            testBreadCrumbs = [
-               { id: 1, title: 'item1' },
-               { id: 2, title: 'item2' },
-               { id: 3, title: 'item3' }
-            ],
+            testBreadCrumbs = new RecordSet({
+               rawData: [
+                  { id: 1, title: 'item1' },
+                  { id: 2, title: 'item2' },
+                  { id: 3, title: 'item3' }
+               ]
+            }),
             testData1 = {
                getMetaData: function() {
                   return {};
@@ -54,8 +66,7 @@ define(['Controls/Explorer'], function(Explorer) {
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: [],
-            _breadCrumbsVisibility: false,
+            _breadCrumbsItems: null,
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -67,8 +78,7 @@ define(['Controls/Explorer'], function(Explorer) {
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: testBreadCrumbs,
-            _breadCrumbsVisibility: true,
+            _breadCrumbsItems: chain(testBreadCrumbs).toArray(),
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -79,8 +89,7 @@ define(['Controls/Explorer'], function(Explorer) {
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: [],
-            _breadCrumbsVisibility: false,
+            _breadCrumbsItems: null,
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -112,6 +121,27 @@ define(['Controls/Explorer'], function(Explorer) {
          assert.equal(instance._leftPadding, 'search');
       });
 
+      it('_onBreadCrumbsClick', function() {
+         var
+            testBreadCrumbs = new RecordSet({
+               rawData: [
+                  { id: 1, title: 'item1' },
+                  { id: 2, title: 'item2', parent: 1 },
+                  { id: 3, title: 'item3', parent: 2 }
+               ]
+            }),
+            instance = new Explorer();
+
+         instance.saveOptions({
+            parentProperty: 'parent',
+            keyProperty: 'id'
+         });
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0), false);
+         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1), true);
+         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
+      });
+
       it('_notifyHandler', function() {
          var
             instance = new Explorer(),
@@ -133,6 +163,76 @@ define(['Controls/Explorer'], function(Explorer) {
          assert.deepEqual(events[0].eventArgs, [1, 2]);
          assert.equal(events[1].eventName, 'beforeBeginEdit');
          assert.deepEqual(events[1].eventArgs, []);
+      });
+
+      describe('EditInPlace', function() {
+         it('beginEdit', function() {
+            var opt = {
+               test: '123'
+            };
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  beginEdit: function(options) {
+                     assert.equal(opt, options);
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.beginEdit(opt);
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('beginAdd', function() {
+            var opt = {
+               test: '123'
+            };
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  beginAdd: function(options) {
+                     assert.equal(opt, options);
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.beginAdd(opt);
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('cancelEdit', function() {
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  cancelEdit: function() {
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.cancelEdit();
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
+
+         it('commitEdit', function() {
+            var
+               instance = new Explorer({});
+            instance._children = {
+               treeControl: {
+                  commitEdit: function() {
+                     return Deferred.success();
+                  }
+               }
+            };
+            var result = instance.commitEdit();
+            assert.instanceOf(result, Deferred);
+            assert.isTrue(result.isSuccessful());
+         });
       });
    });
 });

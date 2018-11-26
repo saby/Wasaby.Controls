@@ -1,4 +1,4 @@
-<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options.style}}{{_options.size == 'big' ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}}"
+<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options.style}}{{_options.size == 'big' ? ' controls-SubmitPopup__size-big' : ' controls-SubmitPopup__size-standard'}} controls-Popup__isolatedFocusingContext"
     ws-tab-cycling="true"
     ws-delegates-tabfocus="true">
     <div class="controls-ConfirmationTemplate__body">

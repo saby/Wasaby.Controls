@@ -1,8 +1,0 @@
-<ws:if data="{{itemData.isSwiped}}">
-   <ws:partial template="{{swipeTemplate}}"  itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
-</ws:if>
-<ws:else>
-   <ws:partial template="{{itemActionsTemplate}}"
-               itemActionsClass="{{itemActionsClass}}"
-               itemData="{{itemData}}"/>
-</ws:else>

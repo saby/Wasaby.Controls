@@ -5,11 +5,11 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
+   'WS.Data/Chain',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
-   'css!theme?Controls/Explorer/Explorer',
    'WS.Data/Entity/VersionableMixin',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'
@@ -19,7 +19,8 @@ define('Controls/Explorer', [
    SearchGridViewModel,
    TreeGridViewModel,
    TreeTileViewModel,
-   tmplNotify
+   tmplNotify,
+   chain
 ) {
    'use strict';
 
@@ -49,14 +50,12 @@ define('Controls/Explorer', [
             }
          },
          dataLoadCallback: function(self, data) {
-            var
-               path = data.getMetaData().path;
-            if (path) {
-               self._breadCrumbsItems = path;
+            var metaData = data.getMetaData();
+            if (metaData.path) {
+               self._breadCrumbsItems = chain(metaData.path).toArray();
             } else {
-               self._breadCrumbsItems = [];
+               self._breadCrumbsItems = null;
             }
-            self._breadCrumbsVisibility = !!self._breadCrumbsItems.length;
             self._forceUpdate();
             if (self._options.dataLoadCallback) {
                self._options.dataLoadCallback(data);
@@ -82,6 +81,7 @@ define('Controls/Explorer', [
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
+    * @mixes Controls/interface/IEditableList
     * @mixes Controls/interface/IGroupedView
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
@@ -93,20 +93,18 @@ define('Controls/Explorer', [
     * @control
     * @public
     * @category List
-    * @author Сухоручкин А.С.
+    * @author Авраменко А.С.
     */
 
    var Explorer = Control.extend({
       _template: template,
       _breadCrumbsItems: null,
-      _breadCrumbsVisibility: false,
       _root: null,
       _viewName: null,
       _viewMode: null,
       _viewModelConstructor: null,
       _leftPadding: null,
       constructor: function() {
-         this._breadCrumbsItems = [];
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          Explorer.superclass.constructor.apply(this, arguments);
       },
@@ -126,7 +124,19 @@ define('Controls/Explorer', [
          }
       },
       _onBreadCrumbsClick: function(event, item, setPreviousNode) {
-         _private.setRoot(this, item[setPreviousNode ? this._options.parentProperty : this._options.keyProperty]);
+         _private.setRoot(this, item.get(setPreviousNode ? this._options.parentProperty : this._options.keyProperty));
+      },
+      beginEdit: function(options) {
+         return this._children.treeControl.beginEdit(options);
+      },
+      beginAdd: function(options) {
+         return this._children.treeControl.beginAdd(options);
+      },
+      cancelEdit: function() {
+         return this._children.treeControl.cancelEdit();
+      },
+      commitEdit: function() {
+         return this._children.treeControl.commitEdit();
       },
       _notifyHandler: tmplNotify
    });

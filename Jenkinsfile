@@ -66,7 +66,7 @@ echo "Генерируем параметры"
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Опции run_int и run_reg можно не отмечать", name: 'run_only_fail_test')
+            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Укажите опции run_int и/или run_reg", name: 'run_only_fail_test')
             ]),
         pipelineTriggers([])
     ])
@@ -87,8 +87,6 @@ node('controls') {
     echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
-
-
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
@@ -101,40 +99,35 @@ node('controls') {
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
-		def tests_for_run = ""
-		def smoke_result = true
-
+        def tests_for_run = ""
+        def smoke_result = true
         try {
-
-		echo "Назначаем переменные"
+        echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
-		def stream_number=props["snit"]
+        def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
-		def python_ver = 'python3'
+        def python_ver = 'python3'
         def SDK = ""
         def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls, controls_theme:${workspace}/controls"
         def run_test_fail = ""
-		def branch_atf
-		if (params.branch_atf) {
-			branch_atf = params.branch_atf
-		} else {
-			branch_atf = props["atf_co"]
-		}
-
+        def branch_atf
+        if (params.branch_atf) {
+            branch_atf = params.branch_atf
+        } else {
+            branch_atf = props["atf_co"]
+        }
         def branch_engine
-		if (params.branch_engine) {
-			branch_engine = params.branch_engine
-		} else {
-			branch_engine = props["engine"]
-		}
-
-		def branch_navigation
-		if (params.branch_navigation) {
-			branch_navigation = params.branch_navigation
-		} else {
-			branch_navigation = props["navigation"]
-		}
-
+        if (params.branch_engine) {
+            branch_engine = params.branch_engine
+        } else {
+            branch_engine = props["engine"]
+        }
+        def branch_navigation
+        if (params.branch_navigation) {
+            branch_navigation = params.branch_navigation
+        } else {
+            branch_navigation = props["navigation"]
+        }
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
@@ -143,17 +136,16 @@ node('controls') {
         if ( inte && all_inte ) {
             inte = false
         }
-		dir(workspace){
-			echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
-			sh "ls | grep -v -E 'controls' | xargs rm -rf"
-			dir("./controls"){
-				sh "rm -rf ${workspace}/controls/tests/int/atf"
-				sh "rm -rf ${workspace}/controls/tests/reg/atf"
-				sh "rm -rf ${workspace}/controls/sbis3-app-engine"
-				sh "rm -rf ${workspace}/controls/tests/navigation"
-			}
-		}
-
+        dir(workspace){
+            echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
+            sh "ls | grep -v -E 'controls' | xargs rm -rf"
+            dir("./controls"){
+                sh "rm -rf ${workspace}/controls/tests/int/atf"
+                sh "rm -rf ${workspace}/controls/tests/reg/atf"
+                sh "rm -rf ${workspace}/controls/sbis3-app-engine"
+                sh "rm -rf ${workspace}/controls/tests/navigation"
+            }
+        }
         echo "Выкачиваем хранилища"
         stage("Checkout"){
             parallel (
@@ -176,10 +168,10 @@ node('controls') {
                     echo "Обновляемся из rc-${version}"
                     dir("./controls"){
                         sh """
-						git clean -fd
+                        git clean -fd
                         git fetch
                         git checkout ${env.BRANCH_NAME}
-						git pull
+                        git pull
                         git merge origin/rc-${version}
                         """
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
@@ -187,9 +179,7 @@ node('controls') {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
-
                     updateGitlabCommitStatus state: 'running'
-
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
@@ -293,36 +283,10 @@ node('controls') {
                     }
                 }
             )
-
         if ( only_fail ) {
             run_test_fail = "-sf"
-            // если галки не отмечены, сами определим какие тесты перезапустить
-            if ( !inte && !regr && !all_inte ) {
-                step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-                script = "python3 ../fail_tests.py"
-                for ( type in ["int", "reg"] ) {
-                    dir("./controls/tests/${type}") {
-                    def result = sh returnStdout: true, script: script
-                    echo "${result}"
-                    if (type == "int") {
-                        if ( result.toBoolean() ) {
-                            inte = true
-                        } else {
-                            inte = false
-                            }
-                        }
-                    if (type == "reg") {
-                        if ( result.toBoolean() ) {
-                            regr = true
-                        } else {
-                            regr = false
-                            }
-                        }
-                    }
-                }
-                if (!inte && !regr) {
-                    exception('Нет тестов для перезапуска.', 'USER FAIL')
-                }
+            if (!inte && !regr) {
+                exception('Не отмечены тип тестов для перезапуска. Укажите опции run_int и/или run_reg', 'USER FAIL')
             }
         }
     }
@@ -413,17 +377,14 @@ node('controls') {
             def password_db = "postgres"
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps2.ini", text: """[Базовая конфигурация]
                 __sbis__url = /another/
-
                 [Ядро.Http]
                 Порт=10030
-
                 [Ядро.Сервер приложений]
                 ЧислоРабочихПроцессов=3
                 ЧислоСлужебныхРабочихПроцессов=0
                 ЧислоДополнительныхПроцессов=0
                 ЧислоПотоковВРабочихПроцессах=10
-				МаксимальныйРазмерВыборкиСписочныхМетодов=0
-
+                МаксимальныйРазмерВыборкиСписочныхМетодов=0
                 [Presentation Service]
                 WarmUpEnabled=No
                 ExtractLicense=Нет
@@ -433,17 +394,14 @@ node('controls') {
             writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
                 [Ядро.Http]
                 Порт=10020
-
                 [Ядро.Сервер приложений]
                 ЧислоРабочихПроцессов=3
                 ЧислоСлужебныхРабочихПроцессов=0
                 ЧислоДополнительныхПроцессов=0
                 ЧислоПотоковВРабочихПроцессах=10
                 МаксимальныйРазмерВыборкиСписочныхМетодов=0
-
                 [Управление облаком.Очередь загрузки]
                 Хранилище=test-redis.unix.tensor.ru:6436
-
                 [Presentation Service]
                 WarmUpEnabled=No
                 ExtractLicense=Нет
@@ -457,25 +415,20 @@ node('controls') {
                 БазаДанных=postgresql: host=\'${host_db}\' port=\'${port_db}\' dbname=\'${name_db}\' user=\'${user_db}\' password=\'${password_db}\'
                 РазмерКэшаСессий=3
                 Конфигурация=ini-файл
-
                 [Ядро.Сервер приложений]
                 ПосылатьОтказВОбслуживанииПриОтсутствииРабочихПроцессов=Нет
                 МаксимальноеВремяЗапросаВОчереди=60000
                 ЧислоРабочихПроцессов=4
                 МаксимальныйРазмерВыборкиСписочныхМетодов=0
-
                 [Ядро.Права]
                 Проверять=Нет
-
                 [Ядро.Асинхронные сообщения]
                 БрокерыОбмена=amqp://test-rabbitmq.unix.tensor.ru
-
                 [Ядро.Логирование]
                 Уровень=Параноидальный
                 ОграничениеДляВходящегоВызова=1024
                 ОграничениеДляИсходящегоВызова=1024
                 ОтправлятьНаСервисЛогов=Нет
-
                 [Тест]
                 Адрес=http://${env.NODE_NAME}:10010"""
             // Копируем шаблоны
@@ -485,7 +438,6 @@ node('controls') {
                 cd "${workspace}/controls/tests/stand/Intest/"
                 sudo python3 "change_theme.py" ${params.theme}
                 cd "${workspace}"
-
             """
             sh """
                 sudo chmod -R 0777 ${workspace}
@@ -495,214 +447,201 @@ node('controls') {
             """
             }
         }
-		if ( regr || inte || all_inte) {
-				def soft_restart = "True"
-				if ( params.browser_type in ['ie', 'edge'] ){
-					soft_restart = "False"
-				}
-				if ( "${params.theme}" != "online" ) {
-					img_dir = "capture_${params.theme}"
-				} else {
-					img_dir = "capture"
-				}
-				writeFile file: "./controls/tests/int/config.ini", text:
-					"""# UTF-8
-					[general]
-					browser = ${params.browser_type}
-					SITE = http://${NODE_NAME}:30010
-					SERVER = test-autotest-db1:5434
-					BASE_VERSION = css_${NODE_NAME}${ver}1
-					DO_NOT_RESTART = True
-					SOFT_RESTART = ${soft_restart}
-					NO_RESOURCES = True
-					DELAY_RUN_TESTS = 2
-					TAGS_NOT_TO_START = iOSOnly
-					ELEMENT_OUTPUT_LOG = locator
-					WAIT_ELEMENT_LOAD = 20
-					SHOW_CHECK_LOG = True
-					HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
-				writeFile file: "./controls/tests/reg/config.ini",
-					text:
-						"""# UTF-8
-						[general]
-						browser = ${params.browser_type}
-						SITE = http://${NODE_NAME}:30010
-						DO_NOT_RESTART = True
-						SOFT_RESTART = False
-						NO_RESOURCES = True
-						DELAY_RUN_TESTS = 2
-						TAGS_TO_START = ${params.theme}
-						ELEMENT_OUTPUT_LOG = locator
-						WAIT_ELEMENT_LOAD = 20
-						HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
-						SERVER = test-autotest-db1:5434
-						BASE_VERSION = css_${NODE_NAME}${ver}1
-						#BRANCH=True
-						[regression]
-						IMAGE_DIR = ${img_dir}
-						RUN_REGRESSION=True"""
+        if ( regr || inte || all_inte) {
+                def soft_restart = "True"
+                if ( params.browser_type in ['ie', 'edge'] ){
+                    soft_restart = "False"
+                }
+                if ( "${params.theme}" != "online" ) {
+                    img_dir = "capture_${params.theme}"
+                } else {
+                    img_dir = "capture"
+                }
+                writeFile file: "./controls/tests/int/config.ini", text:
+                    """# UTF-8
+                    [general]
+                    browser = ${params.browser_type}
+                    SITE = http://${NODE_NAME}:30010
+                    SERVER = test-autotest-db1:5434
+                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    DO_NOT_RESTART = True
+                    SOFT_RESTART = ${soft_restart}
+                    NO_RESOURCES = True
+                    DELAY_RUN_TESTS = 2
+                    TAGS_NOT_TO_START = iOSOnly
+                    ELEMENT_OUTPUT_LOG = locator
+                    WAIT_ELEMENT_LOAD = 20
+                    SHOW_CHECK_LOG = True
+                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+                writeFile file: "./controls/tests/reg/config.ini",
+                    text:
+                        """# UTF-8
+                        [general]
+                        browser = ${params.browser_type}
+                        SITE = http://${NODE_NAME}:30010
+                        DO_NOT_RESTART = True
+                        SOFT_RESTART = False
+                        NO_RESOURCES = True
+                        DELAY_RUN_TESTS = 2
+                        TAGS_TO_START = ${params.theme}
+                        ELEMENT_OUTPUT_LOG = locator
+                        WAIT_ELEMENT_LOAD = 20
+                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
+                        SERVER = test-autotest-db1:5434
+                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        #BRANCH=True
+                        [regression]
+                        IMAGE_DIR = ${img_dir}
+                        RUN_REGRESSION=True"""
+                dir("./controls/tests/int"){
+                    sh"""
+                        source /home/sbis/venv_for_test/bin/activate
+                        ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
+                        deactivate
+                    """
+                    junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+                    sh "sudo rm -rf ./test-reports"
+                    smoke_result = currentBuild.result == null
+                }
+                if ( smoke_result ) {
+                    if ( only_fail ) {
+                        step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
+                    }
+                    if ( inte && !only_fail && changed_files ) {
+                        dir("./controls/tests") {
+                            echo "Выкачиваем файл с зависимостями"
+                            url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+                            script = """
+                                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+                                echo "result.json exitsts"; cp -fr tmp_result.json result.json
+                                else rm -f result.json
+                                fi
+                                """
+                                sh returnStdout: true, script: script
+                            def exist_json = fileExists 'result.json'
+                            if ( exist_json ) {
+                                def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
+                                if ( tests_files ) {
+                                    tests_files = tests_files.replace('\n', '')
+                                    echo "Будут запущены ${tests_files}"
+                                    tests_for_run = "--files_to_start ${tests_files}"
+                                } else {
+                                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
+                                }
+                            } else {
+                                echo "Файл с покрытием не найден. Будут запущены все тесты."
+                            }
+                        }
+                    }
+                    if ( skip ) {
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-chrome) ${version} controls'"
+                    }
+                }
+            }
+            parallel (
+                unit: {
+                    stage ("Unit тесты"){
+                        if ( unit ){
+                            echo "Запускаем юнит тесты"
+                                dir("./controls"){
+                                sh "npm config set registry http://npmregistry.sbis.ru:81/"
+                                echo "run isolated"
+                                sh """
+                                export test_report="artifacts/test-isolated-report.xml"
+                                sh ./bin/test-isolated"""
+                                echo "run browser"
+                                sh """
+                                export test_url_host=${env.NODE_NAME}
+                                export test_server_port=10253
+                                export test_url_port=10253
+                                export WEBDRIVER_remote_enabled=1
+                                export WEBDRIVER_remote_host=10.76.159.209
+                                export WEBDRIVER_remote_port=4444
+                                export test_report=artifacts/test-browser-report.xml
+                                sh ./bin/test-browser"""
+                            }
+                        }
+                    }
+                },
+                int_test: {
+                    stage("Инт.тесты"){
+                        if ( inte || all_inte && smoke_result ){
+                            echo "Запускаем интеграционные тесты"
+                            dir("./controls/tests/int"){
 
-
-				dir("./controls/tests/int"){
-					sh"""
-						source /home/sbis/venv_for_test/bin/activate
-						${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
-						deactivate
-
-					"""
-					junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-					sh "sudo rm -rf ./test-reports"
-					smoke_result = currentBuild.result == null
-				}
-
-				if ( smoke_result ) {
-					if ( only_fail ) {
-						step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
-					}
-					if ( inte && !only_fail && changed_files ) {
-						dir("./controls/tests") {
-							echo "Выкачиваем файл с зависимостями"
-							url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
-							script = """
-								if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-								echo "result.json exitsts"; cp -fr tmp_result.json result.json
-								else rm -f result.json
-								fi
-								"""
-								sh returnStdout: true, script: script
-							def exist_json = fileExists 'result.json'
-							if ( exist_json ) {
-								def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
-								if ( tests_files ) {
-									tests_files = tests_files.replace('\n', '')
-									echo "Будут запущены ${tests_files}"
-									tests_for_run = "--files_to_start ${tests_files}"
-								} else {
-									echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
-								}
-							} else {
-								echo "Файл с покрытием не найден. Будут запущены все тесты."
-							}
-						}
-					}
-					
-
-					if ( skip ) {
-						 skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
-						 skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-chrome) ${version} controls'"
-					}
-				}
-			}
-			parallel (
-				unit: {
-					stage ("Unit тесты"){
-						if ( unit ){
-							echo "Запускаем юнит тесты"
-								dir("./controls"){
-								sh "npm config set registry http://npmregistry.sbis.ru:81/"
-								echo "run isolated"
-								sh """
-								export test_report="artifacts/test-isolated-report.xml"
-								sh ./bin/test-isolated"""
-								echo "run browser"
-								sh """
-								export test_url_host=${env.NODE_NAME}
-								export test_server_port=10253
-								export test_url_port=10253
-								export WEBDRIVER_remote_enabled=1
-								export WEBDRIVER_remote_host=10.76.159.209
-								export WEBDRIVER_remote_port=4444
-								export test_report=artifacts/test-browser-report.xml
-								sh ./bin/test-browser"""
-							}
-						}
-					}
-				},
-				int_test: {
-					stage("Инт.тесты"){
-						if ( inte || all_inte && smoke_result ){
-							echo "Запускаем интеграционные тесты"
-							dir("./controls/tests/int"){
-								
-								sh """
-								source /home/sbis/venv_for_test/bin/activate
-								python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
-								deactivate
-								"""
-							}
-						}
-					}
-				},
-				reg_test: {
-					stage("Рег.тесты"){
-						if ( regr && smoke_result){
-							echo "Запускаем тесты верстки"
-							sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
-							dir("./controls/tests/reg"){
-								sh """
-									source /home/sbis/venv_for_test/bin/activate
-									python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
-									deactivate
-								"""
-							}
-
-						}
-					}
-				}
-			)
-			if ( !smoke_result ) {
-				exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
-			}
+                                sh """
+                                source /home/sbis/venv_for_test/bin/activate
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                deactivate
+                                """
+                            }
+                        }
+                    }
+                },
+                reg_test: {
+                    stage("Рег.тесты"){
+                        if ( regr && smoke_result){
+                            echo "Запускаем тесты верстки"
+                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
+                            dir("./controls/tests/reg"){
+                                sh """
+                                    source /home/sbis/venv_for_test/bin/activate
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                    deactivate
+                                """
+                            }
+                        }
+                    }
+                }
+            )
+            if ( !smoke_result ) {
+                exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
+            }
 } catch (err) {
     echo "ERROR: ${err}"
     currentBuild.result = 'FAILURE'
     gitlabStatusUpdate()
-
 } finally {
     sh """
         sudo chmod -R 0777 ${workspace}
     """
-	def exists_dir = fileExists '/home/sbis/Controls'
-	if ( exists_dir ){
+    def exists_dir = fileExists '/home/sbis/Controls'
+    if ( exists_dir ){
         sh """
             sudo chmod -R 0777 /home/sbis/Controls
         """
-	}
-
+    }
     if ( regr || inte || all_inte){
         dir(workspace){
             def exists_jinnee_logs = fileExists '/jinnee/logs'
-			if ( exists_jinnee_logs ){
-				sh """
-				7za a log_jinnee -t7z ${workspace}/jinnee/logs
-				"""
-				archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-			}
-
-			sh "mkdir logs_ps"
-			if ( exists_dir ){
-				dir('/home/sbis/Controls'){
-					def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-
-					if ( files_err.length > 0 ){
-						sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-						sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-						dir ( workspace ){
-							sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-							archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-						}
-					}
-				}
-			}
-		}
+            if ( exists_jinnee_logs ){
+                sh """
+                7za a log_jinnee -t7z ${workspace}/jinnee/logs
+                """
+                archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
+            }
+            sh "mkdir logs_ps"
+            if ( exists_dir ){
+                dir('/home/sbis/Controls'){
+                    def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
+                    if ( files_err.length > 0 ){
+                        sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+                        sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+                        dir ( workspace ){
+                            sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+                        }
+                    }
+                }
+            }
+        }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-	}
-	
-	if ( unit ){
+    }
+    if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-	}
-
+    }
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
@@ -712,9 +651,9 @@ node('controls') {
     gitlabStatusUpdate()
         }
     }
-	LocalDateTime end_time = LocalDateTime.now();
-	echo "Время завершения: ${end_time}"
-	Duration duration = Duration.between(end_time, start_time);
-	diff_time = Math.abs(duration.toMinutes());
-	echo "Время сборки: ${diff_time} мин."
+    LocalDateTime end_time = LocalDateTime.now();
+    echo "Время завершения: ${end_time}"
+    Duration duration = Duration.between(end_time, start_time);
+    diff_time = Math.abs(duration.toMinutes());
+    echo "Время сборки: ${diff_time} мин."
 }

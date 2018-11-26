@@ -1,0 +1,24 @@
+<div class="ControlsDemo-EditableArea__template">
+   <div class="ControlsDemo-EditableArea__fieldWrapper">
+      <span>Kind:</span>
+      <Controls.EditableArea.Templates.Editors.Base
+         bind:value="editObject.title"
+         isEditing="{{isEditing}}"
+      >
+         <ws:editorTemplate>
+            <Controls.Input.Text selectOnClick="{{ false }}" />
+         </ws:editorTemplate>
+      </Controls.EditableArea.Templates.Editors.Base>
+   </div>
+   <div class="ControlsDemo-EditableArea__fieldWrapper">
+      <span>Created:</span>
+      <Controls.EditableArea.Templates.Editors.Base
+         bind:value="editObject.date"
+         isEditing="{{isEditing}}"
+      >
+         <ws:editorTemplate>
+            <Controls.Input.Text selectOnClick="{{ false }}" />
+         </ws:editorTemplate>
+      </Controls.EditableArea.Templates.Editors.Base>
+   </div>
+</div>

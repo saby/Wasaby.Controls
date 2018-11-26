@@ -1,13 +1,15 @@
 <div class="controls-Explorer">
-   <Controls.BreadCrumbs.Path name="explorerPath"
-                              attr:class="controls-Explorer__breadCrumbsPath{{!_breadCrumbsVisibility ? ' controls-Explorer__breadCrumbsPath_hidden'}}"
-                              keyProperty="{{_options.keyProperty}}"
-                              displayProperty="{{_options.displayProperty}}"
-                              items="{{_breadCrumbsItems}}"
-                              on:arrowActivated="_onBreadCrumbsArrowActivated()"
-                              on:itemClick="_onBreadCrumbsClick()" />
+   <ws:if data="{{_breadCrumbsItems}}">
+      <Controls.BreadCrumbs.Path name="explorerPath"
+                                 keyProperty="{{_options.keyProperty}}"
+                                 displayProperty="{{_options.displayProperty}}"
+                                 items="{{_breadCrumbsItems}}"
+                                 on:arrowActivated="_onBreadCrumbsArrowActivated()"
+                                 on:itemClick="_onBreadCrumbsClick()" />
+   </ws:if>
    <Controls.List.TreeControl root="{{_root}}"
                       scope="{{_options}}"
+                      name="treeControl"
                       viewName="{{_viewName}}"
                       swipeViewMode="{{_swipeViewMode}}"
                       viewModelConstructor="{{_viewModelConstructor}}"

@@ -37,12 +37,13 @@ define('Controls/List/BaseControl', [
 
    var _private = {
       reload: function(self, filter, userCallback, userErrback) {
+         var
+            resDeferred = new Deferred();
          if (self._sourceController) {
             _private.showIndicator(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            var resDeferred = new Deferred();
             self._sourceController.load(filter, self._sorting).addCallback(function(list) {
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
@@ -69,10 +70,11 @@ define('Controls/List/BaseControl', [
                _private.processLoadError(self, error, userErrback);
                resDeferred.callback(null);
             });
-
-            return resDeferred;
+         } else {
+            resDeferred.callback();
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+         return resDeferred;
       },
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
@@ -735,10 +737,6 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      _onItemActionsClick: function(e, action, item) {
-         this._notify('itemActionsClick', [action, item]);
-      },
-
       _hoveredItemChanged: function(event, item) {
          this._notify('hoveredItemChanged', [item]);
       },
@@ -806,10 +804,6 @@ define('Controls/List/BaseControl', [
          if (this._options.itemsDragNDrop && this._isDragging) {
             this._listViewModel.setDragTargetItem(itemData);
          }
-      },
-
-      _markedKeyChangedHandler: function(event, item) {
-         this._notify('markedKeyChanged', [item]);
       }
    });
 

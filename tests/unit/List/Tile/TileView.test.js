@@ -54,7 +54,7 @@ define(['Controls/List/TileView/TileView',
             }, {
                width: 50,
                height: 70
-            });
+            }, 1.5);
 
             assert.equal(position, null);
          });
@@ -70,7 +70,7 @@ define(['Controls/List/TileView/TileView',
             }, {
                width: 70,
                height: 50
-            });
+            }, 1.5);
 
             assert.equal(position, null);
          });
@@ -86,7 +86,7 @@ define(['Controls/List/TileView/TileView',
             }, {
                width: 70,
                height: 70
-            });
+            }, 1.5);
 
             assert.deepEqual(position, {
                left: 0,
@@ -107,7 +107,7 @@ define(['Controls/List/TileView/TileView',
             }, {
                width: 70,
                height: 70
-            });
+            }, 1.5);
 
             assert.deepEqual(position, {
                left: 10,
@@ -128,13 +128,59 @@ define(['Controls/List/TileView/TileView',
             }, {
                width: 70,
                height: 70
-            });
+            }, 1.5);
 
             assert.deepEqual(position, {
                left: 5,
                right: 5,
                top: 5,
                bottom: 5
+            });
+         });
+
+         it('size * zoom < hoverSize', function() {
+            var position = TileView._private.getFixedPosition({
+               width: 60,
+               height: 70
+            }, {
+               left: 15,
+               right: 55,
+               top: 20,
+               bottom: 60,
+               width: 40,
+               height: 40
+            }, {
+               width: 70,
+               height: 80
+            }, 1.5);
+
+            assert.deepEqual(position, {
+               left: 5,
+               right: 5,
+               top: 10,
+               bottom: 0
+            });
+
+            position = TileView._private.getFixedPosition({
+               width: 40,
+               height: 50
+            }, {
+               left: 15,
+               right: 55,
+               top: 20,
+               bottom: 60,
+               width: 40,
+               height: 40
+            }, {
+               width: 70,
+               height: 80
+            }, 1);
+
+            assert.deepEqual(position, {
+               left: 15,
+               right: 15,
+               top: 20,
+               bottom: 10
             });
          });
       });
@@ -148,40 +194,75 @@ define(['Controls/List/TileView/TileView',
          assert.equal(position, 'left: 5px; right: 10px; top: 15px; bottom: 20px; ');
       });
 
-      it('_setFixedItem', function() {
+      it('_setHoveredItem', function() {
          var hoveredItem;
 
-         tileView._setFixedItem(hoveredSize, {
-            left: 15,
-            right: 55,
-            top: 15,
-            bottom: 55,
-            width: 40,
-            height: 40
+         tileView._setHoveredItem({
+            key: 'itemKey1'
          }, {
-            width: 70,
-            height: 70
-         }, 'itemKey1');
-
-         hoveredItem = tileView._listModel.getHoveredItem();
-         assert.deepEqual(hoveredItem.fixedPosition, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
-         assert.deepEqual(hoveredItem.key, 'itemKey1');
-
-         tileView._setFixedItem(hoveredSize, {
             left: 5,
-            right: 45,
-            top: 15,
-            bottom: 55,
-            width: 40,
-            height: 40
+            right: 5,
+            top: 5,
+            bottom: 5
          }, {
-            width: 50,
-            height: 70
-         }, 'itemKey2');
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: 10
+         });
 
          hoveredItem = tileView._listModel.getHoveredItem();
-         assert.deepEqual(hoveredItem.fixedPosition, '');
-         assert.deepEqual(hoveredItem.key, 'itemKey2');
+         assert.equal(hoveredItem.position, 'left: 10px; right: 10px; top: 10px; bottom: 10px; ');
+         assert.equal(hoveredItem.endPosition, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
+         assert.equal(hoveredItem.key, 'itemKey1');
+
+         tileView._setHoveredItem({
+            key: 'itemKey1'
+         }, {
+            left: 5,
+            right: 5,
+            top: 5,
+            bottom: 5
+         });
+
+         hoveredItem = tileView._listModel.getHoveredItem();
+         assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
+         assert.equal(hoveredItem.key, 'itemKey1');
+
+         tileView._setHoveredItem({
+            key: 'itemKey2'
+         });
+
+         hoveredItem = tileView._listModel.getHoveredItem();
+         assert.equal(hoveredItem.position, '');
+         assert.equal(hoveredItem.key, 'itemKey2');
+      });
+
+      it('_afterUpdate', function() {
+         var hoveredItem;
+
+         tileView._setHoveredItem({
+            key: 'itemKey1'
+         }, {
+            left: 5,
+            right: 5,
+            top: 5,
+            bottom: 5
+         }, {
+            left: 10,
+            right: 10,
+            top: 10,
+            bottom: 10
+         });
+
+         tileView._hasFixedItemInDOM = function() {
+            return true;
+         };
+         tileView._afterUpdate();
+         hoveredItem = tileView._listModel.getHoveredItem();
+
+         assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
+         assert.equal(hoveredItem.key, 'itemKey1');
       });
 
       it('_afterMount', function() {
@@ -242,36 +323,47 @@ define(['Controls/List/TileView/TileView',
 
       it('_onItemMouseMove', function() {
          var
-            isTouch = true,
-            timeoutCount = 0,
-            setTimeoutOrigin = setTimeout;
+            isTouch,
+            count = 0,
+            originFn = tileView._calculateHoveredItemPosition;
 
-         setTimeout = function() {
-            timeoutCount++;
-            return timeoutCount;
+         tileView._calculateHoveredItemPosition = function() {
+            count++;
          };
 
          TileView._private.isTouch = function() {
             return isTouch;
          };
          tileView._listModel.setHoveredItem({key: 1});
+         isTouch = false;
          tileView._onItemMouseMove(null, {key: 1});
-         assert.isFalse(!!tileView._mouseMoveTimeout);
+         assert.equal(count, 0);
          assert.equal(tileView._listModel.getHoveredItem().key, 1);
 
          tileView._listModel.setHoveredItem(null);
+         isTouch = true;
          tileView._onItemMouseMove(null, {key: 2});
-         assert.isFalse(!!tileView._mouseMoveTimeout);
+         assert.equal(count, 0);
          assert.isNull(tileView._listModel.getHoveredItem());
 
          tileView._listModel.setHoveredItem(null);
          isTouch = false;
          tileView._onItemMouseMove(null, {key: 3});
-         assert.equal(tileView._mouseMoveTimeout, 1);
+         assert.equal(count, 1);
          tileView._onItemMouseMove(null, {key: 3});
-         assert.equal(tileView._mouseMoveTimeout, 2);
+         assert.equal(count, 2);
 
-         setTimeout = setTimeoutOrigin;
+         tileView._calculateHoveredItemPosition = originFn;
+      });
+
+      it('_getZoomCoefficient', function() {
+         cfg.hoverMode = 'outside';
+         tileView.saveOptions(cfg);
+         assert.equal(tileView._getZoomCoefficient(), 1.5);
+
+         cfg.hoverMode = '';
+         tileView.saveOptions(cfg);
+         assert.equal(tileView._getZoomCoefficient(), 1);
       });
 
       it('_onItemMouseLeave', function() {

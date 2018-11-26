@@ -113,7 +113,6 @@
    font-size: @font-size_Grid-row-cell;
    height: 100%;
    box-sizing: border-box;
-   display: flex;
 }
 
 .controls-Grid__header-cell_halign_left {
@@ -144,7 +143,7 @@
 }
 
 .ws-is-no-touch {
-   .controls-Grid__row_default:hover .controls-Grid__row-cell-background-hover {
+   .controls-Grid__row_highlightOnHover_default:hover .controls-Grid__row-cell-background-hover {
       background-color: @background-color_Grid-row_hover;
    }
    .controls-Grid__row:hover .controls-itemActionsV {
@@ -318,6 +317,7 @@
    width: 100%;
    display: inline-flex;
    align-items: baseline;
+   min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
 }
 
 //MasterList styles

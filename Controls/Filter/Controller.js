@@ -6,18 +6,14 @@ define('Controls/Filter/Controller',
       'WS.Data/Chain',
       'WS.Data/Utils',
       'Core/helpers/Object/isEqual',
-      'Controls/History/FilterSource',
-      'Controls/History/Service',
-      'WS.Data/Source/Memory',
+      'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
-      'Core/helpers/Object/isEmpty',
       'Core/core-merge',
       'Core/core-clone',
       'Controls/Container/Data/ContextOptions'
    ],
-   
-   function(Control, template, Deferred, Chain, Utils, isEqual, HistorySource, HistoryService, Memory, SourceController, isEmptyObject, merge, clone) {
-      
+
+   function(Control, template, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, merge, clone) {
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -41,41 +37,56 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         getHistorySource: function(self, hId) {
-            if (!self._historySource) {
-               self._historySource = new HistorySource({
-                  originSource: new Memory({
-                     idProperty: 'id',
-                     data: []
-                  }),
-                  historySource: new HistoryService({
-                     historyId: hId,
-                     pinned: true,
-                     dataLoaded: true
-                  })
+         prepareItems: function(filterButtonItems, fastFilterItems, prepareCallback) {
+            Chain(filterButtonItems).each(function(buttonItem, index) {
+               Chain(fastFilterItems).each(function(fastItem) {
+                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
+                     prepareCallback(index, fastItem);
+                  }
                });
+            });
+         },
+
+         prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
+            var historyItems = _private.cloneItems(filterButtonItems);
+            function setTextValue(index, item) {
+               setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
             }
-            return self._historySource;
+            _private.prepareItems(filterButtonItems, fastFilterItems, setTextValue);
+            return _private.minimizeFilterItems(historyItems);
+         },
+
+         minimizeFilterItems: function(items) {
+            var minItems = [];
+            Chain(items).each(function(item) {
+               minItems.push({
+                  id: getPropValue(item, 'id'),
+                  value: getPropValue(item, 'value'),
+                  textValue: getPropValue(item, 'textValue'),
+                  visibility: getPropValue(item, 'visibility')
+               });
+            });
+            return minItems;
          },
 
          getHistoryItems: function(self, id) {
             if (!id) {
                return Deferred.success([]);
             }
-            var that = this;
-            var recent, lastFilter;
+            var recent, lastFilter,
+               source = historyUtils.getHistorySource(id);
 
             if (!self._sourceController) {
                self._sourceController = new SourceController({
-                  source: this.getHistorySource(self, id)
+                  source: source
                });
             }
 
             return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = that.getHistorySource(self, id).getRecent();
+               recent = historyUtils.getHistorySource(id).getRecent();
                if (recent.getCount()) {
                   lastFilter = recent.at(0);
-                  return that.getHistorySource(self, id).getDataObject(lastFilter.get('ObjectData'));
+                  return historyUtils.getHistorySource(id).getDataObject(lastFilter.get('ObjectData'));
                }
             });
          },
@@ -134,6 +145,13 @@ define('Controls/Filter/Controller',
             self._fastFilterItems = _private.getItemsByOption(fastFilterOption, historyItems);
          },
 
+         setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
+            function clearTextValue(index) {
+               setPropValue(filterButtonItems[index], 'textValue', '');
+            }
+            _private.prepareItems(filterButtonItems, fastFilterItems, clearTextValue);
+         },
+
          updateFilterItems: function(self, newItems) {
             if (self._filterButtonItems) {
                self._filterButtonItems = _private.cloneItems(self._filterButtonItems);
@@ -144,11 +162,15 @@ define('Controls/Filter/Controller',
                self._fastFilterItems = _private.cloneItems(self._fastFilterItems);
                _private.mergeFilterItems(self._fastFilterItems, newItems);
             }
+
+            if (self._filterButtonItems && self._fastFilterItems) {
+               _private.setFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
+            }
          },
 
          resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
             return _private.getHistoryItems(self, historyId).addCallback(function(historyItems) {
-               _private.setFilterItems(self, filterButtonItems, fastFilterItems);
+               _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
             });
          },
@@ -337,19 +359,17 @@ define('Controls/Filter/Controller',
          },
 
          _itemsChanged: function(event, items) {
-            var filter;
             var meta;
 
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               filter = _private.getFilterByItems(this._filterButtonItems, this._fastFilterItems);
                meta = {
                   '$_addFromData': true
                };
-               _private.getHistorySource(this).update(isEmptyObject(filter) ? filter : items, meta);
+               historyUtils.getHistorySource(this._options.historyId).update(_private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
             }
-            
+
             _private.applyItemsToFilter(this, this._options.filter, items);
             _private.notifyFilterChanged(this);
          },
@@ -358,7 +378,7 @@ define('Controls/Filter/Controller',
             _private.setFilter(this, filter);
             _private.notifyFilterChanged(this);
          }
-         
+
       });
 
       Container._private = _private;

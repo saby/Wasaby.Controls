@@ -3,11 +3,13 @@ define('Controls-demo/List/EditAndRemoveOperations', [
    'wml!Controls-demo/List/EditAndRemoveOperations/EditAndRemoveOperations',
    'WS.Data/Source/Memory',
    'WS.Data/Entity/Model',
+   'Controls/EditableArea/Constants',
    'Controls/Validate/Validators/IsRequired'
 ], function(Control,
             template,
             MemorySource,
-            Model
+            Model,
+            EditConstants
 ) {
    'use strict';
    var counter = 10;
@@ -198,7 +200,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
          this.__editingItem = item;
          switch (item.get('id')) {
             case 1:
-               return 'Cancel';
+               return EditConstants.CANCEL;
             case 2:
                return {
                   item: new Model({

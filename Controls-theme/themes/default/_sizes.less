@@ -266,7 +266,6 @@
 @height_Button_default:                   @height_Button_m;
 @font-size_Button_m:                      @default-text-size;
 @font-size_Button_default:                @font-size_Button_m;
-@font-size_Button-Vdom_m:                 @default-text-size;
 @button-margin:                           auto;
 @border-radius_Button_m:                  16px;
 @border-radius_Button_default:            @border-radius_Button_m;
@@ -308,8 +307,11 @@
 @offset_DropdownList-submenu:   -3px;
 @right_DropdownList-cross:             5px;
 @top_DropdownList-cross:               6px;
+
+//Toolbar
 @margin-left_Toolbar-popup:               @right_DropdownList-cross;
 @margin-top_Toolbar-popup:                -@top_DropdownList-cross;
+@spacing_Toolbar-between-icon-text:             @spacing_Button-between-icon-text;
 
 //MenuButton
 @margin-top_MenuButton_button:        -5px;
@@ -378,7 +380,7 @@
 //VDOM List.TreeTileView
 @font-size_TreeTileView-title:                   15px;
 @height_TreeTileView-item:                       40px;
-@left_TreeTileView-checkbox:                     4px;
+@left_TreeTileView-checkbox:                     0;
 @margin_TreeTileView-title:                      0 8px 0 4px;
 @margin_TreeTileView-icon:                       0 0 0 4px;
 
@@ -458,11 +460,6 @@
 //editAtPlace
 @line-height_editAtPlace_fieldWrapper:   20px;
 
-//Search
-@icon-size_Search:                     @default-icon-size;
-@spacing-Search-between-icon-text:     0 2px;
-@border-radius_Search:                 10px;
-@padding_Search:                       0 5px 0 12px;
 //list add button
 @font-size_listAddButton:                @small-text-size;
 @icon-size_ListAddButton:                @default-icon-size;
@@ -525,17 +522,12 @@
 @margin-top_FilterButton_popup:                    -11px;
 @margin-left_FilterButton_popup:                   9px;
 
-//Lookup
-@spacing_Lookup-collection:              4px;
-@spacing_Lookup-showAllLinks:            4px;
-@spacing_Lookup-item:                    4px;
-
 //itemActions
 @height_itemActions_inside:              24px;
 @height_itemAction_outside:              29px;
 @width_itemActions_outside_bevel:        24px;
 @right_itemActions_inside:               6px;
-@padding_itemActions_inside:             0 6px 0 6px;
+@padding_itemActions_inside:             0 6px 3px 6px;
 @padding_itemActions_outside:            0 6px 3px 0;
 @spacing_itemActions_action:             6px;
 @margin_itemActions_separator:           3px;
@@ -618,13 +610,6 @@
 @width_BreadCrumbs-corner:                                   13px;
 @height_BreadCrumbs-menuItem:                                32px;
 
-//FastFilter
-@icon-size_FastFilter-iconReset:                      @icon-size_default;
-@spacing_FastFilter-item:                   0;
-@height_FastFilter-iconArrow:               9px;
-@width_FastFilter-iconArrow:                16px;
-@margin-top_FastFilter-popup:               @margin-top_DropdownList;
-@margin-left_FastFilter-popup:              2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @box-shadow_IconButton:                  0px 1px 4px @color-IconButton__shadow; // TODO Оставить один вариант

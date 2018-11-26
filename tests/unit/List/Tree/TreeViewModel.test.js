@@ -279,6 +279,16 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          });
       });
+      describe('expandedItems', function() {
+         it('initialize from options', function() {
+            var
+               treeViewModel = new TreeViewModel({
+                  expandedItems: [1, 2, 3]
+               }),
+               preparedExpandedItems = { 1: true, 2: true, 3: true };
+            assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+         });
+      });
       describe('public methods', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
@@ -329,11 +339,15 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
          });
 
-         it('setRoot', function() {
-            treeViewModel.setRoot('testRoot');
-            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandNodes" after setRoot("testRoot").');
-            assert.equal('testRoot', treeViewModel._display.getRoot().getContents(), 'Invalid value "_expandNodes" after setRoot("testRoot").');
-            treeViewModel.setRoot(null);
+         it('setExpandedItems', function() {
+            treeViewModel.setExpandedItems([]);
+            assert.deepEqual({}, treeViewModel._expandedItems);
+
+            treeViewModel.setExpandedItems([1, 2]);
+            assert.deepEqual({
+               1: true,
+               2: true
+            }, treeViewModel._expandedItems);
          });
          it('onCollectionChange', function() {
             var

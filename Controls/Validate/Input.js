@@ -11,7 +11,7 @@ define('Controls/Validate/Input',
 
       return Controller.extend({
          _template: template,
-         _focusOutHandler: function() {
+         _deactivatedHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
          },

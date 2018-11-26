@@ -12,12 +12,18 @@
 .controls-TileView__itemContent {
    box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
    background-color: @background-color_TileView-item;
+   box-sizing: border-box;
    z-index: 1;
    overflow: hidden;
    position: absolute;
    top: 0;
    left: 0;
    right: 0;
+}
+
+.controls-TileView__item_animated {
+   transition-property: left, right, bottom, top;
+   transition-duration: 0.15s;
 }
 
 .controls-TileView__title {

@@ -1,0 +1,37 @@
+<Controls.Validate.FormController
+   name="formController"
+   on:deactivated="_onDeactivatedHandler()"
+>
+   <div
+      class="controls-EditableArea
+      {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}"
+   >
+      <ws:partial
+         template="{{_options.content}}"
+         scope="{{_options}}"
+         editObject="{{_options.editObject}}"
+         on:click="_onClickHandler()"
+         on:keyDown="_onKeyDown()"
+         isEditing="{{_isEditing}}"
+      />
+      <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
+         <div class="controls-EditableArea__Toolbar">
+            <Controls.Button
+               on:click="commitEdit()"
+               attr:class="controls-EditableArea__Toolbar__Button"
+               viewMode="transparentQuickButton"
+               iconStyle="success"
+               icon="icon-small icon-Yes"
+               style="secondary"
+            />
+            <Controls.Button
+               on:click="cancelEdit()"
+               attr:class="controls-EditableArea__Toolbar__Button"
+               icon="icon-small icon-Close"
+               viewMode="transparentQuickButton"
+               style="secondary"
+            />
+         </div>
+      </ws:if>
+   </div>
+</Controls.Validate.FormController>

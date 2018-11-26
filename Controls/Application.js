@@ -86,7 +86,7 @@ define('Controls/Application',
 
             // Find opener for Infobox
             if (!config.opener) {
-               requirejs(['Core/vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
+               requirejs(['Vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
                   config.opener = DefaultOpenerFinder.find(config.target);
                   def.callback(config);
                });
@@ -189,21 +189,27 @@ define('Controls/Application',
             if (!receivedState) {
                receivedState = {};
             }
-            self.application = (context.AppData ? context.AppData.application : cfg.application);
-            self.buildnumber = (context.AppData ? context.AppData.buildnumber : '');
-            self.appRoot = cfg.appRoot ? cfg.appRoot : (context.AppData ? context.AppData.appRoot : '/');
-            self.wsRoot = receivedState.wsRoot || (context.AppData ? context.AppData.wsRoot : cfg.wsRoot);
-            self.resourceRoot = receivedState.resourceRoot || (context.AppData ? context.AppData.resourceRoot : cfg.resourceRoot);
-            if (self.resourceRoot[self.resourceRoot.length - 1] !== '/') {
-               self.resourceRoot = self.resourceRoot + '/';
+
+            self.buildnumber = cfg.buildnumber || constants.buildnumber;
+
+            // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
+            self.appRoot = cfg.appRoot || context.AppData.appRoot || constants.appRoot;
+            self.staticDomains = cfg.staticDomains || constants.staticDomains || '[]';
+            if (typeof self.staticDomains !== 'string') {
+               self.staticDomains = '[]';
             }
+
+            self.wsRoot = cfg.wsRoot || constants.wsRoot;
+            self.resourceRoot = cfg.resourceRoot || constants.resourceRoot;
+
+            // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
+            // Т.к. это должно храниться в отдельном сторе
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
-            self.staticDomains = receivedState.staticDomains || (context.AppData ? context.AppData.staticDomains : cfg.staticDomains) || [];
-            self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite) || false;
-            self.product = receivedState.product || (context.AppData ? context.AppData.product : cfg.product);
-            self.lite = receivedState.lite || (context.AppData ? context.AppData.lite : cfg.lite);
-            self.servicesPath = receivedState.servicesPath || (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || '/service/';
+            self.product = cfg.product || constants.product;
+            self.lite = cfg.lite || false;
+            self.servicesPath = cfg.servicesPath || constants.servicesPath || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
+            self.application = context.AppData.application;
 
             self.linkResolver = new LinkResolver(context.headData.isDebug,
                self.buildnumber,
@@ -222,24 +228,11 @@ define('Controls/Application',
                });
             }
 
-            if (receivedState && context.AppData) {
-               context.AppData.buildnumber = self.buildnumber;
-               context.AppData.wsRoot = self.wsRoot;
-               context.AppData.lite = self.lite;
-               context.AppData.appRoot = self.appRoot;
-               context.AppData.resourceRoot = self.resourceRoot;
-               context.AppData.application = self.application;
-               context.AppData.servicesPath = self.servicesPath;
-               context.AppData.product = self.product;
-               context.AppData.staticDomains = self.staticDomains;
-            }
-
             /**
              * Этот перфоманс нужен, для сохранения состояния с сервера, то есть, cfg - это конфиг, который нам прийдет из файла
              * роутинга и с ним же надо восстанавливаться на клиенте.
              */
             def.callback({
-               application: self.application,
                buildnumber: self.buildnumber,
                lite: self.lite,
                csses: ThemesController.getInstance().getCss(),
@@ -268,6 +261,17 @@ define('Controls/Application',
             if (this._activeInfobox === event.target) {
                this._activeInfobox = null;
                this._children.infoBoxOpener.close();
+            }
+         },
+
+         // Needed to immediately hide the infobox after its target or one
+         // of their parent components are hidden
+         // Will be removed:
+         // https://online.sbis.ru/opendoc.html?guid=1b793c4f-848a-4735-b96a-f0c1cf479fab
+         _forceCloseInfoBoxHandler: function() {
+            if (this._activeInfobox) {
+               this._activeInfobox = null;
+               this._children.infoBoxOpener.close(0);
             }
          },
 

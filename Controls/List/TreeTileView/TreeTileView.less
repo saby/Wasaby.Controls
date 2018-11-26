@@ -11,6 +11,14 @@
    left: @left_TreeTileView-checkbox;
 }
 
+.ws-is-ie {
+   .controls-TreeTileView__checkbox, .controls-TreeTileView__itemActions_center {
+      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
+      top: 50%;
+      transform: translateY(-50%);
+   }
+}
+
 .controls-TreeTileView__item:hover, .controls-TreeTileView__item_active {
    background-color: @background-color_TileView-title;
    box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
