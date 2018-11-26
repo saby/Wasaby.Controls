@@ -7,12 +7,15 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/HeaderContent',
    'Core/detection',
    'wml!Controls/List/Grid/GroupTemplate',
+   'wml!Controls/List/Grid/OldGridView',
+   'wml!Controls/List/Grid/NewGridView',
    'wml!Controls/List/Grid/Header',
    'wml!Controls/List/Grid/Results',
    'wml!Controls/List/Grid/ColGroup',
    'css!Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
+], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
+   GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
 
@@ -51,7 +54,7 @@ define('Controls/List/Grid/GridView', [
          }
       },
       GridView = ListView.extend({
-         _gridTemplateName: null,
+         _gridTemplate: null,
          isNotFullGridSupport: cDetection.isNotFullGridSupport,
          _template: GridViewTemplateChooser,
          _groupTemplate: GroupTemplate,
@@ -63,8 +66,7 @@ define('Controls/List/Grid/GridView', [
             var
                requireDeferred = new cDeferred(),
                modules = [];
-            this._gridTemplateName = cDetection.isNotFullGridSupport ? 'wml!Controls/List/Grid/OldGridView' : 'wml!Controls/List/Grid/NewGridView';
-            modules.push(this._gridTemplateName);
+            this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
             if (cDetection.isNotFullGridSupport) {
                modules.push('css!Controls/List/Grid/OldGrid');
             }
