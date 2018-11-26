@@ -138,6 +138,7 @@ define('Controls/Container/List',
                searchController.setFilter(filter);
             }
             self._searchMode = true;
+            self._searchValue = value;
             searchController.search(value);
          },
          
@@ -157,9 +158,9 @@ define('Controls/Container/List',
          },
          
          isFilterChanged: function(self, context) {
-            var oldValue = this.getFilterFromContext(self, self._context),
-               newValue = this.getFilterFromContext(self, context),
-               changed = false;
+            var oldValue = self._filter || this.getFilterFromContext(self, self._context),
+                newValue = this.getFilterFromContext(self, context),
+                changed = false;
             
             if (newValue) {
                if (self._searchMode) {
@@ -173,8 +174,8 @@ define('Controls/Container/List',
          },
          
          isSearchValueChanged: function(self, context) {
-            var oldValue = this.getSearchValueFromContext(self, self._context),
-               newValue = this.getSearchValueFromContext(self, context);
+            var oldValue = self._searchValue || this.getSearchValueFromContext(self, self._context),
+                newValue = this.getSearchValueFromContext(self, context);
             return !isEqual(oldValue, newValue);
          },
          
