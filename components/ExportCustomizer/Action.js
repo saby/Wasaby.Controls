@@ -409,6 +409,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                      })
                   }
                   wiatIndicator.remove();
+                  var waitForLoad = options.usePresets && options.selectedPresetId && options.staticPresets.every(function (v) { return v.id !== options.selectedPresetId; });
                   var needDelay = options.usePresets && !options.selectedPresetId;
                   var componentOptions = cMerge({
                      name: 'controls-ExportCustomizer__area',
@@ -416,6 +417,12 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                      //waitingMode: needDelay,
                      dialogMode: true,
                      handlers: {
+                        onSubviewChanged: waitForLoad ? function (evt) {
+                           var floatArea = evt.getTarget().getParent();
+                           if (!floatArea.isOpened()) {
+                              floatArea.show();
+                           }
+                        } : undefined,
                         onComplete: this._onAreaComplete.bind(this),
                         onFatalError: this._onAreaError.bind(this)
                      }
@@ -431,6 +438,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Action',
                   this._openDialogAction.execute({
                      dialogOptions: {
                         opener: opener || this,
+                        autoShow: !waitForLoad,
                         direction: 'left',
                         animation: 'slide',
                         isStack: true,

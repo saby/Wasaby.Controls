@@ -312,7 +312,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                CommandDispatcher.declareCommand(this, 'complete', this._cmdComplete);
             }
             //CommandDispatcher.declareCommand(this, 'showMessage', Area.showMessage);
-            this._publish('onComplete', 'onFatalError');
+            this._publish('onSubviewChanged', 'onComplete', 'onFatalError');
          },
 
          init: function () {
@@ -359,6 +359,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   if (command === 'subviewChanged') {
                      var result = handler.apply(this, Array.prototype.slice.call(arguments, 3));
                      evtName.setResult(result || true);
+                     this._notify('onSubviewChanged');
                   }
                }.bind(this, handlers[name].bind(this)));
             }
