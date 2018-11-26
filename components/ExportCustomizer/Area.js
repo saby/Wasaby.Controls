@@ -302,7 +302,8 @@ define('SBIS3.CONTROLS/ExportCustomizer/Area',
                   fieldIds: !usePresets && fieldIds && fieldIds.length ? fieldIds.slice() : undefined,
                   fileUuid: !usePresets && fileUuid ? fileUuid : undefined,
                   serviceParams: serviceParams ? cMerge({}, serviceParams) : undefined,
-                  readOnly: readOnly
+                  readOnly: readOnly,
+                  visible: !usePresets || !!fileUuid
                }
             };
          },
