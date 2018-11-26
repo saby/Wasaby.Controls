@@ -55,7 +55,8 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
       
          suggestComponent._options.filter = {test: 'test'};
          suggestComponent._options.searchValue = 'test';
-      
+         suggestComponent._beforeMount(suggestComponent._options);
+         
          context = suggestComponent._getChildContext();
       
          suggestComponent._options.filter = {test: 'test2'};
