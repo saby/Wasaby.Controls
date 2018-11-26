@@ -40,7 +40,6 @@ define('Controls/Application/Core',
             }
 
             AppCore.superclass.constructor.apply(this, arguments);
-            ThemesController.getInstance().pushTheme(this.coreTheme);
             this.ctxData = new AppData(cfg);
             this.headDataCtx = new HeadDataContext(cfg.theme || '', cfg.cssLinks, true);
          },

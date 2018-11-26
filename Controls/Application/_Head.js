@@ -56,6 +56,8 @@ define('Controls/Application/_Head',
             var csses = ThemesController.getInstance().getCss();
             this.themedCss = csses.themedCss;
             this.simpleCss = csses.simpleCss;
+            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
+            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);
