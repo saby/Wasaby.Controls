@@ -255,6 +255,7 @@ define(
 
             config.target = 'testTarget';
             config.className = 'testClass';
+            config.closeByExternalClick = false;
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.componentOptions, config.templateOptions);
@@ -264,6 +265,7 @@ define(
             assert.equal(newConfig.target, config.target);
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
+            assert.equal(newConfig.dialogOptions.autoHide, config.closeByExternalClick);
             assert.equal(newConfig.dialogOptions.className, config.className);
             assert.equal(newConfig.dialogOptions.title, config.title);
             assert.isTrue(newConfig.dialogOptions.border);
