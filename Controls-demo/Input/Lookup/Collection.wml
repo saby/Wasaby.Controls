@@ -2,73 +2,73 @@
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Single item:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_single"/>
+            <Controls.Selector.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_single"/>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Single item small width:<br/></div>
         <div style="width: 50px" >
-            <Controls.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
+            <Controls.Selector.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" />
+                    <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate" />
                 </ws:itemTemplate>
-            </Controls.SelectedCollection>
+            </Controls.Selector.SelectedCollection>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Multi items:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceMulti}}" displayProperty="title" keyProperty="id"/>
+            <Controls.Selector.SelectedCollection items="{{_sourceMulti}}" displayProperty="title" keyProperty="id"/>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">readOnly:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceMulti}}" displayProperty="title" keyProperty="id">
+            <Controls.Selector.SelectedCollection items="{{_sourceMulti}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" readOnly="{{true}}"/>
+                    <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate" readOnly="{{true}}"/>
                 </ws:itemTemplate>
-            </Controls.SelectedCollection>
+            </Controls.Selector.SelectedCollection>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Items bold:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
+            <Controls.Selector.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="bold"/>
+                    <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate" style="bold"/>
                 </ws:itemTemplate>
-            </Controls.SelectedCollection>
+            </Controls.Selector.SelectedCollection>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Items bold clickable:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_clickable">
+            <Controls.Selector.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id" attr:class="ControlsDemo-LookupCollection_clickable">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="bold" clickable="{{true}}"/>
+                    <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate" style="bold" clickable="{{true}}"/>
                 </ws:itemTemplate>
-            </Controls.SelectedCollection>
+            </Controls.Selector.SelectedCollection>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Items accent:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
+            <Controls.Selector.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="accent" size="l"/>
+                    <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate" style="accent" size="l"/>
                 </ws:itemTemplate>
-            </Controls.SelectedCollection>
+            </Controls.Selector.SelectedCollection>
         </div>
     </div>
     <div class="demo-Lookup__collection-wrapper">
         <div class="demo-Lookup__collection-title">Items primary:<br/></div>
         <div>
-            <Controls.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
+            <Controls.Selector.SelectedCollection items="{{_sourceSingle}}" displayProperty="title" keyProperty="id">
                 <ws:itemTemplate>
-                    <ws:partial template="wml!Controls/Input/Lookup/itemTemplate" style="primary" size="l"/>
+                    <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate" style="primary" size="l"/>
                 </ws:itemTemplate>
-            </Controls.SelectedCollection>
+            </Controls.Selector.SelectedCollection>
         </div>
     </div>
 </div>

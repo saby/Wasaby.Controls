@@ -26,12 +26,15 @@ define('Controls/Input/DateTime', [
     *    <li>date and time.</li>
     * </ol>
     * <a href="/materials/demo-ws4-input-datetime">Demo examples.</a>.
+    *
     * @class Controls/Input/DateTime
+    * @extends Core/Control
     * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/IDateTimeMask
     * @mixes Controls/Input/interface/IValidation
+    *
     * @control
     * @public
     * @demo Controls-demo/Input/DateTime/DateTimePG
@@ -66,6 +69,7 @@ define('Controls/Input/DateTime', [
 
       _inputCompletedHandler: function(event, value) {
          this._model.autocomplete(value);
+         this._notify('inputCompleted', [this._model.value]);
       },
 
       _valueChangedHandler: function(e, value) {

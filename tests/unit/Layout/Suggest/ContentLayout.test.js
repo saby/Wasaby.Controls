@@ -47,6 +47,25 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
          suggestComponent._close();
          assert.isTrue(closed);
       });
+   
+      it('Suggest::_getChildContext', function() {
+         var suggestComponent = new __ContentLayer();
+         var context;
+         var afterUpdateContext;
+      
+         suggestComponent._options.filter = {test: 'test'};
+         suggestComponent._options.searchValue = 'test';
+      
+         context = suggestComponent._getChildContext();
+      
+         suggestComponent._options.filter = {test: 'test2'};
+         suggestComponent._options.searchValue = 'test2';
+      
+         afterUpdateContext = suggestComponent._getChildContext();
+      
+         assert.isTrue(context.filterLayoutField !== afterUpdateContext.filterLayoutField);
+         assert.isTrue(context.searchLayoutField !== afterUpdateContext.searchLayoutField);
+      });
       
       it('Suggest::_private.calcHeight', function() {
          var self = getComponentObject();

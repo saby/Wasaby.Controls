@@ -7,7 +7,7 @@ define('Controls/List/ItemActions/Utils/Actions', [], function(
          if (action.isMenu) {
             self._notify('menuActionsClick', [itemData, event, showAll]);
          } else {
-            self._notify('itemActionsClick', [action, itemData.item]);
+            self._notify('itemActionsClick', [action, itemData.item, event.nativeEvent]);
             action.handler && action.handler(itemData.item);
          }
       }

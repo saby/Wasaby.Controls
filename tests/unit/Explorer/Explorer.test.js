@@ -1,9 +1,13 @@
 define([
    'Controls/Explorer',
-   'Core/Deferred'
+   'Core/Deferred',
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Chain'
 ], function(
    Explorer,
-   Deferred
+   Deferred,
+   RecordSet,
+   chain
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -27,11 +31,13 @@ define([
                }
             },
             testRoot = 'testRoot',
-            testBreadCrumbs = [
-               { id: 1, title: 'item1' },
-               { id: 2, title: 'item2' },
-               { id: 3, title: 'item3' }
-            ],
+            testBreadCrumbs = new RecordSet({
+               rawData: [
+                  { id: 1, title: 'item1' },
+                  { id: 2, title: 'item2' },
+                  { id: 3, title: 'item3' }
+               ]
+            }),
             testData1 = {
                getMetaData: function() {
                   return {};
@@ -60,8 +66,7 @@ define([
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: [],
-            _breadCrumbsVisibility: false,
+            _breadCrumbsItems: null,
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -73,8 +78,7 @@ define([
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: testBreadCrumbs,
-            _breadCrumbsVisibility: true,
+            _breadCrumbsItems: chain(testBreadCrumbs).toArray(),
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -85,8 +89,7 @@ define([
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: [],
-            _breadCrumbsVisibility: false,
+            _breadCrumbsItems: null,
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -116,6 +119,27 @@ define([
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.search);
          assert.equal(instance._leftPadding, 'search');
+      });
+
+      it('_onBreadCrumbsClick', function() {
+         var
+            testBreadCrumbs = new RecordSet({
+               rawData: [
+                  { id: 1, title: 'item1' },
+                  { id: 2, title: 'item2', parent: 1 },
+                  { id: 3, title: 'item3', parent: 2 }
+               ]
+            }),
+            instance = new Explorer();
+
+         instance.saveOptions({
+            parentProperty: 'parent',
+            keyProperty: 'id'
+         });
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0), false);
+         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1), true);
+         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
       });
 
       it('_notifyHandler', function() {

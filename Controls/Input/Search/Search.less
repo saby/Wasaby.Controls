@@ -5,7 +5,7 @@
 
 .controls-Search-InputRender {
    .border-radius(@border-radius_Search);
-   padding: @padding_Search;
+   padding: 0 @border-right_content_spacing_Search 0 @border-left_content_spacing_Search;
    border-color: @border-color_Search;
    border-width: 1px;
 }
@@ -23,16 +23,11 @@
 }
 
 .controls-Search-InputRender_state_disabled {
-   border-color: @border-color_Search_disabled;
+   border-color: @border-color_Search_readOnly;
 }
 
 .controls-Search-InputRender_state_active {
    border-color: @border-color_Search_active;
-}
-
-.controls-Search__search_state_disabled {
-   cursor: default;
-   color: @color_Search-icon_disabled;
 }
 
 .controls-Search__search,
@@ -42,25 +37,33 @@
    .icon-size(@icon-size_Search);
    .flex-shrink(0);
    height: 100%;
-   padding: @spacing-Search-between-icon-text;
+}
+
+.controls-Search__reset {
+   margin-right: @iconReset-iconSearch_spacing;
 }
 
 .controls-Search__search_state_default {
    cursor: pointer;
-   color: @color_Search-icon;
+   color: @color_Search_iconSearch;
+}
+
+.controls-Search__search_state_disabled {
+   cursor: default;
+   color: @color_Search_iconSearch_readOnly;
 }
 
 .controls-Search__reset {
    cursor: pointer;
-   color: @color_Search-iconReset;
+   color: @color_Search_iconReset;
 }
 
 .ws-is-no-touch {
    .controls-Search__search_state_default:hover {
-      color: @color_Search-iconSearch_hovered;
+      color: @color_Search_iconSearch_hovered;
    }
 }
 
 .controls-Search__search_state_default:active {
-   color: @color_Search-iconSearch_hovered;
+   color: @color_Search_iconSearch_active;
 }

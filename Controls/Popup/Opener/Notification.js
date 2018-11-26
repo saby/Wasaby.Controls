@@ -29,31 +29,28 @@ define('Controls/Popup/Opener/Notification',
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Dialog name="dialog">
-          *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
-          *          <ws:templateOptions key="111"/>
+          *    <Controls.Popup.Opener.Notification name="notificationOpener">
+          *       <ws:popupOptions template="wml!Controls/Template/NotificationTemplate">
           *       </ws:popupOptions>
-          *    </Controls.Popup.Opener.Dialog>
+          *    </Controls.Popup.Opener.Notification>
           *
-          *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
-          *    <Controls.Button name="closeDialogButton" caption="close dialog" on:click="_closeDialog()"/>
+          *    <Controls.Button name="openNotificationButton" caption="open notification" on:click="_open()"/>
           * </pre>
           * js
           * <pre>
           *   Control.extend({
           *      ...
-          *
-          *       _openDialog() {
+          *       _open() {
           *          var popupOptions = {
-          *              autofocus: true
+          *              templateOptions: {
+          *                 style: "done",
+          *                 text: "Сообщение отправлено",
+          *                 icon: "Admin"
+          *              }
           *          }
-          *          this._children.dialog.open(popupOptions)
-          *       }
-          *
-          *       _closeDialog() {
-          *          this._children.dialog.close()
-          *       }
-          *       ...
+          *          this._children.notificationOpener.open(popupOptions)
+          *      }
+          *      ...
           *   });
           * </pre>
           * @see close
@@ -61,7 +58,6 @@ define('Controls/Popup/Opener/Notification',
          open: function(popupOptions) {
             popupOptions = popupOptions || {};
 
-            //Убираем автофокусировку, чтобы не закрывались окна с autoHide true
             popupOptions.autofocus = false;
             Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
          }

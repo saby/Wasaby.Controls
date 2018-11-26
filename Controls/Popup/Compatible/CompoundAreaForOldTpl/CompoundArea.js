@@ -358,7 +358,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _headerMouseDown: function(event) {
             var dialogTemplate = this._children.DialogTemplate;
-            if (dialogTemplate) {
+
+            // Если мы кликнули в контрол в шапке - то работаем с этим контролом.
+            // d'n'd работает, когда кликнули непосредственно в шапку
+            var isClickedInControl = $(event.target).wsControl() !== this;
+            if (dialogTemplate && !isClickedInControl) {
                dialogTemplate._onMouseDown(new SyntheticEvent(event));
             }
          },
@@ -377,11 +381,14 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var arg = args[0];
 
             if (commandName === 'close') {
-               return this.close(arg);
+               this.close(arg);
+               return true; // команда close не должна всплывать выше окна
             } if (commandName === 'ok') {
-               return this.close(true);
+               this.close(true);
+               return true; // команда ok не должна всплывать выше окна
             } if (commandName === 'cancel') {
-               return this.close(false);
+               this.close(false);
+               return true; // команда cancel не должна всплывать выше окна
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
             } if (commandName === 'delete') {
@@ -806,6 +813,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
                   var popupAfterUpdated = function popupAfterUpdated(item, container) {
                      if (item.isHiddenForRecalc) {
+
+                        // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
+                        self._notifyVDOM('controlResize', [], { bubbling: true });
+
                         // Если попап был скрыт `ws-invisible` на время пересчета позиции, нужно его отобразить
                         item.isHiddenForRecalc = false;
                         runDelayed(function() {
@@ -873,6 +884,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return;
             }
 
+            // Unregister CompoundArea's inner Event/Listener, before its
+            // container is destroyed by compatibility layer
+            this._unregisterEventListener();
+
             var ops = this._producedPendingOperations;
             while (ops.length > 0) {
                this._unregisterPendingOperation(ops[0]);
@@ -896,6 +911,35 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             CompoundArea.superclass.destroy.apply(this, arguments);
          },
 
+         _unregisterEventListener: function() {
+            var
+               element = this._container[0],
+               controlNodes = element && element.controlNodes,
+               controlNode;
+
+            if (controlNodes) {
+               // Find CompoundArea's control node
+               for (var i = 0; i < controlNodes.length; i++) {
+                  if (controlNodes[i].control === this) {
+                     controlNode = controlNodes[i];
+                     break;
+                  }
+               }
+
+               if (controlNode) {
+                  // Get event listener's control node
+                  var
+                     listenerNode = controlNode.childrenNodes && controlNode.childrenNodes[1],
+                     listener = listenerNode && listenerNode.control;
+
+                  if (listener) {
+                     // Tell event listener to unregister from its Registrar to
+                     // prevent leaks
+                     listener._notify('unregister', ['controlResize', listener], { bubbling: true });
+                  }
+               }
+            }
+         },
 
          _removeOpFromCollections: function(operation) {
             removeOperation(operation, this._producedPendingOperations);

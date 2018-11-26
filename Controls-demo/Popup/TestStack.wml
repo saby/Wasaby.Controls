@@ -44,7 +44,7 @@
                           attr:class="ControlsDemo-TestStack__modalDialog"/>
          <br/>
          <Controls.Button name="infoboxButton" caption="Открыть Инфобокс" on:click="_openInfobox()"
-                          attr:class="ControlsDemo-TestStack__modalDialog"/>
+                          attr:class="ControlsDemo-TestStack__infobox"/>
 
       </div>
    </ws:contentArea>
