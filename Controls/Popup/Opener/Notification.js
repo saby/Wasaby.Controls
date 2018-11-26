@@ -58,7 +58,6 @@ define('Controls/Popup/Opener/Notification',
          open: function(popupOptions) {
             popupOptions = popupOptions || {};
 
-            //Убираем автофокусировку, чтобы не закрывались окна с autoHide true
             popupOptions.autofocus = false;
             Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
          }
