@@ -1,6 +1,6 @@
 {
    "name": "sbis3-controls",
-   "version": "3.18.700",
+   "version": "3.19.100",
    "repository": {
       "type": "git",
       "url": "git@git.sbis.ru:root/sbis3-controls"
@@ -75,14 +75,14 @@
       "postcss": "^6.0.23",
       "progress": "^2.0.1",
       "requirejs": "2.1.18",
-      "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.18.700",
+      "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.19.100",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#3.18.700/feature/marsh-data",
-      "Router": "git+https://github.com/saby/Router.git#rc-3.18.700",
+      "Router": "git+https://github.com/saby/Router.git#rc-3.19.100",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "typescript": "2.5.3",
-      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.18.700",
+      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"
    }
 }
