@@ -17,9 +17,9 @@
                             keyProperty="id"
                             displayProperty="notTitle"
                             multiSelect="{{true}}"
-                            multiline="{{true}}"
+                            multiLine="{{true}}"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
-                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -44,7 +44,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
-                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -71,7 +71,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__accentitems">
-                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -96,7 +96,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__primaryitems">
-                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
                             <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
                         </ws:navigation>
@@ -121,7 +121,7 @@
                             searchParam="title"
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
-                        <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
+                        <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:placeholder>
                             Выберите
                             <Controls.Selector.Lookup.Link caption="имя" on:click="showSelector()"/>

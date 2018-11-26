@@ -1128,7 +1128,7 @@
           "multiSelect": {
             "type": "Boolean"
           },
-          "multiline": {
+          "multiLine": {
             "type": "Boolean"
           },
           "readOnly": {
@@ -1137,7 +1137,7 @@
           "source": {
             "type": "Array"
           },
-          "lookupTemplate": {
+          "selectorTemplate": {
             "type": "Array"
           },
           "itemTemplate.style": {

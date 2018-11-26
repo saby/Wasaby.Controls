@@ -19,7 +19,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
       _componentOptions: null,
       _metaData: null,
       _suggestTemplate: 'Controls-demo/Input/Lookup/Suggest/SuggestTemplate',
-      _lookupTemplate: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
+      _selectorTemplate: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
 
       _beforeMount: function () {
          this._sourceNames = new Memory({
@@ -38,7 +38,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
             name: 'Lookup',
             autoDropDown: false,
             multiSelect: true,
-            multiline: false,
+            multiLine: false,
             readOnly: false,
             searchParam: 'title',
             placeholder: 'Input text',
@@ -51,8 +51,8 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
             suggestTemplate: {
                templateName: this._suggestTemplate
             },
-            lookupTemplate: {
-               templateName: this._lookupTemplate
+            selectorTemplate: {
+               templateName: this._selectorTemplate
             },
             'itemTemplate.style': 'none',
             'itemTemplate.size': 'm'
@@ -85,15 +85,15 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
                ],
                value: 'Names'
             },
-            lookupTemplate: {items: [
+            selectorTemplate: {items: [
                {id: '1', title: 'Template with names', items: {
-                  templateName: this._lookupTemplate,
+                  templateName: this._selectorTemplate,
                   templateOptions: {
                      source: this._sourceNames
                   }
                }},
                {id: '2', title: 'Template with cars', items: {
-                  templateName: this._lookupTemplate,
+                  templateName: this._selectorTemplate,
                   templateOptions: {
                      source: this._sourceCars
                   }

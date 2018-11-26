@@ -12,6 +12,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Controls/Utils/tmplNotify',
    'Controls/Utils/ToSourceModel'
 ], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify, ToSourceModel) {
+   'use strict';
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -53,7 +54,6 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       notifyTextValueChanged: function(self, textValue) {
-         // toDo Выписана задача на написание апи для события https://online.sbis.ru/opendoc.html?guid=cce8c706-a9e8-452e-bd44-5344f3c5fc72
          self._notify('textValueChanged', textValue);
       },
 

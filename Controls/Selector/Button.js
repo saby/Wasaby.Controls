@@ -5,6 +5,11 @@ define('Controls/Selector/Button', ['Core/Control', 'wml!Controls/Selector/Butto
     * Button link with the specified text, on clicking on which a selection window opens.
     *
     * @class Controls/Selector/Button
+    * @mixes Controls/interface/ICaption
+    * @mixes Controls/interface/ISelectedCollection
+    * @mixes Controls/interface/IFilter
+    * @mixes Controls/interface/IMultiSelectable
+    * @mixes Controls/interface/ISource
     * @extends Core/Control
     * @control
     * @public

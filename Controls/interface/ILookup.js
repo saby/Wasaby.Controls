@@ -1,7 +1,7 @@
 /**
  * Created by kraynovdo on 09.01.2018.
  */
-define('Controls/Input/interface/ILookup', [
+define('Controls/interface/ILookup', [
 ], function() {
 
    /**
@@ -13,7 +13,7 @@ define('Controls/Input/interface/ILookup', [
     */
 
    /**
-    * @name Controls/Input/interface/ILookup#lookupTemplate
-    * @cfg {Function} Template for lookup panel.
+    * @name Controls/interface/ILookup#multiLine
+    * @cfg {Boolean} Records display mode, if the value is false, then the records will be in one line.
     */
 });

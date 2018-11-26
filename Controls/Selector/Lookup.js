@@ -1,21 +1,22 @@
-define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Lookup/Lookup'], function(Control, template) {
+define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Lookup/Lookup', 'Core/IoC'], function(Control, template, IoC) {
    'use strict';
 
    /**
     * Input for selection from source.
     *
     * @class Controls/Selector/Lookup
+    * @mixes Controls/interface/ISelectedCollection
     * @mixes Controls/Input/interface/ISearch
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IFilter
     * @mixes Controls/Input/interface/ISuggest
-    * @mixes Controls/Input/interface/ILookup
+    * @mixes Controls/interface/ILookup
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/Input/interface/IInputPlaceholder
     * @mixes Controls/Input/interface/IInputText
-    * @mixes Controls/Input/interface/IValidation
+    * @mixes Controls/Selector/Lookup/LookupStyles
     * @control
     * @public
     * @author Капустин И.А.
@@ -25,6 +26,12 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
 
    return Control.extend({
       _template: template,
+
+      _beforeMount: function(options) {
+         if (options.lookupTemplate) {
+            IoC.resolve('ILogger').warn('Опция "Controls/Selector/Lookup:lookupTemplate" переименована, используйте "Controls/Selector/Lookup:selectorTemplate"');
+         }
+      },
 
       showSelector: function(templateOptions) {
          this._children.controller.showSelector(templateOptions);
