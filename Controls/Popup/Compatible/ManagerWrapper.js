@@ -5,30 +5,28 @@ define('Controls/Popup/Compatible/ManagerWrapper',
    [
       'Core/Control',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
-      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper'
+      'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
+      'Vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(Control, Controller, template) {
+   function(Control, Controller, template, SyntheticEvent) {
       'use strict';
 
       var ManagerWrapper = Control.extend({
          _template: template,
 
-         _beforeMount: function() {
-            if (window) {
-               this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
-               this._resizePage = this._eventRegistratorHandler.bind(this, 'resizeDetect');
-               this._mousemovePage = this._eventRegistratorHandler.bind(this, 'mousemoveDetect');
-               this._touchmovePage = this._eventRegistratorHandler.bind(this, 'touchmoveDetect');
-               this._touchendPage = this._eventRegistratorHandler.bind(this, 'touchendDetect');
-               this._mousedownPage = this._eventRegistratorHandler.bind(this, 'mousedownDetect');
-               this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
-
-               this._toggleWindowHandlers(true);
-            }
-         },
-
          _afterMount: function() {
             Controller.registerManager(this);
+
+            // Add handlers to events when children are created
+            this._scrollPage = this._eventRegistratorHandler.bind(this, 'scrollDetect');
+            this._resizePage = this._eventRegistratorHandler.bind(this, 'resizeDetect');
+            this._mousemovePage = this._eventRegistratorHandler.bind(this, 'mousemoveDetect');
+            this._touchmovePage = this._eventRegistratorHandler.bind(this, 'touchmoveDetect');
+            this._touchendPage = this._eventRegistratorHandler.bind(this, 'touchendDetect');
+            this._mousedownPage = this._eventRegistratorHandler.bind(this, 'mousedownDetect');
+            this._mouseupPage = this._eventRegistratorHandler.bind(this, 'mouseupDetect');
+
+            this._toggleWindowHandlers(true);
          },
 
          _toggleWindowHandlers: function(subscribe) {
@@ -43,7 +41,8 @@ define('Controls/Popup/Compatible/ManagerWrapper',
          },
 
          _eventRegistratorHandler: function(registratorName, event) {
-            this._children[registratorName].start(event);
+            // vdom control used synthetic event
+            this._children[registratorName].start(new SyntheticEvent(event));
          },
 
          _scrollHandler: function() {
