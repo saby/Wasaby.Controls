@@ -92,7 +92,7 @@ define('Controls/Input/Base',
                 * After calling setSelectionRange the select event is triggered and saved the selection in model.
                 * You do not need to do this because the model is now the actual selection.
                 */
-               self._skipSavingSelectionOnce++;
+               self._numberSkippedSaveSelection++;
                field.setSelectionRange(selection.start, selection.end);
             }
          },
@@ -318,10 +318,10 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          /**
-          * @type {Boolean} Determines whether to skip once save the current field selection to the model.
-          * @protected
+          * @type {Number} The number of skipped save the current field selection to the model.
+          * @private
           */
-         _skipSavingSelectionOnce: 0,
+         _numberSkippedSaveSelection: 0,
 
          /**
           * @type {Controls/Utils/getTextWidth}
@@ -438,8 +438,8 @@ define('Controls/Input/Base',
           * @private
           */
          _selectHandler: function() {
-            if (this._skipSavingSelectionOnce > 0) {
-               this._skipSavingSelectionOnce--;
+            if (this._numberSkippedSaveSelection > 0) {
+               this._numberSkippedSaveSelection--;
             } else {
                this._viewModel.selection = this._getFieldSelection();
             }

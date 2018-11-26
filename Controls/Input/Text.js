@@ -112,11 +112,10 @@ define('Controls/Input/Text',
 
          _changeHandler: function() {
             if (this._options.trim) {
-               var oldDisplayValue = this._viewModel.displayValue;
+               var trimmedValue = this._viewModel.displayValue.trim();
 
-               this._viewModel.displayValue = this._viewModel.displayValue.trim();
-
-               if (oldDisplayValue !== this._viewModel.displayValue) {
+               if (trimmedValue !== this._viewModel.displayValue) {
+                  this._viewModel.displayValue = trimmedValue;
                   this._notifyValueChanged();
                }
             }
