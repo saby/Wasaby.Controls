@@ -7,7 +7,7 @@
 .controls-ToolbarV_item {
   .inline-flexbox();
   cursor: pointer;
-  margin-right: @controls-toolbar-default-margin;
+  margin-right: @spacing_Toolbar_between_items;
   .align-items(center);
 }
 .controls-ToolbarV_item:before {
@@ -24,10 +24,10 @@
   }
 }
 .controls-ToolBarV_content__resetMargin {
-  margin-right: -@controls-toolbar-default-margin;
+  margin-right: -@spacing_Toolbar_between_items;
 }
 .controls-ToolbarV__item_icon_m {
-  .icon(@default-icon-size-medium, 'cbuc-icons24');
+  .icon(@font-size_Toolbar__icon, @font-family_Toolbar__icon);
 }
 .controls-ToolbarV__item_title {
   white-space: nowrap;
@@ -38,7 +38,7 @@
   cursor: pointer;
 }
 .controls-ToolbarV_item__styled {
-  color: @color_primary;
+  color: @color_Toolbar__item;
 }
 .controls-ToolbarV_item__styled:active {
   color: @color_Link-text_active;
