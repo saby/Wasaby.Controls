@@ -9,13 +9,13 @@ define('Controls/Tabs/ButtonsStyles',
     * @mixin Controls/Tabs/ButtonsStyles
     * @public
     *
+    * @css @spacing_Tabs-between-separator-top-border Spacing between top or bottom borders of tab control and separator.
     * @css @height_Tabs-separator Height of separator between tabs items.
     * @css @width_Tabs-separator Width of separator between tabs items.
     * @css @border-width_Tabs Thickness of line under tabs items.
-    * @css @padding_Tabs-item_default Spacing between tabs item content and tabs separator.
+    * @css @spacing_Tabs-item_default Spacing between tabs item content and tabs separator.
     * @css @line-height_Tabs-baselineFix Line height for align items content.
     * @css @height_Tabs Height tabs control.
-    * @css @padding_Tabs-item Padding of tabs item.
     * @css @font-size_Tabs-item Font size of tabs item text.
     * @css @font-size_Tabs-item_selected Font size of tabs item in selected state text.
     * @css @max-width_Tabs_item Maximum width of tabs item.

@@ -53,10 +53,10 @@ define('Controls/Tabs/Buttons', [
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
-            IoC.resolve('ILogger').error('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
+            IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
          } else if (options.style === 'additional') {
             modifyToNewStyle = 'secondary';
-            IoC.resolve('ILogger').error('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
+            IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
          } else {
             modifyToNewStyle = options.style;
          }
@@ -84,7 +84,7 @@ define('Controls/Tabs/Buttons', [
    };
 
    /**
-    * Controls are designed to give users a choice among two or more tabs.
+    * Control are designed to give users a choice among two or more tabs.
     *
     * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
     *
@@ -132,8 +132,8 @@ define('Controls/Tabs/Buttons', [
    /**
     * @name Controls/Tabs/Buttons#style
     * @cfg {Enum} Tabs buttons display style.
-    * @variant primary
-    * @variant secondary
+    * @variant primary The display style of the attracting attention to selected tab.
+    * @variant secondary The display style of the explicitly highlighted to selected tab.
     * @default primary
     * @remark
     * If the standard theme does not suit you, you can override the variables:
