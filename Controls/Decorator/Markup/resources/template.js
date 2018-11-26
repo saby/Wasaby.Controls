@@ -21,7 +21,7 @@ define('Controls/Decorator/Markup/resources/template', [
 
    function validAttributesInsertion(to, from) {
       var validAttributes = validHtml.validAttributes,
-         dataAttributeRegExp = /^data-([\w-])*$/gi;
+         dataAttributeRegExp = /^data-([\w-])*/;
       for (var key in from) {
          if (from.hasOwnProperty(key) && (validAttributes[key] || dataAttributeRegExp.test(key))) {
             to[key] = markupGenerator.escape(from[key]);

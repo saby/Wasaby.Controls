@@ -6,13 +6,17 @@ define('Controls/Popup/Manager',
       'Core/helpers/Number/randomId',
       'WS.Data/Collection/List',
       'Core/EventBus',
-      'Core/detection'
+      'Core/detection',
+      'Core/IoC',
+      'Core/core-instance'
    ],
 
-   function(Control, template, ManagerController, randomId, List, EventBus, cDetection) {
+   function(Control, template, ManagerController, randomId, List, EventBus, cDetection, IoC, cInstance) {
       'use strict';
 
       var _private = {
+         activeElement: {},
+
          addElement: function(element) {
             this._popupItems.add(element);
             if (element.isModal) {
@@ -32,7 +36,7 @@ define('Controls/Popup/Manager',
             return removeDeferred.addCallback(function afterRemovePopup() {
                self._popupItems.remove(element);
                _private.updateOverlay.call(self);
-               self._notify('managerPopupDestroyed', [element, self._popupItems], {bubbling: true});
+               self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
                return element;
             });
          },
@@ -47,7 +51,7 @@ define('Controls/Popup/Manager',
             if (element) {
                // при создании попапа, зарегистрируем его
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
-               this._notify('managerPopupCreated', [element, this._popupItems], {bubbling: true});
+               this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
                return true;
             }
             return false;
@@ -57,7 +61,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                var needUpdate = element.controller._elementUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
-               this._notify('managerPopupUpdated', [element, this._popupItems], {bubbling: true});
+               this._notify('managerPopupUpdated', [element, this._popupItems], { bubbling: true });
                return !!needUpdate;
             }
             return false;
@@ -67,7 +71,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                element.controller.elementMaximized(element, _private.getItemContainer(id), state);
-               this._notify('managerPopupMaximized', [element, this._popupItems], {bubbling: true});
+               this._notify('managerPopupMaximized', [element, this._popupItems], { bubbling: true });
                return true;
             }
             return false;
@@ -81,10 +85,37 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupActivated: function(id) {
+            var item = ManagerController.find(id);
+            if (item) {
+               item.waitDeactivated = false;
+            }
+         },
+
          popupDeactivated: function(id) {
-            var element = ManagerController.find(id);
-            if (element) {
-               element.controller.popupDeactivated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
+            var item = ManagerController.find(id);
+            if (item) {
+               if (!_private.isIgnoreActivationArea(document.activeElement)) {
+                  _private.finishPendings(id, function() {
+                     if (!_private.activeElement[id]) {
+                        _private.activeElement[id] = document.activeElement;
+                     }
+                  }, function(popup) {
+                     // if pendings is exist, take focus back while pendings are finishing
+                     popup._container.focus();
+                  }, function() {
+                     var itemContainer = _private.getItemContainer(id);
+                     if (item.popupOptions.isCompoundTemplate) {
+                        if (item.popupOptions.closeByExternalClick) {
+                           _private._getCompoundArea(itemContainer).close();
+                        }
+                     } else {
+                        item.controller.popupDeactivated(item, itemContainer);
+                     }
+                  });
+               } else if (item.popupOptions.closeByExternalClick) {
+                  item.waitDeactivated = true;
+               }
             }
             return false;
          },
@@ -113,7 +144,21 @@ define('Controls/Popup/Manager',
          },
 
          popupClose: function(id) {
-            ManagerController.remove(id, _private.getItemContainer(id));
+            _private.finishPendings(id, null, null, function() {
+               ManagerController.remove(id, _private.getItemContainer(id));
+            });
+            return false;
+         },
+
+         popupDestroyed: function(id) {
+            if (_private.activeElement[id]) {
+               // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
+               // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
+               setTimeout(function() {
+                  _private.activeElement[id].focus();
+                  delete _private.activeElement[id];
+               }, 0);
+            }
             return false;
          },
 
@@ -160,6 +205,46 @@ define('Controls/Popup/Manager',
                }
             });
             _private.redrawItems(instance._popupItems);
+         },
+
+         finishPendings: function(popupId, popupCallback, pendingCallback, pendingsFinishedCallback) {
+            var PopupContainer = ManagerController.getContainer();
+            var popup = PopupContainer.getPopupById(popupId);
+            if (popup) {
+               popupCallback && popupCallback(popup);
+
+               var registrator = PopupContainer.getPendingById(popupId);
+               if (registrator) {
+                  if (registrator._hasRegisteredPendings()) {
+                     pendingCallback && pendingCallback(popup);
+                  }
+                  var finishDef = registrator.finishPendingOperations();
+                  finishDef.addCallbacks(function() {
+                     pendingsFinishedCallback && pendingsFinishedCallback(popup);
+                  }, function(e) {
+                     IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                     pendingsFinishedCallback && pendingsFinishedCallback(popup);
+                  });
+               }
+            }
+         },
+
+         isIgnoreActivationArea: function(focusedContainer) {
+            while (focusedContainer) {
+               if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
+                  return true;
+               }
+               focusedContainer = focusedContainer.parentElement;
+            }
+            return false;
+         },
+
+         // TODO Compatible
+         // Старые панели прерывали свое закрытие без механизма пендингов, на событие onBeforeClose
+         // Зовем метод close с шаблона. Если закрывать по механизму деактивации, то он уничтожит попап =>
+         // у compoundArea вызовется сразу destroy. такую логику прервать нельзя
+         _getCompoundArea: function(popupContainer) {
+            return $('.controls-CompoundArea', popupContainer)[0].controlNodes[0].control;
          }
       };
 
@@ -212,6 +297,16 @@ define('Controls/Popup/Manager',
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };
+         },
+
+         _contentClick: function(event) {
+            this._popupItems.each(function(item) {
+               if (item.waitDeactivated) {
+                  if (!_private.isIgnoreActivationArea(event.target)) {
+                     _private.popupDeactivated(item.id);
+                  }
+               }
+            });
          },
 
          /**

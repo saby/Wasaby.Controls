@@ -1,33 +1,41 @@
-<div class="controlsDemo-Input-DateTime">
-   <h1>Controls.Input.DateTime</h1>
+<Controls.Application title="Demo-example: DateTime fields."
+                      appRoot="/materials/">
+   <ws:head>
+      <link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css"/>
+   </ws:head>
+   <ws:content>
+      <div class="controlsDemo-Input-DateTime">
+         <h1>Controls.Input.DateTime</h1>
 
-   <ws:for data="masksGroup in _masks">
-      <h3>{{masksGroup.title}}</h3>
-      <ws:for data="mask in masksGroup.masks">
-         <div class="controlsDemo-Input-DateTime__row">
-            <div class="controlsDemo-Input-DateTime__row-item">
-               {{mask}}
-            </div>
-            <div class="controlsDemo-Input-DateTime__row-item">
-               <Controls.Input.DateTime
-                  value="{{null}}"
-                  mask="{{mask}}"/>
-            </div>
-            <div class="controlsDemo-Input-DateTime__row-item">
-               <Controls.Input.DateTime
-                  bind:value="_date"
-                  mask="{{mask}}"/>
-            </div>
+         <ws:for data="masksGroup in _masks">
+            <h3>{{masksGroup.title}}</h3>
+            <ws:for data="mask in masksGroup.masks">
+               <div class="controlsDemo-Input-DateTime__row">
+                  <div class="controlsDemo-Input-DateTime__row-item">
+                     {{mask}}
+                  </div>
+                  <div class="controlsDemo-Input-DateTime__row-item">
+                     <Controls.Input.DateTime
+                        value="{{null}}"
+                        mask="{{mask}}"/>
+                  </div>
+                  <div class="controlsDemo-Input-DateTime__row-item">
+                     <Controls.Input.DateTime
+                        bind:value="_date"
+                        mask="{{mask}}"/>
+                  </div>
+               </div>
+            </ws:for>
+         </ws:for>
+
+         <h3>Baseline with inline blocks</h3>
+         <div>
+            Text:
+            <Controls.Input.DateTime
+               value="{{_date}}"
+               mask="{{mask}}"/>
          </div>
-      </ws:for>
-   </ws:for>
 
-   <h3>Baseline with inline blocks</h3>
-   <div>
-      Text:
-      <Controls.Input.DateTime
-         value="{{_date}}"
-         mask="{{mask}}"/>
-   </div>
-
-</div>
+      </div>
+   </ws:content>
+</Controls.Application>

@@ -3,28 +3,15 @@ define('Controls/Application/HeadDataContext', [
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
    'Core/cookie',
-   'View/Runner/common',
-   'Core/Themes/ThemesController',
-   'Core/Serializer'
-], function(DataContext, DepsCollector, Deferred, cookie, common, ThemesController, Serializer) {
-   function getDepsFromSerializer(slr) {
-      var moduleInfo;
-      var deps = {};
-      var modules = slr._linksStorage;
-      var parts;
-      for (var key in modules) {
-         if (modules.hasOwnProperty(key)) {
-            moduleInfo = modules[key];
-            if (moduleInfo.module) {
-               parts = Serializer.parseDeclaration(moduleInfo.module);
-               deps[parts.name] = true;
-            }
-         }
-      }
-      return deps;
-   }
+   'View/Request',
+   'Core/Themes/ThemesController'
 
-
+], function(DataContext,
+   DepsCollector,
+   Deferred,
+   cookie,
+   Request,
+   ThemesController) {
    var bundles, modDeps, contents;
    try {
       modDeps = require('json!resources/module-dependencies');
@@ -49,60 +36,36 @@ define('Controls/Application/HeadDataContext', [
    return DataContext.extend({
       _version: 0,
       needObjects: true,
+
+      /* toDO: StateRec.register */
       pushDepComponent: function(componentName, needRequire) {
          this.depComponentsMap[componentName] = true;
          if (needRequire) {
             this.additionalDeps[componentName] = true;
          }
       },
-      serializeReceivedStates: function() {
-         var slr;
-         var serializedMap = {};
-         var allAdditionalDeps = {};
-         var allRecStates = this.receivedStateObjectsArray;
-         for (var key in allRecStates) {
-            slr = new Serializer();
-            var receivedState = allRecStates[key];
-            var serializedState = JSON.stringify(receivedState, slr.serialize);
-            common.componentOptsReArray.forEach(function(re) {
-               serializedState = serializedState.replace(re.toFind, re.toReplace);
-            });
-            serializedMap[key] = serializedState;
-            var addDeps = getDepsFromSerializer(slr);
-            for (var dep in addDeps) {
-               if (addDeps.hasOwnProperty(dep)) {
-                  allAdditionalDeps[dep] = true;
-               }
-            }
-         }
-         return {
-            serializedMap: serializedMap,
-            additionalDepsMap: allAdditionalDeps
-         };
-      },
-      addReceivedState: function(key, receivedState) {
-         this.receivedStateObjectsArray[key] = receivedState;
-      },
+
       pushWaiterDeferred: function(def) {
          var self = this;
          var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
-            var components = Object.keys(self.depComponentsMap);
+            var components = Object.keys(self.depComponentsMap),
+               files;
             if (self.isDebug) {
-               var files = {};
+               files = {};
             } else {
-               var files = depsCollector.collectDependencies(components);
+               files = depsCollector.collectDependencies(components);
                ThemesController.getInstance().initCss({
                   themedCss: files.css.themedCss,
                   simpleCss: files.css.simpleCss
                });
             }
 
-            var rcsData = self.serializeReceivedStates();
+            var rcsData = Request.getCurrent().stateReceiver.serialize();
             var additionalDepsArray = [];
-            for (var key in rcsData.additionalDepsMap) {
-               if (rcsData.additionalDepsMap.hasOwnProperty(key)) {
+            for (var key in rcsData.additionalDeps) {
+               if (rcsData.additionalDeps.hasOwnProperty(key)) {
                   additionalDepsArray.push(key);
                }
             }
@@ -124,8 +87,8 @@ define('Controls/Application/HeadDataContext', [
                tmpl: files.tmpl || [],
                css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
-               receivedStateArr: rcsData.serializedMap,
-               additionalDeps: Object.keys(rcsData.additionalDepsMap).concat(Object.keys(self.additionalDeps))
+               receivedStateArr: rcsData.serialized,
+               additionalDeps: Object.keys(rcsData.additionalDeps).concat(Object.keys(self.additionalDeps))
             });
          });
       },
@@ -133,7 +96,6 @@ define('Controls/Application/HeadDataContext', [
          this.theme = theme;
          this.defRender = new Deferred();
          this.depComponentsMap = {};
-         this.receivedStateObjectsArray = {};
          this.receivedStateArr = {};
          this.additionalDeps = {};
          this.themesActive = themesActive;

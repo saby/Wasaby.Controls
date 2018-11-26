@@ -44,21 +44,24 @@ define('Controls-demo/EditableArea/EditableArea', [
             icon: 'icon-Print',
             title: 'Распечатать',
             '@parent': false,
-            parent: null
+            parent: null,
+            buttonViewMode: 'iconToolbar'
          },
          {
             id: '2',
             icon: 'icon-RelatedDocumentsDown',
             title: 'Связанные документы',
             '@parent': false,
-            parent: null
+            parent: null,
+            buttonViewMode: 'iconToolbar'
          },
          {
             id: '3',
             icon: 'icon-Question2',
             title: 'Задать вопрос',
             '@parent': false,
-            parent: null
+            parent: null,
+            buttonViewMode: 'iconToolbar'
          }
       ];
 
