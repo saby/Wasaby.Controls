@@ -12,7 +12,7 @@
               itemTemplateProperty="{{_options.additionalTemplateProperty}}"
               on:valueChanged="_valueChangedHandler()"
               on:visibilityChanged="_visibilityChangedHandler()"
-              attr:class="controls-FilterPanel__AdditionalParams {{!_historyId || !_historyItems.getCount() ? 'controls-FilterPanel_lastBlock'}}"/>
+              attr:class="controls-FilterPanel__AdditionalParams {{!_historyId || !_historyItems.getCount() || _options.orientation === 'horizontal' ? 'controls-FilterPanel_lastBlock'}}"/>
    </ws:if>
 </ws:template>
 
