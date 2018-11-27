@@ -1,6 +1,7 @@
 define('Controls/Input/Base',
    [
       'Core/Control',
+      'Core/EventBus',
       'Core/detection',
       'Core/constants',
       'WS.Data/Type/descriptor',
@@ -18,7 +19,7 @@ define('Controls/Input/Base',
       'css!Controls/Input/Base/Base'
    ],
    function(
-      Control, detection, constants, descriptor, tmplNotify, isEqual,
+      Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
       getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
       fieldTemplate, readOnlyFieldTemplate
    ) {
@@ -460,7 +461,11 @@ define('Controls/Input/Base',
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
             if (value !== model.displayValue) {
+               var removalLength = splitValue.delete.length;
+
                splitValue.before = model.displayValue.substring(0, model.displayValue.length - splitValue.after.length);
+               splitValue.delete = splitValue.before.slice(-removalLength);
+               splitValue.before = splitValue.before.slice(0, -removalLength);
             }
 
             _private.handleInput(this, splitValue, inputType);
@@ -493,7 +498,9 @@ define('Controls/Input/Base',
          },
 
          _focusInHandler: function() {
-            /* override */
+            if (detection.isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocus');
+            }
          },
 
          /**
@@ -507,6 +514,10 @@ define('Controls/Input/Base',
              * IE, Firefox does not scrolled. So we do it ourselves.
              */
             this._getField().scrollLeft = 0;
+
+            if (detection.isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocusOut');
+            }
          },
 
          _notifyValueChanged: function() {
