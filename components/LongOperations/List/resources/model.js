@@ -3,7 +3,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
       'WS.Data/Entity/Model',
       'SBIS3.CONTROLS/LongOperations/Entry',
       'EngineUser/Info',
-      'Person/Info/Model'
+      // Временно до выхода новой версии длительных операций:
+      'optional!Person/Info/Model'
    ],
 
    function (

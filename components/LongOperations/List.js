@@ -18,8 +18,9 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
       'SBIS3.CONTROLS/DataGridView',
       'SBIS3.CONTROLS/LongOperations/History',
-      'tmpl!Person/Info/Photo',
-      'css!Person/Info'
+      // Временно до выхода новой версии длительных операций:
+      'optional!tmpl!Person/Info/Photo',
+      'optional!css!Person/Info'
    ],
 
    function (cMerge, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
