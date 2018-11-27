@@ -100,7 +100,7 @@
               keyProperty="id"
               size="m"
               icon="icon-small icon-AddButtonNew"
-              viewMode="quickButton"
+              viewMode="toolButton"
               style="secondary"
               source="{{_createMemory(_iconAdd)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeader"
@@ -110,7 +110,7 @@
       <Controls.Button.Menu
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
-              viewMode="quickButton"
+              viewMode="toolButton"
               style="secondary"
               size="l"
               source="{{_createMemory(_iconAddMedium)}}"
