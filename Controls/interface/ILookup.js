@@ -14,6 +14,6 @@ define('Controls/interface/ILookup', [
 
    /**
     * @name Controls/interface/ILookup#multiLine
-    * @cfg {Boolean} Records display mode, if the value is false, then the records will be in one line.
+    * @cfg {Boolean} Enables multi-line display mode.
     */
 });
