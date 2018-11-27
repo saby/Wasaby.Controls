@@ -819,10 +819,12 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                // TODO: столько много работы, а есди у события "onJsonChange" не будет подписчиков? Стоит переделать - возвращать объект с методом или совсем ничего (пусть вызывают getJson, а вычисления перенсти в него)
 
                // Превратим задекорируем все ссылки из текста, кроме тех, кто уже ссылка в теге <a>.
-               text = LinkWrap.wrapURLs(text, true, false,
+               var decoratedLinkService = cConstants.decoratedLinkService;
+               if (decoratedLinkService && typeof location === 'object') {
                   // В IE 11 нет location.origin
-                  (typeof location === 'object' ? location.origin || location.protocol + '//' + location.host : '') +
-                  (cConstants.decoratedLinkService || ''));
+                  decoratedLinkService = location.protocol + '//' + location.host + decoratedLinkService;
+               }
+               text = LinkWrap.wrapURLs(text, true, false, decoratedLinkService);
                var div = document.createElement('div');
                div.innerHTML = text;
                var options = this._options;
@@ -1454,10 +1456,9 @@ define('SBIS3.CONTROLS/RichEditor/Components/RichTextArea',
                   if (formats.underline && formats.strikethrough) {
                      this._applyTextDecorationUnderlineAndLinethrough(this._getCurrentFormatNode(), true);
                   }
-                  hasOther = true;
                   // Добавил проверку, что это не размер по умолчанию
                   // https://online.sbis.ru/opendoc.html?guid=89964a3c-98b4-4411-9c61-5de10da28ed5
-                  if (formats.fontsize !== constants.baseFontSize && !hasOther) {
+                  if (!hasOther && formats.fontsize !== this.getCurrentFormats(['fontsize']).fontsize) {
                      // Если указан тот же размер шрифта (и это не размер по умолчанию), и нет других изменений - нужно чтобы были правильно
                      // созданы окружающие span-ы (например https://online.sbis.ru/opendoc.html?guid=5f4b9308-ec3e-49b7-934c-d64deaf556dc)
                      // в настоящий момент работает и без этого кода, но если не будет работать, но нужно использовать modify, т.к. expand помечен deprecated.

@@ -426,7 +426,7 @@ define('SBIS3.CONTROLS/ExportCustomizer/_Formatter/View',
          _callFormatterOpen: function (useApp) {
             var options = this._options;
             var fieldIds = options.fieldIds;
-            this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams);
+            this._exportFormatter[useApp ? 'openApp' : 'open'](options.fileUuid || options.primaryUuid, fieldIds || [], this._getFieldTitles(fieldIds), options.serviceParams, useApp ? undefined : this);
          },
 
          /**

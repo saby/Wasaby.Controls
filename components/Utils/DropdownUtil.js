@@ -101,11 +101,10 @@ define('SBIS3.CONTROLS/Utils/DropdownUtil', [
 
       _makeQueryFilterForHistory: function(self, recordsId) {
          var query = new Query(),
-            filter = {};
-
-         filter[this._getHistoryController(self).getOriginalIdProperty()] = recordsId;
-         merge(filter, self._options.filter || {});
-         query.where(filter).limit(12);
+             originFilterClone = coreClone(self._options.filter || {});
+   
+         originFilterClone[this._getHistoryController(self).getOriginalIdProperty()] = recordsId;
+         query.where(originFilterClone).limit(12);
          return query;
       },
 
