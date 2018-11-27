@@ -3,14 +3,20 @@
 @background-color_dialogTemplate-top-area:     @background-color_default;
 
 //caption
-@color_DialogTemplate-caption:                 @color_Heading_secondary;
-@margin-left_dialogTemplate_caption:           @spacing_default_l;
+@color_DialogTemplate-caption:                       @color_Heading_secondary;
+@spacing_DialogTemplate-between-caption-border-left: @spacing_default_l;
 @height_dialogTemplate_caption:                44px;
 @line-height_dialogTemplate_caption:           42px;
 
 //head
-@font-size_dialogTemplate_head:                @size_Heading_l;
-@margin-right_dialogTemplate_head:             48px; //TODO: заменить на @margin-right_dialogTemplate_caption+@width_closeButton
+@font-size_dialogTemplate_head:                    @size_Heading_l;
+@spacing_dialogTemplate-between-head-border-right: 48px;
 
 //close-button
 @top_dialogTemplate_compatible_close-button:   5px;
+
+//border
+@border_dialogTemplate: @thickness_border_default solid @color_border_secondary;
+
+//shadow
+@shadow_dialogtemplate: @size_shadow_default @color_shadow_secondary;

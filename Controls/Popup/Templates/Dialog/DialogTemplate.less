@@ -8,8 +8,8 @@
    background-color: @background-color_dialogTemplate-content;
    position: relative;
    overflow: hidden;
-   .box-shadow(0 0 12px 0 rgba(0,0,0,.4));
-   border: 1px solid #BDBDBD;
+   box-shadow: @shadow_dialogtemplate;
+   border: @border_dialogTemplate;
 }
 
 .controls-DialogTemplate__top-area {
@@ -35,7 +35,7 @@
    flex-shrink: 1;
    display: flex;
    align-items: baseline;
-   margin-right: @margin-right_dialogTemplate_head;
+   margin-right: @spacing_dialogTemplate-between-head-border-right;
    overflow: hidden;
 }
 
@@ -57,7 +57,7 @@
    align-items: baseline;
    flex-shrink: 1;
    display: flex;
-   margin-left: @margin-left_dialogTemplate_caption;
+   margin-left: @spacing_DialogTemplate-between-caption-border-left;
 }
 
 .controls-DialogTemplate__caption_text {
