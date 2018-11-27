@@ -52,7 +52,9 @@
                               </ws:if>
                               <ws:if data="{{  _options.content }}">
                                  <Controls.Application._Wait>
-                                    <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
+                                    <Controls.Container.LoadingIndicator>
+                                       <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
+                                    </Controls.Container.LoadingIndicator>
                                  </Controls.Application._Wait>
                               </ws:if>
                               <ws:else>
