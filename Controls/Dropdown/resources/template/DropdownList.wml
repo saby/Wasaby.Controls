@@ -33,7 +33,7 @@
          </ws:if>
       </div>
    </Controls.Container.Scroll>
-   <ws:if data="{{_options.showClose}}">
+   <ws:if data="{{_options.showClose && !_options.showHeader}}">
       <Controls.Button.Close class="controls-DropdownList-cross" style="light" on:click="_closeClick()"/>
    </ws:if>
    <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer" on:click="_footerClick()">
