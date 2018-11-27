@@ -65,9 +65,9 @@ var server = app.listen(port);
 console.log('app available on port ' + port);
 
 // // Кошерный редирект на CDN, который РАБОТАЕТ
-// app.get('/cdn*', function(req, res) {
-//    res.redirect('http://wi.sbis.ru' + req.url);
-// });
+app.get('/cdn*', function(req, res) {
+   res.redirect('http://fix-online.sbis.ru' + req.url);
+});
 
 // Простой прокси для перенаправления запросов от демо к сервисам Sbis.ru
 var simpleProxy = function(proxyParams, req, res) {
@@ -222,6 +222,7 @@ app.get('/:moduleName/*', function(req, res){
       };
    }
    process.domain.req = req;
+   process.domain.res = res;
 
    var tpl = require('wml!Controls/Application/Route');
    var originalUrl = req.originalUrl;

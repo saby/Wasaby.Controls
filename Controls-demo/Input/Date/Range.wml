@@ -1,31 +1,39 @@
-<div class="controlsDemo-Input-DateRange">
-   <h1>Controls.Input.Date.Range</h1>
+<Controls.Application title="Demo-example: Date range fields with popup panel."
+                      appRoot="/materials/">
+   <ws:head>
+      <link rel="stylesheet" href="/materials/resources/SBIS3.CONTROLS/themes/online/online.css" type="text/css"/>
+   </ws:head>
+   <ws:content>
+      <div class="controlsDemo-Input-DateRange">
+         <h1>Controls.Input.Date.Range</h1>
 
-   <ws:for data="mask in _masks">
-      <div class="controlsDemo-Input-DateRange__row">
-         <div class="controlsDemo-Input-DateRange__row-item">
-            {{mask}}
-         </div>
-         <div class="controlsDemo-Input-DateRange__row-item">
-            <Controls.Input.Date.Range
-               mask="{{mask}}"/>
-         </div>
-         <div class="controlsDemo-Input-DateRange__row-item">
+         <ws:for data="mask in _masks">
+            <div class="controlsDemo-Input-DateRange__row">
+               <div class="controlsDemo-Input-DateRange__row-item">
+                  {{mask}}
+               </div>
+               <div class="controlsDemo-Input-DateRange__row-item">
+                  <Controls.Input.Date.Range
+                     mask="{{mask}}"/>
+               </div>
+               <div class="controlsDemo-Input-DateRange__row-item">
+                  <Controls.Input.Date.Range
+                     bind:startValue="_startDate"
+                     bind:endValue="_endDate"
+                     mask="{{mask}}"/>
+               </div>
+            </div>
+         </ws:for>
+
+         <h3>Baseline with inline blocks</h3>
+         <div>
+            Text:
             <Controls.Input.Date.Range
                bind:startValue="_startDate"
                bind:endValue="_endDate"
                mask="{{mask}}"/>
          </div>
+
       </div>
-   </ws:for>
-
-   <h3>Baseline with inline blocks</h3>
-   <div>
-      Text:
-      <Controls.Input.Date.Range
-         bind:startValue="_startDate"
-         bind:endValue="_endDate"
-         mask="{{mask}}"/>
-   </div>
-
-</div>
+   </ws:content>
+</Controls.Application>

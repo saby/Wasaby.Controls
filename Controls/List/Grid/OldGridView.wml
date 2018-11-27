@@ -1,4 +1,4 @@
-<table class="controls-Grid">
+<table attr:class="controls-Grid controls-Grid_{{_options.style}}">
    <ws:partial template="wml!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
    <ws:if data="{{_listModel.getHeader()}}">
       <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
