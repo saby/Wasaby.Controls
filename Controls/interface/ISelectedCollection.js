@@ -10,7 +10,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @name Controls/interface/ISelectedCollection#displayProperty
-    * @cfg {String="title"} Name of the item property which content will be displayed.
+    * @cfg {String} Name of the item property which content will be displayed.
     */
 
    /**
@@ -20,7 +20,7 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @name Controls/interface/ISelectedCollection#selectorTemplate
-    * @cfg {Function} Template for panel with collection.
+    * @cfg {Function} Record selection panel template.
     * @example
     * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
     * WML:

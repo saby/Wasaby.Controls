@@ -29,7 +29,7 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
 
       _beforeMount: function(options) {
          if (options.lookupTemplate) {
-            IoC.resolve('ILogger').warn('Опция "Controls/Selector/Lookup:lookupTemplate" переименована, используйте "Controls/Selector/Lookup:selectorTemplate"');
+            IoC.resolve('ILogger').warn('Option "Controls/Selector/Lookup:lookupTemplate" renamed and will be deleted in 3.19.100, use "Controls/Selector/Lookup:selectorTemplate"');
          }
       },
 

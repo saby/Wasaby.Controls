@@ -18,7 +18,7 @@
 
 .controls-Lookup__inputRender_multiLine .controls-InputRender__wrapper {
   display: inline-block;
-  width: ~"calc(100% - @{spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorder})";
+  width: ~"calc(100% - @{spacing_Lookup_multiLine_between_inputRenderWrapper_rightBorder})";
 }
 
 .controls-Lookup__inputRender_content_width_custom .controls-InputRender__fieldWrapper {
@@ -26,7 +26,7 @@
 }
 
 .controls-Lookup__inputRender_content_width_default .controls-InputRender__fieldWrapper {
-  line-height: @line-height_Lookup-input-wrapper;
+  line-height: @line-height_Lookup_input_wrapper;
 }
 
 .controls-Lookup__afterFieldWrapper {
@@ -42,7 +42,7 @@
 .controls-Lookup__afterFieldWrapper_multiLine {
   position: absolute;
   top: 0;
-  right: -@spacing_Lookup-multiLine-between-inputRenderWrapper-rightBorder;
+  right: -@spacing_Lookup_multiLine_between_inputRenderWrapper_rightBorder;
   justify-content: space-between;
   flex-flow: column;
 }
@@ -52,21 +52,36 @@
 }
 
 .controls-Lookup__showSelector {
-  .icon-size-without-important(@font-size_Lookup-showSelector);
-  padding: @spacing_Lookup-between-showSelector-border;
-  color: @color_Lookup-showSelector;
-  &:hover {
-    color: @color_Lookup-showSelector-hovered;
+  .icon-size-without-important(@font-size_Lookup_showSelector);
+  padding: @spacing_Lookup_between_showSelector_border;
+  color: @color_Lookup_showSelector;
+}
+
+.ws-is-no-touch {
+  .controls-Lookup__showSelector:hover {
+    color: @color_Lookup_showSelector_hovered;
   }
 }
 
+.controls-Lookup__showSelector:active {
+  color: @color_Lookup_showSelector_active;
+}
+
+
 .controls-Lookup__clearRecords {
-  .icon-size-without-important(@font-size_Lookup-clearRecords);
-  padding: @spacing_Lookup-between-clearRecords-border;
-  color: @color_Lookup-clearRecords;
-  &:hover {
-    color: @color_Lookup-clearRecords-hovered;
+  .icon-size-without-important(@font-size_Lookup_clearRecords);
+  padding: @spacing_Lookup_between_clearRecords_border;
+  color: @color_Lookup_clearRecords;
+}
+
+.ws-is-no-touch {
+  .controls-Lookup__clearRecords:hover {
+    color: @color_Lookup_clearRecords_hovered;
   }
+}
+
+.controls-Lookup__clearRecords:active {
+  color: @color_Lookup_clearRecords_active;
 }
 
 .controls-Lookup__clearRecords_multiLine {
