@@ -225,7 +225,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Нам нужно пометить контрол замаунченым для слоя совместимости,
             // чтобы не создавался еще один enviroment для той же ноды
 
-            makeInstanceCompatible(this);
+            if (makeInstanceCompatible && makeInstanceCompatible.newWave) {
+               this.VDOMReady = true;
+               this.deprecatedContr(this._options);
+            } else {
+               makeInstanceCompatible(this);
+            }
+
             var self = this;
 
             // Для не-vdom контролов всегда вызывается _oldDetectNextActiveChildControl, в BaseCompatible
