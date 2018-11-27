@@ -14,6 +14,10 @@ define('Controls/Button/Menu',
        * @extends Core/Control
        * @mixes Controls/interface/ICaption
        * @mixes Controls/interface/ITooltip
+       * @mixes Controls/interface/ISource
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/List/interface/IHierarchy
+       * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
        * @mixes Controls/interface/IButton
        * @control

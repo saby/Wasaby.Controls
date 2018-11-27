@@ -9,105 +9,6 @@ define('Controls/interface/IMenu', [], function() {
     */
 
    /**
-    * @name Controls/interface/IMenu#keyProperty
-    * @cfg {String} Name of the item property that uniquely identifies collection item.
-    * @example
-    * TMPL:
-    * <pre>
-    *    <Controls.Button.Menu
-    *       keyProperty="id"
-    *       source="{{_source}}" />
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory({
-    *      idProperty: 'id',
-    *      data: [
-    *         {
-    *            id: '1',
-    *            title: 'Yaroslavl'
-    *         },
-    *         {
-    *            id: '2',
-    *            title: 'Moscow'
-    *         },
-    *         {
-    *            id: '3',
-    *            title: 'St-Petersburg'
-    *         }
-    *      ]
-    *    });
-    * </pre>
-    */
-
-   /**
-    * @name Controls/interface/IMenu#source
-    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
-    * @example
-    * TMPL:
-    * <pre>
-    *    <Controls.Button.Menu
-    *       keyProperty="id"
-    *       source="{{_source}}" />
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory({
-    *      idProperty: 'id',
-    *      data: [
-    *         {
-    *            id: '1',
-    *            title: 'Yaroslavl'
-    *         },
-    *         {
-    *            id: '2',
-    *            title: 'Moscow'
-    *         },
-    *         {
-    *            id: '3',
-    *            title: 'St-Petersburg'
-    *         }
-    *      ]
-    *    });
-    * </pre>
-    */
-
-   /**
-    * @name Controls/interface/IMenu#filter
-    * @cfg {Object} Filter configuration - object with field names and their values.
-    * @example
-    * In this example, 2 items will be displayed in the dropdown menu.
-    * TMPL:
-    * <pre>
-    *    <Controls.Button.Menu
-    *       keyProperty="id"
-    *       filter={{_filter}}
-    *       source="{{_source}}" />
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._filter = {id: ['1, '2']};
-    *    this._source = new Memory({
-    *      idProperty: 'id',
-    *      data: [
-    *         {
-    *            id: '1',
-    *            title: 'Yaroslavl'
-    *         },
-    *         {
-    *            id: '2',
-    *            title: 'Moscow'
-    *         },
-    *         {
-    *            id: '3',
-    *            title: 'St-Petersburg'
-    *         }
-    *      ]
-    *    });
-    * </pre>
-    */
-
-   /**
     * @name Controls/interface/IMenu#itemTemplate
     * @cfg {Function} Template for item render.
     * @default "wml!Controls/Dropdown/resources/template/itemTemplate"
@@ -214,101 +115,6 @@ define('Controls/interface/IMenu', [], function() {
     */
 
    /**
-    * @name Controls/interface/IMenu#nodeProperty
-    * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
-    * @example
-    * TMPL:
-    * <pre>
-    *    <Controls.Button.Menu
-    *       keyProperty="id"
-    *       source="{{_source}}"
-    *       nodeProperty="parent@"/>
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory({
-    *      idProperty: 'id',
-    *      data: [
-    *          { id: 1, title: 'Sales of goods and services', parent: null, 'parent@': true },
-    *          { id: 2, title: 'Contract', parent: null, 'parent@': false },
-    *          { id: 3, title: 'Texture', parent: null, 'parent@': false },
-    *          { id: 4, title: 'Score', parent: null, 'parent@': false },
-    *          { id: 5, title: 'Act of reconciliation', parent: null, 'parent@': false },
-    *          { id: 6, title: 'Goods', parent: 1, 'parent@': false },
-    *          { id: 7, title: 'Finished products', parent: 1, 'parent@': false }
-    *      ]
-    *    });
-    * </pre>
-    */
-
-   /**
-    * @name Controls/interface/IMenu#parentProperty
-    * @cfg {String} Name of the field that contains item's parent identifier.
-    * @example
-    * TMPL:
-    * <pre>
-    *    <Controls.Button.Menu
-    *       keyProperty="id"
-    *       source="{{_source}}"
-    *       parentProperty="parent"
-    *       nodeProperty="parent@"/>
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory ({
-    *       data: [
-    *          { id: 1, title: 'Sales of goods and services', parent: null, 'parent@': true },
-    *          { id: 2, title: 'Contract', parent: null, 'parent@': false },
-    *          { id: 3, title: 'Texture', parent: null, 'parent@': false },
-    *          { id: 4, title: 'Score', parent: null, 'parent@': false },
-    *          { id: 5, title: 'Act of reconciliation', parent: null, 'parent@': false },
-    *          { id: 6, title: 'Goods', parent: 1, 'parent@': false },
-    *          { id: 7, title: 'Finished products', parent: 1, 'parent@': false }
-    *       ],
-    *       idProperty: 'id'
-    *    )};
-    * </pre>
-    */
-
-   /**
-    * @name Controls/interface/IMenu#navigation
-    * @cfg {Object} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
-    * @example
-    * In this example, 2 items will be displayed in the dropdown menu.
-    * TMPL:
-    * <pre>
-    *    <Controls.Button.Menu
-    *       keyProperty="id"
-    *       source="{{_source}}"
-    *       navigation="{{_navigation}}"/>
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory ({
-    *       data: [
-    *          { id: 1, title: 'Sales of goods and services' },
-    *          { id: 2, title: 'Contract' },
-    *          { id: 3, title: 'Texture' },
-    *          { id: 4, title: 'Score' },
-    *          { id: 5, title: 'Act of reconciliation' },
-    *          { id: 6, title: 'Goods' },
-    *          { id: 7, title: 'Finished products' }
-    *       ],
-    *       idProperty: 'id'
-    *    )};
-    *    this._navigation = {
-            source: 'page',
-            view: 'page',
-            sourceConfig: {
-               pageSize: 2,
-               page: 0,
-               mode: 'totalCount'
-            }
-         };
-    * </pre>
-    */
-
-   /**
     * @name Controls/interface/IMenu#headerTemplate
     * @cfg {Function | String} Template that will be rendered above the list.
     * @default "wml!Controls/Dropdown/resources/template/defaultHeadTemplate"
@@ -398,18 +204,19 @@ define('Controls/interface/IMenu', [], function() {
     * JS:
     * <pre>
     *    this._source = new Memory({
-    *    data: [
-    *        { id: 1, title: 'Task in development' },
-    *        { id: 2, title: 'Error in development' },
-    *        { id: 3, title: 'Application' },
-    *        { id: 4, title: 'Assignment' },
-    *        { id: 5, title: 'Approval' },
-    *        { id: 6, title: 'Working out' },
-    *        { id: 7, title: 'Assignment for accounting' },
-    *        { id: 8, title: 'Assignment for delivery' },
-    *        { id: 9, title: 'Assignment for logisticians' }
-    *    ],
-    *    idProperty: 'id'
+    *       data: [
+    *           { id: 1, title: 'Task in development' },
+    *           { id: 2, title: 'Error in development' },
+    *           { id: 3, title: 'Application' },
+    *           { id: 4, title: 'Assignment' },
+    *           { id: 5, title: 'Approval' },
+    *           { id: 6, title: 'Working out' },
+    *           { id: 7, title: 'Assignment for accounting' },
+    *           { id: 8, title: 'Assignment for delivery' },
+    *           { id: 9, title: 'Assignment for logisticians' }
+    *       ],
+    *       idProperty: 'id'
+    *    });
     * </pre>
     */
 
@@ -443,6 +250,7 @@ define('Controls/interface/IMenu', [], function() {
     *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
     *            ],
     *        idProperty: 'id'
+    *     });
     * </pre>
     */
 
@@ -487,6 +295,7 @@ define('Controls/interface/IMenu', [], function() {
     *                   { id: 9, title: 'Assignment for logisticians', group: 'Create' }
     *            ],
     *        idProperty: 'id'
+    *    });
     * </pre>
     */
 });
