@@ -201,18 +201,18 @@ node('controls') {
                         checkout_engine: {
                             echo " Выкачиваем engine"
                             dir("./controls"){
-                                checkout([$class: 'GitSCM',
-                                branches: [[name: branch_engine]],
-                                doGenerateSubmoduleConfigurations: false,
-                                extensions: [[
-                                    $class: 'RelativeTargetDirectory',
-                                    relativeTargetDir: "sbis3-app-engine"
-                                    ]],
-                                    submoduleCfg: [],
-                                    userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                                        url: 'git@git.sbis.ru:sbis/engine.git']]
-                                ])
+                          //      checkout([$class: 'GitSCM',
+                           //     branches: [[name: branch_engine]],
+                            //    doGenerateSubmoduleConfigurations: false,
+                             //   extensions: [[
+                            //        $class: 'RelativeTargetDirectory',
+                            //        relativeTargetDir: "sbis3-app-engine"
+                             //       ]],
+                             //       submoduleCfg: [],
+                              //      userRemoteConfigs: [[
+                              //          credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                              //          url: 'git@git.sbis.ru:sbis/engine.git']]
+                              //  ])
                             }
                         },
                         checkout_navigation: {
@@ -616,6 +616,7 @@ node('controls') {
         dir(workspace){
             def exists_jinnee_logs = fileExists '/jinnee/logs'
             if ( exists_jinnee_logs ){
+				echo "ЛОГИ ЕСТЬ. АРТИФАКТА НЕТ"
                 sh """
                 7za a log_jinnee -t7z ${workspace}/jinnee/logs
                 """
