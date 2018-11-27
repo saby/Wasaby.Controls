@@ -1,6 +1,6 @@
 <div class="controls-LongOperationsList__user">
    <ws:if data="{{item.get('hasUserPersonInfo')}}">
-      <ws:partial template="tmpl!Person/Info/Photo"
+      <ws:partial template="optional!tmpl!Person/Info/Photo"
          className="controls-LongOperationsList__user__photo"
          dataItem="{{item.get('userPersonInfo')}}"
          size="{{40}}"
