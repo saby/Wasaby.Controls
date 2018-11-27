@@ -1,15 +1,4 @@
 [{
-   "modules": [
-      "SBIS3.CONTROLS/LongOperations/HistoryItem",
-      "SBIS3.CONTROLS/LongOperations/ManagerLib",
-      "SBIS3.CONTROLS/LongOperations/Tools/Bunch",
-      "SBIS3.CONTROLS/LongOperations/Tools/CallsPool",
-      "SBIS3.CONTROLS/LongOperations/Tools/TabCalls",
-      "SBIS3.CONTROLS/LongOperations/List/resources/model",
-      "WS3LongOperations/LRSProducerLib",
-      "SBIS3.CONTROLS/LongOperations/List",
-      "SBIS3.CONTROLS/LongOperations/Popup"
-   ],
    "include": [
       "SBIS3.CONTROLS/LongOperations/HistoryItem",
       "SBIS3.CONTROLS/LongOperations/ManagerLib",
@@ -25,4 +14,19 @@
    ],
    "exclude": [],
    "output": "SBIS3.CONTROLS/LongOperations/Popup"
+},{
+   "include": [
+      "SBIS3.CONTROLS/LongOperations/Registry/resources/LongOperationsFilter",
+      "SBIS3.CONTROLS/LongOperations/Registry",
+      "SBIS3.CONTROLS/LongOperations/Registry*"
+   ],
+   "exclude": [],
+   "output": "SBIS3.CONTROLS/LongOperations/Registry"
+},{
+   "include": [
+      "SBIS3.CONTROLS/LongOperations/History",
+      "SBIS3.CONTROLS/LongOperations/History*"
+   ],
+   "exclude": [],
+   "output": "SBIS3.CONTROLS/LongOperations/History"
 }]
