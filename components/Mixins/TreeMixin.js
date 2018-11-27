@@ -88,6 +88,37 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
          return isNodeA ? -1 : 1;
       }
    },
+   prepareCursorFields = function(item, field) {
+      var
+         result = [];
+      if (Object.prototype.toString.apply(field) === '[object Array]') {
+         field.forEach(function(f) {
+            result.push(item.get(f));
+         });
+      } else {
+         result.push(item.get(field));
+      }
+      return result;
+   },
+   getIndexByValue = function(items, field, value) {
+      function checkValue(item) {
+         if (field instanceof Array) {
+            for (var j = 0; j < field.length; j++) {
+               if (!item.has(field[j]) || item.get(field[j]) !== value[j]) {
+                  return false;
+               }
+            }
+            return true;
+         }
+         return item.has(field) && item.get(field) === value;
+      }
+      for (var i = 0; i < items.getCount; i++) {
+         if (checkValue(items.at(i))) {
+            return i;
+         }
+      }
+      return -1;
+   },
    getSearchCfg = function(cfg) {
       return {
          idProperty: cfg.idProperty,
@@ -933,15 +964,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             preparedFilter = this._createTreeFilter(id);
             this._notify('onBeforeDataLoad', preparedFilter, this.getSorting(), 0, this._limit);
             return this._callQuery(preparedFilter, this.getSorting(), 0, this._limit).addCallback(forAliveOnly(function (list) {
-               if (this._isCursorNavigation() && this._options.saveReloadPosition && list.getCount()) {
-                  if (Object.prototype.toString.apply(this._options.navigation.config.field) === '[object Array]') {
-                     this._hierNodesCursor[id] = [];
-                     this._options.navigation.config.field.forEach(function(field) {
-                        this._hierNodesCursor[id].push(list.at(list.getCount() - 1).get(field));
-                     }.bind(this));
-                  } else {
-                     this._hierNodesCursor[id] = list.at(list.getCount() - 1).get(this._options.navigation.config.field);
-                  }
+               if (this._isCursorNavigation() && list.getCount()) {
+                  this._hierNodesCursor[id] = prepareCursorFields(list.at(list.getCount() - 1), this._options.navigation.config.field);
                }
                this._options._folderHasMore[id] = list.getMetaData().more;
                this._options._folderOffsets[id] = 0;
@@ -990,12 +1014,14 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
       _setHierarchyViewMode: function(value) {
          if (this._options.hierarchyViewMode !== value) {
             this._options.hierarchyViewMode = value;
-            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
-               // При переключении режима обнуляем запомненные позиции курсора
-               // https://online.sbis.ru/opendoc.html?guid=c8920dc6-2fe4-475d-944e-2c2aa4018deb
-               this.getListNavigation().setPosition(null);
-               this._hierPages = {};
+            if (this._isCursorNavigation()) {
                this._hierNodesCursor = {};
+               if (this._options.saveReloadPosition) {
+                  // При переключении режима обнуляем запомненные позиции курсора
+                  // https://online.sbis.ru/opendoc.html?guid=c8920dc6-2fe4-475d-944e-2c2aa4018deb
+                  this.getListNavigation().setPosition(null);
+                  this._hierPages = {};
+               }
             }
          }
       },
@@ -1211,7 +1237,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             var
                curRoot;
             // Устанавливаем позицию в listCursorNavigation при загрузке корня
-            if (this._isCursorNavigation() && this._options.saveReloadPosition && filter[this._options.parentProperty] === this.getCurrentRoot()) {
+            if (this._isCursorNavigation() && filter[this._options.parentProperty] === this.getCurrentRoot()) {
                curRoot = this.getCurrentRoot();
                if (typeof curRoot === 'undefined') {
                   curRoot = null;
@@ -1431,8 +1457,8 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
             this._notify('onBeforeDataLoad', filter, this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit);
          }
          this._loader = this._callQuery(filter, this.getSorting(), (id ? this._options._folderOffsets[id] : this._options._folderOffsets['null']) + this._limit, this._limit, 'after').addCallback(forAliveOnly(function (dataSet) {
-            if (this._isCursorNavigation() && this._options.saveReloadPosition) {
-               this._hierNodesCursor[id] = dataSet.at(dataSet.getCount() - 1).get(this._options.navigation.config.field);
+            if (this._isCursorNavigation()) {
+               this._hierNodesCursor[id] = prepareCursorFields(dataSet.at(dataSet.getCount() - 1), this._options.navigation.config.field);
             }
             //ВНИМАНИЕ! Здесь стрелять onDataLoad нельзя! Либо нужно определить событие, которое будет
             //стрелять только в reload, ибо между полной перезагрузкой и догрузкой данных есть разница!
@@ -1593,7 +1619,7 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                   // Если используется курсор и сохранение позиции при перезагрузке, то находим запись, сохраненную ранее и скролим до неё
                   // https://online.sbis.ru/opendoc.html?guid=178ddc57-9e78-4136-8257-44ebb28a2d44
                   if (this._isCursorNavigation() && this._options.saveReloadPosition && typeof this._hierPages[curRoot] !== 'undefined') {
-                     item = this.getItems().at(this.getItems().getIndexByValue(this._options.navigation.config.field, this._hierPages[curRoot]));
+                     item = this.getItems().at(getIndexByValue(this.getItems(), this._options.navigation.config.field, this._hierPages[curRoot]));
                   } else {
                      for (var i = 0; i < this._getItemsProjection().getCount(); i++) {
                         item = this._getItemsProjection() && this._getItemsProjection().at(i);
@@ -1730,12 +1756,12 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                }
                var
                   newRootParent = this.getSelectedItem().get(this._options.parentProperty);
-               if (newRootParent === curRoot) {
-                  this._hierPages[curRoot] = this.getSelectedItem().get(this._options.navigation.config.field);
+               if (String(newRootParent) === String(curRoot)) {
+                  this._hierPages[curRoot] = prepareCursorFields(this.getSelectedItem(), this._options.navigation.config.field);
                } else {
                   // Мы можем перейти в узел раскрыв дерево, а значит нужно сохранить курсор для родителя узла в который мы провалились
                   // https://online.sbis.ru/opendoc.html?guid=8e6b6c2b-9dc4-44ef-8cad-8662f2ec65d8
-                  this._hierPages[newRootParent] = this.getSelectedItem().get(this._options.navigation.config.field);
+                  this._hierPages[newRootParent] = prepareCursorFields(this.getSelectedItem(), this._options.navigation.config.field);
                   // Пробегаем также по родителям узла, в который проваливаемся вплоть до currentRoot и таким образом запоминаем исчерпывающий путь
                   // https://online.sbis.ru/opendoc.html?guid=fdfc17bd-043d-45d8-8c77-29ab5547205a
                   var
@@ -1745,11 +1771,11 @@ define('SBIS3.CONTROLS/Mixins/TreeMixin', [
                      root = null;
                   }
                   while (nextParent !== curRoot && nextParent !== root) {
-                     this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
+                     this._hierPages[nextParent] = prepareCursorFields(this.getItems().getRecordById(newRootParent), this._options.navigation.config.field);;
                      newRootParent = nextParent;
                      nextParent = this.getItems().getRecordById(newRootParent).get(this._options.parentProperty);
                   }
-                  this._hierPages[nextParent] = this.getItems().getRecordById(newRootParent).get(this._options.navigation.config.field);
+                  this._hierPages[nextParent] = prepareCursorFields(this.getItems().getRecordById(newRootParent), this._options.navigation.config.field);
                }
             }
          }
