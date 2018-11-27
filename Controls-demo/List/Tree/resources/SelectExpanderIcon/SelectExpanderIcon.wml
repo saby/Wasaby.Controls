@@ -1,0 +1,34 @@
+<Controls.Container.Scroll attr:class="ControlsDemo-TreeHiddenNodes__tasks">
+   <Controls.TreeGrid
+           name="tasksTreeGrid"
+           keyProperty="id"
+           nodeProperty="type"
+           parentProperty="parent"
+           source="{{_tasksSource}}">
+      <ws:itemTemplate>
+         <ws:partial template="wml!Controls/List/TreeGridView/Item"
+                     expanderIcon="{{itemTemplate.itemData.item.type === false ? 'none'}}"/>
+      </ws:itemTemplate>
+      <ws:columns>
+         <ws:Array>
+            <ws:Object width="1fr">
+               <ws:template>
+                  <ws:partial template="wml!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_XL">
+                     <ws:contentTemplate>
+                        <div>
+                           <span class="ControlsDemo-TreeHiddenNodes__tasks-mainColumn__title">{{contentTemplate.itemData.item.title}}</span>
+                           <ws:if data="{{contentTemplate.itemData.item.type === false}}">
+                              <span class="ControlsDemo-TreeHiddenNodes__tasks-mainColumn__subTask">
+                                 <span on:click="onClickSubTaskExpander(itemData.key)">{{contentTemplate.itemData.isExpanded ? '⇓' : '⇒'}} подзадача</span> ({{contentTemplate.itemData.item.subTask}})
+                              </span>
+                           </ws:if>
+                        </div>
+                     </ws:contentTemplate>
+                  </ws:partial>
+               </ws:template>
+            </ws:Object>
+            <ws:Object width="100px" displayProperty="received"/>
+         </ws:Array>
+      </ws:columns>
+   </Controls.TreeGrid>
+</Controls.Container.Scroll>
