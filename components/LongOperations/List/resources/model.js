@@ -2,12 +2,14 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
    [
       'WS.Data/Entity/Model',
       'SBIS3.CONTROLS/LongOperations/Entry',
+      'EngineUser/Info',
       'Person/Info/Model'
    ],
 
    function (
       Model,
       LongOperationEntry,
+      UserInfo,
       PersonModel
    ) {
 
@@ -83,6 +85,12 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                               PersonID: this.get('userPersonId')
                            }
                         });
+                     }
+                  },
+
+                  clientName: {
+                     get: function () {
+                        return UserInfo.get('ИмяКлиента');
                      }
                   }
                }
