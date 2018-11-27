@@ -76,13 +76,12 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                   userPersonInfo: {
                      get: function () {
                         // Временно до выхода новой версии длительных операций:
-                        var PersonModel = require('Person/Info/Model');
-                        return new PersonModel({
+                        return require.defined('Person/Info/Model') ? new (require('Person/Info/Model'))({
                            rawData: {
                               PhotoID: this.get('userPhotoId'),
                               PersonID: this.get('userPersonId')
                            }
-                        });
+                        }) : null;
                      }
                   },
 
