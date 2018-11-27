@@ -464,8 +464,10 @@ define('Controls/Input/Base',
                var removalLength = splitValue.delete.length;
 
                splitValue.before = model.displayValue.substring(0, model.displayValue.length - splitValue.after.length);
-               splitValue.delete = splitValue.before.slice(-removalLength);
-               splitValue.before = splitValue.before.slice(0, -removalLength);
+
+               var lengthSplitBefore = splitValue.before.length;
+               splitValue.delete = splitValue.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
+               splitValue.before = splitValue.before.slice(0, lengthSplitBefore - removalLength);
             }
 
             _private.handleInput(this, splitValue, inputType);
