@@ -12,7 +12,6 @@
       "SBIS3.CONTROLS/LongOperations/Popup",
       "SBIS3.CONTROLS/LongOperations/Popup*"
    ],
-   "exclude": [],
    "output": "SBIS3.CONTROLS/LongOperations/Popup"
 },{
    "include": [
@@ -20,13 +19,11 @@
       "SBIS3.CONTROLS/LongOperations/Registry",
       "SBIS3.CONTROLS/LongOperations/Registry*"
    ],
-   "exclude": [],
    "output": "SBIS3.CONTROLS/LongOperations/Registry"
 },{
    "include": [
       "SBIS3.CONTROLS/LongOperations/History",
       "SBIS3.CONTROLS/LongOperations/History*"
    ],
-   "exclude": [],
    "output": "SBIS3.CONTROLS/LongOperations/History"
 }]
