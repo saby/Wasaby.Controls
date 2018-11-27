@@ -316,7 +316,7 @@ function(cMerge,
          };
 
          if (cfg.hasOwnProperty('closeByExternalClick')) {
-            cfg.autoHide = cfg.closeByExternalClick;
+            cfg.dialogOptions.autoHide = cfg.closeByExternalClick;
          }
 
          if (cfg.hasOwnProperty('closeChildWindows')) {
