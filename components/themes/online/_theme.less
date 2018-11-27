@@ -121,3 +121,10 @@
       }
    }
 }
+
+// temporary fix for Controls/Container/Scroll in old pages without Controls/Application
+body:not(.ws-float-area-overflow-scrolling-auto):not(.controls-ScrollContainer-overflow-scrolling-auto):not(.controls-Scroll_webkitOverflowScrollingAuto) {
+   .controls-Scroll__content {
+      -webkit-overflow-scrolling: touch;
+   }
+}
