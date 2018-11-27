@@ -1,17 +1,12 @@
 define('SBIS3.CONTROLS/LongOperations/List/resources/model',
    [
       'WS.Data/Entity/Model',
-      'SBIS3.CONTROLS/LongOperations/Entry',
-      'EngineUser/Info',
-      // Временно до выхода новой версии длительных операций:
-      'optional!Person/Info/Model'
+      'SBIS3.CONTROLS/LongOperations/Entry'
    ],
 
    function (
       Model,
-      LongOperationEntry,
-      UserInfo,
-      PersonModel
+      LongOperationEntry
    ) {
 
       var _timeSpent = function (model) {
@@ -80,6 +75,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
 
                   userPersonInfo: {
                      get: function () {
+                        // Временно до выхода новой версии длительных операций:
+                        var PersonModel = require('Person/Info/Model');
                         return new PersonModel({
                            rawData: {
                               PhotoID: this.get('userPhotoId'),
@@ -91,7 +88,8 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
 
                   clientName: {
                      get: function () {
-                        return UserInfo.get('ИмяКлиента');
+                        // Временно до выхода новой версии длительных операций:
+                        return require.defined('EngineUser/Info') ? require('EngineUser/Info').get('ИмяКлиента') : (typeof window !== 'undefined' && window.userInfo ? window.userInfo['ИмяКлиента'] : '');
                      }
                   }
                }

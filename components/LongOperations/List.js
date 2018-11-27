@@ -17,10 +17,7 @@ define('SBIS3.CONTROLS/LongOperations/List',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListUserPhotoTemplate',
       'tmpl!SBIS3.CONTROLS/LongOperations/List/resources/LongOperationsListNameTemplate',
       'SBIS3.CONTROLS/DataGridView',
-      'SBIS3.CONTROLS/LongOperations/History',
-      // Временно до выхода новой версии длительных операций:
-      'optional!tmpl!Person/Info/Photo',
-      'optional!css!Person/Info'
+      'SBIS3.CONTROLS/LongOperations/History'
    ],
 
    function (cMerge, Deferred, CompoundControl, LongOperationEntry, longOperationsManager, LongOperationsListDataSource, LongOperationModel, InformationPopupManager, dotTplFn) {
@@ -144,6 +141,14 @@ define('SBIS3.CONTROLS/LongOperations/List',
             this._bindEvents();
 
             this._view.setDataSource(new LongOperationsListDataSource({useQueue:options.useDataSourceQueue}), true);
+
+            if (options.columns.userPic) {
+               // Временно до выхода новой версии длительных операций:
+               var modules = ['Person/Info/Model', 'tmpl!Person/Info/Photo', 'css!Person/Info'];
+               if (modules.some(function (v) { return !require.defined(v); })) {
+                  require(modules, this.reload.bind(this));
+               }
+            }
          },
 
          _bindEvents: function () {
