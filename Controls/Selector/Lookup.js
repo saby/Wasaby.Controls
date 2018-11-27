@@ -3,6 +3,7 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
 
    /**
     * Input for selection from source.
+    * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
     *
     * @class Controls/Selector/Lookup
     * @mixes Controls/interface/ISelectedCollection

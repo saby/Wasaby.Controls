@@ -3,6 +3,7 @@ define('Controls/Selector/Button', ['Core/Control', 'wml!Controls/Selector/Butto
 
    /**
     * Button link with the specified text, on clicking on which a selection window opens.
+    * Here you can see <a href="/materials/demo-ws4-engine-selector-button">demo-example</a>.
     *
     * @class Controls/Selector/Button
     * @mixes Controls/interface/ICaption
