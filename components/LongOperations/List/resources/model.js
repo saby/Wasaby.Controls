@@ -1,10 +1,15 @@
 define('SBIS3.CONTROLS/LongOperations/List/resources/model',
    [
       'WS.Data/Entity/Model',
-      'SBIS3.CONTROLS/LongOperations/Entry'
+      'SBIS3.CONTROLS/LongOperations/Entry',
+      'Person/Info/Model'
    ],
 
-   function (Model, LongOperationEntry) {
+   function (
+      Model,
+      LongOperationEntry,
+      PersonModel
+   ) {
 
       var _timeSpent = function (model) {
          var timeSpent = model.get('timeSpent');
@@ -54,7 +59,30 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                            }
                            parts.push(i === 0 ? part : part.charAt(0) + '.');
                         }
-                        return parts.length ? parts.join(' ') : rk('Пользователь удален');
+                        return parts.length ? parts.join(' ') : '';
+                     }
+                  },
+
+                  hasUserInfo: {
+                     get: function () {
+                        return !!(this.get('userFirstName') || this.get('userLastName'));
+                     }
+                  },
+
+                  hasUserPersonInfo: {
+                     get: function () {
+                        return !!(this.get('userPersonId') || this.get('userPhotoId'));
+                     }
+                  },
+
+                  userPersonInfo: {
+                     get: function () {
+                        return new PersonModel({
+                           rawData: {
+                              PhotoID: this.get('userPhotoId'),
+                              PersonID: this.get('userPersonId')
+                           }
+                        });
                      }
                   }
                }

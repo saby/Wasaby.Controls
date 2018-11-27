@@ -65,6 +65,8 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
          userFirstName: 'string',
          userPatronymicName: 'string',
          userLastName: 'string',
+         userPersonId: 'string',
+         userPhotoId: ['string', 'number'],
          userPic: 'string',
          resultChecker: 'string',
          resultCheckerArgs: ['string', 'object'],
@@ -123,6 +125,10 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
           * @param {string}        [options.user.patronymicName] Отчество пользователя - альтернативно
           * @param {string}        [options.userLastName] Фамилия пользователя (опционально)
           * @param {string}        [options.user.lastName] Фамилия пользователя - альтернативно
+          * @param {string}        [options.userPersonId] Идентификатор персоны пользователя (опционально)
+          * @param {string}        [options.user.personId] Идентификатор персоны пользователя - альтернативно
+          * @param {string}        [options.userPhotoId] Идентификатор фотографии пользователя (опционально)
+          * @param {string}        [options.user.photoId] Идентификатор фотографии пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
           * @param {string}        [options.user.pic] Урл изображения, если применимо к данной операции - альтернативно
           * @param {string}        [options.resultChecker] Строка модуль-метод для проверки доступности результата операции (опционально)
