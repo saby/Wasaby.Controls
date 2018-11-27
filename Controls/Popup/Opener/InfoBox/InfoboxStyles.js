@@ -35,5 +35,5 @@ define('Controls/Popup/Opener/InfoBox/InfoboxStyles', [],
     * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
     * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
     * @css @box-shadow_Infobox Size of shadow.
-    * /
+    */
 );
