@@ -349,6 +349,12 @@ define('Controls/Input/Base',
          _isMobileAndroid: detection.isMobileAndroid,
 
          /**
+          * @type {Boolean} Determines whether the control is building in the mobile IOS environment.
+          * @private
+          */
+         _isMobileIOS: detection.isMobileIOS,
+
+         /**
           *
           * @return {HTMLElement}
           * @private
@@ -460,6 +466,22 @@ define('Controls/Input/Base',
             );
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
+            /**
+             * If the user works quickly with a field, the input event fires several times from
+             * the last synchronization cycle to the next. Due to the fact that the field always displays
+             * the value of the option value, after the second time in the field will be incorrect data.
+             * Example: The field displays 1. The user enters 2 and 3 quickly.
+             * field 1 -> entered 2 -> field 12 -> update by option and notify the parent that value 12 ->
+             * field 1 -> entered 3 -> field 13(expected 123) -> update by option and notify the parent that value 13 ->
+             * synchronization cycle -> field 13(the error should be 123).
+             * For such situations to be handled correctly, we need to adjust the data.
+             * The entered characters and the value after will be correct. The value before is taken
+             * as the displayed value in the model without taking into account the value after.
+             * If there is a value to be deleted, its length is determined correctly. The value will be
+             * equal to the substring of the value before. The substring is taken from the end and is equal
+             * in length to the length of the value to be deleted. The found substring must
+             * be removed from the value before.
+             */
             if (value !== model.displayValue) {
                var removalLength = splitValue.delete.length;
 
@@ -467,7 +489,7 @@ define('Controls/Input/Base',
 
                var lengthSplitBefore = splitValue.before.length;
                splitValue.delete = splitValue.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
-               splitValue.before = splitValue.before.slice(0, lengthSplitBefore - removalLength);
+               splitValue.before = splitValue.before.substring(0, lengthSplitBefore - removalLength);
             }
 
             _private.handleInput(this, splitValue, inputType);
@@ -500,7 +522,7 @@ define('Controls/Input/Base',
          },
 
          _focusInHandler: function() {
-            if (detection.isMobileIOS) {
+            if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
          },
@@ -517,7 +539,7 @@ define('Controls/Input/Base',
              */
             this._getField().scrollLeft = 0;
 
-            if (detection.isMobileIOS) {
+            if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocusOut');
             }
          },
