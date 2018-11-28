@@ -1258,5 +1258,30 @@
         }
       }
     }
+  },
+  "Controls/Indicator/Progress/Bar": {
+    "name": "Controls/Indicator/Progress/Bar",
+    "title": "Control that renders progress bar",
+    "className": "Controls/Indicator/Progress/Bar",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Indicator/Progress/Bar",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "value": {
+            "default": "",
+            "title": "Value",
+            "type": "Number"
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
+          }
+        }
+      }
+    }
   }
 }
