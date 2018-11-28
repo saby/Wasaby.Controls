@@ -1152,11 +1152,11 @@
           },
           "itemTemplate.size": {
             "type": "enum",
-            "default": "m",
+            "default": "s",
             "enum": {
+              "s": "s",
               "m": "m",
-              "l": "l",
-              "h": "h"
+              "l": "l"
             }
           },
           "displayProperty": {

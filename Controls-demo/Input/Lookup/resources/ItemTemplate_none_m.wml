@@ -1,6 +1,7 @@
 <div class="controls-SelectedCollection__item controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}}">
    <ws:partial template="{{contentTemplate}}"
                item="{{item}}"
+               size="m"
                clickable="{{clickable}}"
                displayProperty="{{displayProperty}}"
          />

@@ -55,7 +55,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
                templateName: this._selectorTemplate
             },
             'itemTemplate.style': 'none',
-            'itemTemplate.size': 'm'
+            'itemTemplate.size': 's'
          };
 
          this._dataObject = {

@@ -1,8 +1,8 @@
 <div class="controls-SelectedCollection__item controls-SelectedCollection__item-{{isSingleItem ? 'single' : 'multi'}}">
    <ws:partial template="{{contentTemplate}}"
                item="{{item}}"
-               size="h"
-               style="accent"
+               size="s"
+               style="primary"
                clickable="{{clickable}}"
                displayProperty="{{displayProperty}}"
          />
