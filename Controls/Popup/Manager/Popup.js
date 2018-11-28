@@ -4,7 +4,8 @@ define('Controls/Popup/Manager/Popup',
       'wml!Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
-      'Controls/Popup/PopupContext'
+      'Controls/Popup/PopupContext',
+      'wml!Controls/Popup/Manager/PopupContent'
    ],
    function(Control, template, runDelayed, CoreConstants, PopupContext) {
       'use strict';
@@ -128,6 +129,7 @@ define('Controls/Popup/Manager/Popup',
 
       Popup.getDefaultOptions = function() {
          return {
+            content: 'wml!Controls/Popup/Manager/PopupContent',
             autofocus: true
          };
       };

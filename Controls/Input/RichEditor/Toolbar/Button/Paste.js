@@ -40,7 +40,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
                def.callback(content);
             };
 
-         self._children.loadingIndicator.toggleIndicator(false);
+         self._children.loadingIndicator.hide();
 
          document.addEventListener('paste', onPaste);
 
@@ -75,7 +75,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
             def = new Deferred(),
             service;
 
-         self._children.loadingIndicator.toggleIndicator(true);
+         self._children.loadingIndicator.show();
 
 
          if (Di.isRegistered('SBIS3.Plugin/Source/LocalService')) {
@@ -94,7 +94,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Paste', [
                      contentType === 'Html' ||
                      contentType === 'Rtf') &&
                   withStyles ? 'getHtml' : 'getText', {}).addCallback(function(content) {
-                     self._children.loadingIndicator.toggleIndicator(false);
+                     self._children.loadingIndicator.hide();
                      def.callback(content);
                   }).addErrback(errBack.bind(null, self));
                }).addErrback(errBack.bind(null, self));

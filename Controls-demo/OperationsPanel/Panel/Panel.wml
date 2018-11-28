@@ -2,26 +2,23 @@
    <div class="testBlock" test_name="BackButtonCapture">
       <div class="exampleBlock">
          <h2>Панель операций</h2>
-         <Controls.Container.Data keyProperty="id" source="{{_viewSource}}">
-            <Controls.Container.MultiSelector>
-               <Controls.Operations.Panel
-                       expanded="{{_expanded}}"
-                       multiSelectorVisibility="{{_multiSelectorVisibility}}"
-                       source="{{_source}}"
-                       parentProperty="parent"
-                       nodeProperty="@parent"
-                       rightTemplate="{{_rightTemplate ? _rightTemplateTpl : null}}"
-                       keyProperty="id"
-                       selectedKeys="{{ _selectedKeys }}"
-                       excludedKeys="{{ _excludedKeys }}"
-                       selectedKeysCount="{{ _selectedKeysCount }}"
-                       on:activated="_eventHandler()"
-                       on:selectedTypeChanged="_selectedTypeChangedHandler()"
-                       on:deactivated="_eventHandler()"
-                       on:itemClick="_eventHandler()"
-               />
-            </Controls.Container.MultiSelector>
-         </Controls.Container.Data>
+         <ws:if data="{{ _expanded }}">
+            <Controls.Operations.Panel
+               expanded="{{_expanded}}"
+               source="{{_source}}"
+               parentProperty="parent"
+               nodeProperty="@parent"
+               rightTemplate="{{_rightTemplate ? _rightTemplateTpl : null}}"
+               keyProperty="id"
+               selectedKeys="{{ _selectedKeys }}"
+               excludedKeys="{{ _excludedKeys }}"
+               selectedKeysCount="{{ _selectedKeysCount }}"
+               on:activated="_eventHandler()"
+               on:selectedTypeChanged="_selectedTypeChangedHandler()"
+               on:deactivated="_eventHandler()"
+               on:itemClick="_eventHandler()"
+            />
+         </ws:if>
       </div>
       <div class="optionsBlock">
          <h3>Опции</h3>
@@ -34,8 +31,6 @@
             keyProperty="id"
             selectedKey="{{_sourceNumber}}"
             source="{{_sourceConfig}}"/>
-         <Controls.Label caption="multiSelectorVisibility:"/>
-         <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__multiSelector" bind:value="_multiSelectorVisibility" caption="Show/hide multiSelector"/>
          <Controls.Label caption="rightTemplate:"/>
          <Controls.Toggle.Checkbox attr:class="ControlsDemo-OperationsPanel__rightTemplate" bind:value="_rightTemplate" caption="Show/hide rightTemplate"/>
       </div>
