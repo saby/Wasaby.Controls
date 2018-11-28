@@ -1,0 +1,22 @@
+//sizes
+@spacing_Tabs-between-separator-top-border:    @height_control_default/4;
+@height_Tabs-separator:                        @height_control_default - 2*@spacing_Tabs-between-separator-top-border;
+@width_Tabs-separator:                         @thickness_border_default;
+@border-width_Tabs:                            @thickness_border_default;
+@spacing_Tabs-item_default:                    @spacing_default_l;
+//Разный шрифт может быть во вкладках, при этом они должны быть выровнены по базовой а те которые в дефолтном состоянии дожны быть по центру выравнены, поэтому вешаем line-height.
+@line-height_Tabs-baselineFix:                 32px;
+@height_Tabs:                                  30px + @thickness_border_default;
+@font-size_Tabs-item:                          @size_text_m;
+@font-size_Tabs-item_selected:                 @size_text_l;
+@max-width_Tabs_item:                          630px;
+@border-width_Tabs-item_hover_selected:        2px;
+
+//colors
+@border-color_Tabs:                            @color201;
+@background-color_Tabs-separator:              @color201;
+@text-color_Tabs:                              @color_Heading_secondary;
+@text-color_Tabs-item_selected_primary:        @color_Heading_primary;
+@border-color_Tabs-item_selected_primary:      @color_Heading_primary;
+@text-color_Tabs-item_selected_secondary:      @color_link;
+@border-color_Tabs-item_selected_secondary:    @color_link;

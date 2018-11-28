@@ -190,6 +190,15 @@ module.exports = function(Component) {
             initDependencies: false
          }, []);
       },
+
+      // Демо-пример: Табы
+      '/demo-ws4-tabs': function(req, res) {
+         requirejs('Controls-demo/Tabs/Buttons');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Tabs/Buttons',
+            initDependencies: false
+         }, []);
+      },
    
       // Демо-пример: с поиском
       '/demo-ws4-search-container': function(req, res) {

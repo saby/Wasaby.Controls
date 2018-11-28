@@ -4,7 +4,7 @@
             <ws:partial template="{{'Controls/Tabs/Buttons'}}"
                         attr:class="controls-Suggest__tabs"
                         on:selectedKeyChanged="_tabsSelectedKeyChanged()"
-                        style="additional"
+                        style="secondary"
                         displayProperty="{{_options.tabsOptions.displayProperty}}"
                         keyProperty="{{_options.tabsOptions.keyProperty}}"
                         source="{{_options.tabsOptions.source}}"
