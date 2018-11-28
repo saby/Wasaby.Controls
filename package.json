@@ -7,7 +7,6 @@
    },
    "files": [
       "Controls/*",
-      "File/*",
       "Controls-theme/*",
       "Controls-demo/*"
    ],
@@ -44,8 +43,7 @@
    "nyc": {
       "include": [
          "components/**/*.js",
-         "Controls/**/*.js",
-         "File/**/*.js"
+         "Controls/**/*.js"
       ],
       "reporter": [
          "text",

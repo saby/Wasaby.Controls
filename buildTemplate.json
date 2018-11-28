@@ -84,10 +84,6 @@
       "path": "%cd%/tests/unit"
     },
     {
-      "name": "File",
-      "path": "%cd%/File"
-    },
-    {
       "name": "Vdom",
       "path": "%cd%/node_modules/sbis3-ws/Vdom"
     },
