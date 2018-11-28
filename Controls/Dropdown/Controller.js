@@ -19,8 +19,12 @@ define('Controls/Dropdown/Controller',
        * @class Controls/Dropdown/Controller
        * @extends Core/Control
        * @mixes Controls/interface/ISource
-       * @mixes Controls/interface/IItemTemplate
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/List/interface/IHierarchy
+       * @mixes Controls/interface/INavigation
+       * @mixes Controls/interface/IMultiSelectable
        * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IMenu
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
@@ -173,7 +177,7 @@ define('Controls/Dropdown/Controller',
          },
 
          _open: function(event) {
-            //Проверям что нажата левая кнопка мыши
+            // Проверям что нажата левая кнопка мыши
             if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
                return;
             }
