@@ -1,5 +1,5 @@
 <div class="root">
-    <div class="separator">Style="default"</div>
+    <div class="separator">Style="primary"</div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey1'
@@ -7,7 +7,7 @@
                       source="{{_source1}}"
         />
     </div>
-    <div class="separator">Style="default", with main tab</div>
+    <div class="separator">Style="primary", with main tab</div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey2'
@@ -16,12 +16,12 @@
                       source="{{_source2}}"
         />
      </div>
-    <div class="separator">Style="additional", displayProperty = 'carambola'</div>
+    <div class="separator">Style="secondary", set displayProperty</div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey3'
                       keyProperty="id"
-                      style="additional"
+                      style="secondary"
                       source="{{_source3}}"
         >
             <ws:itemTemplate>
@@ -32,17 +32,17 @@
             </ws:itemTemplate>
         </Controls.Tabs.Buttons>
     </div>
-    <div class="separator">Style="additional", with space template</div>
+    <div class="separator">Style="secondary", with space template</div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey4'
                       keyProperty="id"
-                      style="additional"
+                      style="secondary"
                       tabSpaceTemplate="{{_spaceTemplate}}"
                       source="{{_source4}}"
         />
     </div>
-    <div class="separator">Style="default", with main item template</div>
+    <div class="separator">Style="primary", with main item template</div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey5'
@@ -52,7 +52,7 @@
         />
     </div>
     <div class="separator">
-        <span>Style="default", change source after click</span>
+        <span>Style="primary", change source after click</span>
         <div class="clickmebtn" on:click="_setSource()">click me</div>
     </div>
     <div class="demo-TabButtons">
@@ -64,13 +64,13 @@
         />
 
     </div>
-    <div class="separator">Style="default", with Photo item template</div>
+    <div class="separator">Style="secondary", with Photo item template</div>
     <div class="photo_before_bg"></div>
     <div class="demo-TabButtons">
         <Controls.Tabs.Buttons
                       bind:selectedKey='SelectedKey7'
                       keyProperty="id"
-                      style="additional"
+                      style="secondary"
                       itemTemplateProperty="carambola"
                       source = "{{_source7}}"
         />

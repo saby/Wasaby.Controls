@@ -1,100 +1,89 @@
 define([
-   'Controls/Container/LoadingIndicator',
-   'WS.Data/Entity/Record',
-   'Core/helpers/Function/runDelayed',
-   'Core/Deferred',
-   'WS.Data/Source/Memory',
-   'require'
-], function(LoadingIndicator, Record, runDelayed, Deferred, MemorySource, require) {
+   'Controls/Container/LoadingIndicator'
+], (LoadingIndicator) => {
    'use strict';
 
-   describe('LoadingIndicator-tests', function() {
-      var testControl, testElement;
+   describe('LoadingIndicator-tests', () => {
+      let Loading = new LoadingIndicator();
 
-      function mountControl(moduleName) {
-         var def = new Deferred();
-         require(['Core/Control', moduleName], function(CoreControl, Component) {
-            var element =  document.body.querySelectorAll('#loadingIndicatorComponent')[0];
-            var config = {
-               element: element,
-               dataSource: new MemorySource({
-                  idProperty: 'id',
-                  data: [{ id: 0 }]
-               })
-            };
-            testControl = CoreControl.createControl(Component, config, element);
-            var baseAfterMount = testControl._afterMount;
-
-            testControl._afterMount = function() {
-               baseAfterMount.apply(this, arguments);
-               runDelayed(function() {
-                  // waiting(function() {
-                     def.callback(testControl);
-                  // });
-               });
-            };
+      it('LoadingIndicator - add', () => {
+         Loading._toggleIndicator = () => {
+         };
+         let prom = new Promise((resolve) => {
          });
-         return def;
-      }
+         let config = {
+            message: 'message 1',
+            delay: 1
+         };
+         let id = Loading._show(config, prom);
+         assert.equal(typeof id, 'string');
+         assert.equal(Loading._stack.getCount(), 1);
+         assert.equal(Loading._stack.at(0).overlay, 'default');
+         assert.equal(Loading._stack.at(0).message, 'message 1');
+         assert.equal(Loading._stack.at(0).waitPromise, prom);
 
-      beforeEach(function () {
-         if (!document || !document.body) {//Проверка того, что тесты выполняются в браузере
-            this.skip();
-         }
-         else {
-            var el = document.body.querySelectorAll('#mocha')[0];
-            testElement = document.createElement("div");
-            testElement.setAttribute('id', 'loadingIndicatorComponent');
-            el.appendChild(testElement);
-         }
+         config = {
+            message: 'message 2',
+            overlay: 'none'
+         };
+         Loading._show(config);
+         assert.equal(Loading._stack.getCount(), 2);
+         assert.equal(Loading._stack.at(1).overlay, 'none');
+         assert.equal(Loading._stack.at(1).message, 'message 2');
+
+         Loading._show('message 3');
+         assert.equal(Loading._stack.getCount(), 3);
+         assert.equal(Loading._stack.at(2).message, 'message 3');
       });
 
-      it('LoadingIndicator - SimpleCase', function(done) {
-         var mountedDef = mountControl('Controls-demo/LoadingIndicator/LoadingIndicator');
-         mountedDef.addCallback(function(control) {
-            control._children.loadingIndicator.toggleIndicator(true);
-            setTimeout(function () {
-               assert.equal(control._children.loadingIndicator.isLoading, false);
-               setTimeout(function () {
-                  assert.equal(control._children.loadingIndicator.isLoading, true);
+      it('LoadingIndicator - isOpened', () => {
+         let cfg1 = Loading._stack.at(0);
+         assert.equal(Loading._isOpened(cfg1), true);
 
-                  control._children.loadingIndicator.toggleIndicator(false);
-                  setTimeout(function () {
-                     assert.equal(control._children.loadingIndicator.isLoading, false);
-                     done();
-                  }, 500);
-               }, 1000);
-            }, 500);
-         });
-         mountedDef.addErrback(function(e) {
-            done(e);
-         });
+         let cfg2 = { id: 'test', message: 'test' };
+         assert.equal(Loading._isOpened(cfg2), false);
+         assert.equal(cfg2.hasOwnProperty('id'), false);
+      });
 
-      }).timeout(6000);
+      it('LoadingIndicator - update', () => {
+         let cfg1 = Loading._stack.at(0);
+         let id = cfg1.id;
+         cfg1.message = 'message 0';
+         Loading._show(cfg1);
 
-      it('LoadingIndicator - SimpleCase 2', function(done) {
-         var mountedDef = mountControl('Controls-demo/LoadingIndicator/LoadingIndicator');
-         mountedDef.addCallback(function(control) {
-            control._children.loadingIndicator.toggleIndicator(true);
-            setTimeout(function () {
-               setTimeout(function() {
-                  control._children.loadingIndicator.toggleIndicator(false);
-               }, 300);
-               setTimeout(function () {
-                  assert.equal(control._children.loadingIndicator.isLoading, false);
-                  done();
-               }, 1000);
-            }, 500);
-         });
-         mountedDef.addErrback(function(e) {
-            done(e);
-         });
+         assert.equal(Loading._stack.getCount(), 3);
+         assert.equal(Loading._stack.at(2).id, id);
+         assert.equal(Loading._stack.at(2).message, 'message 0');
+      });
 
-      }).timeout(6000);
+      it('LoadingIndicator - hide', () => {
+         let resultVisible;
+         let resultConfigMessage;
+         Loading._toggleIndicator = (visible, config) => {
+            assert.equal(resultVisible, visible);
+            assert.equal(resultConfigMessage, config && config.message);
+         };
 
-      afterEach(function() {
-         testControl && testControl.destroy();
-         testElement && testElement.remove();
+         let id = Loading._stack.at(0).id;
+         resultVisible = true;
+         resultConfigMessage = 'message 0';
+         Loading._hide(id);
+         assert.equal(Loading._stack.getCount(), 2);
+
+         id = Loading._stack.at(1).id;
+         resultConfigMessage = 'message 3';
+         Loading._hide(id);
+         assert.equal(Loading._stack.getCount(), 1);
+
+         id = Loading._stack.at(0).id;
+         resultConfigMessage = undefined;
+         resultVisible = false;
+         Loading._hide(id);
+         assert.equal(Loading._stack.getCount(), 0);
+      });
+
+      after(() => {
+         Loading.destroy();
       });
    });
 });
