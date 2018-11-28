@@ -565,6 +565,10 @@ define('Controls/Input/Base',
             }
          },
 
+         _mouseDownHandler: function() {
+            /* override */
+         },
+
          _notifyValueChanged: function() {
             _private.notifyValueChanged(this);
          },

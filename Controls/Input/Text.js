@@ -96,18 +96,27 @@ define('Controls/Input/Text',
             Text.superclass._clickHandler.apply(this, arguments);
 
             if (this._options.selectOnClick && this._firstClick) {
-               this._viewModel.selection = {
-                  start: 0,
-                  end: this._viewModel.displayValue.length
-               };
+               this._viewModel.select();
                this._firstClick = false;
             }
          },
 
          _focusInHandler: function() {
-            this._firstClick = true;
+            if (this._focusByMouseDown) {
+               this._firstClick = true;
+            } else {
+               this._viewModel.select();
+            }
+
+            this._focusByMouseDown = false;
 
             Text.superclass._focusInHandler.apply(this, arguments);
+         },
+
+         _mouseDownHandler: function() {
+            if (this._getActiveElement() !== this._getField()) {
+               this._focusByMouseDown = true;
+            }
          },
 
          _changeHandler: function() {

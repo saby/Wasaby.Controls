@@ -12,7 +12,8 @@
       on:change="_changeHandler()"
       on:select="_selectHandler()"
       on:focusin="_focusInHandler()"
-      on:focuout="_focusOutHandler()"
+      on:focusout="_focusOutHandler()"
+      on:mousedown="_mouseDownHandler()"
    />
    <ws:if data="{{!value}}">
       <div class="controls-Base__placeholder">

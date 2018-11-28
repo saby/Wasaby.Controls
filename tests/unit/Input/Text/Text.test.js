@@ -35,6 +35,9 @@ define(
          });
          describe('Click event', function() {
             beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return {};
+               };
                ctrl._beforeMount({
                   value: 'test value'
                });
@@ -45,6 +48,8 @@ define(
 
                ctrl._children.input.selectionStart = 5;
                ctrl._children.input.selectionEnd = 5;
+               ctrl._mouseDownHandler();
+               ctrl._focusInHandler();
                ctrl._clickHandler();
 
                assert.deepEqual(calls, [{
@@ -60,6 +65,7 @@ define(
 
                ctrl._children.input.selectionStart = 5;
                ctrl._children.input.selectionEnd = 5;
+               ctrl._mouseDownHandler();
                ctrl._focusInHandler();
                ctrl._clickHandler();
 
