@@ -20,7 +20,7 @@
            lazyItemsLoad="{{true}}"
            on:selectedItemsChanged="_onItemClickHandler()"
            on:pinClicked="_onPinClickHandler()"
-           class="controls-MenuButton">
+           class="controls-MenuButton__button">
       <Controls.Button icon="{{_options.icon}}"
                        caption="{{_options.caption}}"
                        iconStyle="{{_options.iconStyle}}"

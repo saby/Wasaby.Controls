@@ -22,6 +22,7 @@ define('Controls/Button/Menu',
        * @mixes Controls/List/interface/IHierarchy
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IButton
        * @mixes Controls/Button/interface/IIcon
        * @control
