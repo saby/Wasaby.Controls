@@ -94,7 +94,7 @@ define('Controls/List/interface/IListControl', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {ItemAction} action Object with configuration of the clicked action.
     * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
-    * @param {Object} nativeEvent Native event which can be used to calculate position of the clicked action.
+    * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
     */
 
    /**
@@ -171,6 +171,9 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @event Controls/List/interface/IListControl#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
+    * @param {HTMLElement} itemContainer Container of the item.
     */
 
    /**
