@@ -150,8 +150,6 @@
   ],
   "exclude": [
     "Controls/List/interface/*",
-    "wml!Controls/List/Grid/OldGridView",
-    "wml!Controls/List/Grid/NewGridView",
     "Controls/List/ItemActions/resources/*",
     "Controls/List/ItemActions/ItemActionsControl",
     "Controls/List/Swipe/*",

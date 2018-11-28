@@ -57,6 +57,108 @@ define('Controls-demo/List/Tree/TreeData', [
             parent: 4
          }
       ],
+      tasksFoldersMemoryData = [
+         {
+            id: 1,
+            title: 'Входящие',
+            count: 4,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 2,
+            title: 'Планы - на след. месяц',
+            count: 2,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 3,
+            title: 'Списки VDOM',
+            count: 31,
+            type: true,
+            parent: null,
+            hasChild: true
+         },
+         {
+            id: 31,
+            title: 'Высший приоритет',
+            count: 7,
+            type: true,
+            parent: 3,
+            hasChild: false
+         },
+         {
+            id: 32,
+            title: 'На декабрь',
+            count: 11,
+            type: true,
+            parent: 3,
+            hasChild: false
+         },
+         {
+            id: 33,
+            title: 'Остальное',
+            count: 13,
+            type: true,
+            parent: 3,
+            hasChild: false
+         },
+         {
+            id: 4,
+            title: '3.18.700',
+            count: 14,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 5,
+            title: '3.18.620',
+            count: 1,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 6,
+            title: 'Планы',
+            count: 2,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 7,
+            title: 'Прочие доработки',
+            count: 12,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 8,
+            title: 'Code review',
+            count: 4,
+            type: true,
+            parent: null,
+            hasChild: false
+         },
+         {
+            id: 9,
+            title: 'Согласование',
+            count: null,
+            type: true,
+            parent: null,
+            hasChild: false
+         }
+      ],
+      tasksFoldersMemoryDefaultParams = {
+         data: tasksFoldersMemoryData,
+         idProperty: 'id'
+      },
       tasksMemoryDefaultParams = {
          data: tasksMemoryData,
          idProperty: 'id'
@@ -74,6 +176,9 @@ define('Controls-demo/List/Tree/TreeData', [
    return {
       getTasksMemory: function(additionalParams) {
          return new Memory(prepareParams(tasksMemoryDefaultParams, additionalParams));
+      },
+      getTasksFoldersMemory: function(additionalParams) {
+         return new Memory(prepareParams(tasksFoldersMemoryDefaultParams, additionalParams));
       }
    };
 });

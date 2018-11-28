@@ -42,6 +42,14 @@ define('Controls/List/interface/ITreeControl', [
     */
 
    /**
+    * @name Controls/List/interface/ITreeControl#expanderDisplayMode
+    * @cfg {String} Mode displaying expander indent.
+    * @variant alwaysVisible Always show expander for nodes and indentation for leaves.
+    * @variant adaptive Show expander only for nodes with children.
+    * @default alwaysVisible
+    */
+
+   /**
     * @event Controls/List/interface/ITreeControl#itemExpand Occurs before node expansion.
     */
    /**

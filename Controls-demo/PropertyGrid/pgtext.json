@@ -155,6 +155,51 @@
       }
     }
   },
+  "Controls/Heading/Back": {
+    "name": "Controls/Heading/Back",
+    "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
+    "className": "Controls/Heading/Back",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Heading/Back",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "caption": {
+            "type": "String",
+            "title": "Back button text."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of back button.",
+            "enum": {
+              "secondary": "Button display as icon with border.",
+              "primary": "Button display as main link style."
+            }
+          },
+          "size": {
+            "type": "enum",
+            "title": "Size of the back button.",
+            "enum": {
+              "s": "Back button has s size.",
+              "m": "Back button has m size.",
+              "l": "Back button has l size."
+            }
+          }
+        }
+      }
+    }
+  },
     "Controls/Toggle/Switch": {
     "name": "Controls/Toggle/Switch",
     "title": "Switch control.",

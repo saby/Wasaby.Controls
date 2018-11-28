@@ -28,6 +28,12 @@
 
 @color100:              #DFDFDF;
 @color101:              #F2F2F2;
+@color102:               #F4F9FD;
+@color103:               #FFF9F3;
+
+@color_shadow_default:              rgba(0,0,0,.25);
+@color_shadow_secondary:            rgba(0,0,0,.4);
+@color_shadow_error:                rgba(239, 70, 58, 0.4);
 
 @color201:              #F0F0F0;
 
@@ -46,13 +52,15 @@
 @color_readOnly:                      @color1;
 
 @color_text_default:                  @color0;
-@color_text_disabled:                 @color_readOnly;
+@color_text_readonly:                 @color_readOnly;
 @color_placeholder:                   @color1;
 @color_text_additional:               @color2;
 
 @background-color_default:          @color9;
 @background-color_error:            @color15;
 @background_color_editing:          @color25;
+@background-color_lite:             @color102;
+@background-color_help:             @color103;
 
 @color_border:                      @color1;
 @color_border_error:                @color_danger;
@@ -70,19 +78,19 @@
 @line-height_default:       18px;
 @size_shadow_default:       0 0 12px 0;
 
-@size_text_s:     12px;
-@size_text_m:     14px;
-@size_text_l:     15px;
-@size_text_xl:    16px;
-@size_text_2xl:   17px;
-@size_text_3xl:   18px;
-@size_text_4xl:   20px;
-@size_text_5xl:   24px;
+@font-size_text_s:     12px;
+@font-size_text_m:     14px;
+@font-size_text_l:     15px;
+@font-size_text_xl:    16px;
+@font-size_text_2xl:   17px;
+@font-size_text_3xl:   18px;
+@font-size_text_4xl:   20px;
+@font-size_text_5xl:   24px;
 
-@size_Heading_s:            @size_text_m;
-@size_Heading_m:            @size_text_l;
-@size_Heading_l:            @size_text_3xl;
-@size_Heading_xl:           @size_text_4xl;
+@size_Heading_s:            @font-size_text_m;
+@size_Heading_m:            @font-size_text_l;
+@size_Heading_l:            @font-size_text_3xl;
+@size_Heading_xl:           @font-size_text_4xl;
 
 @spacing_default_xxs:      2px;
 @spacing_default_xs:       4px;
@@ -95,6 +103,10 @@
 @size_icon_s:              16px;
 @size_icon_m:              24px;
 @size_icon_l:              32px;
+
+@font-family_icon_size-s:         'cbuc-icons';
+@font-family_icon_size-m:         'cbuc-icons24';
+@font-family_icon_size-l:         'cbuc-icons';
 
 //
 @color_border_input:                @color4;
