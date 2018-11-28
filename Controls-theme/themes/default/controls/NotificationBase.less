@@ -1,21 +1,24 @@
-@border-width_NotificationBase:           @thickness_border_secondary;
-@box-shadow_NotificationBase:             @size_shadow_default @color_shadow_dark;
+@border-width_NotificationBase:           @size_border_Notification;
+@size_NotificationBase-shadow:            @size_shadow_default;
+@color_NotificationBase-shadow:           @color_shadow_dark;
 @min-height_NotificationBase:             40px;
 @min-width_NotificationBase:              40px;
 @background-color_NotificationBase:       @background-color_default;
 
 //border-color
 @border-color_NotificationBase_danger:                @color_danger;
-@border-color_NotificationBase_primary:               #0055BB;
+@border-color_NotificationBase_primary:               @color_border_Notification_default;
 @border-color_NotificationBase_done:                  @color_success;
 @border-color_NotificationBase_warning:               @color_warning;
 
 //closeButton
-@width_CloseButton_small:                             @size_icon_m;
+@width_CloseButton_small:                                                    @size_icon_m;
 @spacing_NotificationBase-between-closeButton-border-right:                  @spacing_default_m;
 @spacing_NotificationBase-between-closeButton-border-top:                    @spacing_default_m;
 
-@spacing_NotificationBase-between-content-border:     @spacing_default_m;
-@spacing_NotificationBase-between-icon-and-message:   @spacing_default_m;
-@spacing_NotificationBase-between-notifications:      0 @spacing_default_xl @spacing_default_xl 0;
+@spacing_NotificationBase-between-content-border:        @spacing_default_m;
+@spacing_NotificationBase-between-icon-and-message:      @spacing_default_m;
+@spacing_NotificationBase-between-notofications-right:   @spacing_default_xl;
+@spacing_NotificationBase-between-notofications-bottom:  @spacing_default_xl;
+
 @font-size_NotificationBase-message:                  @size_Heading_m;

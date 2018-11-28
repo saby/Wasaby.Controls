@@ -2,8 +2,8 @@
    border-top-style: solid;
    border-top-width: @border-width_InformationPopup;
    background: @background-color_InformationPopup;
-   box-shadow: @shadow_InformationPopup;
-   margin: @spacing_InformationPopup-window;
+   box-shadow: @size_InformationPopup-shadow @color_InformationPopup-shadow;
+   margin: 0 @spacing_InformationPopup-window;
 
    &.controls-ConfirmationTemplate__status-default {
       border-top-color: @border-color_InformationPopup_default;
@@ -25,9 +25,9 @@
 }
 .controls-ConfirmationTemplate__body {
    box-sizing: border-box;
-   border-left: @border-left_SubmitPopup;
-   border-right: @border-right_SubmitPopup;
-   border-bottom: @border-bottom_SubmitPopup;
+   border-left: @size_SubmitPopup-border solid @border-color_SubmitPopup;
+   border-right: @size_SubmitPopup-border solid @border-color_SubmitPopup;
+   border-bottom: @size_SubmitPopup-border solid @border-color_SubmitPopup;
 }
 .controls-ConfirmationTemplate__main {
    padding: @spacing_SubmitPopup-between-content-border;
@@ -35,7 +35,7 @@
 
 .controls-ConfirmationTemplate__footer {
    padding: @spacing_SubmitPopup-between-footer-border;
-   border-top: @border-top_SubmitPopup-footer;
+   border-top: @size_SubmitPopup-border solid @border-color_SubmitPopup-footer-top;
    background: @background-color_SubmitPopup-footer;
 }
 
