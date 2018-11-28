@@ -201,18 +201,18 @@ node('controls') {
                         checkout_engine: {
                             echo " Выкачиваем engine"
                             dir("./controls"){
-                          //      checkout([$class: 'GitSCM',
-                           //     branches: [[name: branch_engine]],
-                            //    doGenerateSubmoduleConfigurations: false,
-                             //   extensions: [[
-                            //        $class: 'RelativeTargetDirectory',
-                            //        relativeTargetDir: "sbis3-app-engine"
-                             //       ]],
-                             //       submoduleCfg: [],
-                              //      userRemoteConfigs: [[
-                              //          credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                              //          url: 'git@git.sbis.ru:sbis/engine.git']]
-                              //  ])
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_engine]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "sbis3-app-engine"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:sbis/engine.git']]
+                                ])
                             }
                         },
                         checkout_navigation: {
