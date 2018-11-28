@@ -168,7 +168,7 @@ module.exports = function(Component) {
       '/demo-ws4-editable-area': function(req, res) {
          requirejs('Controls-demo/EditableArea/EditableAreaWithApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Controls-demo/EditAtPlace/EditableAreaWithApplication',
+            application: 'Controls-demo/EditableArea/EditableAreaWithApplication',
             initDependencies: false
          }, []);
       },
