@@ -1,16 +1,15 @@
 <div>
-   <ws:partial template="{{_options.content}}" on:toggleIndicator="_toggleIndicatorHandler()" attr:class="controls-loading-indicator_content"/>
+   <ws:partial template="{{_options.content}}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()" on:toggleIndicator="_toggleIndicatorHandler()"
+               attr:class="controls-loading-indicator_content"/>
    <ws:if data="{{ isLoading }}">
       <div class="controls-loading-indicator
       {{isGlobal ? 'controls-loading-indicator_global' : 'controls-loading-indicator_local'}}
-      {{useSpinner && message ? 'controls-loading-indicator_text'}}
-      {{useSpinner && scroll ? 'controls-loading-indicator_scroll controls-loading-indicator_sided controls-loading-indicator_sided-' + scroll}}
-      {{useSpinner && small ? 'controls-loading-indicator_small' + (small !== 'yes' ? ' controls-loading-indicator_sided controls-loading-indicator_sided-' + small : '')}}
-      {{useSpinner && overlay ? 'controls-loading-indicator_overlay-' + overlay}}
+      {{message ? 'controls-loading-indicator_text'}}
+      {{scroll ? 'controls-loading-indicator_scroll controls-loading-indicator_sided controls-loading-indicator_sided-' + scroll}}
+      {{small ? 'controls-loading-indicator_small' + (small !== 'yes' ? ' controls-loading-indicator_sided controls-loading-indicator_sided-' + small : '')}}
+      {{overlay ? 'controls-loading-indicator_overlay-' + overlay}}
       {{mods && mods.length ? 'controls-loading-indicator_mod-' + mods.join(' controls-loading-indicator_mod-') }}">
-         <ws:if data="{{useSpinner}}">
-            <div class="controls-loading-indicator-in">{{message}}</div>
-         </ws:if>
+         <div class="controls-loading-indicator-in">{{message}}</div>
       </div>
    </ws:if>
 </div>
