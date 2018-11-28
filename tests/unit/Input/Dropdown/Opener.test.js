@@ -18,6 +18,9 @@ define(
                   nodeProperty: 'nodeProperty',
                   headConfig: {
                      icon: 'icon-small'
+                  },
+                  items: {
+                     each: () => {}
                   }
                },
                className: 'myClass'
