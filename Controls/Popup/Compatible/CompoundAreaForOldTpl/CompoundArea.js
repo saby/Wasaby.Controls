@@ -226,10 +226,10 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // чтобы не создавался еще один enviroment для той же ноды
 
             if (makeInstanceCompatible && makeInstanceCompatible.newWave) {
+               makeInstanceCompatible(this);
+            } else {
                this.VDOMReady = true;
                this.deprecatedContr(this._options);
-            } else {
-               makeInstanceCompatible(this);
             }
 
             var self = this;
