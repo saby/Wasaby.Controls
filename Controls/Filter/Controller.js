@@ -49,12 +49,11 @@ define('Controls/Filter/Controller',
 
          prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
             var historyItems = [];
+            function setTextValue(index, item) {
+               setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
+            }
             if (filterButtonItems && fastFilterItems) {
                historyItems = _private.cloneItems(filterButtonItems);
-
-               function setTextValue(index, item) {
-                  setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
-               }
 
                _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
             } else {
