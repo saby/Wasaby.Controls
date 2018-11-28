@@ -614,13 +614,11 @@ node('controls') {
     }
     if ( regr || inte || all_inte){
         dir(workspace){
-            def exists_jinnee_logs = fileExists '/jinnee/logs'
-            if ( exists_jinnee_logs ){
-                sh """
-                7za a log_jinnee -t7z ${workspace}/jinnee/logs
-                """
-                archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
-            }
+			sh """
+			7za a log_jinnee -t7z ${workspace}/jinnee/logs
+			"""
+			archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
+            
             sh "mkdir logs_ps"
             if ( exists_dir ){
                 dir('/home/sbis/Controls'){
