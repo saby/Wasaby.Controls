@@ -6,7 +6,7 @@ define('Controls/Heading/Back', [
    'css!Controls/Heading/Back/Back'
 ], function(Control, template, types, IoC) {
    /**
-    * Specialized heading to go to the previous level. Support different display styles and sizes.
+    * Specialized heading to go to the previous level.
     *
     * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
     *
@@ -35,7 +35,7 @@ define('Controls/Heading/Back', [
     * <pre>
     *    <Controls.Heading.Back/>
     * </pre>
-    * Back button has 'secondary' style.
+    * Back heading has 'secondary' style.
     * <pre>
     *    <Controls.Heading.Back style="secondary"/>
     * </pre>
@@ -49,11 +49,11 @@ define('Controls/Heading/Back', [
     * @variant l Large heading size.
     * @default m
     * @example
-    * Medium back button size.
+    * Back heading has default size.
     * <pre>
     *    <Controls.Heading.Back/>
     * </pre>
-    * Large back button size.
+    * Back heading has 'l' size.
     * <pre>
     *    <Controls.Heading.Back size="l"/>
     * </pre>

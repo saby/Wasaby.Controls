@@ -5,7 +5,7 @@ define('Controls/Heading/Back/BackStyles',
    }
 
    /**
-    *
+    * @mixin Controls/Heading/Back/BackStyles
     * @public
     *
     * @css @background-image-BackButton_style-primary_size-s Arrow image of back heading with options size 's' and style 'primary'.
