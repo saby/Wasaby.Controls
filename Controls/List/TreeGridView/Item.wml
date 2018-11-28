@@ -8,7 +8,7 @@
       <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
          <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}" expanderSize="{{expanderSize}}"/>
       </ws:if>
-      <ws:else data="{{!expanderSize && expanderIcon !== 'none'}}">
+      <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
