@@ -44,7 +44,7 @@ define('Controls/List/BaseControl', [
       defaultExcludedKeys = [];
 
    var _private = {
-      reload: function(self, filter, userCallback, userErrback) {
+      reload: function(self, filter, sorting, userCallback, userErrback) {
          var
             resDeferred = new Deferred();
          if (self._sourceController) {
@@ -52,7 +52,7 @@ define('Controls/List/BaseControl', [
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, self._sorting).addCallback(function(list) {
+            self._sourceController.load(filter, sorting).addCallback(function(list) {
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
                }
@@ -100,7 +100,7 @@ define('Controls/List/BaseControl', [
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            return self._sourceController.load(self._options.filter, self._sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                if (userCallback && userCallback instanceof Function) {
                   userCallback(addedItems, direction);
                }
@@ -200,7 +200,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options.filter, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
+            _private.reload(self, self._options.filter, self._options.sorting, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], { bubbling: true });
                } else {
@@ -447,6 +447,38 @@ define('Controls/List/BaseControl', [
             result.callback(config.collapsedGroups);
          }
          return result;
+      },
+      
+      getSortingOnChange: function(currentSorting, propName, sortingType) {
+         var sorting = currentSorting ? currentSorting.slice() : [];
+         var sortElemIndex = -1;
+         var sortElem;
+         var newSortElem = {};
+   
+         //use same algorithm when sortingType is not 'single', when the number of properties is equal to one
+         if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
+            sorting.forEach(function(elem, index) {
+               if (elem.hasOwnProperty(propName)) {
+                  sortElem = elem;
+                  sortElemIndex = index;
+               }
+            });
+         } else {
+            sorting = [];
+         }
+   
+         if (sortElem) {
+            if (sortElem[propName] === 'DESC') {
+               sortElem[propName] = 'ASC';
+            } else {
+               sorting.splice(sortElemIndex, 1);
+            }
+         } else {
+            newSortElem[propName] = 'DESC';
+            sorting.push(newSortElem);
+         }
+         
+         return sorting;
       }
 
    };
@@ -544,7 +576,7 @@ define('Controls/List/BaseControl', [
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
                   var
-                     loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
                   loadDef.addCallback(function(items) {
                      return items;
                   });
@@ -576,6 +608,7 @@ define('Controls/List/BaseControl', [
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var recreateSource = newOptions.source !== this._options.source ||
              !isEqualObject(newOptions.navigation, this._options.navigation);
+         var sortingChanged = newOptions.sorting !== this._options.sorting;
 
          if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -604,9 +637,13 @@ define('Controls/List/BaseControl', [
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
+         
+         if (sortingChanged) {
+            this._listViewModel.setSorting(newOptions.sorting);
+         }
 
-         if (filterChanged || recreateSource) {
-            _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+         if (filterChanged || recreateSource || sortingChanged) {
+            _private.reload(this, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
          }
       },
 
@@ -689,10 +726,10 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function(filter) {
-         var
-            reloadFilter = filter || this._options.filter;
-         return _private.reload(this, reloadFilter, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function(filter, sorting) {
+         var reloadFilter = filter || this._options.filter;
+         var reloadSorting = sorting || this._options._sorting;
+         return _private.reload(this, reloadFilter, reloadSorting, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {
@@ -874,6 +911,12 @@ define('Controls/List/BaseControl', [
                }
             }
          }
+      },
+      
+      _sortingChanged: function(event, propName, sortingType) {
+         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
+         event.stopPropagation();
+         this._notify('sortingChanged', [newSorting]);
       }
    });
 
