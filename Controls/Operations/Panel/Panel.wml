@@ -1,6 +1,24 @@
-<ws:if data="{{_options.expanded}}">
-   <Controls.Operations.Panel.View scope="{{_options}}"/>
-</ws:if>
-<ws:else>
-   <div></div>
-</ws:else>
+<div class="controls-operationsPanelV">
+   <Controls.Operations.MultiSelector selectedKeys="{{ _options.selectedKeys }}"
+                                      excludedKeys="{{ _options.excludedKeys }}"
+                                      selectedKeysCount="{{ _options.selectedKeysCount }}" />
+   <div class="controls-operationsPanelV__actions" name="toolbarBlock">
+      <ws:if data="{{_toolbarSource}}">
+         <Controls.Toolbar name="ItemsToolbar"
+                           attr:class="controls-operationsPanelV__toolbar"
+                           parentProperty="{{_options.parentProperty}}"
+                           nodeProperty="{{_options.nodeProperty}}"
+                           keyProperty="{{_options.keyProperty}}"
+                           source="{{_toolbarSource}}"
+                           on:itemClick="_toolbarItemClick()"
+                           itemTemplate="{{ _options.itemTemplate }}">
+         </Controls.Toolbar>
+      </ws:if>
+   </div>
+   <ws:if data="{{_options.rightTemplate}}">
+      <ws:partial attr:class="controls-operationsPanelV__rightTemplate"
+                  template="{{_options.rightTemplate}}"/>
+   </ws:if>
+   <Controls.Event.Listener event="controlResize"
+                            on:controlResize="_onResize()"/>
+</div>
