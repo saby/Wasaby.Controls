@@ -1,11 +1,13 @@
 define('Controls/Input/Number/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/Base/ViewModel',
+      'Controls/Utils/splitIntoTriads',
       'Controls/Input/Number/SplitValueHelper',
       'Controls/Input/Number/InputProcessor'
    ],
    function(
       BaseViewModel,
+      splitIntoTriads,
       SplitValueHelper,
       InputProcessor
    ) {
@@ -17,21 +19,37 @@ define('Controls/Input/Number/ViewModel',
        * @author Журавлев М.С.
        */
 
-      var NumberViewModel = BaseViewModel.extend({
+      var _private = {
+         valueWithoutTrailingZerosRegExp: /[0-9]+(\.[0-9]([1-9]|0(?!0*$))*)?/
+      };
+
+      var ViewModel = BaseViewModel.extend({
 
          /**
-             * Валидирует и подготавливает новое значение по splitValue
-             * @param splitValue
-             * @param inputType
-             * @returns {{value: (*|String), position: (*|Integer)}}
-             */
+          * @param {String} displayValue
+          * @return {Number}
+          * @protected
+          */
+         _convertToValue: function(displayValue) {
+            return parseFloat(displayValue);
+         },
+
+         /**
+          * @param {Number} value
+          * @return {String}
+          * @protected
+          */
+         _convertToDisplayValue: function(value) {
+            return Number.isNaN(value) ? '' : value.toString();
+         },
+
          handleInput: function(splitValue, inputType) {
             var
                result,
                splitValueHelper = new SplitValueHelper(splitValue),
                inputProcessor = new InputProcessor();
 
-            //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+            // Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
             switch (inputType) {
@@ -49,43 +67,19 @@ define('Controls/Input/Number/ViewModel',
                   break;
             }
 
-            this._options.value = result.value.replace(/ /g, '');
-            this._nextVersion();
-
-            //Запишет значение в input и поставит курсор в указанное место
-            return result;
+            return ViewModel.superclass.handleInput.call(this, splitValue, inputType);
          },
 
-         getDisplayValue: function() {
-            return InputProcessor.getValueWithDelimiters({
-               before: '',
-               insert: this._options.value,
-               after: ''
-            });
-         },
+         trimTrailingZeros: function() {
+            var valueWithoutTrailingZeros = this._displayValue.match(_private.valueWithoutTrailingZerosRegExp)[0];
 
-         getValue: function() {
-            return this._options.value;
-         },
+            if (this._displayValue !== valueWithoutTrailingZeros) {
+               this._displayValue = valueWithoutTrailingZeros;
 
-         updateOptions: function(options) {
-            this._options.onlyPositive = options.onlyPositive;
-            this._options.integersLength = options.integersLength;
-            this._options.precision = options.precision;
-            this._options.showEmptyDecimals = options.showEmptyDecimals;
-            if (String(parseFloat(this._options.value)) !== options.value) {
-               this._options.value = options.value;
+               return true;
             }
-            this._nextVersion();
-         },
-
-         updateValue: function(value) {
-            this._options.value = value;
-            this._nextVersion();
-            return value;
          }
       });
 
-      return NumberViewModel;
-   }
-);
+      return ViewModel;
+   });

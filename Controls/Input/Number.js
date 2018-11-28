@@ -5,7 +5,6 @@ define('Controls/Input/Number',
       'Controls/Input/Number/ViewModel'
    ],
    function(Base, descriptor, ViewModel) {
-
       'use strict';
 
       /**
@@ -81,18 +80,33 @@ define('Controls/Input/Number',
        * </pre>
        */
 
+      var _private = {
+         hideEmptyDecimals: function(self) {
+            if (self._viewModel.trimTrailingZeros()) {
+               self._notifyValueChanged();
+            }
+         }
+      };
+
       var NumberInput = Base.extend({
          _getViewModelOptions: function(options) {
             return {
                precision: options.precision,
-               integersLength: options.integersLength,
-               showEmptyDecimals: options.showEmptyDecimals,
-               onlyPositive: options.onlyPositive
+               onlyPositive: options.onlyPositive,
+               integersLength: options.integersLength
             };
          },
 
          _getViewModelConstructor: function() {
             return ViewModel;
+         },
+
+         _changeHandler: function() {
+            if (!this._options.showEmptyDecimals) {
+               _private.hideEmptyDecimals(this);
+            }
+
+            Text.superclass._changeHandler.apply(this, arguments);
          }
       });
 
@@ -110,11 +124,12 @@ define('Controls/Input/Number',
       NumberInput.getDefaultTypes = function() {
          var optionTypes = Base.getDefaultTypes();
 
+         optionTypes.value = descriptor(Number);
          optionTypes.precision = descriptor(Number);
          optionTypes.onlyPositive = descriptor(Boolean);
+         optionTypes.selectOnClick = descriptor(Boolean);
          optionTypes.integersLength = descriptor(Number);
          optionTypes.showEmptyDecimals = descriptor(Boolean);
-         optionTypes.selectOnClick = descriptor(Boolean);
 
          return optionTypes;
       };

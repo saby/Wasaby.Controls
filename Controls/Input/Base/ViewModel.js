@@ -1,13 +1,40 @@
 define('Controls/Input/Base/ViewModel',
    [
+      'Core/core-merge',
       'Core/core-clone',
-      'Core/core-simpleExtend'
+      'Core/core-simpleExtend',
+      'Core/helpers/Object/isEqual'
    ],
-   function(clone, simpleExtend) {
-
+   function(merge, clone, simpleExtend, isEqual) {
       'use strict';
 
+      var _private = {
+         setValue: function(self, value) {
+            if (self._value !== value) {
+               self._value = value;
+
+               self._shouldBeChanged = true;
+            }
+         },
+         setDisplayValue: function(self, displayValue) {
+            if (self._displayValue !== displayValue) {
+               self._displayValue = displayValue;
+               self.selection = displayValue.length;
+
+               self._shouldBeChanged = true;
+            }
+         }
+      };
+
       var ViewModel = simpleExtend.extend({
+         _convertToValue: function(displayValue) {
+            return displayValue;
+         },
+
+         _convertToDisplayValue: function(value) {
+            return value;
+         },
+
          get shouldBeChanged() {
             return this._shouldBeChanged;
          },
@@ -17,7 +44,7 @@ define('Controls/Input/Base/ViewModel',
          },
 
          get oldDisplayValue() {
-            return this.oldValue;
+            return this._oldDisplayValue;
          },
 
          get oldSelection() {
@@ -30,74 +57,76 @@ define('Controls/Input/Base/ViewModel',
 
          set value(value) {
             if (this._value !== value) {
-               this._value = value;
-               this._selection.start = value.length;
-               this._selection.end = value.length;
-               this._shouldBeChanged = true;
+               _private.setValue(this, value);
+               _private.setDisplayValue(this, this._convertToDisplayValue(value));
             }
          },
 
          get displayValue() {
-            return this.value;
+            return this._displayValue;
          },
 
          set displayValue(value) {
-            this.value = value;
+            if (this._displayValue !== value) {
+               _private.setValue(this, this._convertToValue(value));
+               _private.setDisplayValue(this, value);
+            }
          },
 
          get selection() {
             return clone(this._selection);
          },
 
+         /**
+          * @param {Controls/Input/Base/Types/Selection.typedef|Number} value
+          */
          set selection(value) {
-            switch (typeof value) {
-               case 'number':
-                  if (this._selection.start !== value) {
-                     this._selection.start = value;
-                     this._selection.end = value;
-                     this._oldSelection.start = value;
-                     this._oldSelection.end = value;
-                     this._shouldBeChanged = true;
-                  }
-                  break;
-               case 'object':
-                  if (this._selection.start !== value.start || this._selection.end !== value.end) {
-                     this._selection.start = value.start;
-                     this._selection.end = value.end;
-                     this._oldSelection.start = value.start;
-                     this._oldSelection.end = value.end;
-                     this._shouldBeChanged = true;
-                  }
-                  break;
+            var newSelection = typeof value === 'number' ? {
+               start: value,
+               end: value
+            } : value;
+
+            if (!isEqual(this._selection, newSelection)) {
+               merge(this._selection, newSelection);
+               this._shouldBeChanged = true;
+            }
+         },
+
+         get options() {
+            return clone(this._options);
+         },
+
+         set options(value) {
+            for (var prop in value) {
+               if (prop in this._options) {
+                  this._options[prop] = value[prop];
+               }
             }
          },
 
          constructor: function(options, value) {
-            var selection = {
-               start: value.length,
-               end: value.length
-            };
+            this._options = {};
+            this._selection = {};
+            this._oldSelection = {};
 
-            this._value = value;
-            this._oldValue = value;
-            this._selection = clone(selection);
-            this._oldSelection = clone(selection);
-            this.options = clone(options);
-            this._shouldBeChanged = true;
+            this.value = value;
+            this.options = options;
+            this.selection = value.length;
          },
 
          handleInput: function(splitValue) {
             var position = splitValue.before.length + splitValue.insert.length;
-            var value = splitValue.before + splitValue.insert + splitValue.after;
-            var hasChangedValue = this._value !== value;
+            var displayValue = splitValue.before + splitValue.insert + splitValue.after;
+            var hasChangedDisplayValue = this._displayValue !== displayValue;
 
-            this._value = value;
+            this._displayValue = displayValue;
+            this._value = this._convertToValue(displayValue);
             this._selection.start = position;
             this._selection.end = position;
 
             this._shouldBeChanged = true;
 
-            return hasChangedValue;
+            return hasChangedDisplayValue;
          },
 
          changesHaveBeenApplied: function() {
@@ -110,5 +139,4 @@ define('Controls/Input/Base/ViewModel',
       });
 
       return ViewModel;
-   }
-);
+   });

@@ -9,7 +9,7 @@ define('Controls-demo/Input/Number/Number', [
    var VdomDemoNumber = Control.extend({
       _template: template,
       _placeholder: 'Input number',
-      _text1: '',
+      _text1: NaN,
       _tooltip: 'Number',
       _textAlign: 'left',
       _tagStyle: 'primary',
