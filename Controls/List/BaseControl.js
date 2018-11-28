@@ -455,7 +455,7 @@ define('Controls/List/BaseControl', [
          var sortElem;
          var newSortElem = {};
    
-         //use same algorithm when sortingType is not 'single', when the number of properties is equal to one
+         //use same algorithm when sortingType is not 'single', if the number of properties is equal to one
          if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
             sorting.forEach(function(elem, index) {
                if (elem.hasOwnProperty(propName)) {
@@ -467,6 +467,10 @@ define('Controls/List/BaseControl', [
             sorting = [];
          }
    
+         // change sorting direction by rules:
+         // 'DESC' -> 'ASC'
+         // 'ASC' -> empty
+         // empty -> 'DESC'
          if (sortElem) {
             if (sortElem[propName] === 'DESC') {
                sortElem[propName] = 'ASC';
