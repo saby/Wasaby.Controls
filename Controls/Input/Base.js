@@ -247,6 +247,38 @@ define('Controls/Input/Base',
             if (!self._options.readOnly) {
                callback(_private.getField(self));
             }
+         },
+
+         /**
+          * @param {Controls/Input/Base/Types/SplitValue.typedef} data
+          * @param {String} displayValue Values in the field before changing it.
+          */
+         adjustDataForFastInput: function(data, displayValue) {
+            /**
+             * The inserted value and the value after and the length of deleted value will be correct.
+             */
+
+            /**
+             * In the displayValue value none inserted value.
+             * Therefore it consists of a value before and deleted value and a value after.
+             * Cut the displayValue value to so that it does not contain the value after.
+             */
+            data.before = displayValue.substring(0, displayValue.length - data.after.length);
+
+            var removalLength = data.delete.length;
+            var lengthSplitBefore = data.before.length;
+
+            /**
+             * Because the length of the deleted value is correct and it is at the end of the value before,
+             * you can determine the value to be deleted. It will be equal to the substring of the length
+             * of the deleted value taken from the end.
+             */
+            data.delete = data.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
+
+            /**
+             * Cut the value to so that it does not contain the value to be deleted.
+             */
+            data.before = data.before.substring(0, lengthSplitBefore - removalLength);
          }
       };
 
@@ -469,27 +501,16 @@ define('Controls/Input/Base',
             /**
              * If the user works quickly with a field, the input event fires several times from
              * the last synchronization cycle to the next. Due to the fact that the field always displays
-             * the value of the option value, after the second time in the field will be incorrect data.
+             * the value of the option value, after the second time in the field will be incorrect value.
+             * Therefore, the split Value too will be incorrect.
              * Example: The field displays 1. The user enters 2 and 3 quickly.
              * field 1 -> entered 2 -> field 12 -> update by option and notify the parent that value 12 ->
              * field 1 -> entered 3 -> field 13(expected 123) -> update by option and notify the parent that value 13 ->
              * synchronization cycle -> field 13(the error should be 123).
              * For such situations to be handled correctly, we need to adjust the data.
-             * The entered characters and the value after will be correct. The value before is taken
-             * as the displayed value in the model without taking into account the value after.
-             * If there is a value to be deleted, its length is determined correctly. The value will be
-             * equal to the substring of the value before. The substring is taken from the end and is equal
-             * in length to the length of the value to be deleted. The found substring must
-             * be removed from the value before.
              */
             if (value !== model.displayValue) {
-               var removalLength = splitValue.delete.length;
-
-               splitValue.before = model.displayValue.substring(0, model.displayValue.length - splitValue.after.length);
-
-               var lengthSplitBefore = splitValue.before.length;
-               splitValue.delete = splitValue.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
-               splitValue.before = splitValue.before.substring(0, lengthSplitBefore - removalLength);
+               _private.adjustDataForFastInput(splitValue, model.displayValue);
             }
 
             _private.handleInput(this, splitValue, inputType);
