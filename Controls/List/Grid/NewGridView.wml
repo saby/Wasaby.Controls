@@ -1,4 +1,4 @@
-<div class="controls-Grid controls-Grid_{{_options.style}}" attr:style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiSelectVisibility())}};">
+<div attr:class="controls-Grid controls-Grid_{{_options.style}}" attr:style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiSelectVisibility())}};">
    <ws:if data="{{_listModel.getHeader()}}">
       <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
    </ws:if>

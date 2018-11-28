@@ -45,7 +45,7 @@ define('Controls/Popup/Manager/Popup',
                   this._notify('popupCreated', [this._options.id], { bubbling: true });
                }).bind(this);
             } else {
-               this._notify('popupCreated', [this._options.id], {bubbling: true});
+               this._notify('popupCreated', [this._options.id], { bubbling: true });
 
                // Активируем popup, за исключением случаев, когда это старый шаблон. CompoundArea
                // сама управляет фокусом внутри себя
@@ -94,8 +94,8 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _delayedUpdate: function() {
-            //На resize многие обработчики могут влиять на размеры и верстку страницы.
-            //Дожидаемся когда они отработают и пересчитываем размеры попапов.
+            // На resize многие обработчики могут влиять на размеры и верстку страницы.
+            // Дожидаемся когда они отработают и пересчитываем размеры попапов.
             runDelayed(this._update.bind(this));
          },
 

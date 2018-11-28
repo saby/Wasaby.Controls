@@ -9,111 +9,80 @@ define('Controls/Button/ButtonStyles',
     * @mixin Controls/Button/ButtonStyles
     * @public
     *
-    * @css @background-color-IconButton_transparent Background color of button with style set to iconButtonBordered.
-    * @css @background-color-IconButton Background color of button with style set to iconButtonBorderedAdditional.
+    * @css @height_Button_size_m Height of button with options viewMode 'button' and size 'm'.
+    * @css @font-size_Button_size_m Font size of button with options viewMode 'button' and size 'm''.
+    * @css @border-radius_Button_size_m Border radius of button with options viewMode 'button' and size 'm'.
+    * @css @padding_Button-wrapper_size_m Padding from content to border of button with options viewMode 'button' and size 'm'.
     *
-    * @css @border-radius-IconButton Border radius of button with style set to iconButtonBordered and iconButtonBorderedAdditional.
-    * @css @border-style-IconButton Border style of button with style set to iconButtonBordered and iconButtonBorderedAdditional.
+    * @css @height_Button_size_l Height of button with options viewMode 'button' and size 'l'.
+    * @css @font-size_Button_size_l Font size of button with options viewMode 'button' and size 'l'.
+    * @css @border-radius_Button_size_l Border radius of button with options viewMode 'button' and size 'l'.
+    * @css @padding_Button__wrapper_size_l Padding from content to border of button with options viewMode 'button' and size 'l'.
     *
-    * @css @border-width-IconButton Border width of button with style set to iconButtonBordered and iconButtonBorderedAdditional.
-    * @css @border-color-IconButton Border color of button with style set to iconButtonBordered and iconButtonBorderedAdditional.
+    * @css @thickness_Button__border Border thickness of button with option viewMode 'button'.
+    * @css @min-width_Button Minimal width of button with option viewMode 'button'.
+    * @css @box-shadow_Button Box shadow of button with option viewMode 'button'.
+    * @css @box-shadow_Button_active Box shadow of button in active state with option viewMode 'button'.
+    * @css @spacing_Button-between-icon-text Spacing between icon and caption in button with seted option icon.
     *
-    * @css @box-shadow-IconButton Box shadow of button with style set to iconButtonBordered and iconButtonBorderedAdditional.
-    * @css @height-IconButton_size-m Height of button with style set to iconButtonBordered and iconButtonBorderedAdditional and size set to m.
+    * @css @color_Button_readOnly Color of button with options viewMode 'button' and readOnly 'true'.
+    * @css @border-color_Button_readOnly Border color of button with options viewMode 'button' and readOnly 'true'.
     *
-    * @css @width-IconButton_size-m Minimum width of button with style set to iconButtonBordered and iconButtonBorderedAdditional and size set to m.
-    * @css @height-IconButton_size-l Height of button with style set to iconButtonBordered and iconButtonBorderedAdditional and size set to l.
+    * @css @color_Button__text_primary Text color of button with options style 'primary' and viewMode 'button'.
+    * @css @border-color_Button_primary Border color of button with options style 'primary' and viewMode 'button'.
+    * @css @border-color_Button_primary_hovered Border color of button in hovered state with options style 'primary' and viewMode 'button'.
     *
-    * @css @width-IconButton_size-l Minimum width of button with style set to iconButtonBordered and iconButtonBorderedAdditional and size set to l.
-    * @css @color-Button_type-IconButton_readOnly Height of button with style set to iconButtonBordered and iconButtonBorderedAdditional and readOnly set to true.
+    * @css @background_Button_primary Background color of button with style options 'primary' and  viewMode 'button'.
+    * @css @background_Button_primary_hovered Background color of button in hovered state with options style 'primary' and viewMode 'button'.
+    * @css @background_Button_primary_active Background color of button in hovered state with options style 'primary' and viewMode 'button'.
+    * @css @background_Button-primary_readOnly Background color of button with options style 'primary', readOnly 'true' and viewMode 'button'.
     *
-    * @css @border-color-IconButton_readOnly Border color of button with style set to iconButtonBordered and iconButtonBorderedAdditional and readOnly set to true.
-    * @css @background-color-IconButton_hovered Background color of button in hover state with style set to iconButtonBordered.
+    * @css @color_Button__text_secondary Text color of button with options style 'secondary' and viewMode 'button'.
+    * @css @border-color_Button_secondary Border color of button with options style 'secondary' and viewMode 'button'.
+    * @css @border-color_Button_secondary_hovered Border color of button in hovered state with options style 'secondary' and viewMode 'button'.
     *
-    * @css @background-color-IconButton_transparent_hovered Background color of button in hover state with style set to iconButtonBorderedAdditional.
-    * @css @color-Icon_style_done Border color and icon color of button with style set to iconButtonBordered or iconButtonBorderedAdditional and iconStyle set to done.
+    * @css @background_Button_secondary Background of button with options style 'secondary' and viewMode 'button'.
+    * @css @background_Button_secondary_hovered Background color of button in hovered state with options style 'secondary' and viewMode 'button'.
+    * @css @background_Button_secondary_active Background color of button in hovered state with options style 'secondary' and viewMode 'button'.
+    * @css @background_Button-secondary_readOnly Background color of button with options style 'secondary', readOnly 'true' and viewMode 'button'.
     *
-    * @css @color-Icon_style_error	Border color and icon color of button with style set to iconButtonBordered or iconButtonBorderedAdditional and iconStyle set to error.
-    * @css @color-Icon_style_attention	Border color and icon color of button with style set to iconButtonBordered or iconButtonBorderedAdditional and iconStyle set to attention.
+    * @css @height-ToolButton_size-m Height of button with options viewMode 'toolButton' and size 'm'.
+    * @css @width-ToolButton_size-m Minimum width of button with options viewMode 'toolButton' and size 'm'.
     *
-    * @css @color-iconButton__border_iconStyle-primary_hovered	Border color of button with style set to iconButtonBordered or iconButtonBorderedAdditional and iconStyle set to default or unset.
-    * @css @color-IconButtonBordered_default_hovered Icon color of button in hovered state with style set to iconButtonBordered or iconButtonBorderedAdditional and iconStyle set to default or unset.
+    * @css @height-ToolButton_size-l Height of button with options viewMode 'toolButton' and size 'l'.
+    * @css @width-ToolButton_size-l Minimum width of button with options viewMode 'toolButton' and size 'l'.
     *
-    * @css @box-shadow-IconButton_activated Box shadow of button in active with style set to iconButtonBordered and iconButtonBorderedAdditional.
-    * @css @font-size_Link-s Font size of button with size set to s.
+    * @css @border-radius-ToolButton Border radius of button with option viewMode 'toolButton'.
+    * @css @border-width-ToolButton Border width of button with option viewMode 'toolButton'.
+    * @css @border-style-ToolButton Border style of button with option viewMode 'toolButton'.
+    * @css @border-color-ToolButton Border color of button with option viewMode 'toolButton'.
+    * @css @border-color-ToolButton_readOnly Border color of button with options viewMode 'toolButton' and readOnly 'true'.
     *
-    * @css @font-size_Link-m Font size of button with size set to m.
-    * @css @font-size_Link-l Font size of button with size set to l.
+    * @css @box-shadow-ToolButton Box shadow of button with option viewMode 'toolButton'.
+    * @css @box-shadow-ToolButton_activated Box shadow of button in active state with option viewMode 'toolButton'.
     *
-    * @css @font-size_Link-xl Font size of button with size set to xl.
-    * @css @color_Link-main-text Color of button with style set to linkMain.
+    * @css @color-ToolButton_readOnly Height of button with options viewMode 'toolButton' and readOnly 'true'.
+    * @css @color-ToolButton__border_iconStyle-secondary_hovered Border color of button with options viewMode 'toolButton' and iconStyle 'default'.
     *
-    * @css @color_Link-main2-text Color of button with style set to linkMain2.
-    * @css @color_Link-main2-text Color of button with style set to linkMain3.
+    * @css @background-color-ToolButton Background color of button with options viewMode 'toolButton' and transparent 'false'.
+    * @css @background-color-ToolButton_transparent Background color of button with options viewMode 'toolButton' and transparent 'true'.
+    * @css @background-color-ToolButton_hovered Background color of button in hover state with options viewMode 'toolButton' and transparent 'false'.
+    * @css @background-color-IconButton_transparent_hovered Background color of button in hover state with options viewMode 'toolButton' and transparent 'true'.
     *
-    * @css @color_Link-main-text_hovered Color of button in hovered state with style set to linkMain.
-    * @css @color_Link-main3-text_hovered Color of button in hovered state with style set to linkMain3.
+    * @css @font-size_Link-s Font size of button with options size 's' and viewMode 'link'.
+    * @css @font-size_Link-m Font size of button with options size 'm' and viewMode 'link'.
+    * @css @font-size_Link-l Font size of button with options size 'l' and viewMode 'link'.
+    * @css @font-size_Link-xl Font size of button with options size 'xl' and viewMode 'link'.
     *
-    * @css @color_Link-additional-text	Color of button with style set to linkAdditional.
-    * @css @color_Link-additional2-text Color of button with style set to linkAdditional2.
+    * @css @color_Link-secondary_hovered Color of button with options style 'secondary' and viewMode 'link'.
+    * @css @color_Link_readOnly Color of button with options viewMode 'link' and readOnly 'true'.
     *
-    * @css @color_Link-additional3-text Color of button with style set to linkAdditional3.
-    * @css @color_Link-additional4-text Color of button with style set to linkAdditional4.
+    * @css @color_Link_info Color of button with options style 'info' and viewMode 'link'.
+    * @css @color_Link_primary Color of button with options style 'primary' and viewMode 'link'.
+    * @css @color_Link_secondary Color of button with options style 'secondary' and viewMode 'link'.
+    * @css @color_Link_danger Color of button with options style 'danger' and viewMode 'link'.
+    * @css @color_Link_success Color of button with options style 'success' and viewMode 'link'.
+    * @css @color_Link_warning Color of button with options style 'warning' and viewMode 'link'.
     *
-    * @css @color_Link-additional5-text Color of button with style set to linkAdditional5.
-    * @css @color_Link-Vdom-text_readOnly Color of button with any link (linkMain, linkMain2, linkMain3 linkAdditional, linkAdditional2, linkAdditional3, linkAdditional4, linkAdditional5) style and readOnly set to true.
-    *
-    * @css @color_Button-Vdom-readOnly	Color of button with style set to buttonPrimary, buttonDefault, buttonAdd and readOnly set to true.
-    * @css @border-color_Button-Vdom-readOnly Border color of button with style set to buttonPrimary, buttonDefault, buttonAdd and readOnly set to true.
-    *
-    * @css @min-width_Button-Vdom	Minimal width of button with style set to buttonPrimary, buttonDefault, buttonAdd.
-    * @css @box-shadow_Button Box shadow of button with style set to buttonPrimary, buttonDefault, buttonAdd.
-    *
-    * @css @box-shadow_Button_active Box shadow of button in active state with style set to buttonPrimary, buttonDefault, buttonAdd.
-    * @css @color_Button-Vdom-text_primary	Text color of button with style set to buttonPrimary or buttonAdd.
-    *
-    * @css @border-color_Button_primary Border color of button with style set to buttonPrimary or buttonAdd.
-    * @css @background_Button_primary Background color of button with style set to buttonPrimary or buttonAdd.
-    *
-    * @css @border-color_Button_primary_hovered Border color of button in hovered state with style set to buttonPrimary or buttonAdd.
-    * @css @background_Button_primary_active Background color of button in hovered state with style set to buttonPrimary or buttonAdd.
-    *
-    * @css @color_Button-Vdom-text_default	Text color of button with style set to buttonDefault.
-    * @css @border-color_Button Border color of button with style set to buttonDefault.
-    *
-    * @css @background_Button_default Background of button with style set to buttonDefault.
-    * @css @border-color_Button_hovered Border color of button in hovered state with style set to buttonDefault.
-    *
-    * @css @background_Button_default_active Background color of button in hovered state with style set to buttonDefault.
-    * @css @height_Button_m Height of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
-    *
-    * @css @font-size_Button-Vdom_m Font size of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
-    * @css @border-radius_Button_default Border radius of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
-    *
-    * @css @border-width_Button-Vdom Border thickness of button with style set to buttonDefault, buttonPrimary or buttonAdd.
-    * @css @font-size_Button-Vdom_l Font size of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
-    *
-    * @css @height_Button_l Height of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
-    * @css @border-radius_Button_l	Border radius of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
-    *
-    * @css @color_Button-style-addButton-icon Color of icon button with style set to buttonAdd, iconStyle set to default or unset.
-    * @css @color_Button-icon Color of icon button with style set to buttonDefault, iconStyle set to default or unset.
-    *
-    * @css @color_Button-icon_primary Color of icon button with style set to buttonPrimary, iconStyle set to default or unset.
-    * @css @color-IconButtonBordered_default_hovered Icon color of button with style set to iconButtonBordered or iconButtonBorderedAdditional and iconStyle set to default or unset.
-    *
-    * @css @color_Link-main-icon Icon color of button with style set to linkMain.
-    * @css @color-Icon_style_info Icon color of button with style set to linkMain and iconStyle set to info.
-    *
-    * @css @color_Button-style-addButton-icon_hovered Icon color of button in hovered state with style set to buttonAdd.
-    * @css @padding_Button-wrapper_default	Padding of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to m.
-    *
-    * @css @padding_Button-wrapper_l Padding of button with style set to buttonDefault, buttonPrimary or buttonAdd and size set to l.
-    * @css @spacing_Button-between-icon-text Spacing between icon and text in button with seted icon.
-    *
-    * @css @background_Button_primary_hovered Background color of button in hovered state with style set to buttonPrimary or buttonAdd.
-    * @css @background_Button_hovered Background color of button in hovered state with style set to buttonDefault.
-    *
-    * @css @background_Button_active Background color of button in active state with style set to buttonDefault.
     */
 );

@@ -1,0 +1,19 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager" attr:style="width: 800px;">
+   <ws:contentArea>
+      <div style="padding: 10px;">
+         <Controls.Button name="confirmOpenerButton" caption="Открыть окно подтверждения" on:click="_openConfirmation()" attr:class="ControlsDemo-PopupPage__ignoreActivation_confirmButton"/>
+      </div>
+      <div style="padding: 10px;">
+         <Controls.Button name="stackOpenerButton" caption="Открыть стековое окно" on:click="_openStack()" attr:class="ControlsDemo-PopupPage__ignoreActivation_stackButton"/>
+      </div>
+
+      <Controls.Popup.Opener.Confirmation name="confirmDialog" />
+      <Controls.Popup.Opener.Stack name="stack">
+         <ws:popupOptions template="Controls-demo/Popup/TestStack" closeByExternalClick="{{true}}" />
+      </Controls.Popup.Opener.Stack>
+
+      <Controls.Popup.Opener.Notification name="notification">
+         <ws:popupOptions template="wml!Controls-demo/Popup/TestNotification" />
+      </Controls.Popup.Opener.Notification>
+   </ws:contentArea>
+</Controls.Popup.Templates.Stack.StackTemplate>

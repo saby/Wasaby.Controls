@@ -20,6 +20,7 @@ define('Controls/Button', [
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
+    * @mixes Controls/Button/ButtonStyles
     * @control
     * @public
     * @author Михайловский Д.С.
@@ -57,12 +58,6 @@ define('Controls/Button', [
     * @variant button Default button.
     * @variant toolButton Toolbar button.
     * @default button
-    * @remark
-    * Sizes 's' and 'xl' don't supported by viewModes:
-    * <ul>
-    *     <li>button,</li>
-    *     <li>toolButton</li>
-    * </ul>
     * @example
     * Button with 'link' viewMode.
     * <pre>
@@ -106,8 +101,8 @@ define('Controls/Button', [
     * @variant xl Extra large button size.
     * @default m
     * @remark
-    * Button size is different for different button styles.
-    * Sizes 's' and 'xl' don't supported by styles:
+    * Button size is different for different button viewModes.
+    * Sizes 's' and 'xl' don't supported by viewModes:
     * <ul>
     *     <li>button,</li>
     *     <li>toolButton</li>
@@ -134,7 +129,7 @@ define('Controls/Button', [
     * @default Undefined
     * @remark  When you customize a button, use the icon style instead of the css-classes.
     * @example
-    * Button with style buttonPrimary and icon Add.
+    * Primary button with icon 'Add'.
     * <pre>
     *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
     * </pre>

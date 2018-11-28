@@ -48,6 +48,10 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>
 
+   <Controls.Popup.Opener.Stack name="ignoreActivationStack">
+      <ws:popupOptions template="Controls-demo/Popup/TestIgnoreActivationStack" closeByExternalClick="{{true}}" />
+   </Controls.Popup.Opener.Stack>
+
    <Controls.Popup.Opener.Stack name="openOldTemplate">
       <ws:popupOptions template="Controls-demo/Popup/TestFormController/TestFormController" closeByExternalClick="{{true}}">
          <ws:templateOptions type="stack"/>
@@ -88,6 +92,9 @@
    </div>
    <div>
       <Controls.Button name="stackButton" caption="maximizedStack" on:click="openMaximizedStack()" attr:class="ControlsDemo-PopupPage__maximizedStackButton"/>
+   </div>
+   <div>
+      <Controls.Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>
    </div>
    <div>
       <Controls.Button name="stackButton2" caption="open old template" on:click="openOldTemplate()" attr:class="ControlsDemo-PopupPage__stackOldTemplateButton"/>

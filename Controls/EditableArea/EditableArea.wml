@@ -4,7 +4,6 @@
 >
    <div
       class="controls-EditableArea
-      {{_options.toolbarVisibility ? 'controls-EditableArea__withToolbar'}}
       {{_isEditing ? 'controls-EditableArea_isEditing_style_' + (_options.style)}}"
    >
       <ws:partial
