@@ -19,7 +19,7 @@
 }
 
 .controls-HistoryList__content {
-	margin-left: @spacing_FilterPanel-items;
+	margin-left: @spacing_HistoryList-between-leftBorder-content;
 }
 
 .controls-HistoryList__item {
@@ -36,16 +36,23 @@
 }
 
 .controls-HistoryList__iconPin-default {
-	color: @icon-color-disabled;
+	color: @color_HistoryList-pin_unpinned;
 	visibility: hidden;
-}
-
-.controls-HistoryList__iconPin:hover {
-	visibility: visible;
-	color: @icon-color-primary-hover;
 }
 
 .controls-HistoryList__iconPin-active {
 	visibility: visible;
-	color: @icon-color-primary-hover;
+	color: @color_HistoryList-pin_pinned;
+}
+
+.ws-is-no-touch {
+	.controls-HistoryList__iconPin:hover {
+		visibility: visible;
+		color: @color_HistoryList-pin_hover;
+	}
+}
+
+.controls-HistoryList__iconPin:active {
+	visibility: visible;
+	color: @color_HistoryList-pin_active;
 }
