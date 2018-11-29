@@ -22,6 +22,11 @@
               "warning": "warning"
             }
           },
+          "validationErrors": {
+            "type": "Array",
+            "arrayElementType": "String",
+            "title": "List of validation errors."
+          },
           "placeholder": {
             "type": "function|String",
             "title": "Input's placeholder text."
