@@ -1,9 +1,10 @@
 define(
    [
       'Core/IoC',
-      'Controls/Input/Mask'
+      'Controls/Input/Mask',
+      'tests/Calendar/Utils'
    ],
-   function(IoC, Mask) {
+   function(IoC, Mask, testUtils) {
 
       'use strict';
 
@@ -43,6 +44,25 @@ define(
 
             assert.equal(calcReplacer(' ', 'dd.dd'), ' ');
             assert.equal(calcReplacer(' ', 'd\\*'), '');
+         });
+
+         describe('_valueChangedHandler', function() {
+            it('should generate valueChanged event', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = testUtils.createComponent(Mask, { value: '1234', mask: 'dd:dd' });
+               sandbox.stub(component, '_notify');
+               component._valueChangedHandler(null, '1234', '12.34');
+               sinon.assert.calledWith(component._notify, 'valueChanged');
+            });
+            it('should generate inputCompleted event', function() {
+               const
+                  sandbox = sinon.sandbox.create(),
+                  component = testUtils.createComponent(Mask, { value: '1234', mask: 'dd:dd' });
+               sandbox.stub(component, '_notify');
+               component._inputCompletedHandler(null, '1234', '12.34');
+               sinon.assert.calledWith(component._notify, 'inputCompleted');
+            });
          });
       });
    }

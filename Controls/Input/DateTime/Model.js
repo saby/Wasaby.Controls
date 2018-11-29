@@ -83,7 +83,7 @@ define('Controls/Input/DateTime/Model', [
             return;
          }
          _private.updateValue(this, value);
-         this._notify('valueChanged', [value]);
+         this._notify('valueChanged', [value, this._textValue]);
       },
 
       /**
@@ -105,8 +105,16 @@ define('Controls/Input/DateTime/Model', [
          if (!dateUtils.isDatesEqual(this._value, newValue)) {
             this._value = newValue;
             _private.updateLastValue(this);
-            this._notify('valueChanged', [this._value]);
+            this._notify('valueChanged', [this._value, this._textValue]);
          }
+      },
+
+      /**
+       * Value as a string without delimiters.
+       * @returns {String}
+       */
+      get clearTextValue() {
+         return this._textValue.replace(/[ -.:]/g, '');
       },
 
       /**

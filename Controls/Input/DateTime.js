@@ -67,13 +67,13 @@ define('Controls/Input/DateTime', [
          this._model.update(options);
       },
 
-      _inputCompletedHandler: function(event, value) {
-         this._model.autocomplete(value);
-         this._notify('inputCompleted', [this._model.value]);
+      _inputCompletedHandler: function(event, value, textValue) {
+         this._model.autocomplete(textValue);
+         this._notify('inputCompleted', [this._model.value, textValue]);
       },
 
-      _valueChangedHandler: function(e, value) {
-         this._model.textValue = value;
+      _valueChangedHandler: function(e, value, textValue) {
+         this._model.textValue = textValue;
          e.stopImmediatePropagation();
       },
 

@@ -1,5 +1,5 @@
 <Controls.Input.Mask
-   value="{{_model.textValue}}"
+   value="{{_model.clearTextValue}}"
    replacer="{{_model._replacer}}"
    mask="{{_options.mask}}"
    size="{{ _options.size }}"

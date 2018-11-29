@@ -61,15 +61,6 @@ define('Controls-demo/Input/Mask/Mask',
                   }
                }
             });
-         },
-         _setValue: function() {
-            var replacer = this._replacer;
-            this._value = replacer ? this._mask.replace(/./g, function(s) {
-               if (/[Lldx]/.test(s)) {
-                  return replacer;
-               }
-               return s;
-            }) : '';
          }
       });
       return Mask;

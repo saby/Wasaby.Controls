@@ -271,7 +271,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
          if (dateUtils.isValidDate(value)) {
             return formatDate(value, this._mask);
          }
-         return this._mask.replace(/[DMYHms]/g, this._replacer);
+         return '';
       },
 
       /**
