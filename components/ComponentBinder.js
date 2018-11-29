@@ -33,7 +33,7 @@ define('SBIS3.CONTROLS/ComponentBinder',
       if (hideCheckBoxes) {
          gridView.toggleCheckboxes(visible);
       }
-      if (gridView._options.startScrollColumn !== undefined) {
+      if (gridView._options.startScrollColumn !== undefined && gridView._isPartScrollVisible) {
          gridView.updateScrollAndColumns();
       }
       if (cInstance.instanceOfModule(gridView, 'SBIS3.CONTROLS/Tree/DataGridView')) {
