@@ -1527,6 +1527,54 @@ define([
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
+         it('_onItemContextMenu', function() {
+            var callBackCount = 0;
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewConfig: {
+                     idProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     idProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  markedKey: 0,
+                  source: source
+               },
+               instance = new BaseControl(cfg),
+               fakeEvent = {
+                  type: 'itemcontextmenu'
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
+               },
+               itemData = {
+                  key: 1
+               };
+            instance._children = {
+               itemActionsOpener: {
+                  open: function() {
+                     callBackCount++;
+                  }
+               }
+            };
+
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            assert.equal(instance.getViewModel()._markedKey, 0);
+            instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
+            assert.equal(instance.getViewModel()._markedKey, 1);
+            assert.equal(callBackCount, 0);
+         });
+
          it('showActionsMenu context', function() {
             var callBackCount = 0;
             var cfg = {
