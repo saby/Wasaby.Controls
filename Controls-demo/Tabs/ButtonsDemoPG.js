@@ -147,8 +147,12 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                         value: null
                      }
                   ]
+               },
+               style: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 1
                }
-
             };
             this._componentOptions = {
                selectedKey: 1,
@@ -158,7 +162,8 @@ define('Controls-demo/Tabs/ButtonsDemoPG',
                displayProperty: 'title',
                name: 'TabsButtons',
                itemTemplateProperty: null,
-               tabSpaceTemplate: null
+               tabSpaceTemplate: null,
+               style: 'primary'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

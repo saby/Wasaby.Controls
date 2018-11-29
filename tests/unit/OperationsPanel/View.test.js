@@ -1,5 +1,5 @@
 define([
-   'Controls/Operations/Panel/View',
+   'Controls/Operations/Panel',
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils'
 ], function(
@@ -38,7 +38,7 @@ define([
       };
    }
 
-   describe('Controls.Operations.Panel.View', function() {
+   describe('Controls.Operations.Panel', function() {
       var
          instance,
          oldFillItemsType,

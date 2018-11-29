@@ -30,7 +30,7 @@ define('Controls/Container/PendingRegistrator', [
          };
          if (config.showLoadingIndicator && !def.isReady()) {
             // show indicator if deferred still not finished on moment of registration
-            this._children.loadingIndicator.toggleIndicator(true);
+            this._children.loadingIndicator.show();
          }
 
          def.addBoth(function(cnt, res) {
@@ -45,7 +45,7 @@ define('Controls/Container/PendingRegistrator', [
 
          // hide indicator if no more pendings with indicator showing
          if (!this._hasPendingsWithIndicator()) {
-            this._children.loadingIndicator.toggleIndicator(false);
+            this._children.loadingIndicator.hide();
          }
 
          // notify if no more pendings

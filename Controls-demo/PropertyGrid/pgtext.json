@@ -752,6 +752,14 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
+          "style": {
+            "type": "enum",
+            "title": "Tabs buttons display style.",
+            "enum": {
+              "secondary": "RadioGroup is a row of RadioButton.",
+              "primary": "RadioGroup is a column of RadioButton."
+            }
+          },
           "selectedKey": {
             "type": "Number",
             "title": "Identifier of selected item."

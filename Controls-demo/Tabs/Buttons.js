@@ -40,39 +40,39 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'Done',
+                  title: 'Document',
                   align: 'left',
                   isMainTab: true
                },
                {
                   id: '2',
-                  title: 'From Me',
+                  title: 'Files',
                   align: 'left'
                },
                {
                   id: '3',
-                  title: 'Controlled',
+                  title: 'Orders',
                   align: 'left'
                },
                {
                   id: '4',
-                  title: 'very'
+                  title: 'Productions'
                },
                {
                   id: '5',
-                  title: 'hard'
+                  title: 'Employees'
                },
                {
                   id: '6',
-                  title: 'invent'
+                  title: 'Groups'
                },
                {
                   id: '7',
-                  title: 'tabs'
+                  title: 'Photos'
                },
                {
                   id: '8',
-                  title: 'titles'
+                  title: 'Videos'
                }
             ]
          });
@@ -81,29 +81,29 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'Main',
+                  title: 'Person card',
                   align: 'left',
                   itemTemplate: mainTemplate
                },
                {
                   id: '2',
-                  title: 'very'
+                  title: 'Photos'
                },
                {
                   id: '3',
-                  title: 'hard'
+                  title: 'Videos'
                },
                {
                   id: '4',
-                  title: 'invent'
+                  title: 'Groups'
                },
                {
                   id: '5',
-                  title: 'tabs'
+                  title: 'Documents'
                },
                {
                   id: '6',
-                  title: 'titles'
+                  title: 'Meetings'
                }
             ]
          });
@@ -112,28 +112,28 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  carambola: 'First',
+                  carambola: 'Person card',
                   align: 'left'
                },
                {
                   id: '2',
-                  carambola: 'very'
+                  carambola: 'Photos'
                },
                {
                   id: '3',
-                  carambola: 'hard'
+                  carambola: 'Videos'
                },
                {
                   id: '4',
-                  carambola: 'invent'
+                  carambola: 'Groups'
                },
                {
                   id: '5',
-                  carambola: 'tabs'
+                  carambola: 'Documents'
                },
                {
                   id: '6',
-                  carambola: 'titles'
+                  carambola: 'Meetings'
                }
             ]
          });
@@ -142,16 +142,16 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'First',
+                  title: 'Meetings',
                   align: 'left'
                },
                {
                   id: '2',
-                  title: 'tabs'
+                  title: 'Groups'
                },
                {
                   id: '3',
-                  title: 'titles'
+                  title: 'Documents'
                }
             ]
          });
@@ -160,13 +160,13 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'First',
+                  title: 'Documents',
                   align: 'left',
                   itemTemplate: itemTemplate
                },
                {
                   id: '2',
-                  title: 'titles'
+                  title: 'Meetings'
                }
             ]
          });
@@ -176,16 +176,16 @@ define('Controls-demo/Tabs/Buttons', [
                {
                   id: '1',
                   title:
-                     'So long folder name that it will not fit into the maximum size So long folder name that it will not fit into the maximum size'
+                     'Task number 12345678901234567890'
                },
                {
                   id: '2',
-                  title: 'Second',
+                  title: 'News',
                   align: 'left'
                },
                {
                   id: '3',
-                  title: 'third'
+                  title: 'Meetings'
                }
             ]
          });
@@ -194,33 +194,33 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'First',
+                  title: 'Person card',
                   align: 'left',
                   carambola: photoContent,
                   type: 'photo'
                },
                {
                   id: '2',
-                  title: 'very',
+                  title: 'Documents',
                   align: 'left'
                },
                {
                   id: '3',
-                  title: 'hard',
+                  title: 'Photos',
                   align: 'left'
                },
                {
                   id: '4',
-                  title: 'invent',
+                  title: 'Groups',
                   align: 'left'
                },
                {
                   id: '5',
-                  title: 'tabs'
+                  title: 'Meetings'
                },
                {
                   id: '6',
-                  title: 'titles'
+                  title: 'Videos'
                },
                {
                   id: '7',
@@ -237,15 +237,15 @@ define('Controls-demo/Tabs/Buttons', [
             data: [
                {
                   id: '1',
-                  title: 'after'
+                  title: 'Videos'
                },
                {
                   id: '2',
-                  title: 'change'
+                  title: 'Groups'
                },
                {
                   id: '3',
-                  title: 'Source'
+                  title: 'Photos'
                }
             ]
          });
