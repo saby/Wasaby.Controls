@@ -10,7 +10,7 @@
     <ws:if data="{{itemData.multiSelectVisibility}}">
         <ws:partial template="{{multiSelectTpl}}"  attr:class="controls-ListView__checkbox js-controls-ListView__notEditable">
             <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
-                                key="{{itemData.key}}" />
+                                key="{{itemData.key}}"/>
         </ws:partial>
     </ws:if>
 

@@ -8,7 +8,6 @@
   "deprecatedWebPageTemplates": true,
   "htmlWml": true,
   "themes": true,
-
   "minimize": false,
   "wml": false,
   "customPack": false,
