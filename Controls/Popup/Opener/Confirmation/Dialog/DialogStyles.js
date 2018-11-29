@@ -1,6 +1,8 @@
 define('Controls/Popup/Opener/Confirmation/Dialog/DialogStyles', [],
    function() {}
+
    /**
+    *
     * @mixin Controls/Popup/Opener/Confirmation/Dialog/DialogStyles
     * @public
     *
@@ -17,4 +19,4 @@ define('Controls/Popup/Opener/Confirmation/Dialog/DialogStyles', [],
     * @css @min-width_SubmitPopup-button Min-width of buttons.
     * @css @min-width_SubmitPopup-button-small Min-width of small buttons.
     */
- );
+   );

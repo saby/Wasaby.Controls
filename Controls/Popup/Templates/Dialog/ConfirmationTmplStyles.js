@@ -1,5 +1,6 @@
 define('Controls/Popup/Templates/Dialog/ConfirmationTmplStyles', [],
    function() {}
+
    /**
     * @mixin Controls/Popup/Templates/Dialog/ConfirmationTmplStyles
     * @public

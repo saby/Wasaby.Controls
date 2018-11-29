@@ -1,5 +1,6 @@
 define('Controls/Popup/Templates/Notification/NotificationStyles', [],
    function() {}
+
    /**
     * @mixin Controls/Popup/Templates/Notification/NotificationStyles
     * @public
