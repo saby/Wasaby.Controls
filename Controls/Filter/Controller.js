@@ -349,12 +349,12 @@ define('Controls/Filter/Controller',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter)) {
-               _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
-            }
-
             if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
                _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+            }
+
+            if (!isEqual(this._options.filter, newOptions.filter)) {
+               _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
             }
          },
 

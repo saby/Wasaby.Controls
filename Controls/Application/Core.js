@@ -20,7 +20,8 @@ define('Controls/Application/Core',
       createDefault,
       StateReceiver,
       AppData,
-      HeadDataContext) {
+      HeadDataContext,
+      ThemesController) {
       'use strict';
 
       var AppCore = Control.extend({

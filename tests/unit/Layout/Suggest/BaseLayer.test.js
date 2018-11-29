@@ -6,7 +6,8 @@ define(['Controls/Container/Suggest/__BaseLayer'], function(__LayerBase) {
          var baseLayer = new __LayerBase();
          baseLayer._options.filter = {test: 'test'};
          baseLayer._options.searchValue = 'test';
-   
+         baseLayer._beforeMount(baseLayer._options);
+         
          assert.equal(baseLayer._getChildContext().searchLayoutField.searchValue, 'test');
          assert.deepEqual(baseLayer._getChildContext().filterLayoutField.filter, {test: 'test'});
       });

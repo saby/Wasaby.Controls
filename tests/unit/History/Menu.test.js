@@ -3,9 +3,12 @@ define(
       'Controls/History/Menu',
       'WS.Data/Source/Memory',
       'Core/core-clone',
-      'WS.Data/Entity/Model'
+      'WS.Data/Entity/Model',
+      'Controls/History/Source',
+      'Controls/History/Service',
+      'Core/Deferred'
    ],
-   function(Menu, Memory, Clone, Model) {
+   function(Menu, Memory, Clone, Model, HistorySource, HistoryService, Deferred) {
       'use strict';
 
       let items = [
@@ -90,6 +93,42 @@ define(
             });
             menu._beforeUpdate(newConfig);
             assert.deepEqual(menu._filter, { $_history: true, id: 'test' });
+         });
+         it('_onPinClickHandler', function() {
+            var newConfig = Clone(menuConfig);
+            newConfig.source = new HistorySource({
+               originSource: new Memory({
+                  idProperty: 'id',
+                  data: items
+               }),
+               historySource: new HistoryService({
+                  historyId: 'TEST_HISTORY_ID'
+               }),
+               parentProperty: 'parent'
+            });
+            newConfig.source.update = function() {
+               return Deferred.success(false);
+            };
+            var menu = getHistoryMenu(newConfig);
+            menu._children = {
+               notificationOpener: {
+                  open: (popupOptions) => {
+                     assert.deepEqual(popupOptions, {
+                        template: 'wml!Controls/Popup/Templates/Notification/Simple',
+                        templateOptions: {
+                           style: 'error',
+                           text: 'Невозможно закрепить более 10 пунктов',
+                           icon: 'Alert'
+                        }
+                     });
+                  }
+               }
+            };
+            menu._onPinClickHandler('pinClicked', [new Model({
+               rawData: {
+                  pinned: false
+               }
+            })]);
          });
       });
    }
