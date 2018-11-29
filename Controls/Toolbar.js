@@ -115,12 +115,7 @@ define('Controls/Toolbar', [
          }
       },
       _beforeUpdate: function(newOptions) {
-         if (newOptions.keyProperty !== this._options.keyProperty ||
-            this._options.parentProperty !== newOptions.parentProperty ||
-            this._options.nodeProperty !== newOptions.nodeProperty ||
-            this._options.size !== newOptions.size) {
-            _private.setPopupOptions(this, newOptions);
-         }
+         _private.setPopupOptions(this, newOptions);
          if (newOptions.source && newOptions.source !== this._options.source) {
             _private.loadItems(this, newOptions.source).addCallback(function() {
                this._forceUpdate();
@@ -163,7 +158,7 @@ define('Controls/Toolbar', [
 
       _showMenu: function() {
          var config = {
-            className: 'controls-Toolbar__menu-position',
+            className: 'controls-Toolbar__menu-position ' + (this._options.popupClassName || ''),
             templateOptions: {
                items: this._menuItems,
                iconSize: this._options.size
