@@ -55,6 +55,44 @@ define('Controls/interface/INavigation', [
    /**
     * @name Controls/interface/INavigation#navigation
     * @cfg {ListNavigation} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
+    * @example
+    * In this example, 2 items will be displayed in the list.
+    * TMPL:
+    * <pre>
+    *    <Controls.List
+    *       keyProperty="id"
+    *       source="{{_source}}"
+    *       navigation="{{_navigation}}"/>
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = new Memory({
+    *      idProperty: 'id',
+    *      data: [
+    *         {
+    *            id: '1',
+    *            title: 'Yaroslavl'
+    *         },
+    *         {
+    *            id: '2',
+    *            title: 'Moscow'
+    *         },
+    *         {
+    *            id: '3',
+    *            title: 'St-Petersburg'
+    *         }
+    *      ]
+    *    });
+    *    this._navigation = {
+    *       source: 'page',
+    *       view: 'page',
+    *       sourceConfig: {
+    *          pageSize: 2,
+    *          page: 0,
+    *          mode: 'totalCount'
+    *       }
+    *    };
+    * </pre>
     */
 
 });

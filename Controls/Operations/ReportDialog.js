@@ -2,7 +2,7 @@ define('Controls/Operations/ReportDialog', [
    'Core/Control',
    'Core/helpers/String/format',
    'wml!Controls/Operations/ReportDialog/ReportDialog',
-   'css!Controls/Operations/ReportDialog/ReportDialog'
+   'css!theme?Controls/Operations/ReportDialog/ReportDialog'
 ], function(Control, format, template) {
    'use strict';
 

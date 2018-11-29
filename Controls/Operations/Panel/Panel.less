@@ -1,0 +1,35 @@
+.controls-operationsPanelV {
+   display: flex;
+   align-items: center;
+   width: 100%;
+   user-select: none;
+   overflow: hidden;
+   white-space: nowrap;
+   background-color: @background-color_OperationsPanel;
+   position: relative;
+   height: @height_OperationsPanel;
+}
+
+.controls-operationsPanelV__rightTemplate {
+   flex-shrink: 0;
+   margin: @margin_OperationsPanel__rightTemplate;
+}
+
+.controls-operationsPanelV__actions {
+   display: inline-flex;
+   align-items: center;
+   width: 100%;
+   height: 100%;
+   flex-shrink: 1;
+   overflow: hidden;
+   margin: 0 @spacing_OperationsPanel-between-items;
+}
+
+.controls-operationsPanelV__item {
+   align-items: center;
+   flex-shrink: 0;
+}
+
+.controls-operationsPanelV__item_titleWithIcon {
+   padding-left: @spacing_OperationsPanel__item-between-icon-caption;
+}

@@ -6,6 +6,7 @@
              controls-Button_style-{{_style}}_viewMode-{{_viewMode}}{{_state}}
              {{_options.readOnly ?  '':'controls-Button_viewMode-' + _viewMode + '_iconStyle-' + _iconStyle + _state}}"
     attr:title="{{_options.tooltip}}"
+    attr:target="_blank"
     on:click="_clickHandler()"
     on:keypress="_keyUpHandler()"
     attr:href="{{_options.href}}">
