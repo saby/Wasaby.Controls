@@ -1340,7 +1340,7 @@ define('SBIS3.CONTROLS/Mixins/PopupMixin', [
 
       _getOpenerZIndex: function() {
          var opener = this.getOpener() || this.getParent();
-         var selector = '.controls-Popup, .controls-FloatArea, .ws-float-area-stack-cut-wrapper, .ws-window:not(".controls-CompoundArea"), .controls-StylesPalette, .controls-Menu__Popup';
+         var selector = '.controls-Popup, .controls-FloatArea, .ws-float-area-stack-cut-wrapper, .ws-float-area-nostack-panel-overflow, .ws-window:not(".controls-CompoundArea"), .controls-StylesPalette, .controls-Menu__Popup';
          var openerPopup = opener && opener._container && opener._container.closest(selector);
          //Из-за того, что все вешают классы как хотят, по селектору мы можем добраться до контейнера, который лежит внутри попапа.
          //Пытаемся достучаться до корневой ноды попапа, чтобы взять  z-index
