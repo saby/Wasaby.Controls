@@ -82,7 +82,7 @@
       "stylelint-config-standard": "^18.2.0",
       "typescript": "2.5.3",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.18.700",
-      "sbis-rmi": "git+http://git.sbis.ru/sbis/rmi.git#rc-3.18.700",
+      "sbis-rmi": "git+http://git.sbis.ru/sbis/rmi.git#3.18.700/bugfix/without_ws",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"
    }
 }
