@@ -174,7 +174,7 @@ define('SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil', [
                   }
                   i++;
                }
-               href = (linkChild ? getAttribute(linkChild, 'alt') : getAttribute(linkNode, 'href')) || '';
+               href = (linkChild ? getAttribute(linkChild, 'alt') : '') || (linkNode ?  getAttribute(linkNode, 'href') : '');
                node = new Parser.Node({childNodes: [], parentNode: content, text: href, nodeType: 3, nodeValue: href});
                content.childNodes[index] = node;
             };
