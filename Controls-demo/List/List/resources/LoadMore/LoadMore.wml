@@ -1,18 +1,9 @@
 <div>
    <Controls.Container.Scroll attr:class="Demo-LoadMore__scroll">
-      <Controls.List source="{{_viewSource}}" displayProperty="title" keyProperty="id" allowEmptySelection="{{false}}">
-         <ws:navigation source="page" view="demand">
-            <ws:sourceConfig pageSize="{{5}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
-            <ws:viewConfig pagingMode="direct"></ws:viewConfig>
-         </ws:navigation>
-      </Controls.List>
+      <Controls.List source="{{_viewSource}}" displayProperty="title" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}"/>
    </Controls.Container.Scroll>
    <Controls.Container.Scroll attr:class="Demo-LoadMore__scroll">
-      <Controls.Grid source="{{_viewSource}}" keyProperty="id" allowEmptySelection="{{false}}">
-         <ws:navigation source="page" view="demand">
-            <ws:sourceConfig pageSize="{{5}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
-            <ws:viewConfig pagingMode="direct"></ws:viewConfig>
-         </ws:navigation>
+      <Controls.Grid source="{{_gridViewSource}}" keyProperty="id" allowEmptySelection="{{false}}" navigation="{{_listNavigation}}">
          <ws:columns>
             <ws:Array>
                <ws:Object displayProperty="title" width="1fr"/>

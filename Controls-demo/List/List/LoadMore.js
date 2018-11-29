@@ -12,9 +12,26 @@ define('Controls-demo/List/List/LoadMore', [
       ModuleClass = Control.extend({
          _template: template,
          _viewSource: null,
+         _gridViewSource: null,
+         _listNavigation: {
+            source: 'page',
+            view: 'demand',
+            sourceConfig: {
+               pageSize: 5,
+               page: 0,
+               mode: 'totalCount'
+            },
+            viewConfig: {
+               pagingMode: 'direct'
+            }
+         },
 
          _beforeMount: function() {
             this._viewSource = new MemorySource({
+               idProperty: 'id',
+               data: ListData.generate(50)
+            });
+            this._gridViewSource = new MemorySource({
                idProperty: 'id',
                data: ListData.generate(50)
             });
