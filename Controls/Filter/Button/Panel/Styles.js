@@ -19,24 +19,27 @@ define('Controls/Filter/Button/Panel/Styles', [],
     * @css @color_FilterPanel-block-heading Color of the block heading.
     * @css @height_FilterPanel-block-heading Height of the block heading.
     *
-    * @css @spacing_FilterPanel-block-content-bottom-border Spacing between content and bottom border.
+    * @css @spacing_FilterPanel-content-bottomBorder Spacing between content and bottom border.
     *
-    * @css @spacing_FilterPanel-between-left-border-propertyGrid Spacing between left border and the property grid block.
-    * @css @spacing_FilterPanel-between-right-border-propertyGrid Spacing between right border and the property grid block.
+    * @css @spacing_FilterPanel-between-leftBorder-propertyGrid Spacing between left border and the property grid block.
+    * @css @spacing_FilterPanel-between-rightBorder-propertyGrid Spacing between right border and the property grid block.
     *
-    * @css @spacing_FilterPanel-between-left-border-additionalParams Spacing between left border and the additional params block.
-    * @css @spacing_FilterPanel-between-right-border-additionalParams Spacing between right border and the additional params block.
+    * @css @spacing_FilterPanel-between-leftBorder-additionalParams Spacing between left border and the additional params block.
+    * @css @spacing_FilterPanel-between-rightBorder-additionalParams Spacing between right border and the additional params block.
     * @css @spacing_FilterPanel-between-propertyGrid-additionalParams Spacing between the property grid block and the additional params block.
     *
-    * @css @spacing_FilterPanel-between-top-border-history_vertical Spacing between top border and history block, when option orientation set to "vertical".
-    * @css @spacing_FilterPanel-between-left-border-history_vertical Spacing between left border and history block, when option orientation set to "vertical".
-    * @css @spacing_FilterPanel-between-right-border-history_vertical Spacing between right border and history block, when option orientation set to "vertical".
-    * @css @spacing_FilterPanel-between-bottom-border-history_vertical Spacing between bottom border and history block, when option orientation set to "vertical".
+    * @css @spacing_FilterPanel-between-topBorder-history_vertical Spacing between top border and history block, when orientation option set to "vertical".
+    * @css @spacing_FilterPanel-between-leftBorder-history_vertical Spacing between left border and history block, when orientation option set to "vertical".
+    * @css @spacing_FilterPanel-between-rightBorder-history_vertical Spacing between right border and history block, when orientation option set to "vertical".
+    * @css @spacing_FilterPanel-between-bottomBorder-history_vertical Spacing between bottom border and history block, when orientation option set to "vertical".
     *
-    * @css @spacing_FilterPanel-between-top-border-history_horizontal Spacing between top border and history block, when option orientation set to "horizontal".
-    * @css @spacing_FilterPanel-between-left-border-history_horizontal Spacing between left border and history block, when option orientation set to "horizontal".
-    * @css @spacing_FilterPanel-between-right-border-history_horizontal Spacing between right border and history block, when option orientation set to "horizontal".
-    * @css @spacing_FilterPanel-between-bottom-border-history_horizontal Spacing between bottom border and history block, when option orientation set to "horizontal".
+    * @css @background-color_FilterPanel-history_vertical Background color of the history block, when  set to "horizontal".
+    *
+    * @css @spacing_FilterPanel-between-topBorder-history_horizontal Spacing between top border and history block, when orientation option set to "horizontal".
+    * @css @spacing_FilterPanel-between-leftBorder-history_horizontal Spacing between left border and history block, when orientation option set to "horizontal".
+    * @css @spacing_FilterPanel-between-rightBorder-history_horizontal Spacing between right border and history block, when orientation option set to "horizontal".
+    * @css @spacing_FilterPanel-between-bottomBorder-history_horizontal Spacing between bottom border and history block, when orientation option set to "horizontal".
+    *
     *
     * @css @border-left_FilterPanel-history_horizontal Left border of the history block, when option orientation set to "horizontal".
     * @css @max-height_FilterPanel-expandable-block Max height of the expandable blocks in panel.
