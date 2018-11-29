@@ -1,61 +1,90 @@
 <div class="demo-Grid__container">
-    <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
-        <Controls.Container.MultiSelector on:selectedKeysChanged="_selectionChangeHandler()"
-                                          bind:selectedKeys="_selectedKeys"
-                                          bind:excludedKeys="_excludedKeys">
-            <div style="width: 100%;">
-                <Controls.Operations.Button bind:expanded="_panelExpanded"/>
-                <Controls.Operations.Panel
-                        expanded="{{_panelExpanded}}"
-                        name="myPanel"
-                        multiSelectorVisibility="{{true}}"
-                        parentProperty="parent"
-                        nodeProperty="@parent"
-                        keyProperty="id"
-                        source="{{_panelSource}}"
-                        selectedKeys="{{ content._options.selectedKeys }}"
-                        excludedKeys="{{ content._options.excludedKeys }}"
-                        selectedKeysCount="{{ content._options.selectedKeysCount }}"
-                        on:itemClick="_panelItemClick()">
-                    <ws:rightTemplate>
-                        <Controls.Button
-                                caption="Доп. операции"
-                                on:click="_onClickAddBlock()"
-                                icon="icon-small icon-Settings"
-                                style="linkMain"/>
-                    </ws:rightTemplate>
-                </Controls.Operations.Panel>
-                <Controls.List.Remover name="remover"
-                                       nodeProperty="Раздел@"
-                                       parentProperty="Раздел"
-                                       on:beforeItemsRemove="_beforeItemsRemove()"/>
-                <Controls.List.DialogMover name="dialogMover"
-                                           columns="{{_moveDialogColumns}}"
-                                           parentProperty="Раздел"
-                                           on:afterItemsMove="_afterItemsMove()"
-                                           filter="{{_moveDialogFilter}}"
-                                           nodeProperty="Раздел@"
-                                           rootValue="{{null}}"/>
-                <Controls.Container.Scroll>
-                    <Controls.List.Container>
-                        <Controls.List.MultiSelector>
-                            <Controls.TreeGrid
-                                    name="list"
-                                    attr:class="demo-Grid__control"
-                                    parentProperty="{{_parentProperty}}"
-                                    nodeProperty="{{_nodeProperty}}"
-                                    itemsReadyCallback="{{_itemsReadyCallback}}"
-                                    itemActions="{{_itemActions}}"
-                                    itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
-                                    on:itemActionsClick="_itemActionsClick()"
-                                    multiSelectVisibility="{{_panelExpanded ? 'visible'}}"
-                                    columns="{{_gridColumns}}"
-                            />
-                        </Controls.List.MultiSelector>
-                    </Controls.List.Container>
-                </Controls.Container.Scroll>
-            </div>
-        </Controls.Container.MultiSelector>
-    </Controls.Container.Data>
+    <Layout.Browser.Tabs
+       attr:class="demo-PageLayout"
+       bind:tabsSelectedKey = "_selectedKey">
+        <ws:items>
+            <ws:Array>
+                <ws:Object id="{{0}}" title="Список">
+                    <!--TODO: пока нельзя вынести itemTemplate в отдельный файл, иначе туда не долетают изменившиеся опции.
+                    Выписана ошибка: https://online.sbis.ru/opendoc.html?guid=3dd62d85-1529-4b6a-92f4-30fd82d79794 -->
+                    <ws:itemTemplate>
+                        <ws:if data="{{itemTemplate.type === 'topArea'}}">
+                            <Layout.Browser.TopArea bind:expanded="_expanded">
+                                  <span>
+                                     <Controls.Button attr:class="demo-TopArea__button"
+                                                      style="primary"
+                                                      caption="+ Сотрудник"
+                                     />
+                                     <Controls.Button attr:class="demo-TopArea__button"
+                                                      icon="icon-24 icon-CreateFolder"
+                                                      viewMode="link"
+                                     />
+                                  </span>
+                            </Layout.Browser.TopArea>
+                        </ws:if>
+                        <ws:else>
+                            <Layout.Browser source="{{_viewSource}}"
+                                            keyProperty="id"
+                                            nodeProperty="{{_nodeProperty}}"
+                                            parentProperty="{{_parentProperty}}"
+                                            filterButtonSource="{{_filterButtonSource}}"
+                                            bind:operationsPanelExpanded="_expanded"
+                                            bind:selectedKeys="_selectedKeys"
+                                            bind:excludedKeys="_excludedKeys">
+                                <ws:search>
+                                    <Controls.Input.Search bind:value="value"/>
+                                </ws:search>
+                                <ws:filterButton>
+                                    <Controls.Filter.Button templateName="tmpl!Engine-demo/Browser/resources/filterButtonEngineTemplate"/>
+                                </ws:filterButton>
+                                <ws:operationsPanel>
+                                    <Controls.Operations.Panel
+                                       parentProperty="parent"
+                                       nodeProperty="@parent"
+                                       keyProperty="id"
+                                       source="{{_panelSource}}"
+                                       on:itemClick="_panelItemClick()">
+                                        <ws:rightTemplate>
+                                            <Controls.Button
+                                               caption="Доп. операции"
+                                               on:click="_onClickAddBlock()"
+                                               icon="icon-small icon-Settings"
+                                               viewMode="link"
+                                               style="secondary"
+                                            />
+                                        </ws:rightTemplate>
+                                    </Controls.Operations.Panel>
+                                </ws:operationsPanel>
+                                <ws:actions>
+                                    <Controls.List.Remover name="remover"
+                                                           nodeProperty="Раздел@"
+                                                           parentProperty="Раздел"
+                                                           on:beforeItemsRemove="_beforeItemsRemove()"/>
+                                    <Controls.List.DialogMover name="dialogMover"
+                                                               columns="{{_options._moveDialogColumns}}"
+                                                               parentProperty="Раздел"
+                                                               on:afterItemsMove="_afterItemsMove()"
+                                                               filter="{{_options._moveDialogFilter}}"
+                                                               nodeProperty="Раздел@"
+                                                               rootValue="{{null}}"/>
+                                </ws:actions>
+                                <ws:content>
+                                    <Controls.TreeGrid
+                                       name="list"
+                                       attr:class="demo-Grid__control"
+                                       itemsReadyCallback="{{_itemsReadyCallback}}"
+                                       itemActions="{{_itemActions}}"
+                                       itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+                                       on:itemActionsClick="_itemActionsClick()"
+                                       columns="{{_gridColumns}}"
+                                    />
+                                </ws:content>
+                            </Layout.Browser>
+                        </ws:else>
+                    </ws:itemTemplate>
+                </ws:Object>
+            </ws:Array>
+        </ws:items>
+    </Layout.Browser.Tabs>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
 </div>

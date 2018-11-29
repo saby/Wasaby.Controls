@@ -1,6 +1,18 @@
 define(['Controls/Filter/Controller'], function(Filter) {
    
    describe('Controls.Filter.Controller', function () {
+
+      it('_beforeUpdate new items', function () {
+         var filterLayout = new Filter();
+         filterLayout.saveOptions({filterButtonSource: []});
+         var items = [{
+            id: 'testKey',
+            value: 'testValue',
+            resetValue: ''
+         }];
+         filterLayout._beforeUpdate({ filterButtonSource: items });
+         assert.deepEqual(filterLayout._filterButtonItems, items);
+      });
       
       it('_itemsChanged', function () {
          var filterLayout = new Filter();

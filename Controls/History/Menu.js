@@ -86,7 +86,6 @@ define('Controls/History/Menu',
                   });
                }
             });
-            this._items = this._options.source.getItems();
          }
       });
    

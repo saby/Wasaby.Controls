@@ -98,6 +98,9 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
             fs.renameSync(path.join(root, 'application', 'tempName'), path.join(root, 'application', one.name));
          }
       });
+      if(!fs.existsSync(path.join(root, 'application', 'cdn'))) {
+         fs.symlinkSync(path.join(root, 'cdn'), path.join(root, 'application', 'cdn'));
+      }
 
       const allJson = {links: {}, nodes: {}};
       const contents = { buildMode: '', modules: {} };

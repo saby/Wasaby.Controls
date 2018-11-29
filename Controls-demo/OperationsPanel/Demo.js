@@ -9,6 +9,12 @@ define('Controls-demo/OperationsPanel/Demo', [
 ], function(Control, template, Memory, TreeMemory, Data) {
    'use strict';
 
+   var filterButtonData = [{
+      id: 'owner',
+      resetValue: '0',
+      value: '0'
+   }];
+
    return Control.extend({
       _panelExpanded: false,
       _template: template,
@@ -21,8 +27,11 @@ define('Controls-demo/OperationsPanel/Demo', [
       _moveDialogFilter: null,
       _selectedKeys: null,
       _excludedKeys: null,
+      _selectedKey: 0,
+      _expanded: false,
 
       _beforeMount: function() {
+         this._filterButtonSource = filterButtonData;
          this._panelSource = this._getPanelSource([]);
          this._itemActions = Data.itemActions;
          this._selectionChangeHandler = this._selectionChangeHandler.bind(this);
@@ -81,10 +90,10 @@ define('Controls-demo/OperationsPanel/Demo', [
 
          switch (action.id) {
             case 'moveUp':
-               /*У первого не показывать кнопку вверх*/
+               /* У первого не показывать кнопку вверх */
                return prevItem && prevItem.get('Раздел@') === item.get('Раздел@') && prevItem.get('Раздел') === item.get('Раздел');
             case 'moveDown':
-               /*У последнего не показывать кнопку вниз*/
+               /* У последнего не показывать кнопку вниз */
                return nextItem && nextItem.get('Раздел@') === item.get('Раздел@') && nextItem.get('Раздел') === item.get('Раздел');
             default:
                return true;
@@ -130,7 +139,7 @@ define('Controls-demo/OperationsPanel/Demo', [
       },
 
       _afterItemsMove: function(event, items, target, position) {
-         //To display the records in the correct order
+         // To display the records in the correct order
          if (position === 'on') {
             this._children.list.reload();
          }
