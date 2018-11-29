@@ -390,7 +390,7 @@ define('Controls/List/BaseControl', [
          self._popupOptions = {
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
-            horizontalAlign: { side: 'left' },
+            horizontalAlign: { side: 'right' },
             eventHandlers: {
                onResult: self._closeActionsMenu,
                onClose: self._closeActionsMenu
