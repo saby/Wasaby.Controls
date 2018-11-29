@@ -4,7 +4,10 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
       'SBIS3.CONTROLS/LongOperations/Entry'
    ],
 
-   function (Model, LongOperationEntry) {
+   function (
+      Model,
+      LongOperationEntry
+   ) {
 
       var _timeSpent = function (model) {
          var timeSpent = model.get('timeSpent');
@@ -54,7 +57,38 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                            }
                            parts.push(i === 0 ? part : part.charAt(0) + '.');
                         }
-                        return parts.length ? parts.join(' ') : rk('Пользователь удален');
+                        return parts.length ? parts.join(' ') : '';
+                     }
+                  },
+
+                  hasUserInfo: {
+                     get: function () {
+                        return !!(this.get('userFirstName') || this.get('userLastName'));
+                     }
+                  },
+
+                  hasUserPersonInfo: {
+                     get: function () {
+                        return !!(this.get('userPersonId') || this.get('userPhotoId'));
+                     }
+                  },
+
+                  userPersonInfo: {
+                     get: function () {
+                        // Временно до выхода новой версии длительных операций:
+                        return require.defined('Person/Info/Model') ? new (require('Person/Info/Model'))({
+                           rawData: {
+                              PhotoID: this.get('userPhotoId'),
+                              PersonID: this.get('userPersonId')
+                           }
+                        }) : null;
+                     }
+                  },
+
+                  clientName: {
+                     get: function () {
+                        // Временно до выхода новой версии длительных операций:
+                        return require.defined('EngineUser/Info') ? require('EngineUser/Info').get('ИмяКлиента') : (typeof window !== 'undefined' && window.userInfo ? window.userInfo['ИмяКлиента'] : '');
                      }
                   }
                }
