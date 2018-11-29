@@ -252,7 +252,7 @@ define('SBIS3.CONTROLS/TextBox', [
              лучше буду навешивать плейсхолдер только в хроме
              */
             // Плейсхолдер навешивается в шаблоне, иначе он будет моргать
-            if (constants.browser.IEVersion < 12) {
+            if (constants.browser.isIE && constants.browser.IEVersion < 12) {
                // Оказывается, в IE до 11 версии событие input стреляет даже при снятии аттрибута placeholder. Поэтому первое событие input там просто стопим
                this._inputField.one('input', function(e) {
                   e.preventDefault();
