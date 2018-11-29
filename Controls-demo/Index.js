@@ -3,7 +3,7 @@
  */
 define('Controls-demo/Index', [
    'Core/Control',
-   'Controls/Application/LinkResolver',
+   'Core/LinkResolver/LinkResolver',
    'Core/cookie',
    'Core/constants',
    'wml!Controls-demo/Index',
