@@ -4,7 +4,7 @@ define('Controls/Date/interface/IRange', [
 
    /**
     * The control interface allows to allocate intervals from one value to another.
-    * mixin Controls/Date/interface/IRange
+    * @interface Controls/Date/interface/IRange
     */
 
    /**

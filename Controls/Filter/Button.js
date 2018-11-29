@@ -30,22 +30,6 @@ define('Controls/Filter/Button',
        * @public
        * @author Герасимов А.М.
        *
-       * @css @height_FilterButton Button height.
-       * @css @color_FilterButton-icon Button icon color.
-       * @css @color_FilterButton-icon_hover Button icon color in hovered state.
-       * @css @color_FilterButton-icon_disabled Button icon color in disabled state.
-       * @css @spacing_FilterButton-between-icon-text Spacing between the button icon and the filter string.
-       * @css @spacing_FilterButton-between-spaceTemplate-text Spacing between the line space template and the filter string.
-       * @css @color_FilterButton-text Filter string color.
-       * @css @color_FilterButton-text_hover Filter string color in hovered state.
-       * @css @color_FilterButton-text_disabled Filter string color in disabled state.
-       * @css @font-size_FilterButton-text The filter string font size.
-       * @css @color_FilterButton-arrow Icon 'arrow' color.
-       * @css @color_FilterButton-arrow_disabled Icon 'arrow' color in disabled state.
-       * @css @color_FilterButton-clear Icon 'cross' color.
-       * @css @font-size_FilterButton-icon Filter button icon size.
-       * @css @font-family_FilterButton-icon Filter button icon font family.
-       * @css @icon-size_FilterButton-text-icon Icon 'arrow' and icon 'cross' size.
        */
 
       'use strict';
