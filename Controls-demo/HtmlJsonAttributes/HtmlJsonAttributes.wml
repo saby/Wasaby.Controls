@@ -1,5 +1,5 @@
 <div>
-   <Controls.Decorator.Markup json="{{ json }}"
+   <Controls.Decorator.Markup value="{{ json }}"
                               attr:class="ControlsDemo-HtmlJsonAttributes__someClass"
                               attr:someAttr="someValue" />
 </div>
