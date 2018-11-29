@@ -478,6 +478,7 @@ define(
                assert.equal(itemConfig.position.left, -10000);
                assert.equal(itemConfig.position.width, 800);
                assert.equal(itemConfig.position.height, 950);
+               assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Stack/StackContent');
             });
 
             it('stack maximized popup position', function() {
