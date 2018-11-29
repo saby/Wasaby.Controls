@@ -562,7 +562,7 @@ define('Controls/List/BaseControl', [
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var recreateSource = newOptions.source !== this._options.source ||
-            newOptions.navigation !== this._options.navigation;
+             !isEqualObject(newOptions.navigation, this._options.navigation);
 
          if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;

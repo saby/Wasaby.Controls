@@ -111,23 +111,24 @@ define([
             filter: filter2
          };
 
-         ctrl._beforeUpdate(cfg);
-         assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
-         assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
-         ctrl.saveOptions(cfg);
-         assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
-         assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-         assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/List/Tree/TreeViewModel'));
-         assert.isTrue(ctrl._hasUndrawChanges);
-
          //сорс грузит асинхронно
          setTimeout(function() {
-            assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-            ctrl._afterUpdate();
-            assert.isFalse(ctrl._hasUndrawChanges);
-            ctrl._beforeUnmount();
-            done();
-         }, 100);
+            ctrl._beforeUpdate(cfg);
+            assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
+            assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
+            ctrl.saveOptions(cfg);
+            assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
+            assert.equal(ctrl._viewModelConstructor, TreeViewModel);
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/List/Tree/TreeViewModel'));
+            assert.isTrue(ctrl._hasUndrawChanges);
+            setTimeout(function () {
+               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               ctrl._afterUpdate();
+               assert.isFalse(ctrl._hasUndrawChanges);
+               ctrl._beforeUnmount();
+               done();
+            }, 100);
+         }, 1);
       });
 
       it('errback to callback', function(done) {
@@ -178,7 +179,7 @@ define([
       });
 
 
-      it('_needScrollCalculation', function() {
+      it('_needScrollCalculation', function(done) {
 
          var source = new MemorySource({
             idProperty: 'id',
@@ -227,8 +228,11 @@ define([
                view: 'infinity'
             }
          };
-         ctrl._beforeUpdate(cfg);
-         assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after updating');
+         setTimeout(function() {
+            ctrl._beforeUpdate(cfg);
+            assert.isTrue(ctrl._needScrollCalculation, 'Wrong _needScrollCalculation value after updating');
+            done();
+         }, 1);
 
          ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
@@ -278,6 +282,62 @@ define([
          setTimeout(function() {
             BaseControl._private.loadToDirection(ctrl, 'down');
             setTimeout(function() {
+               assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
+               assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               done();
+            }, 100);
+         }, 100);
+
+      });
+
+      it('Navigation demand', function(done) {
+
+         var source = new MemorySource({
+            idProperty: 'id',
+            data: data
+         });
+
+         var dataLoadFired = false;
+
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            dataLoadCallback: function() {
+               dataLoadFired = true;
+            },
+            source: source,
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            navigation: {
+               view: 'demand',
+               source: 'page',
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  mode: 'totalCount'
+               }
+            }
+         };
+
+         var ctrl = new BaseControl(cfg);
+
+
+         ctrl.saveOptions(cfg);
+         ctrl._beforeMount(cfg);
+
+         setTimeout(function() {
+            assert.isTrue(ctrl._shouldDrawFooter, 'Failed draw footer on first load.');
+            assert.equal(ctrl._loadMoreCaption, 3, 'Failed draw footer on first load.');
+
+            BaseControl._private.loadToDirection(ctrl, 'down');
+            setTimeout(function() {
+               assert.isFalse(ctrl._shouldDrawFooter, 'Failed draw footer on second load.');
+
                assert.equal(6, BaseControl._private.getItemsCount(ctrl), 'Items wasn\'t load');
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                done();
