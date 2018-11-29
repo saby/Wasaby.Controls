@@ -137,7 +137,7 @@ define('Controls/Toolbar', [
             config = {
                corner: {vertical: 'top', horizontal: 'left'},
                horizontalAlign: {side: 'right'},
-               className: _private.getItemClassName(item, this._options.size) + ' ' + (item.popupClassName || ''),
+               className: _private.getItemClassName(item, this._options.size) + ' ' + (item.get('popupClassName') || ''),
                templateOptions: {
                   items: this._items,
                   rootKey: item.get(this._options.keyProperty),
