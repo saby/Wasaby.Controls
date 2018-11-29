@@ -49,7 +49,7 @@
     },
     {
       "name": "File",
-      "path": "%cd%/node_modules/sbis-rmi/src/client/File"
+      "path": "%cd%/node_modules/rmi/src/client/File"
     },
     {
       "name": "Transport",
