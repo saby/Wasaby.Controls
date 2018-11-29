@@ -22,11 +22,19 @@
    margin: @padding_List-checkbox;
 }
 
-.controls-ListView__itemContent_withCheckboxes, .controls-ListView__footerWithCheckboxes {
+.controls-ListView__footer__paddingLeft_withCheckboxes {
+   padding-left: @spacing-List-between-checkbox-content + @width_CheckBox;
+}
+
+.controls-ListView__footer__paddingLeft_default {
+   padding-left: @padding_List-left;
+}
+
+.controls-ListView__itemContent_withCheckboxes {
    padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @spacing-List-between-checkbox-content + @width_CheckBox;
 }
 
-.controls-ListView__itemContent_withoutCheckboxes, .controls-ListView__footerWithoutCheckboxes {
+.controls-ListView__itemContent_withoutCheckboxes {
    padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @padding_List-left;
 }
 

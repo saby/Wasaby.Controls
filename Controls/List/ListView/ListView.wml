@@ -12,7 +12,7 @@
               itemOutputWrapper="{{_itemOutputWrapper}}"
               itemTemplate="{{_itemTemplate}}">
       </ws:partial>
-      <div class="controls-ListView__footer{{_options.multiselectVisibility === 'onhover' || _options.multiselectVisibility === 'visible' ? 'With' : 'Without'}}Checkboxes">
+      <div class="controls-ListView__footer__paddingLeft_{{_options.multiselectVisibility === 'onhover' || _options.multiselectVisibility === 'visible' ? 'withCheckboxes' : 'default'}}">
          <ws:partial template="{{_options.footerTemplate}}"/>
       </div>
    </ws:if>

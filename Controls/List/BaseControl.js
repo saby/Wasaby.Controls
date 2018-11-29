@@ -84,7 +84,7 @@ define('Controls/List/BaseControl', [
             if (typeof self._sourceController.getLoadedDataCount() !== 'undefined' && self._sourceController.getAllDataCount()) {
                self._loadMoreCaption = self._sourceController.getAllDataCount() - self._sourceController.getLoadedDataCount();
             } else {
-               self._loadMoreCaption = navigation.sourceConfig.pageSize;
+               self._loadMoreCaption = '...';
             }
          }
       },
