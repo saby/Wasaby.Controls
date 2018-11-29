@@ -22,4 +22,4 @@ define('Controls/Popup/Templates/Dialog/DialogTmplStyles', [],
     * @css @size_DialogTemplate-shadow Size of shadow.
     * @css @color_DialogTemplate-shadow Color of shadow.
     */
-   );
+);
