@@ -69,6 +69,7 @@ define('Controls/Application/Core',
             var result;
             if (this._application !== app) {
                this._applicationForChange = app;
+               this.headDataCtx.resetRenderDeferred();
                this._forceUpdate();
                result = true;
             } else {
