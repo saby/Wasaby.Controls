@@ -155,6 +155,14 @@ define('Controls/Controllers/QueryParamsController/Position',
             }
          },
 
+         getLoadedDataCount: function() {
+
+         },
+
+         getAllDataCount: function() {
+
+         },
+
          hasMoreData: function(loadDirection) {
             var navDirection;
             if (loadDirection === 'up') {

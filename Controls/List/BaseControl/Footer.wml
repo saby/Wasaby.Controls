@@ -1,0 +1,1 @@
+<Controls.Button size="s" attr:class="controls-ListView__loadMore" viewMode="link" caption="{{rk('Еще') + ' ' + loadMoreCaption}}" on:click="_onLoadMoreClick()"/>
