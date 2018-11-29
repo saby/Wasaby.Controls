@@ -311,6 +311,12 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             count: 5
          }],
          panelItems: [{
+            id: 'print',
+            '@parent': false,
+            icon: 'icon-Print',
+            title: 'Распечатать',
+            parent: null
+         }, {
             id: 'save',
             '@parent': true,
             icon: 'icon-Save',
@@ -326,12 +332,6 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             '@parent': false,
             title: 'Excel',
             parent: 'save'
-         }, {
-            id: 'print',
-            '@parent': false,
-            icon: 'icon-Print',
-            title: 'Распечатать',
-            parent: null
          }, {
             id: 'plainList',
             '@parent': false,

@@ -2,30 +2,34 @@
    overflow: hidden;
    padding-left: @controls-Popup-stack-shadow-padding;
    box-sizing: content-box;
-   .controls-Popup__template {
-      width: 100%;
-      height: 100%;
-      flex-shrink: 0;
-      position: relative;
-      border-left: @border-left_stackTemplate;
-      box-sizing: border-box;
-      box-shadow: @controls-Popup-stack-shadow;
-   }
 }
 
-.controls-Stack__waiting .controls-Popup__template {
+.controls-Stack__content {
+   width: 100%;
+   height: 100%;
+   flex-shrink: 0;
+   position: relative;
+   border-left: @border-left_stackTemplate;
+   box-sizing: border-box;
+}
+
+.controls-Stack__shadow {
+   box-shadow: @controls-Popup-stack-shadow;
+}
+.controls-Stack__waiting {
    will-change: transform;
    transform: translateX(100%);
 }
 
-.controls-Stack__open .controls-Popup__template {
+.controls-Stack__open {
    will-change: transform;
    transition: transform @controls-Popup-animate-duration linear;
    transform: translateX(0%);
 }
 
-.controls-Stack__close .controls-Popup__template {
+.controls-Stack__close {
    will-change: transform;
    transition: transform @controls-Popup-animate-duration linear;
    transform: translateX(100%);
 }
+

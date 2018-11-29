@@ -187,7 +187,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @cfg {EditingConfig} editingConfig Configuration for editing in place.
+    * @cfg {EditingConfig} Configuration for editing in place.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:
