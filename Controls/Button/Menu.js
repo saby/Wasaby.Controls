@@ -10,6 +10,9 @@ define('Controls/Button/Menu',
 
       /**
        * Button by clicking on which a drop-down list opens.
+       *
+       * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
+       *
        * @class Controls/Button/Menu
        * @extends Core/Control
        * @mixes Controls/interface/ICaption
