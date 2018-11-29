@@ -1,8 +1,11 @@
 define('Controls/Container/LoadingIndicator', [
    'Core/Control',
    'wml!Controls/Container/LoadingIndicator/LoadingIndicator',
+   'Core/helpers/Number/randomId',
+   'WS.Data/Collection/List',
+   'Core/IoC',
    'css!theme?Controls/Container/LoadingIndicator/LoadingIndicator'
-], function(Control, tmpl) {
+], function(Control, tmpl, randomId, List, IoC) {
    'use strict';
 
    var module = Control.extend({
@@ -10,16 +13,16 @@ define('Controls/Container/LoadingIndicator', [
       isLoading: false,
       _isPreloading: false,
       _prevLoading: null,
+      _stack: new List(),
+      _isLoadingSaved: null,
+      _delay: 2000,
 
       isGlobal: true,
-      useSpinner: true,
       message: '',
       scroll: '',
       small: '',
       overlay: 'default',
       mods: '',
-
-      _isLoadingSaved: null,
 
       _beforeMount: function(cfg) {
          this._updateProperties(cfg);
@@ -30,9 +33,6 @@ define('Controls/Container/LoadingIndicator', [
       _updateProperties: function(cfg) {
          if (cfg.isGlobal !== undefined) {
             this.isGlobal = cfg.isGlobal;
-         }
-         if (cfg.useSpinner !== undefined) {
-            this.useSpinner = cfg.useSpinner;
          }
          if (cfg.message !== undefined) {
             this.message = cfg.message;
@@ -49,9 +49,14 @@ define('Controls/Container/LoadingIndicator', [
          if (cfg.mods !== undefined) {
             this.mods = cfg.mods;
          }
+
+         if (cfg.delay !== undefined) {
+            this.delay = cfg.delay;
+         }
       },
 
       toggleIndicator: function(isLoading) {
+         IoC.resolve('ILogger').error('LoadingIndicator', 'Используйте события showIndicator/hideIndicator взамен toggleIndicator');
          this._isPreloading = isLoading;
 
          var isLoadingStateChanged = this._isPreloading !== this._prevLoading;
@@ -80,7 +85,7 @@ define('Controls/Container/LoadingIndicator', [
                      this._isLoadingSaved = null;
                      this._forceUpdate();
                   }
-               }.bind(this), this._options.delay);
+               }.bind(this), this.delay || this._delay);
             }
          } else {
             // goes to idle state
@@ -92,16 +97,122 @@ define('Controls/Container/LoadingIndicator', [
          this._prevLoading = this._isPreloading;
       },
       _toggleIndicatorHandler: function(e, isLoading) {
-         this.toggleIndicator(isLoading);
+         this.toggleIndicator(isLoading, true);
          e.stopPropagation();
+      },
+
+      _showHandler: function(event, config, waitPromise) {
+         event.stopPropagation();
+         return this._show(config, waitPromise);
+      },
+
+      _hideHandler: function(event, id) {
+         event.stopPropagation();
+         return this._hide(id);
+      },
+
+      show: function(config, waitPromise) {
+         if (!config) {
+            return this._toggleIndicator(true, {});
+         } else {
+            this._show(config, waitPromise);
+         }
+      },
+
+      _show: function(config, waitPromise) {
+         var isUpdate = false;
+         if (this._isOpened(config)) {
+            isUpdate = true;
+            this._removeItem(config.id);
+         }
+         config = this._prepareConfig(config, waitPromise);
+         this._stack.add(config);
+         this._toggleIndicator(true, config, isUpdate);
+
+         return config.id;
+      },
+
+      hide: function(id) {
+         if (!id) {
+            this._toggleIndicator(false, {});
+         } else {
+            this._hide(id);
+         }
+      },
+
+      _hide: function(id) {
+         this._removeItem(id);
+         if (this._stack.getCount()) {
+            this._toggleIndicator(true, this._stack.at(this._stack.getCount() - 1), true);
+         } else {
+            this._toggleIndicator(false);
+         }
+      },
+
+      _isOpened: function(config) {
+         var index = this._getItemIndex(config.id);
+         if (index < 0) {
+            delete config.id;
+         }
+         return !!config.id;
+      },
+
+      _waitPromiseHandler: function(config) {
+         if (this._isOpened(config)) {
+            this._hide(config.id);
+         }
+      },
+
+      _prepareConfig: function(config, waitPromise) {
+         if (typeof config !== 'object') {
+            config = {
+               message: config
+            };
+         }
+         if (!config.hasOwnProperty('overlay')) {
+            config.overlay = 'default';
+         }
+         if (!config.hasOwnProperty('id')) {
+            config.id = randomId();
+         }
+
+         if (!config.waitPromise && waitPromise) {
+            config.waitPromise = waitPromise;
+            config.waitPromise.then(this._waitPromiseHandler.bind(this, config));
+         }
+         return config;
+      },
+
+      _removeItem: function(id) {
+         var index = this._getItemIndex(id);
+         if (index > -1) {
+            this._stack.removeAt(index);
+         }
+      },
+
+      _getItemIndex: function(id) {
+         return this._stack.getIndexByValue('id', id);
+      },
+
+      _toggleIndicator: function(visible, config, force) {
+         clearTimeout(this.delayTimeout);
+         if (visible) {
+            if (force) {
+               this.isLoading = true;
+               this._updateProperties(config);
+            } else {
+               this.delayTimeout = setTimeout(function() {
+                  this.isLoading = true;
+                  this._updateProperties(config);
+                  this._forceUpdate();
+               }.bind(this), config.delay || this._delay);
+            }
+         } else {
+            this.isLoading = false;
+         }
+         this._forceUpdate();
       }
    });
-
-   module.getDefaultOptions = function() {
-      return {
-         delay: 2000
-      };
-   };
 
    return module;
 });

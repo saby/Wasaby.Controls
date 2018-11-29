@@ -1,8 +1,6 @@
-<Controls.Container.LoadingIndicator name="LoadingIndicator" message="Загрузка">
-   <ws:if data="{{isOpened() && (_options.targetTracking || _options.closeOnTargetScroll)}}">
-      <Controls.Event.Listener event="scroll" on:scroll="_scrollHandler()"/>
-   </ws:if>
-   <ws:else>
-      <div></div>
-   </ws:else>
-</Controls.Container.LoadingIndicator>
+<ws:if data="{{isOpened() && (_options.targetTracking || _options.closeOnTargetScroll)}}">
+   <Controls.Event.Listener event="scroll" on:scroll="_scrollHandler()"/>
+</ws:if>
+<ws:else>
+   <div></div>
+</ws:else>

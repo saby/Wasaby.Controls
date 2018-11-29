@@ -75,7 +75,7 @@
       "progress": "^2.0.1",
       "requirejs": "2.1.18",
       "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.18.700",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#3.18.700/feature/marsh-data",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.18.700",
       "Router": "git+https://github.com/saby/Router.git#rc-3.18.700",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",

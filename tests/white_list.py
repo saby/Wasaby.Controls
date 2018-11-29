@@ -50,3 +50,6 @@ add_text_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:135)
 icon_header_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:136)
 icon_button_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:137)
 groups_btn  # unused variable (reg/pages/vdom/vdom_toggle.py:140)
+old_float_btn  # int/pages/vdom/vdom_containers.py:170: unused variable
+old_dialog_btn  # int/pages/vdom/vdom_containers.py:171: unused variable
+old_sticky_btn  # int/pages/vdom/vdom_containers.py:172: unused variable
