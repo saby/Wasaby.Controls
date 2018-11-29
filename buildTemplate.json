@@ -11,7 +11,7 @@
 
   "minimize": false,
   "wml": false,
-  "сustomPack": false,
+  "customPack": false,
   "dependenciesGraph": false,
 
   "modules": [
