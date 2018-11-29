@@ -115,7 +115,13 @@ define('Controls/Toolbar', [
          }
       },
       _beforeUpdate: function(newOptions) {
-         _private.setPopupOptions(this, newOptions);
+         if (newOptions.keyProperty !== this._options.keyProperty ||
+            this._options.parentProperty !== newOptions.parentProperty ||
+            this._options.nodeProperty !== newOptions.nodeProperty ||
+            this._options.size !== newOptions.size ||
+            this._options.popupClassName !== newOptions.popupClassName) {
+            _private.setPopupOptions(this, newOptions);
+         }
          if (newOptions.source && newOptions.source !== this._options.source) {
             _private.loadItems(this, newOptions.source).addCallback(function() {
                this._forceUpdate();
