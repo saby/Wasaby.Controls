@@ -41,6 +41,7 @@ define('Controls/Validate/Controller',
                      onResult: self._mouseInfoboxHandler.bind(self)
                   }
                };
+
                // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
                if (self._isNewEnvironment) {
                   self._notify('openInfoBox', [cfg], { bubbling: true });
@@ -59,7 +60,7 @@ define('Controls/Validate/Controller',
             var data = self;
             self._closeId = setTimeout(function() {
                if (self._isNewEnvironment) {
-                  data._notify('closeInfoBox', [data], {bubbling: true});
+                  data._notify('closeInfoBox', [data], { bubbling: true });
                } else {
                   self._children.infoBoxOpener.close();
                }
