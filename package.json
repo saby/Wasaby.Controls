@@ -23,7 +23,7 @@
    "config": {
       "ws": "/",
       "wsModules": {
-         "File": "sbis-rmi/src/client/File",
+         "File": "node_modules/sbis-rmi/src/client/File",
          "View": "sbis3-ws/View",
          "Vdom": "sbis3-ws/Vdom",
          "Core": "sbis3-ws/Core"
