@@ -43,6 +43,5 @@ define('Controls/Filter/Button/Panel/Styles', [],
     *
     * @css @border-left_FilterPanel-history_horizontal Left border of the history block, when option orientation set to "horizontal".
     * @css @max-height_FilterPanel-expandable-block Max height of the expandable blocks in panel.
-    * @css @height_FilterPanel-button-expand Expand button height.
     */
 );
