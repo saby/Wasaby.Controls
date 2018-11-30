@@ -38,7 +38,8 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
-               }
+               },
+               showClickEvent: true
             };
             this._componentOptions = {
                readOnly: false,
