@@ -5,6 +5,8 @@ define('Controls/Validate/Controller',
       'Core/IoC',
       'Core/ParallelDeferred',
       'Core/Deferred',
+      'Core/helpers/isNewEnvironment',
+      'Controls/Utils/getZIndex',
       'wml!Controls/Validate/ErrorMessage',
       'css!Controls/Validate/ErrorMessage'
    ],
@@ -14,6 +16,8 @@ define('Controls/Validate/Controller',
       IoC,
       ParallelDeferred,
       Deferred,
+      isNewEnvironment,
+      getZIndex,
       errorMessage
    ) {
       'use strict';
@@ -26,7 +30,7 @@ define('Controls/Validate/Controller',
          openInfoBox: function(self) {
             if (self._validationResult && self._validationResult.length && !self._isOpened) {
                self._isOpened = true;
-               self._notify('openInfoBox', [{
+               var cfg = {
                   target: self._container,
                   style: 'error',
                   showDelay: 0,
@@ -36,7 +40,16 @@ define('Controls/Validate/Controller',
                   eventHandlers: {
                      onResult: self._mouseInfoboxHandler.bind(self)
                   }
-               }], { bubbling: true });
+               };
+
+               // todo https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+               if (self._isNewEnvironment) {
+                  self._notify('openInfoBox', [cfg], { bubbling: true });
+               } else {
+                  // To place zIndex in the old environment
+                  cfg.zIndex = getZIndex(self._children.infoBoxOpener);
+                  self._children.infoBoxOpener.open(cfg);
+               }
             }
          },
 
@@ -46,7 +59,11 @@ define('Controls/Validate/Controller',
          closeInfoBox: function(self) {
             var data = self;
             self._closeId = setTimeout(function() {
-               data._notify('closeInfoBox', [data], { bubbling: true });
+               if (self._isNewEnvironment) {
+                  data._notify('closeInfoBox', [data], { bubbling: true });
+               } else {
+                  self._children.infoBoxOpener.close();
+               }
                data._isOpened = false;
             }, 300);
          }
@@ -55,6 +72,7 @@ define('Controls/Validate/Controller',
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
+         _isNewEnvironment: isNewEnvironment(),
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
