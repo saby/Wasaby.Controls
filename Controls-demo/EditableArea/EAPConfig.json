@@ -16,7 +16,7 @@
           },
           "style": {
             "type": "enum",
-            "title": "Edit at place display style.",
+            "title": "Editable area display style.",
             "enum": {
               "withBackground": "Background will be shown while editing."
             }

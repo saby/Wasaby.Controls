@@ -1,0 +1,1 @@
+<ws:partial template="{{template}}" scope="{{templateOptions}}" attr:class="{{stackClassName}}"/>
