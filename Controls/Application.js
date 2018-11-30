@@ -207,7 +207,9 @@ define('Controls/Application',
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
             self.product = cfg.product || constants.product;
             self.lite = cfg.lite || false;
-            self.servicesPath = cfg.servicesPath || constants.servicesPath || '/service/';
+
+            // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
+            self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = context.AppData.application;
 
