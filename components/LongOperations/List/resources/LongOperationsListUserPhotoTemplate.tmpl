@@ -1,12 +1,11 @@
 <div class="controls-LongOperationsList__user">
    <ws:if data="{{item.get('hasUserPersonInfo')}}">
-      <ws:partial template="optional!tmpl!Person/Info/Photo"
+      <ws:partial template="optional!tmpl!Person/Info"
          className="controls-LongOperationsList__user__photo"
          dataItem="{{item.get('userPersonInfo')}}"
          size="{{40}}"
          miniCardShowMode="hoverClick"
       />
-      <span class="controls-LongOperationsList__user_userNameContainer">{{item.get('userFullName')}}</span>
    </ws:if>
    <ws:else data="{{item.get('hasUserInfo')}}">
       <ws:if data="{{item.get('userPic')}}">

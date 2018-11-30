@@ -79,7 +79,10 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                         return require.defined('Person/Info/Model') ? new (require('Person/Info/Model'))({
                            rawData: {
                               PhotoID: this.get('userPhotoId'),
-                              PersonID: this.get('userPersonId')
+                              PersonID: this.get('userPersonId'),
+                              Name: this.get('userFullName'),
+                              Position: this.get('userPosition'),
+                              Department: this.get('userDepartment')
                            }
                         }) : null;
                      }
