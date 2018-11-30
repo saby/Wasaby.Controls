@@ -105,8 +105,9 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          initSelection: function(self) {
-            if (self._options.content) {
-               var input = _private.getInput(self);
+            var input = _private.getInput(self);
+
+            if (input) {
                var selection = self._selection;
                var end = self._options.viewModel.getDisplayValue().length;
                var newSelection = {
