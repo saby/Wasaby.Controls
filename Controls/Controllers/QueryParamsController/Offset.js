@@ -24,6 +24,14 @@ define('Controls/Controllers/QueryParamsController/Offset',
 
          },
 
+         getLoadedDataCount: function() {
+
+         },
+
+         getAllDataCount: function() {
+
+         },
+
          hasMoreData: function(direction) {
 
          },
