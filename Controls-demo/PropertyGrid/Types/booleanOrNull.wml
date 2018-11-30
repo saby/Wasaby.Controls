@@ -1,0 +1,6 @@
+<Controls-demo.PropertyGrid.BooleanOrNullTemplate
+        bind:value="itemValue[name]"
+        scope="{{item}}"
+        caption="{{name}}"
+        triState="{{itemValue.triState}}">
+</Controls-demo.PropertyGrid.BooleanOrNullTemplate>

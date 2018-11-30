@@ -5,7 +5,8 @@
                                data="{{_options.dataObject}}"
                                scopeObject="{{_exampleControlOptions}}"
                                name="PropertyGrid"
-                               templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"
+                               dataTemplates="{{dataTemplates}}"
+                               templateName="wml!Controls-demo/PropertyGrid/PropertyGridTemplate"
                                on:itemsChanged="_valueChangedHandler()">
         </Controls.PropertyGrid>
     </div>
