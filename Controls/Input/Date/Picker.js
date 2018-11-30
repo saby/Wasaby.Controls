@@ -64,6 +64,7 @@ define('Controls/Input/Date/Picker', [
                mask: this._options.mask,
                selectionType: 'single',
                headerType: 'input',
+               closeButtonEnabled: true,
                handlers: {
                   onChoose: this._onResultWS3.bind(this)
                }
