@@ -81,7 +81,6 @@ define('SBIS3.CONTROLS/LongOperations/List/resources/model',
                               PhotoID: this.get('userPhotoId'),
                               PersonID: this.get('userPersonId'),
                               Name: this.get('userFullName'),
-                              Position: this.get('userPosition'),
                               Department: this.get('userDepartment')
                            }
                         }) : null;

@@ -67,7 +67,6 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
          userLastName: 'string',
          userPersonId: 'string',
          userPhotoId: ['string', 'number'],
-         userPosition: 'string',
          userDepartment: 'string',
          userPic: 'string',
          resultChecker: 'string',
@@ -131,8 +130,6 @@ define('SBIS3.CONTROLS/LongOperations/Entry',
           * @param {string}        [options.user.personId] Идентификатор персоны пользователя - альтернативно
           * @param {string}        [options.userPhotoId] Идентификатор фотографии пользователя (опционально)
           * @param {string}        [options.user.photoId] Идентификатор фотографии пользователя - альтернативно
-          * @param {string}        [options.userPosition] Должность пользователя (опционально)
-          * @param {string}        [options.user.position] Должность пользователя - альтернативно
           * @param {string}        [options.userD] Подразделение/отдел пользователя (опционально)
           * @param {string}        [options.user.department] Подразделение/отдел пользователя - альтернативно
           * @param {string}        [options.userPic] Урл изображения, если применимо к данной операции (опционально)
