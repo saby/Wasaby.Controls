@@ -63,7 +63,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             // In order to hide a browser tooltip (something like "Please fill out this field.") title attribute must be
             // set to empty string in  IE. But this method doesn't work if input is inside a <form> element,
             // so if someone wants to use forms they should specify a tooltip.
-            return hasHorizontalScroll ? text : tooltip || '';
+            return hasHorizontalScroll ? text : '';
          },
 
          /**

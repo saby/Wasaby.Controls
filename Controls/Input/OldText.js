@@ -1,10 +1,17 @@
-define('Controls/Input/Text',
+define('Controls/Input/OldText',
    [
-      'Controls/Input/Base',
+      'Core/Control',
+      'Controls/Utils/tmplNotify',
+      'wml!Controls/Input/OldText/OldText',
       'WS.Data/Type/descriptor',
-      'Controls/Input/Text/ViewModel'
+      'Controls/Input/OldText/OldViewModel',
+      'Controls/Input/resources/InputHelper',
+
+      'css!theme?Controls/Input/resources/InputRender/InputRender',
+      'wml!Controls/Input/resources/input'
    ],
-   function(Base, descriptor, ViewModel) {
+   function(Control, tmplNotify, template, types, TextViewModel, inputHelper) {
+
       'use strict';
 
       /**
@@ -21,7 +28,7 @@ define('Controls/Input/Text',
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        *
-       * @public
+       * @private
        * @demo Controls-demo/Input/Text/TextPG
        *
        * @author Колесова П.С.
@@ -80,79 +87,77 @@ define('Controls/Input/Text',
        * </pre>
        */
 
-      var Text = Base.extend({
-         _getViewModelOptions: function(options) {
-            return {
+      var TextBox = Control.extend({
+         _template: template,
+         _caretPosition: null,
+
+         _beforeMount: function(options) {
+            this._textViewModel = new TextViewModel({
+               constraint: options.constraint,
                maxLength: options.maxLength,
-               constraint: options.constraint
-            };
+               value: options.value
+            });
+
+            /**
+             * Browsers use autocomplete to the fields with the previously stored name.
+             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+             * To avoid this, we will translate the name of the control to the name of the tag.
+             * https://habr.com/company/mailru/blog/301840/
+             */
+            this._inputName = options.name || 'input';
          },
 
-         _getViewModelConstructor: function() {
-            return ViewModel;
+         _beforeUpdate: function(newOptions) {
+            this._textViewModel.updateOptions({
+               constraint: newOptions.constraint,
+               maxLength: newOptions.maxLength,
+               value: newOptions.value
+            });
          },
 
-         _clickHandler: function() {
-            Text.superclass._clickHandler.apply(this, arguments);
-
-            if (this._options.selectOnClick && this._firstClick) {
-               this._viewModel.select();
-               this._firstClick = false;
+         _afterUpdate: function(oldOptions) {
+            if ((oldOptions.value !== this._options.value) && this._caretPosition) {
+               this._children[this._inputName].setSelectionRange(this._caretPosition, this._caretPosition);
+               this._caretPosition = null;
             }
          },
 
-         _focusInHandler: function() {
-            if (this._focusByMouseDown) {
-               this._firstClick = true;
-            } else {
-               this._viewModel.select();
-            }
-
-            this._focusByMouseDown = false;
-
-            Text.superclass._focusInHandler.apply(this, arguments);
-         },
-
-         _mouseDownHandler: function() {
-            if (this._getActiveElement() !== this._getField()) {
-               this._focusByMouseDown = true;
-            }
-         },
-
-         _changeHandler: function() {
+         _inputCompletedHandler: function() {
+            // Если стоит опция trim, то перед завершением удалим лишние пробелы и ещё раз стрельнем valueChanged
             if (this._options.trim) {
-               var trimmedValue = this._viewModel.displayValue.trim();
-
-               if (trimmedValue !== this._viewModel.displayValue) {
-                  this._viewModel.displayValue = trimmedValue;
-                  this._notifyValueChanged();
+               var newValue = this._options.value.trim();
+               if (newValue !== this._options.value) {
+                  this._notify('valueChanged', [newValue]);
                }
             }
 
-            Text.superclass._changeHandler.apply(this, arguments);
+            this._notify('inputCompleted', [this._options.value]);
+         },
+         _notifyHandler: tmplNotify,
+         paste: function(text) {
+            this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children[this._inputName], text);
          }
       });
 
-      Text.getDefaultOptions = function() {
-         var defaultOptions = Base.getDefaultOptions();
-
-         defaultOptions.value = '';
-         defaultOptions.trim = false;
-         defaultOptions.selectOnClick = false;
-
-         return defaultOptions;
+      TextBox.getDefaultOptions = function() {
+         return {
+            value: '',
+            trim: false,
+            selectOnClick: false
+         };
       };
 
-      Text.getDefaultTypes = function() {
-         var optionTypes = Base.getDefaultTypes();
+      TextBox.getOptionTypes = function() {
+         return {
+            trim: types(Boolean),
+            selectOnClick: types(Boolean),
 
-         optionTypes.trim = descriptor(Boolean);
-         optionTypes.maxLength = descriptor(Number);
-         optionTypes.constraint = descriptor(String);
-         optionTypes.selectOnClick = descriptor(Boolean);
-
-         return optionTypes;
+            /*placeholder: types(String), вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
+            constraint: types(String),
+            value: types(String),
+            maxLength: types(Number)
+         };
       };
 
-      return Text;
+      return TextBox;
    });
