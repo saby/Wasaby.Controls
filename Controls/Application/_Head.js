@@ -54,10 +54,17 @@ define('Controls/Application/_Head',
          },
          _beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
+            this.reqCBArray = ThemesController.getInstance().getReqCbArray();
             this.themedCss = csses.themedCss;
             this.simpleCss = csses.simpleCss;
             this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
+         },
+         _afterUpdate: function() {
+            for(var i = 0; i < this.reqCBArray.length; i++) {
+               this.reqCBArray[i].call();
+            }
+            this.reqCBArray = null;
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);
