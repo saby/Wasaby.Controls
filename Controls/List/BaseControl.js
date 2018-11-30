@@ -35,6 +35,12 @@ define('Controls/List/BaseControl', [
 ) {
    'use strict';
 
+   //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
+   //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+   var
+      defaultSelectedKeys = [],
+      defaultExcludedKeys = [];
+
    var _private = {
       reload: function(self, filter, userCallback, userErrback) {
          var
@@ -819,8 +825,8 @@ define('Controls/List/BaseControl', [
          uniqueKeys: true,
          multiSelectVisibility: 'hidden',
          style: 'default',
-         selectedKeys: [],
-         excludedKeys: []
+         selectedKeys: defaultSelectedKeys,
+         excludedKeys: defaultExcludedKeys
       };
    };
    return BaseControl;
