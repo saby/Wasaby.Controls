@@ -61,7 +61,7 @@ define('Controls/Application/_Head',
             this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
          },
          _afterUpdate: function() {
-            for(var i = 0; i < this.reqCBArray.length; i++) {
+            for (var i = 0; i < this.reqCBArray.length; i++) {
                this.reqCBArray[i].call();
             }
             this.reqCBArray = null;
