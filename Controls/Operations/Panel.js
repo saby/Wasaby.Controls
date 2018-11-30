@@ -1,8 +1,48 @@
 define('Controls/Operations/Panel', [
    'Core/Control',
-   'wml!Controls/Operations/Panel/Panel'
-], function(Control, template) {
+   'wml!Controls/Operations/Panel/Panel',
+   'wml!Controls/Operations/Panel/ItemTemplate',
+   'WS.Data/Source/Memory',
+   'Controls/Operations/Panel/Utils',
+   'css!theme?Controls/Operations/Panel/Panel'
+], function(
+   Control,
+   template,
+   ItemTemplate,
+   Memory,
+   WidthUtils
+) {
    'use strict';
+
+   var _private = {
+      recalculateToolbarItems: function(self, items, toolbarWidth) {
+         if (items) {
+            self._toolbarSource = new Memory({
+               idProperty: self._options.keyProperty,
+               data: WidthUtils.fillItemsType(self._options.keyProperty, self._options.parentProperty, items, toolbarWidth).getRawData()
+            });
+            self._forceUpdate();
+         }
+      },
+      checkToolbarWidth: function(self) {
+         var newWidth = self._children.toolbarBlock.clientWidth;
+         if (self._oldToolbarWidth !== newWidth) {
+            self._oldToolbarWidth = newWidth;
+            _private.recalculateToolbarItems(self, self._items, newWidth);
+         }
+      },
+      loadData: function(self, source) {
+         var result;
+         if (source) {
+            result = source.query().addCallback(function(dataSet) {
+               self._items = dataSet.getAll();
+               return self._items;
+            });
+         }
+         return result;
+      }
+   };
+
 
    /**
     * Control for grouping operations.
@@ -13,7 +53,6 @@ define('Controls/Operations/Panel', [
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/List/interface/IHierarchy
-    * @mixes Controls/interface/IExpandable
     * @control
     * @public
     * @author Зайцев А.С.
@@ -27,23 +66,11 @@ define('Controls/Operations/Panel', [
     */
 
    /**
-    * @name Controls/Operations/Panel#multiSelectorVisibility
-    * @cfg {Boolean} Show the block with the operations of the mark.
-    * @remark
-    * Mark operations allow you to select, deselect, or invert the selection in the entire list.
-    * @example
-    * Hide the block with the operations of the mark:
-    * <pre>
-    *    <Controls.Operations.Panel multiSelectorVisibility="{{false}}" />
-    * </pre>
-    */
-
-   /**
     * @name Controls/Operations/Panel#rightTemplate
     * @cfg {Function} Template displayed on the right side of the panel.
     * @example
     * <pre>
-    *    <Controls.Operations.Panel rightTemplate="tmpl!MyModule/OperationsPanelRightTemplate" />
+    *    <Controls.Operations.Panel rightTemplate="wml!MyModule/OperationsPanelRightTemplate" />
     * </pre>
     */
 
@@ -71,7 +98,45 @@ define('Controls/Operations/Panel', [
     * </pre>
     */
 
-   return Control.extend({
-      _template: template
+   var Panel = Control.extend({
+      _template: template,
+      _oldToolbarWidth: 0,
+
+      _beforeMount: function(options) {
+         return _private.loadData(this, options.source);
+      },
+
+      _afterMount: function() {
+         _private.checkToolbarWidth(this);
+      },
+
+      _beforeUpdate: function(newOptions) {
+         var self = this;
+         if (newOptions.source !== this._options.source) {
+            _private.loadData(this, newOptions.source).addCallback(function() {
+               _private.recalculateToolbarItems(self, self._items, self._children.toolbarBlock.clientWidth);
+            });
+         }
+      },
+
+      _afterUpdate: function() {
+         _private.checkToolbarWidth(this);
+      },
+
+      _onResize: function() {
+         _private.checkToolbarWidth(this);
+      },
+
+      _toolbarItemClick: function(event, item) {
+         this._notify('itemClick', [item]);
+      }
    });
+
+   Panel.getDefaultOptions = function() {
+      return {
+         itemTemplate: ItemTemplate
+      };
+   };
+
+   return Panel;
 });

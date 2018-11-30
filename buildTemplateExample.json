@@ -71,11 +71,6 @@
     {
       "name": "tests",
       "path": "%cd%/tests"
-    },
-    {
-      "name": "File",
-      "path": "%cd%/File"
     }
-
   ]
 }

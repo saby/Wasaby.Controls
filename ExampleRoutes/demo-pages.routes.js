@@ -168,7 +168,7 @@ module.exports = function(Component) {
       '/demo-ws4-editable-area': function(req, res) {
          requirejs('Controls-demo/EditableArea/EditableAreaWithApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Controls-demo/EditAtPlace/EditableAreaWithApplication',
+            application: 'Controls-demo/EditableArea/EditableAreaWithApplication',
             initDependencies: false
          }, []);
       },
@@ -187,6 +187,15 @@ module.exports = function(Component) {
          requirejs('Controls-demo/Buttons/standartDemoButtonWithApplication');
          res.render('wml!Controls/Application/Route', {
             application: 'Controls-demo/Buttons/standartDemoButtonWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Табы
+      '/demo-ws4-tabs': function(req, res) {
+         requirejs('Controls-demo/Tabs/Buttons');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Tabs/Buttons',
             initDependencies: false
          }, []);
       },

@@ -1,6 +1,7 @@
 define('Controls/Input/Password',
    [
       'Core/Control',
+      'WS.Data/Type/descriptor',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/Password/Password',
       'Controls/Input/Password/ViewModel',
@@ -8,8 +9,7 @@ define('Controls/Input/Password',
       'css!theme?Controls/Input/Password/Password'
    ],
 
-   function(Control, tmplNotify, template, ViewModel) {
-
+   function(Control, descriptor, tmplNotify, template, ViewModel) {
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
@@ -29,6 +29,16 @@ define('Controls/Input/Password',
        * @demo Controls-demo/Input/Password/Password
        *
        * @author Журавлев М.С.
+       */
+
+      /**
+       * @name Controls/Input/Password#revealable
+       * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
+       * @variant true - Enables the reveal toggle button that will show the password in clear text.
+       * @variant false - does not do anything.
+       * @default true
+       * @remark
+       * The button does not appear in {@link readOnly read mode} or in an empty field.
        */
 
       'use strict';
@@ -68,6 +78,10 @@ define('Controls/Input/Password',
             this._passwordVisible = !this._passwordVisible;
          },
 
+         _isVisibleButton: function() {
+            return !this._options.readOnly && this._options.value && this._options.revealable;
+         },
+
          _calculateType: function() {
             return this._passwordVisible || !this._options.autocomplete ? 'text' : 'password';
          }
@@ -76,6 +90,7 @@ define('Controls/Input/Password',
       PasswordInput.getDefaultOptions = function() {
          return {
             value: '',
+            revealable: true,
             autocomplete: true,
             selectOnClick: false
          };
@@ -84,7 +99,8 @@ define('Controls/Input/Password',
       PasswordInput.getOptionTypes = function getOptionsTypes() {
          return {
 
-            /*placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
+            /* placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421 */
+            revealable: descriptor(Boolean)
          };
       };
 

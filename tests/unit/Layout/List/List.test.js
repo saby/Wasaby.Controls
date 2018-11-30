@@ -159,6 +159,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
          var listLayout = new List(listOptions);
          listLayout._beforeMount(listOptions);
          List._private.searchValueChanged(listLayout, 'Sasha');
+         assert.equal(listLayout._searchValue, 'Sasha');
          
          setTimeout(function() {
             //FIXME вернуть как будет cached source
@@ -169,6 +170,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                { id: 5, title: 'Sasha' }
                ]);
             List._private.searchValueChanged(listLayout, '');
+            assert.equal(listLayout._searchValue, '');
             setTimeout(function() {
                assert.deepEqual(listLayout._filter, {});
                assert.deepEqual(listLayout._source._$data, listSourceData);
@@ -324,7 +326,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
          
       });
    
-      it('Container/List::_private.isFilterChanged', function () {
+      it('Container/List::_private.isFilterChanged', function() {
          var listLayout = new List(listOptions);
          var context = getFilledContext();
    
@@ -333,9 +335,15 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
    
          listLayout._saveContextObject(getFilledContext());
          assert.isFalse(List._private.isFilterChanged(listLayout, context));
+   
+         listLayout._filter = getFilledContext().filterLayoutField.filter;
+         assert.isFalse(List._private.isFilterChanged(listLayout, context));
+   
+         listLayout._filter = getEmptyContext().filterLayoutField.filter;
+         assert.isTrue(List._private.isFilterChanged(listLayout, context));
       });
    
-      it('Container/List::_private.isSearchValueChanged', function () {
+      it('Container/List::_private.isSearchValueChanged', function() {
          var listLayout = new List(listOptions);
          listLayout._beforeMount(listOptions);
          var context = getFilledContext();
@@ -345,6 +353,12 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
    
          listLayout._saveContextObject(getFilledContext());
          assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
+         
+         listLayout._searchValue = getFilledContext().searchLayoutField.searchValue;
+         assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
+         
+         listLayout._searchValue = getEmptyContext().searchLayoutField.searchValue;
+         assert.isTrue(List._private.isSearchValueChanged(listLayout, getEmptyContext()));
          
       });
    

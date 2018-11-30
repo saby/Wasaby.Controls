@@ -27,10 +27,10 @@ define('Controls/interface/IEditableArea', [
     * @param {WS.Data/Entity/Record} editObject Editing record.
     * @returns {BeforeBeginEditResult}
     * @example
-    * The following example creates EditAtPlace and shows how to handle the event.
+    * The following example creates EditableArea and shows how to handle the event.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea on:beforeBeginEdit="beforeBeginEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -57,7 +57,7 @@ define('Controls/interface/IEditableArea', [
     * The following example shows how to cancel the end of the editing if certain condition is met.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -71,7 +71,7 @@ define('Controls/interface/IEditableArea', [
     * The following example shows how to handle the event asynchronously.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea on:beforeEndEdit="beforeEndEditHandler()" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
@@ -94,7 +94,7 @@ define('Controls/interface/IEditableArea', [
     * The following example shows how to hide and show an image based on the state of editing.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea on:beforeBeginEdit="beforeBeginEditHandler()" on:afterEndEdit="afterEndEditHandler()" editObject="{{_editObject}}" />
     *    <ws:if data="{{_imgVisible}}">
     *       <img src="/media/examples/frog.png" alt="Frog"/>
     *    </ws:if>
@@ -119,7 +119,7 @@ define('Controls/interface/IEditableArea', [
     * @default false
     * @example
     * <pre>
-    *    <Controls.EditAtPlace toolbarVisibility="{{true}}" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea toolbarVisibility="{{true}}" editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -130,10 +130,10 @@ define('Controls/interface/IEditableArea', [
     * @variant withBackground Background will be shown while editing.
     * @variant withoutBackground Background will not be shown while editing.
     * @remark
-    * You are not limited to these 2 styles, you can pass your own string. Then we will set class 'controls-EditableArea_isEditing_style_<your_class>' on the container of EditAtPlace and you can use it to write your own CSS.
+    * You are not limited to these 2 styles, you can pass your own string. Then we will set class 'controls-EditableArea_isEditing_style_<your_class>' on the container of EditableArea and you can use it to write your own CSS.
     * @example
     * <pre>
-    *    <Controls.EditAtPlace style="withBackground" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea style="withBackground" editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -142,7 +142,7 @@ define('Controls/interface/IEditableArea', [
     * @cfg {WS.Data/Entity/Record} Record with initial data.
     * @example
     * <pre>
-    *    <Controls.EditAtPlace editObject="{{_editObject}}" />
+    *    <Controls.EditableArea editObject="{{_editObject}}" />
     * </pre>
     * @see editObjectChanged
     */
@@ -155,7 +155,7 @@ define('Controls/interface/IEditableArea', [
     * This option is useful when you want to start editing immediately and do not want to wait for the component to mount. For example, if you want to open modal window and edit something in it, this option will help you avoid blinking.
     * @example
     * <pre>
-    *    <Controls.EditAtPlace editWhenFirstRendered="{{true}}" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea editWhenFirstRendered="{{true}}" editObject="{{_editObject}}" />
     * </pre>
     */
 
@@ -167,29 +167,29 @@ define('Controls/interface/IEditableArea', [
     * @example
     * Using Controls.EditableArea.Templates.Editors.Base:
     * <pre>
-    *     <Controls.EditAtPlace editObject="{{_editObject}}">
+    *     <Controls.EditableArea editObject="{{_editObject}}">
     *        <Controls.EditableArea.Templates.Editors.Base bind:value="content.editObject.text">
     *           <ws:editorTemplate>
     *              <Controls.Input.Text />
     *           </ws:editorTemplate>
     *        </Controls.EditableArea.Templates.Editors.Base>
-    *     </Controls.EditAtPlace>
+    *     </Controls.EditableArea>
     * </pre>
     * Using custom template:
     * <pre>
     *    <ws:template name="editingTemplate">
     *       <div class="myEditingTemplate">
-    *          <ws:if data="{{_options.isEditing}}">
-    *             <Controls.Input.Text value="{{_options.value}}" />
+    *          <ws:if data="{{isEditing}}">
+    *             <Controls.Input.Text value="{{editObject.text}}" />
     *          </ws:if>
     *          <ws:else>
-    *             <span>{{_options.value}}</span>
+    *             <span>{{editObject.text}}</span>
     *          </ws:else>
     *       </div>
     *    </ws:template>
-    *    <Controls.EditAtPlace editObject="{{_editObject}}">
-    *       <ws:partial template="editingTemplate" bind:value="content.editObject.text" />
-    *    </Controls.EditAtPlace>
+    *    <Controls.EditableArea editObject="{{_editObject}}">
+    *       <ws:partial template="editingTemplate" scope="{{content}}" />
+    *    </Controls.EditableArea>
     * </pre>
     * @see Controls/EditableArea/Templates/Editors/Base
     */
@@ -198,15 +198,15 @@ define('Controls/interface/IEditableArea', [
     * Starts editing.
     * @function Controls/interface/IEditableArea#beginEdit
     * @example
-    * The following example creates EditAtPlace and shows how to start editing.
+    * The following example creates EditableArea and shows how to start editing.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace name="editAtPlace" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea name="editableArea" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
     *    foo: function() {
-    *       this._children.editAtPlace.beginEdit();
+    *       this._children.editableArea.beginEdit();
     *    }
     * </pre>
     * @see commitEdit
@@ -217,15 +217,15 @@ define('Controls/interface/IEditableArea', [
     * Ends editing and discards changes.
     * @function Controls/interface/IEditableArea#cancelEdit
     * @example
-    * The following example creates EditAtPlace and shows how to end editing and discard changes.
+    * The following example creates EditableArea and shows how to end editing and discard changes.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace name="editAtPlace" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea name="editableArea" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
     *    foo: function() {
-    *       this._children.editAtPlace.cancelEdit();
+    *       this._children.editableArea.cancelEdit();
     *    }
     * </pre>
     * @see beginEdit
@@ -236,15 +236,15 @@ define('Controls/interface/IEditableArea', [
     * Ends editing and commits changes.
     * @function Controls/interface/IEditableArea#commitEdit
     * @example
-    * The following example creates EditAtPlace and shows how to end editing and commit changes.
+    * The following example creates EditableArea and shows how to end editing and commit changes.
     * WML:
     * <pre>
-    *    <Controls.EditAtPlace name="editAtPlace" editObject="{{_editObject}}" />
+    *    <Controls.EditableArea name="editableArea" editObject="{{_editObject}}" />
     * </pre>
     * JS:
     * <pre>
     *    foo: function() {
-    *       this._children.editAtPlace.commitEdit();
+    *       this._children.editableArea.commitEdit();
     *    }
     * </pre>
     * @see beginEdit
