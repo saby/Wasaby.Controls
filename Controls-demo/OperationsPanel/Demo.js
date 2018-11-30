@@ -4,9 +4,10 @@ define('Controls-demo/OperationsPanel/Demo', [
    'WS.Data/Source/Memory',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
+   'Controls/List/ItemActions/Helpers',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
-], function(Control, template, Memory, TreeMemory, Data) {
+], function(Control, template, Memory, TreeMemory, Data, visibilityCallback) {
    'use strict';
 
    return Control.extend({
@@ -75,20 +76,15 @@ define('Controls-demo/OperationsPanel/Demo', [
 
       _itemActionVisibilityCallback: function(action, item) {
          var
-            index = this._items.getIndex(item),
-            prevItem = this._items.at(index - 1),
-            nextItem = this._items.at(index + 1);
+            direction,
+            result = true;
 
-         switch (action.id) {
-            case 'moveUp':
-               /*У первого не показывать кнопку вверх*/
-               return prevItem && prevItem.get('Раздел@') === item.get('Раздел@') && prevItem.get('Раздел') === item.get('Раздел');
-            case 'moveDown':
-               /*У последнего не показывать кнопку вниз*/
-               return nextItem && nextItem.get('Раздел@') === item.get('Раздел@') && nextItem.get('Раздел') === item.get('Раздел');
-            default:
-               return true;
+         if (action.id === 'moveUp' || action.id === 'moveDown') {
+            direction = visibilityCallback.MOVE_DIRECTION[action.id === 'moveUp' ? 'UP' : 'DOWN'];
+            result = visibilityCallback.reorderMoveActionsVisibility(direction, item, this._items, this._parentProperty, this._nodeProperty);
          }
+
+         return result;
       },
 
       _itemActionsClick: function(event, action, item) {
