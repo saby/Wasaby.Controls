@@ -55,6 +55,11 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                };
             });
          },
+         _clickHandler: function() {
+            if (this._options.dataObject.showClickEvent === true) {
+               this.myEvent += 'click\n';
+            }
+         },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;
             this._notify('optionsChanged', [this._options]);
