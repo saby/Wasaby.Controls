@@ -134,8 +134,13 @@ define('Controls/Controllers/QueryParamsController/Position',
                   }
                } else {
                   if (!loadDirection && this._options.direction === 'both') {
-                     this._beforePosition = metaNextPostion.before;
-                     this._afterPosition = metaNextPostion.after;
+                     if (metaNextPostion.before && metaNextPostion.before instanceof Array
+                                               && metaNextPostion.after && metaNextPostion.after instanceof Array) {
+                        this._beforePosition = metaNextPostion.before;
+                        this._afterPosition = metaNextPostion.after;
+                     } else {
+                        IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties. Each properties must be Arrays');
+                     }
                   } else {
                      IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
                   }
