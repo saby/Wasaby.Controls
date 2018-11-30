@@ -6,7 +6,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
-      'Core/vdom/Synchronizer/Synchronizer',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
       'Core/Control',
       'Core/IoC',
@@ -16,7 +15,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    function(CompoundControl,
       template,
       ComponentWrapper,
-      Sync,
       SyntheticEvent,
       control,
       IoC,
@@ -56,7 +54,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                this._modifyInnerOptionsByHandlers();
 
-               require([this._options.template], function() {
+               require([this._options.template, 'Vdom/Synchronizer/Synchronizer'], function() {
                   // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;
@@ -200,6 +198,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             moduleClass.superclass.destroy.apply(this, arguments);
             this._isVDomTemplateMounted = true;
             if (this._vDomTemplate) {
+               var Sync = require('Vdom/Synchronizer/Synchronizer');
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
             }
          },
