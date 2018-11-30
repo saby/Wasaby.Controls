@@ -134,8 +134,7 @@ define('Controls/Controllers/QueryParamsController/Position',
                   }
                } else {
                   if (!loadDirection && this._options.direction === 'both') {
-                     if (metaNextPostion.before && metaNextPostion.before instanceof Array
-                                               && metaNextPostion.after && metaNextPostion.after instanceof Array) {
+                     if (metaNextPostion.before && metaNextPostion.before instanceof Array && metaNextPostion.after && metaNextPostion.after instanceof Array) {
                         this._beforePosition = metaNextPostion.before;
                         this._afterPosition = metaNextPostion.after;
                      } else {
