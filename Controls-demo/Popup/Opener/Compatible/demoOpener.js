@@ -246,7 +246,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
                            autoHide: self._autoHide,
                            enabled: self._enabled,
                            title: self._showTitle ? 'ParentTitle' : '',
-                           target: self._children.testTarget.getContainer(),
+                           target: self._children.testTarget._container,
                            showOnControlsReady: true,
                            maximized: self._maximized,
                            canMaximize: self._canMaximize

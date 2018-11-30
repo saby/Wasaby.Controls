@@ -191,7 +191,7 @@ define(
             assert.isTrue(config.closeButtonStyle === 'testStyle');
             assert.isFalse(!!config.templateOptions.caption);
             let newConfig = config;
-            newConfig.minWidth = 100;
+            newConfig.minWidth = '100';
             newConfig.maximized = false;
             newConfig.canMaximize = true;
             newConfig.maxWidth = 150;
