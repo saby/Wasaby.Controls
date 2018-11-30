@@ -63,10 +63,9 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
                selectedKey: 0
             },
             style: {
-               emptyText: 'none',
-               placeholder: 'select',
                keyProperty: 'id',
-               displayProperty: 'title'
+               displayProperty: 'title',
+               selectedKey: 0
             }
          };
 
