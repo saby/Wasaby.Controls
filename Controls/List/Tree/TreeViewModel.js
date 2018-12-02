@@ -26,14 +26,13 @@ define('Controls/List/Tree/TreeViewModel', [
                isExpanded = this.expandedItems[ItemsUtil.getPropertyValue(itemParent.getContents(), this.keyProperty)];
                if (itemParent.isRoot()) {
                   return itemParent.getOwner().isRootEnumerable() ? isExpanded : true;
-               } else if (isExpanded) {
-                  return _private.isVisibleItem.call(this, itemParent);
-               } else {
-                  return false;
                }
-            } else {
-               return true;
+               if (isExpanded) {
+                  return _private.isVisibleItem.call(this, itemParent);
+               }
+               return false;
             }
+            return true;
          },
 
          displayFilterTree: function(item, index, itemDisplay) {

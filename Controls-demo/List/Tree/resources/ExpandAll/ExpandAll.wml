@@ -1,0 +1,13 @@
+<div>
+   <Controls.Container.Scroll attr:class="Demo-ExpandAll__scroll">
+      <Controls.TreeGrid
+              source="{{_viewSource}}"
+              displayProperty="title"
+              keyProperty="id"
+              expandAll="{{true}}"
+              allowEmptySelection="{{false}}"
+              parentProperty="parent"
+              nodeProperty="type"
+              columns="{{_columns}}" />
+   </Controls.Container.Scroll>
+</div>

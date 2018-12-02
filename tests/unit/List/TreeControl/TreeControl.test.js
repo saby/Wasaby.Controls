@@ -2,17 +2,28 @@ define([
    'Controls/List/TreeControl',
    'Core/Deferred',
    'Core/core-instance',
-   'Controls/List/Tree/TreeViewModel'
+   'Controls/List/TreeGridView/TreeGridViewModel',
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Source/Memory'
 ], function(
    TreeControl,
    Deferred,
    cInstance,
-   TreeViewModel
+   TreeGridViewModel,
+   RecordSet,
+   Memory
 ) {
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function() {
          var
             treeControl = new TreeControl({}),
+            treeGridViewModel = new TreeGridViewModel({
+               columns: [],
+               items: new RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            }),
             isSourceControllerDestroyed = false;
          treeControl._children = {
             baseControl: {
@@ -22,13 +33,7 @@ define([
                   return def;
                },
                getViewModel: function() {
-                  return {
-                     setHasMoreStorage: function() {
-                     },
-                     setExpandedItems: function() {
-                        this._expandedItems = {};
-                     }
-                  };
+                  return treeGridViewModel;
                }
             }
          };
@@ -48,7 +53,17 @@ define([
             reloadCalled = false,
             setRootCalled = false,
             opts = { parentProperty: 'parent' },
-            treeControl = new TreeControl(opts);
+            treeControl = new TreeControl(opts),
+            treeGridViewModel = new TreeGridViewModel({
+               columns: [],
+               items: new RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            });
+         treeGridViewModel.setRoot = function() {
+            setRootCalled = true;
+         };
          treeControl.saveOptions(opts);
          treeControl._children = {
             baseControl: {
@@ -60,15 +75,7 @@ define([
                   return def;
                },
                getViewModel: function() {
-                  return {
-                     setHasMoreStorage: function() {},
-                     setExpandedItems: function() {
-                        this._expandedItems = {};
-                     },
-                     setRoot: function() {
-                        setRootCalled = true;
-                     }
-                  };
+                  return treeGridViewModel;
                }
             }
          };
@@ -268,14 +275,14 @@ define([
       it('All items collapsed after reload', function() {
          var
             treeControl = new TreeControl({}),
-            treeViewModel = new TreeViewModel({});
-
-         treeViewModel._expandedItems = {
-            2246: true,
-            452815: true,
-            457244: true,
-            471641: true
-         };
+            treeGridViewModel = new TreeGridViewModel({
+               expandedItems: [2246, 452815, 457244, 471641],
+               columns: [],
+               items: new RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            });
 
          treeControl._children = {
             baseControl: {
@@ -285,17 +292,54 @@ define([
                   return def;
                },
                getViewModel: function() {
-                  return {
-                     setExpandedItems: function() {
-                        treeViewModel.setExpandedItems([]);
-                     }
-                  };
+                  return treeGridViewModel;
                }
             }
          };
 
          treeControl.reload();
-         assert.deepEqual({}, treeViewModel._expandedItems);
+         assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+      });
+      it('expandAll', function() {
+         var
+            rawData = [
+               { id: 1, type: true, parent: null },
+               { id: 2, type: true, parent: null },
+               { id: 11, type: null, parent: 1 }
+            ],
+            source = new Memory({
+               rawData: rawData,
+               idProperty: 'id'
+            }),
+            cfg = {
+               source: source,
+               columns: [],
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               expandAll: true
+            },
+            treeControl = new TreeControl(cfg),
+            treeGridViewModel = new TreeGridViewModel(cfg);
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: rawData,
+            idProperty: 'id'
+         }));
+         treeControl.saveOptions(cfg);
+         treeControl._children = {
+            baseControl: {
+               reload: function() {
+                  var def = new Deferred();
+                  def.callback();
+                  return def;
+               },
+               getViewModel: function() {
+                  return treeGridViewModel;
+               }
+            }
+         };
+         treeControl._viewModelReadyCallback(treeGridViewModel);
+         assert.deepEqual({1: true, 2: true}, treeGridViewModel._model._expandedItems);
       });
    });
 });

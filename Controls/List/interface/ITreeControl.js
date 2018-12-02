@@ -29,6 +29,12 @@ define('Controls/List/interface/ITreeControl', [
    /**
     * @name Controls/List/interface/ITreeControl#expandedItems
     * @cfg {{Array.<String>}} Arrays of identifiers of expanded nodes.
+    * It is assumed that all data will be loaded initially.
+    */
+
+   /**
+    * @name Controls/List/interface/ITreeControl#expandAll
+    * @cfg {Boolean} Expand all items on data loading.
     */
 
    /**

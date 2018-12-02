@@ -189,6 +189,10 @@ define('Controls/List/ListViewModel',
             _private.updateIndexes(this);
          },
 
+         getItems: function() {
+            return ListViewModel.superclass.getItems.apply(this, arguments);
+         },
+
          _setEditingItemData: function(itemData) {
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
