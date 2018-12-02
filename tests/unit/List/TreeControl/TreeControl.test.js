@@ -339,7 +339,7 @@ define([
             }
          };
          treeControl._viewModelReadyCallback(treeGridViewModel);
-         assert.deepEqual({1: true, 2: true}, treeGridViewModel._model._expandedItems);
+         assert.deepEqual({1: true}, treeGridViewModel._model._expandedItems);
       });
    });
 });

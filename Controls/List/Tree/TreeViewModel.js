@@ -96,7 +96,7 @@ define('Controls/List/Tree/TreeViewModel', [
             if (self._options.hasChildrenProperty) {
                return !!self._items.getRecordById(key).get(self._options.hasChildrenProperty);
             }
-            return self._hierarchyRelation.getChildren(key, self._items).length;
+            return !!self._hierarchyRelation.getChildren(key, self._items).length;
          },
 
          determinePresenceChildItem: function(self) {
@@ -263,6 +263,10 @@ define('Controls/List/Tree/TreeViewModel', [
             if (this._options.expanderDisplayMode === 'adaptive') {
                _private.determinePresenceChildItem(this);
             }
+         },
+
+         hasChildItem: function(key) {
+            return _private.hasChildItem(this, key);
          },
 
          getItemDataByItem: function(dispItem) {

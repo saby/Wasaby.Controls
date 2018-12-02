@@ -28,12 +28,13 @@ define('Controls/List/TreeControl', [
          listViewModel.toggleExpanded(dispItem);
          self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
       },
-      prepareExpandedItems: function(nodeProperty, items) {
+      prepareExpandedItems: function(nodeProperty, viewModel) {
          var
-            expandedItems = [];
+            expandedItems = [],
+            items = viewModel.getItems();
          if (items) {
             items.each(function(item) {
-               if (item.get(nodeProperty) === true) {
+               if (item.get(nodeProperty) === true && viewModel.hasChildItem(item.getId())) {
                   expandedItems.push(item.getId());
                }
             });
@@ -131,7 +132,7 @@ define('Controls/List/TreeControl', [
          var expandedItems;
          viewModel.subscribe('onNodeRemoved', this._onNodeRemovedFn);
          if (this._options.expandAll) {
-            expandedItems = _private.prepareExpandedItems(this._options.nodeProperty, viewModel.getItems());
+            expandedItems = _private.prepareExpandedItems(this._options.nodeProperty, viewModel);
          } else {
             expandedItems = this._options.expandedItems;
          }
@@ -193,7 +194,7 @@ define('Controls/List/TreeControl', [
                viewModel = self._children.baseControl.getViewModel(),
                newExpandedItems = [];
             if (self._options.expandAll) {
-               newExpandedItems = _private.prepareExpandedItems(self._options.nodeProperty, viewModel.getItems());
+               newExpandedItems = _private.prepareExpandedItems(self._options.nodeProperty, viewModel);
             }
             viewModel.setExpandedItems(newExpandedItems);
          });

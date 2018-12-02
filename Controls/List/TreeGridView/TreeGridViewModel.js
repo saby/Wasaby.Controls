@@ -28,6 +28,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          setRoot: function(root) {
             this._model.setRoot(root);
          },
+         hasChildItem: function(key) {
+            return this._model.hasChildItem(key);
+         },
          getCurrent: function() {
             var
                current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
