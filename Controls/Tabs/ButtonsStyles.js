@@ -19,7 +19,7 @@ define('Controls/Tabs/ButtonsStyles',
     * @css @font-size_Tabs-item Font size of tabs item text.
     * @css @font-size_Tabs-item_selected Font size of tabs item in selected state text.
     * @css @max-width_Tabs_item Maximum width of tabs item.
-    * @css @border-width_Tabs-item_hover_selected Thickness of line under tabs items.
+    * @css @border-width_Tabs-item_selected Thickness of line under tabs items in selected state.
     *
     * @css @border-color_Tabs Border color of line under tabs items.
     * @css @background-color_Tabs-separator Color of tabs items separator.

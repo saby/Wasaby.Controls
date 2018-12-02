@@ -80,9 +80,11 @@
 }
 .controls-Tabs__item_state_default {
   .user-select();
-  &:hover {
+}
+.ws-is-no-touch {
+  .controls-Tabs__item_state_default:hover {
     &:after {
-      height: @border-width_Tabs-item_hover_selected;
+      height: @border-width_Tabs-item_selected;
     }
     z-index: 1;
   }
@@ -105,7 +107,7 @@
 /* style = default */
 .controls-Tabs_style_primary__item_state_selected {
   &:after {
-    height: @border-width_Tabs-item_hover_selected;
+    height: @border-width_Tabs-item_selected;
     background: @border-color_Tabs-item_selected_primary;
   }
   color: @text-color_Tabs-item_selected_primary;
@@ -113,7 +115,7 @@
 /* style = additional */
 .controls-Tabs_style_secondary__item_state_selected {
   &:after {
-    height: @border-width_Tabs-item_hover_selected;
+    height: @border-width_Tabs-item_selected;
     background: @border-color_Tabs-item_selected_secondary;
   }
   color: @text-color_Tabs-item_selected_secondary;
