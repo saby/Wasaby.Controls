@@ -19,6 +19,7 @@ define('Controls/Controllers/_SearchController',
                   self._search = new requireRes[0]({
                      source: self._options.source,
                      filter: self._options.filter,
+                     sorting: self._options.sorting,
                      navigation: self._options.navigation,
                      searchDelay: self._options.searchDelay
                   });

@@ -1,16 +1,16 @@
 .controls-Notification {
-  border-style: solid;
-  border-width: @border-width_NotificationBase;
-  box-shadow: @box-shadow_NotificationBase;
+  border-top-style: solid;
+  border-top-width: @border-width_NotificationBase;
+  box-shadow: @size_NotificationBase-shadow @color_NotificationBase-shadow;
   position: relative;
   min-height: @min-height_NotificationBase;
   min-width: @min-width_NotificationBase;
-  margin: @spacing_NotificationBase-between-notifications;
+  margin: 0 @spacing_NotificationBase-between-notifications-right @spacing_NotificationBase-between-notifications-bottom 0;
   background-color: @background-color_NotificationBase;
 }
 
 .controls-Notification__error {
-  border-color: @border-color_NotificationBase_error;
+  border-color: @border-color_NotificationBase_danger;
 }
 
 .controls-Notification__primary {
@@ -26,13 +26,13 @@
 }
 
 .controls-Notification__content {
-  padding: @padding_NotificationBase-content;
+  padding: @spacing_NotificationBase-between-content-border;
 }
 
 .controls-Notification__closeButton {
   position: absolute;
-  top: @top_NotificationBase-closeButton;
-  right: @right_NotificationBase-closeButton;
+  top: @spacing_NotificationBase-between-closeButton-border-top;
+  right: @spacing_NotificationBase-between-closeButton-border-right;
   z-index: 1;
 }
 
@@ -50,5 +50,5 @@
 }
 
 .controls-Notification__content-spacing {
-   margin-right: @width_CloseButton_small;
+   margin-right: @width_NotificationBase-close-button;
 }

@@ -12,6 +12,7 @@
                     source="{{_options.source}}"
                     minSearchLength="{{_options.autoDropDown ? 0 : _options.minSearchLength}}"
                     navigation="{{_options.navigation}}"
+                    sorting="{{_options.sorting}}"
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
                     searchDelay="{{_searchDelay}}"
