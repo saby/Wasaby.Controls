@@ -1,6 +1,7 @@
 define('Controls/Input/Base',
    [
       'Core/Control',
+      'Core/EventBus',
       'Core/detection',
       'Core/constants',
       'WS.Data/Type/descriptor',
@@ -18,7 +19,7 @@ define('Controls/Input/Base',
       'css!Controls/Input/Base/Base'
    ],
    function(
-      Control, detection, constants, descriptor, tmplNotify, isEqual,
+      Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
       getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
       fieldTemplate, readOnlyFieldTemplate
    ) {
@@ -92,7 +93,7 @@ define('Controls/Input/Base',
                 * After calling setSelectionRange the select event is triggered and saved the selection in model.
                 * You do not need to do this because the model is now the actual selection.
                 */
-               self._skipSavingSelectionOnce = true;
+               self._numberSkippedSaveSelection++;
                field.setSelectionRange(selection.start, selection.end);
             }
          },
@@ -246,6 +247,38 @@ define('Controls/Input/Base',
             if (!self._options.readOnly) {
                callback(_private.getField(self));
             }
+         },
+
+         /**
+          * @param {Controls/Input/Base/Types/SplitValue.typedef} data
+          * @param {String} displayValue Values in the field before changing it.
+          */
+         adjustDataForFastInput: function(data, displayValue) {
+            /**
+             * The inserted value and the value after and the length of deleted value will be correct.
+             */
+
+            /**
+             * In the displayValue value none inserted value.
+             * Therefore it consists of a value before and deleted value and a value after.
+             * Cut the displayValue value to so that it does not contain the value after.
+             */
+            data.before = displayValue.substring(0, displayValue.length - data.after.length);
+
+            var removalLength = data.delete.length;
+            var lengthSplitBefore = data.before.length;
+
+            /**
+             * Because the length of the deleted value is correct and it is at the end of the value before,
+             * you can determine the value to be deleted. It will be equal to the substring of the length
+             * of the deleted value taken from the end.
+             */
+            data.delete = data.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
+
+            /**
+             * Cut the value to so that it does not contain the value to be deleted.
+             */
+            data.before = data.before.substring(0, lengthSplitBefore - removalLength);
          }
       };
 
@@ -318,10 +351,10 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          /**
-          * @type {Boolean} Determines whether to skip once save the current field selection to the model.
-          * @protected
+          * @type {Number} The number of skipped save the current field selection to the model.
+          * @private
           */
-         _skipSavingSelectionOnce: false,
+         _numberSkippedSaveSelection: 0,
 
          /**
           * @type {Controls/Utils/getTextWidth}
@@ -346,6 +379,12 @@ define('Controls/Input/Base',
           * @private
           */
          _isMobileAndroid: detection.isMobileAndroid,
+
+         /**
+          * @type {Boolean} Determines whether the control is building in the mobile IOS environment.
+          * @private
+          */
+         _isMobileIOS: detection.isMobileIOS,
 
          /**
           *
@@ -438,8 +477,8 @@ define('Controls/Input/Base',
           * @private
           */
          _selectHandler: function() {
-            if (this._skipSavingSelectionOnce) {
-               this._skipSavingSelectionOnce = false;
+            if (this._numberSkippedSaveSelection > 0) {
+               this._numberSkippedSaveSelection--;
             } else {
                this._viewModel.selection = this._getFieldSelection();
             }
@@ -458,6 +497,21 @@ define('Controls/Input/Base',
                selection, event.nativeEvent.inputType
             );
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
+
+            /**
+             * If the user works quickly with a field, the input event fires several times from
+             * the last synchronization cycle to the next. Due to the fact that the field always displays
+             * the value of the option value, after the second time in the field will be incorrect value.
+             * Therefore, the split Value too will be incorrect.
+             * Example: The field displays 1. The user enters 2 and 3 quickly.
+             * field 1 -> entered 2 -> field 12 -> update by option and notify the parent that value 12 ->
+             * field 1 -> entered 3 -> field 13(expected 123) -> update by option and notify the parent that value 13 ->
+             * synchronization cycle -> field 13(the error should be 123).
+             * For such situations to be handled correctly, we need to adjust the data.
+             */
+            if (value !== model.displayValue) {
+               _private.adjustDataForFastInput(splitValue, model.displayValue);
+            }
 
             _private.handleInput(this, splitValue, inputType);
 
@@ -488,6 +542,12 @@ define('Controls/Input/Base',
             }
          },
 
+         _focusInHandler: function() {
+            if (this._isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocus');
+            }
+         },
+
          /**
           * Event handler focus out in native field.
           * @protected
@@ -499,6 +559,22 @@ define('Controls/Input/Base',
              * IE, Firefox does not scrolled. So we do it ourselves.
              */
             this._getField().scrollLeft = 0;
+
+            if (this._isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInputFocusOut');
+            }
+         },
+
+         _mouseDownHandler: function() {
+            /* override */
+         },
+
+         _notifyValueChanged: function() {
+            _private.notifyValueChanged(this);
+         },
+
+         _notifyInputCompleted: function() {
+            _private.notifyInputCompleted(this);
          },
 
          /**
@@ -508,6 +584,10 @@ define('Controls/Input/Base',
           */
          _getField: function() {
             return this._children[this._fieldName];
+         },
+
+         _getReadOnlyField: function() {
+            return this._children.readOnlyField;
          },
 
          /**
@@ -550,7 +630,8 @@ define('Controls/Input/Base',
           * @private
           */
          _getTooltip: function() {
-            var hasFieldHorizontalScroll = this._hasHorizontalScroll(this._getField());
+            var valueDisplayElement = this._getField() || this._getReadOnlyField();
+            var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : '';
          },

@@ -13,7 +13,7 @@ define('Controls/Application',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'Controls/Application/HeadDataContext',
-      'Controls/Application/LinkResolver',
+      'Core/LinkResolver/LinkResolver',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
       'css!theme?Controls/Application/Application'
