@@ -643,7 +643,6 @@ node('controls') {
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
-				echo "ЛОГИ ЕСТЬ. АРТИФАКТА НЕТ"
                 sh """
                 7za a log_jinnee -t7z ${workspace}/jinnee/logs
                 """
