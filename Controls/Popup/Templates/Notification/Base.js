@@ -66,12 +66,16 @@ define('Controls/Popup/Templates/Notification/Base',
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#autoClose
- * @cfg {Integer} Close by timeout after open.
+ * @cfg {Number} Close by timeout after open.
  */
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#style
  * @cfg {String} Notification display style.
+ * @variant warning
+ * @variant primary
+ * @variant done
+ * @variant error
  */
 
 /**
@@ -81,5 +85,5 @@ define('Controls/Popup/Templates/Notification/Base',
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#contentTemplate
- * @cfg {String} Main content.
+ * @cfg {function|String} Main content.
  */
