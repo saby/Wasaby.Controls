@@ -1,10 +1,9 @@
 
 <div class="custom_space_template">
-    <span class="custom_space_text">you are not prepared</span>
+    <span class="custom_space_text">there may be your custom content</span>
     <div class="content_tab_margin">
-        textBox was here
-    </div>
-    <div class="content_tab_margin">
-        Button was here
+        <Controls.Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Save" style="linkMain"/>
+        <Controls.Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Author" style="linkMain"/>
+        <Controls.Button attr:style="margin-right: 10px" readOnly="{{false}}" icon="icon-16 icon-Erase" style="linkMain"/>
     </div>
 </div>

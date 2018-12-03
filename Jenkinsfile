@@ -53,6 +53,10 @@ echo "Генерируем параметры"
                 description: '',
                 name: 'branch_navigation'),
             string(
+                defaultValue: '',
+                description: '',
+                name: 'branch_themes'),
+            string(
                 defaultValue: "",
                 description: '',
                 name: 'branch_atf'),
@@ -108,7 +112,7 @@ node('controls') {
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_file:${workspace}/controls, controls_theme:${workspace}/controls"
+        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_theme:${workspace}/controls"
         def run_test_fail = ""
         def branch_atf
         if (params.branch_atf) {
@@ -121,6 +125,12 @@ node('controls') {
             branch_engine = params.branch_engine
         } else {
             branch_engine = props["engine"]
+        }
+        def branch_themes
+        if (params.branch_themes) {
+            branch_themes = params.branch_themes
+        } else {
+            branch_themes = props["themes"]
         }
         def branch_navigation
         if (params.branch_navigation) {
@@ -279,6 +289,23 @@ node('controls') {
                             userRemoteConfigs: [[
                                 credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                 url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
+                        ])
+                    }
+                },
+                checkout4: {
+                    dir(workspace) {
+                        echo "Выкачиваем themes"
+                        checkout([$class: 'GitSCM',
+                        branches: [[name: branch_themes]],
+                        doGenerateSubmoduleConfigurations: false,
+                        extensions: [[
+                            $class: 'RelativeTargetDirectory',
+                            relativeTargetDir: "themes"
+                            ]],
+                            submoduleCfg: [],
+                            userRemoteConfigs: [[
+                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                url: 'git@git.sbis.ru:retail/themes.git']]
                         ])
                     }
                 }
@@ -614,13 +641,15 @@ node('controls') {
     }
     if ( regr || inte || all_inte){
         dir(workspace){
-            def exists_jinnee_logs = fileExists '/jinnee/logs'
+            def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
                 sh """
                 7za a log_jinnee -t7z ${workspace}/jinnee/logs
                 """
                 archiveArtifacts allowEmptyArchive: true, artifacts: '**/log_jinnee.7z', caseSensitive: false
             }
+
+
             sh "mkdir logs_ps"
             if ( exists_dir ){
                 dir('/home/sbis/Controls'){

@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="EditAtPlace">
+<Controls.Application.ApplicationWrapper caption="Editable List">
    <ws:content>
       <Controls-demo.List.EditInPlace.Scenarios/>
    </ws:content>

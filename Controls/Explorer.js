@@ -138,6 +138,9 @@ define('Controls/Explorer', [
       commitEdit: function() {
          return this._children.treeControl.commitEdit();
       },
+      reload: function(filter) {
+         return this._children.treeControl.reload(filter);
+      },
       _notifyHandler: tmplNotify
    });
 

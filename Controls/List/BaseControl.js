@@ -15,7 +15,7 @@ define('Controls/List/BaseControl', [
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
-
+   'wml!Controls/List/BaseControl/Footer',
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(
    Control,
@@ -36,6 +36,12 @@ define('Controls/List/BaseControl', [
    tmplNotify
 ) {
    'use strict';
+
+   //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
+   //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+   var
+      defaultSelectedKeys = [],
+      defaultExcludedKeys = [];
 
    var _private = {
       reload: function(self, filter, userCallback, userErrback) {
@@ -60,6 +66,7 @@ define('Controls/List/BaseControl', [
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
+               _private.prepareFooter(self, self._options.navigation, self._sourceController);
 
                _private.handleListScroll(self, 0);
                resDeferred.callback(list);
@@ -77,6 +84,17 @@ define('Controls/List/BaseControl', [
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
          return resDeferred;
+      },
+
+      prepareFooter: function(self, navigation, sourceController) {
+         self._shouldDrawFooter = navigation && navigation.view === 'demand' && sourceController.hasMoreData('down');
+         if (self._shouldDrawFooter) {
+            if (typeof self._sourceController.getLoadedDataCount() !== 'undefined' && self._sourceController.getAllDataCount()) {
+               self._loadMoreCaption = self._sourceController.getAllDataCount() - self._sourceController.getLoadedDataCount();
+            } else {
+               self._loadMoreCaption = '...';
+            }
+         }
       },
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
@@ -105,6 +123,8 @@ define('Controls/List/BaseControl', [
                if (!addedItems.getCount()) {
                   _private.checkLoadToDirectionCapability(self);
                }
+
+               _private.prepareFooter(self, self._options.navigation, self._sourceController);
 
                return addedItems;
 
@@ -161,11 +181,15 @@ define('Controls/List/BaseControl', [
          self._loadTriggerVisibility[direction] = false;
       },
 
+      loadToDirectionIfNeed: function(self, direction) {
+         if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
+            _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
+         }
+      },
+
       onScrollLoadEdge: function(self, direction) {
          if (self._options.navigation && self._options.navigation.view === 'infinity') {
-            if (self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
-               _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
-            }
+            _private.loadToDirectionIfNeed(self, direction);
          }
       },
 
@@ -392,7 +416,7 @@ define('Controls/List/BaseControl', [
          self._popupOptions = {
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
-            horizontalAlign: { side: 'left' },
+            horizontalAlign: { side: 'right' },
             eventHandlers: {
                onResult: self._closeActionsMenu,
                onClose: self._closeActionsMenu
@@ -454,6 +478,9 @@ define('Controls/List/BaseControl', [
       _listViewModel: null,
       _viewModelConstructor: null,
 
+      _loadMoreCaption: null,
+      _shouldDrawFooter: false,
+
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
@@ -514,6 +541,7 @@ define('Controls/List/BaseControl', [
                   self._sourceController.calculateState(receivedState);
                   self._listViewModel.setItems(receivedState);
                   self._items = receivedState;
+                  _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
                   return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
                }
@@ -541,7 +569,8 @@ define('Controls/List/BaseControl', [
 
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
-         var sourceChanged = newOptions.source !== this._options.source;
+         var recreateSource = newOptions.source !== this._options.source ||
+             !isEqualObject(newOptions.navigation, this._options.navigation);
 
          if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -556,7 +585,7 @@ define('Controls/List/BaseControl', [
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
-         if (sourceChanged) {
+         if (recreateSource) {
             if (this._sourceController) {
                this._sourceController.destroy();
             }
@@ -571,7 +600,7 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
 
-         if (filterChanged || sourceChanged) {
+         if (filterChanged || recreateSource) {
             _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
          }
       },
@@ -767,6 +796,10 @@ define('Controls/List/BaseControl', [
          }
       },
 
+      _onLoadMoreClick: function() {
+         _private.loadToDirectionIfNeed(this, 'down');
+      },
+
       _dragStart: function(event, dragObject) {
          this._listViewModel.setDragEntity(dragObject.entity);
          this._listViewModel.setDragItemData(this._itemDragData);
@@ -850,8 +883,8 @@ define('Controls/List/BaseControl', [
          uniqueKeys: true,
          multiSelectVisibility: 'hidden',
          style: 'default',
-         selectedKeys: [],
-         excludedKeys: []
+         selectedKeys: defaultSelectedKeys,
+         excludedKeys: defaultExcludedKeys
       };
    };
    return BaseControl;

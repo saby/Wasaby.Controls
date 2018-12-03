@@ -8,7 +8,7 @@
    </div>
    <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}"
                     attr:id="Back" caption="Назад"
-                    style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+                    viewMode="link" style="secondary" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
 
    <Controls.Container.Scroll attr:class="ControlsDemo-Page_scrollContainer">
       <Router.Route mask="app/:app">

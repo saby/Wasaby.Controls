@@ -274,7 +274,7 @@ define('Controls/List/Tree/TreeViewModel', [
             current.nodeProperty = this._options.nodeProperty;
             current.expanderDisplayMode = this._options.expanderDisplayMode;
             current.thereIsChildItem = this._thereIsChildItem;
-            current.hasChildItem = _private.hasChildItem(this, current.key);
+            current.hasChildItem = !current.isGroup && _private.hasChildItem(this, current.key);
             current.shouldDrawExpander = _private.shouldDrawExpander;
             current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
             current.prepareExpanderClasses = _private.prepareExpanderClasses;

@@ -12,6 +12,7 @@ define('Controls/List/interface/IListControl', [
    /**
     * @name Controls/List/interface/IListControl#contextMenuEnabled
     * @cfg {Boolean} Determines whether context menu should be shown on right-click.
+    * @default true
     */
 
    /**

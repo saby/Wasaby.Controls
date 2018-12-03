@@ -444,6 +444,30 @@ define(
                assert.isTrue(position.bottom === 0);
             });
 
+            it('stack shadow', function(){
+               let baseGetItemPosition = StackController._private.getItemPosition;
+               StackController._private.getItemPosition = (items) => {
+                  return (items.position)
+               };
+               StackController._stack.add({containerWidth: 840, popupOptions: {stackClassName: ''}});
+               StackController._stack.add({position: {width: 720}, popupOptions: {stackClassName: ''}});
+               StackController._stack.add({containerWidth: 600, popupOptions: {stackClassName: ''}});
+               StackController._stack.add({position: {width: 600}, popupOptions: {stackClassName: ''}});
+               StackController._stack.add({position: {width: 840}, popupOptions: {stackClassName: ''}});
+               StackController._stack.add({containerWidth: 500, popupOptions: {stackClassName: ''}});
+               StackController._stack.add({containerWidth: 720, popupOptions: {stackClassName: ''}});
+               StackController._update();
+               assert.isTrue(StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+               assert.isTrue(StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+               assert.isTrue(StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+               assert.isTrue(StackController._stack.at(3).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+               assert.isTrue(StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+               assert.isTrue(StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
+               assert.isTrue(StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+               StackController._private.getItemPosition = baseGetItemPosition;
+            });
+
+
             it('stack default position', function() {
                StackController._private.getWindowSize = () => { return {width: 1920, height: 950}}; //Этот метод зовет получение размеров окна, для этих тестов не нужно
                let itemConfig = {
@@ -454,6 +478,7 @@ define(
                assert.equal(itemConfig.position.left, -10000);
                assert.equal(itemConfig.position.width, 800);
                assert.equal(itemConfig.position.height, 950);
+               assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Stack/StackContent');
             });
 
             it('stack maximized popup position', function() {
@@ -532,7 +557,8 @@ define(
                StackController._elementUpdated(itemConfig, {});
                StackController._elementUpdated(itemConfig, {});
                //класс обновился, потому что состояние было opened. После множ. update класс не задублировался
-               assert.isTrue(itemConfig.popupState === BaseController.POPUP_STATE_UPDATING && itemConfig.popupOptions.className === "controls-Stack");
+               assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATING);
+               assert.equal(itemConfig.popupOptions.className, " controls-Stack");
 
                StackController._elementAfterUpdated(itemConfig, {});
                assert.equal(itemConfig.popupState, BaseController.POPUP_STATE_UPDATED);
