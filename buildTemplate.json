@@ -11,7 +11,7 @@
 
   "minimize": false,
   "wml": false,
-  "customPack": false,
+  "сustomPack": false,
   "dependenciesGraph": false,
 
   "modules": [
@@ -48,10 +48,6 @@
       "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
     },
     {
-      "name": "File",
-      "path": "%cd%/node_modules/rmi/src/client/File"
-    },
-    {
       "name": "Transport",
       "path": "%cd%/node_modules/sbis3-ws/ws/transport"
     },
@@ -86,6 +82,10 @@
     {
       "name": "tests",
       "path": "%cd%/tests/unit"
+    },
+    {
+      "name": "File",
+      "path": "%cd%/node_modules/rmi/src/client/File"
     },
     {
       "name": "Vdom",

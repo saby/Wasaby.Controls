@@ -7,6 +7,7 @@
    },
    "files": [
       "Controls/*",
+      "File/*",
       "Controls-theme/*",
       "Controls-demo/*"
    ],
@@ -23,7 +24,6 @@
    "config": {
       "ws": "/",
       "wsModules": {
-         "File": "node_modules/rmi/src/client/File",
          "View": "sbis3-ws/View",
          "Vdom": "sbis3-ws/Vdom",
          "Core": "sbis3-ws/Core"
@@ -44,7 +44,8 @@
    "nyc": {
       "include": [
          "components/**/*.js",
-         "Controls/**/*.js"
+         "Controls/**/*.js",
+         "File/**/*.js"
       ],
       "reporter": [
          "text",
@@ -77,12 +78,12 @@
       "sbis3-builder": "git+https://git.sbis.ru/root/sbis3-builder.git#rc-3.18.700",
       "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.18.700",
       "Router": "git+https://github.com/saby/Router.git#rc-3.18.700",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#3.18.700/nopostinstall",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "typescript": "2.5.3",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.18.700",
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-3.18.700",
       "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"
    }
 }
