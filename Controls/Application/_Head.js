@@ -66,7 +66,11 @@ define('Controls/Application/_Head',
          },
          _afterUpdate: function() {
             for (var i = 0; i < this.reqCBArray.length; i++) {
-               this.reqCBArray[i].call();
+               if(this.reqCBArray[i].element) {
+                  this.reqCBArray[i].element.remove();
+               } else {
+                  this.reqCBArray[i].resolve.call();
+               }
             }
             this.reqCBArray = null;
          },
