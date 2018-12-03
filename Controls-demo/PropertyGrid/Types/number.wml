@@ -1,0 +1,6 @@
+
+<Controls-demo.PropertyGrid.NumberTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+</Controls-demo.PropertyGrid.NumberTemplate>

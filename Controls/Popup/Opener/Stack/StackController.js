@@ -14,7 +14,6 @@ define('Controls/Popup/Opener/Stack/StackController',
       'use strict';
       var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
       var STACK_CLASS = 'controls-Stack';
-      var STACK_CONTENT_CLASS = 'controls-Stack__content';
       var _private = {
 
          prepareSizes: function(item, container) {
@@ -42,7 +41,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             var currentContainerWidth = container.style.width;
             container.style.width = 'auto';
 
-            var templateWidth = container.querySelector('.controls-Popup__template').offsetWidth;
+            var templateWidth = container.querySelector('.controls-Stack__content').offsetWidth;
             container.style.width = currentContainerWidth;
             return templateWidth;
          },
@@ -81,12 +80,8 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          addStackClasses: function(popupOptions) {
             var className = popupOptions.className || '';
-            var stackClassName = popupOptions.stackClassName || '';
             if (className.indexOf(STACK_CLASS) < 0) {
                popupOptions.className = className + ' ' + STACK_CLASS;
-            }
-            if (stackClassName.indexOf(STACK_CONTENT_CLASS) < 0) {
-               popupOptions.stackClassName = stackClassName + ' ' + STACK_CONTENT_CLASS;
             }
          },
 
@@ -154,6 +149,7 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          elementUpdated: function(item, container) {
             _private.prepareUpdateClassses(item);
+            _private.setStackContent(item);
             _private.prepareSizes(item, container);
             this._update();
          },
@@ -207,6 +203,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          getDefaultConfig: function(item) {
             var baseCoord = { top: 0, right: 0 };
             var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
+            _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
             if (StackStrategy.isMaximizedPanel(item)) {
                // set default values

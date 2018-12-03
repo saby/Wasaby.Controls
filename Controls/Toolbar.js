@@ -11,12 +11,12 @@ define('Controls/Toolbar', [
    'use strict';
 
    /**
-    * Toolbar.
+    * Graphical control element on which buttons, menu and other input or output elements are placed.
+    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     * @class Controls/Toolbar
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
-    * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ISource
@@ -30,9 +30,27 @@ define('Controls/Toolbar', [
     */
 
    /**
-    * @name Controls/Button#size
-    * @cfg {String} Size of the Toolbar.
-    * @variant m Button has medium size.
+    * @event Controls/Toolbar#itemClick Occurs when item was clicked.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {WS.Data/Entity/Record} item Clicked item.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.Toolbar on:itemClick="onToolbarItemClick()" />
+    * </pre>
+    * JS:
+    * <pre>
+    *    onToolbarItemClick: function(e, selectedItem) {
+    *       var itemId = selectedItem.get('id');
+    *       switch (itemId) {
+    *          case 'remove':
+    *             this._removeItems();
+    *             break;
+    *          case 'move':
+    *             this._moveItems();
+    *             break;
+    *    }
+    * </pre>
     */
 
    var _private = {

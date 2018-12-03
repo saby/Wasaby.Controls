@@ -142,5 +142,56 @@ define([
          assert.isFalse(listView._lockForUpdate, 'Incorrect "_lockForUpdate" value after call "afterUpdate".');
          assert.deepEqual([], listView._queue, 'Incorrect initial "_queue" value after call "afterUpdate".');
       });
+      describe('_onItemContextMenu', function() {
+         it('contextMenuEnabled: true', function() {
+            var
+               model = new ListViewModel({
+                  items: data,
+                  keyProperty: 'id'
+               }),
+               cfg = {
+                  listModel: model,
+                  keyProperty: 'id',
+                  contextMenuEnabled: true
+               },
+               lv = new ListView(cfg),
+               fakeItemData = {},
+               fakeNativeEvent = {};
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+
+            lv._notify = function(eventName, eventArgs, eventOptions) {
+               assert.equal(eventName, 'itemContextMenu');
+               assert.equal(eventArgs.length, 3);
+               assert.equal(eventArgs[0], fakeItemData);
+               assert.equal(eventArgs[1], fakeNativeEvent);
+               assert.isTrue(eventArgs[2]);
+               assert.isUndefined(eventOptions);
+            };
+            lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
+         });
+         it('contextMenuEnabled: false', function() {
+            var
+               model = new ListViewModel({
+                  items: data,
+                  keyProperty: 'id'
+               }),
+               cfg = {
+                  listModel: model,
+                  keyProperty: 'id',
+                  contextMenuEnabled: false
+               },
+               lv = new ListView(cfg),
+               fakeItemData = {},
+               fakeNativeEvent = {};
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+
+            lv._notify = function() {
+               throw new Error('itemContextMenu event shouldn\'t fire if contextMenuEnabled is false');
+            };
+            lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
+         });
+      });
    });
 });

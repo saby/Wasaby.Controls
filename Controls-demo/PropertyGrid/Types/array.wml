@@ -1,0 +1,15 @@
+
+    <ws:if data="{{item.items}}">
+        <Controls-demo.PropertyGrid.ArrayTemplate
+                bind:value="item.value"
+                scope="{{item}}"
+                caption="{{name}}">
+        </Controls-demo.PropertyGrid.ArrayTemplate>
+    </ws:if>
+    <ws:else>
+        <Controls-demo.PropertyGrid.ArrayTemplate
+                bind:value="itemValue[name]"
+                scope="{{item}}"
+                caption="{{name}}">
+        </Controls-demo.PropertyGrid.ArrayTemplate>
+    </ws:else>

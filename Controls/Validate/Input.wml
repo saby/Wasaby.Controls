@@ -1,9 +1,26 @@
-<ws:partial template="{{ _options.content }}"
-            validationErrors="{{isValid()}}"
-            scope="{{_options}}"
-            on:valueChanged="_cleanValid()"
-            on:deactivated="_deactivatedHandler()"
-            on:mouseenter="_hoverHandler()"
-            on:focusIn="_focusInHandler()"
-            on:mouseleave="_mouseLeaveHandler()"
-/>
+<ws:if data="{{_isNewEnvironment}}">
+   <ws:partial template="{{ _options.content }}"
+               validationErrors="{{isValid()}}"
+               scope="{{_options}}"
+               on:valueChanged="_cleanValid()"
+               on:deactivated="_deactivatedHandler()"
+               on:mouseenter="_hoverHandler()"
+               on:focusIn="_focusInHandler()"
+               on:mouseleave="_mouseLeaveHandler()"
+   />
+</ws:if>
+<ws:else>
+   <div>
+      <ws:partial template="{{ _options.content }}"
+                  validationErrors="{{isValid()}}"
+                  scope="{{_options}}"
+                  on:valueChanged="_cleanValid()"
+                  on:deactivated="_deactivatedHandler()"
+                  on:mouseenter="_hoverHandler()"
+                  on:focusIn="_focusInHandler()"
+                  on:mouseleave="_mouseLeaveHandler()"
+      />
+      <Controls.Popup.Opener.InfoBox name="infoBoxOpener" _vdomOnOldPage="{{true}}" />
+   </div>
+</ws:else>
+
