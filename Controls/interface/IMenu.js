@@ -64,7 +64,7 @@ define('Controls/interface/IMenu', [], function() {
 
    /**
     * @name Controls/interface/IMenu#itemTemplateProperty
-    * @cfg {Function} Template for item render.
+    * @cfg {Function} Name of the item property that contains template for item render.
     * @remark
     * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
@@ -177,12 +177,12 @@ define('Controls/interface/IMenu', [], function() {
     *          opener: this._children.button
     *       });
     *    }
-    * </ore>
+    * </pre>
     */
 
    /**
     * @name Controls/interface/IMenu#dropdownClassName
-    * @cfg {String} Сlass for template.
+    * @cfg {String} The class that hangs on dropdown list.
     * @remark
     * The string, that is formed by the values from items, also changes position.
     * @example
