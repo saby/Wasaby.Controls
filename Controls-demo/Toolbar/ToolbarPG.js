@@ -78,18 +78,6 @@ define('Controls-demo/Toolbar/ToolbarPG',
                      title: 'Этапу',
                      '@parent': false,
                      parent: '4'
-                  },
-                  {
-                     id: '9',
-                     title: 'Согласование',
-                     '@parent': false,
-                     parent: '2'
-                  },
-                  {
-                     id: '10',
-                     title: 'Задача',
-                     '@parent': false,
-                     parent: '2'
                   }
                ]
             });
@@ -183,7 +171,19 @@ define('Controls-demo/Toolbar/ToolbarPG',
                },
                itemTemplateProperty: {
                   readOnly: false,
-                  value: 'myTemplate'
+                  value: 'default',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'default',
+                        value: null
+                     },
+                     {
+                        id: '2',
+                        title: 'myTemplate',
+                        value: 'myTemplate'
+                     }
+                  ]
                }
             };
             this._componentOptions = {
@@ -196,7 +196,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                displayProperty: 'title',
                name: 'Toolbar',
                itemTemplate: null,
-               itemTemplateProperty: 'myTemplate'
+               itemTemplateProperty: null
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
