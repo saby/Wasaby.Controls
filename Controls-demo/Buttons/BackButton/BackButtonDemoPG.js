@@ -28,7 +28,8 @@ define('Controls-demo/Buttons/BackButton/BackButtonDemoPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 1
-               }
+               },
+               showClickEvent: true
             };
             this._componentOptions = {
                size: 'm',

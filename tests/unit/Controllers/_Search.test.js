@@ -45,7 +45,8 @@ define(
                   page: 0,
                   mode: 'totalCount'
                }
-            };
+            },
+            sorting = [{name: 'DESC'}];
    
          it('.search', function(done) {
             var search = new Search({
@@ -53,10 +54,24 @@ define(
                searchDelay: 50,
                navigation: navigation
             });
+            var searchWithSorting = new Search({
+               source: source,
+               searchDelay: 50,
+               navigation: navigation,
+               sorting: sorting
+            });
+            
             search.search({name: 'Sasha'}).addCallback(function(result) {
                assert.equal(result.data.getCount(), 1);
                assert.equal(result.data.at(0).get('name'), 'Sasha');
-               done();
+   
+               searchWithSorting.search().addCallback(function (result) {
+                  assert.equal(result.data.getCount(), 4);
+                  assert.equal(result.data.at(0).get('name'), 'Sasha');
+                  assert.equal(result.data.at(3).get('name'), 'Aleksey');
+                  done();
+               });
+               
                return result;
             });
          });
