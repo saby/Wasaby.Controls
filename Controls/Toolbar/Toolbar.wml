@@ -1,5 +1,5 @@
-<div class="controls-ToolBarV">
-    <div class="controls-ToolBarV_content {{!_needShowMenu ? 'controls-ToolBarV_content__resetMargin'}}">
+<div class="controls-Toolbar">
+    <div class="controls-Toolbar_content {{!_needShowMenu ? 'controls-Toolbar_content__resetMargin'}}">
         <ws:for data="item in _items">
             <ws:if data="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}">
                 <ws:partial on:click="_onItemClick(item)"
@@ -8,7 +8,7 @@
                         size="{{_options.size}}"/>
             </ws:if>
         </ws:for>
-    <div if="{{_needShowMenu}}" class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"  name="popupTarget" on:click="_showMenu()">
+    <div if="{{_needShowMenu}}" class="controls-Toolbar__menu controls-Toolbar__item_icon"  name="popupTarget" on:click="_showMenu()">
         <i class="icon-medium icon-ExpandDown"/>
     </div>
     <Controls.Dropdown.Opener name="menuOpener" popupOptions="{{_popupOptions}}" />
