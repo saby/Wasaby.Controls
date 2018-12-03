@@ -5,6 +5,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'WS.Data/Source/Memory',
       'wml!Controls-demo/Toolbar/resources/itemTemplate',
+      'wml!Controls-demo/Toolbar/resources/itemTemplateContent',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
@@ -144,7 +145,39 @@ define('Controls-demo/Toolbar/ToolbarPG',
                      {
                         id: '2',
                         title: 'Default template',
-                        template: itemTmpl
+                        template: 'wml!Controls/Toolbar/ToolbarItemTemplate'
+                     }
+                  ]
+               },
+               nodeProperty: {
+                  readOnly: false,
+                  value: '@parent',
+                  items: [
+                     {
+                        id: '1',
+                        title: '@noParent',
+                        value: '@noParent'
+                     },
+                     {
+                        id: '2',
+                        title: '@parent',
+                        value: '@parent'
+                     }
+                  ]
+               },
+               parentProperty: {
+                  readOnly: false,
+                  value: 'parent',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'noParent',
+                        value: 'noParent'
+                     },
+                     {
+                        id: '2',
+                        title: 'parent',
+                        value: 'parent'
                      }
                   ]
                },

@@ -181,10 +181,6 @@
             "type": "String",
             "title": "Name of the item property that contains template for item render"
           },
-          "readOnly": {
-            "type": "Boolean",
-            "title": "Indicates whether control will react to user actions."
-          },
           "name": {
             "title": "Control name",
             "type": "String",
