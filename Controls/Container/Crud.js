@@ -36,18 +36,17 @@ define('Controls/Container/Crud', [
       },
       read: function(key, readMetaData) {
          var def = this._dataSource.read(key, readMetaData);
-
-         this._notify('toggleIndicator', [true], { bubbling: true });
+         this._indicatorId = this._notify('showIndicator', [{ id: this._indicatorId }], { bubbling: true });
 
          var self = this;
          def.addCallback(function(record) {
             self._notify('readSuccessed', [record]);
-            self._notify('toggleIndicator', [false], { bubbling: true });
+            self._notify('hideIndicator', [self._indicatorId], { bubbling: true });
             return record;
          });
          def.addErrback(function(e) {
             self._notify('readFailed', [e]);
-            self._notify('toggleIndicator', [false], { bubbling: true });
+            self._notify('hideIndicator', [self._indicatorId], { bubbling: true });
             return e;
          });
 

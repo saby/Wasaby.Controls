@@ -17,6 +17,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           * @public
           * @category Popup
           * @author Красильников А.С.
+          * @mixes Controls/Popup/Templates/Dialog/ConfirmationTmplStyles
           */
 
          /**

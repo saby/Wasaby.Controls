@@ -13,7 +13,7 @@
          on:validationSuccessed="_alertHandler('FormController demo: validation successed')"
          on:validationFailed="_validationFailedHandler()"
 
-         on:toggleIndicator="_alertHandler('FormController demo: toggleIndicator event. If you\'re seeing this message, some error is occured!')"
+         on:showIndicator="_alertHandler('FormController demo: showIndicator event. If you\'re seeing this message, some error is occured!')"
          on:pendingsFinished="_alertHandler('FormController demo: pendings finished')"
          on:update="_updateHandler()"
 

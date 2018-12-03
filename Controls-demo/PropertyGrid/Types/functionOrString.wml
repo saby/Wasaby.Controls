@@ -1,0 +1,5 @@
+    <Controls-demo.PropertyGrid.StringOrFunctionTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.StringOrFunctionTemplate>

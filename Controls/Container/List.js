@@ -32,6 +32,7 @@ define('Controls/Container/List',
                   minSearchLength: options.minSearchLength,
                   source: options.source,
                   navigation: options.navigation,
+                  sorting: options.sorting,
                   searchDelay: options.searchDelay,
                   searchCallback: _private.searchCallback.bind(self, self),
                   searchErrback: _private.searchErrback.bind(self, self),
@@ -138,6 +139,7 @@ define('Controls/Container/List',
                searchController.setFilter(filter);
             }
             self._searchMode = true;
+            self._searchValue = value;
             searchController.search(value);
          },
          
@@ -157,7 +159,7 @@ define('Controls/Container/List',
          },
          
          isFilterChanged: function(self, context) {
-            var oldValue = this.getFilterFromContext(self, self._context),
+            var oldValue = self._filter || this.getFilterFromContext(self, self._context),
                newValue = this.getFilterFromContext(self, context),
                changed = false;
             
@@ -173,7 +175,7 @@ define('Controls/Container/List',
          },
          
          isSearchValueChanged: function(self, context) {
-            var oldValue = this.getSearchValueFromContext(self, self._context),
+            var oldValue = self._searchValue || this.getSearchValueFromContext(self, self._context),
                newValue = this.getSearchValueFromContext(self, context);
             return !isEqual(oldValue, newValue);
          },

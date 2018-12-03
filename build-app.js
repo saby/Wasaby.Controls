@@ -98,8 +98,9 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
             fs.renameSync(path.join(root, 'application', oldName), path.join(root, 'application', one.name));
          }
       });
-
-      fs.symlinkSync(path.join(root, 'cdn'), path.join(root, 'application', 'cdn'));
+      if(!fs.existsSync(path.join(root, 'application', 'cdn'))) {
+         fs.symlinkSync(path.join(root, 'cdn'), path.join(root, 'application', 'cdn'));
+      }
       var alljson = {links: {}, nodes: {}};
       gultConfig.modules.forEach((one) => {
          if (one.name.indexOf('WS.Core') === -1)
