@@ -28,7 +28,7 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
             'Incorrect result "prepareGridTemplateColumns(gridColumns, false)".');
       });
       it('Footer', function() {
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_S',
+         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
             GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', paddingLeft: 'S' }),
             'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, paddingLeft: S})".');
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
