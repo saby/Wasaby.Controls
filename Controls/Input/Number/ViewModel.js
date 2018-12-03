@@ -20,9 +20,11 @@ define('Controls/Input/Number/ViewModel',
        */
 
       var _private = {
-         valueWithoutTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
+         valueWithoutTrailingZerosRegExp: /-?[0-9 ]*(([1-9]|([0.])(?!0*$))*)?/,
 
-         integerPartRegExp: /-?[0-9]+/,
+         valueWithOneTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
+
+         integerPartRegExp: /^-?[0-9]+$/,
 
          onlyIntegerPart: function(value) {
             return _private.integerPartRegExp.test(value);
@@ -92,11 +94,19 @@ define('Controls/Input/Number/ViewModel',
             return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
          },
 
-         trimTrailingZeros: function() {
-            var valueWithoutTrailingZeros = this._displayValue.match(_private.valueWithoutTrailingZerosRegExp)[0];
+         trimTrailingZeros: function(leaveOneZero) {
+            if (this._options.showEmptyDecimals) {
+               return false;
+            }
 
-            if (this._displayValue !== valueWithoutTrailingZeros) {
-               this._displayValue = valueWithoutTrailingZeros;
+            var regExp = leaveOneZero
+               ? _private.valueWithOneTrailingZerosRegExp
+               : _private.valueWithoutTrailingZerosRegExp;
+            var trimmedValue = this._displayValue.match(regExp)[0];
+
+            if (this._displayValue !== trimmedValue) {
+               this._displayValue = trimmedValue;
+               this._shouldBeChanged = true;
 
                return true;
             }
@@ -104,18 +114,15 @@ define('Controls/Input/Number/ViewModel',
             return false;
          },
 
-         reactOnFocusIn: function() {
+         addTrailingZero: function() {
             if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
                this._displayValue += '.0';
                this._shouldBeChanged = true;
-            }
-         },
 
-         reactOnFocusOut: function() {
-            if (_private.isDecimalPartEqualZero(this._displayValue)) {
-               this._displayValue = this._displayValue.substring(0, this._displayValue.length - 2);
-               this._shouldBeChanged = true;
+               return true;
             }
+
+            return false;
          }
       });
 

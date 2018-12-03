@@ -1,10 +1,11 @@
 define('Controls/Input/Number',
    [
+      'Core/IoC',
       'Controls/Input/Base',
       'WS.Data/Type/descriptor',
       'Controls/Input/Number/ViewModel'
    ],
-   function(Base, descriptor, ViewModel) {
+   function(IoC, Base, descriptor, ViewModel) {
       'use strict';
 
       /**
@@ -81,19 +82,22 @@ define('Controls/Input/Number',
        */
 
       var _private = {
-         hideEmptyDecimals: function(self) {
-            if (self._viewModel.trimTrailingZeros()) {
-               self._notifyValueChanged();
+         validateOptions: function(options) {
+            if (options.integersLength <= 0) {
+               IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
          }
       };
 
       var NumberInput = Base.extend({
          _getViewModelOptions: function(options) {
+            _private.validateOptions(options);
+
             return {
                precision: options.precision,
                onlyPositive: options.onlyPositive,
-               integersLength: options.integersLength
+               integersLength: options.integersLength,
+               showEmptyDecimals: options.showEmptyDecimals
             };
          },
 
@@ -102,23 +106,27 @@ define('Controls/Input/Number',
          },
 
          _changeHandler: function() {
-            if (!this._options.showEmptyDecimals) {
-               _private.hideEmptyDecimals(this);
+            if (this._viewModel.trimTrailingZeros(true)) {
+               this._notifyValueChanged();
             }
 
             NumberInput.superclass._changeHandler.apply(this, arguments);
          },
 
          _focusInHandler: function() {
-            NumberInput.superclass._focusInHandler.apply(this, arguments);
+            if (this._viewModel.addTrailingZero()) {
+               this._notifyValueChanged();
+            }
 
-            this._viewModel.reactOnFocusIn();
+            NumberInput.superclass._focusInHandler.apply(this, arguments);
          },
 
          _focusOutHandler: function() {
-            NumberInput.superclass._focusOutHandler.apply(this, arguments);
+            if (this._viewModel.trimTrailingZeros(false)) {
+               this._notifyValueChanged();
+            }
 
-            this._viewModel.reactOnFocusOut();
+            NumberInput.superclass._focusOutHandler.apply(this, arguments);
          }
       });
 
