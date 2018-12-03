@@ -79,8 +79,8 @@ define('Controls/Toolbar', [
       setPopupOptions: function(self, newOptions) {
          self._popupOptions = {
             className: (newOptions.popupClassName || '') + ' controls-Toolbar__menu-position',
-            corner: {vertical: 'top', horizontal: 'right'},
-            horizontalAlign: {side: 'left'},
+            corner: { vertical: 'top', horizontal: 'right' },
+            horizontalAlign: { side: 'left' },
             eventHandlers: {
                onResult: self._onResult,
                onClose: self._closeHandler
@@ -98,6 +98,36 @@ define('Controls/Toolbar', [
 
       getItemClassName: function(item, size) {
          return 'controls-Toolbar_' + item.get('buttonViewMode') + '_' + size;
+      },
+
+      generateItemPopupConfig: function(item, event, self) {
+         return {
+            corner: { vertical: 'top', horizontal: 'left' },
+            horizontalAlign: { side: 'right' },
+            className: this.getItemClassName(item, self._options.size) + ' ' + (item.get('popupClassName') || ''),
+            templateOptions: {
+               items: self._items,
+               rootKey: item.get(self._options.keyProperty),
+               showHeader: item.get('showHeader'),
+               headConfig: {
+                  icon: item.get('icon'),
+                  caption: item.get('title'),
+                  iconStyle: item.get('iconStyle')
+               }
+            },
+            target: event.target
+         };
+      },
+
+      generateMenuConfig: function(self) {
+         return {
+            className: 'controls-Toolbar__menu-position ' + (self._options.popupClassName || ''),
+            templateOptions: {
+               items: self._menuItems,
+               iconSize: self._options.size
+            },
+            target: self._children.popupTarget
+         };
       }
    };
 
@@ -126,10 +156,8 @@ define('Controls/Toolbar', [
             this._items = receivedState;
             this._menuItems = _private.getMenuItems(this._items);
             this._needShowMenu = this._menuItems && this._menuItems.getCount();
-         } else {
-            if (options.source) {
-               return _private.loadItems(this, options.source);
-            }
+         } else if (options.source) {
+            return _private.loadItems(this, options.source);
          }
       },
       _beforeUpdate: function(newOptions) {
@@ -149,31 +177,14 @@ define('Controls/Toolbar', [
          this._parentProperty = newOptions.parentProperty;
       },
       _onItemClick: function(event, item) {
-         var config;
-
          if (item.get(this._nodeProperty)) {
-            config = {
-               corner: {vertical: 'top', horizontal: 'left'},
-               horizontalAlign: {side: 'right'},
-               className: _private.getItemClassName(item, this._options.size) + ' ' + (item.get('popupClassName') || ''),
-               templateOptions: {
-                  items: this._items,
-                  rootKey: item.get(this._options.keyProperty),
-                  showHeader: item.get('showHeader'),
-                  headConfig: {
-                     icon: item.get('icon'),
-                     caption: item.get('title'),
-                     iconStyle: item.get('iconStyle')
-                  }
-               },
-               target: event.target
-            };
+            var config = _private.generateItemPopupConfig(item, event, this);
             this._children.menuOpener.open(config, this);
 
-            //TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-            //TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+            // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+            // TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
 
-            this._notify('menuOpened', [], {bubbling: true});
+            this._notify('menuOpened', [], { bubbling: true });
          }
          event.stopPropagation();
          this._notify('itemClick', [item]);
@@ -181,15 +192,8 @@ define('Controls/Toolbar', [
       },
 
       _showMenu: function() {
-         var config = {
-            className: 'controls-Toolbar__menu-position ' + (this._options.popupClassName || ''),
-            templateOptions: {
-               items: this._menuItems,
-               iconSize: this._options.size
-            },
-            target: this._children.popupTarget
-         };
-         this._notify('menuOpened', [], {bubbling: true});
+         var config = _private.generateMenuConfig(this);
+         this._notify('menuOpened', [], { bubbling: true });
          this._children.menuOpener.open(config, this);
       },
 
@@ -206,7 +210,7 @@ define('Controls/Toolbar', [
       },
 
       _closeHandler: function() {
-         this._notify('menuClosed', [], {bubbling: true});
+         this._notify('menuClosed', [], { bubbling: true });
       }
    });
 
