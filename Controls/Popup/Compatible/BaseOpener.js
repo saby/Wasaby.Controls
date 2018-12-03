@@ -434,6 +434,9 @@ function(cMerge,
             cfg.maxWidth = parseInt(cfg.width || dimensions.maxWidth || templateOptions.maxWidth, 10) || undefined;
          }
 
+         cfg.minWidth = parseInt(cfg.minWidth, 10);
+         cfg.maxWidth = parseInt(cfg.maxWidth, 10);
+
          cfg.minWidth = cfg.minWidth || cfg.maxWidth;
          cfg.maxWidth = cfg.maxWidth || cfg.minWidth;
 
