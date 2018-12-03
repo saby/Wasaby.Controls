@@ -64,7 +64,7 @@ define('Controls/List/ItemActions/Helpers', [], function() {
             index = items.getIndex(item),
             siblingItem = items.at(index + (direction === MOVE_DIRECTION.UP ? -1 : 1));
 
-         return siblingItem &&
+         return !!siblingItem &&
             (!parentProperty || siblingItem.get(parentProperty) === item.get(parentProperty)) && //items in one folder
             (!nodeProperty || siblingItem.get(nodeProperty) === item.get(nodeProperty));//items of the same type
       }
