@@ -523,6 +523,52 @@ define([
          });
       }).timeout(6000);
 
+      it('FormController - multiple update', function(done) {
+         waiting.call(this, function () {
+
+            var mountedDef = mountControl('Controls-demo/FormController/FormController');
+            mountedDef.addCallback(function(control) {
+               var resultDef = doSteps(control, [
+                  {
+                     action: 'create',
+                     answer: true
+                  }, {
+                     action: 'update',
+                     answer: true
+                  }, {
+                     action: function(control) {
+                        control._record.set('value1', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.formControllerInst.update().addErrback(function(e) {
+                           done(e);
+                        });
+                     }
+                  }, {
+                     action: function(control) {
+                        control._record.set('value2', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.formControllerInst.update().addErrback(function(e) {
+                           done(e);
+                        });
+                     }
+                  }
+               ]);
+               resultDef.addCallbacks(function() {
+                  done();
+               }, function(e) {
+                  done(e);
+               });
+            });
+            mountedDef.addErrback(function(e) {
+               done(e);
+            });
+         });
+      }).timeout(6000);
+
       afterEach(function() {
          testControl && testControl.destroy();
          testElement && testElement.remove();

@@ -382,6 +382,7 @@ define('Controls/FormController', [
                         // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
                         // если из окна сохранения, пендинг завершится там
                         self._propertyChangedDef.callback(true);
+                        self._propertyChangeNotified = false;
                      }
                      self._isNewRecord = false;
 
@@ -402,6 +403,7 @@ define('Controls/FormController', [
                      // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
                      // если из окна сохранения, пендинг завершится там
                      self._propertyChangedDef.callback(true);
+                     self._propertyChangeNotified = false;
                   }
                   self._isNewRecord = false;
                   updateDef.callback(true);
