@@ -328,6 +328,10 @@ define('SBIS3.CONTROLS/Date/RangeBigChoose/resources/DateRangePicker', [
 
          if (changed) {
             if (!DateUtils.isYearsEqual(month, oldMonth)) {
+               // Если открывают декабрь, то сразу же после открытия надо отобразить первую неделю следующего года.
+               // Для этого делаем размер страницы 2 айтема. Если открываем другие месяца, то используем pageSize 1.
+               // Так работает быстрее.
+               this.setPageSize(month && month.getMonth() === 11 ? 2 : 1, true);
                // TODO: временный хак. Базовый класс не релоудит данные если не установлен showPaging
                this.setOffset(this._getOffsetByMonth(month));
                this.reload().addCallback(function(list) {
