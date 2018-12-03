@@ -5,7 +5,8 @@
                                data="{{_options.dataObject}}"
                                scopeObject="{{_exampleControlOptions}}"
                                name="PropertyGrid"
-                               templateName="tmpl!Controls-demo/PropertyGrid/PropertyGridTemplate"
+                               dataTemplates="{{dataTemplates}}"
+                               templateName="wml!Controls-demo/PropertyGrid/PropertyGridTemplate"
                                on:itemsChanged="_valueChangedHandler()">
         </Controls.PropertyGrid>
     </div>
@@ -15,6 +16,7 @@
                         scope="{{_exampleControlOptions}}"
                         bind:value="_options.componentOpt.value"
                         bind:selectedKey="_options.componentOpt.selectedKey"
+                        on:click="_clickHandler()"
                         attr:class="js-Controls_{{_demoName}}_mainField
                         {{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>
         </div>
