@@ -57,7 +57,7 @@ define('Controls/Filter/Controller',
 
                _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
             } else {
-               historyItems = filterButtonItems || fastFilterItems;
+               historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
             }
             return _private.minimizeFilterItems(historyItems);
          },
