@@ -231,14 +231,16 @@ define('Controls/Container/Suggest/Layout',
             this._notify('choose', [item]);
          },
          _searchStart: function() {
-            this._children.indicator.toggleIndicator(this._loading = true);
+            this._loading = true;
+            this._children.indicator.show();
             if (this._options.searchStartCallback) {
                this._options.searchStartCallback();
             }
          },
          _searchEnd: function(result) {
             if (this._options.suggestState) {
-               this._children.indicator.toggleIndicator(this._loading = false);
+               this._loading = false;
+               this._children.indicator.hide();
             }
             this._searchDelay = this._options.searchDelay;
             _private.precessResultData(this, result);

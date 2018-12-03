@@ -106,7 +106,7 @@ define('Controls/Input/Number',
                _private.hideEmptyDecimals(this);
             }
 
-            Text.superclass._changeHandler.apply(this, arguments);
+            NumberInput.superclass._changeHandler.apply(this, arguments);
          }
       });
 

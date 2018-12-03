@@ -150,8 +150,6 @@
   ],
   "exclude": [
     "Controls/List/interface/*",
-    "wml!Controls/List/Grid/OldGridView",
-    "wml!Controls/List/Grid/NewGridView",
     "Controls/List/ItemActions/resources/*",
     "Controls/List/ItemActions/ItemActionsControl",
     "Controls/List/Swipe/*",
@@ -321,5 +319,23 @@
     "Controls/EditableArea/Constants"
   ],
   "output": "controls-editablearea.package.js"
+}, {
+  "include": [
+    "Controls/Explorer",
+    "Controls/Explorer/*",
+    "Controls/BreadCrumbs/Path",
+    "Controls/BreadCrumbs/Path/*"
+  ],
+  "output": "controls-explorer.package.js"
+}, {
+  "include": [
+    "Controls/BreadCrumbs",
+    "Controls/BreadCrumbs/*"
+  ],
+  "exclude": [
+    "Controls/BreadCrumbs/Path",
+    "Controls/BreadCrumbs/Path/*"
+  ],
+  "output": "controls-breadcrumbs.package.js"
 }
 ]

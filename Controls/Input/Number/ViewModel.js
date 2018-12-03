@@ -20,7 +20,17 @@ define('Controls/Input/Number/ViewModel',
        */
 
       var _private = {
-         valueWithoutTrailingZerosRegExp: /[0-9]+(\.[0-9]([1-9]|0(?!0*$))*)?/
+         valueWithoutTrailingZerosRegExp: /[0-9 ]+(\.[0-9]([1-9]|0(?!0*$))*)?/,
+
+         prepareData: function(result) {
+            var position = result.position;
+            return {
+               before: result.value.substring(0, position),
+               after: result.value.substring(position, result.value.length),
+               insert: '',
+               delete: ''
+            };
+         }
       };
 
       var ViewModel = BaseViewModel.extend({
@@ -40,7 +50,9 @@ define('Controls/Input/Number/ViewModel',
           * @protected
           */
          _convertToDisplayValue: function(value) {
-            return Number.isNaN(value) ? '' : value.toString();
+            var displayValue = Number.isNaN(value) ? '' : value.toString();
+
+            return splitIntoTriads(displayValue);
          },
 
          handleInput: function(splitValue, inputType) {
@@ -67,7 +79,7 @@ define('Controls/Input/Number/ViewModel',
                   break;
             }
 
-            return ViewModel.superclass.handleInput.call(this, splitValue, inputType);
+            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
          },
 
          trimTrailingZeros: function() {
@@ -78,6 +90,8 @@ define('Controls/Input/Number/ViewModel',
 
                return true;
             }
+
+            return false;
          }
       });
 

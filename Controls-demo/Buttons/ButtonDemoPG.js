@@ -38,7 +38,8 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
-               }
+               },
+               showClickEvent: true
             };
             this._componentOptions = {
                readOnly: false,
@@ -49,7 +50,8 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                style: 'secondary',
                viewMode: 'link',
                tooltip: '',
-               name: 'Button'
+               name: 'Button',
+               href: ''
 
             };
             this._metaData = config[this._content].properties['ws-config'].options;

@@ -1,18 +1,22 @@
 .controls-InfoBox {
-   padding: @infobox-padding-top @infobox-padding-right @infobox-padding-bottom @infobox-padding-left;
+   padding-top:   @spacing_Infobox-between-content-border-top;
+   padding-right: @spacing_Infobox-between-content-border-right;
+   padding-bottom: @spacing_Infobox-between-content-border-bottom;
+   padding-left:   @spacing_Infobox-between-content-border-left;
+
    box-sizing: border-box;
-   max-width: @infobox-max-width;
+   max-width: @max-width_Infobox;
    overflow: auto;
 }
 
 .controls-InfoBox__popup {
-   border: @infobox-border-size solid;
+   border: @border-width_Infobox solid;
 
    &:before {
-      width: @infobox-arrow-size;
-      height: @infobox-arrow-size;
+      width: @size_Infobox-arrow;
+      height: @size_Infobox-arrow;
       position: absolute;
-      border: @infobox-border-size solid;
+      border: @border-width_Infobox solid;
       border-top: none;
       border-left: none;
       content: '';
@@ -23,22 +27,22 @@
       //tl
       &.controls-Popup-align-horizontal-right:before {
          transform: rotate(45deg);
-         bottom: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         left: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-horizontal-offset;
+         bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         left: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
       }
 
       //tr
       &.controls-Popup-align-horizontal-left:before {
          transform: rotate(45deg);
-         bottom: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         right: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-horizontal-offset;
+         bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         right: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
       }
 
       //tc
       &.controls-Popup-align-horizontal-center:before {
          transform: rotate(45deg);
-         bottom: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         left: ~'calc(50% - '@infobox-arrow-diagonal-length/2 - @infobox-border-size ~')';
+         bottom: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
       }
    }
 
@@ -46,22 +50,22 @@
       //bl
       &.controls-Popup-align-horizontal-right:before {
          transform: rotate(225deg);
-         top: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         left: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-horizontal-offset;
+         top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         left: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
       }
 
       //br
       &.controls-Popup-align-horizontal-left:before {
          transform: rotate(225deg);
-         top: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         right: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-horizontal-offset;
+         top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         right: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @horizontal-offset_Infobox-arrow;
       }
 
       //bc
       &.controls-Popup-align-horizontal-center:before {
          transform: rotate(225deg);
-         top: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         left: ~'calc(50% - '@infobox-arrow-diagonal-length/2 - @infobox-border-size ~')';
+         top: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         left: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
       }
    }
 
@@ -69,22 +73,22 @@
       //rt
       &.controls-Popup-align-vertical-bottom:before {
          transform: rotate(135deg);
-         left: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         top: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-vertical-offset;
+         left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         top: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
       }
 
       //rb
       &.controls-Popup-align-vertical-top:before {
          transform: rotate(135deg);
-         left: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         bottom: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-vertical-offset;
+         left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         bottom: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
       }
 
       //rc
       &.controls-Popup-align-vertical-center:before {
          transform: rotate(135deg);
-         left: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         top: ~'calc(50% - '@infobox-arrow-diagonal-length/2 - @infobox-border-size ~')';
+         left: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
       }
    }
 
@@ -92,89 +96,89 @@
       //lt
       &.controls-Popup-align-vertical-bottom:before {
          transform: rotate(-45deg);
-         right: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         top: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-vertical-offset;
+         right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         top: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
       }
 
       //lb
       &.controls-Popup-align-vertical-top:before {
          transform: rotate(-45deg);
-         right: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         bottom: (@infobox-arrow-diagonal-length - @infobox-arrow-size)/2 + @infobox-arrow-vertical-offset;
+         right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         bottom: (@length_Infobox-arrow-diagonal - @size_Infobox-arrow)/2 + @vertical-offset_Infobox-arrow;
       }
 
       //lc
       &.controls-Popup-align-vertical-center:before {
          transform: rotate(-45deg);
-         right: -(@infobox-arrow-diagonal-length/2 - @infobox-border-size);
-         top: ~'calc(50% - '@infobox-arrow-diagonal-length/2 - @infobox-border-size ~')';
+         right: -(@length_Infobox-arrow-diagonal/2 - @border-width_Infobox);
+         top: ~'calc(50% - '@length_Infobox-arrow-diagonal/2 - @border-width_Infobox ~')';
       }
    }
 }
 
 .controls-InfoBox__closeButton {
    position: absolute;
-   top: @infobox-close-button-top;
-   right: @infobox-close-button-right;
+   top: @spacing_Infobox-between-top-close-button;
+   right: @spacing_Infobox-between-right-close-button;
    cursor: pointer;
-   color: @infobox-close-button-color;
+   color: @color_Infobox-close-button;
 
    &:hover {
-      color: @infobox-close-button-hover-color
+      color: @color_Infobox-close-button_hover;
    }
 }
 
 .controls-InfoBox__message_margin {
-   margin-right: @infobox-message-margin-right;
+   margin-right: @spacing_Infobox-between-message-border;
 }
 
 .controls-InfoBox_floatElement {
-   width: @infobox-float-element-size;
-   height: @infobox-float-element-size;
+   width: @size_Infobox-float-element;
+   height: @size_Infobox-float-element;
    float: right;
 }
 
 .controls-InfoBox-style-default {
-   background: @infobox-bg-style-default;
-   border-color: @infobox-border-color-style-default;
-   box-shadow: @infobox-shadow-color-style-default @infobox-shadow-position;
+   background: @background-color_Infobox_default;
+   border-color: @border-color_Infobox_default;
+   box-shadow: @color_Infobox-shadow_default @box-shadow_Infobox;
 
    &.controls-InfoBox__popup:before {
-      background: @infobox-bg-style-default;
-      border-color: @infobox-border-color-style-default;
+      background: @background-color_Infobox_default;
+      border-color: @border-color_Infobox_default;
    }
 }
 
 .controls-InfoBox-style-lite {
-   background: @infobox-bg-style-lite;
-   border-color: @infobox-border-color-style-lite;
-   box-shadow: @infobox-shadow-color-style-lite @infobox-shadow-position;
+   background: @background-color_Infobox_lite;
+   border-color: @border-color_Infobox_lite;
+   box-shadow: @color_Infobox-shadow_lite @box-shadow_Infobox;
 
    &.controls-InfoBox__popup:before {
-      background: @infobox-bg-style-lite;
-      border-color: @infobox-border-color-style-lite;
+      background: @background-color_Infobox_lite;
+      border-color: @border-color_Infobox_lite;
    }
 }
 
 .controls-InfoBox-style-help {
-   background: @infobox-bg-style-help;
-   border-color: @infobox-border-color-style-help;
-   box-shadow: @infobox-shadow-color-style-help @infobox-shadow-position;
+   background: @background-color_Infobox_help;
+   border-color: @border-color_Infobox_help;
+   box-shadow: @color_Infobox-shadow_help @box-shadow_Infobox;
 
    &.controls-InfoBox__popup:before {
-      background: @infobox-bg-style-help;
-      border-color: @infobox-border-color-style-help;
+      background: @background-color_Infobox_help;
+      border-color: @border-color_Infobox_help;
    }
 }
 
 .controls-InfoBox-style-error {
-   background: @infobox-bg-style-error;
-   border-color: @infobox-border-color-style-error;
-   box-shadow: @infobox-shadow-color-style-error @infobox-shadow-position;
+   background: @background-color_Infobox_error;
+   border-color: @border-color_Infobox_error;
+   box-shadow: @color_Infobox-shadow_error @box-shadow_Infobox;
 
    &.controls-InfoBox__popup:before {
-      background: @infobox-bg-style-error;
-      border-color: @infobox-border-color-style-error;
+      background: @background-color_Infobox_error;
+      border-color: @border-color_Infobox_error;
    }
 }
 
@@ -182,8 +186,8 @@
    Класс для доступа к константам темы из js
 */
 .controls-InfoBox__themeConstants {
-   margin-left: @infobox-arrow-diagonal-length;
-   margin-right: @infobox-arrow-horizontal-offset;
-   margin-bottom: @infobox-arrow-vertical-offset;
-   margin-top: @infobox-distance-to-target;
+   margin-left: @length_Infobox-arrow-diagonal;
+   margin-right: @horizontal-offset_Infobox-arrow;
+   margin-bottom: @vertical-offset_Infobox-arrow;
+   margin-top: @spacing_Infobox-between-target-popup;
 }

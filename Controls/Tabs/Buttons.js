@@ -6,11 +6,13 @@ define('Controls/Tabs/Buttons', [
    'Controls/Controllers/SourceController',
    'wml!Controls/Tabs/Buttons/Buttons',
    'wml!Controls/Tabs/Buttons/ItemTemplate',
+   'Core/IoC',
    'css!theme?Controls/Tabs/Buttons/Buttons'
 ], function(Control,
    SourceController,
    TabButtonsTpl,
-   ItemTemplate
+   ItemTemplate,
+   IoC
 ) {
    'use strict';
 
@@ -47,13 +49,23 @@ define('Controls/Tabs/Buttons', [
       },
       prepareItemClass: function(item, order, options, lastRightOrder) {
          var
-            classes = ['controls-Tabs__item'];
+            classes = ['controls-Tabs__item'],
+            modifyToNewStyle = '';
+         if (options.style === 'default') {
+            modifyToNewStyle = 'primary';
+            IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
+         } else if (options.style === 'additional') {
+            modifyToNewStyle = 'secondary';
+            IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
+         } else {
+            modifyToNewStyle = options.style;
+         }
          classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right'));
          if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme');
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
-            classes.push('controls-Tabs_style_' + options.style + '__item_state_selected');
+            classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected');
             classes.push('controls-Tabs__item_state_selected');
          } else {
             classes.push('controls-Tabs__item_state_default');
@@ -72,11 +84,14 @@ define('Controls/Tabs/Buttons', [
    };
 
    /**
-    * Controls are designed to give users a choice among two or more tabs.
+    * Control are designed to give users a choice among two or more tabs.
+    *
+    * <a href="/materials/demo-ws4-tabs">Demo-example</a>.
     *
     * @class Controls/Tabs/Buttons
     * @extends Core/Control
     * @mixes Controls/interface/ISingleSelectable
+    * @mixes Controls/interface/ISource
     * @control
     * @public
     * @category List
@@ -100,10 +115,6 @@ define('Controls/Tabs/Buttons', [
     *       .....
     *    />
     * </pre>
-    * Bordered icon button with default size.
-    * <pre>
-    *    <Controls.Button caption="Send document" style="iconButtonBordered"/>
-    * </pre>
     * spaceTemplate:
     * <pre>
     *    <div class="additionalContent">
@@ -117,29 +128,29 @@ define('Controls/Tabs/Buttons', [
    /**
     * @name Controls/Tabs/Buttons#style
     * @cfg {Enum} Tabs buttons display style.
-    * @variant default
-    * @variant additional
-    * @default default
+    * @variant primary The display style of the attracting attention to selected tab.
+    * @variant secondary The display style of the explicitly highlighted to selected tab.
+    * @default primary
     * @remark
     * If the standard theme does not suit you, you can override the variables:
     * <ul>
-    *     <li>@border-color_Tabs-item_selected_default,</li>
-    *     <li>@text-color_Tabs-item_selected_default,</li>
-    *     <li>@border-color_Tabs-item_selected_additional,</li>
-    *     <li>@text-color_Tabs-item_selected_additional</li>
+    *     <li>@border-color_Tabs-item_selected_primary,</li>
+    *     <li>@text-color_Tabs-item_selected_primary,</li>
+    *     <li>@border-color_Tabs-item_selected_secondary,</li>
+    *     <li>@text-color_Tabs-item_selected_secondary</li>
     * </ul>
     * @example
-    * Tabs Buttons with additional style.
+    * Tabs Buttons has style 'secondary'.
     * <pre>
     *    <Controls.Tabs.Buttons
     *       bind:selectedKey='_selectedKey'
     *       keyProperty="id"
     *       source="{{_source}}
-    *       style="additional"
+    *       style="secondary"
     *       .....
     *    />
     * </pre>
-    * Tabs Buttons with default style
+    * Tabs Buttons has default style.
     * <pre>
     *    <Controls.Tabs.Buttons
     *       bind:selectedKey='_selectedKey'
@@ -290,7 +301,7 @@ define('Controls/Tabs/Buttons', [
    TabsButtons.getDefaultOptions = function() {
       return {
          itemTemplate: ItemTemplate,
-         style: 'default',
+         style: 'primary',
          displayProperty: 'title'
       };
    };

@@ -13,6 +13,7 @@
       tooltip="{{_options.tooltip}}"
       bind:suggestState="_suggestState"
       filter="{{_options.filter}}"
+      sorting="{{_options.sorting}}"
       autoDropDown="{{_determineAutoDropDown()}}"
       layerName="Controls/Container/Suggest/__PopupLayer"
       value="{{_options.value}}"

@@ -97,11 +97,7 @@ define('Controls/Input/Base/ViewModel',
          },
 
          set options(value) {
-            for (var prop in value) {
-               if (prop in this._options) {
-                  this._options[prop] = value[prop];
-               }
-            }
+            this._options = clone(value);
          },
 
          constructor: function(options, value) {
@@ -112,6 +108,8 @@ define('Controls/Input/Base/ViewModel',
             this.value = value;
             this.options = options;
             this.selection = value.length;
+
+            this.changesHaveBeenApplied();
          },
 
          handleInput: function(splitValue) {
@@ -135,6 +133,15 @@ define('Controls/Input/Base/ViewModel',
             this._oldSelection = clone(this._selection);
 
             this._shouldBeChanged = false;
+         },
+
+         select: function() {
+            this.selection = {
+               start: 0,
+               end: this.displayValue.length
+            };
+
+            this._shouldBeChanged = true;
          }
       });
 
