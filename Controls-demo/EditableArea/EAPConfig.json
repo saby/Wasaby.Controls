@@ -18,6 +18,7 @@
             "type": "enum",
             "title": "Editable area display style.",
             "enum": {
+              "withoutBackground": "Background will not be shown while editing.",
               "withBackground": "Background will be shown while editing."
             }
           },

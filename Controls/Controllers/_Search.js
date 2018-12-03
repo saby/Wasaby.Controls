@@ -25,10 +25,7 @@ define('Controls/Controllers/_Search',
          
          resolveOptions: function(self, options) {
             self._searchDelay = options.searchDelay;
-         },
-         
-         callSearchQuery: function(self, filter) {
-            return self._sourceController.load(filter);
+            self._sorting = options.sorting;
          },
          
          searchCallback: function(self, result) {
@@ -90,7 +87,7 @@ define('Controls/Controllers/_Search',
             this._searchDeferred = new Deferred();
    
             this._searchDelayTimer = setTimeout(function() {
-               _private.callSearchQuery(self, filter)
+               self._sourceController.load(filter, self._sorting)
                   .addCallback(function(result) {
                      _private.searchCallback(self, result);
                      return result;
