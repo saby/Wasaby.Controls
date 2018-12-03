@@ -3,9 +3,9 @@
  */
 define('Controls/Decorator/Markup/Converter', [
    'Controls/Decorator/Markup/resources/template',
-   'Core/Util/Object'
+   'Core/core-merge'
 ], function(template,
-   ObjectUtils) {
+   objectMerge) {
    'use strict';
 
    function domToJson(dom) {
@@ -96,7 +96,7 @@ define('Controls/Decorator/Markup/Converter', [
     * @return {Array}
     */
    var deepCopyJson = function(json) {
-      return ObjectUtils.merge([], json);
+      return objectMerge([], json);
    };
 
    /**
