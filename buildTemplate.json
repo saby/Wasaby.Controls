@@ -8,7 +8,6 @@
   "deprecatedWebPageTemplates": true,
   "htmlWml": true,
   "themes": true,
-  "mode": "debug",
 
   "minimize": false,
   "wml": false,
