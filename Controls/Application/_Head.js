@@ -54,7 +54,11 @@ define('Controls/Application/_Head',
          },
          _beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
-            this.reqCBArray = ThemesController.getInstance().getReqCbArray();
+            if(ThemesController.getInstance().getReqCbArray) {
+               this.reqCBArray = ThemesController.getInstance().getReqCbArray();
+            } else {
+               this.reqCBArray = [];
+            }
             this.themedCss = csses.themedCss;
             this.simpleCss = csses.simpleCss;
             this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
