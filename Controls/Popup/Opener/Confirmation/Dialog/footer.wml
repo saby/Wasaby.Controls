@@ -1,11 +1,11 @@
-<div class="controls-SubmitPopup__buttonContainer">
+<div class="controls-ConfirmationDialog__buttonContainer">
    <ws:if data="{{type === 'ok'}}">
       <Controls.Button
          ws-autofocus="{{true}}"
          style="primary"
          viewmode="button"
          caption="{{okCaption}}"
-         attr:class="controls-SubmitPopup__button controls-Button__ellipsis controls-SubmitPopup__button-standard"
+         attr:class="controls-ConfirmationDialog__button controls-Button__ellipsis controls-ConfirmationDialog__button-standard"
          on:click="_sendResult()"/>
    </ws:if>
    <ws:else>
@@ -14,18 +14,18 @@
          style="primary"
          viewMode="button"
          caption="{{yesCaption}}"
-         attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
+         attr:class="controls-ConfirmationDialog__button{{type === 'yesnocancel' ? ' controls-ConfirmationDialog__button-mini' : ' controls-ConfirmationDialog__button-standard'}} controls-Button__ellipsis"
          on:click="_sendResult(true)"
       />
       <Controls.Button
          caption="{{noCaption}}"
-         attr:class="controls-SubmitPopup__button{{type === 'yesnocancel' ? ' controls-SubmitPopup__button-mini' : ' controls-SubmitPopup__button-standard'}} controls-Button__ellipsis"
+         attr:class="controls-ConfirmationDialog__button{{type === 'yesnocancel' ? ' controls-ConfirmationDialog__button-mini' : ' controls-ConfirmationDialog__button-standard'}} controls-Button__ellipsis"
          on:click="_sendResult(false)"
       />
       <ws:if data="{{type === 'yesnocancel'}}">
          <Controls.Button
             caption="{{cancelCaption}}"
-            attr:class="controls-SubmitPopup__button controls-SubmitPopup__button-mini controls-Button__ellipsis"
+            attr:class="controls-ConfirmationDialog__button controls-ConfirmationDialog__button-mini controls-Button__ellipsis"
             on:click="_sendResult()"
          />
       </ws:if>
