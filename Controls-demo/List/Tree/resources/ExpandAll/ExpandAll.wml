@@ -4,7 +4,7 @@
               source="{{_viewSource}}"
               displayProperty="title"
               keyProperty="id"
-              expandAll="{{true}}"
+              expandedItems="{{_expandedItems}}"
               allowEmptySelection="{{false}}"
               parentProperty="parent"
               nodeProperty="type"

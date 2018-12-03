@@ -28,19 +28,6 @@ define('Controls/List/TreeControl', [
          listViewModel.toggleExpanded(dispItem);
          self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
       },
-      prepareExpandedItems: function(nodeProperty, viewModel) {
-         var
-            expandedItems = [],
-            items = viewModel.getItems();
-         if (items) {
-            items.each(function(item) {
-               if (item.get(nodeProperty) === true && viewModel.hasChildItem(item.getId())) {
-                  expandedItems.push(item.getId());
-               }
-            });
-         }
-         return expandedItems;
-      },
       toggleExpanded: function(self, dispItem) {
          var
             filter = cClone(self._options.filter),
@@ -49,7 +36,7 @@ define('Controls/List/TreeControl', [
             nodeKey = item.getId(),
             expanded = !listViewModel.isExpanded(dispItem);
          self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
-         if (!self._options.expandAll && !self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
+         if (!_private.isExpandAll(self._options.expandedItems) && !self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
             self._nodesSourceControllers[nodeKey] = new SourceController({
                source: self._options.source,
                navigation: self._options.navigation
@@ -99,6 +86,9 @@ define('Controls/List/TreeControl', [
             self._nodesSourceControllers[nodeId].destroy();
          }
          delete self._nodesSourceControllers[nodeId];
+      },
+      isExpandAll: function(expandedItems) {
+         return expandedItems instanceof Array && expandedItems[0] === null;
       }
    };
 
@@ -122,21 +112,14 @@ define('Controls/List/TreeControl', [
       constructor: function(cfg) {
          this._nodesSourceControllers = {};
          this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
-         this._viewModelReadyCallbackFn = this._viewModelReadyCallback.bind(this);
          if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
          }
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
-      _viewModelReadyCallback: function(viewModel) {
-         var expandedItems;
-         viewModel.subscribe('onNodeRemoved', this._onNodeRemovedFn);
-         if (this._options.expandAll) {
-            expandedItems = _private.prepareExpandedItems(this._options.nodeProperty, viewModel);
-         } else {
-            expandedItems = this._options.expandedItems;
-         }
-         viewModel.setExpandedItems(expandedItems);
+      _afterMount: function() {
+         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+         this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
       },
       _dataLoadCallback: function() {
          if (this._options.dataLoadCallback) {
@@ -190,13 +173,7 @@ define('Controls/List/TreeControl', [
          result = this._children.baseControl.reload(filter);
          result.addCallback(function() {
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            var
-               viewModel = self._children.baseControl.getViewModel(),
-               newExpandedItems = [];
-            if (self._options.expandAll) {
-               newExpandedItems = _private.prepareExpandedItems(self._options.nodeProperty, viewModel);
-            }
-            viewModel.setExpandedItems(newExpandedItems);
+            self._children.baseControl.getViewModel().resetExpandedItems();
          });
          return result;
       },

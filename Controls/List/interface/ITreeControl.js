@@ -28,13 +28,16 @@ define('Controls/List/interface/ITreeControl', [
 
    /**
     * @name Controls/List/interface/ITreeControl#expandedItems
-    * @cfg {{Array.<String>}} Arrays of identifiers of expanded nodes.
-    * It is assumed that all data will be loaded initially.
+    * @cfg {{Array.<String>}} Array of identifiers of expanded items.
+    * <b>Note:</b>
+    * To expand all items, this option must be set as array containing one element “null”.
+    * In this case, it is assumed that all data will be loaded initially.
     */
 
    /**
-    * @name Controls/List/interface/ITreeControl#expandAll
-    * @cfg {Boolean} Expand all items on data loading.
+    * @name Controls/List/interface/ITreeControl#collapsedItems
+    * @cfg {Boolean} Array of identifiers of collapsed items.
+    * This option is used only when the value of  {@link Controls/List/interface/ITreeControl#expandedItems expandedItems} is [null].
     */
 
    /**

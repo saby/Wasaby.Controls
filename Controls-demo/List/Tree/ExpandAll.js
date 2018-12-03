@@ -17,6 +17,7 @@ define('Controls-demo/List/Tree/ExpandAll', [
                displayProperty: 'title'
             }
          ],
+         _expandedItems: [null],
 
          _beforeMount: function() {
             this._viewSource = new MemorySource({

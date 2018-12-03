@@ -540,16 +540,10 @@ define('Controls/List/BaseControl', [
                   self._listViewModel.setItems(receivedState);
                   self._items = receivedState;
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
-                  if (self._options.viewModelReadyCallback) {
-                     self._options.viewModelReadyCallback(self._listViewModel);
-                  }
                } else {
                   var
                      loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
                   loadDef.addCallback(function(items) {
-                     if (self._options.viewModelReadyCallback) {
-                        self._options.viewModelReadyCallback(self._listViewModel);
-                     }
                      return items;
                   });
                   return loadDef;

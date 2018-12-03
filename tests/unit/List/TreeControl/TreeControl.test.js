@@ -300,7 +300,7 @@ define([
          treeControl.reload();
          assert.deepEqual({}, treeGridViewModel._model._expandedItems);
       });
-      it('expandAll', function() {
+      it('Expand all', function() {
          var
             rawData = [
                { id: 1, type: true, parent: null },
@@ -317,7 +317,7 @@ define([
                keyProperty: 'id',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               expandAll: true
+               expandedItems: [null]
             },
             treeControl = new TreeControl(cfg),
             treeGridViewModel = new TreeGridViewModel(cfg);
@@ -338,8 +338,11 @@ define([
                }
             }
          };
-         treeControl._viewModelReadyCallback(treeGridViewModel);
-         assert.deepEqual({1: true}, treeGridViewModel._model._expandedItems);
+         assert.deepEqual({null: true}, treeGridViewModel._model._expandedItems);
+         assert.deepEqual({}, treeGridViewModel._model._collapsedItems);
+         treeGridViewModel.toggleExpanded(treeGridViewModel._model._display.at(0));
+         assert.deepEqual({null: true}, treeGridViewModel._model._expandedItems);
+         assert.deepEqual({1: true}, treeGridViewModel._model._collapsedItems);
       });
    });
 });

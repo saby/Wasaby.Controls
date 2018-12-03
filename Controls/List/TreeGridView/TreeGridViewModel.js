@@ -28,8 +28,8 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          setRoot: function(root) {
             this._model.setRoot(root);
          },
-         hasChildItem: function(key) {
-            return this._model.hasChildItem(key);
+         resetExpandedItems: function() {
+            this._model.resetExpandedItems();
          },
          getCurrent: function() {
             var

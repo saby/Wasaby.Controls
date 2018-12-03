@@ -1,6 +1,5 @@
 <Controls.List.BaseControl on:itemMouseMove="_itemMouseMove()"
                            scope="{{_options}}"
-                           viewModelReadyCallback="{{_viewModelReadyCallbackFn}}"
                            name="baseControl">
    <ws:expanderTemplate>
       <div on:click="_onExpanderClick(expanderTemplate.itemData.dispItem)"

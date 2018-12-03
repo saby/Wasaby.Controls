@@ -98,41 +98,29 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, item), 'Invalid value "isVisibleItem(123)".');
+            assert.isTrue(TreeViewModel._private.isVisibleItem.call(treeViewModel.prepareDisplayFilterData(),
+               item), 'Invalid value "isVisibleItem(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
-            assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild), 'Invalid value "isVisibleItem(234)".');
+            assert.isTrue(TreeViewModel._private.isVisibleItem.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild), 'Invalid value "isVisibleItem(234)".');
             treeViewModel.toggleExpanded(item, false);
-            assert.isFalse(TreeViewModel._private.isVisibleItem.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild), 'Invalid value "isVisibleItem(234)".');
+            assert.isFalse(TreeViewModel._private.isVisibleItem.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild), 'Invalid value "isVisibleItem(234)".');
          });
          it('displayFilter', function() {
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call(treeViewModel.prepareDisplayFilterData(),
+               item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
-            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
             treeViewModel.toggleExpanded(item, false);
-            assert.isFalse(TreeViewModel._private.displayFilterTree.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
+            assert.isFalse(TreeViewModel._private.displayFilterTree.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
          });
          it('getDisplayFilter', function() {
             assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedItems, treeViewModel._options).length === 1,
