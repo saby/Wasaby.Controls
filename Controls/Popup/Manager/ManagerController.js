@@ -7,11 +7,18 @@ define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseC
       return {
          _manager: null,
          _container: null,
+         _indicator: null,
          setManager: function(manager) {
             this._manager = manager;
          },
          setContainer: function(container) {
             this._container = container;
+         },
+         setIndicator: function(indicator) {
+            this._indicator = indicator;
+         },
+         getIndicator: function() {
+            return this._indicator;
          },
          getContainer: function() {
             return this._container;
