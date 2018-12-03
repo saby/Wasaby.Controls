@@ -15,7 +15,7 @@ define('Controls/interface/IMenu', [], function() {
     * @remark
     * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field. You can change the display of records by setting their values ​​for the following options:
+    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field. You can change the display of records by setting their values for the following options:
     *    -  displayProperty - defines the display field (By default 'title'),
     *    -  marker - sets the display of the row marker,
     *    -  multiLine - sets the display record to several lines.
@@ -68,7 +68,7 @@ define('Controls/interface/IMenu', [], function() {
     * @remark
     * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
-    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field. You can change the display of records by setting their values ​​for the following options:
+    * By default, the base template wml!Controls/Dropdown/resources/template/itemTemplate will display only the 'title' field. You can change the display of records by setting their values for the following options:
     *    -  displayProperty - defines the display field (By default 'title'),
     *    -  marker - sets the display of the row marker,
     *    -  multiLine - sets the display record to several lines.
