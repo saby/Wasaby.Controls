@@ -216,7 +216,8 @@ define('Controls/Validate/Controller',
           */
          isValid: function() {
             return this._validationResult;
-         }
+         },
+         _private: _private
       });
       return Validate;
    });
