@@ -4,6 +4,7 @@
 define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseController'],
    function(BaseController) {
       'use strict';
+
       // Модуль, необходимый для работы окон/панелей в слое совместимости
       // В WS2/WS3 модулях нет возможности работать через события, чтобы вызвать методы по работе с окнами
       // т.к. хелперы/инстансы старых компонентов могут не лежать в верстке. (а если и лежат, то нет возможности общаться с Manager)
@@ -17,6 +18,7 @@ define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseC
          setContainer: function(container) {
             this._container = container;
          },
+
          // Регистрируем индикатор, лежащий в application.
          // Необходимо для того, чтобы старый индикатор на вдомной странице мог работать через новый компонент
          setIndicator: function(indicator) {
@@ -81,5 +83,4 @@ define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseC
             return false;
          },
       };
-   }
-);
+   });
