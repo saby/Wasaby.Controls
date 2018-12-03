@@ -66,7 +66,7 @@ define('Controls/Application/_Head',
          },
          _afterUpdate: function() {
             for (var i = 0; i < this.reqCBArray.length; i++) {
-               if(this.reqCBArray[i].element) {
+               if (this.reqCBArray[i].element) {
                   this.reqCBArray[i].element.remove();
                } else {
                   this.reqCBArray[i].resolve.call();
