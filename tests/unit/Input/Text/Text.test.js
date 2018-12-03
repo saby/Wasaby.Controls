@@ -69,21 +69,13 @@ define(
                ctrl._focusInHandler();
                ctrl._clickHandler();
 
-               assert.deepEqual(calls, [
-                  {
-                     name: 'selection',
-                     value: {
-                        start: 5,
-                        end: 5
-                     }
-                  },
-                  {
-                     name: 'selection',
-                     value: {
-                        start: 0,
-                        end: 10
-                     }
-                  }]);
+               assert.deepEqual(calls, [{
+                  name: 'selection',
+                  value: {
+                     start: 0,
+                     end: 10
+                  }
+               }]);
             });
          });
          describe('Change event', function() {

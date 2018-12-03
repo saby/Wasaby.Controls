@@ -107,6 +107,18 @@ define('Controls/Input/Number',
             }
 
             NumberInput.superclass._changeHandler.apply(this, arguments);
+         },
+
+         _focusInHandler: function() {
+            NumberInput.superclass._focusInHandler.apply(this, arguments);
+
+            this._viewModel.reactOnFocusIn();
+         },
+
+         _focusOutHandler: function() {
+            NumberInput.superclass._focusOutHandler.apply(this, arguments);
+
+            this._viewModel.reactOnFocusOut();
          }
       });
 
@@ -115,7 +127,6 @@ define('Controls/Input/Number',
 
          defaultOptions.value = 0;
          defaultOptions.onlyPositive = false;
-         defaultOptions.selectOnClick = false;
          defaultOptions.showEmptyDecimals = false;
 
          return defaultOptions;
@@ -127,7 +138,6 @@ define('Controls/Input/Number',
          optionTypes.value = descriptor(Number);
          optionTypes.precision = descriptor(Number);
          optionTypes.onlyPositive = descriptor(Boolean);
-         optionTypes.selectOnClick = descriptor(Boolean);
          optionTypes.integersLength = descriptor(Number);
          optionTypes.showEmptyDecimals = descriptor(Boolean);
 

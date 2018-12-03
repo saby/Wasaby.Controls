@@ -20,7 +20,17 @@ define('Controls/Input/Number/ViewModel',
        */
 
       var _private = {
-         valueWithoutTrailingZerosRegExp: /[0-9 ]+(\.[0-9]([1-9]|0(?!0*$))*)?/,
+         valueWithoutTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
+
+         integerPartRegExp: /-?[0-9]+/,
+
+         onlyIntegerPart: function(value) {
+            return _private.integerPartRegExp.test(value);
+         },
+
+         isDecimalPartEqualZero: function(value) {
+            return !!value && value.indexOf('.0') === value.length - 2;
+         },
 
          prepareData: function(result) {
             var position = result.position;
@@ -92,6 +102,20 @@ define('Controls/Input/Number/ViewModel',
             }
 
             return false;
+         },
+
+         reactOnFocusIn: function() {
+            if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
+               this._displayValue += '.0';
+               this._shouldBeChanged = true;
+            }
+         },
+
+         reactOnFocusOut: function() {
+            if (_private.isDecimalPartEqualZero(this._displayValue)) {
+               this._displayValue = this._displayValue.substring(0, this._displayValue.length - 2);
+               this._shouldBeChanged = true;
+            }
          }
       });
 
