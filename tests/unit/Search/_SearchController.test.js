@@ -13,16 +13,20 @@ define(
       
       var data = [
             {
-               name: 'Sasha'
+               name: 'Sasha',
+               id: 0
             },
             {
-               name: 'Aleksey'
+               name: 'Aleksey',
+               id: 1
             },
             {
-               name: 'Dmitry'
+               name: 'Dmitry',
+               id: 2
             },
             {
-               name: 'Dmitry'
+               name: 'Dmitry',
+               id: 3
             }
          ],
          source = new Memory({
@@ -35,7 +39,8 @@ define(
                page: 0,
                mode: 'totalCount'
             }
-         };
+         },
+         sorting = [{id: 'DESC'}];
       
       describe('Controls/Controllers/_SearchController', function() {
          
@@ -80,6 +85,27 @@ define(
             
             searchController.search('');
             searchController.search('Sasha');
+         });
+   
+         it('search with sorting', function(done) {
+            var filter = {};
+            var searchController = new Search({
+               minSearchLength: 0,
+               source: source,
+               sorting: sorting,
+               navigation: navigation,
+               searchDelay: 0,
+               searchParam: 'name',
+               filter: filter,
+               searchCallback: function(res) {
+                  assert.equal(res.data.getCount(), 2);
+                  assert.equal(res.data.at(0).get('id'), 3);
+                  assert.equal(res.data.at(1).get('id'), 2);
+                  done();
+               }
+            });
+      
+            searchController.search('Dmitry');
          });
          
       });

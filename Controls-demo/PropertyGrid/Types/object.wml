@@ -1,0 +1,7 @@
+<ws:template name="Object">
+    <Controls-demo.PropertyGrid.ArrayTemplate
+            bind:value="item.value"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.ArrayTemplate>
+</ws:template>

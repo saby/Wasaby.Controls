@@ -51,6 +51,16 @@ define('Controls/List/Grid/GridView', [
                   elem.style.top = resultsPadding;
                });
             }
+         },
+         calcFooterPaddingClass: function(params) {
+            var
+               result = 'controls-GridView__footer controls-GridView__footer__paddingLeft_';
+            if (params.multiSelectVisibility === 'onhover' || params.multiSelectVisibility === 'visible') {
+               result += 'withCheckboxes';
+            } else {
+               result += params.paddingLeft || 'default';
+            }
+            return result;
          }
       },
       GridView = ListView.extend({
@@ -76,6 +86,10 @@ define('Controls/List/Grid/GridView', [
                requireDeferred.callback();
             });
             return requireDeferred;
+         },
+
+         _calcFooterPaddingClass: function(params) {
+            return _private.calcFooterPaddingClass(params);
          },
 
          _afterMount: function() {

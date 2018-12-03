@@ -2,8 +2,6 @@
    <div style="padding: 3em; background-color: rgba(38,59,74,0.22)">
       <h2>Для информации</h2>
       <Controls.Label caption="Информация"/>
-      <Controls.Input.Text name="info"
-						   attr:test_name="info"
-      />
+      <Controls.Input.Text name="info" bind:value="_value" attr:test_name="info" />
    </div>
 </div>
