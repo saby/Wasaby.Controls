@@ -1,1 +1,3 @@
-<ws:partial template="{{template}}" scope="{{templateOptions}}" attr:class="{{stackClassName}}"/>
+<div class="controls-Stack__content-wrapper {{stackClassName}}">
+   <ws:partial template="{{template}}" scope="{{templateOptions}}" attr:class="controls-Stack__content"/>
+</div>

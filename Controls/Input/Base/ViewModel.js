@@ -4,7 +4,6 @@ define('Controls/Input/Base/ViewModel',
       'Core/core-simpleExtend'
    ],
    function(clone, simpleExtend) {
-
       'use strict';
 
       var ViewModel = simpleExtend.extend({
@@ -106,9 +105,17 @@ define('Controls/Input/Base/ViewModel',
             this._oldSelection = clone(this._selection);
 
             this._shouldBeChanged = false;
+         },
+
+         select: function() {
+            this.selection = {
+               start: 0,
+               end: this.displayValue.length
+            };
+
+            this._shouldBeChanged = true;
          }
       });
 
       return ViewModel;
-   }
-);
+   });

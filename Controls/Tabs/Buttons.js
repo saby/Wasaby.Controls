@@ -91,7 +91,7 @@ define('Controls/Tabs/Buttons', [
     * @class Controls/Tabs/Buttons
     * @extends Core/Control
     * @mixes Controls/interface/ISingleSelectable
-    * @mixes Controls/Tabs/Buttons/interface/tabsButtonsInterface
+    * @mixes Controls/interface/ISource
     * @control
     * @public
     * @category List
@@ -114,10 +114,6 @@ define('Controls/Tabs/Buttons', [
     *       tabSpaceTemplate=".../spaceTemplate'"
     *       .....
     *    />
-    * </pre>
-    * Bordered icon button with default size.
-    * <pre>
-    *    <Controls.Button caption="Send document" style="iconButtonBordered"/>
     * </pre>
     * spaceTemplate:
     * <pre>
@@ -144,7 +140,7 @@ define('Controls/Tabs/Buttons', [
     *     <li>@text-color_Tabs-item_selected_secondary</li>
     * </ul>
     * @example
-    * Tabs Buttons with additional style.
+    * Tabs Buttons has style 'secondary'.
     * <pre>
     *    <Controls.Tabs.Buttons
     *       bind:selectedKey='_selectedKey'
@@ -154,7 +150,7 @@ define('Controls/Tabs/Buttons', [
     *       .....
     *    />
     * </pre>
-    * Tabs Buttons with default style
+    * Tabs Buttons has default style.
     * <pre>
     *    <Controls.Tabs.Buttons
     *       bind:selectedKey='_selectedKey'

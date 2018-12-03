@@ -1,0 +1,5 @@
+<Controls-demo.PropertyGrid.EnumTemplate
+            bind:value="itemValue[name]"
+            scope="{{item}}"
+            caption="{{name}}">
+</Controls-demo.PropertyGrid.EnumTemplate>

@@ -1,5 +1,5 @@
 define('Controls/Input/Area', [
-   'Controls/Input/Text',
+   'Controls/Input/OldText',
    'Core/constants',
 
    'WS.Data/Type/descriptor',
