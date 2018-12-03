@@ -118,7 +118,7 @@ define('Controls/Input/Base',
          },
 
          callChangeHandler: function(self) {
-            if (self._viewModel.displayValue !== self._displayValueWhenFocus) {
+            if (self._viewModel.displayValue !== self._displayValueAfterFocusIn) {
                self._changeHandler();
             }
          },
@@ -366,7 +366,7 @@ define('Controls/Input/Base',
           * @type {String}
           * @private
           */
-         _displayValueWhenFocus: '',
+         _displayValueAfterFocusIn: '',
 
          /**
           * @type {Controls/Utils/getTextWidth}
@@ -574,7 +574,7 @@ define('Controls/Input/Base',
                EventBus.globalChannel().notify('MobileInputFocus');
             }
 
-            this._displayValueWhenFocus = this._viewModel.displayValue;
+            this._displayValueAfterFocusIn = this._viewModel.displayValue;
          },
 
          /**
