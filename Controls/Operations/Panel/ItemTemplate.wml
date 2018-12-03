@@ -1,10 +1,10 @@
 <ws:partial attr:class="controls-operationsPanelV__item" template="wml!Controls/Toolbar/ToolbarItemTemplate">
     <ws:contentTemplate>
         <ws:if data="{{!!item.icon}}">
-            <i class="controls-ToolbarV__item_icon controls-ToolbarV__item_icon_{{size}} {{item.icon}} icon-{{item.iconStyle ? item.iconStyle : 'default'}}"/>
+            <i class="controls-Toolbar__item_icon_{{size}} {{item.icon}} icon-{{item.iconStyle ? item.iconStyle : 'primary'}}"/>
         </ws:if>
         <ws:if data="{{!!item.title}}">
-            <span class="controls-ToolbarV__item_title {{!!item.icon ? 'controls-operationsPanelV__item_titleWithIcon'}}">{{item.title}}</span>
+            <span class="controls-Toolbar__item_title {{!!item.icon ? 'controls-operationsPanelV__item_titleWithIcon'}}">{{item.title}}</span>
         </ws:if>
     </ws:contentTemplate>
 </ws:partial>

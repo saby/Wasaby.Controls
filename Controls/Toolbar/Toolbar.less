@@ -7,7 +7,7 @@
 .controls-Toolbar_item {
   .inline-flexbox();
   cursor: pointer;
-  margin-right: @spacing_Toolbar_between_items;
+  margin-right: @spacing_Toolbar-between-items;
   .align-items(center);
 }
 .controls-Toolbar_item:before {
@@ -24,27 +24,27 @@
   }
 }
 .controls-Toolbar_content__resetMargin {
-  margin-right: -@spacing_Toolbar_between_items;
+  margin-right: -@spacing_Toolbar-between-items;
 }
 .controls-Toolbar__item_icon_m {
-  .icon(@font-size_Toolbar__icon, 'cbuc-icons24');
+  .icon(@font-size_Toolbar-icon, 'cbuc-icons24');
 }
 .controls-Toolbar__item_title {
   white-space: nowrap;
-  color: @color_Toolbar__text;
+  color: @color_Toolbar-text;
 }
 .controls-Toolbar__item_title:active {
-  color: @color_Toolbar__text_active;
+  color: @color_Toolbar-text_active;
 }
 .controls-Toolbar__menu {
   .inline-flexbox();
   cursor: pointer;
 }
 .controls-Toolbar__item_icon {
-  color: @color_Toolbar__icon;
+  color: @color_Toolbar-icon;
 }
 .controls-Toolbar__item_icon:active {
-  color: @color_Toolbar__icon_active;
+  color: @color_Toolbar-icon_active;
 }
 .controls-Toolbar__item_title:active {
   text-decoration: underline;
@@ -56,17 +56,17 @@
 .ws-is-no-touch {
   .controls-Toolbar_item:hover {
     .controls-Toolbar__item_icon {
-      color: @color_Toolbar__icon_hovered;
+      color: @color_Toolbar-icon_hovered;
     }
     .controls-Toolbar__item_title {
       text-decoration: underline;
     }
     .controls-Toolbar__item_title {
       white-space: nowrap;
-      color: @color_Toolbar__text_hovered;
+      color: @color_Toolbar-text_hovered;
     }
   }
   .controls-Toolbar__menu:hover {
-    color: @color_Toolbar__icon_hovered;
+    color: @color_Toolbar-icon_hovered;
   }
 }
