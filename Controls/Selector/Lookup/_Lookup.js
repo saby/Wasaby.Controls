@@ -10,9 +10,10 @@ define('Controls/Selector/Lookup/_Lookup', [
    'wml!Controls/Selector/SelectedCollection/SelectedCollection',
    'wml!Controls/Selector/Lookup/resources/clearRecordsTemplate',
    'wml!Controls/Selector/Lookup/resources/showSelectorTemplate',
+   'Controls/Utils/tmplNotify',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate) {
+], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify) {
    'use strict';
 
    var
@@ -167,6 +168,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
    var Lookup = Control.extend({
       _template: template,
+      _notifyHandler: tmplNotify,
       _suggestState: false,
       _simpleViewModel: null,
       _availableWidthCollection: null,

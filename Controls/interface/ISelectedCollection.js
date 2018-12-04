@@ -66,4 +66,26 @@ define('Controls/interface/ISelectedCollection', [
     *    }
     * </pre>
     */
+
+   /**
+    * @event Controls/interface/ISelectedCollection#itemsChanged Happens when changing the set of the selected collection.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {RecordSet} items List of selected entries.
+    * @example
+    * The following example creates Selector/Button and shows how to handle the event.
+    * WML:
+    * <pre>
+    *    <Controls.Selector.Button
+    *       source="{{_source}}"
+    *       keyProperty="id"
+    *       on:itemsChanged="onItemsChanged()"
+    *    </Controls.Selector.Button>
+    * </pre>
+    * JS:
+    * <pre>
+    *    onItemsChanged: function(e, items) {
+    *       this.prepareItems(items);
+    *    }
+    * </pre>
+    */
 });
