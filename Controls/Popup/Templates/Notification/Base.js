@@ -85,6 +85,6 @@ define('Controls/Popup/Templates/Notification/Base',
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#contentTemplate
+ * @name Controls/Popup/Templates/Notification/Base#bodyContentTemplate
  * @cfg {function|String} Main content.
  */
