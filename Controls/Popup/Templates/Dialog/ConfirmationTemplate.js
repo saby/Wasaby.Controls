@@ -32,7 +32,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           * @cfg {String} Option description.
           * @variant default Default
           * @variant success Success
-          * @variant error Error
+          * @variant danger Danger
           */
 
          /**

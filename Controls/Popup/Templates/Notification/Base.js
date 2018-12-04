@@ -76,7 +76,7 @@ define('Controls/Popup/Templates/Notification/Base',
  * @variant warning
  * @variant primary
  * @variant done
- * @variant error
+ * @variant danger
  */
 
 /**

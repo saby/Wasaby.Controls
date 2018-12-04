@@ -36,6 +36,11 @@ define('Controls/Popup/Opener/InfoBox',
        */
 
       /**
+       * @name Controls/Popup/Opener/Infobox#closePopupBeforeUnmount
+       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+       */
+
+      /**
        * @name Controls/interface/IInfoboxOptions#config
        * @cfg {Config[]} Infobox options.
        */
@@ -55,6 +60,12 @@ define('Controls/Popup/Opener/InfoBox',
       var InfoBox = Base.extend({
          _openId: null,
          _closeId: null,
+
+         /**
+          * @name Controls/Popup/Opener/Infobox#isOpened
+          * @function
+          * @description Popup opened status.
+          */
 
          /**
           * Open popup.
