@@ -2,11 +2,11 @@ define('Controls/Application/_Wait',
    [
       'Core/Control',
       'Core/Deferred',
-      'Controls/Application/HeadDataContext',
+      'View/Request',
       'wml!Controls/Application/_Wait'
    ],
 
-   function(Base, Deferred, HeadDataContext, template) {
+   function(Base, Deferred, Request, template) {
       'use strict';
 
       var Page = Base.extend({
@@ -25,20 +25,16 @@ define('Controls/Application/_Wait',
             }
             return res;
          },
-         _beforeMount: function(options, context) {
+         _beforeMount: function() {
             this.waitDef = new Deferred();
-            context.headData.pushWaiterDeferred(this.waitDef);
+            Request.getCurrent().getStorage('HeadData').pushWaiterDeferred(this.waitDef);
             if (typeof window !== 'undefined') {
                this.waitDef.callback();
                this.waitDef = new Deferred();
             }
          }
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Page;
    }
 );
