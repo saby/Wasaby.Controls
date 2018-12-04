@@ -9,7 +9,6 @@
       on:keyup="_keyUpHandler()"
       on:click="_clickHandler()"
       on:input="_inputHandler()"
-      on:change="_changeHandler()"
       on:select="_selectHandler()"
       on:focusin="_focusInHandler()"
       on:focusout="_focusOutHandler()"
