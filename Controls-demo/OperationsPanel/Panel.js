@@ -8,8 +8,7 @@ define('Controls-demo/OperationsPanel/Panel', [
    'use strict';
    var PANEL_ITEMS_FIRST = [{
       id: 'remove',
-      icon: 'icon-Erase',
-      iconStyle: 'error',
+      icon: 'icon-Erase icon-error',
       '@parent': false,
       title: 'Удалить',
       parent: null
