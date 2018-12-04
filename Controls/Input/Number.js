@@ -140,13 +140,18 @@ define('Controls/Input/Number',
          return defaultOptions;
       };
 
-      NumberInput.getDefaultTypes = function() {
-         var optionTypes = Base.getDefaultTypes();
+      NumberInput.getOptionTypes = function() {
+         var optionTypes = Base.getOptionTypes();
 
-         optionTypes.value = descriptor(Number);
-         optionTypes.precision = descriptor(Number);
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * optionTypes.value = descriptor(Number|null);
+          * optionTypes.precision = descriptor(Number|null);
+          * optionTypes.integersLength = descriptor(Number|null);
+          */
+         delete optionTypes.value;
+
          optionTypes.onlyPositive = descriptor(Boolean);
-         optionTypes.integersLength = descriptor(Number);
          optionTypes.showEmptyDecimals = descriptor(Boolean);
 
          return optionTypes;

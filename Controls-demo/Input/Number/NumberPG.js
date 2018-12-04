@@ -38,7 +38,7 @@ define('Controls-demo/Input/Number/NumberPG',
             };
             this._componentOptions = {
                name: 'Number',
-               value: NaN,
+               value: null,
                placeholder: 'Input number',
                tagStyle: 'primary',
                precision: 2,

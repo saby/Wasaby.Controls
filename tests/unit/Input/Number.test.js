@@ -22,7 +22,7 @@ define(
          });
 
          it('getDefault', function() {
-            NumberInput.getDefaultTypes();
+            NumberInput.getOptionTypes();
             NumberInput.getDefaultOptions();
          });
          it('The model belongs to the "Controls/Input/Number/ViewModel" class.', function() {

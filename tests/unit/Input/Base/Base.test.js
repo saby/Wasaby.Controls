@@ -27,7 +27,7 @@ define(
          });
 
          it('getDefault', function() {
-            Base.getDefaultTypes();
+            Base.getOptionTypes();
             Base.getDefaultOptions();
          });
          it('Public method paste.', function() {

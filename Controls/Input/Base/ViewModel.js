@@ -107,7 +107,6 @@ define('Controls/Input/Base/ViewModel',
 
             this.value = value;
             this.options = options;
-            this.selection = value.length;
 
             this.changesHaveBeenApplied();
          },

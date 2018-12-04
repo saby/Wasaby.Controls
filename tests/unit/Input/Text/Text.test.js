@@ -23,7 +23,7 @@ define(
          });
 
          it('getDefault', function() {
-            Text.getDefaultTypes();
+            Text.getOptionTypes();
             Text.getDefaultOptions();
          });
          it('The model belongs to the "Controls/Input/Text/ViewModel" class.', function() {

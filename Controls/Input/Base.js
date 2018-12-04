@@ -703,7 +703,7 @@ define('Controls/Input/Base',
          };
       };
 
-      Base.getDefaultTypes = function() {
+      Base.getOptionTypes = function() {
          return {
 
             /**

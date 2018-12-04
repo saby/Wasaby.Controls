@@ -115,11 +115,14 @@ define('Controls/Input/Text',
          return defaultOptions;
       };
 
-      Text.getDefaultTypes = function() {
-         var optionTypes = Base.getDefaultTypes();
+      Text.getOptionTypes = function() {
+         var optionTypes = Base.getOptionTypes();
 
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * optionTypes.maxLength = descriptor(Number|null);
+          */
          optionTypes.trim = descriptor(Boolean);
-         optionTypes.maxLength = descriptor(Number);
          optionTypes.constraint = descriptor(String);
 
          return optionTypes;
