@@ -8,7 +8,7 @@ define('Controls/Container/Suggest/Layout/Styles',
        * @public
        * @author Герасимов А.М.
        *
-       * @css @box-shadow_Suggest Suggest box-shadow.
+       * @css @box-shadow-color_Suggest Suggest shadow color.
        * @css @border-color_Suggest Border color of suggest.
        * @css @border-width_Suggest Border width of suggest.
        * @css @background-color_Suggest Suggest background color.
