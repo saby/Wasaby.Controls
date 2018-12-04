@@ -1,16 +1,9 @@
 <div>
    <script>
-      require([
-         'Controls/Application/AppData',
-         'Controls/Application/HeadDataContext',
-         'Core/app-start',
-         'Core/app-init',
-         'Controls/Application/Core',
-         'View/Runner/tclosure',
-         {{_options.dependencies | unescape}}
-      ], function(AppData, HeadDataContext, AppStart, appInit, Core, tclosure) {
+      require(['Controls/Application/AppData', 'Core/app-start', 
+         'Core/app-init', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, AppStart, appInit, Core, tclosure) {
          appInit();
-         window.startContextData = {AppData: new AppData({}), headData: new HeadDataContext({})};
+         window.startContextData = {AppData: new AppData({})};
          var templateFn = {{_options.builder | unescape}};
          var cnt = Core.extend({
             _template: templateFn

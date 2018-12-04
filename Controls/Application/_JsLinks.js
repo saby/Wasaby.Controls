@@ -3,12 +3,12 @@ define('Controls/Application/_JsLinks',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_JsLinks',
-      'Controls/Application/HeadDataContext'
+      'View/Request'
    ],
 
    // Component for adding jsLinks into html. Waits for Application's content drawn,
 
-   function(Base, Deferred, template, HeadDataContext) {
+   function(Base, Deferred, template, Request) {
       'use strict';
 
       var Page = Base.extend({
@@ -21,11 +21,12 @@ define('Controls/Application/_JsLinks',
             // before returning html to client
             return this._beforeMount.apply(this, arguments);
          },
-         _beforeMount: function(options, context) {
+         _beforeMount: function() {
             if (typeof window !== 'undefined') {
                return;
             }
-            var def = context.headData.waitAppContent();
+            var headData = Request.getCurrent().getStorage('HeadData');
+            var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             def.addCallback(function onLoad(res) {
@@ -44,27 +45,22 @@ define('Controls/Application/_JsLinks',
             return 'theme?' + cssLink;
          },
          getDefines: function() {
+            var result = '';
             if (this.themedCss && this.simpleCss) {
-               var result = '';
-               for (var i = 0; i < this.simpleCss.length; i++) {
+               var i;
+               for (i = 0; i < this.simpleCss.length; i++) {
                   result += 'define("css!' + this.simpleCss[i] + '", "");';
                }
-               for (var i = 0; i < this.themedCss.length; i++) {
+               for (i = 0; i < this.themedCss.length; i++) {
                   result += 'define("css!' + this.getCssNameForDefineWithTheme(this.themedCss[i]) + '", "");';
                }
-            } else {
-               var result = '';
             }
 
             return result;
          }
 
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Page;
    }
 );
