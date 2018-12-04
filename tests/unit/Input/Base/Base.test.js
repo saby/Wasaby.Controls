@@ -258,7 +258,7 @@ define(
             });
          });
          describe('Click event', function() {
-            it('The selection is saved to the model.', function() {
+            it('The selection is saved to the model.', function(done) {
                ctrl._beforeMount({
                   value: '1234567890'
                });
@@ -269,13 +269,16 @@ define(
                ctrl._children.input.selectionEnd = 10;
                ctrl._clickHandler();
 
-               assert.deepEqual(calls, [{
-                  name: 'selection',
-                  value: {
-                     start: 10,
-                     end: 10
-                  }
-               }]);
+               setTimeout(function() {
+                  assert.deepEqual(calls, [{
+                     name: 'selection',
+                     value: {
+                        start: 10,
+                        end: 10
+                     }
+                  }]);
+                  done();
+               }, 100);
             });
          });
          describe('Select event', function() {

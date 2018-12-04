@@ -10,6 +10,7 @@ define('Controls/Input/Base',
       'Controls/Utils/getTextWidth',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
+      'Core/helpers/Function/runDelayed',
       'Controls/Utils/hasHorizontalScroll',
 
       'wml!Controls/Input/Base/Base',
@@ -20,7 +21,7 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
-      getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
+      getTextWidth, InputUtil, ViewModel, runDelayed, hasHorizontalScroll, template,
       fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
@@ -473,7 +474,22 @@ define('Controls/Input/Base',
                this._viewModel.select();
                this._firstClick = false;
             } else {
-               this._viewModel.selection = this._getFieldSelection();
+               var self = this;
+
+               /**
+                * If the value in the field is selected, when you click on the selected area,
+                * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
+                * Therefore, we remember the selection from the field at the next drawing cycle.
+                */
+               runDelayed(function() {
+                  self._viewModel.selection = self._getFieldSelection();
+
+                  /**
+                   * Changes are applied during the synchronization cycle. We are not in it,
+                   * so we need to inform the model that the changes have been applied.
+                   */
+                  self._viewModel.changesHaveBeenApplied();
+               });
             }
          },
 

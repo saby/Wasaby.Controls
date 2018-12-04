@@ -43,7 +43,7 @@ define(
                });
                ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
             });
-            it('The text is not selected.', function() {
+            it('The text is not selected.', function(done) {
                ctrl._options.selectOnClick = false;
 
                ctrl._children.input.selectionStart = 5;
@@ -52,13 +52,16 @@ define(
                ctrl._focusInHandler();
                ctrl._clickHandler();
 
-               assert.deepEqual(calls, [{
-                  name: 'selection',
-                  value: {
-                     start: 5,
-                     end: 5
-                  }
-               }]);
+               setTimeout(function() {
+                  assert.deepEqual(calls, [{
+                     name: 'selection',
+                     value: {
+                        start: 5,
+                        end: 5
+                     }
+                  }]);
+                  done();
+               }, 100);
             });
             it('The text is selected.', function() {
                ctrl._options.selectOnClick = true;
