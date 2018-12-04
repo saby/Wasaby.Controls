@@ -49,7 +49,10 @@ define('Controls/Button/validateIconStyle', ['Core/IoC'], function(IoC) {
       itemsSetOldIconStyle: function(items) {
          items.forEach(function(item) {
             if (item.get('icon') && !item.get('iconStyle')) {
-               item.iconStyle = iconStyleValidate.iconColorFromOptIconToIconStyle(item.get('icon'));
+               var newIconStyle = iconStyleValidate.iconColorFromOptIconToIconStyle(item.get('icon'));
+               if (newIconStyle) {
+                  item.set('iconStyle', newIconStyle);
+               }
             }
          });
       }
