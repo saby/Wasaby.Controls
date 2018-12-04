@@ -14,6 +14,7 @@
         suggestState="{{_options.suggestState}}"
         autoDropDown="{{_options.autoDropDown}}"
         filter="{{_options.filter}}"
+        sorting="{{_options.sorting}}"
         layerName="Controls/Container/Suggest/__ContentLayer">
     <Controls.Input.Search
             value="{{_options.value}}"

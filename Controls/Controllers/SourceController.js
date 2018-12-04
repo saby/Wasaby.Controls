@@ -155,6 +155,18 @@ define('Controls/Controllers/SourceController',
             }
          },
 
+         getLoadedDataCount: function() {
+            if (this._queryParamsController) {
+               return this._queryParamsController.getLoadedDataCount();
+            }
+         },
+
+         getAllDataCount: function() {
+            if (this._queryParamsController) {
+               return this._queryParamsController.getAllDataCount();
+            }
+         },
+
          hasMoreData: function(direction) {
             if (this._queryParamsController) {
                return this._queryParamsController.hasMoreData(direction);

@@ -12,9 +12,11 @@
       <ws:partial template="{{_options.content}}"
                   attr:class="controls-Render__field_textAlign_{{_options.textAlign}}">
          <ws:placeholderTemplate>
-            <div class="controls-Render__placeholder controls-Render__placeholder_overflow">
-               <ws:partial template="{{_options.placeholder}}"/>
-            </div>
+            <ws:if data="{{_options.placeholder}}">
+               <div class="controls-Render__placeholder controls-Render__placeholder_overflow">
+                  <ws:partial template="{{_options.placeholder}}"/>
+               </div>
+            </ws:if>
          </ws:placeholderTemplate>
       </ws:partial>
       <ws:if data="{{_options.afterFieldWrapper}}">
