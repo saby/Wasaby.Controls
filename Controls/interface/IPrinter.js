@@ -22,6 +22,7 @@ define('Controls/interface/IPrinter', [], function() {
     * @param {Boolean} params.pageLandscape Determines whether the page will be in portrait or landscape orientation.
     * @param {Array.<Column>} params.columns List of columns to export.
     * @param {String} params.parentProperty Name of the field that contains item's parent identifier.
+    * @param {Boolean} params.sync Determines whether the file should be downloaded synchronously.
     */
 
    /**

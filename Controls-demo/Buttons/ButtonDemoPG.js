@@ -49,7 +49,8 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                style: 'secondary',
                viewMode: 'link',
                tooltip: '',
-               name: 'Button'
+               name: 'Button',
+               href: ''
 
             };
             this._metaData = config[this._content].properties['ws-config'].options;
