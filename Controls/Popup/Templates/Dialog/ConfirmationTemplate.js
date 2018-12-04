@@ -23,9 +23,8 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          /**
           * @name Controls/Popup/Opener/Confirmation/Dialog#size
           * @cfg {String} Option description.
-          * @variant default По умоланию
-          * @variant success Успех
-          * @variant error Ошибка
+          * @variant default Default size
+          * @variant big Big Size
           */
 
          /**
@@ -39,16 +38,17 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#closeButtonVisibility
           * @cfg {Boolean} Determines whether display of the close button.
+          * @default false
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#contentArea
-          * @cfg {Content} Main content.
+          * @cfg {function|String} Main content.
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#footerArea
-          * @cfg {Content} Content at the bottom of the confirm panel.
+          * @cfg {function|String} Content at the bottom of the confirm panel.
           */
 
          _template: template,
