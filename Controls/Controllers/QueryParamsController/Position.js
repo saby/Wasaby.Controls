@@ -124,9 +124,9 @@ define('Controls/Controllers/QueryParamsController/Position',
             if (metaNextPostion) {
                if (metaNextPostion instanceof Array) {
                   if (loadDirection || this._options.direction !== 'both') {
-                     if (loadDirection !== 'down') {
+                     if (loadDirection !== 'down' || this._options.direction === 'after') {
                         this._beforePosition = metaNextPostion;
-                     } else if (loadDirection !== 'up') {
+                     } else if (loadDirection !== 'up' || this._options.direction === 'before') {
                         this._afterPosition = metaNextPostion;
                      }
                   } else {
@@ -147,11 +147,11 @@ define('Controls/Controllers/QueryParamsController/Position',
 
             } else {
                if (list.getCount()) {
-                  if (loadDirection !== 'down' || this._options.direction === 'after') {
+                  if (loadDirection !== 'down') {
                      edgeElem = list.at(0);
                      this._beforePosition = _private.resolvePosition(edgeElem, this._options.field);
                   }
-                  if (loadDirection !== 'up' || this._options.direction === 'before') {
+                  if (loadDirection !== 'up') {
                      edgeElem = list.at(list.getCount() - 1);
                      this._afterPosition = _private.resolvePosition(edgeElem, this._options.field);
                   }
