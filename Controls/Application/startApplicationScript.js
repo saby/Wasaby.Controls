@@ -2,20 +2,20 @@ define('Controls/Application/startApplicationScript',
    [
       'Core/Control',
       'Core/Deferred',
-      'wml!Controls/Application/startApplicationScript',
-      'Controls/Application/HeadDataContext'
+      'View/Request',
+      'wml!Controls/Application/startApplicationScript'
    ],
 
-   function(Base, Deferred, template, HeadDataContext) {
+   function(Base, Deferred, Request, template) {
       'use strict';
 
       var Page = Base.extend({
          _template: template,
-         _beforeMount: function(opts, ctx) {
+         _beforeMount: function(opts) {
             if (typeof window !== 'undefined') {
                return;
             }
-            var def = ctx.headData.waitAppContent();
+            var def = Request.getCurrent().getStorage('HeadData').waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             def.addCallback(function onLoad(res) {
@@ -38,11 +38,6 @@ define('Controls/Application/startApplicationScript',
          }
 
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
       return Page;
    }
 );
