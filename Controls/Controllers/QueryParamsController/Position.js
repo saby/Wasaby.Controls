@@ -147,11 +147,11 @@ define('Controls/Controllers/QueryParamsController/Position',
 
             } else {
                if (list.getCount()) {
-                  if (loadDirection !== 'down') {
+                  if (loadDirection !== 'down' || this._options.direction === 'after') {
                      edgeElem = list.at(0);
                      this._beforePosition = _private.resolvePosition(edgeElem, this._options.field);
                   }
-                  if (loadDirection !== 'up') {
+                  if (loadDirection !== 'up' || this._options.direction === 'before') {
                      edgeElem = list.at(list.getCount() - 1);
                      this._afterPosition = _private.resolvePosition(edgeElem, this._options.field);
                   }
