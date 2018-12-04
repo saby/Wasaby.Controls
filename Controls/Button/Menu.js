@@ -19,6 +19,7 @@ define('Controls/Button/Menu',
        * @mixes Controls/List/interface/IHierarchy
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IButton
        * @control
        * @public
@@ -39,11 +40,13 @@ define('Controls/Button/Menu',
 
          _beforeMount: function(options) {
             this._offsetClassName = MenuUtils.cssStyleGeneration(options);
-            this._filter = options.filter;
          },
 
          _beforeUpdate: function(options) {
-            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            if (this._options.size !== options.size || this._options.icon !== options.icon ||
+               this._options.viewMode !== options.viewMode) {
+               this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            }
          },
 
          _onItemClickHandler: function(event, result) {
