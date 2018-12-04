@@ -44,8 +44,8 @@ define([
          key2 = typeof key2 === 'string' ? key2.trim() : key2;
          assert.equal(key1, key2);
 
-         assert.equal(document.body.querySelectorAll('.form-content__name .controls-InputRender__field')[0].value, cfg.name);
-         assert.equal(document.body.querySelectorAll('.form-content__email .controls-InputRender__field')[0].value, cfg.email);
+         assert.equal(document.body.querySelectorAll('.form-content__name .controls-Base__nativeField')[0].value, cfg.name);
+         assert.equal(document.body.querySelectorAll('.form-content__email .controls-Base__nativeField')[0].value, cfg.email);
          assert.equal(document.body.querySelectorAll('.form-content__create .controls-BaseButton__text')[0].innerText, cfg.createButtonText);
          assert.equal(document.body.querySelectorAll('.form-content__select>*').length, cfg.selectButtonsCount);
       }
