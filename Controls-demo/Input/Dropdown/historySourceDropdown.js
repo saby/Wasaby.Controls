@@ -15,16 +15,14 @@ define('Controls-demo/Input/Dropdown//historySourceDropdown',
       'use strict';
 
       var items = [
-         { id: 1, title: 'admin.sbis.ru' },
-         { id: 2, title: 'cloud.sbis.ru' },
-         { id: 3, title: 'genie.sbis.ru' },
-         { id: 4, title: 'my.sbis.ru' },
-         { id: 5, title: 'online.sbis.ru' },
-         { id: 6, title: 'sbis.ru' },
-         { id: 7, title: 'tensor.ru' },
-         { id: 8, title: 'wi.sbis.ru' },
-         { id: 9, title: 'dev-online.sbis.ru' },
-         { id: 10, title: 'fix-online.sbis.ru' }
+         { id: 1, title: 'Commission' },
+         { id: 2, title: 'Task in development' },
+         { id: 3, title: 'Issuance of the GO stationary' },
+         { id: 4, title: 'Merge request' },
+         { id: 5, title: 'Agreement'},
+         { id: 6, title: 'Run in the workplace' },
+         { id: 7, title: 'AXO commission' },
+         { id: 8, title: 'Assignment to the personnel department' }
       ];
       var recentData = {
          _type: 'recordset',
@@ -38,7 +36,7 @@ define('Controls-demo/Input/Dropdown//historySourceDropdown',
       var pinnedData = {
          _type: 'recordset',
          d: [
-            [7]
+            [1], [2]
          ],
          s: [
             { n: 'ObjectId', t: 'Строка' },
