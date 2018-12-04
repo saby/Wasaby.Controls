@@ -1,83 +1,48 @@
 define('Controls/Input/Text/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/Base/ViewModel'
    ],
-   function(
-      BaseViewModel
-   ) {
+   function(BaseViewModel) {
       'use strict';
 
       /**
        * @class Controls/Input/Text/ViewModel
+       * @extends Controls/Input/Base/ViewModel
+       *
        * @private
+       *
        * @author Журавлев М.С.
        */
 
-      var
-         _private,
-         TextViewModel;
+      var _private = {
+         constraint: function(splitValue, constraint) {
+            var constraintRegExp = new RegExp(constraint, 'g');
+            var match = splitValue.insert.match(constraintRegExp);
 
-      _private = {
-         constraint: function(value, constraint) {
-            var
-               constraintValue = '',
-               reg = new RegExp(constraint);
-
-            for (var i = 0; i < value.length; i++) {
-               if (reg.test(value[i])) {
-                  constraintValue += value[i];
-               }
-            }
-
-            return constraintValue;
+            splitValue.insert = match ? match.join('') : '';
          },
 
-         maxLength: function(value, splitValue, maxLength) {
-            return value.substring(0, maxLength - splitValue.before.length - splitValue.after.length);
+         maxLength: function(splitValue, maxLength) {
+            var maxInsertionLength = maxLength - splitValue.before.length - splitValue.after.length;
+
+            splitValue.insert = splitValue.insert.substring(0, maxInsertionLength);
          }
       };
 
-      TextViewModel = BaseViewModel.extend({
-         constructor: function(options) {
-            this._options = options;
-         },
-
-         /**
-             * Валидирует и подготавливает новое значение по splitValue
-             * @param splitValue
-             * @returns {{value: (*|String), position: (*|Integer)}}
-             */
-         handleInput: function(splitValue) {
-            var insert = splitValue.insert;
-
-            if (this._options.constraint) {
-               insert = _private.constraint(insert, this._options.constraint);
+      var ViewModel = BaseViewModel.extend({
+         handleInput: function(splitValue, inputType) {
+            if (inputType === 'insert') {
+               if (this.options.constraint) {
+                  _private.constraint(splitValue, this.options.constraint);
+               }
+               if (this.options.maxLength) {
+                  _private.maxLength(splitValue, this.options.maxLength);
+               }
             }
 
-            if (this._options.maxLength) {
-               insert = _private.maxLength(insert, splitValue, this._options.maxLength);
-            }
-
-            this._options.value = splitValue.before + insert + splitValue.after;
-            this._nextVersion();
-
-            return {
-               value: splitValue.before + insert + splitValue.after,
-               position: splitValue.before.length + insert.length
-            };
-         },
-
-         updateOptions: function(options) {
-            this._options.constraint = options.constraint;
-            this._options.maxLength = options.maxLength;
-            this._options.value = options.value;
-            this._nextVersion();
+            return ViewModel.superclass.handleInput.call(this, splitValue, inputType);
          }
       });
 
-      //Приходится записывать _private в свойство, для доступа из unit-тестов
-      TextViewModel._private = _private;
-
-      return TextViewModel;
-   }
-);
+      return ViewModel;
+   });

@@ -22,4 +22,7 @@
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
       <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
    </ws:if>
+   <div attr:class="{{_calcFooterPaddingClass(_options)}}">
+      <ws:partial template="{{_options.footerTemplate}}"/>
+   </div>
 </table>
