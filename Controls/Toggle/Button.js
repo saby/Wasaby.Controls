@@ -20,8 +20,6 @@ define('Controls/Toggle/Button', [
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @ignoreOptions icon
-    *
     * @demo Controls-demo/Buttons/Toggle/ToggleDemo
     */
 
