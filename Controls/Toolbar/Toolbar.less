@@ -40,10 +40,26 @@
   .inline-flexbox();
   cursor: pointer;
 }
-.controls-Toolbar__item_icon {
-  color: @color_Toolbar-icon;
+.controls-Toolbar__item_icon_secondary {
+  color: @color_secondary;
 }
-.controls-Toolbar__item_icon:active {
+//TODO выпилить старые вариант iconStyle когда пмо и ддл поддержат новые iconStyle'ы
+.controls-Toolbar__item_icon_hover, .controls-Toolbar__item_icon_primary {
+  color: @color_primaryV;
+}
+.controls-Toolbar__item_icon_error, .controls-Toolbar__item_icon_danger {
+  color: @color_danger;
+}
+.controls-Toolbar__item_icon_done, .controls-Toolbar__item_icon_success {
+  color: @color_success;
+}
+.controls-Toolbar__item_icon_disabled, .controls-Toolbar__item_icon_info {
+  color: @color_info;
+}
+.controls-Toolbar__item_icon_attention, .controls-Toolbar__item_icon_warning {
+  color: @color_warning;
+}
+.controls-Toolbar__item_icon_secondary:active {
   color: @color_Toolbar-icon_active;
 }
 .controls-Toolbar__item_title:active {
@@ -55,7 +71,7 @@
 }
 .ws-is-no-touch {
   .controls-Toolbar_item:hover {
-    .controls-Toolbar__item_icon {
+    .controls-Toolbar__item_icon_secondary {
       color: @color_Toolbar-icon_hovered;
     }
     .controls-Toolbar__item_title {

@@ -8,7 +8,7 @@
                         size="{{_options.size}}"/>
             </ws:if>
         </ws:for>
-    <div if="{{_needShowMenu}}" class="controls-Toolbar__menu controls-Toolbar__item_icon"  name="popupTarget" on:click="_showMenu()">
+    <div if="{{_needShowMenu}}" class="controls-Toolbar__menu controls-Toolbar__item_icon_secondary"  name="popupTarget" on:click="_showMenu()">
         <i class="icon-medium icon-ExpandDown"/>
     </div>
     <Controls.Dropdown.Opener name="menuOpener" popupOptions="{{_popupOptions}}" />

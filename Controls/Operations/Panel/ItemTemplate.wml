@@ -1,7 +1,7 @@
 <ws:partial attr:class="controls-operationsPanelV__item" template="wml!Controls/Toolbar/ToolbarItemTemplate">
     <ws:contentTemplate>
         <ws:if data="{{!!item.icon}}">
-            <i class="controls-Toolbar__item_icon_{{size}} {{item.icon}} icon-{{item.iconStyle ? item.iconStyle : 'default'}}"/>
+            <i class="controls-Toolbar__item_icon_{{size}} {{item.icon}} controls-Toolbar__item_icon_{{item.iconStyle || 'secondary'}}"/>
         </ws:if>
         <ws:if data="{{!!item.title}}">
             <span class="controls-Toolbar__item_title {{!!item.icon ? 'controls-operationsPanelV__item_titleWithIcon'}}">{{item.title}}</span>

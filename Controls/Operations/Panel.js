@@ -4,13 +4,15 @@ define('Controls/Operations/Panel', [
    'wml!Controls/Operations/Panel/ItemTemplate',
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils',
+   'Controls/Button/validateIconStyle',
    'css!theme?Controls/Operations/Panel/Panel'
 ], function(
    Control,
    template,
    ItemTemplate,
    Memory,
-   WidthUtils
+   WidthUtils,
+   validateIconStyle
 ) {
    'use strict';
 
@@ -36,6 +38,7 @@ define('Controls/Operations/Panel', [
          if (source) {
             result = source.query().addCallback(function(dataSet) {
                self._items = dataSet.getAll();
+               validateIconStyle.itemsSetOldIconStyle(self._items);
                return self._items;
             });
          }
