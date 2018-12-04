@@ -195,11 +195,11 @@ define('Controls/List/TreeControl', [
          var model = this._children.baseControl.getViewModel();
 
          if (model.getDragItemData() && itemData.dispItem.isNode()) {
-            this._setDragTargetPosition(itemData, nativeEvent);
+            this._nodeMouseMove(itemData, nativeEvent);
          }
       },
 
-      _setDragTargetPosition: function(itemData, event) {
+      _nodeMouseMove: function(itemData, event) {
          var
             position,
             topOffset,

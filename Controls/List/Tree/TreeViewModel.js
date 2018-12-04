@@ -335,6 +335,8 @@ define('Controls/List/Tree/TreeViewModel', [
                //Collapse all the nodes that we move.
                entity.getItems().forEach(function(id) {
                   item = this.getItemById(id, this._options.keyProperty);
+
+                  //Not all of the moved items can be in the current recordSet
                   if (item) {
                      this.toggleExpanded(item, false);
                   }
@@ -345,6 +347,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          setDragItemData: function(itemDragData) {
+            //Displays the movable item as closed
             if (itemDragData && itemDragData.isExpanded) {
                itemDragData.isExpanded = false;
             }
@@ -355,12 +358,16 @@ define('Controls/List/Tree/TreeViewModel', [
             var result;
 
             if (targetData && targetData.dispItem.isNode()) {
-               result = position ? this._calculateDragTargetPosition(targetData, position) : {
-                  index: targetData.index,
-                  position: 'on',
-                  item: targetData.item,
-                  data: targetData
-               };
+               if (position === 'after' || position === 'before') {
+                  result = this._calculateDragTargetPosition(targetData, position);
+               } else {
+                  result = {
+                     index: targetData.index,
+                     position: 'on',
+                     item: targetData.item,
+                     data: targetData
+                  };
+               }
             } else {
                result = TreeViewModel.superclass.calculateDragTargetPosition.apply(this, arguments);
             }
@@ -372,8 +379,10 @@ define('Controls/List/Tree/TreeViewModel', [
             var
                result,
                startPosition,
-               afterOpenedNode = position === 'after' && this._expandedItems[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)];
+               afterExpandedNode = position === 'after' && this._expandedItems[ItemsUtil.getPropertyValue(itemData.dispItem.getContents(), this._options.keyProperty)];
 
+            //The position should not change if the record is dragged from the
+            //bottom/top to up/down and brought to the bottom/top of the folder.
             if (this._prevDragTargetPosition) {
                if (this._prevDragTargetPosition.index === itemData.index) {
                   startPosition = this._prevDragTargetPosition.position;
@@ -382,7 +391,7 @@ define('Controls/List/Tree/TreeViewModel', [
                }
             }
 
-            if (position !== startPosition && !afterOpenedNode) {
+            if (position !== startPosition && !afterExpandedNode) {
                result = {
                   index: itemData.index,
                   item: itemData.item,
@@ -396,9 +405,14 @@ define('Controls/List/Tree/TreeViewModel', [
 
          setDragTargetPosition: function(targetPosition) {
             if (targetPosition && targetPosition.position === 'on') {
+
+               //When an item is moved to a folder, the fake record should be displayed at the previous position.
+               //If do not display the fake entry, there will be a visual jump of the interface.
                this._setPrevDragTargetPosition(targetPosition);
             } else {
                this._prevDragTargetPosition = null;
+
+               //The fake item must be displayed at the correct level.
                if (targetPosition) {
                   this._draggingItemData.level = targetPosition.data.level;
                }

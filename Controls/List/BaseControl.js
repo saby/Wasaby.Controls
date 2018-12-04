@@ -826,12 +826,12 @@ define('Controls/List/BaseControl', [
 
          if (!this._listViewModel.getDragEntity()) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
-            if (dragEnterResult) {
-               if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
-                  draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
-                  this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
-               }
 
+            if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+               draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+               this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
+               this._listViewModel.setDragEntity(dragObject.entity);
+            } else if (dragEnterResult === true) {
                this._listViewModel.setDragEntity(dragObject.entity);
             }
          }
@@ -841,28 +841,24 @@ define('Controls/List/BaseControl', [
          this._listViewModel.setDragTargetPosition(null);
       },
 
-      _documentDragStart: function() {
-         this._isDragging = true;
-      },
-
       _documentDragEnd: function() {
-         this._isDragging = false;
          this._listViewModel.setDragTargetPosition(null);
-         this._listViewModel.setDragEntity(null);
          this._listViewModel.setDragItemData(null);
+         this._listViewModel.setDragEntity(null);
       },
 
       _itemMouseEnter: function(event, itemData) {
          var
-            dragEntity,
             dragPosition,
-            dragItemData;
-
-         if (this._options.itemsDragNDrop && this._isDragging) {
-            dragItemData = this._listViewModel.getDragItemData();
+            dragItemData,
             dragEntity = this._listViewModel.getDragEntity();
-            if (dragEntity && (!dragItemData || dragItemData.key !== itemData.key)) {
+
+         if (dragEntity) {
+            dragItemData = this._listViewModel.getDragItemData();
+
+            if (!dragItemData || dragItemData.key !== itemData.key) {
                dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+
                if (this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
                   this._listViewModel.setDragTargetPosition(dragPosition);
                }

@@ -12,7 +12,6 @@
          on:dragLeave="_dragLeave()"
          on:dragEnter="_dragEnter()"
          on:documentDragEnd="_documentDragEnd()"
-         on:documentDragStart="_documentDragStart()"
          draggingTemplate="{{_options.draggingTemplate}}"
          name="dragNDropController">
          <ws:content>

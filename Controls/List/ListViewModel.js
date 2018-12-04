@@ -78,7 +78,7 @@ define('Controls/List/ListViewModel',
                if (this._draggingItemData.key === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
-               if (this._dragEntity && this._dragEntity.getItems().indexOf(itemsModelCurrent.key) !== -1) {
+               if (this._dragEntity.getItems().indexOf(itemsModelCurrent.key) !== -1) {
                   itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
                }
                if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {

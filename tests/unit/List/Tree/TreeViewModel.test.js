@@ -473,6 +473,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             it('on node without prev state', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
 
                //move on 123
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
@@ -486,6 +487,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             it('on node', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
 
                //move before 456
                itemData = tvm.getItemDataByItem(tvm.getItemById('456', 'id'));
@@ -551,6 +553,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             it('move down node', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
 
                //move after 123
                itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
@@ -573,6 +576,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             it('move up item', function() {
                //move item 567
                tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
 
                //move before 456
                itemData = tvm.getItemDataByItem(tvm.getItemById('456', 'id'));
