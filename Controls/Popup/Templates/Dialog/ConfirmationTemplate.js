@@ -42,12 +42,12 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#contentArea
+          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#bodyContentTemplate
           * @cfg {function|String} Main content.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#footerArea
+          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#footerContentTemplate
           * @cfg {function|String} Content at the bottom of the confirm panel.
           */
 
