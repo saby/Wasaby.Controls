@@ -75,7 +75,7 @@ define('Controls/Popup/Templates/Notification/Base',
  * @cfg {String} Notification display style.
  * @variant warning
  * @variant primary
- * @variant done
+ * @variant success
  * @variant danger
  */
 
