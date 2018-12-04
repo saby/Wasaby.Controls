@@ -22,7 +22,6 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options) {
-            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
             this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
             if (typeof window !== 'undefined') {
@@ -51,6 +50,9 @@ define('Controls/Application/_Head',
                return res;
             });
             return innerDef;
+         },
+         _afterMount: function() {
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
          _beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
