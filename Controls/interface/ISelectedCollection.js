@@ -15,12 +15,12 @@ define('Controls/interface/ISelectedCollection', [
 
    /**
     * @name Controls/interface/ISelectedCollection#multiSelect
-    * @cfg {Boolean} Records selection mode, if value false you can choose only one entry
+    * @cfg {Boolean} Selection mode, if value false you can choose only one item.
     */
 
    /**
     * @name Controls/interface/ISelectedCollection#selectorTemplate
-    * @cfg {Function} Record selection panel template.
+    * @cfg {Function} Items selection panel template.
     * @example
     * In the following example, we will create a lookup by specifying selectorTemplate, before this we define the templateOptions value in advance.
     * WML:

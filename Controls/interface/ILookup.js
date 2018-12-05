@@ -14,6 +14,6 @@ define('Controls/interface/ILookup', [
 
    /**
     * @name Controls/interface/ILookup#multiLine
-    * @cfg {Boolean} Enables multi-line display mode.
+    * @cfg {Boolean} Determines then Lookup can be displayed in multi line mode.
     */
 });
