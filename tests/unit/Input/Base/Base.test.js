@@ -1,5 +1,6 @@
 define(
    [
+      'Core/EventBus',
       'Core/constants',
       'Core/core-instance',
       'Controls/Input/Base',
@@ -7,7 +8,7 @@ define(
       'tests/resources/TemplateUtil',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(constants, instance, Base, ProxyCall, TemplateUtil, SyntheticEvent) {
+   function(EventBus, constants, instance, Base, ProxyCall, TemplateUtil, SyntheticEvent) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
@@ -307,17 +308,75 @@ define(
                assert.equal(calls.length, 0);
             });
          });
+         describe('Focus in event', function() {
+            var savedNotify = EventBus.globalChannel().notify;
+
+            beforeEach(function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
+            });
+            afterEach(function() {
+               EventBus.globalChannel().notify = savedNotify;
+            });
+            it('Notification to the global channel about the occurrence of the focus in event. The environment is mobile IOS.', function() {
+               ctrl._isMobileIOS = true;
+
+               ctrl._focusInHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['MobileInputFocus']
+               }]);
+            });
+            it('Not occur notification to the global channel about the occurrence of the focus in event. The environment is not mobile IOS.', function() {
+               ctrl._isMobileIOS = false;
+
+               ctrl._focusInHandler();
+
+               assert.deepEqual(calls.length, 0);
+            });
+         });
          describe('Focus out event', function() {
+            var savedNotify = EventBus.globalChannel().notify;
+
+            beforeEach(function() {
+               EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
+               ctrl._beforeMount({
+                  value: ''
+               });
+            });
+            afterEach(function() {
+               EventBus.globalChannel().notify = savedNotify;
+            });
             it('Scroll to start.', function() {
                ctrl._children.input.scrollLeft = 100;
                ctrl._focusOutHandler();
 
                assert.equal(ctrl._children.input.scrollLeft, 0);
             });
+            it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
+               ctrl._isMobileIOS = true;
+
+               ctrl._focusOutHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['MobileInputFocusOut']
+               }]);
+            });
+            it('Not occur notification to the global channel about the occurrence of the focus out event. The environment is not mobile IOS.', function() {
+               ctrl._isMobileIOS = false;
+
+               ctrl._focusOutHandler();
+
+               assert.deepEqual(calls.length, 0);
+            });
          });
          describe('Click event on the placeholder.', function() {
             beforeEach(function() {
-               ctrl._children.input.focus = ProxyCall.apply(ctrl._notify, 'focus', calls, true);
+               ctrl._children.input.focus = ProxyCall.apply(ctrl._children.input.focus, 'focus', calls, true);
             });
             it('Focus the field through a script in ie browser version 10.', function() {
                ctrl._ieVersion = 10;

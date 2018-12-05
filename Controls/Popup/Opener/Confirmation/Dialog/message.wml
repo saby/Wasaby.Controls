@@ -1,5 +1,5 @@
-<div class="controls-SubmitPopup__message {{hasDetails ? 'controls-SubmitPopup__message_withDetails'}}">
-  <div class="controls-SubmitPopup__message-centered">
+<div class="controls-ConfirmationDialog__message {{hasDetails ? 'controls-ConfirmationDialog__message_withDetails'}}">
+  <div class="controls-ConfirmationDialog__message-centered">
     <ws:partial template="{{content}}"/>
   </div>
 </div>

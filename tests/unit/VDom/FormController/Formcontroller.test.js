@@ -44,8 +44,8 @@ define([
          key2 = typeof key2 === 'string' ? key2.trim() : key2;
          assert.equal(key1, key2);
 
-         assert.equal(document.body.querySelectorAll('.form-content__name .controls-InputRender__field')[0].value, cfg.name);
-         assert.equal(document.body.querySelectorAll('.form-content__email .controls-InputRender__field')[0].value, cfg.email);
+         assert.equal(document.body.querySelectorAll('.form-content__name .controls-Base__nativeField')[0].value, cfg.name);
+         assert.equal(document.body.querySelectorAll('.form-content__email .controls-Base__nativeField')[0].value, cfg.email);
          assert.equal(document.body.querySelectorAll('.form-content__create .controls-BaseButton__text')[0].innerText, cfg.createButtonText);
          assert.equal(document.body.querySelectorAll('.form-content__select>*').length, cfg.selectButtonsCount);
       }
@@ -508,6 +508,52 @@ define([
                   }, {
                      action: function(control) {
                         assert.equal(control._children.Container._options.record.get('testValue'), 'testValue');
+                     }
+                  }
+               ]);
+               resultDef.addCallbacks(function() {
+                  done();
+               }, function(e) {
+                  done(e);
+               });
+            });
+            mountedDef.addErrback(function(e) {
+               done(e);
+            });
+         });
+      }).timeout(6000);
+
+      it('FormController - multiple update', function(done) {
+         waiting.call(this, function () {
+
+            var mountedDef = mountControl('Controls-demo/FormController/FormController');
+            mountedDef.addCallback(function(control) {
+               var resultDef = doSteps(control, [
+                  {
+                     action: 'create',
+                     answer: true
+                  }, {
+                     action: 'update',
+                     answer: true
+                  }, {
+                     action: function(control) {
+                        control._record.set('value1', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.formControllerInst.update().addErrback(function(e) {
+                           done(e);
+                        });
+                     }
+                  }, {
+                     action: function(control) {
+                        control._record.set('value2', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.formControllerInst.update().addErrback(function(e) {
+                           done(e);
+                        });
                      }
                   }
                ]);

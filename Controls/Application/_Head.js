@@ -3,11 +3,10 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController',
-      'Controls/Application/HeadDataContext'
+      'View/Request',
+      'Core/Themes/ThemesController'
    ],
-   function(Base, Deferred, template, HeadDataContext, ThemesController) {
+   function(Base, Deferred, template, Request, ThemesController) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -22,8 +21,7 @@ define('Controls/Application/_Head',
             // before returning html to client
             return this._beforeMount.apply(this, arguments);
          },
-         _beforeMount: function(options, context, receivedState) {
-            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+         _beforeMount: function(options) {
             this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
             if (typeof window !== 'undefined') {
@@ -39,7 +37,8 @@ define('Controls/Application/_Head',
             } else {
                this.staticDomainsStringified = '[]';
             }
-            var def = context.headData.waitAppContent();
+            var headData = Request.getCurrent().getStorage('HeadData');
+            var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
@@ -52,12 +51,30 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
+         _afterMount: function() {
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+         },
          _beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
+            if (ThemesController.getInstance().getReqCbArray) {
+               this.reqCBArray = ThemesController.getInstance().getReqCbArray();
+            } else {
+               this.reqCBArray = [];
+            }
             this.themedCss = csses.themedCss;
             this.simpleCss = csses.simpleCss;
             this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
+         },
+         _afterUpdate: function() {
+            for (var i = 0; i < this.reqCBArray.length; i++) {
+               if (this.reqCBArray[i].element) {
+                  this.reqCBArray[i].element.remove();
+               } else {
+                  this.reqCBArray[i].resolve.call();
+               }
+            }
+            this.reqCBArray = null;
          },
          isArrayHead: function() {
             return Array.isArray(this._options.head);
@@ -69,11 +86,7 @@ define('Controls/Application/_Head',
             return value.replace('.css', '') + '_' + theme + '.css';
          }
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Page;
    }
 );

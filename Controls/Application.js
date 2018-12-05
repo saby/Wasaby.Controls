@@ -12,8 +12,8 @@ define('Controls/Application',
       'Core/compatibility',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
-      'Controls/Application/HeadDataContext',
-      'Controls/Application/LinkResolver',
+      'Core/LinkResolver/LinkResolver',
+      'View/Request',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
       'css!theme?Controls/Application/Application'
@@ -46,8 +46,8 @@ define('Controls/Application',
       compatibility,
       AppData,
       ScrollContext,
-      HeadDataContext,
       LinkResolver,
+      Request,
       ThemesController) {
       'use strict';
 
@@ -213,7 +213,9 @@ define('Controls/Application',
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = context.AppData.application;
 
-            self.linkResolver = new LinkResolver(context.headData.isDebug,
+            var headData = Request.getCurrent().getStorage('HeadData');
+
+            self.linkResolver = new LinkResolver(headData.isDebug,
                self.buildnumber,
                self.wsRoot,
                self.appRoot,
@@ -221,9 +223,9 @@ define('Controls/Application',
 
             // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
 
-            context.headData.pushDepComponent(self.application, false);
+            headData.pushDepComponent(self.application, false);
 
-            if (receivedState.csses && !context.headData.isDebug) {
+            if (receivedState.csses && !headData.isDebug) {
                ThemesController.getInstance().initCss({
                   themedCss: receivedState.csses.themedCss,
                   simpleCss: receivedState.csses.simpleCss
@@ -306,8 +308,7 @@ define('Controls/Application',
 
       Page.contextTypes = function contextTypes() {
          return {
-            AppData: AppData,
-            headData: HeadDataContext
+            AppData: AppData
          };
       };
 

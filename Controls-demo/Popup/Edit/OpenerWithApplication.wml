@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Demo-example: Popup-edit.">
+    <ws:content>
+        <Controls-demo.Popup.Edit.Opener />
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

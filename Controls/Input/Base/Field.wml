@@ -9,9 +9,10 @@
       on:keyup="_keyUpHandler()"
       on:click="_clickHandler()"
       on:input="_inputHandler()"
-      on:change="_changeHandler()"
       on:select="_selectHandler()"
-      on:focuout="_focusOutHandler()"
+      on:focusin="_focusInHandler()"
+      on:focusout="_focusOutHandler()"
+      on:mousedown="_mouseDownHandler()"
    />
    <ws:if data="{{!value}}">
       <div class="controls-Base__placeholder">

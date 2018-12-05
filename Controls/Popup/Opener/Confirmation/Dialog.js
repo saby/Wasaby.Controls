@@ -25,6 +25,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        * @control
        * @private
        * @author Красильников А.С.
+       * @mixin Controls/Popup/Opener/Confirmation/Dialog/DialogStyles
        */
 
    /**

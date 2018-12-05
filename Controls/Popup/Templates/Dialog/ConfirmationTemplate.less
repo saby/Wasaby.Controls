@@ -1,48 +1,48 @@
 .controls-ConfirmationTemplate {
-   border-style: solid;
-   border-width: @controls-InformationPopup-border-width;
-   background: @controls-InformationPopup-bg;
-   box-shadow: @controls-panel-shadow;
-   margin: @controls-InformationPopup-window-spacing;
+   border-top-style: solid;
+   border-top-width: @border-width_InformationPopup;
+   background: @background-color_InformationPopup;
+   box-shadow: @size_InformationPopup-shadow @color_InformationPopup-shadow;
+   margin: 0 @spacing_InformationPopup-window;
 
    &.controls-ConfirmationTemplate__status-default {
-      border-top-color: @controls-InformationPopup-default-status-border-color;
+      border-top-color: @border-color_InformationPopup_default;
    }
 
    &.controls-ConfirmationTemplate__status-success {
-      border-top-color: @controls-InformationPopup-success-status-border-color;
+      border-top-color: @border-color_InformationPopup_success;
    }
 
    &.controls-ConfirmationTemplate__status-error {
-      border-top-color: @controls-InformationPopup-error-status-border-color;
+      border-top-color: @border-color_InformationPopup_danger;
    }
 
    &.controls-ConfirmationTemplate__status-confirm {
-      border-top-color: @controls-InformationPopup-default-status-border-color;
+      border-top-color: @border-color_InformationPopup_default;
    }
 
    box-sizing: border-box;
 }
 .controls-ConfirmationTemplate__body {
    box-sizing: border-box;
-   border-left: @controls-SubmitPopup-border-left;
-   border-right: @controls-SubmitPopup-border-right;
-   border-bottom: @controls-SubmitPopup-border-bottom;
+   border-left: @size_SubmitPopup-border solid @border-color_SubmitPopup;
+   border-right: @size_SubmitPopup-border solid @border-color_SubmitPopup;
+   border-bottom: @size_SubmitPopup-border solid @border-color_SubmitPopup;
 }
 .controls-ConfirmationTemplate__main {
-   padding: @controls-SubmitPopup-body-padding;
+   padding: @spacing_SubmitPopup-between-content-border;
 }
 
 .controls-ConfirmationTemplate__footer {
-   padding: @controls-SubmitPopup-footer-padding;
-   border-top: @controls-SubmitPopup-footer-border-top;
-   background: @controls-SubmitPopup-footer-bg;
+   padding: @spacing_SubmitPopup-between-footer-border;
+   border-top: @size_SubmitPopup-border solid @border-color_SubmitPopup-footer-top;
+   background: @background-color_SubmitPopup-footer;
 }
 
-.controls-SubmitPopup__size-big {
-   width: @controls-SubmitPopup-size-big-width;
+.controls-ConfirmationTemplate__size-l {
+   width: @width_ConfirmationTemplate-l;
 }
 
-.controls-SubmitPopup__size-standard {
-   width: @controls-SubmitPopup-size-standard-width;
+.controls-ConfirmationTemplate__size-default {
+   width: @width_ConfirmationTemplate-default;
 }
