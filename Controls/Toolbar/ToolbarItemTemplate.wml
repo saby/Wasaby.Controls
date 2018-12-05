@@ -11,14 +11,14 @@
             <i class="controls-ToolbarV__item_icon controls-ToolbarV__item_icon_{{size}} {{item.icon}} icon-{{item.iconStyle ? item.iconStyle : 'default'}}"/>
         </ws:if>
         <ws:else data="{{!!item.buttonStyle}}">
-            <Controls.Button readOnly="{{item.buttonReadOnly}}"
-                             caption="{{item.buttonCaption}}"
-                             transparent="{{item.buttonTransparent}}"
-                             iconStyle="{{item.buttonIconStyle}}"
-                             icon="{{item.buttonIcon}}"
-                             style="{{item.buttonStyle}}"
-                             viewMode="{{item.buttonViewMode}}"
-                             size="{{size}}"/>
+            <Controls.Button readOnly="{{buttonReadOnly || item.buttonReadOnly}}"
+                             caption="{{buttonCaption || item.buttonCaption}}"
+                             transparent="{{buttonTransparent || item.buttonTransparent}}"
+                             iconStyle="{{buttonIconStyle || item.buttonIconStyle}}"
+                             icon="{{buttonIcon || item.buttonIcon}}"
+                             style="{{buttonStyle || item.buttonStyle}}"
+                             viewMode="{{buttonViewMode || item.buttonViewMode}}"
+                             size="{{buttonSize || item.size}}"/>
         </ws:else>
         <ws:if data="{{!!item.title && !item.buttonViewMode}}">
             <span class="controls-ToolbarV__item_title {{item.icon ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item.title}}</span>

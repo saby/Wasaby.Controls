@@ -53,6 +53,45 @@ define('Controls/Toolbar', [
     * </pre>
     */
 
+   /**
+    * @name Controls/Toolbar#itemTemplate
+    * @cfg {Function} Template for item render.
+    * @remark
+    * To determine the template, you should call the base template 'wml!Controls/Tabs/Buttons/ItemTemplate'.
+    * The template is placed in the component using the ws:partial tag with the template attribute.
+    * By default, the base template 'wml!Controls/Toolbar/ToolbarItemTemplate'. You can change the display of records as button by setting button options values:
+    * <ul>
+    *    <li>buttonReadOnly</li>
+    *    <li>buttonCaption</li>
+    *    <li>buttonTransparent</li>
+    *    <li>buttonIconStyle</li>
+    *    <li>buttonIcon</li>
+    *    <li>buttonStyle</li>
+    *    <li>buttonViewMode</li>
+    *    <li>buttonSize</li>
+    * <ul>
+    * @example
+    * <pre>
+    *    <Controls.Toolbar
+    *       source="{{_source}}"
+    *       on:itemClick="_itemClick()"
+    *    >
+    *       <ws:itemTemplate>
+    *          <ws:partial
+    *             template="wml!Controls/Toolbar/ToolbarItemTemplate"
+    *             buttonStyle="{{myStyle}}"
+    *             buttonReadOnly="{{readOnlyButton}}"
+    *             buttonCaption="{{myButtonCaption}}"
+    *             buttonTransparent="{{myButtonTransparent}}"
+    *             buttonIconStyle="{{myButtonIconStyle}}"
+    *             buttonIcon="{{myButtonIcon}}"
+    *             buttonViewMode="{{myButtonViewMode}}"
+    *             buttonSize="{{myButtonSize}}"
+    *          />
+    *      </ws:itemTemplate>
+    * </pre>
+    */
+
    var _private = {
       loadItems: function(instance, source) {
          var self = this;
