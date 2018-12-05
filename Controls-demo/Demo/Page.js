@@ -28,10 +28,10 @@ define('Controls-demo/Demo/Page',
             return data;
          })(),
          themeLinks = {
-            carry: '/../SBIS3.CONTROLS/themes/carry/carry',
-            presto: '/../SBIS3.CONTROLS/themes/presto/presto',
-            carry_m: '/../SBIS3.CONTROLS/themes/carry_medium/carry_medium',
-            presto_m: '/../SBIS3.CONTROLS/themes/presto_medium/presto_medium',
+            carry: 'Retail-theme/themes/carry/carry',
+            presto: 'Retail-theme/themes/presto/presto',
+            carry_m: 'Retail-theme/themes/carry_medium/carry_medium',
+            presto_m: 'Retail-theme/themes/presto_medium/presto_medium',
             online: '/../SBIS3.CONTROLS/themes/online/online',
             base: '/../SBIS3.CONTROLS/themes/online/online'
          },
