@@ -163,6 +163,30 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       getLastSelectedItems: function(self, itemsCount) {
          return Chain(self._options.items).last(itemsCount).value();
+      },
+
+      isShowCounter: function(itemsCount, maxVisibleItems) {
+         return itemsCount > maxVisibleItems;
+      },
+
+      getLastRowCollectionWidth: function(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth) {
+         var lastRowCollectionWidth = _private.getCollectionWidth(itemsSizesLastRow);
+
+         if (isShowCounter && allItemsInOneRow) {
+            lastRowCollectionWidth += counterWidth;
+         }
+
+         return lastRowCollectionWidth;
+      },
+
+      getInputWidth: function(fieldWrapperWidth, lastRowCollectionWidth, availableWidth) {
+         if (lastRowCollectionWidth <= availableWidth) {
+            return fieldWrapperWidth - lastRowCollectionWidth - SHOW_SELECTOR_WIDTH;
+         }
+      },
+
+      getMultiLineState: function(lastRowCollectionWidth, availableWidth, allItemsInOneRow) {
+         return lastRowCollectionWidth > availableWidth || !allItemsInOneRow;
       }
    };
 
@@ -210,17 +234,10 @@ define('Controls/Selector/Lookup/_Lookup', [
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
-               isShowCounter = itemsCount > maxVisibleItems;
-               lastRowCollectionWidth = _private.getCollectionWidth(itemsSizesLastRow);
-
-               if (isShowCounter && allItemsInOneRow) {
-                  lastRowCollectionWidth += newOptions._counterWidth;
-               }
-
-               if (lastRowCollectionWidth <= availableWidth) {
-                  inputWidth = DOMUtil.width(this._fieldWrapper) - lastRowCollectionWidth - SHOW_SELECTOR_WIDTH;
-                  multiLineState = !allItemsInOneRow;
-               }
+               isShowCounter = _private.isShowCounter(itemsCount, maxVisibleItems);
+               lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, newOptions._counterWidth);
+               inputWidth = _private.getInputWidth(DOMUtil.width(this._fieldWrapper), lastRowCollectionWidth, availableWidth);
+               multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
 
                if (multiLineState) {
                   afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, true, newOptions.readOnly);
