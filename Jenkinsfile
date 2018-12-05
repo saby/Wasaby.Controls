@@ -2,7 +2,7 @@
 import java.time.*
 import java.lang.Math
 
-def version = "3.18.700"
+def version = "3.18.710"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         updateGitlabCommitStatus state: 'canceled'
@@ -561,8 +561,8 @@ node('controls') {
                         }
                     }
                     if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-chrome) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-chrome) ${version} controls'"
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${browser_type}) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${browser_type}) ${version} controls'"
                     }
                 }
             }
