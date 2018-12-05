@@ -1,9 +1,13 @@
 define([
-   'Controls/List/Swipe/Tile'
-], function(TileSwipe) {
+   'Controls/List/Swipe/Tile',
+   'Core/i18n'
+], function(
+   TileSwipe,
+   i18n
+) {
    describe('Controls.List.Swipe.Tile', function() {
       var showMore = {
-         title: rk('Еще'),
+         title: i18n.rk('Еще'),
          icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
          isMenu: true
       };
