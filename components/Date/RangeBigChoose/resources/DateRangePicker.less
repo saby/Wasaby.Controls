@@ -111,6 +111,8 @@ body.ws-is-desktop-platform .controls-DateRangeBigChoose__dates-dates-wrapper::-
    .controls-DateRangeBigChoose-DateRangePickerItem__displayed {
       .controls-DateRangeBigChoose-DateRangePickerItem__months {
          visibility: visible;
+         // Что бы точно не перекрывался другими элементами
+         z-index: 2;
       }
    }
    .controls-DateRangeBigChoose-DateRangePickerItem__monthsWithDates {
