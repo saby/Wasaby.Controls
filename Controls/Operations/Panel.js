@@ -40,6 +40,7 @@ define('Controls/Operations/Panel', [
                self._items = dataSet.getAll();
 
                // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+               // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
                validateIconStyle.itemsSetOldIconStyle(self._items);
                return self._items;
             });

@@ -35,6 +35,7 @@ define('Controls/Button/validateIconStyle', ['Core/IoC'], function(IoC) {
       },
 
       // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+      // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
       iconColorFromOptIconToIconStyle: function(icon) {
          var
             iconStyleFromIconOpt = /icon-[eadhp][a-z]+/.exec(icon),
