@@ -173,6 +173,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: Диалог редактирования
+      '/demo-ws4-popup-edit': function(req, res) {
+         requirejs('Controls-demo/Popup/Edit/OpenerWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Popup/Edit/OpenerWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: Кнопки
       '/demo-ws4-switchers': function(req, res) {
          requirejs('Controls-demo/Switch/standartDemoSwitchWithApplication');
