@@ -22,12 +22,12 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options) {
-            this.resolvedSimple = []; //ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = []; //ThemesController.getInstance().getThemedResolved();
+            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
+            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
             if (typeof window !== 'undefined') {
-               /*var csses = ThemesController.getInstance().getCss();
+               var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
-               this.simpleCss = csses.simpleCss;*/
+               this.simpleCss = csses.simpleCss;
                return;
             }
             if (typeof options.staticDomains === 'string') {
@@ -49,16 +49,10 @@ define('Controls/Application/_Head',
                innerDef.callback(true);
                return res;
             });
-            this._forceUpdate = function() {
-               //block reload
-            };
             return innerDef;
          },
-         _shouldUpdate: function() {
-            return false;
-         },
          _afterMount: function() {
-            //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
          _beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
