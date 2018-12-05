@@ -3,11 +3,10 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController',
-      'Controls/Application/HeadDataContext'
+      'View/Request',
+      'Core/Themes/ThemesController'
    ],
-   function(Base, Deferred, template, HeadDataContext, ThemesController) {
+   function(Base, Deferred, template, Request, ThemesController) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -41,7 +40,8 @@ define('Controls/Application/_Head',
             } else {
                this.staticDomainsStringified = '[]';
             }
-            var def = context.headData.waitAppContent();
+            var headData = Request.getCurrent().getStorage('HeadData');
+            var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
@@ -54,11 +54,8 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
-         _shouldUpdate: function() {
-            return false;
-         },
          _afterMount: function() {
-            //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
 
          /*_beforeUpdate: function() {
@@ -94,11 +91,7 @@ define('Controls/Application/_Head',
             return value.replace('.css', '') + '_' + theme + '.css';
          }
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Page;
    }
 );
