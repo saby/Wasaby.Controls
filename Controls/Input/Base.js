@@ -398,6 +398,8 @@ define('Controls/Input/Base',
           */
          _isMobileIOS: detection.isMobileIOS,
 
+         _hidePlaceholderUsingCSS: detection.chrome,
+
          /**
           *
           * @return {HTMLElement}

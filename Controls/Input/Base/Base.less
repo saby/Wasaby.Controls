@@ -44,3 +44,18 @@
     */
    min-width: 0;
 }
+
+/**
+ * The modifier hides the custom placeholder if the native placeholder is hidden.
+ * Condition for work:
+ * 1. Used on the input element.
+ * 2. The modifier element have a native placeholder, such as a space.
+ * 3. Custom placeholder is placed after the modifier element.
+ */
+.controls-Base__nativeField_hideCustomPlaceholder {
+   &:-webkit-autofill, &:not(:placeholder-shown) {
+      & + .controls-Base__placeholder {
+         display: none;
+      }
+   }
+}
