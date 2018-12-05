@@ -55,7 +55,7 @@ define('Controls/Application/_Head',
             return innerDef;
          },
          _afterMount: function() {
-            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+            //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
 
          /*_beforeUpdate: function() {
