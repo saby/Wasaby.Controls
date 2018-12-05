@@ -54,12 +54,13 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
-         _shouldUpdate: function(){
+         _shouldUpdate: function() {
             return false;
          },
          _afterMount: function() {
             //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
+
          /*_beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
             if (ThemesController.getInstance().getReqCbArray) {
@@ -82,6 +83,7 @@ define('Controls/Application/_Head',
             }
             this.reqCBArray = null;
          },*/
+
          isArrayHead: function() {
             return Array.isArray(this._options.head);
          },
