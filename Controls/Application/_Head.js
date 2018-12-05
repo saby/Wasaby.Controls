@@ -26,9 +26,9 @@ define('Controls/Application/_Head',
             this.resolvedSimple = []; //ThemesController.getInstance().getSimpleResolved();
             this.resolvedThemed = []; //ThemesController.getInstance().getThemedResolved();
             if (typeof window !== 'undefined') {
-               /*var csses = ThemesController.getInstance().getCss();
+               var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
-               this.simpleCss = csses.simpleCss;*/
+               this.simpleCss = csses.simpleCss;
                return;
             }
             if (typeof options.staticDomains === 'string') {
