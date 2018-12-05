@@ -7,10 +7,10 @@
         </ws:if>
         <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
         <div class="controls-ConfirmationTemplate__main">
-            <ws:partial template="{{_options.contentArea}}"/>
+            <ws:partial template="{{_options.contentArea||_options.bodyContentTemplate}}"/>
         </div>
         <div class="controls-ConfirmationTemplate__footer">
-            <ws:partial template="{{_options.footerArea}}"/>
+            <ws:partial template="{{_options.footerArea||_options.footerContentTemplate}}"/>
         </div>
     </div>
 </div>

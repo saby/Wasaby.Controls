@@ -2,9 +2,10 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
+      'Core/IoC',
       'css!theme?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
    ],
-   function(Control, template) {
+   function(Control, template, IoC) {
       'use strict';
 
       var DialogTemplate = Control.extend({
@@ -52,15 +53,25 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           */
 
          _template: template,
+         _beforeMount: function(options) {
+            if (options.style === 'error') {
+               IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
+            }
+            if (options.contentArea) {
+               IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+            }
+            if (options.footerArea) {
+               IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
+            }
+         },
 
          /**
           * Close the dialog
           * @function Controls/Popup/Templates/Dialog/ConfirmationTemplate#close
           */
          close: function() {
-            this._notify('close', [], {bubbling: true});
+            this._notify('close', [], { bubbling: true });
          }
       });
       return DialogTemplate;
-   }
-);
+   });
