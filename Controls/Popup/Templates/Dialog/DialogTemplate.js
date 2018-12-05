@@ -57,6 +57,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           * @cfg {String} Close button display style.
           * @variant default
           * @variant lite
+          * @variant primary
           */
 
          /**

@@ -1,10 +1,25 @@
 define('Controls/Popup/Templates/Notification/Base',
    [
       'Core/Control',
+      'Core/IoC',
       'wml!Controls/Popup/Templates/Notification/Base',
       'css!Controls/Popup/Templates/Notification/Base'
    ],
-   function(Control, template) {
+   function(Control, IoC, template) {
+
+      var _private = {
+         prepareDisplayStyle: function(color) {
+            var resColor = color;
+            // поддержка старых цветов, чтоб не ломать старые
+            if (color === 'done') {
+               resColor = 'success';
+            }
+            if (color === 'error') {
+               resColor = 'danger';
+            }
+            return resColor;
+         }
+      };
 
       /**
        * Base template of notification popup.
@@ -26,9 +41,22 @@ define('Controls/Popup/Templates/Notification/Base',
          _timerId: null,
 
          _beforeMount: function(options) {
+            if (options.style === 'error') {
+               IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style error, используйте danger');
+            }
+            if (options.style === 'done') {
+               IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style done, используйте success');
+            }
+            options._style = _private.prepareDisplayStyle(options.style);
             if (options.autoClose) {
                this._autoClose();
             }
+            if (options.contentTemplate) {
+               IoC.resolve('ILogger').error('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
+            }
+         },
+         _beforeUpdate:function(options) {
+            options._style = _private.prepareDisplayStyle(options.style);
          },
 
          _closeClick: function() {
