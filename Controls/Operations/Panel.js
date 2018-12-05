@@ -38,6 +38,7 @@ define('Controls/Operations/Panel', [
          if (source) {
             result = source.query().addCallback(function(dataSet) {
                self._items = dataSet.getAll();
+               //TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
                validateIconStyle.itemsSetOldIconStyle(self._items);
                return self._items;
             });
