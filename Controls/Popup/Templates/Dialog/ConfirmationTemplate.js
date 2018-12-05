@@ -11,6 +11,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
       var _private = {
          prepareStatusStyle: function(color) {
             var resColor = color;
+
             // поддержка старых цветов, чтоб не ломать старые
             if (color === 'error') {
                resColor = 'danger';

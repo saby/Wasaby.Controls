@@ -6,10 +6,10 @@ define('Controls/Popup/Templates/Notification/Base',
       'css!Controls/Popup/Templates/Notification/Base'
    ],
    function(Control, IoC, template) {
-
       var _private = {
          prepareDisplayStyle: function(color) {
             var resColor = color;
+
             // поддержка старых цветов, чтоб не ломать старые
             if (color === 'done') {
                resColor = 'success';
@@ -55,7 +55,7 @@ define('Controls/Popup/Templates/Notification/Base',
                IoC.resolve('ILogger').error('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
             }
          },
-         _beforeUpdate:function(options) {
+         _beforeUpdate: function(options) {
             options._style = _private.prepareDisplayStyle(options.style);
          },
 
@@ -90,8 +90,7 @@ define('Controls/Popup/Templates/Notification/Base',
       };
 
       return Notification;
-   }
-);
+   });
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#autoClose
