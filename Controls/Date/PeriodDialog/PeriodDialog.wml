@@ -63,6 +63,8 @@
          bind:month="_displayedDate"
          selectionType="{{_options.selectionType}}"
          quantum="{{_options.quantum}}"
+         calendarSource="{{_options.calendarSource}}"
+         dayTemplate="{{_options.dayTemplate}}"
       />
    </Controls.Date.Controllers.DateRangeSelectionController>
 

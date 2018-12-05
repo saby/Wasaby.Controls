@@ -10,7 +10,7 @@
       </div>
       <ws:partial
          template="{{_tableBodyTmpl}}"
-         scope="{{_options}}"
+         _options="{{_options}}"
          monthViewModel="{{_monthViewModel}}"
          _prepareClass="{{_prepareClass}}"
          _dayTmpl="{{_dayTmpl}}"

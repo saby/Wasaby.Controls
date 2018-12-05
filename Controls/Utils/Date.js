@@ -115,6 +115,15 @@ define('Controls/Utils/Date', [
       },
 
       /**
+       * Returns the number of days in a month.
+       * @param {Date} date
+       * @return {Number}
+       */
+      getDaysInMonth: function(date) {
+         return this.getEndOfMonth(date).getDate();
+      },
+
+      /**
        * Returns true if the transmitted number is the beginning of the quarter.
        * @param {Date} date
        * @return {Boolean}
