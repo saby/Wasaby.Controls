@@ -200,7 +200,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                }
             };
             dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
-            dropdownList.resultHandler({ action: 'itemClick' });
+            dropdownList.resultHandler({ action: 'itemClick', data: [items.at(0)] });
          });
          it('resultHandler pinClick', function() {
             var dropdownList = getDropDownListWithConfig(getDropDownConfig());
