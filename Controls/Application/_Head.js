@@ -21,9 +21,12 @@ define('Controls/Application/_Head',
             // before returning html to client
             return this._beforeMount.apply(this, arguments);
          },
-         _beforeMount: function(options) {
-            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
+         _beforeMount: function(options, context, receivedState) {
+            this.resolvedSimple = [];
+            this.resolvedThemed = [];
+            this._forceUpdate = function() {
+               //do nothing
+            };
             if (typeof window !== 'undefined') {
                var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
@@ -54,7 +57,8 @@ define('Controls/Application/_Head',
          _afterMount: function() {
             ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
-         _beforeUpdate: function() {
+
+         /*_beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
             if (ThemesController.getInstance().getReqCbArray) {
                this.reqCBArray = ThemesController.getInstance().getReqCbArray();
@@ -75,7 +79,8 @@ define('Controls/Application/_Head',
                }
             }
             this.reqCBArray = null;
-         },
+         },*/
+
          isArrayHead: function() {
             return Array.isArray(this._options.head);
          },
