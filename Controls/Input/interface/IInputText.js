@@ -36,8 +36,9 @@ define('Controls/Input/interface/IInputText', [], function() {
     */
 
    /**
-    * @event Controls/Input/interface/IInputText#valueChanged Occurs when field value was changed.
+    * @event Controls/Input/interface/IInputText#valueChanged Occurs when field display value was changed.
     * @param {String} value Value of the field.
+    * @param {String} displayValue Display value of the field.
     * @remark
     * This event should be used to react to changes user makes in the field. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Usually you would use bind notation instead. Example below shows the difference.
     * @example
