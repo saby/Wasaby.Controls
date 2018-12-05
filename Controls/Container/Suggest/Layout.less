@@ -23,7 +23,7 @@
 
 .controls-Suggest__suggestionsContainer-style-default {
 	width: 100%;
-	.box-shadow(0 6px 12px @box-shadow-color_Suggest);
+	.box-shadow(@box-shadow-size_Suggest @box-shadow-color_Suggest);
 }
 
 .controls-Suggest-Text_style_overInput {
@@ -66,7 +66,7 @@
 }
 
 .controls-Suggest__empty {
-	color: @color104;
+	color: @color_Suggest-empty;
 	text-align: center;
 	padding: @spacing_Suggest-empty-between-topBorder-content 0 @spacing_Suggest-empty-between-bottomBorder-content 0;
 }
