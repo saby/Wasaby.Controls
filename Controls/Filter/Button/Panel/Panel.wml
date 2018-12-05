@@ -21,7 +21,7 @@
    <ws:contentArea>
       <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
       <div class="{{_options.orientation === 'horizontal' ? 'controls-FilterPanel__content-horizontal'}}">
-         <div class="{{!_historyId ? 'controls-FilterPanel__blockParams'}}">
+         <div class="{{!_historyId || !_historyItems.getCount() ? 'controls-FilterPanel__blockParams'}}">
             <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
                                    itemTemplate="{{_options.itemTemplate}}"
                                    itemTemplateProperty="{{_options.itemTemplateProperty}}"
