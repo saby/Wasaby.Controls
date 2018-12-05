@@ -3,7 +3,7 @@
       name="{{inputName || 'input'}}"
       type="{{ type }}"
       value="{{value}}"
-      class="controls-InputRender__field"
+      class="controls-InputRender__field {{isEdge ? 'controls-InputRender__field_isEdge'}}"
       autocomplete="{{autocomplete ? 'off' : 'new-password'}}"
       autocorrect="off"
    />

@@ -94,7 +94,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             }
             return getWidthUtils.getWidth(text) > target.clientWidth;
          },
-         
+
          getInput: function(self) {
             //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             return self._children.divinput.querySelector('.controls-InputRender__field');
@@ -112,6 +112,8 @@ define('Controls/Input/resources/InputRender/InputRender',
          // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
          _inputState: undefined,
 
+         _isEdge: cDetection.isIE12,
+
          // text field has focus
          _inputActive: false,
 
@@ -119,7 +121,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
          },
-         
+
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
          },

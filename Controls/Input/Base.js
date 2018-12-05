@@ -399,6 +399,12 @@ define('Controls/Input/Base',
          _isMobileIOS: detection.isMobileIOS,
 
          /**
+          * @type {Boolean} Determines whether the control is building in the Edge.
+          * @private
+          */
+         _isEdge: detection.isIE12,
+
+         /**
           *
           * @return {HTMLElement}
           * @private
