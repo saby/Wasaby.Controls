@@ -107,7 +107,7 @@ node('controls') {
         def smoke_result = true
         try {
         echo "Назначаем переменные"
-        def server_address="http://autotest100:9999/wd/hub"
+        def server_address=props["SERVER_ADDRESS"]
         def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
