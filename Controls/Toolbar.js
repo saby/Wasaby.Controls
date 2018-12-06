@@ -59,12 +59,15 @@ define('Controls/Toolbar', [
     * @remark
     * To determine the template, you should call the base template 'wml!Controls/Toolbar/ToolbarItemTemplate'.
     * The template is placed in the component using the ws:partial tag with the template attribute.
-    * You can change the display of records as button by setting button options values:
+    * You can change the display of records by setting button options values:
     * <ul>
     *    <li>buttonReadOnly</li>
     *    <li>buttonTransparent</li>
     *    <li>buttonStyle</li>
     *    <li>buttonViewMode</li>
+    *    <li>displayProperty</li>
+    *    <li>iconStyleProperty</li>
+    *    <li>iconProperty</li>
     * <ul>
     * @example
     * <pre>
@@ -79,6 +82,9 @@ define('Controls/Toolbar', [
     *             buttonReadOnly="{{readOnlyButton}}"
     *             buttonTransparent="{{myButtonTransparent}}"
     *             buttonViewMode="{{myButtonViewMode}}"
+    *             displayProperty="title"
+    *             iconStyleProperty="iconStyle"
+    *             iconProperty="icon"
     *          />
     *      </ws:itemTemplate>
     * </pre>
