@@ -72,7 +72,9 @@ define('Controls/Validate/Controller',
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
-         _isNewEnvironment: isNewEnvironment(),
+         _beforeMount: function() {
+            this._isNewEnvironment = isNewEnvironment();
+         },
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
@@ -216,7 +218,8 @@ define('Controls/Validate/Controller',
           */
          isValid: function() {
             return this._validationResult;
-         }
+         },
+         _private: _private
       });
       return Validate;
    });
