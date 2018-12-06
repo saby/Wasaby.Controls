@@ -341,7 +341,7 @@ define('Controls/FormController', [
          // maybe anybody want to do custom update. check it.
          var result = this._notify('requestCustomUpdate', [], { bubbling: true });
 
-         if (result instanceof Deferred) {
+         if (result && result.addCallback) {
             result.addCallback(function(defResult) {
                updateCallback(defResult);
                return defResult;
@@ -371,7 +371,7 @@ define('Controls/FormController', [
                self._notify('validationSuccessed', [], { bubbling: true });
                var isChanged = self._record.isChanged();
                var res = self._children.crud.update(record, self._isNewRecord);
-               if (res instanceof Deferred) {
+               if (res && res.addCallback) {
                   res.addCallback(function(record) {
                      if (self._isNewRecord && !self._updateByPopup) {
                         // если созданный рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг

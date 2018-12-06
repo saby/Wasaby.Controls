@@ -32,7 +32,7 @@ define('Controls/EditableArea', [
                return Deferred.success();
             }
 
-            if (result instanceof Deferred) {
+            if (result && result.addCallback) {
                return result.addCallback(function() {
                   return _private.afterEndEdit(self, commit);
                });

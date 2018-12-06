@@ -51,7 +51,7 @@ define('Controls/List/EditInPlace', [
 
             if (eventResult === EditConstants.CANCEL) {
                result = Deferred.fail(options);
-            } else if (eventResult instanceof Deferred) {
+            } else if (eventResult && eventResult.addBoth) {
                self._notify('showIndicator', [], { bubbling: true });
                eventResult.addBoth(function(defResult) {
                   self._notify('hideIndicator', [], { bubbling: true });
@@ -78,7 +78,7 @@ define('Controls/List/EditInPlace', [
             if (result === EditConstants.CANCEL) {
                return Deferred.fail();
             }
-            if (result instanceof Deferred) {
+            if (result && result.addCallback) {
             // Если мы попали сюда, то прикладники сами сохраняют запись
                return result.addCallback(function() {
                   _private.afterEndEdit(self);
