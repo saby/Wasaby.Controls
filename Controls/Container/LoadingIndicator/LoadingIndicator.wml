@@ -1,5 +1,5 @@
 <div class="controls-LoadingIndicator">
-   <ws:partial template="{{_options.content}}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()" on:toggleIndicator="_toggleIndicatorHandler()"
+   <ws:partial template="{{_options.content}}" scope="{{ _options }}" on:showIndicator="_showHandler()" on:hideIndicator="_hideHandler()" on:toggleIndicator="_toggleIndicatorHandler()"
                attr:class="controls-loading-indicator_content"/>
    <ws:if data="{{ isLoading }}">
       <div class="controls-loading-indicator
