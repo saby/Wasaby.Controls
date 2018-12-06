@@ -1,5 +1,5 @@
-<!-- ws-invisible to allow popup take sizes -->
-<div class="controls-Suggest__suggestionsContainer {{!_options.showContent ? 'ws-invisible'}}" attr:style="width:{{_options.target.offsetWidth}}px;">
+<!-- content hidden to allow popup take sizes -->
+<div class="controls-Suggest__suggestionsContainer {{!_options.showContent ? 'controls-Suggest__suggestionsContainer_hidden'}}" attr:style="width:{{_options.target.offsetWidth}}px;">
     <Controls.Container.Scroll attr:class="controls-Suggest__scrollContainer">
         <ws:content>
             <ws:partial template="{{_options.content}}"/>

@@ -1,7 +1,8 @@
 define('Controls/Container/Suggest/__PopupContent',
    [
       'Controls/Container/Suggest/__BaseLayer',
-      'wml!Controls/Container/Suggest/__PopupContent'
+      'wml!Controls/Container/Suggest/__PopupContent',
+      'css!Controls/Container/Suggest/PopupContent'
    ],
    
    function(BaseLayer, template) {
