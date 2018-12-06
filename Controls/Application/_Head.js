@@ -71,6 +71,7 @@ define('Controls/Application/_Head',
             // }
             this.themedCss = csses.themedCss;
             this.simpleCss = csses.simpleCss;
+
             // this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             // this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
          },
