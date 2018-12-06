@@ -567,10 +567,6 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getItemActions(item);
          },
 
-         getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-         },
-
          getIndexBySourceItem: function(item) {
             return this._model.getIndexBySourceItem(item);
          },
@@ -592,16 +588,32 @@ define('Controls/List/Grid/GridViewModel', [
             this._nextVersion();
          },
 
-         setDragTargetItem: function(itemData) {
-            this._model.setDragTargetItem(itemData);
+         setDragTargetPosition: function(position) {
+            this._model.setDragTargetPosition(position);
          },
 
-         getDragTargetItem: function() {
-            return this._model.getDragTargetItem();
+         getDragTargetPosition: function() {
+            return this._model.getDragTargetPosition();
          },
 
-         setDragItems: function(items, itemData) {
-            this._model.setDragItems(items, itemData);
+         setDragEntity: function(entity) {
+            this._model.setDragEntity(entity);
+         },
+
+         getDragEntity: function() {
+            return this._model.getDragEntity();
+         },
+
+         setDragItemData: function(itemData) {
+            this._model.setDragItemData(itemData);
+         },
+
+         getDragItemData: function() {
+            return this._model.getDragItemData();
+         },
+
+         calculateDragTargetPosition: function(targetData, position) {
+            return this._model.calculateDragTargetPosition(targetData, position);
          },
 
          getActiveItem: function() {

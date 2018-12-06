@@ -46,9 +46,6 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          setHasMoreStorage: function(hasMoreStorage) {
             this._model.setHasMoreStorage(hasMoreStorage);
          },
-         setDragPositionOnNode: function(itemData, position) {
-            this._model.setDragPositionOnNode(itemData, position);
-         },
          destroy: function() {
             this._model.unsubscribe('onNodeRemoved', this._onNodeRemovedFn);
             TreeGridViewModel.superclass.destroy.apply(this, arguments);
