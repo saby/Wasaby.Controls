@@ -414,6 +414,7 @@ define('Controls/List/BaseControl', [
 
       setPopupOptions: function(self) {
          self._popupOptions = {
+            className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'right' },

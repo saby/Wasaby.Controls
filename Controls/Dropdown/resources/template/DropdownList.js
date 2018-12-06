@@ -17,6 +17,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          setPopupOptions: function(self, horizontalAlign) {
             var align = horizontalAlign || 'right';
             self._popupOptions = {
+               className: 'controls-DropdownList__subMenu controls-DropdownList__subMenu_margin',
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
                autofocus: false,

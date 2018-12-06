@@ -7,9 +7,8 @@
 
     <Controls.Dropdown.Opener
             name="menuOpener"
-            keyProperty="id"
-            className="controls-BreadCrumbsController__menu">
-        <ws:popupOptions>
+            keyProperty="id">
+        <ws:popupOptions className="controls-BreadCrumbsController__menu">
             <ws:corner vertical="top"
                        horizontal="right"/>
             <ws:horizontalAlign side="left"/>

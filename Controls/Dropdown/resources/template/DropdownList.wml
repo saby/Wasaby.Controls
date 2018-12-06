@@ -44,7 +44,6 @@
    <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"
-                             popupOptions="{{_popupOptions}}"
-                             className="controls-DropdownList__subMenu controls-DropdownList__subMenu_margin">
+                             popupOptions="{{_popupOptions}}">
    </Controls.Dropdown.Opener>
 </div>

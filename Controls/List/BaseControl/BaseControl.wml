@@ -140,7 +140,6 @@
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
-            className="controls-Toolbar__menu-position"
             popupOptions="{{_popupOptions}}"/>
    <ws:if data="{{ _items }}">
       <Controls.List.BaseControl.SelectionController
