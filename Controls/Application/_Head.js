@@ -23,8 +23,8 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options, context, receivedState) {
-            this.resolvedSimple = []; //ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = []; //ThemesController.getInstance().getThemedResolved();
+            this.resolvedSimple = [];
+            this.resolvedThemed = [];
             if (typeof window !== 'undefined') {
 
                /*var csses = ThemesController.getInstance().getCss();
@@ -62,8 +62,8 @@ define('Controls/Application/_Head',
             //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
          _beforeUpdate: function() {
-
             var csses = ThemesController.getInstance().getCss();
+
             // if (ThemesController.getInstance().getReqCbArray) {
             //    this.reqCBArray = ThemesController.getInstance().getReqCbArray();
             // } else {
