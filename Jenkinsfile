@@ -154,6 +154,8 @@ node('controls') {
                 sh "rm -rf ${workspace}/controls/tests/reg/atf"
                 sh "rm -rf ${workspace}/controls/sbis3-app-engine"
                 sh "rm -rf ${workspace}/controls/tests/navigation"
+                sh "rm -rf ${workspace}/controls/node_modules"
+                sh "rm -rf ${workspace}/controls/package-lock.json"
             }
         }
         echo "Выкачиваем хранилища"
