@@ -14,10 +14,12 @@ define('Controls/Popup/Opener/InfoBox',
        * @extends Core/Control
        * @mixes Controls/interface/IInfoboxOptions
        * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       *
+       * @private
        * @control
        * @category Popup
        * @author Красильников А.С.
-       * @private
+       *
        */
 
       /**
@@ -59,7 +61,7 @@ define('Controls/Popup/Opener/InfoBox',
          /**
           * Open popup.
           * @function Controls/Popup/Opener/InfoBox#open
-          * @param {Object} config infobox options.
+          * @param {Object} Config
           * @returns {undefined}
           * @example
           * js
