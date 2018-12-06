@@ -131,8 +131,11 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
          ]),
          style: types(String).oneOf([
             'default',
+            'secondary',
             'success',
-            'error'
+            'done',
+            'error',
+            'danger'
          ])
       };
    };
