@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Sticky/StickyStrategy', ['SBIS3.CONTROLS/Utils/TouchKeyboardHelper'], function(TouchKeyboardHelper) {
+define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyboardHelper'], function(TouchKeyboardHelper) {
    var INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
