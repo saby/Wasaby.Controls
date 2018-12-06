@@ -2,8 +2,8 @@ define('Controls/Selector/SelectedCollection/Popup',
    [
       'Core/Control',
       'wml!Controls/Selector/SelectedCollection/Popup',
-      'css!Controls/Popup/Opener/InfoBox/InfoBox',
-      'css!Controls/Popup/Opener/Previewer/PreviewerController'
+      'css!theme?Controls/Popup/Opener/InfoBox/InfoBox',
+      'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
    ],
 
    function(Control, template) {

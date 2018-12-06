@@ -6,7 +6,7 @@ define('Controls/Input/Date/Range', [
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Range/Range',
-   'css!Controls/Input/Date/Range/Range'
+   'css!theme?Controls/Input/Date/Range/Range'
 ], function(
    Control,
    coreMerge,
