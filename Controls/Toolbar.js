@@ -62,13 +62,9 @@ define('Controls/Toolbar', [
     * You can change the display of records as button by setting button options values:
     * <ul>
     *    <li>buttonReadOnly</li>
-    *    <li>buttonCaption</li>
     *    <li>buttonTransparent</li>
-    *    <li>buttonIconStyle</li>
-    *    <li>buttonIcon</li>
     *    <li>buttonStyle</li>
     *    <li>buttonViewMode</li>
-    *    <li>buttonSize</li>
     * <ul>
     * @example
     * <pre>
