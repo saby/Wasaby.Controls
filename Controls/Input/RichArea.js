@@ -2,10 +2,9 @@ define('Controls/Input/RichArea', [
    'Core/Control',
    'wml!Controls/Input/RichArea/RichArea',
    'Controls/Input/RichArea/RichAreaModel',
-   'Core/helpers/domToJsonML',
-   'Core/HtmlJson',
+   'Controls/Decorator/Markup/Converter',
    'css!theme?Controls/Input/RichArea/RichArea'
-], function(Control, template, RichModel, domToJson, HtmlJson) {
+], function(Control, template, RichModel, MarkupConverter) {
    'use strict';
 
    /**
@@ -29,10 +28,8 @@ define('Controls/Input/RichArea', [
 
    var RichTextArea = Control.extend({
       _template: template,
-      _htmlJson: undefined,
 
       _beforeMount: function(opts) {
-         this._htmlJson = new HtmlJson();
          this._value = typeof opts.value === 'string' ? JSON.parse(opts.value) : opts.value;
          this._simpleViewModel = new RichModel({
             value: this._value
@@ -72,26 +69,15 @@ define('Controls/Input/RichArea', [
       },
 
       _valueChangedHandler: function(e, value) {
-         var newValue = this._valueToJson(value);
+         var newValue = MarkupConverter.htmlToJson(value);
          this._simpleViewModel.updateOptions({
             value: newValue
          });
          this._notify('valueChanged', [newValue]);
       },
 
-      _valueToJson: function(newValue) {
-         if (newValue[0] !== '<') {
-            newValue = '<p>' + newValue + '</p>';
-         }
-         var span = document.createElement('span');
-         span.innerHTML = newValue;
-         var json = domToJson(span).slice(1);
-         this._htmlJson.setJson(json);
-         return json;
-      },
       _jsonToHtml: function(json) {
-         this._htmlJson.setJson(json);
-         return this._htmlJson.render();
+         return MarkupConverter.jsonToHtml(json);
       },
 
       _undoRedoChangedHandler: function(event, state) {

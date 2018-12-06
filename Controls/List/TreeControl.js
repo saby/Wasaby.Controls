@@ -13,7 +13,7 @@ define('Controls/List/TreeControl', [
 ) {
    'use strict';
 
-   var DRAG_MAX_OFFSET = 10;
+   var DRAG_MAX_OFFSET = 15;
 
    var _private = {
       clearSourceControllers: function(self) {
@@ -194,16 +194,18 @@ define('Controls/List/TreeControl', [
       _itemMouseMove: function(event, itemData, nativeEvent) {
          var model = this._children.baseControl.getViewModel();
 
-         if (model.getDragTargetItem() && itemData.dispItem.isNode()) {
-            this._setDragPositionOnNode(itemData, nativeEvent);
+         if (model.getDragItemData() && itemData.dispItem.isNode()) {
+            this._nodeMouseMove(itemData, nativeEvent);
          }
       },
 
-      _setDragPositionOnNode: function(itemData, event) {
+      _nodeMouseMove: function(itemData, event) {
          var
+            position,
             topOffset,
             bottomOffset,
             dragTargetRect,
+            dragTargetPosition,
             model = this._children.baseControl.getViewModel(),
             dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
 
@@ -213,7 +215,12 @@ define('Controls/List/TreeControl', [
             bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
 
             if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
-               model.setDragPositionOnNode(itemData, topOffset < DRAG_MAX_OFFSET ? 'before' : 'after');
+               position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
+               dragTargetPosition = model.calculateDragTargetPosition(itemData, position);
+
+               if (dragTargetPosition && this._notify('changeDragTarget', [model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
+                  model.setDragTargetPosition(dragTargetPosition);
+               }
             }
          }
       },
