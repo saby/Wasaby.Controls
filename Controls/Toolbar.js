@@ -81,12 +81,8 @@ define('Controls/Toolbar', [
     *             template="wml!Controls/Toolbar/ToolbarItemTemplate"
     *             buttonStyle="{{myStyle}}"
     *             buttonReadOnly="{{readOnlyButton}}"
-    *             buttonCaption="{{myButtonCaption}}"
     *             buttonTransparent="{{myButtonTransparent}}"
-    *             buttonIconStyle="{{myButtonIconStyle}}"
-    *             buttonIcon="{{myButtonIcon}}"
     *             buttonViewMode="{{myButtonViewMode}}"
-    *             buttonSize="{{myButtonSize}}"
     *          />
     *      </ws:itemTemplate>
     * </pre>

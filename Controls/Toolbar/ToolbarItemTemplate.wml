@@ -12,13 +12,13 @@
         </ws:if>
         <ws:else data="{{!!item.buttonStyle}}">
             <Controls.Button readOnly="{{buttonReadOnly || item.buttonReadOnly}}"
-                             caption="{{buttonCaption || item.buttonCaption}}"
+                             caption="{{buttonCaption || item.buttonCaption || item.title}}"
                              transparent="{{buttonTransparent || item.buttonTransparent}}"
-                             iconStyle="{{buttonIconStyle || item.buttonIconStyle}}"
-                             icon="{{buttonIcon || item.buttonIcon}}"
+                             iconStyle="{{buttonIconStyle || item.buttonIconStyle || item.iconStyle}}"
+                             icon="{{buttonIcon || item.buttonIcon || item.icon}}"
                              style="{{buttonStyle || item.buttonStyle}}"
                              viewMode="{{buttonViewMode || item.buttonViewMode}}"
-                             size="{{buttonSize || item.size}}"/>
+                             size="{{size}}"/>
         </ws:else>
         <ws:if data="{{!!item.title && !item.buttonViewMode}}">
             <span class="controls-ToolbarV__item_title {{item.icon ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item.title}}</span>
