@@ -16,8 +16,6 @@ define('Controls/Toolbar', [
     *
     * @class Controls/Toolbar
     * @extends Core/Control
-    * @mixes Controls/interface/ICaption
-    * @mixes Controls/Button/interface/IIcon
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
@@ -27,6 +25,49 @@ define('Controls/Toolbar', [
     * @category Toolbar
     * @author Михайловский Д.С.
     * @demo Controls-demo/Toolbar/ToolbarVdom
+    */
+
+   /**
+    * @name Controls/Toolbar#source
+    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
+    * @default undefined
+    * @remark
+    * The item can have an property 'title' and 'showType'. 'Title' determine item caption. 'ShowType' determine where display item, 0 - show in menu,
+    * 1 - show on menu and toolbar, 2 - show in toolbar.
+    * @example
+    * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
+    * <pre>
+    *    <Controls.Toolbar
+    *              keyProperty="key"
+    *              source="{{_source}}"
+    *    />
+    * </pre>
+    * <pre>
+    *    _source: new Memory({
+    *        idProperty: 'key',
+    *        data: [
+    *        {
+    *           id: '1'
+    *           showType: 2,
+    *           icon: 'icon-Time',
+    *           '@parent': false,
+    *           parent: null
+    *        },
+    *        {
+    *           id: '2',
+    *           title: 'Moscow',
+    *           '@parent': false,
+    *           parent: null
+    *        },
+    *        {
+    *           id: '3',
+    *           title: 'St-Petersburg',
+    *           '@parent': false,
+    *           parent: null
+    *        }
+    *        ]
+    *    })
+    * </pre>
     */
 
    /**
