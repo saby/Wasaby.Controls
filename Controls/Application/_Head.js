@@ -54,9 +54,6 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
-         _shouldUpdate: function() {
-            return false;
-         },
          _afterMount: function() {
             //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
          },
