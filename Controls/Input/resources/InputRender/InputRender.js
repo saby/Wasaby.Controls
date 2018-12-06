@@ -126,7 +126,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _mouseEnterHandler: function() {
             var input = _private.getInput(this);
-            var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
+            var tooltipInputValue = _private.getInputValueForTooltip(this._options.type, this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
          },
@@ -282,7 +282,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             style: 'default',
             inputType: 'Text',
             autocomplete: true,
-            tooltip: ''
+            tooltip: '',
+            type: 'text'
          };
       };
 
