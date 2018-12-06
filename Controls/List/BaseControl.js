@@ -764,6 +764,11 @@ define('Controls/List/BaseControl', [
          _private.showActionsMenu(this, event, itemData, childEvent, showAll);
       },
 
+      _onItemContextMenu: function(event, itemData) {
+         this._showActionsMenu.apply(this, arguments);
+         this._listViewModel.setMarkedKey(itemData.key);
+      },
+
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
       },
