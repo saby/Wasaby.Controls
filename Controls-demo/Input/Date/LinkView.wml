@@ -7,8 +7,8 @@
                showNextArrow="{{true}}"
          />
          <Controls.Input.Date.LinkView
-               startValue="{{_startValue}}"
-               endValue="{{_endValue}}"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
                showPrevArrow="{{true}}"
                showNextArrow="{{true}}"
          />
@@ -16,12 +16,14 @@
                bind:startValue="_startValue"
                bind:endValue="_endValue"
                showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               showNext8Arrow="{{true}}"
+               showClearButton="{{true}}"
          />
          <Controls.Input.Date.LinkView
-               startValue="{{_startValue}}"
-               endValue="{{_endValue}}"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
                style="linkMain"
+               showClearButton="{{true}}"
          />
          <Controls.Input.Date.LinkView
                startValue="{{_startValue}}"

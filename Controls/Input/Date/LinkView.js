@@ -1,5 +1,6 @@
 define('Controls/Input/Date/LinkView', [
    'Core/Control',
+   'Core/IoC',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
@@ -7,6 +8,7 @@ define('Controls/Input/Date/LinkView', [
    'css!theme?Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
+   IoC,
    CalendarControlsUtils,
    DateRangeModel,
    IDateLinkView,
@@ -69,8 +71,10 @@ define('Controls/Input/Date/LinkView', [
          this._rangeModel.update(options);
          _private._updateCaption(this, options);
          _private._updateEnabled(this, options.readOnly);
+         if (options.showPrevArrow && options.showClearButton) {
+            IoC.resolve('ILogger').error('LinkView', rk('Функционал контрола не расчитан на одновременное отображение опции showClearButton и опций showPrevArrow/showNextArrow'));
+         }
       },
-
       _beforeUpdate: function(options) {
          var changed = this._rangeModel.update(options);
          if (changed) {
@@ -89,10 +93,17 @@ define('Controls/Input/Date/LinkView', [
          _private._updateCaption(this);
       },
 
+      _clearDate: function() {
+         this._rangeModel.startValue = null;
+         this._rangeModel.endValue = null;
+      },
+
       _onClick: function() {
          this._notify('linkClick');
       },
-
+      _isClearButtonVisible: function() {
+         return this._rangeModel.startValue;
+      },
       _beforeUnmount: function() {
          this._rangeModel.destroy();
       }
