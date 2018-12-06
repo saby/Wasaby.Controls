@@ -137,12 +137,11 @@ define('Controls/Popup/Compatible/Layer', [
             data = window.userInfo;
          }
       } else {
-         for (var i = 0, len = opt.length; i < len; i++) {
-            if (opt[i].control._getChildContext && opt[i].control._getChildContext().userInfoField) {
-               data = opt[i].control._getChildContext().userInfoField.userInfo;
-               break;
-            }
-         }
+         moduleStubs.require(['EngineUser/Info']).addCallbacks(function(modules) {
+            data = modules[0].getAll();
+         }, function(err) {
+            IoC.resolve('ILogger').error('Layer', 'Can\'t load EngineUser/Info', err);
+         });
       }
 
       return expandUserInfo(data);
