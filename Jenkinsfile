@@ -567,6 +567,10 @@ node('controls') {
                          skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
                     }
                 }
+                dir("./controls/tests") {
+                    def rc_err_int = sh returnStdout: true, script: "python3 get_err_from_rc.py"
+                    currentBuild.description = "${rc_err_int}"
+                }
             }
             parallel (
                 unit: {
