@@ -12,8 +12,9 @@ define('Controls/interface/IFastFilter', [
     * @typedef {Object} PropertiesFastFilter
     * @property {String} keyProperty Name of the item property that uniquely identifies collection item.
     * @property {String} displayProperty Name of the item property that content will be displayed. Only affects the value when selecting.
-    * @property {WS.Data/Source/Base} source If the data is used. If 'items' is specified, 'source' will be ignored.
-    * @property {WS.Data/Collection/IList} items If the data is used {WS.Data/Collection/IList}.
+    * @property {WS.Data/Source/Base} source Object that implements ISource interface for data access. If 'items' is specified, 'source' will be ignored.
+    * @property {Object} filter Filter configuration - object with field names and their values. {@link Controls/interface/IFilter}
+    * @property {WS.Data/Collection/IList} items Special structure for the visual representation of the filter. {@link WS.Data/Collection/IList}.
     */
 
    /**
