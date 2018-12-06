@@ -15,8 +15,8 @@
             <Controls.Button readOnly="{{buttonReadOnly || item['buttonReadOnly']}}"
                              caption="{{item[displayProperty] || item['buttonCaption']}}"
                              transparent="{{buttonTransparent || item['buttonTransparent']}}"
-                             iconStyle="{{item[iconStyleProperty] || item['buttonIconStyle'] || item['iconStyle']}}"
-                             icon="{{item[iconProperty] || item['buttonIcon'] || item['icon']}}"
+                             iconStyle="{{item['buttonIconStyle'] || item['iconStyle']}}"
+                             icon="{{item['buttonIcon'] || item['icon']}}"
                              style="{{buttonStyle || item['buttonStyle']}}"
                              viewMode="{{buttonViewMode || item['buttonViewMode']}}"
                              size="{{size}}"/>
