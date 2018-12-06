@@ -22,9 +22,10 @@ define('Controls/Application/_Head',
             return this._beforeMount.apply(this, arguments);
          },
          _beforeMount: function(options) {
-            this.resolvedSimple = []; //ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = []; //ThemesController.getInstance().getThemedResolved();
+            this.resolvedSimple = [];
+            this.resolvedThemed = [];
             if (typeof window !== 'undefined') {
+
                /*var csses = ThemesController.getInstance().getCss();
                this.themedCss = csses.themedCss;
                this.simpleCss = csses.simpleCss;*/
@@ -62,6 +63,7 @@ define('Controls/Application/_Head',
          },
          _beforeUpdate: function() {
             var csses = ThemesController.getInstance().getCss();
+
             // if (ThemesController.getInstance().getReqCbArray) {
             //    this.reqCBArray = ThemesController.getInstance().getReqCbArray();
             // } else {
@@ -69,10 +71,12 @@ define('Controls/Application/_Head',
             // }
             this.themedCss = csses.themedCss;
             this.simpleCss = csses.simpleCss;
+
             // this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
             // this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
          },
          _afterUpdate: function() {
+
             // for (var i = 0; i < this.reqCBArray.length; i++) {
             //    if (this.reqCBArray[i].element) {
             //       this.reqCBArray[i].element.remove();
