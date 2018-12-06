@@ -2,7 +2,7 @@ define('Controls/Heading/Counter', [
    'Core/Control',
    'wml!Controls/Heading/Counter/Counter',
    'WS.Data/Type/descriptor',
-   'css!Controls/Heading/Counter/Counter'
+   'css!theme?Controls/Heading/Counter/Counter'
 ], function(Control, template, types) {
    'use strict';
 

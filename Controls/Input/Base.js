@@ -16,7 +16,7 @@ define('Controls/Input/Base',
       'wml!Controls/Input/Base/Field',
       'wml!Controls/Input/Base/ReadOnly',
 
-      'css!Controls/Input/Base/Base'
+      'css!theme?Controls/Input/Base/Base'
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,

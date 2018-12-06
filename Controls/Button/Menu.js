@@ -3,7 +3,7 @@ define('Controls/Button/Menu',
       'Core/Control',
       'wml!Controls/Button/Menu/Menu',
       'Controls/Button/Menu/MenuUtils',
-      'css!Controls/Button/Menu/Menu',
+      'css!theme?Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
    function(Control, template, MenuUtils) {

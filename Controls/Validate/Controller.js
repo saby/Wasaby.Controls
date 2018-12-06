@@ -8,7 +8,7 @@ define('Controls/Validate/Controller',
       'Core/helpers/isNewEnvironment',
       'Controls/Utils/getZIndex',
       'wml!Controls/Validate/ErrorMessage',
-      'css!Controls/Validate/ErrorMessage'
+      'css!theme?Controls/Validate/ErrorMessage'
    ],
    function(
       Base,

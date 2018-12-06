@@ -4,7 +4,7 @@ define('Controls/Input/Date/Picker', [
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Picker/Picker',
-   'css!Controls/Input/Date/Picker/Picker'
+   'css!theme?Controls/Input/Date/Picker/Picker'
 ], function(
    Control,
    coreMerge,
