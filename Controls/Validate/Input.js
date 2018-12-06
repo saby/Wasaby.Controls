@@ -13,7 +13,9 @@ define('Controls/Validate/Input',
 
       return Controller.extend({
          _template: template,
-         _isNewEnvironment: isNewEnvironment(),
+         _beforeMount: function() {
+            this._isNewEnvironment = isNewEnvironment();
+         },
          _deactivatedHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();
