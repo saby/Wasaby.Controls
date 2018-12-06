@@ -1,8 +1,9 @@
 define('Controls/List/Controllers/VirtualScroll',
    [
-      'Core/core-simpleExtend'
+      'Core/core-simpleExtend',
+      'Controls/Utils/getDimensions'
    ],
-   function(cExtend) {
+   function(cExtend, uDimension) {
       /**
        *
        * @author Родионов Е.А.
@@ -21,7 +22,8 @@ define('Controls/List/Controllers/VirtualScroll',
             return itemsHeight;
          },
 
-         // Заполняет массив высот записей
+         /* Запоминаем высоты отрисованных записей, в дальнейшем это используется для правильного расчета
+            распорок, а также при скроле через бегунок или зажатием мыши. */
          updateItemsSizes: function(self) {
             var
                startIndex = self._startItemIndex,
@@ -30,9 +32,41 @@ define('Controls/List/Controllers/VirtualScroll',
 
             if (!(self._itemsHeights[startIndex] && self._itemsHeights[stopIndex - 1])) {
                for (var i = 0; i < items.length; i++) {
-                  self._itemsHeights[startIndex + i] = items[i].offsetHeight;
+                  self._itemsHeights[startIndex + i] = uDimension(items[i]).height;
                }
             }
+         },
+         updateItemsIndexesOnScrolling: function(self, scrollTop) {
+            var
+               offsetHeight = 0,
+               itemsHeightsCount = self._itemsHeights.length;
+            for (var i = 0; i < itemsHeightsCount; i++) {
+               offsetHeight += self._itemsHeights[i];
+
+               // Находим первую видимую запись по скролл топу
+               if (offsetHeight >= scrollTop) {
+                  var virtualPageHalf = Math.ceil(i - self._virtualPageSize / 2);
+                  self._startItemIndex = Math.max(virtualPageHalf, 0);
+
+                  // Проверяем, что собираемся показать элементы, которые были отрисованы ранее
+                  if (self._startItemIndex + self._virtualPageSize > itemsHeightsCount) {
+                     self._stopItemIndex = itemsHeightsCount;
+                     self._startItemIndex = Math.max(0, itemsHeightsCount - self._virtualPageSize);
+                  } else {
+                     self._stopItemIndex = Math.min(self._startItemIndex + self._virtualPageSize, self._itemsHeights.length);
+                  }
+                  self._topPlaceholderSize = _private.getItemsHeight(self, 0, self._startItemIndex);
+                  self._bottomPlaceholderSize = _private.getItemsHeight(self, self._stopItemIndex, self._itemsHeights.length);
+                  break;
+               }
+            }
+         },
+         isScrollInPlaceholder: function(self, scrollTop) {
+            var itemsHeight = 0;
+            for (var i = self._startItemIndex; i < self._stopItemIndex; i++) {
+               itemsHeight += self._itemsHeights[i];
+            }
+            return (scrollTop < self._topPlaceholderSize || scrollTop > (itemsHeight + self._topPlaceholderSize));
          }
       };
 
@@ -61,6 +95,7 @@ define('Controls/List/Controllers/VirtualScroll',
          resetItemsIndexes: function() {
             this._startItemIndex = 0;
             this._stopItemIndex = this._startItemIndex + this._virtualPageSize;
+            this._itemsHeights = [];
             this._topPlaceholderSize = 0;
             this._bottomPlaceholderSize = 0;
          },
@@ -107,37 +142,11 @@ define('Controls/List/Controllers/VirtualScroll',
             this._itemsCount = itemsCount;
          },
 
-         isScrollInPlaceholder: function(scrollTop) {
-            var itemsHeight = 0;
-            for (var i = this._startItemIndex; i < this._stopItemIndex; i++) {
-               itemsHeight += this._itemsHeights[i];
-            }
-            return (scrollTop < this._topPlaceholderSize || scrollTop > (itemsHeight + this._topPlaceholderSize));
-         },
-
+         /* Если в результате изменения scrollTop получилось так, что в видимой области листа стала видна распорка, то
+            необходимо пересчитать индексы видимых элементов и распорки */
          updateItemsIndexesOnScrolling: function(scrollTop) {
-            var
-               offsetHeight = 0,
-               itemsHeightsCount = this._itemsHeights.length;
-            for (var i = 0; i < itemsHeightsCount; i++) {
-               offsetHeight += this._itemsHeights[i];
-
-               // Находим первую видимую запись по скроллтопу
-               if (offsetHeight >= scrollTop) {
-                  var virtualPageHalf = Math.ceil(i - this._virtualPageSize / 2);
-                  this._startItemIndex = Math.max(virtualPageHalf, 0);
-
-                  // Проверяем, что собираемся показать элементы, которые уже были отрисованы хотябы 1 раз
-                  if (this._startItemIndex + this._virtualPageSize > itemsHeightsCount) {
-                     this._stopItemIndex = itemsHeightsCount;
-                     this._startItemIndex = Math.max(0, itemsHeightsCount - this._virtualPageSize);
-                  } else {
-                     this._stopItemIndex = Math.min(this._startItemIndex + this._virtualPageSize, this._itemsHeights.length);
-                  }
-                  this._topPlaceholderSize = _private.getItemsHeight(this, 0, this._startItemIndex);
-                  this._bottomPlaceholderSize = _private.getItemsHeight(this, this._stopItemIndex, this._itemsHeights.length);
-                  break;
-               }
+            if (_private.isScrollInPlaceholder(this, scrollTop)) {
+               _private.updateItemsIndexesOnScrolling(this, scrollTop);
             }
          }
 
