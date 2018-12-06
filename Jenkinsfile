@@ -563,8 +563,8 @@ node('controls') {
                         }
                     }
                     if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${browser_type}) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${browser_type}) ${version} controls'"
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
                     }
                 }
             }
