@@ -165,7 +165,7 @@ node('controls') {
                 sh "rm -rf ${workspace}/controls/tests/reg/atf"
                 sh "rm -rf ${workspace}/controls/sbis3-app-engine"
                 sh "rm -rf ${workspace}/controls/tests/navigation"
-                sh "rm -rf ${workspace}/controls/tests/viewsettings"
+                sh "rm -rf ${workspace}/controls/viewsettings"
                 sh "rm -rf ${workspace}/controls/node_modules"
                 sh "rm -rf ${workspace}/controls/package-lock.json"
             }
@@ -258,7 +258,7 @@ node('controls') {
                         },
                         checkout_viewsettings: {
                             echo " Выкачиваем viewsettings"
-                            dir("./controls/tests"){
+                            dir("./controls"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_viewsettings]],
                                 doGenerateSubmoduleConfigurations: false,
