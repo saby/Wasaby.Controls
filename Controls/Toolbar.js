@@ -64,10 +64,11 @@ define('Controls/Toolbar', [
     *    <li>buttonReadOnly</li>
     *    <li>buttonTransparent</li>
     *    <li>buttonStyle</li>
+    *    <li>buttonCaption</li>
     *    <li>buttonViewMode</li>
-    *    <li>displayProperty</li>
-    *    <li>iconStyleProperty</li>
-    *    <li>iconProperty</li>
+    *    <li>displayProperty - name of displaying text field, default value "tittle"</li>
+    *    <li>iconStyleProperty - name of displaying iconStyle field, default value "iconStyle"</li>
+    *    <li>iconProperty - name of displaying icon field, default value "icon"</li>
     * <ul>
     * @example
     * <pre>
