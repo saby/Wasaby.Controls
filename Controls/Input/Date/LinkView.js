@@ -107,7 +107,6 @@ define('Controls/Input/Date/LinkView', [
       _beforeUnmount: function() {
          this._rangeModel.destroy();
       }
-
    });
 
    Component.EMPTY_CAPTIONS = IDateLinkView.EMPTY_CAPTIONS;
