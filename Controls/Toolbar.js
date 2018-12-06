@@ -5,9 +5,10 @@ define('Controls/Toolbar', [
    'wml!Controls/Toolbar/ToolbarItemTemplate',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
+   'Controls/Button/validateIconStyle',
    'Controls/Button',
    'css!theme?Controls/Toolbar/Toolbar'
-], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil) {
+], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil, validateIconStyle) {
    'use strict';
 
    /**
@@ -103,6 +104,10 @@ define('Controls/Toolbar', [
          });
          return instance._sourceController.load().addCallback(function(items) {
             instance._items = items;
+
+            // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+            // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+            validateIconStyle.itemsSetOldIconStyle(instance._items);
             instance._menuItems = self.getMenuItems(instance._items);
             instance._needShowMenu = instance._menuItems && instance._menuItems.getCount();
             return items;
@@ -120,8 +125,8 @@ define('Controls/Toolbar', [
       setPopupOptions: function(self, newOptions) {
          self._popupOptions = {
             className: (newOptions.popupClassName || '') + ' controls-Toolbar__menu-position',
-            corner: {vertical: 'top', horizontal: 'right'},
-            horizontalAlign: {side: 'left'},
+            corner: { vertical: 'top', horizontal: 'right' },
+            horizontalAlign: { side: 'left' },
             eventHandlers: {
                onResult: self._onResult,
                onClose: self._closeHandler
@@ -165,12 +170,14 @@ define('Controls/Toolbar', [
          _private.setPopupOptions(this, options);
          if (receivedState) {
             this._items = receivedState;
+
+            // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+            // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+            validateIconStyle.itemsSetOldIconStyle(this._items);
             this._menuItems = _private.getMenuItems(this._items);
             this._needShowMenu = this._menuItems && this._menuItems.getCount();
-         } else {
-            if (options.source) {
-               return _private.loadItems(this, options.source);
-            }
+         } else if (options.source) {
+            return _private.loadItems(this, options.source);
          }
       },
       _beforeUpdate: function(newOptions) {
@@ -193,8 +200,8 @@ define('Controls/Toolbar', [
 
          if (item.get(this._nodeProperty)) {
             config = {
-               corner: {vertical: 'top', horizontal: 'left'},
-               horizontalAlign: {side: 'right'},
+               corner: { vertical: 'top', horizontal: 'left' },
+               horizontalAlign: { side: 'right' },
                className: _private.getItemClassName(item, this._options.size),
                templateOptions: {
                   items: this._items,
@@ -210,10 +217,10 @@ define('Controls/Toolbar', [
             };
             this._children.menuOpener.open(config, this);
 
-            //TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
-            //TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
+            // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
+            // TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
 
-            this._notify('menuOpened', [], {bubbling: true});
+            this._notify('menuOpened', [], { bubbling: true });
          }
          event.stopPropagation();
          this._notify('itemClick', [item]);
@@ -229,7 +236,7 @@ define('Controls/Toolbar', [
             },
             target: this._children.popupTarget
          };
-         this._notify('menuOpened', [], {bubbling: true});
+         this._notify('menuOpened', [], { bubbling: true });
          this._children.menuOpener.open(config, this);
       },
 
@@ -246,7 +253,7 @@ define('Controls/Toolbar', [
       },
 
       _closeHandler: function() {
-         this._notify('menuClosed', [], {bubbling: true});
+         this._notify('menuClosed', [], { bubbling: true });
       }
    });
 
