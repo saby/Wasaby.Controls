@@ -299,7 +299,7 @@ define('Controls/List/Tree/TreeViewModel', [
 
             if (!current.isGroup && current.item.get(current.nodeProperty) !== null) {
                if (current.isExpanded) {
-                  current.hasChildren = this._display.getChildren(current.dispItem).getCount();
+                  current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
 
                   if (this._options.nodeFooterTemplate) {
                      current.footerStorage = {};
@@ -399,8 +399,11 @@ define('Controls/List/Tree/TreeViewModel', [
             this._display.setRoot(root);
             this._nextVersion();
             this._notify('onListChange');
-         }
+         },
 
+         getChildren: function(rootId) {
+            return this._hierarchyRelation.getChildren(rootId, this._items);
+         }
       });
 
    TreeViewModel._private = _private;

@@ -608,6 +608,10 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getActiveItem();
          },
 
+         getChildren: function() {
+            return this._model.getChildren.apply(this._model, arguments);
+         },
+
          destroy: function() {
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);

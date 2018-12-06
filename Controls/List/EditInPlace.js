@@ -3,7 +3,6 @@ define('Controls/List/EditInPlace', [
    'wml!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
    'WS.Data/Entity/Record',
-   'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/getWidth',
    'Controls/Utils/hasHorizontalScroll',
    'Controls/EditableArea/Constants',
@@ -13,7 +12,6 @@ define('Controls/List/EditInPlace', [
    template,
    Deferred,
    Record,
-   ItemsUtil,
    getWidthUtil,
    hasHorizontalScrollUtil,
    EditConstants
@@ -134,33 +132,47 @@ define('Controls/List/EditInPlace', [
             return self._children.formController.submit();
          },
 
+         hasParentInItems: function(item, listModel) {
+            return !!listModel.getItemById(item.get(listModel._options.parentProperty));
+         },
+
          editNextRow: function(self, editNextRow) {
             var index = _private.getEditingItemIndex(self, self._editingItem, self._options.listModel);
 
             if (editNextRow) {
-               if (index < self._options.listModel.getCount() - 1 && _private.getNext(index, self._options.listModel)) {
+               if (_private.getNext(self._editingItem, index, self._options.listModel)) {
                   self.beginEdit({
-                     item: _private.getNext(index, self._options.listModel)
+                     item: _private.getNext(self._editingItem, index, self._options.listModel)
                   });
                } else if (self._options.editingConfig && self._options.editingConfig.autoAdd) {
                   self.beginAdd();
                } else {
                   self.commitEdit();
                }
-            } else if (index > 0 && _private.getPrevious(index, self._options.listModel)) {
+            } else if (_private.getPrevious(self._editingItem, index, self._options.listModel)) {
                self.beginEdit({
-                  item: _private.getPrevious(index, self._options.listModel)
+                  item: _private.getPrevious(self._editingItem, index, self._options.listModel)
                });
             } else {
                self.commitEdit();
             }
          },
 
-         getNext: function(index, listModel) {
+         getNext: function(editingItem, index, listModel) {
             var
-               result,
                offset = 1,
+               result,
+               parentId,
+               parentIndex,
+               count;
+
+            if (_private.hasParentInItems(editingItem, listModel)) {
+               parentId = editingItem.get(listModel._options.parentProperty);
+               parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
+               count = parentIndex + listModel.getChildren(parentId).length + 1;
+            } else {
                count = listModel.getCount();
+            }
 
             while (index + offset < count) {
                result = listModel.at(index + offset).getContents();
@@ -171,12 +183,23 @@ define('Controls/List/EditInPlace', [
             }
          },
 
-         getPrevious: function(index, listModel) {
+         getPrevious: function(editingItem, index, listModel) {
             var
+               offset = -1,
                result,
-               offset = -1;
+               parentId,
+               parentIndex,
+               count;
 
-            while (index + offset >= 0) {
+            if (_private.hasParentInItems(editingItem, listModel)) {
+               parentId = editingItem.get(listModel._options.parentProperty);
+               parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
+               count = parentIndex + 1;
+            } else {
+               count = 0;
+            }
+
+            while (index + offset >= count) {
                result = listModel.at(index + offset).getContents();
                if (result instanceof Record) {
                   return result;
@@ -188,10 +211,16 @@ define('Controls/List/EditInPlace', [
          getEditingItemIndex: function(self, editingItem, listModel) {
             var
                index = listModel.getCount(),
-               originalItem = listModel.getItemById(ItemsUtil.getPropertyValue(editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
+               originalItem = listModel.getItemById(editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty),
+               parentId,
+               parentIndex;
 
             if (originalItem) {
                index = listModel.getIndexBySourceItem(originalItem.getContents());
+            } else if (_private.hasParentInItems(editingItem, listModel)) {
+               parentId = editingItem.get(listModel._options.parentProperty);
+               parentIndex = listModel.getIndexBySourceItem(listModel.getItemById(parentId, listModel._options.keyProperty).getContents());
+               index = parentIndex + listModel.getChildren(parentId).length + 1;
             }
 
             return index;
@@ -375,20 +404,24 @@ define('Controls/List/EditInPlace', [
             this._editingItemData = null;
             return;
          }
-         var index = _private.getEditingItemIndex(this, item, listModel);
-         this._isAdd = index === listModel.getCount();
-         var editingItemProjection = this._isAdd
-            ? listModel._prepareDisplayItemForAdd(item)
-            : listModel.getItemById(ItemsUtil.getPropertyValue(this._editingItem, listModel._options.keyProperty), listModel._options.keyProperty);
+         var editingItemProjection = listModel.getItemById(this._editingItem.get(listModel._options.keyProperty), listModel._options.keyProperty);
+
+         if (!editingItemProjection) {
+            this._isAdd = true;
+            editingItemProjection = listModel._prepareDisplayItemForAdd(item);
+         }
 
          var actions = listModel.getItemActions(item);
          this._editingItemData = listModel.getItemDataByItem(editingItemProjection);
+         if (this._isAdd && _private.hasParentInItems(this._editingItem, listModel)) {
+            this._editingItemData.level = listModel.getItemById(item.get(this._editingItemData.parentProperty)).getLevel() + 1;
+         }
          this._editingItemData.isEditing = true;
          this._editingItemData.item = this._editingItem;
          this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length;
          this._editingItemData.itemActions = this._isAdd ? actions : {};
          if (this._isAdd) {
-            this._editingItemData.index = index;
+            this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel);
          }
          listModel._setEditingItemData(this._editingItemData);
       },
