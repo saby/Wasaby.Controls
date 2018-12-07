@@ -1,6 +1,14 @@
 define('Controls/interface/IButton', [
 ], function() {
    /**
+    * Interface for control Button.
+    *
+    * @interface Controls/interface/IButton
+    * @public
+    * @author Михайловский Д.С.
+    */
+
+   /**
     * @name Controls/interface/IButton#style
     * @cfg {Enum} Button display style.
     * @variant primary The display style of the attracting attention button.
