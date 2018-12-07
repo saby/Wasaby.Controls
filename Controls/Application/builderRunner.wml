@@ -1,8 +1,18 @@
 <div>
    <script>
-      require(['Controls/Application/AppData', 'Core/app-start', 
-         'Core/app-init', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, AppStart, appInit, Core, tclosure) {
+      require(['Controls/Application/AppData', 'Core/app-start', 'View/Request',
+         'View/_Request/createDefault', 'Controls/Application/HeadData',
+         'Controls/Application/StateReceiver',
+         'Core/app-init', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}],
+      function(AppData, AppStart,
+               Request, createDefault, HeadData, StateReceiver, appInit, Core, tclosure) {
          appInit();
+         var req = new Request(createDefault.default(Request));
+         req.setStateReceiver(new StateReceiver());
+         Request.setCurrent(req);
+         var headData = new HeadData('', [], true);
+         Request.getCurrent().setStorage('HeadData', headData);
+
          window.startContextData = {AppData: new AppData({})};
          var templateFn = {{_options.builder | unescape}};
          var cnt = Core.extend({
