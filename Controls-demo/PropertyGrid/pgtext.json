@@ -1173,7 +1173,7 @@
           "multiSelect": {
             "type": "Boolean"
           },
-          "multiline": {
+          "multiLine": {
             "type": "Boolean"
           },
           "readOnly": {
@@ -1181,6 +1181,28 @@
           },
           "source": {
             "type": "Array"
+          },
+          "selectorTemplate": {
+            "type": "Array"
+          },
+          "itemTemplate.style": {
+            "type": "enum",
+            "default": "none",
+            "enum": {
+              "none": "none",
+              "bold": "bold",
+              "accent": "accent",
+              "primary": "primary"
+            }
+          },
+          "itemTemplate.size": {
+            "type": "enum",
+            "default": "s",
+            "enum": {
+              "s": "s",
+              "m": "m",
+              "l": "l"
+            }
           },
           "displayProperty": {
             "type": "enum",

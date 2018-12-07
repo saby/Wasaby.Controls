@@ -17,7 +17,7 @@ define('Controls/Input/interface/ISuggest', [
 
    /**
     * @name Controls/Input/interface/ISuggest#suggestTemplate
-    * @cfg {suggestTemplateProp} Primary suggest template (showing search results).
+    * @cfg {suggestTemplateProp} Template for suggest, that showing search results.
     * @example
     * suggestTemplate.wml
     * <pre>
@@ -42,7 +42,7 @@ define('Controls/Input/interface/ISuggest', [
    
    /**
     * @name Controls/Input/interface/ISuggest#emptyTemplate
-    * @cfg {Function} Template that's rendered when no result were found.
+    * @cfg {Function} Template for suggest when no results were found.
     * @remark If option isn't set, empty suggest won't appear.
     * @example
     * emptyTemplate.wml:
@@ -97,7 +97,7 @@ define('Controls/Input/interface/ISuggest', [
 
    /**
     * @name Controls/Input/interface/ISuggest#autoDropDown
-    * @cfg {Boolean} show dropDown when the input get focused.
+    * @cfg {Boolean} Show suggest when the input get focused.
     */
    
    /**
