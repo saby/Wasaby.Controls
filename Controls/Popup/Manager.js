@@ -7,11 +7,10 @@ define('Controls/Popup/Manager',
       'WS.Data/Collection/List',
       'Core/EventBus',
       'Core/detection',
-      'Core/IoC',
-      'Core/core-instance'
+      'Core/IoC'
    ],
 
-   function(Control, template, ManagerController, randomId, List, EventBus, cDetection, IoC, cInstance) {
+   function(Control, template, ManagerController, randomId, List, EventBus, cDetection, IoC) {
       'use strict';
 
       var _private = {

@@ -154,6 +154,8 @@ node('controls') {
                 sh "rm -rf ${workspace}/controls/tests/reg/atf"
                 sh "rm -rf ${workspace}/controls/sbis3-app-engine"
                 sh "rm -rf ${workspace}/controls/tests/navigation"
+                sh "rm -rf ${workspace}/controls/node_modules"
+                sh "rm -rf ${workspace}/controls/package-lock.json"
             }
         }
         echo "Выкачиваем хранилища"
@@ -561,8 +563,8 @@ node('controls') {
                         }
                     }
                     if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${browser_type}) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${browser_type}) ${version} controls'"
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
                     }
                 }
             }

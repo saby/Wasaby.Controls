@@ -398,6 +398,13 @@ define('Controls/Input/Base',
           */
          _isMobileIOS: detection.isMobileIOS,
 
+         /**
+          * @type {Boolean} Determined whether to hide the placeholder using css.
+          * @private
+          * @remark
+          * Hide in chrome because it supports auto-completion of the field when hovering over an item in the list
+          * of saved values. During this action no events are triggered and hide placeholder using js is not possible.
+          */
          _hidePlaceholderUsingCSS: detection.chrome,
 
          /**

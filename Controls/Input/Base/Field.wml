@@ -16,7 +16,7 @@
       on:focusout="_focusOutHandler()"
       on:mousedown="_mouseDownHandler()"
    />
-   <ws:if data="{{!(value || hidePlaceholderUsingCSS)}}">
+   <ws:if data="{{!value}}">
       <div class="controls-Base__placeholder">
          <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
       </div>
