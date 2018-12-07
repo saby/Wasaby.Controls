@@ -18,6 +18,6 @@ for err in errors:
     _iter = iter(errors[err])
     rc_err = dict(zip(_iter, _iter))
     for test in rc_err:
-        description += "{} - {}\n".format(test, rc_err[test])
+        description += "<b>{}<b> - {}<br>".format(test, rc_err[test])
 print(description)
 
