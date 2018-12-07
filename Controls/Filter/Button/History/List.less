@@ -1,52 +1,58 @@
 .controls-HistoryList__itemWrapper {
-  display: inline-flex;
-  align-items: baseline;
-  justify-content: space-between;
-  cursor: pointer;
-  height: @height_HistoryList-item;
-  width: 100%;
-  &:before {
-    content: "\200b";
-  }
-  &:hover {
-    .controls-HistoryList__item {
-      text-decoration: underline;
-    }
-    .controls-HistoryList__iconPin {
-      visibility: visible;
-    }
-  }
+	display: inline-flex;
+	align-items: baseline;
+	justify-content: space-between;
+	cursor: pointer;
+	height: @height_HistoryList-item;
+	width: 100%;
+	&:before {
+		content: "\200b";
+	}
+	&:hover {
+		.controls-HistoryList__item {
+			text-decoration: underline;
+		}
+		.controls-HistoryList__iconPin {
+			visibility: visible;
+		}
+	}
 }
 
 .controls-HistoryList__content {
-  margin-left: @spacing_FilterPanel-items;
+	margin-left: @spacing_HistoryList-between-leftBorder-content;
 }
 
 .controls-HistoryList__item {
-  font-size: @font-size_HistoryList-item;
-  color: @color_HistoryList-item;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  margin-right: @spacing_HistoryList-between-icon-text;
-  width: 100%;
+	color: @color_HistoryList-item;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	margin-right: @spacing_HistoryList-between-icon-text;
+	width: 100%;
 }
 
 .controls-HistoryList__iconPin {
-  .icon(@icon-size_HistoryList-iconPin, @default-icon-small-font);
+	.icon-size(@font-size_HistoryList-pin);
 }
 
 .controls-HistoryList__iconPin-default {
-  color: @icon-color-disabled;
-  visibility: hidden;
-}
-
-.controls-HistoryList__iconPin:hover {
-  visibility: visible;
-  color: @icon-color-primary-hover;
+	color: @color_HistoryList-pin_unpinned;
+	visibility: hidden;
 }
 
 .controls-HistoryList__iconPin-active {
-  visibility: visible;
-  color: @icon-color-primary-hover;
+	visibility: visible;
+	color: @color_HistoryList-pin_pinned;
+}
+
+.ws-is-no-touch {
+	.controls-HistoryList__iconPin:hover {
+		visibility: visible;
+		color: @color_HistoryList-pin_hover;
+	}
+}
+
+.controls-HistoryList__iconPin:active {
+	visibility: visible;
+	color: @color_HistoryList-pin_active;
 }
