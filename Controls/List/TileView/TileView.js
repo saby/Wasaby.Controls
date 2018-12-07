@@ -4,7 +4,7 @@ define('Controls/List/TileView/TileView', [
    'wml!Controls/List/TileView/DefaultItemTpl',
    'Controls/Context/TouchContextField',
    'Controls/List/TileView/resources/ItemSizeUtils',
-   'css!Controls/List/TileView/TileView'
+   'css!theme?Controls/List/TileView/TileView'
 ], function(ListView, template, defaultItemTpl, TouchContextField, ItemSizeUtils) {
 
    'use strict';
