@@ -15,8 +15,19 @@ define('Controls/List/interface/IGridControl', [
     */
 
    /**
-    * @name Controls/List/interface/IGridControl#stickyFields
+    * @name Controls/List/interface/IGridControl#ladderProperties
     * @cfg {Array.<String>} Array of fields that should be sticky.
+    */
+
+   /**
+    * @typedef {Object} StickyColumn
+    * @property {Number} [index] Index of the column for which sticking is calculated.
+    * @property {String} [property] Name of the field for which sticking is calculated.
+    */
+
+   /**
+    * @name Controls/List/interface/IGridControl#stickyColumn
+    * @cfg {StickyColumn} Configuration for column's sticking.
     */
 
    /**
