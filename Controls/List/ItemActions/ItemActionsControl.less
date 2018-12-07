@@ -98,20 +98,20 @@
   }
 }
 
-.action_icon_style_error {
-  color: @error-color;
+.controls-itemActionsV__action_iconStyle_danger {
+   color: @color_ItemActions-action_style_danger;
 }
 
-.action_icon_style_done {
-  color: @success-color;
+.controls-itemActionsV__action_iconStyle_success {
+   color: @color_ItemActions-action_style_success;
 }
 
-.action_icon_style_default {
-  color: @color_primary;
+.controls-itemActionsV__action_iconStyle_secondary {
+   color: @color_ItemActions-action_style_secondary;
 }
 
-.action_icon_style_attention {
-  color: @warning-color;
+.controls-itemActionsV__action_iconStyle_warning {
+   color: @color_ItemActions-action_style_warning;
 }
 
 //since Opener does not know the specific size of the icon
@@ -127,19 +127,11 @@
   min-height: @default-icon-size;
 }
 
-.controls-itemActionsV__action_title_style_default {
-  color: @color_Link-text;
+.controls-itemActionsV__action_title_style_secondary {
+   color: @color_ItemActions-title_style_secondary;
   font-size:@small-text-size;
 }
 
-.ws-is-no-touch {
-  .controls-itemActionsV__action_title_style_default {
-    &:hover {
-      color: @color_Link-text_active;
-      text-decoration: underline;
-    }
-  }
-}
 .controls-itemActionsV_swiped {
   display: inline-flex;
 }
@@ -149,34 +141,17 @@
       color: @icon-color-primary-hover;
     }
   }
-}
-.ws-is-no-touch {
-  .action_icon_style_error {
-    &:hover {
-      border-color: @error-color;
-    }
-  }
-}
-.ws-is-no-touch {
-  .action_icon_style_done {
-    &:hover {
-      border-color: @success-color;
-    }
-  }
-}
 
-.ws-is-no-touch {
-  .controls-itemActionsV__action_done {
-    &:hover {
-      border-color: @success-color;
-    }
-  }
-}
+   .controls-itemActionsV__action_title_style_secondary:hover {
+      color: @color_ItemActions-title_style_secondary_hover;
+      text-decoration: underline;
+   }
 
-.ws-is-no-touch {
-  .controls-itemActionsV__action_error {
-    &:hover {
-      border-color: @error-color;
-    }
-  }
+   .controls-itemActionsV__action_iconStyle_danger:hover {
+      border-color: @border-color_ItemActions-action_style_danger;
+   }
+
+   .controls-itemActionsV__action_iconStyle_success:hover {
+      border-color: @border-color_ItemActions-action_style_success;
+   }
 }

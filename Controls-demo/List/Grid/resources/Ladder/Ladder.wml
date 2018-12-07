@@ -1,0 +1,16 @@
+<div class="demo-Grid">
+   <div class="demo-Grid__container">
+      <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
+         <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+            <Controls.List.Container>
+               <Controls.Grid
+                  ladderProperties="{{_ladderProperties}}"
+                  stickyColumn="{{_stickyColumn}}"
+                  multiSelectVisibility="hidden"
+                  columns="{{_viewColumns}}">
+               </Controls.Grid>
+            </Controls.List.Container>
+         </Controls.Container.Scroll>
+      </Controls.Container.Data>
+   </div>
+</div>

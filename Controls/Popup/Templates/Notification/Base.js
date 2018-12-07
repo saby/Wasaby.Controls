@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Notification/Base',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Notification/Base',
-      'css!Controls/Popup/Templates/Notification/Base'
+      'css!theme?Controls/Popup/Templates/Notification/Base'
    ],
    function(Control, template) {
 

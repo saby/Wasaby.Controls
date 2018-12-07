@@ -5,7 +5,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/CustomFormat', [
    'WS.Data/Source/Memory',
    'Core/core-clone',
    'Controls/Input/RichArea/helpers/constants',
-   'css!Controls/Input/RichEditor/Toolbar/Button/CustomFormat/CustomFormat',
+   'css!theme?Controls/Input/RichEditor/Toolbar/Button/CustomFormat/CustomFormat',
    'wml!Controls/Input/RichEditor/Toolbar/Button/CustomFormat/item'
 ], function(Control, template, formatPickData, Memory, cClone, constantsHelper) {
    /**

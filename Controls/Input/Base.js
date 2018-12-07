@@ -16,7 +16,7 @@ define('Controls/Input/Base',
       'wml!Controls/Input/Base/Field',
       'wml!Controls/Input/Base/ReadOnly',
 
-      'css!Controls/Input/Base/Base'
+      'css!theme?Controls/Input/Base/Base'
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
@@ -421,7 +421,13 @@ define('Controls/Input/Base',
              * https://habr.com/company/mailru/blog/301840/
              */
             if ('name' in options) {
-               this._fieldName = options.name;
+               /**
+                * The value of the name option can be undefined.
+                * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                */
+               if (typeof options.name !== 'undefined') {
+                  this._fieldName = options.name;
+               }
             }
          },
 

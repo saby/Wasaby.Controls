@@ -4,7 +4,7 @@ define('Controls/Selector/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/ItemTemplate',
       'WS.Data/Chain',
-      'css!Controls/Selector/SelectedCollection/SelectedCollection'
+      'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
    function(Control, template, ItemTemplate, Chain) {

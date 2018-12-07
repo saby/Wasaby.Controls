@@ -25,7 +25,7 @@ define('Controls/Toggle/Checkbox', [
 
    /**
     * @name Controls/Toggle/Checkbox#triState
-    * @cfg {Boolean} Determines whether the CheckBox will allow three check status rather than two.
+    * @cfg {Boolean} Determines whether the Checkbox will allow three check status rather than two.
     * @variant True Enable triState.
     * @variant False Disable triState.
     * @default False
