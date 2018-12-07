@@ -7,7 +7,6 @@
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
-                  headerClass="{{_headerClass}}"
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
