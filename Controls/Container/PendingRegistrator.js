@@ -1,4 +1,4 @@
-define('Controls/Container/PendingRegistrator', [
+odefine('Controls/Container/PendingRegistrator', [
    'Core/Control',
    'wml!Controls/Container/PendingRegistrator/PendingRegistrator',
    'Core/Deferred',
