@@ -24,6 +24,7 @@ define(
                   this.selectionEnd = end;
                }
             };
+            ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
 
          it('getDefault', function() {
@@ -31,8 +32,6 @@ define(
             Base.getDefaultOptions();
          });
          it('Public method paste.', function() {
-            ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
-
             ctrl._beforeMount({
                value: ''
             });
@@ -53,7 +52,6 @@ define(
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
                ctrl._options.readOnly = false;
-               ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
             });
             it('No.', function() {
                ctrl._children.input.value = '';
@@ -244,8 +242,6 @@ define(
          });
          describe('Change event', function() {
             it('Notification when input is complete.', function() {
-               ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
-
                ctrl._beforeMount({
                   value: 'test value'
                });
@@ -305,13 +301,19 @@ define(
                ctrl._inputHandler(new SyntheticEvent({}));
                ctrl._selectHandler();
 
-               assert.equal(calls.length, 0);
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['', '']]
+               }]);
             });
          });
          describe('Focus in event', function() {
             var savedNotify = EventBus.globalChannel().notify;
 
             beforeEach(function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
                EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
             });
             afterEach(function() {
@@ -340,6 +342,9 @@ define(
 
             beforeEach(function() {
                EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
+               ctrl._beforeMount({
+                  value: ''
+               });
             });
             afterEach(function() {
                EventBus.globalChannel().notify = savedNotify;
@@ -484,6 +489,38 @@ define(
                }));
 
                assert.equal(calls.length, 0);
+            });
+         });
+         describe('The value in the field is changed via auto-complete.', function() {
+            it('In an empty field.', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+
+               ctrl._children.input.value = 'test auto-complete value';
+               ctrl._children.input.selectionStart = 24;
+               ctrl._children.input.selectionEnd = 24;
+               ctrl._inputHandler(new SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
+               }]);
+            });
+            it('In an not empty field.', function() {
+               ctrl._beforeMount({
+                  value: 'test value'
+               });
+
+               ctrl._children.input.value = 'test auto-complete value';
+               ctrl._children.input.selectionStart = 24;
+               ctrl._children.input.selectionEnd = 24;
+               ctrl._inputHandler(new SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
+               }]);
             });
          });
       });

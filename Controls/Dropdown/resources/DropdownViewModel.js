@@ -7,10 +7,11 @@ define('Controls/Dropdown/resources/DropdownViewModel',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
       'WS.Data/Entity/Model',
-      'WS.Data/Relation/Hierarchy'
+      'WS.Data/Relation/Hierarchy',
+      'Controls/List/ItemActions/Utils/getStyle'
    ],
 
-   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy) {
+   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy, getStyle) {
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -140,7 +141,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             if (!this._itemsModel.isLast()) {
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
             }
-            itemsModelCurrent.iconStyle = itemsModelCurrent.item.get('iconStyle');
+            itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             return itemsModelCurrent;

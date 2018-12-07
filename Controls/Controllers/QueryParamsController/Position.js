@@ -124,10 +124,10 @@ define('Controls/Controllers/QueryParamsController/Position',
             if (metaNextPostion) {
                if (metaNextPostion instanceof Array) {
                   if (loadDirection || this._options.direction !== 'both') {
-                     if (loadDirection !== 'down') {
-                        this._beforePosition = metaNextPostion;
-                     } else if (loadDirection !== 'up') {
+                     if (loadDirection === 'down' || this._options.direction === 'after') {
                         this._afterPosition = metaNextPostion;
+                     } else if (loadDirection === 'up' || this._options.direction === 'before') {
+                        this._beforePosition = metaNextPostion;
                      }
                   } else {
                      IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');

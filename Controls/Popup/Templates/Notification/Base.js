@@ -3,7 +3,7 @@ define('Controls/Popup/Templates/Notification/Base',
       'Core/Control',
       'Core/IoC',
       'wml!Controls/Popup/Templates/Notification/Base',
-      'css!Controls/Popup/Templates/Notification/Base'
+      'css!theme?Controls/Popup/Templates/Notification/Base'
    ],
    function(Control, IoC, template) {
       var _private = {

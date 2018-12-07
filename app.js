@@ -64,11 +64,6 @@ var server = app.listen(port);
 
 console.log('app available on port ' + port);
 
-// // Кошерный редирект на CDN, который РАБОТАЕТ
-app.get('/cdn*', function(req, res) {
-   res.redirect('http://fix-online.sbis.ru' + req.url);
-});
-
 // Простой прокси для перенаправления запросов от демо к сервисам Sbis.ru
 var simpleProxy = function(proxyParams, req, res) {
    var subReq = function(host, args, content, onResult) {
@@ -192,6 +187,10 @@ var simpleProxy = function(proxyParams, req, res) {
    );
 };
 
+app.get('/cdn*', (req, res) => {
+   res.redirect('http://dev-cdn.wasaby.io' + req.url);
+});
+
 // Параметры, куда и как перенаправлять запросы
 var PROXY_PARAMS = {
    host: 'test-online.sbis.ru',
@@ -234,10 +233,13 @@ app.get('/:moduleName/*', function(req, res){
    try {
       require(cmp);
    } catch(e){
-      res.writeHead(200, {'Content-Type': 'text/html'});
+      res.writeHead(404, {'Content-Type': 'text/html'});
       res.end('');
       return;
    }
+
+   require('Core/constants').resourceRoot = '/';
+
    var html = tpl({
       lite: true,
       wsRoot: '/WS.Core/',
@@ -273,6 +275,3 @@ app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
       return '/stomp/s-' + cookies['sid'] + '/info';
    }
 }));
-
-
-

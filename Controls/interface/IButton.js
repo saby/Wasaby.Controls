@@ -1,6 +1,14 @@
 define('Controls/interface/IButton', [
 ], function() {
    /**
+    * Interface for control Button.
+    *
+    * @interface Controls/interface/IButton
+    * @public
+    * @author Михайловский Д.С.
+    */
+
+   /**
     * @name Controls/interface/IButton#style
     * @cfg {Enum} Button display style.
     * @variant primary The display style of the attracting attention button.
@@ -75,40 +83,5 @@ define('Controls/interface/IButton', [
     *    <Controls.Button caption="Send document" style="primary" viewMode="button" size="xl"/>
     * </pre>
     * @see style
-    */
-
-   /**
-    * @name Controls/interface/IButton#icon
-    * @cfg {String} Button icon.
-    * @default Undefined
-    * @remark  When you customize a button, use the icon style instead of the css-classes.
-    * @example
-    * Primary button with icon 'Add'.
-    * <pre>
-    *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
-    * </pre>
-    * @see iconStyle
-    */
-
-   /**
-    * @name Controls/interface/IButton#iconStyle
-    * @cfg {Enum} Icon display style.
-    * @variant primary The display style of the attracting attention icon.
-    * @variant success The display style of the success icon.
-    * @variant warning The display style of the warning icon.
-    * @variant danger The display style of the danger icon.
-    * @variant info The display style of the simple information icon.
-    * @variant secondary The display style of the secondary icon.
-    * @default secondary
-    * @example
-    * Primary button with default icon style.
-    * <pre>
-    *    <Controls.Button icon="icon-Add" style="primary" viewMode="button"/>
-    * </pre>
-    * Primary button with 'success' icon style.
-    * <pre>
-    *    <Controls.Button icon="icon-Add" iconStyle="success" style="primary" viewMode="button"/>
-    * </pre>
-    * @see Icon
     */
 });

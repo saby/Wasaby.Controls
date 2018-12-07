@@ -8,9 +8,6 @@ define('Controls-demo/List/Grid/Grid', [
    'wml!Controls-demo/List/Grid/DemoCostPrice',
    'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
    'wml!Controls-demo/List/Grid/DemoName',
-   'wml!Controls-demo/List/Grid/DemoTasksPhoto',
-   'wml!Controls-demo/List/Grid/DemoTasksDescr',
-   'wml!Controls-demo/List/Grid/DemoTasksReceived',
    'Controls/Render/Money/Money',
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
@@ -25,10 +22,8 @@ define('Controls-demo/List/Grid/Grid', [
          _actionClicked: '',
          _itemActions: null,
          _viewSource: null,
-         gridData: null,
          gridColumns: null,
          gridHeader: null,
-         tasksColumns: null,
          showType: null,
          _showAction: function(action, item) {
             if (item.get('id') === '471329') {
@@ -147,7 +142,6 @@ define('Controls-demo/List/Grid/Grid', [
                   template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
                }
             ];
-            this.gridData = GridData;
             this.gridHeader = [
                {
                   title: ''
@@ -172,20 +166,6 @@ define('Controls-demo/List/Grid/Grid', [
                {
                   title: 'Сумма остатка',
                   align: 'right'
-               }
-            ];
-            this.tasksColumns = [
-               {
-                  template: 'wml!Controls-demo/List/Grid/DemoTasksPhoto',
-                  width: 'auto'
-               },
-               {
-                  template: 'wml!Controls-demo/List/Grid/DemoTasksDescr',
-                  width: '1fr'
-               },
-               {
-                  template: 'wml!Controls-demo/List/Grid/DemoTasksReceived',
-                  width: 'auto'
                }
             ];
          }

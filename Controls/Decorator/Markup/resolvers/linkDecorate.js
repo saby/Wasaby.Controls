@@ -53,7 +53,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
             linkAttrs[key] = value[1][key];
          }
       }
-      linkAttrs.class = (linkAttrs.class ? linkAttrs.class + ' ' : '') + 'LinkDecorator__linkWrap';
+      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + 'LinkDecorator__linkWrap';
       linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
 
       var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +

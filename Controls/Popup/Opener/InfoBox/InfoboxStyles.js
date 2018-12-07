@@ -3,7 +3,8 @@ define('Controls/Popup/Opener/InfoBox/InfoboxStyles', [],
 
    /**
     * @mixin Controls/Popup/Opener/InfoBox
-    * @public
+    * @mixin Controls/Opener/InfoBox
+    * @private
     * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
     * @css @spacing_Infobox-between-content-border-right Spacing between content and border-right.
     * @css @spacing_Infobox-between-content-border-bottom Spacing between content and border-bottom.
