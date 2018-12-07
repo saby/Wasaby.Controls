@@ -11,6 +11,12 @@
 
          appInit();
          var req = new Request(createDefault.default(Request));
+         req.setStateReceiver(new StateReceiver());
+
+         //TODO: deserialize "themeController: {theme: "{{defaultStaticTheme}}"}"
+         //to StateReceiver
+
+
          Request.setCurrent(req);
          var headData = new HeadData(window.defaultStaticTheme || '', [], true);
          Request.getCurrent().setStorage('HeadData', headData);
