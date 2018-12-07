@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel/Link', [
    'Core/Control',
    'wml!Controls/Filter/Button/Panel/Link/Link',
-   'css!Controls/Filter/Button/Panel/Link/Link'
+   'css!theme?Controls/Filter/Button/Panel/Link/Link'
 ], function(Control, template) {
    /**
     * Control filter link

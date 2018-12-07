@@ -89,6 +89,28 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
       };
 
    describe('Controls.List.Grid.GridViewModel', function() {
+      describe('DragNDrop methods', function() {
+         var gridViewModel = new GridViewModel(cfg);
+
+         it('setDragTargetPosition', function() {
+            var dragTargetPosition = {};
+            gridViewModel.setDragTargetPosition(dragTargetPosition);
+            assert.equal(gridViewModel.getDragTargetPosition(), dragTargetPosition);
+         });
+
+         it('setDragEntity', function() {
+            var dragEntity = {};
+            gridViewModel.setDragEntity(dragEntity);
+            assert.equal(gridViewModel.getDragEntity(), dragEntity);
+         });
+
+         it('setDragItemData', function() {
+            var dragItemData = {};
+            gridViewModel.setDragItemData(dragItemData);
+            assert.equal(gridViewModel.getDragItemData(), dragItemData);
+         });
+      });
+
       describe('"_private" block', function() {
          it('getPaddingCellClasses', function() {
             var

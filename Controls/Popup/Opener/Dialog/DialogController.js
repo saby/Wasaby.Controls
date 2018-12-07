@@ -2,7 +2,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    [
       'Controls/Popup/Opener/BaseController',
       'Controls/Popup/Opener/Dialog/DialogStrategy',
-      'SBIS3.CONTROLS/Utils/TouchKeyboardHelper'
+      'Controls/Utils/TouchKeyboardHelper'
    ],
    function(BaseController, DialogStrategy, TouchKeyboardHelper) {
       var _private = {

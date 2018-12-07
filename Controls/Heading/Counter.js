@@ -2,7 +2,7 @@ define('Controls/Heading/Counter', [
    'Core/Control',
    'wml!Controls/Heading/Counter/Counter',
    'WS.Data/Type/descriptor',
-   'css!Controls/Heading/Counter/Counter'
+   'css!theme?Controls/Heading/Counter/Counter'
 ], function(Control, template, types) {
    'use strict';
 
@@ -27,16 +27,18 @@ define('Controls/Heading/Counter', [
     * @name Controls/Heading/Counter#size
     * @cfg {String} Size of Counter.
     * @variant l Large counter size.
-    * @variant m Medium counter size. It is default value.
+    * @variant m Medium counter size.
     * @variant s Small counter size.
+    * @default m
     */
 
    /**
     * @name Controls/Heading/Counter#style
     * @cfg {String} Counter displaying style.
-    * @variant primary Primary counter style. It is default value.
+    * @variant primary Primary counter style.
     * @variant secondary Secondary counter style.
     * @variant disabled Disabled counter style.
+    * @default primary
     */
 
    var Counter = Control.extend({

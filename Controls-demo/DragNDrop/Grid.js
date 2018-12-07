@@ -1,10 +1,12 @@
 define('Controls-demo/DragNDrop/Grid', [
    'Core/Control',
+   'Core/core-clone',
+   'WS.Data/Entity/Record',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
    'wml!Controls-demo/DragNDrop/Grid/Grid',
    'WS.Data/Source/Memory'
-], function(BaseControl, DemoData, ListEntity, template, MemorySource) {
+], function(BaseControl, cClone, Record, DemoData, ListEntity, template, MemorySource) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -16,7 +18,7 @@ define('Controls-demo/DragNDrop/Grid', [
       _beforeMount: function() {
          this._viewSource = new MemorySource({
             idProperty: 'id',
-            data: DemoData
+            data: cClone(DemoData)
          });
          this._gridColumns = [{
             displayProperty: 'id'
@@ -38,8 +40,8 @@ define('Controls-demo/DragNDrop/Grid', [
             items: items
          });
       },
-      _dragEnd: function(event, items, target, position) {
-         this._children.listMover.moveItems(items, target, position);
+      _dragEnd: function(event, entity, target, position) {
+         this._children.listMover.moveItems(entity.getItems(), target, position);
       }
    });
 

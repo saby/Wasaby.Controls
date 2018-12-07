@@ -1,10 +1,11 @@
 define('Controls-demo/DragNDrop/Tree', [
    'Core/Control',
+   'Core/core-clone',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
    'wml!Controls-demo/DragNDrop/Tree/Tree',
    'Controls-demo/List/Tree/TreeMemory'
-], function(BaseControl, DemoData, ListEntity, template, TreeMemory) {
+], function(BaseControl, cClone, DemoData, ListEntity, template, TreeMemory) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -17,7 +18,7 @@ define('Controls-demo/DragNDrop/Tree', [
          this._itemsReadyCallback = this._itemsReady.bind(this);
          this._viewSource = new TreeMemory({
             idProperty: 'id',
-            data: DemoData
+            data: cClone(DemoData)
          });
          this._gridColumns = [{
             displayProperty: 'id'
@@ -57,8 +58,8 @@ define('Controls-demo/DragNDrop/Tree', [
             additionalText: firstItem.get('additional')
          });
       },
-      _dragEnd: function(event, items, target, position) {
-         this._children.listMover.moveItems(items, target, position);
+      _dragEnd: function(event, entity, target, position) {
+         this._children.listMover.moveItems(entity.getItems(), target, position);
       }
    });
 
