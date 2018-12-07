@@ -425,9 +425,14 @@ node('controls') {
             echo items
         }
         dir("./controls/tests") {
-                    def rc_err_int = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
-                    currentBuild.description = "${rc_err_int}"
-                }
+            def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
+            if (rc_err) {
+                currentBuild.description = "ОШИБКИ ПО UI ТЕСТАМ В RC:${rc_err_int}"
+            } else {
+                currentBuild.description = "НЕТ ОШИБОК ПО UI ТЕСТАМ В RC"
+            }
+
+        }
         if ( regr || inte || all_inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -599,10 +604,6 @@ node('controls') {
                          skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
                          skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
                     }
-                }
-                dir("./controls/tests") {
-                    def rc_err_int = sh returnStdout: true, script: "python3 get_err_from_rc.py"
-                    currentBuild.description = "${rc_err_int}"
                 }
             }
             parallel (
