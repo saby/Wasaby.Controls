@@ -15,7 +15,7 @@ define('Controls/Container/PendingRegistrator', [
       _parallelDef: null,
       _beforeMount: function() {
          var self = this;
-         if(typeof window !== 'undefined') {
+         if (typeof window !== 'undefined') {
             self._beforeUnloadHandler = function(event) {
                // We shouldn't close the tab if there are any pendings
                if (self._hasRegisteredPendings()) {
