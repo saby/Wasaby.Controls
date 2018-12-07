@@ -79,6 +79,31 @@ define(
                assert.equal(result, undefined);
             });
          });
+         describe('initSelection', function() {
+            it('test1', function() {
+               viewModel.updateOptions({value: '123'});
+               render._viewModel = viewModel;
+               render._options.content = 'content';
+               Render._private.initSelection(render);
+
+               assert.equal(render._children.divinput.selectionStart, 3);
+               assert.equal(render._children.divinput.selectionEnd, 3);
+            });
+            it('test2', function() {
+               viewModel.updateOptions({value: '123'});
+               render._viewModel = viewModel;
+               render._selection = {
+                  selectionStart: 0,
+                  selectionEnd: 0
+               };
+               render._children.divinput.selectionStart = 0;
+               render._children.divinput.selectionEnd = 0;
+               Render._private.initSelection(render);
+
+               assert.equal(render._children.divinput.selectionStart, 0);
+               assert.equal(render._children.divinput.selectionEnd, 0);
+            });
+         });
       });
    }
 );
