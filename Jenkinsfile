@@ -425,7 +425,7 @@ node('controls') {
             echo items
         }
         dir("./controls/tests") {
-                    def rc_err_int = sh returnStdout: true, script: "python3 get_err_from_rc.py"
+                    def rc_err_int = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
                     currentBuild.description = "${rc_err_int}"
                 }
         if ( regr || inte || all_inte) {
