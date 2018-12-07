@@ -219,6 +219,11 @@ define('Controls/List/ItemsViewModel', [
             this._notify('onListChange');
          }
       },
+
+      getItems: function() {
+         return this._items;
+      },
+
       appendItems: function(items) {
          this._items.append(items);
       },

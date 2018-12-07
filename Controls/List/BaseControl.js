@@ -543,7 +543,12 @@ define('Controls/List/BaseControl', [
                   self._items = receivedState;
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  var
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  loadDef.addCallback(function(items) {
+                     return items;
+                  });
+                  return loadDef;
                }
             }
          });
