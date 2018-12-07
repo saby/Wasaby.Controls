@@ -134,7 +134,7 @@ define('Controls/Container/PendingRegistrator', [
          }
       },
       _beforeUnmount: function() {
-         window.removeEventListener('beforeUnload', this._beforeUnloadHandler);
+         window.removeEventListener('beforeunload', this._beforeUnloadHandler);
       }
    });
 
