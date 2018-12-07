@@ -543,7 +543,12 @@ define('Controls/List/BaseControl', [
                   self._items = receivedState;
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  var
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  loadDef.addCallback(function(items) {
+                     return items;
+                  });
+                  return loadDef;
                }
             }
          });
@@ -762,6 +767,11 @@ define('Controls/List/BaseControl', [
 
       _showActionsMenu: function(event, itemData, childEvent, showAll) {
          _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+      },
+
+      _onItemContextMenu: function(event, itemData) {
+         this._showActionsMenu.apply(this, arguments);
+         this._listViewModel.setMarkedKey(itemData.key);
       },
 
       _closeActionsMenu: function(args) {

@@ -73,7 +73,7 @@ define('Controls/List/interface/IListControl', [
     * @property {String} icon Operation icon.
     * @property {Number} showType Location of operation.
     * @property {String} style Operation style.
-    * @property {String} iconStyle Style operation icons (default | attention | error | done ).
+    * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
     * @property {Function} handler Operation handler.
     */
 
