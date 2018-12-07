@@ -154,7 +154,7 @@ define('Controls/Popup/Opener/Edit',
 
          /**
           * Close popup
-          * @function Controls/Popup/Opener/Base#show
+          * @function Controls/Popup/Opener/Base#close
           */
          close: function() {
             this._children.Opener.close();
