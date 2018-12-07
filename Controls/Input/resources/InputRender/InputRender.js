@@ -96,8 +96,30 @@ define('Controls/Input/resources/InputRender/InputRender',
          },
 
          getInput: function(self) {
-            //TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
+            // TODO: убрать querySelector после исправления https://online.sbis.ru/opendoc.html?guid=403837db-4075-4080-8317-5a37fa71b64a
             return self._children.divinput.querySelector('.controls-InputRender__field');
+         },
+
+         hasSelectionChanged: function(field, selection) {
+            return field.selectionStart !== selection.selectionStart || field.selectionEnd !== selection.selectionEnd;
+         },
+
+         initSelection: function(self) {
+            var input = _private.getInput(self);
+
+            if (input) {
+               var selection = self._selection;
+               var end = self._options.viewModel.getDisplayValue().length;
+               var newSelection = {
+                  selectionStart: end,
+                  selectionEnd: end
+               };
+
+               if (!selection && _private.hasSelectionChanged(input, newSelection)) {
+                  input.selectionStart = newSelection.selectionStart;
+                  input.selectionEnd = newSelection.selectionEnd;
+               }
+            }
          }
       };
 
@@ -123,8 +145,23 @@ define('Controls/Input/resources/InputRender/InputRender',
             this._isEdge = cDetection.isIE12;
          },
 
+         _afterMount: function() {
+            /**
+             * The cursor should be at the end until the user changes it.
+             * But setting the value in the field through the value attribute the cursor is at the beginning.
+             * https://jsfiddle.net/yc9f5oad/
+             * Therefore, we will install it ourselves.
+             */
+            _private.initSelection(this);
+         },
+
+
          _beforeUpdate: function(newOptions) {
             this._inputState = _private.getInputState(this, newOptions);
+         },
+
+         _afterUpdate: function() {
+            _private.initSelection(this);
          },
 
          _mouseEnterHandler: function() {

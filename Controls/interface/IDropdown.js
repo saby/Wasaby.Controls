@@ -43,12 +43,4 @@ define('Controls/interface/IDropdown', [], function() {
     * @cfg {Boolean} Class for drop-down list.
     */
 
-   /**
-    * @name Controls/Button/Menu#headConfig
-    * @cfg {Object} Menu style menuStyle
-    * @variant defaultHead The head with icon and caption
-    * @variant duplicateHead The icon set near first item
-    * @variant duplicateSelectedItem Duplicate the value of selected item.
-    */
-
 });
