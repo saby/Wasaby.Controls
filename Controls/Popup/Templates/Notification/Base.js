@@ -42,17 +42,17 @@ define('Controls/Popup/Templates/Notification/Base',
 
          _beforeMount: function(options) {
             if (options.style === 'error') {
-               IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style error, используйте danger');
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style error, используйте danger');
             }
             if (options.style === 'done') {
-               IoC.resolve('ILogger').error('Notification', 'Используется устаревшее значение опции style done, используйте success');
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
             }
             options._style = _private.prepareDisplayStyle(options.style);
             if (options.autoClose) {
                this._autoClose();
             }
             if (options.contentTemplate) {
-               IoC.resolve('ILogger').error('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
             }
          },
          _beforeUpdate: function(options) {

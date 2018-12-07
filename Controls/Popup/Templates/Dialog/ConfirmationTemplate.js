@@ -67,14 +67,14 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          _template: template,
          _beforeMount: function(options) {
             if (options.style === 'error') {
-               IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
             }
             options._style = _private.prepareStatusStyle(options.style);
             if (options.contentArea) {
-               IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.footerArea) {
-               IoC.resolve('ILogger').error('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
             }
          },
          _beforeUpdate: function(options) {
