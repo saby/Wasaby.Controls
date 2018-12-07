@@ -1,10 +1,11 @@
 define('Controls/List/Grid/GridViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
+   'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
    'Core/detection'
-], function(BaseViewModel, ListViewModel, ControlsConstants, cClone, cDetection) {
+], function(BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection) {
    'use strict';
 
    var
@@ -64,20 +65,20 @@ define('Controls/List/Grid/GridViewModel', [
             return result;
          },
 
-         getItemColumnCellClasses: function(current) {
+         getItemColumnCellClasses: function(current, columnIndex) {
             var
                cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
 
             cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount());
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
-            if (current.multiSelectVisibility && current.columnIndex === 0) {
+            if (current.multiSelectVisibility && columnIndex === 0) {
                cellClasses += ' controls-Grid__row-cell-checkbox';
             } else {
                cellClasses += _private.getPaddingCellClasses({
                   columns: current.columns,
                   style: current.style,
-                  columnIndex: current.columnIndex,
+                  columnIndex: columnIndex,
                   multiSelectVisibility: current.multiSelectVisibility,
                   leftPadding: current.leftPadding,
                   rightPadding: current.rightPadding,
@@ -95,55 +96,87 @@ define('Controls/List/Grid/GridViewModel', [
 
             return cellClasses;
          },
-         processLadder: function(self, current) {
+         prepareLadder: function(self) {
             var
-               ladderField = self._options.stickyFields[0],
-               nextItem,
-               nextLadderValue;
+               fIdx, idx, item, prevItem,
+               ladderProperties = self._options.ladderProperties,
+               stickyColumn = self._options.stickyColumn,
+               supportLadder = !!(ladderProperties && ladderProperties.length),
+               supportSticky = !!stickyColumn,
+               ladder = {}, ladderState = {}, stickyLadder = {},
+               stickyLadderState = {
+                  ladderLength: 1
+               };
 
-            // если рисуем первый элемент
-            if (current.index === 0) {
-               self._ladder.ladderValue = current.getPropValue(current.item, ladderField);
+            if (!supportLadder && !supportSticky) {
+               return {};
             }
 
-            if (self._drawLadder) {
-               self._withLadder = false;
-               self._drawLadder = false;
-               self._ladder.currentColumn = null;
-               self._ladder.rowIndex = null;
-               self._ladder.columnIndex = null;
-               self._ladder.ladderLength = null;
-            }
-
-            if (self.isLast()) {
-               if (self._ladder.ladderLength > 1) {
-                  self._drawLadder = true;
+            function processLadder(params) {
+               var
+                  value = params.value,
+                  prevValue = params.prevValue,
+                  state = params.state;
+               if (value === prevValue) {
+                  state.ladderLength++;
+               } else {
+                  params.ladder.ladderLength = state.ladderLength;
+                  state.ladderLength = 1;
                }
-               return;
             }
-            nextItem = self.getNext();
 
-            // смотрим на следующий item
-            nextLadderValue = nextItem.getPropValue(nextItem.item, ladderField);
-
-            // если лесенка у следующего item такая же, то увеличиваем длинну лесенки, запоминаем current и rowIndex
-            if (self._ladder.ladderValue === nextLadderValue) {
-               self._withLadder = true;
-
-               // запоминаем только если ранее не запоминали
-               if (!self._ladder.currentColumn) {
-                  self._ladder.currentColumn = current.getCurrentColumn();
-                  self._ladder.rowIndex = current.index;
-                  self._ladder.columnIndex = 0;
-                  self._ladder.ladderLength = 1;
+            function processStickyLadder(params) {
+               processLadder(params);
+               if (params.ladder.ladderLength && params.ladder.ladderLength > 1 && !cDetection.isNotFullGridSupport) {
+                  params.ladder.headingStyle = 'grid-area: ' +
+                     (params.itemIndex + 1) + ' / ' +
+                     '1 / ' +
+                     'span ' + params.ladder.ladderLength + ' / ' +
+                     'span 1;';
                }
-               self._ladder.ladderLength++;
-            } else {
-               if (self._ladder.ladderLength > 1) {
-                  self._drawLadder = true;
-               }
-               self._ladder.ladderValue = nextLadderValue;
             }
+
+            if (supportLadder) {
+               for (fIdx = 0; fIdx < ladderProperties.length; fIdx++) {
+                  ladderState[ladderProperties[fIdx]] = {
+                     ladderLength: 1
+                  };
+               }
+            }
+
+            for (idx = self._model._stopIndex - 1; idx >= self._model._startIndex; idx--) {
+               item = self._model._display.at(idx).getContents();
+               prevItem = idx - 1 >= 0 ? self._model._display.at(idx - 1).getContents() : null;
+
+               if (supportLadder) {
+                  ladder[idx] = {};
+                  for (fIdx = 0; fIdx < ladderProperties.length; fIdx++) {
+                     ladder[idx][ladderProperties[fIdx]] = {};
+                     processLadder({
+                        itemIndex: idx,
+                        value: item.get(ladderProperties[fIdx]),
+                        prevValue: prevItem ? prevItem.get(ladderProperties[fIdx]) : undefined,
+                        state: ladderState[ladderProperties[fIdx]],
+                        ladder: ladder[idx][ladderProperties[fIdx]]
+                     });
+                  }
+               }
+
+               if (supportSticky) {
+                  stickyLadder[idx] = {};
+                  processStickyLadder({
+                     itemIndex: idx,
+                     value: item.get(stickyColumn.property),
+                     prevValue: prevItem ? prevItem.get(stickyColumn.property) : undefined,
+                     state: stickyLadderState,
+                     ladder: stickyLadder[idx]
+                  });
+               }
+            }
+            return {
+               ladder: ladder,
+               stickyLadder: stickyLadder
+            };
          }
       },
 
@@ -163,15 +196,7 @@ define('Controls/List/Grid/GridViewModel', [
          _colgroupColumns: [],
          _curColgroupColumnIndex: 0,
 
-         _withLadder: false,
-         _drawLadder: false,
-         _ladder: {
-            ladderValue: null,
-            currentColumn: null,
-            rowIndex: null,
-            columnIndex: null,
-            ladderLength: null
-         },
+         _ladder: null,
 
          constructor: function(cfg) {
             var
@@ -180,6 +205,7 @@ define('Controls/List/Grid/GridViewModel', [
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
             this._model.subscribe('onListChange', function() {
+               self._ladder = _private.prepareLadder(self);
                self._nextVersion();
                self._notify('onListChange');
             });
@@ -190,6 +216,7 @@ define('Controls/List/Grid/GridViewModel', [
                self._notify('onGroupsExpandChange', changes);
             });
             this._columns = this._prepareColumns(this._options.columns);
+            this._ladder = _private.prepareLadder(this);
             this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility !== 'hidden');
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
@@ -427,7 +454,9 @@ define('Controls/List/Grid/GridViewModel', [
          getItemDataByItem: function(dispItem) {
             var
                self = this,
-               current = this._model.getItemDataByItem(dispItem);
+               stickyColumn = this._options.stickyColumn,
+               current = this._model.getItemDataByItem(dispItem),
+               isStickedColumn;
             current.leftPadding = this._options.leftPadding;
             current.rightPadding = this._options.rightPadding;
             current.rowSpacing = this._options.rowSpacing;
@@ -441,6 +470,11 @@ define('Controls/List/Grid/GridViewModel', [
                current.columns = this._columns;
             }
 
+            if (stickyColumn && !cDetection.isNotFullGridSupport) {
+               current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
+               current.stickyColumnIndex = stickyColumn.index;
+            }
+
             if (this._options.groupMethod) {
                if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                   current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + (current.rightPadding || 'default');
@@ -449,9 +483,11 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             current.showRowSeparator = this._options.showRowSeparator;
-            current.ladderSupport = !!this._options.stickyFields;
 
             current.columnIndex = 0;
+
+            current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
+
             current.resetColumnIndex = function() {
                current.columnIndex = 0;
             };
@@ -475,33 +511,28 @@ define('Controls/List/Grid/GridViewModel', [
                      isEditing: current.isEditing
                   };
                currentColumn.columnIndex = current.columnIndex;
-               currentColumn.cellClasses = _private.getItemColumnCellClasses(current);
+               currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
                currentColumn.column = current.columns[current.columnIndex];
                currentColumn.template = currentColumn.column.template ? currentColumn.column.template : self._columnTemplate;
-               if (current.ladderSupport) {
-                  if (self._withLadder && self._ladder.columnIndex === currentColumn.columnIndex) {
-                     currentColumn.withLadder = true;
+               if (self._options.ladderProperties && self._options.ladderProperties.length) {
+                  currentColumn.ladder = self._ladder.ladder[current.index];
+                  currentColumn.ladderWrapper = LadderWrapper;
+               }
+               if (stickyColumn) {
+                  isStickedColumn = stickyColumn.index === (current.multiSelectVisibility ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
+                  if (cDetection.isNotFullGridSupport) {
+                     currentColumn.hiddenForLadder = isStickedColumn && !self._ladder.stickyLadder[current.index].ladderLength;
+                  } else {
+                     currentColumn.hiddenForLadder = isStickedColumn && self._ladder.stickyLadder[current.index].ladderLength !== 1;
+                     currentColumn.styleForLadder = currentColumn.cellStyleForLadder = 'grid-area: ' +
+                        (current.index + 1) + ' / ' +
+                        (currentColumn.columnIndex + 1) + ' / ' +
+                        'span 1 / ' +
+                        'span 1;';
                   }
-                  currentColumn.cellStyleForLadder = 'grid-area: ' +
-                     +(current.index + 1) + ' / ' +
-                     (currentColumn.columnIndex + 1) + ' / ' +
-                     'span 1 / ' +
-                     'span 1;';
                }
                return currentColumn;
             };
-
-            if (current.ladderSupport) {
-               _private.processLadder(this, current);
-               if (this._drawLadder) {
-                  current.ladder = this._ladder;
-                  current.ladder.style = 'grid-area: ' +
-                     (current.ladder.rowIndex + 1) + ' / ' +
-                     (current.ladder.columnIndex + 1) + ' / ' +
-                     'span ' + current.ladder.ladderLength + ' / ' +
-                     'span 1;';
-               }
-            }
             return current;
          },
 
@@ -528,6 +559,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItems: function(items) {
             this._model.setItems(items);
+         },
+
+         getItems: function() {
+            return this._model.getItems();
          },
 
          setActiveItem: function(itemData) {
@@ -567,10 +602,6 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getItemActions(item);
          },
 
-         getDragTargetPosition: function() {
-            return this._model.getDragTargetPosition();
-         },
-
          getIndexBySourceItem: function(item) {
             return this._model.getIndexBySourceItem(item);
          },
@@ -592,16 +623,32 @@ define('Controls/List/Grid/GridViewModel', [
             this._nextVersion();
          },
 
-         setDragTargetItem: function(itemData) {
-            this._model.setDragTargetItem(itemData);
+         setDragTargetPosition: function(position) {
+            this._model.setDragTargetPosition(position);
          },
 
-         getDragTargetItem: function() {
-            return this._model.getDragTargetItem();
+         getDragTargetPosition: function() {
+            return this._model.getDragTargetPosition();
          },
 
-         setDragItems: function(items, itemData) {
-            this._model.setDragItems(items, itemData);
+         setDragEntity: function(entity) {
+            this._model.setDragEntity(entity);
+         },
+
+         getDragEntity: function() {
+            return this._model.getDragEntity();
+         },
+
+         setDragItemData: function(itemData) {
+            this._model.setDragItemData(itemData);
+         },
+
+         getDragItemData: function() {
+            return this._model.getDragItemData();
+         },
+
+         calculateDragTargetPosition: function(targetData, position) {
+            return this._model.calculateDragTargetPosition(targetData, position);
          },
 
          getActiveItem: function() {

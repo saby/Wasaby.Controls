@@ -3,7 +3,7 @@ define('Controls/Button/Menu',
       'Core/Control',
       'wml!Controls/Button/Menu/Menu',
       'Controls/Button/Menu/MenuUtils',
-      'css!Controls/Button/Menu/Menu',
+      'css!theme?Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
    function(Control, template, MenuUtils) {
@@ -20,6 +20,7 @@ define('Controls/Button/Menu',
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
        * @mixes Controls/interface/IButton
+       * @mixes Controls/Button/interface/IIcon
        * @control
        * @public
        * @author Михайловский Д.С.

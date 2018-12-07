@@ -37,7 +37,7 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         prepareItems: function(filterButtonItems, fastFilterItems, prepareCallback) {
+         equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
             Chain(filterButtonItems).each(function(buttonItem, index) {
                Chain(fastFilterItems).each(function(fastItem) {
                   if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
@@ -48,11 +48,17 @@ define('Controls/Filter/Controller',
          },
 
          prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
-            var historyItems = _private.cloneItems(filterButtonItems);
+            var historyItems = [];
             function setTextValue(index, item) {
                setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
             }
-            _private.prepareItems(filterButtonItems, fastFilterItems, setTextValue);
+            if (filterButtonItems && fastFilterItems) {
+               historyItems = _private.cloneItems(filterButtonItems);
+
+               _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
+            } else {
+               historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
+            }
             return _private.minimizeFilterItems(historyItems);
          },
 
@@ -149,7 +155,7 @@ define('Controls/Filter/Controller',
             function clearTextValue(index) {
                setPropValue(filterButtonItems[index], 'textValue', '');
             }
-            _private.prepareItems(filterButtonItems, fastFilterItems, clearTextValue);
+            _private.equalItemsIterator(filterButtonItems, fastFilterItems, clearTextValue);
          },
 
          updateFilterItems: function(self, newItems) {

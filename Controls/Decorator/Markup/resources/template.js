@@ -35,6 +35,9 @@ define('Controls/Decorator/Markup/resources/template', [
       if (isString(valueToBuild)) {
          return markupGenerator.createText(markupGenerator.escape(valueToBuild), key);
       }
+      if (!valueToBuild) {
+         return [];
+      }
       resolverMode ^= (value !== valueToBuild);
       var children = [];
       if (Array.isArray(valueToBuild[0])) {

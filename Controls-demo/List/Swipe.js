@@ -128,7 +128,7 @@ define('Controls-demo/List/Swipe', [
                   {
                      id: 4,
                      icon: 'icon-Erase',
-                     iconStyle: 'error',
+                     iconStyle: 'danger',
                      title: 'delete pls',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
@@ -174,7 +174,7 @@ define('Controls-demo/List/Swipe', [
                   {
                      id: 4,
                      icon: 'icon-Erase',
-                     iconStyle: 'error',
+                     iconStyle: 'danger',
                      title: 'delete pls',
                      showType: this.showType.TOOLBAR,
                      handler: function() {
@@ -212,7 +212,7 @@ define('Controls-demo/List/Swipe', [
                   {
                      id: 4,
                      icon: 'icon-Erase',
-                     iconStyle: 'error',
+                     iconStyle: 'danger',
                      title: 'delete pls',
                      handler: function() {
                         console.log('action delete Click');
@@ -266,7 +266,7 @@ define('Controls-demo/List/Swipe', [
                   {
                      id: 4,
                      icon: 'icon-Erase',
-                     iconStyle: 'error',
+                     iconStyle: 'danger',
                      title: 'delete pls',
                      handler: function() {
                         console.log('action delete Click');
@@ -331,7 +331,7 @@ define('Controls-demo/List/Swipe', [
                   {
                      id: 4,
                      icon: 'icon-Erase',
-                     iconStyle: 'error',
+                     iconStyle: 'danger',
                      title: 'delete pls',
                      handler: function() {
                         console.log('action delete Click');

@@ -1,1 +1,1 @@
-<ws:partial template="{{dataTemplates[item.type]}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}" a="{{debug()}}" />
+<ws:partial template="{{dataTemplates[item.type]}}" item="{{item}}" name="{{index}}" itemValue="{{itemsProperty}}" />

@@ -91,7 +91,7 @@ define('Controls-demo/List/ItemActions', [
          {
             id: 4,
             icon: 'icon-Erase',
-            iconStyle: 'error',
+            iconStyle: 'danger',
             title: 'delete pls',
             showType: showType.TOOLBAR,
             handler: function() {

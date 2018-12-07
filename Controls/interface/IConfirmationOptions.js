@@ -11,7 +11,7 @@ define('Controls/interface/IConfirmationOptions', [
     */
 
    /**
-    * @typedef {Object} Config
+    * @typedef {Object} popupOptions
     * @description Confirmation configuration.
     * @property {String} type Type of dialog.
     * @property {String} style Confirmation display style.
@@ -24,7 +24,7 @@ define('Controls/interface/IConfirmationOptions', [
     */
 
    /**
-    * @cfg {Config[]} Confirmation configuration.
+    * @cfg {popupOptions[]} Confirmation configuration.
     * @name Controls/interface/IConfirmationOptions#config
     */
 
