@@ -16,6 +16,7 @@
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
                     searchDelay="{{_searchDelay}}"
+                    name="suggestListWrapper"
         />
     </ws:template>
 
