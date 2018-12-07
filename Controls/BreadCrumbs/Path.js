@@ -44,7 +44,7 @@ define('Controls/BreadCrumbs/Path', [
             availableWidth,
             homeWidth;
 
-         self._backButtonCaption = ItemsUtil.getPropertyValue(items[items.length - 1], self._options.displayProperty || 'title');
+         self._backButtonCaption = ItemsUtil.getPropertyValue(items[items.length - 1], self._options.displayProperty);
          if (items.length > 1) {
             self._breadCrumbsItems = items.slice(0, items.length - 1);
             backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
@@ -133,5 +133,12 @@ define('Controls/BreadCrumbs/Path', [
          this._notify('arrowActivated');
       }
    });
+
+   BreadCrumbsPath.getDefaultOptions = function() {
+      return {
+         displayProperty: 'title'
+      };
+   };
+
    return BreadCrumbsPath;
 });

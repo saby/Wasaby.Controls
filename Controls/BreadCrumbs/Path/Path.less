@@ -1,5 +1,3 @@
-@min-width_BackButton_short: @min-width_BreadCrumbs-text + @width-Back__icon_size-m + @spacing-Back-between-icon-text_size_s;
-
 .controls-BreadCrumbsPath {
    height: @height_BreadCrumbs-items;
 }
@@ -60,6 +58,10 @@
    }
    .controls-BreadCrumbsPath__backButton:hover ~ .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-block;
+   }
+
+   .controls-BreadCrumbsPath__home:hover {
+      color: @color_Path-home_hovered;
    }
 }
 
