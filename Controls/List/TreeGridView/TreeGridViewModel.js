@@ -28,6 +28,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          setRoot: function(root) {
             this._model.setRoot(root);
          },
+         resetExpandedItems: function() {
+            this._model.resetExpandedItems();
+         },
          getCurrent: function() {
             var
                current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
