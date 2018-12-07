@@ -111,7 +111,7 @@ define('Controls/Application/HeadData', [
          });
       },
       constructor: function(cssLinks, themesActive) {
-         this.theme = ThemesController.getInstance().themes[0];
+         this.theme = Object.keys(ThemesController.getInstance().themes)[0];
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};

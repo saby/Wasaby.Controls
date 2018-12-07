@@ -15,6 +15,7 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
+   preInitScript="{{ _options.preInitScript }}"
    servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
