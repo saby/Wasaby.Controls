@@ -3,6 +3,7 @@
     <Controls.Toggle.Checkbox bind:value="_hasGrid" caption="Grid" attr:class="demo-CheckBox__Grid"/>
     <Controls.Toggle.Checkbox bind:value="_hasTree" caption="Tree" attr:class="demo-CheckBox__Tree"/>
     <Controls.Toggle.Checkbox bind:value="_hasNotes" caption="Notes" attr:class="demo-CheckBox__Notes"/>
+    <Controls.Toggle.Checkbox bind:value="_hasMasterDetail" caption="MasterDetail" attr:class="demo-CheckBox__MasterDetail"/>
     <ws:if data="{{_hasList}}">
         <Controls-demo.DragNDrop.List attr:class="demo-DragNDrop__List"/>
     </ws:if>
@@ -16,6 +17,9 @@
     </div>
     <ws:if data="{{_hasNotes}}">
         <Controls-demo.DragNDrop.Notes attr:class="demo-DragNDrop__Notes"/>
+    </ws:if>
+    <ws:if data="{{_hasMasterDetail}}">
+        <Controls-demo.DragNDrop.MasterDetail attr:class="demo-DragNDrop__MasterDetail"/>
     </ws:if>
     <Controls-demo.DragNDrop.Basket attr:class="demo-DragNDrop__Basket"/>
 </div>

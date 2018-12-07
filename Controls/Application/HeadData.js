@@ -129,6 +129,9 @@ define('Controls/Application/HeadData', [
       },
       waitAppContent: function() {
          return this.defRender;
+      },
+      resetRenderDeferred: function() {
+         this.defRender = new Deferred();
       }
    });
 });

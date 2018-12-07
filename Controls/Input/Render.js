@@ -5,7 +5,7 @@ define('Controls/Input/Render',
       'Controls/Utils/tmplNotify',
 
       'wml!Controls/Input/Render/Render',
-      'css!Controls/Input/Render/Render'
+      'css!theme?Controls/Input/Render/Render'
    ],
    function(Control, descriptor, tmplNotify, template) {
 
