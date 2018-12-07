@@ -11,7 +11,7 @@ import argparse
 
 if __name__ == '__main__':
     JC_API = 'http://jenkins-control.tensor.ru/api/'
-    description = "ПАДАЕТ В RC:<pre><ul>"
+    description = "UI ТЕСТЫ С ОШИБКАМИ В RC:<pre><ul>"
     parser = argparse.ArgumentParser()
     parser.add_argument('-j', '--jobs', nargs='+', help='List jobs for return errors with fail tests')
     args = parser.parse_args()
