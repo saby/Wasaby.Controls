@@ -215,6 +215,8 @@ define('Controls/Application',
 
             var headData = Request.getCurrent().getStorage('HeadData');
 
+            //TODO: setTheme here to store from server
+
             self.linkResolver = new LinkResolver(headData.isDebug,
                self.buildnumber,
                self.wsRoot,

@@ -7,11 +7,10 @@
       function(AppData, AppStart,
                Request, createDefault, HeadData, StateReceiver, appInit, Core, tclosure) {
 
-         /*Первый шаг - инициализация ядра и темы. Второй шаг - загрузка статических ресурсов*/
+         /*РџРµСЂРІС‹Р№ С€Р°Рі - РёРЅРёС†Р°Р»РёР·Р°С†РёСЏ СЏРґСЂР° Рё С‚РµРјС‹. Р’С‚РѕСЂРѕР№ С€Р°Рі - Р·Р°РіСЂСѓР·РєР° СЂРµСЃСѓСЂСЃРѕРІ*/
 
          appInit();
          var req = new Request(createDefault.default(Request));
-         req.setStateReceiver(new StateReceiver());
          Request.setCurrent(req);
          var headData = new HeadData(window.defaultStaticTheme || '', [], true);
          Request.getCurrent().setStorage('HeadData', headData);

@@ -55,6 +55,8 @@ define('Controls/Application/Core',
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
             var headData = new HeadData(cfg.theme || '', cfg.cssLinks, true);
+            window.defaultStaticTheme = cfg.theme || '';
+
             Request.getCurrent().setStorage('HeadData', headData);
          },
          _getChildContext: function() {
