@@ -13,11 +13,11 @@ rec.raise_for_status()
 rec = requests.post(JC_API + 'test_result/errors_from_last_build', json={'id_job': rec.json()['result']})
 rec.raise_for_status()
 errors = rec.json()['result']
-description = ""
+description = "ПАДАЕТ В RC:<br>"
 for err in errors:
     _iter = iter(errors[err])
     rc_err = dict(zip(_iter, _iter))
     for test in rc_err:
-        description += "<b>{}<b> - {}<br>".format(test, rc_err[test])
+        description += "<b>{}</b> - {}<br>".format(test, rc_err[test])
 print(description)
 
