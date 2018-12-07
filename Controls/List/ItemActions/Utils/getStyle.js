@@ -18,7 +18,7 @@ define('Controls/List/ItemActions/Utils/getStyle', [
       }
 
       if (deprecatedStyles.hasOwnProperty(style)) {
-         IoC.resolve('ILogger').error(controlName, 'Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style);
+         IoC.resolve('ILogger').warn(controlName, 'Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style);
          return deprecatedStyles[style];
       }
 
