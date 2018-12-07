@@ -249,6 +249,14 @@ define('Controls/List/ListViewModel',
          getMultiSelectVisibility: function() {
             return this._options.multiSelectVisibility;
          },
+         
+         setSorting: function(sorting) {
+            this._options.sorting = sorting;
+         },
+         
+         getSorting: function() {
+            return this._options.sorting;
+         },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
 

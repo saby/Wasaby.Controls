@@ -130,6 +130,26 @@ define([
             }, 100);
          }, 1);
       });
+   
+      it('_private::getSortingOnChange', function() {
+         var getEmptySorting = function() {
+            return [];
+         };
+         var getSortingASC = function() {
+            return [{test: 'ASC'}];
+         };
+         var getSortingDESC = function() {
+            return [{test: 'DESC'}];
+         };
+         var getMultiSorting = function() {
+            return [{test: 'DESC'}, {test2: 'DESC'}];
+         };
+      
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
+      });
 
       it('errback to callback', function(done) {
 

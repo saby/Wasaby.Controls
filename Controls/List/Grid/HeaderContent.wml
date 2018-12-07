@@ -1,1 +1,10 @@
-<div class="controls-Grid__header-cell__content">{{colData.column.title}}</div>
+<div class="controls-Grid__header-cell__content">
+    <ws:if data="{{colData.column.sortingProperty}}">
+        <Controls.List.Grid.SortButton
+                caption="{{colData.column.title}}"
+                property="{{colData.column.sortingProperty}}"
+                type="{{colData.column.sortingType}}"
+                value="{{colData.sortingDirection}}"/>
+    </ws:if>
+    <ws:else>{{colData.column.title}}</ws:else>
+</div>
