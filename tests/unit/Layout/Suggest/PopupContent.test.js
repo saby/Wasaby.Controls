@@ -1,7 +1,20 @@
-define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Suggest/__PopupContent'], function(PopupContent, popupContentTemplate) {
+define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Suggest/__PopupContent', 'Core/Deferred'], function(PopupContent, popupContentTemplate, Deferred) {
    
    function removeConfigFromMarkup(markup) {
-      return markup.replace(/ ?(ws-delegates-tabfocus|ws-creates-context|__config|config|tabindex|name)=".+?"/g, '');
+      var result = markup.replace(/ ?(ws-delegates-tabfocus|ws-creates-context|__config|config|tabindex|name)=".+?"/g, '');
+      return result.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
+   }
+   
+   function getMarkup(template, templateArgs) {
+      var result = template(templateArgs);
+      
+      if (result instanceof Deferred) {
+         return result.addCallback(function(res) {
+            return removeConfigFromMarkup(res);
+         });
+      } else {
+         return Deferred.success(removeConfigFromMarkup(result));
+      }
    }
    
    describe('Controls.Container.Suggest.__PopupContent', function() {
@@ -34,25 +47,31 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
    
    describe('Controls.Container.Suggest.__PopupContent template tests', function() {
       
-      it('showContent:false', function() {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer ws-invisible"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:undefinedpx;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-         var templateMarkup = popupContentTemplate({_options: {showContent: false, content: ''}});
+      it('showContent:false', function(done) {
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:undefinedpx;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
-         assert.equal(removeConfigFromMarkup(templateMarkup), standardMarkup);
+         getMarkup(popupContentTemplate, {_options: {showContent: false, content: ''}}).addCallback(function(res) {
+            assert.equal(res, standardMarkup);
+            done();
+         });
       });
       
-      it('showContent:true', function() {
+      it('showContent:true', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:undefinedpx;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-         var templateMarkup = popupContentTemplate({_options: {showContent: true, content: ''}});
          
-         assert.equal(removeConfigFromMarkup(templateMarkup), standardMarkup);
+         getMarkup(popupContentTemplate, {_options: {showContent: true, content: ''}}).addCallback(function(res) {
+            assert.equal(res, standardMarkup);
+            done();
+         });
       });
       
-      it('target.offsetWidth:300px', function() {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer ws-invisible"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:300px;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
-         var templateMarkup = popupContentTemplate({_options: {target: {offsetWidth: 300}, content: ''}});
+      it('target.offsetWidth:300px', function(done) {
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:300px;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
-         assert.equal(removeConfigFromMarkup(templateMarkup), standardMarkup);
+         getMarkup(popupContentTemplate, {_options: {target: {offsetWidth: 300}, content: ''}}).addCallback(function(res) {
+            assert.equal(res, standardMarkup);
+            done();
+         });
       });
       
    });
