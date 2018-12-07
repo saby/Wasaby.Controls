@@ -353,6 +353,9 @@ define(
 
             beforeEach(function() {
                EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
+               ctrl._beforeMount({
+                  value: ''
+               });
             });
             afterEach(function() {
                EventBus.globalChannel().notify = savedNotify;

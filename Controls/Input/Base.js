@@ -17,7 +17,7 @@ define('Controls/Input/Base',
       'wml!Controls/Input/Base/Field',
       'wml!Controls/Input/Base/ReadOnly',
 
-      'css!Controls/Input/Base/Base'
+      'css!theme?Controls/Input/Base/Base'
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
@@ -116,6 +116,12 @@ define('Controls/Input/Base',
           */
          hasAutoFillField: function(field) {
             return !!field.value;
+         },
+
+         callChangeHandler: function(self) {
+            if (self._viewModel.displayValue !== self._displayValueAfterFocusIn) {
+               self._changeHandler();
+            }
          },
 
          /**
@@ -358,6 +364,12 @@ define('Controls/Input/Base',
          _numberSkippedSaveSelection: 0,
 
          /**
+          * @type {String}
+          * @private
+          */
+         _displayValueAfterFocusIn: '',
+
+         /**
           * @type {Controls/Utils/getTextWidth}
           * @private
           */
@@ -463,6 +475,10 @@ define('Controls/Input/Base',
             if (keyCode >= constants.key.end && keyCode <= constants.key.down) {
                this._viewModel.selection = this._getFieldSelection();
             }
+
+            if (keyCode === constants.key.enter) {
+               _private.callChangeHandler(this);
+            }
          },
 
          /**
@@ -544,6 +560,17 @@ define('Controls/Input/Base',
             _private.updateField(this, value, selection);
          },
 
+         /**
+          * Handler for the change event.
+          * @remark
+          * The handler cannot be called through a subscription to the change event in the control template.
+          * The reason is that the native event does not work in all browsers.
+          * Therefore you need to call it on focus in or press enter.
+          * Bug in firefox: If the value in the field after the input event is not changed,
+          * but changed after a timeout, then the browser considers that it has not changed and event is not triggered.
+          * https://jsfiddle.net/v6g0fz7u/
+          * @protected
+          */
          _changeHandler: function() {
             _private.notifyInputCompleted(this);
          },
@@ -575,6 +602,8 @@ define('Controls/Input/Base',
             if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
+
+            this._displayValueAfterFocusIn = this._viewModel.displayValue;
          },
 
          /**
@@ -592,6 +621,8 @@ define('Controls/Input/Base',
             if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocusOut');
             }
+
+            _private.callChangeHandler(this);
          },
 
          _mouseDownHandler: function() {

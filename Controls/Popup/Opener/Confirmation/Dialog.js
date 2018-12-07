@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    'wml!Controls/Popup/Opener/Confirmation/Dialog/message',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/details',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/Dialog',
-   'css!Controls/Popup/Opener/Confirmation/Dialog/Dialog'
+   'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog'
 ], function(Control,
    types,
    constants,

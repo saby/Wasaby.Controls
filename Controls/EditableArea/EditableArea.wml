@@ -19,7 +19,7 @@
             <Controls.Button
                on:click="commitEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
-               viewMode="transparentQuickButton"
+               viewMode="toolButton"
                iconStyle="success"
                icon="icon-small icon-Yes"
                style="secondary"
@@ -28,7 +28,7 @@
                on:click="cancelEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
                icon="icon-small icon-Close"
-               viewMode="transparentQuickButton"
+               viewMode="toolButton"
                style="secondary"
             />
          </div>

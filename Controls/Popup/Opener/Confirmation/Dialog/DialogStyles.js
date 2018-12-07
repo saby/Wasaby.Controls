@@ -4,7 +4,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog/DialogStyles', [],
    /**
     *
     * @mixin Controls/Popup/Opener/Confirmation/Dialog/DialogStyles
-    * @public
+    * @private
     *
     * @css @font-size_SubmitPopup-message Font-size of message.
     * @css @font-weight_SubmitPopup-message Font-weight of message.

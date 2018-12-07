@@ -2,13 +2,18 @@ define('Controls/Container/Async',
    [
       'Core/Control',
       'Core/Deferred',
-      'Controls/Application/HeadDataContext',
+      'View/Request',
       'wml!Controls/Container/Async/Async',
       'View/Runner/requireHelper',
       'Core/IoC'
    ],
 
-   function(Base, Deferred, HeadDataContext, template, requireHelper, IoC) {
+   function(Base,
+      Deferred,
+      Request,
+      template,
+      requireHelper,
+      IoC) {
       'use strict';
 
 
@@ -30,7 +35,7 @@ define('Controls/Container/Async',
       var Async = Base.extend({
          _template: template,
          optionsForComponent: {},
-         _beforeMount: function(options, context) {
+         _beforeMount: function(options) {
             var self = this;
             self.optionsForComponent = options.templateOptions || {};
             if (typeof window !== 'undefined') {
@@ -53,10 +58,13 @@ define('Controls/Container/Async',
             /*
              * It can work without Controls.Application
              * */
+
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
-            if (self.optionsForComponent.resolvedTemplate && context.headData && context.headData.pushDepComponent) {
+            var headData = Request.getCurrent().getStorage('HeadData');
+
+            if (self.optionsForComponent.resolvedTemplate && headData && headData.pushDepComponent) {
                if (options.templateName) {
-                  context.headData.pushDepComponent(options.templateName, true);
+                  headData.pushDepComponent(options.templateName, true);
                } else {
                   self.error = 'Error loading ' + options.templateName;
                   IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
@@ -86,10 +94,6 @@ define('Controls/Container/Async',
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
          }
       });
-      Async.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Async;
    });

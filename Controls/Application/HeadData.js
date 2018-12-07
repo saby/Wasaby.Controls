@@ -1,30 +1,48 @@
-define('Controls/Application/HeadDataContext', [
-   'Core/DataContext',
+define('Controls/Application/HeadData', [
+   'Core/core-extend',
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
    'Core/cookie',
+   'Core/Themes/ThemesController',
    'View/Request',
-   'Core/Themes/ThemesController'
+   'Core/constants'
 
-], function(DataContext,
+], function(extend,
    DepsCollector,
    Deferred,
    cookie,
+   ThemesController,
    Request,
-   ThemesController) {
+   constants) {
    var bundles, modDeps, contents;
+
+   function joinPaths(arr) {
+      var arrRes = [];
+      for (var i = 0; i < arr.length; i++) {
+         arrRes.push(cropSlash(arr[i]));
+      }
+      return arrRes.join('/');
+   }
+
+   function cropSlash(str) {
+      var res = str;
+      res = res.replace(/\/+$/, '');
+      res = res.replace(/^\/+/, '');
+      return res;
+   }
+
    try {
-      modDeps = require('json!resources/module-dependencies');
+      modDeps = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'module-dependencies']));
    } catch (e) {
 
    }
    try {
-      contents = require('json!resources/contents');
+      contents = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'contents']));
    } catch (e) {
 
    }
    try {
-      bundles = require('json!resources/bundlesRoute');
+      bundles = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'bundlesRoute']));
    } catch (e) {
 
    }
@@ -33,7 +51,7 @@ define('Controls/Application/HeadDataContext', [
    modDeps = modDeps || { links: {}, nodes: {} };
    contents = contents || {};
 
-   return DataContext.extend({
+   return extend.extend({
       _version: 0,
       needObjects: true,
 
@@ -50,8 +68,8 @@ define('Controls/Application/HeadDataContext', [
          var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
-            var components = Object.keys(self.depComponentsMap),
-               files;
+            var components = Object.keys(self.depComponentsMap);
+            var files = {};
             if (self.isDebug) {
                files = {};
             } else {
@@ -111,6 +129,9 @@ define('Controls/Application/HeadDataContext', [
       },
       waitAppContent: function() {
          return this.defRender;
+      },
+      resetRenderDeferred: function() {
+         this.defRender = new Deferred();
       }
    });
 });

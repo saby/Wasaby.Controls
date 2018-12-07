@@ -361,7 +361,19 @@ define(['Controls/Filter/Controller'], function(Filter) {
             value: 'testValue',
             resetValue: ''
          }];
-         var historyItems = Filter._private.prepareHistoryItems(fbItems, fastFilterItems);
+         var historyItems = Filter._private.prepareHistoryItems(fbItems);
+         assert.deepEqual(historyItems, [{
+            id: 'testId2',
+            value: '',
+            textValue: '',
+            visibility: undefined
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            textValue: undefined,
+            visibility: undefined
+         }]);
+         historyItems = Filter._private.prepareHistoryItems(fbItems, fastFilterItems);
          assert.deepEqual(historyItems, [{
             id: 'testId2',
             value: '',
