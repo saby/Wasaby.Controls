@@ -155,6 +155,51 @@
       }
     }
   },
+  "Controls/Toolbar": {
+    "name": "Controls/Toolbar",
+    "title": "Toolbar.",
+    "className": "Controls/Toolbar",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toolbar",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "name": {
+            "title": "Control name",
+            "type": "String",
+            "default": ""
+          },
+          "nodeProperty": {
+            "title": "Name of the field describing the type of the node (list, node, hidden node).",
+            "type": "String",
+            "default": ""
+          },
+          "parentProperty": {
+            "title": "Name of the field that contains information about parent node.",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
   "Controls/Heading/Back": {
     "name": "Controls/Heading/Back",
     "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",

@@ -11,8 +11,9 @@
       </ws:if>
       <ws:else>
          <ws:partial template="{{itemData.getCurrentColumn().template}}"
-                     attr:class="{{itemData.getCurrentColumn().withLadder ? 'controls-Grid__row-cell__content_withLadder'}}{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
-                     itemData="{{itemData.getCurrentColumn()}}" />
+                     ladderWrapper="{{itemData.getCurrentColumn().ladderWrapper}}"
+                     attr:class="{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
+                     itemData="{{itemData.getCurrentColumn()}}"/>
       </ws:else>
    </ws:else>
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
@@ -28,27 +29,28 @@
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-             attr:style="{{(itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
-            <ws:partial template="columnContent"/>
+             attr:style="{{(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
+            <ws:partial template="columnContent" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </td>
       </ws:for>
    </tr>
 </ws:if>
 <ws:else>
+   <ws:if data="{{itemData.styleLadderHeading}}">
+      <div attr:class="controls-Grid__row-ladder-cell {{itemData.getItemColumnCellClasses(itemData, itemData.stickyColumnIndex)}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+           attr:style="{{itemData.styleLadderHeading}}">
+         <ws:partial template="columnContent" attr:class="controls-Grid__row-ladder-cell__content"/>
+      </div>
+   </ws:if>
    <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-              attr:style="{{(itemData.ladderSupport ? itemData.getCurrentColumn().cellStyleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
+              attr:style="{{(itemData.getCurrentColumn().styleForLadder ? itemData.getCurrentColumn().styleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
             <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>
-            <ws:partial template="columnContent"/>
+            <ws:partial template="columnContent" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </div>
       </ws:for>
    </div>
 </ws:else>
-<ws:if data="{{itemData.ladder}}">
-   <div attr:class="controls-Grid__row-ladder-cell {{itemData.ladder.currentColumn.cellClasses}}" attr:style="{{itemData.ladder.style}}">
-      <ws:partial template="{{itemData.ladder.currentColumn.template}}" attr:class="controls-Grid__row-ladder-cell__content" itemData="{{itemData.ladder.currentColumn}}" />
-   </div>
-</ws:if>
