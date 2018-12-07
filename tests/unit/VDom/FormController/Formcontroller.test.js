@@ -156,7 +156,7 @@ define([
          }
          else {
             var el = document.body.querySelectorAll('#mocha')[0];
-            var testElement = document.createElement("div");
+            testElement = document.createElement("div");
             testElement.setAttribute('id', 'formControllerComponent');
             el.appendChild(testElement);
          }

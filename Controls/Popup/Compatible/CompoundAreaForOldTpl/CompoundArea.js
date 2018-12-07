@@ -7,6 +7,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/core-debug',
       'Core/Deferred',
       'Core/IoC',
+      'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
@@ -27,6 +28,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       coreDebug,
       cDeferred,
       IoC,
+      makeInstanceCompatible,
       runDelayed,
       CoreConstants,
       doAutofocus,
@@ -78,38 +80,38 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _isReadOnly: true,
 
-         _beforeMount: function() {
+         _beforeMount: function(_options) {
             CompoundArea.superclass._beforeMount.apply(this, arguments);
 
             this._className = 'controls-CompoundArea';
-            if (this._options.type !== 'base') {
-               this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
+            if (_options.type !== 'base') {
+               this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             }
 
             // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
-            if (this._options.type === 'dialog' || this._options.type === 'stack') {
+            if (_options.type === 'dialog' || _options.type === 'stack') {
                this._className += ' controls-CompoundArea-close_button';
             }
 
-            this._childControlName = this._options.template;
+            this._childControlName = _options.template;
 
             /**
              * Поведение если вызвали через ENGINE/MiniCard.
              */
             var _this = this;
 
-            if (this._options.hoverTarget) {
-               this._options.hoverTarget.on('mouseenter', function() {
+            if (_options.hoverTarget) {
+               _options.hoverTarget.on('mouseenter', function() {
                   clearTimeout(_this._hoverTimer);
                   _this._hoverTimer = null;
                });
-               this._options.hoverTarget.on('mouseleave', function() {
+               _options.hoverTarget.on('mouseleave', function() {
                   _this._hoverTimer = setTimeout(function() {
                      _this.hide();
                   }, 1000);
                });
             }
-            if (this._options.popupComponent === 'recordFloatArea') {
+            if (_options.popupComponent === 'recordFloatArea') {
                this.subscribeOnBeforeUnload();
             }
          },
@@ -223,8 +225,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Нам нужно пометить контрол замаунченым для слоя совместимости,
             // чтобы не создавался еще один enviroment для той же ноды
 
-            this.VDOMReady = true;
-            this.deprecatedContr(this._options);
+            if (makeInstanceCompatible && makeInstanceCompatible.newWave) {
+               makeInstanceCompatible(this);
+            } else {
+               this.VDOMReady = true;
+               this.deprecatedContr(this._options);
+            }
 
             var self = this;
 

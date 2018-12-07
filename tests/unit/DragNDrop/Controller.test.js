@@ -40,6 +40,8 @@ define([
    var startEvent = createNativeEvent('mousedown', 20, 10);
 
    describe('Controls.DragNDrop.Controller', function() {
+      var events = [];
+
       it('isDragStarted', function() {
          assert.isTrue(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 25, 10)));
          assert.isTrue(Controller._private.isDragStarted(startEvent, createNativeEvent('mousemove', 20, 15)));
@@ -84,7 +86,7 @@ define([
       describe('Controls.DragNDrop.Controller phase', function() {
          var
             dragObject,
-            events = [], entity = {},
+            entity = {},
             controller = new Controller(),
             startEvent = createSyntheticEvent('mousedown', 20, 10);
 
@@ -117,6 +119,7 @@ define([
 
          describe('mouse', function() {
             it('dragStart', function() {
+               events = [];
                controller.startDragNDrop(entity, startEvent);
                assert.equal(startEvent.nativeEvent, controller._startEvent);
                assert.equal(events.join(', '), 'registermousemove, registertouchmove, registermouseup, registertouchend');
