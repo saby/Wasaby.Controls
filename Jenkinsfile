@@ -424,6 +424,10 @@ node('controls') {
             }
             echo items
         }
+        dir("./controls/tests") {
+                    def rc_err_int = sh returnStdout: true, script: "python3 get_err_from_rc.py"
+                    currentBuild.description = "${rc_err_int}"
+                }
         if ( regr || inte || all_inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
