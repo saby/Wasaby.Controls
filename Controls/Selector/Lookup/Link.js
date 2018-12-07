@@ -4,7 +4,7 @@
 define('Controls/Selector/Lookup/Link', [
    'Core/Control',
    'wml!Controls/Selector/Lookup/Link/LookUp_Link',
-   'css!Controls/Selector/Lookup/Link/LookUp_Link'
+   'css!theme?Controls/Selector/Lookup/Link/LookUp_Link'
 ], function(Control, template) {
    'use strict';
 
