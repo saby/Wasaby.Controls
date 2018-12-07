@@ -199,11 +199,15 @@ define('Controls/Dropdown/resources/template/DropdownList',
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
+            // Close the already opened sub menu. Installation of new data sets new size of the container.
+            // If you change the size of the update, you will see the container twitch.
+            if (this._hasHierarchy) {
+               this._children.subDropdownOpener.close();
+            }
+
             if (hasChildren) {
                var config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
-            } else if (this._hasHierarchy) {
-               this._children.subDropdownOpener.close();
             }
          },
 
