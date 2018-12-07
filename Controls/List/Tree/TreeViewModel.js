@@ -20,24 +20,33 @@ define('Controls/List/Tree/TreeViewModel', [
       _private = {
          isVisibleItem: function(item) {
             var
-               isExpanded = false,
                itemParent = item.getParent ? item.getParent() : undefined,
-               itemParentContents,
-               itemParentKey;
+               isExpandAll = this.isExpandAll(this.expandedItems),
+               keyProperty = this.keyProperty,
+               collapsedItems = this.collapsedItems,
+               expandedItems = this.expandedItems,
+               hasChildItem = this.hasChildItem,
+               itemParentContents;
+            function isExpanded(contents) {
+               var
+                  expanded = false,
+                  key;
+               if (contents) {
+                  key = contents.get(keyProperty);
+                  if (isExpandAll) {
+                     expanded = !collapsedItems[key] && hasChildItem(key);
+                  } else {
+                     expanded = expandedItems[key];
+                  }
+               }
+               return expanded;
+            }
             if (itemParent) {
                itemParentContents = itemParent.getContents();
-               if (this.isExpandAll(this.expandedItems)) {
-                  if (itemParentContents) {
-                     itemParentKey = itemParentContents.get(this.keyProperty);
-                     isExpanded = !this.collapsedItems[itemParentKey] && this.hasChildItem(itemParentKey);
-                  }
-               } else {
-                  isExpanded = itemParentContents && this.expandedItems[itemParentContents.get(this.keyProperty)];
-               }
                if (itemParent.isRoot()) {
-                  return itemParent.getOwner().isRootEnumerable() ? isExpanded : true;
+                  return itemParent.getOwner().isRootEnumerable() ? isExpanded(itemParentContents) : true;
                }
-               if (isExpanded) {
+               if (isExpanded(itemParentContents)) {
                   return _private.isVisibleItem.call(this, itemParent);
                }
                return false;
