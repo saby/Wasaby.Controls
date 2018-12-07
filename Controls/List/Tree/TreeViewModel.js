@@ -93,9 +93,36 @@ define('Controls/List/Tree/TreeViewModel', [
             return res;
          },
 
+         hasChildItem: function(self, key) {
+            if (self._options.hasChildrenProperty) {
+               return !!self._items.getRecordById(key).get(self._options.hasChildrenProperty);
+            }
+            return self._hierarchyRelation.getChildren(key, self._items).length;
+         },
+
+         determinePresenceChildItem: function(self) {
+            var
+               thereIsChildItem = false,
+               items = self._items,
+               rootItems;
+            if (items) {
+               rootItems = self._hierarchyRelation.getChildren(self._display.getRoot().getContents(), items);
+               for (var idx = 0; idx < rootItems.length; idx++) {
+                  if (_private.hasChildItem(self, rootItems[idx].getId())) {
+                     thereIsChildItem = true;
+                     break;
+                  }
+               }
+            }
+            self._thereIsChildItem = thereIsChildItem;
+         },
+
          onCollectionChange: function(self, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
             if (action === IBindCollection.ACTION_REMOVE) {
                _private.checkRemovedNodes(self, removedItems);
+            }
+            if (self._options.expanderDisplayMode === 'adaptive') {
+               _private.determinePresenceChildItem(self);
             }
          },
 
@@ -122,7 +149,12 @@ define('Controls/List/Tree/TreeViewModel', [
                itemType = itemData.item.get(itemData.nodeProperty);
 
             // Show expander icon if it is not equal 'none' or render leafs
-            return itemType !== null && expanderIcon !== 'none';
+            return (itemData.expanderDisplayMode !== 'adaptive' || itemData.thereIsChildItem && itemData.hasChildItem) &&
+               itemType !== null && expanderIcon !== 'none';
+         },
+         shouldDrawExpanderPadding: function(itemData, expanderIcon, expanderSize) {
+            return (itemData.expanderDisplayMode !== 'adaptive' || itemData.thereIsChildItem) &&
+               !expanderSize && expanderIcon !== 'none';
          },
          prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
             var
@@ -159,6 +191,7 @@ define('Controls/List/Tree/TreeViewModel', [
       TreeViewModel = ListViewModel.extend({
          _expandedItems: null,
          _hasMoreStorage: null,
+         _thereIsChildItem: false,
 
          constructor: function(cfg) {
             this._options = cfg;
@@ -169,6 +202,9 @@ define('Controls/List/Tree/TreeViewModel', [
                nodeProperty: cfg.nodeProperty || 'Раздел@'
             });
             TreeViewModel.superclass.constructor.apply(this, arguments);
+            if (this._options.expanderDisplayMode === 'adaptive') {
+               _private.determinePresenceChildItem(this);
+            }
          },
 
          setExpandedItems: function(expandedItems) {
@@ -223,14 +259,28 @@ define('Controls/List/Tree/TreeViewModel', [
             _private.onCollectionChange(this, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          },
 
+         setItems: function() {
+            TreeViewModel.superclass.setItems.apply(this, arguments);
+            if (this._options.expanderDisplayMode === 'adaptive') {
+               _private.determinePresenceChildItem(this);
+            }
+         },
+
          getItemDataByItem: function(dispItem) {
             var
                current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
             current.isExpanded = !!this._expandedItems[current.key];
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
+            current.expanderDisplayMode = this._options.expanderDisplayMode;
+            current.thereIsChildItem = this._thereIsChildItem;
+            current.hasChildItem = !current.isGroup && _private.hasChildItem(this, current.key);
             current.shouldDrawExpander = _private.shouldDrawExpander;
+            current.shouldDrawExpanderPadding = _private.shouldDrawExpanderPadding;
             current.prepareExpanderClasses = _private.prepareExpanderClasses;
+
+            // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
+            current.expanderTemplate = this._options.expanderTemplate;
 
             if (!current.isGroup) {
                current.level = current.dispItem.getLevel();

@@ -15,6 +15,11 @@
       };
       window.buildnumber = '{{ _options.buildnumber }}';
    </script>
+   <ws:if data="{{!_options.compat}}">
+      <script>
+         window.themesActive = true;
+      </script>
+   </ws:if>
 
    <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
 
@@ -55,6 +60,19 @@
    </ws:for>
    <ws:for data="index, value in simpleCss">
       <link rel="stylesheet" class="css-bundles" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'simple-css-' + index }}"/>
+   </ws:for>
+
+   <ws:for data="index, value in resolvedSimple">
+      <style>
+         {{ value }}
+      </style>
+   </ws:for>
+   <ws:for data="theme, allThemed in resolvedThemed">
+      <ws:for data="name, value in allThemed">
+         <style>
+            {{ value }}
+         </style>
+      </ws:for>
    </ws:for>
    <title key="title">{{ _options.title }}</title>
    {{ errorState }}

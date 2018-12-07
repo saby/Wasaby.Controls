@@ -1,0 +1,41 @@
+{
+  "Controls/EditableArea": {
+    "name": "Controls/EditableArea",
+    "title": "Controller for editing of input fields.",
+    "className": "Controls/EditableArea",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/EditableArea",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "toolbarVisibility": {
+            "type": "Boolean",
+            "title": "Determines whether buttons 'Save' and 'Cancel' should be displayed."
+          },
+          "style": {
+            "type": "enum",
+            "title": "Editable area display style.",
+            "enum": {
+              "withoutBackground": "Background will not be shown while editing.",
+              "withBackground": "Background will be shown while editing."
+            }
+          },
+          "editObject": {
+            "type": "enum",
+            "title": "Record with initial data."
+          },
+          "editWhenFirstRendered": {
+            "type": "Boolean",
+            "title": "Determines whether editing should start on first render."
+          },
+          "content": {
+            "type": "enum",
+            "title": "Template that will be used for editing."
+          }
+        }
+      }
+    }
+  }
+}

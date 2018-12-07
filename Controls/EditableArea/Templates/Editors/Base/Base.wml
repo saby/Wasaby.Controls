@@ -1,7 +1,7 @@
-<div class="controls-EditAtPlaceV__editorWrapper">
+<div class="controls-EditableArea__editorWrapper">
    <ws:if data="{{_options.isEditing}}">
       <ws:partial
-         attr:class="controls-EditAtPlaceV__editor"
+         attr:class="controls-EditableArea__editor"
          template="{{_options.editorTemplate}}"
          value="{{_options.value}}"
          on:valueChanged="_editorValueChangeHandler()"
@@ -9,9 +9,8 @@
    </ws:if>
    <ws:else>
       <div
-         class="controls-EditAtPlaceV__Text
-                {{enabled ? 'controls-EditAtPlaceV__Text_enabled'}}
-                controls-EditAtPlaceV__Text_style_{{_options.style ? _options.style  : 'default'}}
+         class="controls-EditableArea__Text
+                controls-EditableArea__Text_style_{{_options.style ? _options.style  : 'default'}}
                 controls-EditingTemplateText_size_{{_options.size ? _options.size : 'default'}}"
       >
          <div class="controls-EditingTemplateText__inner">{{_prepareValueForEditor(_options.value)}}</div>

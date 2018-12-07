@@ -38,18 +38,20 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                   keyProperty: 'id',
                   displayProperty: 'title',
                   selectedKey: 0
-               }
+               },
+               showClickEvent: true
             };
             this._componentOptions = {
                readOnly: false,
                size: 'm',
                icon: 'icon-small icon-Add',
                iconStyle: 'default',
-               caption: '',
+               caption: 'Caption',
                style: 'secondary',
-               viewMode: 'toolButton',
+               viewMode: 'link',
                tooltip: '',
-               name: 'Button'
+               name: 'Button',
+               href: ''
 
             };
             this._metaData = config[this._content].properties['ws-config'].options;

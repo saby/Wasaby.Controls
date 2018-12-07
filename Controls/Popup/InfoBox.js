@@ -24,16 +24,32 @@ define('Controls/Popup/InfoBox',
       /**
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves.
+       * @default 300
        */
 
       /**
        * @name Controls/Popup/InfoBox#showDelay
        * @cfg {Number} Delay before opening after mouse enters.
+       * @default 300
        */
 
       /**
        * @name Controls/Popup/InfoBox#position
-       * @cfg {Number} Point positioning of the target relative to infobox.
+       * @cfg {String} Point positioning of the target relative to infobox.
+       * Popup displayed on the top of the target and aligned by left border.
+       * @variant tl Popup displayed on the top of the target and aligned by left border.
+       * @variant tc Popup displayed on the top of the target and aligned by center.
+       * @variant tr Popup displayed on the top of the target and aligned by right border.
+       * @variant bl Popup displayed on the bottom of the target and aligned by left border.
+       * @variant bc Popup displayed on the bottom of the target and aligned by center.
+       * @variant br Popup displayed on the bottom of the target and aligned by right border.
+       * @variant rt Popup displayed on the right of the target and aligned by top border.
+       * @variant rc Popup displayed on the right of the target and aligned by center.
+       * @variant rb Popup displayed on the right of the target and aligned by bottom border.
+       * @variant lt Popup displayed on the left of the target and aligned by top border.
+       * @variant lc Popup displayed on the left of the target and aligned by center.
+       * @variant lb Popup displayed on the left of the target and aligned by bottom border
+       * @default tl
        */
 
       /**
@@ -63,12 +79,17 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#float
-       * @cfg {String} Whether the content should wrap around the cross closure.
+       * @cfg {Boolean} Whether the content should wrap around the cross closure.
+       * @default false
        */
 
       /**
        * @name Controls/Popup/InfoBox#style
        * @cfg {String} Infobox display style.
+       * @variant default
+       * @variant lite
+       * @variant help
+       * @variant error
        */
 
 
@@ -86,7 +107,8 @@ define('Controls/Popup/InfoBox',
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions
+                  contentTemplateOptions: self._options.templateOptions,
+                  float: self._options.float
                }
             };
          }

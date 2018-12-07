@@ -14,15 +14,19 @@ define('Controls/Input/Date/Picker', [
 ) {
 
    /**
-    * Control for entering date.
+    * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
     * <a href="/materials/demo-ws4-input-datepicker">Demo examples.</a>.
+    *
     * @class Controls/Input/Date/Picker
+    * @extends Core/Control
     * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/IDateMask
     * @mixes Controls/Input/interface/IValidation
+    *
     * @css @spacing_DatePicker-between-input-button Spacing between input field and button.
+    *
     * @control
     * @public
     * @demo Controls-demo/Input/Date/PickerPG

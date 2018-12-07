@@ -14,7 +14,9 @@
 }
 .controls-Tabs__space {
   .inline-flexbox();
-  .flex-shrink(1);
+  //TODO: по поручению опишут как и что должно сжиматься. Пока вешаю огромный flex-shrink на дыру между элементами вкладок, чтобы главная вкладка не начинала сжиматься раньше времени
+  //https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
+  flex-shrink: 9999999;
   .box-sizing();
   .align-items(baseline);
   .tabs-baseline();
@@ -41,7 +43,7 @@
   .tabs-baseline();
   height: 100%;
   position: relative;
-  padding: @padding_Tabs-item;
+  padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
   font-size: @font-size_Tabs-item;
   color: @text-color_Tabs;
   cursor: pointer;
@@ -57,12 +59,16 @@
     background: @border-color_Tabs;
   }
 }
+.controls-Tabs__item_canShrink {
+  flex-shrink: 1;
+  min-width: 0;
+}
 .controls-Tabs__itemSeparator {
   pointer-events: none;
   position: absolute;
   top: calc(50% ~'-' @height_Tabs-separator / 2);
   height: @height_Tabs-separator;
-  width: @border-width_Tabs;
+  width: @width_Tabs-separator;
   background: @background-color_Tabs-separator;
 
 }
@@ -97,20 +103,20 @@
   margin-left: 0;
 }
 /* style = default */
-.controls-Tabs_style_default__item_state_selected {
+.controls-Tabs_style_primary__item_state_selected {
   &:after {
     height: @border-width_Tabs-item_hover_selected;
-    background: @border-color_Tabs-item_selected_default;
+    background: @border-color_Tabs-item_selected_primary;
   }
-  color: @text-color_Tabs-item_selected_default;
+  color: @text-color_Tabs-item_selected_primary;
 }
 /* style = additional */
-.controls-Tabs_style_additional__item_state_selected {
+.controls-Tabs_style_secondary__item_state_selected {
   &:after {
     height: @border-width_Tabs-item_hover_selected;
-    background: @border-color_Tabs-item_selected_additional;
+    background: @border-color_Tabs-item_selected_secondary;
   }
-  color: @text-color_Tabs-item_selected_additional;
+  color: @text-color_Tabs-item_selected_secondary;
 }
 .controls-Tabs__item_overflow {
   overflow: hidden;

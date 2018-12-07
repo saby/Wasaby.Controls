@@ -61,7 +61,7 @@ define('Controls/History/Menu',
          },
          
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter)) {
+            if (!isEqual(this._options.filter, newOptions.filter) || this._options.source !== newOptions.source) {
                this._filter = _private.prepareFilter(newOptions.filter);
             }
          },
@@ -86,7 +86,6 @@ define('Controls/History/Menu',
                   });
                }
             });
-            this._items = this._options.source.getItems();
          }
       });
    

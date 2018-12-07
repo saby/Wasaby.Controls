@@ -165,10 +165,19 @@ module.exports = function(Component) {
       },
 
       // Демо-пример: Редактирование по месту в полях ввода
-      '/demo-ws4-edit-at-place': function(req, res) {
-         requirejs('Controls-demo/EditAtPlace/EditAtPlaceWithApplication');
+      '/demo-ws4-editable-area': function(req, res) {
+         requirejs('Controls-demo/EditableArea/EditableAreaWithApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Controls-demo/EditAtPlace/EditAtPlaceWithApplication',
+            application: 'Controls-demo/EditableArea/EditableAreaWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Диалог редактирования
+      '/demo-ws4-popup-edit': function(req, res) {
+         requirejs('Controls-demo/Popup/Edit/OpenerWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Popup/Edit/OpenerWithApplication',
             initDependencies: false
          }, []);
       },
@@ -187,6 +196,15 @@ module.exports = function(Component) {
          requirejs('Controls-demo/Buttons/standartDemoButtonWithApplication');
          res.render('wml!Controls/Application/Route', {
             application: 'Controls-demo/Buttons/standartDemoButtonWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
+      // Демо-пример: Табы
+      '/demo-ws4-tabs': function(req, res) {
+         requirejs('Controls-demo/Tabs/Buttons');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Tabs/Buttons',
             initDependencies: false
          }, []);
       },

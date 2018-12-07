@@ -1,0 +1,27 @@
+<Controls.Input.resources.InputRender.InputRender
+   name="inputRender"
+   autocomplete="{{_options.autocomplete}}"
+   size="{{ _options.size }}"
+   value="{{ _options.value }}"
+   placeholder="{{_options.placeholder}}"
+   selectOnClick="{{_options.selectOnClick}}"
+   viewModel="{{_textViewModel}}"
+   tagStyle="{{_options.tagStyle}}"
+   validationErrors="{{_options.validationErrors}}"
+   textAlign="{{_options.textAlign}}"
+   tooltip="{{_options.tooltip}}"
+   style="{{_options.style}}"
+   on:tagClick="_notifyHandler('tagClick')"
+   on:tagHover="_notifyHandler('tagHover')"
+   on:valueChanged="_notifyHandler('valueChanged')"
+   on:inputCompleted="_inputCompletedHandler()">
+   <ws:content>
+      <ws:partial
+         template="wml!Controls/Input/resources/input"
+         type="text"
+         inputName="{{_inputName}}"
+         readOnly="{{_options.readOnly}}"
+         value="{{_value}}"
+      />
+   </ws:content>
+</Controls.Input.resources.InputRender.InputRender>

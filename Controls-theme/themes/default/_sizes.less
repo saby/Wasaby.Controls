@@ -266,7 +266,6 @@
 @height_Button_default:                   @height_Button_m;
 @font-size_Button_m:                      @default-text-size;
 @font-size_Button_default:                @font-size_Button_m;
-@font-size_Button-Vdom_m:                 @default-text-size;
 @button-margin:                           auto;
 @border-radius_Button_m:                  16px;
 @border-radius_Button_default:            @border-radius_Button_m;
@@ -461,11 +460,6 @@
 //editAtPlace
 @line-height_editAtPlace_fieldWrapper:   20px;
 
-//Search
-@icon-size_Search:                     @default-icon-size;
-@spacing-Search-between-icon-text:     0 2px;
-@border-radius_Search:                 10px;
-@padding_Search:                       0 5px 0 12px;
 //list add button
 @font-size_listAddButton:                @small-text-size;
 @icon-size_ListAddButton:                @default-icon-size;
@@ -487,19 +481,8 @@
 @font-size_Label:                        0;
 //ReportBrowser
 @height_ReportBrowser-top-content:       44px;
-//Tabs/Buttons
-@height_Tabs-separator:                  12px;
-@border-width_Tabs:                      @default-border-width;
-@padding_Tabs-item_default:              12px;
-@line-height_Tabs-baselineFix:           32px;
-@height_Tabs:                            31px;
-@padding_Tabs-item:                      0 @padding_Tabs-item_default + @border-width_Tabs;
-@font-size_Tabs-item:                    14px;
-@font-size_Tabs-item_selected:           15px;
-@max-width_Tabs_item:                    630px;
-@border-width_Tabs-item_hover_selected:  2px;
 //BrowserTabs Separator
-@thickness_PageLayout_Separator:        @border-width_Tabs;
+@thickness_PageLayout_Separator:         @default-border-width;
 //Scrollbar
 @width_Scrollbar:                        4px;
 //Отступ сверху/снизу и от правого края в скролируемой области.
@@ -519,18 +502,8 @@
 //Scroll
 @height-gradient_Scroll-shadow:          8px;
 //FilterButton
-@spacing_FilterButton-between-icon-text:           @default-padding;
-@spacing_FilterButton-between-spaceTemplate-text:  @default-padding;
-@font-size_FilterButton-icon:                      @icon-size_default_medium;
-@font-family_FilterButton-icon:                    @default-icon-medium-font;
-@font-size_FilterButton-text:                      @default-text-size;
-@icon-size_FilterButton-text-icon:                 @icon-size_default;
 @margin-top_FilterButton_popup:                    -11px;
 @margin-left_FilterButton_popup:                   9px;
-
-//Lookup
-@spacing_Lookup-collection:              4px;
-@spacing_Lookup-item:                    4px;
 
 //itemActions
 @height_itemActions_inside:              24px;
@@ -620,13 +593,6 @@
 @width_BreadCrumbs-corner:                                   13px;
 @height_BreadCrumbs-menuItem:                                32px;
 
-//FastFilter
-@icon-size_FastFilter-iconReset:                      @icon-size_default;
-@spacing_FastFilter-item:                   0;
-@height_FastFilter-iconArrow:               9px;
-@width_FastFilter-iconArrow:                16px;
-@margin-top_FastFilter-popup:               @margin-top_DropdownList;
-@margin-left_FastFilter-popup:              2px;
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @box-shadow_IconButton:                  0px 1px 4px @color-IconButton__shadow; // TODO Оставить один вариант
@@ -686,16 +652,6 @@
 @padding_ToggleButton-wrapper_s:    0;
 @padding_ToggleButton-wrapper_m:    0;
 @padding_ToggleButton-wrapper_l:          0;
-//Notification
-@padding_NotificationBase-content: 8px;
-@font-size_NotificationBase-message: 15px;
-@spacing_NotificationBase-between-icon-and-message: 8px;
-@spacing_NotificationBase-between-notifications: 0 16px 16px 0;
-@right_NotificationBase-closeButton: 8px;
-@top_NotificationBase-closeButton: 8px;
-@min-height_NotificationBase: 40px;
-@min-width_NotificationBase: 40px;
-@border-width_NotificationBase: @controls-InformationPopup-border-width;
 //VDOM ListView
 @height_ListView-group: 24px;
 @spacing_ListView-group-between-text-separator: 12px;

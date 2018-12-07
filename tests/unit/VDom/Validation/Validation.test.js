@@ -30,7 +30,6 @@ define([
          global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Validation1/Validation1'], function (CoreControl, Component) {
             var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
-
             testControl._afterMount = function () {
                runDelayed(function() {
                   $(document).ready(function () {
@@ -95,7 +94,6 @@ define([
          global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Form2/Form2'], function (CoreControl, Component) {
             var element = $('#component123');
             testControl = CoreControl.createControl(Component, {element: element}, element);
-
             testControl._afterMount = function () {
                runDelayed(function() {
                   $(document).ready(function () {

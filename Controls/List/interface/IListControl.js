@@ -12,6 +12,7 @@ define('Controls/List/interface/IListControl', [
    /**
     * @name Controls/List/interface/IListControl#contextMenuEnabled
     * @cfg {Boolean} Determines whether context menu should be shown on right-click.
+    * @default true
     */
 
    /**
@@ -66,7 +67,7 @@ define('Controls/List/interface/IListControl', [
     */
 
    /**
-    * @typedef {Array} ItemActions
+    * @typedef {Object} ItemAction
     * @property {String} id Identifier of operation.
     * @property {String} title Operation name.
     * @property {String} icon Operation icon.
@@ -78,22 +79,30 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @name Controls/List/interface/IListControl#itemActions
-    * @cfg {ItemActions[]} item operations
+    * @cfg {Array.<ItemAction>} Array of configuration objects for buttons which will be shown when the user hovers over an item.
     */
 
    /**
     * @name Controls/List/interface/IListControl#itemActionsPosition
-    * @cfg {String} item operations display type
-    * @variant inside
-    * @variant outside
+    * @cfg {String} Position of item actions.
+    * @variant inside Item actions will be positioned inside the item's row.
+    * @variant outside Item actions will be positioned under the item's row.
+    */
+
+   /**
+    * @event Controls/List/interface/IListControl#itemActionsClick
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {ItemAction} action Object with configuration of the clicked action.
+    * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
+    * @param {Object} nativeEvent Native event which can be used to calculate position of the clicked action.
     */
 
    /**
     * @name Controls/List/interface/IListControl#itemActionVisibilityCallback
     * @cfg {function} item operation visibility filter function
-    * @param {Object} action
-    * @param {Record} item
-    * @return {Boolean} action visibility
+    * @param {ItemAction} action Object with configuration of an action.
+    * @param {WS.Data/Entity/Model} item Instance of the item whose action is being processed.
+    * @returns {Boolean} Determines whether the action should be rendered.
     */
 
    /**

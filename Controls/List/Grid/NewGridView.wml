@@ -1,4 +1,4 @@
-<div class="controls-Grid controls-Grid_{{_options.style}}" attr:style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiSelectVisibility())}};">
+<div attr:class="controls-Grid controls-Grid_{{_options.style}}" attr:style="grid-template-columns: {{_prepareGridTemplateColumns(_listModel.getColumns(), _listModel.getMultiSelectVisibility())}};">
    <ws:if data="{{_listModel.getHeader()}}">
       <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
    </ws:if>
@@ -19,4 +19,8 @@
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
       <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
    </ws:if>
+   <div attr:class="{{_calcFooterPaddingClass(_options)}}"
+        attr:style="{{'grid-column: 1 / ' + (_options.columns.length + 1) + ';'}}">
+      <ws:partial template="{{_options.footerTemplate}}"/>
+   </div>
 </div>

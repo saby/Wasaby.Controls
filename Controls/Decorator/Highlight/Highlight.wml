@@ -1,6 +1,6 @@
 <span>
    <ws:for data="path in _parsedText">
-      <ws:if data="{{path.type === 'found'}}">
+      <ws:if data="{{path.type === 'highlight'}}">
          <span class="{{_options.class}}">{{path.value}}</span>
       </ws:if>
       <ws:else>{{path.value}}</ws:else>

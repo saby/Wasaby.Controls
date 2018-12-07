@@ -2,7 +2,7 @@
     <div class="testBlock">
         <div class="exampleBlock">
             <h2>Back button</h2>
-            <Controls.Heading.BackButton attr:class="ControlsDemo__header" on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
+            <Controls.Heading.Back attr:class="ControlsDemo__header" on:click="clickHandler()" style="{{_backSelectedStyle}}" size="{{_backSelectedSize}}" caption="{{_backCaption}}" inHeader="{{_inHeader}}"/>
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>

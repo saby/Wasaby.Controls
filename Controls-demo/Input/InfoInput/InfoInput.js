@@ -8,7 +8,8 @@ define('Controls-demo/Input/InfoInput/InfoInput',
       'use strict';
 
       var InfoInput = Control.extend({
-		_template: template
+		_template: template,
+		_value: ''
       });
 
       return InfoInput;

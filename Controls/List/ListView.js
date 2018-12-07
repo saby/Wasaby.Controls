@@ -118,7 +118,9 @@ define('Controls/List/ListView', [
          },
 
          _onItemContextMenu: function(event, itemData) {
-            this._notify('itemContextMenu', [itemData, event, true]);
+            if (this._options.contextMenuEnabled) {
+               this._notify('itemContextMenu', [itemData, event, true]);
+            }
          },
 
          _onItemSwipe: function(event, itemData) {
@@ -159,5 +161,12 @@ define('Controls/List/ListView', [
       });
 
    ListView._private = _private;
+
+   ListView.getDefaultOptions = function() {
+      return {
+         contextMenuEnabled: true
+      };
+   };
+
    return ListView;
 });

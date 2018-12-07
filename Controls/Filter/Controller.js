@@ -37,6 +37,25 @@ define('Controls/Filter/Controller',
             return result;
          },
 
+         prepareItems: function(filterButtonItems, fastFilterItems, prepareCallback) {
+            Chain(filterButtonItems).each(function(buttonItem, index) {
+               Chain(fastFilterItems).each(function(fastItem) {
+                  if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
+                     prepareCallback(index, fastItem);
+                  }
+               });
+            });
+         },
+
+         prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
+            var historyItems = _private.cloneItems(filterButtonItems);
+            function setTextValue(index, item) {
+               setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
+            }
+            _private.prepareItems(filterButtonItems, fastFilterItems, setTextValue);
+            return _private.minimizeFilterItems(historyItems);
+         },
+
          minimizeFilterItems: function(items) {
             var minItems = [];
             Chain(items).each(function(item) {
@@ -126,6 +145,13 @@ define('Controls/Filter/Controller',
             self._fastFilterItems = _private.getItemsByOption(fastFilterOption, historyItems);
          },
 
+         setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
+            function clearTextValue(index) {
+               setPropValue(filterButtonItems[index], 'textValue', '');
+            }
+            _private.prepareItems(filterButtonItems, fastFilterItems, clearTextValue);
+         },
+
          updateFilterItems: function(self, newItems) {
             if (self._filterButtonItems) {
                self._filterButtonItems = _private.cloneItems(self._filterButtonItems);
@@ -136,11 +162,15 @@ define('Controls/Filter/Controller',
                self._fastFilterItems = _private.cloneItems(self._fastFilterItems);
                _private.mergeFilterItems(self._fastFilterItems, newItems);
             }
+
+            if (self._filterButtonItems && self._fastFilterItems) {
+               _private.setFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
+            }
          },
 
          resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
             return _private.getHistoryItems(self, historyId).addCallback(function(historyItems) {
-               _private.setFilterItems(self, filterButtonItems, fastFilterItems);
+               _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
             });
          },
@@ -319,12 +349,12 @@ define('Controls/Filter/Controller',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter)) {
-               _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
-            }
-
             if (this._options.filterButtonSource !== newOptions.filterButtonSource || this._options.fastFilterSource !== newOptions.fastFilterSource) {
                _private.setFilterItems(this, newOptions.filterButtonSource, newOptions.fastFilterSource);
+            }
+
+            if (!isEqual(this._options.filter, newOptions.filter)) {
+               _private.applyItemsToFilter(this, newOptions.filter, this._filterButtonItems, this._fastFilterItems);
             }
          },
 
@@ -337,7 +367,7 @@ define('Controls/Filter/Controller',
                meta = {
                   '$_addFromData': true
                };
-               historyUtils.getHistorySource(this._options.historyId).update(_private.minimizeFilterItems(this._filterButtonItems || this._fastFilterItems), meta);
+               historyUtils.getHistorySource(this._options.historyId).update(_private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
             }
 
             _private.applyItemsToFilter(this, this._options.filter, items);

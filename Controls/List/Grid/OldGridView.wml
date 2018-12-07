@@ -1,4 +1,4 @@
-<table class="controls-Grid">
+<table attr:class="controls-Grid controls-Grid_{{_options.style}}">
    <ws:partial template="wml!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
    <ws:if data="{{_listModel.getHeader()}}">
       <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
@@ -22,4 +22,7 @@
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
       <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
    </ws:if>
+   <div attr:class="{{_calcFooterPaddingClass(_options)}}">
+      <ws:partial template="{{_options.footerTemplate}}"/>
+   </div>
 </table>

@@ -6,10 +6,9 @@
          </ws:for>
       </ws:if>
       <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">
-         <div on:click="_onExpanderClick(itemData.dispItem)"
-              class="{{itemData.prepareExpanderClasses(itemData, expanderIcon, expanderSize)}}"></div>
+         <ws:partial template="{{itemData.expanderTemplate}}" itemData="{{itemData}}" expanderIcon="{{expanderIcon}}" expanderSize="{{expanderSize}}"/>
       </ws:if>
-      <ws:else data="{{!expanderSize}}">
+      <ws:else data="{{itemData.shouldDrawExpanderPadding(itemData, expanderIcon, expanderSize)}}">
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>

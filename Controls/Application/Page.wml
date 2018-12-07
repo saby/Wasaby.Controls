@@ -40,6 +40,7 @@
                                  on:mouseup="_mouseupPage()"
                                  on:openInfoBox="_openInfoBoxHandler()"
                                  on:closeInfoBox="_closeInfoBoxHandler()"
+                                 on:forceCloseInfoBox="_forceCloseInfoBoxHandler()"
                                  on:keyPress="_keyPressHandler()"
                                  on:mouseup="_mouseupPage()"
                                  on:openPreviewer="_openPreviewerHandler()"
@@ -50,9 +51,13 @@
                                  <div class="ws-focus-in"></div>
                               </ws:if>
                               <ws:if data="{{  _options.content }}">
+                                 <!-- use private method for loadingIndicator. todo https://online.sbis.ru/opendoc.html?guid=0ebfe128-42ca-43e5-b27b-90e12f81313c -->
                                  <Controls.Application._Wait>
-                                    <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}"/>
+                                       <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}" on:showIndicator="LoadingIndicator._showHandler()" on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
+                                 <Controls.Container.LoadingIndicator name="LoadingIndicator">
+                                    <div></div>
+                                 </Controls.Container.LoadingIndicator>
                               </ws:if>
                               <ws:else>
                                  <Controls.Application._Wait content="">
@@ -74,7 +79,7 @@
                                  </ws:for>
                               </ws:if>
                               <script key="bundles" type="text/javascript"
-                                      src="{{wsRoot}}ext/requirejs/bundles.js"></script>
+                                      src="{{resourceRoot}}bundles.js"></script>
                               <script key="require" type="text/javascript"
                                       src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
@@ -110,11 +115,7 @@
                                  </div>
                               </ws:else>
                               <Controls.Popup.Opener.Previewer name="previewerOpener"/>
-                              <ws:if data="{{ application && application.toLowerCase().indexOf('demo') === -1 }}">
-                                 <Core.TimeTester resourceRoot="{{ resourceRoot }}"
-                                                  RUMEnabled="{{ RUMEnabled }}"
-                                                  pageName="{{ pageName }}" />
-                              </ws:if>
+                              <Core.TimeTester resourceRoot="{{ resourceRoot }}" RUMEnabled="{{ RUMEnabled }}" pageName="{{ pageName }}" />
                               <Controls.Popup.Opener.InfoBox name="infoBoxOpener"/>
                               <ws:if data="{{ themeChanging }}">
                                  <div id="theme-changing-overlay"></div>

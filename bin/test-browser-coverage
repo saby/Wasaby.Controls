@@ -1,14 +1,13 @@
 #!/bin/sh
 # Run unit testing via browser
 
-paths=(Controls File SBIS3.CONTROLS)
+paths=(Controls SBIS3.CONTROLS)
 
 node -v
 npm install
 
-# создаем темповую папку и копируем туда Controls, File и components
+# создаем темповую папку и копируем туда Controls и components
 # делаем это чтобы nyc правильно прописывал пути для инструментированных файлов
-# не Attach.js а File/Attach.js
 for item in ${paths[*]}
 do
     mkdir -p temp/${item}

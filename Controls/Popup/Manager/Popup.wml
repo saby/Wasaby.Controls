@@ -1,8 +1,8 @@
 <div class="controls-Popup" on:animationend="_animated()">
     <ws:partial
             attr:class="controls-Popup__template"
-            template="{{_options.template}}"
-            scope="{{_options.templateOptions}}"
+            template="{{_options.content}}"
+            scope="{{_options}}"
             on:sendResult="_sendResult()"
             on:close="_close()"
             on:popupDragStart="_popupDragStart()"

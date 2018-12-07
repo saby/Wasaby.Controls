@@ -5,6 +5,9 @@ define('Controls/Application/Core',
    [
       'Core/Control',
       'wml!Controls/Application/Core',
+      'View/Request',
+      'View/_Request/createDefault',
+      'Controls/Application/StateReceiver',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
       'Core/Themes/ThemesController',
@@ -13,8 +16,12 @@ define('Controls/Application/Core',
    ],
    function(Control,
       template,
+      Request,
+      createDefault,
+      StateReceiver,
       AppData,
-      HeadDataContext) {
+      HeadDataContext,
+      ThemesController) {
       'use strict';
 
       var AppCore = Control.extend({
@@ -37,6 +44,13 @@ define('Controls/Application/Core',
                process.domain.req.compatible = false;
             } catch (e) {
             }
+
+            var req = new Request(createDefault.default(Request));
+            req.setStateReceiver(new StateReceiver());
+            if (typeof window !== 'undefined' && window.receivedStates) {
+               req.stateReceiver.deserialize(window.receivedStates);
+            }
+            Request.setCurrent(req);
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);

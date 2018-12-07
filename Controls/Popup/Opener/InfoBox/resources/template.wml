@@ -1,4 +1,4 @@
-<div class="controls-InfoBox controls-Container__popup-scrolling-content"  on:mouseenter="_sendResult()" on:mouseleave="_sendResult()">
+<div class="controls-InfoBox controls-Container__popup-scrolling-content">
    <div
       class="controls-InfoBox__closeButton icon-24 icon-Close"
       on:click="_close()">

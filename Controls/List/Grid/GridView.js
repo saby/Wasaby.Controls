@@ -7,12 +7,15 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/HeaderContent',
    'Core/detection',
    'wml!Controls/List/Grid/GroupTemplate',
+   'wml!Controls/List/Grid/OldGridView',
+   'wml!Controls/List/Grid/NewGridView',
    'wml!Controls/List/Grid/Header',
    'wml!Controls/List/Grid/Results',
    'wml!Controls/List/Grid/ColGroup',
    'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection, GroupTemplate) {
+], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
+   GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
 
@@ -48,10 +51,20 @@ define('Controls/List/Grid/GridView', [
                   elem.style.top = resultsPadding;
                });
             }
+         },
+         calcFooterPaddingClass: function(params) {
+            var
+               result = 'controls-GridView__footer controls-GridView__footer__paddingLeft_';
+            if (params.multiSelectVisibility === 'onhover' || params.multiSelectVisibility === 'visible') {
+               result += 'withCheckboxes';
+            } else {
+               result += params.paddingLeft || 'default';
+            }
+            return result;
          }
       },
       GridView = ListView.extend({
-         _gridTemplateName: null,
+         _gridTemplate: null,
          isNotFullGridSupport: cDetection.isNotFullGridSupport,
          _template: GridViewTemplateChooser,
          _groupTemplate: GroupTemplate,
@@ -63,8 +76,7 @@ define('Controls/List/Grid/GridView', [
             var
                requireDeferred = new cDeferred(),
                modules = [];
-            this._gridTemplateName = cDetection.isNotFullGridSupport ? 'wml!Controls/List/Grid/OldGridView' : 'wml!Controls/List/Grid/NewGridView';
-            modules.push(this._gridTemplateName);
+            this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
             if (cDetection.isNotFullGridSupport) {
                modules.push('css!Controls/List/Grid/OldGrid');
             }
@@ -74,6 +86,10 @@ define('Controls/List/Grid/GridView', [
                requireDeferred.callback();
             });
             return requireDeferred;
+         },
+
+         _calcFooterPaddingClass: function(params) {
+            return _private.calcFooterPaddingClass(params);
          },
 
          _afterMount: function() {

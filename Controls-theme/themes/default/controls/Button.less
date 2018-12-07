@@ -1,81 +1,91 @@
-//background
-@background_Button_primary:                @background_Button;
-@background_Button:                       transparent;
-@background_Button_primary_hovered:          #FDECD9;
-@background_Button_hovered:                  #F0F5FB;
-@background_Button_active:                   #E1ECF6;
-@background_Button_default_active:           #E1ECF6;
-@background_Button_primary_active:           #FDD2C0;
-@background_Button-default_readOnly:      @background_Button;
-@background_Button-primary_readOnly:      @background_Button;
-@background_Button_default:               @background_Button;
+//default button
+//sizes
+@height_Button_size_m:                                 @height_control_default;
+@font-size_Button_size_m:                              @font-size_text_m;
+@border-radius_Button_size_m:                          @height_Button_m/2;
+@padding_Button-wrapper_size_m:                        0 @spacing_default_l - @thickness_Button__border;
 
-//default
-@height_Button_m:                         @height_control_default;
-@font-size_Button-Vdom_m:                 @size_text_m;
-@border-width_Button-Vdom:                @thickness_border_default;
-@border-radius_Button_default:            16px;
-@font-size_Button-Vdom_l:                 @size_text_3xl;
-@height_Button-Vdom_l:                    48px;
-@border-radius_Button_l:                  24px; //
-@min-width_Button-Vdom:                   48px; //
-@box-shadow_Button:                       none;
-@box-shadow_Button_active:                none;
-@color_Button-Vdom-readOnly:              #CCC;
-@border-color_Button-Vdom_readOnly:       #CCC;
-@color_Button-Vdom-text_default:          @color_text_default;
-@color_Button-Vdom-text_primary:          @color_text_default;
+@height_Button_size_l:                                 48px;
+@font-size_Button_size_l:                              @font-size_text_3xl;
+@border-radius_Button_size_l:                          @height_Button_size_l/2;
+@padding_Button__wrapper_size_l:                       0 @spacing_default_xxl - @thickness_Button__border;
 
-@border-color_Button_primary:             @color_primaryV;
-@border-color_Button_primary_hovered:     @border-color_Button_primary;
-@border-color_Button:                     #587AB0;
-@border-color_Button_hovered:             @border-color_Button;
+//common
+@thickness_Button__border:                             @thickness_border_default;
+@min-width_Button:                                     48px;
+@box-shadow_Button:                                    none;
+@box-shadow_Button_active:                             none;
+@spacing_Button-between-icon-text:                     @spacing_default_s;
 
-@color_Button-style-addButton-icon:            #000000;
+//readOnly
+@color_Button_readOnly:                                @color_text_readonly;
+@border-color_Button_readOnly:                         @color_text_readonly;
 
-@color_Button-icon:                       @color_secondary;
-@color_Button-icon_primary:               @color_primaryV;
+//styles
+//primary
+@color_Button__text_primary:                           @color_text_default;
 
-@padding_Button-wrapper_default:          0 11px;
-@padding_Button-Vdom-wrapper_l:           0 23px;
-@spacing_Button-between-icon-text:         @spacing_default_s;
+@border-color_Button_primary:                          @color_primaryV;
+@border-color_Button_primary_hovered:                  @border-color_Button_primary;
 
-//IconButtonBordered
-@height-IconButton_size-m:               @height_control_default;
-@width-IconButton_size-m:                24px;
-@height-IconButton_size-l:               28px;
-@width-IconButton_size-l:                28px;
-@border-radius-IconButton:               2px;
-@border-width-IconButton:                @thickness_border_default;
-@border-style-IconButton:                solid;
-@color-IconButton__shadow:               rgba(0, 0, 0, 0.05);
-@box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
-@border-color-IconButton:                rgba(0, 0, 0, 0.08);
-@color-Button_type-IconButton_readOnly:  #CCCCCC;
-@border-color-IconButton_readOnly:       rgba(0, 0, 0, 0.08);
-@color-IconButton__border_iconStyle-primary_hovered:          @color_border;
-@box-shadow-IconButton_activated:               none;
+@background_Button_primary:                            @background_Button;
+@background_Button_primary_hovered:                    @color17;
+@background_Button_primary_active:                     @color20;
+@background_Button-primary_readOnly:                   @background_Button;
 
-//IconButton
-@background-color-IconButton:                     #F8F8F8;
-@background-color-IconButton_transparent:         transparent;
-@background-color-IconButton_hovered:             @background-color-IconButton;
-@background-color-IconButton_transparent_hovered: @background-color-IconButton_transparent;
+//secondary
+@color_Button__text_secondary:                         @color_text_default;
+
+@border-color_Button_secondary:                        @color_secondary;
+@border-color_Button_secondary_hovered:                @border-color_Button;
+
+@background_Button_secondary:                          @background_Button;
+@background_Button_secondary_hovered:                  @color18;
+@background_Button_secondary_active:                   @color19;
+@background_Button-secondary_readOnly:                 @background_Button;
+
+//toolButton
+//sizes
+@height-ToolButton_size-m:                             @height_control_default;
+@width-ToolButton_size-m:                              @height-ToolButton_size-m;
+
+@height-ToolButton_size-l:                             28px;
+@width-ToolButton_size-l:                              @height-ToolButton_size-l;
+
+//common
+@border-radius-ToolButton:                             2px;
+@border-width-ToolButton:                              @thickness_border_default;
+@border-style-ToolButton:                              solid;
+@border-color-ToolButton:                              @color22;
+@border-color-ToolButton_readOnly:                     @color22;
+
+@box-shadow-ToolButton:                                0px 1px 4px @color21;
+@box-shadow-ToolButton_activated:                      none;
+
+@color-ToolButton_readOnly:                            @color_text_readonly;
+@color-ToolButton__border_iconStyle-secondary_hovered: @color_border;
+
+@background-color-ToolButton:                          @color23;
+@background-color-ToolButton_transparent:              transparent;
+@background-color-ToolButton_hovered:                  @background-color-ToolButton;
+@background-color-IconButton_transparent_hovered:      @background-color-ToolButton_transparent;
 
 //Link
-@font-size_Link-s:                        @size_text_s;
-@font-size_Link-m:                        @size_text_m;
-@font-size_Link-l:                        @size_text_l;
-@font-size_Link-xl:                       @size_text_3xl;
-@color_Link-main-text:                         @color_link;
-@color_Link-main-text_hovered:                 #313E78;
-@color_Link-Vdom-text_readOnly:                #CCCCCC;
-@color_Link-main-icon:                         #587AB0;
+//sizes
+@font-size_Link-s:                                     @font-size_text_s;
+@font-size_Link-m:                                     @font-size_text_m;
+@font-size_Link-l:                                     @font-size_text_l;
+@font-size_Link-xl:                                    @font-size_text_3xl;
 
-@color_Link_info:                               @color_unselected;
-@color_Link_primary:                            @color_primaryV;
-@color_Link_secondary:                          @color_link;
-@color_Link_danger:                             @color_danger;
-@color_Link_success:                            @color_success;
-@color_Link_warning:                            @color_warning;
-@color_Link_magic:                              @purple-color;
+@color_Link-secondary_hovered:                         @color_link-hover;
+@color_Link_readOnly:                                  @color_text_readonly;
+
+//styles
+@color_Link_info:                                      @color_unselected;
+@color_Link_primary:                                   @color_primaryV;
+@color_Link_secondary:                                 @color_link;
+@color_Link_danger:                                    @color_danger;
+@color_Link_success:                                   @color_success;
+@color_Link_warning:                                   @color_warning;
+//for support link with magic color, delete when complete https://online.sbis.ru/opendoc.html?guid=b8228090-19fe-454b-992f-bf31d9e96ca5
+@color_Link_magic:                                     @color24;

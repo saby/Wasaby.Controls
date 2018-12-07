@@ -1,8 +1,9 @@
-<ws:partial template="{{_gridTemplateName}}"
+<ws:partial template="{{_gridTemplate}}"
             _listModel="{{_listModel}}"
             _headerContentTemplate="{{_headerContentTemplate}}"
             _itemOutputWrapper="{{_itemOutputWrapper}}"
             _itemTemplate="{{_itemTemplate}}"
             _groupTemplate="{{_groupTemplate}}"
             _prepareGridTemplateColumns="{{_prepareGridTemplateColumns }}"
+            _calcFooterPaddingClass="{{_calcFooterPaddingClass}}"
             _options="{{_options}}"/>
