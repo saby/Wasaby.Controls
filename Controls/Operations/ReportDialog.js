@@ -47,6 +47,11 @@ define('Controls/Operations/ReportDialog', [
     * If the error list is not passed, the default text will be shown.
     */
 
+   /**
+    * @name Controls/Operations/ReportDialog#footerContentTemplate
+    * @cfg {Function} Template displayed at the bottom of the dialog.
+    */
+
 
    return Control.extend({
       _template: template,
