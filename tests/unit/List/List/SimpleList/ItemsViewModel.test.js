@@ -165,6 +165,17 @@ define([
 
       });
 
+      it('getPaddingClassList', function() {
+         var cfg = {
+            rightPadding: 'XS',
+            leftPadding: 'M'
+         };
+
+         var ivm = new ItemsViewModel(cfg);
+         var classList = ' controls-ListView__item-rightPadding_XS controls-ListView__item-leftPadding_M';
+         assert.isTrue(classList === ivm.getPaddingClassList());
+      });
+
       it('Prepend', function () {
          var rs1 = new RecordSet({
             rawData: data,

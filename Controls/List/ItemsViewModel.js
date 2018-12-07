@@ -125,7 +125,8 @@ define('Controls/List/ItemsViewModel', [
                      return this.item.getVersion();
                   }
                   return this.item;
-               }
+               },
+               paddingClassList: this.getPaddingClassList()
             };
          if (this._options.groupMethod) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
@@ -136,6 +137,13 @@ define('Controls/List/ItemsViewModel', [
             }
          }
          return itemData;
+      },
+
+      getPaddingClassList: function() {
+         var classList = '';
+         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || 'default');
+         classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || 'default');
+         return classList;
       },
 
       toggleGroup: function(group, state) {
