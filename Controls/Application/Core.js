@@ -65,7 +65,7 @@ define('Controls/Application/Core',
          coreTheme: '',
          setTheme: function(ev, theme) {
             this.coreTheme = theme;
-            if(ThemesController.getInstance().setTheme) {
+            if (ThemesController.getInstance().setTheme) {
                ThemesController.getInstance().setTheme(theme);
             }
          },
