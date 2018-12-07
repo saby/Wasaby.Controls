@@ -17,7 +17,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
-      'css!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
+      'css!theme?Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
       CompoundContainer,
