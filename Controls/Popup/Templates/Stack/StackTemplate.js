@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Stack/StackTemplate',
-      'css!Controls/Popup/Templates/Stack/StackTemplate'
+      'css!theme?Controls/Popup/Templates/Stack/StackTemplate'
    ],
    function(Control, template) {
       'use strict';

@@ -78,7 +78,7 @@ define('Controls/List/Grid/GridView', [
                modules = [];
             this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
             if (cDetection.isNotFullGridSupport) {
-               modules.push('css!Controls/List/Grid/OldGrid');
+               modules.push('css!theme?Controls/List/Grid/OldGrid');
             }
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);

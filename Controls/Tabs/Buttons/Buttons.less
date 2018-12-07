@@ -1,135 +1,134 @@
 .tabs-baseline() {
-  &:before {
-    content: '\200b'; //zero width space
-    width: 0;
-    display: inline-block;
-    visibility: hidden;
-    line-height: @line-height_Tabs-baselineFix;//why so magic
-    font-size: @font-size_Tabs-item;
-  }
+   &:before {
+      content: '\200b'; //zero width space
+      width: 0;
+      display: inline-block;
+      visibility: hidden;
+      line-height: @line-height_Tabs-baselineFix;//why so magic
+      font-size: @font-size_Tabs-item;
+   }
 }
 .controls-Tabs {
-  .inline-flexbox();
-  height:@height_Tabs;
+   .inline-flexbox();
+   height:@height_Tabs;
 }
 .controls-Tabs__space {
-  .inline-flexbox();
-  //TODO: по поручению опишут как и что должно сжиматься. Пока вешаю огромный flex-shrink на дыру между элементами вкладок, чтобы главная вкладка не начинала сжиматься раньше времени
-  //https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
-  flex-shrink: 9999999;
-  .box-sizing();
-  .align-items(baseline);
-  .tabs-baseline();
-  position: relative;
-  width:100%;
-  height:100%;
-  order: 20;
-  -ms-flex-order:20;
-  &:after {
-    content: '';
-    position: absolute;
-    bottom:0;
-    left:0;
-    width: 100%;
-    height: @border-width_Tabs;
-    background: @border-color_Tabs;
-  }
+   .inline-flexbox();
+   //TODO: по поручению опишут как и что должно сжиматься. Пока вешаю огромный flex-shrink на дыру между элементами вкладок, чтобы главная вкладка не начинала сжиматься раньше времени
+   //https://online.sbis.ru/opendoc.html?guid=cf3f0514-ac78-46cd-9d6a-beb17de3aed8
+   flex-shrink: 9999999;
+   .box-sizing();
+   .align-items(baseline);
+   .tabs-baseline();
+   position: relative;
+   width:100%;
+   height:100%;
+   order: 20;
+   -ms-flex-order:20;
+   &:after {
+      content: '';
+      position: absolute;
+      bottom:0;
+      left:0;
+      width: 100%;
+      height: @border-width_Tabs;
+      background: @border-color_Tabs;
+   }
 }
 .controls-Tabs__item {
-  .inline-flexbox();
-  .flex-shrink(0);
-  .align-items(baseline);
-  .box-sizing();
-  .tabs-baseline();
-  height: 100%;
-  position: relative;
-  padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
-  font-size: @font-size_Tabs-item;
-  color: @text-color_Tabs;
-  cursor: pointer;
-  max-width: @max-width_Tabs_item;
-  white-space: nowrap;
-  &:after {
-    content: '';
-    position: absolute;
-    bottom:0;
-    left:0;
-    width: 100%;
-    height: @border-width_Tabs;
-    background: @border-color_Tabs;
-  }
+   .inline-flexbox();
+   .flex-shrink(0);
+   .align-items(baseline);
+   .box-sizing();
+   .tabs-baseline();
+   height: 100%;
+   position: relative;
+   padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
+   font-size: @font-size_Tabs-item;
+   color: @text-color_Tabs;
+   cursor: pointer;
+   max-width: @max-width_Tabs_item;
+   white-space: nowrap;
+   &:after {
+      content: '';
+      position: absolute;
+      bottom:0;
+      left:0;
+      width: 100%;
+      height: @border-width_Tabs;
+      background: @border-color_Tabs;
+   }
 }
 .controls-Tabs__item_canShrink {
-  flex-shrink: 1;
-  min-width: 0;
+   flex-shrink: 1;
+   min-width: 0;
 }
 .controls-Tabs__itemSeparator {
-  pointer-events: none;
-  position: absolute;
-  top: calc(50% ~'-' @height_Tabs-separator / 2);
-  height: @height_Tabs-separator;
-  width: @width_Tabs-separator;
-  background: @background-color_Tabs-separator;
-
+   pointer-events: none;
+   position: absolute;
+   top: calc(50% ~'-' @height_Tabs-separator / 2);
+   height: @height_Tabs-separator;
+   width: @width_Tabs-separator;
+   background: @background-color_Tabs-separator;
 }
 .controls-Tabs__itemSeparator_align_left {
-  right: 0;
+   right: 0;
 }
 .controls-Tabs__itemSeparator_align_right {
-  left: 0;
+   left: 0;
 }
 .controls-Tabs__item_state_default {
-  .user-select();
-  &:hover {
-    &:after {
-      height: @border-width_Tabs-item_hover_selected;
-    }
-    z-index: 1;
-  }
+   .user-select();
+}
+.ws-is-no-touch {
+   .controls-Tabs__item_state_default:hover {
+      &:after {
+         height: @border-width_Tabs-item_selected;
+      }
+      z-index: 1;
+   }
 }
 .controls-Tabs__item_state_selected {
-  font-weight: bold;
-  font-size: @font-size_Tabs-item_selected;
-  z-index: 2;
+   font-weight: bold;
+   font-size: @font-size_Tabs-item_selected;
+   z-index: 2;
 }
 .controls-Tabs__item_align_left {
-  margin-left: -@border-width_Tabs;
+   margin-left: -@border-width_Tabs;
 }
 .controls-Tabs__item_align_right {
-  margin-right: -@border-width_Tabs;
+   margin-right: -@border-width_Tabs;
 }
 .controls-Tabs__item_extreme {
-  margin-right:0;
-  margin-left: 0;
+   margin-right:0;
+   margin-left: 0;
 }
-/* style = default */
 .controls-Tabs_style_primary__item_state_selected {
-  &:after {
-    height: @border-width_Tabs-item_hover_selected;
-    background: @border-color_Tabs-item_selected_primary;
-  }
-  color: @text-color_Tabs-item_selected_primary;
+   &:after {
+      height: @border-width_Tabs-item_selected;
+      background: @border-color_Tabs-item_selected_primary;
+   }
+   color: @text-color_Tabs-item_selected_primary;
 }
-/* style = additional */
 .controls-Tabs_style_secondary__item_state_selected {
-  &:after {
-    height: @border-width_Tabs-item_hover_selected;
-    background: @border-color_Tabs-item_selected_secondary;
-  }
-  color: @text-color_Tabs-item_selected_secondary;
+   &:after {
+      height: @border-width_Tabs-item_selected;
+      background: @border-color_Tabs-item_selected_secondary;
+   }
+   color: @text-color_Tabs-item_selected_secondary;
 }
 .controls-Tabs__item_overflow {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  display: inline-block;
-  white-space: nowrap;
+   overflow: hidden;
+   text-overflow: ellipsis;
+   max-width: 100%;
+   display: inline-block;
+   white-space: nowrap;
 }
-/* Photo Template */
+//TODO: удалить этот стиль для фото над табами оп задаче https://online.sbis.ru/opendoc.html?guid=c54eee1c-0578-4047-b3e8-666f078a3ae8
 .controls-Tabs__item_type_photo {
-  padding: 0;
-  .align-items(flex-end);
-  &:before {
-    content: '';
-  }
+   padding: 0;
+   .align-items(flex-end);
+   &:before {
+      content: '';
+   }
 }
