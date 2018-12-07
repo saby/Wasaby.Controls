@@ -152,6 +152,23 @@ define('Controls/Popup/Opener/Edit',
             this._children.Opener.open(config);
          },
 
+         /**
+          * Close popup
+          * @function Controls/Popup/Opener/Base#show
+          */
+         close: function() {
+            this._children.Opener.close();
+         },
+
+         /**
+          * Popup opened status
+          * @function Controls/Popup/Opener/Edit#isOpened
+          * @returns {Boolean} is popup opened
+          */
+         isOpened: function() {
+            return this._children.Opener.isOpened();
+         },
+
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
 
