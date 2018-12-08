@@ -9,7 +9,9 @@ define('Controls/History/Menu',
    ],
    function(Menu, itemTemplate, merge, isEqual, MenuUtils) {
       /**
-       * Button
+       * Button menu with history by clicking on which a drop-down list opens.
+       *
+       * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
        *
        * @class Controls/History/Menu
        * @extends Controls/Button/Menu
@@ -18,18 +20,6 @@ define('Controls/History/Menu',
        * @author Герасимов А.М.
        * @category Menu
        * @demo Controls-demo/Menu/MenuVdom
-       */
-
-      /**
-       * @name Controls/History/Menu#historySource
-       * @cfg {Object} The special source whose has two source inside.
-       * The first source is standard, the second source determines where the data will be stored.
-       * If you use History/Service, then it will work with the History of Input service
-       */
-
-      /**
-       * @name Controls/History/Menu#historyId
-       * @cfg {String} history id
        */
 
       'use strict';

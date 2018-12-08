@@ -1,4 +1,4 @@
-define('Controls-demo/List/Grid/GridData', function() {
+define('Controls-demo/List/Grid/GridData', ['Controls-demo/resources/Images'], function(DemoImages) {
    var data = {
       catalog: [
          {
@@ -500,56 +500,98 @@ define('Controls-demo/List/Grid/GridData', function() {
       tasks: [
          {
             id: 1,
-            message:
-               'Регламент: Ошибка в разработку. Автор: Дубенец Д.А. Описание: (reg-chrome-presto) 3.18.150 controls - Поехала верстка кнопок когда они задизейблены prestocarry',
+            message: 'Регламент: Ошибка в разработку. Автор: Дубенец Д.А. Описание: (reg-chrome-presto) 3.18.150 controls - Поехала верстка кнопок когда они задизейблены prestocarry',
             fullName: 'Крайнов Дмитрий',
-            photo: 'List/Grid/data/krainov.png',
-            date: '6 мар 13:21',
+            photo: DemoImages.staff.krainov,
+            date: '6 мар',
             state: 'Review кода (нач. отдела)'
          },
          {
             id: 2,
-            message:
-               'Регламент: Ошибка в разработку. Автор: Волчихина Л.С. Описание: Отображение колонок. При снятии галки с колонки неверная всплывающая подсказка',
+            message: 'Регламент: Ошибка в разработку. Автор: Волчихина Л.С. Описание: Отображение колонок. При снятии галки с колонки неверная всплывающая подсказка',
             fullName: 'Крайнов Дмитрий',
-            photo: 'List/Grid/data/krainov.png',
-            date: '6 мар 13:01',
+            photo: DemoImages.staff.krainov,
+            date: '6 мар',
             state: 'Review кода (нач. отдела)'
          },
          {
             id: 3,
-            message:
-               'Регламент: Ошибка в разработку. Автор: Оборевич К.А. Описание: Розница. Замечания к шрифтам в окнах Что сохранить в PDF/Excel и Что напечатать',
+            message: 'Смотри надошибку. Нужно сделать тесты, чтобы так в будущем не разваливалось',
             fullName: 'Крайнов Дмитрий',
-            photo: 'List/Grid/data/krainov.png',
-            date: '6 мар 12:53',
-            state: 'Review кода (нач. отдела)'
-         },
-         {
-            id: 4,
-            message:
-               'Пустая строка при сканировании в упаковку Тест-онлайн adonis1/adonis123 1) Создать документ списания 2) отсканировать в него наименование/открыть РР/+Упаковка 3) Заполнить данные по упаковке/отсканировать еще 2 марки',
-            fullName: 'Корбут Антон',
-            photo: 'List/Grid/data/korbyt.png',
-            date: '5 мар 13:16',
+            photo: DemoImages.staff.krainov,
+            date: '6 мар',
             state: 'Выполнение'
          },
          {
+            id: 4,
+            message: 'Регламент: Ошибка в разработку. Автор: Оборевич К.А. Описание: Розница. Замечания к шрифтам в окнах Что сохранить в PDF/Excel и Что напечатать',
+            fullName: 'Крайнов Дмитрий',
+            photo: DemoImages.staff.krainov,
+            date: '12 ноя',
+            state: 'Review кода (нач. отдела)'
+         },
+         {
             id: 5,
-            message:
-               'Не работают хлебные крошки и навигация по ним если идентификатор записи равен 0 Как повторить',
-            fullName: 'Догадкин Владимир',
-            photo: 'List/Grid/data/dogadkin.png',
-            date: '28 фев 15:28',
+            message: 'Пустая строка при сканировании в упаковку Тест-онлайн adonis1/adonis123 1) Создать документ списания 2) отсканировать в него наименование/открыть РР/+Упаковка 3) Заполнить данные по упаковке/отсканировать еще 2 марки',
+            fullName: 'Корбут Антон',
+            photo: DemoImages.staff.korbyt,
+            date: '5 мар',
             state: 'Выполнение'
          },
          {
             id: 6,
-            message:
-               'Не работает collapse в группировке в дереве test-online.sbis.ru сталин/Сталин123',
+            message: 'Разобраться с getViewModel - либо наследование, либо создавать модель прямо в TreeControl и передавать в BaseControl, либо ещё какой то вариант придумать.',
+            fullName: 'Кесарева Дарья',
+            photo: DemoImages.staff.kesareva,
+            date: '12 сен',
+            state: 'Выполнение'
+         },
+         {
+            id: 7,
+            message: 'Научить reload обновлять табличное представление VDOM с сохранением набранных данных (например загруженных по кнопке "еще"). В данный момент есть deepReload, но он не сохраняет набранные данные.',
+            fullName: 'Кесарева Дарья',
+            photo: DemoImages.staff.kesareva,
+            date: '12 сен',
+            state: 'Выполнение'
+         },
+         {
+            id: 8,
+            message: 'Лесенка на VDOM. Перевести алгоритм на предварительный расчет в модели. Сделать демку.',
+            fullName: 'Кесарева Дарья',
+            photo: DemoImages.staff.kesareva,
+            date: '12 сен',
+            state: 'Выполнение'
+         },
+         {
+            id: 9,
+            message: 'Прошу сделать возможность отключения: 1) ховера на айтемах  у Controls/List, 2) курсор: поинтер',
+            fullName: 'Кесарева Дарья',
+            photo: DemoImages.staff.kesareva,
+            date: '12 сен',
+            state: 'Выполнение'
+         },
+         {
+            id: 10,
+            message: 'через шаблон ячейки должна быть возможность управлять colspan (или rowspan) отдельной ячейки. <ws:partial template="standartCellTemplate" colspan="2"> типа такого если я напишу, то у меня будет ячейка на две колонки',
+            fullName: 'Кесарева Дарья',
+            photo: DemoImages.staff.kesareva,
+            date: '12 сен',
+            state: 'Выполнение'
+         },
+         {
+            id: 11,
+            message: 'Не работают хлебные крошки и навигация по ним если идентификатор записи равен 0 Как повторить',
             fullName: 'Догадкин Владимир',
-            photo: 'List/Grid/data/dogadkin.png',
-            date: '26 фев 15:50',
+            photo: DemoImages.staff.dogadkin,
+            date: '28 фев',
+            state: 'Выполнение'
+         },
+         {
+            id: 12,
+            message: 'Не работает collapse в группировке в дереве test-online.sbis.ru сталин/Сталин123',
+            fullName: 'Догадкин Владимир',
+            photo: DemoImages.staff.dogadkin,
+            date: '26 фев',
             state: 'Выполнение'
          }
       ]

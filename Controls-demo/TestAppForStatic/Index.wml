@@ -1,0 +1,7 @@
+<Controls.Application>
+   <ws:content>
+      <div>
+         <Controls.Button caption="Кнопка в стиле" />
+      </div>
+   </ws:content>
+</Controls.Application>

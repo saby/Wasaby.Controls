@@ -1,15 +1,25 @@
 <div>
    <script>
-      require(['Controls/Application/AppData', 'Core/app-start', 
-         'Core/app-init', 'Core/Control', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, AppStart, appInit, Core, tclosure) {
+      window.receivedStates = '{"ThemesController": { "themes" : ["' + window.defaultStaticTheme + '"]}}';
+
+      require(['Controls/Application/AppData', 'Core/app-start', 'Core/app-init', 'Core/Control', 'View/Runner/tclosure'],
+      function(AppData, AppStart, appInit, Core) {
+
+         /*Первый шаг - иницализация ядра и темы. Второй шаг - загрузка ресурсов*/
          appInit();
+
+         var headData = new HeadData([], true);
+         Request.getCurrent().setStorage('HeadData', headData);
+
          window.startContextData = {AppData: new AppData({})};
-         var templateFn = {{_options.builder | unescape}};
-         var cnt = Core.extend({
-            _template: templateFn
+         require([ {{_options.dependencies | unescape}} ], function (){
+            var templateFn = {{_options.builder | unescape}};
+            var cnt = Core.extend({
+               _template: templateFn
+            });
+            AppStart._shouldStart = false;
+            AppStart.createControl(cnt, {}, document.getElementById('root'));
          });
-         AppStart._shouldStart = false;
-         AppStart.createControl(cnt, {}, document.getElementById('root'));
       });
    </script>
 </div>

@@ -1,7 +1,7 @@
 define('Controls/Input/RichEditor/Toolbar/Button/Format', [
    'Core/Control',
    'wml!Controls/Input/RichEditor/Toolbar/Button/Format/Format',
-   'css!Controls/Input/RichEditor/Toolbar/Button/Format/Format'
+   'css!theme?Controls/Input/RichEditor/Toolbar/Button/Format/Format'
 ], function(Control, template) {
    /**
     * Component Toolbar/Button/Format

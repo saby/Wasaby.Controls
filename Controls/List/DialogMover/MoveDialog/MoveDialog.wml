@@ -1,4 +1,4 @@
-<Controls.Popup.Templates.Dialog.DialogTemplate caption="В другой раздел" attr:class="controls-MoveDialog">
+<Controls.Popup.Templates.Dialog.DialogTemplate caption="{[В другой раздел]}" attr:class="controls-MoveDialog">
    <ws:contentArea>
       <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
          <Controls.TreeGrid
@@ -15,6 +15,6 @@
             itemsFilterMethod="{{_itemsFilterMethod}}"
             expandedItems="{{_expandedItems}}"
             columns="{{_options.columns}}"/>
-   </Controls.Container.Scroll>
+      </Controls.Container.Scroll>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>

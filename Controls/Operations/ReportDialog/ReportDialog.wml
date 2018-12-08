@@ -10,7 +10,7 @@
    </ws:contentArea>
    <ws:footerArea>
       <div class="controls-ReportDialog__closeButtonContainer">
-         <Controls.Button caption="{[Закрыть]}" style="linkMain2" on:click="_onCloseClick()"/>
+         <Controls.Label caption="{[Закрыть]}" class="controls-Label_underline-hovered" on:click="_onCloseClick()"/>
       </div>
    </ws:footerArea>
 </Controls.Popup.Templates.Dialog.ConfirmationTemplate>
