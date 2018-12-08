@@ -20,6 +20,8 @@ define('Controls/Utils/splitIntoTriads', [], function() {
     * @param {String} value
     */
    return function(value) {
-      return Array.prototype.reduceRight.call(value, _private.reducerRight);
+      return value.replace(/([0-9]+)(.?)/, function(value, replaceable, dot) {
+         return Array.prototype.reduceRight.call(replaceable, _private.reducerRight) + dot;
+      });
    };
 });

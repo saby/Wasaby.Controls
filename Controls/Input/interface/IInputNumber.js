@@ -10,7 +10,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
 
    /**
     * @name Controls/Input/interface/IInputNumber#value
-    * @cfg {Number} The number that will be projected to the text in the field.
+    * @cfg {Number|null} The number that will be projected to the text in the field.
     * @default 0
     * @remark
     * If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
@@ -38,7 +38,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
 
    /**
     * @event Controls/Input/interface/IInputNumber#valueChanged Occurs when field value was changed.
-    * @param {Number} value The number that will be projected to the text in the field.
+    * @param {Number|null} value The number that will be projected to the text in the field.
     * @param {String} displayValue Value of the field.
     * @remark
     * This event should be used to react to changes user makes in the field. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Usually you would use bind notation instead. Example below shows the difference.
@@ -68,7 +68,7 @@ define('Controls/Input/interface/IInputNumber', [], function() {
 
    /**
     * @event Controls/Input/interface/IInputNumber#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
-    * @param {Number} value The number that will be projected to the text in the field.
+    * @param {Number|null} value The number that will be projected to the text in the field.
     * @param {String} displayValue Value of the field.
     * @remark
     * This event can be used as a trigger to validate the field or send entered data to some other control.
