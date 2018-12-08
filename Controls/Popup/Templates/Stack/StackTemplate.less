@@ -4,7 +4,7 @@
    flex-grow: 1;
    flex-shrink: 1;
    height: 100%;
-   background-color: @default-bg-color;
+   background-color: @background-color_StackTemplate-default;
    position: relative;
    overflow: hidden;
 }
@@ -12,9 +12,9 @@
 .controls-StackTemplate__top-area {
    display: flex;
    flex-shrink: 0;
-   min-height: @min-height_stackTemplate_head;
-   background: @background_stackTemplate_head;
-   border-bottom: @border-bottom_stackTemplate_head;
+   min-height: @min-height_StackTemplate-head;
+   background: @background-color_StackTemplate-head;
+   border-bottom: @size_StackTemplate-border-bottom solid @color_StackTemplate-border-bottom;
 }
 
 .controls-StackTemplate__content-area {
@@ -23,7 +23,7 @@
    flex-direction: column;
    flex-grow: 1;
    flex-shrink: 1;
-   background: @background_stackTemplate_content;
+   background: @background-color_StackTemplate-default;
    overflow: hidden;
 }
 
@@ -36,24 +36,24 @@
 }
 
 .controls-StackTemplate__top-area-margin-default {
-   margin: @spacing_stackTemplate_head-default;
+   margin: @spacing_StackTemplate-head_default;
 }
 
 .controls-StackTemplate__top-area-margin-maximized {
-   margin: @spacing_stackTemplate_head-maximized;
+   margin: @spacing_StackTemplate-head_maximized;
 }
 
 .controls-StackTemplate__close_button {
    position: absolute;
-   top: @top-space_stackTemplate_close-button;
+   top: @spacing_StackTemplate-between-close-button-content;
    right: 0;
    z-index: 2;
 }
 
 .controls-StackTemplate__maximized_button {
    position: absolute;
-   right: @right-space_stackTemplate_maximized-button;
-   top: @top-space_stackTemplate_maximized-button;
+   right: @spacing_StackTemplate-between-maximized-button-content-right;
+   top: @spacing_StackTemplate-between-maximized-button-content-top;
    background-image: url('resources/images/resize.svg');
    width: 24px;
    height: 24px;
@@ -64,7 +64,7 @@
 .controls-StackTemplate__caption {
    cursor: default;
    display: flex;
-   height: @min-height_stackTemplate_head;
+   height: @min-height_StackTemplate-head;
    align-items: center;
    flex-shrink: 1;
    overflow: hidden;
@@ -77,23 +77,23 @@
 }
 
 .controls-StackTemplate__caption_style_default {
-   color: @color_stackTemplate_head;
-   font-size: @font-size_stackTemplate_head;
+   color: @color_StackTemplate-caption_default;
+   font-size: @font-size_StackTemplate-caption_default;
    font-weight: 700;
 }
 
 .controls-StackTemplate__caption_style_accent {
-   color: #D94700;
-   font-size: 18px;
+   color: @color_StackTemplate-caption_accent;
+   font-size: @font-size_StackTemplate-caption_accent;
    font-weight: 700;
 }
 .controls-StackTemplate__caption_style_small {
-   color: #8991A9;
-   font-size: 14px;
+   color: @color_StackTemplate-caption_small;
+   font-size: @font-size_StackTemplate-caption_small;
    font-weight: normal;
 }
 
 .controls-StackTemplate__bottomArea {
-   background: @background_stackTemplate_footer;
-   border-top: @border-bottom_stackTemplate_footer;
+   background: @background-color_StackTemplate-footer;
+   border-top: @size_StackTemplate-border-bottom solid @color_StackTemplate-border-bottom;;
 }
