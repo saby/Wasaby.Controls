@@ -7,6 +7,8 @@
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"
+      editingItemData="{{editingItemData}}"
+      isAdd="{{isAdd}}"
       itemTemplate="{{itemTemplate}}"
       itemActionsPosition="{{itemActionsPosition}}" />
 </ws:template>
@@ -31,7 +33,7 @@
       <ws:partial template="itemOutputLocalTemplate"/>
    </ws:else>
 </ws:for>
-<ws:if data="{{editingItemData && isAdd}}">
+<ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
    <ws:partial
       on:click="_onItemClick(editingItemData.dispItem)"
       itemTemplate="{{itemTemplate}}"

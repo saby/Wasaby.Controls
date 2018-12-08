@@ -10,11 +10,11 @@
          minimalHeight="{{200}}"
    />
    <br />
-   <b><u>Core/HtmlJson, построенный на том же json, для проверки поимки события:</u></b>
+   <b><u>Controls/Decorator/Markup, построенный на том же json, для проверки поимки события:</u></b>
    <br />
-   <Core.HtmlJson
+   <Controls.Decorator.Markup
          attr:class="ControlsDemo-JsonRichArea__htmlJson"
-         json="{{json}}"
+         value="{{json}}"
    />
    <br />
    <b><u>Cам json:</u></b>

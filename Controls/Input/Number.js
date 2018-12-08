@@ -1,17 +1,11 @@
 define('Controls/Input/Number',
    [
-      'Core/Control',
-      'Controls/Utils/tmplNotify',
-      'wml!Controls/Input/Number/Number',
-      'WS.Data/Type/descriptor',
-      'Controls/Input/Number/ViewModel',
-      'Controls/Input/resources/InputHelper',
-      'Core/helpers/Function/runDelayed',
       'Core/IoC',
-      'Core/detection'
+      'Controls/Input/Base',
+      'WS.Data/Type/descriptor',
+      'Controls/Input/Number/ViewModel'
    ],
-   function(Control, tmplNotify, template, types, NumberViewModel, inputHelper, runDelayed, IoC, detection) {
-
+   function(IoC, Base, descriptor, ViewModel) {
       'use strict';
 
       /**
@@ -88,194 +82,80 @@ define('Controls/Input/Number',
        */
 
       var _private = {
-         trimEmptyDecimals: function(self, target) {
-            if (!self._options.showEmptyDecimals) {
-               var processedVal = self._numberViewModel.getValue().replace(/\.0*$/g, '');
-               var selectionStart = target.selectionStart;
-               var selectionEnd = target.selectionEnd;
-
-               self._numberViewModel.updateValue(processedVal);
-
-               // Не меняется value у dom-элемента, при смене аттрибута value
-               // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
-               target.value = self._numberViewModel.getDisplayValue();
-
-               /**
-                * If you change the value from code, as we do above, the selection is set to the end. Therefore, it must be restored.
-                * In ie, if the selection changes, the field will be automatically focused.
-                * If the current method is called during the focus out, the focus field will not lose. Therefore, remember the selection.
-                *
-                * Changing the value in the focus out field is only in the number field. Therefore, the code is not needed for all fields.
-                */
-               if (detection.isIE) {
-                  self._selectionStart = selectionStart;
-                  self._selectionEnd = selectionEnd;
-               } else {
-                  target.selectionStart = selectionStart;
-                  target.selectionEnd = selectionEnd;
-               }
+         validateOptions: function(options) {
+            if (options.integersLength <= 0) {
+               IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
          }
       };
 
-      var NumberInput = Control.extend({
-         _template: template,
+      var NumberInput = Base.extend({
+         _getViewModelOptions: function(options) {
+            _private.validateOptions(options);
 
-         _caretPosition: null,
-
-         // We should store previous value, so we could notify it when only '-' left in a field
-         _previousValue: undefined,
-
-         _notifyHandler: tmplNotify,
-
-         _beforeMount: function(options) {
-            if (options.integersLength <= 0) {
-               IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
-            }
-            var value = options.value !== null ? String(options.value) : '';
-            this._previousValue = String(options.value);
-
-            this._numberViewModel = new NumberViewModel({
+            return {
+               precision: options.precision,
                onlyPositive: options.onlyPositive,
                integersLength: options.integersLength,
-               precision: options.precision,
-               showEmptyDecimals: options.showEmptyDecimals,
-               value: value
-            });
+               showEmptyDecimals: options.showEmptyDecimals
+            };
          },
 
-         _beforeUpdate: function(newOptions) {
-            var
-               value;
-
-            if (newOptions.integersLength <= 0) {
-               IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + newOptions.integersLength + '. Integers length must be greater than 0.');
-            }
-
-            //If the old and new values are the same, then the model is changed from outside, and we shouldn't update it's value
-            if (this._options.value === newOptions.value) {
-               value = this._numberViewModel.getValue();
-            } else {
-               value = newOptions.value !== undefined ? String(newOptions.value) : '';
-            }
-
-            this._numberViewModel.updateOptions({
-               onlyPositive: newOptions.onlyPositive,
-               integersLength: newOptions.integersLength,
-               precision: newOptions.precision,
-               showEmptyDecimals: newOptions.showEmptyDecimals,
-               value: value
-            });
+         _getViewModelConstructor: function() {
+            return ViewModel;
          },
 
-         _afterUpdate: function() {
-            if (this._caretPosition) {
-               this._children['input'].setSelectionRange(this._caretPosition, this._caretPosition);
-               this._caretPosition = null;
+         _changeHandler: function() {
+            if (this._viewModel.trimTrailingZeros(true)) {
+               this._notifyValueChanged();
             }
 
-            //Если произошла фокусировка, то нужно выделить текст и поменять значение из модели.
-            if (this._isFocus) {
-               this._children.input.select();
-               this._isFocus = false;
-            }
+            NumberInput.superclass._changeHandler.apply(this, arguments);
          },
 
-         _inputCompletedHandler: function(event, value) {
-            // Convert different interpretations of null(like -0, 0000, -000) to '0'.
-            if (this._options.precision === 0 && this._getNumericValue(value) === 0) {
-               value = '0';
-               this._numberViewModel.updateValue(value);
-            }
-            this._notify('inputCompleted', [this._getNumericValue(value)]);
-         },
-
-         _valueChangedHandler: function(e, value) {
-            if (value === '-') {
-               this._notify('valueChanged', [this._getNumericValue(this._previousValue)]);
-            } else {
-               this._notify('valueChanged', [this._getNumericValue(value)]);
+         _focusInHandler: function() {
+            if (this._viewModel.addTrailingZero()) {
+               this._notifyValueChanged();
             }
 
-            this._previousValue = value;
+            NumberInput.superclass._focusInHandler.apply(this, arguments);
          },
 
-         /**
-       * Transforms value with delimiters into number
-       * @param value
-       * @return {*}
-       * @private
-       */
-         _getNumericValue: function(value) {
-            var
-               val = parseFloat(value.replace(/ /g, ''));
-            return isNaN(val) ? undefined : val;
-         },
-
-         _focusinHandler: function(e) {
-            var
-               self = this,
-               value = this._numberViewModel.getValue();
-
-            if (this._options.precision !== 0 && value && value.indexOf('.') === -1) {
-               value = this._numberViewModel.updateValue(value + '.0');
-
-               // Не меняется value у dom-элемента, при смене аттрибута value
-               // Ошибка: https://online.sbis.ru/opendoc.html?guid=b29cc6bf-6574-4549-9a6f-900a41c58bf9
-               e.target.value = this._numberViewModel.getDisplayValue();
-
-               if (!this._options.readOnly) {
-                  if (this._options.selectOnClick) {
-                     this._isFocus = true;
-                  } else {
-                  // TODO: сделать аналогично как input.select() https://online.sbis.ru/opendoc.html?guid=6136ae81-ef5a-4267-9d04-a416eabacfdc
-                     runDelayed(function() {
-                        self._children.input.setSelectionRange(value.length - 2, value.length - 2);
-                     });
-                  }
-               }
-            }
-         },
-
-         _focusoutHandler: function(e) {
-            _private.trimEmptyDecimals(this, e.target);
-         },
-
-         paste: function(text) {
-            var field = this._children.input;
-            var selection;
-
-            /**
-             * In ie and inactive state the selection is stored on the instance.
-             */
-            if (!this._active && detection.isIE) {
-               selection = {
-                  start: this._selectionStart,
-                  end: this._selectionEnd
-               };
+         _focusOutHandler: function() {
+            if (this._viewModel.trimTrailingZeros(false)) {
+               this._notifyValueChanged();
             }
 
-            this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.input, text, selection);
+            NumberInput.superclass._focusOutHandler.apply(this, arguments);
          }
       });
 
       NumberInput.getDefaultOptions = function() {
-         return {
-            value: '',
-            selectOnClick: false
-         };
+         var defaultOptions = Base.getDefaultOptions();
+
+         defaultOptions.value = 0;
+         defaultOptions.onlyPositive = false;
+         defaultOptions.showEmptyDecimals = false;
+
+         return defaultOptions;
       };
 
       NumberInput.getOptionTypes = function() {
-         return {
-            precision: types(Number), //Точность (кол-во знаков после запятой)
-            integersLength: types(Number), //Длина целой части
-            onlyPositive: types(Boolean), //Только положительные значения
-            showEmptyDecimals: types(Boolean) //Показывать нули в конце дробной части
-         };
-      };
+         var optionTypes = Base.getOptionTypes();
 
-      NumberInput._private = _private;
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * optionTypes.value = descriptor(Number|null);
+          * optionTypes.precision = descriptor(Number|null);
+          * optionTypes.integersLength = descriptor(Number|null);
+          */
+         delete optionTypes.value;
+
+         optionTypes.onlyPositive = descriptor(Boolean);
+         optionTypes.showEmptyDecimals = descriptor(Boolean);
+
+         return optionTypes;
+      };
 
       return NumberInput;
    });

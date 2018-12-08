@@ -169,6 +169,7 @@ define('Controls/Filter/Fast',
                templateOptions: {
                   items: this._configs[index]._items,
                   keyProperty: this._configs[index].keyProperty,
+                  displayProperty: this._configs[index].displayProperty,
                   parentProperty: getPropValue(item, 'parentProperty'),
                   nodeProperty: getPropValue(item, 'nodeProperty'),
                   itemTemplateProperty: getPropValue(item, 'itemTemplateProperty'),

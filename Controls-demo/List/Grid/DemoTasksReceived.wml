@@ -1,6 +1,0 @@
-<ws:partial template="wml!Controls/List/Grid/Column" attr:class="js-controls-ListView__notEditable controls-Grid__row-cell__content_baseline_L" itemData="{{itemData}}">
-   <ws:contentTemplate>
-      <div>{{itemData.item['date']}}</div>
-      <div>{{itemData.item['state']}}</div>
-   </ws:contentTemplate>
-</ws:partial>

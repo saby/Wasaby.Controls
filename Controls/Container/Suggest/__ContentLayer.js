@@ -5,7 +5,7 @@ define('Controls/Container/Suggest/__ContentLayer',
    [
       'Controls/Container/Suggest/__BaseLayer',
       'wml!Controls/Container/Suggest/__ContentLayer',
-      'css!Controls/Container/Suggest/ContentLayer'
+      'css!theme?Controls/Container/Suggest/ContentLayer'
    ],
    
    function(BaseLayer, template) {

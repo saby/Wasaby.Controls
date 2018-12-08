@@ -1,0 +1,11 @@
+<div class="ws-flexbox">
+   <img class="demo-DragNDrop__MasterDetail_item-personPhoto" src="{{item.img}}"/>
+   <div>
+      <div class="demo-DragNDrop__MasterDetail_item-personName">{{item.name}}</div>
+      <div class="demo-DragNDrop__MasterDetail_item-task">
+         <div class="{{item.isNew ? 'demo-DragNDrop__MasterDetail_item-taskTypeNew'}}">{{item.taskType}}</div>
+         <div class="demo-DragNDrop__MasterDetail_item-taskMsg">{{item.shortMsg}}</div>
+      </div>
+   </div>
+   <div class="ws-flex-grow-1 demo-DragNDrop__MasterDetail_item-date">{{item.date}}</div>
+</div>

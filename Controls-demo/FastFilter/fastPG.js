@@ -45,14 +45,14 @@ define('Controls-demo/FastFilter/fastPG',
                      value: 0,
                      properties: {
                         keyProperty: 'key',
-                        displayProperty: 'title',
+                        displayProperty: 'text',
                         source: new Memory({
                            data: [
-                              { key: 0, title: 'All status' },
-                              { key: 1, title: 'Planning' },
-                              { key: 2, title: 'In progress' },
-                              { key: 3, title: 'Done' },
-                              { key: 4, title: 'Not done' }
+                              { key: 0, text: 'All status' },
+                              { key: 1, text: 'Planning' },
+                              { key: 2, text: 'In progress' },
+                              { key: 3, text: 'Done' },
+                              { key: 4, text: 'Not done' }
                            ]
                         })
                      }

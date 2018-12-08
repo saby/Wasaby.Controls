@@ -37,6 +37,11 @@ define(
                parent: '2',
                '@parent': null,
                showType: 0
+            },
+            {
+               id: '5',
+               title: 'Запись 4',
+               buttonViewMode: 'link'
             }
          ];
 
@@ -53,6 +58,9 @@ define(
          };
          let itemWithMenu = new Model({
             rawData: defaultItems[1]
+         });
+         let itemWithOutMenu = new Model({
+            rawData: defaultItems[5]
          });
          let toolbar = new Toolbar(config);
 
@@ -73,7 +81,7 @@ define(
                toolbar._beforeMount(config, null, records);
                assert.equal(toolbar._items, records);
                assert.equal(!!toolbar._needShowMenu, true);
-               assert.equal(toolbar._menuItems.getCount(), 3);
+               assert.equal(toolbar._menuItems.getCount(), 4);
                assert.equal(toolbar._popupOptions.opener, toolbar);
             });
             it('need show menu', function() {
@@ -83,7 +91,7 @@ define(
                      source: config.items
                   }).addCallback(() => {
                      assert.equal(!!toolbar._needShowMenu, true);
-                     assert.equal(toolbar._menuItems.getCount(), 3);
+                     assert.equal(toolbar._menuItems.getCount(), 4);
                      assert.equal(toolbar._items.getCount(), defaultItems.length);
                      resolve();
                   });
@@ -108,9 +116,10 @@ define(
                   assert.equal(e, 'itemClick');
                   isNotify = true;
                };
-               toolbar._onItemClick({stopPropagation: () => {}}, {
+               toolbar._onItemClick({ stopPropagation: () => {} }, {
                   id: 'myTestItem',
-                  get: () => {}
+                  get: () => {},
+                  handler: () => {}
                });
                assert.equal(isNotify, true);
             });
@@ -125,7 +134,7 @@ define(
                      caption: 'Запись 2',
                      iconStyle: 'super'
                   };
-                  if(standart.caption === config.templateOptions.headConfig.caption &&
+                  if (standart.caption === config.templateOptions.headConfig.caption &&
                      standart.icon === config.templateOptions.headConfig.icon &&
                      standart.iconStyle === config.templateOptions.headConfig.iconStyle) {
                      isHeadConfigCorrect = true;
@@ -135,7 +144,7 @@ define(
                   eventString += e;
                   isNotify = true;
                };
-               toolbar._onItemClick({stopPropagation: () => {}}, itemWithMenu);
+               toolbar._onItemClick({ stopPropagation: () => {} }, itemWithMenu);
                assert.equal(eventString, 'menuOpeneditemClick');
                assert.equal(isNotify, true);
                assert.equal(isHeadConfigCorrect, true);
@@ -147,7 +156,7 @@ define(
                });
                return new Promise((resolve) => {
                   toolbar._beforeUpdate({
-                     keyProperty: 'id',
+                     size: 's',
                      source: new Memory({
                         idProperty: 'id',
                         data: defaultItems
@@ -168,7 +177,7 @@ define(
                toolbar._children.menuOpener.close = function() {
                   isMenuClosed = true;
                };
-               toolbar._onResult({action: 'itemClick', event: {name: 'event', stopPropagation: () => {}}, data: [itemWithMenu]});
+               toolbar._onResult({ action: 'itemClick', event: { name: 'event', stopPropagation: () => {} }, data: [itemWithMenu] });
             });
             it('menu not closed if item has child', function() {
                let isMenuClosed = false;
@@ -178,13 +187,99 @@ define(
                };
                assert.equal(isMenuClosed, false);
             });
+            it('item popup config generation', function() {
+               var
+                  testItem = new Model({
+                     rawData:
+                     {
+                        buttonViewMode: 'buttonViewMode',
+                        popupClassName: 'popupClassName',
+                        keyProperty: 'itemKeyProperty',
+                        showHeader: 'showHeader',
+                        icon: 'icon',
+                        title: 'title',
+                        iconStyle: 'iconStyle'
+                     }
+                  }),
+                  testSelf = {
+                     _options: {
+                        size: 'size',
+                        keyProperty: 'keyProperty'
+                     },
+                     _items: 'items'
+                  },
+                  testEvent = {
+                     target: 'target'
+                  },
+                  config = {
+                     className: 'controls-Toolbar_buttonViewMode_size popupClassName',
+                     corner: {
+                        horizontal: 'left',
+                        vertical: 'top'
+                     },
+                     horizontalAlign: {
+                        side: 'right'
+                     },
+                     target: 'target',
+                     templateOptions: {
+                        headConfig: {
+                           caption: 'title',
+                           icon: 'icon',
+                           iconStyle: 'iconStyle'
+                        },
+                        items: 'items',
+                        rootKey: 'itemKeyProperty',
+                        showHeader: 'showHeader'
+                     }
+                  };
+               assert.deepEqual(Toolbar._private.generateItemPopupConfig(testItem, testEvent, testSelf), config);
+            });
+            it('menu popup config generation', function() {
+               var
+                  testSelf = {
+                     _options: {
+                        size: 'size',
+                        popupClassName: 'popupClassName'
+                     },
+                     _children: {
+                        popupTarget: 'popupTarget'
+                     },
+                     _menuItems: 'menuItems'
+                  },
+                  config = {
+                     className: 'controls-Toolbar__menu-position popupClassName',
+                     target: 'popupTarget',
+                     templateOptions: {
+                        items: 'menuItems',
+                        iconSize: 'size'
+                     }
+                  };
+               assert.deepEqual(Toolbar._private.generateMenuConfig(testSelf), config);
+            });
             it('getItemClassName', () => {
                assert.equal('controls-Toolbar_link_s', Toolbar._private.getItemClassName(records.at(3), 's'));
             });
+            it('toolbar closed by his parent', () => {
+               let isMenuClosed = false;
+               toolbar._nodeProperty = '@parent';
+               toolbar._children.menuOpener.close = function() {
+                  isMenuClosed = true;
+               };
+               toolbar._onResult({ action: 'itemClick', event: { name: 'event', stopPropagation: () => {} }, data: [itemWithOutMenu] });
+               assert.equal(isMenuClosed, true, 'toolbar closed, but his submenu did not');
+            });
+            it('_closeHandler', () => {
+               let isMenuClosed = false;
+               toolbar._notify = (e, arr, bubl) => {
+                  assert.equal(e, 'menuClosed', 'closeHandler is uncorrect');
+                  assert.equal(bubl.bubbling, true, 'closeHandler is uncorrect');
+               };
+               toolbar._closeHandler();
+            });
          });
-
          function setTrue(assert) {
             assert.equal(true, true);
          }
       });
-   });
+   }
+);
