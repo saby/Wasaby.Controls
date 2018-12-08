@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(GridViewModel, cMerge) {
+define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(GridViewModel, cMerge, RecordSet) {
    var
       gridData = [
          {
@@ -78,9 +78,11 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          multiSelectVisibility: 'visible',
          header: gridHeader,
          columns: gridColumns,
-         items: gridData,
+         items: new RecordSet({
+            rawData: gridData,
+            idProperty: 'id'
+         }),
          itemActions: itemActions,
-         ladderSupport: false,
          leftPadding: 'XL',
          rightPadding: 'L',
          rowSpacing: 'L',
@@ -89,6 +91,28 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
       };
 
    describe('Controls.List.Grid.GridViewModel', function() {
+      describe('DragNDrop methods', function() {
+         var gridViewModel = new GridViewModel(cfg);
+
+         it('setDragTargetPosition', function() {
+            var dragTargetPosition = {};
+            gridViewModel.setDragTargetPosition(dragTargetPosition);
+            assert.equal(gridViewModel.getDragTargetPosition(), dragTargetPosition);
+         });
+
+         it('setDragEntity', function() {
+            var dragEntity = {};
+            gridViewModel.setDragEntity(dragEntity);
+            assert.equal(gridViewModel.getDragEntity(), dragEntity);
+         });
+
+         it('setDragItemData', function() {
+            var dragItemData = {};
+            gridViewModel.setDragItemData(dragItemData);
+            assert.equal(gridViewModel.getDragItemData(), dragItemData);
+         });
+      });
+
       describe('"_private" block', function() {
          it('getPaddingCellClasses', function() {
             var
@@ -178,21 +202,21 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
                      'controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L ' +
                      'controls-Grid__row-cell_rowSpacing_L ' +
-                     'controls-Grid__header-cell_valign_middle controls-Grid__row-cell_rowSpacing_default' ];
+                     'controls-Grid__header-cell_valign_middle controls-Grid__row-cell_rowSpacing_default'];
             assert.equal(expectedResult[0],
-               GridViewModel._private.getItemColumnCellClasses(current),
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[1],
-               GridViewModel._private.getItemColumnCellClasses(current),
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[2],
-               GridViewModel._private.getItemColumnCellClasses(current),
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[3],
-               GridViewModel._private.getItemColumnCellClasses(current),
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
          });
       });
@@ -206,7 +230,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
             assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
-            assert.isFalse(current.ladderSupport, 'Incorrect value "current.ladderSupport".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
             assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
             assert.equal('L', current.rowSpacing, 'Incorrect value "current.rowSpacing".');
@@ -216,8 +239,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('item', function() {
             assert.equal(gridData[0][cfg.keyProperty], current.key, 'Incorrect value "current.keyProperty".');
             assert.equal(0, current.index, 'Incorrect value "current.index".');
-            assert.deepEqual(gridData[0], current.item, 'Incorrect value "current.item".');
-            assert.deepEqual(gridData[0], current.dispItem.getContents(), 'Incorrect value "current.dispItem".');
+            assert.deepEqual(gridData[0], current.item.getRawData(), 'Incorrect value "current.item".');
+            assert.deepEqual(gridData[0], current.dispItem.getContents().getRawData(), 'Incorrect value "current.dispItem".');
             assert.equal(gridData[0][cfg.displayProperty], current.getPropValue(current.item, cfg.displayProperty), 'Incorrect value "current.displayProperty".');
          });
 
@@ -233,8 +256,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             function checkBaseProperties(checkedColumn, expectedData) {
                assert.equal(expectedData.columnIndex, checkedColumn.columnIndex, 'Incorrect value "columnIndex" when checking columns.');
                assert.deepEqual(expectedData.column, checkedColumn.column, 'Incorrect value "column" when checking columns.');
-               assert.deepEqual(expectedData.item, checkedColumn.item, 'Incorrect value "item" when checking columns.');
-               assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents(), 'Incorrect value "dispItem" when checking columns.');
+               assert.deepEqual(expectedData.item, checkedColumn.item.getRawData(), 'Incorrect value "item" when checking columns.');
+               assert.deepEqual(expectedData.item, checkedColumn.dispItem.getContents().getRawData(), 'Incorrect value "dispItem" when checking columns.');
                assert.equal(expectedData.keyProperty, checkedColumn.keyProperty, 'Incorrect value "keyProperty" when checking columns.');
                assert.equal(expectedData.displayProperty, checkedColumn.displayProperty, 'Incorrect value "displayProperty" when checking columns.');
                assert.equal(expectedData.item[expectedData.keyProperty], checkedColumn.key, 'Incorrect value "getPropValue(item, displayProperty)" when checking columns.');
@@ -349,7 +372,9 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                gridViewModel = new GridViewModel(cfg),
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
-                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'destroy'],
+                  'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
+                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData',
+                  'getChildren', 'getActiveItem', 'setDragItems', 'getDragTargetItem', 'setDragTargetItem', 'destroy'],
                callStackMethods = [];
 
             gridViewModel._model = {};
@@ -364,35 +389,64 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual(callMethods, callStackMethods, 'Incorrect call stack methods.');
          });
       });
-      describe('ladder', function() {
+      describe('ladder and sticky column', function() {
          var
-            gridViewModel = new GridViewModel(cMerge({
-               stickyFields: ['title']
-            }, cfg));
-         it('current.ladderSupport', function() {
-            assert.isTrue(gridViewModel.getCurrent().ladderSupport, 'Incorrect value "ladderSupport" for "current".');
-         });
-         it('_processLadder', function() {
-            var
-               expectedLadder = [{
-                  ladderValue: 'Хлеб',
-                  rowIndex: 0,
-                  columnIndex: 0,
-                  ladderLength: 4,
-                  currentColumn: null
+            resultLadder = {
+               0: { date: { ladderLength: 1 } },
+               1: { date: { ladderLength: 3 } },
+               2: { date: { } },
+               3: { date: { } },
+               4: { date: { ladderLength: 2 } },
+               5: { date: { } },
+               6: { date: { ladderLength: 1 } },
+               7: { date: { ladderLength: 1 } },
+               8: { date: { ladderLength: 2 } },
+               9: { date: { } }
+            },
+            resultStickyLadder = {
+               0: { ladderLength: 3, headingStyle: 'grid-area: 1 / 1 / span 3 / span 1;' },
+               1: { },
+               2: { },
+               3: { ladderLength: 1 },
+               4: { ladderLength: 4, headingStyle: 'grid-area: 5 / 1 / span 4 / span 1;' },
+               5: { },
+               6: { },
+               7: { },
+               8: { ladderLength: 1 },
+               9: { ladderLength: 1 }
+            },
+            ladderViewModel = new GridViewModel({
+               items: new RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
+                     { id: 1, title: 'i1', date: '03 янв', photo: '1.png' },
+                     { id: 2, title: 'i2', date: '03 янв', photo: '1.png' },
+                     { id: 3, title: 'i3', date: '03 янв', photo: '2.png' },
+                     { id: 4, title: 'i4', date: '05 янв', photo: '3.png' },
+                     { id: 5, title: 'i5', date: '05 янв', photo: '3.png' },
+                     { id: 6, title: 'i6', date: '07 янв', photo: '3.png' },
+                     { id: 7, title: 'i7', date: '09 янв', photo: '3.png' },
+                     { id: 8, title: 'i8', date: '10 янв', photo: '4.png' },
+                     { id: 9, title: 'i9', date: '10 янв', photo: '5.png' }
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  displayProperty: 'title'
                }, {
-                  ladderValue: 'Хлеб',
-                  rowIndex: 0,
-                  columnIndex: 0,
-                  ladderLength: 2,
-                  currentColumn: null
+                  width: '1fr',
+                  template: 'wml!MyTestDir/Photo'
                }],
-               current = gridViewModel.getCurrent();
-            GridViewModel._private.processLadder(gridViewModel, current);
-            gridViewModel._ladder.currentColumn = null;
-            assert.isTrue(gridViewModel._withLadder, 'Incorrect value "withLadder".');
-            assert.deepEqual(expectedLadder[0], gridViewModel._ladder, 'Incorrect value "ladder".');
-         });
+               ladderProperties: ['date'],
+               stickyColumn: {
+                  property: 'photo',
+                  index: 1
+               }
+            });
+         assert.deepEqual(ladderViewModel._ladder.ladder, resultLadder, 'Incorrect value prepared ladder.');
+         assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
       });
       describe('other methods of the class', function() {
          var

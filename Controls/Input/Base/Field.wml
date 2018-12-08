@@ -1,7 +1,9 @@
 <div class="controls-Base__field">
    <input
       autocorrect="off"
-      class="controls-Base__nativeField"
+      class="controls-Base__nativeField
+            {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
+      placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
       type="{{type}}"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"

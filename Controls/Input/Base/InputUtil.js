@@ -1,6 +1,21 @@
 define('Controls/Input/Base/InputUtil', [], function() {
-
    'use strict';
+
+   var _private = {
+      isCorrectlySplit: function(split, oldValue, newValue) {
+         return split.before + split.delete + split.after === oldValue &&
+            split.before + split.insert + split.after === newValue;
+      },
+
+      getSplitForAutoComplete: function(oldValue, newValue) {
+         return {
+            before: '',
+            insert: newValue,
+            delete: oldValue,
+            after: ''
+         };
+      }
+   };
 
    return {
 
@@ -24,12 +39,20 @@ define('Controls/Input/Base/InputUtil', [], function() {
          insertedValue = newValue.substring(beforeInsertedValue.length, newValue.length - afterInsertedValue.length);
          deletedValue = oldValue.substring(beforeInsertedValue.length, oldValue.length - afterInsertedValue.length);
 
-         return {
+         var result = {
             before: beforeInsertedValue,
             insert: insertedValue,
             delete: deletedValue,
             after: afterInsertedValue
          };
+
+         /**
+          * We can determine the correct split value only if there were user actions.
+          * If the value has been changed due to auto-complete, then user actions was not.
+          * Then the split value will be incorrect. In this case, return the split value for auto-complete.
+          */
+         return _private.isCorrectlySplit(result, oldValue, newValue) ? result
+            : _private.getSplitForAutoComplete(oldValue, newValue);
       },
 
       /**

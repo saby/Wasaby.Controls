@@ -11,11 +11,11 @@
 
     <Controls.Button caption="Включить/Выключить редактор" on:click="_clickHandler()"/>
     <br />
-    <b><u>Core/HtmlJson, построенный на том же json, для проверки поимки события:</u></b>
+    <b><u>Controls/Decorator/Markup, построенный на том же json, для проверки поимки события:</u></b>
     <br />
-    <Core.HtmlJson
-            attr:class="ControlsDemo-JsonRichArea__htmlJson"
-            json="{{json}}"
+    <Controls.Decorator.Markup
+          attr:class="ControlsDemo-JsonRichArea__htmlJson"
+          value="{{json}}"
     />
     <br />
     <b><u>Cам json:</u></b>

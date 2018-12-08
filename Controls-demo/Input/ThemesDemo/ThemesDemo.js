@@ -1,8 +1,7 @@
 define('Controls-demo/Input/ThemesDemo/ThemesDemo', [
 	'Core/Control',
 	'wml!Controls-demo/Input/ThemesDemo/ThemesDemo',
-	'Controls/Input/Text',
-	'css!Controls-demo/Input/ThemesDemo/ThemesDemo'
+	'Controls/Input/Text'
 ], function ( Control, dotTplFn) {
 	'use strict';
 	var moduleClass = Control.extend({

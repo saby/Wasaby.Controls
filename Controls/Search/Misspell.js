@@ -2,7 +2,7 @@ define('Controls/Search/Misspell',
    [
       'Core/Control',
       'wml!Controls/Search/Misspell',
-      'css!Controls/Search/Misspell'
+      'css!theme?Controls/Search/Misspell'
    ],
    
    /**

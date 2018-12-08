@@ -55,7 +55,7 @@ define('Controls-demo/Explorer/Explorer', [
                {
                   id: 4,
                   icon: 'icon-Erase',
-                  iconStyle: 'error',
+                  iconStyle: 'danger',
                   title: 'delete pls',
                   showType: 0,
                   handler: function() {
@@ -92,7 +92,7 @@ define('Controls-demo/Explorer/Explorer', [
                {
                   id: 8,
                   icon: 'icon-Erase',
-                  iconStyle: 'error',
+                  iconStyle: 'danger',
                   title: 'delete pls',
                   showType: 0,
                   handler: function() {

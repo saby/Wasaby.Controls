@@ -13,7 +13,7 @@ define('Controls/List/TreeControl', [
 ) {
    'use strict';
 
-   var DRAG_MAX_OFFSET = 10;
+   var DRAG_MAX_OFFSET = 15;
 
    var _private = {
       clearSourceControllers: function(self) {
@@ -36,7 +36,7 @@ define('Controls/List/TreeControl', [
             nodeKey = item.getId(),
             expanded = !listViewModel.isExpanded(dispItem);
          self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
-         if (!self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
+         if (!_private.isExpandAll(self._options.expandedItems) && !self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
             self._nodesSourceControllers[nodeKey] = new SourceController({
                source: self._options.source,
                navigation: self._options.navigation
@@ -86,6 +86,9 @@ define('Controls/List/TreeControl', [
             self._nodesSourceControllers[nodeId].destroy();
          }
          delete self._nodesSourceControllers[nodeId];
+      },
+      isExpandAll: function(expandedItems) {
+         return expandedItems instanceof Array && expandedItems[0] === null;
       }
    };
 
@@ -108,17 +111,20 @@ define('Controls/List/TreeControl', [
       _nodesSourceControllers: null,
       constructor: function(cfg) {
          this._nodesSourceControllers = {};
+         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
          if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
          }
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _afterMount: function() {
-         TreeControl.superclass._afterMount.apply(this, arguments);
-         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
-
          // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
          this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
+      },
+      _dataLoadCallback: function() {
+         if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback.apply(null, arguments);
+         }
       },
       _onNodeRemoved: function(event, nodeId) {
          _private.onNodeRemoved(this, nodeId);
@@ -166,9 +172,8 @@ define('Controls/List/TreeControl', [
          _private.clearSourceControllers(this);
          result = this._children.baseControl.reload(filter);
          result.addCallback(function() {
-
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            self._children.baseControl.getViewModel().setExpandedItems([]);
+            self._children.baseControl.getViewModel().resetExpandedItems();
          });
          return result;
       },
@@ -194,16 +199,18 @@ define('Controls/List/TreeControl', [
       _itemMouseMove: function(event, itemData, nativeEvent) {
          var model = this._children.baseControl.getViewModel();
 
-         if (model.getDragTargetItem() && itemData.dispItem.isNode()) {
-            this._setDragPositionOnNode(itemData, nativeEvent);
+         if (model.getDragItemData() && itemData.dispItem.isNode()) {
+            this._nodeMouseMove(itemData, nativeEvent);
          }
       },
 
-      _setDragPositionOnNode: function(itemData, event) {
+      _nodeMouseMove: function(itemData, event) {
          var
+            position,
             topOffset,
             bottomOffset,
             dragTargetRect,
+            dragTargetPosition,
             model = this._children.baseControl.getViewModel(),
             dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
 
@@ -213,7 +220,12 @@ define('Controls/List/TreeControl', [
             bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
 
             if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
-               model.setDragPositionOnNode(itemData, topOffset < DRAG_MAX_OFFSET ? 'before' : 'after');
+               position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
+               dragTargetPosition = model.calculateDragTargetPosition(itemData, position);
+
+               if (dragTargetPosition && this._notify('changeDragTarget', [model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
+                  model.setDragTargetPosition(dragTargetPosition);
+               }
             }
          }
       },
