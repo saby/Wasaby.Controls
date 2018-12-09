@@ -1748,6 +1748,19 @@ define([
             instance._listViewModel._activeItem = {
                item: true
             };
+            instance._container = {
+               querySelector: function(selector) {
+                  if (selector === '.controls-ListView__itemV') {
+                     return {
+                        parentNode: {
+                           children: [{
+                              className: ''
+                           }]
+                        }
+                     };
+                  }
+               }
+            };
             instance._closeActionsMenu({
                action: 'itemClick',
                event: fakeEvent,

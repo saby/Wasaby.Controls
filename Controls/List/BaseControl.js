@@ -779,14 +779,6 @@ define('Controls/List/BaseControl', [
          _private.closeActionsMenu(this, args);
       },
 
-      _hoveredItemChanged: function(event, item) {
-         this._notify('hoveredItemChanged', [item]);
-      },
-
-      _itemMouseMove: function(event, itemData, nativeEvent) {
-         this._notify('itemMouseMove', [itemData, nativeEvent]);
-      },
-
       _itemMouseDown: function(event, itemData, domEvent) {
          var
             items,
