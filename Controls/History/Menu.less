@@ -1,35 +1,34 @@
-.controls-DropdownList__row_pinned {
+.controls-HistoryMenu__row {
+	padding-right: @spacing_HistoryMenu-between-itemCaption-rightBorder;
+}
+
+.controls-HistoryMenu__row_pinned {
 	font-weight: bold;
 }
 
-.controls-DropdownList__row_pin {
-	position: absolute;
-	display: none;
-	.align-items(center);
-	right: @spacing_DropdownList-pin;
-	width:  @width-Dropdown-pin;
-	height: @height_DropdownList-item;
-	font-size: @icon-small-size;
-	font-family: @icon-font;
-	color: @color-Dropdown-pin;
-}
-
-.controls-DropdownList__row_pin.controls-DropdownList__row_pin_swiped {
-    .inline-flexbox();
-}
-
-.ws-is-no-touch .controls-DropdownList__row:hover .controls-DropdownList__row_pin {
-	.inline-flexbox();
-}
-
-.ws-is-no-touch	.controls-DropdownList__row_pin:hover {
-	color: @color-Dropdown-pin_hovered;
-}
-
-.controls-DropdownList__row_unpin {
+.controls-HistoryMenu__iconUnnpin {
 	font-weight: normal;
 }
 
-.controls-DropdownList__row_history {
-	padding-right: @spacing_DropdownList-item-history;
+.controls-HistoryMenu__iconPin {
+	position: absolute;
+	display: none;
+	.align-items(center);
+	right: @spacing_HistoryMenu-between-pin-rightBorder;
+	.icon-size(@icon-size_HistoryMenu-pin);
+	color: @color_HistoryMenu-pin;
+}
+
+.controls-HistoryMenu__iconPin.controls-HistoryMenu__iconPin_swiped {
+	.inline-flexbox();
+}
+
+.ws-is-no-touch {
+	.controls-HistoryMenu__row:hover .controls-HistoryMenu__iconPin {
+		.inline-flexbox();
+	}
+
+	.controls-HistoryMenu__iconPin:hover {
+		color: @color_HistoryMenu-pin_hovered;
+	}
 }
