@@ -32,8 +32,8 @@
          on:itemContextMenu="_onItemContextMenu()"
          on:itemMouseDown="_itemMouseDown()"
          on:itemMouseEnter="_itemMouseEnter()"
-         on:itemMouseMove="_itemMouseMove()"
-         on:hoveredItemChanged="_hoveredItemChanged()"
+         on:itemMouseMove="_notifyHandler('itemMouseMove')"
+         on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
          on:itemSwipe="_listSwipe()">
          <ws:viewTemplate>
             <ws:partial template="{{_options.viewName}}"/>
