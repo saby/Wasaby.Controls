@@ -236,7 +236,7 @@ define('Controls/Filter/Controller',
       };
 
       /**
-       * The filter controller allows you to filter data in a {@link Controls/List}using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to filter data in a {@link Controls/List} using {@link Filter/Button} or {@link Filter/Fast}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.

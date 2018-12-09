@@ -90,7 +90,7 @@ define('Controls/Dropdown/Opener',
             //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
             popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
             if (self._options.className) {
-               IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
+               IoC.resolve('ILogger').warn('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
             }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
             popupOptions.closeByExternalClick = true;

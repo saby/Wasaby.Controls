@@ -1,6 +1,6 @@
 <div attr:class="controls-itemActionsV__action controls-itemActionsV__action_padding
-            {{'controls-itemActionsV__action_style_' + (action.style ? action.style : 'default')}}
-            {{action.iconStyle ? ' action_icon_style_' + action.iconStyle  : 'action_icon_style_default'}}"
+            controls-itemActionsV__action_style_{{action.style}}
+            controls-itemActionsV__action_iconStyle_{{action.iconStyle}}"
       attr:title="{{!!action.title ? action.title}}"
       on:click="_onItemActionsClick(action, itemData)">
     <ws:if data="{{!!action.icon}}">
@@ -8,6 +8,6 @@
     </ws:if>
     <ws:if data="{{!action.icon && action.title}}">
         <span class="controls-itemActionsV__action_title
-         {{'controls-itemActionsV__action_title_style_' + (action.style ? action.style : 'default')}}">{{action.title}}</span>
+         controls-itemActionsV__action_title_style_{{action.style}}">{{action.title}}</span>
     </ws:if>
 </div>

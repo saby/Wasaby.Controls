@@ -95,6 +95,42 @@ define('Controls/Toolbar', [
     * </pre>
     */
 
+   /**
+    * @name Controls/Toolbar#itemTemplate
+    * @cfg {Function} Template for item render.
+    * @remark
+    * To determine the template, you should call the base template 'wml!Controls/Toolbar/ToolbarItemTemplate'.
+    * The template is placed in the component using the ws:partial tag with the template attribute.
+    * You can change the display of records by setting button options values:
+    * <ul>
+    *    <li>buttonReadOnly</li>
+    *    <li>buttonTransparent</li>
+    *    <li>buttonStyle</li>
+    *    <li>buttonCaption</li>
+    *    <li>buttonViewMode</li>
+    *    <li>displayProperty - name of displaying text field, default value "tittle"</li>
+    * <ul>
+    * @example
+    * <pre>
+    *    <Controls.Toolbar
+    *       source="{{_source}}"
+    *       on:itemClick="_itemClick()"
+    *    >
+    *       <ws:itemTemplate>
+    *          <ws:partial
+    *             template="wml!Controls/Toolbar/ToolbarItemTemplate"
+    *             buttonStyle="{{myStyle}}"
+    *             buttonReadOnly="{{readOnlyButton}}"
+    *             buttonTransparent="{{myButtonTransparent}}"
+    *             buttonViewMode="{{myButtonViewMode}}"
+    *             displayProperty="title"
+    *             iconStyleProperty="iconStyle"
+    *             iconProperty="icon"
+    *          />
+    *      </ws:itemTemplate>
+    * </pre>
+    */
+
    var _private = {
       loadItems: function(instance, source) {
          var self = this;
@@ -144,6 +180,36 @@ define('Controls/Toolbar', [
 
       getItemClassName: function(item, size) {
          return 'controls-Toolbar_' + item.get('buttonViewMode') + '_' + size;
+      },
+
+      generateItemPopupConfig: function(item, event, self) {
+         return {
+            corner: { vertical: 'top', horizontal: 'left' },
+            horizontalAlign: { side: 'right' },
+            className: this.getItemClassName(item, self._options.size) + ' ' + (item.get('popupClassName') || ''),
+            templateOptions: {
+               items: self._items,
+               rootKey: item.get(self._options.keyProperty),
+               showHeader: item.get('showHeader'),
+               headConfig: {
+                  icon: item.get('icon'),
+                  caption: item.get('title'),
+                  iconStyle: item.get('iconStyle')
+               }
+            },
+            target: event.target
+         };
+      },
+
+      generateMenuConfig: function(self) {
+         return {
+            className: 'controls-Toolbar__menu-position ' + (self._options.popupClassName || ''),
+            templateOptions: {
+               items: self._menuItems,
+               iconSize: self._options.size
+            },
+            target: self._children.popupTarget
+         };
       }
    };
 
@@ -184,7 +250,8 @@ define('Controls/Toolbar', [
          if (newOptions.keyProperty !== this._options.keyProperty ||
             this._options.parentProperty !== newOptions.parentProperty ||
             this._options.nodeProperty !== newOptions.nodeProperty ||
-            this._options.size !== newOptions.size) {
+            this._options.size !== newOptions.size ||
+            this._options.popupClassName !== newOptions.popupClassName) {
             _private.setPopupOptions(this, newOptions);
          }
          if (newOptions.source && newOptions.source !== this._options.source) {
@@ -196,25 +263,8 @@ define('Controls/Toolbar', [
          this._parentProperty = newOptions.parentProperty;
       },
       _onItemClick: function(event, item) {
-         var config;
-
          if (item.get(this._nodeProperty)) {
-            config = {
-               corner: { vertical: 'top', horizontal: 'left' },
-               horizontalAlign: { side: 'right' },
-               className: _private.getItemClassName(item, this._options.size),
-               templateOptions: {
-                  items: this._items,
-                  rootKey: item.get(this._options.keyProperty),
-                  showHeader: item.get('showHeader'),
-                  headConfig: {
-                     icon: item.get('icon'),
-                     caption: item.get('title'),
-                     iconStyle: item.get('iconStyle')
-                  }
-               },
-               target: event.target
-            };
+            varconfig =  _private.generateItemPopupConfig(item,  event, this);
             this._children.menuOpener.open(config, this);
 
             // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
@@ -228,14 +278,7 @@ define('Controls/Toolbar', [
       },
 
       _showMenu: function() {
-         var config = {
-            className: 'controls-Toolbar__menu-position',
-            templateOptions: {
-               items: this._menuItems,
-               iconSize: this._options.size
-            },
-            target: this._children.popupTarget
-         };
+         var config = _private.generateMenuConfig(this);
          this._notify('menuOpened', [], { bubbling: true });
          this._children.menuOpener.open(config, this);
       },

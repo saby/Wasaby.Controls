@@ -414,6 +414,7 @@ define('Controls/List/BaseControl', [
 
       setPopupOptions: function(self) {
          self._popupOptions = {
+            className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'right' },
@@ -543,7 +544,12 @@ define('Controls/List/BaseControl', [
                   self._items = receivedState;
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  var
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  loadDef.addCallback(function(items) {
+                     return items;
+                  });
+                  return loadDef;
                }
             }
          });

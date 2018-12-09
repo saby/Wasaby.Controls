@@ -3,13 +3,16 @@ define('Controls/Button/Menu',
       'Core/Control',
       'wml!Controls/Button/Menu/Menu',
       'Controls/Button/Menu/MenuUtils',
-      'css!Controls/Button/Menu/Menu',
+      'css!theme?Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
    function(Control, template, MenuUtils) {
 
       /**
        * Button by clicking on which a drop-down list opens.
+       *
+       * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
+       *
        * @class Controls/Button/Menu
        * @extends Core/Control
        * @mixes Controls/interface/ICaption

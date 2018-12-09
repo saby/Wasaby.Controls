@@ -220,11 +220,15 @@ define([
          assert.deepEqual([{
             id: 0,
             title: 'first',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.MENU
          },
          {
             id: 1,
             title: 'second',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.TOOLBAR
          }], listViewModel._actions[0].showed);
       });
@@ -254,10 +258,14 @@ define([
          assert.deepEqual([{
             id: 1,
             title: 'second',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.TOOLBAR
          }, {
             id: 0,
             title: 'first',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.MENU
          }], listViewModel._actions[0].showed);
       });

@@ -14,6 +14,7 @@ define('Controls/Application',
       'Controls/Container/Scroll/Context',
       'Core/LinkResolver/LinkResolver',
       'View/Request',
+      'Controls/Application/HeadData',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
       'css!theme?Controls/Application/Application'
@@ -48,6 +49,7 @@ define('Controls/Application',
       ScrollContext,
       LinkResolver,
       Request,
+      HeadData,
       ThemesController) {
       'use strict';
 
@@ -213,7 +215,14 @@ define('Controls/Application',
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = context.AppData.application;
 
-            var headData = Request.getCurrent().getStorage('HeadData');
+
+
+            if (typeof window === 'undefined' && cfg.theme !== 'default') {
+               ThemesController.getInstance().themes = {};
+               ThemesController.getInstance().pushTheme(cfg.theme);
+            }
+            var headData = new HeadData([], true);
+            Request.getCurrent().setStorage('HeadData', headData);
 
             self.linkResolver = new LinkResolver(headData.isDebug,
                self.buildnumber,

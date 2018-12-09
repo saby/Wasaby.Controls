@@ -73,6 +73,25 @@ define('Controls-demo/LoadingIndicator/LoadingIndicator', [
                self._interval(id, delay);
             }
          }, 1000);
+      },
+
+      _singletonOpen: function() {
+         require(['Core/Indicator'], function(Indicator) {
+            Indicator.setMessage('Синглтон индикатор. Закроется через 3 секунды');
+            setTimeout(function() {
+               Indicator.hide();
+            }, 5000);
+         });
+      },
+
+      _compatibleOpen: function() {
+         requirejs(['Lib/Control/LoadingIndicator/LoadingIndicator'], function(Indicator) {
+            var inst = new Indicator();
+            inst.setMessage('Индикатор в слое совместимости. закроется через 3 секунды');
+            setTimeout(function() {
+               inst.destroy();
+            }, 5000);
+         });
       }
    });
 
