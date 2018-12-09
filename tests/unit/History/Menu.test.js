@@ -68,7 +68,7 @@ define(
             newConfig.size = 'm';
             newConfig.icon = '';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button__m');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
