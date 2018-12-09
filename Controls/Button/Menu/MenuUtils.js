@@ -12,7 +12,7 @@ define('Controls/Button/Menu/MenuUtils', [
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
       var offsetClassName = 'controls-MenuButton controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
 
-      if ((!options.icon || currentButtonClass.type === 'iconButtonBordered') && currentButtonClass.type !== 'button') {
+      if ((!options.icon || currentButtonClass.type === 'iconButtonBordered') && currentButtonClass.viewMode !== 'button') {
          offsetClassName += ('__' + options.size);
       }
 
