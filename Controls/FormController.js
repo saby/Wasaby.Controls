@@ -288,22 +288,14 @@ define('Controls/FormController', [
          return res;
       },
       _createHandler: function(record) {
-         this._isNewRecord = true;
-
-         var def = new Deferred();
-         this._createPendingDef = def;
-
-         var self = this;
-         this._notify('registerPending', [def, {
-            showLoadingIndicator: false,
-            onPendingFail: function(forceFinishValue) {
-               self._showConfirmDialog(def, forceFinishValue);
-               return def;
-            }
-         }], { bubbling: true });
-
-         this._wasCreated = true;
-         this._forceUpdate();
+         // when FormController create record, its need to check previous record was saved or not.
+         // If its not saved but was created, previous record trying to delete.
+         var deleteDef = this._tryDeleteNewRecord();
+         deleteDef.addBoth(function() {
+            this._isNewRecord = true;
+            this._wasCreated = true;
+            this._forceUpdate();
+         }.bind(this));
          return record;
       },
       read: function(key, readMetaData) {
@@ -373,11 +365,6 @@ define('Controls/FormController', [
                var res = self._children.crud.update(record, self._isNewRecord);
                if (res && res.addCallback) {
                   res.addCallback(function(record) {
-                     if (self._isNewRecord && !self._updateByPopup) {
-                        // если созданный рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                        // если из окна сохранения, пендинг завершится там
-                        self._createPendingDef.callback(true);
-                     }
                      if (isChanged && !self._updateByPopup) {
                         // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
                         // если из окна сохранения, пендинг завершится там
@@ -394,11 +381,6 @@ define('Controls/FormController', [
                      return e;
                   });
                } else {
-                  if (self._isNewRecord && !self._updateByPopup) {
-                     // если созданный рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                     // если из окна сохранения, пендинг завершится там
-                     self._createPendingDef.callback(true);
-                  }
                   if (isChanged && !self._updateByPopup) {
                      // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
                      // если из окна сохранения, пендинг завершится там
