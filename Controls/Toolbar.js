@@ -264,7 +264,7 @@ define('Controls/Toolbar', [
       },
       _onItemClick: function(event, item) {
          if (item.get(this._nodeProperty)) {
-            varconfig =  _private.generateItemPopupConfig(item,  event, this);
+            var config =  _private.generateItemPopupConfig(item,  event, this);
             this._children.menuOpener.open(config, this);
 
             // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
