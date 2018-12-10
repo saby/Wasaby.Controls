@@ -134,12 +134,15 @@ define('Controls/Input/resources/InputRender/InputRender',
          // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
          _inputState: undefined,
 
+         _isEdge: null,
+
          // text field has focus
          _inputActive: false,
 
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
+            this._isEdge = cDetection.isIE12;
          },
 
          _afterMount: function() {
