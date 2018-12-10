@@ -169,7 +169,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                expectedResultWithRowSeparator = [
                   ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow',
                   ' controls-Grid__row-cell_withRowSeparator',
-                  ' controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow controls-Grid__row-cell_withRowSeparator'
+                  ' controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow'
                ],
                expectedResultWithoutRowSeparator = [
                   ' controls-Grid__row-cell_withoutRowSeparator',
