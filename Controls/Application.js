@@ -214,6 +214,7 @@ define('Controls/Application',
             self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = context.AppData.application;
+            self.product = context.AppData.product;
 
 
 
