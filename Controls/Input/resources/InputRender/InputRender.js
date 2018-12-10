@@ -207,9 +207,6 @@ define('Controls/Input/resources/InputRender/InputRender',
             if (value !== processedData.value) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
-
-            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
-               _private.hasHorizontalScroll(_private.getInput(this), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {
