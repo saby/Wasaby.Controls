@@ -1,6 +1,6 @@
 <div>
    <script>
-      window.receivedStates = '{"ThemesController": { "themes" : ["' + window.defaultStaticTheme + '"]}}';
+      window.receivedStates = '{"ThemesController": { "themes" : ["' + (window.defaultStaticTheme || '') + '"]}}';
 
       require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/HeadData', 'Core/app-init', 'Core/Control', 'View/Runner/tclosure'],
       function(AppData, AppStart, HeadData, appInit, Core) {
