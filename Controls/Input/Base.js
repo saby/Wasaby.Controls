@@ -260,32 +260,35 @@ define('Controls/Input/Base',
           * @param {Controls/Input/Base/Types/SplitValue.typedef} data
           * @param {String} displayValue Values in the field before changing it.
           */
-         adjustDataForFastInput: function(data, displayValue) {
-            /**
-             * The inserted value and the value after and the length of deleted value will be correct.
-             */
+         adjustDataForFastInput: function(data, inputType, displayValue, selection) {
+            var start, end;
 
-            /**
-             * In the displayValue value none inserted value.
-             * Therefore it consists of a value before and deleted value and a value after.
-             * Cut the displayValue value to so that it does not contain the value after.
-             */
-            data.before = displayValue.substring(0, displayValue.length - data.after.length);
+            if (selection.start === selection.end) {
+               var position = selection.end;
 
-            var removalLength = data.delete.length;
-            var lengthSplitBefore = data.before.length;
+               switch (inputType) {
+                  case 'deleteForward':
+                     start = position;
+                     end = position + data.delete.length;
+                     break;
+                  case 'deleteBackward':
+                     start = position - data.delete.length;
+                     end = position;
+                     break;
+                  default:
+                     start = position;
+                     end = position;
+                     break;
+               }
+            } else {
+               start = selection.start;
+               end = selection.end;
+               data.delete = displayValue.substring(selection.start, selection.end);
+            }
 
-            /**
-             * Because the length of the deleted value is correct and it is at the end of the value before,
-             * you can determine the value to be deleted. It will be equal to the substring of the length
-             * of the deleted value taken from the end.
-             */
-            data.delete = data.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
-
-            /**
-             * Cut the value to so that it does not contain the value to be deleted.
-             */
-            data.before = data.before.substring(0, lengthSplitBefore - removalLength);
+            data.delete = displayValue.substring(start, end);
+            data.before = displayValue.substring(0, start);
+            data.after = displayValue.substring(end, displayValue.length);
          }
       };
 
@@ -581,7 +584,7 @@ define('Controls/Input/Base',
              * For such situations to be handled correctly, we need to adjust the data.
              */
             if (value !== model.displayValue) {
-               _private.adjustDataForFastInput(splitValue, model.displayValue);
+               _private.adjustDataForFastInput(splitValue, inputType, model.displayValue, model.selection);
             }
 
             _private.handleInput(this, splitValue, inputType);
