@@ -99,11 +99,11 @@ define(
             assert.equal(combobox._placeholder, 'This is placeholder');
          });
 
-         it('_beforeUpdate', function() {
+         it('_beforeUpdate width change', function() {
             let combobox = getCombobox(config);
             combobox._container = {offsetWidth: 250};
             assert.equal(combobox._width, undefined);
-            combobox._beforeUpdate();
+            combobox._beforeUpdate({});
             assert.equal(combobox._width, 250);
          });
          it('_afterMount', function() {
