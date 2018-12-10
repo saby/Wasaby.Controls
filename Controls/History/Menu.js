@@ -34,15 +34,6 @@ define('Controls/History/Menu',
             return {
                $_pinned: !item.get('pinned')
             };
-         },
-      
-         getMetaHistory: function() {
-            return  {
-               $_history: true
-            };
-         },
-         prepareFilter: function(filter) {
-            return merge(_private.getMetaHistory(), filter);
          }
       };
    
@@ -52,19 +43,17 @@ define('Controls/History/Menu',
 
          _beforeMount: function(options) {
             this._offsetClassName = MenuUtils.cssStyleGeneration(options);
-            this._filter = _private.prepareFilter(options.filter);
          },
-         
+
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter) || this._options.source !== newOptions.source) {
-               this._filter = _private.prepareFilter(newOptions.filter);
+            if (this._options.size !== newOptions.size || this._options.icon !== newOptions.icon ||
+               this._options.viewMode !== newOptions.viewMode) {
+               this._offsetClassName = MenuUtils.cssStyleGeneration(newOptions);
             }
          },
 
          _onItemClickHandler: function(result, items) {
             this._notify('onMenuItemActivate', [items[0]]);
-            this._options.source.update(items[0], _private.getMetaHistory());
-            this._items = this._options.source.getItems();
          },
 
          _onPinClickHandler: function(event, items) {
