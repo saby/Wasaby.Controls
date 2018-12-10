@@ -6,7 +6,6 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
-            // в 700 этих правок нет. разбираюсь в причинах ошибок в клауде.
             var windowData = {
                width: document.body.clientWidth,
                height: document.body.clientHeight,
