@@ -21,7 +21,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTmplStyles', [],
     * @css @spacing_SubmitPopup-between-content-border Spacing between content and border.
     * @css @spacing_SubmitPopup-between-footer-border Spacing between footer and border.
     * @css @background-color_SubmitPopup-footer Background-color of footer.
-    * @css @width_ConfirmationTemplate_size-big Width of big dialog.
-    * @css @width_ConfirmationTemplate_size-default Width of standard dialog.
+    * @css @width_ConfirmationTemplate_size-l Width of big dialog.
+    * @css @width_ConfirmationTemplate_size-m Width of standard dialog.
     */
 );
