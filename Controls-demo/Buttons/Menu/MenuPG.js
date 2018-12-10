@@ -225,7 +225,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
             this._componentOptions = {
                readOnly: false,
                size: 'm',
-               icon: 'icon-small icon-AddButtonNew',
+               icon: 'icon-medium icon-AddButtonNew',
                iconStyle: 'primary',
                caption: '',
                style: 'primary',
