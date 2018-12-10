@@ -234,7 +234,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
             id: 2,
             icon: 'icon-Erase',
             title: 'error',
-            iconStyle: 'error'
+            iconStyle: 'danger'
          }];
 
          this._viewSource = new Memory({

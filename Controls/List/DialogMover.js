@@ -17,11 +17,11 @@ define('Controls/List/DialogMover', [
     */
 
    var _private = {
-      updateDataOptions: function(self, dataOptions) {
+      updateDataOptions: function(self, options, dataOptions) {
          if (dataOptions) {
             self._items = dataOptions.items;
-            self._source = dataOptions.source;
-            self._keyProperty = dataOptions.keyProperty;
+            self._source = options.source || dataOptions.source;
+            self._keyProperty = options.keyProperty || dataOptions.keyProperty;
          }
       }
    };
@@ -31,11 +31,11 @@ define('Controls/List/DialogMover', [
 
       _beforeMount: function(options, context) {
          this._onDialogResult = this._onDialogResult.bind(this);
-         _private.updateDataOptions(this, context.dataOptions);
+         _private.updateDataOptions(this, options, context.dataOptions);
       },
 
       _beforeUpdate: function(options, context) {
-         _private.updateDataOptions(this, context.dataOptions);
+         _private.updateDataOptions(this, options, context.dataOptions);
       },
 
       moveItemUp: function(item) {

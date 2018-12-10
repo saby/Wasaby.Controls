@@ -8,7 +8,7 @@ define('Controls/Validate/Controller',
       'Core/helpers/isNewEnvironment',
       'Controls/Utils/getZIndex',
       'wml!Controls/Validate/ErrorMessage',
-      'css!Controls/Validate/ErrorMessage'
+      'css!theme?Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
@@ -72,7 +72,9 @@ define('Controls/Validate/Controller',
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
-         _isNewEnvironment: isNewEnvironment(),
+         _beforeMount: function() {
+            this._isNewEnvironment = isNewEnvironment();
+         },
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },

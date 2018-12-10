@@ -3,6 +3,7 @@ define('Controls/List/BaseControl', [
    'Core/IoC',
    'Core/core-clone',
    'Core/core-merge',
+   'Core/core-instance',
    'wml!Controls/List/BaseControl/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
    'require',
@@ -21,6 +22,7 @@ define('Controls/List/BaseControl', [
    IoC,
    cClone,
    cMerge,
+   cInstance,
    BaseControlTpl,
    ItemsUtil,
    require,
@@ -412,6 +414,7 @@ define('Controls/List/BaseControl', [
 
       setPopupOptions: function(self) {
          self._popupOptions = {
+            className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'right' },
@@ -541,7 +544,12 @@ define('Controls/List/BaseControl', [
                   self._items = receivedState;
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  var
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  loadDef.addCallback(function(items) {
+                     return items;
+                  });
+                  return loadDef;
                }
             }
          });
@@ -762,16 +770,13 @@ define('Controls/List/BaseControl', [
          _private.showActionsMenu(this, event, itemData, childEvent, showAll);
       },
 
+      _onItemContextMenu: function(event, itemData) {
+         this._showActionsMenu.apply(this, arguments);
+         this._listViewModel.setMarkedKey(itemData.key);
+      },
+
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
-      },
-
-      _hoveredItemChanged: function(event, item) {
-         this._notify('hoveredItemChanged', [item]);
-      },
-
-      _itemMouseMove: function(event, itemData, nativeEvent) {
-         this._notify('itemMouseMove', [itemData, nativeEvent]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {
@@ -799,7 +804,8 @@ define('Controls/List/BaseControl', [
       },
 
       _dragStart: function(event, dragObject) {
-         this._listViewModel.setDragItems(dragObject.entity.getItems(), this._itemDragData);
+         this._listViewModel.setDragEntity(dragObject.entity);
+         this._listViewModel.setDragItemData(this._itemDragData);
       },
 
       _dragEnd: function(event, dragObject) {
@@ -809,33 +815,57 @@ define('Controls/List/BaseControl', [
       },
 
       _dragEndHandler: function(dragObject) {
-         var
-            items = dragObject.entity.getItems(),
-            dragTarget = this._listViewModel.getDragTargetItem(),
-            targetPosition = this._listViewModel.getDragTargetPosition();
+         var targetPosition = this._listViewModel.getDragTargetPosition();
 
-         if (dragTarget) {
-            this._notify('dragEnd', [items, dragTarget.item, targetPosition.position]);
+         if (targetPosition) {
+            this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+         }
+      },
+
+      _dragEnter: function(event, dragObject) {
+         var
+            dragEnterResult,
+            draggingItemProjection;
+
+         if (!this._listViewModel.getDragEntity()) {
+            dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
+
+            if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+               draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
+               this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
+               this._listViewModel.setDragEntity(dragObject.entity);
+            } else if (dragEnterResult === true) {
+               this._listViewModel.setDragEntity(dragObject.entity);
+            }
          }
       },
 
       _dragLeave: function() {
-         this._listViewModel.setDragTargetItem(null);
-      },
-
-      _documentDragStart: function() {
-         this._isDragging = true;
+         this._listViewModel.setDragTargetPosition(null);
       },
 
       _documentDragEnd: function() {
-         this._isDragging = false;
-         this._listViewModel.setDragTargetItem(null);
-         this._listViewModel.setDragItems(null);
+         this._listViewModel.setDragTargetPosition(null);
+         this._listViewModel.setDragItemData(null);
+         this._listViewModel.setDragEntity(null);
       },
 
       _itemMouseEnter: function(event, itemData) {
-         if (this._options.itemsDragNDrop && this._isDragging) {
-            this._listViewModel.setDragTargetItem(itemData);
+         var
+            dragPosition,
+            dragItemData,
+            dragEntity = this._listViewModel.getDragEntity();
+
+         if (dragEntity) {
+            dragItemData = this._listViewModel.getDragItemData();
+
+            if (!dragItemData || dragItemData.key !== itemData.key) {
+               dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
+
+               if (this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+                  this._listViewModel.setDragTargetPosition(dragPosition);
+               }
+            }
          }
       }
    });

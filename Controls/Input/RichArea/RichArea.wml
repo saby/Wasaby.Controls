@@ -4,7 +4,7 @@
       class="controls-RichTextArea__scrollContainer"
       name="areaScrollContainer">
       <ws:if data="{{_options.readOnly}}">
-         <!--TODO Вернуть Core/HtmlJson, когда будет решена задача https://online.sbis.ru/opendoc.html?guid=623a3e92-8646-4bcb-a2c6-84d29efc8ea2-->
+         <!--TODO Вернуть Controls/Decorator/Markup, когда будет решена задача https://online.sbis.ru/opendoc.html?guid=623a3e92-8646-4bcb-a2c6-84d29efc8ea2-->
          <div name="previewContainer" class="ws-basic-style controls-RichTextArea__dataReview"></div>
       </ws:if>
       <ws:else>

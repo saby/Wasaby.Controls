@@ -76,7 +76,7 @@ define('Controls-demo/List/Remove', [
       _showError: function(message) {
          this._children.popupOpener.open({
             message: message,
-            style: 'error',
+            style: 'danger',
             type: 'ok'
          });
       }
