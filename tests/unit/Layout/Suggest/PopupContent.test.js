@@ -48,7 +48,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
    describe('Controls.Container.Suggest.__PopupContent template tests', function() {
       
       it('showContent:false', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:undefinedpx;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_hidden" style="width:px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
          getMarkup(popupContentTemplate, {_options: {showContent: false, content: ''}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
@@ -57,7 +57,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
       });
       
       it('showContent:true', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:undefinedpx;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer" style="width:px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
          getMarkup(popupContentTemplate, {_options: {showContent: true, content: ''}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
@@ -66,7 +66,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
       });
       
       it('target.offsetWidth:300px', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" style="width:300px;" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_hidden" style="width:300px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
          getMarkup(popupContentTemplate, {_options: {target: {offsetWidth: 300}, content: ''}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
