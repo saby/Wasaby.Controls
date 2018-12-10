@@ -1,108 +1,147 @@
 .controls-Button_viewMode-toggledLink, .controls-Button_viewMode-toggledLink_readOnly {
    border-style: solid;
-   border-width: @border-width_ToggleButton;
-   border-radius: @border-radius-ToggleButton;
-}
-
-.controls-Button_viewMode-toolButton_toggle_on {
-   border-color: @border-color-IconButton_toggled;
+   border-width: @thickness_ToggleLink;
+   border-radius: @border-radius_ToggleLink;
 }
 
 .controls-Button_viewMode-toggledLink {
-   color: @color-ToggleButton_text;
    cursor: pointer;
 }
 
 .controls-Button_viewMode-toggledLink_readOnly {
-   color: @color_ToggleButton_readOnly;
+   color: @color_ToggleLink_readOnly;
 }
 
-.controls-Button_style-secondary_viewMode-toggledLink_readOnly {
-   border-color: @background_ToggleButton;
-   background: @background_ToggleButton;
+.controls-Button_viewMode-toggledLink_readOnly_style-common {
+   border-color: @border-color_ToggleLink_readOnly;
+   background: @background_ToggleLink_readOnly;
 }
 
-.controls-Button_style-secondary_viewMode-toggledLink_toggle_on_readOnly {
-   border-color: @border-color_ToggleButton_readOnly;
-   background: @background_ToggleButton_readOnly;
+.controls-Button_viewMode-toggledLink_toggle_on_readOnly_style-common {
+   border-color: @border-color_ToggleLink_readOnly_toggled;
+   background: @background_ToggleLink_readOnly_toggled;
 }
 
 .controls-Button_viewMode-toolButton_toggle_on {
    box-shadow: none;
 }
 
-.controls-Button_style-secondary_viewMode-toggledLink {
-   background: @background_ToggleButton;
-   border-color: @background_ToggleButton;
+.controls-Button_viewMode-toggledLink_style-common {
+   border-color: @border-color_ToggleLink;
+   background: @background_ToggleLink;
+}
+
+.controls-Button_viewMode-toggledLink_toggle_on_style-common {
+   background: @background_ToggleLink_toggled;
 }
 
 .controls-Button_style-secondary_viewMode-toggledLink_toggle_on {
-   border-color: @border-color_ToggleButton;
-   background: @background_ToggleButton_state-on;
+   border-color: @color_secondary;
+}
+
+.controls-Button_style-primary_viewMode-toggledLink_toggle_on {
+   border-color: @color_primaryV;
+}
+
+.controls-Button_style-info_viewMode-toggledLink_toggle_on {
+   border-color: @color_info;
+}
+
+.controls-Button_style-danger_viewMode-toggledLink_toggle_on {
+   border-color: @color_danger;
+}
+
+.controls-Button_style-warning_viewMode-toggledLink_toggle_on {
+   border-color: @color_warning;
+}
+
+.controls-Button_style-success_viewMode-toggledLink_toggle_on {
+   border-color: @color_success;
 }
 
 .controls-Button_viewMode-toggledLink_size-s {
-   height: @height-ToggleButton_size-s;
-   min-width: @min-width-ToggleButton_size-s;
+   height: @height-ToggleLink_s;
+   min-width: @min-width-ToggleLink_s;
 }
 
 .controls-Button_viewMode-toggledLink_size-m {
-   height: @height-ToggleButton_size-m;
-   min-width: @min-width-ToggleButton_size-m;
+   height: @height-ToggleLink_m;
+   min-width: @min-width-ToggleLink_m;
 }
 
 .controls-Button_viewMode-toggledLink_size-l {
-   height: @height-ToggleButton_size-l;
-   min-width: @min-width-ToggleButton_size-l;
+   height: @height-ToggleLink_l;
+   min-width: @min-width-ToggleLink_l;
 }
 
 .controls-Button__wrapper_viewMode-toggledLink_size-s {
-   padding: @padding_ToggleButton-wrapper_s;
    .justify-content(center);
 }
 
 .controls-Button__wrapper_viewMode-toggledLink_size-m {
-   padding: @padding_ToggleButton-wrapper_m;
    .justify-content(center);
 }
 
 .controls-Button__wrapper_viewMode-toggledLink_size-l {
-   padding: @padding_ToggleButton-wrapper_l;
    .justify-content(center);
 }
 
-.controls-Button_viewMode-toolButton_iconStyle-success_toggle_on {
+.controls-Button_style-success_viewMode-toolButton_toggle_on {
    border-color: @color_success;
 }
 
-.controls-Button_viewMode-toolButton_iconStyle-warning_toggle_on {
+.controls-Button_style-warning_viewMode-toolButton_toggle_on {
    border-color: @color_warning;
 }
 
-.controls-Button_viewMode-toolButton_iconStyle-danger_toggle_on {
+.controls-Button_style-danger_viewMode-toolButton_toggle_on {
    border-color: @color_danger;
 }
 
-.controls-Button_viewMode-toolButton_iconStyle-info_toggle_on {
+.controls-Button_style-info_viewMode-toolButton_toggle_on {
    border-color: @color_info;
 }
 
-.controls-Button_viewMode-toolButton_iconStyle-primary_toggle_on {
+.controls-Button_style-primary_viewMode-toolButton_toggle_on {
    border-color: @color_primaryV;
 }
 
-.controls-Button_viewMode-toolButton_iconStyle-secondary_toggle_on {
-   border-color: @border-color-IconButton_toggled;
+.controls-Button_style-secondary_viewMode-toolButton_toggle_on {
+   border-color: @color_secondary;
+}
+
+.controls-Button__icon-info_toggle_on {
+   color: @color_info;
+}
+
+.controls-Button__icon-success_toggle_on {
+   color: @color_success;
+}
+
+.controls-Button__icon-danger_toggle_on {
+   color: @color_danger;
+}
+
+.controls-Button__icon-warning_toggle_on {
+   color: @color_warning;
+}
+
+.controls-Button__icon-secondary_toggle_on {
+   color: @color_secondary;
+}
+
+.controls-Button__icon-primary_toggle_on {
+   color: @color_primaryV;
 }
 
 .controls-Button_viewMode-toggledLink:active {
    .controls-Button__icon-secondary_toggle_on {
-      color: @color_ToggleButton_Link-main_hovered;
+      color: @color_ToggleLink-icon_secondary_hovered;
    }
 }
 
 .controls-Button__icon-secondary_iconStyle-secondary_viewMode-toolButton_toggle_on {
-   color: @color_ToggleButton_Link-main_hovered;
+   color: @color_secondary;
 }
 
 .controls-Button__icon-secondary_iconStyle-secondary_viewMode-toggledLink_toggle_on {
@@ -132,15 +171,12 @@
 .ws-is-no-touch {
    .controls-Button_style-secondary_viewMode-toggledLink:hover {
       .controls-Button__icon-secondary {
-         color: @color_ToggleButton_Link-main_hovered;
+         color: @color_ToggleLink-icon_secondary_hovered;
       }
    }
 
-   .controls-Button_style-secondary_viewMode-toggledLink:hover {
-      background: @background-ToggleButton_hovered;
-      border-color: @background-ToggleButton_hovered;
-      .controls-Button__icon_iconStyle-secondary {
-         color: @color-ToggleButton__icon_hovered;
-      }
+   .controls-Button_viewMode-toggledLink_style-common:hover {
+      background: @background_ToggleLink_hovered;
+      border-color: @border-color_ToggleLink_hovered;
    }
 }
