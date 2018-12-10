@@ -5,7 +5,7 @@ define('Controls/Dropdown/Opener',
       'Controls/Utils/getZIndex',
       'Core/IoC'
    ],
-   function(Sticky, coreMerge, getZIndex, IoC) {
+   function(Sticky, Merge, getZIndex, IoC) {
       /**
        * Opener for dropdown menu.
        *
@@ -50,19 +50,19 @@ define('Controls/Dropdown/Opener',
            * @param config
            */
          checkIcons: function(self, config) {
-            var compOptions = self._options.popupOptions && self._options.popupOptions.templateOptions,
-               configOptions = config.templateOptions,
-               parentProperty = (configOptions && configOptions.parentProperty) || compOptions && compOptions.parentProperty,
-               items = configOptions && configOptions.items,
-               optIconSize = configOptions && configOptions.iconSize,
-               headerIcon = compOptions && (compOptions.headConfig && compOptions.headConfig.icon || compOptions.showHeader && compOptions.icon),
-               menuStyle = compOptions && compOptions.headConfig && compOptions.headConfig.menuStyle,
+            var templateOptions = Merge(config.templateOptions, (self._options.popupOptions && self._options.popupOptions.templateOptions) || {}),
+               parentProperty = templateOptions && templateOptions.parentProperty,
+               items = templateOptions && templateOptions.items,
+               optIconSize = templateOptions && templateOptions.iconSize,
+               headerIcon = templateOptions && (templateOptions.headConfig && templateOptions.headConfig.icon || templateOptions.showHeader && templateOptions.icon),
+               rootKey = templateOptions && templateOptions.rootKey,
+               menuStyle = templateOptions && templateOptions.headConfig && templateOptions.headConfig.menuStyle,
                parents = {},
                iconSize, pid, icon;
 
             // необходимо учесть иконку в шапке
             if (headerIcon && menuStyle !== 'titleHead') {
-               parents[parentProperty ? 'null' : 'undefined'] = [null, this.getIconSize(headerIcon, optIconSize)];
+               parents[parentProperty ? rootKey || 'null' : 'undefined'] = [null, this.getIconSize(headerIcon, optIconSize)];
             }
 
             items.each(function(item) {
@@ -76,7 +76,7 @@ define('Controls/Dropdown/Opener',
                }
             });
 
-            configOptions.iconPadding = parents;
+            templateOptions.iconPadding = parents;
          },
 
          setTemplateOptions: function(self, config) {
@@ -90,7 +90,7 @@ define('Controls/Dropdown/Opener',
             //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
             popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
             if (self._options.className) {
-               IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
+               IoC.resolve('ILogger').warn('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
             }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
             popupOptions.closeByExternalClick = true;
@@ -113,7 +113,7 @@ define('Controls/Dropdown/Opener',
       DropdownOpener._private = _private;
 
       DropdownOpener.getDefaultOptions = function() {
-         return coreMerge(
+         return Merge(
             Sticky.getDefaultOptions(),
             {
                closeOnTargetScroll: true,

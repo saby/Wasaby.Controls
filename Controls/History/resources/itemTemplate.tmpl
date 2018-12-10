@@ -1,7 +1,7 @@
 <div attr:class="controls-DropdownList__row
-                 controls-DropdownList__row_history
+                 controls-HistoryMenu__row
                  {{itemData.isSelected ? 'controls-DropdownList__selected'}}
-                 {{itemData.getPropValue(itemData.item, 'pinned') === true && !itemData.hasParent ?  'controls-DropdownList__row_pinned'}}"
+                 {{ itemData.getPropValue(itemData.item, 'pinned')=== true && !itemData.hasParent ?  'controls-HistoryMenu__row_pinned'}}"
      on:click="_itemClickHandler(itemData.item)">
    <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}}">
       <div class="controls-DropdownList__icon controls-DropdownList__icon_style_{{itemData.iconStyle || 'default'}} {{(iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}} {{itemData.icon}}"></div>
@@ -10,17 +10,17 @@
         title="{{contentTemplate ? '' : itemData.getPropValue(itemData.item, displayProperty || 'title')}}">
       <ws:if data="{{contentTemplate}}">
          <ws:partial
-            template="{{contentTemplate}}"
-            itemData="{{itemData}}" />
+                 template="{{contentTemplate}}"
+                 itemData="{{itemData}}" />
       </ws:if>
       <ws:else>
          {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
       </ws:else>
    </div>
-    <ws:if data="{{!itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
-        <div    on:click="_itemClickHandler(itemData.item, true)"
-                class="controls-DropdownList__row_pin {{itemData.isSwiped ? 'controls-DropdownList__row_pin_swiped'}} {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-DropdownList__row_unpin icon-PinOff' : 'icon-PinNull'}}"></div>
-    </ws:if>
+   <ws:if data="{{!itemData.hasChildren && !(itemData.getPropValue(itemData.item, 'pinned') === true && itemData.hasParent)}}">
+      <div    on:click="_itemClickHandler(itemData.item, true)"
+              class="controls-HistoryMenu__iconPin {{itemData.isSwiped ? 'controls-HistoryMenu__iconPin_swiped'}} {{itemData.getPropValue(itemData.item, 'pinned') === true ? 'controls-HistoryMenu__iconUnnpin icon-PinOff' : 'icon-PinNull'}}"></div>
+   </ws:if>
    <div if="{{itemData.hasChildren}}" class="controls-DropdownList__arrow icon-MarkCRightLight"></div>
 </div>
 <div if="{{itemData.hasSeparator}}" class="controls-DropdownList__group_separator"></div>

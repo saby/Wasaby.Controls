@@ -272,6 +272,17 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: с кнопкой меню
+      '/demo-ws4-button-menu': function(req, res) {
+         requirejs('Controls-demo/Buttons/Menu/Menu');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Buttons/Menu/Menu',
+            initDependencies: false
+         }, []);
+      },
+
+
+
       /*
         ### СТРАНИЧКИ ДЛЯ СТАРЫХ КОНТРОЛОВ - WS3. ### 
         ### Для построения страницы используется шаблон VIEW. ###

@@ -9,6 +9,8 @@
    itemActionsTemplate="{{itemActionsTemplate}}"
    swipeTemplate="{{swipeTemplate}}"
    multiSelectTpl="{{multiSelectTpl}}"
+   editingItemData="{{editingItemData}}"
+   isAdd="{{isAdd}}"
    itemTemplate="{{itemTemplate}}"
    itemData="{{listModel.getCurrent()}}"
    itemActionsPosition="{{itemActionsPosition}}" />

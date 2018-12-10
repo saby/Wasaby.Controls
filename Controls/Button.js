@@ -54,12 +54,12 @@ define('Controls/Button', [
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
          self._transparent = options.transparent;
          self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
-         if (self._viewMode === ('quickButton' || 'transparentQuickButton')) {
-            self._viewMode = 'toolButton';
-            IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+         if (self._viewMode === 'transparentQuickButton' || self._viewMode === 'quickButton') {
             if (self._viewMode === 'transparentQuickButton') {
                self._transparent = true;
             }
+            self._viewMode = 'toolButton';
+            IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
          }
          self._state = options.readOnly ? '_readOnly' : '';
          self._caption = options.caption;

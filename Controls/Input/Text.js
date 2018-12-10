@@ -92,33 +92,6 @@ define('Controls/Input/Text',
             return ViewModel;
          },
 
-         _clickHandler: function() {
-            Text.superclass._clickHandler.apply(this, arguments);
-
-            if (this._options.selectOnClick && this._firstClick) {
-               this._viewModel.select();
-               this._firstClick = false;
-            }
-         },
-
-         _focusInHandler: function() {
-            if (this._focusByMouseDown) {
-               this._firstClick = true;
-            } else {
-               this._viewModel.select();
-            }
-
-            this._focusByMouseDown = false;
-
-            Text.superclass._focusInHandler.apply(this, arguments);
-         },
-
-         _mouseDownHandler: function() {
-            if (this._getActiveElement() !== this._getField()) {
-               this._focusByMouseDown = true;
-            }
-         },
-
          _changeHandler: function() {
             if (this._options.trim) {
                var trimmedValue = this._viewModel.displayValue.trim();
@@ -138,18 +111,19 @@ define('Controls/Input/Text',
 
          defaultOptions.value = '';
          defaultOptions.trim = false;
-         defaultOptions.selectOnClick = false;
 
          return defaultOptions;
       };
 
-      Text.getDefaultTypes = function() {
-         var optionTypes = Base.getDefaultTypes();
+      Text.getOptionTypes = function() {
+         var optionTypes = Base.getOptionTypes();
 
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * optionTypes.maxLength = descriptor(Number|null);
+          */
          optionTypes.trim = descriptor(Boolean);
-         optionTypes.maxLength = descriptor(Number);
          optionTypes.constraint = descriptor(String);
-         optionTypes.selectOnClick = descriptor(Boolean);
 
          return optionTypes;
       };

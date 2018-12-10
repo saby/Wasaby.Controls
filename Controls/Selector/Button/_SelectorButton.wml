@@ -5,7 +5,7 @@
               items="{{_options.items}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
-              multiline="{{true}}"
+              multiLine="{{true}}"
               clickable="{{true}}"
               on:itemClick="_itemClickHandler()"
               on:crossClick="_crossClick()">

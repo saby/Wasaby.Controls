@@ -237,6 +237,9 @@ app.get('/:moduleName/*', function(req, res){
       res.end('');
       return;
    }
+
+   require('Core/constants').resourceRoot = '/';
+
    var html = tpl({
       lite: true,
       wsRoot: '/WS.Core/',
@@ -272,6 +275,3 @@ app.get('/stomp/s-:sid/info', simpleProxy.bind(null, {
       return '/stomp/s-' + cookies['sid'] + '/info';
    }
 }));
-
-
-

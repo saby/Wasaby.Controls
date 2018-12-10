@@ -1,15 +1,15 @@
 .controls-Suggest__suggestionsContainer-inInput {
-	top: -@top_Suggest_suggestionsContainer_overInput;
-	left: -@left_Suggest_suggestionsContainer_overInput;
-	padding-top: @height_InputRender_default + (@top_Suggest_suggestionsContainer_overInput * 2);
-	border: @thickness_border_default solid @color_border;
-	.box-shadow(@box-shadow_Suggest_suggestionsContainer_overInput);
+	top: @spacing_Suggest-contentLayer-between-topBorder-input;
+	left: @spacing_Suggest-contentLayer-between-leftBorder-input;
+	padding-top: @spacing_Suggest-contentLayer-between-input-suggestions;
+	border: @border-width_Suggest-contentLayer solid @border-color_Suggest-contentLayer;
+	.box-shadow(@box-shadow-size_Suggest-contentLayer @box-shadow-color_Suggest-contentLayer);
 	position: absolute;
 }
 
 .controls-Suggest__close {
 	position: absolute;
-	top: @margin-top_Suggest_close;
+	top: @spacing_Suggest-contentLayer-between-topBorder-close;
 	right: 0;
 	z-index: 1;
 }

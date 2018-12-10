@@ -14,6 +14,7 @@
          lite: {{ _options.lite || false }}
       };
       window.buildnumber = '{{ _options.buildnumber }}';
+      {{__setHTMLUnsafe(_options.preInitScript)}}
    </script>
    <ws:if data="{{!_options.compat}}">
       <script>

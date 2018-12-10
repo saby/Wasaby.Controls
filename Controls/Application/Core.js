@@ -9,8 +9,6 @@ define('Controls/Application/Core',
       'View/_Request/createDefault',
       'Controls/Application/StateReceiver',
       'Controls/Application/AppData',
-      'Controls/Application/HeadData',
-      'Core/Themes/ThemesController',
       'native-css',
       'Core/css-resolve'
    ],
@@ -19,9 +17,7 @@ define('Controls/Application/Core',
       Request,
       createDefault,
       StateReceiver,
-      AppData,
-      HeadData,
-      ThemesController) {
+      AppData) {
       'use strict';
 
       var AppCore = Control.extend({
@@ -45,17 +41,23 @@ define('Controls/Application/Core',
             } catch (e) {
             }
 
-            var req = new Request(createDefault.default(Request));
-            req.setStateReceiver(new StateReceiver());
-            if (typeof window !== 'undefined' && window.receivedStates) {
-               req.stateReceiver.deserialize(window.receivedStates);
+            //__hasRequest - для совместимости, пока не смержено WS. Нужно чтобы работало
+            //и так и сяк
+
+            if (typeof window === 'undefined' || window.__hasRequest === undefined) {
+
+               //need create request for SSR
+               //on client request will create in app-init.js
+               var req = new Request(createDefault.default(Request));
+               req.setStateReceiver(new StateReceiver());
+               if (typeof window !== 'undefined' && window.receivedStates) {
+                  req.stateReceiver.deserialize(window.receivedStates);
+               }
+               Request.setCurrent(req);
             }
-            Request.setCurrent(req);
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
-            var headData = new HeadData(cfg.theme || '', cfg.cssLinks, true);
-            Request.getCurrent().setStorage('HeadData', headData);
          },
          _getChildContext: function() {
             return {
@@ -70,6 +72,7 @@ define('Controls/Application/Core',
             var result;
             if (this._application !== app) {
                this._applicationForChange = app;
+               this.headDataCtx.resetRenderDeferred();
                this._forceUpdate();
                result = true;
             } else {
