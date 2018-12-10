@@ -58,6 +58,20 @@ define(
                integer: '1 000',
                fraction: '.00'
             });
+
+            result = Money._private.parseNumber(-1000.00, false);
+            assert.deepEqual(result, {
+               number: '-1000.00',
+               integer: '-1000',
+               fraction: '.00'
+            });
+
+            result = Money._private.parseNumber(-1000.00, true);
+            assert.deepEqual(result, {
+               number: '-1 000.00',
+               integer: '-1 000',
+               fraction: '.00'
+            });
          });
       });
    }
