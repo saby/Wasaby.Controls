@@ -15,6 +15,11 @@ define('Controls/Popup/Opener/Notification',
        */
 
       /**
+       * @name Controls/Popup/Opener/Notification#closePopupBeforeUnmount
+       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+       */
+
+      /**
        * @typedef {Object} popupOptions
        * @property {Function} template Шаблон отображения внутреннего содержимого
        * @property {Object} templateOptions Шаблон отображения внутреннего содержимого
@@ -78,3 +83,9 @@ define('Controls/Popup/Opener/Notification',
  * @description Close popup.
  * @function
  */
+/**
+ * @name Controls/Popup/Opener/Notification#isOpened
+ * @function
+ * @description Popup opened status.
+ */
+
