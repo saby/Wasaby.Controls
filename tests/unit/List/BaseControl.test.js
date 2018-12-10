@@ -428,7 +428,7 @@ define([
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(3, ctrl._listViewModel.getCount(), 'Items are loaded, but should not');
-               
+
                ctrl._hasUndrawChanges = false;
                BaseControl._private.onScrollLoadEdge(ctrl, 'down');
                setTimeout(function() {
@@ -1807,6 +1807,10 @@ define([
                      close: function() {
                         callBackCount++;
                      }
+                  },
+                  selectionController: {
+                     onCheckBoxClick: function() {
+                     }
                   }
                };
                instance._listViewModel.reset();
@@ -1859,6 +1863,10 @@ define([
                   itemActionsOpener: {
                      close: function() {
                         callBackCount++;
+                     }
+                  },
+                  selectionController: {
+                     onCheckBoxClick: function() {
                      }
                   }
                };
