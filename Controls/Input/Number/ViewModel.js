@@ -53,9 +53,14 @@ define('Controls/Input/Number/ViewModel',
           * @protected
           */
          _convertToValue: function(displayValue) {
-            var value = parseFloat(displayValue);
+            /**
+             * The displayed value can be separated by spaces into triads.
+             * You need to remove these gaps to parseFloat processed value completely.
+             * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
+             */
+            var value = parseFloat(displayValue.replace(/ /g, ''));
 
-            return Number.isNaN(value) ? null : parseFloat(displayValue);
+            return Number.isNaN(value) ? null : value;
          },
 
          /**
