@@ -14,6 +14,17 @@ define('Controls/Container/PendingRegistrator', [
       _pendings: null,
       _parallelDef: null,
       _beforeMount: function() {
+         var self = this;
+         if (typeof window !== 'undefined') {
+            self._beforeUnloadHandler = function(event) {
+               // We shouldn't close the tab if there are any pendings
+               if (self._hasRegisteredPendings()) {
+                  event.preventDefault();
+                  event.returnValue = '';
+               }
+            };
+            window.addEventListener('beforeunload', self._beforeUnloadHandler);
+         }
          this._pendings = {};
       },
       _registerPendingHandler: function(e, def, config) {
@@ -121,6 +132,9 @@ define('Controls/Container/PendingRegistrator', [
             this._parallelDef._fired = -1;
             this._parallelDef.cancel();
          }
+      },
+      _beforeUnmount: function() {
+         window.removeEventListener('beforeunload', this._beforeUnloadHandler);
       }
    });
 
