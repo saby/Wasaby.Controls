@@ -125,7 +125,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          getDefaultOptions: function(item) {
             var template = item.popupOptions.template;
             var templateClass = typeof template === 'string' ? require(template) : template;
-            return templateClass.getDefaultOptions();
+            return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
          }
       };
 
