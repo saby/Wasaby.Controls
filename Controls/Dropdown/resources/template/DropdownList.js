@@ -17,6 +17,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          setPopupOptions: function(self, horizontalAlign) {
             var align = horizontalAlign || 'right';
             self._popupOptions = {
+               className: 'controls-DropdownList__subMenu controls-DropdownList__subMenu_margin',
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
                autofocus: false,
@@ -35,10 +36,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
          getDropdownClass: function(verticalAlign, typeShadow) {
             return 'controls-DropdownList__popup-' + verticalAlign.side +
                ' controls-DropdownList__popup-shadow-' + typeShadow;
-         },
-
-         getDropdownHeaderClass: function(horizontalAlign) {
-            return 'controls-DropdownList__head-' + horizontalAlign.side;
          },
 
          getSubMenuPosition: function(options, popupOptions) {
@@ -193,17 +190,20 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (context && context.stickyCfg.horizontalAlign &&
                (!this._popupOptions || this._popupOptions.horizontalAlign !== context.stickyCfg.horizontalAlign)) {
                this._dropdownClass = _private.getDropdownClass(context.stickyCfg.verticalAlign, newOptions.typeShadow);
-               this._headerClass = _private.getDropdownHeaderClass(context.stickyCfg.horizontalAlign);
                _private.setPopupOptions(this, context.stickyCfg.horizontalAlign.side);
             }
          },
 
          _itemMouseEnter: function(event, item, hasChildren) {
+            // Close the already opened sub menu. Installation of new data sets new size of the container.
+            // If you change the size of the update, you will see the container twitch.
+            if (this._hasHierarchy) {
+               this._children.subDropdownOpener.close();
+            }
+
             if (hasChildren) {
                var config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
-            } else if (this._hasHierarchy) {
-               this._children.subDropdownOpener.close();
             }
          },
 

@@ -1,6 +1,6 @@
 <ws:if data="{{menuStyle === 'defaultHead'}}">
-   <div class="controls-DropdownList__head {{headerClass}}">
-      <ws:partial template="{{headContentTemplate || defaultContentHeadTemplate}}" icon="{{icon}}" caption="{{caption}}" class="{{headerClass}}"/>
+   <div class="controls-DropdownList__head">
+      <ws:partial template="{{headContentTemplate || defaultContentHeadTemplate}}" icon="{{icon}}" caption="{{caption}}"/>
    </div>
 </ws:if>
 <ws:if data="{{menuStyle === 'duplicateHead'}}">

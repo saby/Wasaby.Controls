@@ -414,6 +414,7 @@ define('Controls/List/BaseControl', [
 
       setPopupOptions: function(self) {
          self._popupOptions = {
+            className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'right' },
@@ -776,14 +777,6 @@ define('Controls/List/BaseControl', [
 
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
-      },
-
-      _hoveredItemChanged: function(event, item) {
-         this._notify('hoveredItemChanged', [item]);
-      },
-
-      _itemMouseMove: function(event, itemData, nativeEvent) {
-         this._notify('itemMouseMove', [itemData, nativeEvent]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {

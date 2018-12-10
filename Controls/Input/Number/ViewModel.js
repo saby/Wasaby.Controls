@@ -1,11 +1,13 @@
 define('Controls/Input/Number/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/Base/ViewModel',
+      'Controls/Utils/splitIntoTriads',
       'Controls/Input/Number/SplitValueHelper',
       'Controls/Input/Number/InputProcessor'
    ],
    function(
       BaseViewModel,
+      splitIntoTriads,
       SplitValueHelper,
       InputProcessor
    ) {
@@ -17,21 +19,65 @@ define('Controls/Input/Number/ViewModel',
        * @author Журавлев М.С.
        */
 
-      var NumberViewModel = BaseViewModel.extend({
+      var _private = {
+         valueWithoutTrailingZerosRegExp: /-?[0-9 ]*(([1-9]|([0.])(?!0*$))*)?/,
+
+         valueWithOneTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
+
+         integerPartRegExp: /^-?[0-9]+$/,
+
+         onlyIntegerPart: function(value) {
+            return _private.integerPartRegExp.test(value);
+         },
+
+         isDecimalPartEqualZero: function(value) {
+            return !!value && value.indexOf('.0') === value.length - 2;
+         },
+
+         prepareData: function(result) {
+            var position = result.position;
+            return {
+               before: result.value.substring(0, position),
+               after: result.value.substring(position, result.value.length),
+               insert: '',
+               delete: ''
+            };
+         }
+      };
+
+      var ViewModel = BaseViewModel.extend({
 
          /**
-             * Валидирует и подготавливает новое значение по splitValue
-             * @param splitValue
-             * @param inputType
-             * @returns {{value: (*|String), position: (*|Integer)}}
-             */
+          * @param {String} displayValue
+          * @return {Number}
+          * @protected
+          */
+         _convertToValue: function(displayValue) {
+            var value = parseFloat(displayValue);
+
+            return Number.isNaN(value) ? null : parseFloat(displayValue);
+         },
+
+         /**
+          * @param {Number} value
+          * @return {String}
+          * @protected
+          */
+         _convertToDisplayValue: function(value) {
+            var displayValue = value === null ? '' : value.toString();
+
+            return splitIntoTriads(displayValue);
+         },
+
          handleInput: function(splitValue, inputType) {
             var
                result,
                splitValueHelper = new SplitValueHelper(splitValue),
                inputProcessor = new InputProcessor();
 
-            //Если по ошибке вместо точки ввели запятую или "б"  или "ю", то выполним замену
+            /**
+             * If by mistake instead of a point entered a comma or "b" or "Yu", then perform the replacement
+             */
             splitValue.insert = splitValue.insert.toLowerCase().replace(/,|б|ю/, '.');
 
             switch (inputType) {
@@ -49,43 +95,40 @@ define('Controls/Input/Number/ViewModel',
                   break;
             }
 
-            this._options.value = result.value.replace(/ /g, '');
-            this._nextVersion();
-
-            //Запишет значение в input и поставит курсор в указанное место
-            return result;
+            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
          },
 
-         getDisplayValue: function() {
-            return InputProcessor.getValueWithDelimiters({
-               before: '',
-               insert: this._options.value,
-               after: ''
-            });
-         },
-
-         getValue: function() {
-            return this._options.value;
-         },
-
-         updateOptions: function(options) {
-            this._options.onlyPositive = options.onlyPositive;
-            this._options.integersLength = options.integersLength;
-            this._options.precision = options.precision;
-            this._options.showEmptyDecimals = options.showEmptyDecimals;
-            if (String(parseFloat(this._options.value)) !== options.value) {
-               this._options.value = options.value;
+         trimTrailingZeros: function(leaveOneZero) {
+            if (this._options.showEmptyDecimals) {
+               return false;
             }
-            this._nextVersion();
+
+            var regExp = leaveOneZero
+               ? _private.valueWithOneTrailingZerosRegExp
+               : _private.valueWithoutTrailingZerosRegExp;
+            var trimmedValue = this._displayValue.match(regExp)[0];
+
+            if (this._displayValue !== trimmedValue) {
+               this._displayValue = trimmedValue;
+               this._shouldBeChanged = true;
+
+               return true;
+            }
+
+            return false;
          },
 
-         updateValue: function(value) {
-            this._options.value = value;
-            this._nextVersion();
-            return value;
+         addTrailingZero: function() {
+            if (this._options.precision !== 0 && _private.onlyIntegerPart(this._displayValue)) {
+               this._displayValue += '.0';
+               this._shouldBeChanged = true;
+
+               return true;
+            }
+
+            return false;
          }
       });
 
-      return NumberViewModel;
-   }
-);
+      return ViewModel;
+   });
