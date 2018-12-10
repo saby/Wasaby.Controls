@@ -505,8 +505,6 @@ define('Controls/List/BaseControl', [
          var
             self = this;
 
-         this._multiSelectVisibility = newOptions.multiSelectVisibility;
-
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
@@ -606,10 +604,7 @@ define('Controls/List/BaseControl', [
 
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._options.multiSelectVisibility = newOptions.multiSelectVisibility;
-         }
-
-         if (newOptions.multiSelectVisibility !== this._multiSelectVisibility) {
-            this._listViewModel.setMultiSelectVisibility(this._multiSelectVisibility);
+            this._listViewModel.setMultiSelectVisibility(this._options.multiSelectVisibility);
          }
 
          if (filterChanged || recreateSource) {
@@ -678,9 +673,6 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
             var status = itemData.multiSelectStatus;
-            if (this._options.multiSelectVisibility === 'onhover' && this._multiSelectVisibility === 'onhover') {
-               this._multiSelectVisibility = 'visible';
-            }
             this._children.selectionController.onCheckBoxClick(itemData.key, status);
             this._notify('checkboxClick', [itemData.key, status]);
          }
