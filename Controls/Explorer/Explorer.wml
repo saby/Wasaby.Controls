@@ -2,6 +2,7 @@
    <ws:if data="{{_breadCrumbsItems}}">
       <Controls.BreadCrumbs.Path name="explorerPath"
                                  keyProperty="{{_options.keyProperty}}"
+                                 parentProperty="{{ _options.parentProperty }}"
                                  displayProperty="{{_options.displayProperty}}"
                                  items="{{_breadCrumbsItems}}"
                                  on:arrowActivated="_onBreadCrumbsArrowActivated()"
