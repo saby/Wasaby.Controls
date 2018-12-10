@@ -8,6 +8,7 @@ define('Controls/Application/Core',
       'View/Request',
       'View/_Request/createDefault',
       'Controls/Application/StateReceiver',
+      'Core/Themes/ThemesController',
       'Controls/Application/AppData',
       'native-css',
       'Core/css-resolve'
@@ -17,6 +18,7 @@ define('Controls/Application/Core',
       Request,
       createDefault,
       StateReceiver,
+      ThemesController,
       AppData) {
       'use strict';
 
