@@ -224,7 +224,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
-                  this._children.subDropdownOpener.close();
+                  if (!result.data[0].get(this._options.nodeProperty)) {
+                     this._children.subDropdownOpener.close();
+                  }
                case 'pinClicked':
                   this._notify('sendResult', [result]);
             }

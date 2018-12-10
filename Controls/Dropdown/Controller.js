@@ -95,7 +95,7 @@ define('Controls/Dropdown/Controller',
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
-                  if (!result.data[0].get('@parent')) {
+                  if (!result.data[0].get(this._options.nodeProperty)) {
                      this._children.DropdownOpener.close();
                   }
                   break;

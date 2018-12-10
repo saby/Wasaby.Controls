@@ -187,7 +187,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
                   parent: null,
                   myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
                },
-               { id: 2, title: 'Error in the development', '@parent': true, parent: null },
+               { id: 2, title: 'Error in the development', '@parent': false, parent: null },
                { id: 3, title: 'Commission', parent: 1 },
                {
                   id: 4,
