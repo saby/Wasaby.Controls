@@ -15,6 +15,7 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
+   preInitScript="{{ _options.preInitScript }}"
    servicesPath="{{ servicesPath }}">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
@@ -55,7 +56,7 @@
                                  <Controls.Application._Wait>
                                        <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}" on:showIndicator="LoadingIndicator._showHandler()" on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
-                                 <Controls.Container.LoadingIndicator name="LoadingIndicator">
+                                 <Controls.Container.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
                                     <div></div>
                                  </Controls.Container.LoadingIndicator>
                               </ws:if>

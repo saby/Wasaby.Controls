@@ -10,6 +10,7 @@ define('Controls/Input/Base',
       'Controls/Utils/getTextWidth',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
+      'Core/helpers/Function/runDelayed',
       'Controls/Utils/hasHorizontalScroll',
 
       'wml!Controls/Input/Base/Base',
@@ -20,7 +21,7 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
-      getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
+      getTextWidth, InputUtil, ViewModel, runDelayed, hasHorizontalScroll, template,
       fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
@@ -384,19 +385,25 @@ define('Controls/Input/Base',
           * @type {Number|null} The version of IE browser in which the control is build.
           * @private
           */
-         _ieVersion: detection.IEVersion,
+         _ieVersion: null,
 
          /**
-          * @type {Boolean} The version of IE browser in which the control is build.
+          * @type {Boolean|null} Determines whether the control is building in the mobile Android environment.
           * @private
           */
-         _isMobileAndroid: detection.isMobileAndroid,
+         _isMobileAndroid: null,
 
          /**
-          * @type {Boolean} Determines whether the control is building in the mobile IOS environment.
+          * @type {Boolean|null} Determines whether the control is building in the mobile IOS environment.
           * @private
           */
-         _isMobileIOS: detection.isMobileIOS,
+         _isMobileIOS: null,
+
+         /**
+          * @type {Boolean|null} Determined whether to hide the placeholder using css.
+          * @private
+          */
+         _hidePlaceholderUsingCSS: null,
 
          /**
           *
@@ -405,6 +412,21 @@ define('Controls/Input/Base',
           */
          _getActiveElement: function() {
             return document.activeElement;
+         },
+
+         constructor: function(cfg) {
+            Base.superclass.constructor.call(this, cfg);
+
+            this._ieVersion = detection.IEVersion;
+            this._isMobileAndroid = detection.isMobileAndroid;
+            this._isMobileIOS = detection.isMobileIOS;
+
+            /**
+             * Hide in chrome because it supports auto-completion of the field when hovering over an item
+             * in the list of saved values. During this action no events are triggered and hide placeholder
+             * using js is not possible.
+             */
+            this._hidePlaceholderUsingCSS = detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -491,7 +513,27 @@ define('Controls/Input/Base',
           * @private
           */
          _clickHandler: function() {
-            this._viewModel.selection = this._getFieldSelection();
+            if (this._options.selectOnClick && this._firstClick) {
+               this._viewModel.select();
+               this._firstClick = false;
+            } else {
+               var self = this;
+
+               /**
+                * If the value in the field is selected, when you click on the selected area,
+                * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
+                * Therefore, we remember the selection from the field at the next drawing cycle.
+                */
+               runDelayed(function() {
+                  self._viewModel.selection = self._getFieldSelection();
+
+                  /**
+                   * Changes are applied during the synchronization cycle. We are not in it,
+                   * so we need to inform the model that the changes have been applied.
+                   */
+                  self._viewModel.changesHaveBeenApplied();
+               });
+            }
          },
 
          /**
@@ -576,6 +618,14 @@ define('Controls/Input/Base',
          },
 
          _focusInHandler: function() {
+            if (this._focusByMouseDown) {
+               this._firstClick = true;
+            } else {
+               this._viewModel.select();
+            }
+
+            this._focusByMouseDown = false;
+
             if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
@@ -603,7 +653,9 @@ define('Controls/Input/Base',
          },
 
          _mouseDownHandler: function() {
-            /* override */
+            if (this._getActiveElement() !== this._getField()) {
+               this._focusByMouseDown = true;
+            }
          },
 
          _notifyValueChanged: function() {
@@ -704,11 +756,12 @@ define('Controls/Input/Base',
             placeholder: '',
             textAlign: 'left',
             fontStyle: 'default',
-            autoComplete: false
+            autoComplete: false,
+            selectOnClick: false
          };
       };
 
-      Base.getDefaultTypes = function() {
+      Base.getOptionTypes = function() {
          return {
 
             /**
@@ -717,6 +770,7 @@ define('Controls/Input/Base',
              */
             value: descriptor(String),
             autoComplete: descriptor(Boolean),
+            selectOnClick: descriptor(Boolean),
             size: descriptor(String).oneOf([
                's',
                'm',

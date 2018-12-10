@@ -14,7 +14,6 @@ define('Controls/Input/Area', [
    detection,
    template,
    inputHelper) {
-
    'use strict';
 
    /**
@@ -65,7 +64,7 @@ define('Controls/Input/Area', [
          var fakeArea = self._children.fakeArea;
          var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
-         //Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
+         // Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
          if (needScroll && detection.isIE) {
             fakeArea.scrollTop = self._children.realArea.scrollTop;
          }
@@ -82,8 +81,8 @@ define('Controls/Input/Area', [
          var fakeArea = self._children.fakeArea;
          var fakeAreaWrapper = self._children.fakeAreaWrapper;
 
-         //Will define the number of rows in Area by comparing fakeArea and her wrap heights
-         //Смотрим ещё и на minLines, т.к. прикладники могут создавать Area внутри контейнера с display: none.
+         // Will define the number of rows in Area by comparing fakeArea and her wrap heights
+         // Смотрим ещё и на minLines, т.к. прикладники могут создавать Area внутри контейнера с display: none.
          self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight || minLines > 1;
       }
    };
@@ -101,15 +100,15 @@ define('Controls/Input/Area', [
       _beforeMount: function(options) {
          Area.superclass._beforeMount.apply(this, arguments);
 
-         //'_multiline' is responsible for adding multi-line field classes to InputRender
-         //Should be set before the component is mounted into DOM to avoid content jumps
+         // '_multiline' is responsible for adding multi-line field classes to InputRender
+         // Should be set before the component is mounted into DOM to avoid content jumps
          this._multiline = options.minLines > 1;
       },
 
       _afterMount: function() {
          Area.superclass._afterMount.apply(this, arguments);
 
-         //Should calculate area height after mount
+         // Should calculate area height after mount
          _private.updateHasScroll(this);
          _private.updateMultiline(this, this._options.minLines);
          this._forceUpdate();
@@ -124,7 +123,7 @@ define('Controls/Input/Area', [
 
       _afterUpdate: function(oldOptions) {
          if ((oldOptions.value !== this._options.value) && this._caretPosition) {
-            this._children['realArea'].setSelectionRange(this._caretPosition, this._caretPosition);
+            this._children.realArea.setSelectionRange(this._caretPosition, this._caretPosition);
             this._caretPosition = null;
          }
       },
@@ -137,22 +136,19 @@ define('Controls/Input/Area', [
       },
 
       _keyDownHandler: function(e) {
-
-         //В режиме newLineKey === 'ctrlEnter' будем эмулировать переход на новую строку в ручную
+         // В режиме newLineKey === 'ctrlEnter' будем эмулировать переход на новую строку в ручную
          if (e.nativeEvent.keyCode === constants.key.enter && this._options.newLineKey === 'ctrlEnter') {
-
-            //Обычный enter прерываем
+            // Обычный enter прерываем
             if (!e.nativeEvent.shiftKey && !e.nativeEvent.ctrlKey) {
                e.preventDefault();
             }
 
-            //Вроде не очень хорошо. Но если хотим перенести на новую строку сами, придется вмешиваться.
+            // Вроде не очень хорошо. Но если хотим перенести на новую строку сами, придется вмешиваться.
             if (e.nativeEvent.ctrlKey) {
                e.target.value += '\n';
                this._children.inputRender._inputHandler(e);
             }
          }
-
       },
 
       _scrollHandler: function() {
@@ -160,7 +156,7 @@ define('Controls/Input/Area', [
       },
 
       paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children['inputRender'], this._children['realArea'], text);
+         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
       }
 
    });
@@ -174,8 +170,12 @@ define('Controls/Input/Area', [
 
    Area.getOptionTypes = function() {
       return {
-         minLines: types(Number),
-         maxLines: types(Number),
+
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * minLines: descriptor(Number|null),
+          * maxLines: descriptor(Number|null),
+          */
          newLineKey: types(String).oneOf([
             'enter',
             'ctrlEnter'
@@ -183,9 +183,8 @@ define('Controls/Input/Area', [
       };
    };
 
-   //For unit-tests
+   // For unit-tests
    Area._private = _private;
 
    return Area;
-
 });

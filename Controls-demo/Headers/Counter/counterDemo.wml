@@ -9,7 +9,7 @@
         <div class="optionsBlock">
             <h3>Options</h3>
             <Controls.Label name="myLabel1" caption="caption"/>
-            <Controls.Input.Number bind:value="_counterCaption" attr:class="ControlsDemo__caption"/>
+            <Controls.Input.Text bind:value="_counterCaption" attr:class="ControlsDemo__caption"/>
             <Controls.Label name="myLabel1" caption="style:"/>
             <Controls.Input.ComboBox
                     attr:class="ControlsDemo__style"

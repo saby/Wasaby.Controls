@@ -1,4 +1,16 @@
-define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet', 'WS.Data/Collection/IBind'], function(TreeViewModel, cMerge, RecordSet, IBindCollection) {
+define([
+   'Controls/List/Tree/TreeViewModel',
+   'Core/core-merge',
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Entity/Record',
+   'WS.Data/Collection/IBind'
+], function(
+   TreeViewModel,
+   cMerge,
+   RecordSet,
+   Record,
+   IBindCollection
+) {
    function MockedDisplayItem(cfg) {
       var
          self = this;
@@ -297,6 +309,23 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
             assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after collapse "123".');
+         });
+
+         it('hasChildren should be true when an item gets added to an empty folder', function() {
+            var newItem = new Record({
+               rawData: {
+                  'id': '4',
+                  'title': 'четыре',
+                  'parent': '3',
+                  'parent@': true
+               }
+            });
+            treeViewModel.setExpandedItems(['123', '234', '3']);
+            treeViewModel._editingItemData = {
+               item: newItem
+            };
+            treeViewModel._curIndex = 4;
+            assert.isTrue(treeViewModel.getCurrent().hasChildren);
          });
 
          it('multiSelectStatus', function() {
