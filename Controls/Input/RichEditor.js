@@ -6,7 +6,7 @@ define('Controls/Input/RichEditor', [
    'Controls/Input/RichEditor/Toolbar/defaultToolbarButtonsList',
    'Core/core-clone',
    'Core/moduleStubs',
-   'css!Controls/Input/RichEditor/RichEditor'
+   'css!theme?Controls/Input/RichEditor/RichEditor'
 ], function(Control, template, Memory, RecordSet, defaultButtons, cClone, moduleStubs) {
    /**
     * Component RichEditor

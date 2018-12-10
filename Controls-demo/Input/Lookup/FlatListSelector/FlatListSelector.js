@@ -15,11 +15,11 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
       _keyProperty: 'id',
       _selectionChanged: false,
 
-      _beforeMount: function() {
+      _beforeMount: function(newOptions) {
          var keyProperty = this._keyProperty;
 
          this._closeSelectorBind = this._closeSelector.bind(this);
-         this._source = new Memory({
+         this._source = newOptions.source || new Memory({
             data: lookupData.names,
             filter: function(item, queryFilter) {
                var selectionFilterFn = function(item, filter) {

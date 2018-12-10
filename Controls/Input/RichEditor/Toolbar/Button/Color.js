@@ -3,7 +3,7 @@ define('Controls/Input/RichEditor/Toolbar/Button/Color', [
    'wml!Controls/Input/RichEditor/Toolbar/Button/Color/Color',
    'Controls/Input/RichEditor/Toolbar/Button/Color/data',
    'WS.Data/Source/Memory',
-   'css!Controls/Input/RichEditor/Toolbar/Button/Color/Color',
+   'css!theme?Controls/Input/RichEditor/Toolbar/Button/Color/Color',
 ], function(Control, template, colorsPickData, Memory) {
    /**
     * Component Toolbar/Button/Color

@@ -414,6 +414,7 @@ define('Controls/List/BaseControl', [
 
       setPopupOptions: function(self) {
          self._popupOptions = {
+            className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'right' },
@@ -543,7 +544,12 @@ define('Controls/List/BaseControl', [
                   self._items = receivedState;
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  var
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  loadDef.addCallback(function(items) {
+                     return items;
+                  });
+                  return loadDef;
                }
             }
          });
@@ -764,16 +770,13 @@ define('Controls/List/BaseControl', [
          _private.showActionsMenu(this, event, itemData, childEvent, showAll);
       },
 
+      _onItemContextMenu: function(event, itemData) {
+         this._showActionsMenu.apply(this, arguments);
+         this._listViewModel.setMarkedKey(itemData.key);
+      },
+
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
-      },
-
-      _hoveredItemChanged: function(event, item) {
-         this._notify('hoveredItemChanged', [item]);
-      },
-
-      _itemMouseMove: function(event, itemData, nativeEvent) {
-         this._notify('itemMouseMove', [itemData, nativeEvent]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {

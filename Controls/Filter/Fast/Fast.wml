@@ -10,9 +10,8 @@
          </ws:if>
       </div>
    </ws:for>
-   <Controls.Dropdown.Opener name="DropdownOpener"
-   className="controls-FastFilter-popup">
-      <ws:popupOptions>
+   <Controls.Dropdown.Opener name="DropdownOpener">
+      <ws:popupOptions className="controls-FastFilter-popup">
          <ws:eventHandlers onResult="{{_onResult}}"/>
          <ws:templateOptions
                  showClose="{{true}}">

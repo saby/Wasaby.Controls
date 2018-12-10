@@ -27,6 +27,14 @@ define('Controls/Container/LoadingIndicator', [
       _beforeMount: function(cfg) {
          this._updateProperties(cfg);
       },
+      _afterMount: function(cfg) {
+         var self = this;
+         if (cfg.mainIndicator) {
+            requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
+               ManagerController.setIndicator(self);
+            });
+         }
+      },
       _beforeUpdate: function(cfg) {
          this._updateProperties(cfg);
       },

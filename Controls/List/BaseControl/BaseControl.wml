@@ -21,41 +21,39 @@
    </ws:template>
 
    <ws:template name="viewTpl">
-      <div>
-         <ws:partial
-            name="{{name}}"
-            template="{{ _options.content }}"
-            scope="{{_options}}"
-            listModel="{{_listViewModel}}"
-            on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-            on:itemClick="_onItemClick()"
-            on:groupClick="_onGroupClick()"
-            on:itemContextMenu="_showActionsMenu()"
-            on:itemMouseDown="_itemMouseDown()"
-            on:itemMouseEnter="_itemMouseEnter()"
-            on:itemMouseMove="_itemMouseMove()"
-            on:hoveredItemChanged="_hoveredItemChanged()"
-            on:itemSwipe="_listSwipe()">
-            <ws:viewTemplate>
-               <ws:partial template="{{_options.viewName}}"/>
-            </ws:viewTemplate>
-            <ws:footerTemplate>
-               <ws:if data="{{_options.footerTemplate}}">
-                  <ws:partial template="{{_options.footerTemplate}}"/>
-               </ws:if>
-               <ws:if data="{{_shouldDrawFooter}}">
-                  <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
-               </ws:if>
-            </ws:footerTemplate>
-            <ws:multiSelectTpl>
-                <ws:if data="{{_options.multiSelectVisibility}}">
-                    <Controls.Container.Async name="multiSelectContainer" templateName="wml!Controls/List/BaseControl/multiSelect">
-                        <ws:partial template="{{'wml!Controls/List/BaseControl/multiSelect'}}" />
-                    </Controls.Container.Async>
-                </ws:if>
-            </ws:multiSelectTpl>
-         </ws:partial>
-      </div>
+      <ws:partial
+         name="{{name}}"
+         template="{{ _options.content }}"
+         scope="{{_options}}"
+         listModel="{{_listViewModel}}"
+         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+         on:itemClick="_onItemClick()"
+         on:groupClick="_onGroupClick()"
+         on:itemContextMenu="_onItemContextMenu()"
+         on:itemMouseDown="_itemMouseDown()"
+         on:itemMouseEnter="_itemMouseEnter()"
+         on:itemMouseMove="_notifyHandler('itemMouseMove')"
+         on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+         on:itemSwipe="_listSwipe()">
+         <ws:viewTemplate>
+            <ws:partial template="{{_options.viewName}}"/>
+         </ws:viewTemplate>
+         <ws:footerTemplate>
+            <ws:if data="{{_options.footerTemplate}}">
+               <ws:partial template="{{_options.footerTemplate}}"/>
+            </ws:if>
+            <ws:if data="{{_shouldDrawFooter}}">
+               <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
+            </ws:if>
+         </ws:footerTemplate>
+         <ws:multiSelectTpl>
+             <ws:if data="{{_options.multiSelectVisibility}}">
+                 <Controls.Container.Async name="multiSelectContainer" templateName="wml!Controls/List/BaseControl/multiSelect">
+                     <ws:partial template="{{'wml!Controls/List/BaseControl/multiSelect'}}" />
+                 </Controls.Container.Async>
+             </ws:if>
+         </ws:multiSelectTpl>
+      </ws:partial>
    </ws:template>
 
    <ws:template name="fullView">
@@ -140,7 +138,6 @@
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
-            className="controls-Toolbar__menu-position"
             popupOptions="{{_popupOptions}}"/>
    <ws:if data="{{ _items }}">
       <Controls.List.BaseControl.SelectionController

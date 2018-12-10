@@ -1,7 +1,7 @@
 define('Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog', [
    'Core/Control',
    'wml!Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog/Dialog',
-   'css!Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog/Dialog'
+   'css!theme?Controls/Input/RichEditor/Toolbar/Button/EditLink/Dialog/Dialog'
 ], function(Control, template) {
    /**
     * Component Toolbar/Button/EditLink/Dialog
