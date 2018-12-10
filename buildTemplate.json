@@ -9,10 +9,10 @@
   "htmlWml": true,
   "themes": true,
 
-  "minimize": true,
-  "wml": true,
-  "customPack": true,
-  "dependenciesGraph": true,
+  "minimize": false,
+  "wml": false,
+  "customPack": false,
+  "dependenciesGraph": false,
 
   "modules": [
     {
@@ -66,14 +66,6 @@
     {
       "name": "Data",
       "path": "%cd%/node_modules/ws-data/Data"
-    },
-    {
-        "name": "Layout",
-        "path": "%cd%/Layout"
-    },
-    {
-        "name": "Engine-demo",
-        "path": "%cd%/Engine-demo"
     },
     {
       "name": "SBIS3.CONTROLS",
