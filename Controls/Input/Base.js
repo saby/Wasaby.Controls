@@ -406,6 +406,12 @@ define('Controls/Input/Base',
          _hidePlaceholderUsingCSS: null,
 
          /**
+          * @type {Boolean|null} Determines whether the control is building in the Edge.
+          * @private
+          */
+         _isEdge: null,
+
+         /**
           *
           * @return {HTMLElement}
           * @private
@@ -420,6 +426,7 @@ define('Controls/Input/Base',
             this._ieVersion = detection.IEVersion;
             this._isMobileAndroid = detection.isMobileAndroid;
             this._isMobileIOS = detection.isMobileIOS;
+            this._isEdge = detection.isIE12;
 
             /**
              * Hide in chrome because it supports auto-completion of the field when hovering over an item
