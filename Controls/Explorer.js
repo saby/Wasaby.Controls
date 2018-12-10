@@ -6,6 +6,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
    'WS.Data/Chain',
+   'Core/core-instance',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
@@ -20,7 +21,8 @@ define('Controls/Explorer', [
    TreeGridViewModel,
    TreeTileViewModel,
    tmplNotify,
-   chain
+   chain,
+   cInstance
 ) {
    'use strict';
 
@@ -63,7 +65,7 @@ define('Controls/Explorer', [
          },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
-               self._root = typeof self._options.root !== 'undefined' ? self._options.root : null;
+               self._root = self._options.root;
             }
             self._viewMode = viewMode;
             self._swipeViewMode = viewMode === 'search' ? 'list' : viewMode;
@@ -104,19 +106,34 @@ define('Controls/Explorer', [
       _viewMode: null,
       _viewModelConstructor: null,
       _leftPadding: null,
-      constructor: function() {
-         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
-         Explorer.superclass.constructor.apply(this, arguments);
-      },
+      _dragOnBreadCrumbs: false,
+      _hoveredBreadCrumb: undefined,
+
       _beforeMount: function(cfg) {
+         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+         this._root = this._options.root;
          _private.setViewMode(this, cfg.viewMode);
-         Explorer.superclass._beforeMount.apply(this, arguments);
       },
       _beforeUpdate: function(cfg) {
-         Explorer.superclass._beforeUpdate.apply(this, arguments);
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
          }
+      },
+      _dragEndBreadCrumbs: function(event, dragObject) {
+         if (this._hoveredBreadCrumb !== undefined) {
+            this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
+         }
+      },
+      _documentDragEnd: function() {
+         this._dragOnBreadCrumbs = false;
+      },
+      _documentDragStart: function(event, dragObject) {
+         if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
+            this._dragOnBreadCrumbs = true;
+         }
+      },
+      _hoveredCrumbChanged: function(event, item) {
+         this._hoveredBreadCrumb = item;
       },
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
@@ -155,7 +172,8 @@ define('Controls/Explorer', [
    Explorer.getDefaultOptions = function() {
       return {
          multiSelectVisibility: 'hidden',
-         viewMode: DEFAULT_VIEW_MODE
+         viewMode: DEFAULT_VIEW_MODE,
+         root: null
       };
    };
 

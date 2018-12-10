@@ -66,6 +66,10 @@ define('Controls/BreadCrumbs/View', [
          }
       },
 
+      _onHoveredItemChanged: function(event, itemKey) {
+         this._notify('hoveredItemChanged', [itemKey]);
+      },
+
       _onResize: function() {
          this._children.menuOpener.close();
       },

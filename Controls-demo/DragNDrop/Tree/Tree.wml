@@ -4,10 +4,11 @@
       <Controls.Container.MultiSelector bind:selectedKeys="_options.selectedKeys">
          <Controls.List.Container>
             <Controls.List.MultiSelector>
-               <Controls.TreeGrid
+               <Controls.Explorer
                        on:dragStart="_dragStart()"
                        on:dragEnd="_dragEnd()"
                        displayProperty="title"
+                       viewMode="table"
                        parentProperty="Раздел"
                        nodeProperty="Раздел@"
                        itemsDragNDrop="{{true}}"
@@ -22,7 +23,7 @@
                                  additionalText="{{draggingTemplate.entity._options.additionalText}}">
                      </ws:partial>
                   </ws:draggingTemplate>
-               </Controls.TreeGrid>
+               </Controls.Explorer>
             </Controls.List.MultiSelector>
          </Controls.List.Container>
       </Controls.Container.MultiSelector>

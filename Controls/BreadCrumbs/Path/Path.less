@@ -37,7 +37,19 @@
 
 .controls-BreadCrumbsPath__breadCrumbs {
    flex-grow: 1;
-   overflow: hidden;
+   padding-left: @spacing_BreadCrumbs-between-home-and-crumbs;
+}
+
+.controls-BreadCrumbsPath__home {
+   .icon(@font-size_BreadCrumbs-home);
+   cursor: pointer;
+}
+
+.controls-BreadCrumbsPath__homeContainer {
+   .baseline-fix();
+   position: relative;
+   display: inline-flex;
+   align-items: baseline;
 }
 
 .controls-BreadCrumbsPath__backButton_short {
@@ -60,6 +72,9 @@
    }
    .controls-BreadCrumbsPath__backButton:hover ~ .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-block;
+   }
+   .controls-BreadCrumbsPath__home:hover {
+      color: @bread-crumb-title-hover-color;
    }
 }
 

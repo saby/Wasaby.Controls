@@ -19,7 +19,7 @@ define([
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
          getWidth = getWidthUtil.getWidth;
          getWidthUtil.getWidth = function(item) {
-            if (item === '<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>') {
+            if (item === '<div class="controls-BreadCrumbsPath__home icon-size icon-Home3 icon-primary"></div>') {
                return 24;
             } else {
                return backButtonWidth;
@@ -149,8 +149,8 @@ define([
             path._beforeUpdate({
                items: []
             });
-            assert.equal(path._visibleItems.length, 0);
-            assert.equal(path._breadCrumbsItems.length, 0);
+            assert.isNull(path._visibleItems);
+            assert.isNull(path._breadCrumbsItems);
          });
       });
 
@@ -164,11 +164,17 @@ define([
       });
 
       it('_onHomeClick', function() {
+         var root = null;
+
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.isNull(args[0]);
+               assert.equal(root, args[0]);
             }
          };
+         path._onHomeClick();
+
+         root = 'itemsRoot';
+         path._options.root = root;
          path._onHomeClick();
       });
 

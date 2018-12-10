@@ -54,14 +54,14 @@ define('Controls/BreadCrumbs/Path', [
                   size: 'm'
                }
             }));
-            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
+            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3 icon-primary"></div>');
             _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, containerWidth - homeWidth);
 
             availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
          } else {
-            self._visibleItems = [];
-            self._breadCrumbsItems = [];
+            self._visibleItems = null;
+            self._breadCrumbsItems = null;
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
          }
@@ -89,8 +89,8 @@ define('Controls/BreadCrumbs/Path', [
    var BreadCrumbsPath = Control.extend({
       _template: template,
       _backButtonCaption: '',
-      _visibleItems: [],
-      _breadCrumbsItems: [],
+      _visibleItems: null,
+      _breadCrumbsItems: null,
       _backButtonClass: '',
       _breadCrumbsClass: '',
       _oldWidth: 0,
@@ -126,12 +126,19 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[0].get(this._options.parentProperty)]);
+         this._notify('itemClick', [this._options.root]);
       },
 
       _onArrowClick: function() {
          this._notify('arrowActivated');
       }
    });
+
+   BreadCrumbsPath.getDefaultOptions = function() {
+      return {
+         root: null
+      };
+   };
+
    return BreadCrumbsPath;
 });
