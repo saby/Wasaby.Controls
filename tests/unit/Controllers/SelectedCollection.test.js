@@ -237,6 +237,12 @@ define([
             keyProperty: 'id'
          });
          assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
+
+         selectedCollection._beforeUpdate({
+            keyProperty: 'title'
+         });
+         // т.к items еще не загрузились.
+         assert.deepEqual(selectedCollection._selectedKeys, []);
       });
 
       it('_setItems', function() {

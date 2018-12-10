@@ -70,7 +70,7 @@ define('Controls/List/ListViewModel',
                   }
                }
             }
-            if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
+            if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
@@ -198,6 +198,10 @@ define('Controls/List/ListViewModel',
             }
             this._nextVersion();
             _private.updateIndexes(this);
+         },
+
+         getItems: function() {
+            return ListViewModel.superclass.getItems.apply(this, arguments);
          },
 
          _setEditingItemData: function(itemData) {

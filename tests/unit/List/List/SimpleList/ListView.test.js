@@ -142,6 +142,58 @@ define([
          assert.isFalse(listView._lockForUpdate, 'Incorrect "_lockForUpdate" value after call "afterUpdate".');
          assert.deepEqual([], listView._queue, 'Incorrect initial "_queue" value after call "afterUpdate".');
       });
+      it('_onItemMouseEnter', function(done) {
+         var
+            fakeHTMLElement = {
+               className: 'controls-ListView__itemV'
+            },
+            fakeEvent = {
+               target: {
+                  closest: function(selector) {
+                     if (selector === '.controls-ListView__itemV') {
+                        return fakeHTMLElement;
+                     }
+                  }
+               }
+            },
+            fakeItemData = {
+               item: {}
+            },
+            eventQueue = [],
+            model = new ListViewModel({
+               items: data,
+               keyProperty: 'id'
+            }),
+            cfg = {
+               listModel: model,
+               keyProperty: 'id'
+            },
+            lv = new ListView(cfg);
+         lv._notify = function(eventName, eventArgs, eventOptions) {
+            eventQueue.push({
+               eventName: eventName,
+               eventArgs: eventArgs,
+               eventOptions: eventOptions
+            });
+         };
+         lv._onItemMouseEnter(fakeEvent, fakeItemData);
+         assert.equal(eventQueue.length, 1);
+         assert.equal(eventQueue[0].eventName, 'itemMouseEnter');
+         assert.equal(eventQueue[0].eventArgs.length, 2);
+         assert.equal(eventQueue[0].eventArgs[0], fakeItemData);
+         assert.equal(eventQueue[0].eventArgs[1], fakeEvent);
+         assert.isUndefined(eventQueue[0].eventOptions);
+         setTimeout(function() {
+            assert.equal(lv._hoveredItem, fakeItemData.item);
+            assert.equal(eventQueue.length, 2);
+            assert.equal(eventQueue[1].eventName, 'hoveredItemChanged');
+            assert.equal(eventQueue[1].eventArgs.length, 2);
+            assert.equal(eventQueue[1].eventArgs[0], fakeItemData.item);
+            assert.equal(eventQueue[1].eventArgs[1], fakeHTMLElement);
+            assert.isUndefined(eventQueue[1].eventOptions);
+            done();
+         }, 150); //150 === DEBOUNCE_HOVERED_ITEM_CHANGED
+      });
       describe('_onItemContextMenu', function() {
          it('contextMenuEnabled: true', function() {
             var
