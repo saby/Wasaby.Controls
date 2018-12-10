@@ -16,6 +16,14 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             }
          }
       }
+
+      var addDeps = slr._depsStorage || {};
+      for (var j in addDeps) {
+         if (addDeps.hasOwnProperty(j)) {
+            deps[j] = true;
+         }
+      }
+
       return deps;
    }
 
