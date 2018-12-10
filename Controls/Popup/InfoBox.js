@@ -102,14 +102,14 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                style: self._options.style,
+               float: self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler
                },
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions,
-                  float: self._options.float
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }
