@@ -437,27 +437,27 @@ define('Controls/Input/Base',
             this._initProperties(this);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            /**
-             * Browsers use auto-fill to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the <input> tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            if ('name' in options) {
+            if (options.autoComplete) {
                /**
-                * The value of the name option can be undefined.
-                * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                * Browsers use auto-fill to the fields with the previously stored name.
+                * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+                * To avoid this, we will translate the name of the control to the name of the <input> tag.
+                * https://habr.com/company/mailru/blog/301840/
                 */
-               if (typeof options.name !== 'undefined') {
-                  this._fieldName = options.name;
+               if ('name' in options) {
+                  /**
+                   * The value of the name option can be undefined.
+                   * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                   */
+                  if (typeof options.name !== 'undefined') {
+                     this._fieldName = options.name;
+                  }
                }
-            }
-
-            /**
-             * To disable auto-complete in a field, its name attribute must have a value that
-             * the browser does not remember. To do this, generate a random name.
-             */
-            if (!options.autoComplete) {
+            } else {
+               /**
+                * To disable auto-complete in a field, its name attribute must have a value that
+                * the browser does not remember. To do this, generate a random name.
+                */
                this._fieldName = randomName('name-');
             }
          },
