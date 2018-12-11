@@ -2,6 +2,24 @@ define(['Controls/Filter/Controller'], function(Filter) {
    
    describe('Controls.Filter.Controller', function () {
 
+      it('_beforeMount', function() {
+         var filterLayout = new Filter();
+         var items = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'testText',
+            resetValue: ''
+         }];
+         var fastItems = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'test',
+            resetValue: ''
+         }];
+         filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
+         assert.deepEqual(filterLayout._filterButtonItems, items);
+      });
+
       it('_beforeUpdate new items', function () {
          var filterLayout = new Filter();
          filterLayout.saveOptions({filterButtonSource: []});
