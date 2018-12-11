@@ -20,6 +20,7 @@ define('Controls/Popup/InfoBox',
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        */
 
       /**
