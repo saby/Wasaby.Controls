@@ -9,6 +9,11 @@ define(['Controls/Filter/Controller'], function(Filter) {
             value: 'testValue',
             textValue: 'testText',
             resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: 'testValue',
+            textValue: 'testText2',
+            resetValue: ''
          }];
          var fastItems = [{
             id: 'testKey',
@@ -17,7 +22,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
             resetValue: ''
          }];
          filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
-         assert.deepEqual(filterLayout._filterButtonItems, items);
+         assert.deepEqual(filterLayout._filterButtonItems[0].textValue, '');
+         assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
       });
 
       it('_beforeUpdate new items', function () {
