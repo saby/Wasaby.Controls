@@ -1105,32 +1105,23 @@ define(
 
          testCases.forEach(function(item) {
             it(item.testName, function() {
-               var
-                  numberViewModel = new NumberViewModel(item.controlConfig),
-                  result = numberViewModel.handleInput(item.splitValue, item.inputType);
+               var numberViewModel = new NumberViewModel(item.controlConfig, 0);
 
-               assert.equal(result.value, item.result.value);
+               numberViewModel.handleInput(item.splitValue, item.inputType)
+               assert.equal(numberViewModel.displayValue, item.result.value);
             });
          });
 
          it('getDisplayValue: only integers', function() {
-            var
-               numberViewModel = new NumberViewModel({
-                  value: 123456
-               }),
-               result = numberViewModel.getDisplayValue();
+            var numberViewModel = new NumberViewModel({}, 123456);
 
-            assert.equal(result, '123 456');
+            assert.equal(numberViewModel.displayValue, '123 456');
          });
 
          it('getDisplayValue: integers and decimals', function() {
-            var
-               numberViewModel = new NumberViewModel({
-                  value: 123456.78
-               }),
-               result = numberViewModel.getDisplayValue();
+            var numberViewModel = new NumberViewModel({}, 123456.78);
 
-            assert.equal(result, '123 456.78');
+            assert.equal(numberViewModel.displayValue, '123 456.78');
          });
 
          describe('getDisplayValue', function() {
@@ -1145,48 +1136,11 @@ define(
 
             getValueTests.forEach(function(test, i) {
                it('Test ' + i, function() {
-                  var numberViewModel = new NumberViewModel({
-                     value: test[0]
-                  });
-                  var result = numberViewModel.getDisplayValue();
+                  var numberViewModel = new NumberViewModel({}, test[0]);
 
-                  assert.isTrue(result === test[1]);
+                  assert.isTrue(numberViewModel.displayValue === test[1]);
                });
             });
-         });
-
-         it('\'0.\' wouldn\'t update if value is 0', function() {
-            var
-               numberViewModel = new NumberViewModel({});
-
-            numberViewModel.handleInput({
-               before: '',
-               insert: '.',
-               after: '',
-               delete: ' '
-            }, 'insert');
-
-            numberViewModel.updateOptions({
-               value: 0
-            });
-
-            assert.equal(numberViewModel._options.value, '0.');
-         });
-
-         it('getValue', function() {
-            var
-               numberViewModel = new NumberViewModel({value: '123'});
-
-            assert.equal(numberViewModel.getValue(), '123');
-         });
-
-         it('updateValue', function() {
-            var
-               numberViewModel = new NumberViewModel({value: '123'});
-
-            numberViewModel.updateValue('456');
-
-            assert.equal(numberViewModel.getValue(), '456');
          });
       });
    }

@@ -56,12 +56,12 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#content
-       * @cfg {Function} The content to which the logic of opening and closing the template is added.
+       * @cfg {function|String} The content to which the logic of opening and closing the template is added.
        */
 
       /**
        * @name Controls/Popup/InfoBox#template
-       * @cfg {String|Function} Popup template.
+       * @cfg {function|String} Popup template.
        */
 
       /**

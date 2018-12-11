@@ -15,7 +15,9 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
-   servicesPath="{{ servicesPath }}">
+   preInitScript="{{ _options.preInitScript }}"
+   servicesPath="{{ servicesPath }}"
+   product="{{ product }}">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Registrator name="resizeDetect" register="controlResize" attr:fixCompatible="1">
@@ -55,7 +57,7 @@
                                  <Controls.Application._Wait>
                                        <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}" on:showIndicator="LoadingIndicator._showHandler()" on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
-                                 <Controls.Container.LoadingIndicator name="LoadingIndicator">
+                                 <Controls.Container.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
                                     <div></div>
                                  </Controls.Container.LoadingIndicator>
                               </ws:if>

@@ -177,6 +177,20 @@ define('Controls/List/Grid/GridViewModel', [
                ladder: ladder,
                stickyLadder: stickyLadder
             };
+         },
+   
+         getSortingDirectionByProp: function(sorting, prop) {
+            var sortingDirection;
+      
+            if (sorting) {
+               sorting.forEach(function(elem) {
+                  if (elem[prop]) {
+                     sortingDirection = elem[prop];
+                  }
+               });
+            }
+      
+            return sortingDirection;
          }
       },
 
@@ -303,6 +317,11 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
             }
             headerColumn.cellClasses = cellClasses;
+            
+            if (headerColumn.column.sortingProperty) {
+               headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
+            }
+            
             return headerColumn;
          },
 
@@ -433,6 +452,14 @@ define('Controls/List/Grid/GridViewModel', [
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
+         },
+         
+         setSorting: function(sorting) {
+            this._model.setSorting(sorting);
+         },
+   
+         getSorting: function() {
+            return this._model.getSorting();
          },
 
          getSwipeItem: function() {
@@ -653,6 +680,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          getActiveItem: function() {
             return this._model.getActiveItem();
+         },
+
+         getChildren: function() {
+            return this._model.getChildren.apply(this._model, arguments);
          },
 
          destroy: function() {

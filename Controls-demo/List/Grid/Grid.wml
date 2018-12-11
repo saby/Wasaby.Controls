@@ -19,7 +19,8 @@
                              on:itemActionsClick="_onActionClick()"
                              itemActionVisibilityCallback="{{_showAction}}"
                              itemActionsPosition="outside"
-                             columns="{{gridColumns}}">
+                             columns="{{gridColumns}}"
+                             bind:sorting="_sorting">
                      </Controls.Grid>
                   </Controls.List.MultiSelector>
                </Controls.List.Container>

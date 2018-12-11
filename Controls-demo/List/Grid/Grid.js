@@ -12,7 +12,8 @@ define('Controls-demo/List/Grid/Grid', [
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
    'Controls/Grid',
-   'Controls/Render/Money/Money'
+   'Controls/Render/Money/Money',
+   'Controls/List/Grid/SortButton'
 ], function(BaseControl, GridData, template, MemorySource) {
    'use strict';
    var
@@ -22,6 +23,7 @@ define('Controls-demo/List/Grid/Grid', [
          _actionClicked: '',
          _itemActions: null,
          _viewSource: null,
+         _sorting: [],
          gridColumns: null,
          gridHeader: null,
          showType: null,
@@ -152,7 +154,8 @@ define('Controls-demo/List/Grid/Grid', [
                },
                {
                   title: 'Остаток',
-                  align: 'right'
+                  align: 'right',
+                  sortingProperty: 'balance'
                },
                {
                   title: 'Резерв',
