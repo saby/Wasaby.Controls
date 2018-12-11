@@ -425,6 +425,15 @@ node('controls') {
             echo items
         }
         if ( regr || inte || all_inte) {
+        dir("./controls/tests") {
+            def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
+            if (rc_err) {
+                currentBuild.description = "ОШИБКИ ПО UI ТЕСТАМ В RC:${rc_err}"
+            } else {
+                currentBuild.description = "НЕТ ОШИБОК ПО UI ТЕСТАМ В RC"
+            }
+
+        }
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini

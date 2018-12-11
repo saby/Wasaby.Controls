@@ -16,6 +16,11 @@ define('Controls/Popup/Opener/Confirmation',
        * @author Красильников А.С.
        */
 
+      /**
+       * @name Controls/Popup/Opener/Confirmation#closePopupBeforeUnmount
+       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+       */
+
       var Confirmation = BaseOpener.extend({
          _resultDef: null,
          _openerResultHandler: null,
@@ -31,6 +36,18 @@ define('Controls/Popup/Opener/Confirmation',
                this._resultDef = null;
             }
          },
+
+
+         /**
+          * @name Controls/Popup/Opener/Confirmation#isOpened
+          * @function
+          * @description Popup opened status.
+          */
+
+         /**
+          * Close popup.
+          * @function Controls/Popup/Opener/Confirmation#close
+          */
 
          /**
           * Open confirmation popup.

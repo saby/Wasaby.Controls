@@ -2,8 +2,8 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
    'Core/Control',
    'wml!Controls-demo/List/Tree/TreeWithPhoto',
    'Controls-demo/List/Tree/TreeMemory',
+   'Controls-demo/resources/Images',
    'css!Controls-demo/List/Tree/TreeWithPhoto',
-   'css!Controls-demo/List/data/images',
    'wml!Controls-demo/List/Tree/TreeWithPhoto-content',
    'wml!Controls-demo/List/Tree/TreeWithPhoto-item16',
    'wml!Controls-demo/List/Tree/TreeWithPhoto-item24',
@@ -12,7 +12,7 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
    'wml!Controls-demo/List/Tree/TreeWithPhoto-itemTwoLevels',
    'wml!Controls-demo/List/Tree/TreeWithPhoto-contentTwoLevels',
    'Controls/TreeGrid'
-], function(BaseControl, template, MemorySource) {
+], function(BaseControl, template, MemorySource, resImages) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -32,28 +32,28 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
                      id: 11, title: 'Node', 'Раздел': 1, 'Раздел@': true, 'Раздел$': null, photo: ''
                   },
                   {
-                     id: 111, title: 'Leaf', 'Раздел': 11, 'Раздел@': null, 'Раздел$': null, photo: 'Krainov'
+                     id: 111, title: 'Leaf', 'Раздел': 11, 'Раздел@': null, 'Раздел$': null, photo: resImages.staff.krainov
                   },
                   {
-                     id: 12, title: 'Leaf', 'Раздел': 1, 'Раздел@': null, 'Раздел$': null, photo: 'Korbyt'
+                     id: 12, title: 'Leaf', 'Раздел': 1, 'Раздел@': null, 'Раздел$': null, photo: resImages.staff.korbyt
                   },
                   {
-                     id: 13, title: 'Hidden node', 'Раздел': 1, 'Раздел@': false, 'Раздел$': true, photo: 'Dogadkin'
+                     id: 13, title: 'Hidden node', 'Раздел': 1, 'Раздел@': false, 'Раздел$': true, photo: resImages.staff.dogadkin
                   },
                   {
                      id: 2, title: 'Empty node', 'Раздел': null, 'Раздел@': true, 'Раздел$': null, photo: ''
                   },
                   {
-                     id: 3, title: 'Hidden node', 'Раздел': null, 'Раздел@': false, 'Раздел$': true, photo: 'Krainov'
+                     id: 3, title: 'Hidden node', 'Раздел': null, 'Раздел@': false, 'Раздел$': true, photo: resImages.staff.krainov
                   },
                   {
-                     id: 31, title: 'Leaf', 'Раздел': 3, 'Раздел@': null, 'Раздел$': null, photo: 'Korbyt'
+                     id: 31, title: 'Leaf', 'Раздел': 3, 'Раздел@': null, 'Раздел$': null, photo: resImages.staff.korbyt
                   },
                   {
-                     id: 4, title: 'Empty hidden', 'Раздел': null, 'Раздел@': false, 'Раздел$': false, photo: 'Dogadkin'
+                     id: 4, title: 'Empty hidden', 'Раздел': null, 'Раздел@': false, 'Раздел$': false, photo: resImages.staff.dogadkin
                   },
                   {
-                     id: 5, title: 'Leaf', 'Раздел': null, 'Раздел@': null, 'Раздел$': null, photo: 'Korbyt'
+                     id: 5, title: 'Leaf', 'Раздел': null, 'Раздел@': null, 'Раздел$': null, photo: resImages.staff.korbyt
                   }
                ]
             });
@@ -61,13 +61,13 @@ define('Controls-demo/List/Tree/TreeWithPhoto', [
                idProperty: 'id',
                data: [
                   {
-                     id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: 'Krainov'
+                     id: 1, title: 'Крайнов Дмитрий', 'Раздел': null, 'Раздел@': true, photo: resImages.staff.krainov
                   },
                   {
-                     id: 2, title: 'Корбут Антон', 'Раздел': null, 'Раздел@': true, photo: 'Korbyt'
+                     id: 2, title: 'Корбут Антон', 'Раздел': null, 'Раздел@': true, photo: resImages.staff.korbyt
                   },
                   {
-                     id: 3, title: 'Догадкин Владимир', 'Раздел': null, 'Раздел@': true, photo: 'Dogadkin'
+                     id: 3, title: 'Догадкин Владимир', 'Раздел': null, 'Раздел@': true, photo: resImages.staff.dogadkin
                   },
                   {
                      id: 11, title: 'Шеврон платформенно появляется с отступом от самого длинного поля', 'Раздел': 1, 'Раздел@': null, photo: null

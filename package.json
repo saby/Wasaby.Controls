@@ -38,8 +38,8 @@
          "path": "",
          "query": "reporter=XUnit"
       },
-      "htmlCoverageReport": "artifacts/coverage/index.html",
-      "jsonCoverageReport": "artifacts/coverage.json"
+      "htmlCoverageReport": "application/artifacts/coverage/index.html",
+      "jsonCoverageReport": "application/artifacts/coverage.json"
    },
    "nyc": {
       "include": [
