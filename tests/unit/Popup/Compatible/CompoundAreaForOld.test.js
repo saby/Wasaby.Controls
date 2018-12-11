@@ -11,6 +11,7 @@ define(
       'use strict';
 
       var Area = new CompoundArea({});
+      Area._beforeMount({});
 
       describe('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea', function() {
          it('check options for reload', () => {
