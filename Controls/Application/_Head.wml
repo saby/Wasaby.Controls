@@ -66,6 +66,6 @@
          <!--</style>-->
       <!--</ws:for>-->
    <!--</ws:for>-->
-   <!--<title key="title">{{ _options.title }}</title>-->
+   <title key="title">{{ _options.title }}</title>
    {{ errorState }}
 </head>
