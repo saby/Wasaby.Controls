@@ -1,0 +1,5 @@
+<div class="controls-ListView__empty
+            {{topSpacing ? 'controls-ListView__empty_topSpacing_' + topSpacing}}
+            {{bottomSpacing ? 'controls-ListView__empty_bottomSpacing_' + bottomSpacing}}">
+    <ws:partial template="{{contentTemplate}}"/>
+</div>
