@@ -47,12 +47,10 @@ node coverageUnusedFiles
 
 mv artifacts/coverageAll.json artifacts/all/coverage.json
 mv artifacts/coverageControls.json artifacts/controls/coverage.json
-mv artifacts/coverageFile.json artifacts/file/coverage.json
 mv artifacts/coverageComponents.json artifacts/components/coverage.json
 
 # создаем отчеты о покрытии
 node node_modules/nyc/bin/nyc report --reporter=cobertura --report-dir=cobertura --temp-directory=artifacts/all
 node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-report --temp-directory=artifacts/all
 node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-controls-report --temp-directory=artifacts/controls
-node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-file-report --temp-directory=artifacts/file
 node node_modules/nyc/bin/nyc report --reporter=html --report-dir=coverage-components-report --temp-directory=artifacts/components
