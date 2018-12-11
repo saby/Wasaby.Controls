@@ -116,22 +116,18 @@ define('Controls/Popup/Previewer',
             /**
              * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
              */
-            if (this._options.trigger === 'hover') {
-               this._cancel(event, 'opening');
-            } else {
-               // Stop mousedown event for prevent closing popup by external click
-               if (this._isPopupOpened) {
-                  event.preventDefault();
-               } else {
-                  this._debouncedAction('_open', [event]);
-               }
+            if (!this._isPopupOpened) {
+               this._debouncedAction('_open', [event]);
             }
-
+            event.preventDefault();
             event.stopPropagation();
          },
 
          _contentMouseenterHandler: function(event) {
-            this._debouncedAction('_open', [event]);
+            if (!this._isPopupOpened) {
+               this._debouncedAction('_open', [event]);
+
+            }
             this._cancel(event, 'closing');
          },
 
@@ -157,6 +153,7 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
                case 'mouseenter':
+                  this._isPopupOpened = true;
                   this._debouncedAction('_cancel', [event, 'closing']);
                   break;
                case 'mouseleave':
