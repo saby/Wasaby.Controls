@@ -47,7 +47,6 @@ define('Controls/Toggle/Button', [
       optionsGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-         self._toggleButton = true;
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
          self._transparent = options.transparent;
          self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
