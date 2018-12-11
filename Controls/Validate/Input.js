@@ -26,8 +26,8 @@ define('Controls/Validate/Input',
                this.setValidationResult(null);
             }
          },
-         _inputCompletedHandler: function(event,value) {
-             this._notify('inputCompleted', [value]);
+         _inputCompletedHandler: function(event, value) {
+            this._notify('inputCompleted', [value]);
          },
          _afterUpdate: function() {
             if (this._shouldValidate) {
