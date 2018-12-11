@@ -8,10 +8,11 @@ define(
       'Controls/Popup/Opener/Stack/StackController',
       'Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Dialog/DialogController',
+      'Controls-demo/Popup/TestMaximizedStack',
       'Core/Deferred'
    ],
 
-   function(BaseController, Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController, Deferred) {
+   function(BaseController, Stack, Sticky, Notification, Dialog, StackController, StickyController, DialogController, TestMaximizedStack, Deferred) {
       'use strict';
       describe('Controls/Popup/Opener/Strategy', function() {
          describe('Sticky', function() {
@@ -507,6 +508,8 @@ define(
                let itemConfig = {
                   popupOptions: item.popupOptions
                };
+               itemConfig.popupOptions.template = TestMaximizedStack;
+               itemConfig.popupOptions.minimizedWidth = undefined;
                StackController.getDefaultConfig(itemConfig);
                assert.equal(itemConfig.position.top, -10000);
                assert.equal(itemConfig.position.left, -10000);
@@ -525,6 +528,33 @@ define(
                };
                let position = Stack.getPosition({ top: 0, right: 100 }, item);
                assert.equal(position.right, 0);
+            });
+
+            it('stack maximized default options', function() {
+               let itemConfig = {
+                  popupOptions: {
+                     templateOptions: {},
+                     template: TestMaximizedStack
+                  }
+               };
+               StackController.getDefaultConfig(itemConfig);
+               assert.equal(itemConfig.popupOptions.minWidth, 800);
+               assert.equal(itemConfig.popupOptions.maxWidth, 1200);
+               assert.equal(itemConfig.popupOptions.minimizedWidth, 500);
+
+               itemConfig = {
+                  popupOptions: {
+                     minWidth: 850,
+                     maxWidth: 1250,
+                     minimizedWidth: 550,
+                     templateOptions: {},
+                     template: TestMaximizedStack
+                  }
+               };
+               StackController.getDefaultConfig(itemConfig);
+               assert.equal(itemConfig.popupOptions.minWidth, 850);
+               assert.equal(itemConfig.popupOptions.maxWidth, 1250);
+               assert.equal(itemConfig.popupOptions.minimizedWidth, 550);
             });
 
             it('stack panel maximized', function() {
@@ -546,6 +576,7 @@ define(
 
                assert.equal(Stack.isMaximizedPanel(itemConfig), true);
 
+               itemConfig.popupOptions.template = TestMaximizedStack;
                StackController.getDefaultConfig(itemConfig);
                assert.equal(itemConfig.popupOptions.maximized, false); // default value
                assert.equal(itemConfig.popupOptions.templateOptions.hasOwnProperty('showMaximizedButton'), true);
