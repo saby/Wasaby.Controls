@@ -37,7 +37,7 @@ define('Controls/Popup/Opener/Notification',
                InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config));
             });
          }
-      }
+      };
 
       var Notification = Base.extend({
 
