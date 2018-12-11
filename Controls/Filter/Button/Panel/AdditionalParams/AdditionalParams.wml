@@ -1,6 +1,6 @@
 <div class="controls-AdditionalParams">
    <div class="controls-FilterPanel__caption">{[Еще можно отобрать]}</div>
-   <div class="controls-AdditionalParams__items {{_isMaxHeight ? 'controls-FilterPanel_maxHeight'}}">
+   <div class="controls-AdditionalParams__items {{_isMaxHeight ? 'controls-FilterPanel_block-maxHeight'}}">
       <ws:for data="index, item in _options.items">
          <ws:if data="{{!_isItemVisible(item)}}">
             <div class="controls-AdditionalParams__item">
