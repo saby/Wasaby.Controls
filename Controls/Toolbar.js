@@ -5,9 +5,10 @@ define('Controls/Toolbar', [
    'wml!Controls/Toolbar/ToolbarItemTemplate',
    'WS.Data/Collection/Factory/RecordSet',
    'Controls/Utils/Toolbar',
+   'Controls/Button/validateIconStyle',
    'Controls/Button',
    'css!theme?Controls/Toolbar/Toolbar'
-], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil) {
+], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil, validateIconStyle) {
    'use strict';
 
    /**
@@ -139,6 +140,10 @@ define('Controls/Toolbar', [
          });
          return instance._sourceController.load().addCallback(function(items) {
             instance._items = items;
+
+            // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+            // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+            validateIconStyle.itemsSetOldIconStyle(instance._items);
             instance._menuItems = self.getMenuItems(instance._items);
             instance._needShowMenu = instance._menuItems && instance._menuItems.getCount();
             return items;
@@ -231,6 +236,10 @@ define('Controls/Toolbar', [
          _private.setPopupOptions(this, options);
          if (receivedState) {
             this._items = receivedState;
+
+            // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+            // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+            validateIconStyle.itemsSetOldIconStyle(this._items);
             this._menuItems = _private.getMenuItems(this._items);
             this._needShowMenu = this._menuItems && this._menuItems.getCount();
          } else if (options.source) {
@@ -255,7 +264,7 @@ define('Controls/Toolbar', [
       },
       _onItemClick: function(event, item) {
          if (item.get(this._nodeProperty)) {
-            var config = _private.generateItemPopupConfig(item, event, this);
+            var config =  _private.generateItemPopupConfig(item,  event, this);
             this._children.menuOpener.open(config, this);
 
             // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
