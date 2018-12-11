@@ -13,7 +13,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     * Module with a function to replace common link on decorated link, if it needs.
     * Tag resolver for {@link Controls/Decorator/Markup}.
     *
-    * @class Controls/Decorator/Markup/resolvers/highlight
+    * @class Controls/Decorator/Markup/resolvers/linkDecorate
     * @public
     * @author Кондаков Р.Н.
     */

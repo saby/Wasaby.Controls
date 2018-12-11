@@ -3,7 +3,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'Core/Control',
       'wml!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
-      'Controls/Popup/PopupContext',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
       'wml!Controls/Dropdown/resources/template/itemTemplate',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
@@ -11,7 +10,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, PopupContext, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
 
          setPopupOptions: function(self, horizontalAlign) {
@@ -100,7 +99,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
         * @variant true Заголовок есть
         * @variant false Заголовка нет.
         */
-      var Menu = Control.extend([], {
+      var DropdownList = Control.extend([], {
          _template: MenuItemsTpl,
          _expanded: false,
          _groupTemplate: groupTemplate,
@@ -141,7 +140,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   this._duplicateHeadClassName = 'control-MenuButton-duplicate-head_' + iconSize;
                }
             }
-            Menu.superclass.constructor.apply(this, arguments);
+            DropdownList.superclass.constructor.apply(this, arguments);
             this.resultHandler = this.resultHandler.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
          },
@@ -167,7 +166,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
 
-         _beforeUpdate: function(newOptions, context) {
+         _beforeUpdate: function(newOptions) {
             var rootChanged = newOptions.rootKey !== this._options.rootKey,
                itemsChanged = newOptions.items !== this._options.items;
 
@@ -187,10 +186,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._hasAdditional = this._listModel.hasAdditional();
             }
 
-            if (context && context.stickyCfg.horizontalAlign &&
-               (!this._popupOptions || this._popupOptions.horizontalAlign !== context.stickyCfg.horizontalAlign)) {
-               this._dropdownClass = _private.getDropdownClass(context.stickyCfg.verticalAlign, newOptions.typeShadow);
-               _private.setPopupOptions(this, context.stickyCfg.horizontalAlign.side);
+            if (newOptions.stickyPosition.horizontalAlign &&
+               (!this._popupOptions || this._popupOptions.horizontalAlign !== newOptions.stickyPosition.horizontalAlign)) {
+               this._dropdownClass = _private.getDropdownClass(newOptions.stickyPosition.verticalAlign, newOptions.typeShadow);
+               _private.setPopupOptions(this, newOptions.stickyPosition.horizontalAlign.side);
             }
          },
 
@@ -225,7 +224,9 @@ define('Controls/Dropdown/resources/template/DropdownList',
          resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
-                  this._children.subDropdownOpener.close();
+                  if (!result.data[0].get(this._options.nodeProperty)) {
+                     this._children.subDropdownOpener.close();
+                  }
                case 'pinClicked':
                   this._notify('sendResult', [result]);
             }
@@ -286,20 +287,14 @@ define('Controls/Dropdown/resources/template/DropdownList',
          }
       });
 
-      Menu._private = _private;
+      DropdownList._private = _private;
 
-      Menu.contextTypes = function() {
-         return {
-            stickyCfg: PopupContext
-         };
-      };
-
-      Menu.getDefaultOptions = function() {
+      DropdownList.getDefaultOptions = function() {
          return {
             menuStyle: 'defaultHead',
             typeShadow: 'default'
          };
       };
 
-      return Menu;
+      return DropdownList;
    });

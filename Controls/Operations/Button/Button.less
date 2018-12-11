@@ -3,31 +3,31 @@
    align-items: center;
    justify-content: center;
    position: relative;
-   color: @color_OperationsButton__icon;
+   color: @color_OperationsButton-icon;
    cursor: pointer;
    width: @width_OperationsButton;
    height: @height_OperationsButton;
-   font-size: @font-size_OperationsButton__icon;
-   font-family: @icon-font;
+   font-size: @font-size_OperationsButton-icon;
+   font-family: @font-family_OperationsButton-icon;
+}
 
-   &:hover {
-      color: @color_OperationsButton__icon_hovered;
-   }
+.controls-OperationsButton:active {
+   color: @color_OperationsButton-icon_active;
 }
-.controls-OperationsButton_readonly {
-   color: @color_OperationsButton__icon_readonly;
-   &:hover {
-      color: @color_OperationsButton__icon_readonly;
-   }
-}
-.controls-OperationsButton:after {
-   background: #ccc;
-   width: @width_OperationsPanelButton-separator;
-   height: 24px;
+
+.controls-OperationsButton::after {
+   background: @color_OperationsButton-separator;
+   width: @thickness_OperationsButton-separator;
+   height: @height_OperationsButton-separator;
    content: '\00a0';
-   font-size: 1px;
    position: absolute;
    display: inline-block;
    left: 0;
    top: 0;
+}
+
+.ws-is-no-touch {
+   .controls-OperationsButton:hover {
+      color: @color_OperationsButton-icon_hovered;
+   }
 }
