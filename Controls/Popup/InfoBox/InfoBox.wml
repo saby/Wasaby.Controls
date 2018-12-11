@@ -11,6 +11,12 @@
                   on:mouseenter="_contentMouseenterHandler()"
                   on:mouseleave="_contentMouseleaveHandler()"/>
    </ws:else>
+   <ws:else data="{{_options.trigger === 'demand'}}">
+      <ws:partial template="{{_options.content}}" on:mousedown="_contentMousedownHandler()"/>
+      <ws:if data="{{_opened}}">
+         <Controls.Event.Listener event="mousedown" on:mousedown="_mousedownHandler()"/>
+      </ws:if>
+   </ws:else>
    <ws:else>
       <ws:partial template="{{_options.content}}"
                   on:mouseenter="_contentMouseenterHandler()"
