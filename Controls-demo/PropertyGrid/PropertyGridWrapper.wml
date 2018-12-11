@@ -27,11 +27,7 @@
                     scrollbarVisible="{{true}}"
                     shadowVisible="{{true}}"
                     attr:class="PropertyGrid_events">
-                <div>
-                   <ws:for data="eventName in myEvents">
-                      <div>{{eventName}}</div>
-                   </ws:for>
-                </div>
+                <div attr:style="width:200px; word-spacing:200px;">{{myEvent}}</div>
             </Controls.Container.Scroll>
             <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
 
