@@ -1,4 +1,4 @@
-<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options.style}}{{_options.size == 'big' ? ' controls-ConfirmationTemplate__size-l' : ' controls-ConfirmationTemplate__size-default'}} controls-Popup__isolatedFocusingContext"
+<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options._style}}{{_options.size == 'big' ? ' controls-ConfirmationTemplate__size-l' : ' controls-ConfirmationTemplate__size-default'}} controls-Popup__isolatedFocusingContext"
     ws-tab-cycling="true"
     ws-delegates-tabfocus="true">
     <div class="controls-ConfirmationTemplate__body">
@@ -7,10 +7,10 @@
         </ws:if>
         <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
         <div class="controls-ConfirmationTemplate__main">
-            <ws:partial template="{{_options.contentArea}}"/>
+            <ws:partial template="{{_options.contentArea||_options.bodyContentTemplate}}"/>
         </div>
         <div class="controls-ConfirmationTemplate__footer">
-            <ws:partial template="{{_options.footerArea}}"/>
+            <ws:partial template="{{_options.footerArea||_options.footerContentTemplate}}"/>
         </div>
     </div>
 </div>
