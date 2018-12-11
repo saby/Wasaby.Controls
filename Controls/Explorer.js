@@ -51,7 +51,7 @@ define('Controls/Explorer', [
          },
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
-            if (metaData.path) {
+            if (metaData.path && metaData.path.getCount() > 0) {
                self._breadCrumbsItems = chain(metaData.path).toArray();
             } else {
                self._breadCrumbsItems = null;

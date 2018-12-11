@@ -31,6 +31,12 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       initializeContainers: function(self) {
          self._fieldWrapper = self._children.inputRender._container;
+
+         // toDO Проверка на jQuery до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+         if (window.jQuery && self._fieldWrapper instanceof window.jQuery) {
+            self._fieldWrapper = self._fieldWrapper[0];
+         }
+
          self._wrapperInputRender = self._fieldWrapper.getElementsByClassName('controls-InputRender__wrapper')[0];
       },
 

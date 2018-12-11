@@ -70,16 +70,19 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _pendingTrace: null,
          _waiting: null,
 
-         _childPendingOperations: [],
+         _childPendingOperations: null,
          _allChildrenPendingOperation: null,
          _finishPendingQueue: null,
          _isFinishingChildOperations: false,
-         _producedPendingOperations: [],
+         _producedPendingOperations: null,
 
          _isReadOnly: true,
 
          _beforeMount: function() {
             CompoundArea.superclass._beforeMount.apply(this, arguments);
+
+            this._childPendingOperations = [];
+            this._producedPendingOperations = [];
 
             this._className = 'controls-CompoundArea';
             if (this._options.type !== 'base') {
