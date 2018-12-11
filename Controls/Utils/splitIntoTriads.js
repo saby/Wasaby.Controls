@@ -25,11 +25,15 @@ define('Controls/Utils/splitIntoTriads',
       return function(value) {
          var part = value.match(RegExpUtil.partOfNumber).slice(1, 5);
 
-         /**
-          * We divide the integer part into triads.
-          */
-         part[1] = Array.prototype.reduceRight.call(part[1], _private.reducerRight);
+         if (part[1]) {
+            /**
+             * We divide the integer part into triads.
+             */
+            part[1] = Array.prototype.reduceRight.call(part[1], _private.reducerRight);
 
-         return part.join('');
+            return part.join('');
+         }
+
+         return value;
       };
    });
