@@ -40,6 +40,7 @@ define(
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader" style="top: 0px;">' +
+                                                '<div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
@@ -58,6 +59,7 @@ define(
                inst._isMobilePlatform = false;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;">' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                              '</div>');
@@ -67,6 +69,7 @@ define(
                inst._isMobilePlatform = true;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -1px; padding-top: 1px;">' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                              '</div>');
@@ -76,6 +79,7 @@ define(
                inst._context.stickyHeader.position = 10;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 10px;">' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                              '</div>');
@@ -85,6 +89,7 @@ define(
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;">' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
@@ -93,9 +98,12 @@ define(
 
             it('The header is fixed, but there should be no shadow', function() {
                inst._context.stickyHeader.shadowVisible = false;
+               inst._shadowVisible = true;
                inst._model.shouldBeFixed = true;
+               inst._options.fixedZIndex = 1;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px; z-index: 1;">' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                              '</div>');
@@ -103,9 +111,12 @@ define(
 
             it('The header is fixed, the shadow should be', function() {
                inst._context.stickyHeader.shadowVisible = true;
+               inst._shadowVisible = true;
                inst._model.shouldBeFixed = true;
+               inst._options.fixedZIndex = 2;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px; z-index: 2;">' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +

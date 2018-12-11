@@ -1,8 +1,9 @@
 <div class="controls-StickyHeader" style="{{_getStyle()}}">
+   <Controls.Event.Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()"/>
    <div name="observationTargetTop" class="controls-StickyHeader__observationTargetTop"></div>
    <ws:partial template="{{_options.content}}" attr:class="controls-StickyHeader__content"/>
    <div name="observationTargetBottom" class="controls-StickyHeader__observationTargetBottom"></div>
-   <ws:if data="{{_context.stickyHeader.shadowVisible && _model.shouldBeFixed}}">
+   <ws:if data="{{_context.stickyHeader.shadowVisible && _model.shouldBeFixed && _shadowVisible}}">
       <div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>
    </ws:if>
 </div>

@@ -3,13 +3,14 @@ define('Controls/StickyHeader/_StickyHeader',
       'Core/Control',
       'Core/detection',
       'Controls/StickyHeader/Context',
+      'Controls/StickyHeader/Utils',
       'Controls/Utils/IntersectionObserver',
       'Controls/StickyHeader/_StickyHeader/Model',
       'wml!Controls/StickyHeader/_StickyHeader/StickyHeader',
 
       'css!theme?Controls/StickyHeader/_StickyHeader/StickyHeader'
    ],
-   function(Control, detection, Context, IntersectionObserver, Model, template) {
+   function(Control, detection, Context, stickyUtils, IntersectionObserver, Model, template) {
 
       'use strict';
 
@@ -53,6 +54,10 @@ define('Controls/StickyHeader/_StickyHeader',
           */
          _isMobilePlatform: detection.isMobilePlatform,
 
+         _shadowVisible: true,
+
+         _index: null,
+
          constructor: function() {
             StickyHeader.superclass.constructor.call(this);
             this._observeHandler = this._observeHandler.bind(this);
@@ -61,7 +66,8 @@ define('Controls/StickyHeader/_StickyHeader',
          _afterMount: function() {
             var children = this._children;
 
-            this._index = StickyHeader._index++;
+            this._index = stickyUtils.getNextId();
+
             this._observer = new IntersectionObserver(this._observeHandler);
             this._model = new Model({
                topTarget: children.observationTargetTop,
@@ -101,8 +107,11 @@ define('Controls/StickyHeader/_StickyHeader',
          _fixationStateChangeHandler: function() {
             var information = {
                id: this._index,
-               shouldBeFixed: this._model.shouldBeFixed
+               shouldBeFixed: this._model.shouldBeFixed,
+               offsetHeight: this._container.offsetHeight
             };
+
+            this._shadowVisible = this._model.shouldBeFixed;
 
             this._forceUpdate();
             this._notify('fixed', [information], {bubbling: true});
@@ -129,7 +138,15 @@ define('Controls/StickyHeader/_StickyHeader',
                style += ' padding-top: ' + offset + 'px;';
             }
 
+            if (this._model && this._model.shouldBeFixed) {
+               style += ' z-index: ' + this._options.fixedZIndex + ';';
+            }
+
             return style;
+         },
+
+         _updateStickyShadow: function(e, ids) {
+            this._shadowVisible = ids.indexOf(this._index) !== -1;
          }
       });
 
@@ -138,6 +155,12 @@ define('Controls/StickyHeader/_StickyHeader',
       StickyHeader.contextTypes = function() {
          return {
             stickyHeader: Context
+         };
+      };
+
+      StickyHeader.getDefaultOptions = function() {
+         return {
+            fixedZIndex: 1
          };
       };
 

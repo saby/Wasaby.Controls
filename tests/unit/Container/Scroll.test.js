@@ -26,6 +26,10 @@ define(
 
                return markup;
             };
+            scroll._stickyHeaderIds = [];
+            scroll._children.stickyHeader = {
+               start: sinon.fake()
+            };
          });
 
          describe('Template', function() {
@@ -64,7 +68,7 @@ define(
                      shouldBeFixed: false
                   });
 
-                  assert.equal(scroll._stickyHeaderId, null);
+                  assert.isEmpty(scroll._stickyHeaderIds);
                });
                it('Header with id equal to "sticky" fixed', function() {
                   scroll._fixedHandler(event, {
@@ -72,7 +76,7 @@ define(
                      shouldBeFixed: true
                   });
 
-                  assert.equal(scroll._stickyHeaderId, 'sticky');
+                  assert.include(scroll._stickyHeaderIds, 'sticky');
                });
                it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
                   scroll._fixedHandler(event, {
@@ -84,7 +88,7 @@ define(
                      shouldBeFixed: false
                   });
 
-                  assert.equal(scroll._stickyHeaderId, null);
+                  assert.isEmpty(scroll._stickyHeaderIds);
                });
                it('Header with id equal to "sticky1" fixed, Header with id equal to "sticky2" stop being fixed', function() {
                   scroll._fixedHandler(event, {
@@ -96,7 +100,8 @@ define(
                      shouldBeFixed: false
                   });
 
-                  assert.equal(scroll._stickyHeaderId, 'sticky1');
+                  assert.include(scroll._stickyHeaderIds, 'sticky1');
+                  assert.notInclude(scroll._stickyHeaderIds, 'sticky2');
                });
                it('Header with id equal to "sticky1" stop being fixed, Header with id equal to "sticky2" fixed', function() {
                   scroll._fixedHandler(event, {
@@ -108,7 +113,8 @@ define(
                      shouldBeFixed: true
                   });
 
-                  assert.equal(scroll._stickyHeaderId, 'sticky2');
+                  assert.include(scroll._stickyHeaderIds, 'sticky2');
+                  assert.notInclude(scroll._stickyHeaderIds, 'sticky1');
                });
             });
          });
