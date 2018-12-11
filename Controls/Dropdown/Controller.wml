@@ -16,7 +16,7 @@
                  itemTemplate="{{_options.itemTemplate}}"
                  headTemplate="{{_options.headTemplate}}"
                  groupTemplate="{{_options.groupTemplate}}"
-                 groupMethod="{{groupMethod}}"
+                 groupMethod="{{_options.groupMethod}}"
                  dropdownClassName="{{_options.dropdownClassName}}"
                  footerTemplate="{{_options.footerTemplate}}"
                  headConfig="{{_options.headConfig}}"
