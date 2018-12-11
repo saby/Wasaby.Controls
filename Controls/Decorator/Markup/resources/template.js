@@ -31,6 +31,7 @@ define('Controls/Decorator/Markup/resources/template', [
 
    // We are not ready to remove "decoratedlink" right now.
    // TODO: Should remove this function in 3.19.100, when server and mobile will be ready.
+   // Problem link: https://online.sbis.ru/opendoc.html?guid=4f521fbe-a40b-4926-bcc6-27e2312a4170.
    function replaceDecoratedLinks(value) {
       if (!Array.isArray(value)) {
          return value;
