@@ -612,6 +612,7 @@ node('controls') {
                         if ( unit ){
                             echo "Запускаем юнит тесты"
                                 dir("./controls"){
+                                sh "npm cache clean --force"
                                 sh "npm config set registry http://npmregistry.sbis.ru:81/"
                                 echo "run isolated"
                                 sh """
