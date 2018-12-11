@@ -62,7 +62,6 @@ define('Controls/Button/Menu',
       Menu.getDefaultOptions = function() {
          return {
             showHeader: true,
-            style: 'buttonDefault',
             size: 'm',
             filter: {}
          };

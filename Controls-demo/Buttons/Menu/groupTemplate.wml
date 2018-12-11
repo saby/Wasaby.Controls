@@ -1,0 +1,4 @@
+<ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
+            itemData="{{itemData}}"
+            showText="{{true}}"
+/>

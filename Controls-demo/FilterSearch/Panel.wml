@@ -1,3 +1,3 @@
-<Controls.Filter.Button.Panel attr:class="controls-PanelFilter__width-m" items="{{_options.items}}">
+<Controls.Filter.Button.Panel attr:class="controls-FilterPanel__width-m" items="{{_options.items}}">
    <ws:itemTemplate templateName="wml!Controls-demo/FilterSearch/itemTemplate"/>
 </Controls.Filter.Button.Panel>
