@@ -1,7 +1,7 @@
 <ws:partial template="wml!Controls/List/Grid/Column" attr:class="controls-Grid__row-cell__content_baseline_XL" itemData="{{itemData}}">
    <ws:contentTemplate>
       <ws:if data="{{itemData.item['photo']}}">
-         <img attr:class="demoTreeWithProto__imageBlock demoImage-{{itemData.item['photo']}}"/>
+         <img attr:class="demoTreeWithProto__imageBlock" src="{{itemData.item['photo']}}"/>
       </ws:if>
       <ws:else>
          <div attr:class="demoTreeWithProto__imageBlock"></div>

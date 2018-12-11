@@ -1,4 +1,4 @@
-<Controls.Filter.Button.Panel attr:class="controls-PanelFilter__width-m">
+<Controls.Filter.Button.Panel attr:class="controls-FilterPanel__width-m">
    <ws:itemTemplate templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/mainBlockPanel"/>
    <ws:additionalTemplate templateName="tmpl!Controls-demo/Filter/Button/resources/withAdditional/additionalBlockPanel"/>
 </Controls.Filter.Button.Panel>

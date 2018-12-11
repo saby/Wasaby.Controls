@@ -11,7 +11,8 @@
          staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }},
-         lite: {{ _options.lite || false }}
+         lite: {{ _options.lite || false }},
+         product: '{{ _options.product }}'
       };
       window.buildnumber = '{{ _options.buildnumber }}';
       {{__setHTMLUnsafe(_options.preInitScript)}}

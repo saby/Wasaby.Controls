@@ -10,6 +10,7 @@ define('Controls/Application/Core',
       'Controls/Application/StateReceiver',
       'Core/Themes/ThemesController',
       'Controls/Application/AppData',
+      'Controls/Application/HeadData',
       'native-css',
       'Core/css-resolve'
    ],
@@ -19,7 +20,8 @@ define('Controls/Application/Core',
       createDefault,
       StateReceiver,
       ThemesController,
-      AppData) {
+      AppData,
+      HeadData) {
       'use strict';
 
       var AppCore = Control.extend({
@@ -58,6 +60,9 @@ define('Controls/Application/Core',
                Request.setCurrent(req);
             }
 
+            var headData = new HeadData([], true);
+            Request.getCurrent().setStorage('HeadData', headData);
+
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
          },
@@ -77,7 +82,8 @@ define('Controls/Application/Core',
             var result;
             if (this._application !== app) {
                this._applicationForChange = app;
-               this.headDataCtx.resetRenderDeferred();
+               var headData = Request.getCurrent().getStorage('HeadData');
+               headData && headData.resetRenderDeferred();
                this._forceUpdate();
                result = true;
             } else {

@@ -3,8 +3,9 @@ define('Controls/Input/RichArea', [
    'wml!Controls/Input/RichArea/RichArea',
    'Controls/Input/RichArea/RichAreaModel',
    'Controls/Decorator/Markup/Converter',
+   'Controls/Decorator/Markup/resolvers/linkDecorate',
    'css!theme?Controls/Input/RichArea/RichArea'
-], function(Control, template, RichModel, MarkupConverter) {
+], function(Control, template, RichModel, MarkupConverter, linkDecorateResolver) {
    'use strict';
 
    /**
@@ -21,7 +22,7 @@ define('Controls/Input/RichArea', [
       // TODO: Will be removed https://online.sbis.ru/opendoc.html?guid=7571450e-511e-4e86-897f-e392e53fea68
       updatePreviewContainer: function(self) {
          if (self._options.readOnly) {
-            self._children.previewContainer.innerHTML = self._jsonToHtml(self._value);
+            self._children.previewContainer.innerHTML = self._jsonToHtml(self._value, linkDecorateResolver);
          }
       }
    };
@@ -76,8 +77,8 @@ define('Controls/Input/RichArea', [
          this._notify('valueChanged', [newValue]);
       },
 
-      _jsonToHtml: function(json) {
-         return MarkupConverter.jsonToHtml(json);
+      _jsonToHtml: function(json, tagResolver) {
+         return MarkupConverter.jsonToHtml(json, tagResolver);
       },
 
       _undoRedoChangedHandler: function(event, state) {

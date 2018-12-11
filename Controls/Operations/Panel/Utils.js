@@ -14,7 +14,7 @@ define('Controls/Operations/Panel/Utils', [
    var _private = {
       initializeConstants: function() {
          if (!MENU_WIDTH) {
-            MENU_WIDTH = window && getWidthUtil.getWidth('<span class="controls-ToolBarV__menuOpen controls-ToolbarV_item__styled"><i class="icon-medium icon-ExpandDown"/></span>');
+            MENU_WIDTH = window && getWidthUtil.getWidth('<span class="controls-Toolbar__menuOpen"><i class="icon-medium icon-ExpandDown"/></span>');
          }
       },
 
@@ -35,7 +35,7 @@ define('Controls/Operations/Panel/Utils', [
 
          measurer.classList.add('controls-UtilsOperationsPanel__measurer');
          document.body.appendChild(measurer);
-         [].forEach.call(measurer.getElementsByClassName('controls-ToolbarV_item'), function(item) {
+         [].forEach.call(measurer.getElementsByClassName('controls-Toolbar_item'), function(item) {
             var
                styles = window.getComputedStyle(item),
                padding = parseFloat(styles.marginLeft) + parseFloat(styles.marginRight);

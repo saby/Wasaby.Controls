@@ -8,6 +8,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/detection',
       'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
+      'wml!Controls/Popup/Opener/Sticky/StickyContent',
       'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
    function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, isElementVisible, TargetCoords) {
@@ -44,7 +45,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
-            cfg.popupOptions.position = this.prepareCfgContext(popupCfg);
+            cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
 
             cfg.positionConfig = popupCfg;
 
@@ -114,7 +115,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          },
 
-         prepareCfgContext: function(cfg) {
+         prepareStickyPosition: function(cfg) {
             return {
                horizontalAlign: cfg.align.horizontal,
                verticalAlign: cfg.align.vertical,
@@ -125,6 +126,9 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          getWindowWidth: function() {
             return window.innerWidth;
          },
+         setStickyContent: function(item) {
+            item.popupOptions.content = 'wml!Controls/Popup/Opener/Sticky/StickyContent';
+         }
       };
 
       /**
@@ -137,11 +141,14 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       var StickyController = BaseController.extend({
 
          elementCreated: function(item, container) {
+            _private.setStickyContent(item);
             item.position.position = undefined;
             this.prepareConfig(item, container);
          },
 
          elementUpdated: function(item, container) {
+            _private.setStickyContent(item);
+            item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
             if (this._isElementVisible(item.popupOptions.target)) {
                _private.updateClasses(item, item.positionConfig);
                item.position = StickyStrategy.getPosition(item.positionConfig, _private._getTargetCoords(item, item.positionConfig.sizes));
@@ -185,6 +192,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          getDefaultConfig: function(item) {
+            _private.setStickyContent(item);
             item.position = {
                top: -10000,
                left: -10000,
