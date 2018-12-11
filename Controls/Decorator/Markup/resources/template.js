@@ -113,7 +113,7 @@ define('Controls/Decorator/Markup/resources/template', [
 
       if (!elements.length) {
          // TODO: Replace the empty span with an invisible node after talking with Nikita Izygin.
-         elements = [markupGenerator.createTag('span', { key: key + '0_' }, [], attrsToDecorate,
+         elements = [markupGenerator.createTag('div', { key: key + '0_' }, [], attrsToDecorate,
             defCollection, data, key + '0_')];
       }
       return markupGenerator.joinElements(elements, key, defCollection);
