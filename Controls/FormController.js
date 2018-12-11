@@ -240,7 +240,7 @@ define('Controls/FormController', [
                }.bind(this), function(e) {
                   def.errback(e);
                   return e;
-               }.bind(this));
+               });
             } else if (answer === false) {
                def.callback(false);
             }
