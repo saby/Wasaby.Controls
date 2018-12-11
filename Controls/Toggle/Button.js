@@ -20,7 +20,7 @@ define('Controls/Toggle/Button', [
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @demo Controls-demo/Buttons/Toggle/ToggleDemo
+    * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
     */
 
    /**
@@ -37,6 +37,28 @@ define('Controls/Toggle/Button', [
     * Button with one caption have one caption and it isn't toggled.
     * Button with two captions display one caption, but it is different in free and toggled states.
     * If button has more than two captions, it work only with first and second captions.
+    */
+
+   /**
+    * @name Controls/Toggle/Button#viewMode
+    * @cfg {Enum} Button view mode.
+    * @variant link Decorated hyperlink.
+    * @variant toggledLink Decorated hyperlink transform to toolbar button.
+    * @variant toolButton Toolbar button.
+    * @default button
+    * @example
+    * Button with 'link' viewMode.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+    * </pre>
+    * Button with 'toolButton' viewMode.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="danger" viewMode="toolButton"/>
+    * </pre>
+    * Button with 'toggledLink' viewMode.
+    * <pre>
+    *    <Controls.Button caption="Send document" style="success" viewMode="toggledLink"/>
+    * </pre>
     */
    var stickyButton = [
       'toggledLink',
