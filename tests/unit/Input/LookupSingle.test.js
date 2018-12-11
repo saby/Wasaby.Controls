@@ -43,7 +43,7 @@ define([
             item2 = new Model({
                rawData: {id: 2},
                idProperty: 'id'
-            })
+            });
 
          lookup._options.items = new List({
             items: [item, item2]
@@ -51,6 +51,29 @@ define([
 
          assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 1), [item2]);
          assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 10), [item, item2]);
+      });
+
+      it('isShowCounter', function() {
+         assert.isTrue(Lookup._private.isShowCounter(10, 5));
+         assert.isFalse(Lookup._private.isShowCounter(10, 20));
+      });
+
+      it('getLastRowCollectionWidth', function() {
+         var itemsSizes = [10, 20, 30, 40];
+
+         assert.equal(Lookup._private.getLastRowCollectionWidth(itemsSizes, false, false, 20), 100);
+         assert.equal(Lookup._private.getLastRowCollectionWidth(itemsSizes, true, true, 20), 120);
+      });
+
+      it('getInputWidth', function() {
+         assert.equal(Lookup._private.getInputWidth(400, 200, 100), undefined);
+         assert.equal(Lookup._private.getInputWidth(400, 200, 300), 200);
+      });
+
+      it('getMultiLineState', function() {
+         assert.isTrue(Lookup._private.getMultiLineState(200, 100, true));
+         assert.isFalse(Lookup._private.getMultiLineState(200, 300, true));
+         assert.isTrue(Lookup._private.getMultiLineState(200, 300, false));
       });
 
       it('_beforeMount', function() {
@@ -79,6 +102,18 @@ define([
       
          lookup._afterUpdate();
          assert.isTrue(activated);
+      });
+
+      it('_beforeUpdate', function() {
+         var lookup = new Lookup();
+
+         lookup._beforeMount({});
+         lookup._beforeUpdate({
+            items: new List(),
+            multiLine: true
+         });
+
+         assert.isFalse(!!lookup._multiLineState);
       });
 
       it('_changeValueHandler', function() {

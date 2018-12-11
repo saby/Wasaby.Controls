@@ -1,0 +1,8 @@
+<div class="controls-SortButton">
+    <div class="controls-SortButton__content">
+        <ws:if data="{{_options.value}}">
+            <div class="controls-SortButton__icon {{'icon-Trend' + (_options.value === 'DESC' ? 'Down' : 'Up')}}"></div>
+        </ws:if>
+        <div class="controls-SortButton__caption" on:click="_clickHandler()">{{_options.caption}}</div>
+    </div>
+</div>

@@ -62,7 +62,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          {
             title: 'Цена',
             align: 'right',
-            style: 'default'
+            style: 'default',
+            sortingProperty: 'price'
          },
          {
             title: 'Остаток',
@@ -87,7 +88,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          rightPadding: 'L',
          rowSpacing: 'L',
          showRowSeparator: true,
-         style: 'default'
+         style: 'default',
+         sorting: [{price: 'DESC'}]
       };
 
    describe('Controls.List.Grid.GridViewModel', function() {
@@ -163,6 +165,12 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(expectedResultWithMultiselect[3],
                GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
+         });
+         it('getSortingDirectionByProp', function() {
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test2'), 'DESC');
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
          });
          it('prepareRowSeparatorClasses', function() {
             var
@@ -374,7 +382,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData',
-                  'getChildren', 'getActiveItem', 'setDragItems', 'getDragTargetItem', 'setDragTargetItem', 'destroy'],
+                  'getChildren', 'getActiveItem', 'destroy'],
                callStackMethods = [];
 
             gridViewModel._model = {};
@@ -542,7 +550,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
                   'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_halign_right',
-               index: 2
+               index: 2,
+               sortingDirection: 'DESC'
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');

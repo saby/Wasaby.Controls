@@ -170,6 +170,18 @@ define([
             assert.isTrue(instance._beginEditTarget);
          });
 
+         it('without arguments', function() {
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._notify = mockNotify();
+            instance.beginEdit();
+            assert.equal(eventQueue[0].event, 'beforeBeginEdit');
+            assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
+            assert.isTrue(eventQueue[0].eventOptions.bubbling);
+            assert.isTrue(instance._isEditing);
+            assert.isNull(instance._beginEditTarget);
+         });
+
          it('cancel', function() {
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);

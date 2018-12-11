@@ -5,7 +5,6 @@
               items="{{_options.items}}"
               displayProperty="{{_options.displayProperty}}"
               itemsLayout="twoColumns"
-              multiline="{{true}}"
               on:crossClick="_crossClick()"
               on:itemClick="_itemClick()"
               attr:style="width: {{_options.width}}px">

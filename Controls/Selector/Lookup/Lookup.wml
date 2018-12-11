@@ -5,7 +5,7 @@
       keyProperty="{{_options.keyProperty}}"
       displayProperty="{{_options.displayProperty}}"
       filter="{{_options.filter}}"
-      selectorTemplate="{{_options.lookupTemplate}}"
+      selectorTemplate="{{_options.selectorTemplate || _options.lookupTemplate}}"
       isCompoundTemplate="{{_options.isCompoundTemplate}}"
       multiSelect="{{_options.multiSelect}}"
       attr:class="controls-Lookup">

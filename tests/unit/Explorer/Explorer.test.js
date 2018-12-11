@@ -49,6 +49,15 @@ define([
                      path: testBreadCrumbs
                   };
                }
+            },
+            testData3 = {
+               getMetaData: function() {
+                  return {
+                     path: new RecordSet({
+                        rawData: []
+                     })
+                  };
+               }
             };
          Explorer._private.setRoot(self, testRoot);
          assert.deepEqual({
@@ -95,6 +104,17 @@ define([
                itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
+         Explorer._private.dataLoadCallback(self, testData3);
+         assert.deepEqual({
+            _root: 'testRoot',
+            _forceUpdate: forceUpdate,
+            _notify: notify,
+            _breadCrumbsItems: null,
+            _options: {
+               dataLoadCallback: dataLoadCallback,
+               itemOpenHandler: itemOpenHandler
+            }
+         }, self);
       });
 
       it('setViewMode', function() {
