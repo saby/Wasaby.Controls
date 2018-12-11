@@ -134,12 +134,15 @@ define('Controls/Input/resources/InputRender/InputRender',
          // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
          _inputState: undefined,
 
+         _isEdge: null,
+
          // text field has focus
          _inputActive: false,
 
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
+            this._isEdge = cDetection.isIE12;
          },
 
          _afterMount: function() {
@@ -163,7 +166,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _mouseEnterHandler: function() {
             var input = _private.getInput(this);
-            var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
+            var tooltipInputValue = _private.getInputValueForTooltip(this._options.type, this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
          },
@@ -319,7 +322,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             style: 'default',
             inputType: 'Text',
             autocomplete: true,
-            tooltip: ''
+            tooltip: '',
+            type: 'text'
          };
       };
 

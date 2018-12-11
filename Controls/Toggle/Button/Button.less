@@ -59,17 +59,17 @@
    border-color: @color_success;
 }
 
-.controls-Button_viewMode-toggledLink_size-s {
+.controls-toggleButton_viewMode-toggledLink_size-s {
    height: @height-ToggleLink_s;
    min-width: @min-width-ToggleLink_s;
 }
 
-.controls-Button_viewMode-toggledLink_size-m {
+.controls-toggleButton_viewMode-toggledLink_size-m {
    height: @height-ToggleLink_m;
    min-width: @min-width-ToggleLink_m;
 }
 
-.controls-Button_viewMode-toggledLink_size-l {
+.controls-toggleButton_viewMode-toggledLink_size-l {
    height: @height-ToggleLink_l;
    min-width: @min-width-ToggleLink_l;
 }
@@ -179,4 +179,39 @@
       background: @background_ToggleLink_hovered;
       border-color: @border-color_ToggleLink_hovered;
    }
+}
+
+.controls-toggleButton__wrapper_viewMode-toggleToolButton_size-m, .controls-toggleButton__wrapper_viewMode-toggleToolButton_size-l {
+   justify-content: center;
+}
+
+.controls-toggleButton_viewMode-toolButton_size-s {
+   height: @height_toggleToolButton_s;
+   min-width: @width_toggleToolButton_s;
+}
+
+.controls-toggleButton_viewMode-toolButton_size-m {
+   height: @height_toggleToolButton_m;
+   min-width: @width_toggleToolButton_m;
+}
+
+.controls-toggleButton_viewMode-toolButton_size-l {
+   height: @height_toggleToolButton_l;
+   min-width: @width_toggleToolButton_l;
+}
+
+.controls-toggleButton_viewMode-button_size-m {
+   height: @height_toggleButton_m;
+   font-size: @font-size_toggleButton_m;
+   border-style: solid;
+   border-width: @thickness_toggleButton__border;
+   .border-radius(@border-radius_toggleButton_m);
+}
+
+.controls-toggleButton_viewMode-button_size-l {
+   font-size: @font-size_toggleButton_l;
+   border-style: solid;
+   height: @height_toggleButton_l;
+   border-width: @thickness_toggleButton__border;
+   .border-radius(@border-radius_toggleButton_l);
 }

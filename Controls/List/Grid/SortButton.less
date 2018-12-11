@@ -1,0 +1,29 @@
+.controls-SortButton {
+	display: inline-block;
+}
+
+.controls-SortButton__content {
+	display: inline-flex;
+	align-items: center;
+}
+
+.controls-SortButton__icon {
+	.icon-size(@font-size_SortButton-icon);
+	color: @color_SortButton-icon;
+}
+
+.controls-SortButton__caption {
+	font-size: @font-size_SortButton-caption;
+	color: @color_SortButton-caption;
+	cursor: pointer;
+}
+
+.ws-is-no-touch {
+	.controls-SortButton__caption:hover {
+		text-decoration: underline;
+	}
+}
+
+.controls-SortButton__caption:active {
+	text-decoration: underline;
+}
