@@ -39,11 +39,12 @@ do
     mv ${item}-origin ${item}
 done
 
+# подготавливаем файлы покрытия для создания отчетов
+mkdir -p artifacts/{all,controls,file,components}
+
 # дописываем 0 покрытие для файлов которые не использовались в тестах
 node coverageUnusedFiles
 
-# подготавливаем файлы покрытия для создания отчетов
-mkdir -p artifacts/{all,controls,file,components}
 mv artifacts/coverageAll.json artifacts/all/coverage.json
 mv artifacts/coverageControls.json artifacts/controls/coverage.json
 mv artifacts/coverageFile.json artifacts/file/coverage.json
