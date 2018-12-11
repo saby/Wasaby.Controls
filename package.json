@@ -14,9 +14,9 @@
       "start": "node app",
       "build": "grunt build",
       "rebuild": "grunt rebuild",
-      "test": "node node_modules/ws-unit-testing/mocha --amd test-isolated",
-      "test:debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
-      "coverage": "node node_modules/ws-unit-testing/cover --amd test-isolated",
+      "test": "node node_modules/saby-units/mocha --amd test-isolated",
+      "test:debug": "node node_modules/saby-units/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
+      "coverage": "node node_modules/saby-units/cover --amd test-isolated",
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
       "lintless": "stylelint \"Controls/**/*.less\""
    },
@@ -83,6 +83,6 @@
       "typescript": "2.5.3",
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-3.19.100",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.18.700"
    }
 }
