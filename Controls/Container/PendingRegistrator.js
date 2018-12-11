@@ -95,8 +95,8 @@ define('Controls/Container/PendingRegistrator', [
                   pendingResults.push(res);
                }
             } else {
-               // pending is finished without result
-               pendingResults.push(undefined);
+               // pending is waiting its def finish
+               parallelDef.push(pending.def);
             }
          });
 
