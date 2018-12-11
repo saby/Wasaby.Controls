@@ -6,6 +6,8 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
+            // After popup will be transferred to the synchronous change of coordinates, 
+            // we need to return the calculation of the position with the keyboard.
             var windowData = {
                width: document.body.clientWidth,
                height: document.body.clientHeight,
