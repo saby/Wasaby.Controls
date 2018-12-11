@@ -436,21 +436,21 @@ define('Controls/Input/Base',
             this._initProperties(this);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            /**
-             * Browsers use auto-fill to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the <input> tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            if ('name' in options) {
-               this._fieldName = options.name;
-            }
-
-            /**
-             * To disable auto-complete in a field, its name attribute must have a value that
-             * the browser does not remember. To do this, generate a random name.
-             */
-            if (!options.autoComplete) {
+            if (options.autoComplete) {
+               /**
+                * Browsers use auto-fill to the fields with the previously stored name.
+                * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+                * To avoid this, we will translate the name of the control to the name of the <input> tag.
+                * https://habr.com/company/mailru/blog/301840/
+                */
+               if ('name' in options) {
+                  this._fieldName = options.name;
+               }
+            } else {
+               /**
+                * To disable auto-complete in a field, its name attribute must have a value that
+                * the browser does not remember. To do this, generate a random name.
+                */
                this._fieldName = randomName('name-');
             }
          },
