@@ -374,21 +374,21 @@ define('Controls/FormController', [
                }
                res.addCallback(function(arg) {
                   if (isChanged && !self._propertyChangedDef.isReady()) {
-                        // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                        // если из окна сохранения, пендинг завершится там
-                        self._propertyChangedDef.callback(true);
-                        self._propertyChangeNotified = false;
-                     }
-                     self._isNewRecord = false;
+                     // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
+                     // если из окна сохранения, пендинг завершится там
+                     self._propertyChangedDef.callback(true);
+                     self._propertyChangeNotified = false;
+                  }
+                  self._isNewRecord = false;
 
-                     updateDef.callback(true);
+                  updateDef.callback(true);
                   return arg;
-                  });
-                  res.addErrback(function(e) {
-                     updateDef.errback(e);
-                     return e;
-                  });
-               } else {
+               });
+               res.addErrback(function(e) {
+                  updateDef.errback(e);
+                  return e;
+               });
+            } else {
                // если были ошибки валидации, уведомим о них
                var validationErrors = self._children.validation.isValid();
                self._notify('validationFailed', [validationErrors], { bubbling: true });
