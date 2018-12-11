@@ -10,6 +10,14 @@ define('Controls-demo/Popup/TestMaximizedStack',
          _template: template,
       });
 
+      TestMaximizedStack.getDefaultOptions = function() {
+         return {
+            minimizedWidth: 500,
+            minWidth: 800,
+            maxWidth: 1200
+         }
+      };
+
       return TestMaximizedStack;
    }
 );
