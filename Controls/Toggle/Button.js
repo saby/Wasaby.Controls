@@ -15,6 +15,7 @@ define('Controls/Toggle/Button', [
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
+    * @mixes Controls/Toggle/Button/Styles
     * @control
     * @public
     * @author Михайловский Д.С.
