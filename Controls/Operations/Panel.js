@@ -107,6 +107,7 @@ define('Controls/Operations/Panel', [
    var Panel = Control.extend({
       _template: template,
       _oldToolbarWidth: 0,
+      _initialized: false,
 
       _beforeMount: function(options) {
          return _private.loadData(this, options.source);
@@ -114,6 +115,7 @@ define('Controls/Operations/Panel', [
 
       _afterMount: function() {
          _private.checkToolbarWidth(this);
+         this._initialized = true;
       },
 
       _beforeUpdate: function(newOptions) {
