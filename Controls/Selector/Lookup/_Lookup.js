@@ -202,6 +202,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _suggestState: false,
       _simpleViewModel: null,
       _availableWidthCollection: null,
+      _infoboxOpened: false,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -302,7 +303,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly) {
+         if (this._options.readOnly || this._infoboxOpened) {
             this._suggestState = false;
          }
       },
@@ -313,6 +314,15 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _isEmpty: function() {
          return !this._options.items.getCount();
+      },
+      
+      _openInfoBox: function() {
+         this._suggestState = false;
+         this._infoboxOpened = true;
+      },
+   
+      _closeInfoBox: function() {
+         this._infoboxOpened = false;
       },
 
       _onClickShowSelector: function() {
