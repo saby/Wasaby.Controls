@@ -20,8 +20,11 @@ define('Controls/Validate/Input',
             this._shouldValidate = true;
             this._forceUpdate();
          },
-         _cleanValid: function(event, value) {
+         _valueChangedHandler: function(event,value) {
             this._notify('valueChanged', [value]);
+            this._cleanValid();
+         },
+         _cleanValid: function() {
             if (this._validationResult) {
                this.setValidationResult(null);
             }
