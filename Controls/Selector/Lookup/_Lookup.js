@@ -286,14 +286,14 @@ define('Controls/Selector/Lookup/_Lookup', [
             _private.notifyValue(this, '');
          }
 
-         /* move focus to input after select, because focus will be lost after closing popup  */
-         this.activate();
+         /* move focus to input after select, because focus will be lost after closing popup */
+         this._options.multiSelect && this.activate();
       },
 
       _crossClick: function(event, item) {
          this._notify('removeItem', [item]);
 
-         /* move focus to input after remove, because focus will be lost after removing dom element  */
+         /* move focus to input after remove, because focus will be lost after removing dom element */
          this._needSetFocusInInput = true;
       },
 
