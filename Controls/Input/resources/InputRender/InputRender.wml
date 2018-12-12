@@ -37,6 +37,7 @@
                readOnly="{{ _options.readOnly }}"
                attr:title="{{_tooltip}}"
                autocomplete="{{_options.autocomplete}}"
+               isEdge="{{_isEdge}}"
             />
 
             <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">

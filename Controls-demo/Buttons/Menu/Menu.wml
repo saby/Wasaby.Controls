@@ -203,9 +203,22 @@
               icon="icon-small icon-AddButtonNew"
               showHeader="{{false}}"
               source="{{_createMemory(_groupItems)}}"
-              itemsGroup="{{_itemsGroup}}"
+              groupMethod="{{_groupMethod}}"
+              groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
               tooltip="Add">
+      </Controls.Button.Menu>
+      <Controls.Button.Menu
+              keyProperty="id"
+              viewMode="link"
+              icon="icon-medium icon-Linked"
+              source="{{_createMemory(_groupTextItems)}}"
+              groupMethod="{{_groupMethod}}"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+              tooltip="Add">
+         <ws:groupTemplate>
+            <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
+         </ws:groupTemplate>
       </Controls.Button.Menu>
    </div>
 

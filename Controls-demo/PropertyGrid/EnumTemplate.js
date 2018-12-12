@@ -47,6 +47,7 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
             } else {
                this._notify('valueChanged', undefined);
             }
+            this._comboboxOptions.selectedKey = tmp;
          }
       });
 

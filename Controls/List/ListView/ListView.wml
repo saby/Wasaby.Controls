@@ -12,6 +12,11 @@
               itemOutputWrapper="{{_itemOutputWrapper}}"
               itemTemplate="{{_itemTemplate}}">
       </ws:partial>
+      <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
+         <div class="controls-ListView__emptyTemplate">
+            <ws:partial template="{{_options.emptyTemplate}}"/>
+         </div>
+      </ws:if>
       <div class="controls-ListView__footer__paddingLeft_{{_options.multiselectVisibility === 'onhover' || _options.multiselectVisibility === 'visible' ? 'withCheckboxes' : 'default'}}">
          <ws:partial template="{{_options.footerTemplate}}"/>
       </div>

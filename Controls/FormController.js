@@ -195,7 +195,7 @@ define('Controls/FormController', [
          }
          return def;
       },
-      _onPropertyChange: function(event, fields) {
+      _onPropertyChange: function() {
          if (!this._propertyChangeNotified) {
             var def = new Deferred();
             this._propertyChangedDef = def;
@@ -215,6 +215,7 @@ define('Controls/FormController', [
                         return e;
                      });
                   } else {
+                     self._propertyChangeNotified = false;
                      def.callback(true);
                   }
                   return def;
@@ -225,9 +226,7 @@ define('Controls/FormController', [
       _showConfirmDialog: function(def, forceFinishValue) {
          function updating(answer) {
             if (answer === true) {
-               this._updateByPopup = true;
                this.update().addCallbacks(function(res) {
-                  this._updateByPopup = false;
                   if (!res.validationErrors) {
                      // если нет ошибок в валидации, просто завершаем пендинг с результатом
                      def.callback(res);
@@ -239,10 +238,9 @@ define('Controls/FormController', [
                   }
                   return res;
                }.bind(this), function(e) {
-                  this._updateByPopup = false;
                   def.errback(e);
                   return e;
-               }.bind(this));
+               });
             } else if (answer === false) {
                def.callback(false);
             }
@@ -288,22 +286,14 @@ define('Controls/FormController', [
          return res;
       },
       _createHandler: function(record) {
-         this._isNewRecord = true;
-
-         var def = new Deferred();
-         this._createPendingDef = def;
-
-         var self = this;
-         this._notify('registerPending', [def, {
-            showLoadingIndicator: false,
-            onPendingFail: function(forceFinishValue) {
-               self._showConfirmDialog(def, forceFinishValue);
-               return def;
-            }
-         }], { bubbling: true });
-
-         this._wasCreated = true;
-         this._forceUpdate();
+         // when FormController create record, its need to check previous record was saved or not.
+         // If its not saved but was created, previous record trying to delete.
+         var deleteDef = this._tryDeleteNewRecord();
+         deleteDef.addBoth(function() {
+            this._isNewRecord = true;
+            this._wasCreated = true;
+            this._forceUpdate();
+         }.bind(this));
          return record;
       },
       read: function(key, readMetaData) {
@@ -341,6 +331,11 @@ define('Controls/FormController', [
          // maybe anybody want to do custom update. check it.
          var result = this._notify('requestCustomUpdate', [], { bubbling: true });
 
+         // pending waiting while update process finished
+         var def = new Deferred();
+         self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
+         def.dependOn(updateResult);
+
          if (result instanceof Deferred) {
             result.addCallback(function(defResult) {
                updateCallback(defResult);
@@ -369,45 +364,30 @@ define('Controls/FormController', [
             if (!isError) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
-               var isChanged = self._record.isChanged();
                var res = self._children.crud.update(record, self._isNewRecord);
-               if (res instanceof Deferred) {
-                  res.addCallback(function(record) {
-                     if (self._isNewRecord && !self._updateByPopup) {
-                        // если созданный рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                        // если из окна сохранения, пендинг завершится там
-                        self._createPendingDef.callback(true);
-                     }
-                     if (isChanged && !self._updateByPopup) {
-                        // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                        // если из окна сохранения, пендинг завершится там
-                        self._propertyChangedDef.callback(true);
-                        self._propertyChangeNotified = false;
-                     }
-                     self._isNewRecord = false;
+               var isChanged = self._record.isChanged();
 
-                     updateDef.callback(true);
-                     return record;
-                  });
-                  res.addErrback(function(e) {
-                     updateDef.errback(e);
-                     return e;
-                  });
-               } else {
-                  if (self._isNewRecord && !self._updateByPopup) {
-                     // если созданный рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                     // если из окна сохранения, пендинг завершится там
-                     self._createPendingDef.callback(true);
-                  }
-                  if (isChanged && !self._updateByPopup) {
+               // fake deferred used for code refactoring
+               if (!(res instanceof Deferred)) {
+                  res = new Deferred();
+                  res.callback();
+               }
+               res.addCallback(function(arg) {
+                  if (isChanged && !self._propertyChangedDef.isReady()) {
                      // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
                      // если из окна сохранения, пендинг завершится там
                      self._propertyChangedDef.callback(true);
                      self._propertyChangeNotified = false;
                   }
                   self._isNewRecord = false;
+
                   updateDef.callback(true);
-               }
+                  return arg;
+               });
+               res.addErrback(function(e) {
+                  updateDef.errback(e);
+                  return e;
+               });
             } else {
                // если были ошибки валидации, уведомим о них
                var validationErrors = self._children.validation.isValid();
