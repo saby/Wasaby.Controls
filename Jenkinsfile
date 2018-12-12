@@ -708,9 +708,9 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir(./controls/tests) {
+        dir("./controls/tests") {
             sh """cat ./reg/build_description.txt>>./int/build_description.txt"""
-            build_description('./int/build_description.txt')
+            build_description("./int/build_description.txt")
         }
 
     }
