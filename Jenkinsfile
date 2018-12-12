@@ -229,6 +229,7 @@ node('controls') {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
+                             sh "cp -R ./atf/ ../reg/atf/"
                             }
                         },
                         checkout_engine: {
@@ -651,7 +652,6 @@ node('controls') {
                     stage("Рег.тесты"){
                         if ( regr && smoke_result){
                             echo "Запускаем тесты верстки"
-                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
@@ -705,12 +705,14 @@ node('controls') {
                     }
                 }
             }
-        sh ""
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        dir(./controls/tests) {
+            sh """cat ./reg/build_description.txt>>./int/build_description.txt"""
+            build_description('./int/build_description.txt')
+        }
 
-        build_description()
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
