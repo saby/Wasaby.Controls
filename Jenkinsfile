@@ -710,19 +710,28 @@ node('controls') {
             def description = ''
             def reg_description = ''
             def int_description = ''
+            def int_title
+            def reg_title
             if (inte || all_inte) {
                  int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt")
                  if (int_description) {
+                    int_title = int_description.split('|')[0]
                     description += "${int_description}"
                  }
             }
             if (regr) {
                 reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt")
                 if (reg_description) {
+                    reg_title = int_description.split('|')[0]
                     description += "${reg_description}"
                 }
             }
+            if (int_title && int_title==reg_title) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
+            }
+
             currentBuild.description = description
+
         }
 
     }

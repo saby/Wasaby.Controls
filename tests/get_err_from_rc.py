@@ -43,11 +43,9 @@ class RC:
             now_list = f.readlines()
             if self.test_names == now_list: # если упавших нигде нет
                 if now_list:
-                    self.head = "ОК. Упало только по ошибке в RC"
-            elif len(self.test_names) > len(now_list):
-                self.head = "В RC по ошибкам падает больше, чем в текущей сборке"
+                    self.head = "ОК|Упало только по ошибке в RC"
             elif len(self.test_names) < len(now_list):
-                self.head = "FAIL. В сборке падает не только по ошибкам в RC"
+                self.head = "FAIL|В сборке падает не только по ошибкам в RC"
 
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
