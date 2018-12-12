@@ -5,5 +5,4 @@
             keyProperty="{{_dataOptions.keyProperty}}"
             items="{{_dataOptions.items}}"
             scope="{{_options}}"
-            source="{{_dataOptions.prefetchSource}}"
-            on:filterChanged="_filterChanged()"/>
+            source="{{_dataOptions.prefetchSource}}"/>
