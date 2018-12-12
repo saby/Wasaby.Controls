@@ -10,6 +10,7 @@ define('Controls/Input/Base',
       'Controls/Utils/getTextWidth',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
+      'Core/helpers/Function/runDelayed',
       'Controls/Utils/hasHorizontalScroll',
 
       'wml!Controls/Input/Base/Base',
@@ -20,7 +21,7 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
-      getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
+      getTextWidth, InputUtil, ViewModel, runDelayed, hasHorizontalScroll, template,
       fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
@@ -259,32 +260,35 @@ define('Controls/Input/Base',
           * @param {Controls/Input/Base/Types/SplitValue.typedef} data
           * @param {String} displayValue Values in the field before changing it.
           */
-         adjustDataForFastInput: function(data, displayValue) {
-            /**
-             * The inserted value and the value after and the length of deleted value will be correct.
-             */
+         adjustDataForFastInput: function(data, inputType, displayValue, selection) {
+            var start, end;
 
-            /**
-             * In the displayValue value none inserted value.
-             * Therefore it consists of a value before and deleted value and a value after.
-             * Cut the displayValue value to so that it does not contain the value after.
-             */
-            data.before = displayValue.substring(0, displayValue.length - data.after.length);
+            if (selection.start === selection.end) {
+               var position = selection.end;
 
-            var removalLength = data.delete.length;
-            var lengthSplitBefore = data.before.length;
+               switch (inputType) {
+                  case 'deleteForward':
+                     start = position;
+                     end = position + data.delete.length;
+                     break;
+                  case 'deleteBackward':
+                     start = position - data.delete.length;
+                     end = position;
+                     break;
+                  default:
+                     start = position;
+                     end = position;
+                     break;
+               }
+            } else {
+               start = selection.start;
+               end = selection.end;
+               data.delete = displayValue.substring(selection.start, selection.end);
+            }
 
-            /**
-             * Because the length of the deleted value is correct and it is at the end of the value before,
-             * you can determine the value to be deleted. It will be equal to the substring of the length
-             * of the deleted value taken from the end.
-             */
-            data.delete = data.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
-
-            /**
-             * Cut the value to so that it does not contain the value to be deleted.
-             */
-            data.before = data.before.substring(0, lengthSplitBefore - removalLength);
+            data.delete = displayValue.substring(start, end);
+            data.before = displayValue.substring(0, start);
+            data.after = displayValue.substring(end, displayValue.length);
          }
       };
 
@@ -384,19 +388,31 @@ define('Controls/Input/Base',
           * @type {Number|null} The version of IE browser in which the control is build.
           * @private
           */
-         _ieVersion: detection.IEVersion,
+         _ieVersion: null,
 
          /**
-          * @type {Boolean} The version of IE browser in which the control is build.
+          * @type {Boolean|null} Determines whether the control is building in the mobile Android environment.
           * @private
           */
-         _isMobileAndroid: detection.isMobileAndroid,
+         _isMobileAndroid: null,
 
          /**
-          * @type {Boolean} Determines whether the control is building in the mobile IOS environment.
+          * @type {Boolean|null} Determines whether the control is building in the mobile IOS environment.
           * @private
           */
-         _isMobileIOS: detection.isMobileIOS,
+         _isMobileIOS: null,
+
+         /**
+          * @type {Boolean|null} Determined whether to hide the placeholder using css.
+          * @private
+          */
+         _hidePlaceholderUsingCSS: null,
+
+         /**
+          * @type {Boolean|null} Determines whether the control is building in the Edge.
+          * @private
+          */
+         _isEdge: null,
 
          /**
           *
@@ -405,6 +421,22 @@ define('Controls/Input/Base',
           */
          _getActiveElement: function() {
             return document.activeElement;
+         },
+
+         constructor: function(cfg) {
+            Base.superclass.constructor.call(this, cfg);
+
+            this._ieVersion = detection.IEVersion;
+            this._isMobileAndroid = detection.isMobileAndroid;
+            this._isMobileIOS = detection.isMobileIOS;
+            this._isEdge = detection.isIE12;
+
+            /**
+             * Hide in chrome because it supports auto-completion of the field when hovering over an item
+             * in the list of saved values. During this action no events are triggered and hide placeholder
+             * using js is not possible.
+             */
+            this._hidePlaceholderUsingCSS = detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -421,7 +453,13 @@ define('Controls/Input/Base',
              * https://habr.com/company/mailru/blog/301840/
              */
             if ('name' in options) {
-               this._fieldName = options.name;
+               /**
+                * The value of the name option can be undefined.
+                * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                */
+               if (typeof options.name !== 'undefined') {
+                  this._fieldName = options.name;
+               }
             }
          },
 
@@ -485,7 +523,27 @@ define('Controls/Input/Base',
           * @private
           */
          _clickHandler: function() {
-            this._viewModel.selection = this._getFieldSelection();
+            if (this._options.selectOnClick && this._firstClick) {
+               this._viewModel.select();
+               this._firstClick = false;
+            } else {
+               var self = this;
+
+               /**
+                * If the value in the field is selected, when you click on the selected area,
+                * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
+                * Therefore, we remember the selection from the field at the next drawing cycle.
+                */
+               runDelayed(function() {
+                  self._viewModel.selection = self._getFieldSelection();
+
+                  /**
+                   * Changes are applied during the synchronization cycle. We are not in it,
+                   * so we need to inform the model that the changes have been applied.
+                   */
+                  self._viewModel.changesHaveBeenApplied();
+               });
+            }
          },
 
          /**
@@ -526,7 +584,7 @@ define('Controls/Input/Base',
              * For such situations to be handled correctly, we need to adjust the data.
              */
             if (value !== model.displayValue) {
-               _private.adjustDataForFastInput(splitValue, model.displayValue);
+               _private.adjustDataForFastInput(splitValue, inputType, model.displayValue, model.selection);
             }
 
             _private.handleInput(this, splitValue, inputType);
@@ -570,6 +628,14 @@ define('Controls/Input/Base',
          },
 
          _focusInHandler: function() {
+            if (this._focusByMouseDown) {
+               this._firstClick = true;
+            } else {
+               this._viewModel.select();
+            }
+
+            this._focusByMouseDown = false;
+
             if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
@@ -597,7 +663,9 @@ define('Controls/Input/Base',
          },
 
          _mouseDownHandler: function() {
-            /* override */
+            if (this._getActiveElement() !== this._getField()) {
+               this._focusByMouseDown = true;
+            }
          },
 
          _notifyValueChanged: function() {
@@ -698,11 +766,12 @@ define('Controls/Input/Base',
             placeholder: '',
             textAlign: 'left',
             fontStyle: 'default',
-            autoComplete: false
+            autoComplete: false,
+            selectOnClick: false
          };
       };
 
-      Base.getDefaultTypes = function() {
+      Base.getOptionTypes = function() {
          return {
 
             /**
@@ -711,6 +780,7 @@ define('Controls/Input/Base',
              */
             value: descriptor(String),
             autoComplete: descriptor(Boolean),
+            selectOnClick: descriptor(Boolean),
             size: descriptor(String).oneOf([
                's',
                'm',

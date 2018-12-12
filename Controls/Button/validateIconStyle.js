@@ -1,5 +1,4 @@
 define('Controls/Button/validateIconStyle', ['Core/IoC'], function(IoC) {
-
    'use strict';
 
    var iconStyleValidate = {
@@ -33,8 +32,33 @@ define('Controls/Button/validateIconStyle', ['Core/IoC'], function(IoC) {
                break;
          }
          return newIconStyle;
-      }
+      },
 
+      // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+      // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+      iconColorFromOptIconToIconStyle: function(icon) {
+         var
+            iconStyleFromIconOpt = /icon-[eadhp][a-z]+/.exec(icon),
+            newIconStyle = '';
+         if (iconStyleFromIconOpt) {
+            newIconStyle = iconStyleFromIconOpt[0].replace('icon-', '');
+
+            // не будем возвращать primary так как он эквивалентен secondary, который будет по умолчанию. этим избавляемся
+            // от коллизии с тем что iconStyle primary есть и в старом варианте и в новом, но их значения не эквивалентны
+            return (newIconStyle === 'primary' ? '' : newIconStyle);
+         }
+         return '';
+      },
+      itemsSetOldIconStyle: function(items) {
+         items.forEach(function(item) {
+            if (item.get('icon') && !item.get('iconStyle')) {
+               var newIconStyle = iconStyleValidate.iconColorFromOptIconToIconStyle(item.get('icon'));
+               if (newIconStyle) {
+                  item.set('iconStyle', newIconStyle);
+               }
+            }
+         });
+      }
    };
 
    return iconStyleValidate;

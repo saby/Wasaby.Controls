@@ -204,6 +204,7 @@ define('Controls/List/ItemsViewModel', [
 
       setItems: function(items) {
          if (_private.isEqualItems(this._items, items)) {
+            this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
          } else {
             if (this._options.itemsReadyCallback) {
@@ -219,6 +220,11 @@ define('Controls/List/ItemsViewModel', [
             this._notify('onListChange');
          }
       },
+
+      getItems: function() {
+         return this._items;
+      },
+
       appendItems: function(items) {
          this._items.append(items);
       },

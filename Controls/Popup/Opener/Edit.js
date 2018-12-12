@@ -13,7 +13,7 @@ define('Controls/Popup/Opener/Edit',
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
 
       /**
-       * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
+       * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * @class Controls/Popup/Opener/Edit
        * @control
        * @public
@@ -150,6 +150,23 @@ define('Controls/Popup/Opener/Edit',
          open: function(meta, popupOptions) {
             var config = _private.getConfig(this, meta || {}, popupOptions);
             this._children.Opener.open(config);
+         },
+
+         /**
+          * Close popup
+          * @function Controls/Popup/Opener/Edit#close
+          */
+         close: function() {
+            this._children.Opener.close();
+         },
+
+         /**
+          * Popup opened status
+          * @function Controls/Popup/Opener/Edit#isOpened
+          * @returns {Boolean} is popup opened
+          */
+         isOpened: function() {
+            return this._children.Opener.isOpened();
          },
 
          _onResult: function(data) {

@@ -51,8 +51,7 @@ define('Controls/Application',
       ThemesController) {
       'use strict';
 
-      var _private,
-         DEFAULT_DEBUG_CATALOG = 'debug/';
+      var _private;
 
       _private = {
 
@@ -212,7 +211,14 @@ define('Controls/Application',
             self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = context.AppData.application;
+            self.product = context.AppData.product;
 
+
+
+            if (typeof window === 'undefined' && cfg.theme !== 'default') {
+               ThemesController.getInstance().themes = {};
+               ThemesController.getInstance().pushTheme(cfg.theme);
+            }
             var headData = Request.getCurrent().getStorage('HeadData');
 
             self.linkResolver = new LinkResolver(headData.isDebug,

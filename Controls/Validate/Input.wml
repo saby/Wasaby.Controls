@@ -1,6 +1,6 @@
 <ws:if data="{{_isNewEnvironment}}">
    <ws:partial template="{{ _options.content }}"
-               validationErrors="{{isValid()}}"
+               style="{{isValid() ? 'invalid': 'info'}}"
                scope="{{_options}}"
                on:valueChanged="_cleanValid()"
                on:deactivated="_deactivatedHandler()"
@@ -12,7 +12,7 @@
 <ws:else>
    <div>
       <ws:partial template="{{ _options.content }}"
-                  validationErrors="{{isValid()}}"
+                  style="{{isValid() ? 'invalid': 'info'}}"
                   scope="{{_options}}"
                   on:valueChanged="_cleanValid()"
                   on:deactivated="_deactivatedHandler()"

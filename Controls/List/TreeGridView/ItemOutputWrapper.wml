@@ -7,6 +7,8 @@
       itemActionsTemplate="{{itemActionsTemplate}}"
       currentNode="{{currentNode}}"
       swipeTemplate="{{swipeTemplate}}"
+      editingItemData="{{editingItemData}}"
+      isAdd="{{isAdd}}"
       multiSelectTpl="{{multiSelectTpl}}"
       itemTemplate="{{itemTemplate}}"
       itemActionsPosition="{{itemActionsPosition}}"/>

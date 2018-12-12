@@ -20,6 +20,8 @@
                   fieldName="{{_fieldName}}"
                   template="{{_field.template}}"
                   value="{{_viewModel.displayValue}}"
-                  autoComplete="{{_options.autoComplete}}"/>
+                  autoComplete="{{_options.autoComplete}}"
+                  hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                  isEdge="{{_isEdge}}" />
    </ws:else>
 </Controls.Input.Render>

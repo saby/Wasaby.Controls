@@ -4,13 +4,15 @@ define('Controls/Operations/Panel', [
    'wml!Controls/Operations/Panel/ItemTemplate',
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils',
+   'Controls/Button/validateIconStyle',
    'css!theme?Controls/Operations/Panel/Panel'
 ], function(
    Control,
    template,
    ItemTemplate,
    Memory,
-   WidthUtils
+   WidthUtils,
+   validateIconStyle
 ) {
    'use strict';
 
@@ -36,6 +38,10 @@ define('Controls/Operations/Panel', [
          if (source) {
             result = source.query().addCallback(function(dataSet) {
                self._items = dataSet.getAll();
+
+               // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+               // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+               validateIconStyle.itemsSetOldIconStyle(self._items);
                return self._items;
             });
          }
@@ -59,8 +65,8 @@ define('Controls/Operations/Panel', [
     * @demo Controls-demo/OperationsPanel/Panel
     *
     * @css @background-color_OperationsPanel Background color of the panel.
-    * @css @height_OperationsPanel Height of panel.
-    * @css @spacing_OperationsPanel__item-between-icon-caption Spacing between icon and caption in items.
+    * @css @height_OperationsPanel Height of the panel.
+    * @css @spacing_OperationsPanel__item-between-icon-caption Spacing between the icon and the caption in items.
     * @css @spacing_OperationsPanel-between-items Spacing between items.
     * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
     */
@@ -75,7 +81,7 @@ define('Controls/Operations/Panel', [
     */
 
    /**
-    * @event Controls/Operations/Panel#itemClick Occurs when item was clicked.
+    * @event Controls/Operations/Panel#itemClick Occurs when an item was clicked.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {WS.Data/Entity/Record} item Clicked item.
     * @example

@@ -2,9 +2,8 @@
    <ws:partial template="{{_options.content}}"
                on:mousedown="_open()"/>
 
-   <Controls.Dropdown.Opener name="DropdownOpener"
-                             className="{{_options.popupClassName}}">
-      <ws:popupOptions>
+   <Controls.Dropdown.Opener name="DropdownOpener">
+      <ws:popupOptions className="{{_options.popupClassName}}">
          <ws:eventHandlers onResult="{{_onResult}}"
                            onClose="{{_options.close}}"/>
          <ws:templateOptions
@@ -17,7 +16,7 @@
                  itemTemplate="{{_options.itemTemplate}}"
                  headTemplate="{{_options.headTemplate}}"
                  groupTemplate="{{_options.groupTemplate}}"
-                 groupMethod="{{groupMethod}}"
+                 groupMethod="{{_options.groupMethod}}"
                  dropdownClassName="{{_options.dropdownClassName}}"
                  footerTemplate="{{_options.footerTemplate}}"
                  headConfig="{{_options.headConfig}}"
