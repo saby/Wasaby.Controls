@@ -13,7 +13,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @mixes Controls/interface/IInfoboxOptions
-       * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        *
        * @private
        * @control
