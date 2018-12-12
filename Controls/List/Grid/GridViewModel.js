@@ -229,11 +229,9 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.subscribe('onGroupsExpandChange', function(event, changes) {
                self._notify('onGroupsExpandChange', changes);
             });
-            this._columns = this._prepareColumns(this._options.columns);
             this._ladder = _private.prepareLadder(this);
-            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility !== 'hidden');
-            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
-            this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+            this.setColumns(this._options.columns);
+            this.setHeader(this._options.header);
          },
 
          _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
@@ -269,12 +267,14 @@ define('Controls/List/Grid/GridViewModel', [
          // -----------------------------------------------------------
 
          getHeader: function() {
-            return this._options.header;
+            return this._header;
          },
 
          setHeader: function(columns) {
-            this._options.header = columns;
-            this._prepareHeaderColumns(this._options.header, this._options.multiSelectVisibility !== 'hidden');
+            this._header = columns;
+            this._prepareHeaderColumns(this._header, this._options.multiSelectVisibility !== 'hidden');
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          _prepareHeaderColumns: function(columns, multiSelectVisibility) {
@@ -317,11 +317,11 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
             }
             headerColumn.cellClasses = cellClasses;
-            
+
             if (headerColumn.column.sortingProperty) {
                headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
             }
-            
+
             return headerColumn;
          },
 
@@ -429,6 +429,15 @@ define('Controls/List/Grid/GridViewModel', [
          // -------------------------- items --------------------------
          // -----------------------------------------------------------
 
+         setColumns: function(columns) {
+            this._columns = this._prepareColumns(columns);
+            this._ladder = _private.prepareLadder(this);
+            this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+            this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
          getColumns: function() {
             return this._columns;
          },
@@ -442,7 +451,7 @@ define('Controls/List/Grid/GridViewModel', [
                hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
             this._prepareColgroupColumns(this._columns, hasMultiSelect);
-            this._prepareHeaderColumns(this._options.header, hasMultiSelect);
+            this._prepareHeaderColumns(this._header, hasMultiSelect);
             this._prepareResultsColumns(this._columns, hasMultiSelect);
          },
 
@@ -453,11 +462,11 @@ define('Controls/List/Grid/GridViewModel', [
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
          },
-         
+
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
          },
-   
+
          getSorting: function() {
             return this._model.getSorting();
          },
