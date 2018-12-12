@@ -26,7 +26,7 @@ def send_status_in_gitlab(state) {
 
 def build_description(job, path) {
     dir("./controls/tests") {
-        def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j  '(reg-${params.browser_type}) ${version} controls' -f ${path}"
+        def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j ${job} -f ${path}"
         if (rc_err) {
             return "${rc_err}"
         }
