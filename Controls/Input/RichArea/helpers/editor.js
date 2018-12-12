@@ -1,7 +1,6 @@
 define('Controls/Input/RichArea/helpers/editor', [
-   'SBIS3.CONTROLS/Utils/RichTextAreaUtil/RichTextAreaUtil'
 ],
-function(RichUtil) {
+function() {
    /**
        * Module which provide work tinymce instance with TinyMCE
        */
@@ -114,37 +113,6 @@ function(RichUtil) {
             this.execCommand(self, 'mceInsertLink', false, { href: link });
          }
          self._handlers.inputHandler();
-      },
-
-      /**
-          * Function return prepared content
-          * @param {String} text
-          * @returns {String}
-          */
-      prepareContent: function(text) {
-         return RichUtil.unDecorateLinks(text);
-      },
-
-      /**
-          * Function returns prepared text from JSON
-          * @param text
-          * @returns {*}
-          */
-      prepareFromJson: function(text) {
-         var tempNode = document.createElement('div'),
-            preparedText;
-
-         tempNode.innerHTML = text;
-
-         if (tempNode.firstChild.tagName === 'SPAN') {
-            preparedText = tempNode.firstChild.innerHTML;
-         } else {
-            preparedText = tempNode.innerHTML;
-         }
-
-         delete tempNode;
-
-         return preparedText;
       },
 
       /**
