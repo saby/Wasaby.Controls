@@ -14,11 +14,18 @@ define(
          beforeEach(function() {
             calls = [];
             ctrl = new Text();
-            ctrl._children.input = {
-               setSelectionRange: function(start, end) {
-                  this.selectionStart = start;
-                  this.selectionEnd = end;
-               }
+            var beforeMount = ctrl._beforeMount;
+
+            ctrl._beforeMount = function() {
+               beforeMount.apply(this, arguments);
+
+               ctrl._children[this._fieldName] = {
+                  focus: function() {},
+                  setSelectionRange: function(start, end) {
+                     this.selectionStart = start;
+                     this.selectionEnd = end;
+                  }
+               };
             };
          });
 
@@ -46,8 +53,8 @@ define(
             it('The text is not selected.', function() {
                ctrl._options.selectOnClick = false;
 
-               ctrl._children.input.selectionStart = 5;
-               ctrl._children.input.selectionEnd = 5;
+               ctrl._getField().selectionStart = 5;
+               ctrl._getField().selectionEnd = 5;
                ctrl._mouseDownHandler();
                ctrl._focusInHandler();
                ctrl._clickHandler();
@@ -63,8 +70,8 @@ define(
             it('The text is selected.', function() {
                ctrl._options.selectOnClick = true;
 
-               ctrl._children.input.selectionStart = 5;
-               ctrl._children.input.selectionEnd = 5;
+               ctrl._getField().selectionStart = 5;
+               ctrl._getField().selectionEnd = 5;
                ctrl._mouseDownHandler();
                ctrl._focusInHandler();
                ctrl._clickHandler();
@@ -144,9 +151,9 @@ define(
                   value: '',
                   constraint: '[0-9]'
                });
-               ctrl._children.input.value = 'text';
-               ctrl._children.input.selectionStart = 4;
-               ctrl._children.input.selectionEnd = 4;
+               ctrl._getField().value = 'text';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new SyntheticEvent({}));
 
                assert.equal(ctrl._viewModel.value, '');
@@ -160,9 +167,9 @@ define(
                   value: '',
                   maxLength: 3
                });
-               ctrl._children.input.value = 'text';
-               ctrl._children.input.selectionStart = 4;
-               ctrl._children.input.selectionEnd = 4;
+               ctrl._getField().value = 'text';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new SyntheticEvent({}));
 
                assert.equal(ctrl._viewModel.value, 'tex');
