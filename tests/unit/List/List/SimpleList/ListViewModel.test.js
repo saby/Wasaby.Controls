@@ -49,6 +49,18 @@ define([
          assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
       });
 
+      it('Set empty items', function() {
+         var cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markedKey: 2
+         };
+
+         var iv = new ListViewModel(cfg);
+         iv.setItems([]);
+         assert.deepEqual([], iv._items);
+      });
 
       it('Selection', function() {
          var cfg = {
