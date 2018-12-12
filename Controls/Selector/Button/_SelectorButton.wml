@@ -19,6 +19,6 @@
       </ws:if>
    </ws:if>
    <ws:else>
-      <Controls.Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
+      <Controls.Button name="link" attr:class="controls-SelectorButton_button-select" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
    </ws:else>
 </div>
