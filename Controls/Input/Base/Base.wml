@@ -21,6 +21,7 @@
                   template="{{_field.template}}"
                   value="{{_viewModel.displayValue}}"
                   autoComplete="{{_options.autoComplete}}"
-                  hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"/>
+                  hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                  isEdge="{{_isEdge}}" />
    </ws:else>
 </Controls.Input.Render>

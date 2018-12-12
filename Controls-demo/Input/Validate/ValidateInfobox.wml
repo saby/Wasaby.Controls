@@ -14,7 +14,6 @@
                                 bind:value="_value"
                                 placeholder="{{_placeholder}}"
                                 tagStyle="primary"
-                                validationErrors="{{_validationErrors}}"
                         />
                     </ws:content>
                 </Controls.Validate.Input>
@@ -29,7 +28,6 @@
                                 bind:value="_value3"
                                 placeholder="{{_placeholder}}"
                                 tagStyle="success"
-                                validationErrors="{{_validationErrors}}"
                         />
                     </ws:content>
                 </Controls.Validate.Input>
@@ -57,7 +55,6 @@
                                 bind:value="_value2"
                                 placeholder="Email"
                                 tagStyle="primary"
-                                validationErrors="{{_validationErrors}}"
                         />
                     </ws:content>
                 </Controls.Validate.Controller>
