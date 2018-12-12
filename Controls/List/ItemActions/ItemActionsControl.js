@@ -75,7 +75,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
          if (_private.needActionsMenu(all, options.itemActionsPosition)) {
             showed.push({
-               title: 'Еще',
                icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
                isMenu: true
             });
