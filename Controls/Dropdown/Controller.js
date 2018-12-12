@@ -162,7 +162,9 @@ define('Controls/Dropdown/Controller',
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
-            if (newOptions.source && newOptions.source !== this._options.source) {
+            if ((newOptions.source && newOptions.source !== this._options.source) ||
+               newOptions.navigation !== this._options.navigation ||
+               newOptions.filter !== this._options.filter) {
                if (newOptions.lazyItemsLoad) {
                   /* source changed, items is not actual now */
                   this._items = null;

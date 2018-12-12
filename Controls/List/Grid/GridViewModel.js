@@ -53,11 +53,11 @@ define('Controls/List/Grid/GridViewModel', [
                   result += ' controls-Grid__row-cell_firstRow';
                   result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
                } else {
-                  if (rowIndex === rowCount - 1) {
-                     result += ' controls-Grid__row-cell_lastRow';
-                     result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
-                  }
                   result += ' controls-Grid__row-cell_withRowSeparator';
+               }
+               if (rowIndex === rowCount - 1) {
+                  result += ' controls-Grid__row-cell_lastRow';
+                  result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
                }
             } else {
                result += ' controls-Grid__row-cell_withoutRowSeparator';

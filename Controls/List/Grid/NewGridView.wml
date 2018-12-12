@@ -16,6 +16,11 @@
                itemActionsPosition="{{_options.itemActionsPosition}}"
                itemOutputWrapper="{{_itemOutputWrapper}}"
                swipeTemplate="{{_options.swipeTemplate}}"/>
+   <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
+      <div class="controls-Grid__emptyTemplate" style="{{'grid-column: 1 / ' + (_options.columns.length + 1) + ';'}}">
+         <ws:partial template="{{_options.emptyTemplate}}"/>
+      </div>
+   </ws:if>
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
       <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
    </ws:if>
