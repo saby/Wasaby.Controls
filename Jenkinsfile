@@ -24,6 +24,15 @@ def send_status_in_gitlab(state) {
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
 
+def build_description(path) {
+    dir("./controls/tests") {
+        def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls' -f ${path}"
+        if (rc_err) {
+            currentBuild.description = "${rc_err}"
+        }
+    }
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
@@ -425,15 +434,7 @@ node('controls') {
             echo items
         }
         if ( regr || inte || all_inte) {
-        dir("./controls/tests") {
-            def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
-            if (rc_err) {
-                currentBuild.description = "ОШИБКИ ПО UI ТЕСТАМ В RC:${rc_err}"
-            } else {
-                currentBuild.description = "НЕТ ОШИБОК ПО UI ТЕСТАМ В RC"
-            }
 
-        }
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -704,9 +705,12 @@ node('controls') {
                     }
                 }
             }
+        sh ""
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+
+        build_description()
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
