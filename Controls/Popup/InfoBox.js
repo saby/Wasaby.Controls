@@ -253,6 +253,7 @@ define('Controls/Popup/InfoBox',
             trigger: 'hover'
          };
       };
+      InfoBox._private = _private;
 
       return InfoBox;
    });

@@ -1,36 +1,35 @@
 define(
-   [
-      'Controls/Popup/InfoBox'
-   ],
-   function(InfoBox) {
+    [
+       'Controls/Popup/InfoBox',
+        'Controls/Popup/Previewer/OpenerTemplate'
+    ],
+    function (InfoBox, OpenerTemplate) {
+       'use strict';
+       var getInfoBoxConfig = function() {
+          return {
+             float: true,
+             style: 'error',
+             position: 'tl',
+              template: OpenerTemplate
+          };
+       };
 
-      'use strict';
-      var getInfoBoxConfig = function() {
-         return {
-            float: true,
-            style: 'error',
-            position: 'tl',
-            trigger: 'click',
-            template: 'myTemplate'
-         };
-      };
+       var getInfoBoxWithConfig = function(config) {
+          var infobox = new InfoBox(config);
+          infobox.saveOptions(config);
+          return infobox;
+       };
 
-      var getInfoBoxWithConfig = function(config) {
-         var Infobox = new InfoBox(config);
-         Infobox.saveOptions(config);
-         return Infobox;
-      };
+       describe('Controls/Popup/InfoBox', function () {
+          it('getConfig', () => {
+             var config = getInfoBoxConfig();
+             var Infobox = getInfoBoxWithConfig(config);
+             var newConfig = InfoBox._private.getCfg(Infobox);
 
-      describe('Controls.Popup.InfoBox', () => {
-         it('getConfig', () => {
-            var config = getInfoBoxConfig();
-            var Infobox = getInfoBoxWithConfig(config);
-
-            assert.equal(Infobox._options.float, true);
-            assert.equal(Infobox._options.style, 'error');
-            assert.equal(Infobox._options.position, 'tl');
-            assert.equal(Infobox._options.trigger, 'click');
-            assert.equal(Infobox._options.template, 'myTemplate');
+            assert.equal(newConfig.float, true);
+            assert.equal(newConfig.style, 'error');
+            assert.equal(newConfig.position, 'tl');
+              assert.equal(newConfig.template, OpenerTemplate);
 
          });
       });
