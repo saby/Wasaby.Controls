@@ -10,7 +10,12 @@ define('Controls-demo/InfoBox/InfoBox',
       'use strict';
 
       return Control.extend({
-         _template: template
+         _template: template,
+         _dblClickHandler: function() {
+            var child = this._children.demandInfobox;
+            child.open();
+            setTimeout(child.close.bind(child), 5000);
+         }
       });
    }
 );

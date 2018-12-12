@@ -31,6 +31,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _itemsGroup: null,
          _scrollItems: null,
          _hierarchyMultiItems: null,
+         _groupTextItems: null,
 
          _beforeMount: function() {
             this._oneItem = [
@@ -135,7 +136,9 @@ define('Controls-demo/Buttons/Menu/Menu', [
                { id: 3, title: 'List in Excel' }
             ];
             this._hierarchyItems = [
-               { id: 1, title: 'Sales of goods and services', parent: null, '@parent': true },
+               {
+                  id: 1, title: 'Sales of goods and services', parent: null, '@parent': true
+               },
                { id: 2, title: 'Contract', parent: null },
                { id: 3, title: 'Texture', parent: null },
                { id: 4, title: 'Score', parent: null },
@@ -158,16 +161,14 @@ define('Controls-demo/Buttons/Menu/Menu', [
                   id: 5, title: 'Business trip', iconStyle: 'brown', icon: 'icon-small icon-statusDeparted', group: '2'
                }
             ];
-            this._itemsGroup = {
-               method: function(item) {
-                  if (item.get('group') === 'hidden' || !item.get('group')) {
-                     return ControlsConstants.view.hiddenGroup;
-                  }
-                  return item.get('group');
-               },
-               template: ''
-            };
-
+            this._groupTextItems = [
+               { id: 1, title: 'Project', group: 'Select' },
+               { id: 2, title: 'Work plan', group: 'Select' },
+               { id: 3, title: 'Task', group: 'Select' },
+               { id: 4, title: 'Merge request', group: 'Create' },
+               { id: 5, title: 'Meeting', group: 'Create' },
+               { id: 5, title: 'Video meeting', group: 'Create' }
+            ];
             this._scrollItems = [
                { id: 1, title: 'Task in development' },
                { id: 2, title: 'Error in development' },
@@ -187,7 +188,9 @@ define('Controls-demo/Buttons/Menu/Menu', [
                   parent: null,
                   myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
                },
-               { id: 2, title: 'Error in the development', '@parent': false, parent: null },
+               {
+                  id: 2, title: 'Error in the development', '@parent': false, parent: null
+               },
                { id: 3, title: 'Commission', parent: 1 },
                {
                   id: 4,
@@ -198,10 +201,14 @@ define('Controls-demo/Buttons/Menu/Menu', [
                },
                { id: 5, title: 'Application', parent: 1 },
                { id: 6, title: 'Development', parent: 1 },
-               { id: 7, title: 'Exploitation', parent: 1, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub' },
+               {
+                  id: 7, title: 'Exploitation', parent: 1, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
+               },
                { id: 8, title: 'Coordination', parent: 4 },
                { id: 9, title: 'Negotiate the discount', parent: 4 },
-               { id: 10, title: 'Coordination of change prices', parent: 4, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'},
+               {
+                  id: 10, title: 'Coordination of change prices', parent: 4, myTemplate: 'wml!Controls-demo/Buttons/Menu/itemTemplateSub'
+               },
                { id: 11, title: 'Matching new dish', parent: 4 }
             ];
          },
@@ -215,6 +222,12 @@ define('Controls-demo/Buttons/Menu/Menu', [
 
          _createHistoryMemory: function() {
             return HistorySourceMenu.createMemory();
+         },
+         _groupMethod: function(item) {
+            if (item.get('group') === 'hidden' || !item.get('group')) {
+               return ControlsConstants.view.hiddenGroup;
+            }
+            return item.get('group');
          }
       }
    );

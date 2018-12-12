@@ -9,6 +9,7 @@ define('Controls/Application/Core',
       'View/_Request/createDefault',
       'Controls/Application/StateReceiver',
       'Controls/Application/AppData',
+      'Controls/Application/HeadData',
       'native-css',
       'Core/css-resolve'
    ],
@@ -17,7 +18,8 @@ define('Controls/Application/Core',
       Request,
       createDefault,
       StateReceiver,
-      AppData) {
+      AppData,
+      HeadData) {
       'use strict';
 
       var AppCore = Control.extend({
@@ -55,6 +57,9 @@ define('Controls/Application/Core',
                }
                Request.setCurrent(req);
             }
+
+            var headData = new HeadData([], true);
+            Request.getCurrent().setStorage('HeadData', headData);
 
             AppCore.superclass.constructor.apply(this, arguments);
             this.ctxData = new AppData(cfg);
