@@ -48,7 +48,7 @@ define([
                                        runDelayed(function () { // ждем синхронизатор
                                           runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
                                              runDelayed(function () { // ждем когда пройдет валидация
-                                                assert.deepEqual(testControl._children.textBox._options._options.style, 'info');
+                                                assert.deepEqual(testControl._children.textBox._options.style, 'info');
                                                 done();
                                              });
                                           });
