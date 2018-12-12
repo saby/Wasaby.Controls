@@ -24,11 +24,11 @@ def send_status_in_gitlab(state) {
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
 
-def build_description(path) {
+def build_description(job, path) {
     dir("./controls/tests") {
-        def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls' -f ${path}"
+        def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j  '(reg-${params.browser_type}) ${version} controls' -f ${path}"
         if (rc_err) {
-            currentBuild.description = "${rc_err}"
+            return "${rc_err}"
         }
     }
 }
@@ -709,8 +709,22 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         dir("./controls/tests") {
-            sh """cat ./reg/build_description.txt>>./int/build_description.txt"""
-            build_description("./int/build_description.txt")
+            def description = ''
+            def reg_description = ''
+            def int_description = ''
+            if (inte || all_inte) {
+                 int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt")
+                 if (int_description) {
+                    description += "${int_description}"
+                 }
+            }
+            if (regr) {
+                reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt")
+                if (reg_description) {
+                    description += "${reg_description}"
+                }
+            }
+            currentBuild.description = description
         }
 
     }
