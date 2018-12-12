@@ -149,7 +149,9 @@ define('Controls/Popup/Opener/BaseOpener',
          _getConfig: function(popupOptions) {
             var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
             CoreMerge(cfg, popupOptions || {});
-            cfg.opener = cfg.opener || DefaultOpenerFinder.find(this);
+
+            // Opener can't be empty. If we don't find the defaultOpener, then install the current control
+            cfg.opener = cfg.opener || DefaultOpenerFinder.find(this) || this;
             return cfg;
          },
 
