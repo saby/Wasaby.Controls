@@ -62,7 +62,7 @@ define('Controls/BreadCrumbs/View', [
             });
             e.stopPropagation();
          } else {
-            this._notify('itemClick', [itemData.item]);
+            this._notify('itemClick', [itemData.item.get(this._options.keyProperty)]);
          }
       },
 
@@ -74,7 +74,7 @@ define('Controls/BreadCrumbs/View', [
          var actionName = args && args.action;
 
          if (actionName === 'itemClick') {
-            this._notify('itemClick', [args.data[0]]);
+            this._notify('itemClick', [args.data[0].get(this._options.keyProperty)]);
          }
          this._children.menuOpener.close();
       }

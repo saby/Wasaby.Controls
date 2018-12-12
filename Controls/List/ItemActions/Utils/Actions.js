@@ -7,10 +7,12 @@ define('Controls/List/ItemActions/Utils/Actions', [], function(
          if (action.isMenu) {
             self._notify('menuActionsClick', [itemData, event, showAll]);
          } else {
+            //TODO: self._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            var container = self._container.get ? self._container.get(0) : self._container;
             self._notify('itemActionsClick', [
                action,
                itemData.item,
-               Array.prototype.filter.call(self._container.querySelector('.controls-ListView__itemV').parentNode.children, function(item) {
+               Array.prototype.filter.call(container.querySelector('.controls-ListView__itemV').parentNode.children, function(item) {
                   return item.className.indexOf('controls-ListView__itemV') !== -1;
                })[itemData.index]
             ]);

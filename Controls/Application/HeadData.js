@@ -114,7 +114,6 @@ define('Controls/Application/HeadData', [
          if (typeof theme !== 'string') {
             cssLinks = theme;
          }
-         this.theme = Object.keys(ThemesController.getInstance().themes || {})[0] || '';
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};

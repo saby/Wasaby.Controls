@@ -15,7 +15,7 @@ define('Controls/Popup/InfoBox',
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * @class Controls/Popup/InfoBox
-       * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        *
        * @public
        * @author Красильников А.С.
@@ -72,6 +72,7 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#trigger
        * @cfg {String} Event name trigger the opening or closing of the template.
        * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant demand Opening when requested (content clicked).
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
        * @variant hover|touch Opening by hover or touch on the content. Closing by hover not on the content or template.
@@ -156,6 +157,7 @@ define('Controls/Popup/InfoBox',
             this._openId = null;
             this._closeId = null;
             this._opened = true;
+            this._forceUpdate();
          },
 
          _close: function() {
@@ -174,7 +176,9 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            if (!this._opened) {
+               this._open(event);
+            }
             event.stopPropagation();
          },
 
@@ -214,6 +218,23 @@ define('Controls/Popup/InfoBox',
          },
 
          _mousedownHandler: function() {
+            this._close();
+         },
+
+
+         /**
+          * Open InfoBox
+          * @function Controls/Popup/InfoBox#open
+          */
+         open: function() {
+            this._open();
+         },
+
+         /**
+          * close InfoBox
+          * @function Controls/Popup/InfoBox#close
+          */
+         close: function() {
             this._close();
          },
 
