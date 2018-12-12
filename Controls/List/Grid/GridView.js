@@ -16,7 +16,7 @@ define('Controls/List/Grid/GridView', [
    'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
-      isEqualObject, GroupTemplate, OldGridView, NewGridView) {
+   isEqualObject, GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
 
