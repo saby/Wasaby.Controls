@@ -30,7 +30,7 @@
       },
       "tests": "tests/unit",
       "test_server_port": 1025,
-      "test_report": "artifacts/xunit-report.xml",
+      "test_report": "./application/artifacts/xunit-report.xml",
       "test_url": {
          "scheme": "http",
          "host": "localhost",
@@ -38,8 +38,8 @@
          "path": "",
          "query": "reporter=XUnit"
       },
-      "htmlCoverageReport": "application/artifacts/coverage/index.html",
-      "jsonCoverageReport": "application/artifacts/coverage.json"
+      "htmlCoverageReport": "./application/artifacts/coverage/index.html",
+      "jsonCoverageReport": "./application/artifacts/coverage.json"
    },
    "nyc": {
       "include": [
@@ -52,7 +52,7 @@
       ],
       "cache": false,
       "eager": true,
-      "report-dir": "./artifacts/coverage"
+      "report-dir": "./application/artifacts/coverage"
    },
    "dependencies": {
       "typescript": "^2.9.1"
