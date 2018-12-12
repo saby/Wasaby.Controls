@@ -336,7 +336,7 @@ define('Controls/FormController', [
          self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
          def.dependOn(updateResult);
 
-         if (result instanceof Deferred) {
+         if (result && result.addCallback) {
             result.addCallback(function(defResult) {
                updateCallback(defResult);
                return defResult;
@@ -368,7 +368,7 @@ define('Controls/FormController', [
                var isChanged = self._record.isChanged();
 
                // fake deferred used for code refactoring
-               if (!(res instanceof Deferred)) {
+               if (!(res && res.addCallback)) {
                   res = new Deferred();
                   res.callback();
                }
