@@ -96,7 +96,7 @@ define('Controls/Decorator/Markup/Converter', [
     * @return {Array}
     */
    var deepCopyJson = function(json) {
-      return objectMerge([], json);
+      return objectMerge([], json, { clone: true });
    };
 
    /**

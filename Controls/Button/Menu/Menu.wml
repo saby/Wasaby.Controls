@@ -1,5 +1,6 @@
 <div class="controls-MenuButton">
-   <Controls.Dropdown.Controller        source="{{_options.source}}"
+   <Controls.Dropdown.Controller
+        source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
         parentProperty="{{_options.parentProperty}}"
         additionalProperty="{{_options.additionalProperty}}"
@@ -10,17 +11,20 @@
         footerTemplate="{{_options.footerTemplate}}"
         headConfig="{{_options.headConfig}}"
         icon="{{_options.icon}}"
-        itemsGroup="{{_options.itemsGroup}}"
+        groupMethod="{{_options.groupMethod}}"
+        groupTemplate="{{_options.groupTemplate}}"
         caption="{{_options.caption}}"
         popupClassName="{{_options.popupClassName || _offsetClassName}}"
         dropdownClassName="{{_options.dropdownClassName}}"
         showHeader="{{_options.showHeader}}"
-        filter="{{_filter}}"
+        navigation="{{_options.navigation}}"
+        filter="{{_options.filter}}"
         lazyItemsLoad="{{true}}"
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"
-        class="controls-MenuButton">
+        class="controls-MenuButton__button">
    <Controls.Button icon="{{_options.icon}}"
+                    iconStyle="{{_options.iconStyle}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"
                     viewMode="{{_options.viewMode}}"

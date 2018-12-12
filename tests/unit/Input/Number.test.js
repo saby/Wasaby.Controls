@@ -1,125 +1,72 @@
 define(
    [
-      'Controls/Input/Number'
+      'Core/core-instance',
+      'Controls/Input/Number',
+      'tests/resources/ProxyCall',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(NumberInput) {
+   function(instance, NumberInput, ProxyCall, SyntheticEvent) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
-         it('trimEmptyDecimals ("000" at the end of string)', function() {
-            var
-               res;
-            NumberInput._private.trimEmptyDecimals({
-               _options: {
-                  showEmptyDecimals: false
-               },
-               _numberViewModel: {
-                  getValue: function() {
-                     return '123.000';
-                  },
-                  getDisplayValue: function() {
-                     return '123.000';
-                  },
-                  updateValue: function(processedVal) {
-                     res = processedVal;
-                  }
+         var ctrl, calls;
+
+         beforeEach(function() {
+            calls = [];
+            ctrl = new NumberInput();
+            ctrl._children.input = {
+               setSelectionRange: function(start, end) {
+                  this.selectionStart = start;
+                  this.selectionEnd = end;
                }
-            }, {});
-
-            assert.equal(res, '123');
-         });
-
-         it('trimEmptyDecimals ("." at the end of string)', function() {
-            var
-               res;
-            NumberInput._private.trimEmptyDecimals({
-               _options: {
-                  showEmptyDecimals: false
-               },
-               _numberViewModel: {
-                  getValue: function() {
-                     return '123.';
-                  },
-                  getDisplayValue: function() {
-                     return '123.';
-                  },
-                  updateValue: function(processedVal) {
-                     res = processedVal;
-                  }
-               }
-            }, {});
-
-            assert.equal(res, '123');
-         });
-
-         it('trimEmptyDecimals ("456" at the end of string)', function() {
-            var
-               res;
-            NumberInput._private.trimEmptyDecimals({
-               _options: {
-                  showEmptyDecimals: false
-               },
-               _numberViewModel: {
-                  getValue: function() {
-                     return '123.456';
-                  },
-                  getDisplayValue: function() {
-                     return '123.456';
-                  },
-                  updateValue: function(processedVal) {
-                     res = processedVal;
-                  }
-               }
-            }, {});
-
-            assert.equal(res, '123.456');
-         });
-
-         it('trim minus if value -0', function() {
-            var config = {
-               onlyPositive: false,
-               integersLength: 5,
-               precision: 0,
-               showEmptyDecimals: true,
-               value: null
             };
-            let num = new NumberInput(config);
-            num._beforeMount(config);
-            num._options.precision = 0;
-
-            num._inputCompletedHandler({}, '-0');
-            assert.equal(num._numberViewModel.getValue(), '0');
+            ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
 
-         it('trimEmptyDecimals (single zero, no dot)', function() {
-            var
-               res;
-            NumberInput._private.trimEmptyDecimals({
-               _options: {
-                  showEmptyDecimals: false
-               },
-               _numberViewModel: {
-                  getValue: function() {
-                     return '0';
-                  },
-                  getDisplayValue: function() {
-                     return '0';
-                  },
-                  updateValue: function(processedVal) {
-                     res = processedVal;
-                  }
-               }
-            }, {});
-
-            assert.equal(res, '0');
+         it('getDefault', function() {
+            NumberInput.getOptionTypes();
+            NumberInput.getDefaultOptions();
          });
-         it('_beforeMount( value null)', function() {
-            var config = {
-               value: null
-            };
-            let num = new NumberInput(config);
-            num._beforeMount(config);
-            assert.equal(num._numberViewModel.getDisplayValue(), '');
+         it('The model belongs to the "Controls/Input/Number/ViewModel" class.', function() {
+            ctrl._beforeMount({
+               value: 0
+            });
+
+            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Number/ViewModel'));
+         });
+         describe('Change event', function() {
+            beforeEach(function() {
+               ctrl._beforeMount({
+                  value: 0
+               });
+               ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['displayValue'], calls);
+            });
+            it('ShowEmptyDecimals option equal true. Trailing zeros are not trimmed.', function() {
+               ctrl._options.showEmptyDecimals = true;
+
+               ctrl._changeHandler();
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['inputCompleted', [0, '0']]
+               }]);
+            });
+         });
+         describe('User input.', function() {
+            it('The display value divided into triads is correctly converted to a value.', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._children.input.value = '1111';
+               ctrl._children.input.selectionStart = 4;
+               ctrl._children.input.selectionEnd = 4;
+               ctrl._inputHandler(new SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', [1111, '1 111.0']]
+               }]);
+            });
          });
       });
    }

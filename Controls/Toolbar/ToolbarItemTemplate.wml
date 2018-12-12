@@ -1,5 +1,5 @@
-<div class="controls-ToolbarV_item controls-ToolbarV_item__styled"
-     title="{{item.tooltip}}">
+<div class="controls-Toolbar_item"
+     title="{{item['tooltip']}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
                 template="{{contentTemplate}}"
@@ -7,21 +7,21 @@
                 size="{{size}}"/>
     </ws:if>
     <ws:else>
-        <ws:if data="{{!!item.icon}}">
-            <i class="controls-ToolbarV__item_icon controls-ToolbarV__item_icon_{{size}} {{item.icon}} icon-{{item.iconStyle ? item.iconStyle : 'default'}}"/>
+        <ws:if data="{{item.icon || item[iconProperty]}}">
+            <i class="controls-Toolbar__item_icon_{{(item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}} controls-Toolbar__item_icon_{{size}} {{item['icon'] || item[iconProperty]}}"/>
         </ws:if>
-        <ws:else data="{{!!item.buttonStyle}}">
-            <Controls.Button readOnly="{{item.buttonReadOnly}}"
-                             caption="{{item.buttonCaption}}"
-                             transparent="{{item.buttonTransparent}}"
-                             iconStyle="{{item.buttonIconStyle}}"
-                             icon="{{item.buttonIcon}}"
-                             style="{{item.buttonStyle}}"
-                             viewMode="{{item.buttonViewMode}}"
+        <ws:else data="{{!!item['buttonStyle']}}">
+            <Controls.Button readOnly="{{buttonReadOnly || item['buttonReadOnly']}}"
+                             caption="{{item[displayProperty] || item['buttonCaption']}}"
+                             transparent="{{buttonTransparent || item['buttonTransparent']}}"
+                             iconStyle="{{item['buttonIconStyle'] || item['iconStyle']}}"
+                             icon="{{item['buttonIcon'] || item['icon']}}"
+                             style="{{buttonStyle || item['buttonStyle']}}"
+                             viewMode="{{buttonViewMode || item['buttonViewMode']}}"
                              size="{{size}}"/>
         </ws:else>
-        <ws:if data="{{!!item.title && !item.buttonViewMode}}">
-            <span class="controls-ToolbarV__item_title {{item.icon ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item.title}}</span>
+        <ws:if data="{{(item['title'] || item[displayProperty]) && !item['buttonViewMode']}}">
+            <span class="controls-Toolbar__item_title {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item['title'] || item[displayProperty]}}</span>
         </ws:if>
     </ws:else>
 </div>

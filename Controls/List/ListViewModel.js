@@ -70,7 +70,7 @@ define('Controls/List/ListViewModel',
                   }
                }
             }
-            if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
+            if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
@@ -200,6 +200,10 @@ define('Controls/List/ListViewModel',
             _private.updateIndexes(this);
          },
 
+         getItems: function() {
+            return ListViewModel.superclass.getItems.apply(this, arguments);
+         },
+
          _setEditingItemData: function(itemData) {
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
@@ -244,6 +248,14 @@ define('Controls/List/ListViewModel',
 
          getMultiSelectVisibility: function() {
             return this._options.multiSelectVisibility;
+         },
+         
+         setSorting: function(sorting) {
+            this._options.sorting = sorting;
+         },
+         
+         getSorting: function() {
+            return this._options.sorting;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

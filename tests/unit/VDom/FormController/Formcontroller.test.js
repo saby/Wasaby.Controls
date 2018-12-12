@@ -268,7 +268,7 @@ define([
                      name: 'no name',
                      email: 'no@email.com',
                      createButtonText: 'create with id = ' + 4,
-                     selectButtonsCount: 3 // при еще одном сохранили 2й
+                     selectButtonsCount: 2 // при еще одном сохранили 2й
                   }
                }, {
                   action: 'create',
@@ -278,7 +278,7 @@ define([
                      name: 'no name',
                      email: 'no@email.com',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 3 // а теперь при создании ответили не сохранять и 3й не сохранился
+                     selectButtonsCount: 2 // а теперь при создании ответили не сохранять и 3й не сохранился
                   }
                }, {
                   action: 'read', // читаем 0й
@@ -289,7 +289,7 @@ define([
                      name: '',
                      email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4 // итого у нас 0, 1, 2, 4 сохранены.
+                     selectButtonsCount: 2 // итого у нас 0, 1, 2, 4 сохранены.
                   }
                }, {
                   action: 'read',
@@ -300,18 +300,18 @@ define([
                      name: 'no name',
                      email: 'no@email.com',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'read',
                   updateId: 2,
                   answer: true,
                   checkCfg: {
-                     key: 'now is ' + 2,
-                     name: 'no name',
-                     email: 'no@email.com',
+                     key: 'now is',
+                     name: '',
+                     email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'read',
@@ -322,18 +322,29 @@ define([
                      name: '',
                      email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'read',
                   updateId: 4,
                   answer: true,
                   checkCfg: {
-                     key: 'now is ' + 4,
-                     name: 'no name',
-                     email: 'no@email.com',
+                     key: 'now is',
+                     name: '',
+                     email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
+                  }
+               }, {
+                  action: 'read',
+                  updateId: 0,
+                  answer: true,
+                  checkCfg: {
+                     key: 'now is ' + 0,
+                     name: '',
+                     email: '',
+                     createButtonText: 'create with id = ' + 5,
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'delete',
@@ -343,7 +354,7 @@ define([
                      name: '',
                      email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 3
+                     selectButtonsCount: 1
                   }
                }
                ]);

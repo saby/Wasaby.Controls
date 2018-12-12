@@ -181,13 +181,14 @@
    padding-right: @spacing_Grid-column / 2;
 }
 
-.controls-Grid__row-cell__content_withLadder {
+.controls-Grid__row-cell__content_hiddenForLadder {
    visibility: hidden;
 }
 
 .controls-Grid__row-ladder-cell {
    pointer-events: none;
    position: relative;
+   z-index: 2;
 }
 
 .controls-Grid__row-ladder-cell__content {
@@ -333,10 +334,11 @@
 
 .controls-Grid__row-cell_withSelectionMarker_master {
    background-color: @background-color_MasterList_item-selected;
-   position: sticky;
    z-index: 1;
+   /* Пока нет фикс шапок
+   position: sticky;
    top: 0;
-   bottom: 0;
+   bottom: 0; */
    &:before {
       content: '';
       z-index: 2;
