@@ -15,4 +15,12 @@
          <div>Это всплывающая подсказка.</div>
       </ws:template>
    </Controls.Popup.InfoBox>
+   <Controls.Popup.InfoBox trigger="demand" on:dblclick="_dblClickHandler()" name="demandInfobox">
+      <ws:content>
+         <div>Нажмите 2 раза</div>
+      </ws:content>
+      <ws:template>
+         <div>Это всплывающая подсказка, открывая методом open. Закроется через 5 секунд</div>
+      </ws:template>
+   </Controls.Popup.InfoBox>
 </div>

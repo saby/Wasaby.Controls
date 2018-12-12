@@ -1,4 +1,4 @@
 <Controls.Filter.Button.Panel
-        attr:class="controls-PanelFilter__width-m">
+        attr:class="controls-FilterPanel__width-m">
    <ws:itemTemplate templateName="wml!Controls-demo/EngineBrowser/resources/filterPanelItemsTemplate"/>
 </Controls.Filter.Button.Panel>

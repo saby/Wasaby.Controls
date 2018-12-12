@@ -180,7 +180,6 @@
 //ToolBar
 @color_Toolbar__text:                        @color_Link-main-text;
 
-
 //TODO удалить при перевода dropDownList'a на алиасы
 @shadow_suggestionsContainer:            0 6px 12px rgba(0, 0, 0, 0.25);
 @shadow_suggestionsContainer-reverse:    0 -6px 12px rgba(0, 0, 0, 0.25);
@@ -381,15 +380,9 @@
 @color_RadioItem_caption_selected:          #000000;
 @color_RadioItem_caption_unselected_disabled:      #CCCCCC;
 @color_RadioItem_caption_unselected_enabled:       #999999;
-
-//FilterPanel
-@color_FilterPanel-caption:                  #313e78;
-@background-color_FilterPanel-horizontal:        #F4F4F4;
-@color_FilterPanel-default:                  #313e78;
-@border-color_FilterPanel-horizontal:            #ccc;
 //FilterLink
-@color_FilterLink:                           @color_FilterPanel-default;
-@color_FilterDropdown-text:                  @color_FilterPanel-default;
+@color_FilterLink:                           #313e78;
+@color_FilterDropdown-text:                  #313e78;
 //HistoryList
 @background-color_HistoryList:               #F4F4F4;
 //toggleButton
@@ -413,8 +406,11 @@
 
 //VDOM TreeGridView
 @color_TreeGridView-expander: #313E78;
-@color_TreeGridView-expander_hover: #0055BB;
-@border-color_TreeGridView-item_dragging: #0055BB;
+@color_TreeGridView-expander_hover: @color16;
+@color_TreeGridView-expander-hiddenNode: #8991A9;
+@color_TreeGridView-expander-hiddenNode_hover: @color16;
+@border-color_TreeGridView-item_dragging: @color16;
+
 //MasterList
 @border-color_MasterList: #eaeaea;
 @background-color_MasterList: #f8f8f8;

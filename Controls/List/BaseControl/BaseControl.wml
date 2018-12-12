@@ -108,10 +108,6 @@
           name="swipeControl"/>
     </ws:if>
 
-    <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
-        <ws:partial template="{{_options.emptyTemplate}}"/>
-    </ws:if>
-
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
         <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
