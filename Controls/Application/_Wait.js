@@ -24,7 +24,9 @@ define('Controls/Application/_Wait',
          }
          return res;
       };
-      asyncTemplate.stable = true;
+
+      // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
+      asyncTemplate.stable = template.stable;
 
       var Page = Base.extend({
          _template: asyncTemplate,
