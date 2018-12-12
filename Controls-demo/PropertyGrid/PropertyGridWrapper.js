@@ -20,8 +20,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'json!Controls-demo/PropertyGrid/pgtext',
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper',
-
+      'css!Controls-demo/Wrapper/Wrapper'
    ],
 
    function(Control, Deferred, cMerge, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
@@ -70,7 +69,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                var notOrigin = config.control._notify;
 
                config.control._notify = function(event, arg) {
-                  self.myEvent += event + '\n';
+                  self.myEvent += event + ' ';
                   if (event === opts.eventType) {
                      opts.componentOpt[opts.nameOption] = arg[0];
                   }
@@ -82,7 +81,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _clickHandler: function() {
             if (this._options.dataObject.showClickEvent === true) {
-               this.myEvent += 'click\n';
+               this.myEvent += 'click ';
             }
          },
          _valueChangedHandler: function(event, option, newValue) {
