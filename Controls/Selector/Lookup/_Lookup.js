@@ -286,7 +286,8 @@ define('Controls/Selector/Lookup/_Lookup', [
             _private.notifyValue(this, '');
          }
 
-         /* move focus to input after select, because focus will be lost after closing popup */
+         /* move focus to input after select, because focus will be lost after closing popup,
+          * only in multi-select mode, in single-select mode input is not displayed after selecting a item */
          this._options.multiSelect && this.activate();
       },
 
