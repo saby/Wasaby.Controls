@@ -19,6 +19,11 @@
                   itemOutputWrapper="{{_itemOutputWrapper}}"
                   swipeTemplate="{{_options.swipeTemplate}}"/>
    </tbody>
+   <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
+      <div class="controls-Grid__emptyTemplate">
+         <ws:partial template="{{_options.emptyTemplate}}"/>
+      </div>
+   </ws:if>
    <ws:if data="{{_listModel.getResults() && _listModel.getResults().position === 'bottom'}}">
       <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResults().template}}" listModel="{{_listModel}}"/>
    </ws:if>
