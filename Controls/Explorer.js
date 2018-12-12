@@ -123,8 +123,8 @@ define('Controls/Explorer', [
             _private.setRoot(this, item.getId());
          }
       },
-      _onBreadCrumbsClick: function(event, item, setPreviousNode) {
-         _private.setRoot(this, item.get(setPreviousNode ? this._options.parentProperty : this._options.keyProperty));
+      _onBreadCrumbsClick: function(event, itemId) {
+         _private.setRoot(this, itemId);
       },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);

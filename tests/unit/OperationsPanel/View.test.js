@@ -70,7 +70,9 @@ define([
 
 
       it('_beforeMount', function(done) {
+         assert.isFalse(instance._initialized);
          instance._beforeMount(cfg).addCallback(function(items) {
+            assert.isFalse(instance._initialized);
             assert.deepEqual(items.getRawData(), data);
             assert.deepEqual(instance._items.getRawData(), data);
             done();
@@ -90,7 +92,9 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
+               assert.isFalse(instance._initialized);
                instance._afterMount();
+               assert.isTrue(instance._initialized);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 2);
@@ -112,7 +116,9 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
+               assert.isFalse(instance._initialized);
                instance._afterMount();
+               assert.isTrue(instance._initialized);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 1);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 0);
