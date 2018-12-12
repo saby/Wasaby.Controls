@@ -14,6 +14,8 @@ define(
             assert.equal(splitIntoTriads('1111'), '1 111');
             assert.equal(splitIntoTriads('11111'), '11 111');
             assert.equal(splitIntoTriads('111111'), '111 111');
+            assert.equal(splitIntoTriads('-111'), '-111');
+            assert.equal(splitIntoTriads('-111111'), '-111 111');
          });
       });
    }

@@ -15,12 +15,11 @@ define('Controls/Popup/InfoBox',
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * @class Controls/Popup/InfoBox
-       * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        *
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
-       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        */
 
       /**
