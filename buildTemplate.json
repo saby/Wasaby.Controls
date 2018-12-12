@@ -94,7 +94,10 @@
     {
       "name": "Router",
       "path": "%cd%/node_modules/Router/Router"
+    },
+    {
+      "name": "Inferno",
+      "path": "%cd%/node_modules/sbis3-ws/Inferno"
     }
-
   ]
 }
