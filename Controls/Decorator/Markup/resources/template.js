@@ -147,6 +147,7 @@ define('Controls/Decorator/Markup/resources/template', [
       }
       return markupGenerator.joinElements(elements, key, defCollection);
    };
+   template.stable = true;
 
    return template;
 });
