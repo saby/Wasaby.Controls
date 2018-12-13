@@ -46,7 +46,7 @@ define('Controls/List/BaseControl', [
    var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
-      reload: function(self, filter, sorting, userCallback, userErrback) {
+      reload: function(self, filter, sorting, userCallback, userErrback, navigation) {
          var
             resDeferred = new Deferred();
          if (self._sourceController) {
@@ -68,7 +68,7 @@ define('Controls/List/BaseControl', [
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
-               _private.prepareFooter(self, self._options.navigation, self._sourceController);
+               _private.prepareFooter(self, navigation, self._sourceController);
 
                _private.handleListScroll(self, 0);
                resDeferred.callback(list);
@@ -585,7 +585,7 @@ define('Controls/List/BaseControl', [
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
                   var
-                     loadDef = _private.reload(self, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback, newOptions.navigation);
                   loadDef.addCallback(function(items) {
                      return items;
                   });
