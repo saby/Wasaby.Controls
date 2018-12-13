@@ -734,9 +734,9 @@ node('controls') {
             }
             if (int_title && reg_title && int_title==reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if ('FAIL' == int_title && 'OK' == reg_title || !reg_title) {
+            } else if ('FAIL' == int_title && ('OK' == reg_title || !reg_title)) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if ('FAIL' == reg_title && 'OK' == int_title|| !int_title) {
+            } else if ('FAIL' == reg_title && ('OK' == int_title|| !int_title)) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             }
 
