@@ -61,7 +61,7 @@ define('Controls/List/BaseControl', [
 
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
-                  self._items = list;
+                  self._items = self._listViewModel.getItems();
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
@@ -577,7 +577,7 @@ define('Controls/List/BaseControl', [
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
                   self._listViewModel.setItems(receivedState);
-                  self._items = receivedState;
+                  self._items = self._listViewModel.getItems();
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
                   var
