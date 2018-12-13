@@ -1,4 +1,4 @@
-<div class="controls-Notification controls-Notification__{{_options.style}}"
+<div class="controls-Notification controls-Notification__{{_options._style}}"
      attr:ws-no-focus="true"
      on:mouseenter="_mouseenterHandler()"
      on:mouseleave="_mouseleaveHandler()">
