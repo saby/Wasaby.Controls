@@ -21,7 +21,7 @@ define('Controls/Application/_Head',
             // before returning html to client
             return this._beforeMount.apply(this, arguments);
          },
-         _beforeMount: function(options, context, receivedState) {
+         _beforeMount: function(options) {
             this.resolvedSimple = [];
             this.resolvedThemed = [];
             this._forceUpdate = function() {
@@ -54,33 +54,9 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
-         _afterMount: function() {
-            //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+         _shouldUpdate: function() {
+            return false;
          },
-
-         /*_beforeUpdate: function() {
-            var csses = ThemesController.getInstance().getCss();
-            if (ThemesController.getInstance().getReqCbArray) {
-               this.reqCBArray = ThemesController.getInstance().getReqCbArray();
-            } else {
-               this.reqCBArray = [];
-            }
-            this.themedCss = csses.themedCss;
-            this.simpleCss = csses.simpleCss;
-            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
-         },
-         _afterUpdate: function() {
-            for (var i = 0; i < this.reqCBArray.length; i++) {
-               if (this.reqCBArray[i].element) {
-                  this.reqCBArray[i].element.remove();
-               } else {
-                  this.reqCBArray[i].resolve.call();
-               }
-            }
-            this.reqCBArray = null;
-         },*/
-
          isArrayHead: function() {
             return Array.isArray(this._options.head);
          },
