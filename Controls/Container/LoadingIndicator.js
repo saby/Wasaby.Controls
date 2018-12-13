@@ -158,8 +158,9 @@ define('Controls/Container/LoadingIndicator', [
       },
 
       _isOpened: function(config) {
+         // if config is empty returning false
          if (!config) {
-            return;
+            return false;
          }
          var index = this._getItemIndex(config.id);
          if (index < 0) {
