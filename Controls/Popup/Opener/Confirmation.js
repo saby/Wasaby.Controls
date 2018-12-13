@@ -1,9 +1,10 @@
 define('Controls/Popup/Opener/Confirmation',
    [
       'Controls/Popup/Opener/BaseOpener',
+      'Controls/Utils/getZIndex',
       'Core/Deferred'
    ],
-   function(BaseOpener, Deferred) {
+   function(BaseOpener, getZIndex, Deferred) {
       'use strict';
 
       /**
@@ -20,6 +21,13 @@ define('Controls/Popup/Opener/Confirmation',
        * @name Controls/Popup/Opener/Confirmation#closePopupBeforeUnmount
        * @cfg {Object} Determines whether to close the popup when the component is destroyed.
        */
+
+      var _private = {
+         compatibleOptions: function(self, popupOptions) {
+            // For the old page, set the zIndex manually
+            popupOptions.zIndex = popupOptions.zIndex || getZIndex(self);
+         }
+      };
 
       var Confirmation = BaseOpener.extend({
          _resultDef: null,
@@ -82,6 +90,7 @@ define('Controls/Popup/Opener/Confirmation',
          open: function(templateOptions) {
             this._resultDef = new Deferred();
             var popupOptions = this._getPopupOptions(templateOptions);
+            _private.compatibleOptions(this, popupOptions);
             Confirmation.superclass.open.call(this, popupOptions, 'Controls/Popup/Opener/Dialog/DialogController');
             return this._resultDef;
          },
@@ -98,6 +107,11 @@ define('Controls/Popup/Opener/Confirmation',
 
       });
 
+      Confirmation.getDefaultOptions = function() {
+         return {
+            _vdomOnOldPage: true // Open vdom popup in the old environment
+         };
+      };
+
       return Confirmation;
-   }
-);
+   });
