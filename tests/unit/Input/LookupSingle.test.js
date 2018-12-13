@@ -129,6 +129,24 @@ define([
          lookup._changeValueHandler(null, 1);
          assert.deepEqual(newValue, [1]);
       });
+
+      it('_choose', function() {
+         var
+            isActivate = false,
+            lookup = new Lookup();
+
+         lookup.activate = function() {
+            isActivate = true;
+         };
+
+         lookup._beforeMount({});
+         lookup._choose();
+         assert.isFalse(isActivate);
+
+         lookup._options.multiSelect = true;
+         lookup._choose();
+         assert.isTrue(isActivate);
+      });
    
       it('_deactivated', function() {
          var lookup = new Lookup();
