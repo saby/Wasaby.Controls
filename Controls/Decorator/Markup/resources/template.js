@@ -148,5 +148,8 @@ define('Controls/Decorator/Markup/resources/template', [
       return markupGenerator.joinElements(elements, key, defCollection);
    };
 
+   // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
+   template.stable = true;
+
    return template;
 });
