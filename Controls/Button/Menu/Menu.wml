@@ -23,7 +23,8 @@
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"
         class="controls-MenuButton__button">
-   <Controls.Button icon="{{_options.icon}}"
+   <Controls.Button class="controls-MenuButton__BaseButton"
+                    icon="{{_options.icon}}"
                     iconStyle="{{_options.iconStyle}}"
                     caption="{{_options.caption}}"
                     style="{{_options.style}}"
