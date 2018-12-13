@@ -25,14 +25,20 @@ def send_status_in_gitlab(state) {
 }
 
 def build_description(job, path, skip_test) {
-    def param_skip=""
+    def param_skip = ''
+    def title = ''
     if (skip_test) {
         param_skip="-s"
     }
-    def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
-    if (rc_err) {
-        return "${rc_err}"
+    def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
+    if (description) {
+        echo "${description}"
+        title = description.tokenize('|')[0]
+        description = description.tokenize('|')[1]
+        echo "${title}"
+
     }
+    return [title, description]
 }
 
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
@@ -712,29 +718,17 @@ node('controls') {
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         dir("./controls/tests") {
             def description = ''
-            def reg_description = ''
-            def int_description = ''
-            def int_title=''
-            def reg_title=''
+            def int_title = ''
+            def reg_title = ''
             if (inte || all_inte) {
-                 int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                 if (int_description) {
-                    echo "${int_description}"
-                    int_title = int_description.tokenize('|')[0]
-                    int_description = int_description.tokenize('|')[1]
-                    echo "${int_title}"
-                    description += "${int_description}"
-                 }
+                 int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
+                 int_title = int_data[0]
+                 description += int_data[1]
             }
             if (regr) {
-                reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                if (reg_description) {
-                    echo "${reg_description}"
-                    reg_title = reg_description.tokenize('|')[0]
-                    reg_description = reg_description.tokenize('|')[1]
-                    echo "${reg_title}"
-                    description += "${reg_description}"
-                }
+                reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
+                reg_title = reg_data[0]
+                description += reg_data[1]
             }
             if (int_title && reg_title && int_title==reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
