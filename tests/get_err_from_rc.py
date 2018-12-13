@@ -45,7 +45,7 @@ class RC:
                 if now_list:
                     self.head = "ОК|Эти ошибки уже попали в RC."
             elif len(self.test_names) < len(now_list):
-                self.head = "FAIL|В сборке падает UI тесты по новым ошибкам!В RC таких нет."
+                self.head = "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
 
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
