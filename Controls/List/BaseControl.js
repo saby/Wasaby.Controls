@@ -42,6 +42,8 @@ define('Controls/List/BaseControl', [
    var
       defaultSelectedKeys = [],
       defaultExcludedKeys = [];
+   
+   var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
       reload: function(self, filter, sorting, userCallback, userErrback) {
@@ -228,6 +230,7 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollShow: function(self) {
+         self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
             if (self._options.navigation &&
                self._options.navigation.view === 'infinity' &&
@@ -244,6 +247,7 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollHide: function(self) {
+         self._loadOffset = 0;
          self._pagingCfg = null;
          self._forceUpdate();
       },

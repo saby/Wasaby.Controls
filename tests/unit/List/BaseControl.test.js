@@ -661,6 +661,31 @@ define([
             done();
          }, 100);
       });
+      
+      it('scrollHide/scrollShow base control state', function() {
+         var cfg = {
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  mode: 'totalCount'
+               }
+            }
+         };
+         var baseControl = new BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+   
+         BaseControl._private.onScrollHide(baseControl);
+         assert.equal(baseControl._loadOffset, 0);
+   
+         BaseControl._private.onScrollShow(baseControl);
+         assert.equal(baseControl._loadOffset, 100);
+      });
 
       it('scrollToEdge without load', function(done) {
          var rs = new RecordSet({
