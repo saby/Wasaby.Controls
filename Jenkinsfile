@@ -611,14 +611,15 @@ node('controls') {
                     stage ("Unit тесты"){
                         if ( unit ){
                             echo "Запускаем юнит тесты"
-                                dir("./controls"){
-                                sh "npm config set registry http://npmregistry.sbis.ru:81/"
-                                echo "run isolated"
+							dir("./controls"){
                                 sh """
+								npm cache clean --force
+                                npm config set registry http://npmregistry.sbis.ru:81/
+                                echo "run isolated"                                
                                 export test_report="artifacts/test-isolated-report.xml"
-                                sh ./bin/test-isolated"""
+                                sh ./bin/test-isolated
+								
                                 echo "run browser"
-                                sh """
                                 export test_url_host=${env.NODE_NAME}
                                 export test_server_port=10253
                                 export test_url_port=10253
@@ -626,7 +627,8 @@ node('controls') {
                                 export WEBDRIVER_remote_host=10.76.159.209
                                 export WEBDRIVER_remote_port=4444
                                 export test_report=artifacts/test-browser-report.xml
-                                sh ./bin/test-browser"""
+                                sh ./bin/test-browser
+								"""
                             }
                         }
                     }

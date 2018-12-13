@@ -3,7 +3,6 @@ define([
 ], function(TileSwipe) {
    describe('Controls.List.Swipe.Tile', function() {
       var showMore = {
-         title: rk('Еще'),
          icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
          isMenu: true
       };
