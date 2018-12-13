@@ -88,7 +88,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    function getPackagesNames(allDeps, bundlesRoute) {
       var packages = {};
       for (var key in allDeps) {
-         if(allDeps[key].typeInfo.hasPacket) {
+         if (allDeps[key].typeInfo.hasPacket) {
             if (allDeps.hasOwnProperty(key)) {
                var bundleName = bundlesRoute[key];
                if (bundleName) {
