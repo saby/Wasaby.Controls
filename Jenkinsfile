@@ -24,8 +24,12 @@ def send_status_in_gitlab(state) {
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
 
-def build_description(job, path) {
-    def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path}"
+def build_description(job, path, skip_test) {
+    def param_skip=""
+    if (skip_test) {
+        param_skip="-s"
+    }
+    def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
     if (rc_err) {
         return "${rc_err}"
     }
@@ -713,7 +717,7 @@ node('controls') {
             def int_title
             def reg_title
             if (inte || all_inte) {
-                 int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt")
+                 int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                  if (int_description) {
                     echo "${int_description}"
                     int_title = int_description.tokenize('|')[0]
@@ -723,7 +727,7 @@ node('controls') {
                  }
             }
             if (regr) {
-                reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt")
+                reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                 if (reg_description) {
                     echo "${reg_description}"
                     reg_title = reg_description.tokenize('|')[0]
@@ -734,9 +738,9 @@ node('controls') {
             }
             if (int_title && reg_title && int_title==reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if ('FAIL' == int_title && ('OK' == reg_title || !reg_title)) {
+            } else if (int_title.contains('FAIL') && ('OK' == reg_title || !reg_title)) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if ('FAIL' == reg_title && ('OK' == int_title|| !int_title)) {
+            } else if (reg_title.contains('FAIL') && ('OK' == int_title|| !int_title)) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             }
 
