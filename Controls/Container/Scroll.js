@@ -9,12 +9,13 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'wml!Controls/Container/Scroll/Scroll',
+      'Controls/Utils/tmplNotify',
       'Controls/Container/Scroll/Watcher',
       'Controls/Event/Listener',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
 
       'use strict';
 
@@ -162,6 +163,11 @@ define('Controls/Container/Scroll',
          },
          Scroll = Control.extend({
             _template: template,
+            //Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
+            //Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
+            //прокидываем руками
+            //EVENTSPROXY
+            _tmplNotify: tmplNotify,
 
             /**
              * Смещение контента сверху относительно контейнера.
