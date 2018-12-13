@@ -157,6 +157,9 @@ node('controls') {
         if ( inte && all_inte ) {
             inte = false
         }
+        if ( inte || all_inte || regr ) {
+            unit = true
+        }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
             sh "ls | grep -v -E 'controls' | xargs rm -rf"
@@ -424,6 +427,36 @@ node('controls') {
             }
             echo items
         }
+        stage ("Unit тесты"){
+            if ( unit ){
+                echo "Запускаем юнит тесты"
+                dir("./controls"){
+                    sh """
+                    npm cache clean --force
+                    npm config set registry http://npmregistry.sbis.ru:81/
+                    echo "run isolated"
+                    export test_report="artifacts/test-isolated-report.xml"
+                    sh ./bin/test-isolated
+
+                    echo "run browser"
+                    export test_url_host=${env.NODE_NAME}
+                    export test_server_port=10253
+                    export test_url_port=10253
+                    export WEBDRIVER_remote_enabled=1
+                    export WEBDRIVER_remote_host=10.76.159.209
+                    export WEBDRIVER_remote_port=4444
+                    export test_report=artifacts/test-browser-report.xml
+                    sh ./bin/test-browser
+                    """
+                }
+            }
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            sh "sudo rm -rf ./test-reports"
+            unit_result = currentBuild.result == null
+            if (!unit) {
+                exception('Unit тесты падают по ошибкам.', 'UNIT TEST FAIL')
+            }
+        }
         if ( regr || inte || all_inte) {
         dir("./controls/tests") {
             def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
@@ -514,6 +547,7 @@ node('controls') {
             """
             }
         }
+
         if ( regr || inte || all_inte) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -607,32 +641,6 @@ node('controls') {
                 }
             }
             parallel (
-                unit: {
-                    stage ("Unit тесты"){
-                        if ( unit ){
-                            echo "Запускаем юнит тесты"
-							dir("./controls"){
-                                sh """
-								npm cache clean --force
-                                npm config set registry http://npmregistry.sbis.ru:81/
-                                echo "run isolated"                                
-                                export test_report="artifacts/test-isolated-report.xml"
-                                sh ./bin/test-isolated
-								
-                                echo "run browser"
-                                export test_url_host=${env.NODE_NAME}
-                                export test_server_port=10253
-                                export test_url_port=10253
-                                export WEBDRIVER_remote_enabled=1
-                                export WEBDRIVER_remote_host=10.76.159.209
-                                export WEBDRIVER_remote_port=4444
-                                export test_report=artifacts/test-browser-report.xml
-                                sh ./bin/test-browser
-								"""
-                            }
-                        }
-                    }
-                },
                 int_test: {
                     stage("Инт.тесты"){
                         if ( inte || all_inte && smoke_result ){
