@@ -43,7 +43,7 @@ class RC:
             now_list = f.readlines()
             print('self.test_names :', self.test_names)
             print('now_list :', now_list)
-            if sorted(self.test_names) == sorted(now_list): # если упавших нигде нет
+            if sorted(self.test_names) == sorted(now_list):     # если упавших нигде нет
                 if now_list:
                     self.head = "ОК|Упало только по ошибке в RC"
             elif len(self.test_names) < len(now_list):
