@@ -78,9 +78,15 @@ echo "Генерируем параметры"
         pipelineTriggers([])
     ])
 
+def regr = params.run_reg
+def unit = params.run_unit
+def inte = params.run_int
+def all_inte = params.run_all_int
+def only_fail = false
+
 node('master') {
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int )) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -97,12 +103,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def regr = params.run_reg
-        def unit = params.run_unit
-        def inte = params.run_int
-        def all_inte = params.run_all_int
         def skip = params.skip
-        def only_fail = false
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
