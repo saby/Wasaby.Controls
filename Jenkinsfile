@@ -715,6 +715,7 @@ node('controls') {
             if (inte || all_inte) {
                  int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt")
                  if (int_description) {
+                    echo "${int_description}"
                     int_title = int_description.split('|')[0]
                     description += "${int_description}"
                  }
@@ -722,12 +723,19 @@ node('controls') {
             if (regr) {
                 reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt")
                 if (reg_description) {
+                    echo "${reg_description}"
                     reg_title = int_description.split('|')[0]
                     description += "${reg_description}"
                 }
             }
-            if (int_title && int_title==reg_title) {
+            if (int_title && reg_title && int_title==reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
+            }
+            if ('FAIL' == int_title && 'OK' == reg_title) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
+            }
+            if ('FAIL' == reg_title && 'OK' == int_title) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             }
 
             currentBuild.description = description
