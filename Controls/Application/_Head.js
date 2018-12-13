@@ -40,7 +40,7 @@ define('Controls/Application/_Head',
                * значит мы рендерились на сервере и здесь сейчас оживаем, а значит пользовательский
                * контент уже на странице и генерировать второй раз не надо, чтобы не было синхронизаций
                * */
-               if (document.getElementByClassName('head-custom-block').length > 0) {
+               if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
                }
                this.themedCss = [];
