@@ -40,7 +40,7 @@ class RC:
         """Формируем описаниена основе полученных данных из RC сборки и упавших тестов в текущей"""
         description = '<pre><ul>'
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
-            now_list = f.readlines()
+            now_list = f.read().split()
             print('self.test_names :', self.test_names)
             print('now_list :', now_list)
             if sorted(self.test_names) == sorted(now_list):     # если упавших нигде нет
