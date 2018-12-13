@@ -73,15 +73,14 @@ echo "Генерируем параметры"
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Укажите опции run_int и/или run_reg", name: 'run_only_fail_test')
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]),
         pipelineTriggers([])
     ])
 
 node('master') {
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int )) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -103,7 +102,7 @@ node('controls') {
         def inte = params.run_int
         def all_inte = params.run_all_int
         def skip = params.skip
-        def only_fail = params.run_only_fail_test
+        def only_fail = false
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
