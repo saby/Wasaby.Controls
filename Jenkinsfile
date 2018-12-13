@@ -14,6 +14,7 @@ def gitlabStatusUpdate() {
 }
 def exception(err, reason) {
     currentBuild.displayName = "#${env.BUILD_NUMBER} ${reason}"
+    currentBuild.description = "${err}"
     error(err)
 }
 
