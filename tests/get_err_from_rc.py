@@ -43,9 +43,9 @@ class RC:
             now_list = f.read().split()
             if sorted(self.test_names) == sorted(now_list):     # если упавших нигде нет
                 if now_list:
-                    self.head = "ОК|Упало только по ошибке в RC"
+                    self.head = "ОК|Эти ошибки уже попали в RC."
             elif len(self.test_names) < len(now_list):
-                self.head = "FAIL|В сборке падает не только по ошибкам в RC"
+                self.head = "FAIL|В сборке падает UI тесты по новым ошибкам!В RC таких нет."
 
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
