@@ -717,6 +717,7 @@ node('controls') {
                  if (int_description) {
                     echo "${int_description}"
                     int_title = int_description.split('|')[0]
+                    echo "${int_title}"
                     description += "${int_description}"
                  }
             }
@@ -725,6 +726,7 @@ node('controls') {
                 if (reg_description) {
                     echo "${reg_description}"
                     reg_title = int_description.split('|')[0]
+                    echo "${reg_title}"
                     description += "${reg_description}"
                 }
             }
