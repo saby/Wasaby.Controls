@@ -78,7 +78,10 @@ define('Controls/Input/RichArea', [
       },
 
       _jsonToHtml: function(json, tagResolver) {
-         return MarkupConverter.jsonToHtml(json, tagResolver);
+         var html = MarkupConverter.jsonToHtml(json, tagResolver);
+
+         // Remove outer div.
+         return html.substring(5, html.length - 6);
       },
 
       _undoRedoChangedHandler: function(event, state) {
