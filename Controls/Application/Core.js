@@ -10,7 +10,6 @@ define('Controls/Application/Core',
       'Controls/Application/StateReceiver',
       'Controls/Application/AppData',
       'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController',
       'native-css',
       'Core/css-resolve'
    ],
@@ -20,8 +19,7 @@ define('Controls/Application/Core',
       createDefault,
       StateReceiver,
       AppData,
-      HeadDataContext,
-      ThemesController) {
+      HeadDataContext) {
       'use strict';
 
       var AppCore = Control.extend({

@@ -8,6 +8,7 @@ define('Controls/Input/Base',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
       'Controls/Utils/getTextWidth',
+      'Core/helpers/Number/randomId',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
       'Controls/Utils/hasHorizontalScroll',
@@ -20,7 +21,7 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
-      getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
+      getTextWidth, randomName, InputUtil, ViewModel, hasHorizontalScroll, template,
       fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
@@ -435,14 +436,22 @@ define('Controls/Input/Base',
             this._initProperties(this);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            /**
-             * Browsers use auto-complete to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the <input> tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            if ('name' in options) {
-               this._fieldName = options.name;
+            if (options.autoComplete) {
+               /**
+                * Browsers use auto-fill to the fields with the previously stored name.
+                * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+                * To avoid this, we will translate the name of the control to the name of the <input> tag.
+                * https://habr.com/company/mailru/blog/301840/
+                */
+               if ('name' in options) {
+                  this._fieldName = options.name;
+               }
+            } else {
+               /**
+                * To disable auto-complete in a field, its name attribute must have a value that
+                * the browser does not remember. To do this, generate a random name.
+                */
+               this._fieldName = randomName('name-');
             }
          },
 
