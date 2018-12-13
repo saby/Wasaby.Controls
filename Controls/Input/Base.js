@@ -426,7 +426,11 @@ define('Controls/Input/Base',
              * in the list of saved values. During this action no events are triggered and hide placeholder
              * using js is not possible.
              */
-            this._hidePlaceholderUsingCSS = detection.chrome;
+            /**
+             * Invalid detection value.chrome on the server. So while we will always use css by hide placeholder.
+             * https://online.sbis.ru/opendoc.html?guid=a17b59fb-f5bd-4ae3-87a7-38f47078980a
+             */
+            this._hidePlaceholderUsingCSS = true/*detection.chrome*/;
          },
 
          _beforeMount: function(options) {
