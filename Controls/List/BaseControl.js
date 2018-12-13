@@ -239,6 +239,7 @@ define('Controls/List/BaseControl', [
             ) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
                });
             }
          } else {
@@ -249,6 +250,7 @@ define('Controls/List/BaseControl', [
       onScrollHide: function(self) {
          self._loadOffset = 0;
          self._pagingCfg = null;
+         self._pagingVisible = false;
          self._forceUpdate();
       },
 
@@ -453,13 +455,13 @@ define('Controls/List/BaseControl', [
          }
          return result;
       },
-      
+
       getSortingOnChange: function(currentSorting, propName, sortingType) {
          var sorting = currentSorting ? currentSorting.slice() : [];
          var sortElemIndex = -1;
          var sortElem;
          var newSortElem = {};
-   
+
          //use same algorithm when sortingType is not 'single', if the number of properties is equal to one
          if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
             sorting.forEach(function(elem, index) {
@@ -471,7 +473,7 @@ define('Controls/List/BaseControl', [
          } else {
             sorting = [];
          }
-   
+
          // change sorting direction by rules:
          // 'DESC' -> 'ASC'
          // 'ASC' -> empty
@@ -486,7 +488,7 @@ define('Controls/List/BaseControl', [
             newSortElem[propName] = 'DESC';
             sorting.push(newSortElem);
          }
-         
+
          return sorting;
       }
 
@@ -525,6 +527,9 @@ define('Controls/List/BaseControl', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+
+      _pagingCfg: null,
+      _pagingVisible: false,
 
       // TODO пока спорные параметры
       _sorting: undefined,
@@ -646,7 +651,7 @@ define('Controls/List/BaseControl', [
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
-         
+
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);
          }
@@ -912,7 +917,7 @@ define('Controls/List/BaseControl', [
             }
          }
       },
-      
+
       _sortingChanged: function(event, propName, sortingType) {
          var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
          event.stopPropagation();
