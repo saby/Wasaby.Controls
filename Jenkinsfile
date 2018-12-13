@@ -419,7 +419,7 @@ node('controls') {
                 echo "Собираем ws.data только когда указан сторонний бранч"
                 if ("${params.ws_data_revision}" != "sdk"){
                     echo "Добавляем в items"
-                    items = items + ", ws_data:${workspace}/ws_data"
+                    items = items + ", ws_data:${workspace}/ws_data, data:${workspace}/ws_data"
                 }
             }
             echo items
