@@ -603,8 +603,7 @@ define('Controls/List/BaseControl', [
          }
 
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
-            this._options.multiSelectVisibility = newOptions.multiSelectVisibility;
-            this._listViewModel.setMultiSelectVisibility(this._options.multiSelectVisibility);
+            this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
 
          if (filterChanged || recreateSource) {
