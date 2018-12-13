@@ -41,8 +41,6 @@ class RC:
         description = '<pre><ul>'
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
             now_list = f.read().split()
-            print('self.test_names :', self.test_names)
-            print('now_list :', now_list)
             if sorted(self.test_names) == sorted(now_list):     # если упавших нигде нет
                 if now_list:
                     self.head = "ОК|Упало только по ошибке в RC"

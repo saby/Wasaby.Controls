@@ -716,7 +716,8 @@ node('controls') {
                  int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt")
                  if (int_description) {
                     echo "${int_description}"
-                    int_title = int_description.split('|')[0]
+                    int_title = int_description.tokenize('|')[0]
+                    int_description = int_description.tokenize('|')[1]
                     echo "${int_title}"
                     description += "${int_description}"
                  }
@@ -725,7 +726,8 @@ node('controls') {
                 reg_description = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt")
                 if (reg_description) {
                     echo "${reg_description}"
-                    reg_title = int_description.split('|')[0]
+                    reg_title = reg_description.tokenize('|')[0]
+                    reg_description = reg_description.tokenize('|')[1]
                     echo "${reg_title}"
                     description += "${reg_description}"
                 }
