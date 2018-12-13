@@ -28,6 +28,7 @@ define('Controls/Dropdown/Controller',
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/interface/ICaption
        * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/Button/interface/IIconStyle
        * @mixes Controls/interface/IGroupedView
        * @author Красильников А.С.
        * @control

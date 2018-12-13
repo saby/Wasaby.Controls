@@ -16,6 +16,7 @@ define('Controls/Toggle/Button', [
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
     * @mixes Controls/Button/interface/IHref
+    * @mixes Controls/Button/interface/IIconStyle
     * @mixes Controls/Toggle/Button/Styles
     * @control
     * @public
@@ -31,28 +32,15 @@ define('Controls/Toggle/Button', [
     * Toggle button with one icon have one icon and it isn't toggled.
     * Toggle button with two icons display one icon, but it is different in free and toggled states.
     * If button has more than two icons, it work only with first and second icons.
-    */
-
-   /**
-    * @name Controls/Toggle/Button#iconStyle
-    * @cfg {Enum} Icon display style.
-    * @variant primary attract attention.
-    * @variant secondary Default field display style.
-    * @variant success Success field display style.
-    * @variant warning Warning field display style.
-    * @variant danger Danger field display style.
-    * @variant info Information field display style.
-    * @default secondary
     * @example
-    * Primary link with default icon style.
+    * Primary link with one icon.
     * <pre>
-    *    <Controls.Toggle.Button icon="icon-small icon-Add" style="primary" viewMode="link"/>
+    *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
     * </pre>
-    * Primary link with done icon style.
+    * Primary link with two icons.
     * <pre>
-    *    <Controls.Toggle.Button icon="icon-small icon-Add" iconStyle="success" style="primary" viewMode="link"/>
+    *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
     * </pre>
-    * @see Icons
     */
 
    /**
@@ -61,6 +49,15 @@ define('Controls/Toggle/Button', [
     * Toggle button with one caption have one caption and it isn't toggled.
     * Toggle button with two captions display one caption, but it is different in free and toggled states.
     * If button has more than two captions, it work only with first and second captions.
+    * @example
+    * Toggle button with two removable captions.
+    * <pre>
+    *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
+    * </pre>
+    * Toggle button with one caption.
+    * <pre>
+    *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
+    * </pre>
     */
 
    /**
@@ -73,15 +70,15 @@ define('Controls/Toggle/Button', [
     * @example
     * Toggle button with 'link' viewMode.
     * <pre>
-    *    <Controls.Toggle.Button caption="Send document" style="primary" viewMode="link" size="xl"/>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
     * </pre>
     * Toggle button with 'toolButton' viewMode.
     * <pre>
-    *    <Controls.Toggle.Button caption="Send document" style="danger" viewMode="toolButton"/>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
     * </pre>
     * Toggle button with 'toggledLink' viewMode.
     * <pre>
-    *    <Controls.Toggle.Button caption="Send document" style="success" viewMode="toggledLink"/>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="toggledLink"/>
     * </pre>
     */
    var stickyButton = [
