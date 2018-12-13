@@ -78,7 +78,8 @@ define('Controls/List', [
    ListControl.getDefaultOptions = function() {
       return {
          multiSelectVisibility: 'hidden',
-         style: 'default'
+         style: 'default',
+         markItemByExpanderClick: true
       };
    };
 
