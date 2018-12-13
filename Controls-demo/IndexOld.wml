@@ -248,5 +248,8 @@
       <a href="/Controls-demo/app/Controls-demo%252FFormController%252FFormController?withoutLayout=true">
          FormController
       </a>
+
+      <h1>Indicator</h1>
+      <a href="/Controls-demo/Controls-demo%252FIndicator%252FProgressBar%252FProgressBar">Progress</a>
    </div>
 </div>

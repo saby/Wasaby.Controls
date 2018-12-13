@@ -1,6 +1,8 @@
 define([
    'Controls/List/Swipe/Tile'
-], function(TileSwipe) {
+], function(
+   TileSwipe
+) {
    describe('Controls.List.Swipe.Tile', function() {
       var showMore = {
          icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',

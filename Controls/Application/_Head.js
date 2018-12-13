@@ -27,6 +27,14 @@ define('Controls/Application/_Head',
                //do nothing
             };
 
+            if (typeof options.staticDomains === 'string') {
+               this.staticDomainsStringified = options.staticDomains;
+            } else if (options.staticDomains instanceof Array) {
+               this.staticDomainsStringified = JSON.stringify(options.staticDomains);
+            } else {
+               this.staticDomainsStringified = '[]';
+            }
+
             /*Этот коммент требует английского рефакторинга
             * Сохраним пользовательские данные на инстанс
             * мы хотим рендерить их только 1 раз, при этом, если мы ренедрим их на сервере мы добавим класс
@@ -40,19 +48,13 @@ define('Controls/Application/_Head',
                * значит мы рендерились на сервере и здесь сейчас оживаем, а значит пользовательский
                * контент уже на странице и генерировать второй раз не надо, чтобы не было синхронизаций
                * */
+
                if (document.getElementsByClassName('head-custom-block').length > 0) {
                   this.head = undefined;
                }
                this.themedCss = [];
                this.simpleCss = [];
                return;
-            }
-            if (typeof options.staticDomains === 'string') {
-               this.staticDomainsStringified = options.staticDomains;
-            } else if (options.staticDomains instanceof Array) {
-               this.staticDomainsStringified = JSON.stringify(options.staticDomains);
-            } else {
-               this.staticDomainsStringified = '[]';
             }
             var headData = Request.getCurrent().getStorage('HeadData');
             var def = headData.waitAppContent();
