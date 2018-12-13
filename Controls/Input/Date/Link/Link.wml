@@ -1,9 +1,8 @@
 <div class="controls-DateLink">
    <Controls.Input.Date.LinkView
       scope="{{_options}}"
-      startValue="{{_options.value}}"
-      endValue="{{_options.value}}"
-      on:rangeChanged="_rangeChanged()"
+      bind:startValue="_options.value"
+      bind:endValue="_options.value"
       on:linkClick="_openDialog()"
       attr:class="controls-DateLink__view"
    />

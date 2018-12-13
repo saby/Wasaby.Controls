@@ -67,9 +67,6 @@ define('Controls/Input/Date/Link', [
          this._notify('valueChanged', [value]);
          this._children.opener.close();
          this._forceUpdate();
-      },
-      _rangeChanged: function(event, startValue, endValue) {
-         this._notify('valueChanged', [startValue]);
       }
    });
 

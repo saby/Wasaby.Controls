@@ -41,7 +41,7 @@ define('Controls/Input/Date/RangeLink', [
 
       _beforeMount: function(options) {
          this._rangeModel = new DateRangeModel();
-         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
          this._rangeModel.update(options);
       },
 
@@ -83,7 +83,6 @@ define('Controls/Input/Date/RangeLink', [
          this._children.opener.close();
          this._forceUpdate();
       },
-
       _beforeUnmount: function() {
          this._rangeModel.destroy();
       }
