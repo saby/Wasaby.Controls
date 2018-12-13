@@ -27,18 +27,18 @@ define('Controls/Application/_Head',
             this._forceUpdate = function() {
                //do nothing
             };
-            if (typeof window !== 'undefined') {
-               var csses = ThemesController.getInstance().getCss();
-               this.themedCss = csses.themedCss;
-               this.simpleCss = csses.simpleCss;
-               return;
-            }
             if (typeof options.staticDomains === 'string') {
                this.staticDomainsStringified = options.staticDomains;
             } else if (options.staticDomains instanceof Array) {
                this.staticDomainsStringified = JSON.stringify(options.staticDomains);
             } else {
                this.staticDomainsStringified = '[]';
+            }
+            if (typeof window !== 'undefined') {
+               var csses = ThemesController.getInstance().getCss();
+               this.themedCss = csses.themedCss;
+               this.simpleCss = csses.simpleCss;
+               return;
             }
             var headData = Request.getCurrent().getStorage('HeadData');
             var def = headData.waitAppContent();
