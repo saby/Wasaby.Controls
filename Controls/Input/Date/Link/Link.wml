@@ -1,0 +1,17 @@
+<div class="controls-DateLink">
+   <Controls.Input.Date.LinkView
+      scope="{{_options}}"
+      startValue="{{_options.value}}"
+      endValue="{{_options.value}}"
+      on:rangeChanged="_rangeChanged()"
+      on:linkClick="_openDialog()"
+      attr:class="controls-DateLink__view"
+   />
+
+   <Controls.Popup.Opener.Sticky name="opener">
+      <ws:popupOptions
+         template="SBIS3.CONTROLS/Date/RangeBigChoose"
+         closeByExternalClick="{{true}}"
+      />
+   </Controls.Popup.Opener.Sticky>
+</div>

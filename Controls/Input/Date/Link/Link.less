@@ -1,0 +1,16 @@
+.controls-DateLink {
+   display: inline-flex;
+}
+
+.controls-DateLink__view {
+   flex-grow: 1;
+   flex-shrink: 1;
+}
+
+.controls-DateLink__picker-normal {
+   margin-top: (@height_DateLinkView - @height_PeriodLiteDialog-currentValue)/2 - @default-border-width;
+}
+
+.controls-DateLink__picker-years-only {
+   margin-top: (@height_DateLinkView - @standart-line-height_PeriodLiteDialog)/2 - (2 * @default-border-width) - @height_PeriodLiteDialog-year;
+}

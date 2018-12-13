@@ -1,17 +1,18 @@
 define('Controls/Date/model/DateRange', [
    'Core/core-simpleExtend',
+   'Core/helpers/Function/runDelayed',
    'WS.Data/Entity/ObservableMixin',
    'WS.Data/Entity/VersionableMixin',
    'Controls/Utils/DateRangeUtil',
    'Controls/Utils/Date'
 ], function(
    cExtend,
+   runDelayed,
    ObservableMixin,
    VersionableMixin,
    dateRangeUtil,
    DateUtil
 ) {
-
    /**
     * Model for date range controls.
     * @author Александр Миронов
@@ -22,6 +23,7 @@ define('Controls/Date/model/DateRange', [
       _startValue: null,
       _endValue: null,
       _state: null,
+      _rangeChanged: false,
 
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
@@ -33,11 +35,13 @@ define('Controls/Date/model/DateRange', [
          if (!DateUtil.isDatesEqual(options.startValue, this._state.startValue)) {
             this._startValue = options.startValue;
             this._state.startValue = options.startValue;
+            this._notifyRangeChanged();
             changed = true;
          }
          if (!DateUtil.isDatesEqual(options.endValue, this._state.endValue)) {
             this._endValue = options.endValue;
             this._state.endValue = options.endValue;
+            this._notifyRangeChanged();
             changed = true;
          }
          return changed;
@@ -54,6 +58,7 @@ define('Controls/Date/model/DateRange', [
          this._startValue = value;
          this._nextVersion();
          this._notify('startValueChanged', [value]);
+         this._notifyRangeChanged();
       },
 
       get endValue() {
@@ -67,6 +72,17 @@ define('Controls/Date/model/DateRange', [
          this._endValue = value;
          this._nextVersion();
          this._notify('endValueChanged', [value]);
+         this._notifyRangeChanged();
+      },
+      _notifyRangeChanged: function(value) {
+         if (this._rangeChanged) {
+            return;
+         }
+         this._rangeChanged = true;
+         runDelayed(function() {
+            this._rangeChanged = false;
+            this._notify('rangeChanged', [this.startValue, this.endValue]);
+         }.bind(this));
       },
 
       /**

@@ -1,0 +1,55 @@
+<div class="PageWrap">
+   <div class="PageBlock">
+      <div class="PageBlock__title"></div>
+      <div class="PageBlock__content">
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.Link
+			   attr:test_name="default_range"
+               bind:value="_value"/>
+         </div>
+         <div class="PageBlock__componentWrap ControlsDemo-RangeLink_capture">
+            <Controls.Input.Date.Link
+               showPrevArrow="{{true}}"
+               showNextArrow="{{true}}"
+               bind:value="_value"
+			   attr:test_name="show_arrow_range"
+            />
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.Link
+               bind:value="_value"
+               chooseHalfyears="{{false}}"
+               chooseQuarters="{{false}}"
+               style="linkMain"
+			   attr:test_name="months_range"
+            />
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.Link
+               bind:value="_value"
+               chooseHalfyears="{{false}}"
+               chooseMonths="{{false}}"
+               style="linkMain2"
+			   attr:test_name="quarters_range"
+            />
+
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.Link
+               style="linkAdditional"
+               emptyCaption="не задан"
+			   attr:test_name="range_not_value"
+            />
+         </div>
+         <div class="PageBlock__componentWrap">
+            <Controls.Input.Date.Link
+               bind:value="_value"
+               chooseHalfyears="{{false}}"
+               chooseMonths="{{false}}"
+               chooseQuarters="{{false}}"
+			   attr:test_name="range_years_only"
+            />
+         </div>
+      </div>
+   </div>
+</div>
