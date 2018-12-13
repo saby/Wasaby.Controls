@@ -451,10 +451,9 @@ node('controls') {
                 }
             }
             junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            sh "sudo rm -rf ./test-reports"
             unit_result = currentBuild.result == null
-            if (!unit) {
-                exception('Unit тесты падают по ошибкам.', 'UNIT TEST FAIL')
+            if (!unit_result) {
+                exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
             }
         }
         if ( regr || inte || all_inte) {
