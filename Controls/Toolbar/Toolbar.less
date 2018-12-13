@@ -1,19 +1,19 @@
 .controls-Toolbar__item_has-title-and-icon {
   padding-left: @spacing_Toolbar-between-icon-text;
 }
-.controls-ToolBarV {
+.controls-Toolbar {
   display: inline-block;
 }
-.controls-ToolbarV_item {
+.controls-Toolbar_item {
   .inline-flexbox();
   cursor: pointer;
-  margin-right: @controls-toolbar-default-margin;
+  margin-right: @spacing_Toolbar-between-items;
   .align-items(center);
 }
-.controls-ToolbarV_item:before {
+.controls-Toolbar_item:before {
   content: "\200b";
 }
-.controls-ToolBarV_content {
+.controls-Toolbar_content {
   height: 100%;
   width: 100%;
   .inline-flexbox();
@@ -23,27 +23,46 @@
     content: "\200b";
   }
 }
-.controls-ToolBarV_content__resetMargin {
-  margin-right: -@controls-toolbar-default-margin;
+.controls-Toolbar_content__resetMargin {
+  margin-right: -@spacing_Toolbar-between-items;
 }
-.controls-ToolbarV__item_icon_m {
-  .icon(@default-icon-size-medium, 'cbuc-icons24');
+.controls-Toolbar__item_icon_m {
+  .icon(@font-size_Toolbar-icon, 'cbuc-icons24');
 }
-.controls-ToolbarV__item_title {
+.controls-Toolbar__item_title {
   white-space: nowrap;
-  color: @color_Toolbar__text;
+  color: @color_Toolbar-text;
 }
-.controls-ToolBarV__menuOpen {
+.controls-Toolbar__item_title:active {
+  color: @color_Toolbar-text_active;
+}
+.controls-Toolbar__menu {
   .inline-flexbox();
   cursor: pointer;
 }
-.controls-ToolbarV_item__styled {
-  color: @color_primary;
+.controls-Toolbar__item_icon_secondary {
+  color: @color_secondary;
 }
-.controls-ToolbarV_item__styled:active {
-  color: @color_Link-text_active;
+//TODO выпилить старые вариант iconStyle когда пмо и ддл поддержат новые iconStyle'ы
+.controls-Toolbar__item_icon_hover, .controls-Toolbar__item_icon_primary {
+  color: @color_primaryV;
 }
-.controls-ToolbarV__item_title:active {
+.controls-Toolbar__item_icon_error, .controls-Toolbar__item_icon_danger {
+  color: @color_danger;
+}
+.controls-Toolbar__item_icon_done, .controls-Toolbar__item_icon_success {
+  color: @color_success;
+}
+.controls-Toolbar__item_icon_disabled, .controls-Toolbar__item_icon_info {
+  color: @color_info;
+}
+.controls-Toolbar__item_icon_attention, .controls-Toolbar__item_icon_warning {
+  color: @color_warning;
+}
+.controls-Toolbar__item_icon_secondary:active {
+  color: @color_Toolbar-icon_active;
+}
+.controls-Toolbar__item_title:active {
   text-decoration: underline;
 }
 .controls-Toolbar_link_m, .controls-Toolbar_icon_m {
@@ -51,13 +70,19 @@
    margin-left: @shift-left_MenuButton-link_medium-popup;
 }
 .ws-is-no-touch {
-  .controls-ToolbarV_item__styled:hover {
-    color: @color_Link-text_active;
-  }
-
-  .controls-ToolbarV_item__styled:hover {
-    .controls-ToolbarV__item_title {
+  .controls-Toolbar_item:hover {
+    .controls-Toolbar__item_icon_secondary {
+      color: @color_Toolbar-icon_hovered;
+    }
+    .controls-Toolbar__item_title {
       text-decoration: underline;
     }
+    .controls-Toolbar__item_title {
+      white-space: nowrap;
+      color: @color_Toolbar-text_hovered;
+    }
+  }
+  .controls-Toolbar__menu:hover {
+    color: @color_Toolbar-icon_hovered;
   }
 }

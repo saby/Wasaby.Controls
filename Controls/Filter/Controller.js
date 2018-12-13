@@ -158,6 +158,12 @@ define('Controls/Filter/Controller',
             _private.equalItemsIterator(filterButtonItems, fastFilterItems, clearTextValue);
          },
 
+         resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {
+            if (filterButtonItems && fastFilterItems) {
+               _private.setFilterButtonItems(filterButtonItems, fastFilterItems);
+            }
+         },
+
          updateFilterItems: function(self, newItems) {
             if (self._filterButtonItems) {
                self._filterButtonItems = _private.cloneItems(self._filterButtonItems);
@@ -169,9 +175,7 @@ define('Controls/Filter/Controller',
                _private.mergeFilterItems(self._fastFilterItems, newItems);
             }
 
-            if (self._filterButtonItems && self._fastFilterItems) {
-               _private.setFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
-            }
+            _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
          },
 
          resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
@@ -348,6 +352,7 @@ define('Controls/Filter/Controller',
                self = this;
 
             itemsDef.addCallback(function() {
+               _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
                _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
             });
 

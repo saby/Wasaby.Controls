@@ -24,6 +24,23 @@ def send_status_in_gitlab(state) {
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
 
+def build_description(job, path, skip_test) {
+    def param_skip = ''
+    def title = ''
+    if (skip_test) {
+        param_skip="-s"
+    }
+    def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
+    if (description) {
+        echo "${description}"
+        title = description.tokenize('|')[0]
+        description = description.tokenize('|')[1]
+        echo "${title}"
+
+    }
+    return [title, description]
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
@@ -220,6 +237,7 @@ node('controls') {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
+                             sh "cp -R ./atf/ ../reg/atf/"
                             }
                         },
                         checkout_engine: {
@@ -419,21 +437,13 @@ node('controls') {
                 echo "Собираем ws.data только когда указан сторонний бранч"
                 if ("${params.ws_data_revision}" != "sdk"){
                     echo "Добавляем в items"
-                    items = items + ", ws_data:${workspace}/ws_data"
+                    items = items + ", ws_data:${workspace}/ws_data, data:${workspace}/ws_data"
                 }
             }
             echo items
         }
         if ( regr || inte || all_inte) {
-        dir("./controls/tests") {
-            def rc_err = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '(int-${params.browser_type}) ${version} controls' '(reg-${params.browser_type}) ${version} controls'"
-            if (rc_err) {
-                currentBuild.description = "ОШИБКИ ПО UI ТЕСТАМ В RC:${rc_err}"
-            } else {
-                currentBuild.description = "НЕТ ОШИБОК ПО UI ТЕСТАМ В RC"
-            }
 
-        }
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -611,14 +621,15 @@ node('controls') {
                     stage ("Unit тесты"){
                         if ( unit ){
                             echo "Запускаем юнит тесты"
-                                dir("./controls"){
-                                sh "npm config set registry http://npmregistry.sbis.ru:81/"
-                                echo "run isolated"
+							dir("./controls"){
                                 sh """
+								npm cache clean --force
+                                npm config set registry http://npmregistry.sbis.ru:81/
+                                echo "run isolated"                                
                                 export test_report="artifacts/test-isolated-report.xml"
-                                sh ./bin/test-isolated"""
+                                sh ./bin/test-isolated
+								
                                 echo "run browser"
-                                sh """
                                 export test_url_host=${env.NODE_NAME}
                                 export test_server_port=10253
                                 export test_url_port=10253
@@ -626,7 +637,8 @@ node('controls') {
                                 export WEBDRIVER_remote_host=10.76.159.209
                                 export WEBDRIVER_remote_port=4444
                                 export test_report=artifacts/test-browser-report.xml
-                                sh ./bin/test-browser"""
+                                sh ./bin/test-browser
+								"""
                             }
                         }
                     }
@@ -650,7 +662,6 @@ node('controls') {
                     stage("Рег.тесты"){
                         if ( regr && smoke_result){
                             echo "Запускаем тесты верстки"
-                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
@@ -707,6 +718,32 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        dir("./controls/tests") {
+            def description = ''
+            def int_title = ''
+            def reg_title = ''
+            if (inte || all_inte) {
+                 int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
+                 int_title = int_data[0]
+                 description += int_data[1]
+            }
+            if (regr) {
+                reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
+                reg_title = reg_data[0]
+                description += reg_data[1]
+            }
+            if (int_title && reg_title && int_title==reg_title) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
+            } else if (int_title.contains('FAIL') && ('OK' == reg_title || !reg_title)) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
+            } else if (reg_title.contains('FAIL') && ('OK' == int_title|| !int_title)) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
+            }
+
+            currentBuild.description = description
+
+        }
+
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"

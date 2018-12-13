@@ -177,7 +177,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                expectedResultWithRowSeparator = [
                   ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow',
                   ' controls-Grid__row-cell_withRowSeparator',
-                  ' controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow controls-Grid__row-cell_withRowSeparator'
+                  ' controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow'
                ],
                expectedResultWithoutRowSeparator = [
                   ' controls-Grid__row-cell_withoutRowSeparator',
@@ -397,6 +397,13 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
       });
       describe('ladder and sticky column', function() {
          var
+            initialColumns = [{
+               width: '1fr',
+               displayProperty: 'title'
+            }, {
+               width: '1fr',
+               template: 'wml!MyTestDir/Photo'
+            }],
             resultLadder = {
                0: { date: { ladderLength: 1 } },
                1: { date: { ladderLength: 3 } },
@@ -438,13 +445,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   ]
                }),
                keyProperty: 'id',
-               columns: [{
-                  width: '1fr',
-                  displayProperty: 'title'
-               }, {
-                  width: '1fr',
-                  template: 'wml!MyTestDir/Photo'
-               }],
+               columns: initialColumns,
                ladderProperties: ['date'],
                stickyColumn: {
                   property: 'photo',
@@ -469,6 +470,18 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(null, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(null)".');
             gridViewModel.setHeader(gridHeader);
             assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(gridHeader)".');
+         });
+         it('getColumns && setColumns', function() {
+            var newColumns = [{
+               displayProperty: 'field1'
+            }, {
+               displayProperty: 'field2'
+            }];
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(newColumns)".');
+            gridViewModel.setColumns(newColumns);
+            assert.deepEqual(newColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" after "setColumns(newColumns)".');
+            gridViewModel.setColumns(gridColumns);
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
          it('_prepareCrossBrowserColumn', function() {
             var

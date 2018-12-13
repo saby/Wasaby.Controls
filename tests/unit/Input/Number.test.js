@@ -2,9 +2,10 @@ define(
    [
       'Core/core-instance',
       'Controls/Input/Number',
-      'tests/resources/ProxyCall'
+      'tests/resources/ProxyCall',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(instance, NumberInput, ProxyCall) {
+   function(instance, NumberInput, ProxyCall, SyntheticEvent) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
@@ -13,12 +14,20 @@ define(
          beforeEach(function() {
             calls = [];
             ctrl = new NumberInput();
-            ctrl._children.input = {
-               setSelectionRange: function(start, end) {
-                  this.selectionStart = start;
-                  this.selectionEnd = end;
-               }
+
+            var beforeMount = ctrl._beforeMount;
+
+            ctrl._beforeMount = function() {
+               beforeMount.apply(this, arguments);
+
+               ctrl._children[this._fieldName] = {
+                  setSelectionRange: function(start, end) {
+                     this.selectionStart = start;
+                     this.selectionEnd = end;
+                  }
+               };
             };
+            ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
 
          it('getDefault', function() {
@@ -37,7 +46,6 @@ define(
                ctrl._beforeMount({
                   value: 0
                });
-               ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
                ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['displayValue'], calls);
             });
             it('ShowEmptyDecimals option equal true. Trailing zeros are not trimmed.', function() {
@@ -48,6 +56,22 @@ define(
                assert.deepEqual(calls, [{
                   name: 'notify',
                   arguments: ['inputCompleted', [0, '0']]
+               }]);
+            });
+         });
+         describe('User input.', function() {
+            it('The display value divided into triads is correctly converted to a value.', function() {
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._getField().value = '1111';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
+               ctrl._inputHandler(new SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', [1111, '1 111.0']]
                }]);
             });
          });
