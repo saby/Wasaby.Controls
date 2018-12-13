@@ -714,8 +714,8 @@ node('controls') {
             def description = ''
             def reg_description = ''
             def int_description = ''
-            def int_title
-            def reg_title
+            def int_title=''
+            def reg_title=''
             if (inte || all_inte) {
                  int_description = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                  if (int_description) {
