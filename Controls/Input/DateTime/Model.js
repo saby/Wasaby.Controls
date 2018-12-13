@@ -119,7 +119,7 @@ define('Controls/Input/DateTime/Model', [
          this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, true);
       },
       setCurrentDate: function() {
-         this.value = this._lastValue = this._stringValueConverter.getCurrentDate(this._lastValue, this._mask);
+         this.value = this._stringValueConverter.getCurrentDate(this._lastValue, this._mask);
       }
 
    });
