@@ -42,12 +42,13 @@ class RC:
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
             now_list = sorted(f.read().split())
             self.test_names = sorted(self.test_names)
-            if not skip:    # результаты без параметра skip
-                if self.test_names == now_list:     # если упавших нигде нет
-                    if now_list:                    # падают одинаковые
-                        self.head = "ОК|Эти ошибки уже попали в RC."
-                else:
+            if not skip:
+                if self.test_names == now_list and self.test_names:
+                    self.head = "ОК|Эти ошибки уже попали в RC."
+                elif now_list:
                     self.head = "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
+                elif not self.test_names and not now_list:
+                    return ''
             else:
                 if now_list:
                     self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
