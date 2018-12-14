@@ -6,11 +6,11 @@ define('Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
-      'Controls/Utils/getWidth',
+      'Controls/Utils/hasHorizontalScroll',
       'Core/EventBus',
       'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils, EventBus) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
       'use strict';
 
       /**
@@ -92,7 +92,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             if (!text) {
                return false;
             }
-            return getWidthUtils.getWidth(text) > target.clientWidth;
+            return hasHorizontalScrollUtil(target);
          },
 
          getInput: function(self) {
