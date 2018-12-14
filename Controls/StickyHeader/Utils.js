@@ -21,7 +21,7 @@ define('Controls/StickyHeader/Utils', [
       },
 
       get _lastId() {
-         return lastId;
+         return lastId - 1;
       }
    };
 });

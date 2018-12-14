@@ -61,12 +61,11 @@ define('Controls/StickyHeader/_StickyHeader',
          constructor: function() {
             StickyHeader.superclass.constructor.call(this);
             this._observeHandler = this._observeHandler.bind(this);
+            this._index = stickyUtils.getNextId();
          },
 
          _afterMount: function() {
             var children = this._children;
-
-            this._index = stickyUtils.getNextId();
 
             this._observer = new IntersectionObserver(this._observeHandler);
             this._model = new Model({
@@ -147,6 +146,11 @@ define('Controls/StickyHeader/_StickyHeader',
 
          _updateStickyShadow: function(e, ids) {
             this._shadowVisible = ids.indexOf(this._index) !== -1;
+         },
+
+         _isShadowVisible: function() {
+            return this._context.stickyHeader.shadowVisible && this._shadowVisible &&
+               this._model && this._model.shouldBeFixed;
          }
       });
 

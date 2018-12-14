@@ -37,8 +37,8 @@ define(
                result = scroll._template({});
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
-                                          '<div class="ws-flex-shrink-0">test</div>' +
+                                       '<span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
+                                          '<div class="controls-Scroll__userContent">test</div>' +
                                        '</span>' +
                                        '<div></div>' +
                                     '</div>');
@@ -48,8 +48,8 @@ define(
                });
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
-                                       '<span style="margin-right: -15px;" class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
-                                          '<div class="ws-flex-shrink-0">test</div>' +
+                                       '<span style="margin-right: -15px;" class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
+                                          '<div class="controls-Scroll__userContent">test</div>' +
                                        '</span>' +
                                        '<div></div>' +
                                     '</div>');

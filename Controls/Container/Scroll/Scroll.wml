@@ -8,13 +8,13 @@
             https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ready-solutions/blocks/-->
             <span name="content"
                  style="{{_displayState.heightFix ? '' : _contentStyles}}"
-                 class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup
+                 class="controls-Scroll__content ws-BlockGroup
                         {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                         {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
                         {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
                  on:controlResize="_resizeHandler()"
                  on:scroll="_scrollHandler()">
-               <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
+               <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="controls-Scroll__userContent" on:fixed="_fixedHandler()"/>
             </span>
          </Controls.Event.Registrator>
       </Controls.Event.Registrator>

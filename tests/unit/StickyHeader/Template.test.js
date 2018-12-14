@@ -44,6 +44,7 @@ define(
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
             });
          });
@@ -52,6 +53,7 @@ define(
             beforeEach(function() {
                ctrl = new _StickyHeader({});
                inst._getStyle = ctrl._getStyle;
+               inst._isShadowVisible = ctrl._isShadowVisible;
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
@@ -62,6 +64,7 @@ define(
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
             });
 
@@ -72,6 +75,7 @@ define(
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
             });
 
@@ -82,6 +86,7 @@ define(
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
             });
 
@@ -93,6 +98,7 @@ define(
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
             });
 
@@ -106,6 +112,7 @@ define(
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
             });
 
@@ -119,7 +126,7 @@ define(
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
-                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
+                                                '<div class="controls-Scroll__shadow controls-StickyHeader__shadow controls-StickyHeader__shadowVisible"></div>' +
                                              '</div>');
             });
          });
