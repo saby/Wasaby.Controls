@@ -1,8 +1,9 @@
 define('Controls/Popup/Opener/Notification',
    [
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Core/helpers/isNewEnvironment'
    ],
-   function(Base) {
+   function(Base, isNewEnvironment) {
       /**
        * Component that opens a popup that is positioned in the lower right corner of the browser window. Multiple notification Windows can be opened at the same time. In this case, they are stacked vertically. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_5 See more}.
        *
@@ -24,6 +25,20 @@ define('Controls/Popup/Opener/Notification',
        * @property {Function} template Шаблон отображения внутреннего содержимого
        * @property {Object} templateOptions Шаблон отображения внутреннего содержимого
        */
+
+      var _private = {
+         compatibleOpen: function(self, popupOptions) {
+            var config = self._getConfig(popupOptions);
+            require(['Controls/Popup/Compatible/BaseOpener',
+               'SBIS3.CONTROLS/Utils/InformationPopupManager',
+               'Controls/Popup/Compatible/OldNotification',
+               config.template
+            ], function(BaseOpenerCompat, InformationPopupManager) {
+               InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config));
+            });
+         }
+      };
+
       var Notification = Base.extend({
 
          /**
@@ -62,9 +77,13 @@ define('Controls/Popup/Opener/Notification',
           */
          open: function(popupOptions) {
             popupOptions = popupOptions || {};
-
             popupOptions.autofocus = false;
-            Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
+
+            if (isNewEnvironment()) {
+               Base.prototype.open.call(this, popupOptions, 'Controls/Popup/Opener/Notification/NotificationController');
+            } else {
+               _private.compatibleOpen(this, popupOptions);
+            }
          }
       });
 
@@ -75,8 +94,7 @@ define('Controls/Popup/Opener/Notification',
       };
 
       return Notification;
-   }
-);
+   });
 
 /**
  * @name Controls/Popup/Opener/Notification#close
@@ -88,4 +106,3 @@ define('Controls/Popup/Opener/Notification',
  * @function
  * @description Popup opened status.
  */
-
