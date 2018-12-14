@@ -732,11 +732,17 @@ node('controls') {
                 reg_title = reg_data[0]
                 description += reg_data[1]
             }
-            if (int_title && reg_title && int_title==reg_title) {
+            if (!int_title && !reg_title) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER}
+            } else if (int_title && !reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (int_title.contains('FAIL') && ('OK' == reg_title || !reg_title)) {
+            } else if (!int_title && reg_title) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
+            } else if (int_title && reg_title && int_title==reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (reg_title.contains('FAIL') && ('OK' == int_title|| !int_title)) {
+            } else if (int_title.contains('FAIL' && reg_title.contains('OK')) {
+                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
+            }else if (reg_title.contains('FAIL' && int_title.contains('OK')) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             }
 
