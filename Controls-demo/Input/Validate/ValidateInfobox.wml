@@ -3,7 +3,7 @@
         <ws:content>
             <div>
                 Validate/Input (Валидация происходит по focusOut)
-                <Controls.Validate.Input   name="InputValidate" attr:style="margin: 30px" >
+                <Controls.Validate.Input   name="InputValidate" attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
                     <ws:validators>
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsINN</ws:Function>
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsEmail</ws:Function>
@@ -17,7 +17,7 @@
                         />
                     </ws:content>
                 </Controls.Validate.Input>
-                <Controls.Validate.Input   name="InputValidate2" attr:style="margin: 30px" >
+                <Controls.Validate.Input   name="InputValidate2" attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox_inputValidate2">
                     <ws:validators>
                         <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsINN</ws:Function>
                         <ws:Function value="{{_value3 }}">Controls/Validate/Validators/IsEmail</ws:Function>
@@ -31,7 +31,7 @@
                         />
                     </ws:content>
                 </Controls.Validate.Input>
-                <Controls.Button name="Panel" on:click="_openPanel()" caption="Panel"/>
+                <Controls.Button name="Panel" on:click="_openPanel()" caption="Panel" attr:class="ControlsDemo-ValidateInfobox_panel"/>
                 <Controls.Popup.Opener.Stack name="opener">
                     <ws:popupOptions template="Controls-demo/Input/Validate/Text">
                         <ws:eventHandlers/>
@@ -45,7 +45,7 @@
         <ws:content>
             <div>
                 Validate/Controller(Кнопка запускает процесс валидации)
-                <Controls.Validate.Controller   name="ControllerValidate" attr:style="margin: 30px"  >
+                <Controls.Validate.Controller   name="ControllerValidate" attr:style="margin: 30px"  attr:class="ControlsDemo-ValidateInfobox_infobox">
                     <ws:validators>
                         <ws:Function value="{{_value2 }}">Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
@@ -55,11 +55,12 @@
                                 bind:value="_value2"
                                 placeholder="Email"
                                 tagStyle="primary"
+								attr:class="ControlsDemo-ValidateInfobox_inputValidate3"
                         />
                     </ws:content>
                 </Controls.Validate.Controller>
             </div>
         </ws:content>
     </Controls.Validate.FormController>
-    <Controls.Button caption="Submit"  name="updateButton" on:click="_clickHandler()"/>
+    <Controls.Button caption="Submit"  name="updateButton" on:click="_clickHandler()" attr:class="ControlsDemo-ValidateInfobox_submit" />
 </div>
