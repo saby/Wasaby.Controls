@@ -53,6 +53,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
          layer._afterUpdate(oldOptions);
          assert.isFalse(resultSended);
    
+         layer.saveOptions(oldOptions);
          layer._positionFixed = false;
          layer._afterUpdate(oldOptions);
          assert.isFalse(resultSended);
