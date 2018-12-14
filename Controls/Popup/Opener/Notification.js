@@ -44,7 +44,7 @@ define('Controls/Popup/Opener/Notification',
          /**
           * Open dialog popup.
           * @function Controls/Popup/Opener/Notification#open
-          * @param {popupOptions} popupOptions Notification popup options.
+          * @param {popupOptions[]} popupOptions Notification popup options.
           * @returns {Undefined}
           * @example
           * wml
@@ -105,4 +105,15 @@ define('Controls/Popup/Opener/Notification',
  * @name Controls/Popup/Opener/Notification#isOpened
  * @function
  * @description Popup opened status.
+ */
+
+/**
+ * @typedef {Object} PopupOptions
+ * @description Sets the popup configuration.
+ * @property {} autofocus Determines whether focus is set to the template when popup is opened.
+ * @property {} className Class names of popup.
+ * @property {} opener Control, which is the logical initiator of popup opening.
+ * @property {} template Template inside popup.
+ * @property {} templateOptions Template options inside popup.
+ * @property {} eventHandlers Callback functions on popup events.
  */

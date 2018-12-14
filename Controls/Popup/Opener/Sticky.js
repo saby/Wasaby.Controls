@@ -18,7 +18,7 @@ define('Controls/Popup/Opener/Sticky',
          /**
           * Open sticky popup.
           * @function Controls/Popup/Opener/Sticky#open
-          * @param {Object} popupOptions Sticky popup options.
+          * @param {PopupOptions[]} popupOptions Sticky popup options.
           * @returns {Undefined}
           * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStickyOptions#popupOptions popupOptions}
           * @example
@@ -144,4 +144,26 @@ define('Controls/Popup/Opener/Sticky',
  * @name Controls/Popup/Opener/Sticky#isOpened
  * @description Popup opened status.
  * @function
+ */
+
+/**
+ * @typedef {Object} PopupOptions
+ * @description Stack popup options.
+ * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+ * @property {Boolean} isModal Determines whether the window is modal.
+ * @property {String} className Class names of popup.
+ * @property {Boolean} closeByExternalClick Determines whether possibility of closing the popup when clicking past.
+ * @property {Object} opener Control, which is the logical initiator of popup opening.
+ * @property {String|Template} template Template inside popup.
+ * @property {String|Template} templateOptions Template options inside popup.
+ * @property {Object} eventHandlers Callback functions on popup events.
+ * @property {Integer} corner Sets the popup build point relative target.
+ * @property {Integer} horizontalAlign Sets the horizontal alignment of the popup.
+ * @property {Integer} verticalAlign Sets the vertical alignment of the popup.
+ * @property {Integer} target The maximum width of the panel in a maximized state.
+ * @property {Integer} minWidth The target relative to which the popup is positioned.
+ * @property {Integer} maxWidth The minimum width of popup.
+ * @property {Integer} minHeight The maximum height of popup.
+ * @property {Integer} maxHeight The maximum height of popup.
+ * @property {String} locationStrategy A method of adjusting the popup panel to the free space next to the target.
  */

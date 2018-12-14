@@ -29,7 +29,7 @@ define('Controls/Popup/Opener/Dialog',
           * Open dialog popup.
           * @function Controls/Popup/Opener/Dialog#open
           * @returns {Undefined}
-          * @param {Object} popupOptions Dialog popup options.
+          * @param {PopupOptions[]} popupOptions Dialog popup options.
           * @remark
           * {@link https://wi.sbis.ru/docs/js/Controls/interface/IDialogOptions#popupOptions popupOptions}
           * @example
@@ -123,4 +123,27 @@ define('Controls/Popup/Opener/Dialog',
     * @function
     * @description Popup opened status.
     */
+
+    /**
+     * @typedef {Object} PopupOptions
+     * @description Dialog popup options.
+     * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+     * @property {Boolean} isModal Determines whether the window is modal.
+     * @property {String} className Class names of popup.
+     * @property {Boolean} closeByExternalClick Determines whether possibility of closing the popup when clicking past.
+     * @property {Object} opener Control, which is the logical initiator of popup opening.
+     * @property {String|Template} template Template inside popup.
+     * @property {String|Template} templateOptions Template options inside popup.
+     * @property {Object} eventHandlers Callback functions on popup events.
+     * @property {Boolean} draggable Determines whether the control can be moved by d'n'd.
+     * @property {Integer} minWidth The minimum width of popup.
+     * @property {Integer} maxWidth The maximum width of popup.
+     * @property {Integer} minHeight The minimum height of popup.
+     * @property {Integer} maxHeight The maximum height of popup.
+     * @property {Boolean} maximize Determines whether the control is displayed in full screen.
+     * @property {Boolean} resizable Determines whether popup can be resized.
+     * @property {Integer} top Distance from the window to the top of the screen.
+     * @property {Integer} left Distance from the window to the left border of the screen.
+     * @property {Boolean} draggable Determines whether the component can be moved.
+     */
 );
