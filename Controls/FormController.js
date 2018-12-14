@@ -216,7 +216,9 @@ define('Controls/FormController', [
                      });
                   } else {
                      self._propertyChangeNotified = false;
-                     def.callback(true);
+                     if (!def.isReady()) {
+                        def.callback(true);
+                     }
                   }
                   return def;
                }
@@ -229,7 +231,9 @@ define('Controls/FormController', [
                this.update().addCallbacks(function(res) {
                   if (!res.validationErrors) {
                      // если нет ошибок в валидации, просто завершаем пендинг с результатом
-                     def.callback(res);
+                     if (!def.isReady()) {
+                        def.callback(res);
+                     }
                   } else {
                      // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
                      // чтобы оно не сработало, когда пендинг завершится.
@@ -238,11 +242,15 @@ define('Controls/FormController', [
                   }
                   return res;
                }.bind(this), function(e) {
-                  def.errback(e);
+                  if (!def.isReady()) {
+                     def.errback(e);
+                  }
                   return e;
                });
             } else if (answer === false) {
-               def.callback(false);
+               if (!def.isReady()) {
+                  def.callback(false);
+               }
             }
          }
 
