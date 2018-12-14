@@ -753,7 +753,7 @@ node('controls') {
                 reg_title = reg_data[0]
                 reg_description = reg_data[1]
                 print("in reg ${reg_description}")
-                if ( description && description != reg_description ) {
+                if ( description != reg_description ) {
                     description += "${description}"
                 }
             }
