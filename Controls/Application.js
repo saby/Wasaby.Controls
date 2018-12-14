@@ -216,8 +216,8 @@ define('Controls/Application',
 
 
             if (typeof window === 'undefined' && cfg.theme !== 'default') {
-               // ThemesController.getInstance().themes = {};
-               // ThemesController.getInstance().pushTheme(cfg.theme);
+               ThemesController.getInstance().themes = {};
+               ThemesController.getInstance().setTheme(cfg.theme);
             }
             var headData = Request.getCurrent().getStorage('HeadData');
 
