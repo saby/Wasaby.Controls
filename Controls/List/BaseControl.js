@@ -42,7 +42,7 @@ define('Controls/List/BaseControl', [
    var
       defaultSelectedKeys = [],
       defaultExcludedKeys = [];
-   
+
    var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
@@ -128,6 +128,8 @@ define('Controls/List/BaseControl', [
 
                _private.prepareFooter(self, self._options.navigation, self._sourceController);
 
+               throw new Error('123');
+
                return addedItems;
 
                // обновить начало/конец видимого диапазона записей и высоты распорок
@@ -148,15 +150,16 @@ define('Controls/List/BaseControl', [
                userErrback(error);
             }
 
-            if (!(error.processed || error._isOfflineMode)) {// Не показываем ошибку, если было прервано соединение с интернетом
-               // TODO новые попапы
-               /* InformationPopupManager.showMessageDialog(
-
-                opener: self,
-
-                status: 'error'
-                }
-                ); */
+            // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
+            if (!(error.processed || error._isOfflineMode)) {
+               // Control show messagebox only in clientside
+               if (self._children && self._children.errorMsgOpener) {
+                  self._children.errorMsgOpener.open({
+                     message: error.message,
+                     style: 'error',
+                     type: 'ok'
+                  });
+               }
                error.processed = true;
             }
          }
