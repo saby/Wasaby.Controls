@@ -1,9 +1,12 @@
 <ws:template name="filtersContent">
+   <Controls.Validate.FormController name="formController">
+
    <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
                                               itemTemplate="{{_options.itemTemplate}}"
                                               itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                               on:itemsChanged="_itemsChangedHandler()"
                                               attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount())) ? 'controls-FilterPanel_lastBlock'}}"/>
+   </Controls.Validate.FormController>
    <ws:if data="{{_hasAdditionalParams}}">
       <Controls.Filter.Button.Panel.AdditionalParams
               items="{{_items}}"
@@ -40,7 +43,7 @@
                           name="resetButton"
                           attr:class="controls-FilterPanel__resetButton"/>
 
-         <Controls.Button viewMode="button" style="primary" caption="{[Отобрать]}" on:click="_applyFilter()"
+         <Controls.Button viewMode="button" style="primary" caption="{[Отобрать]}" readOnly="{{!_isValid}}" on:click="_applyFilter()"
                           attr:class="controls-FilterPanel__filterButton"/>
       </div>
    </ws:topArea>
