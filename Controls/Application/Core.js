@@ -8,6 +8,7 @@ define('Controls/Application/Core',
       'View/Request',
       'View/_Request/createDefault',
       'Controls/Application/StateReceiver',
+      'Core/Themes/ThemesController',
       'Controls/Application/AppData',
       'Controls/Application/HeadData',
       'native-css',
@@ -18,6 +19,7 @@ define('Controls/Application/Core',
       Request,
       createDefault,
       StateReceiver,
+      ThemesController,
       AppData,
       HeadData) {
       'use strict';
@@ -72,6 +74,9 @@ define('Controls/Application/Core',
          coreTheme: '',
          setTheme: function(ev, theme) {
             this.coreTheme = theme;
+            if (ThemesController.getInstance().setTheme) {
+               ThemesController.getInstance().setTheme(theme);
+            }
          },
          changeApplicationHandler: function(e, app) {
             var result;

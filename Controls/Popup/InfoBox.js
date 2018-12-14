@@ -15,12 +15,11 @@ define('Controls/Popup/InfoBox',
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * @class Controls/Popup/InfoBox
-       * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        *
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
-       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        */
 
       /**
@@ -104,14 +103,14 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                style: self._options.style,
+               float: self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler
                },
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions,
-                  float: self._options.float
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }
@@ -275,6 +274,7 @@ define('Controls/Popup/InfoBox',
             trigger: 'hover'
          };
       };
+      InfoBox._private = _private;
 
       return InfoBox;
    });

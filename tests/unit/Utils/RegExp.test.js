@@ -22,6 +22,33 @@ define(
                assert.equal(result, '\\\\1\\(2\\)3\\{4\\}5\\+6\\.7\\*8\\[9\\]');
             });
          });
+         describe('partOfNumber', function() {
+            var calculate = function(value) {
+               return value.match(RegExpUtil.partOfNumber).slice(0, 5);
+            };
+
+            it('Empty value.', function() {
+               assert.deepEqual(calculate(''), ['', '', '', '', '']);
+            });
+            it('Non-negative integer value.', function() {
+               assert.deepEqual(calculate('100'), ['100', '', '100', '', '']);
+            });
+            it('Negative integer value.', function() {
+               assert.deepEqual(calculate('-100'), ['-100', '-', '100', '', '']);
+            });
+            it('Non-negative float value.', function() {
+               assert.deepEqual(calculate('100.100'), ['100.100', '', '100', '.', '100']);
+            });
+            it('Negative float value.', function() {
+               assert.deepEqual(calculate('-100.100'), ['-100.100', '-', '100', '.', '100']);
+            });
+            it('Non-negative float value separated by comma.', function() {
+               assert.deepEqual(calculate('100,100'), ['100,100', '', '100', ',', '100']);
+            });
+            it('Negative float value separated by comma.', function() {
+               assert.deepEqual(calculate('-100,100'), ['-100,100', '-', '100', ',', '100']);
+            });
+         });
       });
    }
 );

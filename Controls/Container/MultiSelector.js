@@ -29,8 +29,8 @@ define('Controls/Container/MultiSelector', [
       },
 
       _selectedKeysCountChanged: function(e, count) {
+         e.stopPropagation();
          this._selectedKeysCount = count;
-         return this._notify('selectedKeysCountChanged', Array.prototype.slice.call(arguments, 1));
 
          // TODO: по этой задаче сделаю так, что опции selectedKeysCount вообще не будет: https://online.sbis.ru/opendoc.html?guid=d9b840ba-8c99-49a5-98d3-78715d10d540
       },

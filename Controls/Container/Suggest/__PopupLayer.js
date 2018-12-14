@@ -4,7 +4,8 @@
 define('Controls/Container/Suggest/__PopupLayer',
    [
       'Core/Control',
-      'wml!Controls/Container/Suggest/__PopupLayer'
+      'wml!Controls/Container/Suggest/__PopupLayer',
+      'css!Controls/Container/Suggest/PopupLayer'
    ],
    
    function(Control, template) {
