@@ -725,13 +725,15 @@ node('controls') {
                  int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                  int_title = int_data[0]
                  description= int_data[1]
-                 currentBuild.description += "${description}"
+                 if ( description ) {
+                    currentBuild.description += "${description}"
+                 }
             }
             if (regr) {
                 reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                 reg_title = reg_data[0]
                 description = reg_data[1]
-                if ( description != currentBuild.description ) {
+                if ( description && description != currentBuild.description ) {
                     currentBuild.description += "${description}"
                 }
             }
