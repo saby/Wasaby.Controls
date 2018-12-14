@@ -165,7 +165,7 @@ define([
 
       });
 
-      it('getPaddingClassList', function() {
+      it('getSpacingClassList', function() {
          var cfg = {
             rightPadding: 'XS',
             leftSpacing: 'M'
@@ -173,7 +173,7 @@ define([
 
          var ivm = new ItemsViewModel(cfg);
          var classList = ' controls-ListView__item-rightPadding_XS controls-ListView__item-leftPadding_M';
-         assert.isTrue(classList === ivm.getPaddingClassList());
+         assert.isTrue(classList === ivm.getSpacingClassList());
       });
 
       it('Prepend', function () {

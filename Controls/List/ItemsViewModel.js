@@ -126,7 +126,7 @@ define('Controls/List/ItemsViewModel', [
                   }
                   return this.item;
                },
-               paddingClassList: this.getPaddingClassList()
+               spacingClassList: this.getSpacingClassList()
             };
          if (this._options.groupMethod) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
@@ -139,7 +139,7 @@ define('Controls/List/ItemsViewModel', [
          return itemData;
       },
 
-      getPaddingClassList: function() {
+      getSpacingClassList: function() {
          var classList = '';
          classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
          classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
