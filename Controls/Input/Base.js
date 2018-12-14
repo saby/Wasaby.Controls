@@ -362,6 +362,12 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          /**
+          * @type {Boolean}
+          * @protected
+          */
+         _multiline: false,
+
+         /**
           * @type {Number} The number of skipped save the current field selection to the model.
           * @private
           */
@@ -444,7 +450,7 @@ define('Controls/Input/Base',
             var viewModelCtr = this._getViewModelConstructor();
             var viewModelOptions = this._getViewModelOptions(options);
 
-            this._initProperties(this);
+            this._initProperties(options);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
             if (options.autoComplete) {

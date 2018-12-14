@@ -1,190 +1,141 @@
-define('Controls/Input/Area', [
-   'Controls/Input/OldText',
-   'Core/constants',
+define('Controls/Input/Area',
+   [
+      'Core/constants',
+      'Controls/Input/Text',
+      'WS.Data/Type/descriptor',
+      'wml!Controls/Input/Area/Field',
 
-   'WS.Data/Type/descriptor',
-   'Core/detection',
-   'wml!Controls/Input/Area/Area',
-   'Controls/Input/resources/InputHelper',
+      'css!theme?Controls/Input/Area/Area'
+   ],
+   function(constants, Text, descriptor, fieldTemplate) {
+      'use strict';
 
-   'css!theme?Controls/Input/Area/Area'
-], function(Text,
-   constants,
-   types,
-   detection,
-   template,
-   inputHelper) {
-   'use strict';
-
-   /**
-    * A component for entering multi-line text.
-    * You can adjust the {@link minLines minimum} and {@link maxLines maximum} number of lines.
-    * If the inputed text does not fit on the {@link maxLines number of lines}, a scroll bar appears.
-    * You can move the text to the next line using {@link newLineKey hotkeys}.
-    * <a href="/materials/demo-ws4-input">Демо-пример</a>.
-    *
-    * @class Controls/Input/Area
-    * @extends Controls/Input/Text
-    * @control
-    * @public
-    * @category Input
-    * @demo Controls-demo/Input/Area/Area
-    *
-    * @author Колесова П.С.
-    */
-
-   /**
-    * @name Controls/Input/Area#minLines
-    * @cfg {Number} Minimum number of lines.
-    */
-
-   /**
-    * @name Controls/Input/Area#maxLines
-    * @cfg {Number} Maximum number of lines.
-    */
-
-   /**
-    * @name Controls/Input/Area#newLineKey
-    * @cfg {String} The behavior of creating a new line.
-    * @variant enter When user presses Enter.
-    * @variant ctrlEnter When user presses Ctrl + Enter.
-    * @default enter
-    */
-
-   var _private = {
-
-      setFakeAreaValue: function(self, value) {
-         self._children.fakeAreaValue.innerHTML = value;
-      },
-
-      /*
-       * Обновляет наличие скролла, в зависимости от того, есть ли скролл на фейковой текст арии
+      /**
+       * A component for entering multi-line text.
+       * You can adjust the {@link minLines minimum} and {@link maxLines maximum} number of lines.
+       * If the inputed text does not fit on the {@link maxLines number of lines}, a scroll bar appears.
+       * You can move the text to the next line using {@link newLineKey hotkeys}.
+       * <a href="/materials/demo-ws4-input">Демо-пример</a>.
+       *
+       * @class Controls/Input/Area
+       * @extends Controls/Input/Text
+       * @control
+       * @public
+       * @category Input
+       * @demo Controls-demo/Input/Area/Area
+       *
+       * @author Колесова П.С.
        */
-      updateHasScroll: function(self) {
-         var fakeArea = self._children.fakeArea;
-         var needScroll = fakeArea.scrollHeight - fakeArea.clientHeight > 1;
 
-         // Для IE, текст мы показываем из fakeArea, поэтому сдвинем скролл.
-         if (needScroll && detection.isIE) {
-            fakeArea.scrollTop = self._children.realArea.scrollTop;
-         }
-
-         if (needScroll !== self._hasScroll) {
-            self._hasScroll = needScroll;
-         }
-      },
-
-      /*
-       * Updates area multiline
+      /**
+       * @name Controls/Input/Area#minLines
+       * @cfg {Number} Minimum number of lines.
        */
-      updateMultiline: function(self, minLines) {
-         var fakeArea = self._children.fakeArea;
-         var fakeAreaWrapper = self._children.fakeAreaWrapper;
 
-         // Will define the number of rows in Area by comparing fakeArea and her wrap heights
-         // Смотрим ещё и на minLines, т.к. прикладники могут создавать Area внутри контейнера с display: none.
-         self._multiline = fakeArea.clientHeight > fakeAreaWrapper.clientHeight || minLines > 1;
-      }
-   };
+      /**
+       * @name Controls/Input/Area#maxLines
+       * @cfg {Number} Maximum number of lines.
+       */
 
-   var Area = Text.extend({
+      /**
+       * @name Controls/Input/Area#newLineKey
+       * @cfg {String} The behavior of creating a new line.
+       * @variant enter When user presses Enter.
+       * @variant ctrlEnter When user presses Ctrl + Enter.
+       * @default enter
+       */
+      var _private = {
+         calcSizesByMeasuredBlock: function(areaSize) {
+            var measuredBlock = document.createElement('div');
+            measuredBlock.className = 'controls-Area__measuredBlock controls-Area__measuredBlock_size_' + areaSize;
+            document.body.appendChild(measuredBlock);
+            var sizes = {
+               rowHeight: measuredBlock.clientHeight,
+               indents: measuredBlock.offsetHeight - measuredBlock.clientHeight
+            };
+            document.body.removeChild(measuredBlock);
 
-      _template: template,
+            return sizes;
+         },
 
-      _hasScroll: false,
+         calculateHeightLines: function(sizes, count, hasIndents) {
+            var indents = hasIndents ? sizes.indents : 0;
 
-      _caretPosition: null,
+            return sizes.rowHeight * count + indents;
+         },
 
-      _multiline: undefined,
+         isPressAdditionalKeys: function(event, ignore) {
+            var additionalKeys = ['shiftKey', 'altKey', 'ctrlKey'];
 
-      _beforeMount: function(options) {
-         Area.superclass._beforeMount.apply(this, arguments);
+            return additionalKeys.every(function(additionalKey) {
+               if (additionalKey === ignore) {
+                  return true;
+               }
 
-         // '_multiline' is responsible for adding multi-line field classes to InputRender
-         // Should be set before the component is mounted into DOM to avoid content jumps
-         this._multiline = options.minLines > 1;
-      },
+               return event[additionalKey];
+            });
+         },
 
-      _afterMount: function() {
-         Area.superclass._afterMount.apply(this, arguments);
-
-         // Should calculate area height after mount
-         _private.updateHasScroll(this);
-         _private.updateMultiline(this, this._options.minLines);
-         this._forceUpdate();
-      },
-
-      _beforeUpdate: function(newOptions) {
-         Area.superclass._beforeUpdate.apply(this, arguments);
-         _private.setFakeAreaValue(this, newOptions.value);
-         _private.updateHasScroll(this);
-         _private.updateMultiline(this, newOptions.minLines);
-      },
-
-      _afterUpdate: function(oldOptions) {
-         if ((oldOptions.value !== this._options.value) && this._caretPosition) {
-            this._children.realArea.setSelectionRange(this._caretPosition, this._caretPosition);
-            this._caretPosition = null;
+         isPressEnter: function(event) {
+            return event.keyCode === constants.key.enter;
          }
-      },
-
-      _valueChangedHandler: function(e, value) {
-         _private.setFakeAreaValue(this, value);
-         _private.updateHasScroll(this);
-         _private.updateMultiline(this, this._options.minLines);
-         this._notify('valueChanged', [value]);
-      },
-
-      _keyDownHandler: function(e) {
-         // В режиме newLineKey === 'ctrlEnter' будем эмулировать переход на новую строку в ручную
-         if (e.nativeEvent.keyCode === constants.key.enter && this._options.newLineKey === 'ctrlEnter') {
-            // Обычный enter прерываем
-            if (!e.nativeEvent.shiftKey && !e.nativeEvent.ctrlKey) {
-               e.preventDefault();
-            }
-
-            // Вроде не очень хорошо. Но если хотим перенести на новую строку сами, придется вмешиваться.
-            if (e.nativeEvent.ctrlKey) {
-               e.target.value += '\n';
-               this._children.inputRender._inputHandler(e);
-            }
-         }
-      },
-
-      _scrollHandler: function() {
-         _private.updateHasScroll(this);
-      },
-
-      paste: function(text) {
-         this._caretPosition = inputHelper.pasteHelper(this._children.inputRender, this._children.realArea, text);
-      }
-
-   });
-
-   Area.getDefaultOptions = function() {
-      return {
-         newLineKey: 'enter',
-         selectOnClick: false
       };
-   };
 
-   Area.getOptionTypes = function() {
-      return {
+      var Area = Text.extend({
+         _multiline: true,
 
-         /**
-          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
-          * minLines: descriptor(Number|null),
-          * maxLines: descriptor(Number|null),
-          */
-         newLineKey: types(String).oneOf([
+         _keyDownHandler: function(event) {
+            var nativeEvent = event.nativeEvent;
+
+            if (_private.isPressEnter(nativeEvent)) {
+               if (this._options.newLineKey === 'enter' && !_private.isPressAdditionalKeys(nativeEvent)) {
+                  return;
+               }
+               if (this._options.newLineKey === 'ctrlEnter' && !_private.isPressAdditionalKeys(nativeEvent, 'ctrlKey')) {
+                  this.paste('\n');
+
+                  return;
+               }
+
+               event.preventDefault();
+            }
+         },
+
+         _initProperties: function(options) {
+            Area.superclass._initProperties.apply(this, arguments);
+
+            this._field.template = fieldTemplate;
+
+            if (typeof window !== 'undefined') {
+               var sizes = _private.calcSizesByMeasuredBlock(options.size);
+
+               this._field.scope.calculateHeightLines = function(count, hasIndents) {
+                  return _private.calculateHeightLines(sizes, count, hasIndents);
+               };
+            }
+         }
+      });
+
+      Area.getDefaultOptions = function() {
+         var defaultOptions = Text.getDefaultOptions();
+
+         defaultOptions.newLineKey = 'enter';
+
+         return defaultOptions;
+      };
+
+      Area.getOptionTypes = function() {
+         var optionTypes = Text.getOptionTypes();
+
+         optionTypes.minLines = descriptor(Number);
+         optionTypes.maxLines = descriptor(Number);
+         optionTypes.newLineKey = descriptor(String).oneOf([
             'enter',
             'ctrlEnter'
-         ])
+         ]);
+
+         return optionTypes;
       };
-   };
 
-   // For unit-tests
-   Area._private = _private;
-
-   return Area;
-});
+      return Area;
+   });

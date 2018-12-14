@@ -2,6 +2,7 @@
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
                        style="{{_options.style}}"
+                       multiline="{{_multiline}}"
                        tagStyle="{{_options.tagStyle}}"
                        fontStyle="{{_options.fontStyle}}"
                        textAlign="{{_options.textAlign}}"
@@ -10,17 +11,18 @@
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
    <ws:if data="{{_options.readOnly}}">
-      <ws:partial scope="{{_readOnlyField.scope}}"
-                  template="{{_readOnlyField.template}}"
-                  value="{{_viewModel.displayValue}}"/>
+      <ws:partial options="{{_options}}"
+                  scope="{{_readOnlyField.scope}}"
+                  value="{{_viewModel.displayValue}}"
+                  template="{{_readOnlyField.template}}"/>
    </ws:if>
    <ws:else>
       <ws:partial type="{{_type}}"
+                  options="{{_options}}"
                   scope="{{_field.scope}}"
                   fieldName="{{_fieldName}}"
                   template="{{_field.template}}"
                   value="{{_viewModel.displayValue}}"
-                  autoComplete="{{_options.autoComplete}}"
                   hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
                   isEdge="{{_isEdge}}" />
    </ws:else>

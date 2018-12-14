@@ -1,14 +1,14 @@
 <div class="controls-Base__field">
    <input
       autocorrect="off"
-      class="controls-Base__nativeField
-      {{isEdge?'controls-Base__nativeField_edge'}}
-            {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
-      placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
       type="{{type}}"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
-      autocomplete="{{autoComplete ? 'on' : 'new-password'}}"
+      placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
+      autocomplete="{{options.autoComplete ? 'on' : 'new-password'}}"
+      class="controls-Base__nativeField controls-Base__nativeField_margin
+            {{isEdge ? 'controls-Base__nativeField_edge'}}
+            {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
       on:keyup="_keyUpHandler()"
       on:click="_clickHandler()"
       on:input="_inputHandler()"
