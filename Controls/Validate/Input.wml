@@ -1,8 +1,10 @@
 <ws:if data="{{_isNewEnvironment}}">
    <ws:partial template="{{ _options.content }}"
+               validationErrors="{{isValid()}}"
                style="{{isValid() ? 'invalid': 'info'}}"
                scope="{{_options}}"
-               on:valueChanged="_cleanValid()"
+               on:valueChanged="_valueChangedHandler()"
+               on:inputCompleted="_inputCompletedHandler()"
                on:deactivated="_deactivatedHandler()"
                on:mouseenter="_hoverHandler()"
                on:focusIn="_focusInHandler()"
@@ -13,8 +15,10 @@
    <div>
       <ws:partial template="{{ _options.content }}"
                   style="{{isValid() ? 'invalid': 'info'}}"
+                  validationErrors="{{isValid()}}"
                   scope="{{_options}}"
-                  on:valueChanged="_cleanValid()"
+                  on:valueChanged="_valueChangedHandler()"
+                  on:inputCompleted="_inputCompletedHandler()"
                   on:deactivated="_deactivatedHandler()"
                   on:mouseenter="_hoverHandler()"
                   on:focusIn="_focusInHandler()"

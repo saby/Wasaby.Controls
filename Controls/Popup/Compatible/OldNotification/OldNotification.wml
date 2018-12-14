@@ -1,0 +1,1 @@
+<ws:partial template="{{_options.template}}" scope="{{_options.templateOptions}}" on:close="_close()"/>

@@ -266,7 +266,7 @@ define('Controls/List/Tree/TreeViewModel', [
          toggleExpanded: function(dispItem, expanded) {
             var
                itemId = dispItem.getContents().getId(),
-               currentExpanded = this._expandedItems[itemId] || false;
+               currentExpanded = this.isExpanded(dispItem);
 
             if (expanded !== currentExpanded || expanded === undefined) {
                if (_private.isExpandAll(this._expandedItems)) {

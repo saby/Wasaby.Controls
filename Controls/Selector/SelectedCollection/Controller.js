@@ -166,6 +166,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
             });
          }
 
+         if (!newOptions.multiSelect && this._selectedKeys.length > 1) {
+            this._setItems([]);
+         }
+
          this._counterWidth = itemsCount && _private.getCounterWidth(itemsCount);
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
