@@ -83,15 +83,20 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
             Utils.getItemPropertyValue(item, 'visibility');
       },
 
+      _textValueChangedHandler: function(event, index, textValue) {
+         this._options.items[index].textValue = textValue;
+         this._notify('itemsChanged', [this._options.items]);
+      },
+
       _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;
          this._options.items[index].visibility = true;
-         this._notify('valueChanged');
+         this._notify('itemsChanged', [this._options.items]);
       },
 
       _visibilityChangedHandler: function(event, index) {
          this._options.items[index].visibility = true;
-         this._notify('visibilityChanged');
+         this._notify('itemsChanged', [this._options.items]);
       },
 
       _clickSeparatorHandler: function() {
