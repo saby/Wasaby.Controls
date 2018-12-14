@@ -1,5 +1,5 @@
 <Controls.Popup.Opener.Sticky name="suggestPopup">
-    <ws:popupOptions autofocus="{{false}}">
+    <ws:popupOptions autofocus="{{false}}" className="controls-Suggest__suggestionsContainer-popup">
         <ws:verticalAlign side="bottom"/>
         <ws:corner vertical="bottom"/>
     </ws:popupOptions>

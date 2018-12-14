@@ -7,6 +7,7 @@ define('Controls/HighChartsLight',
       'Core/core-clone',
       'Core/Date',
       'css!theme?Controls/HighChartsLight/HighChartsLight',
+      'i18n!Controls/HighChartsLight',
       'browser!/cdn/highcharts/4.2.7/highcharts-more.js'
    ],
    function(Control, template, constants, detection, cClone) {
@@ -78,7 +79,9 @@ define('Controls/HighChartsLight',
                      months: constants.Date.longMonths,
                      shortMonths: constants.Date.months,
                      weekdays: constants.Date.longDays,
-                     thousandsSep: ' '
+                     thousandsSep: ' ',
+                     resetZoom: rk('Сбросить масштабирование'),
+                     resetZoomTitle: rk('Сбросить масштабирование')
                   },
                   plotOptions: {
                      series: {
