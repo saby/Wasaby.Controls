@@ -113,5 +113,16 @@ define([
 
       });
 
+      describe('.setCurrentDate', function() {
+
+         it('should set current date in value', function() {
+            let model = new DateTimeModel(options);
+            let clock = sinon.useFakeTimers(new Date(2019, 0, 2, 3, 4, 5, 6), 'Date');
+            model.setCurrentDate();
+            assert.strictEqual((new Date(2019, 0, 2)).getTime(), model.value.getTime());
+            clock.restore();
+         });
+      });
+
    });
 });
