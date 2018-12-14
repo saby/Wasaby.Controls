@@ -12,6 +12,8 @@ define('Controls/Container/Suggest/__PopupLayer',
       
       'use strict';
       
+      var POPUP_CLASS_NAME = "controls-Suggest__suggestionsContainer_popup";
+      
       var _private = {
          openPopup: function(self, opener, options) {
             opener.open({
@@ -26,12 +28,37 @@ define('Controls/Container/Suggest/__PopupLayer',
                   showContent: options.showContent
                }
             });
+         },
+         
+         getPopupClassName: function(verAlign) {
+           return POPUP_CLASS_NAME + '_' + verAlign;
+         },
+         
+         setPopupOptions: function(self) {
+            self._popupOptions = {
+               autofocus: false,
+               className: _private.getPopupClassName('bottom'),
+               verticalAlign: {
+                  side: 'bottom'
+               },
+               corner: {
+                  vertical: 'bottom'
+               },
+               eventHandlers: {
+                  onResult: self._onResult
+               }
+            };
          }
       };
       
       var __PopupLayer = Control.extend({
          
          _template: template,
+         
+         _beforeMount: function() {
+            this._onResult = this._onResult.bind(this);
+            _private.setPopupOptions(this);
+         },
          
          _afterMount: function(options) {
             _private.openPopup(this, this._children.suggestPopup, options);
@@ -45,9 +72,20 @@ define('Controls/Container/Suggest/__PopupLayer',
                 this._options.misspellingCaption !== oldOptions.misspellingCaption) {
                _private.openPopup(this, this._children.suggestPopup, this._options);
             }
+         },
+         
+         _onResult: function(position) {
+            //fix suggest position after show
+            this._popupOptions.verticalAlign = position.verticalAlign;
+            this._popupOptions.horizontalAlign = position.horizontalAlign;
+            this._popupOptions.corner = position.corner;
+            this._popupOptions.className = _private.getPopupClassName(position.verticalAlign.side);
+            this._popupOptions.locationStrategy = 'fixed';
          }
          
       });
+   
+      __PopupLayer._private = _private;
       
       return __PopupLayer;
    });
