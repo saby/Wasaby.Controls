@@ -68,6 +68,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       if (res && res.length) {
          return res[0].slice(1);
       }
+      IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
+      return '';
    }
 
    function isThemedCss(key) {
@@ -77,7 +79,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    function parseModuleName(name) {
       var typeInfo = getType(name);
       if (typeInfo === null) {
-         Logger.log('Wrong type. Can not process module.', [name]);
+         IoC.resolve('ILogger').error('Wrong type. Can not process module: ' + name);
          return null;
       }
       var nameWithoutPlugin;
@@ -112,9 +114,6 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
                var ext = getExt(bundleName);
-               if (packages[ext] === undefined) {
-                  packages[ext] = {};
-               }
                packages[ext][getPackageName(bundleName)] = DEPTYPES.BUNDLE;
             }
          }
