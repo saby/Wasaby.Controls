@@ -41,6 +41,23 @@ def build_description(job, path, skip_test) {
     return [title, description]
 }
 
+def build_title(t_int, t_reg) {
+    if (!t_int && !t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER}"
+    } else if (t_int && !t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    } else if (!t_int && t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+    } else if (t_int && t_reg && t_int==t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+    }
+
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
@@ -741,20 +758,7 @@ node('controls') {
                 }
             }
 
-            if (!int_title && !reg_title) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER}"
-            } else if (int_title && !reg_title) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (!int_title && reg_title) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
-            } else if (int_title && reg_title && int_title==reg_title) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (int_title.contains('FAIL') && reg_title.contains('OK')) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            }else if (reg_title.contains('FAIL') && int_title.contains('OK')) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
-            }
-
+            build_title(int_title, reg_title)
             currentBuild.description = "${description}"
         }
     }
