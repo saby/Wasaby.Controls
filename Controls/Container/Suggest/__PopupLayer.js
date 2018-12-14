@@ -12,7 +12,7 @@ define('Controls/Container/Suggest/__PopupLayer',
       
       'use strict';
       
-      var POPUP_CLASS_NAME = "controls-Suggest__suggestionsContainer_popup";
+      var POPUP_CLASS_NAME = 'controls-Suggest__suggestionsContainer_popup';
       
       var _private = {
          openPopup: function(self, opener, options) {
@@ -31,7 +31,7 @@ define('Controls/Container/Suggest/__PopupLayer',
          },
          
          getPopupClassName: function(verAlign) {
-           return POPUP_CLASS_NAME + '_' + verAlign;
+            return POPUP_CLASS_NAME + '_' + verAlign;
          },
          
          setPopupOptions: function(self) {
