@@ -168,7 +168,7 @@ define([
       it('getPaddingClassList', function() {
          var cfg = {
             rightPadding: 'XS',
-            leftPadding: 'M'
+            leftSpacing: 'M'
          };
 
          var ivm = new ItemsViewModel(cfg);

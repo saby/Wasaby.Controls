@@ -141,8 +141,8 @@ define('Controls/List/ItemsViewModel', [
 
       getPaddingClassList: function() {
          var classList = '';
-         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || 'default');
-         classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || 'default');
+         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
+         classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
          return classList;
       },
 
