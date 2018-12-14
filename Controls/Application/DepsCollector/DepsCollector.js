@@ -65,7 +65,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function getExt(fileName) {
       var res = fileName.match(/\.\w+$/);
-      if(res && res.length) {
+      if (res && res.length) {
          return res[0].slice(1);
       }
    }
@@ -95,8 +95,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function getEmptyPackages() {
       var packages = {};
-      for(var key in TYPES) {
-         if(TYPES.hasOwnProperty(key)) {
+      for (var key in TYPES) {
+         if (TYPES.hasOwnProperty(key)) {
             packages[key] = {};
          }
       }
@@ -112,7 +112,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
                var ext = getExt(bundleName);
-               if(packages[ext] === undefined) {
+               if (packages[ext] === undefined) {
                   packages[ext] = {};
                }
                packages[ext][getPackageName(bundleName)] = DEPTYPES.BUNDLE;
@@ -175,12 +175,12 @@ define('Controls/Application/DepsCollector/DepsCollector', [
 
    function mergePackages(result, addedPackages) {
       for (var package in addedPackages) {
-         if(addedPackages.hasOwnProperty(package)) {
+         if (addedPackages.hasOwnProperty(package)) {
             if (result[package] === undefined) {
                result[package] = {};
             }
             for (var key in addedPackages[package]) {
-               if(addedPackages[package].hasOwnProperty(key)) {
+               if (addedPackages[package].hasOwnProperty(key)) {
                   result[package][key] = addedPackages[package][key];
                }
             }
