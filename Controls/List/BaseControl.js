@@ -121,15 +121,13 @@ define('Controls/List/BaseControl', [
                   // self._virtualScroll.prependItems(addedItems.getCount());
                }
 
-               // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+               // If received list is empty, make another request.
+               // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                if (!addedItems.getCount()) {
                   _private.checkLoadToDirectionCapability(self);
                }
 
                _private.prepareFooter(self, self._options.navigation, self._sourceController);
-
-               throw new Error('123');
-
                return addedItems;
 
                // обновить начало/конец видимого диапазона записей и высоты распорок
