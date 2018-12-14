@@ -43,7 +43,7 @@
                           name="resetButton"
                           attr:class="controls-FilterPanel__resetButton"/>
 
-         <Controls.Button viewMode="button" style="primary" caption="{[Отобрать]}" readOnly="{{!_isValid}}" on:click="_applyFilter()"
+         <Controls.Button viewMode="button" style="primary" caption="{[Отобрать]}" on:click="_applyFilter()"
                           attr:class="controls-FilterPanel__filterButton"/>
       </div>
    </ws:topArea>
