@@ -38,7 +38,7 @@ class RC:
 
     def description(self, fail_tests_path, skip):
         """Формируем описаниена основе полученных данных из RC сборки и упавших тестов в текущей"""
-        description = '<pre><ul>'
+
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
             now_list = sorted(f.read().split())
             self.test_names = sorted(self.test_names)
@@ -53,6 +53,7 @@ class RC:
                     self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
                     return ''   # не показываем ошибки из RC
 
+        description = '<pre><ul>'
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
         description += "</ul>"
