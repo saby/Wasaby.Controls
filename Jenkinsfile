@@ -736,7 +736,7 @@ node('controls') {
                 }
             }
             if (!int_title && !reg_title) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER}
+                currentBuild.displayName = "#${env.BUILD_NUMBER}"
             } else if (int_title && !reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
             } else if (!int_title && reg_title) {
