@@ -743,9 +743,9 @@ node('controls') {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             } else if (int_title && reg_title && int_title==reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (int_title.contains('FAIL' && reg_title.contains('OK')) {
+            } else if (int_title.contains('FAIL') && reg_title.contains('OK')) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            }else if (reg_title.contains('FAIL' && int_title.contains('OK')) {
+            }else if (reg_title.contains('FAIL') && int_title.contains('OK')) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             }
         }
