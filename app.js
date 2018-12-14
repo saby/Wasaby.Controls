@@ -188,7 +188,7 @@ var simpleProxy = function(proxyParams, req, res) {
 };
 
 app.get('/cdn*', (req, res) => {
-   res.redirect('http://dev-cdn.wasaby.io' + req.url);
+   res.redirect('http://dev-cdn.wasaby.io' + req.url.replace('/cdn/', '/'));
 });
 
 // Параметры, куда и как перенаправлять запросы
