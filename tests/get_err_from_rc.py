@@ -46,7 +46,7 @@ class RC:
                 if self.test_names == now_list:     # если упавших нигде нет
                     if now_list:                    # падают одинаковые
                         self.head = "ОК|Эти ошибки уже попали в RC."
-                elif len(self.test_names) < len(now_list):
+                else:
                     self.head = "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
             else:
                 if now_list:
