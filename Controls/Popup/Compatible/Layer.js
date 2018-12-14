@@ -15,7 +15,7 @@ define('Controls/Popup/Compatible/Layer', [
    'use strict';
 
    var loadDeferred;
-   var jQueryModuleName = 'cdn!jquery/3.3.1/jquery-min.js';
+   var jQueryModuleName = 'is!browser?jquery';
    var compatibleDeps = [
       'Core/Control',
       'Lib/Control/Control.compatible',
