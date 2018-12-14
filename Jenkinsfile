@@ -719,18 +719,21 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
         dir("./controls/tests") {
-            def description = ''
             def int_title = ''
             def reg_title = ''
             if (inte || all_inte) {
                  int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                  int_title = int_data[0]
-                 description += int_data[1]
+                 description= int_data[1]
+                 currentBuild.description += "${description}"
             }
             if (regr) {
                 reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                 reg_title = reg_data[0]
-                description += reg_data[1]
+                description = reg_data[1]
+                if ( description != currentBuild.description ) {
+                    currentBuild.description += "${description}"
+                }
             }
             if (!int_title && !reg_title) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER}
@@ -745,11 +748,7 @@ node('controls') {
             }else if (reg_title.contains('FAIL' && int_title.contains('OK')) {
                 currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
             }
-
-            currentBuild.description = description
-
         }
-
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"

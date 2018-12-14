@@ -50,7 +50,7 @@ class RC:
                     self.head = "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
             else:
                 if now_list:
-                    self.head = "FAIL WITH SKIP|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
+                    self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
                     return  # не показываем ошибки из RC
 
         for err in self.err_dict:
