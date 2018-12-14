@@ -342,6 +342,7 @@ define([
                   assert.equal(args[0], action);
                   assert.equal(args[1], itemData.item);
                   assert.equal(args[2], fakeHTMLElement);
+                  assert.equal(args[3], fakeEvent);
                   assert.equal(eventName, 'itemActionsClick');
                },
                _container: {

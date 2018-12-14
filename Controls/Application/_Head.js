@@ -3,10 +3,9 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'View/Request',
-      'Core/Themes/ThemesController'
+      'View/Request'
    ],
-   function(Base, Deferred, template, Request, ThemesController) {
+   function(Base, Deferred, template, Request) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -27,6 +26,7 @@ define('Controls/Application/_Head',
             this._forceUpdate = function() {
                //do nothing
             };
+
             if (typeof options.staticDomains === 'string') {
                this.staticDomainsStringified = options.staticDomains;
             } else if (options.staticDomains instanceof Array) {
@@ -34,10 +34,26 @@ define('Controls/Application/_Head',
             } else {
                this.staticDomainsStringified = '[]';
             }
+
+            /*Этот коммент требует английского рефакторинга
+            * Сохраним пользовательские данные на инстанс
+            * мы хотим рендерить их только 1 раз, при этом, если мы ренедрим их на сервере мы добавим класс
+            * head-custom-block */
+            this.head = options.head;
+
             if (typeof window !== 'undefined') {
-               var csses = ThemesController.getInstance().getCss();
-               this.themedCss = csses.themedCss;
-               this.simpleCss = csses.simpleCss;
+
+               /*всем элементам в head назначается атрибут data-vdomignore
+               * то есть, inferno их не удалит, и если в head есть спец элементы,
+               * значит мы рендерились на сервере и здесь сейчас оживаем, а значит пользовательский
+               * контент уже на странице и генерировать второй раз не надо, чтобы не было синхронизаций
+               * */
+
+               if (document.getElementsByClassName('head-custom-block').length > 0) {
+                  this.head = undefined;
+               }
+               this.themedCss = [];
+               this.simpleCss = [];
                return;
             }
             var headData = Request.getCurrent().getStorage('HeadData');
@@ -58,7 +74,7 @@ define('Controls/Application/_Head',
             return false;
          },
          isArrayHead: function() {
-            return Array.isArray(this._options.head);
+            return Array.isArray(this.head);
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);

@@ -8,6 +8,7 @@
          appRoot: '{{_options.appRoot}}',
          RUMEnabled: '{{ _options.RUMEnabled }}',
          pageName: '{{ _options.pageName }}',
+         userConfigSupport: true,
          staticDomains: {{ __setHTMLUnsafe(staticDomainsStringified) }},
          defaultServiceUrl: '{{_options.servicesPath}}',
          compatible: {{ _options.compat }},
@@ -28,31 +29,31 @@
    <link rel="stylesheet" key="defaultcss"
          href="{{ _options.linkResolver.resolveLink('Controls-theme/themes/default/default', 'css') }}"/>
 
-   <ws:if data="{{ _options.head }}">
+   <ws:if data="{{ head }}">
       <ws:if data="{{ isArrayHead() }}">
-         <ws:for data="i in _options.head">
-            <ws:partial template="{{ i }}"/>
+         <ws:for data="i in head">
+            <ws:partial template="{{ i }}"  data-vdomignore="true" attr:class="head-custom-block"/>
          </ws:for>
       </ws:if>
       <ws:else>
-         <ws:partial template="{{ _options.head }}"/>
+         <ws:partial template="{{ head }}"  data-vdomignore="true" attr:class="head-custom-block"/>
       </ws:else>
    </ws:if>
 
    <ws:for data="index, value in themedCss">
       <ws:if data="{{_options.theme}}">
-         <link rel="stylesheet" class="css-bundles"
+         <link rel="stylesheet" class="css-bundles" data-vdomignore="true"
                css-name="{{value}}"
                href="{{ _options.linkResolver.resolveCssWithTheme(value, _options.theme) }}"
                type="text/css"
                key="{{ 'themed-css-' + index }}"/>
       </ws:if>
       <ws:else>
-         <link rel="stylesheet" class="css-bundles" css-name="{{value}}" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'themed-css-' + index }}"/>
+         <link rel="stylesheet" class="css-bundles" data-vdomignore="true" css-name="{{value}}" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'themed-css-' + index }}"/>
       </ws:else>
    </ws:for>
    <ws:for data="index, value in simpleCss">
-      <link rel="stylesheet" class="css-bundles" css-name="{{value}}" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'simple-css-' + index }}"/>
+      <link rel="stylesheet" class="css-bundles" data-vdomignore="true" css-name="{{value}}" href="{{ _options.linkResolver.resolveLink(value, 'css') }}" type="text/css" key="{{ 'simple-css-' + index }}"/>
    </ws:for>
 
    <!--<ws:for data="index, value in resolvedSimple">-->
