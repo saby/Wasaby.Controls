@@ -14,6 +14,7 @@ def gitlabStatusUpdate() {
 }
 def exception(err, reason) {
     currentBuild.displayName = "#${env.BUILD_NUMBER} ${reason}"
+    currentBuild.description = "${err}"
     error(err)
 }
 
@@ -90,15 +91,20 @@ echo "Генерируем параметры"
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Укажите опции run_int и/или run_reg", name: 'run_only_fail_test')
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]),
         pipelineTriggers([])
     ])
 
+def regr = params.run_reg
+def unit = params.run_unit
+def inte = params.run_int
+def all_inte = params.run_all_int
+def only_fail = false
+
 node('master') {
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -115,12 +121,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def regr = params.run_reg
-        def unit = params.run_unit
-        def inte = params.run_int
-        def all_inte = params.run_all_int
         def skip = params.skip
-        def only_fail = params.run_only_fail_test
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
@@ -173,6 +174,9 @@ node('controls') {
         }
         if ( inte && all_inte ) {
             inte = false
+        }
+        if ( inte || all_inte || regr ) {
+            unit = true
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -442,6 +446,35 @@ node('controls') {
             }
             echo items
         }
+        stage ("Unit тесты"){
+            if ( unit ){
+                echo "Запускаем юнит тесты"
+                dir("./controls"){
+                    sh """
+                    npm cache clean --force
+                    npm config set registry http://npmregistry.sbis.ru:81/
+                    echo "run isolated"
+                    export test_report="artifacts/test-isolated-report.xml"
+                    sh ./bin/test-isolated
+
+                    echo "run browser"
+                    export test_url_host=${env.NODE_NAME}
+                    export test_server_port=10253
+                    export test_url_port=10253
+                    export WEBDRIVER_remote_enabled=1
+                    export WEBDRIVER_remote_host=10.76.159.209
+                    export WEBDRIVER_remote_port=4444
+                    export test_report=artifacts/test-browser-report.xml
+                    sh ./bin/test-browser
+                    """
+                }
+            }
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            unit_result = currentBuild.result == null
+            if (!unit_result) {
+                exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+            }
+        }
         if ( regr || inte || all_inte) {
 
         stage("Разворот стенда"){
@@ -524,6 +557,7 @@ node('controls') {
             """
             }
         }
+
         if ( regr || inte || all_inte) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -617,32 +651,6 @@ node('controls') {
                 }
             }
             parallel (
-                unit: {
-                    stage ("Unit тесты"){
-                        if ( unit ){
-                            echo "Запускаем юнит тесты"
-							dir("./controls"){
-                                sh """
-								npm cache clean --force
-                                npm config set registry http://npmregistry.sbis.ru:81/
-                                echo "run isolated"                                
-                                export test_report="artifacts/test-isolated-report.xml"
-                                sh ./bin/test-isolated
-								
-                                echo "run browser"
-                                export test_url_host=${env.NODE_NAME}
-                                export test_server_port=10253
-                                export test_url_port=10253
-                                export WEBDRIVER_remote_enabled=1
-                                export WEBDRIVER_remote_host=10.76.159.209
-                                export WEBDRIVER_remote_port=4444
-                                export test_report=artifacts/test-browser-report.xml
-                                sh ./bin/test-browser
-								"""
-                            }
-                        }
-                    }
-                },
                 int_test: {
                     stage("Инт.тесты"){
                         if ( inte || all_inte && smoke_result ){
