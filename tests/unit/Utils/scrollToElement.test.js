@@ -4,9 +4,11 @@ define([
    scrollToElement
 ) {
    describe('Controls/Utils/scrollToElement', function() {
-      if (typeof window !== 'undefined') {
-         this.skip();
-      }
+      beforeEach(function() {
+         if (typeof window !== 'undefined') {
+            this.skip();
+         }
+      });
 
       var documentElement = {};
       function mockDOM(bodyScrollTop, bodyClientHeight) {
