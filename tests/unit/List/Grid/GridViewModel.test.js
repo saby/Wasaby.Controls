@@ -236,7 +236,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
             assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
@@ -255,7 +255,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('state', function() {
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
