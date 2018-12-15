@@ -84,6 +84,7 @@ define(
 
          it('fireEventHandler', function() {
             let Manager = getManager();
+            let eventOnCloseFired = false;
             id = Manager.show({
                testOption: 'created'
             }, new BaseController());
@@ -95,12 +96,18 @@ define(
                   onClose: function() {
                      eventCloseFired = true;
                   }
+               },
+               _events: {
+                  onClose: () => {
+                     eventOnCloseFired = true;
+                  }
                }
             });
 
             Manager._private.fireEventHandler(id, 'onClose');
 
             assert.isTrue(eventCloseFired, 'event is not fired.');
+            assert.isTrue(eventOnCloseFired, 'event is not fired.');
          });
 
          it('remove popup', function() {
@@ -217,10 +224,16 @@ define(
 
          });
          it('managerPopupCreated notified', function() {
+            let isPopupOpenedEventTriggered = false;
             let popupOptions = {
                isModal: false,
                maximize: false,
-               testOption: 'created'
+               testOption: 'created',
+               _events: {
+                  onOpen: () => {
+                     isPopupOpenedEventTriggered = true;
+                  }
+               }
             };
             let Manager = getManager();
             var isCreateNotified;
@@ -232,7 +245,7 @@ define(
             let id0 = Manager.show(popupOptions, new BaseController());
             Manager._private.popupCreated(id0);
             assert.isTrue(isCreateNotified);
-
+            assert.isTrue(isPopupOpenedEventTriggered);
          });
       });
    }
