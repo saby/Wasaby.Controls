@@ -483,11 +483,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "value": {
             "type": "DateTime",
             "title": "Field value."
@@ -545,11 +540,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "value": {
             "type": "DateTime",
             "title": "Field value."
@@ -590,11 +580,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "startValue": {
             "type": "DateTime",
             "title": "Field value."
