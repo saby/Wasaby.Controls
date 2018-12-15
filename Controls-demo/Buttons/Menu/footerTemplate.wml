@@ -1,0 +1,3 @@
+<div class="controls-DropdownList__row">
+   <Controls.Button viewMode="link" style="default" caption="+еще"/>
+</div>

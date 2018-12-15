@@ -15,11 +15,45 @@ define('Controls/Popup/InfoBox',
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_4 see more}.
        *
        * @class Controls/Popup/InfoBox
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
        *
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
+       *
+       * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
+       * @css @spacing_Infobox-between-content-border-right Spacing between content and border-right.
+       * @css @spacing_Infobox-between-content-border-bottom Spacing between content and border-bottom.
+       * @css @spacing_Infobox-between-content-border-left Spacing between content and border-left.
+       *
+       * @css @max-width_Infobox Max-width of Infobox.
+       * @css @size_Infobox-arrow Size of Infobox arrow.
+       * @css @horizontal-offset_Infobox-arrow Spacing between arrow and border-left.
+       * @css @vertical-offset_Infobox-arrow  Spacing between arrow and border-top.
+       * @css @spacing_Infobox-between-top-close-button Spacing between close-button and border-top.
+       * @css @spacing_Infobox-between-right-close-button Spacing between close-button and border-right.
+       *
+       * @css @color_Infobox-close-button Color of close-button.
+       * @css @color_Infobox-close-button_hover Color of close-button in hovered state.
+       *
+       * @css @background-color_Infobox_default Default background color.
+       * @css @background-color_Infobox_lite Background color when option style is set to lite.
+       * @css @background-color_Infobox_help Background color when option style is set to help.
+       * @css @background-color_Infobox_error Background color when option style is set to error.
+       *
+       * @css @border-color_Infobox_default Default border color.
+       * @css @border-color_Infobox_lite Border color when option style is set to lite.
+       * @css @border-color_Infobox_help Border color when option style is set to help.
+       * @css @border-color_Infobox_error Border color when option style is set to error.
+       * @css @border-width_Infobox Thickness of border.
+       *
+       * @css @color_Infobox-shadow_default Default color of shadow.
+       * @css @color_Infobox-shadow_lite Color of shadow when option style is set to lite.
+       * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
+       * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
+       * @css @box-shadow_Infobox Size of shadow.
        */
+
 
       /**
        * @name Controls/Popup/InfoBox#hideDelay
@@ -54,12 +88,12 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#content
-       * @cfg {Function} The content to which the logic of opening and closing the template is added.
+       * @cfg {function|String} The content to which the logic of opening and closing the template is added.
        */
 
       /**
        * @name Controls/Popup/InfoBox#template
-       * @cfg {String|Function} Popup template.
+       * @cfg {function|String} Popup template.
        */
 
       /**
@@ -71,6 +105,7 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#trigger
        * @cfg {String} Event name trigger the opening or closing of the template.
        * @variant click Opening by click on the content. Closing by click not on the content or template.
+       * @variant demand Opening when requested (content clicked).
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
        * @variant hover|touch Opening by hover or touch on the content. Closing by hover not on the content or template.
@@ -101,14 +136,14 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                style: self._options.style,
+               float: self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler
                },
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions,
-                  float: self._options.float
+                  contentTemplateOptions: self._options.templateOptions
                }
             };
          }
@@ -155,6 +190,7 @@ define('Controls/Popup/InfoBox',
             this._openId = null;
             this._closeId = null;
             this._opened = true;
+            this._forceUpdate();
          },
 
          _close: function() {
@@ -173,7 +209,9 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            this._open(event);
+            if (!this._opened) {
+               this._open(event);
+            }
             event.stopPropagation();
          },
 
@@ -216,6 +254,23 @@ define('Controls/Popup/InfoBox',
             this._close();
          },
 
+
+         /**
+          * Open InfoBox
+          * @function Controls/Popup/InfoBox#open
+          */
+         open: function() {
+            this._open();
+         },
+
+         /**
+          * close InfoBox
+          * @function Controls/Popup/InfoBox#close
+          */
+         close: function() {
+            this._close();
+         },
+
          _resultHandler: function(event) {
             switch (event.type) {
                case 'mouseenter':
@@ -252,6 +307,7 @@ define('Controls/Popup/InfoBox',
             trigger: 'hover'
          };
       };
+      InfoBox._private = _private;
 
       return InfoBox;
    });

@@ -5,6 +5,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
    'Controls/Context/TouchContextField',
+   'Controls/List/ItemActions/Utils/getStyle',
    'css!theme?Controls/List/ItemActions/ItemActionsControl'
 ], function(
    Control,
@@ -12,7 +13,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    tUtil,
    aUtil,
    ControlsConstants,
-   TouchContextField
+   TouchContextField,
+   getStyle
 ) {
    'use strict';
 
@@ -32,6 +34,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                   action.icon += ' ' + ACTION_ICON_CLASS;
                }
+               action.style = getStyle(action.style, 'ItemActions');
+               action.iconStyle = getStyle(action.iconStyle, 'ItemActions');
                actions.push(action);
             }
          });
@@ -56,7 +60,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             showed.push({
                icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
                style: 'bordered',
-               iconDone: true,
                handler: function(item) {
                   this._applyEdit(item);
                }.bind(self)
@@ -72,7 +75,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
          if (_private.needActionsMenu(all, options.itemActionsPosition)) {
             showed.push({
-               title: 'Еще',
                icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
                isMenu: true
             });

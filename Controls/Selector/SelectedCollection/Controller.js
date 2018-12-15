@@ -9,8 +9,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Core/core-merge',
    'Controls/Utils/getWidth',
    'wml!Controls/Selector/SelectedCollection/CounterTemplate',
-   'Controls/Utils/tmplNotify'
-], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify) {
+   'Controls/Utils/tmplNotify',
+   'Controls/Utils/ToSourceModel'
+], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify, ToSourceModel) {
+   'use strict';
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -52,8 +54,11 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       notifyTextValueChanged: function(self, textValue) {
-         // toDo Выписана задача на написание апи для события https://online.sbis.ru/opendoc.html?guid=cce8c706-a9e8-452e-bd44-5344f3c5fc72
          self._notify('textValueChanged', textValue);
+      },
+
+      prepareItems: function(self) {
+         ToSourceModel(_private.getItems(self), self._options.source, self._options.keyProperty);
       },
 
       addItem: function(self, item) {
@@ -70,6 +75,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
                _private.getItems(self).assign([item]);
             }
 
+            _private.prepareItems(self);
             _private.notifyChanges(self, selectedKeys);
             _private.setSelectedKeys(self, selectedKeys);
          }
@@ -160,6 +166,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
             });
          }
 
+         if (!newOptions.multiSelect && this._selectedKeys.length > 1) {
+            this._setItems([]);
+         }
+
          this._counterWidth = itemsCount && _private.getCounterWidth(itemsCount);
 
          if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
@@ -189,6 +199,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
 
          _private.getItems(this).assign(items);
+         _private.prepareItems(this);
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);
       },

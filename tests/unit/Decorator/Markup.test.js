@@ -160,8 +160,8 @@ define([
             cConstants.decoratedLinkService = decoratedLinkService;
          });
          it('empty', function() {
-            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<span></span>'));
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<span></span>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<div></div>'));
          });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><'];

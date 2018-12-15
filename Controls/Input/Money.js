@@ -5,7 +5,7 @@ define('Controls/Input/Money',
 
       'wml!Controls/Input/Money/ReadOnly',
 
-      'css!Controls/Input/Money/Money'
+      'css!theme?Controls/Input/Money/Money'
    ],
    function(Base, ViewModel, readOnlyFieldTemplate) {
 

@@ -27,6 +27,14 @@ define('Controls/Container/LoadingIndicator', [
       _beforeMount: function(cfg) {
          this._updateProperties(cfg);
       },
+      _afterMount: function(cfg) {
+         var self = this;
+         if (cfg.mainIndicator) {
+            requirejs(['Controls/Popup/Manager/ManagerController'], function(ManagerController) {
+               ManagerController.setIndicator(self);
+            });
+         }
+      },
       _beforeUpdate: function(cfg) {
          this._updateProperties(cfg);
       },
@@ -150,6 +158,10 @@ define('Controls/Container/LoadingIndicator', [
       },
 
       _isOpened: function(config) {
+         // config is not required parameter. If config object is empty we should always create new Indicator due to absence of ID field in config
+         if (!config) {
+            return false;
+         }
          var index = this._getItemIndex(config.id);
          if (index < 0) {
             delete config.id;

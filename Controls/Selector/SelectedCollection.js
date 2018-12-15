@@ -4,10 +4,11 @@ define('Controls/Selector/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/ItemTemplate',
       'WS.Data/Chain',
-      'css!Controls/Selector/SelectedCollection/SelectedCollection'
+      'Controls/Utils/tmplNotify',
+      'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, Chain) {
+   function(Control, template, ItemTemplate, Chain, tmplNotify) {
       'use strict';
 
       /**
@@ -43,6 +44,7 @@ define('Controls/Selector/SelectedCollection',
          _template: template,
          _templateOptions: null,
          _items: [],
+         _notifyHandler: tmplNotify,
 
          _beforeMount: function(options) {
             this._onResult = _private.onResult.bind(this);

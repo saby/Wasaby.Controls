@@ -15,8 +15,19 @@ define('Controls/List/interface/IGridControl', [
     */
 
    /**
-    * @name Controls/List/interface/IGridControl#stickyFields
+    * @name Controls/List/interface/IGridControl#ladderProperties
     * @cfg {Array.<String>} Array of fields that should be sticky.
+    */
+
+   /**
+    * @typedef {Object} StickyColumn
+    * @property {Number} [index] Index of the column for which sticking is calculated.
+    * @property {String} [property] Name of the field for which sticking is calculated.
+    */
+
+   /**
+    * @name Controls/List/interface/IGridControl#stickyColumn
+    * @cfg {StickyColumn} Configuration for column's sticking.
     */
 
    /**
@@ -75,6 +86,7 @@ define('Controls/List/interface/IGridControl', [
    /**
     * @name Controls/List/interface/IGridControl#columns
     * @cfg {Array.<Column>} Describes Grid's columns.
+    * @remark Before rendering, make sure that {@link WS.Data/Display/Collection Collection} contains required data, when the {@link Controls/List/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/List/interface/IGridControl#columns columns} option, if necessary.
     */
 
 });

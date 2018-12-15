@@ -1,10 +1,25 @@
 define('Controls/Popup/Templates/Notification/Base',
    [
       'Core/Control',
+      'Core/IoC',
       'wml!Controls/Popup/Templates/Notification/Base',
-      'css!Controls/Popup/Templates/Notification/Base'
+      'css!theme?Controls/Popup/Templates/Notification/Base'
    ],
-   function(Control, template) {
+   function(Control, IoC, template) {
+      var _private = {
+         prepareDisplayStyle: function(color) {
+            var resColor = color;
+
+            // поддержка старых цветов, чтоб не ломать старые
+            if (color === 'done') {
+               resColor = 'success';
+            }
+            if (color === 'error') {
+               resColor = 'danger';
+            }
+            return resColor;
+         }
+      };
 
       /**
        * Base template of notification popup.
@@ -26,9 +41,22 @@ define('Controls/Popup/Templates/Notification/Base',
          _timerId: null,
 
          _beforeMount: function(options) {
+            if (options.style === 'error') {
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style error, используйте danger');
+            }
+            if (options.style === 'done') {
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
+            }
+            options._style = _private.prepareDisplayStyle(options.style);
             if (options.autoClose) {
                this._autoClose();
             }
+            if (options.contentTemplate) {
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
+            }
+         },
+         _beforeUpdate: function(options) {
+            options._style = _private.prepareDisplayStyle(options.style);
          },
 
          _closeClick: function() {
@@ -62,17 +90,20 @@ define('Controls/Popup/Templates/Notification/Base',
       };
 
       return Notification;
-   }
-);
+   });
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#autoClose
- * @cfg {Integer} Close by timeout after open.
+ * @cfg {Number} Close by timeout after open.
  */
 
 /**
  * @name Controls/Popup/Templates/Notification/Base#style
  * @cfg {String} Notification display style.
+ * @variant warning
+ * @variant primary
+ * @variant success
+ * @variant danger
  */
 
 /**
@@ -81,6 +112,6 @@ define('Controls/Popup/Templates/Notification/Base',
  */
 
 /**
- * @name Controls/Popup/Templates/Notification/Base#contentTemplate
- * @cfg {String} Main content.
+ * @name Controls/Popup/Templates/Notification/Base#bodyContentTemplate
+ * @cfg {function|String} Main content.
  */

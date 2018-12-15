@@ -186,6 +186,14 @@ define([
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
          var textValue = '';
+         var source = new Memory({
+            data: [
+               {id: 1, title: 'Alex', text: 'Alex'},
+               {id: 2, title: 'Ilya', text: 'Ilya'},
+               {id: 3, title: 'Mike', text: 'Mike'}
+            ],
+            idProperty: 'id'
+         });
 
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
@@ -224,19 +232,25 @@ define([
          assert.deepEqual(selectedCollection._selectedKeys, [1]);
 
          selectedCollection._beforeUpdate({
+            selectedKeys: [1, 2],
+            source: source,
+            keyProperty: 'id'
+         });
+         assert.deepEqual(selectedCollection._selectedKeys, []);
+
+         selectedCollection._beforeUpdate({
             multiSelect: true,
             selectedKeys: [1, 2],
-            source: new Memory({
-               data: [
-                  {id: 1, title: 'Alex', text: 'Alex'},
-                  {id: 2, title: 'Ilya', text: 'Ilya'},
-                  {id: 3, title: 'Mike', text: 'Mike'}
-               ],
-               idProperty: 'id'
-            }),
+            source: source,
             keyProperty: 'id'
          });
          assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
+
+         selectedCollection._beforeUpdate({
+            keyProperty: 'title'
+         });
+         // т.к items еще не загрузились.
+         assert.deepEqual(selectedCollection._selectedKeys, []);
       });
 
       it('_setItems', function() {

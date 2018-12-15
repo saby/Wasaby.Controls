@@ -15,7 +15,7 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
 
    'css!WS/css/styles/RichContentStyles',
    'i18n!SBIS3.CONTROLS/RichEditor',
-   'css!Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
+   'css!theme?Controls/Input/RichArea/resources/TinyMCE/TinyMCE'
 ], function(Control,
    template,
    constantsHelper,
@@ -63,7 +63,7 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
       _clipboardText: '',
 
       _beforeMount: function(options) {
-         this._value = editorHelper.prepareContent(editorHelper.prepareFromJson(options.value));
+         this._value = options.value;
          this._editorConfig = cClone(configHelper.editorConfig);
 
          formatHelper.initFormats(this, options.additionalFormats || {});

@@ -3,7 +3,7 @@ define('Controls/Heading/Back', [
    'wml!Controls/Heading/Back/Back',
    'WS.Data/Type/descriptor',
    'Core/IoC',
-   'css!Controls/Heading/Back/Back'
+   'css!theme?Controls/Heading/Back/Back'
 ], function(Control, template, types, IoC) {
    /**
     * Specialized heading to go to the previous level.

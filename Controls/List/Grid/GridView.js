@@ -6,6 +6,7 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Column',
    'wml!Controls/List/Grid/HeaderContent',
    'Core/detection',
+   'Core/helpers/Object/isEqual',
    'wml!Controls/List/Grid/GroupTemplate',
    'wml!Controls/List/Grid/OldGridView',
    'wml!Controls/List/Grid/NewGridView',
@@ -15,7 +16,7 @@ define('Controls/List/Grid/GridView', [
    'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
-   GroupTemplate, OldGridView, NewGridView) {
+   isEqualObject, GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
 
@@ -78,7 +79,7 @@ define('Controls/List/Grid/GridView', [
                modules = [];
             this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
             if (cDetection.isNotFullGridSupport) {
-               modules.push('css!Controls/List/Grid/OldGrid');
+               modules.push('css!theme?Controls/List/Grid/OldGrid');
             }
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
@@ -86,6 +87,18 @@ define('Controls/List/Grid/GridView', [
                requireDeferred.callback();
             });
             return requireDeferred;
+         },
+
+         _beforeUpdate: function(newCfg) {
+            if (!isEqualObject(this._options.columns, newCfg.columns)) {
+               this._listModel.setColumns(newCfg.columns);
+            }
+            if (!isEqualObject(this._options.header, newCfg.header)) {
+               this._listModel.setHeader(newCfg.header);
+            }
+            if (!cDetection.isNotFullGridSupport) {
+               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+            }
          },
 
          _calcFooterPaddingClass: function(params) {

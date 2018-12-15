@@ -4,10 +4,12 @@
       on:deactivated="_deactivated()"
       suggestTemplate="{{_options.suggestTemplate}}"
       footerTemplate="{{_options.suggestFooterTemplate}}"
+      emptyTemplate="{{_options.emptyTemplate}}"
       on:suggestStateChanged="_suggestStateChanged()"
       minSearchLength="{{_options.minSearchLength}}"
       source="{{_options.source}}"
       searchParam="{{_options.searchParam}}"
+      searchDelay="{{_options.searchDelay}}"
       trim="{{_options.trim}}"
       navigation="{{_options.navigation}}"
       tooltip="{{_options.tooltip}}"
@@ -32,6 +34,7 @@
          placeholder="{{ _options.placeholder }}"
          validationErrors="{{ _options.validationErrors }}"
          on:valueChanged="_changeValueHandler()"
+         on:inputCompleted="_notifyHandler('inputCompleted')"
          attr:class="controls-Lookup__inputRender controls-Lookup__inputRender_{{_multiLineState ? 'multiLine' : 'singleLine'}}
             {{!_isEmpty() && !_options.multiSelect ? ' controls-Lookup__inputRender_fieldWrapper_hidden'}}
             controls-Lookup__inputRender_content_width_{{_inputWidth ? 'custom' : 'default'}}">
@@ -51,10 +54,12 @@
                   itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                   items="{{_options.items}}"
                   _counterWidth="{{_options._counterWidth}}"
-                  maxVisibleItems="{{!_options.readOnly || _options.multiline || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems}}"
+                  maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems}}"
                   readOnly="{{_options.readOnly}}"
                   on:itemClick="_itemClick()"
                   on:crossClick="_crossClick()"
+                  on:openInfoBox="_openInfoBox()"
+                  on:closeInfoBox="_closeInfoBox()"
                   attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}"
                   attr:style="max-width:{{_options.multiSelect && !_options.readOnly ? _availableWidthCollection}}px;"/>
          </ws:if>

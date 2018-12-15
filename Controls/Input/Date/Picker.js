@@ -4,7 +4,7 @@ define('Controls/Input/Date/Picker', [
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Picker/Picker',
-   'css!Controls/Input/Date/Picker/Picker'
+   'css!theme?Controls/Input/Date/Picker/Picker'
 ], function(
    Control,
    coreMerge,
@@ -22,6 +22,7 @@ define('Controls/Input/Date/Picker', [
     * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
+    * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/Input/interface/IDateMask
     * @mixes Controls/Input/interface/IValidation
     *
@@ -64,6 +65,7 @@ define('Controls/Input/Date/Picker', [
                mask: this._options.mask,
                selectionType: 'single',
                headerType: 'input',
+               closeButtonEnabled: true,
                handlers: {
                   onChoose: this._onResultWS3.bind(this)
                }

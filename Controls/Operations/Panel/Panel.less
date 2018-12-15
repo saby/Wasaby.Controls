@@ -5,14 +5,17 @@
    user-select: none;
    overflow: hidden;
    white-space: nowrap;
-   background-color: @background-color_OperationsPanel;
    position: relative;
+}
+
+.controls-operationsPanelV_initialized {
+   background-color: @background-color_OperationsPanel;
    height: @height_OperationsPanel;
 }
 
 .controls-operationsPanelV__rightTemplate {
    flex-shrink: 0;
-   margin: @margin_OperationsPanel__rightTemplate;
+   margin: 0 @spacing_OperationsPanel-between-rightTemplate-and-rightEdge 0 0;
 }
 
 .controls-operationsPanelV__actions {

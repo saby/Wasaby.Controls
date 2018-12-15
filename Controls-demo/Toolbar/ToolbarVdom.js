@@ -35,13 +35,13 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                {
                   id: '1',
                   showType: 2,
-                  icon: 'icon-Time',
+                  icon: 'icon-Time icon-medium',
                   '@parent': false,
                   parent: null
                },
                {
                   id: '3',
-                  icon: 'icon-Print',
+                  icon: 'icon-Print icon-medium',
                   title: 'Распечатать',
                   '@parent': false,
                   parent: null
@@ -60,7 +60,7 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                {
                   id: '5',
                   buttonViewMode: 'icon',
-                  icon: 'icon-Link',
+                  icon: 'icon-Link icon-medium',
                   title: 'Скопировать в буфер',
                   '@parent': false,
                   parent: null
@@ -97,18 +97,44 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                   title: 'Задача',
                   '@parent': false,
                   parent: '2'
+               },
+               {
+                  id: '11',
+                  icon: 'icon-medium icon-EmptyMessage',
+                  buttonStyle: 'secondary',
+                  showHeader: true,
+                  buttonViewMode: 'link',
+                  buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
+                  title: 'Обсудить',
+                  '@parent': true,
+                  parent: null
+               },
+               {
+                  id: '12',
+                  showType: 0,
+                  title: 'Видеозвонок',
+                  '@parent': false,
+                  parent: '11'
+               },
+               {
+                  id: '13',
+                  showType: 0,
+                  title: 'Сообщение',
+                  '@parent': false,
+                  parent: '11'
                }
             ];
             this._flatItems = [
                {
                   id: '1',
                   showType: 2,
-                  icon: 'icon-Time'
+                  icon: 'icon-Time  icon-medium'
                },
                {
                   id: '2',
                   showType: 2,
-                  icon: 'icon-Linked',
+                  icon: 'icon-Linked icon-medium',
                   title: 'Связанные документы',
                   myTemplate: 'wml!Controls-demo/Toolbar/resources/itemTemplate'
                },

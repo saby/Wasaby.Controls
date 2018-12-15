@@ -4,10 +4,9 @@ define('Controls/Popup/Manager/Popup',
       'wml!Controls/Popup/Manager/Popup',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
-      'Controls/Popup/PopupContext',
       'wml!Controls/Popup/Manager/PopupContent'
    ],
-   function(Control, template, runDelayed, CoreConstants, PopupContext) {
+   function(Control, template, runDelayed, CoreConstants) {
       'use strict';
 
       var Popup = Control.extend({
@@ -35,6 +34,10 @@ define('Controls/Popup/Manager/Popup',
           */
 
          _template: template,
+
+         // Register the openers that initializing inside current popup
+         // After updating the position of the current popup, calls the repositioning of popup from child openers
+         _openersUpdateCallback: [],
 
          _afterMount: function() {
             /* TODO: COMPATIBLE. Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
@@ -86,12 +89,32 @@ define('Controls/Popup/Manager/Popup',
             this._notify('popupAnimated', [this._options.id], { bubbling: true });
          },
 
+         _registerOpenerUpdateCallback: function(event, callback) {
+            this._openersUpdateCallback.push(callback);
+         },
+
+         _unregisterOpenerUpdateCallback: function(event, callback) {
+            var index = this._openersUpdateCallback.indexOf(callback);
+            if (index > -1) {
+               this._openersUpdateCallback.splice(index, 1);
+            }
+         },
+
+         _callOpenersUpdate: function() {
+            for (var i = 0; i < this._openersUpdateCallback.length; i++) {
+               this._openersUpdateCallback[i]();
+            }
+         },
+
          /**
           * Обновить popup
           * @function Controls/Popup/Manager/Popup#_close
           */
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
+
+            // After updating popup position we will updating the position of the popups open with it.
+            runDelayed(this._callOpenersUpdate.bind(this));
          },
 
          _delayedUpdate: function() {
@@ -118,12 +141,6 @@ define('Controls/Popup/Manager/Popup',
             if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
                this._close();
             }
-         },
-
-         _getChildContext: function() {
-            return {
-               stickyCfg: new PopupContext(this._options.position)
-            };
          }
       });
 

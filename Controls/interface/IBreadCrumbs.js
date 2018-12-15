@@ -20,6 +20,11 @@ define('Controls/interface/IBreadCrumbs', [
     */
 
    /**
+    * @name Controls/interface/IBreadCrumbs#parentProperty
+    * @cfg {String} Name of the field that contains information about parent node..
+    */
+
+   /**
     * @name Controls/interface/IBreadCrumbs#displayProperty
     * @cfg {String="title"} Name of the item property which content will be displayed.
     */
@@ -27,7 +32,7 @@ define('Controls/interface/IBreadCrumbs', [
    /**
     * @event Controls/interface/IBreadCrumbs#itemClick Happens after clicking on breadcrumb.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Object} item Clicked item.
+    * @param {String} itemId Key of the clicked item.
     */
 
 });

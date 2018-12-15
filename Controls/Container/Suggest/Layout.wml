@@ -16,10 +16,11 @@
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
                     searchDelay="{{_searchDelay}}"
+                    name="suggestListWrapper"
         />
     </ws:template>
 
-    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" on:click="_inputClicked()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
+    <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" on:deactivated="_inputDeactivated()" on:click="_inputClicked()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <ws:if data="{{_options.suggestState}}">
         <ws:partial template="{{_options.layerName}}" target="{{_container}}" filter="{{_filter}}" searchValue="{{_searchValue}}" showContent="{{_showContent}}" showFooter="{{_isFooterShown}}" misspellingCaption="{{_misspellingCaption}}" on:close="_close()">
@@ -39,7 +40,9 @@
                 <ws:if data="{{_isFooterShown}}">
                     <ws:partial template="{{ _options.footerTemplate.templateName }}" scope="{{_options.footerTemplate.templateOptions}}">
                         <ws:showSelectorButtonTemplate>
-                            <span class="controls-Suggest__showAllLink" on:click="_showAllClick()">{[Показать все]} </span>
+                            <span class="controls-Suggest__showAllLink" on:click="_showAllClick()">
+                                <span class="controls-Suggest__showAllLink-content">{[Показать все]}</span>
+                            </span>
                         </ws:showSelectorButtonTemplate>
                         <ws:showMoreButtonTemplate>
                             <span if="{{(_searchResult.hasMore && _searchResult.hasMore !== true)}}">Ещё {{_searchResult.hasMore}}</span>

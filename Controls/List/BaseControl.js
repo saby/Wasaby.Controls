@@ -42,9 +42,11 @@ define('Controls/List/BaseControl', [
    var
       defaultSelectedKeys = [],
       defaultExcludedKeys = [];
+   
+   var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
-      reload: function(self, filter, userCallback, userErrback) {
+      reload: function(self, filter, sorting, userCallback, userErrback, navigation) {
          var
             resDeferred = new Deferred();
          if (self._sourceController) {
@@ -52,7 +54,7 @@ define('Controls/List/BaseControl', [
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, self._sorting).addCallback(function(list) {
+            self._sourceController.load(filter, sorting).addCallback(function(list) {
                if (userCallback && userCallback instanceof Function) {
                   userCallback(list);
                }
@@ -61,12 +63,12 @@ define('Controls/List/BaseControl', [
 
                if (self._listViewModel) {
                   self._listViewModel.setItems(list);
-                  self._items = list;
+                  self._items = self._listViewModel.getItems();
                }
 
                //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
 
-               _private.prepareFooter(self, self._options.navigation, self._sourceController);
+               _private.prepareFooter(self, navigation, self._sourceController);
 
                _private.handleListScroll(self, 0);
                resDeferred.callback(list);
@@ -100,7 +102,7 @@ define('Controls/List/BaseControl', [
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
          if (self._sourceController) {
-            return self._sourceController.load(self._options.filter, self._sorting, direction).addCallback(function(addedItems) {
+            return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                if (userCallback && userCallback instanceof Function) {
                   userCallback(addedItems, direction);
                }
@@ -200,7 +202,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options.filter, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
+            _private.reload(self, self._options.filter, self._options.sorting, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], { bubbling: true });
                } else {
@@ -228,6 +230,7 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollShow: function(self) {
+         self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
             if (self._options.navigation &&
                self._options.navigation.view === 'infinity' &&
@@ -236,6 +239,7 @@ define('Controls/List/BaseControl', [
             ) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
                });
             }
          } else {
@@ -244,7 +248,9 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollHide: function(self) {
+         self._loadOffset = 0;
          self._pagingCfg = null;
+         self._pagingVisible = false;
          self._forceUpdate();
       },
 
@@ -414,6 +420,7 @@ define('Controls/List/BaseControl', [
 
       setPopupOptions: function(self) {
          self._popupOptions = {
+            className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'right' },
@@ -447,6 +454,42 @@ define('Controls/List/BaseControl', [
             result.callback(config.collapsedGroups);
          }
          return result;
+      },
+
+      getSortingOnChange: function(currentSorting, propName, sortingType) {
+         var sorting = currentSorting ? currentSorting.slice() : [];
+         var sortElemIndex = -1;
+         var sortElem;
+         var newSortElem = {};
+
+         //use same algorithm when sortingType is not 'single', if the number of properties is equal to one
+         if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
+            sorting.forEach(function(elem, index) {
+               if (elem.hasOwnProperty(propName)) {
+                  sortElem = elem;
+                  sortElemIndex = index;
+               }
+            });
+         } else {
+            sorting = [];
+         }
+
+         // change sorting direction by rules:
+         // 'DESC' -> 'ASC'
+         // 'ASC' -> empty
+         // empty -> 'DESC'
+         if (sortElem) {
+            if (sortElem[propName] === 'DESC') {
+               sortElem[propName] = 'ASC';
+            } else {
+               sorting.splice(sortElemIndex, 1);
+            }
+         } else {
+            newSortElem[propName] = 'DESC';
+            sorting.push(newSortElem);
+         }
+
+         return sorting;
       }
 
    };
@@ -484,6 +527,9 @@ define('Controls/List/BaseControl', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+
+      _pagingCfg: null,
+      _pagingVisible: false,
 
       // TODO пока спорные параметры
       _sorting: undefined,
@@ -540,10 +586,15 @@ define('Controls/List/BaseControl', [
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
                   self._listViewModel.setItems(receivedState);
-                  self._items = receivedState;
+                  self._items = self._listViewModel.getItems();
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  return _private.reload(self, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+                  var
+                     loadDef = _private.reload(self, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback, newOptions.navigation);
+                  loadDef.addCallback(function(items) {
+                     return items;
+                  });
+                  return loadDef;
                }
             }
          });
@@ -571,6 +622,7 @@ define('Controls/List/BaseControl', [
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
          var recreateSource = newOptions.source !== this._options.source ||
              !isEqualObject(newOptions.navigation, this._options.navigation);
+         var sortingChanged = newOptions.sorting !== this._options.sorting;
 
          if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -600,8 +652,12 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
 
-         if (filterChanged || recreateSource) {
-            _private.reload(this, newOptions.filter, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+         if (sortingChanged) {
+            this._listViewModel.setSorting(newOptions.sorting);
+         }
+
+         if (filterChanged || recreateSource || sortingChanged) {
+            _private.reload(this, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
          }
       },
 
@@ -666,6 +722,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
             var status = itemData.multiSelectStatus;
+            this._children.selectionController.onCheckBoxClick(itemData.key, status);
             this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {
@@ -684,15 +741,14 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function(filter) {
-         var
-            reloadFilter = filter || this._options.filter;
-         return _private.reload(this, reloadFilter, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function(filter, sorting) {
+         var reloadFilter = filter || this._options.filter;
+         var reloadSorting = sorting || this._options._sorting;
+         return _private.reload(this, reloadFilter, reloadSorting, this._options.dataLoadCallback, this._options.dataLoadErrback);
       },
 
       _onGroupClick: function(e, item, baseEvent) {
-         // if clicked on group expander element
-         if (baseEvent.target.className.indexOf('controls-ListView__groupExpander') !== -1) {
+         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             this._listViewModel.toggleGroup(item);
          }
       },
@@ -764,16 +820,13 @@ define('Controls/List/BaseControl', [
          _private.showActionsMenu(this, event, itemData, childEvent, showAll);
       },
 
+      _onItemContextMenu: function(event, itemData) {
+         this._showActionsMenu.apply(this, arguments);
+         this._listViewModel.setMarkedKey(itemData.key);
+      },
+
       _closeActionsMenu: function(args) {
          _private.closeActionsMenu(this, args);
-      },
-
-      _hoveredItemChanged: function(event, item) {
-         this._notify('hoveredItemChanged', [item]);
-      },
-
-      _itemMouseMove: function(event, itemData, nativeEvent) {
-         this._notify('itemMouseMove', [itemData, nativeEvent]);
       },
 
       _itemMouseDown: function(event, itemData, domEvent) {
@@ -864,6 +917,12 @@ define('Controls/List/BaseControl', [
                }
             }
          }
+      },
+
+      _sortingChanged: function(event, propName, sortingType) {
+         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
+         event.stopPropagation();
+         this._notify('sortingChanged', [newSorting]);
       }
    });
 

@@ -110,14 +110,16 @@ define('Controls/Application/HeadData', [
             });
          });
       },
-      constructor: function(theme, cssLinks, themesActive) {
-         this.theme = theme;
+      constructor: function(theme, cssLinks) {
+         if (typeof theme !== 'string') {
+            cssLinks = theme;
+         }
          this.defRender = new Deferred();
          this.depComponentsMap = {};
          this.receivedStateArr = {};
          this.additionalDeps = {};
-         this.themesActive = themesActive;
-         this.cssLinks = cssLinks;
+         this.themesActive = true;
+         this.cssLinks = cssLinks || [];
          this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
       },
       pushCssLink: function(url) {

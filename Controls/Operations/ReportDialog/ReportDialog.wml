@@ -3,14 +3,15 @@
       <div class="controls-ReportDialog__title">{{_options.title}}</div>
       <div class="controls-ReportDialog__message">{{_message}}</div>
       <ws:if data="{{_options.errors}}">
-         <ws:for data="error in _options.errors">
-            <div class="controls-ReportDialog__error">{{error}}</div>
+         <ws:for data="index, error in _options.errors">
+            <div class="controls-ReportDialog__error {{index === 0 ? ' controls-ReportDialog__error_first' : ' controls-ReportDialog__error_withSpacing'}}">{{error}}</div>
          </ws:for>
       </ws:if>
    </ws:contentArea>
    <ws:footerArea>
       <div class="controls-ReportDialog__closeButtonContainer">
-         <Controls.Button caption="{[Закрыть]}" style="linkMain2" on:click="_onCloseClick()"/>
+         <ws:partial if="{{_options.footerContentTemplate}}" template="{{_options.footerContentTemplate}}"/>
+         <Controls.Label caption="{[Закрыть]}" class="controls-Label_underline-hovered" on:click="_onCloseClick()"/>
       </div>
    </ws:footerArea>
 </Controls.Popup.Templates.Dialog.ConfirmationTemplate>

@@ -175,18 +175,37 @@ define([
       it('_onItemActionClick', function() {
          var callBackCount = 0;
          var instance = new ItemActionsControl();
+         var fakeItemData = {
+            item: {},
+            index: 0
+         };
+         var fakeHTMLElement = {
+            className: 'controls-ListView__itemV'
+         };
+         instance._container = {
+            querySelector: function(selector) {
+               if (selector === '.controls-ListView__itemV') {
+                  return {
+                     parentNode: {
+                        children: [fakeHTMLElement]
+                     }
+                  };
+               }
+            }
+         };
          var action = {
             handler: function(item) {
                callBackCount++;
-               assert.isTrue(item);
+               assert.equal(item, fakeItemData.item);
             }
          };
          instance._notify = function(eventName, args) {
             callBackCount++;
-            assert.isTrue(args[1]);
             assert.equal(args[0], action);
+            assert.equal(args[1], fakeItemData.item);
+            assert.equal(args[2], fakeHTMLElement);
          };
-         instance._onItemActionsClick({stopPropagation: function() {}}, action, {item: true});
+         instance._onItemActionsClick({ stopPropagation: function() {} }, action, fakeItemData);
          assert.equal(callBackCount, 2);
       });
 
@@ -220,11 +239,15 @@ define([
          assert.deepEqual([{
             id: 0,
             title: 'first',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.MENU
          },
          {
             id: 1,
             title: 'second',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.TOOLBAR
          }], listViewModel._actions[0].showed);
       });
@@ -254,10 +277,14 @@ define([
          assert.deepEqual([{
             id: 1,
             title: 'second',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.TOOLBAR
          }, {
             id: 0,
             title: 'first',
+            iconStyle: 'secondary',
+            style: 'secondary',
             showType: tUtil.showType.MENU
          }], listViewModel._actions[0].showed);
       });
@@ -295,6 +322,9 @@ define([
          var
             callBackCount = 0,
             fakeNativeEvent = {},
+            fakeHTMLElement = {
+               className: 'controls-ListView__itemV'
+            },
             fakeEvent = {
                stopPropagation: function() {
                   callBackCount++;
@@ -303,15 +333,28 @@ define([
             },
             action = {},
             itemData = {
-               item: 'test'
+               item: 'test',
+               index: 0
             },
             instance = {
                _notify: function(eventName, args) {
                   callBackCount++;
                   assert.equal(args[0], action);
                   assert.equal(args[1], itemData.item);
-                  assert.equal(args[2], fakeNativeEvent);
+                  assert.equal(args[2], fakeHTMLElement);
+                  assert.equal(args[3], fakeEvent);
                   assert.equal(eventName, 'itemActionsClick');
+               },
+               _container: {
+                  querySelector: function(selector) {
+                     if (selector === '.controls-ListView__itemV') {
+                        return {
+                           parentNode: {
+                              children: [fakeHTMLElement]
+                           }
+                        };
+                     }
+                  }
                }
             };
          aUtil.itemActionsClick(instance, fakeEvent, action, itemData, false);

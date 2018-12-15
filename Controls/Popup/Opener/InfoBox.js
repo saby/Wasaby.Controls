@@ -13,7 +13,9 @@ define('Controls/Popup/Opener/InfoBox',
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @mixes Controls/interface/IInfoboxOptions
-       * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
+       *
+       * @private
        * @control
        * @category Popup
        * @author Красильников А.С.
@@ -33,6 +35,11 @@ define('Controls/Popup/Opener/InfoBox',
        * @property {Boolean} float Whether the content should wrap around the cross closure.
        * @property {String} style Infobox display style.
        * @property {Number} showDelay Delay before opening.
+       */
+
+      /**
+       * @name Controls/Popup/Opener/Infobox#closePopupBeforeUnmount
+       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
        */
 
       /**
@@ -57,9 +64,15 @@ define('Controls/Popup/Opener/InfoBox',
          _closeId: null,
 
          /**
+          * @name Controls/Popup/Opener/Infobox#isOpened
+          * @function
+          * @description Popup opened status.
+          */
+
+         /**
           * Open popup.
           * @function Controls/Popup/Opener/InfoBox#open
-          * @param {Object} config infobox options.
+          * @param {Object} Config
           * @returns {undefined}
           * @example
           * js
