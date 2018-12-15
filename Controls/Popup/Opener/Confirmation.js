@@ -60,7 +60,7 @@ define('Controls/Popup/Opener/Confirmation',
          /**
           * Open confirmation popup.
           * @function Controls/Popup/Opener/Confirmation#open
-          * @param {Object} popupOptions Confirmation options.
+          * @param {PopupOptions[]} popupOptions Confirmation options.
           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
           * @remark
           * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
@@ -115,3 +115,16 @@ define('Controls/Popup/Opener/Confirmation',
 
       return Confirmation;
    });
+
+/**
+ * @typedef {Object} popupOptions
+ * @description Confirmation configuration.
+ * @property {String} type Type of dialog.
+ * @property {String} style Confirmation display style.
+ * @property {String} message Main text.
+ * @property {String} details Additional text.
+ * @property {String} yesCaption Сonfirmation button text.
+ * @property {String} noCaption Negation button text.
+ * @property {String} cancelCaption Cancel button text.
+ * @property {String} okCaption Accept text button.
+ */
