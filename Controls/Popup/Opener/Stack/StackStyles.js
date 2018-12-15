@@ -1,6 +1,5 @@
 define('Controls/Popup/Opener/Stack/StackStyles', [],
-
-    function() {}
+   function() {}
 
 /**
  * @mixin Controls/Popup/Opener/Stack/Stack

@@ -1,7 +1,7 @@
 define('Controls/Popup/Templates/Stack/StackTemplateStyles', [],
-    function() {}
+   function() {}
 
-    /**
+   /**
      * @mixin Controls/Popup/Templates/Stack/StackTemplate
      * @private
      *
