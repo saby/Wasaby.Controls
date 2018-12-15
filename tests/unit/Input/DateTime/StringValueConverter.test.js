@@ -39,10 +39,10 @@ define([
       describe('.getStringByValue', function() {
          [{
             date: null,
-            dateStr: '__.__.____'
+            dateStr: ''
          }, {
             date: new Date('Invalid'),
-            dateStr: '__.__.____'
+            dateStr: ''
          }, {
             date: new Date(2018, 0, 1),
             dateStr: '01.01.2018'
