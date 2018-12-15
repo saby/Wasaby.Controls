@@ -709,6 +709,10 @@
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
           },
+          "revealable": {
+            "type": "Boolean",
+            "title": "Determines whether to enables the reveal toggle button that will show the password in clear text."
+          },
           "name": {
             "default": "",
             "title": "Имя контрола",
