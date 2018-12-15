@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Stack/StackStyles', [],
 
-function() {}
+    function() {}
 
 /**
  * @mixin Controls/Popup/Opener/Stack/Stack
@@ -12,6 +12,6 @@ function() {}
  *@css @padding_Stack-shadow     Padding for shadow
  *@css @size_Stack-shadow        Size of shadow
  *@css @color_Stack-shadow       Color of shadow
-  *
+ *
  */
 );
