@@ -33,7 +33,8 @@ define([
       "js/tmplDep": "resources/jstmplbdl/tmpldep.package.min.js",
       "css": "resources/bdl/ggg.package.min.js",
       "ddd/aaa": "resources/bdl/hhh.package.min.js",
-      "xxx/aaa": "resources/bdl/jjj.package.min.js"
+      "xxx/aaa": "resources/bdl/jjj.package.min.js",
+      "tmpl!ppp/ppp": "resources/bdl/tmplpckd.package.min.js"
    }
    var depsCollectorWithThemes = new DepsCollector(modDeps, modInfo, bundlesRoute, true);
    describe('DepsCollector', function() {
@@ -84,9 +85,14 @@ define([
          var deps = depsCollectorWithThemes.collectDependencies(["tmpl!xxx/aaa"]);
          assert.deepEqual(deps.tmpl, ["xxx/aaa"]);
       });
-      it('tmpl in js bundle', function() {
+      it('tmpl packed in parent js', function() {
          var deps = depsCollectorWithThemes.collectDependencies(["js/tmplDep"]);
          assert.deepEqual(deps.js, ["jstmplbdl/tmpldep.package"]);
+         assert.deepEqual(deps.tmpl, []);
+      });
+      it('custom extension in bundlesRoute', function() {
+         var deps = depsCollectorWithThemes.collectDependencies(["tmpl!ppp/ppp"]);
+         assert.deepEqual(deps.js, ["bdl/tmplpckd.package"]);
          assert.deepEqual(deps.tmpl, []);
       });
    });
