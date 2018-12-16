@@ -39,11 +39,12 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       }
 
       // Decorate link just in the end of paragraph.
-      var last = parent.length - 1;
-      if (value !== parent[last] && value !== parent[last - 1]) {
-         return value;
+      var indexOfNextValue = parent.indexOf(value) + 1;
+      if (typeof parent[indexOfNextValue] === 'string' && /^[ \u00a0]+$/.test(parent[indexOfNextValue])) {
+         indexOfNextValue++;
       }
-      if (parent[last] !== value && (Array.isArray(parent[last]) || /[^ \u00a0]/.test(parent[last]))) {
+      if (indexOfNextValue < parent.length &&
+            (!Array.isArray(parent[indexOfNextValue]) || parent[indexOfNextValue][0] !== 'br')) {
          return value;
       }
 

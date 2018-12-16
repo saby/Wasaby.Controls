@@ -309,6 +309,31 @@ define('Controls/Input/DateTime/StringValueConverter', [
          }
 
          return new Date('Invalid');
+      },
+      getCurrentDate: function(baseValue, mask) {
+         var date = dateUtils.isValidDate(baseValue) ? new Date(baseValue) : new Date(1900, 0, 1);
+         var now = new Date();
+         if (mask.indexOf('YYYY') > -1) {
+            date.setFullYear(now.getFullYear());
+         } else if (mask.indexOf('YY') > -1) {
+            date.setFullYear(now.getFullYear());
+         }
+         if (mask.indexOf('MM') > -1) {
+            date.setMonth(now.getMonth());
+         }
+         if (mask.indexOf('DD') > -1) {
+            date.setDate(now.getDate());
+         }
+         if (mask.indexOf('HH') > -1) {
+            date.setHours(now.getHours());
+         }
+         if (mask.indexOf('mm') > -1) {
+            date.setMinutes(now.getMinutes());
+         }
+         if (mask.indexOf('ss') > -1) {
+            date.setSeconds(now.getSeconds());
+         }
+         return date;
       }
    });
 
