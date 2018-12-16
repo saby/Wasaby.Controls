@@ -247,6 +247,10 @@ define('Controls/List/ItemsViewModel', [
          return this._display ? this._display.at(index) : undefined;
       },
 
+      getDisplay: function() {
+         return this._display;
+      },
+
       destroy: function() {
          ItemsViewModel.superclass.destroy.apply(this, arguments);
          if (this._display) {

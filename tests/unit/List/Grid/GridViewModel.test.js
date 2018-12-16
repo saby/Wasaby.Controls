@@ -456,6 +456,31 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          assert.deepEqual(ladderViewModel._ladder.ladder, resultLadder, 'Incorrect value prepared ladder.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
+
+         var
+            newItems = new RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
+                  { id: 1, title: 'i1', date: '03 янв', photo: '1.png' },
+                  { id: 2, title: 'i2', date: '03 янв', photo: '1.png' }
+               ]
+            }),
+            newResultLadder = {
+               0: { date: { ladderLength: 1 } },
+               1: { date: { ladderLength: 2 } },
+               2: { date: { } }
+            },
+            newResultStickyLadder = {
+               0: { ladderLength: 3, headingStyle: 'grid-area: 1 / 1 / span 3 / span 1;' },
+               1: { },
+               2: { }
+            };
+
+         ladderViewModel.setItems(newItems);
+
+         assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
+         assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
       });
       describe('other methods of the class', function() {
          var
