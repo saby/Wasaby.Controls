@@ -6,43 +6,18 @@
    content: "\200b";
 }
 
-.controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l {
-   font-size: @font-size_CloseButton_default;
+.controls-Button__close__icon_default, .controls-Button__close__icon_primary,
+.controls-Button__close__icon_default, .controls-Button__close__icon_primary {
+   fill: @color_CloseButton-icon;
 }
 
-//Icon has odd height, button has even height and chrome center align break down. Height is even for chrome.
-.ws-is-chrome {
-   .controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l {
-      height: @height_CloseButton_icon_l;
-   }
+.controls-Button__close__icon_default:active, .controls-Button__close__icon_primary:active,
+.controls-Button__close__icon_default:active, .controls-Button__close__icon_primary:active {
+   fill: @color_CloseButton-icon_hover;
 }
 
-.controls-Button__close__icon_default_l, .controls-Button__close__icon_primary_l,
-.controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
-   font-family: @font-family_CloseButton_default;
-   color: @color_CloseButton-icon;
-}
-
-.controls-Button__close__icon_default_m, .controls-Button__close__icon_primary_m {
-   font-size: @font-size_CloseButton_m;
-}
-
-.controls-Button__close__icon_light_l, .controls-Button__close__icon_light_m {
-   font-size: @font-size_CloseButton_light;
-}
-
-.controls-Button__close__icon:before {
-   content: @content_CloseButton_icon;
-   text-shadow: @text-shadow_Button;
-}
-
-.controls-Button__close__icon_default_l:active, .controls-Button__close__icon_primary_l:active,
-.controls-Button__close__icon_default_m:active, .controls-Button__close__icon_primary_m:active {
-   color: @color_CloseButton-icon_hover;
-}
-
-.controls-Button__close__icon_light_l:active, .controls-Button__close__icon_light_m:active {
-   color: @color_CloseButton-light-icon_hover;
+.controls-Button__close__icon_light:active, .controls-Button__close__icon_light:active {
+   fill: @color_CloseButton-light-icon_hover;
 }
 
 .controls-Button__close__wrapper {
@@ -90,13 +65,13 @@
 }
 
 .ws-is-no-touch{
-   .controls-Button__close__icon_default_l:hover, .controls-Button__close__icon_primary_l:hover,
-   .controls-Button__close__icon_default_m:hover, .controls-Button__close__icon_primary_m:hover {
-      color: @color_CloseButton-icon_hover;
+   .controls-Button__close__icon_default:hover, .controls-Button__close__icon_primary:hover,
+   .controls-Button__close__icon_default:hover, .controls-Button__close__icon_primary:hover {
+      fill: @color_CloseButton-icon_hover;
    }
 
-   .controls-Button__close__icon_light_l:hover, .controls-Button__close__icon_light_m:hover {
-      color: @color_CloseButton-light-icon_hover;
+   .controls-Button__close__icon_light:hover, .controls-Button__close__icon_light:hover {
+      fill: @color_CloseButton-light-icon_hover;
    }
 
    .controls-Button__close_default_l:hover, .controls-Button__close_primary_l:hover,
