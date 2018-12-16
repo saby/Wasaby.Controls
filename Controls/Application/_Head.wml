@@ -1,4 +1,6 @@
 <head key="1_1_">
+   <title key="title">{{ _options.title }}</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
    <meta name="viewport" content="{{_options.viewport || 'width=1024'}}"/>
    <meta charset="utf-8"/>
    <script key="ws-config">
@@ -68,6 +70,5 @@
          <!--</style>-->
       <!--</ws:for>-->
    <!--</ws:for>-->
-   <title key="title">{{ _options.title }}</title>
    {{ errorState }}
 </head>
