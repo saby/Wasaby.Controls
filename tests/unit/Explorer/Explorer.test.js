@@ -33,9 +33,9 @@ define([
             testRoot = 'testRoot',
             testBreadCrumbs = new RecordSet({
                rawData: [
-                  { id: 1, title: 'item1' },
-                  { id: 2, title: 'item2' },
-                  { id: 3, title: 'item3' }
+                  { id: 1, title: 'item1', parent: null },
+                  { id: 2, title: 'item2', parent: 1 },
+                  { id: 3, title: 'item3', parent: 2 }
                ]
             }),
             testData1 = {
@@ -47,6 +47,15 @@ define([
                getMetaData: function() {
                   return {
                      path: testBreadCrumbs
+                  };
+               }
+            },
+            testData3 = {
+               getMetaData: function() {
+                  return {
+                     path: new RecordSet({
+                        rawData: []
+                     })
                   };
                }
             };
@@ -95,6 +104,17 @@ define([
                itemOpenHandler: itemOpenHandler
             }
          }, self, 'Incorrect self data after "dataLoadCallback(self, testData1)".');
+         Explorer._private.dataLoadCallback(self, testData3);
+         assert.deepEqual({
+            _root: 'testRoot',
+            _forceUpdate: forceUpdate,
+            _notify: notify,
+            _breadCrumbsItems: null,
+            _options: {
+               dataLoadCallback: dataLoadCallback,
+               itemOpenHandler: itemOpenHandler
+            }
+         }, self);
       });
 
       it('setViewMode', function() {
@@ -136,9 +156,9 @@ define([
             parentProperty: 'parent',
             keyProperty: 'id'
          });
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0), false);
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0).get('id'));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1), true);
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1).get('parent'));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
       });
 

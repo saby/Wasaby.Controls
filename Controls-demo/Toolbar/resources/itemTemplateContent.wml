@@ -1,1 +1,1 @@
-<span>⊗</span><i class="controls-ToolbarV__item_icon {{item.icon}}"/><div class="toolbarItemTemplate">прикладной_шаблон</div><span>⊗</span>
+<span>⊗</span><i class="controls-Toolbar__item_icon_secondary {{item.icon}}"/><div class="toolbarItemTemplate">прикладной_шаблон</div><span>⊗</span>

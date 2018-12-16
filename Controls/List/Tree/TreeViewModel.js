@@ -81,23 +81,6 @@ define('Controls/List/Tree/TreeViewModel', [
             return children;
          },
 
-         getSelectedChildrenCount: function(hierarchyRelation, rootId, items, selectedKeys) {
-            var
-               res = 0;
-
-            hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
-               if (selectedKeys.indexOf(child.getId()) !== -1) {
-                  if (hierarchyRelation.isNode(child)) {
-                     res += 1 + _private.getSelectedChildrenCount(hierarchyRelation, child.getId(), items, selectedKeys);
-                  } else {
-                     res++;
-                  }
-               }
-            });
-
-            return res;
-         },
-
          allChildrenSelected: function(hierarchyRelation, key, items, selectedKeys) {
             var
                res = true;
@@ -266,7 +249,7 @@ define('Controls/List/Tree/TreeViewModel', [
          toggleExpanded: function(dispItem, expanded) {
             var
                itemId = dispItem.getContents().getId(),
-               currentExpanded = this._expandedItems[itemId] || false;
+               currentExpanded = this.isExpanded(dispItem);
 
             if (expanded !== currentExpanded || expanded === undefined) {
                if (_private.isExpandAll(this._expandedItems)) {
@@ -364,14 +347,10 @@ define('Controls/List/Tree/TreeViewModel', [
                   }
                }
                if (this._selectedKeys.indexOf(current.key) !== -1) {
-
-                  //TODO: проверка на hasMore должна быть тут
                   if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
                      current.multiSelectStatus = true;
-                  } else if (_private.getSelectedChildrenCount(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
-                     current.multiSelectStatus = null;
                   } else {
-                     current.multiSelectStatus = false;
+                     current.multiSelectStatus = null;
                   }
                }
             }

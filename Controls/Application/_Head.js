@@ -3,10 +3,9 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'View/Request',
-      'Core/Themes/ThemesController'
+      'View/Request'
    ],
-   function(Base, Deferred, template, Request, ThemesController) {
+   function(Base, Deferred, template, Request) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -21,24 +20,41 @@ define('Controls/Application/_Head',
             // before returning html to client
             return this._beforeMount.apply(this, arguments);
          },
-         _beforeMount: function(options, context, receivedState) {
+         _beforeMount: function(options) {
             this.resolvedSimple = [];
             this.resolvedThemed = [];
             this._forceUpdate = function() {
                //do nothing
             };
-            if (typeof window !== 'undefined') {
-               var csses = ThemesController.getInstance().getCss();
-               this.themedCss = csses.themedCss;
-               this.simpleCss = csses.simpleCss;
-               return;
-            }
+
             if (typeof options.staticDomains === 'string') {
                this.staticDomainsStringified = options.staticDomains;
             } else if (options.staticDomains instanceof Array) {
                this.staticDomainsStringified = JSON.stringify(options.staticDomains);
             } else {
                this.staticDomainsStringified = '[]';
+            }
+
+            /*Этот коммент требует английского рефакторинга
+            * Сохраним пользовательские данные на инстанс
+            * мы хотим рендерить их только 1 раз, при этом, если мы ренедрим их на сервере мы добавим класс
+            * head-custom-block */
+            this.head = options.head;
+
+            if (typeof window !== 'undefined') {
+
+               /*всем элементам в head назначается атрибут data-vdomignore
+               * то есть, inferno их не удалит, и если в head есть спец элементы,
+               * значит мы рендерились на сервере и здесь сейчас оживаем, а значит пользовательский
+               * контент уже на странице и генерировать второй раз не надо, чтобы не было синхронизаций
+               * */
+
+               if (document.getElementsByClassName('head-custom-block').length > 0) {
+                  this.head = undefined;
+               }
+               this.themedCss = [];
+               this.simpleCss = [];
+               return;
             }
             var headData = Request.getCurrent().getStorage('HeadData');
             var def = headData.waitAppContent();
@@ -54,35 +70,11 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
-         _afterMount: function() {
-            //ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
+         _shouldUpdate: function() {
+            return false;
          },
-
-         /*_beforeUpdate: function() {
-            var csses = ThemesController.getInstance().getCss();
-            if (ThemesController.getInstance().getReqCbArray) {
-               this.reqCBArray = ThemesController.getInstance().getReqCbArray();
-            } else {
-               this.reqCBArray = [];
-            }
-            this.themedCss = csses.themedCss;
-            this.simpleCss = csses.simpleCss;
-            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
-         },
-         _afterUpdate: function() {
-            for (var i = 0; i < this.reqCBArray.length; i++) {
-               if (this.reqCBArray[i].element) {
-                  this.reqCBArray[i].element.remove();
-               } else {
-                  this.reqCBArray[i].resolve.call();
-               }
-            }
-            this.reqCBArray = null;
-         },*/
-
          isArrayHead: function() {
-            return Array.isArray(this._options.head);
+            return Array.isArray(this.head);
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);

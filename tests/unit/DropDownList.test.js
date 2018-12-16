@@ -47,7 +47,8 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
          nodeProperty: '@parent',
          parentProperty: 'parent',
          typeShadow: 'suggestionsContainer',
-         itemTemplateProperty: 'myTemplate'
+         itemTemplateProperty: 'myTemplate',
+         stickyPosition: {}
       };
    };
 
@@ -108,29 +109,26 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
             /**** CHANGE ORIENTATION POPUP *******************/
 
             dropDownConfig = getDropDownConfig();
-            dropDownList = getDropDownListWithConfig(dropDownConfig);
-
-            var context = {
-               stickyCfg: {
-                  horizontalAlign: {
-                     offset: 0,
-                     side: 'right'
-                  },
-                  verticalAlign: {
-                     offset: 0,
-                     side: 'top'
-                  }
+            dropDownConfig.stickyPosition = {
+               horizontalAlign: {
+                  offset: 0,
+                  side: 'right'
+               },
+               verticalAlign: {
+                  offset: 0,
+                  side: 'top'
                }
             };
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
 
             dropDownList._beforeMount(dropDownConfig);
-            dropDownList._beforeUpdate(dropDownConfig, context);
+            dropDownList._beforeUpdate(dropDownConfig);
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'right' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-top controls-DropdownList__popup-shadow-suggestionsContainer');
 
-            context.stickyCfg.horizontalAlign.side = 'left';
-            context.stickyCfg.verticalAlign.side = 'bottom';
-            dropDownList._beforeUpdate(dropDownConfig, context);
+            dropDownConfig.stickyPosition.horizontalAlign.side = 'left';
+            dropDownConfig.stickyPosition.verticalAlign.side = 'bottom';
+            dropDownList._beforeUpdate(dropDownConfig);
             assert.deepEqual(dropDownList._popupOptions.horizontalAlign, { side: 'left' });
             assert.equal(dropDownList._dropdownClass, 'controls-DropdownList__popup-bottom controls-DropdownList__popup-shadow-suggestionsContainer');
 
@@ -198,7 +196,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
                }
             };
             dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
-            dropdownList.resultHandler({ action: 'itemClick' });
+            dropdownList.resultHandler({ action: 'itemClick', data: [items.at(0)] });
          });
          it('resultHandler pinClick', function() {
             var dropdownList = getDropDownListWithConfig(getDropDownConfig());

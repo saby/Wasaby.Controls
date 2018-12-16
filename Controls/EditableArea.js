@@ -32,7 +32,7 @@ define('Controls/EditableArea', [
                return Deferred.success();
             }
 
-            if (result instanceof Deferred) {
+            if (result && result.addCallback) {
                return result.addCallback(function() {
                   return _private.afterEndEdit(self, commit);
                });
@@ -127,7 +127,7 @@ define('Controls/EditableArea', [
          if (result !== EditConstants.CANCEL) {
             this._isEditing = true;
             this._oldEditObject = this._options.editObject.clone();
-            this._beginEditTarget = event.target.closest('.controls-EditableArea__editorWrapper');
+            this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
          }
       },
 

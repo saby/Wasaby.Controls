@@ -25,7 +25,7 @@ define('Controls/List/TreeControl', [
          }
       },
       toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
-         listViewModel.toggleExpanded(dispItem);
+         listViewModel.toggleExpanded(dispItem, expanded);
          self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
       },
       toggleExpanded: function(self, dispItem) {

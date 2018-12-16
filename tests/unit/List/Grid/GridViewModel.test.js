@@ -62,7 +62,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          {
             title: 'Цена',
             align: 'right',
-            style: 'default'
+            style: 'default',
+            sortingProperty: 'price'
          },
          {
             title: 'Остаток',
@@ -87,7 +88,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          rightPadding: 'L',
          rowSpacing: 'L',
          showRowSeparator: true,
-         style: 'default'
+         style: 'default',
+         sorting: [{price: 'DESC'}]
       };
 
    describe('Controls.List.Grid.GridViewModel', function() {
@@ -164,12 +166,18 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
          });
+         it('getSortingDirectionByProp', function() {
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test2'), 'DESC');
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+         });
          it('prepareRowSeparatorClasses', function() {
             var
                expectedResultWithRowSeparator = [
                   ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow',
                   ' controls-Grid__row-cell_withRowSeparator',
-                  ' controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow controls-Grid__row-cell_withRowSeparator'
+                  ' controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow'
                ],
                expectedResultWithoutRowSeparator = [
                   ' controls-Grid__row-cell_withoutRowSeparator',
@@ -228,7 +236,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
             assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
@@ -247,7 +255,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('state', function() {
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
@@ -391,6 +399,13 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
       });
       describe('ladder and sticky column', function() {
          var
+            initialColumns = [{
+               width: '1fr',
+               displayProperty: 'title'
+            }, {
+               width: '1fr',
+               template: 'wml!MyTestDir/Photo'
+            }],
             resultLadder = {
                0: { date: { ladderLength: 1 } },
                1: { date: { ladderLength: 3 } },
@@ -432,13 +447,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   ]
                }),
                keyProperty: 'id',
-               columns: [{
-                  width: '1fr',
-                  displayProperty: 'title'
-               }, {
-                  width: '1fr',
-                  template: 'wml!MyTestDir/Photo'
-               }],
+               columns: initialColumns,
                ladderProperties: ['date'],
                stickyColumn: {
                   property: 'photo',
@@ -463,6 +472,18 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(null, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(null)".');
             gridViewModel.setHeader(gridHeader);
             assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(gridHeader)".');
+         });
+         it('getColumns && setColumns', function() {
+            var newColumns = [{
+               displayProperty: 'field1'
+            }, {
+               displayProperty: 'field2'
+            }];
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(newColumns)".');
+            gridViewModel.setColumns(newColumns);
+            assert.deepEqual(newColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" after "setColumns(newColumns)".');
+            gridViewModel.setColumns(gridColumns);
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
          it('_prepareCrossBrowserColumn', function() {
             var
@@ -542,7 +563,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
                   'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_halign_right',
-               index: 2
+               index: 2,
+               sortingDirection: 'DESC'
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');

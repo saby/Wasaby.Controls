@@ -11,27 +11,33 @@ define([
          data = [
             {
                id: 1,
-               title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1'
+               title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+               parent: null
             },
             {
                id: 2,
-               title: 'Notebooks 2'
+               title: 'Notebooks 2',
+               parent: 1
             },
             {
                id: 3,
-               title: 'Smartphones 3'
+               title: 'Smartphones 3',
+               parent: 2
             },
             {
                id: 4,
-               title: 'Record1'
+               title: 'Record1',
+               parent: 3
             },
             {
                id: 5,
-               title: 'Record2'
+               title: 'Record2',
+               parent: 4
             },
             {
                id: 6,
-               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw'
+               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+               parent: 5
             }
          ];
          bc = new BreadCrumbsView();
@@ -40,7 +46,9 @@ define([
                return new Model({
                   rawData: item
                });
-            })
+            }),
+            keyProperty: 'id',
+            parentProperty: 'parent'
          });
       });
       afterEach(function() {
@@ -50,15 +58,16 @@ define([
       describe('_onItemClick', function() {
          it('item', function() {
             var itemData = {
-               item: {
-                  id: 2,
-                  title: 'Notebooks 2'
-               }
+               item: new Model({
+                  rawData: {
+                     id: 2,
+                     title: 'Notebooks 2'
+                  }
+               })
             };
             bc._notify = function(e, args) {
                if (e === 'itemClick') {
-                  assert.equal(itemData.item, args[0]);
-                  assert.isFalse(!!args[1]);
+                  assert.equal(itemData.item.get('id'), args[0]);
                }
             };
             bc._onItemClick({}, itemData);
@@ -107,7 +116,7 @@ define([
          };
          bc._notify = function(e, eventArgs) {
             if (e === 'itemClick') {
-               assert.deepEqual(bc._options.items[0].getRawData(), eventArgs[0].getRawData());
+               assert.equal(bc._options.items[0].get('id'), eventArgs[0]);
             }
          };
          bc._children = {

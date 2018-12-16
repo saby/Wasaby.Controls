@@ -47,6 +47,9 @@ define('Controls/Popup/Opener/Previewer',
 
             _private.clearClosingTimeout(this);
 
+            // Previewer - singleton
+            this.close();
+
             if (type === 'hover') {
                this._openingTimerId = setTimeout(function() {
                   self.openingTimerId = null;
@@ -70,6 +73,7 @@ define('Controls/Popup/Opener/Previewer',
                   Previewer.superclass.close.call(self);
                }, _private.displayDuration);
             } else {
+               this._popupIds = [];
                Previewer.superclass.close.call(this);
             }
          },

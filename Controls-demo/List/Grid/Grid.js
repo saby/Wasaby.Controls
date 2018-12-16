@@ -12,16 +12,103 @@ define('Controls-demo/List/Grid/Grid', [
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
    'Controls/Grid',
-   'Controls/Render/Money/Money'
+   'Controls/Render/Money/Money',
+   'Controls/List/Grid/SortButton'
 ], function(BaseControl, GridData, template, MemorySource) {
    'use strict';
    var
-
+      partialColumns = [
+         {
+            displayProperty: 'name',
+            width: '1fr',
+            template: 'wml!Controls-demo/List/Grid/DemoName'
+         },
+         {
+            displayProperty: 'price',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+         }
+      ],
+      fullColumns = [
+         {
+            displayProperty: 'name',
+            width: '1fr',
+            template: 'wml!Controls-demo/List/Grid/DemoName'
+         },
+         {
+            displayProperty: 'price',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+         },
+         {
+            displayProperty: 'balance',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
+         },
+         {
+            displayProperty: 'reserve',
+            width: 'auto',
+            align: 'right'
+         },
+         {
+            displayProperty: 'costPrice',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+         },
+         {
+            displayProperty: 'balanceCostSumm',
+            width: 'auto',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+         }
+      ],
+      partialHeader = [
+         {
+            title: ''
+         },
+         {
+            title: 'Цена',
+            align: 'right'
+         }
+      ],
+      fullHeader = [
+         {
+            title: ''
+         },
+         {
+            title: 'Цена',
+            align: 'right'
+         },
+         {
+            title: 'Остаток',
+            align: 'right',
+            sortingProperty: 'balance'
+         },
+         {
+            title: 'Резерв',
+            align: 'right'
+         },
+         {
+            title: 'Себест.',
+            align: 'right',
+            template: 'wml!Controls-demo/List/Grid/DemoHeaderCostPrice'
+         },
+         {
+            title: 'Сумма остатка',
+            align: 'right'
+         }
+      ],
       ModuleClass = BaseControl.extend({
          _template: template,
          _actionClicked: '',
+         _fullSet: true,
          _itemActions: null,
          _viewSource: null,
+         _sorting: [],
          gridColumns: null,
          gridHeader: null,
          showType: null,
@@ -106,68 +193,14 @@ define('Controls-demo/List/Grid/Grid', [
                   }
                }
             ];
-            this.gridColumns = [
-               {
-                  displayProperty: 'name',
-                  width: '1fr',
-                  template: 'wml!Controls-demo/List/Grid/DemoName'
-               },
-               {
-                  displayProperty: 'price',
-                  width: 'auto',
-                  align: 'right',
-                  template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
-               },
-               {
-                  displayProperty: 'balance',
-                  width: 'auto',
-                  align: 'right',
-                  template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
-               },
-               {
-                  displayProperty: 'reserve',
-                  width: 'auto',
-                  align: 'right'
-               },
-               {
-                  displayProperty: 'costPrice',
-                  width: 'auto',
-                  align: 'right',
-                  template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
-               },
-               {
-                  displayProperty: 'balanceCostSumm',
-                  width: 'auto',
-                  align: 'right',
-                  template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
-               }
-            ];
-            this.gridHeader = [
-               {
-                  title: ''
-               },
-               {
-                  title: 'Цена',
-                  align: 'right'
-               },
-               {
-                  title: 'Остаток',
-                  align: 'right'
-               },
-               {
-                  title: 'Резерв',
-                  align: 'right'
-               },
-               {
-                  title: 'Себест.',
-                  align: 'right',
-                  template: 'wml!Controls-demo/List/Grid/DemoHeaderCostPrice'
-               },
-               {
-                  title: 'Сумма остатка',
-                  align: 'right'
-               }
-            ];
+            this.gridColumns = fullColumns;
+            this.gridHeader = fullHeader;
+         },
+         _onToggleColumnsClicked: function() {
+            this._fullSet = !this._fullSet;
+            this.gridColumns = this._fullSet ? fullColumns : partialColumns;
+            this.gridHeader = this._fullSet ? fullHeader : partialHeader;
+            this._forceUpdate();
          }
       });
 

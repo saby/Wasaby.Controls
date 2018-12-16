@@ -1,6 +1,5 @@
 <Controls.Input.resources.InputRender.InputRender
    autocomplete="{{_options.autocomplete}}"
-   value="{{_options.value}}"
    viewModel="{{_viewModel}}"
    tagStyle="{{_options.tagStyle}}"
    placeholder="{{_options.placeholder}}"
@@ -8,8 +7,8 @@
    validationErrors="{{_options.validationErrors}}"
    tooltip="{{_options.tooltip}}"
    on:focusin="_focusinHandler()"
-   on:valueChanged="_notifyHandler('valueChanged')"
-   on:inputCompleted="_notifyHandler('inputCompleted')"
+   on:valueChanged="_valueChangedHandler()"
+   on:inputCompleted="_inputCompletedHandler()"
 >
    <ws:content>
       <ws:partial

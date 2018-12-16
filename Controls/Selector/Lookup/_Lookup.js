@@ -31,6 +31,12 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       initializeContainers: function(self) {
          self._fieldWrapper = self._children.inputRender._container;
+
+         // toDO Проверка на jQuery до исправления этой ошибки https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+         if (window.jQuery && self._fieldWrapper instanceof window.jQuery) {
+            self._fieldWrapper = self._fieldWrapper[0];
+         }
+
          self._wrapperInputRender = self._fieldWrapper.getElementsByClassName('controls-InputRender__wrapper')[0];
       },
 
@@ -196,6 +202,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _suggestState: false,
       _simpleViewModel: null,
       _availableWidthCollection: null,
+      _infoboxOpened: false,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -280,14 +287,15 @@ define('Controls/Selector/Lookup/_Lookup', [
             _private.notifyValue(this, '');
          }
 
-         /* move focus to input after select, because focus will be lost after closing popup  */
-         this.activate();
+         /* move focus to input after select, because focus will be lost after closing popup,
+          * only in multi-select mode, in single-select mode input is not displayed after selecting a item */
+         this._options.multiSelect && this.activate();
       },
 
       _crossClick: function(event, item) {
          this._notify('removeItem', [item]);
 
-         /* move focus to input after remove, because focus will be lost after removing dom element  */
+         /* move focus to input after remove, because focus will be lost after removing dom element */
          this._needSetFocusInInput = true;
       },
 
@@ -296,7 +304,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly) {
+         if (this._options.readOnly || this._infoboxOpened) {
             this._suggestState = false;
          }
       },
@@ -307,6 +315,15 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _isEmpty: function() {
          return !this._options.items.getCount();
+      },
+      
+      _openInfoBox: function() {
+         this._suggestState = false;
+         this._infoboxOpened = true;
+      },
+   
+      _closeInfoBox: function() {
+         this._infoboxOpened = false;
       },
 
       _onClickShowSelector: function() {

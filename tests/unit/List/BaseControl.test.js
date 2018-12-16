@@ -113,6 +113,7 @@ define([
 
          //сорс грузит асинхронно
          setTimeout(function() {
+            assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             ctrl._beforeUpdate(cfg);
             assert.isTrue(ctrl._sourceController !== oldSourceCtrl, '_dataSourceController wasn\'t changed before updating');
             assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before updating');
@@ -129,6 +130,26 @@ define([
                done();
             }, 100);
          }, 1);
+      });
+   
+      it('_private::getSortingOnChange', function() {
+         var getEmptySorting = function() {
+            return [];
+         };
+         var getSortingASC = function() {
+            return [{test: 'ASC'}];
+         };
+         var getSortingDESC = function() {
+            return [{test: 'DESC'}];
+         };
+         var getMultiSorting = function() {
+            return [{test: 'DESC'}, {test2: 'DESC'}];
+         };
+      
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
+         assert.deepEqual(BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
       });
 
       it('errback to callback', function(done) {
@@ -428,7 +449,7 @@ define([
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
                assert.equal(3, ctrl._listViewModel.getCount(), 'Items are loaded, but should not');
-               
+
                ctrl._hasUndrawChanges = false;
                BaseControl._private.onScrollLoadEdge(ctrl, 'down');
                setTimeout(function() {
@@ -640,6 +661,31 @@ define([
 
             done();
          }, 100);
+      });
+      
+      it('scrollHide/scrollShow base control state', function() {
+         var cfg = {
+            navigation: {
+               view: 'infinity',
+               source: 'page',
+               viewConfig: {
+                  pagingMode: 'direct'
+               },
+               sourceConfig: {
+                  pageSize: 3,
+                  page: 0,
+                  mode: 'totalCount'
+               }
+            }
+         };
+         var baseControl = new BaseControl(cfg);
+         baseControl.saveOptions(cfg);
+   
+         BaseControl._private.onScrollHide(baseControl);
+         assert.equal(baseControl._loadOffset, 0);
+   
+         BaseControl._private.onScrollShow(baseControl);
+         assert.equal(baseControl._loadOffset, 100);
       });
 
       it('scrollToEdge without load', function(done) {
@@ -1807,6 +1853,10 @@ define([
                      close: function() {
                         callBackCount++;
                      }
+                  },
+                  selectionController: {
+                     onCheckBoxClick: function() {
+                     }
                   }
                };
                instance._listViewModel.reset();
@@ -1859,6 +1909,10 @@ define([
                   itemActionsOpener: {
                      close: function() {
                         callBackCount++;
+                     }
+                  },
+                  selectionController: {
+                     onCheckBoxClick: function() {
                      }
                   }
                };
