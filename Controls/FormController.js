@@ -216,9 +216,9 @@ define('Controls/FormController', [
                      });
                   } else {
                      self._propertyChangeNotified = false;
-                     if (!def.isReady()) {
+                     // if (!def.isReady()) {
                         def.callback(true);
-                     }
+                     // }
                   }
                   return def;
                }
@@ -372,8 +372,8 @@ define('Controls/FormController', [
             if (!isError) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
-               var res = self._children.crud.update(record, self._isNewRecord);
                var isChanged = self._record.isChanged();
+               var res = self._children.crud.update(record, self._isNewRecord);
 
                // fake deferred used for code refactoring
                if (!(res instanceof Deferred)) {
