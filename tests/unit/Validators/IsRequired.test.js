@@ -26,6 +26,13 @@ define(
                   doNotValidate: true
                }), true);
             });
+
+            it('Valid {}', function () {
+               assert.notEqual(IsRequired({
+                  value: {}
+               }), true);
+            });
+
          });
       });
    }
