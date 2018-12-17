@@ -566,6 +566,16 @@ define([
                            done(e);
                         });
                      }
+                  }, {
+                     action: function(control) {
+                        control._record.set('value3', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.registrator.finishPendingOperations().addErrback(function () {
+                           done(e);
+                        });
+                     }
                   }
                ]);
                resultDef.addCallbacks(function() {
