@@ -216,9 +216,9 @@ define('Controls/FormController', [
                      });
                   } else {
                      self._propertyChangeNotified = false;
-                     // if (!def.isReady()) {
+                     if (!def.isReady()) {
                         def.callback(true);
-                     // }
+                     }
                   }
                   return def;
                }
