@@ -14,6 +14,7 @@
          window.startContextData = {AppData: new AppData({})};
          require([ {{_options.dependencies | unescape}} ], function (){
             var templateFn = {{_options.builder | unescape}};
+            templateFn.stable = true;
             var cnt = Core.extend({
                _template: templateFn
             });

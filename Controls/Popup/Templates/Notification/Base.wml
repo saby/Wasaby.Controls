@@ -1,4 +1,4 @@
-<div class="controls-Notification controls-Notification__{{_options._style}} controls-Popup__isolatedFocusingContext"
+<div class="controls-Notification controls-Notification__{{_style}} controls-Popup__isolatedFocusingContext"
      on:mouseenter="_mouseenterHandler()"
      on:mouseleave="_mouseleaveHandler()">
    <div class="controls-Notification__content {{_options.iconClose ? 'controls-Notification__content-spacing'}}">
