@@ -164,6 +164,37 @@ define(
             assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
 
          });
+
+         it('popup deactivated', () => {
+            let Manager = getManager();
+            let isDeactivated = false;
+            let controller = {
+               popupDeactivated: () => {
+                  isDeactivated = true;
+               },
+               getDefaultConfig: () => { return {}}
+            };
+            let id = Manager.show({
+               closeByExternalClick: true
+            }, controller);
+
+
+            let baseFinishPendings = Manager._private.finishPendings;
+            Manager._private.finishPendings = (popupId, popupCallback, pendingCallback, pendingsFinishedCallback) => {
+               pendingsFinishedCallback();
+            };
+            Manager._private.popupDeactivated(id);
+            assert.equal(isDeactivated, true);
+
+            isDeactivated = false;
+            let item = Manager.find(id);
+            item.popupOptions.closeByExternalClick = false;
+            Manager._private.popupDeactivated(id);
+            assert.equal(isDeactivated, false);
+
+            Manager._private.finishPendings = baseFinishPendings;
+         });
+
          it('managerPopupMaximized notified', function() {
             let popupOptions = {
                isModal: false,
