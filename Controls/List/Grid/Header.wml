@@ -13,6 +13,9 @@
 
 <Controls.StickyHeader.Group attr:class="controls-Grid__header">
    <div class="controls-Grid__header">
+      <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+      <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+      {{ listModel.resetHeaderColumns() }}
       <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
          <ws:partial
                template="cell"
