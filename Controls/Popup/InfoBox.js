@@ -184,10 +184,6 @@ define('Controls/Popup/InfoBox',
             event.stopPropagation();
          },
 
-         _stopPropagation: function(event) {
-            event.stopPropagation();
-         },
-
          _contentMouseenterHandler: function() {
             /**
              * On touch devices there is no real hover, although the events are triggered. Therefore, the opening is not necessary.
