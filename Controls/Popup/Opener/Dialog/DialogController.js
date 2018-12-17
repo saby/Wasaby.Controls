@@ -1,16 +1,17 @@
 define('Controls/Popup/Opener/Dialog/DialogController',
    [
       'Controls/Popup/Opener/BaseController',
-      'Controls/Popup/Opener/Dialog/DialogStrategy',
-      'Controls/Utils/TouchKeyboardHelper'
+      'Controls/Popup/Opener/Dialog/DialogStrategy'
    ],
-   function(BaseController, DialogStrategy, TouchKeyboardHelper) {
+   function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
+            // After popup will be transferred to the synchronous change of coordinates, 
+            // we need to return the calculation of the position with the keyboard.
             var windowData = {
                width: document.body.clientWidth,
-               height: document.body.clientHeight - TouchKeyboardHelper.getKeyboardHeight(),
-               scrollTop: document.body.scrollTop,
+               height: document.body.clientHeight,
+               scrollTop: 0,
             };
 
             // Positioning relative to body
@@ -100,7 +101,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
 
          needRecalcOnKeyboardShow: function() {
-            return true;
+            return false;
          },
          _private: _private
       });

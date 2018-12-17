@@ -1,15 +1,19 @@
-define('Controls/Input/DateTime', [
+﻿define('Controls/Input/DateTime', [
    'Core/Control',
+   'Core/constants',
    'Core/core-merge',
    'Controls/Calendar/Utils',
+   'Controls/Utils/Date',
    'Controls/Input/DateTime/Model',
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/DateTime/DateTime'
 ], function(
    Control,
+   CoreConstants,
    coreMerge,
    CalendarControlsUtils,
+   dateUtils,
    Model,
    IDateTimeMask,
    tmplNotify,
@@ -32,6 +36,7 @@ define('Controls/Input/DateTime', [
     * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Input/interface/IInputText
     * @mixes Controls/Input/interface/IInputDateTime
+    * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/Input/interface/IDateTimeMask
     * @mixes Controls/Input/interface/IValidation
     *
@@ -67,16 +72,21 @@ define('Controls/Input/DateTime', [
          this._model.update(options);
       },
 
-      _inputCompletedHandler: function(event, value) {
-         this._model.autocomplete(value);
-         this._notify('inputCompleted', [this._model.value]);
+      _inputCompletedHandler: function(event, value, textValue) {
+         this._model.autocomplete(textValue);
+         this._notify('inputCompleted', [this._model.value, textValue]);
       },
 
-      _valueChangedHandler: function(e, value) {
-         this._model.textValue = value;
+      _valueChangedHandler: function(e, value, textValue) {
+         this._model.textValue = textValue;
          e.stopImmediatePropagation();
       },
-
+      _onKeyDown: function(event) {
+         if (event.nativeEvent.keyCode === CoreConstants.key.insert) {
+         // on Insert button press current date should be inserted in field
+            this._model.setCurrentDate();
+         }
+      },
       _beforeUnmount: function() {
          this._model.destroy();
       }

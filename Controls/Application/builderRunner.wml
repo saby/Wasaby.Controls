@@ -1,9 +1,9 @@
 <div>
    <script>
-      window.receivedStates = '{"ThemesController": { "themes" : ["' + (window.defaultStaticTheme || '') + '"]}}';
+      window.receivedStates = '{"ThemesController": { "themes" : {"' + (window.defaultStaticTheme || 'default') + '": true}}}';
 
-      require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/HeadData', 'Core/app-init', 'Core/Control', 'View/Runner/tclosure'],
-      function(AppData, AppStart, HeadData, appInit, Core) {
+      require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/HeadData', 'View/Request', 'Core/app-init', 'Core/Control', 'View/Runner/tclosure'],
+      function(AppData, AppStart, HeadData, Request, appInit, Core) {
 
          /*Первый шаг - иницализация ядра и темы. Второй шаг - загрузка ресурсов*/
          appInit();
@@ -14,6 +14,7 @@
          window.startContextData = {AppData: new AppData({})};
          require([ {{_options.dependencies | unescape}} ], function (){
             var templateFn = {{_options.builder | unescape}};
+            templateFn.stable = true;
             var cnt = Core.extend({
                _template: templateFn
             });

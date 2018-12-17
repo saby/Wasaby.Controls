@@ -53,7 +53,6 @@ define('Controls/Dropdown/Opener',
             var templateOptions = Merge(config.templateOptions, (self._options.popupOptions && self._options.popupOptions.templateOptions) || {}),
                parentProperty = templateOptions && templateOptions.parentProperty,
                items = templateOptions && templateOptions.items,
-               optIconSize = templateOptions && templateOptions.iconSize,
                headerIcon = templateOptions && (templateOptions.headConfig && templateOptions.headConfig.icon || templateOptions.showHeader && templateOptions.icon),
                rootKey = templateOptions && templateOptions.rootKey,
                menuStyle = templateOptions && templateOptions.headConfig && templateOptions.headConfig.menuStyle,
@@ -62,7 +61,7 @@ define('Controls/Dropdown/Opener',
 
             // необходимо учесть иконку в шапке
             if (headerIcon && menuStyle !== 'titleHead') {
-               parents[parentProperty ? rootKey || 'null' : 'undefined'] = [null, this.getIconSize(headerIcon, optIconSize)];
+               parents[parentProperty ? rootKey || 'null' : 'undefined'] = [null, this.getIconSize(headerIcon)];
             }
 
             items.each(function(item) {
@@ -70,7 +69,7 @@ define('Controls/Dropdown/Opener',
                if (icon) {
                   pid = item.get(parentProperty);
                   if (!parents.hasOwnProperty(pid)) {
-                     iconSize = _private.getIconSize(icon, optIconSize);
+                     iconSize = _private.getIconSize(icon);
                      parents[pid] = [pid, iconSize];
                   }
                }

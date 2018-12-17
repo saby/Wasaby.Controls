@@ -39,10 +39,10 @@ define([
       describe('.getStringByValue', function() {
          [{
             date: null,
-            dateStr: '__.__.____'
+            dateStr: ''
          }, {
             date: new Date('Invalid'),
-            dateStr: '__.__.____'
+            dateStr: ''
          }, {
             date: new Date(2018, 0, 1),
             dateStr: '01.01.2018'
@@ -105,5 +105,52 @@ define([
          });
       });
 
+      describe('.getCurrentDate', function() {
+         const
+            baseDate = new Date(2018, 10, 10, 10, 10, 10);
+            let clock,
+            currentYear = 2019,
+            currentMonth = 5,
+            currentDay = 6,
+            currentHour = 7,
+            currentMinutes = 8,
+            currentSeconds = 9,
+            currentDate = new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds);
+
+         beforeEach(() => {
+            clock = sinon.useFakeTimers(currentDate.getTime(), 'Date');
+         });
+
+         afterEach(() => {
+            clock && clock.restore();
+         });
+
+         let baseYear = baseDate.getFullYear(),
+            baseMonth = baseDate.getMonth(),
+            baseDay = baseDate.getDate(),
+            baseHour = baseDate.getHours(),
+            baseMinutes = baseDate.getMinutes(),
+            baseSeconds = baseDate.getSeconds();
+         [
+            { mask: 'DD.MM.YYYY', value: new Date(currentYear, currentMonth, currentDay, baseHour, baseMinutes, baseSeconds) },
+            { mask: 'DD.MM.YY', value: new Date(currentYear, currentMonth, currentDay, baseHour, baseMinutes, baseSeconds) },
+            { mask: 'YYYY', value: new Date(currentYear, baseMonth, baseDay, baseHour, baseMinutes, baseSeconds) },
+            { mask: 'HH:mm', value: new Date(baseYear, baseMonth, baseDay, currentHour, currentMinutes, baseSeconds) },
+            { mask: 'HH:mm:ss', value: new Date(baseYear, baseMonth, baseDay, currentHour, currentMinutes, currentSeconds) },
+            { mask: 'DD.MM HH:mm', value: new Date(baseYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds) },
+            { mask: 'DD.MM HH:mm:ss', value: new Date(baseYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds) },
+            { mask: 'DD.MM.YY HH:mm', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds) },
+            { mask: 'DD.MM.YY HH:mm:ss', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds) },
+            { mask: 'DD.MM.YYYY HH:mm', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, baseSeconds) },
+            { mask: 'DD.MM.YYYY HH:mm:ss', value: new Date(currentYear, currentMonth, currentDay, currentHour, currentMinutes, currentSeconds) }
+         ].forEach(function(test) {
+            it(`should return curent date if it icludes "${test.mask}"`, function() {
+               let converter = new StringValueConverter();
+               let tested = converter.getCurrentDate(baseDate, test.mask);
+               assert(dateUtils.isDatesEqual(tested, test.value),`"${tested}" "${test.value}"`);
+               clock.restore();
+            });
+         });
+      });
    });
 });

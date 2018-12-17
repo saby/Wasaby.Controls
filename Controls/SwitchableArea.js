@@ -19,7 +19,7 @@ function(
     * @extends Core/Control
     * @control
     * @public
-    * @author Зайцев А.С.
+    * @author Михайловский Д.С.
     */
 
    /**

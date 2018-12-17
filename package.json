@@ -12,8 +12,8 @@
    ],
    "scripts": {
       "start": "node app",
-      "build": "grunt build",
-      "rebuild": "grunt rebuild",
+      "build": "node build-app",
+      "rebuild": "node build-app",
       "test": "node node_modules/ws-unit-testing/mocha --amd test-isolated",
       "test:debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
       "coverage": "node node_modules/ws-unit-testing/cover --amd test-isolated",
@@ -26,7 +26,8 @@
          "File": "node_modules/rmi/src/client/File",
          "View": "sbis3-ws/View",
          "Vdom": "sbis3-ws/Vdom",
-         "Core": "sbis3-ws/Core"
+         "Core": "sbis3-ws/Core",
+         "Inferno": "sbis3-ws/Inferno"
       },
       "tests": "tests/unit",
       "test_server_port": 1025,
@@ -38,8 +39,8 @@
          "path": "",
          "query": "reporter=XUnit"
       },
-      "htmlCoverageReport": "application/artifacts/coverage/index.html",
-      "jsonCoverageReport": "application/artifacts/coverage.json"
+      "htmlCoverageReport": "artifacts/coverage/index.html",
+      "jsonCoverageReport": "artifacts/coverage.json"
    },
    "nyc": {
       "include": [
@@ -68,7 +69,6 @@
       "gulp-livereload": "^3.8.1",
       "humanize": "0.0.9",
       "less": "^2.7.3",
-      "load-grunt-config": "0.16.0",
       "merge": "1.2.0",
       "minimatch": "^3.0.3",
       "postcss": "^6.0.23",

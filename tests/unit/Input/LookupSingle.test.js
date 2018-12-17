@@ -129,6 +129,24 @@ define([
          lookup._changeValueHandler(null, 1);
          assert.deepEqual(newValue, [1]);
       });
+
+      it('_choose', function() {
+         var
+            isActivate = false,
+            lookup = new Lookup();
+
+         lookup.activate = function() {
+            isActivate = true;
+         };
+
+         lookup._beforeMount({});
+         lookup._choose();
+         assert.isFalse(isActivate);
+
+         lookup._options.multiSelect = true;
+         lookup._choose();
+         assert.isTrue(isActivate);
+      });
    
       it('_deactivated', function() {
          var lookup = new Lookup();
@@ -146,6 +164,12 @@ define([
          assert.isTrue(lookup._suggestState);
 
          lookup._options.readOnly = true;
+         lookup._suggestStateChanged();
+         assert.isFalse(lookup._suggestState);
+   
+         lookup._suggestState = true;
+         lookup._infoboxOpened = true;
+         lookup._options.readOnly = false;
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
       });

@@ -8,6 +8,7 @@ define('Controls/Input/Base',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
       'Controls/Utils/getTextWidth',
+      'Core/helpers/Number/randomId',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
       'Core/helpers/Function/runDelayed',
@@ -21,8 +22,8 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
-      getTextWidth, InputUtil, ViewModel, runDelayed, hasHorizontalScroll, template,
-      fieldTemplate, readOnlyFieldTemplate
+      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, hasHorizontalScroll,
+      template, fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
 
@@ -435,8 +436,22 @@ define('Controls/Input/Base',
              * Hide in chrome because it supports auto-completion of the field when hovering over an item
              * in the list of saved values. During this action no events are triggered and hide placeholder
              * using js is not possible.
+             *
+             * IMPORTANTLY: Cannot be used in IE. because the native placeholder will be used,
+             * and with it the field behaves incorrectly. After the focus out, the input event will be called.
+             * When this event is processed, the selection in the field is incorrect.
+             * The start and end selection is equal to the length of the native placeholder. https://jsfiddle.net/e0uaczqw/1/
+             * When processing input, we set a selection from the model if the value in the field is different
+             * from the value in the model. And when you change the selection, the field starts to focus.
+             * There is a situation that you can not withdraw focus from the field.
+             *
+             * The detection.chrome value is not invalid detecting on the server.
+             * https://online.sbis.ru/opendoc.html?guid=a17b59fb-f5bd-4ae3-87a7-38f47078980a
+             * Because of this, If the field already has a value substituted by the browser,
+             * the control does not hide the placeholder until the control is revived.
+             * As a solution, the value on the server is always true, and the recalculation is performed on the client.
              */
-            this._hidePlaceholderUsingCSS = detection.chrome;
+            this._hidePlaceholderUsingCSS = constants.isBuildOnServer || detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -446,20 +461,28 @@ define('Controls/Input/Base',
             this._initProperties(this);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            /**
-             * Browsers use auto-complete to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the <input> tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            if ('name' in options) {
+            if (options.autoComplete) {
                /**
-                * The value of the name option can be undefined.
-                * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                * Browsers use auto-fill to the fields with the previously stored name.
+                * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+                * To avoid this, we will translate the name of the control to the name of the <input> tag.
+                * https://habr.com/company/mailru/blog/301840/
                 */
-               if (typeof options.name !== 'undefined') {
-                  this._fieldName = options.name;
+               if ('name' in options) {
+                  /**
+                   * The value of the name option can be undefined.
+                   * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                   */
+                  if (typeof options.name !== 'undefined') {
+                     this._fieldName = options.name;
+                  }
                }
+            } else {
+               /**
+                * To disable auto-complete in a field, its name attribute must have a value that
+                * the browser does not remember. To do this, generate a random name.
+                */
+               this._fieldName = randomName('name-');
             }
          },
 
