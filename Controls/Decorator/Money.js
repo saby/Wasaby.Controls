@@ -51,7 +51,7 @@ define('Controls/Decorator/Money',
        */
 
       var _private = {
-         searchPaths: /([0-9]*?)(\.[0-9]{2})/,
+         searchPaths: /(-?[0-9]*?)(\.[0-9]{2})/,
 
          parseNumber: function(number, delimiters) {
             var exec = this.searchPaths.exec(number.toFixed(2));

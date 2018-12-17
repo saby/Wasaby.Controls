@@ -14,7 +14,6 @@ define('Controls/Application',
       'Controls/Container/Scroll/Context',
       'Core/LinkResolver/LinkResolver',
       'View/Request',
-      'Controls/Application/HeadData',
       'Core/Themes/ThemesController',
       'Core/ConsoleLogger',
       'css!theme?Controls/Application/Application'
@@ -49,12 +48,10 @@ define('Controls/Application',
       ScrollContext,
       LinkResolver,
       Request,
-      HeadData,
       ThemesController) {
       'use strict';
 
-      var _private,
-         DEFAULT_DEBUG_CATALOG = 'debug/';
+      var _private;
 
       _private = {
 
@@ -196,7 +193,7 @@ define('Controls/Application',
 
             // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
             self.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : constants.appRoot);
-            self.staticDomains = cfg.staticDomains || constants.staticDomains || '[]';
+            self.staticDomains = cfg.staticDomains || context.AppData.staticDomains || constants.staticDomains || '[]';
             if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
             }
@@ -219,11 +216,10 @@ define('Controls/Application',
 
 
             if (typeof window === 'undefined' && cfg.theme !== 'default') {
-               ThemesController.getInstance().themes = {};
-               ThemesController.getInstance().pushTheme(cfg.theme);
+               // ThemesController.getInstance().themes = {};
+               // ThemesController.getInstance().pushTheme(cfg.theme);
             }
-            var headData = new HeadData([], true);
-            Request.getCurrent().setStorage('HeadData', headData);
+            var headData = Request.getCurrent().getStorage('HeadData');
 
             self.linkResolver = new LinkResolver(headData.isDebug,
                self.buildnumber,

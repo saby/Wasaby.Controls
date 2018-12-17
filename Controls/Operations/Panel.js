@@ -4,13 +4,15 @@ define('Controls/Operations/Panel', [
    'wml!Controls/Operations/Panel/ItemTemplate',
    'WS.Data/Source/Memory',
    'Controls/Operations/Panel/Utils',
+   'Controls/Button/validateIconStyle',
    'css!theme?Controls/Operations/Panel/Panel'
 ], function(
    Control,
    template,
    ItemTemplate,
    Memory,
-   WidthUtils
+   WidthUtils,
+   validateIconStyle
 ) {
    'use strict';
 
@@ -36,6 +38,10 @@ define('Controls/Operations/Panel', [
          if (source) {
             result = source.query().addCallback(function(dataSet) {
                self._items = dataSet.getAll();
+
+               // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
+               // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
+               validateIconStyle.itemsSetOldIconStyle(self._items);
                return self._items;
             });
          }
@@ -101,6 +107,7 @@ define('Controls/Operations/Panel', [
    var Panel = Control.extend({
       _template: template,
       _oldToolbarWidth: 0,
+      _initialized: false,
 
       _beforeMount: function(options) {
          return _private.loadData(this, options.source);
@@ -108,6 +115,7 @@ define('Controls/Operations/Panel', [
 
       _afterMount: function() {
          _private.checkToolbarWidth(this);
+         this._initialized = true;
       },
 
       _beforeUpdate: function(newOptions) {

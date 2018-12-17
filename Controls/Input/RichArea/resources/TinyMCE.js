@@ -63,7 +63,7 @@ define('Controls/Input/RichArea/resources/TinyMCE', [
       _clipboardText: '',
 
       _beforeMount: function(options) {
-         this._value = editorHelper.prepareContent(editorHelper.prepareFromJson(options.value));
+         this._value = options.value;
          this._editorConfig = cClone(configHelper.editorConfig);
 
          formatHelper.initFormats(this, options.additionalFormats || {});

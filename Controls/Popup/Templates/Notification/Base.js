@@ -39,6 +39,7 @@ define('Controls/Popup/Templates/Notification/Base',
          _template: template,
 
          _timerId: null,
+         _style: null,
 
          _beforeMount: function(options) {
             if (options.style === 'error') {
@@ -47,7 +48,7 @@ define('Controls/Popup/Templates/Notification/Base',
             if (options.style === 'done') {
                IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
             }
-            options._style = _private.prepareDisplayStyle(options.style);
+            this._style = _private.prepareDisplayStyle(options.style);
             if (options.autoClose) {
                this._autoClose();
             }
@@ -56,7 +57,7 @@ define('Controls/Popup/Templates/Notification/Base',
             }
          },
          _beforeUpdate: function(options) {
-            options._style = _private.prepareDisplayStyle(options.style);
+            this._style = _private.prepareDisplayStyle(options.style);
          },
 
          _closeClick: function() {

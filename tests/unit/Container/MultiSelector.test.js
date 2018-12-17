@@ -27,14 +27,22 @@ define([
             assert.equal(eventName, 'selectedKeysCountChanged');
             assert.equal(eventArgs[0], count);
          };
-         instance._selectedKeysCountChanged({}, count);
+         instance._selectedKeysCountChanged({
+            stopPropagation: function() {
+
+            }
+         }, count);
          assert.equal(instance._selectedKeysCount, count);
          count = 2;
          instance._notify = function(eventName, eventArgs) {
             assert.equal(eventName, 'selectedKeysCountChanged');
             assert.equal(eventArgs[0], count);
          };
-         instance._selectedKeysCountChanged({}, count);
+         instance._selectedKeysCountChanged({
+            stopPropagation: function() {
+
+            }
+         }, count);
       });
 
       it('_notifyHandler', function() {

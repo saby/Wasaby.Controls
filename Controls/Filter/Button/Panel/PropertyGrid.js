@@ -34,12 +34,17 @@ define('Controls/Filter/Button/Panel/PropertyGrid', [
 
       _valueChangedHandler: function(event, index, value) {
          this._options.items[index].value = value;
-         this._notify('valueChanged', [value]);
+         this._notify('itemsChanged', [this._options.items]);
+      },
+
+      _textValueChangedHandler: function(event, index, textValue) {
+         this._options.items[index].textValue = textValue;
+         this._notify('itemsChanged', [this._options.items]);
       },
 
       _visibilityChangedHandler: function(event, index, visibility) {
          this._options.items[index].visibility = visibility;
-         this._notify('visibilityChanged', [visibility]);
+         this._notify('itemsChanged', [this._options.items]);
       }
    });
 

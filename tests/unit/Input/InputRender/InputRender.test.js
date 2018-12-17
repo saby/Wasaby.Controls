@@ -6,7 +6,6 @@ define(
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],
    function(Constants, hasHorizontalScroll, Render, BaseViewModel) {
-
       'use strict';
 
       if (!Constants.isBrowserPlatform) {
@@ -78,10 +77,28 @@ define(
                render._inputHandler(event);
                assert.equal(result, undefined);
             });
+            it('Tooltip is not recalculated', function() {
+               var isCall = false;
+               var tooltipFn = Render._private.getTooltip;
+
+               Render._private.getTooltip = function() {
+                  isCall = true;
+
+                  return tooltipFn.apply(Render._private, arguments);
+               };
+
+               event.target.value = '123';
+               event.target.selectionStart = 3;
+               event.target.selectionEnd = 3;
+               render._inputHandler(event);
+               assert.equal(isCall, false);
+
+               Render._private.getTooltip = tooltipFn;
+            });
          });
          describe('initSelection', function() {
             it('test1', function() {
-               viewModel.updateOptions({value: '123'});
+               viewModel.updateOptions({ value: '123' });
                render._viewModel = viewModel;
                render._options.content = 'content';
                Render._private.initSelection(render);
@@ -90,7 +107,7 @@ define(
                assert.equal(render._children.divinput.selectionEnd, 3);
             });
             it('test2', function() {
-               viewModel.updateOptions({value: '123'});
+               viewModel.updateOptions({ value: '123' });
                render._viewModel = viewModel;
                render._selection = {
                   selectionStart: 0,
