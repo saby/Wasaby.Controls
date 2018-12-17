@@ -176,9 +176,15 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            if (!this._opened) {
-               this._open(event);
+            if (this._options.trigger !== 'demand') {
+               if (!this._opened) {
+                  this._open(event);
+               }
             }
+            event.stopPropagation();
+         },
+
+         _stopPropagation: function(event) {
             event.stopPropagation();
          },
 
