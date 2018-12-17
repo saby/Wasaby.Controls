@@ -172,7 +172,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
          this._counterWidth = itemsCount && _private.getCounterWidth(itemsCount);
 
-         if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
+         if ((sourceIsChanged || keysChanged) && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
                _private.notifyItemsChanged(self, result);
                _private.notifyTextValueChanged(self, _private.getTextValue(self));
