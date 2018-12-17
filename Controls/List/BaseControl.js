@@ -722,6 +722,7 @@ define('Controls/List/BaseControl', [
          this._children.itemActionsOpener.close();
          if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
             var status = itemData.multiSelectStatus;
+            this._children.selectionController.onCheckBoxClick(itemData.key, status);
             this._notify('checkboxClick', [itemData.key, status]);
          }
          if (direction === 'right' || direction === 'left') {

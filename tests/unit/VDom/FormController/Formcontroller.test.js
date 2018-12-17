@@ -448,9 +448,9 @@ define([
                   }, {
                      action: function(control) {
                         control._requestCustomUpdate = function() {
-                           var def = new Deferred();
-                           def.callback(true);
-                           return def;
+                           return new Promise(function(resolve) {
+                              resolve(true);
+                           });
                         };
                      }
                   }, {
@@ -466,9 +466,9 @@ define([
                   }, {
                      action: function(control) {
                         control._requestCustomUpdate = function() {
-                           var def = new Deferred();
-                           def.callback(false);
-                           return def;
+                           return new Promise(function(resolve) {
+                              resolve(false);
+                           });
                         };
                      }
                   }, {

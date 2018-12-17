@@ -1,8 +1,9 @@
 define(
    [
+      'Core/core-merge',
       'Controls/Input/Mask/ViewModel'
    ],
-   function(ViewModel) {
+   function(coreMerge, ViewModel) {
 
       'use strict';
 
@@ -26,7 +27,8 @@ define(
                viewModel.updateOptions(options);
                result = {
                   replacer: viewModel._replacer,
-                  format: viewModel._format
+                  format: viewModel._format,
+                  formatMaskChars: viewModel._formatMaskChars
                };
                assert.deepEqual(result, {
                   replacer: options.replacer,
@@ -38,7 +40,8 @@ define(
                            'type': 'single'
                         }
                      }
-                  }
+                  },
+                  formatMaskChars: options.formatMaskChars
                });
             });
          });
@@ -61,8 +64,34 @@ define(
                   delete: ''
                });
                result = viewModel._options.value;
-               assert.equal(result, '12.34');
+               assert.equal(result, '1234');
             });
+         });
+
+         describe('getDisplayValue', function() {
+            const gdvDefaultOptions = {
+               value: '',
+               replacer: '',
+               mask: 'dd.dd',
+               formatMaskChars: {
+                  'd': '[0-9]'
+               }
+            };
+
+            [
+               { options: { }, resp: '' },
+               { options: { replacer: '-' }, resp: '--.--' },
+               { options: { value: '1234' }, resp: '12.34' },
+               { options: { value: '1234', replacer: '-' }, resp: '12.34' }
+            ].forEach(function(test) {
+               const options = coreMerge(test.options, gdvDefaultOptions, { preferSource: true });
+               it(`should return ${test.resp} if options is equals value: ${options.value}, valueType: ${options.valueType}`, function() {
+                  viewModel.updateOptions(options);
+                  result = viewModel.getDisplayValue();
+                  assert.equal(viewModel.getDisplayValue(), test.resp);
+               });
+            });
+
          });
       });
    }
