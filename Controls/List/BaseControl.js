@@ -66,11 +66,17 @@ define('Controls/List/BaseControl', [
                   self._items = self._listViewModel.getItems();
                }
 
-               //self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+               /* Перезагрузка полностью обновляет данные в рекордсете, а значит индексы, высоты элементов и распорок
+                  потеряли актуальность, сбрасываем их. */
+               if (self._virtualScroll) {
+                  self._virtualScroll.resetItemsIndexes();
+                  self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                  self._virtualScroll.updateItemsIndexes('down');
+                  _private.applyVirtualScroll(self);
+               }
 
                _private.prepareFooter(self, navigation, self._sourceController);
 
-               _private.handleListScroll(self, 0);
                resDeferred.callback(list);
 
                // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
@@ -111,14 +117,8 @@ define('Controls/List/BaseControl', [
 
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
-
-                  // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
-                  // self._virtualScroll.appendItems(addedItems.getCount());
                } else if (direction === 'up') {
                   self._listViewModel.prependItems(addedItems);
-
-                  // Virtual scroll: https://online.sbis.ru/opendoc.html?guid=cb6361c4-8eda-4894-b484-5c6ebfa6085a
-                  // self._virtualScroll.prependItems(addedItems.getCount());
                }
 
                // If received list is empty, make another request.
@@ -127,11 +127,19 @@ define('Controls/List/BaseControl', [
                   _private.checkLoadToDirectionCapability(self);
                }
 
+               /* После догрузки данных потенциально изменяется (увеличивается) количество записей,
+                  нужно пересчитать Virtual Scroll*/
+               if (self._virtualScroll) {
+
+                  // Обновляем общее количество записей
+                  self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+
+                  _private.applyVirtualScroll(self, direction);
+               }
+
                _private.prepareFooter(self, self._options.navigation, self._sourceController);
                return addedItems;
 
-               // обновить начало/конец видимого диапазона записей и высоты распорок
-               // _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
             }).addErrback(function(error) {
                return _private.processLoadError(self, error, userErrback);
             });
@@ -139,6 +147,16 @@ define('Controls/List/BaseControl', [
          IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
       },
 
+      // Основной метод пересчета состояния Virtual Scroll
+      applyVirtualScroll: function(self) {
+         var
+            indexes = self._virtualScroll.getItemsIndexes(),
+            placeholdersSizes = self._virtualScroll.getPlaceholdersSizes();
+
+         self._listViewModel.setIndexes(indexes.start, indexes.stop);
+         self._topPlaceholderHeight = placeholdersSizes.top;
+         self._bottomPlaceholderHeight = placeholdersSizes.bottom;
+      },
 
       processLoadError: function(self, error, userErrback) {
          if (!error.canceled) {
@@ -190,8 +208,30 @@ define('Controls/List/BaseControl', [
          }
       },
 
+      // Метод, в котором опеределяется необходимость догрузки данных
+      updateVirtualWindow: function(self, direction) {
+         var indexes = self._virtualScroll.getItemsIndexes();
+
+         // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
+         if (self._listViewModel.getCount() <= indexes.stop) {
+            if (self._options.navigation && self._options.navigation.view === 'infinity') {
+               if (self._sourceController.hasMoreData(direction)) {
+                  _private.loadToDirectionIfNeed(self, direction);
+               }
+            }
+         } else {
+
+            // Иначе пересчитываем скролл
+            self._virtualScroll.updateItemsIndexes(direction);
+            _private.applyVirtualScroll(self);
+         }
+      },
+
+      // Метод, вызываемый при прокрутке скролла до триггера
       onScrollLoadEdge: function(self, direction) {
-         if (self._options.navigation && self._options.navigation.view === 'infinity') {
+         if (self._virtualScroll) {
+            _private.updateVirtualWindow(self, direction);
+         } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
             _private.loadToDirectionIfNeed(self, direction);
          }
       },
@@ -249,9 +289,8 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollHide: function(self) {
-         self._loadOffset = 0;
          self._pagingCfg = null;
-         self._pagingVisible = false;
+         self._loadOffset = 0;
          self._forceUpdate();
       },
 
@@ -296,24 +335,15 @@ define('Controls/List/BaseControl', [
       },
 
       /**
-       * Обновить размеры распорок и начало/конец отображаемых элементов
-       */
-      applyVirtualWindow: function(self, virtualWindow) {
-         self._topPlaceholderHeight = virtualWindow.topPlaceholderHeight;
-         self._bottomPlaceholderHeight = virtualWindow.bottomPlaceholderHeight;
-         self._listViewModel.updateIndexes(virtualWindow.indexStart, virtualWindow.indexStop);
-         self._forceUpdate();
-      },
-
-      /**
        * Обработать прокрутку списка виртуальным скроллом
        */
       handleListScroll: function(self, scrollTop, position) {
-         var virtualWindowIsChanged = self._virtualScroll.setScrollTop(scrollTop);
          var hasMoreData;
 
-         if (virtualWindowIsChanged) {
-            // _private.applyVirtualWindow(self, self._virtualScroll.getVirtualWindow());
+         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
+         if (self._virtualScroll && !self._hasUndrawChanges) {
+            self._virtualScroll.updateItemsIndexesOnScrolling(scrollTop);
+            _private.applyVirtualScroll(self);
          }
 
          if (self._scrollPagingCtr) {
@@ -334,20 +364,6 @@ define('Controls/List/BaseControl', [
 
       needScrollCalculation: function(navigationOpt) {
          return navigationOpt && navigationOpt.view === 'infinity';
-      },
-
-      /**
-       * отдать в VirtualScroll контейнер с отрисованными элементами для расчета средней высоты 1 элемента
-       * Отдаю именно контейнер, а не высоту, чтобы не считать размер, когда высоты уже проинициализированы
-       * @param self
-       */
-      initializeAverageItemsHeight: function(self) {
-         // TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
-         // Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
-         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
-         if (res.changed) {
-            // _private.applyVirtualWindow(self, res.virtualWindow);
-         }
       },
 
       getItemsCount: function(self) {
@@ -554,14 +570,15 @@ define('Controls/List/BaseControl', [
          _private.bindHandlers(this);
          _private.setPopupOptions(this);
 
-         this._virtualScroll = new VirtualScroll({
-            maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
-            itemsCount: 0
-         });
-
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (this._needScrollCalculation) {
+            if (newOptions.virtualScrolling === true) {
+               this._virtualScroll = new VirtualScroll({
+                  virtualPageSize: newOptions.virtualPageSize,
+                  virtualSegmentSize: newOptions.virtualSegmentSize
+               });
+            }
             this._loadTriggerVisibility = {
                up: false,
                down: false
@@ -574,7 +591,6 @@ define('Controls/List/BaseControl', [
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
-               self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.initListViewModelHandler(self, self._listViewModel);
             }
 
@@ -588,6 +604,12 @@ define('Controls/List/BaseControl', [
                   self._sourceController.calculateState(receivedState);
                   self._listViewModel.setItems(receivedState);
                   self._items = self._listViewModel.getItems();
+                  if (self._virtualScroll) {
+                     // При серверной верстке применяем начальные значения
+                     var indexes = self._virtualScroll.getItemsIndexes();
+                     self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                     self._listViewModel.setIndexes(indexes.start, indexes.stop);
+                  }
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
                   var
@@ -613,9 +635,8 @@ define('Controls/List/BaseControl', [
          if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
          }
-         if (_private.getItemsCount(this)) {
-            // Посчитаем среднюю высоту строки и отдадим ее в VirtualScroll
-            _private.initializeAverageItemsHeight(this);
+         if (this._virtualScroll) {
+            this._virtualScroll.setItemsContainer(this._children.listView.getItemsContainer());
          }
       },
 
@@ -628,7 +649,6 @@ define('Controls/List/BaseControl', [
          if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(newOptions);
-            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
             _private.initListViewModelHandler(this, this._listViewModel);
          }
 
@@ -680,12 +700,12 @@ define('Controls/List/BaseControl', [
       },
 
       _afterUpdate: function() {
-         if (_private.getItemsCount(this)) {
-            _private.initializeAverageItemsHeight(this);
-         }
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.checkLoadToDirectionCapability(this);
+            if (this._virtualScroll) {
+               this._virtualScroll.updateItemsSizes();
+            }
          }
       },
 

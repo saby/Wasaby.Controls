@@ -88,15 +88,37 @@ define('Controls/List/ItemsViewModel', [
       },
 
       reset: function() {
-         this._curIndex = 0;
+         this._startIndex = this._options.virtualScrolling && !!this._startIndex ? this._startIndex : 0;
+         this._curIndex = this._startIndex;
       },
 
       isEnd: function() {
-         return this._curIndex < (this._display ? this._display.getCount() : 0);
+         var endIndex;
+         if (this._options.virtualScrolling) {
+            endIndex = (this._options.virtualScrolling && !!this._stopIndex ? this._stopIndex : 0);
+         } else {
+            endIndex = (this._display ? this._display.getCount() : 0);
+         }
+         return this._curIndex < endIndex;
+      },
+
+      setIndexes: function(startIndex, stopIndex) {
+         if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
+            this._startIndex = startIndex;
+            this._stopIndex = stopIndex;
+            this._nextVersion();
+            this._notify('onListChange');
+         }
       },
 
       isLast: function() {
-         return this._curIndex === (this._display ? this._display.getCount() - 1 : 0);
+         var lastIndex;
+         if (this._options.virtualScrolling) {
+            lastIndex = this._stopIndex - 1;
+         } else {
+            lastIndex = (this._display ? this._display.getCount() - 1 : 0);
+         }
+         return this._curIndex === lastIndex;
       },
 
       goToNext: function() {

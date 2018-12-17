@@ -2,7 +2,8 @@
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
-        <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+        <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger"
+             style="bottom: -{{_loadOffset}}px;"></div>
     </ws:if>
 
    <ws:template name="withDragNDrop">
