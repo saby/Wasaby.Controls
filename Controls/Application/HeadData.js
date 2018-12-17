@@ -4,18 +4,14 @@ define('Controls/Application/HeadData', [
    'Core/Deferred',
    'Core/cookie',
    'Core/Themes/ThemesController',
-   'View/Request',
-   'Core/IoC',
-   'Core/constants'
+   'View/Request'
 
 ], function(extend,
    DepsCollector,
    Deferred,
    cookie,
    ThemesController,
-   Request,
-   IoC,
-   constants) {
+   Request) {
    var bundles, modDeps, contents;
 
    function joinPaths(arr) {
