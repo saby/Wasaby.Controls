@@ -6,4 +6,4 @@ call npm install
 node depencyCollector
 py build.py
 node sbis3-ws/compileEsAndTs.js
-node node_modules/ws-unit-testing/cover --amd test-isolated
+node node_modules/saby-units/cover --amd test-isolated
