@@ -6,7 +6,7 @@
       attr:class="xml ControlsDemo-TestXslt__xml ControlsDemo-TestXslt__area"
       minLines="{{20}}"
       on:input="change('xml')"
-      value="{{xml}}"
+      bind:value="_xml"
    />
 
    <Controls.Input.Area
@@ -15,7 +15,7 @@
       attr:class="xsl ControlsDemo-TestXslt__xsl ControlsDemo-TestXslt__area"
       minLines="{{20}}"
       on:input="change('xsl')"
-      value="{{xsl}}"
+      bind:value="_xsl"
    />
 
    <Controls.Input.Area
@@ -24,7 +24,7 @@
       attr:class="result ControlsDemo-TestXslt__result ControlsDemo-TestXslt__area"
       minLines="{{20}}"
       on:input="change('result')"
-      value="{{result}}"
+      bind:value="_result"
    />
    
    <Controls.Button
