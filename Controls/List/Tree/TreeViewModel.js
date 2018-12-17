@@ -2,6 +2,7 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/ListViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
+   'Core/core-clone',
    'WS.Data/Relation/Hierarchy',
    'WS.Data/Collection/IBind',
    'Controls/Utils/ArraySimpleValuesUtil'
@@ -9,6 +10,7 @@ define('Controls/List/Tree/TreeViewModel', [
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
+   cClone,
    HierarchyRelation,
    IBindCollection,
    ArraySimpleValuesUtil
@@ -187,9 +189,14 @@ define('Controls/List/Tree/TreeViewModel', [
             }
             return result;
          },
-
+         prepareCollapsedItems: function(expandedItems, collapsedItems) {
+            if (_private.isExpandAll(expandedItems) && collapsedItems) {
+               return cClone(collapsedItems);
+            }
+            return {};
+         },
          isExpandAll: function(expandedItems) {
-            return !!expandedItems[null];
+            return expandedItems && !!expandedItems[null];
          },
 
          resetExpandedItems: function(self) {
@@ -198,6 +205,7 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                self._expandedItems = {};
             }
+            self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
          }
       },
 
@@ -210,9 +218,7 @@ define('Controls/List/Tree/TreeViewModel', [
          constructor: function(cfg) {
             this._options = cfg;
             this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
-            if (_private.isExpandAll(this._expandedItems)) {
-               this._collapsedItems = {};
-            }
+            this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
             this._hierarchyRelation = new HierarchyRelation({
                idProperty: cfg.keyProperty || 'id',
                parentProperty: cfg.parentProperty || 'Раздел',
@@ -226,6 +232,7 @@ define('Controls/List/Tree/TreeViewModel', [
 
          setExpandedItems: function(expandedItems) {
             this._expandedItems = _private.prepareExpandedItems(expandedItems);
+            this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextVersion();
             this._notify('onListChange');
