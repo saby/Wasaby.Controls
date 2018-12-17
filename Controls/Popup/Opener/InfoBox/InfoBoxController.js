@@ -90,7 +90,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
        * Стратегия позиционирования инфобокса
        * @class Controls/Popup/Opener/InfoBox/InfoBoxController
        * @control
-       * @public
+       * @private
        * @category Popup
        */
       var InfoBoxController = StickyController.constructor.extend({

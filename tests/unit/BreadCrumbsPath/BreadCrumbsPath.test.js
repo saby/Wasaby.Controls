@@ -3,13 +3,15 @@ define([
    'Controls/BreadCrumbs/Utils',
    'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
-   'Core/Deferred'
+   'Core/Deferred',
+   'WS.Data/Entity/Model'
 ], function(
    Path,
    BreadCrumbsUtil,
    getWidthUtil,
    FontLoadUtil,
-   Deferred
+   Deferred,
+   Model
 ) {
    describe('Controls.BreadCrumbs.Path', function() {
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
@@ -40,32 +42,44 @@ define([
          data = [
             {
                id: 1,
-               title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1'
+               title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
+               parent: null
             },
             {
                id: 2,
-               title: 'Notebooks 2'
+               title: 'Notebooks 2',
+               parent: 1
             },
             {
                id: 3,
-               title: 'Smartphones 3'
+               title: 'Smartphones 3',
+               parent: 2
             },
             {
                id: 4,
-               title: 'Record1'
+               title: 'Record1',
+               parent: 3
             },
             {
                id: 5,
-               title: 'Record2'
+               title: 'Record2',
+               parent: 4
             },
             {
                id: 6,
-               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw'
+               title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
+               parent: 5
             }
          ];
          path = new Path();
          path.saveOptions({
-            items: data
+            items: data.map(function(item) {
+               return new Model({
+                  rawData: item
+               });
+            }),
+            keyProperty: 'id',
+            parentProperty: 'parent'
          });
       });
       afterEach(function() {
@@ -140,21 +154,10 @@ define([
          });
       });
 
-      it('_onItemClick', function() {
-         path._notify = function(e, args) {
-            if (e === 'itemClick') {
-               assert.equal(path._options.items[1], args[0]);
-               assert.isFalse(!!args[1]);
-            }
-         };
-         path._onItemClick({}, path._options.items[1]);
-      });
-
       it('_onBackButtonClick', function() {
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[path._options.items.length - 1], args[0]);
-               assert.isTrue(args[1]);
+               assert.equal(path._options.items[path._options.items.length - 1].get('parent'), args[0]);
             }
          };
          path._onBackButtonClick();
@@ -163,8 +166,7 @@ define([
       it('_onHomeClick', function() {
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[0], args[0]);
-               assert.isTrue(args[1]);
+               assert.isNull(args[0]);
             }
          };
          path._onHomeClick();

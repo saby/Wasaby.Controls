@@ -31,7 +31,7 @@ define('Controls/Popup/Opener/Stack',
           * Open stack popup.
           * @function Controls/Popup/Opener/Stack#open
           * @returns {Undefined}
-          * @param {Object} popupOptions Stack popup options.
+          * @param {PopupOptions[]} popupOptions Stack popup options.
           * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStackOptions#popupOptions popupOptions}
           * @example
           * Open stack with specified configuration.
@@ -128,4 +128,21 @@ define('Controls/Popup/Opener/Stack',
  * @name Controls/Popup/Opener/Stack#isOpened
  * @description Popup opened status.
  * @function
+ */
+
+/**
+ * @typedef {Object} PopupOptions
+ * @description Stack popup options.
+ * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+ * @property {Boolean} isModal Determines whether the window is modal.
+ * @property {String} className Class names of popup.
+ * @property {Boolean} closeByExternalClick Determines whether possibility of closing the popup when clicking past.
+ * @property {Object} opener Control, which is the logical initiator of popup opening.
+ * @property {String|Template} template Template inside popup.
+ * @property {String|Template} templateOptions Template options inside popup.
+ * @property {Object} eventHandlers Callback functions on popup events.
+ * @property {Integer} minWidth The minimum width of popup.
+ * @property {Integer} maxWidth The maximum width of popup.
+ * @property {Integer} minimizedWidth The width of the panel in a minimized state.
+ * @property {Boolean} maximize Determines whether the control is displayed in full screen.
  */

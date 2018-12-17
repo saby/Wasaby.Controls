@@ -151,7 +151,6 @@ define('Controls/List/Swipe/List', [
             secondColumnItems = allActions.slice(oneColumnCount, oneColumnCount * 2 - 1);
 
             secondColumnItems.push({
-               title: rk('Еще'),
                icon: 'icon-ExpandDown icon-primary ' + swipeConstants.ACTION_ICON_CLASS,
                height: 'auto',
                isMenu: true

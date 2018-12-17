@@ -45,7 +45,13 @@ define('Controls/Popup/Opener/BaseOpener',
             this._popupIds = [];
          },
 
+         _afterMount: function() {
+            this._openerUpdateCallback = this._updatePopup.bind(this);
+            this._notify('registerOpenerUpdateCallback', [this._openerUpdateCallback], { bubbling: true });
+         },
+
          _beforeUnmount: function() {
+            this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], { bubbling: true });
             if (this._options.closePopupBeforeUnmount) {
                if (this._useVDOM()) {
                   this._popupIds.forEach(function(popupId) {
@@ -149,7 +155,9 @@ define('Controls/Popup/Opener/BaseOpener',
          _getConfig: function(popupOptions) {
             var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
             CoreMerge(cfg, popupOptions || {});
-            cfg.opener = cfg.opener || DefaultOpenerFinder.find(this);
+
+            // Opener can't be empty. If we don't find the defaultOpener, then install the current control
+            cfg.opener = cfg.opener || DefaultOpenerFinder.find(this) || this;
             return cfg;
          },
 
@@ -186,12 +194,17 @@ define('Controls/Popup/Opener/BaseOpener',
             // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
             if (this.isOpened() && event.type === 'scroll') {
                if (this._options.targetTracking) {
-                  ManagerController.popupUpdated(this._getCurrentPopupId());
+                  this._updatePopup();
                } else if (this._options.closeOnTargetScroll) {
                   this._closeOnTargetScroll();
                }
             }
          },
+
+         _updatePopup: function() {
+            ManagerController.popupUpdated(this._getCurrentPopupId());
+         },
+
          _closeOnTargetScroll: function() {
             this.close();
          },

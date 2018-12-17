@@ -21,13 +21,11 @@ define('Controls/Validate/FormController',
          },
          onValidateCreated: function(e, control) {
             this._validates.push(control);
-            e.stopPropagation();
          },
          onValidateDestroyed: function(e, control) {
             this._validates = this._validates.filter(function(validate) {
                return validate !== control;
             });
-            e.stopPropagation();
          },
          submit: function() {
             var parallelDeferred = new ParallelDeferred();

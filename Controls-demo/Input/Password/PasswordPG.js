@@ -36,6 +36,7 @@ define('Controls-demo/Input/Password/PasswordPG',
                placeholder: 'Input text',
                tagStyle: 'primary',
                readOnly: false,
+               revealable: true,
                tooltip: 'myTooltip',
                validationErrors: ''
             };
