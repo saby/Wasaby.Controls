@@ -33,8 +33,12 @@ define('Controls/Application/HeadData', [
       return res;
    }
 
-   // 
+   // Need these try-catch because:
+   // 1. We don't need to load these files on client
+   // 2. We don't have another way to check if these files exists on server
    try {
+      // TODO https://online.sbis.ru/opendoc.html?guid=7e096cc5-d95a-48b9-8b71-2a719bd9886f
+      // Need to fix this, to remove hardcoded paths
       modDeps = require('json!resources/module-dependencies');
    } catch (e) {
    }
