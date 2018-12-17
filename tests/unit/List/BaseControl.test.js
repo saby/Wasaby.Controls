@@ -30,7 +30,8 @@ define([
             {
                id: 3,
                title: 'Третий',
-               type: 2
+               type: 2,
+               'parent@': true
             },
             {
                id: 4,
@@ -1822,6 +1823,48 @@ define([
                }]});
             assert.equal(instance._listViewModel._activeItem, null);
             assert.equal(callBackCount, 5);
+            assert.isFalse(instance._menuIsShown);
+         });
+
+         it('closeActionsMenu item with children', function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._listViewModel._activeItem = {
+               item: true
+            };
+            instance._container = {
+               querySelector: function(selector) {
+                  if (selector === '.controls-ListView__itemV') {
+                     return {
+                        parentNode: {
+                           children: [{
+                              className: ''
+                           }]
+                        }
+                     };
+                  }
+               }
+            };
+            instance._closeActionsMenu({
+               action: 'itemClick',
+               event: {
+                  type: 'click',
+                  stopPropagation: ()=>{}
+               },
+               data: [{
+                  getRawData: function() {
+                     return {
+                        'parent@': true
+                     };
+                  }
+               }]});
+            assert.equal(instance._menuIsShown, null);
          });
 
          it('_listSwipe  multiSelectStatus = true', function(done) {

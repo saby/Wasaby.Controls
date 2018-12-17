@@ -406,11 +406,13 @@ define('Controls/List/BaseControl', [
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
             aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
-            self._children.itemActionsOpener.close();
+            if (!action['parent@']) {
+               self._children.itemActionsOpener.close();
+               self._listViewModel.setActiveItem(null);
+               self._children.swipeControl.closeSwipe();
+               self._menuIsShown = false;
+            }
          }
-         self._listViewModel.setActiveItem(null);
-         self._children.swipeControl.closeSwipe();
-         self._menuIsShown = false;
          self._forceUpdate();
       },
 
