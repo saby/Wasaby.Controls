@@ -34,7 +34,7 @@
    <div class="panel-demo-item">
       <h4>With history</h4>
       <div>
-         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component"
+         <Controls.Filter.Button attr:class="ControlsDemo-FilterButton-PanelVDom__component ControlsDemo-FilterButton-PanelVDom__withHistory"
                                  templateName="wml!Controls-demo/Filter/Button/resources/withAdditional/filterPanelTemplateAdditional"
                                  bind:items="_itemsHistory"
                                  alignment="left"
