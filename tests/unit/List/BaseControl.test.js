@@ -1516,7 +1516,7 @@ define([
                   }
                }
             ];
-         it('showActionsMenu context', function() {
+         it('showActionsMenu context', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1564,16 +1564,19 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(itemData, instance._listViewModel._activeItem);
-            assert.isTrue(itemData.contextEvent);
-            assert.equal(callBackCount, 3);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.isTrue(itemData.contextEvent);
+               assert.equal(callBackCount, 3);
 
-            //dont show by long tap
-            instance._isTouch = true;
-            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+               //dont show by long tap
+               instance._isTouch = true;
+               instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
+               done();
+            }, 0);
          });
 
-         it('_onItemContextMenu', function() {
+         it('_onItemContextMenu', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1617,11 +1620,14 @@ define([
             instance._beforeMount(cfg);
             assert.equal(instance.getViewModel()._markedKey, 0);
             instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(instance.getViewModel()._markedKey, 1);
-            assert.equal(callBackCount, 0);
+            setTimeout(function() {
+               assert.equal(instance.getViewModel()._markedKey, 1);
+               assert.equal(callBackCount, 1);
+               done();
+            });
          });
 
-         it('showActionsMenu context', function() {
+         it('showActionsMenu context', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1661,10 +1667,13 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(callBackCount, 0);
+            setTimeout(function() {
+               assert.equal(callBackCount, 1);
+               done();
+            });
          });
 
-         it('no showActionsMenu context without actions', function() {
+         it('no showActionsMenu context without actions', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1684,6 +1693,16 @@ define([
                },
                itemData = {
                   itemActions: {all: []}
+               },
+               childEvent = {
+                  nativeEvent: {
+                     preventDefault: function() {
+                        callBackCount++;
+                     }
+                  },
+                  stopImmediatePropagation: function() {
+                     callBackCount++;
+                  }
                };
             instance._children = {
                itemActionsOpener: {
@@ -1695,12 +1714,14 @@ define([
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._showActionsMenu(fakeEvent, itemData);
-            assert.equal(callBackCount, 0); //проверяем что не открывали меню
-
+            instance._showActionsMenu(fakeEvent, itemData, childEvent);
+            setTimeout(function() {
+               assert.equal(callBackCount, 1); //проверяем что не открывали меню
+               done();
+            }, 0);
          });
 
-         it('showActionsMenu no context', function() {
+         it('showActionsMenu no context', function(done) {
             var callBackCount = 0;
             var
                cfg = {
@@ -1748,9 +1769,12 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(itemData, instance._listViewModel._activeItem);
-            assert.isFalse(itemData.contextEvent);
-            assert.equal(callBackCount, 3);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.isFalse(itemData.contextEvent);
+               assert.equal(callBackCount, 3);
+               done();
+            }, 0);
          });
 
          it('closeActionsMenu', function() {

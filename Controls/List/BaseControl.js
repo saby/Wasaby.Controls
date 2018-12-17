@@ -378,7 +378,6 @@ define('Controls/List/BaseControl', [
          if (showActions && showActions.length) {
             var
                rs = new RecordSet({ rawData: showActions });
-            childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
@@ -418,12 +417,12 @@ define('Controls/List/BaseControl', [
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
       },
 
-      setPopupOptions: function(self) {
+      setPopupOptions: function(self, horizontalAlign) {
          self._popupOptions = {
             className: 'controls-Toolbar__menu-position',
             closeByExternalClick: true,
             corner: { vertical: 'top', horizontal: 'right' },
-            horizontalAlign: { side: 'right' },
+            horizontalAlign: { side: horizontalAlign },
             eventHandlers: {
                onResult: self._closeActionsMenu,
                onClose: self._closeActionsMenu
@@ -551,7 +550,7 @@ define('Controls/List/BaseControl', [
             self = this;
 
          _private.bindHandlers(this);
-         _private.setPopupOptions(this);
+         _private.setPopupOptions(this, 'right');
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
@@ -816,7 +815,14 @@ define('Controls/List/BaseControl', [
       },
 
       _showActionsMenu: function(event, itemData, childEvent, showAll) {
-         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
+         var self = this;
+         _private.setPopupOptions(this, event.type === 'itemcontextmenu' ? 'right' : 'left');
+         childEvent.nativeEvent.preventDefault();
+
+         // Because alignment is set as an option on the popup we have to show menu asynchronously, otherwise it's going to open with the wrong alignment.
+         setTimeout(function() {
+            _private.showActionsMenu(self, event, itemData, childEvent, showAll);
+         }, 0);
       },
 
       _onItemContextMenu: function(event, itemData) {
