@@ -6,18 +6,8 @@
    content: "\200b";
 }
 
-.controls-Button__close__icon_default, .controls-Button__close__icon_primary,
 .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
    fill: @color_CloseButton-icon;
-}
-
-.controls-Button__close__icon_default:active, .controls-Button__close__icon_primary:active,
-.controls-Button__close__icon_default:active, .controls-Button__close__icon_primary:active {
-   fill: @color_CloseButton-icon_hover;
-}
-
-.controls-Button__close__icon_light:active, .controls-Button__close__icon_light:active {
-   fill: @color_CloseButton-light-icon_hover;
 }
 
 .controls-Button__close__wrapper {
@@ -60,22 +50,27 @@
    fill: @color_CloseButton-light-icon;
 }
 
+.controls-Button__close__icon_light:active {
+   fill: @color_CloseButton-light-icon_hover;
+}
+
 .controls-Button__close_default:active, .controls-Button__close_primary:active {
    border-color: @default-border-color-second;
+   .controls-Button__close__icon_default:active, .controls-Button__close__icon_primary {
+      fill: @color_CloseButton-icon_hover;
+   }
 }
 
 .ws-is-no-touch{
-   .controls-Button__close__icon_default:hover, .controls-Button__close__icon_primary:hover,
-   .controls-Button__close__icon_default:hover, .controls-Button__close__icon_primary:hover {
-      fill: @color_CloseButton-icon_hover;
-   }
-
-   .controls-Button__close__icon_light:hover, .controls-Button__close__icon_light:hover {
+   .controls-Button__close__icon_light:hover {
       fill: @color_CloseButton-light-icon_hover;
    }
 
    .controls-Button__close_default_l:hover, .controls-Button__close_primary_l:hover,
    .controls-Button__close_default_m:hover, .controls-Button__close_primary_m:hover {
       border-color: @default-border-color-second;
+      .controls-Button__close__icon_default, .controls-Button__close__icon_primary {
+         fill: @color_CloseButton-icon_hover;
+      }
    }
 }
