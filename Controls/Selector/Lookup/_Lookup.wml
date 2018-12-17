@@ -50,7 +50,6 @@
             <Controls.Selector.SelectedCollection
                   name="collection"
                   itemTemplate="{{_options.itemTemplate}}"
-                  itemTemplatePopup="{{_options.itemTemplatePopup}}"
                   displayProperty="{{_options.displayProperty}}"
                   itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                   items="{{_options.items}}"

@@ -45,7 +45,7 @@ define('Controls/Selector/SelectedCollection',
             templateOptions.items = options.items;
             templateOptions.readOnly = options.readOnly;
             templateOptions.displayProperty = options.displayProperty;
-            templateOptions.itemTemplate = options.itemTemplatePopup || options.itemTemplate;
+            templateOptions.itemTemplate = options.itemTemplate;
             templateOptions.width = self._container && self._container.offsetWidth;
             templateOptions.clickCallback = self._onResult.bind(this);
 

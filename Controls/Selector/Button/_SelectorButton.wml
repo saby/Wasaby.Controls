@@ -4,7 +4,6 @@
               _counterWidth="{{_options._counterWidth}}"
               items="{{_options.items}}"
               itemTemplate="{{_options.itemTemplate}}"
-              itemTemplatePopup="{{_options.itemTemplatePopup}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
               multiLine="{{true}}"

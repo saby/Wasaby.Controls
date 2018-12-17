@@ -19,11 +19,6 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
-    * @name Controls/interface/ISelectedCollection#itemTemplatePopup
-    * @cfg {String} Template for item render in detailed list.
-    */
-
-   /**
     * @name Controls/interface/ISelectedCollection#selectorTemplate
     * @cfg {Function} Items selection panel template.
     * @example
