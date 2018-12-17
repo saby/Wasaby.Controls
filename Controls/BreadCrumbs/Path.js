@@ -4,6 +4,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/getWidth',
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
+   'Controls/Utils/tmplNotify',
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Heading/Back/Back',
    'Controls/Heading/Back',
@@ -14,6 +15,7 @@ define('Controls/BreadCrumbs/Path', [
    getWidthUtil,
    ItemsUtil,
    FontLoadUtil,
+   tmplNotify,
    template,
    backButtonTemplate
 ) {
@@ -113,12 +115,10 @@ define('Controls/BreadCrumbs/Path', [
          }
       },
 
-      _onItemClick: function(e, item, homeClick) {
-         this._notify('itemClick', [item, homeClick]);
-      },
+      _notifyHandler: tmplNotify,
 
       _onBackButtonClick: function() {
-         this._notify('itemClick', [this._options.items[this._options.items.length - 1], true]);
+         this._notify('itemClick', [this._options.items[this._options.items.length - 1].get(this._options.parentProperty)]);
       },
 
       _onResize: function() {
@@ -126,7 +126,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[0], true]);
+         this._notify('itemClick', [this._options.items[0].get(this._options.parentProperty)]);
       },
 
       _onArrowClick: function() {

@@ -104,13 +104,22 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          var self = getComponentObject();
          var state;
          self._options.suggestState = false;
+         self._inputActive = true;
          self._notify = function(eventName, args) {
             state = args[0];
          };
          Suggest._private.open(self);
          self._dependenciesDeferred.addCallback(function() {
             assert.isTrue(state);
-            done();
+   
+            state = false;
+            self._options.suggestState = false;
+            Suggest._private.open(self);
+            self._inputActive = false;
+            self._dependenciesDeferred.addCallback(function() {
+               assert.isFalse(state);
+               done();
+            });
          });
       });
    

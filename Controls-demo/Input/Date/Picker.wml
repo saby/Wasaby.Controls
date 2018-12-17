@@ -32,7 +32,17 @@
                value="{{_date}}"
                mask="{{mask}}"/>
          </div>
-
+         <h3>Demo with tagStyle</h3>
+         <div>
+            <Controls.Input.Date.Picker
+               value="{{_date}}"
+               mask="{{mask}}"
+               tagStyle="{{'primary'}}"/>
+            <Controls.Input.Date.Picker
+               value="{{_date}}"
+               mask="{{mask}}"
+               tagStyle="{{'info'}}"/>
+         </div>
       </div>
    </ws:content>
 </Controls.Application>

@@ -19,14 +19,12 @@
    </ws:componentClass>
    <ws:componentProperty>
       <Controls.Label caption="replacer"/>
-      <Controls.Input.Text attr:test_name="replacer" name="replacer" on:inputCompleted="_setValue()"
-                           bind:value="_replacer" attr:class="demo-TextBox"/>
+      <Controls.Input.Text attr:test_name="replacer" name="replacer" bind:value="_replacer" attr:class="demo-TextBox"/>
       <Controls.Label name="myLabel1" caption="placeholder"/>
       <Controls.Input.Text attr:id="placeholder" bind:value="_placeholder" attr:class="demo-TextBox"/>
       <Controls.Label caption="mask"/>
       <Controls-demo.Input.resources.SuggestTwoLines attr:id="constraint" bind:suggestValue="_mask" source="{{_items}}"
-                                      on:suggestValueChanged="_setValue()" attr:class="demo-TextBox"
-									  attr:test_name="mask"/>
+                                                     attr:class="demo-TextBox" attr:test_name="mask"/>
       <Controls.Label name="myLabel1" caption="tagStyle"/>
       <Controls-demo.Input.resources.TagStyle attr:id="tagStyle" bind:tagStyleValue="_tagStyle" attr:class="demo-TextBox"/>
        <Controls.Label caption="tooltip"/>

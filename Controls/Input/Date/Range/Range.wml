@@ -3,18 +3,24 @@
       bind:value="_rangeModel.startValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
+      tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       validationErrors="{{_options.validationErrors}}"
-      on:inputCompleted="_proxyEvent('inputCompleted')">
+      on:inputCompleted="_proxyEvent('inputCompleted')"
+      on:tagClick="_proxyEvent('tagClick')"
+      on:tagHover="_proxyEvent('tagHover')">
    </Controls.Input.DateTime>
    <div class="controls-Input-DateRange__dash"></div>
    <Controls.Input.DateTime
       bind:value="_rangeModel.endValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
+      tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       validationErrors="{{_options.validationErrors}}"
-      on:inputCompleted="_proxyEvent('inputCompleted')">
+      on:inputCompleted="_proxyEvent('inputCompleted')"
+      on:tagClick="_proxyEvent('tagClick')"
+      on:tagHover="_proxyEvent('tagHover')">
    </Controls.Input.DateTime>
    <Controls.Button
       attr:class="controls-Input-DateRange__button"

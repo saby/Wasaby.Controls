@@ -14,7 +14,8 @@ define('Controls/List/ItemActions/Utils/Actions', [], function(
                itemData.item,
                Array.prototype.filter.call(container.querySelector('.controls-ListView__itemV').parentNode.children, function(item) {
                   return item.className.indexOf('controls-ListView__itemV') !== -1;
-               })[itemData.index]
+               })[itemData.index],
+               event //TODO: кидаю нативное событие, чтобы прикладники могли бы сами сделать операции над записью с меню. В январе по этой задаче предоставлю им платформенный механизм https://online.sbis.ru/opendoc.html?guid=94840c27-ff4f-4cc9-9b9e-b900f326dd18
             ]);
             action.handler && action.handler(itemData.item);
          }
