@@ -5,6 +5,7 @@ define('Controls/Application/HeadData', [
    'Core/cookie',
    'Core/Themes/ThemesController',
    'View/Request',
+   'Core/IoC',
    'Core/constants'
 
 ], function(extend,
@@ -13,6 +14,7 @@ define('Controls/Application/HeadData', [
    cookie,
    ThemesController,
    Request,
+   IoC,
    constants) {
    var bundles, modDeps, contents;
 
@@ -31,20 +33,18 @@ define('Controls/Application/HeadData', [
       return res;
    }
 
+   // 
    try {
-      modDeps = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'module-dependencies']));
+      modDeps = require('json!resources/module-dependencies');
    } catch (e) {
-
    }
    try {
-      contents = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'contents']));
+      contents = require('json!resources/contents');
    } catch (e) {
-
    }
    try {
-      bundles = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'bundlesRoute']));
+      bundles = require('json!resources/bundlesRoute');
    } catch (e) {
-
    }
 
    bundles = bundles || {};
