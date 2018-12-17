@@ -166,6 +166,12 @@ define([
          lookup._options.readOnly = true;
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
+   
+         lookup._suggestState = true;
+         lookup._infoboxOpened = true;
+         lookup._options.readOnly = false;
+         lookup._suggestStateChanged();
+         assert.isFalse(lookup._suggestState);
       });
 
       it('_determineAutoDropDown', function() {

@@ -1,5 +1,6 @@
 <ws:if data="{{_isNewEnvironment}}">
    <ws:partial template="{{ _options.content }}"
+               validationErrors="{{isValid()}}"
                style="{{isValid() ? 'invalid': 'info'}}"
                scope="{{_options}}"
                on:valueChanged="_valueChangedHandler()"
@@ -14,6 +15,7 @@
    <div>
       <ws:partial template="{{ _options.content }}"
                   style="{{isValid() ? 'invalid': 'info'}}"
+                  validationErrors="{{isValid()}}"
                   scope="{{_options}}"
                   on:valueChanged="_valueChangedHandler()"
                   on:inputCompleted="_inputCompletedHandler()"

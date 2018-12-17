@@ -12,5 +12,6 @@
    on:valueChanged="_valueChangedHandler()"
    on:inputCompleted="_inputCompletedHandler()"
    on:tagClick="_proxyEvent('tagClick')"
-   on:tagHover="_proxyEvent('tagHover')">
+   on:tagHover="_proxyEvent('tagHover')"
+   on:keydown="_onKeyDown()">
 </Controls.Input.Mask>
