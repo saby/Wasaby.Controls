@@ -36,7 +36,27 @@ define('Controls/List/BaseControl/SelectionController', [
             self._notify('excludedKeysChanged', [newSelection.excluded, excludedKeysDiff.added, excludedKeysDiff.removed]);
          }
 
-         self._notify('selectedKeysCountChanged', [self._multiselection.getCount()]);
+         /*
+            TODO: удалить это после того, как количество отмеченных записей будет рассчитываться на БЛ: https://online.sbis.ru/opendoc.html?guid=d9b840ba-8c99-49a5-98d3-78715d10d540
+            Такие костыли из-за ситуации, когда прикладники в браузер кладут список, обёрнутый в Container/Scroll, и события перестают всплывать по всем нашим обёрткам, лежащим внутри браузера.
+            С большинством событий нет проблем, т.к. наши обёртки ничего с ними не делают, и всё работает по опциям, которые приходят сверху.
+
+            Но в данном случае, событие существует только для связи ПМО и списка, оно должно полностью обрабатываться в браузере.
+
+            Были такие альтернативы:
+            1) Заставить прикладников убрать Container/Scroll, чтобы исключить вообще все подобные проблемы.
+            Это решение не сработает, т.к. тогда начнут скроллиться поиск, пмо и т.д.
+
+            2) Сделать какую-нибудь обёртку для прикладников, в которую они должны будут заворачивать список, а она будет прокидывать все такие события.
+            По идее браузер и есть такая обёртка, так что это решение не очень.
+
+            3) Заставить прикладников прокидывать это событие.
+            Они не смогут это правильно сделать, т.к. сейчас на браузере даже нет опции selectedKeysCount.
+
+            4) Прокидывать событие в Container/Scroll.
+            Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
+          */
+         self._notify('listSelectedKeysCountChanged', [self._multiselection.getCount()], { bubbling: true });
 
          self._options.listModel.updateSelection(self._multiselection.getSelectedKeysForRender());
       },
@@ -98,7 +118,7 @@ define('Controls/List/BaseControl/SelectionController', [
       },
 
       _afterMount: function() {
-         this._notify('selectedKeysCountChanged', [this._multiselection.getCount()]);
+         this._notify('listSelectedKeysCountChanged', [this._multiselection.getCount()], { bubbling: true });
          this._notify('register', ['selectedTypeChanged', this, _private.selectedTypeChangedHandler], { bubbling: true });
          this._onCollectionChangeHandler = _private.onCollectionChange.bind(this);
          this._options.items.subscribe('onCollectionChange', this._onCollectionChangeHandler);

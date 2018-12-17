@@ -35,6 +35,10 @@ define('Controls/Popup/Manager/Popup',
 
          _template: template,
 
+         // Register the openers that initializing inside current popup
+         // After updating the position of the current popup, calls the repositioning of popup from child openers
+         _openersUpdateCallback: [],
+
          _afterMount: function() {
             /* TODO: COMPATIBLE. Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
              * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза. Смотрим по флагу waitForPopupCreated */
@@ -85,12 +89,32 @@ define('Controls/Popup/Manager/Popup',
             this._notify('popupAnimated', [this._options.id], { bubbling: true });
          },
 
+         _registerOpenerUpdateCallback: function(event, callback) {
+            this._openersUpdateCallback.push(callback);
+         },
+
+         _unregisterOpenerUpdateCallback: function(event, callback) {
+            var index = this._openersUpdateCallback.indexOf(callback);
+            if (index > -1) {
+               this._openersUpdateCallback.splice(index, 1);
+            }
+         },
+
+         _callOpenersUpdate: function() {
+            for (var i = 0; i < this._openersUpdateCallback.length; i++) {
+               this._openersUpdateCallback[i]();
+            }
+         },
+
          /**
           * Обновить popup
           * @function Controls/Popup/Manager/Popup#_close
           */
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
+
+            // After updating popup position we will updating the position of the popups open with it.
+            runDelayed(this._callOpenersUpdate.bind(this));
          },
 
          _delayedUpdate: function() {

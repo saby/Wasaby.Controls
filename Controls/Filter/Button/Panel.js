@@ -140,12 +140,8 @@ define('Controls/Filter/Button/Panel', [
          this._loadDeferred = _private.loadHistoryItems(this, this._historyId);
       },
 
-      _valueChangedHandler: function() {
-         this._items = _private.cloneItems(this._items);
-      },
-
-      _visibilityChangedHandler: function() {
-         this._items = _private.cloneItems(this._items);
+      _itemsChangedHandler: function(event, items) {
+         this._items = _private.cloneItems(items);
       },
 
       _applyHistoryFilter: function(event, items) {
