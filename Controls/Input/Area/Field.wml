@@ -1,26 +1,27 @@
-<Controls.Container.Scroll attr:class="controls-Base__field"
+<Controls.Container.Scroll name="scroll"
+                           attr:class="controls-Base__field"
                            attr:style="{{options.minLines ? 'min-height: ' + calculateHeightLines(options.minLines, true) + 'px;'}}
                                        {{options.maxLines ? 'max-height: ' + calculateHeightLines(options.maxLines, true) + 'px;'}}">
-   <div class="controls-Area__fieldWrapper controls-Area__nativeField_margin">
-            <textarea
-               wrap="hard"
-               spellcheck="false"
-               name="{{fieldName}}"
-               value="{{calculateValueForTemplate()}}"
-               class="controls-Base__nativeField controls-Area__realField
-                      {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
-               placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
-               on:keyup="_keyUpHandler()"
-               on:click="_clickHandler()"
-               on:input="_inputHandler()"
-               on:select="_selectHandler()"
-               on:keydown="_keyDownHandler()"
-               on:focusin="_focusInHandler()"
-               on:focusout="_focusOutHandler()"
-               on:mousedown="_mouseDownHandler()"
-            ></textarea>
+   <div name="fieldWrapper" class="controls-Area__fieldWrapper controls-Area__nativeField_margin">
       <div class="controls-Area__fakeField"
            style="{{options.minLines ? 'min-height: ' + calculateHeightLines(options.minLines, false) + 'px;'}}">&#65279;{{value}}&#65279;</div>
+      <textarea
+         wrap="hard"
+         spellcheck="false"
+         name="{{fieldName}}"
+         value="{{calculateValueForTemplate()}}"
+         class="controls-Base__nativeField controls-Area__realField
+                      {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
+         placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
+         on:keyup="_keyUpHandler()"
+         on:click="_clickHandler()"
+         on:input="_inputHandler()"
+         on:select="_selectHandler()"
+         on:keydown="_keyDownHandler()"
+         on:focusin="_focusInHandler()"
+         on:focusout="_focusOutHandler()"
+         on:mousedown="_mouseDownHandler()"
+      ></textarea>
       <ws:if data="{{!value}}">
          <div class="controls-Base__placeholder">
             <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>

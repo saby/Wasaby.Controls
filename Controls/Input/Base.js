@@ -773,11 +773,15 @@ define('Controls/Input/Base',
                model.changesHaveBeenApplied();
 
                if (this._getActiveElement() === field) {
-                  _private.recalculateLocationVisibleArea(this, field, model.displayValue, model.selection);
+                  this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
                }
             }
 
             return model.displayValue;
+         },
+
+         _recalculateLocationVisibleArea: function(field, displayValue, selection) {
+            _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
          paste: function(text) {
