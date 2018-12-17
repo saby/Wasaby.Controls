@@ -5,4 +5,4 @@ node -v
 npm install
 
 node build-app
-node node_modules/ws-unit-testing/cover --amd test-isolated
+node node_modules/saby-units/cover --amd test-isolated

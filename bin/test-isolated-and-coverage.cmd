@@ -5,4 +5,4 @@ call npm install
 
 node depencyCollector
 node sbis3-ws/compileEsAndTs.js
-node node_modules/ws-unit-testing/cover -- -t 10000 -R xunit --amd test-report
+node node_modules/saby-units/cover -- -t 10000 -R xunit --amd test-report

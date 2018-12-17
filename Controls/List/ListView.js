@@ -107,6 +107,10 @@ define('Controls/List/ListView', [
             }
          },
 
+         getItemsContainer: function() {
+            return this._children.itemsContainer;
+         },
+
          _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
             this._notify('itemClick', [item, e], {bubbling: true});

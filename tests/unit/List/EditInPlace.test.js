@@ -190,7 +190,7 @@ define([
             var result = eip.beginEdit({
                item: listModel.at(0).getContents()
             });
-            assert.isFalse(result.isSuccessful());
+            assert.isTrue(result.isSuccessful());
          });
 
          it('Without handler', function() {
@@ -428,7 +428,7 @@ define([
             });
             var result = eip.commitEdit();
 
-            assert.isFalse(result.isSuccessful());
+            assert.isTrue(result.isSuccessful());
          });
 
          it('Deferred', function() {
@@ -518,7 +518,7 @@ define([
                }
             };
             var result = eip.commitEdit();
-            assert.isFalse(result.isSuccessful());
+            assert.isTrue(result.isSuccessful());
          });
 
          describe('afterEndEdit', function() {

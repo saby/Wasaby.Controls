@@ -1,0 +1,21 @@
+<div class="123">
+    <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+        <ws:content>
+            <Controls.List
+                    source="{{_viewSource}}"
+                    markedKey="{{2}}"
+                    displayProperty="title"
+                    allowEmptySelection="{{false}}"
+                    multiSelect="{{true}}"
+                    name="listVirt"
+                    keyProperty="id"
+                    virtualScrolling="{{true}}"
+                    virtualPageSize="{{100}}"
+                    virtualSegmentSize="{{20}}">
+                <ws:navigation source="page" view="infinity">
+                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+                </ws:navigation>
+            </Controls.List>
+        </ws:content>
+    </Controls.Container.Scroll>
+</div>

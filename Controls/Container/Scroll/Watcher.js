@@ -113,7 +113,10 @@ define('Controls/Container/Scroll/Watcher',
             }
 
             if (self._scrollPositionCache !== curPosition) {
-               _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+               _private.sendByRegistrar(self, 'scrollMove', {
+                  scrollTop: self._scrollTopCache,
+                  position: curPosition
+               });
                if (!withObserver) {
                   _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
                }
