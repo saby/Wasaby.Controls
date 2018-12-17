@@ -90,7 +90,11 @@ define('Controls/Input/Base',
                field.value = value;
             }
 
-            if (_private.hasSelectionChanged(field, selection)) {
+            /**
+             * In IE, change the selection leads to the automatic focusing of the field.
+             * Therefore, we change it only if the field is already focused.
+             */
+            if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(self)) {
                /**
                 * After calling setSelectionRange the select event is triggered and saved the selection in model.
                 * You do not need to do this because the model is now the actual selection.
@@ -117,6 +121,10 @@ define('Controls/Input/Base',
           */
          hasAutoFillField: function(field) {
             return !!field.value;
+         },
+
+         isFieldFocused: function(self) {
+            return self._getActiveElement() === self._getField();
          },
 
          callChangeHandler: function(self) {
@@ -686,7 +694,7 @@ define('Controls/Input/Base',
          },
 
          _mouseDownHandler: function() {
-            if (this._getActiveElement() !== this._getField()) {
+            if (!_private.isFieldFocused(this)) {
                this._focusByMouseDown = true;
             }
          },
@@ -766,7 +774,7 @@ define('Controls/Input/Base',
                _private.updateField(this, model.displayValue, model.selection);
                model.changesHaveBeenApplied();
 
-               if (this._getActiveElement() === field) {
+               if (_private.isFieldFocused(this)) {
                   _private.recalculateLocationVisibleArea(this, field, model.displayValue, model.selection);
                }
             }
