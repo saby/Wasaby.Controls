@@ -127,8 +127,11 @@ define('Controls/Input/Area',
       Area.getOptionTypes = function() {
          var optionTypes = Text.getOptionTypes();
 
-         optionTypes.minLines = descriptor(Number);
-         optionTypes.maxLines = descriptor(Number);
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * optionTypes.minLines = descriptor(Number);
+          * optionTypes.maxLines = descriptor(Number);
+          */
          optionTypes.newLineKey = descriptor(String).oneOf([
             'enter',
             'ctrlEnter'

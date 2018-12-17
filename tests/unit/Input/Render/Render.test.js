@@ -50,7 +50,7 @@ define(
             it('In the content template passed the placeholder template', function() {
                ctrl._options.placeholder = 'test placeholder';
 
-               assert.equal(template(ctrl), '<div class="controls-Render controls-Render_style controls-Render_size_m controls-Render_style_info controls-Render_fontStyle_default controls-Render_fontStyle_default_size_m controls-Render_textAlign_left">' +
+               assert.equal(template(ctrl), '<div class="controls-Render controls-Render_style controls-Render_fontStyle_default controls-Render_textAlign_left controls-Render_style_info controls-Render_fontStyle_default_size_m controls-Render_size_m">' +
                                                 '<div class="controls-Render__wrapper">' +
                                                    '<span class="controls-Render__baseline">&#65279;</span>' +
                                                    '<div class="controls-Render__field_textAlign_left">' +

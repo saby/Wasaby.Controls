@@ -1,4 +1,4 @@
-<div class="controls-Base__field">
+<div class="controls-Base__field controls-Base__field_margin">
    <input
       autocorrect="off"
       type="{{type}}"
@@ -6,7 +6,7 @@
       value="{{calculateValueForTemplate()}}"
       placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
       autocomplete="{{options.autoComplete ? 'on' : 'new-password'}}"
-      class="controls-Base__nativeField controls-Base__nativeField_margin
+      class="controls-Base__nativeField
             {{isEdge ? 'controls-Base__nativeField_edge'}}
             {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
       on:keyup="_keyUpHandler()"

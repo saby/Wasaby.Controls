@@ -6,7 +6,8 @@ define('Controls-demo/Input/Area/AreaPG',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
+      'css!Controls-demo/Wrapper/Wrapper',
+      'css!Controls-demo/Input/Area/AreaPG'
    ],
 
    function(Control, template, config) {
