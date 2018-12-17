@@ -135,6 +135,9 @@
             keyProperty="id"
             menuStyle="cross"
             popupOptions="{{_popupOptions}}"/>
+    <Controls.Popup.Opener.Confirmation
+            name="errorMsgOpener"
+    />
    <ws:if data="{{ _items }}">
       <Controls.List.BaseControl.SelectionController
          name="selectionController"
