@@ -29,7 +29,6 @@ define('Controls/List/Swipe/Tile', [
          if (visibleItems.length < actionsWithIcons.length) {
             visibleItems.pop();
             visibleItems.push({
-               title: rk('Еще'),
                icon: 'icon-ExpandDown icon-primary ' + swipeConstants.ACTION_ICON_CLASS,
                isMenu: true
             });

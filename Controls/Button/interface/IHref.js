@@ -12,7 +12,7 @@ define('Controls/Button/interface/IHref', [
     * @name Controls/Button/interface/IHref#href
     * @cfg {String} Specifies the linked resource.
     * @default Undefined
-    * @remark This options is analog of html href. It open resource in new page.
+    * @remark This options is analog of html href.
     * @example
     * When button pressed, we go to google.com
     * <pre>

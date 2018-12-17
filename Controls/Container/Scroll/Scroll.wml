@@ -13,7 +13,7 @@
                      {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
               on:controlResize="_resizeHandler()"
               on:scroll="_scrollHandler()">
-            <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
+            <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()" on:selectedKeysChanged="_tmplNotify('selectedKeysChanged')"/>
          </span>
       </Controls.Event.Registrator>
    </Controls.Container.Scroll.Watcher>

@@ -47,10 +47,6 @@ define('Controls/List/ListControl', [
 
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
-      },
-
-      _markedKeyChangedHandler: function(event, key) {
-         this._notify('markedKeyChanged', [key]);
       }
    });
 
