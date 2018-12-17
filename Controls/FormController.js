@@ -336,12 +336,11 @@ define('Controls/FormController', [
          self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
          def.dependOn(updateResult);
 
-         if (result && result.addCallback) {
-            result.addCallback(function(defResult) {
+         if (result && result.then) {
+            result.then(function(defResult) {
                updateCallback(defResult);
                return defResult;
-            });
-            result.addErrback(function(err) {
+            }, function(err) {
                updateResult.errback(err);
                return err;
             });

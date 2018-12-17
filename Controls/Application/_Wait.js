@@ -9,22 +9,27 @@ define('Controls/Application/_Wait',
    function(Base, Deferred, Request, template) {
       'use strict';
 
-      var Page = Base.extend({
-         _template: function() {
-            var res = template.apply(this, arguments);
-            var self = this;
-            if (res.addCallback && !res.isReady() && !self.waitDef.isReady()) {
-               res.addCallback(function(result) {
-                  self.waitDef.callback({});
-                  return result;
-               });
-            } else {
-               if (self.waitDef && !self.waitDef.isReady()) {
-                  self.waitDef.callback({});
-               }
+      var asyncTemplate = function() {
+         var res = template.apply(this, arguments);
+         var self = this;
+         if (res.addCallback && !res.isReady() && !self.waitDef.isReady()) {
+            res.addCallback(function(result) {
+               self.waitDef.callback({});
+               return result;
+            });
+         } else {
+            if (self.waitDef && !self.waitDef.isReady()) {
+               self.waitDef.callback({});
             }
-            return res;
-         },
+         }
+         return res;
+      };
+
+      // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
+      asyncTemplate.stable = template.stable;
+
+      var Page = Base.extend({
+         _template: asyncTemplate,
          _beforeMount: function() {
             this.waitDef = new Deferred();
             Request.getCurrent().getStorage('HeadData').pushWaiterDeferred(this.waitDef);

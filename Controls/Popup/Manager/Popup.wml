@@ -10,6 +10,8 @@
             on:maximized="_maximized()"
             on:keyup="_keyUp()"
             on:transitionend="_animated()"
+            on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
+            on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
             on:controlResize="_update()">
     </ws:partial>
     <Controls.Event.Listener event="controlResize" on:controlResize="_delayedUpdate()"/>

@@ -1,11 +1,9 @@
 /* global define */
 define('Controls/Controllers/Multiselect/Selection', [
    'Core/core-simpleExtend',
-   'Core/core-clone',
    'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    cExtend,
-   cClone,
    ArraySimpleValuesUtil
 ) {
    'use strict';
@@ -48,10 +46,10 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       constructor: function(options) {
          this._options = options;
-         this._selectedKeys = cClone(options.selectedKeys);
-         this._excludedKeys = cClone(options.excludedKeys);
+         this._selectedKeys = options.selectedKeys;
+         this._excludedKeys = options.excludedKeys;
 
-         this._items = cClone(options.items);
+         this._items = options.items;
 
          Selection.superclass.constructor.apply(this, arguments);
       },
@@ -110,11 +108,11 @@ define('Controls/Controllers/Multiselect/Selection', [
          var swap;
 
          if (this._isAllSelection(this._getParams())) {
-            swap = cClone(this._excludedKeys);
+            swap = this._excludedKeys;
             this.unselectAll();
             this.select(swap);
          } else {
-            swap = cClone(this._selectedKeys);
+            swap = this._selectedKeys;
             this.selectAll();
             this.unselect(swap);
          }
@@ -136,7 +134,7 @@ define('Controls/Controllers/Multiselect/Selection', [
        * @param {WS.Data/Collection/RecordSet} items
        */
       setItems: function(items) {
-         this._items = cClone(items);
+         this._items = items;
       },
 
       /**

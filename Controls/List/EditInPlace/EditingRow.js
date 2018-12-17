@@ -1,28 +1,24 @@
 define('Controls/List/EditInPlace/EditingRow', [
    'Core/Control',
+   'Controls/Utils/scrollToElement',
    'wml!Controls/List/EditInPlace/EditingRow'
 ], function(
    Control,
+   scrollToElement,
    template
 ) {
    var EditingRow = Control.extend({
       _template: template,
 
       _afterMount: function() {
-         var self = this;
          this.activate();
 
-         if (window && window.jQuery) {
-            requirejs(['Lib/LayoutManager/LayoutManager'], function(LayoutManager) {
-               LayoutManager.scrollToElement($(self._container));
-            });
-         } else {
-            requirejs(['cdn!jquery/3.3.1/jquery-min.js'], function() {
-               requirejs(['Lib/LayoutManager/LayoutManager'], function(LayoutManager) {
-                  LayoutManager.scrollToElement($(self._container));
-               });
-            });
-         }
+         // TODO: this._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+         var container = this._container.get ? this._container.get(0) : this._container;
+
+         setTimeout(function() {
+            scrollToElement(container);
+         }, 0);
       },
 
       _onClickHandler: function(e) {

@@ -33,12 +33,6 @@ define('Controls/List/MultiSelector', [
     * @param {Array} deleted Array of deleted keys in selection.
     */
 
-   /**
-    * @event Controls/List/MultiSelector#listSelectedKeysCountChanged Occurs when count of selected keys was changed.
-    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {Number} selectedKeysCount Count of selected keys.
-    */
-
    var MultiSelector = Control.extend({
       _template: template,
 

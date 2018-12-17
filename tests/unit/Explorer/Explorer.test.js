@@ -33,9 +33,9 @@ define([
             testRoot = 'testRoot',
             testBreadCrumbs = new RecordSet({
                rawData: [
-                  { id: 1, title: 'item1' },
-                  { id: 2, title: 'item2' },
-                  { id: 3, title: 'item3' }
+                  { id: 1, title: 'item1', parent: null },
+                  { id: 2, title: 'item2', parent: 1 },
+                  { id: 3, title: 'item3', parent: 2 }
                ]
             }),
             testData1 = {
@@ -156,9 +156,9 @@ define([
             parentProperty: 'parent',
             keyProperty: 'id'
          });
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0), false);
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0).get('id'));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1), true);
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1).get('parent'));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
       });
 

@@ -35,7 +35,10 @@ define('Controls/Container/Suggest/Layout',
          },
          open: function(self) {
             _private.loadDependencies(self).addCallback(function() {
-               _private.suggestStateNotify(self, true);
+               //focus can be moved out while dependencies loading
+               if (self._inputActive) {
+                  _private.suggestStateNotify(self, true);
+               }
             });
          },
          searchErrback: function(self) {
@@ -129,6 +132,7 @@ define('Controls/Container/Suggest/Layout',
          _searchDelay: null,
          _dependenciesDeferred: null,
          _showContent: false,
+         _inputActive: false,
 
          /**
           * three state flag
@@ -204,10 +208,16 @@ define('Controls/Container/Suggest/Layout',
             _private.updateSuggestState(this);
          },
          _inputActivated: function() {
+            this._inputActive = true;
             if (this._options.autoDropDown && !this._options.readOnly) {
                _private.open(this);
             }
          },
+   
+         _inputDeactivated: function() {
+            this._inputActive = false;
+         },
+         
          _inputClicked: function() {
             if (this._options.autoDropDown && !this._options.suggestState &&  !this._options.readOnly) {
                _private.open(this);
