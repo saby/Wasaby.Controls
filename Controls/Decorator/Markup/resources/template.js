@@ -48,7 +48,7 @@ define('Controls/Decorator/Markup/resources/template', [
                   href: value[i][1].href,
                   target: '_blank'
                },
-               value[1][i].href
+               value[i][1].href
             ]);
          } else {
             newValue.push(value[i]);
@@ -59,6 +59,7 @@ define('Controls/Decorator/Markup/resources/template', [
 
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
+         wasResolved,
          i;
       if (isString(valueToBuild)) {
          return markupGenerator.createText(markupGenerator.escape(valueToBuild), key);
@@ -66,14 +67,15 @@ define('Controls/Decorator/Markup/resources/template', [
       if (!valueToBuild) {
          return [];
       }
-      resolverMode ^= (value !== valueToBuild);
+      wasResolved = value !== valueToBuild;
+      resolverMode ^= wasResolved;
       valueToBuild = replaceDecoratedLinks(valueToBuild);
       var children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
             children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', parent));
          }
-         resolverMode ^= (value !== valueToBuild);
+         resolverMode ^= wasResolved;
          return children;
       }
       var firstChildIndex = 1,
@@ -84,7 +86,7 @@ define('Controls/Decorator/Markup/resources/template', [
             key: key
          };
       if (!validHtml.validNodes[tagName]) {
-         resolverMode ^= (value !== valueToBuild);
+         resolverMode ^= wasResolved;
          return [];
       }
       if (valueToBuild[1] && !isString(valueToBuild[1]) && !Array.isArray(valueToBuild[1])) {
@@ -94,7 +96,7 @@ define('Controls/Decorator/Markup/resources/template', [
       for (i = firstChildIndex; i < valueToBuild.length; ++i) {
          children.push(recursiveMarkup(valueToBuild[i], {}, key + i + '_', valueToBuild));
       }
-      resolverMode ^= (value !== valueToBuild);
+      resolverMode ^= wasResolved;
       return [markupGenerator.createTag(tagName, attrs, children, attrsToDecorate, defCollection, control, key)];
    }
 

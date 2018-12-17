@@ -211,11 +211,21 @@ define('Controls/Popup/Opener/Edit',
 /**
  * @name Controls/Popup/Opener/Edit#popupOptions
  * @cfg {Object} Sets the popup configuration.
+ * @description
+ * <ul>
+ *     <li>if mode option equal 'stack' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
+ *     <li>if mode option equal 'dialog' see {@link Controls/interface/IDialogOptions#popupOptions popupOptions}</li>
+ *     <li>if mode option equal 'sticky' see {@link Controls/interface/IStickyOptions#popupOptions popupOptions}</li>
+ * </ul>
+ *
  */
 
 /**
  * @name Controls/Popup/Opener/Edit#mode
  * @cfg {Object} Sets the display mode of the dialog.
+ * @variant stack Open edit dialog in the stack panel.
+ * @variant dialog Open edit dialog in the dialog popup.
+ * @variant sticky Open edit dialog in the sticky popup.
  */
 
 /**

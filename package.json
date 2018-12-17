@@ -12,11 +12,11 @@
    ],
    "scripts": {
       "start": "node app",
-      "build": "grunt build",
-      "rebuild": "grunt rebuild",
-      "test": "node node_modules/ws-unit-testing/mocha --amd test-isolated",
-      "test:debug": "node node_modules/ws-unit-testing/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
-      "coverage": "node node_modules/ws-unit-testing/cover --amd test-isolated",
+      "build": "node build-app",
+      "rebuild": "node build-app",
+      "test": "node node_modules/saby-units/mocha --amd test-isolated",
+      "test:debug": "node node_modules/saby-units/mocha --amd %NODE_DEBUG_OPTION% test-isolated",
+      "coverage": "node node_modules/saby-units/cover --amd test-isolated",
       "lint": "node ./node_modules/eslint/bin/eslint --color --no-eslintrc -c=.eslintrc -f=stylish .",
       "lintless": "stylelint \"Controls/**/*.less\""
    },
@@ -69,7 +69,6 @@
       "gulp-livereload": "^3.8.1",
       "humanize": "0.0.9",
       "less": "^2.7.3",
-      "load-grunt-config": "0.16.0",
       "merge": "1.2.0",
       "minimatch": "^3.0.3",
       "postcss": "^6.0.23",
@@ -84,6 +83,6 @@
       "typescript": "2.5.3",
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-3.19.100",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100",
-      "ws-unit-testing": "git+https://git.sbis.ru/ws/unit-testing.git#rc-3.18.600"
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.18.700"
    }
 }

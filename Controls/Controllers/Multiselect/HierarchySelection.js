@@ -215,16 +215,14 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             itemId,
             isParentSelected,
             isParentExcluded,
-            hasSelectedChildren,
             excluded;
 
          this._items.forEach(function(item) {
             itemId = item.get(self._options.keyProperty);
             isParentSelected = _private.isParentSelected(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items);
             isParentExcluded = _private.isParentExcluded(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items);
-            hasSelectedChildren = _private.getSelectedChildrenCount(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items) > 0;
             excluded = self._excludedKeys.indexOf(itemId) !== -1 || isParentExcluded;
-            if ((self._selectedKeys[0] === null || isParentSelected || hasSelectedChildren) && !excluded || self._selectedKeys.indexOf(itemId) !== -1) {
+            if ((self._selectedKeys[0] === null || isParentSelected) && !excluded || self._selectedKeys.indexOf(itemId) !== -1) {
                res.push(itemId);
             }
          });

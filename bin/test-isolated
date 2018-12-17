@@ -5,4 +5,4 @@ node -v
 npm install
 
 node build-app
-node node_modules/ws-unit-testing/mocha -t 10000 -R xunit --amd test-report
+node node_modules/saby-units/mocha -t 10000 -R xunit --amd test-report

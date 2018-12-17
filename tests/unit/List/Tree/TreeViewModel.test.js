@@ -30,6 +30,16 @@ define([
          };
       };
    }
+   /*
+      123
+         234
+            1 (лист)
+            2 (лист)
+            3 (пустая папка)
+      345 (лист)
+      456 (лист)
+      567 (лист)
+   */
    var
       treeData = [
          {
@@ -344,11 +354,11 @@ define([
             treeViewModel.updateSelection(['123', '234', '1']);
             treeViewModel._curIndex = 0; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 1; //123
+            treeViewModel._curIndex = 1; //234
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel.updateSelection(['123']);
             treeViewModel._curIndex = 0; //123
-            assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
+            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
             assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel.updateSelection(['123', '234', '3']);
