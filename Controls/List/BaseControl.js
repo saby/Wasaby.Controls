@@ -403,15 +403,21 @@ define('Controls/List/BaseControl', [
             actionName = args && args.action,
             event = args && args.event;
 
+         function closeMenu() {
+            self._listViewModel.setActiveItem(null);
+            self._children.swipeControl.closeSwipe();
+            self._menuIsShown = false;
+         }
+
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
             aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
             if (!action['parent@']) {
                self._children.itemActionsOpener.close();
-               self._listViewModel.setActiveItem(null);
-               self._children.swipeControl.closeSwipe();
-               self._menuIsShown = false;
+               closeMenu();
             }
+         } else {
+            closeMenu();
          }
          self._forceUpdate();
       },
