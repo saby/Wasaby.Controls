@@ -25,7 +25,19 @@ define(
             clearPopupIds(popupIds, false, 'single');
             assert.deepEqual(popupIds, []);
          });
+
+         it('registerOpenerUpdateCallback', () => {
+            let opener = new BaseOpener();
+            opener._notify = (eventName, args) => {
+               assert.equal(eventName, 'registerOpenerUpdateCallback');
+               assert.equal(typeof args[0], 'function');
+            };
+            opener._afterMount();
+            opener._notify = () => {};
+            opener.destroy();
+         });
       });
+
 
       describe('Controls.Popup.Opener.Dialog', () => {
          it('getConfig', () => {

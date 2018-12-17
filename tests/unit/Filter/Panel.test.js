@@ -1,9 +1,10 @@
 define(
    [
       'Controls/Filter/Button/Panel',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+      'Core/core-clone'
    ],
-   function(FilterPanel, RecordSet) {
+   function(FilterPanel, RecordSet, Clone) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -108,11 +109,10 @@ define(
 
          it('valueChanged, visibilityChanged', function() {
             panel._beforeMount(config);
-            panel._valueChangedHandler();
-            assert.deepEqual(panel._items, config.items);
-
-            panel._visibilityChangedHandler();
-            assert.deepEqual(panel._items, config.items);
+            var newItems = Clone(items);
+            newItems[0].value = 'testValue2';
+            panel._itemsChangedHandler('itemsChanged', newItems);
+            assert.deepEqual(panel._items[0].value, 'testValue2');
          });
    
          it('resolveItems', function() {
