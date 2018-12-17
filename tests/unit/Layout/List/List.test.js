@@ -315,9 +315,11 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                });
    
                listLayout._searchMode = true;
+               context.filterLayoutField.filter = {test: 'testFilter'};
                listLayout._beforeUpdate(newOpts, context);
    
                assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
+               assert.deepEqual(listLayout._searchController._options.filter, {test: 'testFilter'});
                assert.isTrue(listLayout._source !== newOpts.source);
    
                done();
