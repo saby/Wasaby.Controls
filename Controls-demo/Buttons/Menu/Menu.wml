@@ -4,8 +4,9 @@
       <h4>One item</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              iconStyle="default"
-              style="buttonPrimary"
+              iconStyle="secondary"
+              style="primary"
+              viewMode="button"
               caption="+ Add"
               source="{{_createMemory(_oneItem)}}"
               attr:class="ControlsDemo-ButtonsMenu__item"
@@ -15,8 +16,9 @@
       <h4>Simple</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              iconStyle="default"
-              style="buttonPrimary"
+              iconStyle="secondary"
+              style="primary"
+              viewMode="button"
               caption="Create"
               source="{{_createMemory(_simpleItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__simple"
@@ -27,7 +29,8 @@
       <h4>With icons</h4>
       <Controls.Button.MenuButton
               keyProperty="id"
-              style="buttonPrimary"
+              style="primary"
+              viewMode="button"
               caption="Download"
               source="{{_createMemory(_iconsItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__icon"
@@ -38,7 +41,8 @@
       <h4>With subparagraphs</h4>
       <Controls.Button.MenuButton
               keyProperty="id"
-              style="buttonPrimary"
+              style="primary"
+              viewMode="button"
               caption="Reports"
               itemTemplateProperty="myTemplate"
               source="{{_createMemory(_subParagraphItems)}}"
@@ -51,8 +55,10 @@
       <Controls.Button.Menu
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
+              iconStyle="primary"
               itemTemplateProperty="myTemplate"
-              style="buttonPrimary"
+              style="primary"
+              viewMode="button"
               source="{{_createMemory(_commentItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__comments"
               tooltip="Add">
@@ -66,7 +72,9 @@
               keyProperty="id"
               caption="Topic +"
               itemTemplate="wml!Controls-demo/Buttons/Menu/itemTemplateComment"
-              style="buttonPrimary"
+              style="primary"
+              dropdownClassName="demo-menu"
+              viewMode="button"
               source="{{_createMemory(_themesItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__noIcons"
               tooltip="Add topic"/>
@@ -77,7 +85,8 @@
       <Controls.Button.Menu
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
-              style="buttonDefault"
+              style="secondary"
+              viewMode="button"
               source="{{_createMemory(_simpleAdd)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__addText"
               tooltip="Add">
@@ -91,7 +100,8 @@
               keyProperty="id"
               size="m"
               icon="icon-small icon-AddButtonNew"
-              style="iconButtonBordered"
+              viewMode="toolButton"
+              style="secondary"
               source="{{_createMemory(_iconAdd)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconHeader"
               tooltip="Add">
@@ -100,7 +110,8 @@
       <Controls.Button.Menu
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
-              style="iconButtonBordered"
+              viewMode="toolButton"
+              style="secondary"
               size="l"
               source="{{_createMemory(_iconAddMedium)}}"
               attr:class="ControlsDemo-ButtonsMenu__item"
@@ -114,7 +125,10 @@
       <Controls.History.Menu
               keyProperty="id"
               icon="icon-medium icon-AddButtonNew"
-              style="buttonPrimary"
+              iconStyle="primary"
+              style="primary"
+              viewMode="button"
+              iconStyle="primary"
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_createHistoryMemory()}}"
@@ -128,7 +142,8 @@
       <h4>Menu with icon button</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               icon="icon-Save icon-small icon-primary "
               source="{{_createMemory(_iconButtonItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__iconButton"
@@ -137,7 +152,8 @@
       </Controls.Button.Menu>
       <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               icon="icon-Save icon-medium icon-primary "
               source="{{_createMemory(_iconButtonItems)}}"
               attr:class="ControlsDemo-ButtonsMenu__item"
@@ -150,7 +166,8 @@
       <h4>Menu with multiple levels</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
@@ -164,7 +181,8 @@
       <h4>Multiple level menu with comments</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              style="buttonPrimary"
+              style="primary"
+              viewMode="button"
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
@@ -179,13 +197,28 @@
       <h4>Grouping in the menu</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              style="buttonPrimary"
+              style="primary"
+              iconStyle="primary"
+              viewMode="button"
               icon="icon-small icon-AddButtonNew"
               showHeader="{{false}}"
               source="{{_createMemory(_groupItems)}}"
-              itemsGroup="{{_itemsGroup}}"
+              groupMethod="{{_groupMethod}}"
+              groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
               tooltip="Add">
+      </Controls.Button.Menu>
+      <Controls.Button.Menu
+              keyProperty="id"
+              viewMode="link"
+              icon="icon-medium icon-Linked"
+              source="{{_createMemory(_groupTextItems)}}"
+              groupMethod="{{_groupMethod}}"
+              attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
+              tooltip="Add">
+         <ws:groupTemplate>
+            <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}"/>
+         </ws:groupTemplate>
       </Controls.Button.Menu>
    </div>
 
@@ -193,7 +226,8 @@
       <h4>Scrolling in the menu</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               caption="Subtask"
               icon="icon-small icon-Check icon-primary"
               dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
@@ -201,9 +235,10 @@
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__scroll"
               tooltip="Subtask">
       </Controls.Button.Menu>
-   <Controls.Button.Menu
+      <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               caption="Subtask"
               icon="icon-medium icon-Check icon-primary"
               dropdownClassName="ControlsDemo-ButtonsMenu__scroll"
@@ -217,7 +252,8 @@
    <div class="ControlsDemo-ButtonsMenu__wrapper ControlsDemo-ButtonsMenu-bottom-right">
       <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"
@@ -232,7 +268,8 @@
       <h4>The menu opens down and left</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              style="linkMain"
+              style="secondary"
+              viewMode="link"
               caption="Document"
               parentProperty="parent"
               nodeProperty="@parent"

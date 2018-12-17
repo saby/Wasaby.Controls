@@ -9,28 +9,43 @@ define('Controls/Application/_Wait',
    function(Base, Deferred, Request, template) {
       'use strict';
 
+      var asyncTemplate = function() {
+         var res = template.apply(this, arguments);
+         var self = this;
+         if (res.then) {
+            res.then(function(result) {
+               self._resolvePromiseFn();
+               return result;
+            });
+         } else {
+            self._resolvePromiseFn();
+         }
+         return res;
+      };
+
+      // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
+      asyncTemplate.stable = template.stable;
+
       var Page = Base.extend({
-         _template: function() {
-            var res = template.apply(this, arguments);
-            var self = this;
-            if (res.addCallback && !res.isReady() && !self.waitDef.isReady()) {
-               res.addCallback(function(result) {
-                  self.waitDef.callback({});
-                  return result;
-               });
-            } else {
-               if (self.waitDef && !self.waitDef.isReady()) {
-                  self.waitDef.callback({});
-               }
+         _template: asyncTemplate,
+         _resolvePromise: null,
+         _resolvePromiseFn: function() {
+            if (this._resolvePromise) {
+               this._resolvePromise();
+               this._resolvePromise = null;
             }
-            return res;
+         },
+         _createPromise: function() {
+            this.waitDef = new Promise(function(resolve) {
+               this._resolvePromise = resolve;
+            }.bind(this));
          },
          _beforeMount: function() {
-            this.waitDef = new Deferred();
+            this._createPromise();
             Request.getCurrent().getStorage('HeadData').pushWaiterDeferred(this.waitDef);
             if (typeof window !== 'undefined') {
-               this.waitDef.callback();
-               this.waitDef = new Deferred();
+               this._resolvePromiseFn();
+               this._createPromise();
             }
          }
       });

@@ -8,13 +8,13 @@ define('Controls-demo/OperationsPanel/Panel', [
    'use strict';
    var PANEL_ITEMS_FIRST = [{
       id: 'remove',
-      icon: 'icon-Erase icon-error',
+      icon: 'icon-Erase icon-error icon-medium',
       '@parent': false,
       title: 'Удалить',
       parent: null
    }, {
       id: 'save',
-      icon: 'icon-Save',
+      icon: 'icon-Save icon-medium',
       '@parent': true,
       title: 'Выгрузить',
       parent: null
@@ -30,26 +30,26 @@ define('Controls-demo/OperationsPanel/Panel', [
       parent: 'save'
    }, {
       id: 'move',
-      icon: 'icon-Move',
+      icon: 'icon-Move icon-medium',
       '@parent': false,
       title: 'Перенести',
       parent: null
    }];
    var PANEL_ITEMS_SECOND = [{
       id: 'merge',
-      icon: 'icon-Unite',
+      icon: 'icon-Unite icon-medium',
       '@parent': false,
       title: 'Объединить',
       parent: null
    }, {
       id: 'read',
-      icon: 'icon-WorkRead',
+      icon: 'icon-WorkRead icon-medium',
       '@parent': false,
       title: 'Прочитать',
       parent: null
    }, {
       id: 'show',
-      icon: 'icon-Show',
+      icon: 'icon-Show icon-medium',
       '@parent': false,
       title: 'Поставить на контроль',
       parent: null

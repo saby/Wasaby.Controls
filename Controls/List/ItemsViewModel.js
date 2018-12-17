@@ -125,7 +125,8 @@ define('Controls/List/ItemsViewModel', [
                      return this.item.getVersion();
                   }
                   return this.item;
-               }
+               },
+               spacingClassList: this.getSpacingClassList()
             };
          if (this._options.groupMethod) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
@@ -136,6 +137,13 @@ define('Controls/List/ItemsViewModel', [
             }
          }
          return itemData;
+      },
+
+      getSpacingClassList: function() {
+         var classList = '';
+         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
+         classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
+         return classList;
       },
 
       toggleGroup: function(group, state) {
@@ -204,6 +212,7 @@ define('Controls/List/ItemsViewModel', [
 
       setItems: function(items) {
          if (_private.isEqualItems(this._items, items)) {
+            this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
          } else {
             if (this._options.itemsReadyCallback) {
@@ -219,6 +228,11 @@ define('Controls/List/ItemsViewModel', [
             this._notify('onListChange');
          }
       },
+
+      getItems: function() {
+         return this._items;
+      },
+
       appendItems: function(items) {
          this._items.append(items);
       },

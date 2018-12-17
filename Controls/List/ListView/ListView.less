@@ -12,11 +12,6 @@
    top: 0;
 }
 
-// Удалить при закрытии: https://online.sbis.ru/opendoc.html?guid=2525f9fc-8b96-4bc0-ae35-8597290ecdae
-.controls-ListView__checkbox .controls-Checkbox__caption {
-   display: none;
-}
-
 .controls-ListView__checkbox {
    float: left;
    margin: @padding_List-checkbox;
@@ -31,11 +26,67 @@
 }
 
 .controls-ListView__itemContent_withCheckboxes {
-   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @spacing-List-between-checkbox-content + @width_CheckBox;
+   padding: @spacing_List-item_default / 2 0 @spacing_List-item_default / 2 @spacing-List-between-checkbox-content + @width_CheckBox;
 }
 
 .controls-ListView__itemContent_withoutCheckboxes {
-   padding: @spacing_List-item_default / 2 @padding_List-right @spacing_List-item_default / 2 @padding_List-left;
+   padding: @spacing_List-item_default / 2 0;
+}
+
+.controls-ListView__item-leftPadding_default {
+   padding-left: @spacing_ListView-item-around-content_m;
+}
+
+.controls-ListView__item-leftPadding_XS {
+   padding-left: @spacing_ListView-item-around-content_xs;
+}
+
+.controls-ListView__item-leftPadding_S {
+   padding-left: @spacing_ListView-item-around-content_s;
+}
+
+.controls-ListView__item-leftPadding_M {
+   padding-left: @spacing_ListView-item-around-content_m;
+}
+
+.controls-ListView__item-leftPadding_L {
+   padding-left: @spacing_ListView-item-around-content_l;
+}
+
+.controls-ListView__item-leftPadding_XL {
+   padding-left: @spacing_ListView-item-around-content_xl;
+}
+
+.controls-ListView__item-leftPadding_XXL {
+   padding-left: @spacing_ListView-item-around-content_xxl;
+}
+
+.controls-ListView__item-rightPadding_default {
+   padding-right: @spacing_ListView-item-around-content_m;
+}
+
+.controls-ListView__item-rightPadding_XS {
+   padding-right: @spacing_ListView-item-around-content_xs;
+}
+
+.controls-ListView__item-rightPadding_S {
+   padding-right: @spacing_ListView-item-around-content_s;
+}
+
+.controls-ListView__item-rightPadding_M {
+   padding-right: @spacing_ListView-item-around-content_m;
+}
+
+.controls-ListView__item-rightPadding_L {
+   padding-right: @spacing_ListView-item-around-content_l;
+}
+
+.controls-ListView__item-rightPadding_XL {
+   padding-right: @spacing_ListView-item-around-content_xl;
+}
+
+.controls-ListView__item-rightPadding_XXL {
+   padding-right: @spacing_ListView-item-around-content_xxl;
 }
 
 .controls-ListView__itemContent {
@@ -183,5 +234,58 @@
          background-color: @hover-color_MasterList_item;
       }
    }
+}
+
+.controls-ListView__empty {
+   color: @color_ListView-empty;
+   text-align: center;
+}
+
+.controls-ListView__empty_topSpacing_xs {
+   margin-top: @spacing_ListView-empty-top_xs;
+}
+
+.controls-ListView__empty_topSpacing_s {
+   margin-top: @spacing_ListView-empty-top_s;
+}
+
+.controls-ListView__empty_topSpacing_m {
+   margin-top: @spacing_ListView-empty-top_m;
+}
+
+.controls-ListView__empty_topSpacing_l {
+   margin-top: @spacing_ListView-empty-top_l;
+}
+
+.controls-ListView__empty_topSpacing_xl {
+   margin-top: @spacing_ListView-empty-top_xl;
+}
+
+.controls-ListView__empty_topSpacing_xxl {
+   margin-top: @spacing_ListView-empty-top_xxl;
+}
+
+.controls-ListView__empty_bottomSpacing_xs {
+   margin-bottom: @spacing_ListView-empty-bottom_xs;
+}
+
+.controls-ListView__empty_bottomSpacing_s {
+   margin-bottom: @spacing_ListView-empty-bottom_s;
+}
+
+.controls-ListView__empty_bottomSpacing_m {
+   margin-bottom: @spacing_ListView-empty-bottom_m;
+}
+
+.controls-ListView__empty_bottomSpacing_l {
+   margin-bottom: @spacing_ListView-empty-bottom_l;
+}
+
+.controls-ListView__empty_bottomSpacing_xl {
+   margin-bottom: @spacing_ListView-empty-bottom_xl;
+}
+
+.controls-ListView__empty_bottomSpacing_xxl {
+   margin-bottom: @spacing_ListView-empty-bottom_xxl;
 }
 

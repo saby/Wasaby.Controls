@@ -2,7 +2,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/DialogTemplate',
-      'css!Controls/Popup/Templates/Dialog/DialogTemplate'
+      'css!theme?Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
    function(Control, template) {
       'use strict';
@@ -28,20 +28,23 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#captionStyle
           * @cfg {String} Caption display style.
+          * @variant default
+          * @variant accent
+          * @variant small
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#headerContentTemplate
-          * @cfg {Content} The content between the header and the cross closure.
+          * @cfg {function|String} The content between the header and the cross closure.
           */
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#bodyContentTemplate
-          * @cfg {Content} Main content.
+          * @cfg {function|String} Main content.
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#footerContentTemplate
-          * @cfg {Content} Content at the bottom of the stack panel.
+          * @cfg {function|String} Content at the bottom of the stack panel.
           */
 
          /**
@@ -52,11 +55,15 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#closeButtonStyle
           * @cfg {String} Close button display style.
+          * @variant default
+          * @variant lite
+          * @variant primary
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#draggable
           * @cfg {Boolean} Determines whether the control can be moved by d'n'd.
+          * @default false
           */
 
          _template: template,

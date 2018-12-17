@@ -1,9 +1,10 @@
 define([
    'Controls/List/Swipe/List'
-], function(ListSwipe) {
+], function(
+   ListSwipe
+) {
    describe('Controls.List.Swipe.List', function() {
       var showMore = {
-         title: rk('Еще'),
          icon: 'icon-ExpandDown icon-primary controls-itemActionsV__action_icon icon-size',
          height: 'auto',
          isMenu: true

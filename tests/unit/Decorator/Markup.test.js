@@ -158,8 +158,8 @@ define([
             cConstants.decoratedLinkService = decoratedLinkService;
          });
          it('empty', function() {
-            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<span></span>'));
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<span></span>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<div></div>'));
          });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><'];
@@ -283,6 +283,8 @@ define([
                ['p', linkNode, '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
+               ['p', linkNode, ['br'], 'text'],
+               ['p', linkNode, '   ', ['br'], 'text'],
                ['p', ['strong', linkNode], 'text'],
                ['p',
                   ['a',
@@ -301,6 +303,8 @@ define([
                '<p>' + decoratedLinkHtml + '   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
+               '<p>' + decoratedLinkHtml + '<br />text</p>' +
+               '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
                '<p>' + decoratedLinkHtml + '</p>' +
                '<p><a href="https://ya.ru">text</a></p>' +

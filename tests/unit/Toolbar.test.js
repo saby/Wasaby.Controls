@@ -187,6 +187,75 @@ define(
                };
                assert.equal(isMenuClosed, false);
             });
+            it('item popup config generation', function() {
+               var
+                  testItem = new Model({
+                     rawData:
+                     {
+                        buttonViewMode: 'buttonViewMode',
+                        popupClassName: 'popupClassName',
+                        keyProperty: 'itemKeyProperty',
+                        showHeader: 'showHeader',
+                        icon: 'icon',
+                        title: 'title',
+                        iconStyle: 'iconStyle'
+                     }
+                  }),
+                  testSelf = {
+                     _options: {
+                        size: 'size',
+                        keyProperty: 'keyProperty'
+                     },
+                     _items: 'items'
+                  },
+                  testEvent = {
+                     target: 'target'
+                  },
+                  config = {
+                     className: 'controls-Toolbar_buttonViewMode_size popupClassName',
+                     corner: {
+                        horizontal: 'left',
+                        vertical: 'top'
+                     },
+                     horizontalAlign: {
+                        side: 'right'
+                     },
+                     target: 'target',
+                     templateOptions: {
+                        headConfig: {
+                           caption: 'title',
+                           icon: 'icon',
+                           iconStyle: 'iconStyle'
+                        },
+                        items: 'items',
+                        rootKey: 'itemKeyProperty',
+                        showHeader: 'showHeader'
+                     }
+                  };
+               assert.deepEqual(Toolbar._private.generateItemPopupConfig(testItem, testEvent, testSelf), config);
+            });
+            it('menu popup config generation', function() {
+               var
+                  testSelf = {
+                     _options: {
+                        size: 'size',
+                        popupClassName: 'popupClassName'
+                     },
+                     _children: {
+                        popupTarget: 'popupTarget'
+                     },
+                     _menuItems: 'menuItems'
+                  },
+                  config = {
+                     className: 'controls-Toolbar__menu-position popupClassName',
+                     target: 'popupTarget',
+                     templateOptions: {
+                        items: 'menuItems',
+                        iconSize: 'size'
+                     }
+                  };
+               assert.deepEqual(Toolbar._private.generateMenuConfig(testSelf), config);
+            });
             it('getItemClassName', () => {
                assert.equal('controls-Toolbar_link_s', Toolbar._private.getItemClassName(records.at(3), 's'));
             });
@@ -208,7 +277,6 @@ define(
                toolbar._closeHandler();
             });
          });
-
          function setTrue(assert) {
             assert.equal(true, true);
          }

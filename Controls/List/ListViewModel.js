@@ -52,7 +52,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) !== -1;
-            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover';
+            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             if (itemsModelCurrent.itemActions) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
@@ -70,7 +70,7 @@ define('Controls/List/ListViewModel',
                   }
                }
             }
-            if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
+            if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
@@ -192,12 +192,16 @@ define('Controls/List/ListViewModel',
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
-            if (!this._markedItem && this._options.markerVisibility === 'always') {
+            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items.getCount()) {
                this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
             _private.updateIndexes(this);
+         },
+
+         getItems: function() {
+            return ListViewModel.superclass.getItems.apply(this, arguments);
          },
 
          _setEditingItemData: function(itemData) {
@@ -244,6 +248,14 @@ define('Controls/List/ListViewModel',
 
          getMultiSelectVisibility: function() {
             return this._options.multiSelectVisibility;
+         },
+         
+         setSorting: function(sorting) {
+            this._options.sorting = sorting;
+         },
+         
+         getSorting: function() {
+            return this._options.sorting;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

@@ -123,6 +123,19 @@ function(cMerge,
          }
       },
 
+      prepareNotificationConfig: function(config) {
+         var template = typeof config.template === 'string' ?  requirejs(config.template) : config.template;
+         config.opener = null;
+         config.className = 'controls-OldNotification';
+         config.isVDOM = true;
+         config.template = 'Controls/Popup/Compatible/OldNotification';
+         config.componentOptions = {
+            template: template,
+            templateOptions: config.templateOptions
+         };
+         return config;
+      },
+
       _prepareContext: function(cfg, parentContext) {
          var destroyDef = new Deferred(),
             destrFunc = function() {

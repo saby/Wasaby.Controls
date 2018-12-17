@@ -14,6 +14,7 @@ def gitlabStatusUpdate() {
 }
 def exception(err, reason) {
     currentBuild.displayName = "#${env.BUILD_NUMBER} ${reason}"
+    currentBuild.description = "${err}"
     error(err)
 }
 
@@ -22,6 +23,40 @@ def send_status_in_gitlab(state) {
     def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
     echo "${request_data}"
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
+}
+
+def build_description(job, path, skip_test) {
+    def param_skip = ''
+    def title = ''
+    if (skip_test) {
+        param_skip="-s"
+    }
+    def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
+    if (description) {
+        echo "${description}"
+        title = description.tokenize('|')[0]
+        description = description.tokenize('|')[1]
+        echo "${title}"
+
+    }
+    return [title, description]
+}
+
+def build_title(t_int, t_reg) {
+    if (!t_int && !t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER}"
+    } else if (t_int && !t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    } else if (!t_int && t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+    } else if (t_int && t_reg && t_int==t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+    }
+
 }
 
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
@@ -55,6 +90,10 @@ echo "Генерируем параметры"
             string(
                 defaultValue: '',
                 description: '',
+                name: 'branch_viewsettings'),
+            string(
+                defaultValue: '',
+                description: '',
                 name: 'branch_themes'),
             string(
                 defaultValue: "",
@@ -69,15 +108,20 @@ echo "Генерируем параметры"
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Запуск ТОЛЬКО УПАВШИХ тестов из предыдущего билда. Укажите опции run_int и/или run_reg", name: 'run_only_fail_test')
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]),
         pipelineTriggers([])
     ])
 
+def regr = params.run_reg
+def unit = params.run_unit
+def inte = params.run_int
+def all_inte = params.run_all_int
+def only_fail = false
+
 node('master') {
 
-    if ( "${env.BUILD_NUMBER}" != "1" && !( params.run_reg || params.run_unit || params.run_int || params.run_all_int || params.run_only_fail_test )) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -94,12 +138,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
-        def regr = params.run_reg
-        def unit = params.run_unit
-        def inte = params.run_int
-        def all_inte = params.run_all_int
         def skip = params.skip
-        def only_fail = params.run_only_fail_test
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
@@ -138,6 +177,13 @@ node('controls') {
         } else {
             branch_navigation = props["navigation"]
         }
+        def branch_viewsettings
+        if (params.branch_viewsettings) {
+            branch_viewsettings = params.branch_viewsettings
+        } else {
+            branch_viewsettings = props["viewsettings"]
+        }
+        
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
@@ -145,6 +191,9 @@ node('controls') {
         }
         if ( inte && all_inte ) {
             inte = false
+        }
+        if ( inte || all_inte || regr ) {
+            unit = true
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -154,6 +203,7 @@ node('controls') {
                 sh "rm -rf ${workspace}/controls/tests/reg/atf"
                 sh "rm -rf ${workspace}/controls/sbis3-app-engine"
                 sh "rm -rf ${workspace}/controls/tests/navigation"
+                sh "rm -rf ${workspace}/controls/viewsettings"
                 sh "rm -rf ${workspace}/controls/node_modules"
                 sh "rm -rf ${workspace}/controls/package-lock.json"
             }
@@ -208,6 +258,7 @@ node('controls') {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
+                             sh "cp -R ./atf/ ../reg/atf/"
                             }
                         },
                         checkout_engine: {
@@ -241,6 +292,23 @@ node('controls') {
                                     userRemoteConfigs: [[
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:navigation-configuration/navigation.git']]
+                                ])
+                            }
+                        },
+                        checkout_viewsettings: {
+                            echo " Выкачиваем viewsettings"
+                            dir("./controls"){
+                                checkout([$class: 'GitSCM',
+                                branches: [[name: branch_viewsettings]],
+                                doGenerateSubmoduleConfigurations: false,
+                                extensions: [[
+                                    $class: 'RelativeTargetDirectory',
+                                    relativeTargetDir: "viewsettings"
+                                    ]],
+                                    submoduleCfg: [],
+                                    userRemoteConfigs: [[
+                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        url: 'git@git.sbis.ru:engine/viewsettings.git']]
                                 ])
                             }
                         }
@@ -390,12 +458,42 @@ node('controls') {
                 echo "Собираем ws.data только когда указан сторонний бранч"
                 if ("${params.ws_data_revision}" != "sdk"){
                     echo "Добавляем в items"
-                    items = items + ", ws_data:${workspace}/ws_data"
+                    items = items + ", ws_data:${workspace}/ws_data, data:${workspace}/ws_data"
                 }
             }
             echo items
         }
+        stage ("Unit тесты"){
+            if ( unit ){
+                echo "Запускаем юнит тесты"
+                dir("./controls"){
+                    sh """
+                    npm cache clean --force
+                    npm config set registry http://npmregistry.sbis.ru:81/
+                    echo "run isolated"
+                    export test_report="artifacts/test-isolated-report.xml"
+                    sh ./bin/test-isolated
+
+                    echo "run browser"
+                    export test_url_host=${env.NODE_NAME}
+                    export test_server_port=10253
+                    export test_url_port=10253
+                    export WEBDRIVER_remote_enabled=1
+                    export WEBDRIVER_remote_host=10.76.159.209
+                    export WEBDRIVER_remote_port=4444
+                    export test_report=artifacts/test-browser-report.xml
+                    sh ./bin/test-browser
+                    """
+                }
+            }
+            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            unit_result = currentBuild.result == null
+            if (!unit_result) {
+                exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+            }
+        }
         if ( regr || inte || all_inte) {
+
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -476,6 +574,7 @@ node('controls') {
             """
             }
         }
+
         if ( regr || inte || all_inte) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -569,30 +668,6 @@ node('controls') {
                 }
             }
             parallel (
-                unit: {
-                    stage ("Unit тесты"){
-                        if ( unit ){
-                            echo "Запускаем юнит тесты"
-                                dir("./controls"){
-                                sh "npm config set registry http://npmregistry.sbis.ru:81/"
-                                echo "run isolated"
-                                sh """
-                                export test_report="artifacts/test-isolated-report.xml"
-                                sh ./bin/test-isolated"""
-                                echo "run browser"
-                                sh """
-                                export test_url_host=${env.NODE_NAME}
-                                export test_server_port=10253
-                                export test_url_port=10253
-                                export WEBDRIVER_remote_enabled=1
-                                export WEBDRIVER_remote_host=10.76.159.209
-                                export WEBDRIVER_remote_port=4444
-                                export test_report=artifacts/test-browser-report.xml
-                                sh ./bin/test-browser"""
-                            }
-                        }
-                    }
-                },
                 int_test: {
                     stage("Инт.тесты"){
                         if ( inte || all_inte && smoke_result ){
@@ -612,7 +687,6 @@ node('controls') {
                     stage("Рег.тесты"){
                         if ( regr && smoke_result){
                             echo "Запускаем тесты верстки"
-                            sh "cp -R ./controls/tests/int/atf/ ./controls/tests/reg/atf/"
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
@@ -669,6 +743,32 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        dir("./controls/tests") {
+            def int_title = ''
+            def reg_title = ''
+            def description = ''
+            if (inte || all_inte) {
+                 int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
+                 int_title = int_data[0]
+                 int_description= int_data[1]
+                 print("in int ${int_description}")
+                 if ( int_description ) {
+                    description += "${int_description}"
+                 }
+            }
+            if (regr) {
+                reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
+                reg_title = reg_data[0]
+                reg_description = reg_data[1]
+                print("in reg ${reg_description}")
+                if ( description != reg_description ) {
+                    description += "${reg_description}"
+                }
+            }
+
+            build_title(int_title, reg_title)
+            currentBuild.description = "${description}"
+        }
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
