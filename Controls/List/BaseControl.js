@@ -42,7 +42,7 @@ define('Controls/List/BaseControl', [
    var
       defaultSelectedKeys = [],
       defaultExcludedKeys = [];
-   
+
    var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
@@ -121,13 +121,13 @@ define('Controls/List/BaseControl', [
                   // self._virtualScroll.prependItems(addedItems.getCount());
                }
 
-               // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
+               // If received list is empty, make another request.
+               // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                if (!addedItems.getCount()) {
                   _private.checkLoadToDirectionCapability(self);
                }
 
                _private.prepareFooter(self, self._options.navigation, self._sourceController);
-
                return addedItems;
 
                // обновить начало/конец видимого диапазона записей и высоты распорок
@@ -148,15 +148,16 @@ define('Controls/List/BaseControl', [
                userErrback(error);
             }
 
-            if (!(error.processed || error._isOfflineMode)) {// Не показываем ошибку, если было прервано соединение с интернетом
-               // TODO новые попапы
-               /* InformationPopupManager.showMessageDialog(
-
-                opener: self,
-
-                status: 'error'
-                }
-                ); */
+            // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
+            if (!(error.processed || error._isOfflineMode)) {
+               // Control show messagebox only in clientside
+               if (self._children && self._children.errorMsgOpener) {
+                  self._children.errorMsgOpener.open({
+                     message: error.message,
+                     style: 'error',
+                     type: 'ok'
+                  });
+               }
                error.processed = true;
             }
          }

@@ -39,6 +39,13 @@
             <ws:partial template="{{_options.viewName}}"/>
          </ws:viewTemplate>
          <ws:footerTemplate>
+            <ws:if data="{{_loadingIndicatorState}}">
+               <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+                  <ws:if data="{{_showLoadingIndicatorImage}}">
+                     <div class="controls-BaseControl__loadingIndicatorImg"></div>
+                  </ws:if>
+               </div>
+            </ws:if>
             <ws:if data="{{_options.footerTemplate}}">
                <ws:partial template="{{_options.footerTemplate}}"/>
             </ws:if>
@@ -123,18 +130,14 @@
           <Controls.List.Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.List.Paging>
        </div>
     </ws:if>
-    <ws:if data="{{_loadingIndicatorState}}">
-        <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
-            <ws:if data="{{_showLoadingIndicatorImage}}">
-                <div class="controls-BaseControl__loadingIndicatorImg"></div>
-            </ws:if>
-        </div>
-    </ws:if>
     <Controls.Dropdown.Opener
             name="itemActionsOpener"
             keyProperty="id"
             menuStyle="cross"
             popupOptions="{{_popupOptions}}"/>
+    <Controls.Popup.Opener.Confirmation
+            name="errorMsgOpener"
+    />
    <ws:if data="{{ _items }}">
       <Controls.List.BaseControl.SelectionController
          name="selectionController"

@@ -9,7 +9,8 @@ define('Controls/Container/Suggest/Layout/Styles',
        * @author Герасимов А.М.
        *
        * @css @box-shadow-color_Suggest Suggest shadow color.
-       * @css @box-shadow-size_Suggest Suggest shadow size.
+       * @css @box-shadow-size_Suggest_top Suggest shadow size, when vertical align of suggest is top.
+       * @css @box-shadow-size_Suggest_bottom Suggest shadow size, when vertical align of suggest is bottom.
        * @css @border-color_Suggest Border color of suggest.
        * @css @border-width_Suggest Border width of suggest.
        * @css @background-color_Suggest Suggest background color.
