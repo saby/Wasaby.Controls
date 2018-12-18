@@ -391,8 +391,17 @@ define('Controls/List/BaseControl', [
                   keyProperty: 'id',
                   parentProperty: 'parent',
                   nodeProperty: 'parent@',
-                  dropdownClassName: 'controls-itemActionsV__popup'
+                  dropdownClassName: 'controls-itemActionsV__popup',
+                  showClose: true
                },
+               eventHandlers: {
+                  onResult: self._closeActionsMenu,
+                  onClose: self._closeActionsMenu
+               },
+               closeByExternalClick: true,
+               corner: { vertical: 'top', horizontal: 'right' },
+               horizontalAlign: { side: context ? 'right' : 'left' },
+               className: 'controls-Toolbar__menu-position',
                nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
@@ -417,22 +426,6 @@ define('Controls/List/BaseControl', [
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
-      },
-
-      setPopupOptions: function(self) {
-         self._popupOptions = {
-            className: 'controls-Toolbar__menu-position',
-            closeByExternalClick: true,
-            corner: { vertical: 'top', horizontal: 'right' },
-            horizontalAlign: { side: 'right' },
-            eventHandlers: {
-               onResult: self._closeActionsMenu,
-               onClose: self._closeActionsMenu
-            },
-            templateOptions: {
-               showClose: true
-            }
-         };
       },
 
       groupsExpandChangeHandler: function(self, changes) {
@@ -552,7 +545,6 @@ define('Controls/List/BaseControl', [
             self = this;
 
          _private.bindHandlers(this);
-         _private.setPopupOptions(this);
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,
