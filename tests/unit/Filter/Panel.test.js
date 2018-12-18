@@ -2,9 +2,10 @@ define(
    [
       'Controls/Filter/Button/Panel',
       'WS.Data/Collection/RecordSet',
-      'Core/core-clone'
+      'Core/core-clone',
+      'Core/Deferred'
    ],
-   function(FilterPanel, RecordSet, Clone) {
+   function(FilterPanel, RecordSet, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -62,6 +63,10 @@ define(
          it('apply', function() {
             isNotifyClose = false;
             panel._beforeMount(config);
+            panel._children = { formController: {submit: ()=>{return Deferred.success([true])}}};
+            panel._applyFilter();
+            assert.isFalse(isNotifyClose);
+            panel._children = { formController: {submit: ()=>{return Deferred.success([false])}}};
             panel._applyFilter();
             assert.deepEqual({text: '123'}, filter);
             assert.isTrue(isNotifyClose);
@@ -145,6 +150,5 @@ define(
             }
             assert.isTrue(errorCathed);
          });
-
       });
    });
