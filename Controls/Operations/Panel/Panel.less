@@ -5,8 +5,19 @@
    user-select: none;
    overflow: hidden;
    white-space: nowrap;
-   background-color: @background-color_OperationsPanel;
    position: relative;
+}
+
+.controls-operationsPanelV_notInitialized {
+   /*
+   We have to set height: 0 on the parent, because we set the height of the actions on the first render but don't actually want to show them yet (because they're not ready).
+   See comment to .controls-operationsPanelV__actions_notInitialized to understand why the height is set on the actions on the first render.
+   */
+   height: 0;
+}
+
+.controls-operationsPanelV_initialized {
+   background-color: @background-color_OperationsPanel;
    height: @height_OperationsPanel;
 }
 
@@ -23,6 +34,15 @@
    flex-shrink: 1;
    overflow: hidden;
    margin: 0 @spacing_OperationsPanel-between-items;
+}
+
+.controls-operationsPanelV__actions_notInitialized {
+   /*
+   In IE calculated width of the flex element is 0 if the calculated height of the element is 0.
+   But if we set the height on the element it works as expected
+   http://jsfiddle.net/bnycf4a9/
+   */
+   height: 1px;
 }
 
 .controls-operationsPanelV__item {

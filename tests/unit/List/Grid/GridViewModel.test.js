@@ -236,7 +236,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
             assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
@@ -255,7 +255,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('state', function() {
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
@@ -399,6 +399,13 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
       });
       describe('ladder and sticky column', function() {
          var
+            initialColumns = [{
+               width: '1fr',
+               displayProperty: 'title'
+            }, {
+               width: '1fr',
+               template: 'wml!MyTestDir/Photo'
+            }],
             resultLadder = {
                0: { date: { ladderLength: 1 } },
                1: { date: { ladderLength: 3 } },
@@ -440,13 +447,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   ]
                }),
                keyProperty: 'id',
-               columns: [{
-                  width: '1fr',
-                  displayProperty: 'title'
-               }, {
-                  width: '1fr',
-                  template: 'wml!MyTestDir/Photo'
-               }],
+               columns: initialColumns,
                ladderProperties: ['date'],
                stickyColumn: {
                   property: 'photo',
@@ -455,6 +456,31 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          assert.deepEqual(ladderViewModel._ladder.ladder, resultLadder, 'Incorrect value prepared ladder.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
+
+         var
+            newItems = new RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
+                  { id: 1, title: 'i1', date: '03 янв', photo: '1.png' },
+                  { id: 2, title: 'i2', date: '03 янв', photo: '1.png' }
+               ]
+            }),
+            newResultLadder = {
+               0: { date: { ladderLength: 1 } },
+               1: { date: { ladderLength: 2 } },
+               2: { date: { } }
+            },
+            newResultStickyLadder = {
+               0: { ladderLength: 3, headingStyle: 'grid-area: 1 / 1 / span 3 / span 1;' },
+               1: { },
+               2: { }
+            };
+
+         ladderViewModel.setItems(newItems);
+
+         assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
+         assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
       });
       describe('other methods of the class', function() {
          var
@@ -471,6 +497,18 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(null, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(null)".');
             gridViewModel.setHeader(gridHeader);
             assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(gridHeader)".');
+         });
+         it('getColumns && setColumns', function() {
+            var newColumns = [{
+               displayProperty: 'field1'
+            }, {
+               displayProperty: 'field2'
+            }];
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(newColumns)".');
+            gridViewModel.setColumns(newColumns);
+            assert.deepEqual(newColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" after "setColumns(newColumns)".');
+            gridViewModel.setColumns(gridColumns);
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
          it('_prepareCrossBrowserColumn', function() {
             var

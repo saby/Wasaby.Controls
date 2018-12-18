@@ -49,7 +49,6 @@ define([
          assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
       });
 
-
       it('Selection', function() {
          var cfg = {
             items: data,

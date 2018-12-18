@@ -8,7 +8,6 @@
   "deprecatedWebPageTemplates": true,
   "htmlWml": true,
   "themes": true,
-
   "minimize": false,
   "wml": false,
   "customPack": false,
@@ -88,13 +87,20 @@
       "path": "%cd%/tests/unit"
     },
     {
+      "name": "File",
+      "path": "%cd%/node_modules/rmi/src/client/File"
+    },
+    {
       "name": "Vdom",
       "path": "%cd%/node_modules/sbis3-ws/Vdom"
     },
     {
       "name": "Router",
       "path": "%cd%/node_modules/Router/Router"
+    },
+    {
+      "name": "Inferno",
+      "path": "%cd%/node_modules/sbis3-ws/Inferno"
     }
-
   ]
 }

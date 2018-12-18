@@ -1,9 +1,11 @@
 define(
    [
       'Controls/Filter/Button/Panel',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+      'Core/core-clone',
+      'Core/Deferred'
    ],
-   function(FilterPanel, RecordSet) {
+   function(FilterPanel, RecordSet, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -61,6 +63,10 @@ define(
          it('apply', function() {
             isNotifyClose = false;
             panel._beforeMount(config);
+            panel._children = { formController: {submit: ()=>{return Deferred.success([true])}}};
+            panel._applyFilter();
+            assert.isFalse(isNotifyClose);
+            panel._children = { formController: {submit: ()=>{return Deferred.success([false])}}};
             panel._applyFilter();
             assert.deepEqual({text: '123'}, filter);
             assert.isTrue(isNotifyClose);
@@ -108,11 +114,10 @@ define(
 
          it('valueChanged, visibilityChanged', function() {
             panel._beforeMount(config);
-            panel._valueChangedHandler();
-            assert.deepEqual(panel._items, config.items);
-
-            panel._visibilityChangedHandler();
-            assert.deepEqual(panel._items, config.items);
+            var newItems = Clone(items);
+            newItems[0].value = 'testValue2';
+            panel._itemsChangedHandler('itemsChanged', newItems);
+            assert.deepEqual(panel._items[0].value, 'testValue2');
          });
    
          it('resolveItems', function() {
@@ -145,6 +150,5 @@ define(
             }
             assert.isTrue(errorCathed);
          });
-
       });
    });

@@ -1,4 +1,5 @@
 <div class="demo-Grid">
+   <Controls.Button caption="Toggle columns" on:click="_onToggleColumnsClicked()"/>
    <div class="demo-Grid__container">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector
