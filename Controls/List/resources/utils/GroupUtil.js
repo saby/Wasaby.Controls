@@ -1,6 +1,7 @@
 define('Controls/List/resources/utils/GroupUtil', [
-   'Core/UserConfig'
-], function(cUserConfig) {
+   'Core/UserConfig',
+   'Core/Deferred'
+], function(cUserConfig, cDeferred) {
    var
       PREFIX_STORE_KEY_COLLAPSED_GROUP = 'LIST_COLLAPSED_GROUP_',
       GroupUtil = {
@@ -12,7 +13,9 @@ define('Controls/List/resources/utils/GroupUtil', [
           * @returns {Core/Deferred}
           */
          storeCollapsedGroups: function(groups, storeKey) {
-            return cUserConfig.setParam(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey, groups);
+            var
+               preparedGroups = JSON.stringify(groups);
+            return cUserConfig.setParam(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey, preparedGroups);
          },
 
          /**
@@ -21,7 +24,16 @@ define('Controls/List/resources/utils/GroupUtil', [
           * @returns {Core/Deferred}
           */
          restoreCollapsedGroups: function(storeKey) {
-            return cUserConfig.getParam(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey);
+            var
+               result = new cDeferred();
+            cUserConfig.getParam(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey).addCallback(function(storedGroups) {
+               try {
+                  result.callback(JSON.parse(storedGroups));
+               } catch (e) {
+                  result.callback();
+               }
+            });
+            return result;
          }
       };
    return GroupUtil;
