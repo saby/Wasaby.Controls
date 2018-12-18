@@ -33,11 +33,14 @@ def build_description(job, path, skip_test) {
     }
     def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
     if (description) {
-        echo "${description}"
         title = description.tokenize('|')[0]
         description = description.tokenize('|')[1]
         echo "${title}"
-        return [title, description]
+        echo "${description}"
+        if (title && description) {
+            return [title, description]
+        }
+
     }
 }
 
