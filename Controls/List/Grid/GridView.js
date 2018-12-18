@@ -20,6 +20,26 @@ define('Controls/List/Grid/GridView', [
 
    'use strict';
 
+   // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+   function isEqualObjectsWithSkip(obj1, obj2, skipFields) {
+      if ((!obj1 && obj2) || (obj1 && !obj2)) {
+         return false;
+      }
+      var
+         keys1 = Object.keys(obj1),
+         keys2 = Object.keys(obj2);
+
+      if (keys1.length !== keys2.length) {
+         return false;
+      }
+
+      keys1.sort();
+      keys2.sort();
+      return !keys1.some(function(key, index) {
+         return !(keys2[index] === key && (skipFields[key] || isEqualObject(obj1[key], obj2[key])));
+      });
+   }
+
    var
       _private = {
          prepareGridTemplateColumns: function(columns, multiselect) {
@@ -90,10 +110,11 @@ define('Controls/List/Grid/GridView', [
          },
 
          _beforeUpdate: function(newCfg) {
-            if (!isEqualObject(this._options.columns, newCfg.columns)) {
+            // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+            if (!isEqualObjectsWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                this._listModel.setColumns(newCfg.columns);
             }
-            if (!isEqualObject(this._options.header, newCfg.header)) {
+            if (!isEqualObjectsWithSkip(this._options.header, newCfg.header, { template: true })) {
                this._listModel.setHeader(newCfg.header);
             }
             if (!cDetection.isNotFullGridSupport) {
