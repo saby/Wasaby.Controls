@@ -1,6 +1,6 @@
 <div class="demo-Grid__container">
     <Layout.Browser.Tabs
-       attr:class="demo-PageLayout"
+       attr:class="demo-BrowserTabs"
        bind:tabsSelectedKey = "_selectedKey">
         <ws:items>
             <ws:Array>
@@ -9,18 +9,10 @@
                     Выписана ошибка: https://online.sbis.ru/opendoc.html?guid=3dd62d85-1529-4b6a-92f4-30fd82d79794 -->
                     <ws:itemTemplate>
                         <ws:if data="{{itemTemplate.type === 'topArea'}}">
-                            <Layout.Browser.TopArea bind:expanded="_expanded">
-                                  <span>
-                                     <Controls.Button attr:class="demo-TopArea__button"
-                                                      style="primary"
-                                                      caption="+ Сотрудник"
-                                     />
-                                     <Controls.Button attr:class="demo-TopArea__button"
-                                                      icon="icon-24 icon-CreateFolder"
-                                                      viewMode="link"
-                                     />
-                                  </span>
-                            </Layout.Browser.TopArea>
+                            <span>
+                                <Controls.Button attr:class="demo-TopArea__button" style="primary" caption="+ Сотрудник"/>
+                                <Controls.Button attr:class="demo-TopArea__button" icon="icon-24 icon-CreateFolder" viewMode="link"/>
+                            </span>
                         </ws:if>
                         <ws:else>
                             <Layout.Browser source="{{_viewSource}}"
@@ -28,6 +20,8 @@
                                             nodeProperty="{{_nodeProperty}}"
                                             parentProperty="{{_parentProperty}}"
                                             filterButtonSource="{{_filterButtonSource}}"
+                                            on:selectedKeysChanged="_selectionChangeHandler()"
+                                            on:excludedKeysChanged="_selectionChangeHandler()"
                                             bind:operationsPanelExpanded="_expanded"
                                             bind:selectedKeys="_selectedKeys"
                                             bind:excludedKeys="_excludedKeys">
@@ -61,10 +55,10 @@
                                                            parentProperty="Раздел"
                                                            on:beforeItemsRemove="_beforeItemsRemove()"/>
                                     <Controls.List.DialogMover name="dialogMover"
-                                                               columns="{{_options._moveDialogColumns}}"
+                                                               columns="{{_moveDialogColumns}}"
                                                                parentProperty="Раздел"
                                                                on:afterItemsMove="_afterItemsMove()"
-                                                               filter="{{_options._moveDialogFilter}}"
+                                                               filter="{{_moveDialogFilter}}"
                                                                nodeProperty="Раздел@"
                                                                rootValue="{{null}}"/>
                                 </ws:actions>
