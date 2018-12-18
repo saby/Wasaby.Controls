@@ -14,11 +14,18 @@ define(
          beforeEach(function() {
             calls = [];
             ctrl = new NumberInput();
-            ctrl._children.input = {
-               setSelectionRange: function(start, end) {
-                  this.selectionStart = start;
-                  this.selectionEnd = end;
-               }
+
+            var beforeMount = ctrl._beforeMount;
+
+            ctrl._beforeMount = function() {
+               beforeMount.apply(this, arguments);
+
+               ctrl._children[this._fieldName] = {
+                  setSelectionRange: function(start, end) {
+                     this.selectionStart = start;
+                     this.selectionEnd = end;
+                  }
+               };
             };
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
@@ -53,13 +60,18 @@ define(
             });
          });
          describe('User input.', function() {
+            beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+            });
             it('The display value divided into triads is correctly converted to a value.', function() {
                ctrl._beforeMount({
                   value: ''
                });
-               ctrl._children.input.value = '1111';
-               ctrl._children.input.selectionStart = 4;
-               ctrl._children.input.selectionEnd = 4;
+               ctrl._getField().value = '1111';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new SyntheticEvent({}));
 
                assert.deepEqual(calls, [{

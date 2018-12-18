@@ -90,7 +90,11 @@ define('Controls/Input/Base',
                field.value = value;
             }
 
-            if (_private.hasSelectionChanged(field, selection)) {
+            /**
+             * In IE, change the selection leads to the automatic focusing of the field.
+             * Therefore, we change it only if the field is already focused.
+             */
+            if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(self)) {
                /**
                 * After calling setSelectionRange the select event is triggered and saved the selection in model.
                 * You do not need to do this because the model is now the actual selection.
@@ -117,6 +121,10 @@ define('Controls/Input/Base',
           */
          hasAutoFillField: function(field) {
             return !!field.value;
+         },
+
+         isFieldFocused: function(self) {
+            return self._getActiveElement() === self._getField();
          },
 
          callChangeHandler: function(self) {
@@ -436,8 +444,22 @@ define('Controls/Input/Base',
              * Hide in chrome because it supports auto-completion of the field when hovering over an item
              * in the list of saved values. During this action no events are triggered and hide placeholder
              * using js is not possible.
+             *
+             * IMPORTANTLY: Cannot be used in IE. because the native placeholder will be used,
+             * and with it the field behaves incorrectly. After the focus out, the input event will be called.
+             * When this event is processed, the selection in the field is incorrect.
+             * The start and end selection is equal to the length of the native placeholder. https://jsfiddle.net/e0uaczqw/1/
+             * When processing input, we set a selection from the model if the value in the field is different
+             * from the value in the model. And when you change the selection, the field starts to focus.
+             * There is a situation that you can not withdraw focus from the field.
+             *
+             * The detection.chrome value is not invalid detecting on the server.
+             * https://online.sbis.ru/opendoc.html?guid=a17b59fb-f5bd-4ae3-87a7-38f47078980a
+             * Because of this, If the field already has a value substituted by the browser,
+             * the control does not hide the placeholder until the control is revived.
+             * As a solution, the value on the server is always true, and the recalculation is performed on the client.
              */
-            this._hidePlaceholderUsingCSS = detection.chrome;
+            this._hidePlaceholderUsingCSS = constants.isBuildOnServer || detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -672,7 +694,7 @@ define('Controls/Input/Base',
          },
 
          _mouseDownHandler: function() {
-            if (this._getActiveElement() !== this._getField()) {
+            if (!_private.isFieldFocused(this)) {
                this._focusByMouseDown = true;
             }
          },
@@ -752,7 +774,7 @@ define('Controls/Input/Base',
                _private.updateField(this, model.displayValue, model.selection);
                model.changesHaveBeenApplied();
 
-               if (this._getActiveElement() === field) {
+               if (_private.isFieldFocused(this)) {
                   _private.recalculateLocationVisibleArea(this, field, model.displayValue, model.selection);
                }
             }
@@ -797,7 +819,8 @@ define('Controls/Input/Base',
             ]),
             fontStyle: descriptor(String).oneOf([
                'default',
-               'primary'
+               'primary',
+               'secondary'
             ]),
             textAlign: descriptor(String).oneOf([
                'left',

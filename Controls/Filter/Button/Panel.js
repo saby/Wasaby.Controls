@@ -100,6 +100,10 @@ define('Controls/Filter/Button/Panel', [
          return isChanged;
       },
 
+      validate: function(self) {
+         return self._children.formController.submit();
+      },
+
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          Chain(items).each(function(item) {
@@ -140,12 +144,8 @@ define('Controls/Filter/Button/Panel', [
          this._loadDeferred = _private.loadHistoryItems(this, this._historyId);
       },
 
-      _valueChangedHandler: function() {
-         this._items = _private.cloneItems(this._items);
-      },
-
-      _visibilityChangedHandler: function() {
-         this._items = _private.cloneItems(this._items);
+      _itemsChangedHandler: function(event, items) {
+         this._items = _private.cloneItems(items);
       },
 
       _applyHistoryFilter: function(event, items) {
@@ -155,11 +155,16 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _applyFilter: function(event, items) {
-         this._notify('sendResult', [{
-            filter: _private.getFilter(this),
-            items: items || this._items
-         }]);
-         this._notify('close');
+         var self = this;
+         _private.validate(this).addCallback(function(result) {
+            if (!result[0]) {
+               self._notify('sendResult', [{
+                  filter: _private.getFilter(self),
+                  items: items || self._items
+               }]);
+               self._notify('close');
+            }
+         });
       },
 
       _resetFilter: function() {

@@ -6,6 +6,7 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Column',
    'wml!Controls/List/Grid/HeaderContent',
    'Core/detection',
+   'Core/helpers/Object/isEqual',
    'wml!Controls/List/Grid/GroupTemplate',
    'wml!Controls/List/Grid/OldGridView',
    'wml!Controls/List/Grid/NewGridView',
@@ -15,9 +16,32 @@ define('Controls/List/Grid/GridView', [
    'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
-   GroupTemplate, OldGridView, NewGridView) {
+   isEqualObject, GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
+
+   // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+   function isEqualObjectsWithSkip(obj1, obj2, skipFields) {
+      if ((!obj1 && obj2) || (obj1 && !obj2)) {
+         return false;
+      }
+      if (!obj1 && !obj2) {
+         return true;
+      }
+      var
+         keys1 = Object.keys(obj1),
+         keys2 = Object.keys(obj2);
+
+      if (keys1.length !== keys2.length) {
+         return false;
+      }
+
+      keys1.sort();
+      keys2.sort();
+      return !keys1.some(function(key, index) {
+         return !(keys2[index] === key && (skipFields[key] || isEqualObject(obj1[key], obj2[key])));
+      });
+   }
 
    var
       _private = {
@@ -86,6 +110,19 @@ define('Controls/List/Grid/GridView', [
                requireDeferred.callback();
             });
             return requireDeferred;
+         },
+
+         _beforeUpdate: function(newCfg) {
+            // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
+            if (!isEqualObjectsWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
+               this._listModel.setColumns(newCfg.columns);
+            }
+            if (!isEqualObjectsWithSkip(this._options.header, newCfg.header, { template: true })) {
+               this._listModel.setHeader(newCfg.header);
+            }
+            if (!cDetection.isNotFullGridSupport) {
+               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+            }
          },
 
          _calcFooterPaddingClass: function(params) {

@@ -201,7 +201,7 @@ define(
 
             it('Sticky state', function() {
                StickyController._checkContainer = () => false;
-               StickyController._isElementVisible = () => true;
+               StickyController._private.isTargetVisible = () => true;
                let itemConfig = {
                   popupOptions: {}
                };
@@ -252,7 +252,7 @@ define(
             });
 
             it('Sticky updated classes', function() {
-               StickyController._isElementVisible = () => true;
+               StickyController._private.isTargetVisible = () => true;
                let item = {
                   position: {},
                   popupOptions: {},

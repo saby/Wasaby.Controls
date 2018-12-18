@@ -6,11 +6,13 @@ define([
    'Controls/Decorator/Markup/resources/template',
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Controls/Decorator/Markup/resolvers/innerText',
    'Core/constants'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
+   innerTextResolver,
    cConstants) {
    'use strict';
 
@@ -283,6 +285,8 @@ define([
                ['p', linkNode, '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
+               ['p', linkNode, ['br'], 'text'],
+               ['p', linkNode, '   ', ['br'], 'text'],
                ['p', ['strong', linkNode], 'text'],
                ['p',
                   ['a',
@@ -301,6 +305,8 @@ define([
                '<p>' + decoratedLinkHtml + '   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
+               '<p>' + decoratedLinkHtml + '<br />text</p>' +
+               '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
                '<p>' + decoratedLinkHtml + '</p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
@@ -319,6 +325,10 @@ define([
                '<p><span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span></p>' +
                '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
+         });
+         it('with innerText resolver', function() {
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
          });
       });
    });

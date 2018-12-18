@@ -186,6 +186,15 @@ define([
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
          var textValue = '';
+         var result;
+         var source = new Memory({
+            data: [
+               {id: 1, title: 'Alex', text: 'Alex'},
+               {id: 2, title: 'Ilya', text: 'Ilya'},
+               {id: 3, title: 'Mike', text: 'Mike'}
+            ],
+            idProperty: 'id'
+         });
 
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
@@ -194,13 +203,23 @@ define([
             }
          };
 
-         selectedCollection._beforeMount({
+         result = selectedCollection._beforeMount({
+            selectedKeys: [],
+            source: new Memory({
+               data: [ {id: 1} ],
+               idProperty: 'id'
+            })
+         });
+         assert.equal(result, undefined);
+
+         result = selectedCollection._beforeMount({
             selectedKeys: selectedKeys,
             source: new Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
             })
          });
+         assert.notEqual(result, undefined);
 
          selectedCollection._beforeUpdate({
             selectedKeys: []
@@ -224,16 +243,16 @@ define([
          assert.deepEqual(selectedCollection._selectedKeys, [1]);
 
          selectedCollection._beforeUpdate({
+            selectedKeys: [1, 2],
+            source: source,
+            keyProperty: 'id'
+         });
+         assert.deepEqual(selectedCollection._selectedKeys, []);
+
+         selectedCollection._beforeUpdate({
             multiSelect: true,
             selectedKeys: [1, 2],
-            source: new Memory({
-               data: [
-                  {id: 1, title: 'Alex', text: 'Alex'},
-                  {id: 2, title: 'Ilya', text: 'Ilya'},
-                  {id: 3, title: 'Mike', text: 'Mike'}
-               ],
-               idProperty: 'id'
-            }),
+            source: source,
             keyProperty: 'id'
          });
          assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);

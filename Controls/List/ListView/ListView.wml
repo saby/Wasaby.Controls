@@ -1,17 +1,19 @@
 <div class="controls-ListView controls-ListView_{{_options.style}}">
    <ws:if data="{{_listModel}}">
-      <ws:partial
-              template="wml!Controls/List/resources/For"
-              listModel="{{_listModel}}"
-              itemActionsTemplate="{{_options.itemActionsTemplate}}"
-              swipeTemplate="{{_options.swipeTemplate}}"
-              groupTemplate="{{_groupTemplate}}"
-              multiSelectTpl="{{_options.multiSelectTpl}}"
-              editingItemData="{{_options.editingItemData}}"
-              isAdd="{{_options.isAdd}}"
-              itemOutputWrapper="{{_itemOutputWrapper}}"
-              itemTemplate="{{_itemTemplate}}">
-      </ws:partial>
+      <div name="itemsContainer">
+         <ws:partial
+                 template="wml!Controls/List/resources/For"
+                 listModel="{{_listModel}}"
+                 itemActionsTemplate="{{_options.itemActionsTemplate}}"
+                 swipeTemplate="{{_options.swipeTemplate}}"
+                 groupTemplate="{{_groupTemplate}}"
+                 multiSelectTpl="{{_options.multiSelectTpl}}"
+                 editingItemData="{{_options.editingItemData}}"
+                 isAdd="{{_options.isAdd}}"
+                 itemOutputWrapper="{{_itemOutputWrapper}}"
+                 itemTemplate="{{_itemTemplate}}">
+         </ws:partial>
+      </div>
       <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
          <div class="controls-ListView__emptyTemplate">
             <ws:partial template="{{_options.emptyTemplate}}"/>

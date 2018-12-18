@@ -24,7 +24,7 @@ define('Controls/Input/Mask',
        * @class Controls/Input/Mask
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputMaskValue
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
@@ -196,6 +196,14 @@ define('Controls/Input/Mask',
                runDelayed(function() {
                   _private.setCaretPosition(input, input.selectionEnd, value, replacer);
                });
+            },
+
+            _valueChangedHandler: function(event, value) {
+               this._notify('valueChanged', [value, this._viewModel.getDisplayValue()]);
+            },
+
+            _inputCompletedHandler: function(event, value) {
+               this._notify('inputCompleted', [value, this._viewModel.getDisplayValue()]);
             }
          });
 

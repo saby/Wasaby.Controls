@@ -6,7 +6,7 @@ define('Controls/Dropdown/Util',
 
       function prepareEmpty(emptyText) {
          if (emptyText) {
-            return emptyText === true ? 'Не выбрано' : emptyText;
+            return emptyText === true ? rk('Не выбрано') : emptyText;
          }
       }
 
