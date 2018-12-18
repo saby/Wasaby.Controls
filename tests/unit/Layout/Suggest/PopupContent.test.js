@@ -7,11 +7,13 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
    
    function getMarkup(template, templateArgs) {
       var result = template(templateArgs);
+      var def = new Deferred();
       
-      if (result instanceof Deferred) {
-         return result.addCallback(function(res) {
-            return removeConfigFromMarkup(res);
+      if (result && result.then) {
+         result.then(function(res) {
+            def.callback(removeConfigFromMarkup(res));
          });
+         return def;
       } else {
          return Deferred.success(removeConfigFromMarkup(result));
       }
