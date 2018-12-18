@@ -39,7 +39,7 @@ define('Controls/Selector/SelectedCollection',
             return maxVisibleItems ? items.slice(Math.max(items.length - maxVisibleItems, 0)) : items;
          },
 
-         setTemplateOptions: function(self, options) {
+         getTemplateOptions: function(self, options) {
             var templateOptions = self._templateOptions || {};
 
             templateOptions.items = options.items;
@@ -48,8 +48,8 @@ define('Controls/Selector/SelectedCollection',
             templateOptions.itemTemplate = options.itemTemplate;
             templateOptions.width = self._container && self._container.offsetWidth;
             templateOptions.clickCallback = self._onResult.bind(this);
-
-            self._templateOptions = templateOptions;
+            
+            return templateOptions;
          }
       };
 
@@ -68,7 +68,7 @@ define('Controls/Selector/SelectedCollection',
          _beforeUpdate: function(newOptions) {
             this._items = _private.getItemsInArray(newOptions.items);
             this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
-            _private.setTemplateOptions(this, newOptions);
+            this._templateOptions = _private.getTemplateOptions(this, newOptions);
          },
 
          _afterUpdate: function() {
@@ -78,7 +78,7 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _afterMount: function() {
-            _private.setTemplateOptions(this, this._options);
+            this._templateOptions = _private.getTemplateOptions(this, this._options);
             this._forceUpdate();
          },
 
