@@ -488,8 +488,10 @@ node('controls') {
                     """
                 }
             }
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            unit_result = currentBuild.result == null
+		*/
+            //junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+        /*
+			unit_result = currentBuild.result == null
             if (!unit_result) {
                 exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
             }
@@ -774,11 +776,10 @@ node('controls') {
             currentBuild.description = "${description}"
         }
     }
-	/*
-    if ( unit ){
-        junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-    }
-	*/
+	
+    //if ( unit ){
+    //    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+    //}
     if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
