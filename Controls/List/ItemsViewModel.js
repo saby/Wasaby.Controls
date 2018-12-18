@@ -163,10 +163,8 @@ define('Controls/List/ItemsViewModel', [
 
       getSpacingClassList: function() {
          var classList = '';
-         if (this._options.multiSelectVisibility !== 'hidden') {
-            classList += ' controls-ListView__item-withCheckbox-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
-         } else {
-            classList += ' controls-ListView__item-withoutCheckbox-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
+         if (this._options.multiSelectVisibility === 'hidden') {
+            classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
          }
          classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
          return classList;
