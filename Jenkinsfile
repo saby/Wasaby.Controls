@@ -463,8 +463,8 @@ node('controls') {
             }
             echo items
         }
-        /*
-		stage ("Unit тесты"){
+        stage ("Unit тесты"){
+		    unit = false
             if ( unit ){
                 echo "Запускаем юнит тесты"
                 dir("./controls"){
@@ -487,13 +487,13 @@ node('controls') {
                     """
                 }
             }
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            unit_result = currentBuild.result == null
-            if (!unit_result) {
-                exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
-            }
+            //junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+            //unit_result = currentBuild.result == null
+            //if (!unit_result) {
+            //    exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+            //}
         }
-		*/
+		
         if ( regr || inte || all_inte) {
 
         stage("Разворот стенда"){
