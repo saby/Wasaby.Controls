@@ -193,7 +193,7 @@ node('controls') {
             inte = false
         }
         if ( inte || all_inte || regr ) {
-            unit = true
+            unit = false
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
