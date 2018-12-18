@@ -1,0 +1,31 @@
+<div class="example-Label">
+   <div class="example-Base__title">
+      Design of labels
+      <div class="icon-24 icon-primary action-hover
+                  {{_lock ? 'icon-Lock' : 'icon-Unlock'}}"
+           on:click="_switchBlocker()"></div>
+   </div>
+   <div>
+      <Controls.Label caption="Label"
+                      viewMode="default"
+                      readOnly="{{_lock}}"/>
+      <Controls.Label caption="Label"
+                      viewMode="default"
+                      required="{{true}}"
+                      readOnly="{{_lock}}"/>
+      <Controls.Label viewMode="default"
+                      readOnly="{{_lock}}"
+                      caption="{{_limitedCaption}}"
+                      attr:title="{{_limitedCaption}}"
+                      attr:class="example-Label_limit"/>
+      <Controls.Label viewMode="default"
+                      required="{{true}}"
+                      readOnly="{{_lock}}"
+                      caption="{{_limitedCaption}}"
+                      attr:title="{{_limitedCaption}}"
+                      attr:class="example-Label_limit"/>
+      <Controls.Label viewMode="link"
+                      readOnly="{{_lock}}"
+                      caption="Label as a link"/>
+   </div>
+</div>

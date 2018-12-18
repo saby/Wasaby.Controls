@@ -1,12 +1,12 @@
 define('Controls/Label',
    [
       'Core/Control',
+      'WS.Data/Type/descriptor',
       'wml!Controls/Label/Label',
 
       'css!theme?Controls/Label/Label'
    ],
-   function(Control, template) {
-
+   function(Control, descriptor, template) {
       'use strict';
 
       /**
@@ -29,10 +29,30 @@ define('Controls/Label',
        * @cfg {Boolean}
        */
 
+      /**
+       * @name Controls/Label#viewMode
+       * @cfg {String}
+       */
+
       var Label = Control.extend({
          _template: template
       });
 
+      Label.getDefaultOptions = function() {
+         return {
+            viewMode: 'default'
+         };
+      };
+
+      Label.getOptionTypes = function() {
+         return {
+            viewMode: descriptor(String).oneOf([
+               'link',
+               'default'
+            ]),
+            required: descriptor(Boolean)
+         };
+      };
+
       return Label;
-   }
-);
+   });
