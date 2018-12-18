@@ -49,14 +49,19 @@ class RC:
         new_set = set(new_list)
 
         if rc_set == new_set:
+            print('rc_set == new_set')
             return "ОК|Эти ошибки уже попали в RC."
         elif new_set.issubset(rc_set):
+            print('new_set.issubset(rc_set)')
             return "ОК|Эти ошибки уже попали в RC."
         elif rc_set.issubset(new_set) or not rc_set.intersection(new_set):
+            print('rc_set.issubset(new_set) or not rc_set.intersection(new_set)')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
         elif not rc_set and new_set:
+            print('not rc_set and new_set')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
         elif (not new_set and rc_set) or (not rc_set and not new_set):
+            print('(not new_set and rc_set) or (not rc_set and not new_set)')
             return ''
 
     def description(self, fail_tests_path, skip):
@@ -66,14 +71,20 @@ class RC:
             now_list = sorted(f.read().split())
             self.test_names = sorted(self.test_names)
             if not skip:
-                title = self.get_status_title(self.test_names, now_list)
-                if not title:
+                print('not skip')
+                self.head = self.get_status_title(self.test_names, now_list)
+                print('title')
+                if not self.head:
+                    print('not title')
                     return ''
             else:
+                print('else')
                 if now_list:
+                    print('now_list')
                     self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
                     return ''   # не показываем ошибки из RC
 
+        print()
         description = '<pre><ul>'
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
