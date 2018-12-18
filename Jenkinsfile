@@ -463,7 +463,8 @@ node('controls') {
             }
             echo items
         }
-        stage ("Unit тесты"){
+        /*
+		stage ("Unit тесты"){
             if ( unit ){
                 echo "Запускаем юнит тесты"
                 dir("./controls"){
@@ -492,6 +493,7 @@ node('controls') {
                 exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
             }
         }
+		*/
         if ( regr || inte || all_inte) {
 
         stage("Разворот стенда"){
