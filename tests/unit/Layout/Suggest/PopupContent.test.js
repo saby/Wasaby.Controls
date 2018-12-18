@@ -62,6 +62,11 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
    });
    
    describe('Controls.Container.Suggest.__PopupContent template tests', function() {
+      beforeEach(function() {
+         if (typeof window === 'undefined') {
+            this.skip();
+         }
+      });
       
       it('showContent:false', function(done) {
          var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden" style="width:px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
