@@ -133,8 +133,7 @@
     <Controls.Dropdown.Opener
             name="itemActionsOpener"
             keyProperty="id"
-            menuStyle="cross"
-            popupOptions="{{_popupOptions}}"/>
+            menuStyle="cross"/>
     <Controls.Popup.Opener.Confirmation
             name="errorMsgOpener"
     />
