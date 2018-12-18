@@ -156,7 +156,7 @@ define([
          }
          else {
             var el = document.body.querySelectorAll('#mocha')[0];
-            var testElement = document.createElement("div");
+            testElement = document.createElement("div");
             testElement.setAttribute('id', 'formControllerComponent');
             el.appendChild(testElement);
          }
@@ -563,6 +563,16 @@ define([
                   }, {
                      action: function(control) {
                         control._children.formControllerInst.update().addErrback(function(e) {
+                           done(e);
+                        });
+                     }
+                  }, {
+                     action: function(control) {
+                        control._record.set('value3', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.registrator.finishPendingOperations().addErrback(function () {
                            done(e);
                         });
                      }
