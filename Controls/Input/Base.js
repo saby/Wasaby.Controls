@@ -811,7 +811,8 @@ define('Controls/Input/Base',
             ]),
             fontStyle: descriptor(String).oneOf([
                'default',
-               'primary'
+               'primary',
+               'secondary'
             ]),
             textAlign: descriptor(String).oneOf([
                'left',
