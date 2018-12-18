@@ -77,7 +77,7 @@ class RC:
             else:
                 if now_list:
                     self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
-                    return ''   # не показываем ошибки из RC
+                return ''   # не показываем ошибки из RC
         description = '<pre><ul>'
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
