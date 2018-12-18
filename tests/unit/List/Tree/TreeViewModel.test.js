@@ -280,12 +280,29 @@ define([
          });
       });
       describe('expandedItems', function() {
-         it('initialize from options', function() {
+         it('initialize from options and changing expandedItems', function() {
             var
+               baseExpandedItems = [1, 2, 3],
                treeViewModel = new TreeViewModel({
-                  expandedItems: [1, 2, 3]
+                  expandedItems: baseExpandedItems,
+                  items: new RecordSet({
+                     rawData: [
+                        { id: 1, parent: null, type: true },
+                        { id: 2, parent: null, type: true },
+                        { id: 3, parent: 2, type: true }
+                     ],
+                     idProperty: 'id'
+                  }),
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
                }),
-               preparedExpandedItems = { 1: true, 2: true, 3: true };
+               preparedExpandedItems = { 1: true, 2: true, 3: true },
+               preparedExpandedAllItems = { null: true };
+            assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+            treeViewModel.setExpandedItems([null]);
+            assert.deepEqual(preparedExpandedAllItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+            treeViewModel.setExpandedItems(baseExpandedItems);
             assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
          });
       });

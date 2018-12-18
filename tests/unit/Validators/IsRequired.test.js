@@ -26,6 +26,19 @@ define(
                   doNotValidate: true
                }), true);
             });
+
+            it('Valid {}', function () {
+               assert.notEqual(IsRequired({
+                  value: {}
+               }), true);
+            });
+
+            it('Valid Date', function() {
+               assert.equal(IsRequired({
+                  value: new Date()
+               }), true);
+            });
+
          });
       });
    }
