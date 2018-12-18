@@ -50,10 +50,10 @@ class RC:
 
         if rc_set == new_set:
             # print('rc_set == new_set')
-            return "ОК|Эти ошибки уже попали в RC."
+            return "OK|Эти ошибки уже попали в RC."
         elif new_set.issubset(rc_set):
             # print('new_set.issubset(rc_set)')
-            return "ОК|Эти ошибки уже попали в RC."
+            return "OK|Эти ошибки уже попали в RC."
         elif rc_set.issubset(new_set) or not rc_set.intersection(new_set):
             # print('rc_set.issubset(new_set) or not rc_set.intersection(new_set)')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."

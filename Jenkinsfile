@@ -44,15 +44,15 @@ def build_description(job, path, skip_test) {
 def build_title(t_int, t_reg) {
     if (!t_int && !t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER}"
-    } else if (t_int && !t_reg) {
+    } else if (t_int && (!t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
     } else if (!t_int && t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     } else if (t_int && t_reg && t_int==t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+    } else if (t_int.contains('FAIL') {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+    }else if (t_reg.contains('FAIL') {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     }
 
