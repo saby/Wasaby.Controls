@@ -273,11 +273,7 @@ define('Controls/List/BaseControl', [
       onScrollShow: function(self) {
          self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
-            if (self._options.navigation &&
-               self._options.navigation.view === 'infinity' &&
-               self._options.navigation.viewConfig &&
-               self._options.navigation.viewConfig.pagingMode
-            ) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
                   self._pagingVisible = true;
@@ -359,11 +355,40 @@ define('Controls/List/BaseControl', [
                }
                self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
             }
+         } else {
+            if (_private.needScrollPaging(self._options.navigation)) {
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                  self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
+               });
+            }
          }
       },
 
       needScrollCalculation: function(navigationOpt) {
          return navigationOpt && navigationOpt.view === 'infinity';
+      },
+
+      needScrollPaging: function(navigationOpt) {
+         return (navigationOpt &&
+            navigationOpt.view === 'infinity' &&
+            navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode
+         );
+      },
+
+      /**
+       * отдать в VirtualScroll контейнер с отрисованными элементами для расчета средней высоты 1 элемента
+       * Отдаю именно контейнер, а не высоту, чтобы не считать размер, когда высоты уже проинициализированы
+       * @param self
+       */
+      initializeAverageItemsHeight: function(self) {
+         // TODO брать _container - плохо. Узнаю у Зуева как сделать хорошо
+         // Узнал тут, пока остается _container: https://online.sbis.ru/open_dialog.html?guid=01b6161a-01e7-a11f-d1ff-ec1731d3e21f
+         var res = self._virtualScroll.calcAverageItemHeight(self._children.listView._container);
+         if (res.changed) {
+            // _private.applyVirtualWindow(self, res.virtualWindow);
+         }
       },
 
       getItemsCount: function(self) {
