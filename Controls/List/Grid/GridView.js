@@ -25,6 +25,9 @@ define('Controls/List/Grid/GridView', [
       if ((!obj1 && obj2) || (obj1 && !obj2)) {
          return false;
       }
+      if (!obj1 && !obj2) {
+         return true;
+      }
       var
          keys1 = Object.keys(obj1),
          keys2 = Object.keys(obj2);
