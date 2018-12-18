@@ -21,6 +21,8 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
                isEmpty = !Boolean(args.value.getCount());
             } else if (args.value instanceof Array) {
                isEmpty = !Boolean(args.value.length);
+            } else if (args.value instanceof Date) {
+               isEmpty = false;
             } else if (args.value instanceof Object) {
                isEmpty = !(Object.keys(args.value).length);
             } else if (args.value === null) {
