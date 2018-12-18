@@ -176,6 +176,11 @@ define(
             });
          });
          describe('User input.', function() {
+            beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+            });
             it('The field does not change, but the model changes.', function() {
                ctrl._beforeMount({
                   value: ''
@@ -313,6 +318,10 @@ define(
                }]);
             });
             it('The selection is not saved to the model after script actions', function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+
                ctrl._getField().value = '';
                ctrl._getField().selectionStart = 0;
                ctrl._getField().selectionEnd = 0;
@@ -521,6 +530,9 @@ define(
          });
          describe('The value in the field is changed via auto-complete.', function() {
             it('In an empty field.', function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
                ctrl._beforeMount({
                   value: ''
                });
@@ -536,6 +548,9 @@ define(
                }]);
             });
             it('In an not empty field.', function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
                ctrl._beforeMount({
                   value: 'test value'
                });
