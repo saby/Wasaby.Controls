@@ -1,14 +1,26 @@
-<div class="controls-Grid__header">
-   <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
-      <div class="{{listModel.getCurrentHeaderColumn().cellClasses}}">
-         <ws:if data="{{listModel.getMultiSelectVisibility() === 'hidden' || listModel.getCurrentHeaderColumn().index !== 0}}">
-            <ws:if data="{{!!listModel.getCurrentHeaderColumn().column.template}}">
-               <ws:partial template="{{listModel.getCurrentHeaderColumn().column.template}}" colData="{{listModel.getCurrentHeaderColumn()}}"/>
-            </ws:if>
-            <ws:else>
-               <ws:partial template="{{defaultHeaderContent}}" colData="{{listModel.getCurrentHeaderColumn()}}"/>
-            </ws:else>
+<ws:template name="cell">
+   <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" fixedZIndex="3">
+      <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
+         <ws:if data="{{!!headerColumn.column.template}}">
+            <ws:partial template="{{headerColumn.column.template}}" colData="{{headerColumn}}"/>
          </ws:if>
-      </div>
-   </ws:for>
-</div>
+         <ws:else>
+            <ws:partial template="{{defaultHeaderContent}}" colData="{{headerColumn}}"/>
+         </ws:else>
+      </ws:if>
+   </Controls.StickyHeader>
+</ws:template>
+
+<Controls.StickyHeader.Group attr:class="controls-Grid__header">
+   <div class="controls-Grid__header">
+      <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+      <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+      {{ listModel.resetHeaderColumns() }}
+      <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
+         <ws:partial
+               template="cell"
+               headerColumn="{{ listModel.getCurrentHeaderColumn() }}"
+               multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
+      </ws:for>
+   </div>
+</Controls.StickyHeader.Group>

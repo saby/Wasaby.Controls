@@ -50,7 +50,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
          },
 
          closePopups: function() {
-            var items = this.getItems();
+            var items = this.getItems().clone();
             var self = this;
 
             // todo: Задача: научить Listener'ы, лежащие в старом окружени, регистрироваться в ManagerWrapper'e

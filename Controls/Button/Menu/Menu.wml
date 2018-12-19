@@ -21,8 +21,9 @@
         filter="{{_options.filter}}"
         lazyItemsLoad="{{true}}"
         on:selectedItemsChanged="_onItemClickHandler()"
-        on:pinClicked="_onPinClickHandler()">
-   <Controls.Button class="controls-MenuButton__BaseButton"
+        on:pinClicked="_onPinClickHandler()"
+        attr:class="controls-MenuButton__Wrapper">
+   <Controls.Button
                     icon="{{_options.icon}}"
                     iconStyle="{{_options.iconStyle}}"
                     caption="{{_options.caption}}"
