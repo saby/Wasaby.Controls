@@ -35,7 +35,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       }
 
       // Decorate link only with text == href, and href length should be less then 1500;
-      if (!value[1] || !value[1].href || value[1].length >= 1500 || value[1].href !== value[2]) {
+      if (!value[1] || !value[1].href || value[1].href.length >= 1500 || value[1].href !== value[2]) {
          return value;
       }
 
