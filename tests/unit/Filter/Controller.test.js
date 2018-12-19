@@ -49,6 +49,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
          filterLayout._notify = function() {
             filterChangedNotifyed = true;
          };
+         filterLayout._options.filter = {testKey2: 'testValue2'};
+         filterLayout._filter = {testKey: 'testValue2'};
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
          assert.isTrue(filterChangedNotifyed);
