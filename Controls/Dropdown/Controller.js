@@ -225,6 +225,12 @@ define('Controls/Dropdown/Controller',
          }
       });
 
+      //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
+      //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+      var
+         defaultFilter = {},
+         defaultSelectedKeys = [];
+
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {
             filter: defaultFilter,
