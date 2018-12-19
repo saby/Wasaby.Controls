@@ -122,7 +122,7 @@ def only_fail = false
 def pri = params.set_pri
 if ( pri ) {
     props.add(parameters(string(
-                defaultValue: "",
+                defaultValue: "1",
                 description: 'Запустить сборку',
                 name: 'BuildPriority')))
 }
