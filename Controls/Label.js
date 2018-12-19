@@ -1,12 +1,13 @@
 define('Controls/Label',
    [
+      'Core/IoC',
       'Core/Control',
       'WS.Data/Type/descriptor',
       'wml!Controls/Label/Label',
 
       'css!theme?Controls/Label/Label'
    ],
-   function(Control, descriptor, template) {
+   function(IoC, Control, descriptor, template) {
       'use strict';
 
       /**
@@ -32,10 +33,22 @@ define('Controls/Label',
       /**
        * @name Controls/Label#viewMode
        * @cfg {String}
+       * @variant link
+       * @variant default
        */
 
       var Label = Control.extend({
-         _template: template
+         _template: template,
+
+         _afterMount: function() {
+            var container = this._container;
+
+            ['controls-Label_underline-hovered', 'controls-Label_underline_color-hovered'].forEach(function(item) {
+               if (container.classList.contains(item)) {
+                  IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + item + ' не поддерживается. Используйте опцию viewMode со значением link');
+               }
+            });
+         }
       });
 
       Label.getDefaultOptions = function() {

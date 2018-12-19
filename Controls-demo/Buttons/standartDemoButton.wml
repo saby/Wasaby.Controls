@@ -51,8 +51,7 @@
         <div attr:class="demo-Button_margin-10 ControlsDemo__simpleLink">
             <div attr:class="test_element_two_column demo-Button__testBlock_column">
                 <Controls.Button readOnly="{{false}}" caption="Main link" style="secondary" viewMode="link" size="m"/>
-                <Controls.Label class="controls-Label_underline-hovered" caption="Inactive link 1"/>
-                <Controls.Label class="controls-Label_underline_color-hovered" caption="Inactive link 2"/>
+                <Controls.Label viewMode="link" caption="Inactive link 1"/>
                 <Controls.Button readOnly="{{false}}" caption="Inactive link 3" style="info" viewMode="link" size="m"/>
             </div>
             <div attr:class="test_element_two_column test_element demo-Button__testBlock_column">
