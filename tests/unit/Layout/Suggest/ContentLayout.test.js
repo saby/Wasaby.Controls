@@ -40,7 +40,7 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
          var closed = false;
          
          suggestComponent._notify = function(event) {
-            if (event === 'close') {
+            if (event === 'closeButtonClick') {
                closed = true;
             }
          };

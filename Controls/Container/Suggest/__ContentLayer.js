@@ -102,7 +102,7 @@ define('Controls/Container/Suggest/__ContentLayer',
          },
          
          _close: function() {
-            this._notify('close', [], {bubbling: true});
+            this._notify('closeButtonClick', [], {bubbling: true});
          }
          
       });
