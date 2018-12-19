@@ -113,9 +113,7 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     echo "${user}"
-    if ( user.contains("ea.proshin")) {
-        echo "тут были"
-
+    if ( user in ["ea.proshin", "kraynovdo", "ls.baranova"] ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
     echo "${common_params}"
