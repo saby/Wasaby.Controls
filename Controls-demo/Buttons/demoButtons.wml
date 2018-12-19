@@ -3,23 +3,23 @@
         <div class="header">Кнопка с залипанием</div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="s"</span>
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="s" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="default"</span>
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="m" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="linkMain"/>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="linkMain"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="l"</span>
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
+            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="l"</span>
-            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
+            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="iconButtonBordered"/>
         </div>
         <div class="demo_element">
             <span class="span_label">toggleButton, size="l"</span>
-            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="linkMain"/>
+            <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="xl" iconStyle="secondary" icons="{{['icon-16 icon-Send', 'icon-16 icon-Send']}}" style="linkMain"/>
         </div>
         <div class="header">Кнопки-ссылки</div>
         <div class="type_block" test_name="button_link">

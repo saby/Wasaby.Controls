@@ -63,13 +63,13 @@
     <span class="baseline_span">baseline</span>
     <Controls.Button readOnly="{{true}}" icon="icon-16 icon-Author" style="iconButtonBordered" size="l"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="m" icons="{{['icon-16 icon-Send']}}" style="linkMain"/>
+    <Controls.Toggle.Button readOnly="{{true}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" style="linkMain"/>
     <span class="baseline_span">С текстом для престы и карри</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" icons="{{['icon-24 icon-Send']}}" style="iconButtonBordered"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="iconButtonBordered"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" icons="{{['icon-16 icon-Send']}}" style="linkMain"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-16 icon-Send']}}" style="linkMain"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" icons="{{['icon-24 icon-Send']}}" style="iconButtonBordered"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" icons="{{['icon-24 icon-Send']}}" style="iconButtonBordered"/>
     <span class="baseline_span">Без текста для онлайна</span>
-    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="l" captions="{{['caption']}}" style="linkMain"/>
+    <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState" size="xl" captions="{{['caption']}}" style="linkMain"/>
 </div>

@@ -1129,7 +1129,8 @@
             "enum": {
               "s": "Small button size.",
               "m": "Medium button size.",
-              "l": "Large button size. It is default value."
+              "l": "Large button size. It is default value.",
+              "xl": "Extralarge button size."
             }
           },
           "icons": {
