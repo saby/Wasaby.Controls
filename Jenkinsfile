@@ -72,7 +72,7 @@ def getBuildUser() {
 }
 
 def getParams(user) {
-    def params = [
+    def common_params = [
             string(
                 defaultValue: 'sdk',
                 description: '',
@@ -116,10 +116,10 @@ def getParams(user) {
     if (user in ["ea.proshin"]) {
         echo "тут были"
 
-        params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
+        common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
-    echo "${params}"
-    return params
+    echo "${common_params}"
+    return common_params
 }
 def user_name = "${getBuildUser()}"
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
