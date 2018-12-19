@@ -49,6 +49,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
+               _private.fireEventHandler(id, 'onOpen');
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
                return true;

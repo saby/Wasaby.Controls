@@ -300,6 +300,33 @@ define(
             };
             dropdownController._open();
          });
+   
+         it('mousedown', () => {
+            let dropdownController = getDropdownController(configLazyLoad);
+            let opened = false;
+            let items = new RecordSet({
+               idProperty: 'id',
+               rawData: [ {id: 1, title: 'Запись 1'}, {id: 2, title: 'Запись 2'} ]
+            });
+            dropdownController._items = items;
+            dropdownController._children.DropdownOpener = {
+               close: function() {
+                  opened = false;
+               },
+               open: function() {
+                  opened = true;
+               },
+               isOpened: function() {
+                  return opened;
+               }
+            };
+            dropdownController._mousedown();
+            assert.isTrue(opened);
+   
+            dropdownController._mousedown();
+            ssert.isFalse(opened);
+         });
+         
          it('getFilter', () => {
             var filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
             assert.deepEqual(filter, {$_history: true, id: 'test'});

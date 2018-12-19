@@ -1,11 +1,12 @@
 <div>
    <ws:partial template="{{_options.content}}"
-               on:mousedown="_open()"/>
+               on:mousedown="_mousedown()"/>
 
    <Controls.Dropdown.Opener name="DropdownOpener">
       <ws:popupOptions className="{{_options.popupClassName}}">
          <ws:eventHandlers onResult="{{_onResult}}"
-                           onClose="{{_options.close}}"/>
+                           onClose="{{_options.close}}"
+                           onOpen="{{_options.open}}"/>
          <ws:templateOptions
                  keyProperty="{{_options.keyProperty}}"
                  displayProperty="{{_options.displayProperty}}"
