@@ -105,7 +105,7 @@ echo "Генерируем параметры"
                 name: 'theme'),
              string(
                 defaultValue: "",
-                description: 'Приоритет сборки',
+                description: 'Запустить сборку',
                 name: 'BuildPriority'),
 
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
@@ -113,7 +113,8 @@ echo "Генерируем параметры"
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+            booleanParam(defaultValue: false, description: "Запуск тестов c наивысшим приоритетом", name: 'set_pri')
             ]),
         pipelineTriggers([])
     ])
@@ -123,6 +124,10 @@ def unit = params.run_unit
 def inte = params.run_int
 def all_inte = params.run_all_int
 def only_fail = false
+def pri = params.set_pri
+if ( pri ) {
+    params.BuildPriority='1'
+}
 
 node('master') {
 
