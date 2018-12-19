@@ -55,6 +55,10 @@ define('Controls/Dropdown/Controller',
        * @cfg {Boolean} Determines whether the cross is displayed.
        */
 
+      // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+      var defaultFilter = {},
+         defaultSelectedKeys = [];
+
       var _private = {
          getMetaHistory: function() {
             return {
@@ -158,7 +162,7 @@ define('Controls/Dropdown/Controller',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
+            if (newOptions.selectedKeys !== this._options.selectedKeys) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
@@ -222,8 +226,8 @@ define('Controls/Dropdown/Controller',
 
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {
-            filter: {},
-            selectedKeys: []
+            filter: defaultFilter,
+            selectedKeys: defaultSelectedKeys
          };
       };
 
