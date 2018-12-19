@@ -1,6 +1,7 @@
 define('Controls/Container/MasterList', [
    'Core/Control',
-   'wml!Controls/Container/MasterList/MasterList'
+   'wml!Controls/Container/MasterList/MasterList',
+   'css!Controls/Container/MasterList/MasterList'
 ], function(Control, template) {
    return Control.extend({
       _template: template,
