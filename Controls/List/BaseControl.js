@@ -95,10 +95,14 @@ define('Controls/List/BaseControl', [
       },
 
       prepareFooter: function(self, navigation, sourceController) {
-         self._shouldDrawFooter = navigation && navigation.view === 'demand' && sourceController.hasMoreData('down');
+         var
+            loadedDataCount, allDataCount;
+         self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
          if (self._shouldDrawFooter) {
-            if (typeof self._sourceController.getLoadedDataCount() !== 'undefined' && self._sourceController.getAllDataCount()) {
-               self._loadMoreCaption = self._sourceController.getAllDataCount() - self._sourceController.getLoadedDataCount();
+            loadedDataCount = sourceController.getLoadedDataCount();
+            allDataCount = sourceController.getAllDataCount();
+            if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
+               self._loadMoreCaption = allDataCount - loadedDataCount;
             } else {
                self._loadMoreCaption = '...';
             }
@@ -273,23 +277,18 @@ define('Controls/List/BaseControl', [
       onScrollShow: function(self) {
          self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
-            if (self._options.navigation &&
-               self._options.navigation.view === 'infinity' &&
-               self._options.navigation.viewConfig &&
-               self._options.navigation.viewConfig.pagingMode
-            ) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
                   self._pagingVisible = true;
                });
             }
-         } else {
-
+         } else if (_private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = true;
          }
       },
 
       onScrollHide: function(self) {
-         self._pagingCfg = null;
          self._loadOffset = 0;
          self._forceUpdate();
       },
@@ -359,11 +358,26 @@ define('Controls/List/BaseControl', [
                }
                self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
             }
+         } else {
+            if (_private.needScrollPaging(self._options.navigation)) {
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                  self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
+               });
+            }
          }
       },
 
       needScrollCalculation: function(navigationOpt) {
          return navigationOpt && navigationOpt.view === 'infinity';
+      },
+
+      needScrollPaging: function(navigationOpt) {
+         return (navigationOpt &&
+            navigationOpt.view === 'infinity' &&
+            navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode
+         );
       },
 
       getItemsCount: function(self) {
@@ -429,14 +443,22 @@ define('Controls/List/BaseControl', [
             actionName = args && args.action,
             event = args && args.event;
 
+         function closeMenu() {
+            self._listViewModel.setActiveItem(null);
+            self._children.swipeControl.closeSwipe();
+            self._menuIsShown = false;
+         }
+
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
             aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
-            self._children.itemActionsOpener.close();
+            if (!action['parent@']) {
+               self._children.itemActionsOpener.close();
+               closeMenu();
+            }
+         } else {
+            closeMenu();
          }
-         self._listViewModel.setActiveItem(null);
-         self._children.swipeControl.closeSwipe();
-         self._menuIsShown = false;
          self._forceUpdate();
       },
 

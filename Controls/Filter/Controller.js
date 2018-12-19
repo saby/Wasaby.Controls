@@ -381,7 +381,7 @@ define('Controls/Filter/Controller',
                historyUtils.getHistorySource(this._options.historyId).update(_private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
             }
 
-            _private.applyItemsToFilter(this, this._options.filter, items);
+            _private.applyItemsToFilter(this, this._filter, items);
             _private.notifyFilterChanged(this);
          },
 
