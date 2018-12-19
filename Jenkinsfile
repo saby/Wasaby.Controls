@@ -103,7 +103,8 @@ echo "Генерируем параметры"
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
+            choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
@@ -743,7 +744,7 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir("./controls/tests") {
+        /*dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
             def description = ''
@@ -768,7 +769,7 @@ node('controls') {
 
             build_title(int_title, reg_title)
             currentBuild.description = "${description}"
-        }
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"

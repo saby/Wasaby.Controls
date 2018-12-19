@@ -49,6 +49,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
+               _private.fireEventHandler(id, 'onOpen');
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
                return true;
@@ -174,11 +175,16 @@ define('Controls/Popup/Manager',
          },
 
          fireEventHandler: function(id, event) {
-            var element = ManagerController.find(id);
+            var item = ManagerController.find(id);
             var args = Array.prototype.slice.call(arguments, 2);
-            if (element && element.popupOptions.eventHandlers && typeof element.popupOptions.eventHandlers[event] === 'function') {
-               element.popupOptions.eventHandlers[event].apply(element.popupOptions, args);
-               return true;
+            if (item) {
+               if (item.popupOptions._events) {
+                  item.popupOptions._events[event].apply(item.popupOptions, Array.prototype.slice.call(arguments, 1));
+               }
+               if (item.popupOptions.eventHandlers && typeof item.popupOptions.eventHandlers[event] === 'function') {
+                  item.popupOptions.eventHandlers[event].apply(item.popupOptions, args);
+                  return true;
+               }
             }
             return false;
          },

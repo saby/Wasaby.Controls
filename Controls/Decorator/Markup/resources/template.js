@@ -73,7 +73,7 @@ define('Controls/Decorator/Markup/resources/template', [
       var children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
-            children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', parent));
+            children.push(recursiveMarkup(valueToBuild[i], attrsToDecorate, key + i + '_', valueToBuild));
          }
          resolverMode ^= wasResolved;
          return children;
