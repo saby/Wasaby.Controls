@@ -35,6 +35,10 @@ define('Controls/List/ListViewModel',
                this._markedKey = cfg.markedKey;
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
+            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items && this._items.getCount()) {
+               this._markedKey = this._items.at(0).getId();
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
 
             this._selectedKeys = cfg.selectedKeys || [];
 
@@ -98,6 +102,10 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
             this._notify('onListChange');
             this._notify('onMarkedKeyChanged', key);
+         },
+
+         getMarkedKey: function() {
+            return this._markedKey;
          },
 
          getSwipeItem: function() {

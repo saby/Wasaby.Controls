@@ -151,6 +151,18 @@ define([
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
       });
 
+      it('getMarkedKey', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               markedKey: 1
+            };
+         var lv = new ListViewModel(cfg);
+         assert.equal(lv.getMarkedKey(), 1);
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
@@ -162,7 +174,7 @@ define([
                   return this.items;
                }
             };
-            target = { index: 1, key: 2, position: 'after'};
+            target = { index: 1, key: 2, position: 'after' };
             lvm = new ListViewModel({
                items: data,
                keyProperty: 'id'
@@ -232,13 +244,13 @@ define([
                lvm.setDragItemData(dragItemData);
                lvm.setDragEntity(dragEntity);
 
-               //move up
+               // move up
                lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(0))));
                current = lvm.getItemDataByItem(lvm.at(0));
                assert.equal(current.dragTargetPosition, 'before');
                assert.equal(current.draggingItemData, dragItemData);
 
-               //move down
+               // move down
                lvm.setDragTargetPosition(lvm.calculateDragTargetPosition(lvm.getItemDataByItem(lvm.at(2))));
                current = lvm.getItemDataByItem(lvm.at(2));
                assert.equal(current.dragTargetPosition, 'after');
@@ -264,13 +276,13 @@ define([
                lvm.setDragItemData(dragItemData);
                lvm.setDragEntity(dragEntity);
 
-               //before dragItemData
+               // before dragItemData
                itemData = lvm.getItemDataByItem(lvm.at(0));
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
 
-               //after dragItemData
+               // after dragItemData
                itemData = lvm.getItemDataByItem(lvm.at(2));
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
@@ -282,13 +294,13 @@ define([
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                lvm.setDragTargetPosition(dragTargetPosition);
 
-               //move up
+               // move up
                itemData = lvm.getItemDataByItem(lvm.at(0));
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
 
-               //move down
+               // move down
                itemData = lvm.getItemDataByItem(lvm.at(1));
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
