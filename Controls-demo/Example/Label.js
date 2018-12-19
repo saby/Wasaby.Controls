@@ -13,6 +13,8 @@ define('Controls-demo/Example/Label',
       return Control.extend({
          _template: template,
 
+         _value: 'text',
+
          _limitedCaption: 'Label with limited width',
 
          _switchBlocker: function() {

@@ -6,26 +6,49 @@
            on:click="_switchBlocker()"></div>
    </div>
    <div>
-      <Controls.Label caption="Label"
-                      viewMode="default"
-                      readOnly="{{_lock}}"/>
-      <Controls.Label caption="Label"
-                      viewMode="default"
-                      required="{{true}}"
-                      readOnly="{{_lock}}"/>
-      <Controls.Label viewMode="default"
-                      readOnly="{{_lock}}"
-                      caption="{{_limitedCaption}}"
-                      attr:title="{{_limitedCaption}}"
-                      attr:class="example-Label_limit"/>
-      <Controls.Label viewMode="default"
-                      required="{{true}}"
-                      readOnly="{{_lock}}"
-                      caption="{{_limitedCaption}}"
-                      attr:title="{{_limitedCaption}}"
-                      attr:class="example-Label_limit"/>
-      <Controls.Label viewMode="link"
-                      readOnly="{{_lock}}"
-                      caption="Label as a link"/>
+      <div class="ws-flexbox">
+         <Controls.Label caption="Label"
+                         viewMode="default"
+                         readOnly="{{_lock}}"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox">
+         <Controls.Label caption="Label"
+                         viewMode="default"
+                         required="{{true}}"
+                         readOnly="{{_lock}}"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox">
+         <Controls.Label viewMode="default"
+                           readOnly="{{_lock}}"
+                           caption="{{_limitedCaption}}"
+                           attr:title="{{_limitedCaption}}"
+                           attr:class="example-Label_limit"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox">
+         <Controls.Label viewMode="default"
+                           required="{{true}}"
+                           readOnly="{{_lock}}"
+                           caption="{{_limitedCaption}}"
+                           attr:title="{{_limitedCaption}}"
+                           attr:class="example-Label_limit"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox">
+         <Controls.Label viewMode="link"
+                           readOnly="{{_lock}}"
+                           caption="Label as a link"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+
+
+
    </div>
 </div>
