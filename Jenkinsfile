@@ -122,10 +122,8 @@ def only_fail = false
 def pri = params.set_pri
 if ( pri ) {
     echo "${params}"
-    params.add(string(
-                defaultValue: "1",
-                description: 'Запустить сборку',
-                name: 'BuildPriority'))
+    params['BuildPriority']='1'
+    echo "NEW: ${params}"
 }
 
 node('master') {
