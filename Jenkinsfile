@@ -68,7 +68,7 @@ def getBuildUser() {
         //ничего не делаем
     }
 
-    return userId
+    return "${userId}"
 }
 
 def getParams(user) {
@@ -112,11 +112,9 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
-    echo "${user}"
-    if ( user in ["ea.proshin", "kraynovdo", "ls.baranova"] ) {
+    if ( ["ea.proshin", "kraynovdo", "ls.baranova"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
-    echo "${common_params}"
     return common_params
 }
 def user_name = "${getBuildUser()}"
