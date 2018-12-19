@@ -33,7 +33,8 @@ define('Controls/Label',
       /**
        * @name Controls/Label#viewMode
        * @cfg {String}
-       * @variant link
+       * @variant link1
+       * @variant link2
        * @variant default
        */
 
@@ -43,9 +44,9 @@ define('Controls/Label',
          _afterMount: function() {
             var container = this._container;
 
-            ['controls-Label_underline-hovered', 'controls-Label_underline_color-hovered'].forEach(function(item) {
+            ['controls-Label_underline-hovered', 'controls-Label_underline_color-hovered'].forEach(function(item, arr, index) {
                if (container.classList.contains(item)) {
-                  IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + item + ' не поддерживается. Используйте опцию viewMode со значением link');
+                  IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + item + ' не поддерживается. Используйте опцию viewMode со значением link' + index);
                }
             });
          }
@@ -60,7 +61,8 @@ define('Controls/Label',
       Label.getOptionTypes = function() {
          return {
             viewMode: descriptor(String).oneOf([
-               'link',
+               'link1',
+               'link2',
                'default'
             ]),
             required: descriptor(Boolean)
