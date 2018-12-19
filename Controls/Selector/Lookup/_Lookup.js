@@ -254,12 +254,17 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _afterMount: function() {
+         var itemsCount = this._options.items.getCount();
+
          _private.initializeConstants();
          _private.initializeContainers(this);
 
-         if (this._options.items.getCount()) {
+         if (itemsCount) {
             _private.calculatingSizes(this, this._options);
-            this._forceUpdate();
+
+            if (this._options.multiLine || !this._options.readOnly || itemsCount <= this._maxVisibleItems) {
+               this._forceUpdate();
+            }
          }
       },
 
