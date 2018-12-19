@@ -35,7 +35,6 @@ define('Controls/Input/Date/Range', [
     * @category Input
     * @author Миронов А.Ю.
     */
-
    var Component = Control.extend([], {
       _template: template,
       _proxyEvent: tmplNotify,
@@ -90,6 +89,17 @@ define('Controls/Input/Date/Range', [
          this._rangeModel.endValue = endValue;
          this._children.opener.close();
          this._forceUpdate();
+      },
+
+      //ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender
+
+      _focusChanger: function() {
+         var datetimeStart = this._container.getElementsByClassName('controls-Input-DateRange_firstField')[0].children[0].children[0].children[0];
+         var datetimeEnd = this._container.getElementsByClassName('controls-Input-DateRange_secondField')[0].children[0].children[0].children[0];
+         if (datetimeStart.selectionStart === this._options.mask.length) {
+            datetimeEnd.focus();
+            datetimeEnd.setSelectionRange(0, 0);
+         }
       }
    });
 
@@ -102,5 +112,8 @@ define('Controls/Input/Date/Range', [
    };
 
    return Component;
-
 });
+
+
+document.body.onclick = function() {
+};

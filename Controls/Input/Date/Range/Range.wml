@@ -6,9 +6,11 @@
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       validationErrors="{{_options.validationErrors}}"
+      on:keyup="_focusChanger()"
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('tagClick')"
-      on:tagHover="_proxyEvent('tagHover')">
+      on:tagHover="_proxyEvent('tagHover')"
+      attr:class="controls-Input-DateRange_firstField">
    </Controls.Input.DateTime>
    <div class="controls-Input-DateRange__dash"></div>
    <Controls.Input.DateTime
@@ -20,7 +22,8 @@
       validationErrors="{{_options.validationErrors}}"
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('tagClick')"
-      on:tagHover="_proxyEvent('tagHover')">
+      on:tagHover="_proxyEvent('tagHover')"
+      attr:class="controls-Input-DateRange_secondField">
    </Controls.Input.DateTime>
    <Controls.Button
       attr:class="controls-Input-DateRange__button"
