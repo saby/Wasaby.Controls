@@ -58,7 +58,7 @@ def build_title(t_int, t_reg) {
     }
 
 }
-
+def p =
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
@@ -103,11 +103,6 @@ echo "Генерируем параметры"
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-             string(
-                defaultValue: "",
-                description: 'Запустить сборку',
-                name: 'BuildPriority'),
-
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
@@ -126,7 +121,10 @@ def all_inte = params.run_all_int
 def only_fail = false
 def pri = params.set_pri
 if ( pri ) {
-    params.BuildPriority='1'
+    props.add(parameters(string(
+                defaultValue: "",
+                description: 'Запустить сборку',
+                name: 'BuildPriority')))
 }
 
 node('master') {
