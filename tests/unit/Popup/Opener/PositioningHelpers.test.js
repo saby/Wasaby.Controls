@@ -492,6 +492,8 @@ define(
                StackController._stack.add({ containerWidth: 500, popupOptions: { stackClassName: '' } });
                StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
                StackController._update();
+               StackController._update();
+               StackController._update();
                assert.isTrue(StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
                assert.isTrue(StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
                assert.isTrue(StackController._stack.at(2).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
