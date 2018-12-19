@@ -6,14 +6,14 @@
            on:click="_switchBlocker()"></div>
    </div>
    <div>
-      <div class="ws-flexbox">
+      <div class="ws-flexbox ControlsDemo-Label__example1">
          <Controls.Label caption="Label"
                          viewMode="default"
                          readOnly="{{_lock}}"/>
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
-      <div class="ws-flexbox">
+      <div class="ws-flexbox ControlsDemo-Label__example2">
          <Controls.Label caption="Label"
                          viewMode="default"
                          required="{{true}}"
@@ -21,7 +21,7 @@
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
-      <div class="ws-flexbox">
+      <div class="ws-flexbox ControlsDemo-Label__example3">
          <Controls.Label viewMode="default"
                            readOnly="{{_lock}}"
                            caption="{{_limitedCaption}}"
@@ -30,7 +30,7 @@
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
-      <div class="ws-flexbox">
+      <div class="ws-flexbox ControlsDemo-Label__example4">
          <Controls.Label viewMode="default"
                            required="{{true}}"
                            readOnly="{{_lock}}"
@@ -40,7 +40,7 @@
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
-      <div class="ws-flexbox">
+      <div class="ws-flexbox ControlsDemo-Label__example5">
          <Controls.Label viewMode="link"
                            readOnly="{{_lock}}"
                            caption="Label as a link"/>
