@@ -89,10 +89,14 @@ define('Controls/List/BaseControl', [
       },
 
       prepareFooter: function(self, navigation, sourceController) {
-         self._shouldDrawFooter = navigation && navigation.view === 'demand' && sourceController.hasMoreData('down');
+         var
+            loadedDataCount, allDataCount;
+         self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
          if (self._shouldDrawFooter) {
-            if (typeof self._sourceController.getLoadedDataCount() !== 'undefined' && self._sourceController.getAllDataCount()) {
-               self._loadMoreCaption = self._sourceController.getAllDataCount() - self._sourceController.getLoadedDataCount();
+            loadedDataCount = sourceController.getLoadedDataCount();
+            allDataCount = sourceController.getAllDataCount();
+            if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
+               self._loadMoreCaption = allDataCount - loadedDataCount;
             } else {
                self._loadMoreCaption = '...';
             }
