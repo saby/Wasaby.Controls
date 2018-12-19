@@ -33,6 +33,12 @@ define(
                }), true);
             });
 
+            it('Valid Date', function() {
+               assert.equal(IsRequired({
+                  value: new Date()
+               }), true);
+            });
+
          });
       });
    }

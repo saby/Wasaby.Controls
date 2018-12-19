@@ -89,8 +89,9 @@ define('Controls/List/Grid/GridViewModel', [
             cellClasses += ' controls-Grid__row-cell_rowSpacing_default';
 
             if (current.isSelected) {
-               if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + (current.style || 'default');
+               cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
+               if (current.columnIndex === current.getLastColumnIndex()) {
+                  cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
                }
             }
 
@@ -461,6 +462,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
+         },
+
+         getMarkedKey: function() {
+            return this._model.getMarkedKey();
          },
 
          setSorting: function(sorting) {

@@ -39,7 +39,8 @@ define('Controls/Input/Render',
             ]).required(),
             fontStyle: descriptor(String).oneOf([
                'default',
-               'primary'
+               'primary',
+               'secondary'
             ]).required(),
             textAlign: descriptor(String).oneOf([
                'left',

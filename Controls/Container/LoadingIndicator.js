@@ -13,7 +13,7 @@ define('Controls/Container/LoadingIndicator', [
       isLoading: false,
       _isPreloading: false,
       _prevLoading: null,
-      _stack: new List(),
+      _stack: null,
       _isLoadingSaved: null,
       _delay: 2000,
 
@@ -25,6 +25,7 @@ define('Controls/Container/LoadingIndicator', [
       mods: '',
 
       _beforeMount: function(cfg) {
+         this._stack = new List();
          this._updateProperties(cfg);
       },
       _afterMount: function(cfg) {

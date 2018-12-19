@@ -332,7 +332,7 @@
    box-sizing: border-box;
 }
 
-.controls-Grid__row-cell_withSelectionMarker_master {
+.controls-Grid__row-cell_selected-master {
    background-color: @background-color_MasterList_item-selected;
    z-index: 1;
    /* Пока нет фикс шапок
@@ -355,6 +355,9 @@
       //Top border of grid element is 1px;
       height: ~'calc(100% + 1px)';
    }
+}
+
+.controls-Grid__row-cell_selected__last-master {
    &:after {
       content: '';
       z-index: 1;
