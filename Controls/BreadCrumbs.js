@@ -54,5 +54,11 @@ define('Controls/BreadCrumbs', [
       }
    });
 
+   BreadCrumbs.getDefaultOptions = function() {
+      return {
+         displayProperty: 'title'
+      };
+   };
+
    return BreadCrumbs;
 });
