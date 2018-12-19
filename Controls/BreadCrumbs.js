@@ -23,7 +23,7 @@ define('Controls/BreadCrumbs', [
     * @control
     * @public
     * @author Зайцев А.С.
-    * @demo Controls-demo/BreadCrumbs/BreadCrumbs
+    * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
     */
 
    var BreadCrumbs = Control.extend({
@@ -35,7 +35,7 @@ define('Controls/BreadCrumbs', [
          if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth;
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function() {
-               BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  this._options.items, this._oldWidth);
+               BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, this._options.items, this._oldWidth);
                this._forceUpdate();
             }.bind(this));
          }
@@ -44,7 +44,7 @@ define('Controls/BreadCrumbs', [
       _beforeUpdate: function(newOptions) {
          if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth)) {
             this._oldWidth = this._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this,  newOptions.items, this._container.clientWidth);
+            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newOptions.items, this._container.clientWidth);
          }
       },
 

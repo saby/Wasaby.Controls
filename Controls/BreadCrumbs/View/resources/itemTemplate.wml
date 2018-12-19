@@ -3,7 +3,7 @@
         <span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>
     </ws:if>
     <div class="controls-BreadCrumbsView__titleWrapper{{itemData.withOverflow ? ' controls-BreadCrumbsView__titleWrapper_withOverflow'}}"
-         title="{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}">
-        <div class="controls-BreadCrumbsView__title">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+         title="{{ itemData.getPropValue(itemData.item, displayProperty) }}">
+        <div class="controls-BreadCrumbsView__title">{{ itemData.getPropValue(itemData.item, displayProperty) }}</div>
     </div>
 </div>

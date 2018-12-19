@@ -200,6 +200,76 @@
       }
     }
   },
+  "Controls/BreadCrumbs": {
+    "name": "Controls/BreadCrumbs",
+    "title": "Breadcrumbs.",
+    "className": "Controls/BreadCrumbs",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/BreadCrumbs",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "items": {
+            "type": "Array",
+            "arrayElementType": "Object",
+            "title": "Array of breadcrumbs to draw."
+          },
+          "displayProperty": {
+            "title": "Name of the item property which content will be displayed.",
+            "type": "String",
+            "default": "title"
+          },
+          "keyProperty": {
+            "title": "Name of the item property that uniquely identifies collection item.",
+            "type": "String",
+            "default": ""
+          },
+          "parentProperty": {
+            "title": "Name of the field that contains information about parent node.",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
+  "Controls/BreadCrumbs/Path": {
+    "name": "Controls/BreadCrumbs/Path",
+    "title": "Breadcrumbs with back button.",
+    "className": "Controls/BreadCrumbs/Path",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/BreadCrumbs/Path",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "items": {
+            "type": "Array",
+            "arrayElementType": "Object",
+            "title": "Array of breadcrumbs to draw."
+          },
+          "displayProperty": {
+            "title": "Name of the item property which content will be displayed.",
+            "type": "String",
+            "default": "title"
+          },
+          "keyProperty": {
+            "title": "Name of the item property that uniquely identifies collection item.",
+            "type": "String",
+            "default": ""
+          },
+          "parentProperty": {
+            "title": "Name of the field that contains information about parent node.",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
   "Controls/Heading/Back": {
     "name": "Controls/Heading/Back",
     "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
