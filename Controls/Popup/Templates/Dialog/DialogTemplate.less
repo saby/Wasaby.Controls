@@ -46,7 +46,6 @@
    right: 0;
 }
 
-
 .controls-DialogTemplate__caption {
    color: @color_DialogTemplate-caption;
    font-size: @font-size_dialogTemplate_head;
@@ -54,15 +53,11 @@
    overflow: hidden;
    cursor: default;
    height: @height_dialogTemplate_caption; //todo themes value equal min-height
+   line-height: @line-height_dialogTemplate_caption; // the baseline is not centered
    align-items: baseline;
    flex-shrink: 1;
    display: flex;
    margin-left: @spacing_DialogTemplate-between-caption-border-left;
-}
-
-.controls-DialogTemplate__caption:before {
-   content: '\200b';
-   font-size: 27px;
 }
 
 .controls-DialogTemplate__caption_text {
