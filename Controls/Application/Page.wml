@@ -58,12 +58,11 @@
                                     <ws:partial
                                        template="{{ _options.content }}"
                                        scope="{{ templateConfig }}"
-                                       attr:class="zIndex-context"
                                        on:showIndicator="LoadingIndicator._showHandler()"
                                        on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
                                  <Controls.Container.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
-                                    <div attr:class="zIndex-content"></div>
+                                    <div></div>
                                  </Controls.Container.LoadingIndicator>
                               </ws:if>
                               <ws:else>
