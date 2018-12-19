@@ -23,7 +23,7 @@
     <ws:partial template="{{_options.content}}" on:valueChanged="_changeValueHandler()" on:activated="_inputActivated()" on:deactivated="_inputDeactivated()" on:click="_inputClicked()" attr:class="controls-Suggest-Text_style_{{_options.suggestStyle}}"/>
 
     <ws:if data="{{_options.suggestState}}">
-        <ws:partial template="{{_options.layerName}}" target="{{_container}}" filter="{{_filter}}" searchValue="{{_searchValue}}" showContent="{{_showContent}}" showFooter="{{_isFooterShown}}" misspellingCaption="{{_misspellingCaption}}" on:closeButtonClick="_close()">
+        <ws:partial template="{{_options.layerName}}" target="{{_container}}" filter="{{_filter}}" searchValue="{{_searchValue}}" showContent="{{_showContent}}" showFooter="{{_isFooterShown}}" misspellingCaption="{{_misspellingCaption}}" on:close="_close()">
             <ws:content>
                 <ws:if data="{{_misspellingCaption}}">
                     <ws:partial template="{{'Controls/Search/Misspell'}}" attr:class="controls-Suggest__Misspell">
