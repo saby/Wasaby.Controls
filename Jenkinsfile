@@ -112,12 +112,12 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
-    if ( ["ea.proshin", "kraynovdo", "ls.baranova"].contains("${user}") ) {
+    if ( ["ea.proshin", "kraynovdo", "ls.baranova"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
     return common_params
 }
-def user_name = "${getBuildUser()}"
+def user_name = getBuildUser()
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
