@@ -758,8 +758,8 @@ node('controls') {
                 }
             }
 
-            build_title(int_title, reg_title)
-            currentBuild.description = "${description}"
+            //build_title(int_title, reg_title)
+            //currentBuild.description = "${description}"
         }
     }
     if ( unit ){
