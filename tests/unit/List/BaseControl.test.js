@@ -191,7 +191,7 @@ define([
                return def;
             };
 
-            BaseControl._private.reload(ctrl).addCallback(function() {
+            BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
                done();
             }).addErrback(function() {
                assert.isTrue(false, 'reload() returns errback');
@@ -773,7 +773,7 @@ define([
             }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             BaseControl._private.onScrollHide(ctrl);
-            assert.deepEqual(null, ctrl._pagingCfg, 'Wrong state of paging');
+            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
 
             done();
          }, 100);
