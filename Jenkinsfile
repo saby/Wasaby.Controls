@@ -68,7 +68,7 @@ def getBuildUser() {
         //ничего не делаем
     }
 
-    return "${userId}"
+    return userId
 }
 
 def getParams(user) {
