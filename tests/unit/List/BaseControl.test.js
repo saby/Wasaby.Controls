@@ -30,7 +30,8 @@ define([
             {
                id: 3,
                title: 'Третий',
-               type: 2
+               type: 2,
+               'parent@': true
             },
             {
                id: 4,
@@ -360,6 +361,122 @@ define([
                done();
             }, 100);
          }, 100);
+      });
+
+      it('prepareFooter', function() {
+         var
+            tests = [
+               {
+                  data: [
+                     {},
+                     undefined,
+                     {}
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     {},
+                     {}
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'page' },
+                     {}
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return false;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return true;
+                        },
+                        getLoadedDataCount: function() {
+                        },
+                        getAllDataCount: function() {
+                           return true;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: true,
+                     _loadMoreCaption: '...'
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return true;
+                        },
+                        getLoadedDataCount: function() {
+                           return 5;
+                        },
+                        getAllDataCount: function() {
+                           return true;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: true,
+                     _loadMoreCaption: '...'
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return true;
+                        },
+                        getLoadedDataCount: function() {
+                           return 5;
+                        },
+                        getAllDataCount: function() {
+                           return 10;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: true,
+                     _loadMoreCaption: 5
+                  }
+               }
+            ];
+         tests.forEach(function(test, index) {
+            BaseControl._private.prepareFooter.apply(null, test.data);
+            assert.deepEqual(test.data[0], test.result, 'Invalid prepare footer on step #' + index);
+         });
       });
 
       it('loadToDirection up', function(done) {
@@ -1841,6 +1958,48 @@ define([
             });
             assert.equal(instance._listViewModel._activeItem, null);
             assert.equal(callBackCount, 5);
+            assert.isFalse(instance._menuIsShown);
+         });
+
+         it('closeActionsMenu item with children', function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._listViewModel._activeItem = {
+               item: true
+            };
+            instance._container = {
+               querySelector: function(selector) {
+                  if (selector === '.controls-ListView__itemV') {
+                     return {
+                        parentNode: {
+                           children: [{
+                              className: ''
+                           }]
+                        }
+                     };
+                  }
+               }
+            };
+            instance._closeActionsMenu({
+               action: 'itemClick',
+               event: {
+                  type: 'click',
+                  stopPropagation: ()=>{}
+               },
+               data: [{
+                  getRawData: function() {
+                     return {
+                        'parent@': true
+                     };
+                  }
+               }]});
+            assert.equal(instance._menuIsShown, null);
          });
 
          it('_listSwipe  multiSelectStatus = true', function(done) {
