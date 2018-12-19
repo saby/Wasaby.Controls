@@ -13,7 +13,7 @@ node node_modules/istanbul/lib/cli instrument --complete-copy --output Controls-
 
 node depencyCollector
 py build.py
-node node_modules/ws-unit-testing/queue test-server test-browser-coverage
+node node_modules/saby-units/queue test-server test-browser-coverage
 
 @rmdir /S /Q components
 @rename components-origin components

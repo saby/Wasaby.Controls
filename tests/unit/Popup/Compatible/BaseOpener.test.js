@@ -145,6 +145,24 @@ define(
 
          });
 
+         it('prepareNotificationConfig', function() {
+            let template = () => {};
+            let config = {
+               template,
+               opener: 'opener',
+               templateOptions: {
+                  myOpt: true
+               }
+            };
+            BaseOpener.prepareNotificationConfig(config);
+            assert.equal(config.template, 'Controls/Popup/Compatible/OldNotification');
+            assert.equal(config.componentOptions.template, template);
+            assert.equal(config.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(config.isVDOM, true);
+            assert.equal(config.className, 'controls-OldNotification');
+            assert.equal(config.opener, null);
+         });
+
          it('_setSizes', function() {
             BaseOpener._setSizes(config, DropdownExample);
             assert.isTrue(config.autoWidth);
