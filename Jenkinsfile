@@ -112,7 +112,9 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
+    echo "${user}"
     if (user in ['ea.proshin']) {
+
         params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
     return params
