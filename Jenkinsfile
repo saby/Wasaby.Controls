@@ -118,7 +118,7 @@ def getParams(user) {
 
         params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
-    echo ${params}
+    echo "${params}"
     return params
 }
 def user_name = "${getBuildUser()}"
