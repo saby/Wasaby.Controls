@@ -121,6 +121,7 @@ def all_inte = params.run_all_int
 def only_fail = false
 def pri = params.set_pri
 if ( pri ) {
+    echo "${params}"
     params.add(string(
                 defaultValue: "1",
                 description: 'Запустить сборку',
