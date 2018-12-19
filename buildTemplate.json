@@ -47,10 +47,6 @@
       "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
     },
     {
-      "name": "File",
-      "path": "%cd%/node_modules/rmi/src/client/File"
-    },
-    {
       "name": "Transport",
       "path": "%cd%/node_modules/sbis3-ws/ws/transport"
     },

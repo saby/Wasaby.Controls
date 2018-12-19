@@ -42,7 +42,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysScroll"
                                keyProperty="id"
                                displayProperty="title"
-                               popupClassName="ControlsDemo-InputDropdown__scroll"
+                               dropdownClassName="ControlsDemo-InputDropdown__scroll"
                                source="{{_getMultiData()}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
