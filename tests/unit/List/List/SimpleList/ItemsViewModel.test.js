@@ -165,14 +165,27 @@ define([
 
       });
 
-      it('getSpacingClassList', function() {
+      it('getSpacingClassListWithoutCheckbox', function() {
          var cfg = {
             rightPadding: 'XS',
-            leftSpacing: 'M'
+            leftSpacing: 'M',
+            multiSelectVisibility: 'hidden'
          };
 
          var ivm = new ItemsViewModel(cfg);
-         var classList = ' controls-ListView__item-rightPadding_XS controls-ListView__item-leftPadding_M';
+         var classList = ' controls-ListView__item-leftPadding_M controls-ListView__item-rightPadding_XS';
+         assert.isTrue(classList === ivm.getSpacingClassList());
+      });
+
+      it('getSpacingClassListWithCheckbox', function() {
+         var cfg = {
+            rightPadding: 'XS',
+            leftSpacing: 'M',
+            multiSelectVisibility: 'visible'
+         };
+
+         var ivm = new ItemsViewModel(cfg);
+         var classList = ' controls-ListView__item-rightPadding_XS';
          assert.isTrue(classList === ivm.getSpacingClassList());
       });
 
