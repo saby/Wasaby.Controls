@@ -20,9 +20,14 @@
 }
 
 .controls-StickyHeader__shadow {
+   visibility: hidden;
    bottom: -@height-gradient_Scroll-shadow;
    background: linear-gradient(
       to bottom,
       @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
    );
+}
+
+.controls-StickyHeader__shadowVisible {
+   visibility: visible;
 }
