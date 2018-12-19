@@ -239,14 +239,13 @@ define('Controls/List/BaseControl', [
                   self._pagingVisible = true;
                });
             }
-         } else {
-
+         } else if (_private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = true;
          }
       },
 
       onScrollHide: function(self) {
          self._loadOffset = 0;
-         self._pagingCfg = null;
          self._pagingVisible = false;
          self._forceUpdate();
       },
