@@ -104,7 +104,7 @@ echo "Генерируем параметры"
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
-            choice(choices: "-\n1", description: '', name: 'set_pri'),
+            choice(choices: "default\n1", description: 'Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий, name: 'build_priority'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
