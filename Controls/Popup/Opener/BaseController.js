@@ -179,7 +179,10 @@ define('Controls/Popup/Opener/BaseController',
          },
          _checkContainer: function(item, container, stage) {
             if (!container) {
-               Utils.logger.error(this._moduleName, 'Ошибка при построении шаблона ' + item.popupOptions.template + ' на этапе ' + stage);
+               // if popup has initializing state then container doesn't created yet
+               if (item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
+                  Utils.logger.error(this._moduleName, 'Ошибка при построении шаблона ' + item.popupOptions.template + ' на этапе ' + stage);
+               }
                return false;
             }
             return true;
