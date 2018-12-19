@@ -504,12 +504,12 @@ node('controls') {
                     export test_report=artifacts/test-browser-report.xml
                     sh ./bin/test-browser
                     """
+                    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                    unit_result = currentBuild.result == null
+                    if (!unit_result) {
+                        exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+                    }
                 }
-            }
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            unit_result = currentBuild.result == null
-            if (!unit_result) {
-                exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
             }
         }
         if ( regr || inte || all_inte) {
@@ -751,8 +751,8 @@ node('controls') {
                 dir('/home/sbis/Controls'){
                     def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
                     if ( files_err.length > 0 ){
-                        sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-                        sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+                        sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
                         dir ( workspace ){
                             sh """7za a logs_ps -t7z ${workspace}/logs_ps """
                             archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
