@@ -5,7 +5,7 @@
             <div class="controls-FastFilter__iconArrow icon-DayForward controls-FastFilter__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}"></div>
             <div class="controls-Dropdown__text  controls-FastFilter__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}" title="{{_configs[index].text}}">{{_configs[index].text}}</div>
          </div>
-         <ws:if data="{{!_options.readOnly && item.resetValue && item.value !== item.resetValue}}">
+         <ws:if data="{{!_options.readOnly && item.resetValue !== undefined && item.value !== item.resetValue}}">
             <span class="controls-FastFilter__iconReset icon-Close" on:click="_reset(item, index)"></span>
          </ws:if>
       </div>

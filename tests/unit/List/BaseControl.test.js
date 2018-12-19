@@ -1697,7 +1697,6 @@ define([
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData);
             assert.equal(callBackCount, 0); //проверяем что не открывали меню
-
          });
 
          it('showActionsMenu no context', function() {

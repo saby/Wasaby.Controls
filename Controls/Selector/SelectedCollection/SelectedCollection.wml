@@ -6,7 +6,9 @@
               trigger="click"
               templateName="Controls/Selector/SelectedCollection/Popup"
               templateOptions="{{_templateOptions}}"
-              position="bl">
+              position="bl"
+              on:openInfoBox="_notifyHandler('openInfoBox')"
+              on:closeInfoBox="_notifyHandler('closeInfoBox')">
           <ws:partial template="wml!Controls/Selector/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_options._counterWidth}}px;"/>
       </Controls.Popup.InfoBox>
    </ws:if>

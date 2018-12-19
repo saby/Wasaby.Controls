@@ -38,21 +38,23 @@ class RC:
 
     def description(self, fail_tests_path, skip):
         """Формируем описаниена основе полученных данных из RC сборки и упавших тестов в текущей"""
-        description = '<pre><ul>'
+
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
             now_list = sorted(f.read().split())
             self.test_names = sorted(self.test_names)
-            if not skip:    # результаты без параметра skip
-                if self.test_names == now_list:     # если упавших нигде нет
-                    if now_list:                    # падают одинаковые
-                        self.head = "ОК|Эти ошибки уже попали в RC."
-                elif len(self.test_names) < len(now_list):
+            if not skip:
+                if self.test_names == now_list and self.test_names:
+                    self.head = "ОК|Эти ошибки уже попали в RC."
+                elif now_list:
                     self.head = "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
+                elif not self.test_names and not now_list:
+                    return ''
             else:
                 if now_list:
-                    self.head = "FAIL WITH SKIP|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
-                    return  # не показываем ошибки из RC
+                    self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
+                    return ''   # не показываем ошибки из RC
 
+        description = '<pre><ul>'
         for err in self.err_dict:
             description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
         description += "</ul>"

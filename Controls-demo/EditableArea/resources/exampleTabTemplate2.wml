@@ -14,7 +14,7 @@
             <ws:editorTemplate>
                <Controls.Input.Text selectOnClick="{{ false }}"
                                     size="l"
-                                    style="header" />
+                                    fontStyle="secondary" />
             </ws:editorTemplate>
          </Controls.EditableArea.Templates.Editors.Base>
       </div>

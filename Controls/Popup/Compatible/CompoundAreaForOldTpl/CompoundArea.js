@@ -380,6 +380,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
+         _rebuildTitleBar: function() {
+            var customTitles = this._container.find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
+            customTitles.remove();
+            this._setCustomHeader();
+         },
+
          handleCommand: function(commandName, args) {
             var arg = args[0];
 
@@ -394,6 +400,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return true; // команда cancel не должна всплывать выше окна
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
+            } if (commandName === 'rebuildTitleBar') {
+               return this._rebuildTitleBar(arg);
             } if (commandName === 'delete') {
                return this.delRecord(arg);
             } if (commandName === 'print') {

@@ -11,9 +11,9 @@ define('Controls/List/ListViewModel',
        */
 
       var _private = {
-         updateIndexes: function(self) {
-            self._startIndex = 0;
-            self._stopIndex = self.getCount();
+         updateIndexes: function(self, startIndex, stopIndex) {
+            self._startIndex = startIndex;
+            self._stopIndex = stopIndex;
          }
       };
 
@@ -39,7 +39,7 @@ define('Controls/List/ListViewModel',
             this._selectedKeys = cfg.selectedKeys || [];
 
             // TODO надо ли?
-            _private.updateIndexes(self);
+            _private.updateIndexes(self, 0, self.getCount());
          },
 
          getItemDataByItem: function() {
@@ -180,14 +180,22 @@ define('Controls/List/ListViewModel',
 
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
-               this._startIndex = startIndex;
-               this._stopIndex = stopIndex;
+               _private.updateIndexes(self, startIndex, stopIndex);
                this._nextVersion();
                this._notify('onListChange');
             }
          },
 
+         getStartIndex: function() {
+            return this._startIndex;
+         },
+
+         getStopIndex: function() {
+            return this._stopIndex;
+         },
+
          setItems: function(items) {
+            _private.updateIndexes(this, 0, items.getCount());
             ListViewModel.superclass.setItems.apply(this, arguments);
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
@@ -197,7 +205,6 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
-            _private.updateIndexes(this);
          },
 
          getItems: function() {
