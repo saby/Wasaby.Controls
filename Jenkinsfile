@@ -735,7 +735,7 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir("./controls/tests") {
+        /*dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
             def description = ''
@@ -758,9 +758,9 @@ node('controls') {
                 }
             }
 
-            //build_title(int_title, reg_title)
-            //currentBuild.description = "${description}"
-        }
+            build_title(int_title, reg_title)
+            currentBuild.description = "${description}"
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
