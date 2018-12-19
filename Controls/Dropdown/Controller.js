@@ -87,8 +87,8 @@ define('Controls/Dropdown/Controller',
             });
          },
 
-         updateSelectedItems: function(self, selectedKeys, keyProperty, dataLoadCallback) {
-            if (selectedKeys[0] === null && self._options.emptyText) {
+         updateSelectedItems: function(self, emptyText, selectedKeys, keyProperty, dataLoadCallback) {
+            if (selectedKeys[0] === null && emptyText) {
                self._selectedItems.push(null);
             } else {
                Chain(self._items).each(function(item) {
@@ -150,7 +150,7 @@ define('Controls/Dropdown/Controller',
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
-                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
+                  _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else if (options.source) {
                   return _private.loadItems(this, options);
                }
@@ -160,7 +160,7 @@ define('Controls/Dropdown/Controller',
          _beforeUpdate: function(newOptions) {
             if (!isEqual(newOptions.selectedKeys, this._options.selectedKeys)) {
                this._selectedItems = [];
-               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
+               _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
             if ((newOptions.source && newOptions.source !== this._options.source) ||
                newOptions.navigation !== this._options.navigation ||
@@ -220,10 +220,16 @@ define('Controls/Dropdown/Controller',
          }
       });
 
+      //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
+      //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+      var
+         defaultFilter = {},
+         defaultSelectedKeys = [];
+
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {
-            filter: {},
-            selectedKeys: []
+            filter: defaultFilter,
+            selectedKeys: defaultSelectedKeys
          };
       };
 

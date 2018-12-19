@@ -116,6 +116,45 @@ define(
             assert.deepEqual(dropdownController._items.getRawData(), itemsRecords.getRawData());
          });
 
+         it('received state, selectedItems = [null], emptyText is set', () => {
+            let dataLoadCallbackCalled = false;
+            const config = {
+               selectedKeys: [null],
+               keyProperty: 'id',
+               emptyText: '123',
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            };
+            const dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._selectedItems, [null]);
+            assert.isTrue(dataLoadCallbackCalled);
+         });
+
+         it('received state, selectedItems = [null], emptyText is NOT set', () => {
+            let dataLoadCallbackCalled = false;
+            const config = {
+               selectedKeys: [null],
+               keyProperty: 'id',
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            };
+            const dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._selectedItems, []);
+            assert.isTrue(dataLoadCallbackCalled);
+         });
+
          it('check selectedItemsChanged event', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = itemsRecords;
@@ -278,7 +317,7 @@ define(
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._selectedItems = [];
-            Dropdown._private.updateSelectedItems(dropdownController, [null], 'id');
+            Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id');
             assert.deepEqual(dropdownController._selectedItems, [null]);
          });
 
