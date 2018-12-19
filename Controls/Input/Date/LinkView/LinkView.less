@@ -1,7 +1,6 @@
 .controls-DateLinkView {
-   display: inline-flex;
-   justify-content: baseline;
-   align-items: flex-end;
+   display: inline-block;
+
    .user-select();
 
    font-size: @font-size_DateLinkView;
@@ -78,7 +77,6 @@
 }
 
 .controls-DateLinkView__clear {
-   font-family: 'cbuc-icons24';
    color: #CCCCCC;
    cursor: pointer;
 }
@@ -89,4 +87,8 @@
 
 .controls-DateLinkView__clear:hover {
    color: @color_CloseButton-light-icon_hover;
+}
+
+.controls-DateLinkView__clear-hidden {
+    display: none;
 }

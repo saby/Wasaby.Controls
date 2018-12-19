@@ -1,27 +1,29 @@
 <div class="controls-DateLinkView">
-    <ws:if data="{{ _options.showPrevArrow && _options.style === 'default' }}">
-       <span
-          class="controls-DateLinkView__prev {{ _prevNextButtonsEnabledClass }}"
-          on:click="shiftBack()">
-       </span>
-    </ws:if>
-    <span class="controls-DateLinkView__value-wrapper {{_isMinWidth ? 'controls-DateLinkView__value-wrapper-minWidth'}}">
-       <ws:if data="{{ _options.style == 'default' }}">
-          <span class="controls-DateLinkView__value {{ _valueEnabledClass }}" on:click="_onClick()">
-             {{ _caption }}
-          </span>
-       </ws:if>
-       <ws:else>
-          <Controls.Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" on:click="_onClick()"/>
-       </ws:else>
-    </span>
-    <ws:if data="{{ _options.showClearButton }}">
-          <span class="controls-DateLinkView__clear {{ !_isClearButtonVisible() ? 'ws-invisible' }}" on:click="_clearDate()"></span>
-    </ws:if>
-    <ws:if data="{{ _options.showNextArrow && _options.style === 'default' }}">
-       <span
-          class="controls-DateLinkView__next {{ _prevNextButtonsEnabledClass }}"
-          on:click="shiftForward()">
-       </span>
-    </ws:if>
+    <div class="controls-DateLinkView-wrapper">
+        <ws:if data="{{ _options.showPrevArrow && _options.style === 'default' }}">
+           <span
+              class="controls-DateLinkView__prev {{ _prevNextButtonsEnabledClass }}"
+              on:click="shiftBack()">
+           </span>
+        </ws:if>
+        <span class="controls-DateLinkView__value-wrapper {{_isMinWidth ? 'controls-DateLinkView__value-wrapper-minWidth'}}">
+           <ws:if data="{{ _options.style == 'default' }}">
+              <span class="controls-DateLinkView__value {{ _valueEnabledClass }}" on:click="_onClick()">
+                 {{ _caption }}
+              </span>
+           </ws:if>
+           <ws:else>
+              <Controls.Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" on:click="_onClick()"/>
+           </ws:else>
+        </span>
+        <ws:if data="{{ _options.showClearButton }}">
+              <span class="controls-DateLinkView__clear {{ !_isClearButtonVisible() ? 'controls-DateLinkView__clear-hidden' }}" on:click="_clearDate()"></span>
+        </ws:if>
+        <ws:if data="{{ _options.showNextArrow && _options.style === 'default' }}">
+           <span
+              class="controls-DateLinkView__next {{ _prevNextButtonsEnabledClass }}"
+              on:click="shiftForward()">
+           </span>
+        </ws:if>
+    </div>
 </div>

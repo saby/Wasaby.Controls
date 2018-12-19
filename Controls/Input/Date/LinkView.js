@@ -71,7 +71,10 @@ define('Controls/Input/Date/LinkView', [
          this._rangeModel.update(options);
          _private._updateCaption(this, options);
          _private._updateEnabled(this, options.readOnly);
-         if (options.showPrevArrow && options.showClearButton) {
+
+         // showClearButton is option of clearButton visibility state
+
+         if ((options.showPrevArrow && options.showClearButton) || (options.showNextArrow && options.showClearButton)) {
             IoC.resolve('ILogger').error('LinkView', rk('Функционал контрола не расчитан на одновременное отображение опции showClearButton и опций showPrevArrow/showNextArrow'));
          }
       },
