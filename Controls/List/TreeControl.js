@@ -244,6 +244,7 @@ define('Controls/List/TreeControl', [
       return {
          uniqueKeys: true,
          filter: {},
+         markItemByExpanderClick: true,
          root: null,
          columns: DEFAULT_COLUMNS_VALUE
       };
