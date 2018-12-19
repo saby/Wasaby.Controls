@@ -2,7 +2,8 @@ define('Controls/List/Container',
    [
       'Core/Control',
       'wml!Controls/List/Container',
-      'Controls/Container/Data/ContextOptions'
+      'Controls/Container/Data/ContextOptions',
+      'Controls/Container/LoadingIndicator'
    ],
    
    /**
@@ -26,6 +27,12 @@ define('Controls/List/Container',
    
          _beforeUpdate: function(options, context) {
             this._dataOptions = context.dataOptions;
+         },
+         
+         _afterUpdate: function() {
+            if (this._options.loading) {
+               this._children.indicator.show();
+            }
          }
          
       });

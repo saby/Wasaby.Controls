@@ -32,7 +32,7 @@ define('Controls/List/ListControl', [
    var ListControl = Control.extend(/** @lends Controls/List/ListControl.prototype */{
       _template: ListControlTpl,
       reload: function() {
-         this._children.baseControl.reload();
+         return this._children.baseControl.reload();
       },
       beginEdit: function(options) {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);

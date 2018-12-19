@@ -42,7 +42,7 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>
 
-   <Controls.Popup.Opener.Stack name="notifyStack" on:close="_notifyCloseHandler()" on:open="_notifyOpenHandler()" on:result="_notifyResultHandler()">
+   <Controls.Popup.Opener.Stack name="notifyStack" on:popupClose="_notifyCloseHandler()" on:popupOpen="_notifyOpenHandler()" on:popupResult="_notifyResultHandler()">
       <ws:popupOptions template="Controls-demo/Popup/NotifyStack" closeByExternalClick="{{true}}" />
    </Controls.Popup.Opener.Stack>
 
