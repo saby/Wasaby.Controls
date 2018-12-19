@@ -107,7 +107,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          initSelection: function(self) {
             var input = _private.getInput(self);
 
-            if (input) {
+            /**
+             * In IE, change the selection leads to the automatic focusing of the field.
+             * Therefore, we change it only if the field is already focused.
+             */
+            if (input && self._inputActive) {
                var selection = self._selection;
                var end = self._options.viewModel.getDisplayValue().length;
                var newSelection = {

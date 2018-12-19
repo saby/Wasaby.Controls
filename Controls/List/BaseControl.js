@@ -101,10 +101,14 @@ define('Controls/List/BaseControl', [
       },
 
       prepareFooter: function(self, navigation, sourceController) {
-         self._shouldDrawFooter = navigation && navigation.view === 'demand' && sourceController.hasMoreData('down');
+         var
+            loadedDataCount, allDataCount;
+         self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
          if (self._shouldDrawFooter) {
-            if (typeof self._sourceController.getLoadedDataCount() !== 'undefined' && self._sourceController.getAllDataCount()) {
-               self._loadMoreCaption = self._sourceController.getAllDataCount() - self._sourceController.getLoadedDataCount();
+            loadedDataCount = sourceController.getLoadedDataCount();
+            allDataCount = sourceController.getAllDataCount();
+            if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
+               self._loadMoreCaption = allDataCount - loadedDataCount;
             } else {
                self._loadMoreCaption = '...';
             }
@@ -403,8 +407,17 @@ define('Controls/List/BaseControl', [
                   keyProperty: 'id',
                   parentProperty: 'parent',
                   nodeProperty: 'parent@',
-                  dropdownClassName: 'controls-itemActionsV__popup'
+                  dropdownClassName: 'controls-itemActionsV__popup',
+                  showClose: true
                },
+               eventHandlers: {
+                  onResult: self._closeActionsMenu,
+                  onClose: self._closeActionsMenu
+               },
+               closeByExternalClick: true,
+               corner: { vertical: 'top', horizontal: 'right' },
+               horizontalAlign: { side: context ? 'right' : 'left' },
+               className: 'controls-Toolbar__menu-position',
                nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
@@ -416,35 +429,27 @@ define('Controls/List/BaseControl', [
             actionName = args && args.action,
             event = args && args.event;
 
+         function closeMenu() {
+            self._listViewModel.setActiveItem(null);
+            self._children.swipeControl.closeSwipe();
+            self._menuIsShown = false;
+         }
+
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
             aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
-            self._children.itemActionsOpener.close();
+            if (!action['parent@']) {
+               self._children.itemActionsOpener.close();
+               closeMenu();
+            }
+         } else {
+            closeMenu();
          }
-         self._listViewModel.setActiveItem(null);
-         self._children.swipeControl.closeSwipe();
-         self._menuIsShown = false;
          self._forceUpdate();
       },
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
-      },
-
-      setPopupOptions: function(self) {
-         self._popupOptions = {
-            className: 'controls-Toolbar__menu-position',
-            closeByExternalClick: true,
-            corner: { vertical: 'top', horizontal: 'right' },
-            horizontalAlign: { side: 'right' },
-            eventHandlers: {
-               onResult: self._closeActionsMenu,
-               onClose: self._closeActionsMenu
-            },
-            templateOptions: {
-               showClose: true
-            }
-         };
       },
 
       groupsExpandChangeHandler: function(self, changes) {
@@ -564,7 +569,6 @@ define('Controls/List/BaseControl', [
             self = this;
 
          _private.bindHandlers(this);
-         _private.setPopupOptions(this);
 
          this._virtualScroll = new VirtualScroll({
             maxVisibleItems: newOptions.virtualScrollConfig && newOptions.virtualScrollConfig.maxVisibleItems,

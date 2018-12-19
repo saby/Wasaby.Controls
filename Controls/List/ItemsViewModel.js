@@ -141,8 +141,10 @@ define('Controls/List/ItemsViewModel', [
 
       getSpacingClassList: function() {
          var classList = '';
+         if (this._options.multiSelectVisibility === 'hidden') {
+            classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
+         }
          classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
-         classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
          return classList;
       },
 
@@ -206,10 +208,17 @@ define('Controls/List/ItemsViewModel', [
       },
 
       _onCollectionChange: function() {
+         this._onBeginCollectionChange();
          this._nextVersion();
          this._notify('onListChange');
+         this._onEndCollectionChange();
       },
-
+      _onBeginCollectionChange: function() {
+         // method may be implemented
+      },
+      _onEndCollectionChange: function() {
+         // method may be implemented
+      },
       setItems: function(items) {
          if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());

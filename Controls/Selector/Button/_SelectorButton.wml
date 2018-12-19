@@ -3,6 +3,7 @@
       <Controls.Selector.SelectedCollection
               _counterWidth="{{_options._counterWidth}}"
               items="{{_options.items}}"
+              itemTemplate="{{_options.itemTemplate}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
               multiLine="{{true}}"
