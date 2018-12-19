@@ -324,7 +324,7 @@ define(
             assert.isTrue(opened);
    
             dropdownController._mousedown();
-            ssert.isFalse(opened);
+            assert.isFalse(opened);
          });
          
          it('getFilter', () => {
