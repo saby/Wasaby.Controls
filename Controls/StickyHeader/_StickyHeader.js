@@ -117,7 +117,11 @@ define('Controls/StickyHeader/_StickyHeader',
          },
 
          _getStyle: function() {
-            var top = this._context.stickyHeader.position;
+            var top = 0;
+
+            if (this._context.stickyHeader) {
+               top = this._context.stickyHeader.position;
+            }
 
             /**
              * On android and ios there is a gap between child elements.
@@ -149,8 +153,8 @@ define('Controls/StickyHeader/_StickyHeader',
          },
 
          _isShadowVisible: function() {
-            return this._context.stickyHeader.shadowVisible && this._shadowVisible &&
-               this._model && this._model.shouldBeFixed;
+            return (!this._context.stickyHeader || this._context.stickyHeader.shadowVisible) &&
+               this._shadowVisible && this._model && this._model.shouldBeFixed;
          }
       });
 
