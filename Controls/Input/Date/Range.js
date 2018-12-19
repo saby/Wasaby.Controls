@@ -35,6 +35,7 @@ define('Controls/Input/Date/Range', [
     * @category Input
     * @author Миронов А.Ю.
     */
+
    var Component = Control.extend([], {
       _template: template,
       _proxyEvent: tmplNotify,
@@ -91,14 +92,16 @@ define('Controls/Input/Date/Range', [
          this._forceUpdate();
       },
 
-      //ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender
+      // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
+
+      _keyUpHandler: function() {
+         this._focusChanger();
+      },
 
       _focusChanger: function() {
-         var datetimeStart = this._container.getElementsByClassName('controls-Input-DateRange_firstField')[0].children[0].children[0].children[0];
-         var datetimeEnd = this._container.getElementsByClassName('controls-Input-DateRange_secondField')[0].children[0].children[0].children[0];
+         var datetimeStart = this._children.startValueField._container.querySelector('input');
          if (datetimeStart.selectionStart === this._options.mask.length) {
-            datetimeEnd.focus();
-            datetimeEnd.setSelectionRange(0, 0);
+            this._children.endValueField.activate();
          }
       }
    });
@@ -110,10 +113,5 @@ define('Controls/Input/Date/Range', [
    Component.getOptionTypes = function() {
       return coreMerge({}, IDateTimeMask.getOptionTypes());
    };
-
    return Component;
 });
-
-
-document.body.onclick = function() {
-};
