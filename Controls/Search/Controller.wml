@@ -4,6 +4,7 @@
             misspellValue="{{_misspellValue}}"
             itemOpenHandler="{{_itemOpenHandler}}"
             viewMode="{{_viewMode}}"
+            loading="{{_loading}}"
             on:search="_search()"
             on:resetSearch="_resetSearch()"
             on:misspellCaptionClick="_misspellCaptionClick()"/>

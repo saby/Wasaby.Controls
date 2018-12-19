@@ -27,7 +27,8 @@ define('Controls/Search/Controller',
                   source: options.source,
                   navigation: options.navigation,
                   searchCallback: _private.searchCallback.bind(self, self),
-                  abortCallback: _private.abortCallback.bind(self, self)
+                  abortCallback: _private.abortCallback.bind(self, self),
+                  searchStartCallback: _private.searchStartCallback.bind(self, self)
                });
             }
    
@@ -36,7 +37,8 @@ define('Controls/Search/Controller',
          
          searchCallback: function(self, result, filter) {
             var switcherStr = getSwitcherStrFromData(result.data);
-            
+   
+            self._loading = false;
             self._previousViewMode = self._viewMode;
             self._viewMode = 'search';
             self._forceUpdate();
@@ -49,6 +51,7 @@ define('Controls/Search/Controller',
          },
          
          abortCallback: function(self, filter) {
+            self._loading = false;
             if (self._viewMode === 'search') {
                self._viewMode = self._previousViewMode;
                self._previousViewMode = null;
@@ -57,6 +60,10 @@ define('Controls/Search/Controller',
                self._forceUpdate();
                self._notify('filterChanged', [filter], {bubbling: true});
             }
+         },
+   
+         searchStartCallback: function(self) {
+            self._loading = true;
          },
          
          needUpdateSearchController: function(options, newOptions) {
