@@ -206,10 +206,17 @@ define('Controls/List/ItemsViewModel', [
       },
 
       _onCollectionChange: function() {
+         this._onBeginCollectionChange();
          this._nextVersion();
          this._notify('onListChange');
+         this._onEndCollectionChange();
       },
-
+      _onBeginCollectionChange: function() {
+         // method may be implemented
+      },
+      _onEndCollectionChange: function() {
+         // method may be implemented
+      },
       setItems: function(items) {
          if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());

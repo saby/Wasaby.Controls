@@ -195,7 +195,6 @@ define('Controls/List/ListViewModel',
          },
 
          setItems: function(items) {
-            _private.updateIndexes(this, 0, items.getCount());
             ListViewModel.superclass.setItems.apply(this, arguments);
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
@@ -207,8 +206,8 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         getItems: function() {
-            return ListViewModel.superclass.getItems.apply(this, arguments);
+         _onBeginCollectionChange: function() {
+            _private.updateIndexes(this, 0, this.getItems().getCount());
          },
 
          _setEditingItemData: function(itemData) {
@@ -256,11 +255,11 @@ define('Controls/List/ListViewModel',
          getMultiSelectVisibility: function() {
             return this._options.multiSelectVisibility;
          },
-         
+
          setSorting: function(sorting) {
             this._options.sorting = sorting;
          },
-         
+
          getSorting: function() {
             return this._options.sorting;
          },

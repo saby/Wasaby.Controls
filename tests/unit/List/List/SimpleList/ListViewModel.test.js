@@ -49,6 +49,37 @@ define([
          assert.isTrue(cur.multiSelectStatus, 'Incorrect field set on getCurrent()');
       });
 
+      it('updateIndexes', function() {
+         var
+            items = new RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1' },
+                  { id: 2, title: 'item 2' },
+                  { id: 3, title: 'item 3' }
+               ],
+               idProperty: 'id'
+            }),
+            model = new ListViewModel({
+               keyProperty: 'id',
+               items: new RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            });
+         assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after constructor.');
+         assert.equal(model._stopIndex, 0, 'Invalid value of "_stopIndex" after constructor.');
+         model.setItems(items);
+         assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after setItems(items).');
+         assert.equal(model._stopIndex, 3, 'Invalid value of "_stopIndex" after setItems(items).');
+         model.subscribe('onListChange', function() {
+            assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after items.removeAt(0) in onListChange handler.');
+            assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0) in onListChange handler.');
+         });
+         model.getItems().removeAt(0);
+         assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after items.removeAt(0).');
+         assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
+      });
+
       it('Selection', function() {
          var cfg = {
             items: data,
