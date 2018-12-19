@@ -69,7 +69,7 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
 
          Search._private.searchCallback(controller, {});
          
-         assert.isTrue(controller._loading);
+         assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
          assert.isTrue(controller._viewMode === 'search');
