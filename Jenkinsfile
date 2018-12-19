@@ -465,7 +465,6 @@ node('controls') {
         }
 
         stage ("Unit тесты"){
-		    unit = false
             if ( unit ){
                 echo "Запускаем юнит тесты"
                 dir("./controls"){
