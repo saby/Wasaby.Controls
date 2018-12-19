@@ -63,7 +63,8 @@ define(
             source: new Memory({
                idProperty: 'id',
                data: items
-            })
+            }),
+            filter: {}
          };
 
          let configLazyLoad = {
@@ -189,6 +190,13 @@ define(
 
          });
 
+         it('_beforeUpdate new filter', () => {
+            let dropdownController = getDropdownController(config);
+            dropdownController._selectedItems = items;
+            dropdownController._beforeUpdate(config);
+            assert.equal(dropdownController._selectedItems.length, 9);
+         });
+
          it('open dropdown', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = itemsRecords;
@@ -270,7 +278,8 @@ define(
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
                selectedKeys: '[6]',
-               keyProperty: 'id'
+               keyProperty: 'id',
+               filter: config.filter
             });
             assert.deepEqual(dropdownController._selectedItems[0].getRawData(), items[5]);
          });
