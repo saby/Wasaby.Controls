@@ -464,6 +464,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setMarkedKey(key);
          },
 
+         getMarkedKey: function() {
+            return this._model.getMarkedKey();
+         },
+
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
          },
