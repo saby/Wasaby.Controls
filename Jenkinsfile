@@ -58,19 +58,21 @@ def build_title(t_int, t_reg) {
     }
 
 }
+@NonCPS
+def getBuildUser() {
+    def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
+    def userId = ''
+    try {
+        userId = cause.getUserId()
+    }catch (java.lang.NullPointerException e) {
+        //ничего не делаем
+    }
 
-echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
-echo "Генерируем параметры"
-    properties([
-    disableConcurrentBuilds(),
-    gitLabConnection('git'),
-    buildDiscarder(
-        logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
-        parameters([
+    return userId
+}
+
+def getParams(user) {
+    def params = [
             string(
                 defaultValue: 'sdk',
                 description: '',
@@ -104,13 +106,34 @@ echo "Генерируем параметры"
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
-            ]),
+            ]
+    if (user in ['ea.proshin']) {
+        common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
+    }
+    return params
+
+
+
+
+}
+def user_name = "${getBuildUser()}"
+echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
+echo "Генерируем параметры"
+    properties([
+    disableConcurrentBuilds(),
+    gitLabConnection('git'),
+    buildDiscarder(
+        logRotator(
+            artifactDaysToKeepStr: '3',
+            artifactNumToKeepStr: '3',
+            daysToKeepStr: '3',
+            numToKeepStr: '3')),
+        parameters(getParams(user_name)),
         pipelineTriggers([])
     ])
 
