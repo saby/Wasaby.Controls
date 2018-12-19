@@ -170,6 +170,9 @@ define('Controls/List/TreeControl', [
       },
       _onExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
+         if (this._options.markItemByExpanderClick) {
+            this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+         }
          e.stopImmediatePropagation();
       },
       _onLoadMoreClick: function(e, dispItem) {
@@ -241,6 +244,7 @@ define('Controls/List/TreeControl', [
       return {
          uniqueKeys: true,
          filter: {},
+         markItemByExpanderClick: true,
          root: null,
          columns: DEFAULT_COLUMNS_VALUE
       };
