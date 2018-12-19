@@ -237,24 +237,19 @@ define('Controls/List/BaseControl', [
       onScrollShow: function(self) {
          self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
-            if (self._options.navigation &&
-               self._options.navigation.view === 'infinity' &&
-               self._options.navigation.viewConfig &&
-               self._options.navigation.viewConfig.pagingMode
-            ) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
                   self._pagingVisible = true;
                });
             }
-         } else {
-
+         } else if (_private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = true;
          }
       },
 
       onScrollHide: function(self) {
          self._loadOffset = 0;
-         self._pagingCfg = null;
          self._pagingVisible = false;
          self._forceUpdate();
       },
@@ -333,11 +328,26 @@ define('Controls/List/BaseControl', [
                }
                self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
             }
+         } else {
+            if (_private.needScrollPaging(self._options.navigation)) {
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                  self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
+               });
+            }
          }
       },
 
       needScrollCalculation: function(navigationOpt) {
          return navigationOpt && navigationOpt.view === 'infinity';
+      },
+
+      needScrollPaging: function(navigationOpt) {
+         return (navigationOpt &&
+            navigationOpt.view === 'infinity' &&
+            navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode
+         );
       },
 
       /**
