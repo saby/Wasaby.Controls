@@ -64,7 +64,7 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#showDelay
-       * @cfg {Number} Delay before opening after mouse enters.
+       * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
        * @default 300
        */
 
