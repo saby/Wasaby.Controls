@@ -91,8 +91,11 @@ define('Controls/List/TreeControl', [
       isExpandAll: function(expandedItems) {
          return expandedItems instanceof Array && expandedItems[0] === null;
       },
-      beforeReloadCallback: function(self, filter) {
-         filter[self._options.parentProperty] = self._root;
+      beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
+         // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
+         if (!_private.isExpandAll(cfg.expandedItems)) {
+            filter[self._options.parentProperty] = self._root;
+         }
          _private.clearSourceControllers(self);
       },
       afterReloadCallback: function(self) {
