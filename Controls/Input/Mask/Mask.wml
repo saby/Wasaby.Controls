@@ -11,10 +11,17 @@
    on:inputCompleted="_inputCompletedHandler()"
 >
    <ws:content>
+      <!--  The input does not know how to adjust its width to the width of the entered text. -->
+      <!--  If we need auto width, then set the width of the input by the parent container. -->
       <ws:partial
          name="input"
          template="wml!Controls/Input/resources/input"
          readOnly="{{_options.readOnly}}"
+         attr:class="{{ _isAutoWidth() ? 'controls-Mask__input-autoWidth' }}"
       />
+      <ws:if data="{{ _isAutoWidth() }}">
+         <!-- Fake container that stretches control to the correct width. -->
+         <div class="controls-Mask__stretcher">{{_viewModel.getDisplayValue()}}</div>
+      </ws:if>
    </ws:content>
 </Controls.Input.resources.InputRender.InputRender>
