@@ -2,9 +2,10 @@ define(
    [
       'Controls/Container/Data',
       'WS.Data/Source/Memory',
-      'Controls/Container/Data/ContextOptions'
+      'Controls/Container/Data/ContextOptions',
+      'Core/Deferred'
    ],
-   function(Data, Memory, ContextOptions) {
+   function(Data, Memory, ContextOptions, Deferred) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -101,6 +102,55 @@ define(
             data._beforeMount(config).addCallback(function() {
                data._itemsChanged(event, data._items);
                assert.isTrue(propagationStopped);
+               done();
+            });
+         });
+   
+         it('_private.processLoadError', function() {
+            var msgOpened = false;
+            var errMoch = {
+               canceled: false,
+               processed: false,
+               _isOfflineMode: false
+            };
+            var msgOpener = {
+               open: function() {
+                  msgOpened = true;
+               }
+            };
+   
+            Data._private.processLoadError(msgOpener, errMoch);
+            assert.isTrue(msgOpened);
+         });
+   
+         it('query returns error', function(done) {
+            var msgOpened = false;
+            var source = {
+               query: function() {
+                  return Deferred.fail({
+                     canceled: false,
+                     processed: false,
+                     _isOfflineMode: false
+                  });
+               },
+               _mixins: [],
+               "[WS.Data/Source/ICrud]": true
+            };
+            var config = {source: source, keyProperty: 'id'};
+            var msgOpener = {
+               open: function() {
+                  msgOpened = true;
+               }
+            };
+            var data = getDataWithConfig(config);
+            data._children = {};
+            data._children.errorMsgOpener = msgOpener;
+   
+   
+            data._beforeMount(config).addCallback(function() {
+               assert.isTrue(msgOpened);
+               assert.isFalse(!!data._dataOptionsContext.prefetchSource);
+               assert.eqaul(data._dataOptionsContext.source, source);
                done();
             });
          });
