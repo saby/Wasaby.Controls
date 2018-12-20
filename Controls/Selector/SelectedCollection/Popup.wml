@@ -4,6 +4,8 @@
       <Controls.Selector.SelectedCollection
               items="{{_options.items}}"
               displayProperty="{{_options.displayProperty}}"
+              itemTemplate="{{_options.itemTemplate}}"
+              readOnly="{{_options.readOnly}}"
               itemsLayout="twoColumns"
               on:crossClick="_crossClick()"
               on:itemClick="_itemClick()"

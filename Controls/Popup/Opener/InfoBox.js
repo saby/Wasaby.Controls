@@ -1,10 +1,11 @@
 define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-clone',
-      'Core/IoC',
-      'Controls/Popup/Opener/BaseOpener'
+       'Core/IoC',
+      'Controls/Popup/Opener/BaseOpener',
+      'Controls/Utils/getZIndex'
    ],
-   function(cClone, IoC, Base) {
+   function(cClone,IoC,  Base, getZIndex) {
       'use strict';
 
       /**
@@ -135,7 +136,7 @@ define('Controls/Popup/Opener/InfoBox',
                target: cfg.target,
                position: cfg.position,
                autofocus: false,
-               zIndex: cfg.zIndex,
+               zIndex: cfg.zIndex || getZIndex(this),
                eventHandlers: cfg.eventHandlers,
                opener: cfg.opener,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
@@ -177,7 +178,7 @@ define('Controls/Popup/Opener/InfoBox',
          var options = Base.getDefaultOptions();
 
          options.closeOnTargetScroll = true;
-
+         options._vdomOnOldPage = true; // Open vdom popup in the old environment
          return options;
       };
 

@@ -7,21 +7,14 @@ define('Controls/List/DialogMover/MoveDialog', [
 
    return Control.extend({
       _template: template,
-      _expandedItems: undefined,
-      _root: undefined,
       _itemActions: undefined,
 
-      _beforeMount: function(options) {
+      _beforeMount: function() {
          this._itemActions = [{
             id: 1,
             title: rk('Выбрать'),
             showType: 2
          }];
-         this._root = {};
-         this._root[options.keyProperty] = options.rootValue;
-         this._root[options.columns[0].displayProperty] = rk('Корень');
-         this._root[options.nodeProperty] = true;
-         this._expandedItems = [options.rootValue];
          this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
       },
 
