@@ -35,17 +35,17 @@ define('Controls/History/Source', [
     * @author Герасимов А.М.
     * @category Menu
     * @example
-    *  <pre>
+    * <pre>
     *    var source = new historySource({
-    *           originSource: new Memory({
-    *               idProperty: 'id',
-    *               data: items
-    *           }),
-    *           historySource: new historyService({
-    *               historyId: 'TEST_HISTORY_ID'
-    *           }),
-    *           parentProperty: 'parent'
-    *       });
+    *        originSource: new Memory({
+    *           idProperty: 'id',
+    *           data: items
+    *        }),
+    *        historySource: new historyService({
+    *           historyId: 'TEST_HISTORY_ID'
+    *        }),
+    *        parentProperty: 'parent'
+    *    });
     * </pre>
     * @name Controls/MenuButton#originSource
     * @cfg {Source} A data source

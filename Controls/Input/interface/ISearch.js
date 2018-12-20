@@ -28,7 +28,7 @@ define('Controls/Input/interface/ISearch', [
     * In this example search starts after typing 2 characters.
     * <pre>
     *    <Controls.Input.Suggest minSearchLength="{{2}}" searchParam="city"/>
-    * </pre
+    * </pre>
     */
 
    /**
@@ -41,6 +41,6 @@ define('Controls/Input/interface/ISearch', [
     * In this example search will start after 1s delay.
     * <pre>
     *    <Controls.Input.Suggest searchDelay="{{1000}}" searchParam="city"/>
-    * </pre
+    * </pre>
     */
 });

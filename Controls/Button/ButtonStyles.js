@@ -78,11 +78,32 @@ define('Controls/Button/ButtonStyles',
     * @css @color_Link_readOnly Color of button with options viewMode 'link' and readOnly 'true'.
     *
     * @css @color_Link_info Color of button with options style 'info' and viewMode 'link'.
+    * @css @color_Link_info_hovered Color of button in hovered state with options style 'info' and viewMode 'link'.
     * @css @color_Link_primary Color of button with options style 'primary' and viewMode 'link'.
+    * @css @color_Link_primary_hovered Color of button in hovered state with options style 'primary' and viewMode 'link'.
     * @css @color_Link_secondary Color of button with options style 'secondary' and viewMode 'link'.
+    * @css @color_Link_secondary_hovered Color of button in hovered state with options style 'secondary' and viewMode 'link'.
     * @css @color_Link_danger Color of button with options style 'danger' and viewMode 'link'.
+    * @css @color_Link_danger_hovered Color of button in hovered state with options style 'danger' and viewMode 'link'.
     * @css @color_Link_success Color of button with options style 'success' and viewMode 'link'.
+    * @css @color_Link_success_hovered Color of button in hovered state with options style 'success' and viewMode 'link'.
     * @css @color_Link_warning Color of button with options style 'warning' and viewMode 'link'.
+    * @css @color_Link_warning_hovered Color of button in hovered state with options style 'info' and viewMode 'link'.
+    * @css @color_Link_default Color of button with options style 'default' and viewMode 'link'.
+    * @css @color_Link_default_hovered Color of button in hovered state with options style 'default' and viewMode 'link'.
     *
+    * @css @text-shadow_Button Text shadow of button with viewMode 'button'.
+    * @css @text-shadow_Button_readOnly Text shadow of button with viewMode 'button' and readOnly 'true'.
+    *
+    * @css @text-shadow_ToolButton Text shadow of button with viewMode 'toolButton'.
+    * @css @text-shadow_ToolButton_readOnly Text shadow of button with viewMode 'toolButton' and readOnly 'true'.
+    *
+    * @css @text-decoration_Link_default Text decoration of button with options style 'default' and viewMode 'link'.
+    * @css @text-decoration_Link_secondary Text decoration of button with options style 'secondary' and viewMode 'link'.
+    * @css @text-decoration_Link_primary Text decoration of button with options style 'primary' and viewMode 'link'.
+    * @css @text-decoration_Link_danger decoration of button with options style 'danger' and viewMode 'link'.
+    * @css @text-decoration_Link_warning Text decoration of button with options style 'warning' and viewMode 'link'.
+    * @css @text-decoration_Link_success Text decoration of button with options style 'success' and viewMode 'link'.
+    * @css @text-decoration_Link_info Text decoration of button with options style 'info' and viewMode 'link'.
     */
 );

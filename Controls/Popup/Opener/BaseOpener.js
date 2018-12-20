@@ -181,7 +181,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _notifyEvent: function(eventName, args) {
             // Trim the prefix "on" in the event name
-            var event = eventName.toLowerCase().substr(2);
+            var event = 'popup' + eventName.substr(2);
             this._notify(event, args);
          },
 
