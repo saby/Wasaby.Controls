@@ -97,7 +97,7 @@
 }
 
 .controls-TileView__item_withMarker {
-   border: @border-width_TileView-item solid @border-color_TileView-item_active;
+   border: @border-width_TileView-item solid @border-color_TileView-item_marked;
 }
 
 //TODO: Можно убрать после решения задачи: https://online.sbis.ru/opendoc.html?guid=38c5aa2c-f30c-42e9-a654-5358bc7691fd
@@ -120,14 +120,15 @@
    background: linear-gradient(to right, transparent, @background-color_TileView-title);
 }
 
-@height_TileView-title_with-border: @min-height_TileView-title + @border-width_TileView-title + extract(@spacing_TileView-between-title-border, 1) * 2;
+//Internal variable required to reduce the height of the image under the title.
+@height_TileView-title: @min-height_TileView-title + @border-width_TileView-title + @spacing_TileView-between-title-topBorder + @spacing_TileView-between-title-bottomBorder;
 .controls-TileView__resizer {
-   margin-bottom: -@height_TileView-title_with-border;
+   margin-bottom: -@height_TileView-title;
 }
 
 .controls-TileView__imageWrapper_reduced {
-   border-bottom: @height_TileView-title_with-border solid transparent;
-   margin-bottom: -@height_TileView-title_with-border;
+   border-bottom: @height_TileView-title solid transparent;
+   margin-bottom: -@height_TileView-title;
    box-sizing: border-box;
 }
 
