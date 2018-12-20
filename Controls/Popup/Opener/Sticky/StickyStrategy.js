@@ -83,9 +83,14 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             coordinate = self.getCoordinate(targetPoint, popupCfg, direction);
             maxOverflowValue = self.getMaxOverflowValue(coordinate, popupCfg, direction, targetCoords);
 
-            // Если окно не влезает, то передаем управление дальше
-            if (maxOverflowValue > 0 && popupCfg.locationStrategy !== 'fixed') {
-               callback(maxOverflowValue);
+            // Check if the popup is outside the screen
+            if (maxOverflowValue > 0) {
+               if (popupCfg.locationStrategy === 'fixed') {
+                  // Reduce the size to fit the popup into the screen
+                  size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - maxOverflowValue;
+               } else {
+                  callback(maxOverflowValue);
+               }
             }
          };
 

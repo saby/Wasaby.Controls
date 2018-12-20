@@ -112,6 +112,15 @@ define('Controls/Filter/Button/Panel', [
             }
          });
          return hasAdditional;
+      },
+
+      prepareItems: function(items) {
+         Chain(items).each(function(item) {
+            if (getPropValue(item, 'visibility') === true && getPropValue(item, 'value') === getPropValue(item, 'resetValue')) {
+               setPropValue(item, 'visibility', false);
+            }
+         });
+         return items;
       }
    };
 
@@ -160,7 +169,7 @@ define('Controls/Filter/Button/Panel', [
             if (!result[0]) {
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
-                  items: items || self._items
+                  items: _private.prepareItems(items || self._items)
                }]);
                self._notify('close');
             }
