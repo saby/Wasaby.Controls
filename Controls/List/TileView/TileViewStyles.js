@@ -1,7 +1,8 @@
 define('Controls/List/TileView/TileViewStyles', [],
    function() {
       /**
-       * @interface Controls/List/TileView/TileViewStyles
+       * @mixin Controls/List/TileView/TileViewStyles
+       * @public
        *
        * @css @spacing_TileView-between-items Spacing between items.
        * @css @border-width_TileView-item Thickness of the border around items.
@@ -22,8 +23,6 @@ define('Controls/List/TileView/TileViewStyles', [],
        * @css @background-color_TileView-title Shadow color around items on the hover.
        * @css @border-color_TileView-title Border color of the title.
        * @css @background-color_TileView-checkbox Background color of the checkbox.
-       * @public
-       * @author Сухоручкие А.С.
        */
    }
 );
