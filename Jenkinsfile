@@ -193,7 +193,7 @@ node('controls') {
             inte = false
         }
         if ( inte || all_inte || regr ) {
-            unit = false
+            unit = true
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -485,11 +485,11 @@ node('controls') {
                     sh ./bin/test-browser
                     """
                 }
+            }
             junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
             unit_result = currentBuild.result == null
             if (!unit_result) {
                 exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
-            }
             }
         }
         if ( regr || inte || all_inte) {
