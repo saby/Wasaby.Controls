@@ -5,22 +5,22 @@
    </div>
    <br/>
    <div>
-      <Controls.Button caption="Open Second Indicator without overlay" name="controls-demo__indicator_second_open" on:click="_secondOpen()"/>
+      <Controls.Button caption="Open Second Indicator without overlay" name="controls-demo__indicator_second_open" class="controls-demo__indicator_second_open" on:click="_secondOpen()"/>
       <Controls.Button caption="Close" class="controls-demo__indicator_second_close" on:click="_close('second')"/>
    </div>
    <br/>
    <div>
-      <Controls.Button caption="Open Third Indicator without overlay" name="controls-demo__indicator_third_open" on:click="_thirdOpen()"/>
+      <Controls.Button caption="Open Third Indicator without overlay" name="controls-demo__indicator_third_open" class="controls-demo__indicator_third_open" on:click="_thirdOpen()"/>
       <Controls.Button caption="Close" class="controls-demo__indicator_third_close" on:click="_close('third')"/>
    </div>
    <br />
    <div>
-      <Controls.Button caption="Open Singleton Compatible Indicator" name="controls-demo__indicator_singleton_open" on:click="_singletonOpen()"/>
+      <Controls.Button caption="Open Singleton Compatible Indicator" name="controls-demo__indicator_singleton_open" class="controls-demo__indicator_singleton_open" on:click="_singletonOpen()"/>
    </div>
    <br />
    <div>
-      <Controls.Button caption="Open Compatible Indicator" name="controls-demo__indicator_compatible_open" on:click="_compatibleOpen()"/>
+      <Controls.Button caption="Open Compatible Indicator" name="controls-demo__indicator_compatible_open" class="controls-demo__indicator_compatible_open" on:click="_compatibleOpen()"/>
    </div>
    <br/>
-   <Controls.Button caption="Open Indicator with overlay" name="controls-demo__indicator_overlay" on:click="_overlay()"/>
+   <Controls.Button caption="Open Indicator with overlay" name="controls-demo__indicator_overlay" class="controls-demo__indicator_overlay" on:click="_overlay()"/>
 </div>
