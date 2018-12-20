@@ -302,6 +302,7 @@ define('Controls/List/BaseControl', [
 
       onScrollHide: function(self) {
          self._loadOffset = 0;
+         self._pagingVisible = false;
          self._forceUpdate();
       },
 
