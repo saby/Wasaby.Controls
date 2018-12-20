@@ -1,9 +1,10 @@
 define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-clone',
+      'Core/IoC',
       'Controls/Popup/Opener/BaseOpener'
    ],
-   function(cClone, Base) {
+   function(cClone, IoC, Base) {
       'use strict';
 
       /**
@@ -32,7 +33,7 @@ define('Controls/Popup/Opener/InfoBox',
        * @property {domNode} target The target relative to which the popup is positioned.
        * @property {String} position Point positioning of the target relative to infobox.
        * @property {String} message The text in the body popup.
-       * @property {Boolean} float Whether the content should wrap around the cross closure.
+       * @property {Boolean} floatCloseButton Whether the content should wrap around the cross closure.
        * @property {String} style Infobox display style.
        * @property {Number} showDelay Delay before opening.
        */
@@ -54,7 +55,7 @@ define('Controls/Popup/Opener/InfoBox',
       var DEFAULT_CONFIG = {
          position: 'tl',
          style: 'default',
-         float: false,
+         floatCloseButton: false,
          hideDelay: INFOBOX_HIDE_DELAY,
          showDelay: INFOBOX_SHOW_DELAY
       };
@@ -94,6 +95,13 @@ define('Controls/Popup/Opener/InfoBox',
           *   });
           * </pre>
           */
+         _beforeMount: function(options) {
+            InfoBox.superclass._beforeMount.apply(this, arguments);
+            if (options.float) {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+            }
+         },
+
          open: function(cfg) {
             // todo Есть проблема с обновлением в инфобоксе. В update прилетает новый конфиг, но в dom находится
             // еще старая версия подсказки => нельзя получить актуальные размеры, чтобы правильно спозиционироваться.
@@ -102,7 +110,7 @@ define('Controls/Popup/Opener/InfoBox',
             }
             this._clearTimeout();
 
-            //smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
+            // smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
             var newCfg = cClone(DEFAULT_CONFIG);
             for (var i in cfg) {
                if (cfg.hasOwnProperty(i)) {
@@ -110,6 +118,9 @@ define('Controls/Popup/Opener/InfoBox',
                      newCfg[i] = cfg[i];
                   }
                }
+            }
+            if (cfg.float) {
+               newCfg.floatCloseButton = cfg.float;
             }
 
             // TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
@@ -131,7 +142,7 @@ define('Controls/Popup/Opener/InfoBox',
                   template: cfg.template,
                   templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)
                   message: cfg.message,
-                  float: cfg.float
+                  floatCloseButton: cfg.floatCloseButton
                },
                className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
                template: 'Controls/Popup/Opener/InfoBox/resources/template'

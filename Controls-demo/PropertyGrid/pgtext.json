@@ -1479,5 +1479,82 @@
         }
       }
     }
+  },
+  "Controls/Popup/InfoBox": {
+    "name": "Controls/Popup/InfoBox",
+    "title": "Component that opens a popup that is positioned relative to a specified element",
+    "className": "Controls/Popup/InfoBox",
+    "kind": "class",
+    "isPublic": true,
+    "fullname": "Controls/Popup/InfoBox",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "floatCloseButton": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions.",
+            "default": "False"
+          },
+          "position": {
+            "type": "enum",
+            "default": "tl",
+            "title": "Point positioning of the target relative to infobox.",
+            "enum": {
+              "tl": "Popup displayed on the top of the target and aligned by left border.",
+              "tc": "Popup displayed on the top of the target and aligned by center.",
+              "tr": "Popup displayed on the top of the target and aligned by right border.",
+              "bl": "Popup displayed on the bottom of the target and aligned by left border.",
+              "bc": "Popup displayed on the bottom of the target and aligned by center.",
+              "br": "Popup displayed on the bottom of the target and aligned by right border.",
+              "rt": "Popup displayed on the right of the target and aligned by top border.",
+              "rc": "Popup displayed on the right of the target and aligned by center.",
+              "rb": "Popup displayed on the right of the target and aligned by bottom border.",
+              "lt": "Popup displayed on the left of the target and aligned by top border.",
+              "lc": "Popup displayed on the left of the target and aligned by center.",
+              "lb": "Popup displayed on the left of the target and aligned by bottom border"
+            }
+          },
+          "hideDelay": {
+            "type": "Number",
+            "title": "Delay before closing after mouse leaves."
+          },
+          "showDelay": {
+            "type": "Number",
+            "title": "Delay before opening after mouse enters."
+          },
+          "content": {
+            "type": "function|String",
+            "title": "The content to which the logic of opening and closing the template is added."
+          },
+          "template": {
+            "type": "function|String",
+            "title": "Popup template."
+          },
+          "style": {
+            "type": "enum",
+            "default": "default",
+            "title": "Infobox display style.",
+            "enum": {
+              "default": "default",
+              "lite": "lite",
+              "help": "help",
+              "error": "error"
+            }
+          },
+          "trigger": {
+            "type": "enum",
+            "default": "hover",
+            "title": "Event name trigger the opening or closing of the template.",
+            "enum": {
+              "click": "Opening by click on the content. Closing by click not on the content or template.",
+              "hover": "Opening by hover on the content. Closing by hover not on the content or template.\nOpening is ignored on touch devices.",
+              "demand": "Opening when requested (content clicked).",
+              "hover|touch": "Opening by hover or touch on the content. Closing by hover not on the content or template."
+            }
+          }
+        }
+      }
+    }
   }
 }
