@@ -1,11 +1,11 @@
 define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-clone',
-       'Core/IoC',
+      'Core/IoC',
       'Controls/Popup/Opener/BaseOpener',
       'Controls/Utils/getZIndex'
    ],
-   function(cClone,IoC,  Base, getZIndex) {
+   function(cClone, IoC, Base, getZIndex) {
       'use strict';
 
       /**
