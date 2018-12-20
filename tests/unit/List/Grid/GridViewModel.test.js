@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(GridViewModel, cMerge, RecordSet) {
+define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet', 'Core/detection'], function(GridViewModel, cMerge, RecordSet, cDetection) {
    var
       gridData = [
          {
