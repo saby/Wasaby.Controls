@@ -47,17 +47,6 @@
 @min-height_TinyMCE-paragraphs_empty:   18px;
 //RichArea
 @padding_RichArea-dataReview: 2px 0 2px 4px;
-
-//StackTemplate
-@min-height_stackTemplate_head:                 38px;
-@font-size_stackTemplate_head:                  18px;
-@spacing_stackTemplate_head-default:            0 52px 0 12px;
-@spacing_stackTemplate_head-maximized:          0 84px 0 12px;
-@top-space_stackTemplate_close-button:          5px;
-@top-space_stackTemplate_maximized-button:      7px;
-@right-space_stackTemplate_maximized-button:    44px;
-@shadow_stackTemplate_close-button:             0 1px 2px rgba(0,0,0, .15); //todo - в 350 версии будет компонент closeButton, все стили будут на нем
-
 //DialogTemplate
 @margin_dialogTemplate_head:                   0 48px 0 0;
 @margin-left_dialogTemplate_caption:           12px;
@@ -292,7 +281,6 @@
 //Toolbar
 @margin-left_Toolbar-popup:               @right_DropdownList-cross;
 @margin-top_Toolbar-popup:                -@top_DropdownList-cross;
-@spacing_Toolbar-between-icon-text:             @spacing_Button-between-icon-text;
 
 
 @height-Dropdown-cross: 36px;
@@ -346,18 +334,6 @@
 @left_TreeTileView-checkbox:                     0;
 @margin_TreeTileView-title:                      0 8px 0 4px;
 @margin_TreeTileView-icon:                       0 0 0 4px;
-
-//VDOM Operations.Panel
-@height_OperationsPanel:                              30px;
-@spacing_OperationsPanel__item-between-icon-caption:  6px;
-@margin_OperationsPanel__rightTemplate:               0 8px 0 0;
-@spacing_OperationsPanel-between-items:               12px;
-
-//VDOM Operations.Button
-@height_OperationsButton:                             24px;
-@width_OperationsButton:                              24px;
-@width_OperationsPanelButton-separator:               1px;
-@font-size_OperationsButton__icon:                    18px;
 
    //VDOM Switch
 @width_Switch:                     46px;
@@ -532,21 +508,6 @@
 //ExportCustomizer
 @min-height_ExportCustomizer-Formatter-View-preview: 50px;
 
-//Path
-@font-size_Path-backButtonArrow:                      @default-icon-size;
-@spacing_Path-between-home-and-backButton:            8px;
-
-//BreadCrumbs
-@height_BreadCrumbs-items:                                   24px;
-@font-size_BreadCrumbs-home:                                 @default-icon-size;
-@spacing_BreadCrumbs-between-home-and-crumbs:                4px;
-@font-size_BreadCrumbs-arrow:                                @default-icon-size;
-@min-width_BreadCrumbs-text:                                 36px;
-@max-width_BreadCrumbs-menu:                                 800px;
-@height_BreadCrumbs-corner:                                  14px;
-@width_BreadCrumbs-corner:                                   13px;
-@height_BreadCrumbs-menuItem:                                32px;
-
 //icon-button
 @box-shadow-IconButton:                  0px 1px 4px @color-IconButton__shadow;
 @box-shadow_IconButton:                  0px 1px 4px @color-IconButton__shadow; // TODO Оставить один вариант
@@ -560,29 +521,8 @@
 @box-shadow-IconButton_activated:        none;
 @icon-size_IconButton-buttonChoose:      @default-icon-size;
 
-//FilterPanel
-@width_FilterPanel_size-m:                                     400px;
-@width_FilterPanel_size-l:                                     600px;
-@width_FilterPanel_size-xl:                                    800px;
-@spacing_FilterPanel-between-filterButton-closeButton:         4px;
-@spacing_FilterPanel-between-resetButton-filterButton:         16px;
-@margin_FilterPanel__PropertyGrid:                             0 12px 6px 34px;
-@margin_FilterPanel-AdditionalParams:                          6px 12px;
-@spacing_FilterPanel-header-topTemplate:                       0 16px;
-@height_FilterPanel-header:                                    44px;
-@spacing-bottom_FilterPanel:                                   12px;
-@padding_FilterPanel-history-vertical:                          6px 12px 12px 12px;
-@padding_FilterPanel-history-horizontal:                           6px 12px 0 12px;
-@margin_FilterPanel-history:                                   12px;
-@border-width_FilterPanel-horizontal:                              1px;
-@spacing_FilterPanel-items:                                    22px;
 //FilterLink
 @height_FilterLink:                                            24px;
-//AdditionalParams
-@max-height_FilterPanel-items:              120px;
-@height_FilterPanel-caption:                24px;
-@font-size_FilterPanel-caption:             15px;
-@height_AdditionalParams-arrow:             26px;
 //toggleButton
 @border-width_ToggleButton:               1px;
 @border-radius-ToggleButton:              2px;
@@ -634,7 +574,7 @@
 @margin-left_Browser-search:              12px;
 @margin-right_Browser-filter:             8px;
 //MasterList
-@border-width_MasterList-right: 3px;
+@border-width_MasterList-right: 4px;
 @border-width_MasterList-selected-item: 1px 0 1px 0;
 //ComboBox
 @margin-top_ComboBox-popup: -@border-width_InputRender;

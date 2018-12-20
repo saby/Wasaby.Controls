@@ -21,20 +21,11 @@ define('Controls/Filter/Button/Panel', [
     * @demo Controls-demo/Filter/Button/panelOptions/panelPG
     * @control
     * @public
-    * @author Герасимов А.М.
+    * @author Золотова Элина
     *
-    * @cssModifier controls-PanelFilter__width-m Medium panel width.
-    * @cssModifier controls-PanelFilter__width-l Large panel width.
-    * @cssModifier controls-PanelFilter__width-xl Extra large panel width.
-    *
-    * @css @width_FilterPanel_default Width filter panel
-    * @css @spacing-bottom_FilterPanel Indent of bottom for the content of the panel.
-    * @css @spacing_FilterPanel-between-filterButton-closeButton Spacing between button "Selected" and cross.
-    * @css @spacing_FilterPanel-between-resetButton-filterButton Spacing between button "By default" and button "Selected".
-    * @css @margin_FilterPanel__PropertyGrid Margin for the block "Selected".
-    * @css @margin_FilterPanel-AdditionalParams Margin for the additional block.
-    * @css @spacing_FilterPanel-header-topTemplate Margin for the template in the header of the panel .
-    * @css @height_FilterPanel-header Height header of the panel.
+    * @cssModifier controls-FilterPanel__width-m Medium panel width.
+    * @cssModifier controls-FilterPanel__width-l Large panel width.
+    * @cssModifier controls-FilterPanel__width-xl Extra large panel width.
     */
 
    /**
@@ -109,6 +100,10 @@ define('Controls/Filter/Button/Panel', [
          return isChanged;
       },
 
+      validate: function(self) {
+         return self._children.formController.submit();
+      },
+
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          Chain(items).each(function(item) {
@@ -117,6 +112,15 @@ define('Controls/Filter/Button/Panel', [
             }
          });
          return hasAdditional;
+      },
+
+      prepareItems: function(items) {
+         Chain(items).each(function(item) {
+            if (getPropValue(item, 'visibility') === true && getPropValue(item, 'value') === getPropValue(item, 'resetValue')) {
+               setPropValue(item, 'visibility', false);
+            }
+         });
+         return items;
       }
    };
 
@@ -149,12 +153,8 @@ define('Controls/Filter/Button/Panel', [
          this._loadDeferred = _private.loadHistoryItems(this, this._historyId);
       },
 
-      _valueChangedHandler: function() {
-         this._items = _private.cloneItems(this._items);
-      },
-
-      _visibilityChangedHandler: function() {
-         this._items = _private.cloneItems(this._items);
+      _itemsChangedHandler: function(event, items) {
+         this._items = _private.cloneItems(items);
       },
 
       _applyHistoryFilter: function(event, items) {
@@ -164,11 +164,16 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _applyFilter: function(event, items) {
-         this._notify('sendResult', [{
-            filter: _private.getFilter(this),
-            items: items || this._items
-         }]);
-         this._notify('close');
+         var self = this;
+         _private.validate(this).addCallback(function(result) {
+            if (!result[0]) {
+               self._notify('sendResult', [{
+                  filter: _private.getFilter(self),
+                  items: _private.prepareItems(items || self._items)
+               }]);
+               self._notify('close');
+            }
+         });
       },
 
       _resetFilter: function() {

@@ -3,7 +3,7 @@
                           visibleItems="{{_visibleItems}}"
                           keyProperty="{{_options.keyProperty}}"
                           displayProperty="{{_options.displayProperty}}"
-                          on:itemClick="_onItemClick()"/>
+                          on:itemClick="_notifyHandler('itemClick')"/>
 
     <Controls.Event.Listener event="controlResize"
                             on:controlResize="_onResize()"/>

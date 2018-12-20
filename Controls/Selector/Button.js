@@ -11,12 +11,14 @@ define('Controls/Selector/Button', ['Core/Control', 'wml!Controls/Selector/Butto
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/interface/ISource
+    * @mixes Controls/interface/IItemTemplate
     * @extends Core/Control
     * @control
     * @public
     * @demo Controls-demo/Buttons/SelectorButtonPG
     *
-    * @css @spacing_SelectorButton-between-buttonMore-buttonReset Spacing between button more and button reset.
+    * @css @spacing_SelectorButton_between_buttonMore_buttonReset Spacing between button more and button reset.
+    * @css @min-height_SelectorButton Minimum selector button height
     */
 
    return Control.extend({

@@ -60,15 +60,6 @@
 @color_DropdownList-group-separator:     #EAEAEA;
 @color_DropdownList-group-text:          #8991A9;
 
-//StackTemplate
-@border-left_stackTemplate:                1px solid #BDBDBD;
-@background_stackTemplate_head:            #F8F8F8;
-@background_stackTemplate_content:         #FFFFFF;
-@background_stackTemplate_footer:          #F8F8F8;
-@border-bottom_stackTemplate_footer:       1px solid #F0F0F0;
-@border-bottom_stackTemplate_head:         1px solid #F0F0F0;
-@color_stackTemplate_head:                 #313E78;
-
 // RichArea
 @border-color_RichArea_readonly: transparent;
 @border-color_RichArea_editable: #eaeaea;
@@ -180,7 +171,6 @@
 //ToolBar
 @color_Toolbar__text:                        @color_Link-main-text;
 
-
 //TODO удалить при перевода dropDownList'a на алиасы
 @shadow_suggestionsContainer:            0 6px 12px rgba(0, 0, 0, 0.25);
 @shadow_suggestionsContainer-reverse:    0 -6px 12px rgba(0, 0, 0, 0.25);
@@ -235,15 +225,6 @@
 @border-color_TileView-title:                      #E4E4E4;
 @border-color_TileView-item_marked:                #ff7033;
 @border-color_TileView-checkbox:                   #fff;
-
-
-//VDOM Operations.Panel
-@background-color_OperationsPanel:                 #e5ecf5;
-
-//VDOM Operations.Button
-@color_OperationsButton__icon:                           #587AB0;
-@color_OperationsButton__icon_hovered:                   #313E78;
-@color_OperationsButton__icon_readonly:                  @disabled-color;
 
 //VDOM Switcher
 @border-color_Switch:                              #E4E4E4;
@@ -371,14 +352,6 @@
 @color_BigSeparator-icon:                         #8991A9;
 @color_BigSeparator-icon_hovered:                 #313E78;
 
-//BreadCrumbs
-@color_BreadCrumbs-title:                          #0055BB;
-@color_BreadCrumbs-title_hovered:                  #313E78;
-
-//Path
-@color_Path-backButtonArrow_hovered:               #FF7033;
-@background-color_Path-backButtonArrow:            @default-bg-color;
-
 //radioGroup
 @color_ToggleCircle_innerCircle_selected_enabled:     #FF7033;
 @color_ToggleCircle_innerCircle_selected_disabled:    #313E78;
@@ -390,15 +363,9 @@
 @color_RadioItem_caption_selected:          #000000;
 @color_RadioItem_caption_unselected_disabled:      #CCCCCC;
 @color_RadioItem_caption_unselected_enabled:       #999999;
-
-//FilterPanel
-@color_FilterPanel-caption:                  #313e78;
-@background-color_FilterPanel-horizontal:        #F4F4F4;
-@color_FilterPanel-default:                  #313e78;
-@border-color_FilterPanel-horizontal:            #ccc;
 //FilterLink
-@color_FilterLink:                           @color_FilterPanel-default;
-@color_FilterDropdown-text:                  @color_FilterPanel-default;
+@color_FilterLink:                           #313e78;
+@color_FilterDropdown-text:                  #313e78;
 //HistoryList
 @background-color_HistoryList:               #F4F4F4;
 //toggleButton
@@ -422,8 +389,11 @@
 
 //VDOM TreeGridView
 @color_TreeGridView-expander: #313E78;
-@color_TreeGridView-expander_hover: #0055BB;
-@border-color_TreeGridView-item_dragging: #0055BB;
+@color_TreeGridView-expander_hover: @color16;
+@color_TreeGridView-expander-hiddenNode: #8991A9;
+@color_TreeGridView-expander-hiddenNode_hover: @color16;
+@border-color_TreeGridView-item_dragging: @color16;
+
 //MasterList
 @border-color_MasterList: #eaeaea;
 @background-color_MasterList: #f8f8f8;

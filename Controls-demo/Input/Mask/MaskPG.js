@@ -41,10 +41,10 @@ define('Controls-demo/Input/Mask/MaskPG',
                   selectedKey: 0
                },
                mask: {
-                  readOnly: true
+                  readOnly: false
                },
                replacer: {
-                  readOnly: true
+                  readOnly: false
                },
                formatMaskChars: {
                   items: [

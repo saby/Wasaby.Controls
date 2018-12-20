@@ -13,7 +13,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     * Module with a function to replace common link on decorated link, if it needs.
     * Tag resolver for {@link Controls/Decorator/Markup}.
     *
-    * @class Controls/Decorator/Markup/resolvers/highlight
+    * @class Controls/Decorator/Markup/resolvers/linkDecorate
     * @public
     * @author Кондаков Р.Н.
     */
@@ -23,27 +23,29 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
          return value;
       }
 
+
       // Decorate tag "a" only.
-      if (!Array.isArray(value) || Array.isArray(value[0]) || value[0] != 'a') {
+      if (!Array.isArray(value) || Array.isArray(value[0]) || value[0] !== 'a') {
          return value;
       }
 
       // Decorate link right inside paragraph.
-      if (!parent || parent[0] != 'p') {
+      if (!parent || (typeof parent[0] === 'string' && parent[0] !== 'p' && parent[0] !== 'div')) {
          return value;
       }
 
       // Decorate link only with text == href, and href length should be less then 1500;
-      if (!value[1] || !value[1].href || value[1].length >= 1500 || value[1].href != value[2]) {
+      if (!value[1] || !value[1].href || value[1].href.length >= 1500 || value[1].href !== value[2]) {
          return value;
       }
 
       // Decorate link just in the end of paragraph.
-      var last = parent.length - 1;
-      if (value !== parent[last] && value !== parent[last - 1]) {
-         return value;
+      var indexOfNextValue = parent.indexOf(value) + 1;
+      if (typeof parent[indexOfNextValue] === 'string' && /^[ \u00a0]+$/.test(parent[indexOfNextValue])) {
+         indexOfNextValue++;
       }
-      if (parent[last] !== value && (Array.isArray(parent[last]) || /[^ \u00a0]/.test(parent[last]))) {
+      if (indexOfNextValue < parent.length &&
+            (!Array.isArray(parent[indexOfNextValue]) || parent[indexOfNextValue][0] !== 'br')) {
          return value;
       }
 

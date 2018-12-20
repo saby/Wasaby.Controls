@@ -14,7 +14,7 @@
                                emptyText="{{true}}"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey3"
-                               attr:class="ControlsDemo-ComboboxVDOM__item"/>
+                               attr:class="ControlsDemo-ComboboxVDOM__item ControlsDemo-ComboboxVDOM__emptyValue"/>
    </div>
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With scroll</h4>
@@ -30,7 +30,7 @@
       <h4>With application styles and comment</h4>
       <Controls.Input.ComboBox source="{{_createMemory(_itemsCode)}}"
                                keyProperty="id"
-                               displayProperty="title"
+                               displayProperty="text"
                                itemTemplate="wml!Controls-demo/Combobox/itemTemplateCombobox"
                                bind:selectedKey="_selectedKey4"
                                attr:class="ControlsDemo-ComboboxVDOM__item"/>
@@ -56,6 +56,15 @@
                                itemTemplate="wml!Controls-demo/Combobox/itemTemplateMultiline"
                                bind:selectedKey="_selectedKey6"
                                attr:class="ControlsDemo-ComboboxVDOM__itemBig"/>
+   </div>
+
+   <div class="ControlsDemo-ComboboxVDOM__wrapper">
+      <h4>History combobox</h4>
+      <Controls.Input.ComboBox source="{{_historySource}}"
+                                 keyProperty="id"
+                                 displayProperty="title"
+                                 bind:selectedKey="_selectedKeyHistory"
+                                 attr:class="ControlsDemo-ComboboxVDOM__item"/>
    </div>
 
    <div class="ControlsDemo-ComboboxVDOM__wrapper">

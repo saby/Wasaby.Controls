@@ -78,6 +78,7 @@
    "Красный": "Red",
    "Курсив": "Italics",
    "Можно отобрать": "Possible to select",
+   "Еще можно отобрать": "Also possible to select",
    "Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена с сохранением стилей": "Without closing this window, press CTRL + V to paste the text from the clipboard to the conservation of styles",
    "Не закрывая это окно нажмите CTRL + V для вставки текста из буфера обмена без сохранения стилей": "Without closing this window, press CTRL + V to paste the text from the clipboard without saving the styles",
    "Наименование": "Name",
@@ -278,5 +279,6 @@
    "БТР@@Подчеркнутый": "Underline",
    "БТР@@Зачеркнутый": "Strikethrough",
    "Нет данных": "No data",
-   "Найти": "Find"
+   "Найти": "Find",
+   "Сбросить масштабирование": "Reset zoom"
 }

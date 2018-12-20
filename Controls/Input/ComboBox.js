@@ -20,6 +20,7 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/interface/IDropdown
        * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
        * @public
@@ -39,8 +40,8 @@ define('Controls/Input/ComboBox',
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
       var _private = {
-         close: function() {
-            this._isOpen = false;
+         popupVisibilityChanged: function(state) {
+            this._isOpen = state;
             this._forceUpdate();
          }
       };
@@ -49,9 +50,11 @@ define('Controls/Input/ComboBox',
          _template: template,
          _isOpen: false,
          _notifyHandler: tmplNotify,
+         _filter: null,
 
          _beforeMount: function(options) {
-            this._onClose = _private.close.bind(this);
+            this._onClose = _private.popupVisibilityChanged.bind(this, false);
+            this._onOpen = _private.popupVisibilityChanged.bind(this, true);
             this._placeholder = options.placeholder;
             this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
@@ -69,11 +72,9 @@ define('Controls/Input/ComboBox',
          },
 
          _beforeUpdate: function() {
-            this._width = this._container.offsetWidth;
-         },
-
-         _mouseDownHandler: function() {
-            this._isOpen = !this._isOpen;
+            if (this._width !== this._container.offsetWidth) {
+               this._width = this._container.offsetWidth;
+            }
          },
 
          _selectedItemsChangedHandler: function(event, selectedItems) {
@@ -102,7 +103,6 @@ define('Controls/Input/ComboBox',
 
       ComboBox.getDefaultOptions = function() {
          return {
-            editable: false,
             placeholder: rk('Выберите...')
          };
       };

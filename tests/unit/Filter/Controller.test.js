@@ -2,6 +2,30 @@ define(['Controls/Filter/Controller'], function(Filter) {
    
    describe('Controls.Filter.Controller', function () {
 
+      it('_beforeMount', function() {
+         var filterLayout = new Filter();
+         var items = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'testText',
+            resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: 'testValue',
+            textValue: 'testText2',
+            resetValue: ''
+         }];
+         var fastItems = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'test',
+            resetValue: ''
+         }];
+         filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
+         assert.deepEqual(filterLayout._filterButtonItems[0].textValue, '');
+         assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
+      });
+
       it('_beforeUpdate new items', function () {
          var filterLayout = new Filter();
          filterLayout.saveOptions({filterButtonSource: []});
@@ -25,6 +49,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
          filterLayout._notify = function() {
             filterChangedNotifyed = true;
          };
+         filterLayout._options.filter = {testKey2: 'testValue2'};
+         filterLayout._filter = {testKey: 'testValue2'};
          filterLayout._itemsChanged(null, items);
          assert.deepEqual(filterLayout._filter, {testKey: 'testValue'});
          assert.isTrue(filterChangedNotifyed);
@@ -385,6 +411,36 @@ define(['Controls/Filter/Controller'], function(Filter) {
             textValue: undefined,
             visibility: undefined
          }]);
+      });
+
+      it('_private.getOnlyChangesFilter', function() {
+         var fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetValue: ''
+         }];
+
+         var filterButtonItems = [{
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId4',
+            value: '',
+            resetValue: ''
+         }];
+         var filter = Filter._private.getOnlyChangesFilter(filterButtonItems, fastFilterItems);
+         assert.deepEqual(filter, { testId2: 'testValue', testId3: 'testValue' });
       });
 
    });

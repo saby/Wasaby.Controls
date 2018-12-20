@@ -15,7 +15,7 @@ define('Controls/Popup/Compatible/Layer', [
    'use strict';
 
    var loadDeferred;
-   var jQueryModuleName = 'cdn!jquery/3.3.1/jquery-min.js';
+   var jQueryModuleName = 'is!browser?jquery';
    var compatibleDeps = [
       'Core/Control',
       'Lib/Control/Control.compatible',
@@ -317,7 +317,7 @@ define('Controls/Popup/Compatible/Layer', [
                Constants.userConfigSupport = true;
                loadDataProviders(parallelDef);
                parallelDefRes.addCallbacks(function() {
-                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addCallback(function() {
+                  moduleStubs.require(['optional!WS3MiniCard/MiniCard']).addCallback(function() {
                      self.loadActivity(parallelDefRes, loadDepsDef, result);
                   }).addErrback(function(err) {
                      IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
@@ -325,7 +325,7 @@ define('Controls/Popup/Compatible/Layer', [
                   });
                }, function(err) {
                   IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
-                  moduleStubs.require(['UserActivity/ActivityMonitor', 'UserActivity/UserStatusInitializer', 'optional!WS3MiniCard/MiniCard']).addCallback(function() {
+                  moduleStubs.require(['optional!WS3MiniCard/MiniCard']).addCallback(function() {
                      self.loadActivity(parallelDefRes, loadDepsDef, result);
                   }).addErrback(function(activityErr) {
                      IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', activityErr);

@@ -15,6 +15,7 @@
         filter="{{_options.filter}}"
         navigation="{{_options.navigation}}"
         popupClassName="{{_options.popupClassName ||  (_options.showHeader ? 'controls-DropdownList__margin-head' : 'controls-DropdownList__margin')}}"
+        dropdownClassName="{{_options.dropdownClassName}}"
         caption="{{_options.caption || _text}}"
         dataLoadCallback="{{_setText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"

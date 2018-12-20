@@ -2,11 +2,13 @@ define('Controls/BreadCrumbs', [
    'Core/Control',
    'Controls/BreadCrumbs/Utils',
    'Controls/Utils/FontLoadUtil',
+   'Controls/Utils/tmplNotify',
    'wml!Controls/BreadCrumbs/BreadCrumbs'
 ], function(
    Control,
    BreadCrumbsUtil,
    FontLoadUtil,
+   tmplNotify,
    template
 ) {
    'use strict';
@@ -45,14 +47,18 @@ define('Controls/BreadCrumbs', [
          }
       },
 
-      _onItemClick: function(e, item) {
-         this._notify('itemClick', [item]);
-      },
+      _notifyHandler: tmplNotify,
 
       _onResize: function() {
          //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
       }
    });
+
+   BreadCrumbs.getDefaultOptions = function() {
+      return {
+         displayProperty: 'title'
+      };
+   };
 
    return BreadCrumbs;
 });

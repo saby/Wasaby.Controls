@@ -62,7 +62,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          {
             title: 'Цена',
             align: 'right',
-            style: 'default'
+            style: 'default',
+            sortingProperty: 'price'
          },
          {
             title: 'Остаток',
@@ -87,7 +88,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          rightPadding: 'L',
          rowSpacing: 'L',
          showRowSeparator: true,
-         style: 'default'
+         style: 'default',
+         sorting: [{price: 'DESC'}]
       };
 
    describe('Controls.List.Grid.GridViewModel', function() {
@@ -164,12 +166,18 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                GridViewModel._private.getPaddingCellClasses(cMerge(paramsWithMultiselect, {columnIndex: 3})),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(paramsWithMultiselect)".');
          });
+         it('getSortingDirectionByProp', function() {
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test'), 'ASC');
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test2'), 'DESC');
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+            assert.equal(GridViewModel._private.getSortingDirectionByProp([{test: 'ASC'}, {test2: 'DESC'}], 'test3'), undefined);
+         });
          it('prepareRowSeparatorClasses', function() {
             var
                expectedResultWithRowSeparator = [
                   ' controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow',
                   ' controls-Grid__row-cell_withRowSeparator',
-                  ' controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow controls-Grid__row-cell_withRowSeparator'
+                  ' controls-Grid__row-cell_withRowSeparator controls-Grid__row-cell_lastRow controls-Grid__row-cell_withRowSeparator_lastRow'
                ],
                expectedResultWithoutRowSeparator = [
                   ' controls-Grid__row-cell_withoutRowSeparator',
@@ -189,20 +197,19 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                gridViewModel = new GridViewModel(cfg),
                current = gridViewModel.getCurrent(),
                expectedResult = [
-                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
-                     'controls-Grid__row-cell_withSelectionMarker controls-Grid__row-cell_withSelectionMarker_default',
-                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L ' +
-                     'controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default',
-                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                     'controls-Grid__row-cell_rowSpacing_L ' +
-                     'controls-Grid__header-cell_valign_bottom controls-Grid__row-cell_rowSpacing_default',
-                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                     'controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L ' +
-                     'controls-Grid__row-cell_rowSpacing_L ' +
-                     'controls-Grid__header-cell_valign_middle controls-Grid__row-cell_rowSpacing_default'];
+                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+                  ' controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+                  ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default',
+                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+                  ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top' +
+                  ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
+                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom' +
+                  ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
+                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle' +
+                  ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+                  ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default' ];
             assert.equal(expectedResult[0],
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
@@ -228,7 +235,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('configuration', function() {
             assert.equal(cfg.keyProperty, current.keyProperty, 'Incorrect value "current.keyProperty".');
             assert.equal(cfg.displayProperty, current.displayProperty, 'Incorrect value "current.displayProperty".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.deepEqual([{}].concat(gridColumns), current.columns, 'Incorrect value "current.columns".');
             assert.equal('XL', current.leftPadding, 'Incorrect value "current.leftPadding".');
             assert.equal('L', current.rightPadding, 'Incorrect value "current.rightPadding".');
@@ -247,7 +254,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          it('state', function() {
             assert.isTrue(current.isSelected, 'Incorrect value "current.isSelected".');
             assert.equal(undefined, current.isActive, 'Incorrect value "current.isActive".');
-            assert.isTrue(current.multiSelectVisibility, 'Incorrect value "current.multiSelectVisibility".');
+            assert.isTrue(current.multiSelectVisibility === 'visible');
             assert.isTrue(current.showActions, 'Incorrect value "current.showActions".');
             assert.equal(undefined, current.isSwiped, 'Incorrect value "current.isSwiped".');
          });
@@ -277,9 +284,10 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: {},
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
-                  'controls-Grid__row-cell_withSelectionMarker controls-Grid__row-cell_withSelectionMarker_default'
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
+                  ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default' +
+                  ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+                  ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default'
             });
 
             // check next column
@@ -293,9 +301,9 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: gridColumns[0],
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L ' +
-                  'controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default'
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+               ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default ' +
+               'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default'
             });
 
             // check next column
@@ -309,10 +317,9 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: gridColumns[1],
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom ' +
-                  'controls-Grid__row-cell_rowSpacing_default'
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+               ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom' +
+               ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default'
             });
 
             // check last column
@@ -326,10 +333,10 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: gridColumns[2],
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L ' +
-                  'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle ' +
-                  'controls-Grid__row-cell_rowSpacing_default'
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+               ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle' +
+               ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+               ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default'
             });
 
             // check the absence of other columns
@@ -348,9 +355,10 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: {},
                item: gridData[0],
                template: null,
-               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow ' +
-                  'controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default ' +
-                  'controls-Grid__row-cell_withSelectionMarker controls-Grid__row-cell_withSelectionMarker_default'
+               cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
+                  ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default' +
+                  ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+                  ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default'
             });
          });
       });
@@ -373,7 +381,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                callMethods = ['getItemById', 'setMarkedKey', 'reset', 'isEnd', 'goToNext', 'getNext', 'isLast',
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
-                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData',
+                  '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
                   'getChildren', 'getActiveItem', 'destroy'],
                callStackMethods = [];
 
@@ -391,6 +399,13 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
       });
       describe('ladder and sticky column', function() {
          var
+            initialColumns = [{
+               width: '1fr',
+               displayProperty: 'title'
+            }, {
+               width: '1fr',
+               template: 'wml!MyTestDir/Photo'
+            }],
             resultLadder = {
                0: { date: { ladderLength: 1 } },
                1: { date: { ladderLength: 3 } },
@@ -432,13 +447,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                   ]
                }),
                keyProperty: 'id',
-               columns: [{
-                  width: '1fr',
-                  displayProperty: 'title'
-               }, {
-                  width: '1fr',
-                  template: 'wml!MyTestDir/Photo'
-               }],
+               columns: initialColumns,
                ladderProperties: ['date'],
                stickyColumn: {
                   property: 'photo',
@@ -447,6 +456,31 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             });
          assert.deepEqual(ladderViewModel._ladder.ladder, resultLadder, 'Incorrect value prepared ladder.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
+
+         var
+            newItems = new RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
+                  { id: 1, title: 'i1', date: '03 янв', photo: '1.png' },
+                  { id: 2, title: 'i2', date: '03 янв', photo: '1.png' }
+               ]
+            }),
+            newResultLadder = {
+               0: { date: { ladderLength: 1 } },
+               1: { date: { ladderLength: 2 } },
+               2: { date: { } }
+            },
+            newResultStickyLadder = {
+               0: { ladderLength: 3, headingStyle: 'grid-area: 1 / 1 / span 3 / span 1;' },
+               1: { },
+               2: { }
+            };
+
+         ladderViewModel.setItems(newItems);
+
+         assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
+         assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
       });
       describe('other methods of the class', function() {
          var
@@ -463,6 +497,18 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.equal(null, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(null)".');
             gridViewModel.setHeader(gridHeader);
             assert.deepEqual(gridHeader, gridViewModel.getHeader(), 'Incorrect value "getHeader()" after "setHeader(gridHeader)".');
+         });
+         it('getColumns && setColumns', function() {
+            var newColumns = [{
+               displayProperty: 'field1'
+            }, {
+               displayProperty: 'field2'
+            }];
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(newColumns)".');
+            gridViewModel.setColumns(newColumns);
+            assert.deepEqual(newColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" after "setColumns(newColumns)".');
+            gridViewModel.setColumns(gridColumns);
+            assert.deepEqual(gridColumns, gridViewModel.getColumns(), 'Incorrect value "getColumns()" before "setColumns(gridColumns)".');
          });
          it('_prepareCrossBrowserColumn', function() {
             var
@@ -542,7 +588,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
                   'controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_halign_right',
-               index: 2
+               index: 2,
+               sortingDirection: 'DESC'
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
 
             assert.equal(true, gridViewModel.isEndHeaderColumn(), 'Incorrect value "isEndHeaderColumn()" after third call "getCurrentHeaderColumn()".');

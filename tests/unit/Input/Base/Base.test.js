@@ -17,14 +17,21 @@ define(
          beforeEach(function() {
             calls = [];
             ctrl = new Base();
-            ctrl._children.input = {
-               focus: function() {},
-               setSelectionRange: function(start, end) {
-                  this.selectionStart = start;
-                  this.selectionEnd = end;
-               }
-            };
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
+
+            var beforeMount = ctrl._beforeMount;
+
+            ctrl._beforeMount = function() {
+               beforeMount.apply(this, arguments);
+
+               ctrl._children[this._fieldName] = {
+                  focus: function() {},
+                  setSelectionRange: function(start, end) {
+                     this.selectionStart = start;
+                     this.selectionEnd = end;
+                  }
+               };
+            };
          });
 
          it('getDefault', function() {
@@ -54,21 +61,19 @@ define(
                ctrl._options.readOnly = false;
             });
             it('No.', function() {
-               ctrl._children.input.value = '';
-
                ctrl._beforeMount({
                   value: ''
                });
+               ctrl._getField().value = '';
                ctrl._afterMount();
 
                assert.deepEqual(calls.length, 0);
             });
             it('Yes.', function() {
-               ctrl._children.input.value = 'test value';
-
                ctrl._beforeMount({
                   value: ''
                });
+               ctrl._getField().value = 'test value';
                ctrl._afterMount();
 
                assert.deepEqual(calls, [{
@@ -80,18 +85,28 @@ define(
          describe('The _fieldName property value equal the name option value when mounting the control, if it defined.', function() {
             it('No.', function() {
                ctrl._beforeMount({
-                  value: ''
+                  value: '',
+                  autoComplete: true
                });
 
                assert.equal(ctrl._fieldName, 'input');
             });
             it('Yes.', function() {
                ctrl._beforeMount({
+                  value: '',
                   name: 'test name',
-                  value: ''
+                  autoComplete: true
                });
 
                assert.equal(ctrl._fieldName, 'test name');
+            });
+            it('A random name is generated when auto-complete is disabled.', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  autoComplete: false
+               });
+
+               assert.equal(ctrl._fieldName.indexOf('name-'), 0);
             });
          });
          describe('Changing options in model.', function() {
@@ -161,18 +176,23 @@ define(
             });
          });
          describe('User input.', function() {
+            beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+            });
             it('The field does not change, but the model changes.', function() {
                ctrl._beforeMount({
                   value: ''
                });
-               ctrl._children.input.value = 'text';
-               ctrl._children.input.selectionStart = 4;
-               ctrl._children.input.selectionEnd = 4;
+               ctrl._getField().value = 'text';
+               ctrl._getField().selectionStart = 4;
+               ctrl._getField().selectionEnd = 4;
                ctrl._inputHandler(new SyntheticEvent({}));
 
-               assert.equal(ctrl._children.input.value, '');
-               assert.equal(ctrl._children.input.selectionStart, 0);
-               assert.equal(ctrl._children.input.selectionEnd, 0);
+               assert.equal(ctrl._getField().value, '');
+               assert.equal(ctrl._getField().selectionStart, 0);
+               assert.equal(ctrl._getField().selectionEnd, 0);
                assert.equal(ctrl._viewModel.value, 'text');
                assert.deepEqual(ctrl._viewModel.selection, {
                   start: 4,
@@ -187,56 +207,56 @@ define(
                      return 10 * value.length;
                   };
                   ctrl._getActiveElement = function() {
-                     return ctrl._children.input;
+                     return ctrl._getField();
                   };
                   ctrl._beforeMount({
 
                      // length = 20, width = 200;
                      value: '01234567890123456789'
                   });
-                  ctrl._children.input.clientWidth = 100;
+                  ctrl._getField().clientWidth = 100;
                });
                it('The cursor is behind the left edge.', function() {
-                  ctrl._children.input.scrollLeft = 100;
+                  ctrl._getField().scrollLeft = 100;
 
-                  ctrl._children.input.selectionStart = 10;
-                  ctrl._children.input.selectionEnd = 10;
+                  ctrl._getField().selectionStart = 10;
+                  ctrl._getField().selectionEnd = 10;
                   ctrl._clickHandler();
-                  ctrl._children.input.value = '0123456780123456789';
-                  ctrl._children.input.selectionStart = 9;
-                  ctrl._children.input.selectionEnd = 9;
+                  ctrl._getField().value = '0123456780123456789';
+                  ctrl._getField().selectionStart = 9;
+                  ctrl._getField().selectionEnd = 9;
                   ctrl._inputHandler(new SyntheticEvent({}));
                   ctrl._template(ctrl);
 
-                  assert.equal(ctrl._children.input.scrollLeft, 41);
+                  assert.equal(ctrl._getField().scrollLeft, 41);
                });
                it('The cursor between the edges.', function() {
-                  ctrl._children.input.scrollLeft = 50;
+                  ctrl._getField().scrollLeft = 50;
 
-                  ctrl._children.input.selectionStart = 10;
-                  ctrl._children.input.selectionEnd = 10;
+                  ctrl._getField().selectionStart = 10;
+                  ctrl._getField().selectionEnd = 10;
                   ctrl._clickHandler();
-                  ctrl._children.input.value = '0123456789t0123456789';
-                  ctrl._children.input.selectionStart = 11;
-                  ctrl._children.input.selectionEnd = 11;
+                  ctrl._getField().value = '0123456789t0123456789';
+                  ctrl._getField().selectionStart = 11;
+                  ctrl._getField().selectionEnd = 11;
                   ctrl._inputHandler(new SyntheticEvent({}));
                   ctrl._template(ctrl);
 
-                  assert.equal(ctrl._children.input.scrollLeft, 50);
+                  assert.equal(ctrl._getField().scrollLeft, 50);
                });
                it('The cursor is behind the right edge.', function() {
-                  ctrl._children.input.scrollLeft = 0;
+                  ctrl._getField().scrollLeft = 0;
 
-                  ctrl._children.input.selectionStart = 10;
-                  ctrl._children.input.selectionEnd = 10;
+                  ctrl._getField().selectionStart = 10;
+                  ctrl._getField().selectionEnd = 10;
                   ctrl._clickHandler();
-                  ctrl._children.input.value = '0123456789a0123456789';
-                  ctrl._children.input.selectionStart = 11;
-                  ctrl._children.input.selectionEnd = 11;
+                  ctrl._getField().value = '0123456789a0123456789';
+                  ctrl._getField().selectionStart = 11;
+                  ctrl._getField().selectionEnd = 11;
                   ctrl._inputHandler(new SyntheticEvent({}));
                   ctrl._template(ctrl);
 
-                  assert.equal(ctrl._children.input.scrollLeft, 61);
+                  assert.equal(ctrl._getField().scrollLeft, 61);
                });
             });
          });
@@ -261,8 +281,8 @@ define(
 
                ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
 
-               ctrl._children.input.selectionStart = 10;
-               ctrl._children.input.selectionEnd = 10;
+               ctrl._getField().selectionStart = 10;
+               ctrl._getField().selectionEnd = 10;
                ctrl._clickHandler();
 
                setTimeout(function() {
@@ -285,8 +305,8 @@ define(
                ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
             });
             it('The selection is saved to the model after user select.', function() {
-               ctrl._children.input.selectionStart = 0;
-               ctrl._children.input.selectionEnd = 10;
+               ctrl._getField().selectionStart = 0;
+               ctrl._getField().selectionEnd = 10;
                ctrl._selectHandler();
 
                assert.deepEqual(calls, [{
@@ -298,9 +318,13 @@ define(
                }]);
             });
             it('The selection is not saved to the model after script actions', function() {
-               ctrl._children.input.value = '';
-               ctrl._children.input.selectionStart = 0;
-               ctrl._children.input.selectionEnd = 0;
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+
+               ctrl._getField().value = '';
+               ctrl._getField().selectionStart = 0;
+               ctrl._getField().selectionEnd = 0;
                ctrl._inputHandler(new SyntheticEvent({}));
                ctrl._selectHandler();
 
@@ -360,10 +384,10 @@ define(
                EventBus.globalChannel().notify = savedNotify;
             });
             it('Scroll to start.', function() {
-               ctrl._children.input.scrollLeft = 100;
+               ctrl._getField().scrollLeft = 100;
                ctrl._focusOutHandler();
 
-               assert.equal(ctrl._children.input.scrollLeft, 0);
+               assert.equal(ctrl._getField().scrollLeft, 0);
             });
             it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
                ctrl._isMobileIOS = true;
@@ -385,7 +409,10 @@ define(
          });
          describe('Click event on the placeholder.', function() {
             beforeEach(function() {
-               ctrl._children.input.focus = ProxyCall.apply(ctrl._children.input.focus, 'focus', calls, true);
+               ctrl._beforeMount({
+                  value: ''
+               });
+               ctrl._getField().focus = ProxyCall.apply(ctrl._getField().focus, 'focus', calls, true);
             });
             it('Focus the field through a script in ie browser version 10.', function() {
                ctrl._ieVersion = 10;
@@ -412,8 +439,8 @@ define(
                   optionModel: 'test'
                });
                ctrl._viewModel = ProxyCall.set(ctrl._viewModel, ['selection'], calls, true);
-               ctrl._children.input.selectionStart = 10;
-               ctrl._children.input.selectionEnd = 10;
+               ctrl._getField().selectionStart = 10;
+               ctrl._getField().selectionEnd = 10;
             });
             it('Pressing the up arrow', function() {
                ctrl._keyUpHandler(new SyntheticEvent({
@@ -503,13 +530,16 @@ define(
          });
          describe('The value in the field is changed via auto-complete.', function() {
             it('In an empty field.', function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
                ctrl._beforeMount({
                   value: ''
                });
 
-               ctrl._children.input.value = 'test auto-complete value';
-               ctrl._children.input.selectionStart = 24;
-               ctrl._children.input.selectionEnd = 24;
+               ctrl._getField().value = 'test auto-complete value';
+               ctrl._getField().selectionStart = 24;
+               ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new SyntheticEvent({}));
 
                assert.deepEqual(calls, [{
@@ -518,13 +548,16 @@ define(
                }]);
             });
             it('In an not empty field.', function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
                ctrl._beforeMount({
                   value: 'test value'
                });
 
-               ctrl._children.input.value = 'test auto-complete value';
-               ctrl._children.input.selectionStart = 24;
-               ctrl._children.input.selectionEnd = 24;
+               ctrl._getField().value = 'test auto-complete value';
+               ctrl._getField().selectionStart = 24;
+               ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new SyntheticEvent({}));
 
                assert.deepEqual(calls, [{

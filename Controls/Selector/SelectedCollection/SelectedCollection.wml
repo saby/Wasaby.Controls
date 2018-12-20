@@ -6,13 +6,15 @@
               trigger="click"
               templateName="Controls/Selector/SelectedCollection/Popup"
               templateOptions="{{_templateOptions}}"
-              position="bl">
-          <ws:partial template="wml!Controls/Selector/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_options._counterWidth}}px;"/>
+              position="bl"
+              on:openInfoBox="_notifyHandler('openInfoBox')"
+              on:closeInfoBox="_notifyHandler('closeInfoBox')">
+          <ws:partial template="wml!Controls/Selector/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_counterWidth}}px;"/>
       </Controls.Popup.InfoBox>
    </ws:if>
    <ws:for data="index, item in _visibleItems">
       <ws:partial
-              attr:style="{{index === 0 && _items.length > _options.maxVisibleItems ? 'max-width: calc(100% - ' + _options._counterWidth + 'px);'}}"
+              attr:style="{{index === 0 && _items.length > _options.maxVisibleItems ? 'max-width: calc(100% - ' + _counterWidth + 'px);'}}"
               attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
               template="{{_options.itemTemplate}}"
               item="{{item}}"

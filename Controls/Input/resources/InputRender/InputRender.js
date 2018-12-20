@@ -6,11 +6,11 @@ define('Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
       'Core/detection',
-      'Controls/Utils/getWidth',
+      'Controls/Utils/hasHorizontalScroll',
       'Core/EventBus',
       'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, getWidthUtils, EventBus) {
+   function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
       'use strict';
 
       /**
@@ -92,7 +92,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             if (!text) {
                return false;
             }
-            return getWidthUtils.getWidth(text) > target.clientWidth;
+            return hasHorizontalScrollUtil(target);
          },
 
          getInput: function(self) {
@@ -107,7 +107,11 @@ define('Controls/Input/resources/InputRender/InputRender',
          initSelection: function(self) {
             var input = _private.getInput(self);
 
-            if (input) {
+            /**
+             * In IE, change the selection leads to the automatic focusing of the field.
+             * Therefore, we change it only if the field is already focused.
+             */
+            if (input && self._inputActive) {
                var selection = self._selection;
                var end = self._options.viewModel.getDisplayValue().length;
                var newSelection = {
@@ -134,12 +138,15 @@ define('Controls/Input/resources/InputRender/InputRender',
          // Current state of input. Could be: 'default', 'disabled', 'active', 'error'
          _inputState: undefined,
 
+         _isEdge: null,
+
          // text field has focus
          _inputActive: false,
 
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
+            this._isEdge = cDetection.isIE12;
          },
 
          _afterMount: function() {
@@ -163,7 +170,7 @@ define('Controls/Input/resources/InputRender/InputRender',
 
          _mouseEnterHandler: function() {
             var input = _private.getInput(this);
-            var tooltipInputValue = _private.getInputValueForTooltip(input.getAttribute('type'), this._options.viewModel.getDisplayValue());
+            var tooltipInputValue = _private.getInputValueForTooltip(this._options.type, this._options.viewModel.getDisplayValue());
 
             this._tooltip = _private.getTooltip(tooltipInputValue, this._options.tooltip, _private.hasHorizontalScroll(input, tooltipInputValue));
          },
@@ -207,9 +214,6 @@ define('Controls/Input/resources/InputRender/InputRender',
             if (value !== processedData.value) {
                this._notify('valueChanged', [this._options.viewModel.getValue()]);
             }
-
-            this._tooltip = _private.getTooltip(this._options.viewModel.getDisplayValue(), this._options.tooltip,
-               _private.hasHorizontalScroll(_private.getInput(this), this._options.viewModel.getDisplayValue()));
          },
 
          _keyUpHandler: function(e) {
@@ -319,7 +323,8 @@ define('Controls/Input/resources/InputRender/InputRender',
             style: 'default',
             inputType: 'Text',
             autocomplete: true,
-            tooltip: ''
+            tooltip: '',
+            type: 'text'
          };
       };
 

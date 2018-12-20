@@ -107,8 +107,9 @@ define([
             instance._afterMount();
             assert.equal(eventQueue.length, 2);
             var firstEvent = eventQueue[0];
-            assert.equal(firstEvent.eventName, 'selectedKeysCountChanged');
+            assert.equal(firstEvent.eventName, 'listSelectedKeysCountChanged');
             assert.equal(firstEvent.eventArgs[0], 0);
+            assert.isTrue(firstEvent.eventOptions.bubbling);
             var secondEvent = eventQueue[1];
             assert.equal(secondEvent.eventName, 'register');
             assert.equal(secondEvent.eventArgs[0], 'selectedTypeChanged');
@@ -160,8 +161,9 @@ define([
                assert.deepEqual(firstEvent.eventArgs[1], [3, 4]);
                assert.deepEqual(firstEvent.eventArgs[2], []);
                var secondEvent = eventQueue[1];
-               assert.equal(secondEvent.eventName, 'selectedKeysCountChanged');
+               assert.equal(secondEvent.eventName, 'listSelectedKeysCountChanged');
                assert.deepEqual(secondEvent.eventArgs[0], 2);
+               assert.isTrue(secondEvent.eventOptions.bubbling);
                done();
             });
          });
@@ -203,8 +205,9 @@ define([
                assert.deepEqual(firstEvent.eventArgs[1], [1]);
                assert.deepEqual(firstEvent.eventArgs[2], []);
                var secondEvent = eventQueue[1];
-               assert.equal(secondEvent.eventName, 'selectedKeysCountChanged');
+               assert.equal(secondEvent.eventName, 'listSelectedKeysCountChanged');
                assert.deepEqual(secondEvent.eventArgs[0], 5);
+               assert.isTrue(secondEvent.eventOptions.bubbling);
                done();
             });
          });
@@ -225,8 +228,9 @@ define([
                assert.deepEqual(firstEvent.eventArgs[1], []);
                assert.deepEqual(firstEvent.eventArgs[2], [1]);
                var secondEvent = eventQueue[1];
-               assert.equal(secondEvent.eventName, 'selectedKeysCountChanged');
+               assert.equal(secondEvent.eventName, 'listSelectedKeysCountChanged');
                assert.deepEqual(secondEvent.eventArgs[0], 0);
+               assert.isTrue(secondEvent.eventOptions.bubbling);
                done();
             });
          });
@@ -247,8 +251,9 @@ define([
                assert.deepEqual(firstEvent.eventArgs[1], [2]);
                assert.deepEqual(firstEvent.eventArgs[2], []);
                var secondEvent = eventQueue[1];
-               assert.equal(secondEvent.eventName, 'selectedKeysCountChanged');
+               assert.equal(secondEvent.eventName, 'listSelectedKeysCountChanged');
                assert.deepEqual(secondEvent.eventArgs[0], 2);
+               assert.isTrue(secondEvent.eventOptions.bubbling);
                done();
             });
          });

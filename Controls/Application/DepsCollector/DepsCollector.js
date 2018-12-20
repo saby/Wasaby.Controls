@@ -1,7 +1,8 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
+   'Core/IoC',
    'Core/core-extend'
-], function(Logger, coreExtend) {
+], function(Logger, IoC, coreExtend) {
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
@@ -62,6 +63,15 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return packageLink.replace(/^(\/resources\/|resources\/)+/, '').replace(/\.min\.(css|js)$/, '');
    }
 
+   function getExt(fileName) {
+      var res = fileName.match(/\.\w+$/);
+      if (res && res.length) {
+         return res[0].slice(1);
+      }
+      IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
+      return '';
+   }
+
    function isThemedCss(key) {
       return !!~key.indexOf('theme?');
    }
@@ -69,7 +79,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    function parseModuleName(name) {
       var typeInfo = getType(name);
       if (typeInfo === null) {
-         Logger.log('Wrong type. Can not process module.', [name]);
+         // TODO Change to error after https://online.sbis.ru/opendoc.html?guid=5de9d9bd-be4a-483a-bece-b41983e916e4
+         Logger.log('Wrong type', ['Can not process module: ' + name]);
          return null;
       }
       var nameWithoutPlugin;
@@ -85,24 +96,36 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       };
    }
 
-   function getPackagesNames(allDeps, bundlesRoute) {
+   function getEmptyPackages() {
       var packages = {};
+      for (var key in TYPES) {
+         if (TYPES.hasOwnProperty(key)) {
+            packages[key] = {};
+         }
+      }
+      return packages;
+   }
+
+   function getPackagesNames(allDeps, bundlesRoute) {
+      var packages = getEmptyPackages();
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
             var bundleName = bundlesRoute[key];
             if (bundleName) {
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
-               packages[getPackageName(bundleName)] = DEPTYPES.BUNDLE;
+               var ext = getExt(bundleName);
+               packages[ext][getPackageName(bundleName)] = DEPTYPES.BUNDLE;
             }
          }
       }
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
+            var ext = allDeps[key].typeInfo.type;
             if (allDeps[key].typeInfo.plugin) {
-               packages[key.split(allDeps[key].typeInfo.plugin + '!')[1]] = DEPTYPES.SINGLE;
+               packages[ext][key.split(allDeps[key].typeInfo.plugin + '!')[1]] = DEPTYPES.SINGLE;
             } else {
-               packages[key] = DEPTYPES.SINGLE;
+               packages[ext][key] = DEPTYPES.SINGLE;
             }
          }
       }
@@ -141,15 +164,28 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    }
 
    function getAllPackagesNames(allDeps, bundlesRoute, themesActive) {
-      var packages = {
-         js: {},
-         css: {}
-      };
-      packages.js = getPackagesNames(allDeps.js, bundlesRoute);
+      var packages = getEmptyPackages();
+      mergePackages(packages, getPackagesNames(allDeps.js, bundlesRoute));
+      mergePackages(packages, getPackagesNames(allDeps.tmpl, bundlesRoute));
+      mergePackages(packages, getPackagesNames(allDeps.wml, bundlesRoute));
+
       packages.css = getCssPackages(allDeps.css, bundlesRoute, themesActive);
-      packages.tmpl = getPackagesNames(allDeps.tmpl, bundlesRoute);
-      packages.wml = getPackagesNames(allDeps.wml, bundlesRoute);
       return packages;
+   }
+
+   function mergePackages(result, addedPackages) {
+      for (var package in addedPackages) {
+         if (addedPackages.hasOwnProperty(package)) {
+            if (result[package] === undefined) {
+               result[package] = {};
+            }
+            for (var key in addedPackages[package]) {
+               if (addedPackages[package].hasOwnProperty(key)) {
+                  result[package][key] = addedPackages[package][key];
+               }
+            }
+         }
+      }
    }
 
    /**
@@ -206,7 +242,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       },
       collectDependencies: function(deps) {
          var files = {
-            js: [], css: {themedCss: [], simpleCss: []}, tmpl: [], wml: []
+            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: []
          };
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);

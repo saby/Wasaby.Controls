@@ -48,8 +48,8 @@ define('Controls/List/EditInPlace', [
             var result;
 
             if (eventResult === EditConstants.CANCEL) {
-               result = Deferred.fail(options);
-            } else if (eventResult instanceof Deferred) {
+               result = Deferred.success({ cancelled: true });
+            } else if (eventResult && eventResult.addBoth) {
                self._notify('showIndicator', [], { bubbling: true });
                eventResult.addBoth(function(defResult) {
                   self._notify('hideIndicator', [], { bubbling: true });
@@ -74,9 +74,9 @@ define('Controls/List/EditInPlace', [
             var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
 
             if (result === EditConstants.CANCEL) {
-               return Deferred.fail();
+               return Deferred.success({ cancelled: true });
             }
-            if (result instanceof Deferred) {
+            if (result && result.addCallback) {
             // Если мы попали сюда, то прикладники сами сохраняют запись
                return result.addCallback(function() {
                   _private.afterEndEdit(self);
@@ -265,8 +265,14 @@ define('Controls/List/EditInPlace', [
          var self = this;
 
          if (!this._editingItem || !this._editingItem.isEqual(options.item)) {
-            return this.commitEdit().addCallback(function() {
+            return this.commitEdit().addCallback(function(res) {
+               if (res && res.validationFailed) {
+                  return Deferred.success();
+               }
                return _private.beginEdit(self, options).addCallback(function(newOptions) {
+                  if (newOptions && newOptions.cancelled) {
+                     return Deferred.success({ cancelled: true });
+                  }
                   return _private.afterBeginEdit(self, newOptions);
                });
             });
@@ -275,8 +281,14 @@ define('Controls/List/EditInPlace', [
 
       beginAdd: function(options) {
          var self = this;
-         return this.commitEdit().addCallback(function() {
+         return this.commitEdit().addCallback(function(res) {
+            if (res && res.validationFailed) {
+               return Deferred.success();
+            }
             return _private.beginEdit(self, options || {}, true).addCallback(function(newOptions) {
+               if (newOptions && newOptions.cancelled) {
+                  return Deferred.success({ cancelled: true });
+               }
                return _private.afterBeginEdit(self, newOptions, true);
             });
          });
@@ -288,7 +300,7 @@ define('Controls/List/EditInPlace', [
          return _private.validate(this).addCallback(function(result) {
             for (var key in result) {
                if (result.hasOwnProperty(key) && result[key]) {
-                  return Deferred.fail();
+                  return Deferred.success({ validationFailed: true });
                }
             }
             return _private.endItemEdit(self, true);

@@ -64,7 +64,7 @@ define('Controls/interface/IMenu', [], function() {
 
    /**
     * @name Controls/interface/IMenu#itemTemplateProperty
-    * @cfg {Function} Template for item render.
+    * @cfg {Function} Name of the item property that contains template for item render.
     * @remark
     * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.
@@ -177,12 +177,12 @@ define('Controls/interface/IMenu', [], function() {
     *          opener: this._children.button
     *       });
     *    }
-    * </ore>
+    * </pre>
     */
 
    /**
     * @name Controls/interface/IMenu#dropdownClassName
-    * @cfg {String} Сlass for template.
+    * @cfg {String} The class that hangs on dropdown list.
     * @remark
     * The string, that is formed by the values from items, also changes position.
     * @example
@@ -296,6 +296,72 @@ define('Controls/interface/IMenu', [], function() {
     *            ],
     *        idProperty: 'id'
     *    });
+    * </pre>
+    */
+
+   /**
+    * @name Controls/interface/IMenu#headerTemplate
+    * @cfg {Function | String} Template that will be rendered above the list.
+    * @default "wml!Controls/Dropdown/resources/template/defaultHeadTemplate"
+    * @remark
+    * To determine the template, you should call the base template 'wml!Controls/Dropdown/resources/template/defaultHeadTemplate'.
+    * The template should be placed in the component using the <ws:partial> tag with the template attribute.
+    * By default, the base template 'wml!Controls/Dropdown/resources/template/defaultHeadTemplate' will display caption and icon, if they are set. You can change the following options:
+    * <ul>
+    *     <li>caption - header text,</li>
+    *     <li>icon - header icon.</li>
+    * </ul>
+    * @example
+    * Menu with text header - "Add".
+    * TMPL:
+    * <pre>
+    *    <Controls.Button.Menu
+    *          keyProperty="id"
+    *          icon="icon-medium icon-AddButtonNew"
+    *          source="{{_source)}}"
+    *          tooltip="Add">
+    *       <ws:headerTemplate>
+    *          <ws:partial template="wml!Controls/Dropdown/resources/template/defaultHeadTemplate" caption="Add"/>
+    *       </ws:headerTemplate>
+    *    </Controls.Button.Menu>
+    * </pre>
+    * JS:
+    * <pre>
+    *    this._source = new Memory ({
+    *       data: [
+    *           { id: 1, title: 'Task in development' },
+    *           { id: 2, title: 'Error in development' }
+    *       ],
+    *       idProperty: 'id'
+    *    });
+    * </pre>
+    */
+
+   /**
+    * @name Controls/interface/IMenu#footerTemplate
+    * @cfg {Function | String} Template that will be rendered below the list.
+    * @example
+    * TMPL:
+    * <pre>
+    *    <Controls.Button.Menu
+    *          keyProperty="id"
+    *          icon="icon-Save icon-small"
+    *          on:footerClick="footerClickHandler()"
+    *          source="{{_source}}">
+    *       <ws:footerTemplate>
+    *          <div class="ControlsDemo-InputDropdown-footerTpl">
+    *             <Controls.Button caption="+ New template" size="l" viewMode="link"/>
+    *          </div>
+    *       </ws:footerTemplate>
+    *    </Controls.Button.Menu>
+    * </pre>
+    * JS:
+    * <pre>
+    *    footerClickHandler: function() {
+    *       this._children.stack.open({
+    *          opener: this._children.button
+    *       });
+    *    }
     * </pre>
     */
 });

@@ -2,12 +2,10 @@ define('Controls/History/Menu',
    [
       'Controls/Button/Menu',
       'wml!Controls/History/resources/itemTemplate',
-      'Core/core-merge',
-      'Core/helpers/Object/isEqual',
       'Controls/Button/Menu/MenuUtils',
       'css!theme?Controls/History/Menu'
    ],
-   function(Menu, itemTemplate, merge, isEqual, MenuUtils) {
+   function(Menu, itemTemplate, MenuUtils) {
       /**
        * Button menu with history by clicking on which a drop-down list opens.
        *
@@ -28,43 +26,32 @@ define('Controls/History/Menu',
        */
 
       'use strict';
-   
+
       var _private = {
          getMetaPinned: function(item) {
             return {
                $_pinned: !item.get('pinned')
             };
-         },
-      
-         getMetaHistory: function() {
-            return  {
-               $_history: true
-            };
-         },
-         prepareFilter: function(filter) {
-            return merge(_private.getMetaHistory(), filter);
          }
       };
-   
+
       var HistoryMenu = Menu.extend({
          _itemTemplate: itemTemplate,
          _filter: null,
 
          _beforeMount: function(options) {
             this._offsetClassName = MenuUtils.cssStyleGeneration(options);
-            this._filter = _private.prepareFilter(options.filter);
          },
-         
+
          _beforeUpdate: function(newOptions) {
-            if (!isEqual(this._options.filter, newOptions.filter) || this._options.source !== newOptions.source) {
-               this._filter = _private.prepareFilter(newOptions.filter);
+            if (this._options.size !== newOptions.size || this._options.icon !== newOptions.icon ||
+               this._options.viewMode !== newOptions.viewMode) {
+               this._offsetClassName = MenuUtils.cssStyleGeneration(newOptions);
             }
          },
 
          _onItemClickHandler: function(result, items) {
             this._notify('onMenuItemActivate', [items[0]]);
-            this._options.source.update(items[0], _private.getMetaHistory());
-            this._items = this._options.source.getItems();
          },
 
          _onPinClickHandler: function(event, items) {
@@ -83,9 +70,9 @@ define('Controls/History/Menu',
             });
          }
       });
-   
+
       HistoryMenu._private = _private;
-      
+
       return HistoryMenu;
    }
 );

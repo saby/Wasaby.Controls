@@ -6,11 +6,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/core-merge',
       'Core/core-clone',
       'Core/detection',
-      'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
+      'wml!Controls/Popup/Opener/Sticky/StickyContent',
       'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, isElementVisible, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -44,7 +44,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
-            cfg.popupOptions.position = this.prepareCfgContext(popupCfg);
+            cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
 
             cfg.positionConfig = popupCfg;
 
@@ -114,7 +114,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          },
 
-         prepareCfgContext: function(cfg) {
+         isTargetVisible: function(item) {
+            var targetCoords = _private._getTargetCoords(item, {});
+            return !!targetCoords.width;
+         },
+
+         prepareStickyPosition: function(cfg) {
             return {
                horizontalAlign: cfg.align.horizontal,
                verticalAlign: cfg.align.vertical,
@@ -125,6 +130,9 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          getWindowWidth: function() {
             return window.innerWidth;
          },
+         setStickyContent: function(item) {
+            item.popupOptions.content = 'wml!Controls/Popup/Opener/Sticky/StickyContent';
+         }
       };
 
       /**
@@ -137,12 +145,15 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       var StickyController = BaseController.extend({
 
          elementCreated: function(item, container) {
+            _private.setStickyContent(item);
             item.position.position = undefined;
             this.prepareConfig(item, container);
          },
 
          elementUpdated: function(item, container) {
-            if (this._isElementVisible(item.popupOptions.target)) {
+            _private.setStickyContent(item);
+            item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
+            if (_private.isTargetVisible(item)) {
                _private.updateClasses(item, item.positionConfig);
                item.position = StickyStrategy.getPosition(item.positionConfig, _private._getTargetCoords(item, item.positionConfig.sizes));
 
@@ -185,6 +196,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          getDefaultConfig: function(item) {
+            _private.setStickyContent(item);
             item.position = {
                top: -10000,
                left: -10000,
@@ -201,10 +213,6 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             _private.removeOrientationClasses(item);
             var sizes = this._getPopupSizes(item, container);
             _private.prepareConfig(item, sizes);
-         },
-
-         _isElementVisible: function(target) {
-            return isElementVisible(target);
          },
 
          needRecalcOnKeyboardShow: function() {

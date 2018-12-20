@@ -1,4 +1,5 @@
 .controls-Base__field {
+   width: 100%;
    flex-grow: 1;
    position: relative;
 }
@@ -13,6 +14,7 @@
 }
 
 .controls-Base__field_readOnly {
+   width: 100%;
    .text-overflow();
 }
 
@@ -58,4 +60,12 @@
          display: none;
       }
    }
+}
+
+   /*
+    * In Edge, spacing between border and text is more than in others browsers
+    * https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/13433382/
+    */
+.controls-Base__nativeField_edge {
+   margin-left: -1px;
 }

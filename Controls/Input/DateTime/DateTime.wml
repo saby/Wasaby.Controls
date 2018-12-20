@@ -1,13 +1,17 @@
 <Controls.Input.Mask
-   value="{{_model.textValue}}"
+   value="{{_model.clearTextValue}}"
    replacer="{{_model._replacer}}"
    mask="{{_options.mask}}"
    size="{{ _options.size }}"
    selectOnClick="{{_options.selectOnClick}}"
    placeholder="{{_options.placeholder}}"
+   tagStyle="{{ _options.tagStyle }}"
    validationErrors="{{_options.validationErrors}}"
    tooltip="{{_options.tooltip}}"
    formatMaskChars="{{_formatMaskChars}}"
    on:valueChanged="_valueChangedHandler()"
-   on:inputCompleted="_inputCompletedHandler()">
+   on:inputCompleted="_inputCompletedHandler()"
+   on:tagClick="_proxyEvent('tagClick')"
+   on:tagHover="_proxyEvent('tagHover')"
+   on:keydown="_onKeyDown()">
 </Controls.Input.Mask>

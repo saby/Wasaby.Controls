@@ -16,6 +16,7 @@
                         scope="{{_exampleControlOptions}}"
                         bind:value="_options.componentOpt.value"
                         bind:selectedKey="_options.componentOpt.selectedKey"
+                        bind:selectedKeys="_options.componentOpt.selectedKeys"
                         on:click="_clickHandler()"
                         attr:class="js-Controls_{{_demoName}}_mainField
                         {{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>
@@ -27,7 +28,7 @@
                     scrollbarVisible="{{true}}"
                     shadowVisible="{{true}}"
                     attr:class="PropertyGrid_events">
-                <pre>{{myEvent}}</pre>
+                <div attr:style="width:200px; word-spacing:200px;">{{myEvent}}</div>
             </Controls.Container.Scroll>
             <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
 
