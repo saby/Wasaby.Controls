@@ -19,7 +19,8 @@ define('Controls/Tile', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IListControl
-    * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/interface/IHierarchy
+    * @mixes Controls/List/interface/ITreeControl
     *
     * @mixes Controls/List/TileView/TileViewStyles
     * @mixes Controls/List/TreeTileView/TreeTileViewStyles
