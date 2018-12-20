@@ -78,17 +78,13 @@ define(
             assert.isFalse(combobox._isOpen);
          });
 
-         it('_mouseDownHandler', function() {
+         it('popupVisibilityChanged', function() {
             let combobox = getCombobox(config);
-            assert.isFalse(combobox._isOpen);
-            combobox._mouseDownHandler();
+   
+            Combobox._private.popupVisibilityChanged.call(combobox, true);
             assert.isTrue(combobox._isOpen);
-         });
-
-         it('close', function() {
-            let combobox = getCombobox(config);
-            let close = Combobox._private.close.bind(combobox);
-            close();
+   
+            Combobox._private.popupVisibilityChanged.call(combobox, false);
             assert.isFalse(combobox._isOpen);
          });
 
