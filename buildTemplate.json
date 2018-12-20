@@ -12,7 +12,7 @@
   "wml": false,
   "customPack": false,
   "dependenciesGraph": false,
-
+  "resourcesUrl": false,
   "modules": [
     {
       "name": "Controls",
