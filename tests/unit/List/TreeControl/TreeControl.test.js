@@ -309,5 +309,101 @@ define([
             }, 10);
          }, 10);
       });
+
+      it('markItemByExpanderClick true', function() {
+
+         var
+            rawData = [
+               { id: 1, type: true, parent: null },
+               { id: 2, type: true, parent: null },
+               { id: 11, type: null, parent: 1 }
+            ],
+            source = new Memory({
+               rawData: rawData,
+               idProperty: 'id'
+            }),
+            cfg = {
+               source: source,
+               columns: [],
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               markedKey: 11,
+               markItemByExpanderClick: true
+            },
+            e = {
+               stopImmediatePropagation: function(){}
+            },
+            treeControl = new TreeControl(cfg),
+            treeGridViewModel = new TreeGridViewModel(cfg);
+         treeControl.saveOptions(cfg);
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: rawData,
+            idProperty: 'id'
+         }));
+
+         treeControl._children = {
+            baseControl: {
+               getViewModel: function() {
+                  return treeGridViewModel;
+               }
+            }
+         };
+
+         TreeControl._private.toggleExpanded = function(){};
+         assert.deepEqual(11, treeGridViewModel._model._markedKey);
+
+         treeControl._onExpanderClick(e, treeGridViewModel.at(0));
+         assert.deepEqual(1, treeGridViewModel._model._markedKey);
+      });
+
+      it('markItemByExpanderClick false', function() {
+
+         var
+            rawData = [
+               { id: 1, type: true, parent: null },
+               { id: 2, type: true, parent: null },
+               { id: 11, type: null, parent: 1 }
+            ],
+            source = new Memory({
+               rawData: rawData,
+               idProperty: 'id'
+            }),
+            cfg = {
+               source: source,
+               columns: [],
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               markedKey: 11,
+               markItemByExpanderClick: false
+            },
+            e = {
+               stopImmediatePropagation: function(){}
+            },
+            treeControl = new TreeControl(cfg),
+            treeGridViewModel = new TreeGridViewModel(cfg);
+         treeControl.saveOptions(cfg);
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: rawData,
+            idProperty: 'id'
+         }));
+
+         treeControl._children = {
+            baseControl: {
+               getViewModel: function() {
+                  return treeGridViewModel;
+               }
+            }
+         };
+
+         TreeControl._private.toggleExpanded = function(){};
+         assert.deepEqual(11, treeGridViewModel._model._markedKey);
+
+         treeControl._onExpanderClick(e, treeGridViewModel.at(0));
+         assert.deepEqual(11, treeGridViewModel._model._markedKey);
+      });
+
+
    });
 });
