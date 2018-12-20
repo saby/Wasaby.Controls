@@ -68,6 +68,9 @@ define('Controls/Application/HeadData', [
          var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
+            if(self.defRender._fired) {
+               return;
+            }
             var components = Object.keys(self.depComponentsMap);
             var files = {};
             if (self.isDebug) {
