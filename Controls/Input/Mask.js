@@ -108,24 +108,6 @@ define('Controls/Input/Mask',
        * </pre>
        */
 
-      // Temporarily hid the option. Need to think about api. Probably, the width must be set for all fields
-      // that have the replacer option set. Maybe this option should be implemented at the InputRender level.
-      /**
-       * @name Controls/Input/Mask#autoWidth
-       * @cfg {Boolean} If the option is true, then the width of the field adjusts to the text entered.
-       *
-       * @remark This option can be used with the replacer option.
-       * If the replacer option is specified, the text entered in the field is always the same width.
-       * If you enable autoWidth, this width will be set automatically.
-       *
-       * @example
-       * <pre>
-       *    <Controls.Input.Mask mask="dd.dd", replacer=" ", value="12.34" autoWidth="{{true}}}}"/>
-       *    The width of the field will be such that the text '12.34' to '  .  ' would fit.
-       * </pre>
-       * @noShow
-       */
-
       var
          _private = {
             regExpQuantifiers: /\\({.*?}|.)/,
@@ -223,6 +205,10 @@ define('Controls/Input/Mask',
 
             _inputCompletedHandler: function(event, value) {
                this._notify('inputCompleted', [value, this._viewModel.getDisplayValue()]);
+            },
+
+            _isAutoWidth: function() {
+               return Boolean(this._options.replacer);
             }
          });
 
