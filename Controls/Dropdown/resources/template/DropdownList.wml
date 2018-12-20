@@ -1,4 +1,4 @@
-<div class="controls-DropdownList__popup
+<div class="controls-DropdownList__popup controls-Popup__isolatedFocusingContext
             {{_dropdownClass}}
             {{_options.dropdownClassName}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}"

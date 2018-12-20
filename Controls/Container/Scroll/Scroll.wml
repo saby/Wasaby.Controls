@@ -1,20 +1,22 @@
 <ws:template name="content">
    <Controls.Container.Scroll.Watcher scope="{{_options}}" name="scrollWatcher">
       <Controls.Event.Registrator name="scrollDetect" register="scroll">
-         <!--Реализация области блоков требует наличия следующей структуры ws-BlockLayout > ws-BlockGroup.
-         Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
-         Таким образом мы избавляемся от лишней вложенности.
-         https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ready-solutions/blocks/-->
-         <span name="content"
-              style="{{_displayState.heightFix ? '' : _contentStyles}}"
-              class="ws-flex-grow-1 controls-Scroll__content ws-BlockGroup
-                     {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
-                     {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                     {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
-              on:controlResize="_resizeHandler()"
-              on:scroll="_scrollHandler()">
-            <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="ws-flex-shrink-0" on:fixed="_fixedHandler()"/>
-         </span>
+         <Controls.Event.Registrator name="stickyHeader" register="updateStickyShadow">
+            <!--Реализация области блоков требует наличия следующей структуры ws-BlockLayout > ws-BlockGroup.
+            Добавляем класс ws-BlockGroup, для того чтобы была облюдена структура если использовать ws-BlockLayout на контейнере.
+            Таким образом мы избавляемся от лишней вложенности.
+            https://wi.sbis.ru/doc/platform/developmentapl/interface-development/ready-solutions/blocks/-->
+            <span name="content"
+                 style="{{_displayState.heightFix ? '' : _contentStyles}}"
+                 class="controls-Scroll__content ws-BlockGroup
+                        {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
+                        {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
+                        {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+                 on:controlResize="_resizeHandler()"
+                 on:scroll="_scrollHandler()">
+               <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="controls-Scroll__userContent" on:fixed="_fixedHandler()"/>
+            </span>
+         </Controls.Event.Registrator>
       </Controls.Event.Registrator>
    </Controls.Container.Scroll.Watcher>
 </ws:template>
@@ -40,7 +42,7 @@
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
          <div class="controls-Scroll__shadow controls-Scroll__shadow_top
-                     {{_displayState.shadowPosition.indexOf('top') === -1 || _stickyHeaderId ? ' ws-invisible'}}"></div>
+                     {{ !_topShadowVisible() ? ' ws-invisible'}}"></div>
          <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom
                      {{_displayState.shadowPosition.indexOf('bottom') === -1 ? ' ws-invisible'}}"></div>
       </ws:if>

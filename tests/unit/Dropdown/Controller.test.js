@@ -63,7 +63,8 @@ define(
             source: new Memory({
                idProperty: 'id',
                data: items
-            })
+            }),
+            filter: {}
          };
 
          let configLazyLoad = {
@@ -114,6 +115,45 @@ define(
             let dropdownController = getDropdownController(config);
             dropdownController._beforeMount(config, null, itemsRecords);
             assert.deepEqual(dropdownController._items.getRawData(), itemsRecords.getRawData());
+         });
+
+         it('received state, selectedItems = [null], emptyText is set', () => {
+            let dataLoadCallbackCalled = false;
+            const config = {
+               selectedKeys: [null],
+               keyProperty: 'id',
+               emptyText: '123',
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            };
+            const dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._selectedItems, [null]);
+            assert.isTrue(dataLoadCallbackCalled);
+         });
+
+         it('received state, selectedItems = [null], emptyText is NOT set', () => {
+            let dataLoadCallbackCalled = false;
+            const config = {
+               selectedKeys: [null],
+               keyProperty: 'id',
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            };
+            const dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._selectedItems, []);
+            assert.isTrue(dataLoadCallbackCalled);
          });
 
          it('check selectedItemsChanged event', () => {
@@ -187,6 +227,13 @@ define(
             });
             assert.deepEqual(dropdownController._filter, { $_history: true });
 
+         });
+
+         it('_beforeUpdate new filter', () => {
+            let dropdownController = getDropdownController(config);
+            dropdownController._selectedItems = items;
+            dropdownController._beforeUpdate(config);
+            assert.equal(dropdownController._selectedItems.length, 9);
          });
 
          it('open dropdown', () => {
@@ -270,7 +317,8 @@ define(
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
                selectedKeys: '[6]',
-               keyProperty: 'id'
+               keyProperty: 'id',
+               filter: config.filter
             });
             assert.deepEqual(dropdownController._selectedItems[0].getRawData(), items[5]);
          });
@@ -278,7 +326,7 @@ define(
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._selectedItems = [];
-            Dropdown._private.updateSelectedItems(dropdownController, [null], 'id');
+            Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id');
             assert.deepEqual(dropdownController._selectedItems, [null]);
          });
 

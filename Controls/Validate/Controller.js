@@ -33,8 +33,6 @@ define('Controls/Validate/Controller',
                var cfg = {
                   target: self._container,
                   style: 'error',
-                  showDelay: 0,
-                  hideDelay: 0,
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {

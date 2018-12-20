@@ -10,7 +10,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
    'use strict';
 
    var Lookup = Control.extend({
-      _selectedKeys: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+      _selectedKeys: [],
       _template: template,
       _content: 'Controls/Selector/Lookup',
       _dataObject: null,
@@ -37,7 +37,7 @@ define('Controls-demo/Input/Lookup/LookupPropertyGrid', [
          this._componentOptions = {
             name: 'Lookup',
             autoDropDown: false,
-            multiSelect: true,
+            multiSelect: false,
             multiLine: false,
             readOnly: false,
             searchParam: 'title',

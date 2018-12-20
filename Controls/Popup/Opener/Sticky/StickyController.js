@@ -6,12 +6,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/core-merge',
       'Core/core-clone',
       'Core/detection',
-      'Core/helpers/Hcontrol/isElementVisible',
       'Controls/Popup/TargetCoords',
       'wml!Controls/Popup/Opener/Sticky/StickyContent',
       'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, isElementVisible, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -115,6 +114,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             return TargetCoords.get(cfg.popupOptions.target ? cfg.popupOptions.target : document.body);
          },
 
+         isTargetVisible: function(item) {
+            var targetCoords = _private._getTargetCoords(item, {});
+            return !!targetCoords.width;
+         },
+
          prepareStickyPosition: function(cfg) {
             return {
                horizontalAlign: cfg.align.horizontal,
@@ -149,7 +153,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          elementUpdated: function(item, container) {
             _private.setStickyContent(item);
             item.popupOptions.stickyPosition = _private.prepareStickyPosition(item.positionConfig);
-            if (this._isElementVisible(item.popupOptions.target)) {
+            if (_private.isTargetVisible(item)) {
                _private.updateClasses(item, item.positionConfig);
                item.position = StickyStrategy.getPosition(item.positionConfig, _private._getTargetCoords(item, item.positionConfig.sizes));
 
@@ -209,10 +213,6 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             _private.removeOrientationClasses(item);
             var sizes = this._getPopupSizes(item, container);
             _private.prepareConfig(item, sizes);
-         },
-
-         _isElementVisible: function(target) {
-            return isElementVisible(target);
          },
 
          needRecalcOnKeyboardShow: function() {
