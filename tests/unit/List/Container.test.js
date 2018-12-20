@@ -18,10 +18,10 @@ define(['Controls/List/Container'], function(Container) {
             }
          };
    
-         listContainer._beforeUpdate({loading: true});
+         listContainer._beforeUpdate({loading: true}, {});
          assert.isTrue(indicatorVisible);
    
-         listContainer._beforeUpdate({loading: false});
+         listContainer._beforeUpdate({loading: false}, {});
          assert.isFalse(indicatorVisible);
       });
       
