@@ -58,13 +58,13 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#hideDelay
-       * @cfg {Number} Delay before closing after mouse leaves.
+       * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
        * @default 300
        */
 
       /**
        * @name Controls/Popup/InfoBox#showDelay
-       * @cfg {Number} Delay before opening after mouse enters.
+       * @cfg {Number} Delay before opening after mouse enters. (measured in milliseconds)
        * @default 300
        */
 
