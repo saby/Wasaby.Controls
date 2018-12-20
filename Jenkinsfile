@@ -696,7 +696,7 @@ node('controls') {
 
                                 sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                python start_tests.py --files_to_start ./SBIS3.CONTROLS/WSFocuses/test_wsfocuses.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                 deactivate
                                 """
                             }
