@@ -340,7 +340,7 @@ define(
             dropdownController._open();
          });
          it('getFilter', () => {
-            let filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
+            var filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
             assert.deepEqual(filter, {$_history: true, id: 'test'});
             filter = Dropdown._private.getFilter({id: 'test2'}, new Memory({}));
             assert.deepEqual(filter, {id: 'test2'});
