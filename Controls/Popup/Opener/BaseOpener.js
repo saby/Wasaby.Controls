@@ -7,6 +7,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'View/Runner/requireHelper',
       'Core/core-clone',
       'Core/core-merge',
+      'Core/IoC',
       'Core/Deferred',
       'Core/helpers/isNewEnvironment'
    ],
@@ -18,6 +19,7 @@ define('Controls/Popup/Opener/BaseOpener',
       requireHelper,
       CoreClone,
       CoreMerge,
+      IoC,
       Deferred,
       isNewEnvironment
    ) {
@@ -158,7 +160,29 @@ define('Controls/Popup/Opener/BaseOpener',
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
             cfg.opener = cfg.opener || DefaultOpenerFinder.find(this) || this;
+            this._prepareNotifyConfig(cfg);
             return cfg;
+         },
+
+         _prepareNotifyConfig: function(cfg) {
+            this._notifyEvent = this._notifyEvent.bind(this);
+
+            // Handlers for popup events
+            cfg._events = {
+               onOpen: this._notifyEvent,
+               onResult: this._notifyEvent,
+               onClose: this._notifyEvent
+            };
+
+            if (cfg.eventHandlers) {
+               IoC.resolve('ILogger').warn(this._moduleName, 'Use an opener subscription instead of popupOptions.eventHandlers');
+            }
+         },
+
+         _notifyEvent: function(eventName, args) {
+            // Trim the prefix "on" in the event name
+            var event = 'popup' + eventName.substr(2);
+            this._notify(event, args);
          },
 
          _toggleIndicator: function(visible) {

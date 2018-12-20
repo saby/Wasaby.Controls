@@ -58,19 +58,21 @@ def build_title(t_int, t_reg) {
     }
 
 }
+@NonCPS
+def getBuildUser() {
+    def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
+    def userId = ''
+    try {
+        userId = cause.getUserId()
+    }catch (java.lang.NullPointerException e) {
+        //ничего не делаем
+    }
 
-echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
-echo "Генерируем параметры"
-    properties([
-    disableConcurrentBuilds(),
-    gitLabConnection('git'),
-    buildDiscarder(
-        logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
-        parameters([
+    return userId
+}
+
+def getParams(user) {
+    def common_params = [
             string(
                 defaultValue: 'sdk',
                 description: '',
@@ -103,13 +105,31 @@ echo "Генерируем параметры"
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
-            ]),
+            ]
+    if ( ["kraynovdo", "ls.baranova"].contains(user) ) {
+        common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
+    }
+    return common_params
+}
+def user_name = getBuildUser()
+echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
+echo "Генерируем параметры"
+    properties([
+    disableConcurrentBuilds(),
+    gitLabConnection('git'),
+    buildDiscarder(
+        logRotator(
+            artifactDaysToKeepStr: '3',
+            artifactNumToKeepStr: '3',
+            daysToKeepStr: '3',
+            numToKeepStr: '3')),
+        parameters(getParams(user_name)),
         pipelineTriggers([])
     ])
 
@@ -484,12 +504,12 @@ node('controls') {
                     export test_report=artifacts/test-browser-report.xml
                     sh ./bin/test-browser
                     """
+                    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                    unit_result = currentBuild.result == null
+                    if (!unit_result) {
+                        exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+                    }
                 }
-            }
-            junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-            unit_result = currentBuild.result == null
-            if (!unit_result) {
-                exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
             }
         }
         if ( regr || inte || all_inte) {
@@ -731,8 +751,8 @@ node('controls') {
                 dir('/home/sbis/Controls'){
                     def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
                     if ( files_err.length > 0 ){
-                        sh "sudo cp -R /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-                        sh "sudo cp -R /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+                        sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
+                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
                         dir ( workspace ){
                             sh """7za a logs_ps -t7z ${workspace}/logs_ps """
                             archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
@@ -743,7 +763,7 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir("./controls/tests") {
+        /*dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
             def description = ''
@@ -768,7 +788,7 @@ node('controls') {
 
             build_title(int_title, reg_title)
             currentBuild.description = "${description}"
-        }
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"

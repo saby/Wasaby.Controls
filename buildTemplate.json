@@ -12,7 +12,7 @@
   "wml": false,
   "customPack": false,
   "dependenciesGraph": false,
-
+  "resourcesUrl": false,
   "modules": [
     {
       "name": "Controls",
@@ -45,10 +45,6 @@
     {
       "name": "WS.Deprecated",
       "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
-    },
-    {
-      "name": "File",
-      "path": "%cd%/node_modules/rmi/src/client/File"
     },
     {
       "name": "Transport",

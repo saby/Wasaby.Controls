@@ -142,7 +142,12 @@ define(
             config.verticalAlign = 'top';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.horizontalAlign.side, 'left');
-
+            config.catchFocus = false;
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.autofocus, false);
+            config.catchFocus = true;
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.autofocus, true);
          });
 
          it('prepareNotificationConfig', function() {

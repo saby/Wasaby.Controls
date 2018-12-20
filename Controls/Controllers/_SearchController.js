@@ -34,6 +34,11 @@ define('Controls/Controllers/_SearchController',
                
                filter = clone(filter);
                filter[self._options.searchParam] = value;
+               
+               if (self._options.searchStartCallback) {
+                  self._options.searchStartCallback(filter);
+               }
+               
                search.search(filter)
                   .addCallback(function(result) {
                      if (self._options.searchCallback) {
