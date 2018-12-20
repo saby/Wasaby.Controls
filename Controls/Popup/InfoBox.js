@@ -64,7 +64,7 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#showDelay
-       * @cfg {Number} Delay before opening after mouse enters. (measured in milliseconds)
+       * @cfg {Number} Delay before opening after mouse enters.
        * @default 300
        */
 
@@ -291,6 +291,10 @@ define('Controls/Popup/InfoBox',
                case 'mousedown':
                   event.stopPropagation();
                   break;
+               case 'close':
+                  // todo Для совместимости
+                  // Удалить, как будет сделана задача https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+                  this._opened = false;
             }
          },
 

@@ -13,9 +13,9 @@
         popupClassName="{{_options.popupClassName ? _options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}}"
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
+        open="{{_onOpen}}"
         dataLoadCallback="{{_setText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        on:mousedown="_mouseDownHandler()"
         class="controls-ComboBox">
 
       <Controls.Input.resources.InputRender.InputRender

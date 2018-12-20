@@ -53,7 +53,8 @@ define('Controls/List/BaseControl', [
             navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
          if (cfg.beforeReloadCallback) {
-            cfg.beforeReloadCallback(filter, sorting, navigation);
+            // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
+            cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
          }
          if (self._sourceController) {
             _private.showIndicator(self);

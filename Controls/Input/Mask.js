@@ -9,7 +9,8 @@ define('Controls/Input/Mask',
       'wml!Controls/Input/Mask/Mask',
 
       'Controls/Input/resources/InputRender/InputRender',
-      'wml!Controls/Input/resources/input'
+      'wml!Controls/Input/resources/input',
+      'css!Controls/Input/Mask/Mask'
    ],
    function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
 
@@ -204,6 +205,10 @@ define('Controls/Input/Mask',
 
             _inputCompletedHandler: function(event, value) {
                this._notify('inputCompleted', [value, this._viewModel.getDisplayValue()]);
+            },
+
+            _isAutoWidth: function() {
+               return Boolean(this._options.replacer);
             }
          });
 
@@ -217,7 +222,8 @@ define('Controls/Input/Mask',
                'd': '[0-9]',
                'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
             },
-            selectOnClick: false
+            selectOnClick: false,
+            autoWidth: false
          };
       };
 
