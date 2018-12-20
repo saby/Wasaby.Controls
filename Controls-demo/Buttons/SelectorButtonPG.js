@@ -43,7 +43,9 @@ define('Controls-demo/Buttons/SelectorButtonPG', [
             selectedKeys: this._selectedKeys,
             keyProperty: 'id',
             displayProperty: 'title',
-            templateName: this._templateName
+            selectorTemplate: {
+               templateName: this._templateName
+            }
          };
 
          this._dataObject = {

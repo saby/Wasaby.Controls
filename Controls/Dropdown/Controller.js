@@ -56,7 +56,8 @@ define('Controls/Dropdown/Controller',
        */
 
       // TODO: удалить после исправления https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
-      var defaultFilter = {},
+      var
+         defaultFilter = {},
          defaultSelectedKeys = [];
 
       var _private = {
@@ -86,13 +87,13 @@ define('Controls/Dropdown/Controller',
             });
             return self._sourceController.load(self._filter).addCallback(function(items) {
                self._items = items;
-               _private.updateSelectedItems(self, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
+               _private.updateSelectedItems(self, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                return items;
             });
          },
 
-         updateSelectedItems: function(self, selectedKeys, keyProperty, dataLoadCallback) {
-            if (selectedKeys[0] === null && self._options.emptyText) {
+         updateSelectedItems: function(self, emptyText, selectedKeys, keyProperty, dataLoadCallback) {
+            if (selectedKeys[0] === null && emptyText) {
                self._selectedItems.push(null);
             } else {
                Chain(self._items).each(function(item) {
@@ -121,10 +122,10 @@ define('Controls/Dropdown/Controller',
                      this._options.source.update(result.data[0], _private.getMetaHistory());
                   }
 
-                  //FIXME тут необходимо перевести на кэширующий источник,
-                  //Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
-                  //Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
-                  //https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
+                  // FIXME тут необходимо перевести на кэширующий источник,
+                  // Чтобы при клике историческое меню обновляло источник => а контейнер обновил item'ы
+                  // Но т.к. кэширующий сорс есть только в 400, выписываю задачу на переход.
+                  // https://online.sbis.ru/opendoc.html?guid=eedde59b-d906-47c4-b2cf-4f6d3d3cc2c7
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
@@ -154,7 +155,7 @@ define('Controls/Dropdown/Controller',
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
-                  _private.updateSelectedItems(this, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
+                  _private.updateSelectedItems(this, options.emptyText, options.selectedKeys, options.keyProperty, options.dataLoadCallback);
                } else if (options.source) {
                   return _private.loadItems(this, options);
                }
@@ -164,7 +165,7 @@ define('Controls/Dropdown/Controller',
          _beforeUpdate: function(newOptions) {
             if (newOptions.selectedKeys !== this._options.selectedKeys) {
                this._selectedItems = [];
-               _private.updateSelectedItems(this, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
+               _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }
             if ((newOptions.source && newOptions.source !== this._options.source) ||
                newOptions.navigation !== this._options.navigation ||
@@ -218,11 +219,26 @@ define('Controls/Dropdown/Controller',
                itemsLoadCallback(this._items);
             }
          },
+   
+         _mousedown: function() {
+            var opener = this._children.DropdownOpener;
+            if (opener.isOpened()) {
+               opener.close();
+            } else {
+               this._open();
+            }
+         },
 
          _getEmptyText: function() {
             return dropdownUtils.prepareEmpty(this._options.emptyText);
          }
       });
+
+      //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
+      //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
+      var
+         defaultFilter = {},
+         defaultSelectedKeys = [];
 
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {

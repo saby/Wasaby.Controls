@@ -10,6 +10,9 @@
 @border-radius_Button_size_l:                          @height_Button_size_l/2;
 @padding_Button__wrapper_size_l:                       0 @spacing_default_xxl - @thickness_Button__border;
 
+@text-shadow_Button:                                   none;
+@text-shadow_Button_readOnly:                          none;
+
 //common
 @thickness_Button__border:                             @thickness_border_default;
 @min-width_Button:                                     48px;
@@ -70,6 +73,9 @@
 @background-color-ToolButton_hovered:                  @background-color-ToolButton;
 @background-color-IconButton_transparent_hovered:      @background-color-ToolButton_transparent;
 
+@text-shadow_ToolButton:                               none;
+@text-shadow_ToolButton_readOnly:                      none;
+
 //Link
 //sizes
 @font-size_Link-s:                                     @font-size_text_s;
@@ -77,15 +83,32 @@
 @font-size_Link-l:                                     @font-size_text_l;
 @font-size_Link-xl:                                    @font-size_text_3xl;
 
-@color_Link-secondary_hovered:                         @color_link-hover;
 @color_Link_readOnly:                                  @color_text_readonly;
 
 //styles
 @color_Link_info:                                      @color_unselected;
+@color_Link_info_hovered:                              @color_unselected;
 @color_Link_primary:                                   @color_primaryV;
+@color_Link_primary_hovered:                           @color_primaryV;
 @color_Link_secondary:                                 @color_link;
+@color_Link_secondary_hovered:                         @color_link-hover;
 @color_Link_danger:                                    @color_danger;
+@color_Link_danger_hovered:                            @color_danger;
 @color_Link_success:                                   @color_success;
+@color_Link_success_hovered:                           @color_success;
 @color_Link_warning:                                   @color_warning;
+@color_Link_warning_hovered:                           @color_warning;
+@color_Link_default:                                   @color_text_default;
+@color_Link_default_hovered:                           @color_text_default;
+
+//text-decoration
+@text-decoration_Link_default:                   none;
+@text-decoration_Link_secondary:                 none;
+@text-decoration_Link_primary:                   none;
+@text-decoration_Link_danger:                    none;
+@text-decoration_Link_warning:                   none;
+@text-decoration_Link_success:                   none;
+@text-decoration_Link_info:                      none;
+
 //for support link with magic color, delete when complete https://online.sbis.ru/opendoc.html?guid=b8228090-19fe-454b-992f-bf31d9e96ca5
 @color_Link_magic:                                     @color24;
