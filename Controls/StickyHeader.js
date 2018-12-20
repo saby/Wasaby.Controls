@@ -2,10 +2,11 @@ define('Controls/StickyHeader',
    [
       'Core/Control',
       'Core/detection',
+      'Controls/StickyHeader/Utils',
       'wml!Controls/StickyHeader/StickyHeader',
       'Controls/StickyHeader/_StickyHeader'
    ],
-   function(Control, detection, template) {
+   function(Control, detection, stickyUtils, template) {
 
       'use strict';
 
@@ -40,7 +41,11 @@ define('Controls/StickyHeader',
           * The position property with sticky value is not supported in ie and edge lower version 16.
           * https://developer.mozilla.org/ru/docs/Web/CSS/position
           */
-         _isStickySupport: !detection.isIE || detection.IEVersion > 15
+         _isStickySupport: null,
+
+         _beforeMount: function(options, context, receivedState) {
+            this._isStickySupport = stickyUtils.isStickySupport();
+         },
       });
 
       return StickyHeader;

@@ -64,6 +64,38 @@ define(
                assert.isTrue(position.left === 400);
             });
 
+            it('Sticky position fixed', function() {
+               var position = Sticky.getPosition({
+                  corner: {
+                     vertical: 'bottom',
+                     horizontal: 'right'
+                  },
+                  align: {
+                     vertical: {
+                        side: 'bottom',
+                        offset: 0
+                     },
+                     horizontal: {
+                        side: 'right',
+                        offset: 0
+                     }
+                  },
+                  config: {},
+                  sizes: {
+                     width: 100,
+                     height: 700,
+                     margins: {
+                        top: 0,
+                        left: 0
+                     }
+                  },
+                  locationStrategy: 'fixed'
+               }, targetCoords);
+               assert.equal(position.top, 400);
+               assert.equal(position.left, 400);
+               assert.equal(position.height, 640);
+            });
+
             it('Centered sticky', function() {
                var position = Sticky.getPosition({
                   corner: {
@@ -491,6 +523,8 @@ define(
                StackController._stack.add({ position: { width: 840 }, popupOptions: { stackClassName: '' } });
                StackController._stack.add({ containerWidth: 500, popupOptions: { stackClassName: '' } });
                StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
+               StackController._update();
+               StackController._update();
                StackController._update();
                assert.isTrue(StackController._stack.at(0).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
                assert.isTrue(StackController._stack.at(1).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
