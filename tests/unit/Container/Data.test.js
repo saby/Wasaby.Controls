@@ -106,25 +106,7 @@ define(
             });
          });
    
-         it('_private.processLoadError', function() {
-            var msgOpened = false;
-            var errMoch = {
-               canceled: false,
-               processed: false,
-               _isOfflineMode: false
-            };
-            var msgOpener = {
-               open: function() {
-                  msgOpened = true;
-               }
-            };
-   
-            Data._private.processLoadError(msgOpener, errMoch);
-            assert.isTrue(msgOpened);
-         });
-   
          it('query returns error', function(done) {
-            var msgOpened = false;
             var source = {
                query: function() {
                   return Deferred.fail({
@@ -137,20 +119,11 @@ define(
                "[WS.Data/Source/ICrud]": true
             };
             var config = {source: source, keyProperty: 'id'};
-            var msgOpener = {
-               open: function() {
-                  msgOpened = true;
-               }
-            };
             var data = getDataWithConfig(config);
-            data._children = {};
-            data._children.errorMsgOpener = msgOpener;
-   
-   
+            
             data._beforeMount(config).addCallback(function() {
-               assert.isTrue(msgOpened);
                assert.isFalse(!!data._dataOptionsContext.prefetchSource);
-               assert.eqaul(data._dataOptionsContext.source, source);
+               assert.equal(data._dataOptionsContext.source, source);
                done();
             });
          });

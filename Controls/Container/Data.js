@@ -81,24 +81,10 @@ define('Controls/Container/Data',
                })
                .addErrback(function(error) {
                   resultDef.callback(null);
-                  return _private.processLoadError(self._children.errorMsgOpener, error);
+                  return error;
                });
    
             return resultDef;
-         },
-   
-         processLoadError: function(msgOpener, error) {
-            if (error && !error.canceled && !(error.processed || error._isOfflineMode)) {
-               if (msgOpener) {
-                  msgOpener.open({
-                     message: error.message,
-                     style: 'error',
-                     type: 'ok'
-                  });
-               }
-               error.processed = true;
-            }
-            return error;
          },
 
          resolveOptions: function(self, options) {
