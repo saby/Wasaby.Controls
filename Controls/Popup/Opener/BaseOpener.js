@@ -103,9 +103,9 @@ define('Controls/Popup/Opener/BaseOpener',
                if (!self._isPopupCreating()) {
                   cfg._vdomOnOldPage = self._options._vdomOnOldPage;
                   Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
+                     self._toggleIndicator(false);
                      if (self._useVDOM()) {
                         self._popupIds.push(result);
-                        self._toggleIndicator(false);
 
                         // Call redraw to create emitter on scroll after popup opening
                         self._forceUpdate();
