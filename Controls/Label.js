@@ -31,12 +31,20 @@ define('Controls/Label',
        */
 
       /**
-       * @name Controls/Label#viewMode
+       * @name Controls/Label#underline
        * @cfg {String}
-       * @variant link1
-       * @variant link2
-       * @variant default
+       * @variant hovered
+       * @variant fixed
+       * @variant none
        */
+
+      var _private = {
+         warn: function(container, className, optionValue) {
+            if (container.classList.contains(className)) {
+               IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + className + ' не поддерживается. Используйте опцию underline со значением ' + optionValue);
+            }
+         }
+      };
 
       var Label = Control.extend({
          _template: template,
@@ -44,26 +52,23 @@ define('Controls/Label',
          _afterMount: function() {
             var container = this._container;
 
-            ['controls-Label_underline-hovered', 'controls-Label_underline_color-hovered'].forEach(function(item, arr, index) {
-               if (container.classList.contains(item)) {
-                  IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + item + ' не поддерживается. Используйте опцию viewMode со значением link' + index);
-               }
-            });
+            _private.warn(container, 'controls-Label_underline-hovered', 'hovered');
+            _private.warn(container, 'controls-Label_underline_color-hovered', 'fixed');
          }
       });
 
       Label.getDefaultOptions = function() {
          return {
-            viewMode: 'default'
+            underline: 'none'
          };
       };
 
       Label.getOptionTypes = function() {
          return {
-            viewMode: descriptor(String).oneOf([
-               'link1',
-               'link2',
-               'default'
+            underline: descriptor(String).oneOf([
+               'none',
+               'fixed',
+               'hovered'
             ]),
             required: descriptor(Boolean)
          };

@@ -8,21 +8,21 @@
    <div>
       <div class="ws-flexbox ControlsDemo-Label__example1">
          <Controls.Label caption="Label"
-                         viewMode="default"
+                         underline="none"
                          readOnly="{{_lock}}"/>
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
       <div class="ws-flexbox ControlsDemo-Label__example2">
          <Controls.Label caption="Label"
-                         viewMode="default"
+                         underline="none"
                          required="{{true}}"
                          readOnly="{{_lock}}"/>
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
       <div class="ws-flexbox ControlsDemo-Label__example3">
-         <Controls.Label viewMode="default"
+         <Controls.Label underline="none"
                          readOnly="{{_lock}}"
                          caption="{{_limitedCaption}}"
                          attr:title="{{_limitedCaption}}"
@@ -31,7 +31,7 @@
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
       <div class="ws-flexbox ControlsDemo-Label__example4">
-         <Controls.Label viewMode="default"
+         <Controls.Label underline="none"
                          required="{{true}}"
                          readOnly="{{_lock}}"
                          caption="{{_limitedCaption}}"
@@ -41,14 +41,14 @@
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
       <div class="ws-flexbox ControlsDemo-Label__example5">
-         <Controls.Label viewMode="link1"
+         <Controls.Label underline="hovered"
                          readOnly="{{_lock}}"
                          caption="Label as a link"/>
          <Controls.Input.Text bind:value="_value"/>
          <Controls.Button caption="Button" viewMode="link"/>
       </div>
       <div class="ws-flexbox ControlsDemo-Label__example6">
-         <Controls.Label viewMode="link2"
+         <Controls.Label underline="fixed"
                          readOnly="{{_lock}}"
                          caption="Label as a link"/>
          <Controls.Input.Text bind:value="_value"/>

@@ -1,7 +1,7 @@
-<div class="controls-LabelV controls-LabelV_viewMode_{{_options.viewMode}}">
+<div class="controls-LabelV controls-LabelV_underline_{{_options.underline}}">
    <div class="controls-LabelV__wrapper">
-      <div class="controls-LabelV__caption controls-LabelV__caption_viewMode_{{_options.viewMode}}
-               controls-LabelV__caption_viewMode_{{_options.viewMode}}_{{_options.readOnly ? 'read' : 'edit'}}">
+      <div class="controls-LabelV__caption controls-LabelV__caption_underline_{{_options.underline}}
+               controls-LabelV__caption_underline_{{_options.underline}}_{{_options.readOnly ? 'read' : 'edit'}}">
          <ws:partial template="{{_options.caption}}"/>
       </div>
       <ws:if data="{{_options.required}}">
