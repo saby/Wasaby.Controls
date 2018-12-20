@@ -77,6 +77,15 @@ define('Controls/Popup/Opener/Stack/StackController',
             return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
          },
 
+         addShadowClass: function(item) {
+            _private.removeShadowClass(item);
+            item.popupOptions.stackClassName += ' controls-Stack__shadow';
+         },
+
+         removeShadowClass: function(item) {
+            item.popupOptions.stackClassName = item.popupOptions.stackClassName.replace(/controls-Stack__shadow/ig, '').trim();
+         },
+
          prepareUpdateClassses: function(item) {
             item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
             _private.addStackClasses(item.popupOptions);
@@ -203,7 +212,9 @@ define('Controls/Popup/Opener/Stack/StackController',
                var currentWidth = item.containerWidth || item.position.width;
                if (!cache[currentWidth]) {
                   cache[currentWidth] = 1;
-                  item.popupOptions.stackClassName += ' controls-Stack__shadow';
+                  _private.addShadowClass(item);
+               } else {
+                  _private.removeShadowClass(item);
                }
                if (StackStrategy.isMaximizedPanel(item)) {
                   _private.prepareMaximizedState(maxPanelWidth, item);
@@ -217,6 +228,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             var position = StackStrategy.getPosition(baseCoord, item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
+            item.popupOptions.stackClassName = '';
             if (StackStrategy.isMaximizedPanel(item)) {
                // set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
@@ -224,7 +236,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                _private.setMaximizedState(item, maximizedState);
             }
             if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName += 'controls-Stack__waiting';
+               item.popupOptions.stackClassName = 'controls-Stack__waiting';
             }
 
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes

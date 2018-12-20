@@ -1,6 +1,7 @@
 <ws:template name="columnContent">
-   <ws:if data="{{itemData.multiSelectVisibility && itemData.columnIndex === 0}}">
-      <ws:partial template="{{multiSelectTpl}}" attr:class="controls-GridView__checkbox">
+   <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && itemData.columnIndex === 0}}">
+      <ws:partial template="{{multiSelectTpl}}"
+                  attr:class="controls-GridView__checkbox {{(itemData.multiSelectVisibility === 'onhover' && !itemData.multiSelectStatus) ? 'controls-GridView__checkbox-onhover'}}">
          <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}"/>
       </ws:partial>
@@ -29,7 +30,7 @@
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-             attr:style="{{(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
+             attr:style="{{(colspan && itemData.columnIndex===(itemData.multiSelectVisibility !== 'hidden' ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility !== 'hidden' ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
             <ws:partial template="columnContent" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </td>
       </ws:for>
@@ -45,7 +46,7 @@
    <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
-              attr:style="{{(itemData.getCurrentColumn().styleForLadder ? itemData.getCurrentColumn().styleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
+              attr:style="{{(itemData.getCurrentColumn().styleForLadder ? itemData.getCurrentColumn().styleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility !== 'hidden' ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility !== 'hidden' ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
             <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>

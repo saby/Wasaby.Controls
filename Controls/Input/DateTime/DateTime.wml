@@ -1,5 +1,5 @@
 <Controls.Input.Mask
-   value="{{_model.textValue}}"
+   value="{{_model.clearTextValue}}"
    replacer="{{_model._replacer}}"
    mask="{{_options.mask}}"
    size="{{ _options.size }}"
@@ -12,5 +12,6 @@
    on:valueChanged="_valueChangedHandler()"
    on:inputCompleted="_inputCompletedHandler()"
    on:tagClick="_proxyEvent('tagClick')"
-   on:tagHover="_proxyEvent('tagHover')">
+   on:tagHover="_proxyEvent('tagHover')"
+   on:keydown="_onKeyDown()">
 </Controls.Input.Mask>

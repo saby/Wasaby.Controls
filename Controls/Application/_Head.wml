@@ -1,4 +1,6 @@
 <head key="1_1_">
+   <title key="title">{{ _options.title }}</title>
+   <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
    <meta name="viewport" content="{{_options.viewport || 'width=1024'}}"/>
    <meta charset="utf-8"/>
    <script key="ws-config">
@@ -32,11 +34,11 @@
    <ws:if data="{{ head }}">
       <ws:if data="{{ isArrayHead() }}">
          <ws:for data="i in head">
-            <ws:partial template="{{ i }}"  data-vdomignore="true" attr:class="head-custom-block"/>
+            <ws:partial template="{{ i }}"  attr:data-vdomignore="true" attr:class="head-custom-block"/>
          </ws:for>
       </ws:if>
       <ws:else>
-         <ws:partial template="{{ head }}"  data-vdomignore="true" attr:class="head-custom-block"/>
+         <ws:partial template="{{ head }}"  attr:data-vdomignore="true" attr:class="head-custom-block"/>
       </ws:else>
    </ws:if>
 
@@ -68,6 +70,5 @@
          <!--</style>-->
       <!--</ws:for>-->
    <!--</ws:for>-->
-   <title key="title">{{ _options.title }}</title>
    {{ errorState }}
 </head>

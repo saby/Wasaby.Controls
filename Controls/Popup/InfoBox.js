@@ -8,7 +8,6 @@ define('Controls/Popup/InfoBox',
       'Controls/Utils/getZIndex'
    ],
    function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
-
       'use strict';
 
       /**
@@ -20,7 +19,40 @@ define('Controls/Popup/InfoBox',
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
+       *
+       * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
+       * @css @spacing_Infobox-between-content-border-right Spacing between content and border-right.
+       * @css @spacing_Infobox-between-content-border-bottom Spacing between content and border-bottom.
+       * @css @spacing_Infobox-between-content-border-left Spacing between content and border-left.
+       *
+       * @css @max-width_Infobox Max-width of Infobox.
+       * @css @size_Infobox-arrow Size of Infobox arrow.
+       * @css @horizontal-offset_Infobox-arrow Spacing between arrow and border-left.
+       * @css @vertical-offset_Infobox-arrow  Spacing between arrow and border-top.
+       * @css @spacing_Infobox-between-top-close-button Spacing between close-button and border-top.
+       * @css @spacing_Infobox-between-right-close-button Spacing between close-button and border-right.
+       *
+       * @css @color_Infobox-close-button Color of close-button.
+       * @css @color_Infobox-close-button_hover Color of close-button in hovered state.
+       *
+       * @css @background-color_Infobox_default Default background color.
+       * @css @background-color_Infobox_lite Background color when option style is set to lite.
+       * @css @background-color_Infobox_help Background color when option style is set to help.
+       * @css @background-color_Infobox_error Background color when option style is set to error.
+       *
+       * @css @border-color_Infobox_default Default border color.
+       * @css @border-color_Infobox_lite Border color when option style is set to lite.
+       * @css @border-color_Infobox_help Border color when option style is set to help.
+       * @css @border-color_Infobox_error Border color when option style is set to error.
+       * @css @border-width_Infobox Thickness of border.
+       *
+       * @css @color_Infobox-shadow_default Default color of shadow.
+       * @css @color_Infobox-shadow_lite Color of shadow when option style is set to lite.
+       * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
+       * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
+       * @css @box-shadow_Infobox Size of shadow.
        */
+
 
       /**
        * @name Controls/Popup/InfoBox#hideDelay
@@ -136,7 +168,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             }
          },
 
@@ -144,7 +176,7 @@ define('Controls/Popup/InfoBox',
             var config = _private.getCfg(this);
 
             if (this._isNewEnvironment()) {
-               this._notify('openInfoBox', [config], {bubbling: true});
+               this._notify('openInfoBox', [config], { bubbling: true });
             } else {
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
@@ -162,7 +194,7 @@ define('Controls/Popup/InfoBox',
 
          _close: function() {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             } else {
                this._children.infoBoxOpener.close();
             }
@@ -176,8 +208,10 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            if (!this._opened) {
-               this._open(event);
+            if (this._options.trigger !== 'demand') {
+               if (!this._opened) {
+                  this._open(event);
+               }
             }
             event.stopPropagation();
          },
@@ -252,6 +286,10 @@ define('Controls/Popup/InfoBox',
                case 'mousedown':
                   event.stopPropagation();
                   break;
+               case 'close':
+                  // todo Для совместимости
+                  // Удалить, как будет сделана задача https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+                  this._opened = false;
             }
          },
 

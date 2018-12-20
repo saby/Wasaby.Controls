@@ -1,8 +1,8 @@
 <div class="controls-SelectorButton{{_options.items.getCount() === 0 ? ' controls-SelectorButton_empty'}}">
    <ws:if data="{{_options.items.getCount()}}">
       <Controls.Selector.SelectedCollection
-              _counterWidth="{{_options._counterWidth}}"
               items="{{_options.items}}"
+              itemTemplate="{{_options.itemTemplate}}"
               maxVisibleItems="{{_options.maxVisibleItems}}"
               displayProperty="{{_options.displayProperty}}"
               multiLine="{{true}}"

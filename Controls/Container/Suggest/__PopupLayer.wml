@@ -1,6 +1,1 @@
-<Controls.Popup.Opener.Sticky name="suggestPopup">
-    <ws:popupOptions autofocus="{{false}}" className="controls-Suggest__suggestionsContainer-popup">
-        <ws:verticalAlign side="bottom"/>
-        <ws:corner vertical="bottom"/>
-    </ws:popupOptions>
-</Controls.Popup.Opener.Sticky>
+<Controls.Popup.Opener.Sticky name="suggestPopup" popupOptions="{{_popupOptions}}"/>

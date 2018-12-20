@@ -109,11 +109,26 @@ define([
 
          lookup._beforeMount({});
          lookup._beforeUpdate({
+            items: new List()
+         });
+         assert.equal(lookup._multiLineState, undefined);
+         assert.equal(lookup._counterWidth, undefined);
+
+         lookup._beforeUpdate({
             items: new List(),
             multiLine: true
          });
+         assert.notEqual(lookup._multiLineState, undefined);
+         assert.notEqual(lookup._counterWidth, undefined);
+         assert.equal(lookup._maxVisibleItems, undefined);
 
-         assert.isFalse(!!lookup._multiLineState);
+         lookup._beforeUpdate({
+            items: new List(),
+            maxVisibleItems: 10
+         });
+         assert.notEqual(lookup._maxVisibleItems, undefined);
+         assert.equal(lookup._inputWidth, undefined);
+         assert.equal(lookup._availableWidthCollection, undefined);
       });
 
       it('_changeValueHandler', function() {
@@ -164,6 +179,12 @@ define([
          assert.isTrue(lookup._suggestState);
 
          lookup._options.readOnly = true;
+         lookup._suggestStateChanged();
+         assert.isFalse(lookup._suggestState);
+   
+         lookup._suggestState = true;
+         lookup._infoboxOpened = true;
+         lookup._options.readOnly = false;
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
       });

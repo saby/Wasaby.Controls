@@ -10,10 +10,11 @@ define('Controls/Filter/Controller',
       'Controls/Controllers/SourceController',
       'Core/core-merge',
       'Core/core-clone',
+      'Core/helpers/Object/isEmpty',
       'Controls/Container/Data/ContextOptions'
    ],
 
-   function(Control, template, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, merge, clone) {
+   function(Control, template, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, merge, clone, isEmpty) {
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
@@ -127,6 +128,20 @@ define('Controls/Filter/Controller',
 
             function processItems(elem) {
                filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
+            }
+
+            _private.itemsIterator(filterButtonItems, fastFilterItems, processItems);
+
+            return filter;
+         },
+
+         getOnlyChangesFilter: function(filterButtonItems, fastFilterItems) {
+            var filter = {};
+
+            function processItems(elem) {
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue'))) {
+                  filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
+               }
             }
 
             _private.itemsIterator(filterButtonItems, fastFilterItems, processItems);
@@ -378,10 +393,11 @@ define('Controls/Filter/Controller',
                meta = {
                   '$_addFromData': true
                };
-               historyUtils.getHistorySource(this._options.historyId).update(_private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
+               var filter = _private.getOnlyChangesFilter(this._filterButtonItems, this._fastFilterItems);
+               historyUtils.getHistorySource(this._options.historyId).update(isEmpty(filter) ? filter : _private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
             }
 
-            _private.applyItemsToFilter(this, this._options.filter, items);
+            _private.applyItemsToFilter(this, this._filter, items);
             _private.notifyFilterChanged(this);
          },
 

@@ -483,11 +483,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "value": {
             "type": "DateTime",
             "title": "Field value."
@@ -545,11 +540,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "value": {
             "type": "DateTime",
             "title": "Field value."
@@ -590,11 +580,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "startValue": {
             "type": "DateTime",
             "title": "Field value."
@@ -610,6 +595,51 @@
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },"Controls/Input/Date/RangeLinkLite": {
+    "name": "Controls/Input/Date/RangeLinkLite",
+    "title": "Input for selection date range links in Light Calendar.",
+    "className": "Controls/Input/Date/RangeLinkLite",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Date/RangeLinkLite",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "startValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "endValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "showPrevArrow": {
+            "type": "Boolean",
+            "title": "",
+            "default": true
+          },
+          "showNextArrow": {
+            "type": "Boolean",
+            "title": "",
+            "default": true
           },
           "name": {
             "title": "Имя контрола",
@@ -723,6 +753,10 @@
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
+          },
+          "revealable": {
+            "type": "Boolean",
+            "title": "Determines whether to enables the reveal toggle button that will show the password in clear text."
           },
           "name": {
             "default": "",

@@ -60,6 +60,11 @@ define(
             });
          });
          describe('User input.', function() {
+            beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+            });
             it('The display value divided into triads is correctly converted to a value.', function() {
                ctrl._beforeMount({
                   value: ''

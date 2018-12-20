@@ -2,12 +2,10 @@ define('Controls/History/Menu',
    [
       'Controls/Button/Menu',
       'wml!Controls/History/resources/itemTemplate',
-      'Core/core-merge',
-      'Core/helpers/Object/isEqual',
       'Controls/Button/Menu/MenuUtils',
       'css!theme?Controls/History/Menu'
    ],
-   function(Menu, itemTemplate, merge, isEqual, MenuUtils) {
+   function(Menu, itemTemplate, MenuUtils) {
       /**
        * Button menu with history by clicking on which a drop-down list opens.
        *
@@ -28,7 +26,7 @@ define('Controls/History/Menu',
        */
 
       'use strict';
-   
+
       var _private = {
          getMetaPinned: function(item) {
             return {
@@ -36,7 +34,7 @@ define('Controls/History/Menu',
             };
          }
       };
-   
+
       var HistoryMenu = Menu.extend({
          _itemTemplate: itemTemplate,
          _filter: null,
@@ -72,9 +70,9 @@ define('Controls/History/Menu',
             });
          }
       });
-   
+
       HistoryMenu._private = _private;
-      
+
       return HistoryMenu;
    }
 );

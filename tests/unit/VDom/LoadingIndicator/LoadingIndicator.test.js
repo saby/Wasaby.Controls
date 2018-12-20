@@ -5,6 +5,7 @@ define([
 
    describe('LoadingIndicator-tests', () => {
       let Loading = new LoadingIndicator();
+      Loading._beforeMount({});
 
       it('LoadingIndicator - add', () => {
          Loading._toggleIndicator = () => {

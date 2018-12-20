@@ -186,6 +186,7 @@ define([
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
          var textValue = '';
+         var result;
          var source = new Memory({
             data: [
                {id: 1, title: 'Alex', text: 'Alex'},
@@ -202,13 +203,23 @@ define([
             }
          };
 
-         selectedCollection._beforeMount({
+         result = selectedCollection._beforeMount({
+            selectedKeys: [],
+            source: new Memory({
+               data: [ {id: 1} ],
+               idProperty: 'id'
+            })
+         });
+         assert.equal(result, undefined);
+
+         result = selectedCollection._beforeMount({
             selectedKeys: selectedKeys,
             source: new Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
             })
          });
+         assert.notEqual(result, undefined);
 
          selectedCollection._beforeUpdate({
             selectedKeys: []

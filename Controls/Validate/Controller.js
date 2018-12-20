@@ -33,8 +33,6 @@ define('Controls/Validate/Controller',
                var cfg = {
                   target: self._container,
                   style: 'error',
-                  showDelay: 0,
-                  hideDelay: 0,
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {
@@ -218,6 +216,11 @@ define('Controls/Validate/Controller',
           */
          isValid: function() {
             return this._validationResult;
+         },
+
+         // todo это временный фикс, этот код должен уйти в контрол поля ввода, валидация уже отдает туда результат валидации, контролу нужно использовать эти данные
+         _isValidResult: function() {
+            return this._validationResult && !(this._validationResult instanceof Deferred);
          },
          _private: _private
       });
