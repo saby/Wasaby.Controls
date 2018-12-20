@@ -190,7 +190,7 @@ define([
                return def;
             };
 
-            BaseControl._private.reload(ctrl).addCallback(function() {
+            BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
                done();
             }).addErrback(function() {
                assert.isTrue(false, 'reload() returns errback');
