@@ -16,8 +16,8 @@
               <Controls.Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" on:click="_onClick()"/>
            </ws:else>
         </span>
-        <ws:if data="{{ _options.showClearButton }}">
-              <span class="controls-DateLinkView__clear {{ !_isClearButtonVisible() ? 'controls-DateLinkView__clear-hidden' }}" on:click="_clearDate()"></span>
+        <ws:if data="{{ _options.showClearButton && _options.startValue }}">
+              <span class="controls-DateLinkView__clear" on:click="_clearDate()"></span>
         </ws:if>
         <ws:if data="{{ _options.showNextArrow && _options.style === 'default' }}">
            <span

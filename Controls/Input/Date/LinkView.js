@@ -104,9 +104,7 @@ define('Controls/Input/Date/LinkView', [
       _onClick: function() {
          this._notify('linkClick');
       },
-      _isClearButtonVisible: function() {
-         return this._rangeModel.startValue;
-      },
+
       _beforeUnmount: function() {
          this._rangeModel.destroy();
       }
