@@ -125,10 +125,10 @@ define('Controls/Filter/Button/OldPanelOpener',
                 *    ...
                 *    template: 'js!SBIS3.User.Info'
                 *    templateOptions: {
-             *       firstName: 'John',
-             *       secondName: 'Snow',
-             *       nationality: 'Westerosi'
-             *    }
+                *       firstName: 'John',
+                *       secondName: 'Snow',
+                *       nationality: 'Westerosi'
+                *    }
                 *    ...
                 * </pre>
                 */

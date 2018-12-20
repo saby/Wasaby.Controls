@@ -35,8 +35,8 @@ define('Controls/History/FilterSource', [
     * @public
     * @author Герасимов А.М.
     * @category Menu
-    *  @example
-    *  <pre>
+    * @example
+    * <pre>
     *    var source = new filterSource({
     *           originSource: new Memory({
     *               idProperty: 'id',

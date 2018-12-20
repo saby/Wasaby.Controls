@@ -277,6 +277,9 @@ function(cMerge,
          if (cfg.hasOwnProperty('onCloseHandler')) {
             cfg.eventHandlers.onClose = cfg.onCloseHandler;
          }
+         if (cfg.hasOwnProperty('catchFocus')) {
+            cfg.autofocus = cfg.catchFocus;
+         }
 
          cfg.isCompoundTemplate = true;
       },

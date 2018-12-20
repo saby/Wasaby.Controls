@@ -1,6 +1,8 @@
 <Controls.List.BaseControl on:itemMouseMove="_itemMouseMove()"
                            scope="{{_options}}"
-                           name="baseControl">
+                           name="baseControl"
+                           beforeReloadCallback="{{_beforeReloadCallback}}"
+                           afterReloadCallback="{{_afterReloadCallback}}">
    <ws:expanderTemplate>
       <div on:click="_onExpanderClick(expanderTemplate.itemData.dispItem)"
            class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>

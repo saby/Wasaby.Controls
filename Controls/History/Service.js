@@ -29,8 +29,8 @@ define('Controls/History/Service', [
      * @example
      * <pre>
      *    new historyService({
-     *              historyId: 'TEST_HISTORY_ID'
-     *           })
+     *       historyId: 'TEST_HISTORY_ID'
+     *    })
      * </pre>
      * @name Controls/MenuButton#historyId
      * @cfg {String} unique service history identifier

@@ -69,6 +69,7 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
 
          Search._private.searchCallback(controller, {});
          
+         assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
          assert.isTrue(controller._viewMode === 'search');
@@ -101,6 +102,7 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
          var controller = getSearchController();
          controller._viewMode = 'search';
          controller._misspellValue = 'testStr';
+         controller._loading = true;
          var filterChanged = false;
    
          controller._notify = function(eventName) {
@@ -115,7 +117,14 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
    
          assert.isTrue(filterChanged);
          assert.isFalse(controller._viewMode === 'search');
+         assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
+      });
+   
+      it('_private.searchStartCallback', function() {
+         var self = {};
+         Search._private.searchStartCallback(self);
+         assert.isTrue(self._loading);
       });
    
       it('_private.needUpdateSearchController', function() {

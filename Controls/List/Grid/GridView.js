@@ -21,26 +21,26 @@ define('Controls/List/Grid/GridView', [
    'use strict';
 
    // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
-   function isEqualObjectsWithSkip(obj1, obj2, skipFields) {
+   function isEqualWithSkip(obj1, obj2, skipFields) {
       if ((!obj1 && obj2) || (obj1 && !obj2)) {
          return false;
       }
       if (!obj1 && !obj2) {
          return true;
       }
-      var
-         keys1 = Object.keys(obj1),
-         keys2 = Object.keys(obj2);
-
-      if (keys1.length !== keys2.length) {
+      if (obj1.length !== obj2.length) {
          return false;
       }
-
-      keys1.sort();
-      keys2.sort();
-      return !keys1.some(function(key, index) {
-         return !(keys2[index] === key && (skipFields[key] || isEqualObject(obj1[key], obj2[key])));
-      });
+      for (var i = 0; i < obj1.length; i++) {
+         for (var j in obj1[i]) {
+            if (!skipFields[j] && obj1[i].hasOwnProperty(j)) {
+               if (!obj2[i].hasOwnProperty(j) || obj1[i][j] !== obj2[i][j]) {
+                  return false;
+               }
+            }
+         }
+      }
+      return true;
    }
 
    var
@@ -114,14 +114,17 @@ define('Controls/List/Grid/GridView', [
 
          _beforeUpdate: function(newCfg) {
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
-            if (!isEqualObjectsWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
+            if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                this._listModel.setColumns(newCfg.columns);
+               if (!cDetection.isNotFullGridSupport) {
+                  _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+               }
             }
-            if (!isEqualObjectsWithSkip(this._options.header, newCfg.header, { template: true })) {
+            if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                this._listModel.setHeader(newCfg.header);
-            }
-            if (!cDetection.isNotFullGridSupport) {
-               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+               if (!cDetection.isNotFullGridSupport) {
+                  _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+               }
             }
          },
 
