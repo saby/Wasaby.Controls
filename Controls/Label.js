@@ -52,6 +52,12 @@ define('Controls/Label',
          _afterMount: function() {
             var container = this._container;
 
+            /**
+             * Способ смены внешнего вида контрола переведен с модификаторов на опцию.
+             * Предупреждаем тех кто их использует, что им нужно поправить свой код.
+             * Предупреждение будет удалено в 19.200 по задаче.
+             * https://online.sbis.ru/opendoc.html?guid=7c63d5fe-db71-4a5c-91e9-3a422969c1c7
+             */
             _private.warn(container, 'controls-Label_underline-hovered', 'hovered');
             _private.warn(container, 'controls-Label_underline_color-hovered', 'fixed');
          }
