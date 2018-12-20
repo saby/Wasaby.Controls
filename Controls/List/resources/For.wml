@@ -7,6 +7,8 @@
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"
+      editingItemData="{{editingItemData}}"
+      isAdd="{{isAdd}}"
       itemTemplate="{{itemTemplate}}"
       itemActionsPosition="{{itemActionsPosition}}" />
 </ws:template>
@@ -19,19 +21,20 @@
    {{listModel.goToNext();}}
    <ws:if data="{{currentGroup.isGroupExpanded}}">
       <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup;">
-         <ws:partial template="itemOutputLocalTemplate"/>
+         <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
       </ws:for>
    </ws:if>
 </ws:template>
 <ws:for data="listModel.reset(); listModel.isEnd();">
    <ws:if data="{{listModel.getCurrent().isGroup}}">
-      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{listModel.getCurrent()}}"/>
+      <ws:partial template="groupOutputLocalTemplate" currentGroup="{{listModel.getCurrent()}}"
+                  attr:key="{{listModel.getCurrent().key}}"/>
    </ws:if>
    <ws:else>
       <ws:partial template="itemOutputLocalTemplate"/>
    </ws:else>
 </ws:for>
-<ws:if data="{{editingItemData && isAdd}}">
+<ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">
    <ws:partial
       on:click="_onItemClick(editingItemData.dispItem)"
       itemTemplate="{{itemTemplate}}"

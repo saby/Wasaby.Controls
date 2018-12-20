@@ -147,6 +147,8 @@ define('Controls/DragNDrop/Controller',
          _documentDragStart: function(dragObject) {
             if (this._insideDragging) {
                this._notify('dragStart', [dragObject]);
+            } else {
+               this._dragEntity = dragObject.entity;
             }
             this._documentDragging = true;
             this._notify('documentDragStart', [dragObject]);
@@ -156,6 +158,7 @@ define('Controls/DragNDrop/Controller',
             if (this._insideDragging) {
                this._notify('dragEnd', [dragObject]);
             }
+
             this._insideDragging = false;
             this._documentDragging = false;
             this._notify('documentDragEnd', [dragObject]);

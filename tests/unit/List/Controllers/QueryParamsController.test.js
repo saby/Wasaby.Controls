@@ -249,8 +249,8 @@ define(
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
                assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
-               /**/
 
+               //first query with direction: after
                pNav = new PositionNavigation({
                   field: 'field',
                   direction: 'after',
@@ -258,9 +258,9 @@ define(
                   limit: 100
                });
 
-               //first query with direction: after
+
                dataRs.setMetaData({more: true, nextPosition:[7]});
-               pNav.calculateState(dataRs, 'down');
+               pNav.calculateState(dataRs);
                assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
 
                pNav = new PositionNavigation({
@@ -270,11 +270,29 @@ define(
                   limit: 100
                });
 
-               //first query with direction: after
+               //first query with direction: before
                dataRs.setMetaData({more: true, nextPosition:[1]});
-               pNav.calculateState(dataRs, 'up');
+               pNav.calculateState(dataRs);
                assert.deepEqual([1], pNav._beforePosition, 'Calculate state: wrong _beforePosition value');
 
+
+               /*any first query, but having "load to direction query"*/
+               pNav = new PositionNavigation({
+                  field: 'field',
+                  direction: 'both',
+                  position: 5,
+                  limit: 100
+               });
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true, nextPosition:[7]});
+               pNav.calculateState(dataRs, 'down');
+               assert.deepEqual([7], pNav._afterPosition, 'Calculate state: wrong _afterPosition value');
+
+               //first query with direction: after
+               dataRs.setMetaData({more: true, nextPosition:[666]});
+               pNav.calculateState(dataRs, 'up');
+               assert.deepEqual([666], pNav._beforePosition, 'Calculate state: wrong _afterPosition value');
             });
 
 

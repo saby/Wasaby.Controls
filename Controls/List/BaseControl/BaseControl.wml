@@ -1,8 +1,9 @@
-<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()">
+<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()" on:sortingChanged="_sortingChanged()">
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
-        <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger" style="bottom: -{{_loadOffset}}px;"></div>
+        <div class="controls-BaseControl__trigger controls-BaseControl__topLoadTrigger" name="topLoadTrigger"
+             style="bottom: -{{_loadOffset}}px;"></div>
     </ws:if>
 
    <ws:template name="withDragNDrop">
@@ -10,8 +11,8 @@
          on:dragStart="_dragStart()"
          on:dragEnd="_dragEnd()"
          on:dragLeave="_dragLeave()"
+         on:dragEnter="_dragEnter()"
          on:documentDragEnd="_documentDragEnd()"
-         on:documentDragStart="_documentDragStart()"
          draggingTemplate="{{_options.draggingTemplate}}"
          name="dragNDropController">
          <ws:content>
@@ -21,41 +22,46 @@
    </ws:template>
 
    <ws:template name="viewTpl">
-      <div>
-         <ws:partial
-            name="{{name}}"
-            template="{{ _options.content }}"
-            scope="{{_options}}"
-            listModel="{{_listViewModel}}"
-            on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-            on:itemClick="_onItemClick()"
-            on:groupClick="_onGroupClick()"
-            on:itemContextMenu="_showActionsMenu()"
-            on:itemMouseDown="_itemMouseDown()"
-            on:itemMouseEnter="_itemMouseEnter()"
-            on:itemMouseMove="_itemMouseMove()"
-            on:hoveredItemChanged="_hoveredItemChanged()"
-            on:itemSwipe="_listSwipe()">
-            <ws:viewTemplate>
-               <ws:partial template="{{_options.viewName}}"/>
-            </ws:viewTemplate>
-            <ws:footerTemplate>
-               <ws:if data="{{_options.footerTemplate}}">
-                  <ws:partial template="{{_options.footerTemplate}}"/>
-               </ws:if>
-               <ws:if data="{{_shouldDrawFooter}}">
-                  <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
-               </ws:if>
-            </ws:footerTemplate>
-            <ws:multiSelectTpl>
-                <ws:if data="{{_options.multiSelectVisibility}}">
-                    <Controls.Container.Async name="multiSelectContainer" templateName="wml!Controls/List/BaseControl/multiSelect">
-                        <ws:partial template="{{'wml!Controls/List/BaseControl/multiSelect'}}" />
-                    </Controls.Container.Async>
-                </ws:if>
-            </ws:multiSelectTpl>
-         </ws:partial>
-      </div>
+      <ws:partial
+         name="{{name}}"
+         template="{{ _options.content }}"
+         scope="{{_options}}"
+         listModel="{{_listViewModel}}"
+         on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+         on:itemClick="_onItemClick()"
+         on:groupClick="_onGroupClick()"
+         on:itemContextMenu="_onItemContextMenu()"
+         on:itemMouseDown="_itemMouseDown()"
+         on:itemMouseEnter="_itemMouseEnter()"
+         on:itemMouseMove="_notifyHandler('itemMouseMove')"
+         on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+         on:itemSwipe="_listSwipe()">
+         <ws:viewTemplate>
+            <ws:partial template="{{_options.viewName}}"/>
+         </ws:viewTemplate>
+         <ws:footerTemplate>
+            <ws:if data="{{_loadingIndicatorState}}">
+               <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+                  <ws:if data="{{_showLoadingIndicatorImage}}">
+                     <div class="controls-BaseControl__loadingIndicatorImg"></div>
+                  </ws:if>
+               </div>
+            </ws:if>
+            <ws:if data="{{_options.footerTemplate}}">
+               <ws:partial template="{{_options.footerTemplate}}"/>
+            </ws:if>
+            <ws:if data="{{_shouldDrawFooter}}">
+               <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
+            </ws:if>
+         </ws:footerTemplate>
+         <ws:multiSelectTpl>
+             <ws:if data="{{_options.multiSelectVisibility}}">
+                 <Controls.Container.Async name="multiSelectContainer" templateName="wml!Controls/List/BaseControl/multiSelect">
+                     <ws:partial template="{{'wml!Controls/List/BaseControl/multiSelect'}}" />
+                 </Controls.Container.Async>
+             </ws:if>
+         </ws:multiSelectTpl>
+      </ws:partial>
    </ws:template>
 
    <ws:template name="fullView">
@@ -110,10 +116,6 @@
           name="swipeControl"/>
     </ws:if>
 
-    <ws:if data="{{_options.emptyTemplate && _listViewModel && !_listViewModel.getCount()}}">
-        <ws:partial template="{{_options.emptyTemplate}}"/>
-    </ws:if>
-
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__bottomLoadTrigger" name="bottomLoadTrigger" style="top: -{{_loadOffset}}px;"></div>
         <div class="controls-BaseControl__bottomPlaceholder" style="height: {{_bottomPlaceholderHeight}}px;"></div>
@@ -124,24 +126,18 @@
         <Controls.List.BaseControl.Scroll.Emitter on:emitListScroll="__onEmitScroll()" name="ScrollEmitter"/>
     </ws:if>
 
-    <ws:if data="{{_pagingCfg}}">
+    <ws:if data="{{_pagingVisible}}">
        <div class="controls-BaseControl__pagingContainer">
           <Controls.List.Paging attr:class="controls-BaseControl__scrollPaging" scope="{{_pagingCfg}}" on:onArrowClick="__onPagingArrowClick()"></Controls.List.Paging>
        </div>
     </ws:if>
-    <ws:if data="{{_loadingIndicatorState}}">
-        <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
-            <ws:if data="{{_showLoadingIndicatorImage}}">
-                <div class="controls-BaseControl__loadingIndicatorImg"></div>
-            </ws:if>
-        </div>
-    </ws:if>
     <Controls.Dropdown.Opener
             name="itemActionsOpener"
             keyProperty="id"
-            menuStyle="cross"
-            className="controls-Toolbar__menu-position"
-            popupOptions="{{_popupOptions}}"/>
+            menuStyle="cross"/>
+    <Controls.Popup.Opener.Confirmation
+            name="errorMsgOpener"
+    />
    <ws:if data="{{ _items }}">
       <Controls.List.BaseControl.SelectionController
          name="selectionController"

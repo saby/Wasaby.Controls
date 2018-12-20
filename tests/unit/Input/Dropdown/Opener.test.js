@@ -4,42 +4,50 @@ define(
       'Controls/Popup/Opener/BaseOpener'
    ],
    (Opener, BaseOpener) => {
-      describe('Opener', () => {
+      describe('Dropdown/Opener', () => {
          let config = {
-            itemTemplate: 'itemTemplate',
-            headTemplate: 'headTemplate',
-            footerTemplate: 'footerTemplate',
-            keyProperty: 'keyProperty',
-            selectedKeys: 'selectedKeys',
-            parentProperty: 'parentProperty',
-            itemTemplateProperty: 'itemTemplateProperty',
-            nodeProperty: 'nodeProperty',
-            className: 'myClass',
-            template: 'Controls/Dropdown/resources/template/DropdownList'
+            popupOptions: {
+               templateOptions: {
+                  itemTemplate: 'itemTemplate',
+                  headTemplate: 'headTemplate',
+                  footerTemplate: 'footerTemplate',
+                  keyProperty: 'keyProperty',
+                  selectedKeys: 'selectedKeys',
+                  parentProperty: 'parentProperty',
+                  itemTemplateProperty: 'itemTemplateProperty',
+                  nodeProperty: 'nodeProperty',
+                  headConfig: {
+                     icon: 'icon-small'
+                  },
+                  items: {
+                     each: () => {}
+                  }
+               },
+               className: 'myClass'
+            }
          };
 
-         let opener = new Opener(config);
-         opener._beforeMount(config);
-         opener._children.LoadingIndicator = {
-            toggleIndicator: () => {}
-         };
-         opener.saveOptions(config);
+         function getOpener(openerConfig) {
+            let opener = new Opener(openerConfig);
+            opener._beforeMount(openerConfig);
+            opener._children.LoadingIndicator = {
+               toggleIndicator: () => {}
+            };
+            opener.saveOptions(openerConfig);
+            return opener;
+         }
 
          BaseOpener.isNewEnvironment = function() {
             return true;
          };
 
-
-         it('check setter className option', () => {
-            assert.equal(opener._options.className, config.className);
-         });
-
          it('get template', () => {
+            let opener = getOpener(config);
             let controllerName = 'Controls/Popup/Opener/Sticky/StickyController';
 
-            //первый раз загрузка
+            // первый раз загрузка
             opener._requireModules(config, controllerName).addCallback(() => {
-               //второй раз из кэша рекваера
+               // второй раз из кэша рекваера
                opener._requireModules(config, controllerName).addCallback(() => {
                   assert.isTrue(true);
                });
@@ -47,6 +55,7 @@ define(
          });
 
          it('open', () => {
+            let opener = getOpener(config);
             opener._children.StickyOpener = {
                open: function(cfg) {
                   let compOptions = cfg.templateOptions;
@@ -65,6 +74,7 @@ define(
          });
 
          it('check templates config', () => {
+            let opener = getOpener(config);
             let cfg = {
                templateOptions: {
                   items: {
@@ -73,7 +83,7 @@ define(
                }
             };
             Opener._private.setPopupOptions(opener, cfg);
-            assert.isTrue(cfg.className === config.className);
+            assert.isTrue(cfg.className === 'myClass');
 
             Opener._private.setTemplateOptions(opener, cfg);
             let isEqual = true;
@@ -84,5 +94,15 @@ define(
             }
             assert.isTrue(isEqual);
          });
+
+         it('checkIcons', function() {
+            let opener = getOpener(config);
+            Opener._private.checkIcons(opener, config);
+            assert.deepEqual(config.popupOptions.templateOptions.iconPadding, { null: [null, 'icon-small'] });
+            config.popupOptions.templateOptions.rootKey = 'testKey';
+            Opener._private.checkIcons(opener, config);
+            assert.deepEqual(config.popupOptions.templateOptions.iconPadding, { testKey: [null, 'icon-small'] });
+         });
       });
-   });
+   }
+);

@@ -1,9 +1,10 @@
 define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-clone',
-      'Controls/Popup/Opener/BaseOpener'
+      'Controls/Popup/Opener/BaseOpener',
+      'Controls/Utils/getZIndex'
    ],
-   function(cClone, Base) {
+   function(cClone, Base, getZIndex) {
       'use strict';
 
       /**
@@ -13,7 +14,9 @@ define('Controls/Popup/Opener/InfoBox',
        * @class Controls/Popup/Opener/InfoBox
        * @extends Core/Control
        * @mixes Controls/interface/IInfoboxOptions
-       * @mixes Controls/Popup/Opener/InfoBox/InfoboxStyles
+       * @mixes Controls/Popup/InfoBox/InfoboxStyles
+       *
+       * @private
        * @control
        * @category Popup
        * @author Красильников А.С.
@@ -33,6 +36,11 @@ define('Controls/Popup/Opener/InfoBox',
        * @property {Boolean} float Whether the content should wrap around the cross closure.
        * @property {String} style Infobox display style.
        * @property {Number} showDelay Delay before opening.
+       */
+
+      /**
+       * @name Controls/Popup/Opener/Infobox#closePopupBeforeUnmount
+       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
        */
 
       /**
@@ -57,9 +65,15 @@ define('Controls/Popup/Opener/InfoBox',
          _closeId: null,
 
          /**
+          * @name Controls/Popup/Opener/Infobox#isOpened
+          * @function
+          * @description Popup opened status.
+          */
+
+         /**
           * Open popup.
           * @function Controls/Popup/Opener/InfoBox#open
-          * @param {Object} config infobox options.
+          * @param {Object} Config
           * @returns {undefined}
           * @example
           * js
@@ -89,7 +103,7 @@ define('Controls/Popup/Opener/InfoBox',
             }
             this._clearTimeout();
 
-            //smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
+            // smart merge of two objects. Standart "core-merge util" will rewrite field value of first object even if value of second object will be undefined
             var newCfg = cClone(DEFAULT_CONFIG);
             for (var i in cfg) {
                if (cfg.hasOwnProperty(i)) {
@@ -111,7 +125,7 @@ define('Controls/Popup/Opener/InfoBox',
                target: cfg.target,
                position: cfg.position,
                autofocus: false,
-               zIndex: cfg.zIndex,
+               zIndex: cfg.zIndex || getZIndex(this),
                eventHandlers: cfg.eventHandlers,
                opener: cfg.opener,
                templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
@@ -153,7 +167,7 @@ define('Controls/Popup/Opener/InfoBox',
          var options = Base.getDefaultOptions();
 
          options.closeOnTargetScroll = true;
-
+         options._vdomOnOldPage = true; // Open vdom popup in the old environment
          return options;
       };
 

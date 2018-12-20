@@ -16,6 +16,14 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
             }
          }
       }
+
+      var addDeps = slr._depsStorage || {};
+      for (var j in addDeps) {
+         if (addDeps.hasOwnProperty(j)) {
+            deps[j] = true;
+         }
+      }
+
       return deps;
    }
 
@@ -61,9 +69,6 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
       deserialize: function(str) {
          var slr = new Serializer();
          try {
-            common.componentOptsReArray.forEach(function(re) {
-               str = str.replace(re.toReplace, re.toFind);
-            });
             this._deserialized = JSON.parse(str, slr.deserialize);
          } catch (e) {
             IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);

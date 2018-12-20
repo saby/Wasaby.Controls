@@ -15,7 +15,9 @@
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
-   servicesPath="{{ servicesPath }}">
+   preInitScript="{{ _options.preInitScript }}"
+   servicesPath="{{ servicesPath }}"
+   product="{{ product }}">
 </Controls.Application._Head>
 <Controls.Event.Registrator name="scrollDetect" register="scroll" attr:fixCompatible="1">
    <Controls.Event.Registrator name="resizeDetect" register="controlResize" attr:fixCompatible="1">
@@ -53,10 +55,15 @@
                               <ws:if data="{{  _options.content }}">
                                  <!-- use private method for loadingIndicator. todo https://online.sbis.ru/opendoc.html?guid=0ebfe128-42ca-43e5-b27b-90e12f81313c -->
                                  <Controls.Application._Wait>
-                                       <ws:partial template="{{  _options.content }}" scope="{{ templateConfig }}" on:showIndicator="LoadingIndicator._showHandler()" on:hideIndicator="LoadingIndicator._hideHandler()"/>
+                                    <ws:partial
+                                       template="{{ _options.content }}"
+                                       scope="{{ templateConfig }}"
+                                       attr:class="zIndex-context"
+                                       on:showIndicator="LoadingIndicator._showHandler()"
+                                       on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
-                                 <Controls.Container.LoadingIndicator name="LoadingIndicator">
-                                    <div></div>
+                                 <Controls.Container.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
+                                    <div attr:class="zIndex-content"></div>
                                  </Controls.Container.LoadingIndicator>
                               </ws:if>
                               <ws:else>

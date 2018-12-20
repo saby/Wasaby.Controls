@@ -120,7 +120,7 @@ define('Controls/Input/interface/IInputDateRange', [
     * In this example, we subscribe to inputCompleted event and save field's value to the first database and field`s display value to the second database.
     * <pre>
     *    <Controls.Input.Date.Range on:inputCompleted="_inputCompletedHandler()" />
-    * </pre
+    * </pre>
     * <pre>
     *    Control.extend({
     *       ....

@@ -1,7 +1,4 @@
-<ws:if data="{{itemData.dragTargetPosition === 'before'}}">
-   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
-</ws:if>
-<ws:if data="{{itemData.isVisible !== false}}">
+<ws:template name="baseTemplate">
    <ws:partial
       on:click="_onItemClick(itemData.dispItem)"
       on:contextmenu="_onItemContextMenu(itemData)"
@@ -18,7 +15,16 @@
       template="wml!Controls/List/ItemTemplateWrapper"
       itemData="{{itemData}}"
       actionsType="{{itemActionsPosition}}"/>
+</ws:template>
+<ws:if data="{{itemData.dragTargetPosition === 'before'}}">
+   <ws:partial multiSelectTpl="{{multiSelectTpl}}" attr:key="{{ itemData.draggingItemData.key }}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+</ws:if>
+<ws:if data="{{itemData.isVisible !== false}}">
+   <ws:partial template="baseTemplate" itemData="{{itemData}}" attr:key="{{ itemData.key }}"/>
+</ws:if>
+<ws:if data="{{editingItemData && isAdd && itemData.index === editingItemData.index - 1}}">
+   <ws:partial template="baseTemplate" itemData="{{editingItemData}}" attr:key="{{ editingItemData.key }}"/>
 </ws:if>
 <ws:if data="{{itemData.dragTargetPosition === 'after'}}">
-   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
+   <ws:partial multiSelectTpl="{{multiSelectTpl}}" template="{{itemTemplate}}" itemData="{{itemData.draggingItemData}}" itemActionsTemplate="{{itemActionsTemplate}}" attr:key="{{itemData.draggingItemData.key}}"/>
 </ws:if>

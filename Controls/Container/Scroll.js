@@ -9,12 +9,13 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/ScrollWidthUtil',
       'Controls/Container/Scroll/ScrollHeightFixUtil',
       'wml!Controls/Container/Scroll/Scroll',
+      'Controls/Utils/tmplNotify',
       'Controls/Container/Scroll/Watcher',
       'Controls/Event/Listener',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template) {
+   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
 
       'use strict';
 
@@ -154,14 +155,20 @@ define('Controls/Container/Scroll',
              */
             updateFixationState: function(self, data) {
                if (data.shouldBeFixed) {
-                  self._stickyHeaderId = data.id;
-               } else if (self._stickyHeaderId === data.id) {
-                  self._stickyHeaderId = null;
+                  self._stickyHeaderIds.push(data.id);
+               } else if (self._stickyHeaderIds.indexOf(data.id) > -1) {
+                  self._stickyHeaderIds.splice(self._stickyHeaderIds.indexOf(data.id), 1);
                }
             }
          },
          Scroll = Control.extend({
             _template: template,
+            
+            //Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
+            //Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
+            //прокидываем руками
+            //EVENTSPROXY
+            _tmplNotify: tmplNotify,
 
             /**
              * Смещение контента сверху относительно контейнера.
@@ -195,7 +202,7 @@ define('Controls/Container/Scroll',
              * @type {String|null}
              * @private
              */
-            _stickyHeaderId: null,
+            _stickyHeaderIds: null,
 
             /**
              * @type {Controls/StickyHeader/Context|null}
@@ -208,6 +215,7 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
+               this._stickyHeaderIds = [];
                this._displayState = {};
                this._stickyHeaderContext = new StickyHeaderContext({
                   shadowVisible: options.shadowVisible
@@ -297,6 +305,10 @@ define('Controls/Container/Scroll',
 
                   this._forceUpdate();
                }
+            },
+
+            _topShadowVisible: function() {
+               return this._displayState.shadowPosition.indexOf('top') !== -1 && this._stickyHeaderIds.length === 0;
             },
 
             /**
@@ -418,6 +430,7 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
+               this._children.stickyHeader.start([this._stickyHeaderIds[this._stickyHeaderIds.length - 1]]);
 
                event.stopPropagation();
             },

@@ -37,10 +37,11 @@ define('Controls/List/ListView', [
          }
       },
 
-      setHoveredItem: cDebounce(function(self, item) {
+      setHoveredItem: cDebounce(function(self, item, nativeEvent) {
          if (item !== self._hoveredItem) {
             self._hoveredItem = item;
-            self._notify('hoveredItemChanged', [item]);
+            var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
+            self._notify('hoveredItemChanged', [item, container]);
          }
       }, DEBOUNCE_HOVERED_ITEM_CHANGED)
    };
@@ -93,6 +94,9 @@ define('Controls/List/ListView', [
 
          _afterMount: function() {
             _private.resizeNotifyOnListChanged(this);
+            if (this._options.markedKey === undefined && this._options.markerVisibility === 'always') {
+               this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
+            }
          },
 
          _afterUpdate: function() {
@@ -104,6 +108,10 @@ define('Controls/List/ListView', [
                }
                this._queue = [];
             }
+         },
+
+         getItemsContainer: function() {
+            return this._children.itemsContainer;
          },
 
          _onItemClick: function(e, dispItem) {
@@ -140,7 +148,7 @@ define('Controls/List/ListView', [
 
          _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
-            _private.setHoveredItem(this, itemData.item);
+            _private.setHoveredItem(this, itemData.item, event);
          },
 
          //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,

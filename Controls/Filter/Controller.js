@@ -37,7 +37,7 @@ define('Controls/Filter/Controller',
             return result;
          },
 
-         prepareItems: function(filterButtonItems, fastFilterItems, prepareCallback) {
+         equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
             Chain(filterButtonItems).each(function(buttonItem, index) {
                Chain(fastFilterItems).each(function(fastItem) {
                   if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
@@ -48,11 +48,17 @@ define('Controls/Filter/Controller',
          },
 
          prepareHistoryItems: function(filterButtonItems, fastFilterItems) {
-            var historyItems = _private.cloneItems(filterButtonItems);
+            var historyItems = [];
             function setTextValue(index, item) {
                setPropValue(historyItems[index], 'textValue', getPropValue(item, 'textValue'));
             }
-            _private.prepareItems(filterButtonItems, fastFilterItems, setTextValue);
+            if (filterButtonItems && fastFilterItems) {
+               historyItems = _private.cloneItems(filterButtonItems);
+
+               _private.equalItemsIterator(filterButtonItems, fastFilterItems, setTextValue);
+            } else {
+               historyItems = _private.cloneItems(filterButtonItems || fastFilterItems);
+            }
             return _private.minimizeFilterItems(historyItems);
          },
 
@@ -149,7 +155,13 @@ define('Controls/Filter/Controller',
             function clearTextValue(index) {
                setPropValue(filterButtonItems[index], 'textValue', '');
             }
-            _private.prepareItems(filterButtonItems, fastFilterItems, clearTextValue);
+            _private.equalItemsIterator(filterButtonItems, fastFilterItems, clearTextValue);
+         },
+
+         resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {
+            if (filterButtonItems && fastFilterItems) {
+               _private.setFilterButtonItems(filterButtonItems, fastFilterItems);
+            }
          },
 
          updateFilterItems: function(self, newItems) {
@@ -163,9 +175,7 @@ define('Controls/Filter/Controller',
                _private.mergeFilterItems(self._fastFilterItems, newItems);
             }
 
-            if (self._filterButtonItems && self._fastFilterItems) {
-               _private.setFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
-            }
+            _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
          },
 
          resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
@@ -230,7 +240,7 @@ define('Controls/Filter/Controller',
       };
 
       /**
-       * The filter controller allows you to filter data in a {@link Controls/List}using {@link Filter/Button} or {@link Filter/Fast}.
+       * The filter controller allows you to filter data in a {@link Controls/List} using {@link Filter/Button} or {@link Filter/Fast}.
        * The filter controller allows you to save filter history and restore page after reload with last applied filter.
        *
        * More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/filter-search/'>here</a>.
@@ -342,6 +352,7 @@ define('Controls/Filter/Controller',
                self = this;
 
             itemsDef.addCallback(function() {
+               _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
                _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
             });
 
@@ -370,7 +381,7 @@ define('Controls/Filter/Controller',
                historyUtils.getHistorySource(this._options.historyId).update(_private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
             }
 
-            _private.applyItemsToFilter(this, this._options.filter, items);
+            _private.applyItemsToFilter(this, this._filter, items);
             _private.notifyFilterChanged(this);
          },
 

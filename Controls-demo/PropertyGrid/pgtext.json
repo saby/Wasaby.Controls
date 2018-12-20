@@ -155,6 +155,51 @@
       }
     }
   },
+  "Controls/Toolbar": {
+    "name": "Controls/Toolbar",
+    "title": "Toolbar.",
+    "className": "Controls/Toolbar",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Toolbar",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "title": "Object that implements ISource interface for data access."
+          },
+          "itemTemplate": {
+            "type": "function",
+            "title": "Template for item render."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "name": {
+            "title": "Control name",
+            "type": "String",
+            "default": ""
+          },
+          "nodeProperty": {
+            "title": "Name of the field describing the type of the node (list, node, hidden node).",
+            "type": "String",
+            "default": ""
+          },
+          "parentProperty": {
+            "title": "Name of the field that contains information about parent node.",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
   "Controls/Heading/Back": {
     "name": "Controls/Heading/Back",
     "title": "Specialized heading to go to the previous level. Support different display styles and sizes.",
@@ -438,11 +483,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "value": {
             "type": "DateTime",
             "title": "Field value."
@@ -500,11 +540,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "value": {
             "type": "DateTime",
             "title": "Field value."
@@ -545,11 +580,6 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
-          },
           "startValue": {
             "type": "DateTime",
             "title": "Field value."
@@ -565,6 +595,51 @@
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },"Controls/Input/Date/RangeLinkLite": {
+    "name": "Controls/Input/Date/RangeLinkLite",
+    "title": "Input for selection date range links in Light Calendar.",
+    "className": "Controls/Input/Date/RangeLinkLite",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Date/RangeLinkLite",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "startValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "endValue": {
+            "type": "DateTime",
+            "title": "Field value."
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Field tooltip."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Indicates whether control will react to user actions."
+          },
+          "showPrevArrow": {
+            "type": "Boolean",
+            "title": "",
+            "default": true
+          },
+          "showNextArrow": {
+            "type": "Boolean",
+            "title": "",
+            "default": true
           },
           "name": {
             "title": "Имя контрола",
@@ -678,6 +753,10 @@
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
+          },
+          "revealable": {
+            "type": "Boolean",
+            "title": "Determines whether to enables the reveal toggle button that will show the password in clear text."
           },
           "name": {
             "default": "",
@@ -1128,7 +1207,7 @@
           "multiSelect": {
             "type": "Boolean"
           },
-          "multiline": {
+          "multiLine": {
             "type": "Boolean"
           },
           "readOnly": {
@@ -1136,6 +1215,28 @@
           },
           "source": {
             "type": "Array"
+          },
+          "selectorTemplate": {
+            "type": "Array"
+          },
+          "itemTemplate.style": {
+            "type": "enum",
+            "default": "none",
+            "enum": {
+              "none": "none",
+              "bold": "bold",
+              "accent": "accent",
+              "primary": "primary"
+            }
+          },
+          "itemTemplate.size": {
+            "type": "enum",
+            "default": "s",
+            "enum": {
+              "s": "s",
+              "m": "m",
+              "l": "l"
+            }
           },
           "displayProperty": {
             "type": "enum",
@@ -1262,6 +1363,138 @@
             "default": "",
             "title": "Имя контрола",
             "type": "String"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Button/Menu": {
+    "name": "Controls/Button/Menu",
+    "title": "Control \"ButtonMenu\"",
+    "className": "Controls/Button/Menu",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Button/Menu",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "tooltip": {
+            "type": "String",
+            "title": "Tooltip text."
+          },
+          "icon": {
+            "type": "String",
+            "title": "Button icon."
+          },
+          "caption": {
+            "type": "String",
+            "title": "Button text."
+          },
+          "style": {
+            "type": "enum",
+            "title": "Display style of button.",
+            "enum": {
+              "primary": "Button display as main link style.",
+              "success": "Button display as first nonaccent link style.",
+              "warning": "Button display as second nonaccent link style.",
+              "danger": "Button display as third nonaccent link style.",
+              "info": "Button display as first accent link style.",
+              "secondary": "Button display as icon with border.",
+              "default": "The display style of button as default text."
+            }
+          },
+          "viewMode": {
+            "type": "enum",
+            "title": "View mode of button.",
+            "enum": {
+              "link": "Decorated hyperlink.",
+              "button": "Default button.",
+              "toolButton": "Toolbar button."
+            }
+          },
+          "size": {
+            "type": "enum",
+            "title": "Button size. The value is given by common size notations.",
+            "enum": {
+              "s": "Small button size.",
+              "m": "Medium button size.",
+              "l": "Large button size.",
+              "xl": "Extra large button size."
+            }
+          },
+          "iconStyle": {
+            "type": "enum",
+            "title": "Displaying icon style.",
+            "enum": {
+              "primary": "The display style of the attracting attention icon.",
+              "success": "The display style of the success icon.",
+              "warning": "The display style of the warning icon.",
+              "danger": "The display style of the danger icon.",
+              "info": "The display style of the simple information icon.",
+              "secondary": "The display style of the secondary icon."
+            }
+          },
+          "source": {
+            "type": "Array",
+            "title": "Object that implements ISource interface for data access."
+          },
+          "groupTemplate": {
+            "type": "function|String",
+            "title": "Group template."
+          },
+          "groupMethod": {
+            "type": "function",
+            "title": "Function that returns group identifier."
+          },
+          "nodeProperty": {
+            "type": "String",
+            "title": "Name of the field describing the type of the node (list, node, hidden node)."
+          },
+          "parentProperty": {
+            "type": "String",
+            "title": "Name of the field that contains item's parent identifier."
+          },
+          "navigation": {
+            "type": "Object",
+            "title": "List navigation configuration"
+          },
+          "headTemplate": {
+            "type": "function|String",
+            "title": "Template that will be rendered above the list."
+          },
+          "footerTemplate": {
+            "type": "function|String",
+            "title": "Template that will be rendered below the list."
+          },
+          "dropdownClassName": {
+            "type": "String",
+            "title": "Сlass for template."
+          },
+          "filter": {
+            "type": "Object",
+            "title": "Filter configuration - object with field names and their values."
+          },
+          "itemTemplate": {
+            "type": "function|String",
+            "title": "Template for item render."
+          },
+          "itemTemplateProperty": {
+            "type": "String",
+            "title": "Name of the item property that contains template for item render"
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
           }
         }
       }

@@ -58,7 +58,6 @@
    box-sizing: border-box;
    min-width: 0;
    font-size: @font-size_Grid-header-cell;
-   .position-sticky();
    z-index: 1;
    top: 0;
    background-color: @background-color_Grid-sticky-row;
@@ -181,13 +180,14 @@
    padding-right: @spacing_Grid-column / 2;
 }
 
-.controls-Grid__row-cell__content_withLadder {
+.controls-Grid__row-cell__content_hiddenForLadder {
    visibility: hidden;
 }
 
 .controls-Grid__row-ladder-cell {
    pointer-events: none;
    position: relative;
+   z-index: 2;
 }
 
 .controls-Grid__row-ladder-cell__content {
@@ -312,6 +312,14 @@
    left: 0;
 }
 
+.controls-GridView__checkbox-onhover {
+   display: none;
+}
+
+.ws-is-no-touch .controls-Grid__row:hover .controls-GridView__checkbox-onhover {
+   display: inline-block;
+}
+
 .controls-Grid__row-cell__contentWrapper {
    display: inline-flex;
    width: 100%;
@@ -331,12 +339,13 @@
    box-sizing: border-box;
 }
 
-.controls-Grid__row-cell_withSelectionMarker_master {
+.controls-Grid__row-cell_selected-master {
    background-color: @background-color_MasterList_item-selected;
-   position: sticky;
    z-index: 1;
+   /* Пока нет фикс шапок
+   position: sticky;
    top: 0;
-   bottom: 0;
+   bottom: 0; */
    &:before {
       content: '';
       z-index: 2;
@@ -353,6 +362,9 @@
       //Top border of grid element is 1px;
       height: ~'calc(100% + 1px)';
    }
+}
+
+.controls-Grid__row-cell_selected__last-master {
    &:after {
       content: '';
       z-index: 1;

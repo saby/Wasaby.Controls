@@ -1,10 +1,7 @@
 <div class="controls-itemActionsV__action
             controls-itemActionsV__action_padding_swipe
-            controls-itemActionsV__action_style_{{action.style ? action.style : 'default'}}
-            {{!!action.iconDone ? ' controls-itemActionsV__action_done'}}
-            {{!!action.iconError ? ' controls-itemActionsV__action_error'}}
-            {{action.iconStyle ? ' action_icon_style_' + action.iconStyle  : 'action_icon_style_default'}}"
-      title="{{!!action.title ? action.title}}"
+            controls-itemActionsV__action_style_{{action.style}}
+            controls-itemActionsV__action_iconStyle_{{action.iconStyle}}"
       style="{{'height:' + action.height}}">
    <ws:if data="{{needShowIcon(action, direction, hasShowedItemActionWithIcon)}}">
         <i class="{{action.icon}} controls-itemActionsV__action_icon_{{swipeIconSize}} controls-itemActionsV__action_icon_swipe"/>

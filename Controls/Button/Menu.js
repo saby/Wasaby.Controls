@@ -3,13 +3,16 @@ define('Controls/Button/Menu',
       'Core/Control',
       'wml!Controls/Button/Menu/Menu',
       'Controls/Button/Menu/MenuUtils',
-      'css!Controls/Button/Menu/Menu',
+      'css!theme?Controls/Button/Menu/Menu',
       'Controls/Button'
    ],
    function(Control, template, MenuUtils) {
 
       /**
        * Button by clicking on which a drop-down list opens.
+       *
+       * <a href="/materials/demo-ws4-button-menu">Demo-example</a>.
+       *
        * @class Controls/Button/Menu
        * @extends Core/Control
        * @mixes Controls/interface/ICaption
@@ -19,7 +22,9 @@ define('Controls/Button/Menu',
        * @mixes Controls/List/interface/IHierarchy
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
+       * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IButton
+       * @mixes Controls/Button/interface/IIcon
        * @control
        * @public
        * @author Михайловский Д.С.
@@ -39,11 +44,13 @@ define('Controls/Button/Menu',
 
          _beforeMount: function(options) {
             this._offsetClassName = MenuUtils.cssStyleGeneration(options);
-            this._filter = options.filter;
          },
 
          _beforeUpdate: function(options) {
-            this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            if (this._options.size !== options.size || this._options.icon !== options.icon ||
+               this._options.viewMode !== options.viewMode) {
+               this._offsetClassName = MenuUtils.cssStyleGeneration(options);
+            }
          },
 
          _onItemClickHandler: function(event, result) {
@@ -55,7 +62,6 @@ define('Controls/Button/Menu',
       Menu.getDefaultOptions = function() {
          return {
             showHeader: true,
-            style: 'buttonDefault',
             size: 'm',
             filter: {}
          };

@@ -6,7 +6,7 @@ define('Controls/Input/Date/Range', [
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Range/Range',
-   'css!Controls/Input/Date/Range/Range'
+   'css!theme?Controls/Input/Date/Range/Range'
 ], function(
    Control,
    coreMerge,
@@ -25,6 +25,7 @@ define('Controls/Input/Date/Range', [
     * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Date/interface/IRange
     * @mixes Controls/Input/interface/IInputDateRange
+    * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/Input/interface/IDateMask
     * @mixes Controls/Input/interface/IValidation
     * @css @spacing_DateRange-between-input-button Spacing between input field and button.

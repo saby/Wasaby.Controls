@@ -2,6 +2,8 @@
    __noDirtyChecking="{{true}}"
    template="{{'wml!Controls/List/resources/ItemOutput'}}"
    listModel="{{listModel}}"
+   editingItemData="{{editingItemData}}"
+   isAdd="{{isAdd}}"
    itemActionsTemplate="{{itemActionsTemplate}}"
    swipeTemplate="{{swipeTemplate}}"
    multiSelectTpl="{{multiSelectTpl}}"

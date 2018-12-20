@@ -43,7 +43,7 @@ define([
             item2 = new Model({
                rawData: {id: 2},
                idProperty: 'id'
-            })
+            });
 
          lookup._options.items = new List({
             items: [item, item2]
@@ -51,6 +51,29 @@ define([
 
          assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 1), [item2]);
          assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 10), [item, item2]);
+      });
+
+      it('isShowCounter', function() {
+         assert.isTrue(Lookup._private.isShowCounter(10, 5));
+         assert.isFalse(Lookup._private.isShowCounter(10, 20));
+      });
+
+      it('getLastRowCollectionWidth', function() {
+         var itemsSizes = [10, 20, 30, 40];
+
+         assert.equal(Lookup._private.getLastRowCollectionWidth(itemsSizes, false, false, 20), 100);
+         assert.equal(Lookup._private.getLastRowCollectionWidth(itemsSizes, true, true, 20), 120);
+      });
+
+      it('getInputWidth', function() {
+         assert.equal(Lookup._private.getInputWidth(400, 200, 100), undefined);
+         assert.equal(Lookup._private.getInputWidth(400, 200, 300), 200);
+      });
+
+      it('getMultiLineState', function() {
+         assert.isTrue(Lookup._private.getMultiLineState(200, 100, true));
+         assert.isFalse(Lookup._private.getMultiLineState(200, 300, true));
+         assert.isTrue(Lookup._private.getMultiLineState(200, 300, false));
       });
 
       it('_beforeMount', function() {
@@ -81,6 +104,33 @@ define([
          assert.isTrue(activated);
       });
 
+      it('_beforeUpdate', function() {
+         var lookup = new Lookup();
+
+         lookup._beforeMount({});
+         lookup._beforeUpdate({
+            items: new List()
+         });
+         assert.equal(lookup._multiLineState, undefined);
+         assert.equal(lookup._counterWidth, undefined);
+
+         lookup._beforeUpdate({
+            items: new List(),
+            multiLine: true
+         });
+         assert.notEqual(lookup._multiLineState, undefined);
+         assert.notEqual(lookup._counterWidth, undefined);
+         assert.equal(lookup._maxVisibleItems, undefined);
+
+         lookup._beforeUpdate({
+            items: new List(),
+            maxVisibleItems: 10
+         });
+         assert.notEqual(lookup._maxVisibleItems, undefined);
+         assert.equal(lookup._inputWidth, undefined);
+         assert.equal(lookup._availableWidthCollection, undefined);
+      });
+
       it('_changeValueHandler', function() {
          var
             newValue = [],
@@ -93,6 +143,24 @@ define([
          };
          lookup._changeValueHandler(null, 1);
          assert.deepEqual(newValue, [1]);
+      });
+
+      it('_choose', function() {
+         var
+            isActivate = false,
+            lookup = new Lookup();
+
+         lookup.activate = function() {
+            isActivate = true;
+         };
+
+         lookup._beforeMount({});
+         lookup._choose();
+         assert.isFalse(isActivate);
+
+         lookup._options.multiSelect = true;
+         lookup._choose();
+         assert.isTrue(isActivate);
       });
    
       it('_deactivated', function() {
@@ -111,6 +179,12 @@ define([
          assert.isTrue(lookup._suggestState);
 
          lookup._options.readOnly = true;
+         lookup._suggestStateChanged();
+         assert.isFalse(lookup._suggestState);
+   
+         lookup._suggestState = true;
+         lookup._infoboxOpened = true;
+         lookup._options.readOnly = false;
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
       });

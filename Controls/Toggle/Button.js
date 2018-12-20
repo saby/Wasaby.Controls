@@ -7,13 +7,14 @@ define('Controls/Toggle/Button', [
    'css!theme?Controls/Toggle/Button/Button'
 ], function(Control, Classes, template, validateIconStyle) {
    /**
-    * Button that switches between different states. It support different display styles, icon display styles and sizes
+    * Button that switches between two states: on-state and off-state.
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
     * @class Controls/Toggle/Button
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
+    * @mixes Controls/interface/IButton
     * @control
     * @public
     * @author Михайловский Д.С.
@@ -23,44 +24,18 @@ define('Controls/Toggle/Button', [
     */
 
    /**
-    * @name Controls/Toggle/Button#iconStyle
-    * @cfg {String} Displaying icon style.
-    * @variant default Default icon display style.  It is different for different toggle button styles. It is default value.
-    * @variant attention Attention icon display style.
-    * @variant error Error icon display style.
-    * @variant done Done icon display style.
-    */
-
-   /**
-    * @name Controls/Toggle/Button#style
-    * @cfg {String} Display style of button.
-    * @variant iconButtonBordered Bordered icon toggle button display style.
-    * @variant linkMain Main link toggle button display style. It is default value.
-    * @variant buttonLinkMain Main link button display style.
-    * @variant buttonLinkAdditional Additional link button display style.
-    */
-
-   /**
-    * @name Controls/Toggle/Button#size
-    * @cfg {String} Size of the button.
-    * @variant s Small button size.
-    * @variant m Medium button size.
-    * @variant l Large button size. It is default value.
-    */
-
-   /**
     * @name Controls/Toggle/Button#icons
-    * @cfg {Array} Set of icons. Button with zero icons - button without icons.
+    * @cfg {Array} Set of icons.
     * Button with one icon have one icon and it isn't toggled.
-    * Button with two icons have one icon, but it is different in free and toggled states.
-    * If button has more than two icons, it work only with first and second captions.
+    * Button with two icons display one icon, but it is different in free and toggled states.
+    * If button has more than two icons, it work only with first and second icons.
     */
 
    /**
     * @name Controls/Toggle/Button#captions
-    * @cfg {Array} Set of captions. Button with zero icons - button without caption.
+    * @cfg {Array} Set of captions.
     * Button with one caption have one caption and it isn't toggled.
-    * Button with two caption have one caption, but it is different in free and toggled states.
+    * Button with two captions display one caption, but it is different in free and toggled states.
     * If button has more than two captions, it work only with first and second captions.
     */
    var stickyButton = [
@@ -72,6 +47,7 @@ define('Controls/Toggle/Button', [
       optionsGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
+         self._toggleButton = true;
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
          self._transparent = options.transparent;
          self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;

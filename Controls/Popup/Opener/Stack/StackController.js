@@ -17,10 +17,11 @@ define('Controls/Popup/Opener/Stack/StackController',
       var _private = {
 
          prepareSizes: function(item, container) {
-            var templateStyle = getComputedStyle(container.children[0]);
+            var templateStyle = container ? getComputedStyle(container.children[0]) : {};
+            var defaultOptions = _private.getDefaultOptions(item);
 
-            item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || templateStyle.minWidth, 10);
-            item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || templateStyle.maxWidth, 10);
+            item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
+            item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
 
             // Если задано одно значение - приравниваем minWidth и maxWidth
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
@@ -30,8 +31,12 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.maxWidth = item.popupOptions.minWidth;
             }
 
+            if (!item.popupOptions.hasOwnProperty('minimizedWidth')) {
+               item.popupOptions.minimizedWidth = defaultOptions.minimizedWidth;
+            }
+
             // optimization: don't calculate the size of the container, if the configuration is set
-            if (!item.popupOptions.minWidth && !item.popupOptions.maxWidth) {
+            if (container && !item.popupOptions.minWidth && !item.popupOptions.maxWidth) {
                item.containerWidth = _private.getContainerWidth(item, container);
             }
          },
@@ -70,6 +75,15 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          removeAnimationClasses: function(className) {
             return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
+         },
+
+         addShadowClass: function(item) {
+            _private.removeShadowClass(item);
+            item.popupOptions.stackClassName += ' controls-Stack__shadow';
+         },
+
+         removeShadowClass: function(item) {
+            item.popupOptions.stackClassName = item.popupOptions.stackClassName.replace(/controls-Stack__shadow/ig, '').trim();
          },
 
          prepareUpdateClassses: function(item) {
@@ -115,6 +129,12 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
          setStackContent: function(item) {
             item.popupOptions.content = 'wml!Controls/Popup/Opener/Stack/StackContent';
+         },
+
+         getDefaultOptions: function(item) {
+            var template = item.popupOptions.template;
+            var templateClass = typeof template === 'string' ? require(template) : template;
+            return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
          }
       };
 
@@ -192,7 +212,9 @@ define('Controls/Popup/Opener/Stack/StackController',
                var currentWidth = item.containerWidth || item.position.width;
                if (!cache[currentWidth]) {
                   cache[currentWidth] = 1;
-                  item.popupOptions.stackClassName += ' controls-Stack__shadow';
+                  _private.addShadowClass(item);
+               } else {
+                  _private.removeShadowClass(item);
                }
                if (StackStrategy.isMaximizedPanel(item)) {
                   _private.prepareMaximizedState(maxPanelWidth, item);
@@ -202,9 +224,11 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          getDefaultConfig: function(item) {
             var baseCoord = { top: 0, right: 0 };
-            var position = StackStrategy.getPosition(baseCoord, { popupOptions: item.popupOptions });
+            _private.prepareSizes(item);
+            var position = StackStrategy.getPosition(baseCoord, item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
+            item.popupOptions.stackClassName = '';
             if (StackStrategy.isMaximizedPanel(item)) {
                // set default values
                item.popupOptions.templateOptions.showMaximizedButton = undefined; // for vdom dirtyChecking
@@ -212,7 +236,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                _private.setMaximizedState(item, maximizedState);
             }
             if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName += 'controls-Stack__waiting';
+               item.popupOptions.stackClassName = 'controls-Stack__waiting';
             }
 
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes

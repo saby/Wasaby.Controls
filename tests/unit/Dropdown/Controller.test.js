@@ -3,9 +3,12 @@ define(
       'Controls/Dropdown/Controller',
       'WS.Data/Source/Memory',
       'Core/core-clone',
-      'WS.Data/Collection/RecordSet'
+      'WS.Data/Collection/RecordSet',
+      'Controls/History/Source',
+      'Controls/History/Service',
+      'Core/Deferred'
    ],
-   (Dropdown, Memory, Clone, RecordSet) => {
+   (Dropdown, Memory, Clone, RecordSet, historySource, historyService, Deferred) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -60,7 +63,8 @@ define(
             source: new Memory({
                idProperty: 'id',
                data: items
-            })
+            }),
+            filter: {}
          };
 
          let configLazyLoad = {
@@ -113,6 +117,45 @@ define(
             assert.deepEqual(dropdownController._items.getRawData(), itemsRecords.getRawData());
          });
 
+         it('received state, selectedItems = [null], emptyText is set', () => {
+            let dataLoadCallbackCalled = false;
+            const config = {
+               selectedKeys: [null],
+               keyProperty: 'id',
+               emptyText: '123',
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            };
+            const dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._selectedItems, [null]);
+            assert.isTrue(dataLoadCallbackCalled);
+         });
+
+         it('received state, selectedItems = [null], emptyText is NOT set', () => {
+            let dataLoadCallbackCalled = false;
+            const config = {
+               selectedKeys: [null],
+               keyProperty: 'id',
+               dataLoadCallback: function() {
+                  dataLoadCallbackCalled = true;
+               },
+               source: new Memory({
+                  idProperty: 'id',
+                  data: items
+               })
+            };
+            const dropdownController = getDropdownController(config);
+            dropdownController._beforeMount(config, null, itemsRecords);
+            assert.deepEqual(dropdownController._selectedItems, []);
+            assert.isTrue(dataLoadCallbackCalled);
+         });
+
          it('check selectedItemsChanged event', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = itemsRecords;
@@ -153,6 +196,44 @@ define(
                   resolve();
                });
             });
+         });
+
+         it('_beforeUpdate new historySource', function() {
+            let dropdownController = getDropdownController(config);
+            let historyS = new historySource({
+               originSource: new Memory({
+                  idProperty: 'id',
+                  data: items
+               }),
+               historySource: new historyService({
+                  historyId: 'TEST_HISTORY_ID_DDL_CONTROLLER'
+               })
+            });
+            historyS.query = function() {
+               var def = new Deferred();
+               def.addCallback(function(set) {
+                  return set;
+               });
+               def.callback(itemsRecords);
+               return def;
+            };
+            dropdownController._selectedItems = [];
+            dropdownController._items = itemsRecords;
+            dropdownController._beforeUpdate({
+               selectedKeys: '[2]',
+               keyProperty: 'id',
+               source: historyS,
+               filter: {}
+            });
+            assert.deepEqual(dropdownController._filter, { $_history: true });
+
+         });
+
+         it('_beforeUpdate new filter', () => {
+            let dropdownController = getDropdownController(config);
+            dropdownController._selectedItems = items;
+            dropdownController._beforeUpdate(config);
+            assert.equal(dropdownController._selectedItems.length, 9);
          });
 
          it('open dropdown', () => {
@@ -236,7 +317,8 @@ define(
             dropdownController._items = itemsRecords;
             dropdownController._beforeUpdate({
                selectedKeys: '[6]',
-               keyProperty: 'id'
+               keyProperty: 'id',
+               filter: config.filter
             });
             assert.deepEqual(dropdownController._selectedItems[0].getRawData(), items[5]);
          });
@@ -244,7 +326,7 @@ define(
          it('check empty item update', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._selectedItems = [];
-            Dropdown._private.updateSelectedItems(dropdownController, [null], 'id');
+            Dropdown._private.updateSelectedItems(dropdownController, '123', [null], 'id');
             assert.deepEqual(dropdownController._selectedItems, [null]);
          });
 
@@ -256,6 +338,39 @@ define(
                open: setTrue.bind(this, assert)
             };
             dropdownController._open();
+         });
+   
+         it('mousedown', () => {
+            let dropdownController = getDropdownController(configLazyLoad);
+            let opened = false;
+            let items = new RecordSet({
+               idProperty: 'id',
+               rawData: [ {id: 1, title: 'Запись 1'}, {id: 2, title: 'Запись 2'} ]
+            });
+            dropdownController._items = items;
+            dropdownController._children.DropdownOpener = {
+               close: function() {
+                  opened = false;
+               },
+               open: function() {
+                  opened = true;
+               },
+               isOpened: function() {
+                  return opened;
+               }
+            };
+            dropdownController._mousedown();
+            assert.isTrue(opened);
+   
+            dropdownController._mousedown();
+            assert.isFalse(opened);
+         });
+         
+         it('getFilter', () => {
+            var filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
+            assert.deepEqual(filter, {$_history: true, id: 'test'});
+            filter = Dropdown._private.getFilter({id: 'test2'}, new Memory({}));
+            assert.deepEqual(filter, {id: 'test2'});
          });
 
          function setTrue(assert) {

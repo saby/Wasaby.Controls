@@ -13,7 +13,7 @@ define('Controls/Popup/Opener/Edit',
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
 
       /**
-       * The component opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, component synchronize editable entry with recordsets.
+       * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * @class Controls/Popup/Opener/Edit
        * @control
        * @public
@@ -152,6 +152,23 @@ define('Controls/Popup/Opener/Edit',
             this._children.Opener.open(config);
          },
 
+         /**
+          * Close popup
+          * @function Controls/Popup/Opener/Edit#close
+          */
+         close: function() {
+            this._children.Opener.close();
+         },
+
+         /**
+          * Popup opened status
+          * @function Controls/Popup/Opener/Edit#isOpened
+          * @returns {Boolean} is popup opened
+          */
+         isOpened: function() {
+            return this._children.Opener.isOpened();
+         },
+
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
 
@@ -194,11 +211,21 @@ define('Controls/Popup/Opener/Edit',
 /**
  * @name Controls/Popup/Opener/Edit#popupOptions
  * @cfg {Object} Sets the popup configuration.
+ * @description
+ * <ul>
+ *     <li>if mode option equal 'stack' see {@link Controls/interface/IStackOptions#popupOptions popupOptions}</li>
+ *     <li>if mode option equal 'dialog' see {@link Controls/interface/IDialogOptions#popupOptions popupOptions}</li>
+ *     <li>if mode option equal 'sticky' see {@link Controls/interface/IStickyOptions#popupOptions popupOptions}</li>
+ * </ul>
+ *
  */
 
 /**
  * @name Controls/Popup/Opener/Edit#mode
  * @cfg {Object} Sets the display mode of the dialog.
+ * @variant stack Open edit dialog in the stack panel.
+ * @variant dialog Open edit dialog in the dialog popup.
+ * @variant sticky Open edit dialog in the sticky popup.
  */
 
 /**

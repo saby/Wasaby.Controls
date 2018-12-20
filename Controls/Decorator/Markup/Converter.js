@@ -45,7 +45,7 @@ define('Controls/Decorator/Markup/Converter', [
       var inLink = false;
       return html.replace(linkParseRegExp, function(match, link, linkPrefix, email, text, end) {
          if (link && !inLink) {
-            return '<a rel="noreferrer" href="' + (linkPrefix === 'www.' ? 'http://' : '') + link + '" target="_blank">' + link + '</a>' + end;
+            return '<a class="asLink" rel="noreferrer" href="' + (linkPrefix === 'www.' ? 'http://' : '') + link + '" target="_blank">' + link + '</a>' + end;
          }
          if (email && !inLink) {
             return '<a href="mailto:' + email + '">' + email + '</a>' + end;
@@ -96,7 +96,7 @@ define('Controls/Decorator/Markup/Converter', [
     * @return {Array}
     */
    var deepCopyJson = function(json) {
-      return objectMerge([], json);
+      return objectMerge([], json, { clone: true });
    };
 
    /**

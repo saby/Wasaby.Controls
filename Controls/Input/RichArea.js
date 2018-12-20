@@ -2,10 +2,10 @@ define('Controls/Input/RichArea', [
    'Core/Control',
    'wml!Controls/Input/RichArea/RichArea',
    'Controls/Input/RichArea/RichAreaModel',
-   'Core/helpers/domToJsonML',
-   'Core/HtmlJson',
+   'Controls/Decorator/Markup/Converter',
+   'Controls/Decorator/Markup/resolvers/linkDecorate',
    'css!theme?Controls/Input/RichArea/RichArea'
-], function(Control, template, RichModel, domToJson, HtmlJson) {
+], function(Control, template, RichModel, MarkupConverter, linkDecorateResolver) {
    'use strict';
 
    /**
@@ -22,17 +22,15 @@ define('Controls/Input/RichArea', [
       // TODO: Will be removed https://online.sbis.ru/opendoc.html?guid=7571450e-511e-4e86-897f-e392e53fea68
       updatePreviewContainer: function(self) {
          if (self._options.readOnly) {
-            self._children.previewContainer.innerHTML = self._jsonToHtml(self._value);
+            self._children.previewContainer.innerHTML = self._jsonToHtml(self._value, linkDecorateResolver);
          }
       }
    };
 
    var RichTextArea = Control.extend({
       _template: template,
-      _htmlJson: undefined,
 
       _beforeMount: function(opts) {
-         this._htmlJson = new HtmlJson();
          this._value = typeof opts.value === 'string' ? JSON.parse(opts.value) : opts.value;
          this._simpleViewModel = new RichModel({
             value: this._value
@@ -72,26 +70,18 @@ define('Controls/Input/RichArea', [
       },
 
       _valueChangedHandler: function(e, value) {
-         var newValue = this._valueToJson(value);
+         var newValue = MarkupConverter.htmlToJson(value);
          this._simpleViewModel.updateOptions({
             value: newValue
          });
          this._notify('valueChanged', [newValue]);
       },
 
-      _valueToJson: function(newValue) {
-         if (newValue[0] !== '<') {
-            newValue = '<p>' + newValue + '</p>';
-         }
-         var span = document.createElement('span');
-         span.innerHTML = newValue;
-         var json = domToJson(span).slice(1);
-         this._htmlJson.setJson(json);
-         return json;
-      },
-      _jsonToHtml: function(json) {
-         this._htmlJson.setJson(json);
-         return this._htmlJson.render();
+      _jsonToHtml: function(json, tagResolver) {
+         var html = MarkupConverter.jsonToHtml(json, tagResolver);
+
+         // Remove outer div.
+         return html.substring(5, html.length - 6);
       },
 
       _undoRedoChangedHandler: function(event, state) {

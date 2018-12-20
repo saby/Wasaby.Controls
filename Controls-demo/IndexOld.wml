@@ -25,8 +25,18 @@
          </Router.Link>
       </div>
       <div>
+         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
+            <a href="{{content.href}}">List/VirtualScroll</a>
+         </Router.Link>
+      </div>
+      <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
             List/Multiselect
+         </a>
+      </div>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FVirtualScroll">
+            List/VirtualScroll
          </a>
       </div>
       <div>
@@ -48,30 +58,33 @@
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FExplorer%252FExplorer">Explorer</a>
       </div>
+      <h1>MasterDetail</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FMasterDetail%252FDemo">MasterDetail</a>
+      </div>
       <h1>Paging</h1>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FPaging">Paging</a>
       </div>
       <h1>ItemActions</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FList%252FItemActions?theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FItemActions">
             ItemActions
          </a>
          <br />
-         <a href="/Controls-demo/app/Controls-demo%252FList%252FSwipe?theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FSwipe">
             Swipe
          </a>
       </div>
       <h1>DragNDrop</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FDragNDrop%252FContainer?theme=online">
-            DragNDrop List</a>
+         <a href="/Controls-demo/app/Controls-demo%252FDragNDrop%252FContainer">DragNDrop</a>
       </div>
       <h1>Actions</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FList%252FRemove?theme=online">Remove</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FRemove">Remove</a>
          <br/>
-         <a href="/Controls-demo/app/Controls-demo%252FList%252FMover?theme=online">Mover</a>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FMover">Mover</a>
       </div>
       <h1>Edit And Remove Operations</h1>
       <div>
@@ -85,23 +98,23 @@
    <div class="demo_controls_list_section">
       <h1>Buttons</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FButtonsVdom?theme=online">Buttons: baseline demo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FButtonsVdom">Buttons: baseline demo</a>
       </div>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FdemoButtons?theme=online">Buttons: styles demo</a>
+         <a href="/Controls-demo/app/Controls-demo%252FButtons%252FdemoButtons">Buttons: styles demo</a>
       </div>
 
       <h1>Dropdown</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FDropdown%252FMenuVdom?withoutLayout=true&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FDropdown%252FMenuVdom?withoutLayout=true">
          Dropdown
       </a>
 
       <h1>Search</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FSearch%252FSearchVDom?theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FSearch%252FSearchVDom">
          Search
       </a>
       <h1>Checkbox</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FCheckbox%252FCheckbox?theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FCheckbox%252FCheckbox">
          Checkbox
       </a>
 
@@ -138,22 +151,22 @@
       <a href="/Controls-demo/app/Controls-demo%252FInfoBox%252FInfoBox">InfoBox</a>
 
       <h1>Confirmation</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation?theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FConfirmation%252FConfirmation">
          Confirmation
       </a>
 
       <h1>TabButtons</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FTabs%252FButtons?compat=true&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FTabs%252FButtons?compat=true">
          TabButtons
       </a>
       <h1>Switchers</h1>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FSwitch%252FSwitchDemo?compat=true&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FSwitch%252FSwitchDemo?compat=true">
             Switch
          </a>
       </div>
       <div>
-         <a href="/Controls-demo/app/Controls-demo%252FSwitch%252FDoubleSwitchDemo?compat=true&theme=online">
+         <a href="/Controls-demo/app/Controls-demo%252FSwitch%252FDoubleSwitchDemo?compat=true">
             DoubleSwitch
          </a>
       </div>
@@ -166,14 +179,14 @@
       </div>
 
       <h1>Headers</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FHeaders%252FstandartDemoHeader?theme=online">Headers</a>
+      <a href="/Controls-demo/app/Controls-demo%252FHeaders%252FstandartDemoHeader">Headers</a>
       <br/>
       <a href="/Controls-demo/app/Controls-demo%252FHeaders%252FheaderDemo">Headers2</a>
    </div>
    <div class="demo_controls_list_section">
       <h1>FastFilter</h1>
       %252F
-      <a href="/Controls-demo/app/Controls-demo%252FFastFilter%252FFastFilter?withoutLayout=true&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FFastFilter%252FFastFilter?withoutLayout=true">
          FastData
       </a>
       <h1>BreadCrumbs</h1>
@@ -242,7 +255,7 @@
    </div>
    <div class="demo_controls_list_section">
       <h1>FormController</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FFormController%252FFormController?withoutLayout=true&theme=online">
+      <a href="/Controls-demo/app/Controls-demo%252FFormController%252FFormController?withoutLayout=true">
          FormController
       </a>
 

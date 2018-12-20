@@ -4,7 +4,10 @@
 @color_Grid-selection-marker: #FF7033;
 //--------------- styles ---------------
 .ws-is-not-full-grid-support {
-  .controls-Grid__row-cell_withSelectionMarker {
+  .controls-Grid__row-cell_selected-master:before {
+    display: none;
+  }
+  .controls-Grid__row-cell_selected__first {
     box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
   }
   .controls-Grid {
@@ -50,6 +53,9 @@
     display: table-cell;
     white-space: nowrap;
     vertical-align: top;
+  }
+  .controls-Grid__row-cell__content {
+    white-space: normal;
   }
   .controls-Grid__row-cell-checkbox {
     width: @width_Grid-cell-checkbox;

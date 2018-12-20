@@ -8,14 +8,14 @@
         emptyText="{{_options.emptyText}}"
         corner="{{_corner}}"
         width="{{_width}}"
+        filter="{{_filter}}"
         marker="{{false}}"
         popupClassName="{{_options.popupClassName ? _options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}}"
         typeShadow="suggestionsContainer"
         close="{{_onClose}}"
+        open="{{_onOpen}}"
         dataLoadCallback="{{_setText}}"
-        tooltip="{{_options.tooltip}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        on:mousedown="_mouseDownHandler()"
         class="controls-ComboBox">
 
       <Controls.Input.resources.InputRender.InputRender

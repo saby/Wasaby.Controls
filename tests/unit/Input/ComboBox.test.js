@@ -78,17 +78,13 @@ define(
             assert.isFalse(combobox._isOpen);
          });
 
-         it('_mouseDownHandler', function() {
+         it('popupVisibilityChanged', function() {
             let combobox = getCombobox(config);
-            assert.isFalse(combobox._isOpen);
-            combobox._mouseDownHandler();
+   
+            Combobox._private.popupVisibilityChanged.call(combobox, true);
             assert.isTrue(combobox._isOpen);
-         });
-
-         it('close', function() {
-            let combobox = getCombobox(config);
-            let close = Combobox._private.close.bind(combobox);
-            close();
+   
+            Combobox._private.popupVisibilityChanged.call(combobox, false);
             assert.isFalse(combobox._isOpen);
          });
 
@@ -99,11 +95,11 @@ define(
             assert.equal(combobox._placeholder, 'This is placeholder');
          });
 
-         it('_beforeUpdate', function() {
+         it('_beforeUpdate width change', function() {
             let combobox = getCombobox(config);
             combobox._container = {offsetWidth: 250};
             assert.equal(combobox._width, undefined);
-            combobox._beforeUpdate();
+            combobox._beforeUpdate({});
             assert.equal(combobox._width, 250);
          });
          it('_afterMount', function() {

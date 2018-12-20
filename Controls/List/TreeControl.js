@@ -13,7 +13,8 @@ define('Controls/List/TreeControl', [
 ) {
    'use strict';
 
-   var DRAG_MAX_OFFSET = 10;
+   var DRAG_MAX_OFFSET = 15,
+      DEFAULT_COLUMNS_VALUE = [];
 
    var _private = {
       clearSourceControllers: function(self) {
@@ -25,7 +26,7 @@ define('Controls/List/TreeControl', [
          }
       },
       toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
-         listViewModel.toggleExpanded(dispItem);
+         listViewModel.toggleExpanded(dispItem, expanded);
          self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
       },
       toggleExpanded: function(self, dispItem) {
@@ -36,7 +37,7 @@ define('Controls/List/TreeControl', [
             nodeKey = item.getId(),
             expanded = !listViewModel.isExpanded(dispItem);
          self._notify(expanded ? 'itemExpand' : 'itemCollapse', [item]);
-         if (!self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
+         if (!_private.isExpandAll(self._options.expandedItems) && !self._nodesSourceControllers[nodeKey] && !dispItem.isRoot()) {
             self._nodesSourceControllers[nodeKey] = new SourceController({
                source: self._options.source,
                navigation: self._options.navigation
@@ -86,6 +87,19 @@ define('Controls/List/TreeControl', [
             self._nodesSourceControllers[nodeId].destroy();
          }
          delete self._nodesSourceControllers[nodeId];
+      },
+      isExpandAll: function(expandedItems) {
+         return expandedItems instanceof Array && expandedItems[0] === null;
+      },
+      beforeReloadCallback: function(self, filter) {
+         filter[self._options.parentProperty] = self._root;
+         _private.clearSourceControllers(self);
+      },
+      afterReloadCallback: function(self) {
+         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+         if (self._children.baseControl) {
+            self._children.baseControl.getViewModel().resetExpandedItems();
+         }
       }
    };
 
@@ -106,25 +120,31 @@ define('Controls/List/TreeControl', [
       _root: null,
       _updatedRoot: false,
       _nodesSourceControllers: null,
+      _beforeReloadCallback: null,
+      _afterReloadCallback: null,
       constructor: function(cfg) {
          this._nodesSourceControllers = {};
+         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
          if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
          }
+         this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
+         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _afterMount: function() {
-         TreeControl.superclass._afterMount.apply(this, arguments);
-         this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
-
          // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
          this._children.baseControl.getViewModel().subscribe('onNodeRemoved', this._onNodeRemovedFn);
+      },
+      _dataLoadCallback: function() {
+         if (this._options.dataLoadCallback) {
+            this._options.dataLoadCallback.apply(null, arguments);
+         }
       },
       _onNodeRemoved: function(event, nodeId) {
          _private.onNodeRemoved(this, nodeId);
       },
       _beforeUpdate: function(newOptions) {
-         TreeControl.superclass._beforeUpdate.apply(this, arguments);
          if (typeof newOptions.root !== 'undefined' && this._root !== newOptions.root) {
             this._root = newOptions.root;
             this._updatedRoot = true;
@@ -136,14 +156,10 @@ define('Controls/List/TreeControl', [
          }
       },
       _afterUpdate: function(oldOptions) {
-         var
-            filter;
          TreeControl.superclass._afterUpdate.apply(this, arguments);
          if (this._updatedRoot) {
             this._updatedRoot = false;
-            filter = cClone(this._options.filter || {});
-            filter[this._options.parentProperty] = this._root;
-            this.reload(filter);
+            this.reload();
             this._children.baseControl.getViewModel().setRoot(this._root);
          }
       },
@@ -154,23 +170,16 @@ define('Controls/List/TreeControl', [
       },
       _onExpanderClick: function(e, dispItem) {
          _private.toggleExpanded(this, dispItem);
+         if (this._options.markItemByExpanderClick) {
+            this._children.baseControl.getViewModel().setMarkedKey(dispItem.getContents().getId());
+         }
          e.stopImmediatePropagation();
       },
       _onLoadMoreClick: function(e, dispItem) {
          _private.loadMore(this, dispItem);
       },
-      reload: function(filter) {
-         var
-            self = this,
-            result;
-         _private.clearSourceControllers(this);
-         result = this._children.baseControl.reload(filter);
-         result.addCallback(function() {
-
-            // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
-            self._children.baseControl.getViewModel().setExpandedItems([]);
-         });
-         return result;
+      reload: function() {
+         return this._children.baseControl.reload();
       },
       beginEdit: function(options) {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.beginEdit(options);
@@ -194,16 +203,18 @@ define('Controls/List/TreeControl', [
       _itemMouseMove: function(event, itemData, nativeEvent) {
          var model = this._children.baseControl.getViewModel();
 
-         if (model.getDragTargetItem() && itemData.dispItem.isNode()) {
-            this._setDragPositionOnNode(itemData, nativeEvent);
+         if (model.getDragItemData() && itemData.dispItem.isNode()) {
+            this._nodeMouseMove(itemData, nativeEvent);
          }
       },
 
-      _setDragPositionOnNode: function(itemData, event) {
+      _nodeMouseMove: function(itemData, event) {
          var
+            position,
             topOffset,
             bottomOffset,
             dragTargetRect,
+            dragTargetPosition,
             model = this._children.baseControl.getViewModel(),
             dragTarget = event.target.closest('.js-controls-TreeView__dragTargetNode');
 
@@ -213,7 +224,12 @@ define('Controls/List/TreeControl', [
             bottomOffset = dragTargetRect.top + dragTargetRect.height - event.nativeEvent.pageY;
 
             if (topOffset < DRAG_MAX_OFFSET || bottomOffset < DRAG_MAX_OFFSET) {
-               model.setDragPositionOnNode(itemData, topOffset < DRAG_MAX_OFFSET ? 'before' : 'after');
+               position = topOffset < DRAG_MAX_OFFSET ? 'before' : 'after';
+               dragTargetPosition = model.calculateDragTargetPosition(itemData, position);
+
+               if (dragTargetPosition && this._notify('changeDragTarget', [model.getDragEntity(), dragTargetPosition.item, dragTargetPosition.position]) !== false) {
+                  model.setDragTargetPosition(dragTargetPosition);
+               }
             }
          }
       },
@@ -227,7 +243,10 @@ define('Controls/List/TreeControl', [
    TreeControl.getDefaultOptions = function() {
       return {
          uniqueKeys: true,
-         filter: {}
+         filter: {},
+         markItemByExpanderClick: true,
+         root: null,
+         columns: DEFAULT_COLUMNS_VALUE
       };
    };
 

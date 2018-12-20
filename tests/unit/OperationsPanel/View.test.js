@@ -70,7 +70,9 @@ define([
 
 
       it('_beforeMount', function(done) {
+         assert.isFalse(instance._initialized);
          instance._beforeMount(cfg).addCallback(function(items) {
+            assert.isFalse(instance._initialized);
             assert.deepEqual(items.getRawData(), data);
             assert.deepEqual(instance._items.getRawData(), data);
             done();
@@ -90,7 +92,9 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
+               assert.isFalse(instance._initialized);
                instance._afterMount();
+               assert.isTrue(instance._initialized);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 2);
@@ -112,7 +116,9 @@ define([
             };
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
+               assert.isFalse(instance._initialized);
                instance._afterMount();
+               assert.isTrue(instance._initialized);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 1);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 0);
@@ -139,6 +145,7 @@ define([
                };
                instance._beforeUpdate(cfg);
                assert.isFalse(forceUpdateCalled);
+               assert.isNotOk(instance._sourceChanged);
                done();
             });
          });
@@ -164,13 +171,62 @@ define([
                   forceUpdateCalled = true;
                };
                instance._beforeUpdate(newCfg);
-               assert.isTrue(forceUpdateCalled);
+               assert.isFalse(forceUpdateCalled);
+               assert.isTrue(instance._sourceChanged);
                done();
             });
          });
       });
 
       describe('_afterUpdate', function() {
+         it('old source', function(done) {
+            var forceUpdateCalled = false;
+            instance._children = {
+               toolbarBlock: {
+                  clientWidth: 100
+               }
+            };
+            WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
+            instance._beforeMount(cfg).addCallback(function() {
+               instance._afterMount();
+               instance._forceUpdate = function() {
+                  forceUpdateCalled = true;
+               };
+               instance._sourceChanged = false;
+               instance._afterUpdate(cfg);
+               assert.isFalse(forceUpdateCalled);
+               assert.isNotOk(instance._sourceChanged);
+               done();
+            });
+         });
+         it('new source', function(done) {
+            var
+               forceUpdateCalled = false,
+               newCfg = {
+                  source: new Memory({
+                     idProperty: 'id',
+                     data: data
+                  }),
+                  keyProperty: 'id'
+               };
+            instance._children = {
+               toolbarBlock: {
+                  clientWidth: 100
+               }
+            };
+            WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
+            instance._beforeMount(cfg).addCallback(function() {
+               instance._afterMount();
+               instance._forceUpdate = function() {
+                  forceUpdateCalled = true;
+               };
+               instance._sourceChanged = true;
+               instance._afterUpdate(newCfg);
+               assert.isTrue(forceUpdateCalled);
+               assert.isFalse(instance._sourceChanged);
+               done();
+            });
+         });
          it('enough space', function(done) {
             var forceUpdateCalled = false;
             instance._children = {

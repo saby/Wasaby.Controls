@@ -2,43 +2,54 @@ define('Controls/Application/_Wait',
    [
       'Core/Control',
       'Core/Deferred',
-      'Controls/Application/HeadDataContext',
+      'View/Request',
       'wml!Controls/Application/_Wait'
    ],
 
-   function(Base, Deferred, HeadDataContext, template) {
+   function(Base, Deferred, Request, template) {
       'use strict';
 
+      var asyncTemplate = function() {
+         var res = template.apply(this, arguments);
+         var self = this;
+         if (res.then) {
+            res.then(function(result) {
+               self._resolvePromiseFn();
+               return result;
+            });
+         } else {
+            self._resolvePromiseFn();
+         }
+         return res;
+      };
+
+      // Template functions should have true "stable" flag to send error on using, for example, some control instead it.
+      asyncTemplate.stable = template.stable;
+
       var Page = Base.extend({
-         _template: function() {
-            var res = template.apply(this, arguments);
-            var self = this;
-            if (res.addCallback && !res.isReady() && !self.waitDef.isReady()) {
-               res.addCallback(function(result) {
-                  self.waitDef.callback({});
-                  return result;
-               });
-            } else {
-               if (self.waitDef && !self.waitDef.isReady()) {
-                  self.waitDef.callback({});
-               }
+         _template: asyncTemplate,
+         _resolvePromise: null,
+         _resolvePromiseFn: function() {
+            if (this._resolvePromise) {
+               this._resolvePromise();
+               this._resolvePromise = null;
             }
-            return res;
          },
-         _beforeMount: function(options, context) {
-            this.waitDef = new Deferred();
-            context.headData.pushWaiterDeferred(this.waitDef);
+         _createPromise: function() {
+            this.waitDef = new Promise(function(resolve) {
+               this._resolvePromise = resolve;
+            }.bind(this));
+         },
+         _beforeMount: function() {
+            this._createPromise();
+            Request.getCurrent().getStorage('HeadData').pushWaiterDeferred(this.waitDef);
             if (typeof window !== 'undefined') {
-               this.waitDef.callback();
-               this.waitDef = new Deferred();
+               this._resolvePromiseFn();
+               this._createPromise();
             }
          }
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Page;
    }
 );

@@ -18,6 +18,22 @@ define('Controls/List/interface/IListControl', [
    /**
     * @name Controls/List/interface/IListControl#emptyTemplate
     * @cfg {Function} Template for the empty list.
+    * @remark
+    * We recommend to use default template for emptyTemplate: wml!Controls/List/emptyTemplate
+    * The template accepts the following options:
+    * - contentTemplate content of emptyTemplate
+    * - topSpacing Spacing between top border and content of emptyTemplate
+    * - bottomSpacing Spacing between bottom border and content of emptyTemplate
+    * @example
+    * <pre>
+    *    <Controls.List>
+    *       <ws:emptyTemplate>
+    *          <ws:partial template="wml!Controls/List/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+    *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
+    *          </ws:partial>
+    *       </ws:emptyTemplate>
+    *    </Controls.List
+    * </pre>
     */
 
    /**
@@ -73,7 +89,7 @@ define('Controls/List/interface/IListControl', [
     * @property {String} icon Operation icon.
     * @property {Number} showType Location of operation.
     * @property {String} style Operation style.
-    * @property {String} iconStyle Style operation icons (default | attention | error | done ).
+    * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
     * @property {Function} handler Operation handler.
     */
 
@@ -94,7 +110,7 @@ define('Controls/List/interface/IListControl', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {ItemAction} action Object with configuration of the clicked action.
     * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
-    * @param {Object} nativeEvent Native event which can be used to calculate position of the clicked action.
+    * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
     */
 
    /**
@@ -171,6 +187,9 @@ define('Controls/List/interface/IListControl', [
 
    /**
     * @event Controls/List/interface/IListControl#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
+    * @param {HTMLElement} itemContainer Container of the item.
     */
 
    /**

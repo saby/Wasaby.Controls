@@ -1,15 +1,17 @@
 <div attr:class="controls-BreadCrumbsView">
     <ws:if data="{{_options.visibleItems.length > 0}}">
         <div attr:class="controls-BreadCrumbsView__wrapper">
-            <ws:partial template="{{_itemsTemplate}}" items="{{_options.visibleItems}}" itemTemplate="{{_itemTemplate}}" />
+            <ws:partial template="{{_itemsTemplate}}"
+                        displayProperty="{{ _options.displayProperty }}"
+                        items="{{_options.visibleItems}}"
+                        itemTemplate="{{_itemTemplate}}" />
         </div>
     </ws:if>
 
     <Controls.Dropdown.Opener
             name="menuOpener"
-            keyProperty="id"
-            className="controls-BreadCrumbsController__menu">
-        <ws:popupOptions>
+            keyProperty="id">
+        <ws:popupOptions className="controls-BreadCrumbsController__menu">
             <ws:corner vertical="top"
                        horizontal="right"/>
             <ws:horizontalAlign side="left"/>

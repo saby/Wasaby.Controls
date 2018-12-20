@@ -7,10 +7,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Core/helpers/Object/isEqual',
    'WS.Data/Collection/List',
    'Core/core-merge',
-   'Controls/Utils/getWidth',
-   'wml!Controls/Selector/SelectedCollection/CounterTemplate',
-   'Controls/Utils/tmplNotify'
-], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify) {
+   'Controls/Utils/tmplNotify',
+   'Controls/Utils/ToSourceModel'
+], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, tmplNotify, ToSourceModel) {
+   'use strict';
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -52,8 +52,11 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       notifyTextValueChanged: function(self, textValue) {
-         // toDo Выписана задача на написание апи для события https://online.sbis.ru/opendoc.html?guid=cce8c706-a9e8-452e-bd44-5344f3c5fc72
          self._notify('textValueChanged', textValue);
+      },
+
+      prepareItems: function(self) {
+         ToSourceModel(_private.getItems(self), self._options.source, self._options.keyProperty);
       },
 
       addItem: function(self, item) {
@@ -70,6 +73,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
                _private.getItems(self).assign([item]);
             }
 
+            _private.prepareItems(self);
             _private.notifyChanges(self, selectedKeys);
             _private.setSelectedKeys(self, selectedKeys);
          }
@@ -104,12 +108,6 @@ define('Controls/Selector/SelectedCollection/Controller', [
          return titleItems.join(', ');
       },
 
-      getCounterWidth: function(itemsCount) {
-         return GetWidth.getWidth(CounterTemplate({
-            itemsCount: itemsCount
-         }));
-      },
-
       getItems: function(self) {
          if (!self._items) {
             self._items = new List();
@@ -137,16 +135,9 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
       },
 
-      _afterMount: function() {
-         if (_private.getItems(this).getCount()) {
-            this._forceUpdate();
-         }
-      },
-
       _beforeUpdate: function(newOptions) {
          var
             self = this,
-            itemsCount = _private.getItems(this).getCount(),
             keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
@@ -160,9 +151,11 @@ define('Controls/Selector/SelectedCollection/Controller', [
             });
          }
 
-         this._counterWidth = itemsCount && _private.getCounterWidth(itemsCount);
+         if (!newOptions.multiSelect && this._selectedKeys.length > 1) {
+            this._setItems([]);
+         }
 
-         if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
+         if ((sourceIsChanged || keysChanged) && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
                _private.notifyItemsChanged(self, result);
                _private.notifyTextValueChanged(self, _private.getTextValue(self));
@@ -189,6 +182,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
 
          _private.getItems(this).assign(items);
+         _private.prepareItems(this);
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);
       },

@@ -1,11 +1,12 @@
 <div>
-   <ws:partial template="{{_options.content}}" items="{{_getItems()}}" _counterWidth="{{_counterWidth}}"
+   <ws:partial template="{{_options.content}}" items="{{_getItems()}}"
                on:showSelector="_onShowSelectorHandler()"
                on:addItem="_onAddItemHandler()"
                on:removeItem="_onRemoveItemHandler()"
                on:updateItems="_onUpdateItemsHandler()"
                on:valueChanged="_notifyHandler('valueChanged')"
-               on:itemClick="_notifyHandler('itemClick')"/>
+               on:itemClick="_notifyHandler('itemClick')"
+               on:inputCompleted="_notifyHandler('inputCompleted')"/>
 
    <ws:if data="{{_options.selectorTemplate}}">
       <Controls.Selector.Opener name="selectorOpener">

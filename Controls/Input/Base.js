@@ -8,20 +8,22 @@ define('Controls/Input/Base',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
       'Controls/Utils/getTextWidth',
+      'Core/helpers/Number/randomId',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
+      'Core/helpers/Function/runDelayed',
       'Controls/Utils/hasHorizontalScroll',
 
       'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Base/Field',
       'wml!Controls/Input/Base/ReadOnly',
 
-      'css!Controls/Input/Base/Base'
+      'css!theme?Controls/Input/Base/Base'
    ],
    function(
       Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
-      getTextWidth, InputUtil, ViewModel, hasHorizontalScroll, template,
-      fieldTemplate, readOnlyFieldTemplate
+      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, hasHorizontalScroll,
+      template, fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
 
@@ -88,7 +90,11 @@ define('Controls/Input/Base',
                field.value = value;
             }
 
-            if (_private.hasSelectionChanged(field, selection)) {
+            /**
+             * In IE, change the selection leads to the automatic focusing of the field.
+             * Therefore, we change it only if the field is already focused.
+             */
+            if (_private.hasSelectionChanged(field, selection) && _private.isFieldFocused(self)) {
                /**
                 * After calling setSelectionRange the select event is triggered and saved the selection in model.
                 * You do not need to do this because the model is now the actual selection.
@@ -115,6 +121,16 @@ define('Controls/Input/Base',
           */
          hasAutoFillField: function(field) {
             return !!field.value;
+         },
+
+         isFieldFocused: function(self) {
+            return self._getActiveElement() === self._getField();
+         },
+
+         callChangeHandler: function(self) {
+            if (self._viewModel.displayValue !== self._displayValueAfterFocusIn) {
+               self._changeHandler();
+            }
          },
 
          /**
@@ -253,32 +269,35 @@ define('Controls/Input/Base',
           * @param {Controls/Input/Base/Types/SplitValue.typedef} data
           * @param {String} displayValue Values in the field before changing it.
           */
-         adjustDataForFastInput: function(data, displayValue) {
-            /**
-             * The inserted value and the value after and the length of deleted value will be correct.
-             */
+         adjustDataForFastInput: function(data, inputType, displayValue, selection) {
+            var start, end;
 
-            /**
-             * In the displayValue value none inserted value.
-             * Therefore it consists of a value before and deleted value and a value after.
-             * Cut the displayValue value to so that it does not contain the value after.
-             */
-            data.before = displayValue.substring(0, displayValue.length - data.after.length);
+            if (selection.start === selection.end) {
+               var position = selection.end;
 
-            var removalLength = data.delete.length;
-            var lengthSplitBefore = data.before.length;
+               switch (inputType) {
+                  case 'deleteForward':
+                     start = position;
+                     end = position + data.delete.length;
+                     break;
+                  case 'deleteBackward':
+                     start = position - data.delete.length;
+                     end = position;
+                     break;
+                  default:
+                     start = position;
+                     end = position;
+                     break;
+               }
+            } else {
+               start = selection.start;
+               end = selection.end;
+               data.delete = displayValue.substring(selection.start, selection.end);
+            }
 
-            /**
-             * Because the length of the deleted value is correct and it is at the end of the value before,
-             * you can determine the value to be deleted. It will be equal to the substring of the length
-             * of the deleted value taken from the end.
-             */
-            data.delete = data.before.substring(lengthSplitBefore - removalLength, lengthSplitBefore);
-
-            /**
-             * Cut the value to so that it does not contain the value to be deleted.
-             */
-            data.before = data.before.substring(0, lengthSplitBefore - removalLength);
+            data.delete = displayValue.substring(start, end);
+            data.before = displayValue.substring(0, start);
+            data.after = displayValue.substring(end, displayValue.length);
          }
       };
 
@@ -357,6 +376,12 @@ define('Controls/Input/Base',
          _numberSkippedSaveSelection: 0,
 
          /**
+          * @type {String}
+          * @private
+          */
+         _displayValueAfterFocusIn: '',
+
+         /**
           * @type {Controls/Utils/getTextWidth}
           * @private
           */
@@ -372,19 +397,31 @@ define('Controls/Input/Base',
           * @type {Number|null} The version of IE browser in which the control is build.
           * @private
           */
-         _ieVersion: detection.IEVersion,
+         _ieVersion: null,
 
          /**
-          * @type {Boolean} The version of IE browser in which the control is build.
+          * @type {Boolean|null} Determines whether the control is building in the mobile Android environment.
           * @private
           */
-         _isMobileAndroid: detection.isMobileAndroid,
+         _isMobileAndroid: null,
 
          /**
-          * @type {Boolean} Determines whether the control is building in the mobile IOS environment.
+          * @type {Boolean|null} Determines whether the control is building in the mobile IOS environment.
           * @private
           */
-         _isMobileIOS: detection.isMobileIOS,
+         _isMobileIOS: null,
+
+         /**
+          * @type {Boolean|null} Determined whether to hide the placeholder using css.
+          * @private
+          */
+         _hidePlaceholderUsingCSS: null,
+
+         /**
+          * @type {Boolean|null} Determines whether the control is building in the Edge.
+          * @private
+          */
+         _isEdge: null,
 
          /**
           *
@@ -395,6 +432,36 @@ define('Controls/Input/Base',
             return document.activeElement;
          },
 
+         constructor: function(cfg) {
+            Base.superclass.constructor.call(this, cfg);
+
+            this._ieVersion = detection.IEVersion;
+            this._isMobileAndroid = detection.isMobileAndroid;
+            this._isMobileIOS = detection.isMobileIOS;
+            this._isEdge = detection.isIE12;
+
+            /**
+             * Hide in chrome because it supports auto-completion of the field when hovering over an item
+             * in the list of saved values. During this action no events are triggered and hide placeholder
+             * using js is not possible.
+             *
+             * IMPORTANTLY: Cannot be used in IE. because the native placeholder will be used,
+             * and with it the field behaves incorrectly. After the focus out, the input event will be called.
+             * When this event is processed, the selection in the field is incorrect.
+             * The start and end selection is equal to the length of the native placeholder. https://jsfiddle.net/e0uaczqw/1/
+             * When processing input, we set a selection from the model if the value in the field is different
+             * from the value in the model. And when you change the selection, the field starts to focus.
+             * There is a situation that you can not withdraw focus from the field.
+             *
+             * The detection.chrome value is not invalid detecting on the server.
+             * https://online.sbis.ru/opendoc.html?guid=a17b59fb-f5bd-4ae3-87a7-38f47078980a
+             * Because of this, If the field already has a value substituted by the browser,
+             * the control does not hide the placeholder until the control is revived.
+             * As a solution, the value on the server is always true, and the recalculation is performed on the client.
+             */
+            this._hidePlaceholderUsingCSS = constants.isBuildOnServer || detection.chrome;
+         },
+
          _beforeMount: function(options) {
             var viewModelCtr = this._getViewModelConstructor();
             var viewModelOptions = this._getViewModelOptions(options);
@@ -402,14 +469,28 @@ define('Controls/Input/Base',
             this._initProperties(this);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
-            /**
-             * Browsers use auto-complete to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the <input> tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            if ('name' in options) {
-               this._fieldName = options.name;
+            if (options.autoComplete) {
+               /**
+                * Browsers use auto-fill to the fields with the previously stored name.
+                * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
+                * To avoid this, we will translate the name of the control to the name of the <input> tag.
+                * https://habr.com/company/mailru/blog/301840/
+                */
+               if ('name' in options) {
+                  /**
+                   * The value of the name option can be undefined.
+                   * Should it be so unclear. https://online.sbis.ru/opendoc.html?guid=a32eb034-b2da-4718-903f-9c09949adb2f
+                   */
+                  if (typeof options.name !== 'undefined') {
+                     this._fieldName = options.name;
+                  }
+               }
+            } else {
+               /**
+                * To disable auto-complete in a field, its name attribute must have a value that
+                * the browser does not remember. To do this, generate a random name.
+                */
+               this._fieldName = randomName('name-');
             }
          },
 
@@ -462,6 +543,10 @@ define('Controls/Input/Base',
             if (keyCode >= constants.key.end && keyCode <= constants.key.down) {
                this._viewModel.selection = this._getFieldSelection();
             }
+
+            if (keyCode === constants.key.enter) {
+               _private.callChangeHandler(this);
+            }
          },
 
          /**
@@ -469,7 +554,27 @@ define('Controls/Input/Base',
           * @private
           */
          _clickHandler: function() {
-            this._viewModel.selection = this._getFieldSelection();
+            if (this._options.selectOnClick && this._firstClick) {
+               this._viewModel.select();
+               this._firstClick = false;
+            } else {
+               var self = this;
+
+               /**
+                * If the value in the field is selected, when you click on the selected area,
+                * the cursor in the field is placed after the event. https://jsfiddle.net/wv9o4xmd/
+                * Therefore, we remember the selection from the field at the next drawing cycle.
+                */
+               runDelayed(function() {
+                  self._viewModel.selection = self._getFieldSelection();
+
+                  /**
+                   * Changes are applied during the synchronization cycle. We are not in it,
+                   * so we need to inform the model that the changes have been applied.
+                   */
+                  self._viewModel.changesHaveBeenApplied();
+               });
+            }
          },
 
          /**
@@ -510,7 +615,7 @@ define('Controls/Input/Base',
              * For such situations to be handled correctly, we need to adjust the data.
              */
             if (value !== model.displayValue) {
-               _private.adjustDataForFastInput(splitValue, model.displayValue);
+               _private.adjustDataForFastInput(splitValue, inputType, model.displayValue, model.selection);
             }
 
             _private.handleInput(this, splitValue, inputType);
@@ -523,6 +628,17 @@ define('Controls/Input/Base',
             _private.updateField(this, value, selection);
          },
 
+         /**
+          * Handler for the change event.
+          * @remark
+          * The handler cannot be called through a subscription to the change event in the control template.
+          * The reason is that the native event does not work in all browsers.
+          * Therefore you need to call it on focus in or press enter.
+          * Bug in firefox: If the value in the field after the input event is not changed,
+          * but changed after a timeout, then the browser considers that it has not changed and event is not triggered.
+          * https://jsfiddle.net/v6g0fz7u/
+          * @protected
+          */
          _changeHandler: function() {
             _private.notifyInputCompleted(this);
          },
@@ -543,9 +659,19 @@ define('Controls/Input/Base',
          },
 
          _focusInHandler: function() {
+            if (this._focusByMouseDown) {
+               this._firstClick = true;
+            } else {
+               this._viewModel.select();
+            }
+
+            this._focusByMouseDown = false;
+
             if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
+
+            this._displayValueAfterFocusIn = this._viewModel.displayValue;
          },
 
          /**
@@ -563,10 +689,14 @@ define('Controls/Input/Base',
             if (this._isMobileIOS) {
                EventBus.globalChannel().notify('MobileInputFocusOut');
             }
+
+            _private.callChangeHandler(this);
          },
 
          _mouseDownHandler: function() {
-            /* override */
+            if (!_private.isFieldFocused(this)) {
+               this._focusByMouseDown = true;
+            }
          },
 
          _notifyValueChanged: function() {
@@ -644,7 +774,7 @@ define('Controls/Input/Base',
                _private.updateField(this, model.displayValue, model.selection);
                model.changesHaveBeenApplied();
 
-               if (this._getActiveElement() === field) {
+               if (_private.isFieldFocused(this)) {
                   _private.recalculateLocationVisibleArea(this, field, model.displayValue, model.selection);
                }
             }
@@ -667,11 +797,12 @@ define('Controls/Input/Base',
             placeholder: '',
             textAlign: 'left',
             fontStyle: 'default',
-            autoComplete: false
+            autoComplete: false,
+            selectOnClick: false
          };
       };
 
-      Base.getDefaultTypes = function() {
+      Base.getOptionTypes = function() {
          return {
 
             /**
@@ -680,6 +811,7 @@ define('Controls/Input/Base',
              */
             value: descriptor(String),
             autoComplete: descriptor(Boolean),
+            selectOnClick: descriptor(Boolean),
             size: descriptor(String).oneOf([
                's',
                'm',
@@ -687,7 +819,8 @@ define('Controls/Input/Base',
             ]),
             fontStyle: descriptor(String).oneOf([
                'default',
-               'primary'
+               'primary',
+               'secondary'
             ]),
             textAlign: descriptor(String).oneOf([
                'left',

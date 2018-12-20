@@ -142,7 +142,30 @@ define(
             config.verticalAlign = 'top';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.horizontalAlign.side, 'left');
+            config.catchFocus = false;
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.autofocus, false);
+            config.catchFocus = true;
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.autofocus, true);
+         });
 
+         it('prepareNotificationConfig', function() {
+            let template = () => {};
+            let config = {
+               template,
+               opener: 'opener',
+               templateOptions: {
+                  myOpt: true
+               }
+            };
+            BaseOpener.prepareNotificationConfig(config);
+            assert.equal(config.template, 'Controls/Popup/Compatible/OldNotification');
+            assert.equal(config.componentOptions.template, template);
+            assert.equal(config.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(config.isVDOM, true);
+            assert.equal(config.className, 'controls-OldNotification');
+            assert.equal(config.opener, null);
          });
 
          it('_setSizes', function() {

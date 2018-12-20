@@ -8,7 +8,7 @@ define('Controls/Validate/Controller',
       'Core/helpers/isNewEnvironment',
       'Controls/Utils/getZIndex',
       'wml!Controls/Validate/ErrorMessage',
-      'css!Controls/Validate/ErrorMessage'
+      'css!theme?Controls/Validate/ErrorMessage'
    ],
    function(
       Base,
@@ -33,8 +33,6 @@ define('Controls/Validate/Controller',
                var cfg = {
                   target: self._container,
                   style: 'error',
-                  showDelay: 0,
-                  hideDelay: 0,
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {
@@ -72,7 +70,9 @@ define('Controls/Validate/Controller',
       var Validate = Base.extend({
          _template: template,
          _isOpened: false,
-         _isNewEnvironment: isNewEnvironment(),
+         _beforeMount: function() {
+            this._isNewEnvironment = isNewEnvironment();
+         },
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
@@ -216,6 +216,11 @@ define('Controls/Validate/Controller',
           */
          isValid: function() {
             return this._validationResult;
+         },
+
+         // todo это временный фикс, этот код должен уйти в контрол поля ввода, валидация уже отдает туда результат валидации, контролу нужно использовать эти данные
+         _isValidResult: function() {
+            return this._validationResult && !(this._validationResult instanceof Deferred);
          },
          _private: _private
       });

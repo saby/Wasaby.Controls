@@ -5,7 +5,7 @@ define('Controls/Input/Render',
       'Controls/Utils/tmplNotify',
 
       'wml!Controls/Input/Render/Render',
-      'css!Controls/Input/Render/Render'
+      'css!theme?Controls/Input/Render/Render'
    ],
    function(Control, descriptor, tmplNotify, template) {
 
@@ -39,7 +39,8 @@ define('Controls/Input/Render',
             ]).required(),
             fontStyle: descriptor(String).oneOf([
                'default',
-               'primary'
+               'primary',
+               'secondary'
             ]).required(),
             textAlign: descriptor(String).oneOf([
                'left',

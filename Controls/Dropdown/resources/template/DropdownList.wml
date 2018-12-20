@@ -1,4 +1,4 @@
-<div class="controls-DropdownList__popup
+<div class="controls-DropdownList__popup controls-Popup__isolatedFocusingContext
             {{_dropdownClass}}
             {{_options.dropdownClassName}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}"
@@ -7,7 +7,6 @@
       <ws:partial template="{{_options.headTemplate ? _options.headTemplate : _defaultHeadTemplate}}"
                   defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
-                  headerClass="{{_headerClass}}"
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
    </ws:if>
@@ -44,7 +43,6 @@
    <Controls.Dropdown.Opener if="{{_hasHierarchy}}"
                              name="subDropdownOpener"
                              on:onSelectedItemChange="resultHandler()"
-                             popupOptions="{{_popupOptions}}"
-                             className="controls-DropdownList__subMenu controls-DropdownList__subMenu_margin">
+                             popupOptions="{{_popupOptions}}">
    </Controls.Dropdown.Opener>
 </div>

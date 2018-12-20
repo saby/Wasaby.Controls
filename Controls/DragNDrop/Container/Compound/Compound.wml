@@ -1,0 +1,8 @@
+<Controls.DragNDrop.Container>
+   <ws:partial
+      template="{{_options.content}}"
+      scope="{{_options}}"
+      on:register="_onRegisterHandler()"
+      on:unregister="_onRegisterHandler()"
+   />
+</Controls.DragNDrop.Container>

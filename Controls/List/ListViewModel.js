@@ -11,16 +11,15 @@ define('Controls/List/ListViewModel',
        */
 
       var _private = {
-         updateIndexes: function(self) {
-            self._startIndex = 0;
-            self._stopIndex = self.getCount();
+         updateIndexes: function(self, startIndex, stopIndex) {
+            self._startIndex = startIndex;
+            self._stopIndex = stopIndex;
          }
       };
 
       var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
          _markedItem: null,
-         _dragItems: null,
-         _dragTargetItem: null,
+         _dragEntity: null,
          _draggingItemData: null,
          _dragTargetPosition: null,
          _actions: null,
@@ -36,11 +35,15 @@ define('Controls/List/ListViewModel',
                this._markedKey = cfg.markedKey;
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
+            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items && this._items.getCount()) {
+               this._markedKey = this._items.at(0).getId();
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
 
             this._selectedKeys = cfg.selectedKeys || [];
 
             // TODO надо ли?
-            _private.updateIndexes(self);
+            _private.updateIndexes(self, 0, self.getCount());
          },
 
          getItemDataByItem: function() {
@@ -53,7 +56,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) !== -1;
-            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility === 'visible' || this._options.multiSelectVisibility === 'onhover';
+            itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             if (itemsModelCurrent.itemActions) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
@@ -71,7 +74,7 @@ define('Controls/List/ListViewModel',
                   }
                }
             }
-            if (this._editingItemData && itemsModelCurrent.index === this._editingItemData.index) {
+            if (this._editingItemData && itemsModelCurrent.key === this._editingItemData.key) {
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
@@ -79,8 +82,8 @@ define('Controls/List/ListViewModel',
                if (this._draggingItemData.key === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
-               if (this._dragItems.indexOf(itemsModelCurrent.key) !== -1) {
-                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetItem : false;
+               if (this._dragEntity.getItems().indexOf(itemsModelCurrent.key) !== -1) {
+                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
                }
                if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                   itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
@@ -101,6 +104,10 @@ define('Controls/List/ListViewModel',
             this._notify('onMarkedKeyChanged', key);
          },
 
+         getMarkedKey: function() {
+            return this._markedKey;
+         },
+
          getSwipeItem: function() {
             return this._swipeItem.item;
          },
@@ -110,56 +117,68 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         setDragItems: function(items, itemDragData) {
-            if (this._dragItems !== items) {
-               this._dragItems = items;
-               this._draggingItemData = itemDragData || (items ? this.getItemDataByItem(this.getItemById(items[0], this._options.keyProperty)) : null);
-               if (this._draggingItemData) {
-                  this._draggingItemData.isDragging = true;
-               }
+         setDragEntity: function(entity) {
+            if (this._dragEntity !== entity) {
+               this._dragEntity = entity;
                this._nextVersion();
                this._notify('onListChange');
             }
          },
 
-         getDragTargetItem: function() {
-            return this._dragTargetItem;
+         getDragEntity: function() {
+            return this._dragEntity;
          },
 
-         setDragTargetItem: function(itemData) {
-            if (this._draggingItemData && (!itemData || this._draggingItemData.key !== itemData.key)) {
-               this._dragTargetItem = itemData;
-               this._updateDragTargetPosition(itemData);
-               this._nextVersion();
-               this._notify('onListChange');
+         setDragItemData: function(itemData) {
+            this._draggingItemData = itemData;
+            if (this._draggingItemData) {
+               this._draggingItemData.isDragging = true;
             }
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         getDragItemData: function() {
+            return this._draggingItemData;
+         },
+
+         calculateDragTargetPosition: function(targetData) {
+            var
+               position,
+               prevIndex = -1;
+
+            if (this._dragTargetPosition) {
+               prevIndex = this._dragTargetPosition.index;
+            } else if (this._draggingItemData) {
+               prevIndex = this._draggingItemData.index;
+            }
+
+            if (prevIndex === -1) {
+               position = 'before';
+            } else if (targetData.index > prevIndex) {
+               position = 'after';
+            } else if (targetData.index < prevIndex) {
+               position = 'before';
+            } else if (targetData.index === prevIndex) {
+               position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
+            }
+
+            return {
+               index: targetData.index,
+               item: targetData.item,
+               data: targetData,
+               position: position
+            };
+         },
+
+         setDragTargetPosition: function(position) {
+            this._dragTargetPosition = position;
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          getDragTargetPosition: function() {
             return this._dragTargetPosition;
-         },
-
-         _updateDragTargetPosition: function(targetData) {
-            var
-               position,
-               prevIndex;
-
-            if (targetData) {
-               prevIndex = this._dragTargetPosition ? this._dragTargetPosition.index : this._draggingItemData.index;
-               if (targetData.index > prevIndex) {
-                  position = 'after';
-               } else if (targetData.index < prevIndex) {
-                  position = 'before';
-               } else {
-                  position = this._dragTargetPosition.position === 'after' ? 'before' : 'after';
-               }
-               this._dragTargetPosition = {
-                  index: targetData.index,
-                  position: position
-               };
-            } else {
-               this._dragTargetPosition = null;
-            }
          },
 
          setSwipeItem: function(itemData) {
@@ -169,11 +188,18 @@ define('Controls/List/ListViewModel',
 
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
-               this._startIndex = startIndex;
-               this._stopIndex = stopIndex;
+               _private.updateIndexes(self, startIndex, stopIndex);
                this._nextVersion();
                this._notify('onListChange');
             }
+         },
+
+         getStartIndex: function() {
+            return this._startIndex;
+         },
+
+         getStopIndex: function() {
+            return this._stopIndex;
          },
 
          setItems: function(items) {
@@ -181,12 +207,15 @@ define('Controls/List/ListViewModel',
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
-            if (!this._markedItem && this._options.markerVisibility === 'always') {
+            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items.getCount()) {
                this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
-            _private.updateIndexes(this);
+         },
+
+         _onBeginCollectionChange: function() {
+            _private.updateIndexes(this, 0, this.getItems().getCount());
          },
 
          _setEditingItemData: function(itemData) {
@@ -233,6 +262,14 @@ define('Controls/List/ListViewModel',
 
          getMultiSelectVisibility: function() {
             return this._options.multiSelectVisibility;
+         },
+
+         setSorting: function(sorting) {
+            this._options.sorting = sorting;
+         },
+
+         getSorting: function() {
+            return this._options.sorting;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

@@ -44,8 +44,8 @@ define([
          key2 = typeof key2 === 'string' ? key2.trim() : key2;
          assert.equal(key1, key2);
 
-         assert.equal(document.body.querySelectorAll('.form-content__name .controls-InputRender__field')[0].value, cfg.name + '_fix');
-         assert.equal(document.body.querySelectorAll('.form-content__email .controls-InputRender__field')[0].value, cfg.email);
+         assert.equal(document.body.querySelectorAll('.form-content__name .controls-Base__nativeField')[0].value, cfg.name);
+         assert.equal(document.body.querySelectorAll('.form-content__email .controls-Base__nativeField')[0].value, cfg.email);
          assert.equal(document.body.querySelectorAll('.form-content__create .controls-BaseButton__text')[0].innerText, cfg.createButtonText);
          assert.equal(document.body.querySelectorAll('.form-content__select>*').length, cfg.selectButtonsCount);
       }
@@ -156,7 +156,7 @@ define([
          }
          else {
             var el = document.body.querySelectorAll('#mocha')[0];
-            var testElement = document.createElement("div");
+            testElement = document.createElement("div");
             testElement.setAttribute('id', 'formControllerComponent');
             el.appendChild(testElement);
          }
@@ -268,7 +268,7 @@ define([
                      name: 'no name',
                      email: 'no@email.com',
                      createButtonText: 'create with id = ' + 4,
-                     selectButtonsCount: 3 // при еще одном сохранили 2й
+                     selectButtonsCount: 2 // при еще одном сохранили 2й
                   }
                }, {
                   action: 'create',
@@ -278,7 +278,7 @@ define([
                      name: 'no name',
                      email: 'no@email.com',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 3 // а теперь при создании ответили не сохранять и 3й не сохранился
+                     selectButtonsCount: 2 // а теперь при создании ответили не сохранять и 3й не сохранился
                   }
                }, {
                   action: 'read', // читаем 0й
@@ -289,7 +289,7 @@ define([
                      name: '',
                      email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4 // итого у нас 0, 1, 2, 4 сохранены.
+                     selectButtonsCount: 2 // итого у нас 0, 1, 2, 4 сохранены.
                   }
                }, {
                   action: 'read',
@@ -300,18 +300,18 @@ define([
                      name: 'no name',
                      email: 'no@email.com',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'read',
                   updateId: 2,
                   answer: true,
                   checkCfg: {
-                     key: 'now is ' + 2,
-                     name: 'no name',
-                     email: 'no@email.com',
+                     key: 'now is',
+                     name: '',
+                     email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'read',
@@ -322,18 +322,29 @@ define([
                      name: '',
                      email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'read',
                   updateId: 4,
                   answer: true,
                   checkCfg: {
-                     key: 'now is ' + 4,
-                     name: 'no name',
-                     email: 'no@email.com',
+                     key: 'now is',
+                     name: '',
+                     email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 4
+                     selectButtonsCount: 2
+                  }
+               }, {
+                  action: 'read',
+                  updateId: 0,
+                  answer: true,
+                  checkCfg: {
+                     key: 'now is ' + 0,
+                     name: '',
+                     email: '',
+                     createButtonText: 'create with id = ' + 5,
+                     selectButtonsCount: 2
                   }
                }, {
                   action: 'delete',
@@ -343,7 +354,7 @@ define([
                      name: '',
                      email: '',
                      createButtonText: 'create with id = ' + 5,
-                     selectButtonsCount: 3
+                     selectButtonsCount: 1
                   }
                }
                ]);
@@ -437,9 +448,9 @@ define([
                   }, {
                      action: function(control) {
                         control._requestCustomUpdate = function() {
-                           var def = new Deferred();
-                           def.callback(true);
-                           return def;
+                           return new Promise(function(resolve) {
+                              resolve(true);
+                           });
                         };
                      }
                   }, {
@@ -455,9 +466,9 @@ define([
                   }, {
                      action: function(control) {
                         control._requestCustomUpdate = function() {
-                           var def = new Deferred();
-                           def.callback(false);
-                           return def;
+                           return new Promise(function(resolve) {
+                              resolve(false);
+                           });
                         };
                      }
                   }, {
@@ -552,6 +563,16 @@ define([
                   }, {
                      action: function(control) {
                         control._children.formControllerInst.update().addErrback(function(e) {
+                           done(e);
+                        });
+                     }
+                  }, {
+                     action: function(control) {
+                        control._record.set('value3', true);
+                     }
+                  }, {
+                     action: function(control) {
+                        control._children.registrator.finishPendingOperations().addErrback(function () {
                            done(e);
                         });
                      }

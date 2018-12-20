@@ -3,11 +3,9 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'Controls/Application/HeadDataContext',
-      'Core/Themes/ThemesController',
-      'Controls/Application/HeadDataContext'
+      'View/Request'
    ],
-   function(Base, Deferred, template, HeadDataContext, ThemesController) {
+   function(Base, Deferred, template, Request) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -22,16 +20,13 @@ define('Controls/Application/_Head',
             // before returning html to client
             return this._beforeMount.apply(this, arguments);
          },
-         _beforeMount: function(options, context, receivedState) {
-            ThemesController.getInstance().setUpdateCallback(this._forceUpdate.bind(this));
-            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
-            if (typeof window !== 'undefined') {
-               var csses = ThemesController.getInstance().getCss();
-               this.themedCss = csses.themedCss;
-               this.simpleCss = csses.simpleCss;
-               return;
-            }
+         _beforeMount: function(options) {
+            this.resolvedSimple = [];
+            this.resolvedThemed = [];
+            this._forceUpdate = function() {
+               //do nothing
+            };
+
             if (typeof options.staticDomains === 'string') {
                this.staticDomainsStringified = options.staticDomains;
             } else if (options.staticDomains instanceof Array) {
@@ -39,7 +34,30 @@ define('Controls/Application/_Head',
             } else {
                this.staticDomainsStringified = '[]';
             }
-            var def = context.headData.waitAppContent();
+
+            /*Этот коммент требует английского рефакторинга
+            * Сохраним пользовательские данные на инстанс
+            * мы хотим рендерить их только 1 раз, при этом, если мы ренедрим их на сервере мы добавим класс
+            * head-custom-block */
+            this.head = options.head;
+
+            if (typeof window !== 'undefined') {
+
+               /*всем элементам в head назначается атрибут data-vdomignore
+               * то есть, inferno их не удалит, и если в head есть спец элементы,
+               * значит мы рендерились на сервере и здесь сейчас оживаем, а значит пользовательский
+               * контент уже на странице и генерировать второй раз не надо, чтобы не было синхронизаций
+               * */
+
+               if (document.getElementsByClassName('head-custom-block').length > 0) {
+                  this.head = undefined;
+               }
+               this.themedCss = [];
+               this.simpleCss = [];
+               return;
+            }
+            var headData = Request.getCurrent().getStorage('HeadData');
+            var def = headData.waitAppContent();
             var self = this;
             var innerDef = new Deferred();
             self.cssLinks = [];
@@ -52,15 +70,11 @@ define('Controls/Application/_Head',
             });
             return innerDef;
          },
-         _beforeUpdate: function() {
-            var csses = ThemesController.getInstance().getCss();
-            this.themedCss = csses.themedCss;
-            this.simpleCss = csses.simpleCss;
-            this.resolvedSimple = ThemesController.getInstance().getSimpleResolved();
-            this.resolvedThemed = ThemesController.getInstance().getThemedResolved();
+         _shouldUpdate: function() {
+            return false;
          },
          isArrayHead: function() {
-            return Array.isArray(this._options.head);
+            return Array.isArray(this.head);
          },
          isMultiThemes: function() {
             return Array.isArray(this._options.theme);
@@ -69,11 +83,7 @@ define('Controls/Application/_Head',
             return value.replace('.css', '') + '_' + theme + '.css';
          }
       });
-      Page.contextTypes = function() {
-         return {
-            headData: HeadDataContext
-         };
-      };
+
       return Page;
    }
 );

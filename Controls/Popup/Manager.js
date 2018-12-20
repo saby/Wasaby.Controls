@@ -7,11 +7,10 @@ define('Controls/Popup/Manager',
       'WS.Data/Collection/List',
       'Core/EventBus',
       'Core/detection',
-      'Core/IoC',
-      'Core/core-instance'
+      'Core/IoC'
    ],
 
-   function(Control, template, ManagerController, randomId, List, EventBus, cDetection, IoC, cInstance) {
+   function(Control, template, ManagerController, randomId, List, EventBus, cDetection, IoC) {
       'use strict';
 
       var _private = {
@@ -50,6 +49,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
+               _private.fireEventHandler(id, 'onOpen');
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
                return true;
@@ -95,29 +95,33 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var item = ManagerController.find(id);
             if (item) {
-               if (!_private.isIgnoreActivationArea(document.activeElement)) {
-                  _private.finishPendings(id, function() {
-                     if (!_private.activeElement[id]) {
-                        _private.activeElement[id] = document.activeElement;
-                     }
-                  }, function(popup) {
-                     // if pendings is exist, take focus back while pendings are finishing
-                     popup._container.focus();
-                  }, function() {
-                     var itemContainer = _private.getItemContainer(id);
-                     if (item.popupOptions.isCompoundTemplate) {
-                        if (item.popupOptions.closeByExternalClick) {
-                           _private._getCompoundArea(itemContainer).close();
+               if (item.popupOptions.closeByExternalClick) {
+                  if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
+                     _private.finishPendings(id, function() {
+                        if (!_private.activeElement[id]) {
+                           _private.activeElement[id] = _private.getActiveElement();
                         }
-                     } else {
-                        item.controller.popupDeactivated(item, itemContainer);
-                     }
-                  });
-               } else if (item.popupOptions.closeByExternalClick) {
-                  item.waitDeactivated = true;
+                     }, function(popup) {
+                        // if pendings is exist, take focus back while pendings are finishing
+                        popup._container.focus();
+                     }, function() {
+                        var itemContainer = _private.getItemContainer(id);
+                        if (item.popupOptions.isCompoundTemplate) {
+                           _private._getCompoundArea(itemContainer).close();
+                        } else {
+                           item.controller.popupDeactivated(item, itemContainer);
+                        }
+                     });
+                  } else {
+                     item.waitDeactivated = true;
+                  }
                }
             }
             return false;
+         },
+
+         getActiveElement: function() {
+            return document && document.activeElement;
          },
 
          popupDragStart: function(id, offset) {
@@ -171,11 +175,16 @@ define('Controls/Popup/Manager',
          },
 
          fireEventHandler: function(id, event) {
-            var element = ManagerController.find(id);
+            var item = ManagerController.find(id);
             var args = Array.prototype.slice.call(arguments, 2);
-            if (element && element.popupOptions.eventHandlers && typeof element.popupOptions.eventHandlers[event] === 'function') {
-               element.popupOptions.eventHandlers[event].apply(element.popupOptions, args);
-               return true;
+            if (item) {
+               if (item.popupOptions._events) {
+                  item.popupOptions._events[event].apply(item.popupOptions, Array.prototype.slice.call(arguments, 1));
+               }
+               if (item.popupOptions.eventHandlers && typeof item.popupOptions.eventHandlers[event] === 'function') {
+                  item.popupOptions.eventHandlers[event].apply(item.popupOptions, args);
+                  return true;
+               }
             }
             return false;
          },

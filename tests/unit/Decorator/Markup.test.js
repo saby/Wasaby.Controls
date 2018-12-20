@@ -3,12 +3,16 @@
  */
 define([
    'Controls/Decorator/Markup/Converter',
+   'Controls/Decorator/Markup/resources/template',
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Controls/Decorator/Markup/resolvers/innerText',
    'Core/constants'
 ], function(Converter,
+   template,
    highlightResolver,
    linkDecorateResolver,
+   innerTextResolver,
    cConstants) {
    'use strict';
 
@@ -39,6 +43,7 @@ define([
          attributedNode = ['span', { 'class': 'someClass' }, 'text'],
          linkNode = ['a',
             {
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'https://ya.ru',
                target: '_blank'
@@ -47,6 +52,7 @@ define([
          ],
          httpLinkNode = ['a',
             {
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'http://ya.ru',
                target: '_blank'
@@ -55,6 +61,7 @@ define([
          ],
          wwwLinkNode = ['a',
             {
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'http://www.ya.ru',
                target: '_blank'
@@ -62,9 +69,20 @@ define([
             'www.ya.ru'
          ],
          decoratedLinkService,
+         openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
          deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
-         linkHtml = '<a rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a rel="noreferrer" href="https://ya.ru" target="_blank" class="LinkDecorator__linkWrap"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
+         linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
+         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
+
+      function sortAttrs(html) {
+         return html.replace(openTagRegExp, function(match, begin, attrs, end) {
+            return begin + (attrs + ' ').split('" ').sort().join('" ') + end;
+         });
+      }
+
+      function equalsHtml(html1, html2) {
+         return sortAttrs(html1) === sortAttrs(html2);
+      }
 
       describe('deepCopyJson', function() {
          it('one big', function() {
@@ -120,6 +138,7 @@ define([
                ['p',
                   ['a',
                      {
+                        'class': 'asLink',
                         rel: 'noreferrer',
                         href: 'http://update*.sbis.ru/tx_stat',
                         target: '_blank'
@@ -141,15 +160,20 @@ define([
             cConstants.decoratedLinkService = decoratedLinkService;
          });
          it('empty', function() {
-            assert.equal(Converter.jsonToHtml([]), '<span></span>');
+            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<div></div>'));
          });
          it('escape', function() {
-            assert.equal(Converter.jsonToHtml(['p', { title: '"&<>' }, '&gt;&lt;><']), '<div><p title="&quot;&amp;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;</p></div>');
+            var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><'];
+            var vdomTemplate = template({ '_options': { 'value': json } }, {}, undefined, true);
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), '<div><p title="&quot;&amp;lt;&lt;&gt;">&amp;gt;&amp;lt;&gt;&lt;</p></div>'));
+            assert.equal(vdomTemplate[0].children[0].children[0].children, '&amp;gt;&amp;lt;><');
+            assert.equal(vdomTemplate[0].children[0].hprops.attributes.title, '"&amp;lt;<>');
          });
          it('one big', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<div><p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p></div>';
-            assert.equal(Converter.jsonToHtml(json), html);
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
          it('all valid tags and attributes', function() {
             var json = [
@@ -253,7 +277,7 @@ define([
                '</p>' +
                '<p alt="testAlt" class="testClass" colspan="testColspan" config="testConfig" data-bind="testDataOne" data-random-ovdmxzme="testDataTwo" data-some-id="testDataThree" hasmarkup="testHasmarkup" height="testHeight" href="testHref" id="testId" name="testName" rel="testRel" rowspan="testRowspan" src="testSrc" style="testStyle" tabindex="testTabindex" target="testTarget" title="testTitle" width="testWidth">All valid attributes</p>' +
                '</div>';
-            assert.equal(Converter.jsonToHtml(json), html);
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
          it('with linkDecorate resolver', function() {
             var json = [
@@ -261,7 +285,19 @@ define([
                ['p', linkNode, '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
+               ['p', linkNode, ['br'], 'text'],
+               ['p', linkNode, '   ', ['br'], 'text'],
                ['p', ['strong', linkNode], 'text'],
+               ['p',
+                  ['a',
+                     {
+                        rel: 'noreferrer',
+                        href: 'https:\\\\ya.ru',
+                        target: '_blank'
+                     },
+                     'https:\\\\ya.ru'
+                  ]
+               ],
                ['p', ['a', { href: 'https://ya.ru' }, 'text']]
             ];
             var html = '<div>' +
@@ -269,10 +305,13 @@ define([
                '<p>' + decoratedLinkHtml + '   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
+               '<p>' + decoratedLinkHtml + '<br />text</p>' +
+               '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
+               '<p>' + decoratedLinkHtml + '</p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
-            assert.equal(Converter.jsonToHtml(json, linkDecorateResolver), html);
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, linkDecorateResolver), html));
          });
          it('with highlight resolver', function() {
             var json = [
@@ -285,7 +324,11 @@ define([
                '<p><span class="controls-Highlight_found">aba</span>, <span class="controls-Highlight_found">abA</span>, <span class="controls-Highlight_found">aBa</span>, <span class="controls-Highlight_found">aBA</span>, <span class="controls-Highlight_found">Aba</span>, <span class="controls-Highlight_found">AbA</span>, <span class="controls-Highlight_found">ABa</span>, <span class="controls-Highlight_found">ABA</span></p>' +
                '<p><span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span></p>' +
                '</div>';
-            assert.equal(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html);
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
+         });
+         it('with innerText resolver', function() {
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
          });
       });
    });

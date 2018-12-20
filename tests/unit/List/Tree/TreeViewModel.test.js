@@ -1,4 +1,16 @@
-define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet', 'WS.Data/Collection/IBind'], function(TreeViewModel, cMerge, RecordSet, IBindCollection) {
+define([
+   'Controls/List/Tree/TreeViewModel',
+   'Core/core-merge',
+   'WS.Data/Collection/RecordSet',
+   'WS.Data/Entity/Record',
+   'WS.Data/Collection/IBind'
+], function(
+   TreeViewModel,
+   cMerge,
+   RecordSet,
+   Record,
+   IBindCollection
+) {
    function MockedDisplayItem(cfg) {
       var
          self = this;
@@ -18,6 +30,16 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          };
       };
    }
+   /*
+      123
+         234
+            1 (лист)
+            2 (лист)
+            3 (пустая папка)
+      345 (лист)
+      456 (лист)
+      567 (лист)
+   */
    var
       treeData = [
          {
@@ -59,7 +81,7 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             'title': 'Масло',
             'price': 100,
             'parent': null,
-            'parent@': null,
+            'parent@': true,
             'balance': 5
          },
          {
@@ -98,41 +120,29 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, item), 'Invalid value "isVisibleItem(123)".');
+            assert.isTrue(TreeViewModel._private.isVisibleItem.call(treeViewModel.prepareDisplayFilterData(),
+               item), 'Invalid value "isVisibleItem(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
-            assert.isTrue(TreeViewModel._private.isVisibleItem.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild), 'Invalid value "isVisibleItem(234)".');
+            assert.isTrue(TreeViewModel._private.isVisibleItem.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild), 'Invalid value "isVisibleItem(234)".');
             treeViewModel.toggleExpanded(item, false);
-            assert.isFalse(TreeViewModel._private.isVisibleItem.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild), 'Invalid value "isVisibleItem(234)".');
+            assert.isFalse(TreeViewModel._private.isVisibleItem.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild), 'Invalid value "isVisibleItem(234)".');
          });
          it('displayFilter', function() {
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
                itemChild;
-            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call(treeViewModel.prepareDisplayFilterData(),
+               item.getContents(), 0, item), 'Invalid value "displayFilterTree(123)".');
             treeViewModel.toggleExpanded(item, true);
             itemChild = treeViewModel.getItemById('234', cfg.keyProperty);
-            assert.isTrue(TreeViewModel._private.displayFilterTree.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
+            assert.isTrue(TreeViewModel._private.displayFilterTree.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
             treeViewModel.toggleExpanded(item, false);
-            assert.isFalse(TreeViewModel._private.displayFilterTree.call({
-               expandedItems: treeViewModel._expandedItems,
-               keyProperty: treeViewModel._options.keyProperty
-            }, itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
+            assert.isFalse(TreeViewModel._private.displayFilterTree.call(treeViewModel.prepareDisplayFilterData(),
+               itemChild.getContents(), 1, itemChild), 'Invalid value "displayFilterTree(234)".');
          });
          it('getDisplayFilter', function() {
             assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel._expandedItems, treeViewModel._options).length === 1,
@@ -280,12 +290,29 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
          });
       });
       describe('expandedItems', function() {
-         it('initialize from options', function() {
+         it('initialize from options and changing expandedItems', function() {
             var
+               baseExpandedItems = [1, 2, 3],
                treeViewModel = new TreeViewModel({
-                  expandedItems: [1, 2, 3]
+                  expandedItems: baseExpandedItems,
+                  items: new RecordSet({
+                     rawData: [
+                        { id: 1, parent: null, type: true },
+                        { id: 2, parent: null, type: true },
+                        { id: 3, parent: 2, type: true }
+                     ],
+                     idProperty: 'id'
+                  }),
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
                }),
-               preparedExpandedItems = { 1: true, 2: true, 3: true };
+               preparedExpandedItems = { 1: true, 2: true, 3: true },
+               preparedExpandedAllItems = { null: true };
+            assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+            treeViewModel.setExpandedItems([null]);
+            assert.deepEqual(preparedExpandedAllItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+            treeViewModel.setExpandedItems(baseExpandedItems);
             assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
          });
       });
@@ -309,6 +336,27 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after expand "123" and "234".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), false);
             assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after collapse "123".');
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty));
+            assert.deepEqual({ '123': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after toggle "123".');
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty));
+            assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after toggle "123".');
+         });
+
+         it('hasChildren should be true when an item gets added to an empty folder', function() {
+            var newItem = new Record({
+               rawData: {
+                  'id': '4',
+                  'title': 'четыре',
+                  'parent': '3',
+                  'parent@': true
+               }
+            });
+            treeViewModel.setExpandedItems(['123', '234', '3']);
+            treeViewModel._editingItemData = {
+               item: newItem
+            };
+            treeViewModel._curIndex = 4;
+            assert.isTrue(treeViewModel.getCurrent().hasChildren);
          });
 
          it('multiSelectStatus', function() {
@@ -323,11 +371,11 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             treeViewModel.updateSelection(['123', '234', '1']);
             treeViewModel._curIndex = 0; //123
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 1; //123
+            treeViewModel._curIndex = 1; //234
             assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel.updateSelection(['123']);
             treeViewModel._curIndex = 0; //123
-            assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
+            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel._curIndex = 1; //234
             assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
             treeViewModel.updateSelection(['123', '234', '3']);
@@ -368,77 +416,8 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
             assert.deepEqual(treeViewModel._expandedItems, {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });
-         it('setDragItems', function() {
-            var itemData = {};
-            treeViewModel._expandedItems = {'123': true, '456': true};
-
-            treeViewModel.setDragItems(['123', '567'], itemData);
-            assert.deepEqual(treeViewModel._expandedItems, {'456': true});
-            assert.isFalse(itemData.isExpanded);
-         });
-         it('updateDragTargetPosition', function() {
-            treeViewModel._draggingItemData = { index: 2 };
-
-            //set node
-            treeViewModel._updateDragTargetPosition({
-               index: 1,
-               dispItem: new MockedDisplayItem({ id: '1', isNode: true })
-            });
-            assert.equal(treeViewModel._dragTargetPosition.position, 'on');
-            assert.equal(treeViewModel._dragTargetPosition.index, 1);
-
-            //set leaf with change level
-            treeViewModel._updateDragTargetPosition({
-               index: 3,
-               level: 2,
-               dispItem: new MockedDisplayItem({ id: '3', isNode: false })
-            });
-            assert.equal(treeViewModel._dragTargetPosition.position, 'after');
-            assert.equal(treeViewModel._dragTargetPosition.index, 3);
-            assert.equal(treeViewModel._draggingItemData.level, 2);
-
-            //set leaf with change level
-            treeViewModel._updateDragTargetPosition({
-               index: 2,
-               level: 1,
-               dispItem: new MockedDisplayItem({ id: '2', isNode: false })
-            });
-            assert.equal(treeViewModel._dragTargetPosition.position, 'before');
-            assert.equal(treeViewModel._dragTargetPosition.index, 2);
-            assert.equal(treeViewModel._draggingItemData.level, 1);
-
-            //set null
-            treeViewModel._updateDragTargetPosition();
-            assert.equal(treeViewModel._dragTargetPosition, null);
-         });
-         it('setDragPositionOnNode', function() {
-            var itemData = {
-               dispItem: new MockedDisplayItem({ id: '3', isNode: true }),
-               key: 3,
-               index: 3
-            };
-
-            //setDragPosition after node
-            treeViewModel.setDragTargetItem(itemData);
-            treeViewModel.setDragPositionOnNode(itemData, 'after');
-            assert.equal(treeViewModel._dragTargetPosition.position, 'after');
-            assert.equal(treeViewModel._dragTargetPosition.index, 3);
-
-            //setDragPosition before node
-            treeViewModel.setDragTargetItem(itemData);
-            treeViewModel.setDragPositionOnNode(itemData, 'before');
-            assert.equal(treeViewModel._dragTargetPosition.position, 'before');
-            assert.equal(treeViewModel._dragTargetPosition.index, 3);
-
-            //setDragPosition after opened node
-            treeViewModel.setDragTargetItem(itemData);
-            treeViewModel._expandedItems = {'3': true};
-            treeViewModel.setDragPositionOnNode(itemData, 'after');
-            assert.equal(treeViewModel._dragTargetPosition.position, 'on');
-            assert.equal(treeViewModel._dragTargetPosition.index, 3);
-
-         });
       });
+
       describe('expanderDisplayMode', function() {
          var
 
@@ -504,6 +483,166 @@ define(['Controls/List/Tree/TreeViewModel', 'Core/core-merge', 'WS.Data/Collecti
                items: rawData_4,
                hasChildrenProperty: 'hasChild'
             }, false);
+         });
+      });
+
+      describe('DragNDrop methods', function() {
+         var tvm, dragEntity;
+
+         beforeEach(function() {
+            tvm = new TreeViewModel(cfg);
+            dragEntity = {
+               items: ['123'],
+               getItems: function() {
+                  return this.items;
+               }
+            };
+         });
+
+         it('setDragEntity', function() {
+            tvm.toggleExpanded(tvm.getItemById('123', 'id'), true);
+            tvm.toggleExpanded(tvm.getItemById('456', 'id'), true);
+
+            tvm.setDragEntity(dragEntity);
+            assert.isFalse(tvm.isExpanded(tvm.getItemById('123', 'id')));
+            assert.isTrue(tvm.isExpanded(tvm.getItemById('456', 'id')));
+         });
+
+         it('setDragItemData', function() {
+            tvm.toggleExpanded(tvm.getItemById('123', 'id'), true);
+            tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('123', 'id')));
+
+            assert.isFalse(tvm.getDragItemData().isExpanded);
+         });
+
+         describe('setDragTargetPosition', function() {
+            var itemData, dragTargetPosition;
+
+            it('on node without prev state', function() {
+               //move item 567
+               tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
+
+               //move on 123
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               tvm.setDragTargetPosition(dragTargetPosition);
+
+               assert.equal(tvm._prevDragTargetPosition.data.key, '567');
+               assert.equal(tvm._prevDragTargetPosition.position, 'after');
+            });
+
+            it('on node', function() {
+               //move item 567
+               tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
+
+               //move before 456
+               itemData = tvm.getItemDataByItem(tvm.getItemById('456', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               tvm.setDragTargetPosition(dragTargetPosition);
+
+               //move on 123
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               tvm.setDragTargetPosition(dragTargetPosition);
+
+               assert.equal(tvm._prevDragTargetPosition.data.key, '456');
+               assert.equal(tvm._prevDragTargetPosition.position, 'before');
+            });
+         });
+
+         describe('calculateDragTargetPosition', function() {
+            var itemData, dragTargetPosition;
+
+            it('not node', function() {
+               itemData = tvm.getItemDataByItem(tvm.getItemById('567', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+            });
+
+            it('on node', function() {
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'on');
+            });
+
+            it('before node', function() {
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+            });
+
+            it('after node', function() {
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'after');
+            });
+
+            it('before expanded node', function() {
+               tvm.toggleExpanded(tvm.getItemById('123', 'id'), true);
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+            });
+
+            it('after expanded node', function() {
+               tvm.toggleExpanded(tvm.getItemById('123', 'id'), true);
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
+               assert.equal(dragTargetPosition, undefined);
+            });
+
+            it('move down node', function() {
+               //move item 567
+               tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
+
+               //move after 123
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               tvm.setDragTargetPosition(tvm.calculateDragTargetPosition(itemData, 'after'));
+
+               //move on 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               tvm.setDragTargetPosition(tvm.calculateDragTargetPosition(itemData));
+
+               //move before 345
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               assert.equal(dragTargetPosition, undefined);
+
+               //move after 345
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'after');
+            });
+
+            it('move up item', function() {
+               //move item 567
+               tvm.setDragItemData(tvm.getItemDataByItem(tvm.getItemById('567', 'id')));
+               tvm.setDragEntity(dragEntity);
+
+               //move before 456
+               itemData = tvm.getItemDataByItem(tvm.getItemById('456', 'id'));
+               tvm.setDragTargetPosition(tvm.calculateDragTargetPosition(itemData, 'before'));
+
+               //move on 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               tvm.setDragTargetPosition(tvm.calculateDragTargetPosition(itemData));
+
+               //move after 345
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
+               assert.equal(dragTargetPosition, undefined);
+
+               //move before 345
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+            });
          });
       });
    });
