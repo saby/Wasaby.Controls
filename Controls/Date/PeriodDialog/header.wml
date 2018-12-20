@@ -53,7 +53,8 @@
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
    <Controls.Button
-      viewMode="transparentQuickButton"
+      viewMode="toolButton"
+      transparent="{{true}}"
       style="success"
       icon="icon-medium icon-Yes"
       iconStyle="success"
