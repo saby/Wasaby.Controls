@@ -16,7 +16,6 @@
         open="{{_onOpen}}"
         dataLoadCallback="{{_setText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        on:mousedown="_mouseDownHandler()"
         class="controls-ComboBox">
 
       <Controls.Input.resources.InputRender.InputRender
