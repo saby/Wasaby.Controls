@@ -14,7 +14,7 @@
                                emptyText="{{true}}"
                                displayProperty="title"
                                bind:selectedKey="_selectedKey3"
-                               attr:class="ControlsDemo-ComboboxVDOM__item"/>
+                               attr:class="ControlsDemo-ComboboxVDOM__item ControlsDemo-ComboboxVDOM__emptyValue"/>
    </div>
    <div class="ControlsDemo-ComboboxVDOM__wrapper">
       <h4>With scroll</h4>
