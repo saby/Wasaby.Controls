@@ -46,17 +46,23 @@ define('Controls/List/BaseControl', [
    var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
-      reload: function(self, filter, sorting, userCallback, userErrback, navigation) {
+      reload: function(self, cfg) {
          var
+            filter = cClone(cfg.filter),
+            sorting = cClone(cfg.sorting),
+            navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
+         if (cfg.beforeReloadCallback) {
+            cfg.beforeReloadCallback(filter, sorting, navigation);
+         }
          if (self._sourceController) {
             _private.showIndicator(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-               if (userCallback && userCallback instanceof Function) {
-                  userCallback(list);
+               if (cfg.dataLoadCallback instanceof Function) {
+                  cfg.dataLoadCallback(list);
                }
 
                _private.hideIndicator(self);
@@ -78,13 +84,19 @@ define('Controls/List/BaseControl', [
                   _private.checkLoadToDirectionCapability(self);
                }
             }).addErrback(function(error) {
-               _private.processLoadError(self, error, userErrback);
+               _private.processLoadError(self, error, cfg.dataLoadErrback);
                resDeferred.callback(null);
             });
          } else {
             resDeferred.callback();
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
+         resDeferred.addCallback(function(items) {
+            if (cfg.afterReloadCallback) {
+               cfg.afterReloadCallback();
+            }
+            return items;
+         });
          return resDeferred;
       },
 
@@ -144,12 +156,12 @@ define('Controls/List/BaseControl', [
       },
 
 
-      processLoadError: function(self, error, userErrback) {
+      processLoadError: function(self, error, dataLoadErrback) {
          if (!error.canceled) {
             _private.hideIndicator(self);
 
-            if (userErrback && userErrback instanceof Function) {
-               userErrback(error);
+            if (dataLoadErrback instanceof Function) {
+               dataLoadErrback(error);
             }
 
             // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
@@ -207,7 +219,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options.filter, self._options.sorting, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
+            _private.reload(self, self._options).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], { bubbling: true });
                } else {
@@ -237,24 +249,19 @@ define('Controls/List/BaseControl', [
       onScrollShow: function(self) {
          self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
-            if (self._options.navigation &&
-               self._options.navigation.view === 'infinity' &&
-               self._options.navigation.viewConfig &&
-               self._options.navigation.viewConfig.pagingMode
-            ) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
                   self._pagingVisible = true;
                });
             }
-         } else {
-
+         } else if (_private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = true;
          }
       },
 
       onScrollHide: function(self) {
          self._loadOffset = 0;
-         self._pagingCfg = null;
          self._pagingVisible = false;
          self._forceUpdate();
       },
@@ -333,11 +340,26 @@ define('Controls/List/BaseControl', [
                }
                self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
             }
+         } else {
+            if (_private.needScrollPaging(self._options.navigation)) {
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                  self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
+               });
+            }
          }
       },
 
       needScrollCalculation: function(navigationOpt) {
          return navigationOpt && navigationOpt.view === 'infinity';
+      },
+
+      needScrollPaging: function(navigationOpt) {
+         return (navigationOpt &&
+            navigationOpt.view === 'infinity' &&
+            navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode
+         );
       },
 
       /**
@@ -594,12 +616,7 @@ define('Controls/List/BaseControl', [
                   self._items = self._listViewModel.getItems();
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  var
-                     loadDef = _private.reload(self, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback, newOptions.navigation);
-                  loadDef.addCallback(function(items) {
-                     return items;
-                  });
-                  return loadDef;
+                  return _private.reload(self, newOptions);
                }
             }
          });
@@ -662,7 +679,7 @@ define('Controls/List/BaseControl', [
          }
 
          if (filterChanged || recreateSource || sortingChanged) {
-            _private.reload(this, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+            _private.reload(this, newOptions);
          }
       },
 
@@ -745,10 +762,8 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function(filter, sorting) {
-         var reloadFilter = filter || this._options.filter;
-         var reloadSorting = sorting || this._options._sorting;
-         return _private.reload(this, reloadFilter, reloadSorting, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function() {
+         return _private.reload(this, this._options);
       },
 
       _onGroupClick: function(e, item, baseEvent) {

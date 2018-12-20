@@ -154,9 +154,9 @@ define('Controls/Container/Scroll',
              */
             updateFixationState: function(self, data) {
                if (data.shouldBeFixed) {
-                  self._stickyHeaderId = data.id;
-               } else if (self._stickyHeaderId === data.id) {
-                  self._stickyHeaderId = null;
+                  self._stickyHeaderIds.push(data.id);
+               } else if (self._stickyHeaderIds.indexOf(data.id) > -1) {
+                  self._stickyHeaderIds.splice(self._stickyHeaderIds.indexOf(data.id), 1);
                }
             }
          },
@@ -195,7 +195,7 @@ define('Controls/Container/Scroll',
              * @type {String|null}
              * @private
              */
-            _stickyHeaderId: null,
+            _stickyHeaderIds: null,
 
             /**
              * @type {Controls/StickyHeader/Context|null}
@@ -208,6 +208,7 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
+               this._stickyHeaderIds = [];
                this._displayState = {};
                this._stickyHeaderContext = new StickyHeaderContext({
                   shadowVisible: options.shadowVisible
@@ -297,6 +298,10 @@ define('Controls/Container/Scroll',
 
                   this._forceUpdate();
                }
+            },
+
+            _topShadowVisible: function() {
+               return this._displayState.shadowPosition.indexOf('top') !== -1 && this._stickyHeaderIds.length === 0;
             },
 
             /**
@@ -418,6 +423,7 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
+               this._children.stickyHeader.start([this._stickyHeaderIds[this._stickyHeaderIds.length - 1]]);
 
                event.stopPropagation();
             },
