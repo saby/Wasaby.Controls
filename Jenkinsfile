@@ -5,11 +5,11 @@ import java.lang.Math
 def version = "3.19.100"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
-        updateGitlabCommitStatus state: 'canceled'
+        send_status_in_gitlab('canceled')
     } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
-        updateGitlabCommitStatus state: 'failed'
+        send_status_in_gitlab('failed')
     } else if ( currentBuild.currentResult == "SUCCESS" ) {
-        updateGitlabCommitStatus state: 'success'
+        send_status_in_gitlab('success')
     }
 }
 def exception(err, reason) {
