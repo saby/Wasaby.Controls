@@ -11,9 +11,9 @@ define('Controls/List/ListViewModel',
        */
 
       var _private = {
-         updateIndexes: function(self) {
-            self._startIndex = 0;
-            self._stopIndex = self.getCount();
+         updateIndexes: function(self, startIndex, stopIndex) {
+            self._startIndex = startIndex;
+            self._stopIndex = stopIndex;
          }
       };
 
@@ -35,11 +35,15 @@ define('Controls/List/ListViewModel',
                this._markedKey = cfg.markedKey;
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
+            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items && this._items.getCount()) {
+               this._markedKey = this._items.at(0).getId();
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
 
             this._selectedKeys = cfg.selectedKeys || [];
 
             // TODO надо ли?
-            _private.updateIndexes(self);
+            _private.updateIndexes(self, 0, self.getCount());
          },
 
          getItemDataByItem: function() {
@@ -98,6 +102,10 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
             this._notify('onListChange');
             this._notify('onMarkedKeyChanged', key);
+         },
+
+         getMarkedKey: function() {
+            return this._markedKey;
          },
 
          getSwipeItem: function() {
@@ -180,11 +188,18 @@ define('Controls/List/ListViewModel',
 
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
-               this._startIndex = startIndex;
-               this._stopIndex = stopIndex;
+               _private.updateIndexes(self, startIndex, stopIndex);
                this._nextVersion();
                this._notify('onListChange');
             }
+         },
+
+         getStartIndex: function() {
+            return this._startIndex;
+         },
+
+         getStopIndex: function() {
+            return this._stopIndex;
          },
 
          setItems: function(items) {
@@ -197,11 +212,10 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             this._nextVersion();
-            _private.updateIndexes(this);
          },
 
-         getItems: function() {
-            return ListViewModel.superclass.getItems.apply(this, arguments);
+         _onBeginCollectionChange: function() {
+            _private.updateIndexes(this, 0, this.getItems().getCount());
          },
 
          _setEditingItemData: function(itemData) {
@@ -249,11 +263,11 @@ define('Controls/List/ListViewModel',
          getMultiSelectVisibility: function() {
             return this._options.multiSelectVisibility;
          },
-         
+
          setSorting: function(sorting) {
             this._options.sorting = sorting;
          },
-         
+
          getSorting: function() {
             return this._options.sorting;
          },

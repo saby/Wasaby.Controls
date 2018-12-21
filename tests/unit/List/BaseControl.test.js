@@ -30,7 +30,8 @@ define([
             {
                id: 3,
                title: 'Третий',
-               type: 2
+               type: 2,
+               'parent@': true
             },
             {
                id: 4,
@@ -59,7 +60,10 @@ define([
       });
       it('life cycle', function(done) {
          var dataLoadFired = false;
-         var filter = {1: 1, 2: 2};
+         var filter = {
+            1: 1,
+            2: 2
+         };
          var cfg = {
             viewName: 'Controls/List/ListView',
             viewConfig: {
@@ -81,14 +85,14 @@ define([
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
-         //received state 3'rd argument
+         // received state 3'rd argument
          mountResult = ctrl._beforeMount(cfg, {}, rs);
          assert.isTrue(!!mountResult.addCallback, '_beforeMount doesn\'t return deferred');
 
          assert.isTrue(!!ctrl._sourceController, '_dataSourceController wasn\'t created before mounting');
          assert.deepEqual(filter, ctrl._options.filter, 'incorrect filter before mounting');
 
-         //создаем новый сорс
+         // создаем новый сорс
          var oldSourceCtrl = ctrl._sourceController;
 
          source = new MemorySource({
@@ -96,7 +100,7 @@ define([
             data: data
          });
 
-         var filter2 = {3: 3};
+         var filter2 = { 3: 3 };
          cfg = {
             viewName: 'Controls/List/ListView',
             source: source,
@@ -111,7 +115,7 @@ define([
             filter: filter2
          };
 
-         //сорс грузит асинхронно
+         // сорс грузит асинхронно
          setTimeout(function() {
             assert.equal(ctrl._items, ctrl.getViewModel().getItems());
             ctrl._beforeUpdate(cfg);
@@ -122,7 +126,7 @@ define([
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
             assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/List/Tree/TreeViewModel'));
             assert.isTrue(ctrl._hasUndrawChanges);
-            setTimeout(function () {
+            setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._afterUpdate();
                assert.isFalse(ctrl._hasUndrawChanges);
@@ -153,7 +157,6 @@ define([
       });
 
       it('errback to callback', function(done) {
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
@@ -179,29 +182,26 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //waiting for first load
+         // waiting for first load
          setTimeout(function() {
-
-            //emulate loading error
+            // emulate loading error
             ctrl._sourceController.load = function() {
                var def = new cDeferred();
                def.errback();
                return def;
             };
 
-            BaseControl._private.reload(ctrl).addCallback(function() {
+            BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
                done();
             }).addErrback(function() {
                assert.isTrue(false, 'reload() returns errback');
                done();
             });
          }, 100);
-
       });
 
 
       it('_needScrollCalculation', function(done) {
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
@@ -262,7 +262,6 @@ define([
       });
 
       it('loadToDirection down', function(done) {
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
@@ -308,11 +307,9 @@ define([
                done();
             }, 100);
          }, 100);
-
       });
 
       it('Navigation demand', function(done) {
-
          var source = new MemorySource({
             idProperty: 'id',
             data: data
@@ -364,7 +361,122 @@ define([
                done();
             }, 100);
          }, 100);
+      });
 
+      it('prepareFooter', function() {
+         var
+            tests = [
+               {
+                  data: [
+                     {},
+                     undefined,
+                     {}
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     {},
+                     {}
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'page' },
+                     {}
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return false;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: false
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return true;
+                        },
+                        getLoadedDataCount: function() {
+                        },
+                        getAllDataCount: function() {
+                           return true;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: true,
+                     _loadMoreCaption: '...'
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return true;
+                        },
+                        getLoadedDataCount: function() {
+                           return 5;
+                        },
+                        getAllDataCount: function() {
+                           return true;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: true,
+                     _loadMoreCaption: '...'
+                  }
+               },
+               {
+                  data: [
+                     {},
+                     { view: 'demand' },
+                     {
+                        hasMoreData: function() {
+                           return true;
+                        },
+                        getLoadedDataCount: function() {
+                           return 5;
+                        },
+                        getAllDataCount: function() {
+                           return 10;
+                        }
+                     }
+                  ],
+                  result: {
+                     _shouldDrawFooter: true,
+                     _loadMoreCaption: 5
+                  }
+               }
+            ];
+         tests.forEach(function(test, index) {
+            BaseControl._private.prepareFooter.apply(null, test.data);
+            assert.deepEqual(test.data[0], test.result, 'Invalid prepare footer on step #' + index);
+         });
       });
 
       it('loadToDirection up', function(done) {
@@ -404,7 +516,6 @@ define([
                done();
             }, 100);
          }, 100);
-
       });
 
       it('onScrollLoadEdge', function(done) {
@@ -443,7 +554,7 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
+         // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
             ctrl._hasUndrawChanges = true;
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
@@ -458,8 +569,6 @@ define([
                }, 100);
             }, 100);
          }, 100);
-
-
       });
 
       it('scrollLoadStarted MODE', function(done) {
@@ -498,9 +607,9 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
+         // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = false; //_afterUpdate
+            ctrl._hasUndrawChanges = false; // _afterUpdate
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
@@ -516,14 +625,12 @@ define([
                }, 100);
             }, 100);
          }, 100);
-
-
       });
 
       it('processLoadError', function() {
          var cfg = {};
          var ctrl = new BaseControl(cfg);
-         var error = {message: 'error'};
+         var error = { message: 'error' };
 
          result = false;
          var userErrback = function(error) {
@@ -542,13 +649,13 @@ define([
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
 
-         //картинка должен появляться через 2000 мс, проверим, что её нет сразу
+         // картинка должен появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
-         //искуственно покажем картинку
+         // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
 
-         //и вызовем скрытие
+         // и вызовем скрытие
          BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
@@ -591,7 +698,7 @@ define([
          ctrl._beforeMount(cfg);
 
 
-         //два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
+         // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
             BaseControl._private.scrollToEdge(ctrl, 'down');
             setTimeout(function() {
@@ -599,7 +706,6 @@ define([
                done();
             }, 100);
          }, 100);
-
       });
 
       it('ScrollPagingController', function(done) {
@@ -641,23 +747,34 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //эмулируем появление скролла
+         // эмулируем появление скролла
          BaseControl._private.onScrollShow(ctrl);
 
-         //скроллпэйджиг контроллер создается асинхронном
+         // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
             assert.isTrue(!!ctrl._scrollPagingCtr, 'ScrollPagingController wasn\'t created');
 
 
-            //прокручиваем к низу, проверяем состояние пэйджинга
+            // прокручиваем к низу, проверяем состояние пэйджинга
             BaseControl._private.handleListScroll(ctrl, 300, 'down');
-            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'normal',
+               stateEnd: 'normal'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll to bottom');
 
             BaseControl._private.handleListScroll(ctrl, 200, 'middle');
-            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
+            assert.deepEqual({
+               stateBegin: 'normal',
+               statePrev: 'normal',
+               stateNext: 'normal',
+               stateEnd: 'normal'
+            }, ctrl._pagingCfg, 'Wrong state of paging arrows after scroll');
 
             BaseControl._private.onScrollHide(ctrl);
-            assert.deepEqual(null, ctrl._pagingCfg, 'Wrong state of paging');
+            assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
+            assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
 
             done();
          }, 100);
@@ -727,14 +844,14 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //дождемся загрузки списка
+         // дождемся загрузки списка
          setTimeout(function() {
             result = false;
             ctrl._notify = function(event, dir) {
                result = dir;
             };
 
-            //прокручиваем к низу, проверяем состояние пэйджинга
+            // прокручиваем к низу, проверяем состояние пэйджинга
             BaseControl._private.scrollToEdge(ctrl, 'down');
             assert.equal(result, 'bottom', 'List wasn\'t scrolled to bottom');
 
@@ -784,25 +901,25 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //эмулируем появление скролла
+         // эмулируем появление скролла
          BaseControl._private.onScrollShow(ctrl);
 
-         //скроллпэйджиг контроллер создается асинхронном
+         // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
             ctrl._notify = function(eventName, type) {
                result = type;
             };
 
-            //прокручиваем к низу, проверяем состояние пэйджинга
+            // прокручиваем к низу, проверяем состояние пэйджинга
             result = false;
             ctrl.__onPagingArrowClick({}, 'End');
             assert.equal('bottom', result[0], 'Wrong state of scroll after clicking to End');
 
-            //прокручиваем к верху, проверяем состояние пэйджинга
+            // прокручиваем к верху, проверяем состояние пэйджинга
             ctrl.__onPagingArrowClick({}, 'Begin');
             assert.equal('top', result[0], 'Wrong state of scroll after clicking to Begin');
 
-            //прокручиваем страницу вверх и вниз, проверяем состояние пэйджинга
+            // прокручиваем страницу вверх и вниз, проверяем состояние пэйджинга
             ctrl.__onPagingArrowClick({}, 'Next');
             assert.equal('pageDown', result[0], 'Wrong state of scroll after clicking to Next');
 
@@ -852,21 +969,21 @@ define([
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
 
-         //эмулируем появление скролла
+         // эмулируем появление скролла
          BaseControl._private.onScrollShow(ctrl);
 
-         //скроллпэйджиг контроллер создается асинхронном
+         // скроллпэйджиг контроллер создается асинхронном
          setTimeout(function() {
             ctrl._notify = function(eventName, type) {
                result = type;
             };
 
-            //прогоняем все варианты, без проверки, т.к. все ветки уже тестируются выше
+            // прогоняем все варианты, без проверки, т.к. все ветки уже тестируются выше
             ctrl.__onEmitScroll({}, 'loadTop');
             ctrl.__onEmitScroll({}, 'loadBottom');
             ctrl.__onEmitScroll({}, 'listTop');
             ctrl.__onEmitScroll({}, 'listBottom');
-            ctrl.__onEmitScroll({}, 'scrollMove', {scrollTop: 200});
+            ctrl.__onEmitScroll({}, 'scrollMove', { scrollTop: 200 });
             ctrl.__onEmitScroll({}, 'canScroll');
             ctrl.__onEmitScroll({}, 'cantScroll');
 
@@ -1238,12 +1355,17 @@ define([
                }
             };
             var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
                items: rs,
                keyProperty: 'id',
                selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._children = {
+               itemActions: {
+                  updateItemActions: function() {
+                  }
+               }
+            };
             ctrl._notify = function(e, options) {
                assert.equal('afterBeginEdit', e);
                assert.equal(options[0], opt);
@@ -1282,12 +1404,17 @@ define([
                }
             };
             var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
                items: rs,
                keyProperty: 'id',
                selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._children = {
+               itemActions: {
+                  updateItemActions: function() {
+                  }
+               }
+            };
             ctrl._notify = function(e, options) {
                assert.equal('afterBeginEdit', e);
                assert.equal(options[0], opt);
@@ -1326,12 +1453,17 @@ define([
                }
             };
             var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
                items: rs,
                keyProperty: 'id',
                selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._children = {
+               itemActions: {
+                  updateItemActions: function() {
+                  }
+               }
+            };
             ctrl._notify = function(e, args) {
                assert.equal('afterEndEdit', e);
                assert.equal(args[0], opt);
@@ -1370,12 +1502,17 @@ define([
                }
             };
             var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ //аналог beforemount
+            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
                items: rs,
                keyProperty: 'id',
                selectedKeys: [1, 3]
             });
-            ctrl._children = {itemActions: {updateItemActions: function() {}}};
+            ctrl._children = {
+               itemActions: {
+                  updateItemActions: function() {
+                  }
+               }
+            };
             ctrl._notify = function(e, args) {
                assert.equal('afterEndEdit', e);
                assert.equal(args[0], opt);
@@ -1546,7 +1683,7 @@ define([
                   }
                },
                itemData = {
-                  itemActions: {all: actions}
+                  itemActions: { all: actions }
                };
             instance._children = {
                itemActionsOpener: {
@@ -1568,7 +1705,7 @@ define([
             assert.isTrue(itemData.contextEvent);
             assert.equal(callBackCount, 3);
 
-            //dont show by long tap
+            // dont show by long tap
             instance._isTouch = true;
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
@@ -1683,7 +1820,7 @@ define([
                   type: 'itemcontextmenu'
                },
                itemData = {
-                  itemActions: {all: []}
+                  itemActions: { all: [] }
                };
             instance._children = {
                itemActionsOpener: {
@@ -1696,8 +1833,7 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData);
-            assert.equal(callBackCount, 0); //проверяем что не открывали меню
-
+            assert.equal(callBackCount, 0); // проверяем что не открывали меню
          });
 
          it('showActionsMenu no context', function() {
@@ -1733,7 +1869,7 @@ define([
                   }
                },
                itemData = {
-                  itemActions: {all: actions}
+                  itemActions: { all: actions }
                };
             instance._children = {
                itemActionsOpener: {
@@ -1819,9 +1955,52 @@ define([
                         }
                      };
                   }
-               }]});
+               }]
+            });
             assert.equal(instance._listViewModel._activeItem, null);
             assert.equal(callBackCount, 5);
+            assert.isFalse(instance._menuIsShown);
+         });
+
+         it('closeActionsMenu item with children', function() {
+            var cfg = {
+                  viewName: 'Controls/List/ListView',
+                  viewModelConstructor: ListViewModel,
+                  source: source
+               },
+               instance = new BaseControl(cfg);
+            instance.saveOptions(cfg);
+            instance._beforeMount(cfg);
+            instance._listViewModel._activeItem = {
+               item: true
+            };
+            instance._container = {
+               querySelector: function(selector) {
+                  if (selector === '.controls-ListView__itemV') {
+                     return {
+                        parentNode: {
+                           children: [{
+                              className: ''
+                           }]
+                        }
+                     };
+                  }
+               }
+            };
+            instance._closeActionsMenu({
+               action: 'itemClick',
+               event: {
+                  type: 'click',
+                  stopPropagation: ()=>{}
+               },
+               data: [{
+                  getRawData: function() {
+                     return {
+                        'parent@': true
+                     };
+                  }
+               }]});
+            assert.equal(instance._menuIsShown, null);
          });
 
          it('_listSwipe  multiSelectStatus = true', function(done) {
@@ -1876,7 +2055,6 @@ define([
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
                done();
-
             });
             return done;
          });
@@ -1924,7 +2102,6 @@ define([
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
                done();
-
             });
             return done;
          });

@@ -6,7 +6,7 @@
  * node test-browser
  */
 
-let app = require('ws-unit-testing/browser');
+let app = require('saby-units/browser');
 const config = require('./package.json').config;
 
 function buildUrl (scheme, host, port, path, query) {

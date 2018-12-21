@@ -7,11 +7,9 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Core/helpers/Object/isEqual',
    'WS.Data/Collection/List',
    'Core/core-merge',
-   'Controls/Utils/getWidth',
-   'wml!Controls/Selector/SelectedCollection/CounterTemplate',
    'Controls/Utils/tmplNotify',
    'Controls/Utils/ToSourceModel'
-], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, GetWidth, CounterTemplate, tmplNotify, ToSourceModel) {
+], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, tmplNotify, ToSourceModel) {
    'use strict';
 
    var _private = {
@@ -110,12 +108,6 @@ define('Controls/Selector/SelectedCollection/Controller', [
          return titleItems.join(', ');
       },
 
-      getCounterWidth: function(itemsCount) {
-         return GetWidth.getWidth(CounterTemplate({
-            itemsCount: itemsCount
-         }));
-      },
-
       getItems: function(self) {
          if (!self._items) {
             self._items = new List();
@@ -143,16 +135,9 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
       },
 
-      _afterMount: function() {
-         if (_private.getItems(this).getCount()) {
-            this._forceUpdate();
-         }
-      },
-
       _beforeUpdate: function(newOptions) {
          var
             self = this,
-            itemsCount = _private.getItems(this).getCount(),
             keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
@@ -170,9 +155,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
             this._setItems([]);
          }
 
-         this._counterWidth = itemsCount && _private.getCounterWidth(itemsCount);
-
-         if (sourceIsChanged || keysChanged && this._selectedKeys.length) {
+         if ((sourceIsChanged || keysChanged) && this._selectedKeys.length) {
             return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
                _private.notifyItemsChanged(self, result);
                _private.notifyTextValueChanged(self, _private.getTextValue(self));

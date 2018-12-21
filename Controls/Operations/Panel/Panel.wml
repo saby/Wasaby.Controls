@@ -1,9 +1,9 @@
-<div class="controls-operationsPanelV{{ _initialized ? ' controls-operationsPanelV_initialized' : '' }}">
+<div class="controls-operationsPanelV{{ _initialized ? ' controls-operationsPanelV_initialized' : ' controls-operationsPanelV_notInitialized' }}">
    <Controls.Operations.MultiSelector selectedKeys="{{ _options.selectedKeys }}"
                                       excludedKeys="{{ _options.excludedKeys }}"
                                       selectedKeysCount="{{ _options.selectedKeysCount }}"
                                       attr:class="{{ _initialized ? '' : 'ws-invisible' }}" />
-   <div class="controls-operationsPanelV__actions" name="toolbarBlock">
+   <div class="controls-operationsPanelV__actions{{ _initialized ? '' : ' controls-operationsPanelV__actions_notInitialized' }}" name="toolbarBlock">
       <ws:if data="{{_toolbarSource && _initialized}}">
          <Controls.Toolbar attr:class="controls-operationsPanelV__toolbar"
                            parentProperty="{{_options.parentProperty}}"

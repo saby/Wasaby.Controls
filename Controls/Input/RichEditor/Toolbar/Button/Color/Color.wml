@@ -4,7 +4,8 @@
    showHeader="{{false}}"
    attr:title="{[Выбор цвета]}"
    icon="icon-LetterA icon-medium"
-   style="linkMain"
+   style="secondary"
+   viewMode="link"
    on:onMenuItemActivate="_menuItemActivateHandler()">
    <ws:itemTemplate>
       <ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate">

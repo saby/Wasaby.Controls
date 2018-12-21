@@ -3,7 +3,7 @@ define('Controls/Date/model/DateRange', [
    'WS.Data/Entity/ObservableMixin',
    'WS.Data/Entity/VersionableMixin',
    'Controls/Utils/DateRangeUtil',
-   'SBIS3.CONTROLS/Utils/DateUtil'
+   'Controls/Utils/Date'
 ], function(
    cExtend,
    ObservableMixin,

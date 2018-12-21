@@ -87,5 +87,22 @@ define(
                });
             });
          });
+   
+         it('itemsChanged', function(done) {
+            var config = {source: source, keyProperty: 'id'};
+            var data = getDataWithConfig(config);
+            var propagationStopped = false;
+            var event = {
+               stopPropagation: function() {
+                  propagationStopped = true;
+               }
+            };
+      
+            data._beforeMount(config).addCallback(function() {
+               data._itemsChanged(event, data._items);
+               assert.isTrue(propagationStopped);
+               done();
+            });
+         });
       });
    });

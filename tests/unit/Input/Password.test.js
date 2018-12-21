@@ -63,6 +63,22 @@ define(
                assert.equal(ctrl._calculateType(), 'text');
             });
          });
+         describe('_getType', function() {
+            var ctrl;
+            beforeEach(function() {
+               ctrl = new Password({});
+            });
+            it('Password is visible.', function() {
+               ctrl._passwordVisible = true;
+
+               assert.equal(ctrl._getType(), 'text');
+            });
+            it('Password is hidden.', function() {
+               ctrl._passwordVisible = false;
+
+               assert.equal(ctrl._getType(), 'password');
+            });
+         });
       });
    }
 );

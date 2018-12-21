@@ -88,15 +88,37 @@ define('Controls/List/ItemsViewModel', [
       },
 
       reset: function() {
-         this._curIndex = 0;
+         this._startIndex = this._options.virtualScrolling && !!this._startIndex ? this._startIndex : 0;
+         this._curIndex = this._startIndex;
       },
 
       isEnd: function() {
-         return this._curIndex < (this._display ? this._display.getCount() : 0);
+         var endIndex;
+         if (this._options.virtualScrolling) {
+            endIndex = (this._options.virtualScrolling && !!this._stopIndex ? this._stopIndex : 0);
+         } else {
+            endIndex = (this._display ? this._display.getCount() : 0);
+         }
+         return this._curIndex < endIndex;
+      },
+
+      setIndexes: function(startIndex, stopIndex) {
+         if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
+            this._startIndex = startIndex;
+            this._stopIndex = stopIndex;
+            this._nextVersion();
+            this._notify('onListChange');
+         }
       },
 
       isLast: function() {
-         return this._curIndex === (this._display ? this._display.getCount() - 1 : 0);
+         var lastIndex;
+         if (this._options.virtualScrolling) {
+            lastIndex = this._stopIndex - 1;
+         } else {
+            lastIndex = (this._display ? this._display.getCount() - 1 : 0);
+         }
+         return this._curIndex === lastIndex;
       },
 
       goToNext: function() {
@@ -125,7 +147,8 @@ define('Controls/List/ItemsViewModel', [
                      return this.item.getVersion();
                   }
                   return this.item;
-               }
+               },
+               spacingClassList: this.getSpacingClassList()
             };
          if (this._options.groupMethod) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
@@ -136,6 +159,15 @@ define('Controls/List/ItemsViewModel', [
             }
          }
          return itemData;
+      },
+
+      getSpacingClassList: function() {
+         var classList = '';
+         if (this._options.multiSelectVisibility === 'hidden') {
+            classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
+         }
+         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
+         return classList;
       },
 
       toggleGroup: function(group, state) {
@@ -198,10 +230,17 @@ define('Controls/List/ItemsViewModel', [
       },
 
       _onCollectionChange: function() {
+         this._onBeginCollectionChange();
          this._nextVersion();
          this._notify('onListChange');
+         this._onEndCollectionChange();
       },
-
+      _onBeginCollectionChange: function() {
+         // method may be implemented
+      },
+      _onEndCollectionChange: function() {
+         // method may be implemented
+      },
       setItems: function(items) {
          if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
@@ -245,6 +284,10 @@ define('Controls/List/ItemsViewModel', [
 
       at: function(index) {
          return this._display ? this._display.at(index) : undefined;
+      },
+
+      getDisplay: function() {
+         return this._display;
       },
 
       destroy: function() {

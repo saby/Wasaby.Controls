@@ -13,7 +13,7 @@ define('Controls/Container/LoadingIndicator', [
       isLoading: false,
       _isPreloading: false,
       _prevLoading: null,
-      _stack: new List(),
+      _stack: null,
       _isLoadingSaved: null,
       _delay: 2000,
 
@@ -25,6 +25,7 @@ define('Controls/Container/LoadingIndicator', [
       mods: '',
 
       _beforeMount: function(cfg) {
+         this._stack = new List();
          this._updateProperties(cfg);
       },
       _afterMount: function(cfg) {
@@ -142,6 +143,9 @@ define('Controls/Container/LoadingIndicator', [
 
       hide: function(id) {
          if (!id) {
+
+            // Used public api. In this case, hide the indicator immediately.
+            this._clearStack();
             this._toggleIndicator(false, {});
          } else {
             this._hide(id);
@@ -155,6 +159,10 @@ define('Controls/Container/LoadingIndicator', [
          } else {
             this._toggleIndicator(false);
          }
+      },
+
+      _clearStack: function() {
+         this._stack.clear();
       },
 
       _isOpened: function(config) {
