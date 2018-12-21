@@ -74,7 +74,7 @@ define('Controls/Dropdown/Controller',
          getFilter: function(filter, source) {
             // TODO: Избавиться от проверки, когда будет готово решение задачи https://online.sbis.ru/opendoc.html?guid=e6a1ab89-4b83-41b1-aa5e-87a92e6ff5e7
             if (_private.isHistorySource(source)) {
-               return Merge(_private.getMetaHistory(), filter);
+               return Merge(_private.getMetaHistory(), filter || {});
             }
             return filter;
          },
