@@ -112,7 +112,7 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
-    if ( ["kraynovdo", "ls.baranova"].contains(user) ) {
+    if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
     return common_params
@@ -203,7 +203,7 @@ node('controls') {
         } else {
             branch_viewsettings = props["viewsettings"]
         }
-        
+
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
