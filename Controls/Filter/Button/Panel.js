@@ -116,7 +116,7 @@ define('Controls/Filter/Button/Panel', [
 
       prepareItems: function(items) {
          Chain(items).each(function(item) {
-            if (getPropValue(item, 'visibility') === true && getPropValue(item, 'value') === getPropValue(item, 'resetValue')) {
+            if (getPropValue(item, 'visibility') === true && isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
                setPropValue(item, 'visibility', false);
             }
          });
