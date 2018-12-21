@@ -41,6 +41,23 @@ def build_description(job, path, skip_test) {
     return [title, description]
 }
 
+def build_title(t_int, t_reg) {
+    if (!t_int && !t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER}"
+    } else if (t_int && !t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    } else if (!t_int && t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+    } else if (t_int && t_reg && t_int==t_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
+    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+    }
+
+}
+
 echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
 echo "Генерируем параметры"
     properties([
@@ -718,32 +735,32 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir("./controls/tests") {
-            def description = ''
+        /*dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
+            def description = ''
             if (inte || all_inte) {
                  int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                  int_title = int_data[0]
-                 description += int_data[1]
+                 int_description= int_data[1]
+                 print("in int ${int_description}")
+                 if ( int_description ) {
+                    description += "${int_description}"
+                 }
             }
             if (regr) {
                 reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                 reg_title = reg_data[0]
-                description += reg_data[1]
-            }
-            if (int_title && reg_title && int_title==reg_title) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (int_title.contains('FAIL') && ('OK' == reg_title || !reg_title)) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${int_title}"
-            } else if (reg_title.contains('FAIL') && ('OK' == int_title|| !int_title)) {
-                currentBuild.displayName = "#${env.BUILD_NUMBER} ${reg_title}"
+                reg_description = reg_data[1]
+                print("in reg ${reg_description}")
+                if ( description != reg_description ) {
+                    description += "${reg_description}"
+                }
             }
 
-            currentBuild.description = description
-
-        }
-
+            build_title(int_title, reg_title)
+            currentBuild.description = "${description}"
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"

@@ -79,7 +79,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    function parseModuleName(name) {
       var typeInfo = getType(name);
       if (typeInfo === null) {
-         IoC.resolve('ILogger').error('Wrong type. Can not process module: ' + name);
+         // TODO Change to error after https://online.sbis.ru/opendoc.html?guid=5de9d9bd-be4a-483a-bece-b41983e916e4
+         Logger.log('Wrong type', ['Can not process module: ' + name]);
          return null;
       }
       var nameWithoutPlugin;

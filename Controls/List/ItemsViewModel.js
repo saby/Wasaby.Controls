@@ -125,7 +125,8 @@ define('Controls/List/ItemsViewModel', [
                      return this.item.getVersion();
                   }
                   return this.item;
-               }
+               },
+               spacingClassList: this.getSpacingClassList()
             };
          if (this._options.groupMethod) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
@@ -136,6 +137,15 @@ define('Controls/List/ItemsViewModel', [
             }
          }
          return itemData;
+      },
+
+      getSpacingClassList: function() {
+         var classList = '';
+         if (this._options.multiSelectVisibility === 'hidden') {
+            classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
+         }
+         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
+         return classList;
       },
 
       toggleGroup: function(group, state) {
@@ -198,10 +208,17 @@ define('Controls/List/ItemsViewModel', [
       },
 
       _onCollectionChange: function() {
+         this._onBeginCollectionChange();
          this._nextVersion();
          this._notify('onListChange');
+         this._onEndCollectionChange();
       },
-
+      _onBeginCollectionChange: function() {
+         // method may be implemented
+      },
+      _onEndCollectionChange: function() {
+         // method may be implemented
+      },
       setItems: function(items) {
          if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
@@ -245,6 +262,10 @@ define('Controls/List/ItemsViewModel', [
 
       at: function(index) {
          return this._display ? this._display.at(index) : undefined;
+      },
+
+      getDisplay: function() {
+         return this._display;
       },
 
       destroy: function() {

@@ -61,7 +61,13 @@ define('Controls/Input/Area',
 
          calcPositionCursor: function(container, textBeforeCursor) {
             var measuredBlock = document.createElement('div');
-            measuredBlock.innerHTML = '&#65279;' + textBeforeCursor + '&#65279;';
+
+            /**
+             * In order for the block to have the correct height, you need to add an empty character to the end.
+             * Without it, the height, in the case of an empty value, will be zero.
+             * In the case when at the end of the transition to a new line height will be one line less.
+             */
+            measuredBlock.innerHTML = textBeforeCursor + '&#65279;';
             container.appendChild(measuredBlock);
             var position = measuredBlock.clientHeight;
             container.removeChild(measuredBlock);
@@ -75,20 +81,32 @@ define('Controls/Input/Area',
             return sizes.rowHeight * count + indents;
          },
 
-         isPressAdditionalKeys: function(event, ignore) {
+         /**
+          * @param event
+          * @param {String} [key]
+          * @variant altKey
+          * @variant ctrlKey
+          * @variant shiftKey
+          * @return {Boolean}
+          */
+         isPressAdditionalKey: function(event, key) {
             var additionalKeys = ['shiftKey', 'altKey', 'ctrlKey'];
 
             return additionalKeys.every(function(additionalKey) {
-               if (additionalKey === ignore) {
-                  return true;
+               if (additionalKey === key) {
+                  return event[additionalKey];
                }
 
-               return event[additionalKey];
+               return !event[additionalKey];
             });
          },
 
          isPressEnter: function(event) {
-            return event.keyCode === constants.key.enter;
+            return event.keyCode === constants.key.enter && _private.isPressAdditionalKey(event);
+         },
+
+         isPressCtrlEnter: function(event) {
+            return event.keyCode === constants.key.enter && _private.isPressAdditionalKey(event, 'ctrlKey');
          },
 
          /**
@@ -104,6 +122,11 @@ define('Controls/Input/Area',
             var textBeforeCursor = value.substring(0, selection.end);
 
             var positionCursor = _private.calcPositionCursor(self._children.fieldWrapper, textBeforeCursor);
+
+            /**
+             * По другому до clientHeight не достучаться.
+             * https://online.sbis.ru/opendoc.html?guid=1d24c04f-73d0-4e0f-9b61-4d0bc9c23e2f
+             */
             var sizeVisibleArea = scroll._container.clientHeight;
 
             // По другому до scrollTop не достучаться.
@@ -135,16 +158,9 @@ define('Controls/Input/Area',
          _keyDownHandler: function(event) {
             var nativeEvent = event.nativeEvent;
 
-            if (_private.isPressEnter(nativeEvent)) {
-               if (this._options.newLineKey === 'enter' && !_private.isPressAdditionalKeys(nativeEvent)) {
-                  return;
-               }
-               if (this._options.newLineKey === 'ctrlEnter' && !_private.isPressAdditionalKeys(nativeEvent, 'ctrlKey')) {
-                  this.paste('\n');
-
-                  return;
-               }
-
+            if (this._options.newLineKey === 'ctrlEnter' && _private.isPressCtrlEnter(nativeEvent)) {
+               this.paste('\n');
+            } else if (!(this._options.newLineKey === 'enter' && _private.isPressEnter(nativeEvent))) {
                event.preventDefault();
             }
          },

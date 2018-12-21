@@ -49,6 +49,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // при создании попапа, зарегистрируем его
+               _private.fireEventHandler(id, 'onOpen');
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
                return true;
@@ -94,29 +95,33 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var item = ManagerController.find(id);
             if (item) {
-               if (!_private.isIgnoreActivationArea(document.activeElement)) {
-                  _private.finishPendings(id, function() {
-                     if (!_private.activeElement[id]) {
-                        _private.activeElement[id] = document.activeElement;
-                     }
-                  }, function(popup) {
-                     // if pendings is exist, take focus back while pendings are finishing
-                     popup._container.focus();
-                  }, function() {
-                     var itemContainer = _private.getItemContainer(id);
-                     if (item.popupOptions.isCompoundTemplate) {
-                        if (item.popupOptions.closeByExternalClick) {
-                           _private._getCompoundArea(itemContainer).close();
+               if (item.popupOptions.closeByExternalClick) {
+                  if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
+                     _private.finishPendings(id, function() {
+                        if (!_private.activeElement[id]) {
+                           _private.activeElement[id] = _private.getActiveElement();
                         }
-                     } else {
-                        item.controller.popupDeactivated(item, itemContainer);
-                     }
-                  });
-               } else if (item.popupOptions.closeByExternalClick) {
-                  item.waitDeactivated = true;
+                     }, function(popup) {
+                        // if pendings is exist, take focus back while pendings are finishing
+                        popup._container.focus();
+                     }, function() {
+                        var itemContainer = _private.getItemContainer(id);
+                        if (item.popupOptions.isCompoundTemplate) {
+                           _private._getCompoundArea(itemContainer).close();
+                        } else {
+                           item.controller.popupDeactivated(item, itemContainer);
+                        }
+                     });
+                  } else {
+                     item.waitDeactivated = true;
+                  }
                }
             }
             return false;
+         },
+
+         getActiveElement: function() {
+            return document && document.activeElement;
          },
 
          popupDragStart: function(id, offset) {

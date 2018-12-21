@@ -89,8 +89,12 @@ define('Controls/List/Grid/GridViewModel', [
             cellClasses += ' controls-Grid__row-cell_rowSpacing_default';
 
             if (current.isSelected) {
+               cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
                if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_withSelectionMarker' + ' controls-Grid__row-cell_withSelectionMarker_' + (current.style || 'default');
+                  cellClasses += ' controls-Grid__row-cell_selected__first' + ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
+               }
+               if (current.columnIndex === current.getLastColumnIndex()) {
+                  cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
                }
             }
 
@@ -144,9 +148,9 @@ define('Controls/List/Grid/GridViewModel', [
                }
             }
 
-            for (idx = self._model._stopIndex - 1; idx >= self._model._startIndex; idx--) {
-               item = self._model._display.at(idx).getContents();
-               prevItem = idx - 1 >= 0 ? self._model._display.at(idx - 1).getContents() : null;
+            for (idx = self._model.getStopIndex() - 1; idx >= self._model.getStartIndex(); idx--) {
+               item = self._model.getDisplay().at(idx).getContents();
+               prevItem = idx - 1 >= 0 ? self._model.getDisplay().at(idx - 1).getContents() : null;
 
                if (supportLadder) {
                   ladder[idx] = {};
@@ -288,6 +292,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          resetHeaderColumns: function() {
             this._curHeaderColumnIndex = 0;
+         },
+
+         isNotFullGridSupport: function() {
+            return cDetection.isNotFullGridSupport;
          },
 
          getCurrentHeaderColumn: function() {
@@ -461,6 +469,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
+         },
+
+         getMarkedKey: function() {
+            return this._model.getMarkedKey();
          },
 
          setSorting: function(sorting) {
