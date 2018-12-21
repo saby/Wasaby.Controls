@@ -258,11 +258,17 @@ node('controls') {
                         git fetch
                         git checkout ${env.BRANCH_NAME}
                         git pull
-                        git merge origin/rc-${version}
                         """
+
                         def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
                         echo "${gitCommit}"
                         env.GIT_COMMIT = gitCommit
+
+                        sh """
+                        git merge origin/rc-${version}
+                        """
+
+
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
