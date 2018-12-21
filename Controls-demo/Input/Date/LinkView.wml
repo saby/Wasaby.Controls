@@ -3,28 +3,28 @@
       <div class="PageBlock__title"></div>
       <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly;">
          <Controls.Input.Date.LinkView
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
                bind:endValue="_endValue"
-               showClearButton="{{true}}"
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
+               clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
                bind:endValue="_endValue"
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
-               showClearButton="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
+               clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
                bind:endValue="_endValue"
                style="linkMain"
-               showClearButton="{{true}}"
+               clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                startValue="{{_startValue}}"

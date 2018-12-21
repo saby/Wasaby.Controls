@@ -72,10 +72,10 @@ define('Controls/Input/Date/LinkView', [
          _private._updateCaption(this, options);
          _private._updateEnabled(this, options.readOnly);
 
-         // showClearButton is option of clearButton visibility state
+         // clearButtonVisibility is option of clearButton visibility state
 
-         if ((options.showPrevArrow && options.showClearButton) || (options.showNextArrow && options.showClearButton)) {
-            IoC.resolve('ILogger').error('LinkView', rk('Функционал контрола не расчитан на одновременное отображение опции showClearButton и опций showPrevArrow/showNextArrow'));
+         if ((options.prevArrowVisibility && options.clearButtonVisibility) || (options.nextArrowVisibility && options.clearButtonVisibility)) {
+            IoC.resolve('ILogger').error('LinkView', rk('The Controls functional is not intended for showClearButton and showPrevArrow/showNextArrow options using in one time'));
          }
       },
       _beforeUpdate: function(options) {

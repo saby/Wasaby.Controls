@@ -1,6 +1,6 @@
 <div class="controls-DateLinkView">
     <div class="controls-DateLinkView-wrapper">
-        <ws:if data="{{ _options.showPrevArrow && _options.style === 'default' }}">
+        <ws:if data="{{ _options.prevArrowVisibility && _options.style === 'default' }}">
            <span
               class="controls-DateLinkView__prev {{ _prevNextButtonsEnabledClass }}"
               on:click="shiftBack()">
@@ -16,10 +16,10 @@
               <Controls.Button name="Link" caption="{{ _caption }}" style="{{_options.style}}" on:click="_onClick()"/>
            </ws:else>
         </span>
-        <ws:if data="{{ _options.showClearButton && _options.startValue }}">
+        <ws:if data="{{ _options.clearButtonVisibility && _options.startValue }}">
               <span class="controls-DateLinkView__clear" on:click="_clearDate()"></span>
         </ws:if>
-        <ws:if data="{{ _options.showNextArrow && _options.style === 'default' }}">
+        <ws:if data="{{ _options.nextArrowVisibility && _options.style === 'default' }}">
            <span
               class="controls-DateLinkView__next {{ _prevNextButtonsEnabledClass }}"
               on:click="shiftForward()">
