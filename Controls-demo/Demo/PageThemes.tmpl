@@ -7,7 +7,7 @@
          <div class="theme_button" on:click="changeTheme('carry')">carry</div>
          <div class="theme_button theme_dark" on:click="changeTheme('presto')">presto</div>
       </div>
-      <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="linkMain" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
+      <Controls.Button if="{{componentName !== 'Controls-demo/Index'}}" attr:id="Back" caption="Назад" style="secondary" viewMode="link" icon="icon-16 icon-DayBackward icon-primary" on:click="backClickHdl()" />
       <Controls.Container.Scroll attr:class="ControlsDemo-Page_scrollContainer">
          <Controls.Container.Async templateName="{{componentName}}" attr:id="newListView" attr:class="ControlsDemo-Page_content" />
       </Controls.Container.Scroll>
