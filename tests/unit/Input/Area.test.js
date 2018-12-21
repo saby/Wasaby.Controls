@@ -156,6 +156,20 @@ define(
                   arguments: []
                }]);
             });
+            it('The option newLineKey is equal to enter. Press b.', function() {
+               event = new SyntheticEvent({
+                  keyCode: constants.key.b,
+                  altKey: false,
+                  ctrlKey: false,
+                  shiftKey: false,
+                  preventDefault: preventDefault
+               });
+               ctrl._options.newLineKey = 'enter';
+
+               ctrl._keyDownHandler(event);
+
+               assert.deepEqual(calls.length, 0);
+            });
             it('The option newLineKey is equal to ctrlEnter. Press enter.', function() {
                event = new SyntheticEvent({
                   keyCode: constants.key.enter,

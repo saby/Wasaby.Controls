@@ -46,6 +46,11 @@ define('Controls/Input/Area',
        * @default enter
        */
       var _private = {
+
+         /**
+          * @param {Controls/Input/Area#size} areaSize
+          * @return {Controls/Input/Area/Types/FieldSizes.typedef}
+          */
          calcSizesByMeasuredBlock: function(areaSize) {
             var measuredBlock = document.createElement('div');
             measuredBlock.className = 'controls-Area__measuredBlock controls-Area__measuredBlock_size_' + areaSize;
@@ -75,7 +80,14 @@ define('Controls/Input/Area',
             return position;
          },
 
-         calculateHeightLines: function(sizes, count, hasIndents) {
+         /**
+          *
+          * @param {Controls/Input/Area/Types/FieldSizes.typedef} sizes
+          * @param {Number} count Number of rows in the container.
+          * @param {Boolean} [hasIndents] Determine whether to ignore the indents.
+          * @return {*}
+          */
+         calculateHeightContainer: function(sizes, count, hasIndents) {
             var indents = hasIndents ? sizes.indents : 0;
 
             return sizes.rowHeight * count + indents;
@@ -102,11 +114,15 @@ define('Controls/Input/Area',
          },
 
          isPressEnter: function(event) {
-            return event.keyCode === constants.key.enter && _private.isPressAdditionalKey(event);
+            return event.keyCode === constants.key.enter;
          },
 
-         isPressCtrlEnter: function(event) {
-            return event.keyCode === constants.key.enter && _private.isPressAdditionalKey(event, 'ctrlKey');
+         isPressCtrl: function(event) {
+            return _private.isPressAdditionalKey(event, 'ctrlKey');
+         },
+
+         isPressAdditionalKeys: function(event) {
+            return !_private.isPressAdditionalKey(event);
          },
 
          /**
@@ -158,10 +174,12 @@ define('Controls/Input/Area',
          _keyDownHandler: function(event) {
             var nativeEvent = event.nativeEvent;
 
-            if (this._options.newLineKey === 'ctrlEnter' && _private.isPressCtrlEnter(nativeEvent)) {
-               this.paste('\n');
-            } else if (!(this._options.newLineKey === 'enter' && _private.isPressEnter(nativeEvent))) {
-               event.preventDefault();
+            if (_private.isPressEnter(nativeEvent)) {
+               if (this._options.newLineKey === 'ctrlEnter' && _private.isPressCtrl(nativeEvent)) {
+                  this.paste('\n');
+               } else if (this._options.newLineKey !== 'enter' || _private.isPressAdditionalKeys(nativeEvent)) {
+                  event.preventDefault();
+               }
             }
          },
 
@@ -177,8 +195,8 @@ define('Controls/Input/Area',
             if (typeof window !== 'undefined') {
                var sizes = _private.calcSizesByMeasuredBlock(options.size);
 
-               this._field.scope.calculateHeightLines = function(count, hasIndents) {
-                  return _private.calculateHeightLines(sizes, count, hasIndents);
+               this._field.scope.calculateHeightContainer = function(count, hasIndents) {
+                  return _private.calculateHeightContainer(sizes, count, hasIndents);
                };
             }
          }
