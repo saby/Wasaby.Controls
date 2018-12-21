@@ -146,20 +146,22 @@ define('Controls/List/Tree/TreeViewModel', [
             }
          },
 
+         removeNodeFromExpandedIfNeed: function(self, nodeId) {
+            if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
+               // If it is necessary to delete only the nodes deleted from the items, add this condition:
+               // if (!self._items.getRecordById(nodeId)) {
+               delete self._expandedItems[nodeId];
+               self._notify('onNodeRemoved', nodeId);
+            }
+         },
+
          checkRemovedNodes: function(self, removedItems) {
-            var
-               nodeId;
             if (removedItems.length) {
                for (var idx = 0; idx < removedItems.length; idx++) {
 
                   // removedItems[idx].isNode - fast check on item type === 'group'
                   if (removedItems[idx].isNode && removedItems[idx].getContents().get(self._options.nodeProperty) !== null) {
-                     nodeId = removedItems[idx].getContents().getId();
-
-                     // If it is necessary to delete only the nodes deleted from the items, add this condition:
-                     // if (!self._items.getRecordById(nodeId)) {
-                     delete self._expandedItems[nodeId];
-                     self._notify('onNodeRemoved', nodeId);
+                     _private.removeNodeFromExpandedIfNeed(self, removedItems[idx].getContents().getId());
                   }
                }
             }
@@ -220,9 +222,21 @@ define('Controls/List/Tree/TreeViewModel', [
             if (_private.isExpandAll(self._expandedItems)) {
                self._expandedItems = { null: true };
             } else {
-               self._expandedItems = {};
+               for (var itemId in self._expandedItems) {
+                  if (self._expandedItems.hasOwnProperty(itemId)) {
+                     _private.removeNodeFromExpandedIfNeed(self, itemId);
+                  }
+               }
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
+         },
+         collapseChildNodes: function(self, nodeId) {
+            self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {
+               var
+                  itemId = item.getId();
+               delete self._expandedItems[itemId];
+               _private.collapseChildNodes(self, itemId);
+            });
          }
       },
 
@@ -285,6 +299,7 @@ define('Controls/List/Tree/TreeViewModel', [
                } else {
                   if (this._expandedItems[itemId]) {
                      delete this._expandedItems[itemId];
+                     _private.collapseChildNodes(this, itemId);
                   } else {
                      this._expandedItems[itemId] = true;
                   }
