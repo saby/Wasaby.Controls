@@ -2,11 +2,12 @@
    <div class="controls-VDomMenu" style="padding: 50px;">
       Меню с историей и разделителями
       <Controls.History.Menu
+              attr:class="demo-Menu_width"
               name="myMenuButton1"
               keyProperty="id"
               style="buttonDefault"
               icon="icon-medium icon-Author icon-primary"
-              caption="Menu"
+              caption="Very Long Menu Caption With Width"
               parentProperty="parent"
               nodeProperty="@parent"
               source="{{_getHierarchyMenuItems()}}"

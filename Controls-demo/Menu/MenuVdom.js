@@ -13,7 +13,8 @@ define('Controls-demo/Menu/MenuVdom', [
    'WS.Data/Adapter/Sbis',
    'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
    'wml!Controls-demo/Menu/DemoGroupTemplate',
-   'css!Controls-demo/Dropdown/MenuVdom'
+   'css!Controls-demo/Dropdown/MenuVdom',
+   'css!Controls-demo/Menu/MenuVdom'
 ], function(Control, template, cClone, DataSet, RecordSet, Memory, historySource, historyService, ControlsConstants, Query, Deferred, SbisAdapter) {
    'use strict';
    var ModuleClass = Control.extend(
