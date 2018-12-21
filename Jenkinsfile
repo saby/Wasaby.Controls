@@ -3,6 +3,7 @@ import java.time.*
 import java.lang.Math
 
 def version = "3.19.100"
+env.GIT_COMMIT = ''
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         send_status_in_gitlab('canceled')
@@ -20,7 +21,7 @@ def exception(err, reason) {
 
 def send_status_in_gitlab(state) {
     def request_url = "http://ci-platform.sbis.ru:8000/set_status"
-    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
+    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "commit":"${GIT_COMMIT}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
     echo "${request_data}"
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
@@ -139,6 +140,7 @@ def inte = params.run_int
 def all_inte = params.run_all_int
 def only_fail = false
 
+
 node('master') {
 
     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
@@ -235,7 +237,7 @@ node('controls') {
                     def mr_info
                     echo "Выкачиваем controls "
                     dir(workspace) {
-                        mr_info = checkout([$class: 'GitSCM',
+                       def mr_info = checkout([$class: 'GitSCM',
                         branches: [[name: env.BRANCH_NAME]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
@@ -248,6 +250,7 @@ node('controls') {
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
                         echo "${mr_info}"
+                        env.GIT_COMMIT = mr_info.GIT_COMMIT
                     }
                     echo "Обновляемся из rc-${version}"
                     dir("./controls"){
