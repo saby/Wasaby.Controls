@@ -81,6 +81,8 @@ define(
             ddl._setText([itemsRecords.at(5)]);
             assert.equal(ddl._text, 'Запись 6');
             assert.equal(ddl._icon, 'icon-16 icon-Admin icon-primary');
+            ddl._setText([{ id: null }]);
+            assert.equal(ddl._icon, null);
          });
 
          it('check selectedItemsChanged event', () => {
