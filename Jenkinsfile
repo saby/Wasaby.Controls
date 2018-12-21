@@ -232,9 +232,10 @@ node('controls') {
         stage("Checkout"){
             parallel (
                 checkout1: {
+                    def mr_info
                     echo "Выкачиваем controls "
                     dir(workspace) {
-                        checkout([$class: 'GitSCM',
+                        mr_info = checkout([$class: 'GitSCM',
                         branches: [[name: env.BRANCH_NAME]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
@@ -246,6 +247,7 @@ node('controls') {
                                 credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
+                        echo "${mr_info}"
                     }
                     echo "Обновляемся из rc-${version}"
                     dir("./controls"){
@@ -261,7 +263,7 @@ node('controls') {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
-                    updateGitlabCommitStatus state: 'running'
+
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
