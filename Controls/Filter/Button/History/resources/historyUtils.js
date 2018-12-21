@@ -6,9 +6,10 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       'WS.Data/Adapter/Sbis',
       'WS.Data/Collection/RecordSet',
       'WS.Data/Source/Memory',
+      'Core/constants',
       'WS.Data/Di'
    ],
-   function(HistorySource, HistoryService, SourceController, SbisAdapter, RecordSet, MemorySource, Di) {
+   function(HistorySource, HistoryService, SourceController, SbisAdapter, RecordSet, MemorySource, Constants, Di) {
       'use strict';
 
       var HISTORY_SOURCE = {};
@@ -37,7 +38,11 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       }
 
       function getHistorySource(historyId) {
-         HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId);
+         if (Constants.isServerScript) {
+            HISTORY_SOURCE[historyId] = createHistorySource(historyId);
+         } else {
+            HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId);
+         }
          return HISTORY_SOURCE[historyId];
       }
 
