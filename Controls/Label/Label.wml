@@ -1,4 +1,4 @@
-<div class="controls-LabelV controls-LabelV_underline_{{_options.underline}}" on:click="_clickHandler()">
+<div class="controls-LabelV controls-LabelV_underline_{{_options.underline}}">
    <div class="controls-LabelV__wrapper">
       <div class="controls-LabelV__caption controls-LabelV__caption_underline_{{_options.underline}}
                controls-LabelV__caption_underline_{{_options.underline}}_{{_options.readOnly ? 'read' : 'edit'}}">
