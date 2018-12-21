@@ -3,14 +3,13 @@ define('Controls/Dropdown/Controller',
       'Core/Control',
       'wml!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
-      'Core/helpers/Object/isEqual',
       'WS.Data/Chain',
       'Core/core-merge',
       'Controls/History/Source',
       'Controls/Dropdown/Util'
    ],
 
-   function(Control, template, SourceController, isEqual, Chain, Merge, historySource, dropdownUtils) {
+   function(Control, template, SourceController, Chain, Merge, historySource, dropdownUtils) {
       'use strict';
 
       /**
