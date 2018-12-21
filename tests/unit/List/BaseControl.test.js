@@ -125,7 +125,7 @@ define([
             assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function () {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
-               ctrl._afterUpdate();
+               ctrl._afterUpdate({});
                assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
                done();
