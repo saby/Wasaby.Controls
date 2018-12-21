@@ -162,6 +162,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
+        deleteDir()
         def skip = params.skip
         def changed_files
         def skip_tests_int = ""
