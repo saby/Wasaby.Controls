@@ -1152,7 +1152,7 @@
             "title": "Button view mode.",
             "enum": {
               "toolButton": "Bordered icon toggle button display style.",
-              "toggledLink": "Main link toggle button display style. It is default value.",
+              "pushButton": "Main link toggle button display style. It is default value.",
               "link": "Main link button display style."
             }
           },

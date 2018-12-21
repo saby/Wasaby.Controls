@@ -28,7 +28,7 @@ define('Controls/Toggle/Button', [
 
    /**
     * @name Controls/Toggle/Button#icons
-    * @cfg {Array} Set of icons.
+    * @cfg {Array} Pair of icons.
     * Toggle button with one icon have one icon and it isn't toggled.
     * Toggle button with two icons display one icon, but it is different in free and toggled states.
     * If button has more than two icons, it work only with first and second icons.
@@ -45,7 +45,7 @@ define('Controls/Toggle/Button', [
 
    /**
     * @name Controls/Toggle/Button#captions
-    * @cfg {Array} Set of captions.
+    * @cfg {Array} Pair of captions.
     * Toggle button with one caption have one caption and it isn't toggled.
     * Toggle button with two captions display one caption, but it is different in free and toggled states.
     * If button has more than two captions, it work only with first and second captions.
@@ -64,7 +64,7 @@ define('Controls/Toggle/Button', [
     * @name Controls/Toggle/Button#viewMode
     * @cfg {Enum} Button view mode.
     * @variant link Decorated hyperlink.
-    * @variant toggledLink Decorated hyperlink transform to toolbar button.
+    * @variant pushButton Decorated hyperlink transform to toolbar button.
     * @variant toolButton Toolbar button.
     * @default button
     * @example
@@ -76,13 +76,13 @@ define('Controls/Toggle/Button', [
     * <pre>
     *    <Controls.Toggle.Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
     * </pre>
-    * Toggle button with 'toggledLink' viewMode.
+    * Toggle button with 'pushButton' viewMode.
     * <pre>
-    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="toggledLink"/>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
     * </pre>
     */
    var stickyButton = [
-      'toggledLink',
+      'pushButton',
       'toolButton'
    ];
 

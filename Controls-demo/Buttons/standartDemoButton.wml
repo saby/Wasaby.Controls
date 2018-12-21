@@ -167,23 +167,23 @@
             <div>
                 <div class="demo-Button__Label">For the color picker panel.</div>
                 <div class="ControlsDemo__colorPanel">
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="secondary" viewMode="toggledLink"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState4" size="s" icons="{{['icon-16 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState5" size="s" icons="{{['icon-16 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState6" size="s" icons="{{['icon-16 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState7" size="s" icons="{{['icon-16 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState8" size="s" icons="{{['icon-16 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState9" size="s" icons="{{['icon-16 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
             <div>
                 <div class="demo-Button__Label">For the text editor. First variant.</div>
                 <div class="demo-Button__background_simple ControlsDemo__textEditor">
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="toggledLink"/>
-                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="toggledLink"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState10" size="m" icons="{{['icon-24 icon-Bold']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState11" size="m" icons="{{['icon-24 icon-Italic']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState12" size="m" icons="{{['icon-24 icon-Underline']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState13" size="m" icons="{{['icon-24 icon-LetterN']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState14" size="m" icons="{{['icon-24 icon-LetterA']}}" style="secondary" viewMode="pushButton"/>
+                    <Controls.Toggle.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" bind:value="toggleState15" size="m" icons="{{['icon-24 icon-Quote']}}" style="secondary" viewMode="pushButton"/>
                 </div>
             </div>
             <div>

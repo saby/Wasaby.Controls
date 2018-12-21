@@ -52,6 +52,9 @@ define('Controls/Button/ButtonStyles',
     * @css @height-ToolButton_size-l Height of button with options viewMode 'toolButton' and size 'l'.
     * @css @width-ToolButton_size-l Minimum width of button with options viewMode 'toolButton' and size 'l'.
     *
+    * @css @height-ToolButton_size-xl Height of button with options viewMode 'toolButton' and size 'xl'.
+    * @css @width-ToolButton_size-xl Minimum width of button with options viewMode 'toolButton' and size 'xl'.
+    *
     * @css @border-radius-ToolButton Border radius of button with option viewMode 'toolButton'.
     * @css @border-width-ToolButton Border width of button with option viewMode 'toolButton'.
     * @css @border-style-ToolButton Border style of button with option viewMode 'toolButton'.
