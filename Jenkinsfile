@@ -2,7 +2,6 @@
 import java.time.*
 import java.lang.Math
 
-
 def version = "3.19.100"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
