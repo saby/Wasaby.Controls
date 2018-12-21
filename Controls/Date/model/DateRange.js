@@ -74,6 +74,12 @@ define('Controls/Date/model/DateRange', [
          this._notify('endValueChanged', [value]);
          this._notifyRangeChanged();
       },
+
+      /**
+         * Notification about rangeChanged event. runDelayed for waiting both events:
+         * startValueChanged and endValueChanged.
+      */
+
       _notifyRangeChanged: function(value) {
          if (this._rangeChanged) {
             return;
