@@ -1,11 +1,15 @@
+.controls-LabelV {
+   display: inline-block;
+}
 .controls-LabelV_underline_none {
    height:  @height_Label;
    padding: @padding_Label;
 }
 .controls-LabelV__wrapper {
    height: 100%;
-   display: flex;
+   position: relative;
    align-items: center;
+   display: inline-flex;
 }
 .controls-LabelV__caption {
    .text-overflow();
@@ -41,4 +45,11 @@
 }
 .controls-LabelV__asterisk {
    color: @color_Label-asterisk;
+}
+.controls-LabelV__fakeLink {
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   position: absolute;
 }

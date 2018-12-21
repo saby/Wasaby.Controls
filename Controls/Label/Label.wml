@@ -1,8 +1,11 @@
-<div class="controls-LabelV controls-LabelV_underline_{{_options.underline}}">
+<div class="controls-LabelV controls-LabelV_underline_{{_options.underline}}" on:click="_clickHandler()">
    <div class="controls-LabelV__wrapper">
       <div class="controls-LabelV__caption controls-LabelV__caption_underline_{{_options.underline}}
                controls-LabelV__caption_underline_{{_options.underline}}_{{_options.readOnly ? 'read' : 'edit'}}">
          <ws:partial template="{{_options.caption}}"/>
+         <ws:if data="{{_options.href}}">
+            <a class="controls-LabelV__fakeLink" href="{{_options.href}}"></a>
+         </ws:if>
       </div>
       <ws:if data="{{_options.required}}">
          <div class="controls-LabelV__asterisk">&nbsp;*</div>

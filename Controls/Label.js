@@ -38,6 +38,11 @@ define('Controls/Label',
        * @variant none
        */
 
+      /**
+       * @name Controls/Label#href
+       * @cfg {String}
+       */
+
       var _private = {
          warn: function(container, className, optionValue) {
             if (container.classList.contains(className)) {
@@ -71,6 +76,8 @@ define('Controls/Label',
 
       Label.getOptionTypes = function() {
          return {
+            href: descriptor(String),
+            caption: descriptor(String).required(),
             underline: descriptor(String).oneOf([
                'none',
                'fixed',
