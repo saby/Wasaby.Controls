@@ -21,6 +21,7 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IInputDropdown
        * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
        * @public
@@ -28,11 +29,6 @@ define('Controls/Input/ComboBox',
        * @author Золотова Э.Е.
        * @demo Controls-demo/Input/ComboBox/ComboBox
        * @demo Controls-demo/Combobox/ComboboxVDom
-       */
-
-      /**
-       * @name Controls/Input/Dropdown#contentTemplate
-       * @cfg {Function} Template that will be render calling element.
        */
 
       'use strict';
