@@ -368,34 +368,6 @@ define([
             assert.isTrue(treeViewModel.getCurrent().hasChildren);
          });
 
-         it('multiSelectStatus', function() {
-            treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            treeViewModel._curIndex = 1; //234
-            treeViewModel.toggleExpanded(treeViewModel.getCurrent().dispItem, true);
-            treeViewModel.updateSelection(['123', '234', '1', '2', '3']);
-            treeViewModel._curIndex = 0; //123
-            assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 1; //234
-            assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel.updateSelection(['123', '234', '1']);
-            treeViewModel._curIndex = 0; //123
-            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 1; //234
-            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel.updateSelection(['123']);
-            treeViewModel._curIndex = 0; //123
-            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 1; //234
-            assert.isFalse(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel.updateSelection(['123', '234', '3']);
-            treeViewModel._curIndex = 0; //123
-            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 1; //234
-            assert.isNull(treeViewModel.getCurrent().multiSelectStatus);
-            treeViewModel._curIndex = 4; //3
-            assert.isTrue(treeViewModel.getCurrent().multiSelectStatus);
-         });
-
          it('setExpandedItems', function() {
             treeViewModel.setExpandedItems([]);
             assert.deepEqual({}, treeViewModel._expandedItems);

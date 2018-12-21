@@ -35,7 +35,7 @@ define([
             keyProperty: 'id',
             displayProperty: 'title',
             markedKey: 1,
-            selectedKeys: [data[0].id]
+            selectedKeys: {1: true}
          };
 
          var iv = new ListViewModel(cfg);
