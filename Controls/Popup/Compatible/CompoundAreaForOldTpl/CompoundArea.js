@@ -17,7 +17,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'WS.Data/Entity/InstantiableMixin',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent',
+      'Vdom/Vdom',
       'css!theme?Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea'
    ],
    function(
@@ -38,7 +38,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       InstantiableMixin,
       callNext,
       cInstance,
-      SyntheticEvent
+      Vdom
    ) {
       function removeOperation(operation, array) {
          var idx = arrayFindIndex(array, function(op) {
@@ -372,7 +372,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // d'n'd работает, когда кликнули непосредственно в шапку
             var isClickedInControl = $(event.target).wsControl() !== this;
             if (dialogTemplate && !isClickedInControl) {
-               dialogTemplate._onMouseDown(new SyntheticEvent(event));
+               dialogTemplate._onMouseDown(new Vdom.SyntheticEvent(event));
             }
          },
 

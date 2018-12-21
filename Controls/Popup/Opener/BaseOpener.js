@@ -3,7 +3,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'Core/Control',
       'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
-      'Vdom/Utils/DefaultOpenerFinder',
+      'Vdom/Vdom',
       'View/Runner/requireHelper',
       'Core/core-clone',
       'Core/core-merge',
@@ -15,7 +15,7 @@ define('Controls/Popup/Opener/BaseOpener',
       Control,
       Template,
       ManagerController,
-      DefaultOpenerFinder,
+      Vdom,
       requireHelper,
       CoreClone,
       CoreMerge,
@@ -159,7 +159,7 @@ define('Controls/Popup/Opener/BaseOpener',
             CoreMerge(cfg, popupOptions || {});
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
-            cfg.opener = cfg.opener || DefaultOpenerFinder.find(this) || this;
+            cfg.opener = cfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
             this._prepareNotifyConfig(cfg);
             return cfg;
          },

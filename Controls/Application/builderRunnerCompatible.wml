@@ -5,7 +5,7 @@
          'Core/load-contents',
          'Core/app-init',
          'Core/constants',
-         'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
+         'Vdom/Vdom',
          'Lib/Control/BaseCompatible/BaseCompatible',
          'Core/nativeExtensions',
          'is!browser?jquery'
