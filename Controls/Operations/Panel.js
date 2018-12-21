@@ -19,6 +19,7 @@ define('Controls/Operations/Panel', [
    var _private = {
       recalculateToolbarItems: function(self, items, toolbarWidth) {
          if (items) {
+            self._oldToolbarWidth = toolbarWidth;
             self._toolbarSource = new Memory({
                idProperty: self._options.keyProperty,
                data: WidthUtils.fillItemsType(self._options.keyProperty, self._options.parentProperty, items, toolbarWidth).getRawData()
@@ -119,16 +120,26 @@ define('Controls/Operations/Panel', [
       },
 
       _beforeUpdate: function(newOptions) {
-         var self = this;
          if (newOptions.source !== this._options.source) {
-            _private.loadData(this, newOptions.source).addCallback(function() {
-               _private.recalculateToolbarItems(self, self._items, self._children.toolbarBlock.clientWidth);
-            });
+            //TODO: нельзя смотреть на то изменился ли source в _afterUpdate, т.к. в oldOptions приходит одно и то же значение, и _afterUpdate зацикливается
+            //TODO: будет исправляться по этой ошибке: https://online.sbis.ru/opendoc.html?guid=a48be8fb-7ee2-429a-ba8e-abd407436554
+            this._sourceChanged = true;
          }
       },
 
       _afterUpdate: function() {
-         _private.checkToolbarWidth(this);
+         var self = this;
+         if (this._sourceChanged) {
+            // We should recalculate the size of the toolbar only when all the children have updated, otherwise available width may be incorrect.
+            this._sourceChanged = false;
+            _private.loadData(this, this._options.source).addCallback(function() {
+               _private.recalculateToolbarItems(self, self._items, self._children.toolbarBlock.clientWidth);
+            });
+         } else {
+            //TODO: размеры пересчитываются после каждого обновления, т.к. иначе нельзя понять что изменился rightTemplate (там каждый раз новая функция)
+            //TODO: будет исправляться по этой задаче: https://online.sbis.ru/opendoc.html?guid=b4ed11ba-1e4f-4076-986e-378d2ffce013
+            _private.checkToolbarWidth(this);
+         }
       },
 
       _onResize: function() {

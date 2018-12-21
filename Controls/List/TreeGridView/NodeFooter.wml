@@ -1,8 +1,9 @@
 <div attr:class="controls-Grid__row controls-TreeGrid__nodeFooter" attr:key="nodeFooter_{{itemData.item.getId()}}">
-   <ws:if data="{{itemData.multiSelectVisibility}}">
+    <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
       <div class=""></div>
    </ws:if>
-   <div class="controls-TreeGrid__nodeFooterContent" style="{{(itemData.multiSelectVisibility ? 'grid-column: 2 / ' : 'grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
+    <div class="controls-TreeGrid__nodeFooterContent"
+         style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2 / ' : 'grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
       <ws:for data="i in itemData.dispItem.getLevel()">
          <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{itemData.expanderSize ? itemData.expanderSize : 'default'}}"></div>
       </ws:for>

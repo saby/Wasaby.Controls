@@ -3,7 +3,7 @@
       <Controls.Button
          ws-autofocus="{{true}}"
          style="primary"
-         viewmode="button"
+         viewMode="button"
          caption="{{okCaption}}"
          attr:class="controls-ConfirmationDialog__button controls-Button__ellipsis controls-ConfirmationDialog__button-standard"
          on:click="_sendResult()"/>

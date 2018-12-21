@@ -48,7 +48,7 @@ define([
                value = new Date(2017, 11, 1);
 
             sandbox.stub(component, '_notify');
-            component._inputCompletedHandler(null, textValue);
+            component._inputCompletedHandler(null, '01122017', textValue);
 
             assert.strictEqual(component._model.value.getTime(), value.getTime());
             assert.strictEqual(component._model.textValue, textValue);
@@ -71,7 +71,7 @@ define([
                value = new Date(2017, 11, 1);
 
             sandbox.stub(component, '_notify');
-            component._valueChangedHandler(event, textValue);
+            component._valueChangedHandler(event, '01122017', textValue);
 
             assert.strictEqual(component._model.value.getTime(), value.getTime());
             assert.strictEqual(component._model.textValue, textValue);

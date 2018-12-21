@@ -17,6 +17,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @public
           * @category Popup
           * @author Красильников А.С.
+          * @mixes Controls/Popup/Templates/Stack/StackTemplateStyles
           */
 
          /**

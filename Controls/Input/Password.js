@@ -50,6 +50,10 @@ define('Controls/Input/Password',
 
          _passwordVisible: false,
 
+         _getType: function() {
+            return this._passwordVisible ? 'text' : 'password';
+         },
+
          _beforeMount: function(options) {
             this._simpleViewModel = new ViewModel({
                value: options.value,

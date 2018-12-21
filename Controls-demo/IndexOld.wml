@@ -25,8 +25,18 @@
          </Router.Link>
       </div>
       <div>
+         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
+            <a href="{{content.href}}">List/VirtualScroll</a>
+         </Router.Link>
+      </div>
+      <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
             List/Multiselect
+         </a>
+      </div>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FList%252FVirtualScroll">
+            List/VirtualScroll
          </a>
       </div>
       <div>

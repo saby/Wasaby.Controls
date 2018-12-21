@@ -6,7 +6,7 @@
                <ws:template>
                   <div class="ws-flexbox ws-flex-column">
                      <div class="example-Base__specify">Header</div>
-                     <Controls.Input.Text style="header"
+                     <Controls.Input.Text fontStyle="secondary"
                                           placeholder="Tooltip"
                                           bind:value="_value1"/>
                   </div>
@@ -16,7 +16,7 @@
                <ws:template>
                   <div class="ws-flexbox ws-flex-column">
                      <div class="example-Base__specify">Accent header</div>
-                     <Controls.Input.Text style="accentHeader"
+                     <Controls.Input.Text style="primary"
                                           placeholder="Tooltip"
                                           bind:value="_value2"/>
                   </div>

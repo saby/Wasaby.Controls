@@ -53,11 +53,13 @@
                   displayProperty="{{_options.displayProperty}}"
                   itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                   items="{{_options.items}}"
-                  _counterWidth="{{_options._counterWidth}}"
+                  _counterWidth="{{_counterWidth}}"
                   maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems}}"
                   readOnly="{{_options.readOnly}}"
                   on:itemClick="_itemClick()"
                   on:crossClick="_crossClick()"
+                  on:openInfoBox="_openInfoBox()"
+                  on:closeInfoBox="_closeInfoBox()"
                   attr:class="controls-Lookup__collection_{{_options.multiSelect ? 'multi' : 'single'}}"
                   attr:style="max-width:{{_options.multiSelect && !_options.readOnly ? _availableWidthCollection}}px;"/>
          </ws:if>

@@ -21,6 +21,14 @@ define('Controls/Container/Scroll/Watcher',
 
       var _private = {
 
+         getDOMContainer: function(element) {
+            //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            if (element.get) {
+               return element.get(0);
+            }
+            return element;
+         },
+
          sendCanScroll: function(self, clientHeight, scrollHeight) {
             var eventName;
             if (clientHeight < scrollHeight) {
@@ -105,7 +113,10 @@ define('Controls/Container/Scroll/Watcher',
             }
 
             if (self._scrollPositionCache !== curPosition) {
-               _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+               _private.sendByRegistrar(self, 'scrollMove', {
+                  scrollTop: self._scrollTopCache,
+                  position: curPosition
+               });
                if (!withObserver) {
                   _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
                }
@@ -174,10 +185,10 @@ define('Controls/Container/Scroll/Watcher',
             if (!self._sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
             }
-            if (self._sizeCache.clientHeight <= self._sizeCache.scrollHeight) {
-               self._registrar.startOnceTarget(component, 'cantScroll');
-            } else {
+            if (self._sizeCache.clientHeight < self._sizeCache.scrollHeight) {
                self._registrar.startOnceTarget(component, 'canScroll');
+            } else {
+               self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
             if (!withObserver) {
@@ -231,14 +242,14 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          _afterMount: function() {
-            _private.calcSizeCache(this, this._container);
+            _private.calcSizeCache(this, _private.getDOMContainer(this._container));
             _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
 
          _scrollHandler: function(e) {
-            _private.onScrollContainer(this, this._container, !!this._observer);
+            _private.onScrollContainer(this, _private.getDOMContainer(this._container), !!this._observer);
          },
 
          //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
@@ -247,7 +258,7 @@ define('Controls/Container/Scroll/Watcher',
             if (force) {
                withObserver = false;
             }
-            _private.onResizeContainer(this, this._container, withObserver);
+            _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
          },
 
          _registerIt: function(event, registerType, component, callback, triggers) {
@@ -262,16 +273,16 @@ define('Controls/Container/Scroll/Watcher',
                   }
                }
 
-               _private.onRegisterNewComponent(this, this._container, component, !!this._observer);
+               _private.onRegisterNewComponent(this, _private.getDOMContainer(this._container), component, !!this._observer);
             }
          },
 
          _doScrollHandler: function(e, scrollParam) {
-            _private.doScroll(this, scrollParam, this._container);
+            _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
          },
 
          doScroll: function(scrollParam) {
-            _private.doScroll(this, scrollParam, this._container);
+            _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
          },
 
          _unRegisterIt: function(event, registerType, component) {

@@ -77,7 +77,7 @@ define('Controls/Controllers/QueryParamsController/Page',
                if (this._options.mode == 'totalCount') {
                   //в таком случае в more приходит общее число записей в списке
                   //значит умножим номер след. страницы на число записей на одной странице и сравним с общим
-                  return this.getLoadedDataCount() < this.getAllDataCount();
+                  return typeof this._more === 'boolean' ? this._more : this.getLoadedDataCount() < this.getAllDataCount();
                } else {
                   return this._more;
                }

@@ -8,12 +8,11 @@
   "deprecatedWebPageTemplates": true,
   "htmlWml": true,
   "themes": true,
-
   "minimize": false,
   "wml": false,
   "customPack": false,
   "dependenciesGraph": false,
-
+  "resourcesUrl": false,
   "modules": [
     {
       "name": "Controls",
@@ -46,10 +45,6 @@
     {
       "name": "WS.Deprecated",
       "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
-    },
-    {
-      "name": "File",
-      "path": "%cd%/node_modules/rmi/src/client/File"
     },
     {
       "name": "Transport",
@@ -86,6 +81,10 @@
     {
       "name": "tests",
       "path": "%cd%/tests/unit"
+    },
+    {
+      "name": "File",
+      "path": "%cd%/node_modules/rmi/src/client/File"
     },
     {
       "name": "Vdom",

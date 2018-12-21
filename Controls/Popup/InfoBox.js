@@ -5,9 +5,10 @@ define('Controls/Popup/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox',
       'Controls/Context/TouchContextField',
-      'Controls/Utils/getZIndex'
+      'Controls/Utils/getZIndex',
+      'Core/IoC'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, IoC) {
 
       'use strict';
 
@@ -20,17 +21,50 @@ define('Controls/Popup/InfoBox',
        * @public
        * @author Красильников А.С.
        * @demo Controls-demo/InfoBox/InfoBox
+       *
+       * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
+       * @css @spacing_Infobox-between-content-border-right Spacing between content and border-right.
+       * @css @spacing_Infobox-between-content-border-bottom Spacing between content and border-bottom.
+       * @css @spacing_Infobox-between-content-border-left Spacing between content and border-left.
+       *
+       * @css @max-width_Infobox Max-width of Infobox.
+       * @css @size_Infobox-arrow Size of Infobox arrow.
+       * @css @horizontal-offset_Infobox-arrow Spacing between arrow and border-left.
+       * @css @vertical-offset_Infobox-arrow  Spacing between arrow and border-top.
+       * @css @spacing_Infobox-between-top-close-button Spacing between close-button and border-top.
+       * @css @spacing_Infobox-between-right-close-button Spacing between close-button and border-right.
+       *
+       * @css @color_Infobox-close-button Color of close-button.
+       * @css @color_Infobox-close-button_hover Color of close-button in hovered state.
+       *
+       * @css @background-color_Infobox_default Default background color.
+       * @css @background-color_Infobox_lite Background color when option style is set to lite.
+       * @css @background-color_Infobox_help Background color when option style is set to help.
+       * @css @background-color_Infobox_error Background color when option style is set to error.
+       *
+       * @css @border-color_Infobox_default Default border color.
+       * @css @border-color_Infobox_lite Border color when option style is set to lite.
+       * @css @border-color_Infobox_help Border color when option style is set to help.
+       * @css @border-color_Infobox_error Border color when option style is set to error.
+       * @css @border-width_Infobox Thickness of border.
+       *
+       * @css @color_Infobox-shadow_default Default color of shadow.
+       * @css @color_Infobox-shadow_lite Color of shadow when option style is set to lite.
+       * @css @color_Infobox-shadow_help Color of shadow when option style is set to help.
+       * @css @color_Infobox-shadow_error Color of shadow when option style is set to lite.
+       * @css @box-shadow_Infobox Size of shadow.
        */
+
 
       /**
        * @name Controls/Popup/InfoBox#hideDelay
-       * @cfg {Number} Delay before closing after mouse leaves.
+       * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
        * @default 300
        */
 
       /**
        * @name Controls/Popup/InfoBox#showDelay
-       * @cfg {Number} Delay before opening after mouse enters.
+       * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
        * @default 300
        */
 
@@ -80,7 +114,7 @@ define('Controls/Popup/InfoBox',
        */
 
       /**
-       * @name Controls/Popup/InfoBox#float
+       * @name Controls/Popup/InfoBox#floatCloseButton
        * @cfg {Boolean} Whether the content should wrap around the cross closure.
        * @default false
        */
@@ -103,14 +137,14 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                style: self._options.style,
-               float: self._options.float,
+               floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler
                },
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions
+                  contentTemplateOptions: self._options.templateOptions,
                }
             };
          }
@@ -125,8 +159,11 @@ define('Controls/Popup/InfoBox',
 
          _closeId: null,
 
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
+            if (options.float) {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+            }
          },
 
          /**
@@ -176,8 +213,10 @@ define('Controls/Popup/InfoBox',
          },
 
          _contentMousedownHandler: function(event) {
-            if (!this._opened) {
-               this._open(event);
+            if (this._options.trigger !== 'demand') {
+               if (!this._opened) {
+                  this._open(event);
+               }
             }
             event.stopPropagation();
          },
@@ -252,6 +291,10 @@ define('Controls/Popup/InfoBox',
                case 'mousedown':
                   event.stopPropagation();
                   break;
+               case 'close':
+                  // todo Для совместимости
+                  // Удалить, как будет сделана задача https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+                  this._opened = false;
             }
          },
 

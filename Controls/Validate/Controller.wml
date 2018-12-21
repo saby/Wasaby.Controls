@@ -1,6 +1,7 @@
 <ws:if data="{{_isNewEnvironment}}">
    <ws:partial template="{{ _options.content }}"
-               style="{{isValid() ? 'invalid': 'info'}}"
+               style="{{_isValidResult() ? 'invalid': 'info'}}"
+               validationErrors="{{isValid()}}"
                on:mouseenter="_hoverHandler()"
                on:focusIn="_focusInHandler()"
                on:mouseleave="_mouseLeaveHandler()"/>
@@ -8,7 +9,8 @@
 <ws:else>
    <div>
       <ws:partial template="{{ _options.content }}"
-                  style="{{isValid() ? 'invalid': 'info'}}"
+                  style="{{_isValidResult() ? 'invalid': 'info'}}"
+                  validationErrors="{{isValid()}}"
                   on:mouseenter="_hoverHandler()"
                   on:focusIn="_focusInHandler()"
                   on:mouseleave="_mouseLeaveHandler()"/>

@@ -3,16 +3,20 @@
       value="{{_options.value}}"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
+      tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       placeholder="{{_options.placeholder}}"
       validationErrors="{{_options.validationErrors}}"
       tooltip="{{_options.tooltip}}"
       on:valueChanged="_proxyEvent('valueChanged')"
-      on:inputCompleted="_proxyEvent('inputCompleted')">
+      on:inputCompleted="_proxyEvent('inputCompleted')"
+      on:tagClick="_proxyEvent('tagClick')"
+      on:tagHover="_proxyEvent('tagHover')">
    </Controls.Input.DateTime>
    <Controls.Button
       attr:class="controls-Input-DatePicker__button"
-      style="linkMain"
+      style="secondary"
+      viewMode="link"
       icon="icon-small icon-Calendar2 icon-primary"
       on:click="_openDialog()"
    />

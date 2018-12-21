@@ -216,7 +216,9 @@ define('Controls/FormController', [
                      });
                   } else {
                      self._propertyChangeNotified = false;
-                     def.callback(true);
+                     if (!def.isReady()) {
+                        def.callback(true);
+                     }
                   }
                   return def;
                }
@@ -229,7 +231,9 @@ define('Controls/FormController', [
                this.update().addCallbacks(function(res) {
                   if (!res.validationErrors) {
                      // если нет ошибок в валидации, просто завершаем пендинг с результатом
-                     def.callback(res);
+                     if (!def.isReady()) {
+                        def.callback(res);
+                     }
                   } else {
                      // если валидация не прошла, нам нужно оставить пендинг, но отменить ожидание завершения пендинга,
                      // чтобы оно не сработало, когда пендинг завершится.
@@ -238,11 +242,15 @@ define('Controls/FormController', [
                   }
                   return res;
                }.bind(this), function(e) {
-                  def.errback(e);
+                  if (!def.isReady()) {
+                     def.errback(e);
+                  }
                   return e;
                });
             } else if (answer === false) {
-               def.callback(false);
+               if (!def.isReady()) {
+                  def.callback(false);
+               }
             }
          }
 
@@ -336,12 +344,11 @@ define('Controls/FormController', [
          self._notify('registerPending', [def, { showLoadingIndicator: false }], { bubbling: true });
          def.dependOn(updateResult);
 
-         if (result && result.addCallback) {
-            result.addCallback(function(defResult) {
+         if (result && result.then) {
+            result.then(function(defResult) {
                updateCallback(defResult);
                return defResult;
-            });
-            result.addErrback(function(err) {
+            }, function(err) {
                updateResult.errback(err);
                return err;
             });
@@ -364,8 +371,8 @@ define('Controls/FormController', [
             if (!isError) {
                // при успешной валидации пытаемся сохранить рекорд
                self._notify('validationSuccessed', [], { bubbling: true });
-               var res = self._children.crud.update(record, self._isNewRecord);
                var isChanged = self._record.isChanged();
+               var res = self._children.crud.update(record, self._isNewRecord);
 
                // fake deferred used for code refactoring
                if (!(res && res.addCallback)) {

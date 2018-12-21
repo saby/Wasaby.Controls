@@ -4,10 +4,12 @@ define('Controls/Selector/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/ItemTemplate',
       'WS.Data/Chain',
+      'Controls/Utils/tmplNotify',
+      'Controls/Selector/SelectedCollection/Utils',
       'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, Chain) {
+   function(Control, template, ItemTemplate, Chain, tmplNotify, selectedCollectionUtils) {
       'use strict';
 
       /**
@@ -36,6 +38,23 @@ define('Controls/Selector/SelectedCollection',
 
          getVisibleItems: function(items, maxVisibleItems) {
             return maxVisibleItems ? items.slice(Math.max(items.length - maxVisibleItems, 0)) : items;
+         },
+
+         getTemplateOptions: function(self, options) {
+            var templateOptions = self._templateOptions || {};
+
+            templateOptions.items = options.items;
+            templateOptions.readOnly = options.readOnly;
+            templateOptions.displayProperty = options.displayProperty;
+            templateOptions.itemTemplate = options.itemTemplate;
+            templateOptions.width = self._container && self._container.offsetWidth;
+            templateOptions.clickCallback = self._onResult.bind(this);
+            
+            return templateOptions;
+         },
+
+         getCounterWidth: function(itemsCount) {
+            return selectedCollectionUtils.getCounterWidth(itemsCount);
          }
       };
 
@@ -43,17 +62,20 @@ define('Controls/Selector/SelectedCollection',
          _template: template,
          _templateOptions: null,
          _items: [],
+         _notifyHandler: tmplNotify,
 
          _beforeMount: function(options) {
             this._onResult = _private.onResult.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
+            this._counterWidth = options._counterWidth || _private.getCounterWidth(this._items.length);
          },
 
          _beforeUpdate: function(newOptions) {
             this._items = _private.getItemsInArray(newOptions.items);
             this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
-            this._templateOptions.items = newOptions.items;
+            this._templateOptions = _private.getTemplateOptions(this, newOptions);
+            this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length);
          },
 
          _afterUpdate: function() {
@@ -63,13 +85,7 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _afterMount: function() {
-            this._templateOptions = {
-               items: this._options.items,
-               readOnly: this._options.readOnly,
-               displayProperty: this._options.displayProperty,
-               width: this._container && this._container.offsetWidth,
-               clickCallback: this._onResult.bind(this)
-            };
+            this._templateOptions = _private.getTemplateOptions(this, this._options);
             this._forceUpdate();
          },
 

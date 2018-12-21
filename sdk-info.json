@@ -2,6 +2,8 @@
     "ui-modules":
     [
          "SBIS3.CONTROLS",
-		 "Controls"
+		 "Controls",
+         "Controls-theme"
+
     ]
 }

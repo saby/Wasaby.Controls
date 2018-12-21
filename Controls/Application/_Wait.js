@@ -12,15 +12,13 @@ define('Controls/Application/_Wait',
       var asyncTemplate = function() {
          var res = template.apply(this, arguments);
          var self = this;
-         if (res.addCallback && !res.isReady() && !self.waitDef.isReady()) {
-            res.addCallback(function(result) {
-               self.waitDef.callback({});
+         if (res.then) {
+            res.then(function(result) {
+               self._resolvePromiseFn();
                return result;
             });
          } else {
-            if (self.waitDef && !self.waitDef.isReady()) {
-               self.waitDef.callback({});
-            }
+            self._resolvePromiseFn();
          }
          return res;
       };
@@ -30,12 +28,24 @@ define('Controls/Application/_Wait',
 
       var Page = Base.extend({
          _template: asyncTemplate,
+         _resolvePromise: null,
+         _resolvePromiseFn: function() {
+            if (this._resolvePromise) {
+               this._resolvePromise();
+               this._resolvePromise = null;
+            }
+         },
+         _createPromise: function() {
+            this.waitDef = new Promise(function(resolve) {
+               this._resolvePromise = resolve;
+            }.bind(this));
+         },
          _beforeMount: function() {
-            this.waitDef = new Deferred();
+            this._createPromise();
             Request.getCurrent().getStorage('HeadData').pushWaiterDeferred(this.waitDef);
             if (typeof window !== 'undefined') {
-               this.waitDef.callback();
-               this.waitDef = new Deferred();
+               this._resolvePromiseFn();
+               this._createPromise();
             }
          }
       });

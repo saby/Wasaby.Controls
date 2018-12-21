@@ -7,6 +7,7 @@
                             templateOptions="{{_options.itemTemplate.templateOptions}}"
                             on:valueChanged="_valueChangedHandler(index)"
                             on:visibilityChanged="_visibilityChangedHandler(index)"
+                            on:textValueChanged="_textValueChangedHandler(index)"
                             on:selectedKeysChanged="_valueChangedHandler(index)"/>
             </div>
         </ws:if>
