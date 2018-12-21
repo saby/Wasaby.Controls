@@ -1,11 +1,13 @@
 <div class="controls-Render controls-Render_style
-            controls-Render_size_{{_options.size}}
-            controls-Render_style_{{_options.style}}{{_getState()}}
             controls-Render_fontStyle_{{_options.fontStyle}}
+            controls-Render_textAlign_{{_options.textAlign}}
+            controls-Render_style_{{_options.style}}{{_getState()}}
             controls-Render_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
-            controls-Render_textAlign_{{_options.textAlign}}">
+            {{_options.multiline ? 'controls-Render_multiline' : 'controls-Render_size_' + _options.size}}">
    <div class="controls-Render__wrapper">
-      <span class="controls-Render__baseline">&#65279;</span>
+      <ws:if data="{{!_options.multiline}}">
+         <span class="controls-Render__baseline">&#65279;</span>
+      </ws:if>
       <ws:if data="{{_options.beforeFieldWrapper}}">
          <ws:partial template="{{_options.beforeFieldWrapper}}"/>
       </ws:if>

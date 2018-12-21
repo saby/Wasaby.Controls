@@ -1,101 +1,41 @@
-.controls-InputArea {
-   width: @width_InputArea;
-}
-
-.controls-InputArea__field {
-   width: 100%;
-   white-space: pre-wrap;
+.controls-Area__fieldWrapper {
+   height: auto;
+   position: relative;
    word-wrap: break-word;
+   white-space: pre-wrap;
 }
 
-.controls-InputArea__fieldPadding {
-   padding-right: @horizontal-padding_InputRender;
-   padding-top: @vertical-padding_InputArea;
-   padding-bottom: @vertical-padding_InputArea;
-   padding-left: 0; //reset default textarea padding
-}
-
-.controls-InputArea__field_size_l {
-   line-height: @line-height_InputRender_l;
-}
-
-.controls-InputArea__field_size_m {
-   line-height: @line-height_InputRender_m;
-}
-
-.controls-InputArea__field_size_default {
-   line-height: @line-height_InputRender_default;
-}
-
-.controls-InputArea__realField {
-   resize: none;
-   position: absolute;
-   box-sizing: border-box;
+.controls-Area__realField {
    top: 0;
-   height: 100%;
+   position: absolute;
 }
 
-.controls-InputArea__realField_scroll-hidden {
-   overflow-y: hidden;
-}
-
-.controls-InputArea__realField_scroll-scroll {
-   overflow-y: scroll;
-}
-
-/*Демка с растягиванием фейковой area с помощью float: https://jsfiddle.net/85y2oj2s/1/*/
-.controls-InputArea__fakeField {
-   float: left; //Необходимо для растягивания блока controls-fakeTextArea__firstWrapper
+.controls-Area__fakeField {
    visibility: hidden;
-   overflow-y: auto;
-   box-sizing: border-box;
 }
 
-/*На тач устройствах fakeArea периодически перехватывает на себя фокус
-   Временная правка, необходимо уточнить почему так происходит
-   TODO Задача: https://online.sbis.ru/opendoc.html?guid=fa61e193-b2b2-45f3-a8e6-e4a649557f14
-*/
-.ws-is-touch .controls-fakeTextArea__firstWrapper {
-   z-index: -1;
-}
-
-.controls-fakeTextArea__firstWrapper {
-   vertical-align: bottom;
-   display: inline-block;
-   width: 100%;
-   box-sizing: border-box;
-}
-
-.controls-fakeTextArea__secondWrapper {
-   width: 100%;
-}
-
-.controls-fakeTextArea__secondWrapper_size_default {
-   height: @line-height_InputRender_default;
-}
-
-.controls-fakeTextArea__secondWrapper_size_m {
-   height: @line-height_InputRender_m;
-}
-
-.controls-fakeTextArea__secondWrapper_size_l {
-   height: @line-height_InputRender_l;
-}
-
-.controls-InputArea__clear {
-   clear: both;
-}
-
-// TODO: Разобраться с каскадом по задаче https://online.sbis.ru/opendoc.html?guid=fa935c87-4aa8-49c6-8f6a-f624f87c265d
-.controls-InputArea.controls-Text-InputRender_state_disabled_singleLine {
+.controls-Area__measuredBlock {
+   border-style: solid;
    border-color: transparent;
+   border-width: @spacing_Area_between-topBorder-text @spacing_Area_between-rightBorder-text @spacing_Area_between-bottomBorder-text @spacing_Area_between-leftBorder-text;
+}
+
+.controls-Area__measuredBlock_size {
+   @variants: s, m, l;
+   .for(@variants, { &_@{_item} {
+      height: ~"@{height_Area_oneLine_size_@{_item}}";
+   } });
+}
+
+.controls-Area__nativeField_margin {
+   margin: @spacing_Area_between-topBorder-text @spacing_Area_between-rightBorder-text @spacing_Area_between-bottomBorder-text @spacing_Area_between-leftBorder-text;
 }
 
 .ws-is-mobile-safari, .ws-is-mobile-chrome-ios {
    // On the iPad, in safari and chrome, textarea has indispensable 3px padding, at left and right sides.
    // https://stackoverflow.com/questions/6890149/remove-3-pixels-in-ios-webkit-textarea
    // To compensate them, we should move textarea to the left by 3px and increase it's width to 6px
-   .controls-InputArea__realField {
+   .controls-Area__realField {
       margin-left: -3px;
       width: ~"calc(100% + 6px)";
 
