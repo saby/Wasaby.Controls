@@ -168,6 +168,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
       StickyHeader.getDefaultOptions = function() {
          return {
+
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
             fixedZIndex: 2
          };
