@@ -4,6 +4,7 @@ import java.lang.Math
 
 def version = "3.19.100"
 env.GIT_COMMIT = ''
+echo "GIT_COMMIT ${}"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
         send_status_in_gitlab('canceled')
@@ -234,7 +235,6 @@ node('controls') {
         stage("Checkout"){
             parallel (
                 checkout1: {
-                    def mr_info
                     echo "Выкачиваем controls "
                     dir(workspace) {
                        def mr_info = checkout([$class: 'GitSCM',
