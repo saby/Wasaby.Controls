@@ -5,9 +5,11 @@ define('Controls/Popup/InfoBox',
       'Controls/Popup/Previewer/OpenerTemplate',
       'Controls/Popup/Opener/InfoBox',
       'Controls/Context/TouchContextField',
-      'Controls/Utils/getZIndex'
+      'Controls/Utils/getZIndex',
+      'Core/IoC'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, IoC) {
+
       'use strict';
 
       /**
@@ -56,13 +58,13 @@ define('Controls/Popup/InfoBox',
 
       /**
        * @name Controls/Popup/InfoBox#hideDelay
-       * @cfg {Number} Delay before closing after mouse leaves.
+       * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
        * @default 300
        */
 
       /**
        * @name Controls/Popup/InfoBox#showDelay
-       * @cfg {Number} Delay before opening after mouse enters.
+       * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
        * @default 300
        */
 
@@ -112,7 +114,7 @@ define('Controls/Popup/InfoBox',
        */
 
       /**
-       * @name Controls/Popup/InfoBox#float
+       * @name Controls/Popup/InfoBox#floatCloseButton
        * @cfg {Boolean} Whether the content should wrap around the cross closure.
        * @default false
        */
@@ -135,14 +137,14 @@ define('Controls/Popup/InfoBox',
                template: OpenerTemplate,
                position: self._options.position,
                style: self._options.style,
-               float: self._options.float,
+               floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
                   onResult: self._resultHandler
                },
                templateOptions: {
                   content: self._options.template,
                   contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions
+                  contentTemplateOptions: self._options.templateOptions,
                }
             };
          }
@@ -157,8 +159,11 @@ define('Controls/Popup/InfoBox',
 
          _closeId: null,
 
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
+            if (options.float) {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+            }
          },
 
          /**
@@ -168,7 +173,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], { bubbling: true });
+               this._notify('closeInfoBox', [], {bubbling: true});
             }
          },
 
@@ -176,7 +181,7 @@ define('Controls/Popup/InfoBox',
             var config = _private.getCfg(this);
 
             if (this._isNewEnvironment()) {
-               this._notify('openInfoBox', [config], { bubbling: true });
+               this._notify('openInfoBox', [config], {bubbling: true});
             } else {
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
@@ -194,7 +199,7 @@ define('Controls/Popup/InfoBox',
 
          _close: function() {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], { bubbling: true });
+               this._notify('closeInfoBox', [], {bubbling: true});
             } else {
                this._children.infoBoxOpener.close();
             }
