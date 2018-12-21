@@ -237,7 +237,7 @@ node('controls') {
                 checkout1: {
                     echo "Выкачиваем controls "
                     dir(workspace) {
-                       def mr_info = checkout([$class: 'GitSCM',
+                       checkout([$class: 'GitSCM',
                         branches: [[name: env.BRANCH_NAME]],
                         doGenerateSubmoduleConfigurations: false,
                         extensions: [[
@@ -249,8 +249,7 @@ node('controls') {
                                 credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
-                        echo "${mr_info}"
-                        env.GIT_COMMIT = mr_info.GIT_COMMIT
+
                     }
                     echo "Обновляемся из rc-${version}"
                     dir("./controls"){
@@ -261,6 +260,9 @@ node('controls') {
                         git pull
                         git merge origin/rc-${version}
                         """
+                        def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
+                        echo "${gitCommit}"
+                        env.GIT_COMMIT = gitCommit
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
