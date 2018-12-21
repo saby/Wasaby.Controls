@@ -27,11 +27,9 @@ define('Controls/List/Container',
    
          _beforeUpdate: function(options, context) {
             this._dataOptions = context.dataOptions;
-         },
-         
-         _afterUpdate: function() {
-            if (this._options.loading) {
-               this._children.indicator.show();
+    
+            if (this._children.indicator) {
+               this._children.indicator[options.loading ? 'show' : 'hide']();
             }
          }
          

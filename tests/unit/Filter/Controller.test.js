@@ -413,6 +413,36 @@ define(['Controls/Filter/Controller'], function(Filter) {
          }]);
       });
 
+      it('_private.getOnlyChangesFilter', function() {
+         var fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetValue: ''
+         }];
+
+         var filterButtonItems = [{
+            id: 'testId2',
+            value: 'testValue',
+            textValue: 'test2',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId4',
+            value: '',
+            resetValue: ''
+         }];
+         var filter = Filter._private.getOnlyChangesFilter(filterButtonItems, fastFilterItems);
+         assert.deepEqual(filter, { testId2: 'testValue', testId3: 'testValue' });
+      });
+
    });
 
 });

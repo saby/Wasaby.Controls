@@ -1,4 +1,4 @@
-<ws:template name="listContent">
+<Controls.Container.LoadingIndicator name="indicator" isGlobal="{{false}}">
     <ws:partial template="{{_options.content}}"
                 filter="{{_dataOptions.filter}}"
                 navigation="{{_dataOptions.navigation}}"
@@ -7,13 +7,4 @@
                 items="{{_dataOptions.items}}"
                 scope="{{_options}}"
                 source="{{_dataOptions.prefetchSource}}"/>
-</ws:template>
-
-<ws:if data="{{_options.loading}}">
-    <Controls.Container.LoadingIndicator name="indicator" isGlobal="{{false}}">
-        <ws:partial template="listContent"/>
-    </Controls.Container.LoadingIndicator>
-</ws:if>
-<ws:else>
-    <ws:partial template="listContent"/>
-</ws:else>
+</Controls.Container.LoadingIndicator>

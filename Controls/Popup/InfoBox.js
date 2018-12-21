@@ -8,7 +8,6 @@ define('Controls/Popup/InfoBox',
       'Controls/Utils/getZIndex'
    ],
    function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex) {
-
       'use strict';
 
       /**
@@ -136,7 +135,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             }
          },
 
@@ -144,7 +143,7 @@ define('Controls/Popup/InfoBox',
             var config = _private.getCfg(this);
 
             if (this._isNewEnvironment()) {
-               this._notify('openInfoBox', [config], {bubbling: true});
+               this._notify('openInfoBox', [config], { bubbling: true });
             } else {
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
@@ -162,7 +161,7 @@ define('Controls/Popup/InfoBox',
 
          _close: function() {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             } else {
                this._children.infoBoxOpener.close();
             }
@@ -254,6 +253,10 @@ define('Controls/Popup/InfoBox',
                case 'mousedown':
                   event.stopPropagation();
                   break;
+               case 'close':
+                  // todo Для совместимости
+                  // Удалить, как будет сделана задача https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
+                  this._opened = false;
             }
          },
 
