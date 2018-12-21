@@ -6,7 +6,7 @@
         </div>
         <div class="optionsBlock">
             <h3>Options</h3>
-            <Controls.Label name="myLabel1" caption="size:"/>
+            <Controls.Label name="myLabel1" caption="size:" attr:class="ControlsDemo__label"/>
             <Controls.Input.ComboBox
                     attr:class="ControlsDemo__size"
                     source="{{_headerSizeSource}}"
@@ -17,9 +17,9 @@
                     selectedKey="{{_headerSelectedSize}}"
                     on:selectedKeyChanged="changeSize()"
             />
-            <Controls.Label name="myLabel1" caption="caption"/>
+            <Controls.Label name="myLabel1" caption="caption" attr:class="ControlsDemo__label"/>
             <Controls.Input.Text bind:value="_caption" attr:class="ControlsDemo__caption"/>
-            <Controls.Label name="myLabel1" caption="style:"/>
+            <Controls.Label name="myLabel1" caption="style:" attr:class="ControlsDemo__label"/>
             <Controls.Input.ComboBox
                     attr:class="ControlsDemo__style"
                     source="{{_headerStyleSource}}"
