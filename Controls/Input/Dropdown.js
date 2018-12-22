@@ -22,6 +22,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IInputDropdown
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
