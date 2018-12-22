@@ -29,7 +29,7 @@ define('Controls/Button/Menu',
        * @public
        * @author Михайловский Д.С.
        * @category Button
-       * @demo Controls-demo/Dropdown/MenuVdom
+       * @demo Controls-demo/Buttons/Menu/MenuPG
        */
 
       'use strict';

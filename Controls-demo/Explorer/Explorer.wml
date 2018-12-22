@@ -1,6 +1,6 @@
 <div>
    <span>Demo Controls/Explorer</span>
-   <Controls.Button attr:class="demo-Explorer__viewButton" on:click="_changeViewMode()" style="linkMain" icon="icon-medium icon-primary {{_changeViewIcon}}"/>
+   <Controls.Button attr:class="demo-Explorer__viewButton" on:click="_changeViewMode()" style="secondary" viewMode="link" icon="icon-medium icon-primary {{_changeViewIcon}}"/>
    <Controls.Container.Scroll attr:class="demo-Explorer__scrollContainer">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector bind:selectedKeys="_selectedKeys"

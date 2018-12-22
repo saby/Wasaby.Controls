@@ -294,6 +294,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._curHeaderColumnIndex = 0;
          },
 
+         isNotFullGridSupport: function() {
+            return cDetection.isNotFullGridSupport;
+         },
+
          getCurrentHeaderColumn: function() {
             var
                columnIndex = this._curHeaderColumnIndex,
