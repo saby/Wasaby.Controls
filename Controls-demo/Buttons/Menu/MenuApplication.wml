@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="FilterSearch">
+   <ws:content>
+      <Controls-demo.Buttons.Menu.Menu/>
+   </ws:content>
+</Controls.Application.ApplicationWrapper>

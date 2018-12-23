@@ -2,7 +2,8 @@
    <div>
       <Controls.Button.Menu
          keyProperty="id"
-         style="linkMain"
+         style="secondary"
+         viewMode="link"
          attr:title="{[Вставка]}"
          icon="icon-PasteBtr icon-medium"
          on:onMenuItemActivate="_menuItemActivateHandler()"
