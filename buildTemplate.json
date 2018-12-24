@@ -59,8 +59,8 @@
       "path": "%cd%/node_modules/ws-data/WS.Data"
     },
     {
-      "name": "Data",
-      "path": "%cd%/node_modules/ws-data/Data"
+      "name": "Types",
+      "path": "%cd%/node_modules/saby-types/Types"
     },
     {
       "name": "SBIS3.CONTROLS",

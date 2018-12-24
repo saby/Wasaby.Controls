@@ -4,10 +4,11 @@ define('Controls/Container/Data',
       'Core/core-instance',
       'wml!Controls/Container/Data/Data',
       'Controls/Container/Data/getPrefetchSource',
-      'Controls/Container/Data/ContextOptions'
+      'Controls/Container/Data/ContextOptions',
+      'Core/Deferred'
    ],
 
-   function(Control, cInstance, template, getPrefetchSource, ContextOptions) {
+   function(Control, cInstance, template, getPrefetchSource, ContextOptions, Deferred) {
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
@@ -54,7 +55,7 @@ define('Controls/Container/Data',
                   // не влияет на source из таблицы. Решение: Не будем брать source из опций, а в контекс положим
                   // source, который лежит внутри prefetchSource.
                   // Выписана задача для удаления данного костыля: https://online.sbis.ru/opendoc.html?guid=fb540e42-278c-436c-928b-92e6f72b3abc
-                  result.source = self._prefetchSource._$target;
+                  result.source = self._prefetchSource ? self._prefetchSource._$target : self._source; //prefetchSource will no created if query returns error
                } else {
                   result[optName] = self['_' + optName];
                }
@@ -63,15 +64,27 @@ define('Controls/Container/Data',
 
             return CONTEXT_OPTIONS.reduce(reducer, dataOptions);
          },
-
+   
          createPrefetchSource: function(self, data) {
-            return getPrefetchSource({
+            var resultDef = new Deferred();
+   
+            getPrefetchSource({
                source: self._source,
                navigation: self._navigation,
                sorting: self._sorting,
                filter: self._filter,
                keyProperty: self._keyProperty
-            }, data);
+            }, data)
+               .addCallback(function(result) {
+                  resultDef.callback(result);
+                  return result;
+               })
+               .addErrback(function(error) {
+                  resultDef.callback(null);
+                  return error;
+               });
+   
+            return resultDef;
          },
 
          resolveOptions: function(self, options) {
@@ -103,7 +116,9 @@ define('Controls/Container/Data',
                self._dataOptionsContext = new ContextOptions(_private.updateDataOptions(self, {}));
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
-                  _private.resolvePrefetchSourceResult(self, result);
+                  if (result) {
+                     _private.resolvePrefetchSourceResult(self, result);
+                  }
                   self._dataOptionsContext = new ContextOptions(_private.updateDataOptions(self, {}));
                   return result;
                });
@@ -117,7 +132,9 @@ define('Controls/Container/Data',
 
             if (this._options.source !== newOptions.source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
-                  _private.resolvePrefetchSourceResult(self, result);
+                  if (result) {
+                     _private.resolvePrefetchSourceResult(self, result);
+                  }
                   _private.updateDataOptions(self, self._dataOptionsContext);
                   self._dataOptionsContext.updateConsumers();
                   self._forceUpdate();
