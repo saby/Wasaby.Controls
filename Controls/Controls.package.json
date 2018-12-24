@@ -103,8 +103,8 @@
   "output": "controls-filter-compatible.package.js"
 }, {
   "include": [
-    "Controls/Header/*",
-    "Controls/Header"
+    "Controls/Heading/*",
+    "Controls/Heading"
   ],
   "output": "controls-header.package.js"
 }, {
