@@ -151,9 +151,6 @@ def only_fail = false
 
 
 node('master') {
-
-    sh "printenv"
-
     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
