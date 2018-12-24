@@ -15,6 +15,7 @@
    </Controls.Input.DateTime>
    <Controls.Button
       attr:class="controls-Input-DatePicker__button"
+      attr:tabindex="-1"
       style="secondary"
       viewMode="link"
       icon="icon-small icon-Calendar2 icon-primary"
