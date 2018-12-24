@@ -1,12 +1,11 @@
 define('Controls/StickyHeader',
    [
       'Core/Control',
-      'Core/detection',
       'Controls/StickyHeader/Utils',
       'wml!Controls/StickyHeader/StickyHeader',
       'Controls/StickyHeader/_StickyHeader'
    ],
-   function(Control, detection, stickyUtils, template) {
+   function(Control, stickyUtils, template) {
 
       'use strict';
 
