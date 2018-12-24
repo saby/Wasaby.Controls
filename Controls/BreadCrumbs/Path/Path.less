@@ -14,6 +14,13 @@
    padding-right: @spacing_Path-between-home-and-backButton;
 }
 
+.controls-BreadCrumbsPath__home {
+   .icon(@font-size_Path-home);
+   cursor: pointer;
+   padding-right: @spacing_Path-between-home-and-crumbs;
+   color: @color_Path-home;
+}
+
 .controls-BreadCrumbsPath__backButton__wrapper {
    position: relative;
    display: inline-flex;
@@ -27,6 +34,7 @@
    background-color: @background-color_Path-backButtonArrow;
    right: 0;
    display: none;
+   color: @color_Path-backButtonArrow;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {

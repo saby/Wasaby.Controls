@@ -19,6 +19,7 @@ define('Controls/BreadCrumbs', [
     * @class Controls/BreadCrumbs
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
+    * @mixes Controls/BreadCrumbs/BreadCrumbsStyles
     * @control
     * @public
     * @author Зайцев А.С.

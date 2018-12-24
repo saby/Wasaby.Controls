@@ -19,7 +19,7 @@ define([
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
          getWidth = getWidthUtil.getWidth;
          getWidthUtil.getWidth = function(item) {
-            if (item === '<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>') {
+            if (item === '<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>') {
                return 24;
             } else {
                return backButtonWidth;
