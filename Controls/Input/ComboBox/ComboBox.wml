@@ -11,6 +11,7 @@
         marker="{{false}}"
         popupClassName="{{_options.popupClassName ? _options.popupClassName + ' controls-ComboBox-popup' : 'controls-ComboBox-popup'}}"
         typeShadow="suggestionsContainer"
+        filter="{{_options.filter}}"
         close="{{_onClose}}"
         open="{{_onOpen}}"
         dataLoadCallback="{{_setText}}"
