@@ -7,7 +7,7 @@ env.GIT_COMMIT = ''
 echo "GIT_COMMIT ${}"
 def log = currentBuild.rawBuild.getLog(100).toString()
 echo "${log}"
-def commit = (log =~ /(Jenkinsfile from)/)
+def commit = (log =~ /Jenkinsfile from ([0-9a-z]+)/)
 
 echo "COMMIT: ${commit[0][1]}"
 echo "LOG OFF"
