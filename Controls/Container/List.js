@@ -256,7 +256,7 @@ define('Controls/Container/List',
          
          _beforeUpdate: function(newOptions, context) {
             if (this._options.source !== newOptions.source || !isEqual(this._options.navigation, newOptions.navigation) || this._options.searchDelay !== newOptions.searchDelay) {
-               var currentFilter = this._filter || _private.getFilterFromContext(this, this._context);
+               var currentFilter = this._searchController ? this._searchController.getFilter() : _private.getFilterFromContext(this, this._context);
                var source = this._source;
                
                _private.resolveOptions(this, newOptions);
