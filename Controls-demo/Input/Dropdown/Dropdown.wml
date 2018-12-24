@@ -4,7 +4,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysSimple"
                                keyProperty="id"
                                displayProperty="title"
-							   attr:class="ControlsDemo-simple"
+                               attr:class="ControlsDemo-simple"
                                source="{{_createMemory(_simpleItems)}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
@@ -34,7 +34,7 @@
       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysIcon"
                                keyProperty="id"
                                displayProperty="title"
-							   attr:class="ControlsDemo-iconLeft"
+                               attr:class="ControlsDemo-iconLeft"
                                source="{{_createMemory(_iconItems)}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
@@ -88,12 +88,20 @@
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
       <h3>With footer</h3>
-       <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysFooter"
-                                keyProperty="id"
-                                displayProperty="title"
-                                source="{{_createMemory(_footerItems)}}"
-                                on:footerClick="footerClickHandler()"
-                                footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
+      <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysFooter"
+                               keyProperty="id"
+                               displayProperty="title"
+                               source="{{_createMemory(_footerItems)}}"
+                               on:footerClick="footerClickHandler()"
+                               footerTemplate="wml!Controls-demo/Input/Dropdown/footerTemplateDropdown">
+      </Controls.Input.Dropdown>
+   </div>
+   <div class="ControlsDemo-InputDropdown__wrapper">
+      <h3>With history</h3>
+      <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysHistory"
+                               keyProperty="id"
+                               displayProperty="title"
+                               source="{{_historySource}}">
       </Controls.Input.Dropdown>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">

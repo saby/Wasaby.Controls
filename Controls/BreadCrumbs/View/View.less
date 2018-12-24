@@ -51,12 +51,7 @@
 .controls-BreadCrumbsView__arrow {
    .icon(@font-size_BreadCrumbs-arrow);
    cursor: pointer;
-}
-
-.controls-BreadCrumbsView__home {
-   .icon(@font-size_BreadCrumbs-home);
-   cursor: pointer;
-   padding-right: @spacing_BreadCrumbs-between-home-and-crumbs;
+   color: @color_BreadCrumbs-arrow;
 }
 
 .controls-BreadCrumbsView__title_min {
@@ -97,6 +92,10 @@
    .controls-BreadCrumbsView__title:hover {
       color: @color_BreadCrumbs-title_hovered;
       text-decoration: underline;
+   }
+
+   .controls-BreadCrumbsView__arrow:hover {
+      color: @color_BreadCrumbs-arrow_hovered;
    }
 }
 

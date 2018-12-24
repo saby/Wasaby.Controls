@@ -6,11 +6,12 @@
                                       caption="{{_backButtonCaption}}"
                                       style="secondary"
                                       on:click="_onBackButtonClick()"/>
-                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View icon-primary{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
+                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
+                     title="{[Подробнее]}"
                      on:click="_onArrowClick()"></div>
             </div>
             <ws:if data="{{_visibleItems.length}}">
-                <div attr:class="controls-BreadCrumbsView__home icon-Home3 icon-primary"
+                <div attr:class="controls-BreadCrumbsPath__home icon-Home3"
                      on:click="_onHomeClick()"></div>
                 <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                            items="{{_breadCrumbsItems}}"
