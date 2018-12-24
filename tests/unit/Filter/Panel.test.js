@@ -163,15 +163,17 @@ define(
             var options = { items: ['test'] };
             var context = {
                filterPanelOptionsField: {
-                  options: {}
+                  options: {
+                     historyId: 'testId'
+                  }
                }
             };
 
             FilterPanel._private.resolveItems(self, options, context);
             assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
             assert.equal(self._items[0], 'test');
-            FilterPanel._private.resolveHistoryId(self, {}, context);
-            assert.equal(self._historyId, undefined);
+            FilterPanel._private.resolveHistoryId(self, {}, self._contextOptions);
+            assert.equal(self._historyId, 'testId');
          });
 
          it('_private:prepareItems', function() {
