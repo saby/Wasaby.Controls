@@ -6,13 +6,14 @@ define('Controls/Input/Mask',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
+      'WS.Data/Type/descriptor',
       'wml!Controls/Input/Mask/Mask',
 
       'Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, types, MaskTpl) {
 
       'use strict';
 
@@ -224,6 +225,12 @@ define('Controls/Input/Mask',
             },
             selectOnClick: false,
             autoWidth: false
+         };
+      };
+
+      Mask.getOptionTypes = function getOptionTypes() {
+         return {
+            mask: types(String).required()
          };
       };
 
