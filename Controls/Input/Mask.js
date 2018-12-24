@@ -163,7 +163,7 @@ define('Controls/Input/Mask',
                   if (document.activeElement === input && !this._destroyed && replacer && !value.replace(rp, '')) {
                      input.setSelectionRange(0, 0);
                   }
-               });
+               }.bind(this));
             },
             validateReplacer: function(replacer, mask) {
                var validation;
