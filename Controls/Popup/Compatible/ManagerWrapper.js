@@ -54,9 +54,13 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             var self = this;
 
             // todo: Задача: научить Listener'ы, лежащие в старом окружени, регистрироваться в ManagerWrapper'e
-            // https://online.sbis.ru/opendoc.html?guid=cc63938a-8b0c-40f4-82f5-d920f7f2141c
+            // https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
             items.forEach(function(item) {
-               self._children.Manager.remove(item.id);
+               // Если попап не следует за таргетом при скролле - закроем его.
+               // Избавимся только когда сделают задачу, описанную комментом выше
+               if (!item.popupOptions.targetTracking) {
+                  self._children.Manager.remove(item.id);
+               }
             });
          },
 
