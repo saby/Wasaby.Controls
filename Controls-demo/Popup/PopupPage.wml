@@ -42,6 +42,10 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>
 
+   <Controls.Popup.Opener.Stack name="notifyStack" on:popupClose="_notifyCloseHandler()" on:popupOpen="_notifyOpenHandler()" on:popupResult="_notifyResultHandler()">
+      <ws:popupOptions template="Controls-demo/Popup/NotifyStack" closeByExternalClick="{{true}}" />
+   </Controls.Popup.Opener.Stack>
+
    <Controls.Popup.Opener.Stack name="maximizedStack">
       <ws:popupOptions template="Controls-demo/Popup/TestMaximizedStack" closeByExternalClick="{{true}}">
          <ws:templateOptions type="stack"/>
@@ -91,7 +95,11 @@
       <Controls.Button name="stackExecutingButton" caption="openExecutingPopup" on:click="openExecutingPopup()" attr:class="ControlsDemo-PopupPage__openExecutingPopupButton"/>
    </div>
    <div>
-      <Controls.Button name="stackButton" caption="maximizedStack" on:click="openMaximizedStack()" attr:class="ControlsDemo-PopupPage__maximizedStackButton"/>
+      <Controls.Button name="maxButton" caption="maximizedStack" on:click="openMaximizedStack()" attr:class="ControlsDemo-PopupPage__maximizedStackButton"/>
+   </div>
+   <div>
+      <Controls.Button name="notifyButton" caption="notifyStack" on:click="openNotifyStack()" attr:class="ControlsDemo-PopupPage__notifyStackButton"/>
+      <span class="ControlsDemo-PopupPage__notifyStackText">{{ _notifyStackText }}</span>
    </div>
    <div>
       <Controls.Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>
@@ -106,6 +114,6 @@
       <Controls.Button name="stackButton4" caption="open stack with Controls-demo/FormController/FormController" on:click="openStackWithFormController()" attr:class="ControlsDemo-PopupPage__withFCButton"/>
    </div>
    <div style="margin-top: 10px;">
-      <Controls.Input.Text placeholder="for focusing"/>
+      <Controls.Input.Text placeholder="for focusing" attr:class="ControlsDemo-PopupPage__forFocusing"/>
    </div>
 </div>

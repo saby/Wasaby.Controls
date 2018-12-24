@@ -65,6 +65,22 @@ define('Controls-demo/Popup/PopupPage',
             });
          },
 
+         openNotifyStack: function() {
+            this._children.notifyStack.open();
+         },
+
+         _notifyCloseHandler: function() {
+            this._notifyStackText = 'Стековая панель закрылась';
+         },
+
+         _notifyOpenHandler: function() {
+            this._notifyStackText = 'Стековая панель открылась';
+         },
+
+         _notifyResultHandler: function(event, result) {
+            this._notifyStackText = 'Результат из стековой панели ' + result;
+         },
+
          openMaximizedStack: function () {
             this._children.maximizedStack.open({
                minimizedWidth: 600,

@@ -7,7 +7,7 @@ define(
        'use strict';
        var getInfoBoxConfig = function() {
           return {
-             float: true,
+             floatCloseButton: true,
              style: 'error',
              position: 'tl',
               template: OpenerTemplate
@@ -26,7 +26,7 @@ define(
              var Infobox = getInfoBoxWithConfig(config);
              var newConfig = InfoBox._private.getCfg(Infobox);
 
-            assert.equal(newConfig.float, true);
+            assert.equal(newConfig.floatCloseButton, true);
             assert.equal(newConfig.style, 'error');
             assert.equal(newConfig.position, 'tl');
               assert.equal(newConfig.template, OpenerTemplate);

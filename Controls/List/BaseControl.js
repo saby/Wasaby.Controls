@@ -46,17 +46,24 @@ define('Controls/List/BaseControl', [
    var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
-      reload: function(self, filter, sorting, userCallback, userErrback, navigation) {
+      reload: function(self, cfg) {
          var
+            filter = cClone(cfg.filter),
+            sorting = cClone(cfg.sorting),
+            navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
+         if (cfg.beforeReloadCallback) {
+            // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
+            cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
+         }
          if (self._sourceController) {
             _private.showIndicator(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
-               if (userCallback && userCallback instanceof Function) {
-                  userCallback(list);
+               if (cfg.dataLoadCallback instanceof Function) {
+                  cfg.dataLoadCallback(list);
                }
 
                _private.hideIndicator(self);
@@ -84,21 +91,31 @@ define('Controls/List/BaseControl', [
                   _private.checkLoadToDirectionCapability(self);
                }
             }).addErrback(function(error) {
-               _private.processLoadError(self, error, userErrback);
+               _private.processLoadError(self, error, cfg.dataLoadErrback);
                resDeferred.callback(null);
             });
          } else {
             resDeferred.callback();
             IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
+         resDeferred.addCallback(function(items) {
+            if (cfg.afterReloadCallback) {
+               cfg.afterReloadCallback();
+            }
+            return items;
+         });
          return resDeferred;
       },
 
       prepareFooter: function(self, navigation, sourceController) {
-         self._shouldDrawFooter = navigation && navigation.view === 'demand' && sourceController.hasMoreData('down');
+         var
+            loadedDataCount, allDataCount;
+         self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
          if (self._shouldDrawFooter) {
-            if (typeof self._sourceController.getLoadedDataCount() !== 'undefined' && self._sourceController.getAllDataCount()) {
-               self._loadMoreCaption = self._sourceController.getAllDataCount() - self._sourceController.getLoadedDataCount();
+            loadedDataCount = sourceController.getLoadedDataCount();
+            allDataCount = sourceController.getAllDataCount();
+            if (typeof loadedDataCount === 'number' && typeof allDataCount === 'number') {
+               self._loadMoreCaption = allDataCount - loadedDataCount;
             } else {
                self._loadMoreCaption = '...';
             }
@@ -158,12 +175,12 @@ define('Controls/List/BaseControl', [
          self._bottomPlaceholderHeight = placeholdersSizes.bottom;
       },
 
-      processLoadError: function(self, error, userErrback) {
+      processLoadError: function(self, error, dataLoadErrback) {
          if (!error.canceled) {
             _private.hideIndicator(self);
 
-            if (userErrback && userErrback instanceof Function) {
-               userErrback(error);
+            if (dataLoadErrback instanceof Function) {
+               dataLoadErrback(error);
             }
 
             // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
@@ -243,7 +260,7 @@ define('Controls/List/BaseControl', [
       scrollToEdge: function(self, direction) {
          if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options.filter, self._options.sorting, self._options.dataLoadCallback, self._options.dataLoadErrback).addCallback(function() {
+            _private.reload(self, self._options).addCallback(function() {
                if (direction === 'up') {
                   self._notify('doScroll', ['top'], { bubbling: true });
                } else {
@@ -273,24 +290,20 @@ define('Controls/List/BaseControl', [
       onScrollShow: function(self) {
          self._loadOffset = LOAD_TRIGGER_OFFSET;
          if (!self._scrollPagingCtr) {
-            if (self._options.navigation &&
-               self._options.navigation.view === 'infinity' &&
-               self._options.navigation.viewConfig &&
-               self._options.navigation.viewConfig.pagingMode
-            ) {
+            if (_private.needScrollPaging(self._options.navigation)) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
                   self._pagingVisible = true;
                });
             }
-         } else {
-
+         } else if (_private.needScrollPaging(self._options.navigation)) {
+            self._pagingVisible = true;
          }
       },
 
       onScrollHide: function(self) {
-         self._pagingCfg = null;
          self._loadOffset = 0;
+         self._pagingVisible = false;
          self._forceUpdate();
       },
 
@@ -359,11 +372,26 @@ define('Controls/List/BaseControl', [
                }
                self._scrollPagingCtr.handleScrollEdge(position, hasMoreData);
             }
+         } else {
+            if (_private.needScrollPaging(self._options.navigation)) {
+               _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
+                  self._scrollPagingCtr = scrollPagingCtr;
+                  self._pagingVisible = true;
+               });
+            }
          }
       },
 
       needScrollCalculation: function(navigationOpt) {
          return navigationOpt && navigationOpt.view === 'infinity';
+      },
+
+      needScrollPaging: function(navigationOpt) {
+         return (navigationOpt &&
+            navigationOpt.view === 'infinity' &&
+            navigationOpt.viewConfig &&
+            navigationOpt.viewConfig.pagingMode
+         );
       },
 
       getItemsCount: function(self) {
@@ -407,8 +435,17 @@ define('Controls/List/BaseControl', [
                   keyProperty: 'id',
                   parentProperty: 'parent',
                   nodeProperty: 'parent@',
-                  dropdownClassName: 'controls-itemActionsV__popup'
+                  dropdownClassName: 'controls-itemActionsV__popup',
+                  showClose: true
                },
+               eventHandlers: {
+                  onResult: self._closeActionsMenu,
+                  onClose: self._closeActionsMenu
+               },
+               closeByExternalClick: true,
+               corner: { vertical: 'top', horizontal: 'right' },
+               horizontalAlign: { side: context ? 'right' : 'left' },
+               className: 'controls-Toolbar__menu-position',
                nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;
@@ -420,35 +457,27 @@ define('Controls/List/BaseControl', [
             actionName = args && args.action,
             event = args && args.event;
 
+         function closeMenu() {
+            self._listViewModel.setActiveItem(null);
+            self._children.swipeControl.closeSwipe();
+            self._menuIsShown = false;
+         }
+
          if (actionName === 'itemClick') {
             var action = args.data && args.data[0] && args.data[0].getRawData();
             aUtil.itemActionsClick(self, event, action, self._listViewModel.getActiveItem());
-            self._children.itemActionsOpener.close();
+            if (!action['parent@']) {
+               self._children.itemActionsOpener.close();
+               closeMenu();
+            }
+         } else {
+            closeMenu();
          }
-         self._listViewModel.setActiveItem(null);
-         self._children.swipeControl.closeSwipe();
-         self._menuIsShown = false;
          self._forceUpdate();
       },
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
-      },
-
-      setPopupOptions: function(self) {
-         self._popupOptions = {
-            className: 'controls-Toolbar__menu-position',
-            closeByExternalClick: true,
-            corner: { vertical: 'top', horizontal: 'right' },
-            horizontalAlign: { side: 'right' },
-            eventHandlers: {
-               onResult: self._closeActionsMenu,
-               onClose: self._closeActionsMenu
-            },
-            templateOptions: {
-               showClose: true
-            }
-         };
       },
 
       groupsExpandChangeHandler: function(self, changes) {
@@ -568,7 +597,6 @@ define('Controls/List/BaseControl', [
             self = this;
 
          _private.bindHandlers(this);
-         _private.setPopupOptions(this);
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
@@ -612,12 +640,7 @@ define('Controls/List/BaseControl', [
                   }
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
-                  var
-                     loadDef = _private.reload(self, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback, newOptions.navigation);
-                  loadDef.addCallback(function(items) {
-                     return items;
-                  });
-                  return loadDef;
+                  return _private.reload(self, newOptions);
                }
             }
          });
@@ -678,7 +701,7 @@ define('Controls/List/BaseControl', [
          }
 
          if (filterChanged || recreateSource || sortingChanged) {
-            _private.reload(this, newOptions.filter, newOptions.sorting, newOptions.dataLoadCallback, newOptions.dataLoadErrback);
+            _private.reload(this, newOptions);
          }
       },
 
@@ -699,12 +722,23 @@ define('Controls/List/BaseControl', [
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
 
-      _afterUpdate: function() {
+      _afterUpdate: function(oldOptions) {
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
+            }
+         }
+   
+   
+         //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
+         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
+         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
+            if (this._options.loading) {
+               _private.showIndicator(this);
+            } else if (!this._sourceController.isLoading()) {
+               _private.hideIndicator(this);
             }
          }
       },
@@ -762,10 +796,8 @@ define('Controls/List/BaseControl', [
          event.stopPropagation();
       },
 
-      reload: function(filter, sorting) {
-         var reloadFilter = filter || this._options.filter;
-         var reloadSorting = sorting || this._options._sorting;
-         return _private.reload(this, reloadFilter, reloadSorting, this._options.dataLoadCallback, this._options.dataLoadErrback);
+      reload: function() {
+         return _private.reload(this, this._options);
       },
 
       _onGroupClick: function(e, item, baseEvent) {

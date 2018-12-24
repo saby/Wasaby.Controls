@@ -99,6 +99,7 @@ define(
          describe('initSelection', function() {
             it('test1', function() {
                viewModel.updateOptions({ value: '123' });
+               render._inputActive = true;
                render._viewModel = viewModel;
                render._options.content = 'content';
                Render._private.initSelection(render);
@@ -119,6 +120,16 @@ define(
 
                assert.equal(render._children.divinput.selectionStart, 0);
                assert.equal(render._children.divinput.selectionEnd, 0);
+            });
+            it('test3', function() {
+               viewModel.updateOptions({ value: '123' });
+               render._inputActive = false;
+               render._viewModel = viewModel;
+               render._options.content = 'content';
+               Render._private.initSelection(render);
+
+               assert.equal(render._children.divinput.selectionStart, undefined);
+               assert.equal(render._children.divinput.selectionEnd, undefined);
             });
          });
       });

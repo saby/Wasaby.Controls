@@ -2,9 +2,10 @@ define(
    [
       'Controls/Container/Data',
       'WS.Data/Source/Memory',
-      'Controls/Container/Data/ContextOptions'
+      'Controls/Container/Data/ContextOptions',
+      'Core/Deferred'
    ],
-   function(Data, Memory, ContextOptions) {
+   function(Data, Memory, ContextOptions, Deferred) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -85,6 +86,45 @@ define(
                   assert.isFalse(data._items === items);
                   done();
                });
+            });
+         });
+   
+         it('itemsChanged', function(done) {
+            var config = {source: source, keyProperty: 'id'};
+            var data = getDataWithConfig(config);
+            var propagationStopped = false;
+            var event = {
+               stopPropagation: function() {
+                  propagationStopped = true;
+               }
+            };
+      
+            data._beforeMount(config).addCallback(function() {
+               data._itemsChanged(event, data._items);
+               assert.isTrue(propagationStopped);
+               done();
+            });
+         });
+   
+         it('query returns error', function(done) {
+            var source = {
+               query: function() {
+                  return Deferred.fail({
+                     canceled: false,
+                     processed: false,
+                     _isOfflineMode: false
+                  });
+               },
+               _mixins: [],
+               "[WS.Data/Source/ICrud]": true
+            };
+            var config = {source: source, keyProperty: 'id'};
+            var data = getDataWithConfig(config);
+            
+            data._beforeMount(config).addCallback(function() {
+               assert.isFalse(!!data._dataOptionsContext.prefetchSource);
+               assert.equal(data._dataOptionsContext.source, source);
+               done();
             });
          });
       });

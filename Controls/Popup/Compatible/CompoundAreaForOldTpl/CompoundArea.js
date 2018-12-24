@@ -655,13 +655,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
 
          setReadOnly: function(isReadOnly) {
-            this._isReadOnly = isReadOnly;
-            if (this._childControl) {
-               this._setEnabledForChildControls(!isReadOnly);
-            } else {
-               this._childCreatedDfr.addCallback(function() {
+            if (!this.isDestroyed()) {
+               this._isReadOnly = isReadOnly;
+               if (this._childControl) {
                   this._setEnabledForChildControls(!isReadOnly);
-               }.bind(this));
+               } else {
+                  this._childCreatedDfr.addCallback(function() {
+                     this._setEnabledForChildControls(!isReadOnly);
+                  }.bind(this));
+               }
             }
          },
          isReadOnly: function() {

@@ -3,9 +3,14 @@
  */
 define([
    'Controls/List/ListView',
-   'Controls/List/ListViewModel'
-], function(ListView, ListViewModel){
-   describe('Controls.List.ListView', function () {
+   'Controls/List/ListViewModel',
+   'WS.Data/Collection/RecordSet'
+], function(
+   ListView,
+   ListViewModel,
+   RecordSet
+) {
+   describe('Controls.List.ListView', function() {
       var data, data2, display;
       beforeEach(function() {
          data = [
@@ -243,6 +248,93 @@ define([
                throw new Error('itemContextMenu event shouldn\'t fire if contextMenuEnabled is false');
             };
             lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
+         });
+      });
+
+      describe('_afterMount', function() {
+         it('should fire markedKeyChanged if _options.markerVisibility is \'always\'', function() {
+            var model = new ListViewModel({
+               items: new RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
+               markerVisibility: 'always'
+            });
+            var cfg = {
+               listModel: model,
+               keyProperty: 'id',
+               markerVisibility: 'always'
+            };
+            var lv = new ListView(cfg);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+
+            lv._notify = function(eventName, eventArgs, eventOpts) {
+               assert.equal(eventName, 'markedKeyChanged');
+               assert.equal(eventArgs.length, 1);
+               assert.equal(eventArgs[0], 1);
+               assert.isUndefined(eventOpts);
+            };
+
+            lv._afterMount();
+         });
+
+         it('should not fire markedKeyChanged if _options.markerVisibility is \'always\', but markedKey is not undefined', function() {
+            var model = new ListViewModel({
+               items: new RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
+               markerVisibility: 'always'
+            });
+            var cfg = {
+               listModel: model,
+               keyProperty: 'id',
+               markerVisibility: 'always',
+               markedKey: null
+            };
+            var lv = new ListView(cfg);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+
+            var notifyCalled = false;
+            lv._notify = function(eventName) {
+               if (eventName === 'markedKeyChanged') {
+                  notifyCalled = true;
+               }
+            };
+
+            lv._afterMount();
+            assert.isFalse(notifyCalled);
+         });
+
+         it('should not fire markedKeyChanged if _options.markerVisibility is not \'always\'', function() {
+            var model = new ListViewModel({
+               items: new RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id'
+            });
+            var cfg = {
+               listModel: model,
+               keyProperty: 'id'
+            };
+            var lv = new ListView(cfg);
+            lv.saveOptions(cfg);
+            lv._beforeMount(cfg);
+
+            var notifyCalled = false;
+            lv._notify = function(eventName) {
+               if (eventName === 'markedKeyChanged') {
+                  notifyCalled = true;
+               }
+            };
+
+            lv._afterMount();
+            assert.isFalse(notifyCalled);
          });
       });
    });

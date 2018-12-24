@@ -33,15 +33,13 @@ def build_description(job, path, skip_test) {
     }
     def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
     if (description) {
+        echo "${description}"
         title = description.tokenize('|')[0]
         description = description.tokenize('|')[1]
         echo "${title}"
-        echo "${description}"
-        if (title && description) {
-            return [title, description]
-        }
 
     }
+    return [title, description]
 }
 
 def build_title(t_int, t_reg) {
@@ -53,26 +51,28 @@ def build_title(t_int, t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     } else if (t_int && t_reg && t_int==t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL')) {
+    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL')) {
+    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     }
 
 }
+@NonCPS
+def getBuildUser() {
+    def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
+    def userId = ''
+    try {
+        userId = cause.getUserId()
+    }catch (java.lang.NullPointerException e) {
+        //ничего не делаем
+    }
 
-echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
-echo "Генерируем параметры"
-    properties([
-    disableConcurrentBuilds(),
-    gitLabConnection('git'),
-    buildDiscarder(
-        logRotator(
-            artifactDaysToKeepStr: '3',
-            artifactNumToKeepStr: '3',
-            daysToKeepStr: '3',
-            numToKeepStr: '3')),
-        parameters([
+    return userId
+}
+
+def getParams(user) {
+    def common_params = [
             string(
                 defaultValue: 'sdk',
                 description: '',
@@ -105,13 +105,31 @@ echo "Генерируем параметры"
                 choices: "online\npresto\ncarry\ngenie",
                 description: '',
                 name: 'theme'),
-            choice(choices: "chrome\nff\nie\nedge", description: '', name: 'browser_type'),
+            choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
-            ]),
+            ]
+    if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
+        common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
+    }
+    return common_params
+}
+def user_name = getBuildUser()
+echo "Ветка в GitLab: https://git.sbis.ru/sbis/controls/tree/${env.BRANCH_NAME}"
+echo "Генерируем параметры"
+    properties([
+    disableConcurrentBuilds(),
+    gitLabConnection('git'),
+    buildDiscarder(
+        logRotator(
+            artifactDaysToKeepStr: '3',
+            artifactNumToKeepStr: '3',
+            daysToKeepStr: '3',
+            numToKeepStr: '3')),
+        parameters(getParams(user_name)),
         pipelineTriggers([])
     ])
 
@@ -185,7 +203,7 @@ node('controls') {
         } else {
             branch_viewsettings = props["viewsettings"]
         }
-        
+
         if ("${env.BUILD_NUMBER}" == "1"){
             inte = true
             regr = true
@@ -195,7 +213,7 @@ node('controls') {
             inte = false
         }
         if ( inte || all_inte || regr ) {
-            unit = false
+            unit = true
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -398,8 +416,8 @@ node('controls') {
             }
             parallel(
                 ws: {
-                    echo "Выкачиваем ws для unit тестов и если указан сторонний бранч"
-                    if ( unit || "${params.ws_revision}" != "sdk" ){
+                    echo "Выкачиваем ws если указан сторонний бранч"
+                    if ("${params.ws_revision}" != "sdk" ){
                         def ws_revision = params.ws_revision
                         if ("${params.ws_revision}" == "sdk" ){
                             ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
@@ -421,8 +439,8 @@ node('controls') {
                     }
                 },
                 ws_data: {
-                    echo "Выкачиваем ws.data для unit тестов и если указан сторонний бранч"
-                    if ( unit || "${params.ws_data_revision}" != "sdk" ){
+                    echo "Выкачиваем ws.data если указан сторонний бранч"
+                    if ( "${params.ws_data_revision}" != "sdk" ){
                         def ws_data_revision = params.ws_data_revision
                         if ( "${params.ws_data_revision}" == "sdk" ){
                             ws_data_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
@@ -468,6 +486,7 @@ node('controls') {
         stage ("Unit тесты"){
             if ( unit ){
                 echo "Запускаем юнит тесты"
+                sh "date"
                 dir("./controls"){
                     sh """
                     npm cache clean --force
@@ -486,12 +505,14 @@ node('controls') {
                     export test_report=artifacts/test-browser-report.xml
                     sh ./bin/test-browser
                     """
+                    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                    unit_result = currentBuild.result == null
+                    if (!unit_result) {
+                        exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+                    }
                 }
-                junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
-                unit_result = currentBuild.result == null
-                if (!unit_result) {
-                    exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
-                }
+                echo "Юнит тесты завершились"
+                sh "date"
             }
         }
         if ( regr || inte || all_inte) {
@@ -745,36 +766,32 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir("./controls/tests") {
+        /*dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
             def description = ''
             if (inte || all_inte) {
                  int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                 if ( int_data ) {
-                     int_title = int_data[0]
-                     int_description= int_data[1]
-                     print("in int ${int_description}")
-                     if ( int_description ) {
-                        description += "${int_description}"
-                     }
+                 int_title = int_data[0]
+                 int_description= int_data[1]
+                 print("in int ${int_description}")
+                 if ( int_description ) {
+                    description += "${int_description}"
                  }
             }
             if (regr) {
                 reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                if (reg_data) {
-                    reg_title = reg_data[0]
-                    reg_description = reg_data[1]
-                    print("in reg ${reg_description}")
-                    if ( description != reg_description ) {
-                        description += "${reg_description}"
-                    }
+                reg_title = reg_data[0]
+                reg_description = reg_data[1]
+                print("in reg ${reg_description}")
+                if ( description != reg_description ) {
+                    description += "${reg_description}"
                 }
             }
 
             build_title(int_title, reg_title)
             currentBuild.description = "${description}"
-        }
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"

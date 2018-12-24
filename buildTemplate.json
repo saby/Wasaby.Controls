@@ -12,7 +12,7 @@
   "wml": false,
   "customPack": false,
   "dependenciesGraph": false,
-
+  "resourcesUrl": false,
   "modules": [
     {
       "name": "Controls",
@@ -47,10 +47,6 @@
       "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
     },
     {
-      "name": "File",
-      "path": "%cd%/node_modules/rmi/src/client/File"
-    },
-    {
       "name": "Transport",
       "path": "%cd%/node_modules/sbis3-ws/ws/transport"
     },
@@ -63,8 +59,8 @@
       "path": "%cd%/node_modules/ws-data/WS.Data"
     },
     {
-      "name": "Data",
-      "path": "%cd%/node_modules/ws-data/Data"
+      "name": "Types",
+      "path": "%cd%/node_modules/saby-types/Types"
     },
     {
       "name": "SBIS3.CONTROLS",
