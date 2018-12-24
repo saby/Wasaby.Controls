@@ -273,6 +273,23 @@
    line-height: @line-height_InputRender_l;
 }
 
+// У Input.Area в режиме однострочного и многострочного отображения отличаются выравнивание текста.
+// В однострочном текст выравнивается по центру, а в многострочном через межстрочный интервал.
+// Если используется шрифт TensorFont, то положение текста в разных режимах совпадают.
+// В консультанте шрифт текста отличается от TensorFont. Из-за этого текст имеет разное положение относительно контейнера
+// в однострочном и многострочном режиме. Сделаем только для TextArea выравнивание в однострочном режиме через межстрочный интервал.
+// Этот костыль будет только для 18.710. В 19.100 будет удалено, а ошибка
+// поправится по https://online.sbis.ru/opendoc.html?guid=e79abfaa-1d44-49ca-92f5-27416e2b7522
+.controls-InputArea.controls-InputRender_size_default_singleLine {
+   line-height: @line-height_InputRender_default;
+}
+.controls-InputArea.controls-InputRender_size_m_singleLine {
+   line-height: @line-height_InputRender_m;
+}
+.controls-InputArea.controls-InputRender_size_l_singleLine {
+   line-height: @line-height_InputRender_l;
+}
+
 //Модификаторы
 /*
    Проблемы, если везде задавать padding с двух сторон:
