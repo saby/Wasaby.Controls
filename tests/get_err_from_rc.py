@@ -48,7 +48,7 @@ class RC:
         rc_set = set(rc_list)
         new_set = set(new_list)
 
-        if rc_set == new_set:
+        if rc_set == new_set and new_set:
             # print('rc_set == new_set')
             return "OK|Эти ошибки уже попали в RC."
         elif new_set.issubset(rc_set):
