@@ -3,11 +3,15 @@ import java.time.*
 import java.lang.Math
 
 def version = "3.19.100"
-def log = currentBuild.rawBuild.getLog(100).toString()
-def commit = (log =~ /Jenkinsfile from ([0-9a-z]+)/)
-echo "COMMIT: ${commit[0][1]}"
-env.GIT_COMMIT = commit[0][1]
 
+@NonCPS
+def get_commit() {
+    def log = currentBuild.rawBuild.getLog(100)
+    def commit = (log =~ /Jenkinsfile from ([0-9a-z]+)/)
+    echo "COMMIT: ${commit[0][1]}"
+    return commit[0][1]
+}
+env.GIT_COMMIT = get_commit()
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
