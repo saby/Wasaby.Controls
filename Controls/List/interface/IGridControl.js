@@ -91,6 +91,7 @@ define('Controls/List/interface/IGridControl', [
    /**
     * @name Controls/List/interface/IGridControl#stickyHeader
     * @cfg {Boolean} Fix the table header.
+    * @default true
     */
 
 });
