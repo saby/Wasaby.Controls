@@ -143,6 +143,9 @@ define('Controls/Container/LoadingIndicator', [
 
       hide: function(id) {
          if (!id) {
+
+            // Used public api. In this case, hide the indicator immediately.
+            this._clearStack();
             this._toggleIndicator(false, {});
          } else {
             this._hide(id);
@@ -156,6 +159,10 @@ define('Controls/Container/LoadingIndicator', [
          } else {
             this._toggleIndicator(false);
          }
+      },
+
+      _clearStack: function() {
+         this._stack.clear();
       },
 
       _isOpened: function(config) {
