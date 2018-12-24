@@ -266,12 +266,11 @@ node('controls') {
                         sh """
                         git clean -fd
                         git fetch
-                        git checkout ${env.BRANCH_NAME}
-                        git pull
+                        git checkout ${env.GIT_COMMIT}
                         git merge origin/rc-${version}
                         """
 
-                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.GIT_COMMIT} --name-only| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
