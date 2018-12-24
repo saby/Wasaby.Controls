@@ -46,7 +46,6 @@ define('Controls/Input/ComboBox',
          _template: template,
          _isOpen: false,
          _notifyHandler: tmplNotify,
-         _filter: null,
 
          _beforeMount: function(options) {
             this._onClose = _private.popupVisibilityChanged.bind(this, false);
