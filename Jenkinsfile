@@ -5,7 +5,8 @@ import java.lang.Math
 def version = "3.19.100"
 env.GIT_COMMIT = ''
 echo "GIT_COMMIT ${}"
-echo "LOG: ${currentBuild.rawBuild.getLog(100)}"
+def log = currentBuild.rawBuild.getLog(100).toString()
+echo "LOG: ${log}"
 echo "LOG OFF"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
