@@ -48,19 +48,19 @@ class RC:
         rc_set = set(rc_list)
         new_set = set(new_list)
 
-        if rc_set == new_set and new_set:
+        if rc_set == new_set and bool(new_set):
             # print('rc_set == new_set')
             return "OK|Эти ошибки уже попали в RC."
         elif new_set.issubset(rc_set):
             # print('new_set.issubset(rc_set)')
             return "OK|Эти ошибки уже попали в RC."
-        elif rc_set.issubset(new_set) or not rc_set.intersection(new_set):
+        elif rc_set.issubset(new_set) or not bool(rc_set.intersection(new_set)):
             # print('rc_set.issubset(new_set) or not rc_set.intersection(new_set)')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
-        elif not rc_set and new_set:
+        elif not bool(rc_set) and bool(new_set):
             # print('not rc_set and new_set')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
-        elif (not new_set and rc_set) or (not rc_set and not new_set):
+        elif (not bool(new_set) and bool(rc_set)) or (not bool(rc_set) and not bool(new_set)):
             # print('(not new_set and rc_set) or (not rc_set and not new_set)')
             return ''
 
