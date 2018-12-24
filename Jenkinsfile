@@ -493,7 +493,7 @@ node('controls') {
                 dir("./controls"){
                     sh """
                     npm cache clean --force
-                    npm config set registry http://npmregistry.sbis.ru:81/
+                    npm set registry https://registry.npmjs.org/
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
                     sh ./bin/test-isolated
