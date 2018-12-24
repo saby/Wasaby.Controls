@@ -48,8 +48,19 @@ define('Controls/Decorator/Markup', [
     */
 
    var MarkupDecorator = Control.extend({
-      constructor: function(){
+      constructor: function() {
          MarkupDecorator.superclass.constructor.apply(this, arguments);
+
+         /**
+          * когда контрол вставляют в старое окружение,
+          * которое вставлено в новое окружение
+          * decoptions не инициализируется и корневые атрибуты не сохраняются
+          * здесь нужно создавать контролы руками, но тгда они будут моргать
+          * в 19.100 нас спасет этот реквест:
+          * https://online.sbis.ru/opendoc.html?guid=39adaa74-8996-4f44-8ba9-60f2c4f93256
+          * слой совместимости будет подмешиваться динамически и этот конструктор можно будет удалить
+          * */
+
          if (!this._decOptions) {
             this._decOptions = {};
          }
