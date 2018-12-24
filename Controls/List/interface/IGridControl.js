@@ -88,4 +88,10 @@ define('Controls/List/interface/IGridControl', [
     * @cfg {Array.<Column>} Describes Grid's columns.
     */
 
+   /**
+    * @name Controls/List/interface/IGridControl#stickyHeader
+    * @cfg {Boolean} Fix the table header.
+    * @default true
+    */
+
 });
