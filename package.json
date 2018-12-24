@@ -6,6 +6,7 @@
       "url": "git@git.sbis.ru:root/sbis3-controls"
    },
    "files": [
+      "Data/*",
       "Controls/*",
       "Controls-theme/*",
       "Controls-demo/*"
