@@ -156,11 +156,11 @@ define('Controls/Input/Mask',
                   input.setSelectionRange(position, position);
                }
 
-               // ВРЕМЕННОЕ РЕШЕНИЕ, заведена ошибка https://online.sbis.ru/opendoc.html?guid=d1e449c5-835d-4c01-a63c-24879056aa9d
+               // ВРЕМЕННОЕ РЕШЕНИЕ, заведена ошибка https://online.sbis.ru/opendoc.html?guid=7b969897-2c73-4564-b8d4-78554d8391c1
 
                runDelayed(function() {
                   var rp = new RegExp('[' + replacer + '.:-]', 'g');
-                  if (replacer && !value.replace(rp, '')) {
+                  if (document.activeElement === input && !this._destroyed && replacer && !value.replace(rp, '')) {
                      input.setSelectionRange(0, 0);
                   }
                });
