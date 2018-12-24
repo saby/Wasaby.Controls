@@ -271,13 +271,6 @@ node('controls') {
                         git fetch
                         git checkout ${env.BRANCH_NAME}
                         git pull
-                        """
-
-                        def gitCommit = sh(returnStdout: true, script: 'git rev-parse HEAD').trim()
-                        echo "${gitCommit}"
-                        env.GIT_COMMIT = gitCommit
-
-                        sh """
                         git merge origin/rc-${version}
                         """
 
