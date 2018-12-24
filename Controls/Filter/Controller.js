@@ -104,7 +104,7 @@ define('Controls/Filter/Controller',
                   var value = getPropValue(elem, 'value');
                   var visibility = getPropValue(elem, 'visibility');
 
-                  if (value && (visibility === undefined || visibility === true)) {
+                  if (value !== undefined && value !== null && (visibility === undefined || visibility === true)) {
                      if (differentCallback) {
                         differentCallback(elem);
                      }
@@ -135,7 +135,7 @@ define('Controls/Filter/Controller',
             return filter;
          },
 
-         getOnlyChangesFilter: function(filterButtonItems, fastFilterItems) {
+         isFilterChanged: function(filterButtonItems, fastFilterItems) {
             var filter = {};
 
             function processItems(elem) {
@@ -146,7 +146,7 @@ define('Controls/Filter/Controller',
 
             _private.itemsIterator(filterButtonItems, fastFilterItems, processItems);
 
-            return filter;
+            return !isEmpty(filter);
          },
 
          getEmptyFilterKeys: function(filterButtonItems, fastFilterItems) {
@@ -236,6 +236,18 @@ define('Controls/Filter/Controller',
             merge(filterClone, itemsFilter);
 
             _private.setFilter(self, filterClone);
+         },
+
+         getHistoryData: function(filterButtonItems, fastFilterItems) {
+
+            /* A blank filter should not appear in the history, but should be applied when loading data from the history.
+               To understand this, save an empty object in history. */
+
+            if (_private.isFilterChanged(filterButtonItems, fastFilterItems)) {
+               return _private.prepareHistoryItems(filterButtonItems, fastFilterItems);
+            } else {
+               return {};
+            }
          },
 
          setFilter: function(self, filter) {
@@ -393,8 +405,8 @@ define('Controls/Filter/Controller',
                meta = {
                   '$_addFromData': true
                };
-               var filter = _private.getOnlyChangesFilter(this._filterButtonItems, this._fastFilterItems);
-               historyUtils.getHistorySource(this._options.historyId).update(isEmpty(filter) ? filter : _private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
+               var dataForHistory = _private.getHistoryData(this._filterButtonItems, this._fastFilterItems);
+               historyUtils.getHistorySource(this._options.historyId).update(dataForHistory, meta);
             }
 
             _private.applyItemsToFilter(this, this._filter, items);
