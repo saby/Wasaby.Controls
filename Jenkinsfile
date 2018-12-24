@@ -33,13 +33,15 @@ def build_description(job, path, skip_test) {
     }
     def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
     if (description) {
-        echo "${description}"
         title = description.tokenize('|')[0]
         description = description.tokenize('|')[1]
         echo "${title}"
+        echo "${description}"
+        if (title && description) {
+            return [title, description]
+        }
 
     }
-    return [title, description]
 }
 
 def build_title(t_int, t_reg) {
@@ -51,13 +53,13 @@ def build_title(t_int, t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     } else if (t_int && t_reg && t_int==t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+    } else if (t_int.contains('FAIL')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+    }else if (t_reg.contains('FAIL')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     }
-
 }
+
 @NonCPS
 def getBuildUser() {
     def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
@@ -766,7 +768,7 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        /*dir("./controls/tests") {
+        dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
             def description = ''
@@ -791,7 +793,7 @@ node('controls') {
 
             build_title(int_title, reg_title)
             currentBuild.description = "${description}"
-        } */
+        }
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
