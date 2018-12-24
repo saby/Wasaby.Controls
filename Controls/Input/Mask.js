@@ -155,6 +155,17 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
+
+               // ВРЕМЕННОЕ РЕШЕНИЕ, заведена ошибка https://online.sbis.ru/opendoc.html?guid=7b969897-2c73-4564-b8d4-78554d8391c1
+
+               runDelayed(function() {
+                  var rep = new RegExp(' ');
+                  console.log('реплейсер', replacer);
+                  console.log('валуе', value.replace(/[ -.:rep]/g, ''));
+                  if (replacer && !value.replace(/[ -.:]/g, '').length) {
+                     input.setSelectionRange(0, 0);
+                  }
+               });
             },
             validateReplacer: function(replacer, mask) {
                var validation;
