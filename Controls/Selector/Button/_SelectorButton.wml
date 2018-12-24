@@ -1,4 +1,4 @@
-<div class="controls-SelectorButton{{_options.items.getCount() === 0 ? ' controls-SelectorButton_empty'}}">
+<div class="controls-SelectorButtonV{{_options.items.getCount() === 0 ? ' controls-SelectorButtonV_empty'}}">
    <ws:if data="{{_options.items.getCount()}}">
       <Controls.Selector.SelectedCollection
               items="{{_options.items}}"
@@ -12,7 +12,7 @@
       </Controls.Selector.SelectedCollection>
       <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
-                          attr:class="controls-SelectorButton_button-more"/>
+                          attr:class="controls-SelectorButtonV_button-more"/>
       </ws:if>
       <ws:if data="{{_options.items.getCount() > 1 && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"
