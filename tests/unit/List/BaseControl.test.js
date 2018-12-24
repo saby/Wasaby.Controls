@@ -775,8 +775,15 @@ define([
 
             BaseControl._private.onScrollHide(ctrl);
             assert.deepEqual({stateBegin: 'normal', statePrev: 'normal', stateNext: 'normal', stateEnd: 'normal'}, ctrl._pagingCfg, 'Wrong state of paging after scrollHide');
-
-            done();
+   
+            BaseControl._private.onScrollHide(ctrl);
+            BaseControl._private.handleListScroll(ctrl, 200, 'middle');
+            
+            setTimeout(function() {
+               assert.isFalse(ctrl._pagingVisible);
+               done();
+            }, 100);
+            
          }, 100);
       });
       
