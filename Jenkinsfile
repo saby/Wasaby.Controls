@@ -6,9 +6,10 @@ def version = "3.19.100"
 env.GIT_COMMIT = ''
 echo "GIT_COMMIT ${}"
 def log = currentBuild.rawBuild.getLog(100).toString()
-def commit = (log =~ /.* Jenkinsfile from (.*{40})/)
+echo "${log}"
+def commit = (log =~ /Jenkinsfile from ([0-9a-z]+)/)
 
-echo "COMMIT: ${commit.group(0)}"
+echo "COMMIT: ${commit.group(1)}"
 echo "LOG OFF"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
