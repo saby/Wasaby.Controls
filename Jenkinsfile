@@ -5,10 +5,10 @@ import java.lang.Math
 def version = "3.19.100"
 env.GIT_COMMIT = ''
 echo "GIT_COMMIT ${}"
-def log = currentBuild.rawBuild.getLog(100).toString()
-def commit = (log =~ /Jenkinsfile from (.*{40})/)
+//def log = currentBuild.rawBuild.getLog(100).toString()
+//def commit = (log =~ /Jenkinsfile from (.*{40})/)
 
-echo "COMMIT: ${commit.group(0)}"
+//echo "COMMIT: ${commit.group(0)}"
 echo "LOG OFF"
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
@@ -148,6 +148,8 @@ def only_fail = false
 
 
 node('master') {
+
+    sh "printenv"
 
     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
