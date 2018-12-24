@@ -1,98 +1,102 @@
-define('Controls/Button', [
-   'Core/Control',
-   'Controls/Button/Classes',
-   'wml!Controls/Button/Button',
-   'Controls/Button/validateIconStyle',
-   'Core/IoC',
-   'css!theme?Controls/Button/Button'
-], function(Control, Classes, template, validateIconStyle, IoC) {
-   'use strict';
+import * as Control from 'Core/Control';
+import template = require('wml!Controls/_button/Button');
+import {classesUtil} from './classesUtil'
+import {iconsUtil} from './iconsUtil'
+import * as IoC from 'Core/IoC';
 
-   /**
-    * Graphical control element that provides the user a simple way to trigger an event.
-    *
-    * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
-    *
-    * @class Controls/Button
-    * @extends Core/Control
-    * @mixes Controls/Button/interface/IHref
-    * @mixes Controls/interface/ICaption
-    * @mixes Controls/Button/interface/IClick
-    * @mixes Controls/Button/interface/IIcon
-    * @mixes Controls/interface/ITooltip
-    * @mixes Controls/interface/IButton
-    * @mixes Controls/Button/ButtonStyles
-    * @control
-    * @public
-    * @author Михайловский Д.С.
-    * @category Button
-    * @demo Controls-demo/Buttons/ButtonDemoPG
-    */
 
-   /**
-    * @name Controls/Button#transparent
-    * @cfg {Boolean} Determines whether button having background.
-    * @variant true Button has transparent background.
-    * @variant false Button has default background for this viewmode and style.
-    * @default false
-    * @example
-    * Button has transparent background.
-    * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
-    * </pre>
-    * Button hasn't transparent background.
-    * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
-    * </pre>
-    * @see style
-    */
+/**
+ * Graphical control element that provides the user a simple way to trigger an event.
+ *
+ * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
+ *
+ * @class Controls/Button
+ * @extends Core/Control
+ * @mixes Controls/Button/interface/IHref
+ * @mixes Controls/interface/ICaption
+ * @mixes Controls/Button/interface/IClick
+ * @mixes Controls/Button/interface/IIcon
+ * @mixes Controls/interface/ITooltip
+ * @mixes Controls/interface/IButton
+ * @mixes Controls/Button/ButtonStyles
+ * @control
+ * @public
+ * @author Михайловский Д.С.
+ * @category Button
+ * @demo Controls-demo/Buttons/ButtonDemoPG
+ */
 
-   var _private = {
-      cssStyleGeneration: function(self, options) {
-         var currentButtonClass = Classes.getCurrentButtonClass(options.style);
+/**
+ * @name Controls/Button#transparent
+ * @cfg {Boolean} Determines whether button having background.
+ * @variant true Button has transparent background.
+ * @variant false Button has default background for this viewmode and style.
+ * @default false
+ * @example
+ * Button has transparent background.
+ * <pre>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+ * </pre>
+ * Button hasn't transparent background.
+ * <pre>
+ *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+ * </pre>
+ * @see style
+ */
 
-         self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
-         self._transparent = options.transparent;
-         self._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
-         if (self._viewMode === 'transparentQuickButton' || self._viewMode === 'quickButton') {
-            if (self._viewMode === 'transparentQuickButton') {
-               self._transparent = true;
-            }
-            self._viewMode = 'toolButton';
-            IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
+class Button extends Control {
+   private _template: Function = template;
+
+   private _style: String;
+   private _transparent: Boolean;
+   private _viewMode: String;
+   private _state: String;
+   private _caption: String | Function;
+   private _stringCaption: String;
+   private _icon: String;
+   private _iconStyle: String;
+
+   private cssStyleGeneration(options) {
+      const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
+
+      this._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+      this._transparent = options.transparent;
+      this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
+      if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
+         if (this._viewMode === 'transparentQuickButton') {
+            this._transparent = true;
          }
-         self._state = options.readOnly ? '_readOnly' : '';
-         self._caption = options.caption;
-         self._stringCaption = typeof options.caption === 'string';
-         self._icon = options.icon;
-         self._iconStyle = currentButtonClass.buttonAdd ? 'default' : validateIconStyle.iconStyleTransformation(options.iconStyle);
+         this._viewMode = 'toolButton';
+         IoC.resolve('ILogger').warn('Button', 'В кнопке используется viewMode = quickButton, transparentQuickButton используйте значение опции viewMode toolButton и опцию transparent');
       }
-   };
-   var Button = Control.extend({
-      _template: template,
+      this._state = options.readOnly ? '_readOnly' : '';
+      this._caption = options.caption;
+      this._stringCaption = typeof options.caption === 'string';
+      this._icon = options.icon;
+      this._iconStyle = currentButtonClass.buttonAdd ? 'default' : iconsUtil.iconStyleTransformation(options.iconStyle);
+   }
 
-      _beforeMount: function(options) {
-         _private.cssStyleGeneration(this, options);
-      },
+   _beforeMount(options) {
+      this.cssStyleGeneration(options);
+   }
 
-      _beforeUpdate: function(newOptions) {
-         _private.cssStyleGeneration(this, newOptions);
-      },
+   _beforeUpdate(newOptions) {
+      this.cssStyleGeneration(newOptions);
+   }
 
-      _keyUpHandler: function(e) {
-         if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
-            this._notify('click');
-         }
-      },
-
-      _clickHandler: function(e) {
-         if (this._options.readOnly) {
-            e.stopPropagation();
-         }
+   _keyUpHandler(e) {
+      if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
+         this._notify('click');
       }
-   });
+   }
 
-   Button.getDefaultOptions = function() {
+   _clickHandler(e) {
+      if (this._options.readOnly) {
+         e.stopPropagation();
+      }
+   }
+
+   static getDefaultOptions() {
       return {
          style: 'secondary',
          viewMode: 'button',
@@ -100,9 +104,7 @@ define('Controls/Button', [
          iconStyle: 'secondary',
          transparent: true
       };
-   };
+   }
+}
 
-   Button._private = _private;
-
-   return Button;
-});
+export default Button;
