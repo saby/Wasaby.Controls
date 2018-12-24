@@ -1,4 +1,4 @@
-define('Controls/Container/Suggest/Layout',
+﻿define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
       'wml!Controls/Container/Suggest/Layout',
@@ -7,9 +7,10 @@ define('Controls/Container/Suggest/Layout',
       'Core/moduleStubs',
       'Core/core-clone',
       'Controls/Search/Misspell/getSwitcherStrFromData',
+      'Controls/History/Service',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData) {
+   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, HistoryService) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
@@ -103,6 +104,18 @@ define('Controls/Container/Suggest/Layout',
          },
          setMissSpellingCaption: function(self, value) {
             self._misspellingCaption = value;
+         },
+         getFrequentIdentificators: function(self) {
+            //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
+            return self._historyService.query().addCallback(function(dataSet) {
+               var identificators = [];
+
+               dataSet.getRow().get('frequent').each(function(item) {
+                  identificators.push(item.get('ObjectId'));
+               });
+
+               return identificators;
+            });
          }
       };
 
@@ -131,6 +144,7 @@ define('Controls/Container/Suggest/Layout',
          _searchResult: null,
          _searchDelay: null,
          _dependenciesDeferred: null,
+         _historyService: null,
          _showContent: false,
          _inputActive: false,
 
@@ -153,6 +167,12 @@ define('Controls/Container/Suggest/Layout',
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
+            if (this._options.historyId) {
+               this._historyService = new HistoryService({
+                  historyId: this._options.historyId,
+                  frequent: true
+               });
+            }
          },
          _beforeUnmount: function() {
             this._searchResult = null;
@@ -208,9 +228,18 @@ define('Controls/Container/Suggest/Layout',
             _private.updateSuggestState(this);
          },
          _inputActivated: function() {
+            var self = this;
+
             this._inputActive = true;
             if (this._options.autoDropDown && !this._options.readOnly) {
-               _private.open(this);
+               if (this._historyService) {
+                  _private.getFrequentIdentificators(this).addCallback(function(identificators) {
+                     self._filter[self._options.keyProperty] = identificators;
+                     _private.open(self);
+                  });
+               } else {
+                  _private.open(this);
+               }
             }
          },
    
@@ -239,6 +268,9 @@ define('Controls/Container/Suggest/Layout',
             item = item || event;
             _private.close(this);
             this._notify('choose', [item]);
+            if (this._historyService) {
+               this._historyService.update(item, {$_history: true});
+            }
          },
          _searchStart: function() {
             this._loading = true;
