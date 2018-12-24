@@ -24,7 +24,8 @@
    </Controls.Input.DateTime>
    <Controls.Button
       attr:class="controls-Input-DateRange__button"
-      style="linkMain"
+      style="secondary"
+      viewMode="link"
       icon="icon-small icon-Calendar2 icon-primary"
       on:click="_openDialog()"
    />

@@ -220,17 +220,20 @@ define('Controls/Dropdown/Controller',
                itemsLoadCallback(this._items);
             }
          },
+   
+         _mousedown: function() {
+            var opener = this._children.DropdownOpener;
+            if (opener.isOpened()) {
+               opener.close();
+            } else {
+               this._open();
+            }
+         },
 
          _getEmptyText: function() {
             return dropdownUtils.prepareEmpty(this._options.emptyText);
          }
       });
-
-      //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
-      //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
-      var
-         defaultFilter = {},
-         defaultSelectedKeys = [];
 
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {

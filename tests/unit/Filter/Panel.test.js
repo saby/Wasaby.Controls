@@ -178,6 +178,12 @@ define(
                      value: true,
                      resetValue: false,
                      visibility: false
+                  },
+                  {
+                     id: 'testObject',
+                     value: {},
+                     resetValue: {},
+                     visibility: true
                   }
                ],
                resetItems = [
@@ -197,6 +203,12 @@ define(
                      id: 'bool',
                      value: true,
                      resetValue: false,
+                     visibility: false
+                  },
+                  {
+                     id: 'testObject',
+                     value: {},
+                     resetValue: {},
                      visibility: false
                   }
                ];

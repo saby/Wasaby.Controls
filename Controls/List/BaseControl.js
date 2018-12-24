@@ -53,7 +53,8 @@ define('Controls/List/BaseControl', [
             navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
          if (cfg.beforeReloadCallback) {
-            cfg.beforeReloadCallback(filter, sorting, navigation);
+            // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
+            cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
          }
          if (self._sourceController) {
             _private.showIndicator(self);
@@ -721,12 +722,23 @@ define('Controls/List/BaseControl', [
          BaseControl.superclass._beforeUnmount.apply(this, arguments);
       },
 
-      _afterUpdate: function() {
+      _afterUpdate: function(oldOptions) {
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
+            }
+         }
+   
+   
+         //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
+         //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
+         if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
+            if (this._options.loading) {
+               _private.showIndicator(this);
+            } else if (!this._sourceController.isLoading()) {
+               _private.hideIndicator(this);
             }
          }
       },

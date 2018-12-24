@@ -4,6 +4,6 @@
         <div class="controls-BreadCrumbsView__title">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </div>
     <ws:if data="{{ itemData.hasArrow }}">
-        <span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>
+        <span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>
     </ws:if>
 </div>

@@ -274,9 +274,9 @@ module.exports = function(Component) {
 
       // Демо-пример: с кнопкой меню
       '/demo-ws4-button-menu': function(req, res) {
-         requirejs('Controls-demo/Buttons/Menu/Menu');
+         requirejs('Controls-demo/Buttons/Menu/MenuApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Controls-demo/Buttons/Menu/Menu',
+            application: 'Controls-demo/Buttons/Menu/MenuApplication',
             initDependencies: false
          }, []);
       },
