@@ -129,6 +129,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
          listLayoutWithPrefetch._options.searchErrback = function() {
             errbackCalledWithPrefetch = true;
          };
+         listLayoutWithPrefetch._options.source = listSource;
          List._private.searchErrback(listLayout, {});
          
          assert.deepEqual(null, listLayout._source._$data);
