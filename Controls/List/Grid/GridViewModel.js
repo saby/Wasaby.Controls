@@ -298,6 +298,10 @@ define('Controls/List/Grid/GridViewModel', [
             return cDetection.isNotFullGridSupport;
          },
 
+         isStickyHeader: function() {
+            return this._options.stickyHeader;
+         },
+
          getCurrentHeaderColumn: function() {
             var
                columnIndex = this._curHeaderColumnIndex,
