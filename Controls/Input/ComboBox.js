@@ -21,6 +21,7 @@ define('Controls/Input/ComboBox',
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/interface/IDropdown
+       * @mixes Controls/interface/IInputDropdown
        * @css @margin-top_ComboBox-popup Offset on the top for pop-up.
        * @control
        * @public
@@ -30,18 +31,13 @@ define('Controls/Input/ComboBox',
        * @demo Controls-demo/Combobox/ComboboxVDom
        */
 
-      /**
-       * @name Controls/Input/Dropdown#contentTemplate
-       * @cfg {Function} Template that will be render calling element.
-       */
-
       'use strict';
 
       var getPropValue = Utils.getItemPropertyValue.bind(Utils);
 
       var _private = {
-         close: function() {
-            this._isOpen = false;
+         popupVisibilityChanged: function(state) {
+            this._isOpen = state;
             this._forceUpdate();
          }
       };
@@ -53,7 +49,8 @@ define('Controls/Input/ComboBox',
          _filter: null,
 
          _beforeMount: function(options) {
-            this._onClose = _private.close.bind(this);
+            this._onClose = _private.popupVisibilityChanged.bind(this, false);
+            this._onOpen = _private.popupVisibilityChanged.bind(this, true);
             this._placeholder = options.placeholder;
             this._value = options.value;
             this._simpleViewModel = new BaseViewModel({
@@ -74,10 +71,6 @@ define('Controls/Input/ComboBox',
             if (this._width !== this._container.offsetWidth) {
                this._width = this._container.offsetWidth;
             }
-         },
-
-         _mouseDownHandler: function() {
-            this._isOpen = !this._isOpen;
          },
 
          _selectedItemsChangedHandler: function(event, selectedItems) {

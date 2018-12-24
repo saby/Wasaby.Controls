@@ -6,7 +6,7 @@
  * node test-server
  */
 
-let app = require('ws-unit-testing/server');
+let app = require('saby-units/server');
 const pckg = require('./package.json');
 
 app.run(process.env.test_server_port || pckg.config.test_server_port, {

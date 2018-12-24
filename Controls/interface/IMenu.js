@@ -362,6 +362,6 @@ define('Controls/interface/IMenu', [], function() {
     *          opener: this._children.button
     *       });
     *    }
-    * </ore>
+    * </pre>
     */
 });

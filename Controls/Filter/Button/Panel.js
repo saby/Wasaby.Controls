@@ -100,6 +100,10 @@ define('Controls/Filter/Button/Panel', [
          return isChanged;
       },
 
+      validate: function(self) {
+         return self._children.formController.submit();
+      },
+
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          Chain(items).each(function(item) {
@@ -108,6 +112,15 @@ define('Controls/Filter/Button/Panel', [
             }
          });
          return hasAdditional;
+      },
+
+      prepareItems: function(items) {
+         Chain(items).each(function(item) {
+            if (getPropValue(item, 'visibility') === true && isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
+               setPropValue(item, 'visibility', false);
+            }
+         });
+         return items;
       }
    };
 
@@ -151,11 +164,16 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _applyFilter: function(event, items) {
-         this._notify('sendResult', [{
-            filter: _private.getFilter(this),
-            items: items || this._items
-         }]);
-         this._notify('close');
+         var self = this;
+         _private.validate(this).addCallback(function(result) {
+            if (!result[0]) {
+               self._notify('sendResult', [{
+                  filter: _private.getFilter(self),
+                  items: _private.prepareItems(items || self._items)
+               }]);
+               self._notify('close');
+            }
+         });
       },
 
       _resetFilter: function() {

@@ -113,7 +113,10 @@ define('Controls/Container/Scroll/Watcher',
             }
 
             if (self._scrollPositionCache !== curPosition) {
-               _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
+               _private.sendByRegistrar(self, 'scrollMove', {
+                  scrollTop: self._scrollTopCache,
+                  position: curPosition
+               });
                if (!withObserver) {
                   _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
                }
@@ -182,10 +185,10 @@ define('Controls/Container/Scroll/Watcher',
             if (!self._sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
             }
-            if (self._sizeCache.clientHeight <= self._sizeCache.scrollHeight) {
-               self._registrar.startOnceTarget(component, 'cantScroll');
-            } else {
+            if (self._sizeCache.clientHeight < self._sizeCache.scrollHeight) {
                self._registrar.startOnceTarget(component, 'canScroll');
+            } else {
+               self._registrar.startOnceTarget(component, 'cantScroll');
             }
 
             if (!withObserver) {

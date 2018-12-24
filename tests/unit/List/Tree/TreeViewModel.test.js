@@ -290,12 +290,29 @@ define([
          });
       });
       describe('expandedItems', function() {
-         it('initialize from options', function() {
+         it('initialize from options and changing expandedItems', function() {
             var
+               baseExpandedItems = [1, 2, 3],
                treeViewModel = new TreeViewModel({
-                  expandedItems: [1, 2, 3]
+                  expandedItems: baseExpandedItems,
+                  items: new RecordSet({
+                     rawData: [
+                        { id: 1, parent: null, type: true },
+                        { id: 2, parent: null, type: true },
+                        { id: 3, parent: 2, type: true }
+                     ],
+                     idProperty: 'id'
+                  }),
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
                }),
-               preparedExpandedItems = { 1: true, 2: true, 3: true };
+               preparedExpandedItems = { 1: true, 2: true, 3: true },
+               preparedExpandedAllItems = { null: true };
+            assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+            treeViewModel.setExpandedItems([null]);
+            assert.deepEqual(preparedExpandedAllItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
+            treeViewModel.setExpandedItems(baseExpandedItems);
             assert.deepEqual(preparedExpandedItems, treeViewModel._expandedItems, 'Invalid value "_expandedItems".');
          });
       });
@@ -323,6 +340,15 @@ define([
             assert.deepEqual({ '123': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after toggle "123".');
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty));
             assert.deepEqual({}, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after toggle "123".');
+
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
+            treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
+            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after expand "123" and "234".');
+            treeViewModel.setItems(new RecordSet({
+               rawData: treeData,
+               idProperty: 'id'
+            }));
+            assert.deepEqual({ '123': true, '234': true }, treeViewModel._expandedItems, 'Invalid value "_expandedItems" after setItems.');
          });
 
          it('hasChildren should be true when an item gets added to an empty folder', function() {

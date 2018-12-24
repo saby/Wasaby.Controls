@@ -149,13 +149,13 @@
 
    .controls-Button_style-secondary_viewMode-toolButton:hover {
       .controls-Button__icon-secondary {
-         color: @color_Link-secondary_hovered;
+         color: @color_Link_secondary_hovered;
       }
    }
 
    .controls-Button_style-secondary_viewMode-link:hover {
       .controls-Button__icon-secondary {
-         color: @color_Link-secondary_hovered;
+         color: @color_Link_secondary_hovered;
       }
    }
 }
@@ -189,7 +189,6 @@
 }
 
 .controls-BaseButton {
-   max-width: 100%;
    display: inline-block;
    box-sizing: border-box;
    .user-select();
@@ -225,6 +224,7 @@
 
 .controls-Button_viewMode-toolButton {
    cursor: pointer;
+   text-shadow: @text-shadow_ToolButton;
 }
 
 .controls-Button_viewMode-toolButton_style-common {
@@ -244,6 +244,7 @@
 .controls-Button_viewMode-toolButton_readOnly {
    color: @color-ToolButton_readOnly;
    border-color: @border-color-ToolButton_readOnly;
+   text-shadow: @text-shadow_ToolButton_readOnly;
 }
 
 .ws-is-no-touch {
@@ -290,30 +291,37 @@
 
 .controls-Button_style-secondary_viewMode-link {
    color: @color_Link_secondary;
+   text-decoration: @text-decoration_Link_secondary;
 }
 
 .controls-Button_style-success_viewMode-link {
    color: @color_Link_success;
+   text-decoration: @text-decoration_Link_success;
 }
 
 .controls-Button_style-danger_viewMode-link {
    color: @color_Link_danger;
+   text-decoration: @text-decoration_Link_danger;
 }
 
 .controls-Button_style-info_viewMode-link {
    color: @color_Link_info;
+   text-decoration: @text-decoration_Link_info;
 }
 
 .controls-Button_style-warning_viewMode-link {
    color: @color_Link_warning;
+   text-decoration: @text-decoration_Link_warning;
 }
 
 .controls-Button_style-primary_viewMode-link {
    color: @color_Link_primary;
+   text-decoration: @text-decoration_Link_primary;
 }
 
 .controls-Button_style-default_viewMode-link {
    color: @color_text_default;
+   text-decoration: @text-decoration_Link_default;
 }
 
 .controls-Button_style-magic_viewMode-link {
@@ -323,20 +331,35 @@
 .ws-is-no-touch {
    .controls-Button_style-secondary_viewMode-link:hover {
       .controls-Button__icon-secondary_viewMode-link_iconStyle-default {
-         color: @color_Link-secondary_hovered;
+         color: @color_Link_secondary_hovered;
       }
-      color: @color_Link-secondary_hovered;
+      color: @color_Link_secondary_hovered;
    }
-}
-
-.controls-Button_type-link_readOnly {
-   color: @color_Link_readOnly;
+   .controls-Button_style-primary_viewMode-link:hover {
+      color: @color_Link_primary_hovered;
+   }
+   .controls-Button_style-info_viewMode-link:hover {
+      color: @color_Link_info_hovered;
+   }
+   .controls-Button_style-success_viewMode-link:hover {
+      color: @color_Link_success_hovered;
+   }
+   .controls-Button_style-danger_viewMode-link:hover {
+      color: @color_Link_danger_hovered;
+   }
+   .controls-Button_style-warning_viewMode-link:hover {
+      color: @color_Link_warning_hovered;
+   }
+   .controls-Button_style-default_viewMode-link:hover {
+      color: @color_Link_default_hovered;
+   }
 }
 
 .controls-Button_viewMode-button {
    cursor: pointer;
    min-width: @min-width_Button;
    box-shadow: @box-shadow_Button;
+   text-shadow: @text-shadow_Button;
 }
 
 .controls-Button_viewMode-button:active {
@@ -348,6 +371,7 @@
    cursor: default;
    color: @color_Button_readOnly;
    border-color: @border-color_Button_readOnly;
+   text-shadow: @text-shadow_Button_readOnly;
 }
 
 .controls-Button_style-secondary_viewMode-Button_readOnly {
@@ -408,14 +432,14 @@
       text-decoration: underline;
    }
    .controls-Label_underline_color-hovered:hover {
-      color: @color_Link-secondary_hovered;
+      color: @color_Link_secondary_hovered;
    }
 }
 .controls-Label_underline-hovered:active {
    text-decoration: underline;
 }
 .controls-Label_underline_color-hovered:active {
-   color: @color_Link-secondary_hovered;
+   color: @color_Link_secondary_hovered;
 }
 .controls-Label_underline_color-hovered {
    text-decoration: underline;

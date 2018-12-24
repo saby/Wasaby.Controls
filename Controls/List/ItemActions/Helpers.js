@@ -44,7 +44,8 @@ define('Controls/List/ItemActions/Helpers', [], function() {
        *
        *    return result;
        * }
-       *
+       * </pre>
+       * 
        * In the following example, only items that are in the same parent and have the same type are allowed to be moved.
        * JS:
        * <pre>

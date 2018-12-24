@@ -7,6 +7,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/core-debug',
       'Core/Deferred',
       'Core/IoC',
+      'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'Core/helpers/Hcontrol/doAutofocus',
@@ -27,6 +28,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       coreDebug,
       cDeferred,
       IoC,
+      makeInstanceCompatible,
       runDelayed,
       CoreConstants,
       doAutofocus,
@@ -78,41 +80,41 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          _isReadOnly: true,
 
-         _beforeMount: function() {
+         _beforeMount: function(_options) {
             CompoundArea.superclass._beforeMount.apply(this, arguments);
 
             this._childPendingOperations = [];
             this._producedPendingOperations = [];
 
             this._className = 'controls-CompoundArea';
-            if (this._options.type !== 'base') {
-               this._className += (this._options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
+            if (_options.type !== 'base') {
+               this._className += (_options.type === 'stack') ? ' ws-float-area' : ' ws-window'; // Старые шаблоны завязаны селекторами на этот класс.
             }
 
             // Отступ крестика должен быть по старым стандартам. У всех кроме стики, переопределяем
-            if (this._options.type === 'dialog' || this._options.type === 'stack') {
+            if (_options.type === 'dialog' || _options.type === 'stack') {
                this._className += ' controls-CompoundArea-close_button';
             }
 
-            this._childControlName = this._options.template;
+            this._childControlName = _options.template;
 
             /**
              * Поведение если вызвали через ENGINE/MiniCard.
              */
             var _this = this;
 
-            if (this._options.hoverTarget) {
-               this._options.hoverTarget.on('mouseenter', function() {
+            if (_options.hoverTarget) {
+               _options.hoverTarget.on('mouseenter', function() {
                   clearTimeout(_this._hoverTimer);
                   _this._hoverTimer = null;
                });
-               this._options.hoverTarget.on('mouseleave', function() {
+               _options.hoverTarget.on('mouseleave', function() {
                   _this._hoverTimer = setTimeout(function() {
                      _this.hide();
                   }, 1000);
                });
             }
-            if (this._options.popupComponent === 'recordFloatArea') {
+            if (_options.popupComponent === 'recordFloatArea') {
                this.subscribeOnBeforeUnload();
             }
          },
@@ -226,8 +228,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             // Нам нужно пометить контрол замаунченым для слоя совместимости,
             // чтобы не создавался еще один enviroment для той же ноды
 
-            this.VDOMReady = true;
-            this.deprecatedContr(this._options);
+            if (makeInstanceCompatible && makeInstanceCompatible.newWave) {
+               makeInstanceCompatible(this);
+            } else {
+               this.VDOMReady = true;
+               this.deprecatedContr(this._options);
+            }
 
             var self = this;
 
@@ -380,6 +386,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
+         _rebuildTitleBar: function() {
+            var customTitles = this._container.find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
+            customTitles.remove();
+            this._setCustomHeader();
+         },
+
          handleCommand: function(commandName, args) {
             var arg = args[0];
 
@@ -394,6 +406,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                return true; // команда cancel не должна всплывать выше окна
             } if (this._options._mode === 'recordFloatArea' && commandName === 'save') {
                return this.save(arg);
+            } if (commandName === 'rebuildTitleBar') {
+               return this._rebuildTitleBar(arg);
             } if (commandName === 'delete') {
                return this.delRecord(arg);
             } if (commandName === 'print') {
@@ -641,13 +655,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
 
          setReadOnly: function(isReadOnly) {
-            this._isReadOnly = isReadOnly;
-            if (this._childControl) {
-               this._setEnabledForChildControls(!isReadOnly);
-            } else {
-               this._childCreatedDfr.addCallback(function() {
+            if (!this.isDestroyed()) {
+               this._isReadOnly = isReadOnly;
+               if (this._childControl) {
                   this._setEnabledForChildControls(!isReadOnly);
-               }.bind(this));
+               } else {
+                  this._childCreatedDfr.addCallback(function() {
+                     this._setEnabledForChildControls(!isReadOnly);
+                  }.bind(this));
+               }
             }
          },
          isReadOnly: function() {

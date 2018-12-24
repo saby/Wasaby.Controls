@@ -64,6 +64,7 @@ define(
          it('search', function(done) {
             var filter = {};
             var aborted = false;
+            var searchStarted = false
             var searchController = new Search({
                minSearchLength: 3,
                source: source,
@@ -75,11 +76,15 @@ define(
                   assert.equal(res.data.getCount(), 1);
                   assert.equal(res.data.at(0).get('name'), 'Sasha');
                   assert.isTrue(aborted);
+                  assert.isTrue(searchStarted);
                   assert.isTrue(filter !== resFilter);
                   done();
                },
                abortCallback: function() {
                   aborted = true;
+               },
+               searchStartCallback: function() {
+                  searchStarted = true;
                }
             });
             

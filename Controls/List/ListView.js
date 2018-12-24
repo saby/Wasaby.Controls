@@ -94,6 +94,9 @@ define('Controls/List/ListView', [
 
          _afterMount: function() {
             _private.resizeNotifyOnListChanged(this);
+            if (this._options.markedKey === undefined && this._options.markerVisibility === 'always') {
+               this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
+            }
          },
 
          _afterUpdate: function() {
@@ -105,6 +108,10 @@ define('Controls/List/ListView', [
                }
                this._queue = [];
             }
+         },
+
+         getItemsContainer: function() {
+            return this._children.itemsContainer;
          },
 
          _onItemClick: function(e, dispItem) {

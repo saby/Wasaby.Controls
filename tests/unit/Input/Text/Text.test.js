@@ -141,6 +141,11 @@ define(
             });
          });
          describe('User input.', function() {
+            beforeEach(function() {
+               ctrl._getActiveElement = function() {
+                  return ctrl._getField();
+               };
+            });
             it('Constraint option equal [0-9]. The value of numbers only.', function() {
                ctrl._beforeMount({
                   value: '',

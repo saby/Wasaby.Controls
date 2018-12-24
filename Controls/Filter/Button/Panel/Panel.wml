@@ -1,9 +1,12 @@
 <ws:template name="filtersContent">
+   <Controls.Validate.FormController name="formController">
+
    <Controls.Filter.Button.Panel.PropertyGrid items="{{_items}}"
                                               itemTemplate="{{_options.itemTemplate}}"
                                               itemTemplateProperty="{{_options.itemTemplateProperty}}"
                                               on:itemsChanged="_itemsChangedHandler()"
                                               attr:class="controls-FilterPanel__PropertyGrid {{(!_hasAdditionalParams && (!_historyId || !_historyItems.getCount())) ? 'controls-FilterPanel_lastBlock'}}"/>
+   </Controls.Validate.FormController>
    <ws:if data="{{_hasAdditionalParams}}">
       <Controls.Filter.Button.Panel.AdditionalParams
               items="{{_items}}"

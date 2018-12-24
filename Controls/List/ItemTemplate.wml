@@ -10,7 +10,7 @@
     <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
         <ws:partial template="{{multiSelectTpl}}"  attr:class="controls-ListView__checkbox js-controls-ListView__notEditable">
             <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
-                                key="{{itemData.key}}" />
+                                key="{{itemData.key}}"/>
         </ws:partial>
     </ws:if>
 
@@ -19,14 +19,12 @@
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}}">
+        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}} {{itemData.spacingClassList}}">
             <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}}">
-            {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
-        </div>
+        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}} {{itemData.spacingClassList}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
     <ws:if data="{{itemData.drawActions}}">
         <ws:if data="{{itemData.isSwiped}}">

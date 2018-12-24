@@ -2,9 +2,10 @@ define(
    [
       'Controls/Filter/Button/Panel',
       'WS.Data/Collection/RecordSet',
-      'Core/core-clone'
+      'Core/core-clone',
+      'Core/Deferred'
    ],
-   function(FilterPanel, RecordSet, Clone) {
+   function(FilterPanel, RecordSet, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -41,7 +42,7 @@ define(
             if (e == 'close') {
                isNotifyClose = true;
             } else if (e == 'sendResult') {
-               filter = args[0]['filter'];
+               filter = args[0].filter;
             }
          };
 
@@ -62,15 +63,27 @@ define(
          it('apply', function() {
             isNotifyClose = false;
             panel._beforeMount(config);
+            panel._children = {
+               formController: {
+                  submit: () => Deferred.success([true])
+               }
+            };
             panel._applyFilter();
-            assert.deepEqual({text: '123'}, filter);
+            assert.isFalse(isNotifyClose);
+            panel._children = {
+               formController: {
+                  submit: () => Deferred.success([false])
+               }
+            };
+            panel._applyFilter();
+            assert.deepEqual({ text: '123' }, filter);
             assert.isTrue(isNotifyClose);
          });
 
          it('apply history filter', function() {
             panel._beforeMount(config);
             panel._applyHistoryFilter();
-            assert.deepEqual({text: '123'}, filter);
+            assert.deepEqual({ text: '123' }, filter);
          });
 
          it('reset and filter', function() {
@@ -114,7 +127,7 @@ define(
             panel._itemsChangedHandler('itemsChanged', newItems);
             assert.deepEqual(panel._items[0].value, 'testValue2');
          });
-   
+
          it('resolveItems', function() {
             var items = ['test'];
             var self = {};
@@ -129,15 +142,15 @@ define(
                }
             };
             var errorCathed = false;
-   
+
             FilterPanel._private.resolveItems(self, options);
             assert.isTrue(options.items !== self._items);
             assert.equal(self._items[0], 'test');
-   
+
             FilterPanel._private.resolveItems(self, {}, context);
             assert.isTrue(context.filterPanelOptionsField.options.items !== self._items);
             assert.equal(self._items[0], 'test');
-            
+
             try {
                FilterPanel._private.resolveItems(self, {}, {});
             } catch (e) {
@@ -146,5 +159,61 @@ define(
             assert.isTrue(errorCathed);
          });
 
+         it('_private:prepareItems', function() {
+            var changeItems = [
+                  {
+                     id: 'list',
+                     value: 1,
+                     resetValue: 1,
+                     visibility: true
+                  },
+                  {
+                     id: 'text',
+                     value: '123',
+                     resetValue: '',
+                     visibility: true
+                  },
+                  {
+                     id: 'bool',
+                     value: true,
+                     resetValue: false,
+                     visibility: false
+                  },
+                  {
+                     id: 'testObject',
+                     value: {},
+                     resetValue: {},
+                     visibility: true
+                  }
+               ],
+               resetItems = [
+                  {
+                     id: 'list',
+                     value: 1,
+                     resetValue: 1,
+                     visibility: false
+                  },
+                  {
+                     id: 'text',
+                     value: '123',
+                     resetValue: '',
+                     visibility: true
+                  },
+                  {
+                     id: 'bool',
+                     value: true,
+                     resetValue: false,
+                     visibility: false
+                  },
+                  {
+                     id: 'testObject',
+                     value: {},
+                     resetValue: {},
+                     visibility: false
+                  }
+               ];
+            assert.deepEqual(FilterPanel._private.prepareItems(changeItems), resetItems);
+         });
       });
-   });
+   }
+);
