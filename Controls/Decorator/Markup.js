@@ -48,6 +48,12 @@ define('Controls/Decorator/Markup', [
     */
 
    var MarkupDecorator = Control.extend({
+      constructor: function(){
+         MarkupDecorator.superclass.constructor.apply(this, arguments);
+         if (!this._decOptions) {
+            this._decOptions = {};
+         }
+      },
       _template: template
    });
 
