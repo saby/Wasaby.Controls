@@ -251,6 +251,10 @@ define('Controls/List/Tree/TreeViewModel', [
             this._nextVersion();
             this._notify('onListChange');
          },
+   
+         getExpandedItems: function() {
+            return this._expandedItems;
+         },
 
          resetExpandedItems: function() {
             _private.resetExpandedItems(this);
