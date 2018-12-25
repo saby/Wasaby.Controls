@@ -218,7 +218,7 @@ define('Controls/Container/List',
             //костыль до перевода Suggest'a на Search/Controller,
             //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
             //После этого этот модуль можно будет удалить.
-            return cInstance.instanceOfModule(source, 'Data/_source/PrefetchProxy') ? source._$target : source;
+            return cInstance.instanceOfModule(source, 'Types/source:PrefetchProxy') ? source._$target : source;
          }
       };
       
