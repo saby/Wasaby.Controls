@@ -61,14 +61,15 @@ define('Controls/Selector/SelectedCollection',
       var Collection = Control.extend({
          _template: template,
          _templateOptions: null,
-         _items: [],
+         _items: null,
          _notifyHandler: tmplNotify,
+         _counterWidth: 0,
 
          _beforeMount: function(options) {
             this._onResult = _private.onResult.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
-            this._counterWidth = options._counterWidth || _private.getCounterWidth(this._items.length);
+            this._counterWidth = options._counterWidth;
          },
 
          _beforeUpdate: function(newOptions) {
@@ -85,6 +86,7 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _afterMount: function() {
+            this._counterWidth = this._counterWidth || _private.getCounterWidth(this._items.length);
             this._templateOptions = _private.getTemplateOptions(this, this._options);
             this._forceUpdate();
          },
