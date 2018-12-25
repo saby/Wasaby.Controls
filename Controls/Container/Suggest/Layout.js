@@ -7,10 +7,10 @@
       'Core/moduleStubs',
       'Core/core-clone',
       'Controls/Search/Misspell/getSwitcherStrFromData',
-      'Controls/History/Service',
+      'Core/Deferred',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, HistoryService) {
+   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, Deferred) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
@@ -105,16 +105,35 @@
          setMissSpellingCaption: function(self, value) {
             self._misspellingCaption = value;
          },
-         getFrequentIdentificators: function(self) {
-            //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
-            return self._historyService.query().addCallback(function(dataSet) {
-               var identificators = [];
-
-               dataSet.getRow().get('frequent').each(function(item) {
-                  identificators.push(item.get('ObjectId'));
+         getHistoryService: function(self) {
+            if (!self._historyService) {
+               self._historyServiceLoad = new Deferred();
+               require(['Controls/History/Service'], function(HistoryService) {
+                  self._historyService = new HistoryService({
+                     historyId: self._options.historyId
+                  });
+                  self._historyServiceLoad.callback(self._historyService);
                });
+            } else {
+               self._historyServiceLoad.addCallback(function() {
+                  return self._historyService;
+               });
+            }
 
-               return identificators;
+            return self._historyServiceLoad;
+         },
+         getRecentIdentificators: function(self) {
+            //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
+            return _private.getHistoryService(self).addCallback(function(historyService) {
+               return historyService.query().addCallback(function(dataSet) {
+                  var identificators = [];
+
+                  dataSet.getRow().get('recent').each(function(item) {
+                     identificators.push(item.get('ObjectId'));
+                  });
+
+                  return identificators;
+               });
             });
          }
       };
@@ -167,12 +186,6 @@
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
-            if (this._options.historyId) {
-               this._historyService = new HistoryService({
-                  historyId: this._options.historyId,
-                  frequent: true
-               });
-            }
          },
          _beforeUnmount: function() {
             this._searchResult = null;
@@ -232,8 +245,8 @@
 
             this._inputActive = true;
             if (this._options.autoDropDown && !this._options.readOnly) {
-               if (this._historyService) {
-                  _private.getFrequentIdentificators(this).addCallback(function(identificators) {
+               if (this._options.historyId) {
+                  _private.getRecentIdentificators(this).addCallback(function(identificators) {
                      self._filter[self._options.keyProperty] = identificators;
                      _private.open(self);
                   });
@@ -268,8 +281,10 @@
             item = item || event;
             _private.close(this);
             this._notify('choose', [item]);
-            if (this._historyService) {
-               this._historyService.update(item, {$_history: true});
+            if (this._options.historyId) {
+               _private.getHistoryService(this).addCallback(function(historyService) {
+                  historyService.update(item, {$_history: true});
+               });
             }
          },
          _searchStart: function() {
