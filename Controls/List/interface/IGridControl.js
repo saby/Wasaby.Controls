@@ -89,4 +89,10 @@ define('Controls/List/interface/IGridControl', [
     * @remark Before rendering, make sure that {@link WS.Data/Display/Collection Collection} contains required data, when the {@link Controls/List/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/List/interface/IGridControl#columns columns} option, if necessary.
     */
 
+   /**
+    * @name Controls/List/interface/IGridControl#stickyHeader
+    * @cfg {Boolean} Fix the table header.
+    * @default true
+    */
+
 });

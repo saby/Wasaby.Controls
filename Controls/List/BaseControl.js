@@ -376,7 +376,6 @@ define('Controls/List/BaseControl', [
             if (_private.needScrollPaging(self._options.navigation)) {
                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                   self._scrollPagingCtr = scrollPagingCtr;
-                  self._pagingVisible = true;
                });
             }
          }

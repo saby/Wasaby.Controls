@@ -40,5 +40,11 @@ define('Controls/Grid', [
          }
       });
 
+   Grid.getDefaultOptions = function() {
+      return {
+         stickyHeader: true
+      };
+   };
+
    return Grid;
 });

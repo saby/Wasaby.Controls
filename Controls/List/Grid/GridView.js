@@ -6,7 +6,6 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Column',
    'wml!Controls/List/Grid/HeaderContent',
    'Core/detection',
-   'Core/helpers/Object/isEqual',
    'wml!Controls/List/Grid/GroupTemplate',
    'wml!Controls/List/Grid/OldGridView',
    'wml!Controls/List/Grid/NewGridView',
@@ -16,7 +15,7 @@ define('Controls/List/Grid/GridView', [
    'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
-   isEqualObject, GroupTemplate, OldGridView, NewGridView) {
+   GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
 

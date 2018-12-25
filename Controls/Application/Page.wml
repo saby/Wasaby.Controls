@@ -88,7 +88,7 @@
                               <script key="bundles" type="text/javascript"
                                       src="{{resourceRoot}}bundles.js"></script>
                               <script key="require" type="text/javascript"
-                                      src="/cdn/requirejs/2.3.5-p3/require-min.js"></script>
+                                      src="/cdn/requirejs/2.3.5-p4/require-min.js"></script>
                               <script key="contents" type="text/javascript" src="{{ linkResolver.resolveLink('contents', 'js') }}"></script>
                               <script key="config" type="text/javascript"
                                       src="{{wsRoot}}ext/requirejs/config.js"></script>
