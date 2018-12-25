@@ -156,6 +156,23 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _getConfig: function(popupOptions) {
             var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
+            cfg.closeByExternalClick = cfg.closeByExternalClick || this._options.closeByExternalClick;
+            cfg.autofocus = cfg.autofocus || this._options.autofocus;
+            cfg.isModal =  cfg.isModal || this._options.isModal;
+            cfg.className =  cfg.className || this._options.className;
+            cfg.template =  cfg.template || this._options.template;
+            cfg.opener = cfg.opener || this._options.opener;
+            cfg.templateOptions = cfg.templateOptions || this._options.templateOptions;
+            cfg.minWidth = cfg.minWidth || this._options.minWidth;
+            cfg.maxWidth = cfg.maxWidth || this._options.maxWidth;
+            cfg.maximize = cfg.maximize || this._options.maximize;
+            cfg.resizable = cfg.resizable || this._options.resizable;
+            cfg.top = cfg.top || this._options.top;
+            cfg.left = cfg.left || this._options.left;
+            cfg.maxHeight = cfg.maxHeight || this._options.maxHeight;
+            cfg.minHeight = cfg.minHeight || this._options.minHeight;
+            cfg.draggable = cfg.draggable || this._options.draggable;
+
             CoreMerge(cfg, popupOptions || {});
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control

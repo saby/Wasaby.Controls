@@ -1620,5 +1620,81 @@
         }
       }
     }
+  },
+  "Controls/Popup/Opener/Dialog": {
+    "name": "Controls/Popup/Opener/Dialog",
+    "title": "Component that opens a popup that is positioned in the center of the browser window",
+    "className": "Controls/Popup/Opener/Dialog",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Popup/Opener/Dialog",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
+          },
+          "autofocus": {
+            "title": "Determines whether focus is set to the template when popup is opened.",
+            "type": "Boolean"
+          },
+          "isModal": {
+            "title": "Determines whether the window is modal.",
+            "type": "Boolean"
+          },
+          "className": {
+            "title": "Class names of popup.",
+            "type": "String"
+          },
+          "closeByExternalClick": {
+            "title": "Determines whether possibility of closing the popup when clicking past.",
+            "type": "Boolean"
+          },
+          "template": {
+            "title": "Template inside popup.",
+            "type": "function|String"
+          },
+          "draggable": {
+            "title": "Determines whether the component can be moved.",
+            "type": "Boolean"
+          },
+          "minWidth": {
+            "title": "The minimum width of popup.",
+            "type": "Number"
+          },
+          "maxWidth": {
+            "title": "The maximum width of popup.",
+            "type": "Number"
+          },
+          "minHeight": {
+            "title": "The minimum height of popup.",
+            "type": "Number"
+          },
+          "maxHeight": {
+            "title": "The maximum height of popup.",
+            "type": "Number"
+          },
+          "maximize": {
+            "title": "Determines whether the control is displayed in full screen.",
+            "type": "Boolean"
+          },
+          "resizable": {
+            "title": "Determines whether popup can be resized.",
+            "type": "Boolean"
+          },
+          "top": {
+            "title": "Distance from the window to the top of the screen.",
+            "type": "Number"
+          },
+          "left": {
+            "title": "Distance from the window to the left border of the screen.",
+            "type": "Number"
+          }
+        }
+      }
+    }
   }
 }
