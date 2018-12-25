@@ -776,20 +776,24 @@ node('controls') {
                 def description = ''
                 if (inte || all_inte) {
                      int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                     int_title = int_data[0]
-                     int_description= int_data[1]
-                     print("in int ${int_description}")
-                     if ( int_description ) {
-                        description += "${int_description}"
-                     }
+                     if ( int_data ) {
+                         int_title = int_data[0]
+                         int_description= int_data[1]
+                         print("in int ${int_description}")
+                         if ( int_description ) {
+                            description += "${int_description}"
+                         }
+                    }
                 }
                 if (regr) {
                     reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                    reg_title = reg_data[0]
-                    reg_description = reg_data[1]
-                    print("in reg ${reg_description}")
-                    if ( description != reg_description ) {
-                        description += "${reg_description}"
+                    if ( reg_data ) {
+                        reg_title = reg_data[0]
+                        reg_description = reg_data[1]
+                        print("in reg ${reg_description}")
+                        if ( description != reg_description ) {
+                            description += "${reg_description}"
+                        }
                     }
                 }
 
