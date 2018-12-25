@@ -244,9 +244,10 @@ define('Controls/Container/List',
 
             if (this._searchMode) {
                _private.cachedSourceFix(this);
+               var originSource = _private.getOriginSource(options.source);
                this._source = new Memory({
-                  model: options.source.getModel(),
-                  idProperty: options.source.getIdProperty()
+                  model: originSource.getModel(),
+                  idProperty: originSource.getIdProperty()
                });
             }
 

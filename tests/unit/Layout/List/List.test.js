@@ -141,6 +141,14 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
          assert.isTrue(errbackCalledWithPrefetch);
       });
    
+      it('_beforeMount', function() {
+         var listLayout = new List(listOptionsWithPrefetch);
+         listLayout._searchMode = true;
+         listLayout._beforeMount(listOptionsWithPrefetch);
+         
+         assert.equal(listLayout._source.getModel(), listOptionsWithPrefetch.source._$target.getModel());
+      });
+   
       it('.searchCallback', function() {
          var recordSet = new RecordSet({
             rawData:[
