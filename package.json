@@ -60,6 +60,7 @@
    },
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
+      "Router": "git+https://github.com/saby/Router.git#rc-3.19.100",
       "body-parser": "^1.18.3",
       "cookie-parser": "^1.4.3",
       "eslint": "^5.7.0",
@@ -74,16 +75,15 @@
       "postcss": "^6.0.23",
       "progress": "^2.0.1",
       "requirejs": "2.1.18",
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#3.19.100/bugfix/kirill/constats-fix",
+      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-3.19.100",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.18.700",
       "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-3.19.100",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-3.19.100",
-      "Router": "git+https://github.com/saby/Router.git#rc-3.19.100",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#3.19.100/feature/m-t",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "typescript": "2.5.3",
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-3.19.100",
-      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100",
-      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-3.19.100",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-3.18.700"
+      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-3.19.100"
    }
 }
