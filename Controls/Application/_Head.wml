@@ -26,11 +26,6 @@
       </script>
    </ws:if>
 
-   <link rel="stylesheet" href="{{_options.wsRoot}}css/core-min.css" type="text/css" key="core-css"/>
-
-   <link rel="stylesheet" key="defaultcss"
-         href="{{ _options.linkResolver.resolveLink('Controls-theme/themes/default/default', 'css') }}"/>
-
    <ws:if data="{{ head }}">
       <ws:if data="{{ isArrayHead() }}">
          <ws:for data="i in head">
