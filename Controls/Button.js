@@ -19,6 +19,7 @@ define('Controls/Button', [
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Button/interface/IClick
     * @mixes Controls/Button/interface/IIcon
+    * @mixes Controls/Button/interface/IIconStyle
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
     * @mixes Controls/Button/ButtonStyles

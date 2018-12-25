@@ -1,6 +1,6 @@
 {
    "name": "sbis3-controls",
-   "version": "19.100",
+   "version": "19.100.0",
    "repository": {
       "type": "git",
       "url": "git@git.sbis.ru:root/sbis3-controls"
