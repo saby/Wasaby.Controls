@@ -80,7 +80,7 @@ class RC:
                 return ''   # не показываем ошибки из RC
         description = ''
         if self.err_dict:
-            description = 'Список изветсных ошибок:<br><pre><ul>'
+            description = 'Список известных ошибок:<br><pre><ul>'
             for err in self.err_dict:
                 description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
         description += "</ul>"
