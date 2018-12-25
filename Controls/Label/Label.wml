@@ -1,6 +1,14 @@
-<div attr:class="controls-LabelV controls-LabelV_{{_options.readOnly ? 'disabled' : 'enabled'}}">
-   <div attr:class="controls-LabelV__caption
-                    {{_options.required ? ' controls-LabelV__caption_required'}}
-                    {{_options.required && !_options.readOnly ? ' controls-LabelV__caption_required_enabled'}}
-                    ws-flexbox ws-align-items-center">{{_options.caption}}</div>
+<div class="controls-Label controls-Label_underline_{{_options.underline}}">
+   <div class="controls-Label__wrapper">
+      <div class="controls-Label__caption controls-Label__caption_underline_{{_options.underline}}
+               controls-Label__caption_underline_{{_options.underline}}_{{_options.readOnly ? 'read' : 'edit'}}">
+         <ws:partial template="{{_options.caption}}"/>
+         <ws:if data="{{_options.href}}">
+            <a class="controls-Label__fakeLink" href="{{_options.href}}"></a>
+         </ws:if>
+      </div>
+      <ws:if data="{{_options.required}}">
+         <div class="controls-Label__asterisk">&nbsp;*</div>
+      </ws:if>
+   </div>
 </div>

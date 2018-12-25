@@ -11,7 +11,7 @@
                              multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}" />
       </ws:partial>
-      <span class="controls-TreeTileView__folderIcon icon-large icon-Folder icon-disabled"></span>
+      <span class="controls-TreeTileView__nodeIcon icon-large icon-Folder icon-disabled"></span>
       <div class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
       <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
                   template="{{swipeTemplate}}"
