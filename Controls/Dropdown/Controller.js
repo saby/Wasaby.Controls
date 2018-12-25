@@ -3,14 +3,13 @@ define('Controls/Dropdown/Controller',
       'Core/Control',
       'wml!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
-      'Core/helpers/Object/isEqual',
       'WS.Data/Chain',
       'Core/core-merge',
       'Controls/History/Source',
       'Controls/Dropdown/Util'
    ],
 
-   function(Control, template, SourceController, isEqual, Chain, Merge, historySource, dropdownUtils) {
+   function(Control, template, SourceController, Chain, Merge, historySource, dropdownUtils) {
       'use strict';
 
       /**
@@ -74,7 +73,7 @@ define('Controls/Dropdown/Controller',
          getFilter: function(filter, source) {
             // TODO: Избавиться от проверки, когда будет готово решение задачи https://online.sbis.ru/opendoc.html?guid=e6a1ab89-4b83-41b1-aa5e-87a92e6ff5e7
             if (_private.isHistorySource(source)) {
-               return Merge(_private.getMetaHistory(), filter);
+               return Merge(_private.getMetaHistory(), filter || {});
             }
             return filter;
          },
@@ -233,12 +232,6 @@ define('Controls/Dropdown/Controller',
             return dropdownUtils.prepareEmpty(this._options.emptyText);
          }
       });
-
-      //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
-      //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
-      var
-         defaultFilter = {},
-         defaultSelectedKeys = [];
 
       Dropdown.getDefaultOptions = function getDefaultOptions() {
          return {

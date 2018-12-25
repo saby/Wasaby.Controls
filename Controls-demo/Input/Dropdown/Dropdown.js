@@ -1,6 +1,7 @@
 define('Controls-demo/Input/Dropdown/Dropdown', [
    'Core/Control',
    'WS.Data/Source/Memory',
+   'Controls-demo/Input/Dropdown//historySourceDropdown',
    'wml!Controls-demo/Input/Dropdown/Dropdown',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
    'css!Controls-demo/Input/Dropdown/Dropdown',
@@ -11,7 +12,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/headTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
-], function(Control, Memory, template) {
+], function(Control, Memory, historySource, template) {
 
    'use strict';
 
@@ -41,6 +42,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeys0: null,
       _selectedKeys1: null,
       _selectedKeys2: null,
+      _historySource: null,
+      _selectedKeysHistory: null,
 
       _beforeMount: function() {
          this._simpleItems = [
@@ -147,6 +150,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
                title: 'Запись 8'
             }
          ];
+         this._historySource = historySource.createMemory();
          this._selectedKeysSimple = [1];
          this._selectedKeysSub = [1];
          this._selectedKeysHierarchy = [8];
@@ -161,6 +165,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeys0 = ['1'];
          this._selectedKeys1 = ['1'];
          this._selectedKeys2 = ['1'];
+         this._selectedKeysHistory = [1];
       },
       _createMemory: function(items) {
          return new Memory({

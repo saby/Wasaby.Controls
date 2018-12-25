@@ -6,13 +6,14 @@ define('Controls/Input/Mask',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
+      'WS.Data/Type/descriptor',
       'wml!Controls/Input/Mask/Mask',
 
       'Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, MaskTpl) {
+   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, types, MaskTpl) {
 
       'use strict';
 
@@ -137,6 +138,15 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
+
+               // ВРЕМЕННОЕ РЕШЕНИЕ, заведена ошибка https://online.sbis.ru/opendoc.html?guid=7b969897-2c73-4564-b8d4-78554d8391c1
+
+               runDelayed(function() {
+                  var rp = new RegExp('[' + replacer + '.:-]', 'g');
+                  if (document.activeElement === input && !this._destroyed && replacer && !value.replace(rp, '')) {
+                     input.setSelectionRange(0, 0);
+                  }
+               }.bind(this));
             },
             validateReplacer: function(replacer, mask) {
                var validation;
@@ -224,6 +234,12 @@ define('Controls/Input/Mask',
             },
             selectOnClick: false,
             autoWidth: false
+         };
+      };
+
+      Mask.getOptionTypes = function getOptionTypes() {
+         return {
+            mask: types(String).required()
          };
       };
 

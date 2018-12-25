@@ -53,7 +53,7 @@ define('Controls/List', [
       },
 
       reload: function() {
-         this._children.listControl.reload();
+         return this._children.listControl.reload();
       },
 
       beginEdit: function(options) {

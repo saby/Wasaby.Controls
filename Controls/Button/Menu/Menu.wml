@@ -24,6 +24,7 @@
         on:pinClicked="_onPinClickHandler()"
         attr:class="controls-MenuButton__Wrapper">
    <Controls.Button
+                    attr:class="controls-MenuButton__BaseButton"
                     icon="{{_options.icon}}"
                     iconStyle="{{_options.iconStyle}}"
                     caption="{{_options.caption}}"
