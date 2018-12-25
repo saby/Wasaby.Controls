@@ -1,14 +1,16 @@
 define('Controls/Input/Area',
    [
+      'Core/IoC',
       'Core/constants',
       'Controls/Input/Text',
       'WS.Data/Type/descriptor',
       'wml!Controls/Input/Area/Field',
+      'wml!Controls/Input/Area/ReadOnly',
       'Core/helpers/Function/runDelayed',
 
       'css!theme?Controls/Input/Area/Area'
    ],
-   function(constants, Text, descriptor, fieldTemplate, runDelayed) {
+   function(IoC, constants, Text, descriptor, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
       'use strict';
 
       /**
@@ -165,11 +167,34 @@ define('Controls/Input/Area',
                   scroll.scrollTo(positionCursor - sizeVisibleArea / 2);
                });
             }
+         },
+
+         validateLines: function(min, max) {
+            if (min > max) {
+               IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
+               return false;
+            }
+
+            return true;
          }
       };
 
       var Area = Text.extend({
          _multiline: true,
+
+         _beforeMount: function(options) {
+            Area.superclass._beforeMount.apply(this, arguments);
+
+            _private.validateLines(options.minLines, options.maxLines);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            Area.superclass._beforeUpdate.apply(this, arguments);
+
+            if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
+               _private.validateLines(newOptions.minLines, newOptions.maxLines);
+            }
+         },
 
          _keyDownHandler: function(event) {
             var nativeEvent = event.nativeEvent;
@@ -191,13 +216,16 @@ define('Controls/Input/Area',
             Area.superclass._initProperties.apply(this, arguments);
 
             this._field.template = fieldTemplate;
+            this._readOnlyField.template = readOnlyFieldTemplate;
 
             if (typeof window !== 'undefined') {
                var sizes = _private.calcSizesByMeasuredBlock(options.size);
-
-               this._field.scope.calculateHeightContainer = function(count, hasIndents) {
+               var calculateHeightContainer = function(count, hasIndents) {
                   return _private.calculateHeightContainer(sizes, count, hasIndents);
                };
+
+               this._field.scope.calculateHeightContainer = calculateHeightContainer;
+               this._readOnlyField.scope.calculateHeightContainer = calculateHeightContainer;
             }
          }
       });

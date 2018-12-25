@@ -74,6 +74,11 @@
       border-color: ~"@{border-color_Render_style_@{_item}_readOnly}";
       background: ~"@{background_Render_style_@{_item}_readOnly}";
    } });
+
+   .for(@variants, { &_@{_item}_readOnly_multiline {
+      border-color: ~"@{border-color_Render_style_@{_item}_readOnly_multiline}";
+      background: ~"@{background_Render_style_@{_item}_readOnly_multiline}";
+   } });
 }
 
 .controls-Render__tagStyle {

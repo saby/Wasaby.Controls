@@ -2,9 +2,12 @@
                            attr:class="controls-Base__field"
                            attr:style="{{options.minLines ? 'min-height: ' + calculateHeightContainer(options.minLines, true) + 'px;'}}
                                        {{options.maxLines ? 'max-height: ' + calculateHeightContainer(options.maxLines, true) + 'px;'}}">
-   <div name="fieldWrapper" class="controls-Area__fieldWrapper controls-Area__nativeField_margin">
+   <div name="fieldWrapper" class="controls-Area__fieldWrapper controls-Area__field_margin">
       <div class="controls-Area__fakeField"
-           style="{{options.minLines ? 'min-height: ' + calculateHeightContainer(options.minLines, false) + 'px;'}}">{{value}}&#65279;</div>
+           style="{{options.minLines ? 'min-height: ' + calculateHeightContainer(options.minLines, false) + 'px;'}}">
+         <ws:if data="{{value}}">{{value}}&#65279;</ws:if>
+         <ws:else><ws:partial template="{{placeholderTemplate}}"/></ws:else>
+      </div>
       <textarea
          wrap="hard"
          spellcheck="false"

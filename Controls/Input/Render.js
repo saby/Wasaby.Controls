@@ -17,8 +17,13 @@ define('Controls/Input/Render',
 
          _getState: function() {
             if (this._options.readOnly) {
+               if (this._options.multiline) {
+                  return '_readOnly_multiline';
+               }
+
                return '_readOnly';
-            } if (this._active) {
+            }
+            if (this._active) {
                return '_active';
             }
 
