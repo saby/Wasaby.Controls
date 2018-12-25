@@ -84,7 +84,7 @@ class RC:
             if not skip:
                 self.head = self.get_status_title(self.test_names, now_list)
                 if self.err_dict:
-                    description = 'Список известных:<br><pre><ul>'
+                    description = '\nСписок известных:<br><pre><ul>'
                     for err in self.err_dict:
                         description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(
                             self.err_dict[err]))

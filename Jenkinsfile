@@ -781,7 +781,7 @@ node('controls') {
                          int_description= int_data[1]
                          print("in int ${int_description}")
                          if ( int_description ) {
-                            description += "${int_description}"
+                            description += "[INT] ${int_description}"
                          }
                     }
                 }
@@ -792,7 +792,7 @@ node('controls') {
                         reg_description = reg_data[1]
                         print("in reg ${reg_description}")
                         if ( description != reg_description ) {
-                            description += "${reg_description}"
+                            description += "\n[REG] ${reg_description}"
                         }
                     }
                 }
