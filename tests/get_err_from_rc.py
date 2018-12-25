@@ -50,10 +50,10 @@ class RC:
 
         if rc_set == new_set and bool(new_set):
             # print('rc_set == new_set')
-            return "OK|Эти ошибки уже попали в RC."
+            return "OK|Ошибки в сборке уже попали в RC."
         elif new_set.issubset(rc_set) and bool(new_set):
             # print('new_set.issubset(rc_set)')
-            return "OK|Эти ошибки уже попали в RC."
+            return "OK|Ошибки в сборке уже попали в RC."
         elif rc_set.issubset(new_set) or not bool(rc_set.intersection(new_set)):
             # print('rc_set.issubset(new_set) or not rc_set.intersection(new_set)')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
@@ -78,9 +78,11 @@ class RC:
                 if now_list:
                     self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
                 return ''   # не показываем ошибки из RC
-        description = '<pre><ul>'
-        for err in self.err_dict:
-            description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
+        description = ''
+        if self.err_dict:
+            description = 'Список изветсных ошибок:<br><pre><ul>'
+            for err in self.err_dict:
+                description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
         description += "</ul>"
         return description
 
