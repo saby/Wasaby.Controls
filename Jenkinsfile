@@ -259,7 +259,7 @@ node('controls') {
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
-                            dir('./controls/tests') {
+                            dir('./tests') {
                                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
                                 echo "RUN: ${tests_files}"
                             }
