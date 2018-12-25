@@ -483,6 +483,7 @@ node('controls') {
             }
             echo items
         }
+        /*
         stage ("Unit тесты"){
             if ( unit ){
                 echo "Запускаем юнит тесты"
@@ -514,8 +515,8 @@ node('controls') {
                 echo "Юнит тесты завершились"
                 sh "date"
             }
-        }
-        if ( regr || inte || all_inte) {
+        } */
+        /*if ( regr || inte || all_inte) {
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -597,7 +598,7 @@ node('controls') {
             """
             }
         }
-
+        */
         if ( regr || inte || all_inte) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
