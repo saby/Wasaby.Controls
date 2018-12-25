@@ -4,7 +4,7 @@ define('Controls-demo/DragNDrop/Tree', [
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
    'wml!Controls-demo/DragNDrop/Tree/Tree',
-   'Data/source'
+   'Types/source'
 ], function(BaseControl, cClone, DemoData, ListEntity, template, source) {
    'use strict';
 

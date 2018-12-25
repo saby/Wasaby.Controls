@@ -3,7 +3,7 @@
         <ws:partial attr:class="{{!itemData.isDots && applyHighlighter(highlighter, itemData.item.getId())}}"
                     template="{{itemTemplate}}"
                     itemData="{{itemData}}"
-                    on:mouseEnter="_onHoveredItemChanged(itemData.item[keyProperty])"
+                    on:mouseEnter="_onHoveredItemChanged(itemData.item.getId())"
                     on:mouseLeave="_onHoveredItemChanged()"
                     on:click="_onItemClick(itemData)"/>
     </ws:for>

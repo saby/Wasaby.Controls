@@ -7,7 +7,7 @@ define('Controls/Utils/applyHighlighter', [], function() {
          result = '',
          args = arguments;
 
-      highlighters.forEach(function(highlighter) {
+      highlighters && highlighters.forEach(function(highlighter) {
          result += highlighter.apply(undefined, Array.prototype.slice.call(args, 1));
       });
 
