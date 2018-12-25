@@ -14,7 +14,7 @@
    flex-shrink: 0;
    min-height: @min-height_StackTemplate-head;
    background: @background-color_StackTemplate-head;
-   border-bottom: @size_StackTemplate-border-bottom solid @color_StackTemplate-border-bottom;
+   border-bottom: @thickness_StackTemplate-border-bottom solid @color_StackTemplate-border-bottom;
 }
 
 .controls-StackTemplate__content-area {
@@ -33,28 +33,43 @@
    display: flex;
    align-items: baseline;
    overflow: hidden;
+   justify-content: space-between;
 }
 
-.controls-StackTemplate__top-area-margin-default {
-   margin: @spacing_StackTemplate-head;
-}
-
-.controls-StackTemplate__top-area-margin-maximized {
-   margin: @spacing_StackTemplate-head_withMaximizedButton;
+.controls-StackTemplate__top-area-margin{
+   margin-left: @spacing_StackTemplate-between-caption-border-left;
 }
 
 .controls-StackTemplate__close_button {
-   position: absolute;
-   top: @spacing_StackTemplate-between-close-button-content;
-   right: 0;
+   position: relative;
+   margin-top: @spacing_StackTemplate-between-close-button-border-top;
    z-index: 2;
 }
 
-.controls-StackTemplate__maximized_button {
+.controls-StackTemplate__headerContentTemplate {
+   margin-right: @spacing_StackTemplate-between-content-close-button;
+   position: relative;
+}
+
+.controls-StackTemplate__command_buttons {
+   position: relative;
+   display: flex;
+   align-self: flex-end;
+   height: @min-height_StackTemplate-head;
+}
+
+.controls-StackTemplate__command_buttons_without_head {
    position: absolute;
-   right: @spacing_StackTemplate-between-maximized-button-content-right;
-   top: @spacing_StackTemplate-between-maximized-button-content-top;
-   background-image: url('resources/images/resize.svg');
+   right: 0;
+   top: 0;
+   display: flex;
+}
+
+.controls-StackTemplate__maximized_button {
+   position: relative;
+   margin-top: @spacing_StackTemplate-between-maximized-button-content-top;
+   margin-right: @spacing_StackTemplate-between-maximized-button-close-button;
+   background-image: url(resources/images/resize.svg);
    width: 24px;
    height: 24px;
    z-index: 100;
@@ -95,5 +110,5 @@
 
 .controls-StackTemplate__bottomArea {
    background: @background-color_StackTemplate-footer;
-   border-top: @size_StackTemplate-border-bottom solid @color_StackTemplate-border-bottom;;
+   border-top: @thickness_StackTemplate-border-bottom solid @color_StackTemplate-border-bottom;;
 }
