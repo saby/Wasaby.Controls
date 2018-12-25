@@ -69,7 +69,7 @@ define('Controls/Selector/SelectedCollection',
             this._onResult = _private.onResult.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
-            this._counterWidth = options._counterWidth;
+            this._counterWidth = options._counterWidth || 0;
          },
 
          _beforeUpdate: function(newOptions) {
