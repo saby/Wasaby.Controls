@@ -1,5 +1,5 @@
 .controls-TreeTileView__item {
-   height: @height_TreeTileView-item;
+   height: @height_TreeTileView-node;
    box-sizing: border-box;
    display: flex;
    align-items: center;
@@ -8,7 +8,7 @@
 }
 
 .controls-TreeTileView__checkbox {
-   left: @left_TreeTileView-checkbox;
+   left: 0;
 }
 
 .ws-is-ie {
@@ -21,7 +21,7 @@
 
 .controls-TreeTileView__item:hover, .controls-TreeTileView__item_active {
    background-color: @background-color_TileView-title;
-   box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
+   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
 }
 
 .controls-TreeTileView__title {
@@ -30,12 +30,12 @@
    white-space: nowrap;
    width: 100%;
    font-size: @font-size_TreeTileView-title;
-   margin: @margin_TreeTileView-title;
+   margin: 0 @spacing_TreeTileView-between-title-rightBorder 0 @spacing_TreeTileView-between-nodeIcon-title;
    flex-shrink: 1;
 }
 
-.controls-TreeTileView__folderIcon {
-   margin: @margin_TreeTileView-icon;
+.controls-TreeTileView__nodeIcon {
+   margin-left: @spacing_TreeTileView-between-nodeIcon-leftBorder;
    flex-shrink: 0;
 }
 
