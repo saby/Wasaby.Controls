@@ -5,13 +5,13 @@ import java.lang.Math
 def version = "3.19.100"
 
 @NonCPS
-def get_commit() {
+def get_run_commit() {
     def log = currentBuild.rawBuild.getLog(100)
     def commit = (log =~ /Jenkinsfile from ([0-9a-z]+)/)
     echo "COMMIT: ${commit[0][1]}"
     return commit[0][1]
 }
-env.GIT_COMMIT = get_commit()
+env.GIT_COMMIT = get_run_commit()
 
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
