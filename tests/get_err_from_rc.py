@@ -60,30 +60,28 @@ class RC:
         elif not bool(rc_set) and bool(new_set):
             # print('not rc_set and new_set')
             return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
-        elif (not bool(new_set) and bool(rc_set)) or (not bool(rc_set) and not bool(new_set)):
-            # print('(not new_set and rc_set) or (not rc_set and not new_set)')
-            return ''
 
     def description(self, fail_tests_path, skip):
         """Формируем описаниена основе полученных данных из RC сборки и упавших тестов в текущей"""
 
+        description = ''
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
             now_list = sorted(f.read().split())
             self.test_names = sorted(self.test_names)
+            if not now_list:
+                return ''
             if not skip:
                 self.head = self.get_status_title(self.test_names, now_list)
-                if not self.head:
-                    return ''
+                if self.err_dict:
+                    description = 'Список известных ошибок:<br><pre><ul>'
+                    for err in self.err_dict:
+                        description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(
+                            self.err_dict[err]))
+                    description += "</ul>"
             else:
                 if now_list:
-                    self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
+                    self.head = "FAIL WITH SKIP|Тесты по ошибкам в RC не запускались. В сборке появились новые ошибки!"
                 return ''   # не показываем ошибки из RC
-        description = ''
-        if self.err_dict:
-            description = 'Список известных ошибок:<br><pre><ul>'
-            for err in self.err_dict:
-                description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
-        description += "</ul>"
         return description
 
 
