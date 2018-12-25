@@ -3,9 +3,9 @@ define(
       'Core/core-instance',
       'Controls/Input/Number',
       'tests/resources/ProxyCall',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Vdom/Vdom'
    ],
-   function(instance, NumberInput, ProxyCall, SyntheticEvent) {
+   function(instance, NumberInput, ProxyCall, Vdom) {
       'use strict';
 
       describe('Controls.Input.Number', function() {
@@ -72,7 +72,7 @@ define(
                ctrl._getField().value = '1111';
                ctrl._getField().selectionStart = 4;
                ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.deepEqual(calls, [{
                   name: 'notify',

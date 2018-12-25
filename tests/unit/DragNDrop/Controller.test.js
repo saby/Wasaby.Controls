@@ -1,7 +1,7 @@
 define([
    'Controls/DragNDrop/Controller',
-   'Core/vdom/Synchronizer/resources/SyntheticEvent'
-], function(Controller, SyntheticEvent) {
+   'Vdom/Vdom'
+], function(Controller, Vdom) {
    'use strict';
 
 
@@ -34,7 +34,7 @@ define([
    }
 
    function createSyntheticEvent(type, pageX, pageY) {
-      return new SyntheticEvent(createNativeEvent(type, pageX, pageY));
+      return new Vdom.SyntheticEvent(createNativeEvent(type, pageX, pageY));
    }
 
    var startEvent = createNativeEvent('mousedown', 20, 10);
