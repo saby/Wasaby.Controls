@@ -483,7 +483,7 @@ node('controls') {
             }
             echo items
         }
-        /*
+
         stage ("Unit тесты"){
             if ( unit ){
                 echo "Запускаем юнит тесты"
@@ -515,9 +515,8 @@ node('controls') {
                 echo "Юнит тесты завершились"
                 sh "date"
             }
-        } */
-        /* if ( regr || inte || all_inte) {
-
+        }
+        if ( regr || inte || all_inte) {
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -598,7 +597,7 @@ node('controls') {
             """
             }
         }
-        */
+
         if ( regr || inte || all_inte) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -646,16 +645,14 @@ node('controls') {
                         IMAGE_DIR = ${img_dir}
                         RUN_REGRESSION=True"""
                 dir("./controls/tests/int"){
-                /*    sh"""
+                    sh"""
                         source /home/sbis/venv_for_test/bin/activate
                         ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
                         deactivate
                     """
                     junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
                     sh "sudo rm -rf ./test-reports"
-                    //smoke_result = currentBuild.result == null
-                */
-                    smoke_result = true
+                    smoke_result = currentBuild.result == null
                 }
                 if ( smoke_result ) {
                     if ( only_fail ) {
@@ -769,7 +766,7 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        /*dir("./controls/tests") {
+        dir("./controls/tests") {
             def int_title = ''
             def reg_title = ''
             def description = ''
@@ -794,7 +791,7 @@ node('controls') {
 
             build_title(int_title, reg_title)
             currentBuild.description = "${description}"
-        } */
+        }
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
