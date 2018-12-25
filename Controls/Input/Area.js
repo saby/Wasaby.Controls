@@ -33,6 +33,7 @@ define('Controls/Input/Area',
       /**
        * @name Controls/Input/Area#minLines
        * @cfg {Number} Minimum number of lines.
+       * @default 1
        */
 
       /**
@@ -233,6 +234,7 @@ define('Controls/Input/Area',
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();
 
+         defaultOptions.minLines = 1;
          defaultOptions.newLineKey = 'enter';
 
          return defaultOptions;
