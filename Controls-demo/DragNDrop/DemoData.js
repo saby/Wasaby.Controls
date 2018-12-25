@@ -55,9 +55,10 @@ define('Controls-demo/DragNDrop/DemoData', ['Controls-demo/DragNDrop/Images'],
          additional: 'Additional text 7',
          image: Images[7],
          'Раздел@': true,
+
          'Раздел': 6
       }, {
-         id: '8',
+         id: 8,
          title: 'draggable item 8',
          additional: 'Additional text 8',
          image: Images[8],

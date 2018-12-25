@@ -114,7 +114,7 @@ define('Controls/Explorer', [
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          this._root = this._options.root;
-         this._breadCrumbsDrugHighlighter = this._drugHighlighter.bind(this);
+         this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          _private.setViewMode(this, cfg.viewMode);
       },
       _beforeUpdate: function(cfg) {
@@ -127,7 +127,7 @@ define('Controls/Explorer', [
             this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
          }
       },
-      _drugHighlighter: function(itemKey) {
+      _dragHighlighter: function(itemKey) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
       },
       _documentDragEnd: function() {
