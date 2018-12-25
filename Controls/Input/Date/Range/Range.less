@@ -1,10 +1,6 @@
 .controls-Input-DateRange {
    display: inline-block;
    white-space: nowrap;
-   // TODO: Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=8de68fe7-5462-472c-9d79-3e1d3637d67b
-   > .controls-InputRender {
-      width: 63px;
-   }
 }
 
 .controls-Input-DateRange__button {
@@ -14,11 +10,12 @@
 .controls-Input-DateRange__dash {
    display: inline-block;
    width: @width_DateRange-dash;
-   margin: @margin_DateRange-dash;
+   margin: 0 @spacing_DateRange-between-dash-date;
    border-top: @thickness_DateRange-dash solid @color_DateRange-dash;
+   vertical-align: middle;
 }
 
-// Удалить после того как перейдем на новую панельку
 .controls-PeriodDialog__picker {
-   margin: @margin_PeriodDialog-picker;
+   margin-top: @shift-top_PeriodDialog-picker;
+   margin-left: @shift-left_PeriodDialog-picker;
 }
