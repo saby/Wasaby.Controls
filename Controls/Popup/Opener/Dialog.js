@@ -16,55 +16,56 @@ define('Controls/Popup/Opener/Dialog',
       var _private = {
          getDialogConfig: function(config, self) {
             config = config || {};
-            if(config.closeByExternalClick !== undefined || self._options.closeByExternalClick !== undefined ) {
+            if (config.closeByExternalClick !== undefined || self._options.closeByExternalClick !== undefined) {
                config.closeByExternalClick = config.closeByExternalClick || self._options.closeByExternalClick;
             }
-            if(config.autofocus !== undefined || self._options.autofocus !== undefined) {
+            if (config.autofocus !== undefined || self._options.autofocus !== undefined) {
                config.autofocus = config.autofocus || self._options.autofocus;
             }
-            if(config.isModal !== undefined || self._options.isModal !== undefined) {
+            if (config.isModal !== undefined || self._options.isModal !== undefined) {
                config.isModal = config.isModal || self._options.isModal;
             }
-            if(config.className !== undefined || self._options.className !== undefined) {
+            if (config.className !== undefined || self._options.className !== undefined) {
                config.className = config.className || self._options.className;
             }
-            if(config.template !== undefined || self._options.template !== undefined) {
+            if (config.template !== undefined || self._options.template !== undefined) {
                config.template = config.template || self._options.template;
             }
-            if(config.opener !== undefined || self._options.opener !== undefined) {
+            if (config.opener !== undefined || self._options.opener !== undefined) {
                config.opener = config.opener || self._options.opener;
             }
-            if(config.templateOptions !== undefined || self._options.templateOptions !== undefined) {
+            if (config.templateOptions !== undefined || self._options.templateOptions !== undefined) {
                config.templateOptions = config.templateOptions || self._options.templateOptions;
             }
-            if(config.minWidth !== undefined || self._options.winWidth !== undefined) {
+            if (config.minWidth !== undefined || self._options.winWidth !== undefined) {
                config.minWidth = config.minWidth || self._options.minWidth;
             }
-            if(config.maxWidth !== undefined || self._options.maxWidth !== undefined) {
+            if (config.maxWidth !== undefined || self._options.maxWidth !== undefined) {
                config.maxWidth = config.maxWidth || self._options.maxWidth;
             }
-            if(config.maximize !== undefined || self._options.maximize !== undefined) {
+            if (config.maximize !== undefined || self._options.maximize !== undefined) {
                config.maximize = config.maximize || self._options.maximize;
             }
-            if(config.resizable !== undefined || self._options.resizable !== undefined) {
+            if (config.resizable !== undefined || self._options.resizable !== undefined) {
                config.resizable = config.resizable || self._options.resizable;
             }
-            if(config.top !== undefined || self._options.top !== undefined) {
+            if (config.top !== undefined || self._options.top !== undefined) {
                config.top = config.top || self._options.top;
             }
-            if(config.left !== undefined || self._options.left !== undefined) {
+            if (config.left !== undefined || self._options.left !== undefined) {
                config.left = config.left || self._options.left;
             }
-            if(config.maxHeight !== undefined || self._options.maxHeight !== undefined) {
+            if (config.maxHeight !== undefined || self._options.maxHeight !== undefined) {
                config.maxHeight = config.maxHeight || self._options.maxHeight;
             }
-            if(config.minHeight !== undefined || self._options.minHeight !== undefined) {
+            if (config.minHeight !== undefined || self._options.minHeight !== undefined) {
                config.minHeight = config.minHeight || self._options.minHeight;
             }
-            if(config.draggable !== undefined || self._options.draggable !== undefined) {
+            if (config.draggable !== undefined || self._options.draggable !== undefined) {
                config.draggable = config.draggable || self._options.draggable;
             }
-            //The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+
+            // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;
          }
