@@ -652,8 +652,9 @@ node('controls') {
                         deactivate
                     """
                     junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-                */    sh "sudo rm -rf ./test-reports"
+                    sh "sudo rm -rf ./test-reports"
                     //smoke_result = currentBuild.result == null
+                */
                     smoke_result = true
                 }
                 if ( smoke_result ) {
