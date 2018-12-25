@@ -1,25 +1,33 @@
 <div class="controls-BreadCrumbsPath">
     <div class="controls-BreadCrumbsPath__wrapper">
-        <ws:if data="{{_options.items && _options.items.length && _backButtonCaption}}">
+        <ws:if data="{{_backButtonCaption}}">
             <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
                 <Controls.Heading.Back attr:class="controls-BreadCrumbsPath__backButton"
-                                      caption="{{_backButtonCaption}}"
-                                      style="secondary"
-                                      on:click="_onBackButtonClick()"/>
-                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View{{_breadCrumbsItems.length > 0 ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
+                                       caption="{{_backButtonCaption}}"
+                                       style="secondary"
+                                       on:click="_onBackButtonClick()"/>
+                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
                      title="{[Подробнее]}"
                      on:click="_onArrowClick()"></div>
             </div>
-            <ws:if data="{{_visibleItems.length}}">
-                <div attr:class="controls-BreadCrumbsPath__home icon-Home3"
-                     on:click="_onHomeClick()"></div>
-                <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
-                                           items="{{_breadCrumbsItems}}"
-                                           visibleItems="{{_visibleItems}}"
-                                           keyProperty="{{_options.keyProperty}}"
-                                           displayProperty="{{_options.displayProperty}}"
-                                           on:itemClick="_notifyHandler('itemClick')"/>
-            </ws:if>
+        </ws:if>
+        <ws:if data="{{_visibleItems || _options.rootVisible}}">
+            <div class="controls-BreadCrumbsPath__homeContainer {{ _applyHighlighter(_options.highlighter, _options.root) }}"
+                         on:mouseEnter="_notifyHandler('hoveredItemChanged', _options.root)"
+                         on:mouseLeave="_notifyHandler('hoveredItemChanged')"
+                         on:click="_onHomeClick()">
+                <div class="controls-BreadCrumbsPath__home icon-Home3"></div>
+            </div>
+        </ws:if>
+        <ws:if data="{{_visibleItems}}">
+            <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
+                                       items="{{_breadCrumbsItems}}"
+                                       visibleItems="{{_visibleItems}}"
+                                       keyProperty="{{_options.keyProperty}}"
+                                       displayProperty="{{_options.displayProperty}}"
+                                       highlighter="{{_options.highlighter}}"
+                                       on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                                       on:itemClick="_notifyHandler('itemClick')"/>
         </ws:if>
 
         <Controls.Event.Listener event="controlResize"

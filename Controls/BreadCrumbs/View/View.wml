@@ -3,6 +3,8 @@
         <div attr:class="controls-BreadCrumbsView__wrapper">
             <ws:partial template="{{_itemsTemplate}}"
                         displayProperty="{{ _options.displayProperty }}"
+                        highlighter="{{_options.highlighter}}"
+                        applyHighlighter="{{_applyHighlighter}}"
                         items="{{_options.visibleItems}}"
                         itemTemplate="{{_itemTemplate}}" />
         </div>

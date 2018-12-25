@@ -46,7 +46,7 @@ define('Controls/BreadCrumbs/Utils', [
          return {
             getPropValue: ItemsUtil.getPropertyValue,
             item: currentItem,
-            hasArrow: count > 1 && index !== count - 1,
+            hasArrow: count > 1 && index !== 0,
             withOverflow: withOverflow
          };
       },
@@ -116,8 +116,9 @@ define('Controls/BreadCrumbs/Utils', [
                   }
 
                   // Если осталось всего 2 крошки, но места все равно не хватает, то пытаемся обрезать первый элемент.
-                  if (i === 0 && currentWidth > availableWidth && itemsSizes[0] - ARROW_WIDTH > BREAD_CRUMB_MIN_WIDTH) {
+                  if (i === 0 && currentWidth > availableWidth && itemsSizes[0] > BREAD_CRUMB_MIN_WIDTH) {
                      shrinkedItemIndex = 0;
+                     currentWidth -= itemsSizes[0] - BREAD_CRUMB_MIN_WIDTH;
                   }
 
                   for (var j = 0; j <= i; j++) {
@@ -138,7 +139,7 @@ define('Controls/BreadCrumbs/Utils', [
             } else {
                self._visibleItems = items.map(function(item, index, items) {
                   var
-                     hasArrow = index !== 1,
+                     hasArrow = index !== 0,
                      withOverflow = itemsSizes[index] - (hasArrow ? ARROW_WIDTH : 0) > BREAD_CRUMB_MIN_WIDTH;
                   return _private.getItemData(index, items, withOverflow);
                });
