@@ -10,7 +10,7 @@
       </ws:if>
    </Controls.StickyHeader>
 </ws:template>
-<ws:if data="{{listModel.isNotFullGridSupport()}}">
+<ws:if data="{{!listModel.isStickyHeader() || listModel.isNotFullGridSupport()}}">
    <div class="controls-Grid__header">
       <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
          <div class="{{listModel.getCurrentHeaderColumn().cellClasses}}">

@@ -371,6 +371,8 @@ define(
             assert.deepEqual(filter, {$_history: true, id: 'test'});
             filter = Dropdown._private.getFilter({id: 'test2'}, new Memory({}));
             assert.deepEqual(filter, {id: 'test2'});
+            filter = Dropdown._private.getFilter(undefined, new historySource({}));
+            assert.deepEqual(filter, {$_history: true});
          });
 
          function setTrue(assert) {

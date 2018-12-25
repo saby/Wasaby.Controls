@@ -5,6 +5,7 @@
 }
 .controls-Misspell__text {
 	font-weight: bold;
+	white-space: nowrap;
 }
 
 .controls-Misspell__caption {
@@ -13,6 +14,9 @@
 	cursor: pointer;
 	text-align: left;
 	max-width: 100%;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .ws-is-no-touch .controls-Misspell__caption:hover {

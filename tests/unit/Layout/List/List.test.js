@@ -129,6 +129,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
          listLayoutWithPrefetch._options.searchErrback = function() {
             errbackCalledWithPrefetch = true;
          };
+         listLayoutWithPrefetch._options.source = listSource;
          List._private.searchErrback(listLayout, {});
          
          assert.deepEqual(null, listLayout._source._$data);
@@ -321,6 +322,10 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
                assert.deepEqual(listLayout._searchController._options.filter, {test: 'testFilter'});
                assert.isTrue(listLayout._source !== newOpts.source);
+   
+               listLayout._filter = {scTest: 'scTest'};
+               listLayout._beforeUpdate(newOpts, context);
+               assert.deepEqual(listLayout._searchController.getFilter(), {test: 'testFilter'});
    
                done();
             }, 50);

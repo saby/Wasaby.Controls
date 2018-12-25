@@ -83,6 +83,7 @@ define('Controls/Input/Dropdown',
                this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null || items[0] === null;
                if (this._isEmptyItem) {
                   this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
+                  this._icon = null;
                } else {
                   this._text = getPropValue(items[0], this._options.displayProperty);
                   this._icon = getPropValue(items[0], 'icon');
