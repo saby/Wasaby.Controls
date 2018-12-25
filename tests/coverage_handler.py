@@ -17,7 +17,6 @@ class Coverage:
 
     path_result = {}
     build_result = {}
-    test_result = []
     fullpath = []
 
     def get_fullpath_test_name(self):
@@ -68,14 +67,32 @@ class Coverage:
     def get_tests(self, change_files):
         """Возвращает список файлов, которые нужно запустить"""
 
+        test_result = []
         with open(RESULT_JSON, encoding='utf-8') as f:
             data = json.load(f, encoding='utf-8')
             for test_name in data:
                 for source in data[test_name]:
                     for file in change_files:
                         if file in source:
-                            self.test_result.append(test_name)
+                            test_result.append(test_name)
+        return test_result
 
+    def get_test_for_regression_test(self, change_files):
+        """Получить список тестов для запуска, в которых делались изменения"""
+
+        test_result = []
+        def validate(path_test):
+            test_name = os.path.basename(path_test)
+            if path_test.startswith('int/SBIS3.CONTROLS') or path_test.startswith('int/VDOM') or \
+                    path_test.startswith('reg/SBIS3.CONTROLS') or path_test.startswith('reg/VDOM') and test_name.startswith('test') and test_name.endswith('.py'):
+                return True
+            else:
+                return False
+
+        for file in change_files:
+            if validate(file):
+                test_result.append(file)
+        return test_result
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -91,6 +108,11 @@ if __name__ == '__main__':
         coverage.build(args.source_path)
 
     if args.changelist:
-        coverage.get_tests(args.changelist)
-        if coverage.test_result:
-            print(' '.join(set(coverage.test_result)))
+        test_result = coverage.get_tests(args.changelist)
+        if test_result:
+            print(' '.join(set(test_result)))
+        else:
+            regression_test = coverage.get_test_for_regression_test(args.changelist)
+            if regression_test:
+                print(' '.join(set(test_result)))
+
