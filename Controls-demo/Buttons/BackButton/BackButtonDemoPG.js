@@ -29,7 +29,10 @@ define('Controls-demo/Buttons/BackButton/BackButtonDemoPG',
                   displayProperty: 'title',
                   selectedKey: 1
                },
-               showClickEvent: true
+               showClickEvent: {
+                  value: true,
+                  type: 'none'
+               }
             };
             this._componentOptions = {
                size: 'm',

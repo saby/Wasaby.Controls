@@ -80,7 +80,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
             });
          },
          _clickHandler: function() {
-            if (this._options.dataObject.showClickEvent === true) {
+            if (this._options.dataObject.showClickEvent.value === true) {
                this.myEvent += 'click ';
             }
          },

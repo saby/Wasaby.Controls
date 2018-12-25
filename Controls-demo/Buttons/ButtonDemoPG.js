@@ -39,7 +39,10 @@ define('Controls-demo/Buttons/ButtonDemoPG',
                   displayProperty: 'title',
                   selectedKey: 0
                },
-               showClickEvent: true
+               showClickEvent: {
+                  value: true,
+                  type: 'none'
+               }
             };
             this._componentOptions = {
                readOnly: false,
