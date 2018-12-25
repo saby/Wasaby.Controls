@@ -259,6 +259,7 @@ node('controls') {
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
+                            echo "${changed_files.split()}"
                         }
                     }
                     updateGitlabCommitStatus state: 'running'
