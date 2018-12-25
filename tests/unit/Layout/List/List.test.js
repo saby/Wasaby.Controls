@@ -8,7 +8,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
    
    
    describe('Controls.Container.List', function () {
-      var listLayout, listLayoutWithPrefetch, listOptions, listSource, listSourceData, listSearchParam, listPrefetchSource, listOptionsWithPrefetch;
+      var listLayout, listLayoutWithPrefetch, listOptions, getListOptionsWithPrefetch, listSource, listSourceData, listSearchParam, listPrefetchSource, listOptionsWithPrefetch;
       
       var getFilledContext = function() {
          return {
@@ -71,23 +71,25 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                }
             }
          };
-   
-         listOptionsWithPrefetch = {
-            source: listPrefetchSource,
-            searchParam: listSearchParam,
-            searchDelay: 0,
-            minSearchLength: 3,
-            filter: {},
-            navigation: {
-               source: 'page',
-               view: 'page',
-               sourceConfig: {
-                  pageSize: 10,
-                  page: 0,
-                  mode: 'totalCount'
+         getListOptionsWithPrefetch = function() {
+            return {
+               source: listPrefetchSource,
+               searchParam: listSearchParam,
+               searchDelay: 0,
+               minSearchLength: 3,
+               filter: {},
+               navigation: {
+                  source: 'page',
+                  view: 'page',
+                  sourceConfig: {
+                     pageSize: 10,
+                     page: 0,
+                     mode: 'totalCount'
+                  }
                }
-            }
+            };
          };
+         listOptionsWithPrefetch = getListOptionsWithPrefetch();
          listLayout = new List(listOptions);
          listLayout.saveOptions(listOptions);
    
@@ -139,6 +141,14 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
    
          assert.deepEqual(null, listLayoutWithPrefetch._source._$data);
          assert.isTrue(errbackCalledWithPrefetch);
+      });
+   
+      it('_beforeMount', function() {
+         var listLayout = new List(getListOptionsWithPrefetch());
+         listLayout._searchMode = true;
+         listLayout._beforeMount(getListOptionsWithPrefetch());
+         
+         assert.equal(listLayout._source.getModel(), getListOptionsWithPrefetch().source._$target.getModel());
       });
    
       it('.searchCallback', function() {

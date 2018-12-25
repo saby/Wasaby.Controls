@@ -2,14 +2,24 @@
 import java.time.*
 import java.lang.Math
 
-def version = "3.19.100"
+def version = "19.100"
+
+@NonCPS
+def get_run_commit() {
+    def log = currentBuild.rawBuild.getLog(100)
+    def commit = (log =~ /Jenkinsfile from ([0-9a-z]+)/)
+    echo "COMMIT: ${commit[0][1]}"
+    return commit[0][1]
+}
+env.GIT_COMMIT = get_run_commit()
+
 def gitlabStatusUpdate() {
     if ( currentBuild.currentResult == "ABORTED" ) {
-        updateGitlabCommitStatus state: 'canceled'
+        send_status_in_gitlab('canceled')
     } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
-        updateGitlabCommitStatus state: 'failed'
+        send_status_in_gitlab('failed')
     } else if ( currentBuild.currentResult == "SUCCESS" ) {
-        updateGitlabCommitStatus state: 'success'
+        send_status_in_gitlab('success')
     }
 }
 def exception(err, reason) {
@@ -20,7 +30,7 @@ def exception(err, reason) {
 
 def send_status_in_gitlab(state) {
     def request_url = "http://ci-platform.sbis.ru:8000/set_status"
-    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
+    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "commit":"${GIT_COMMIT}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
     echo "${request_data}"
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
@@ -139,8 +149,8 @@ def inte = params.run_int
 def all_inte = params.run_all_int
 def only_fail = false
 
-node('master') {
 
+node('master') {
     if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
@@ -246,6 +256,7 @@ node('controls') {
                                 credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
+
                     }
                     echo "Обновляемся из rc-${version}"
                     dir("./controls"){
@@ -256,12 +267,13 @@ node('controls') {
                         git pull
                         git merge origin/rc-${version}
                         """
+
                         changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
                     }
-                    updateGitlabCommitStatus state: 'running'
+
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"

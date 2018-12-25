@@ -35,6 +35,11 @@ define('Controls-demo/Buttons/Toggle/ToggleButtonPG',
                   displayProperty: 'title',
                   selectedKey: 0
                },
+               viewMode: {
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
                size: {
                   keyProperty: 'id',
                   displayProperty: 'title',
@@ -81,7 +86,8 @@ define('Controls-demo/Buttons/Toggle/ToggleButtonPG',
                size: 'm',
                icons: this._iconList,
                iconStyle: 'default',
-               style: 'iconButtonBordered',
+               viewMode: 'toolButton',
+               style: 'secondary',
                tooltip: 'myTooltip',
                captions: this._items,
                name: 'ToggleButton'

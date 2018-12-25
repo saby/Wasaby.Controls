@@ -8,7 +8,7 @@ define('Controls/Toggle/Button/Classes', ['Core/IoC'], function(IoC) {
 
       linkMain: {
          style: 'secondary',
-         type: 'toggledLink'
+         type: 'pushButton'
       },
 
       buttonLinkMain: {

@@ -6,11 +6,11 @@
 .controls-TileView__item {
    position: relative;
    flex-grow: 1;
-   margin: @margin_TileView-item;
+   margin: @spacing_TileView-between-items / 2;
 }
 
 .controls-TileView__itemContent {
-   box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
+   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
    background-color: @background-color_TileView-item;
    box-sizing: border-box;
    z-index: 1;
@@ -28,7 +28,8 @@
 
 .controls-TileView__title {
    max-height: @max-height_TileView-title;
-   padding: @padding_TileView-title;
+   min-height: @min-height_TileView-title;
+   padding: @spacing_TileView-between-title-topBorder @spacing_TileView-between-title-rightBorder @spacing_TileView-between-title-bottomBorder @spacing_TileView-between-title-leftBorder;
    border-top: @border-width_TileView-title solid @border-color_TileView-title;
    overflow: hidden;
    white-space: nowrap;
@@ -48,7 +49,7 @@
 }
 
 .controls-TileView__itemContent:hover, .controls-TileView__item_active, .controls-TileView__item_swiped {
-   box-shadow: 0 0 @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
+   box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item_hover;
 }
 
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
@@ -82,7 +83,7 @@
    z-index: 1;
 
    .controls-Checkbox__icon:before {
-      background-color: @border-color_TileView-checkbox;
+      background-color: @background-color_TileView-checkbox;
    }
 }
 
@@ -106,17 +107,28 @@
 //TODO: end
 
 .controls-TileView__itemActions {
-   box-shadow: @box-shadow-offset_TileView-itemActions 0 @box-shadow-blur_TileView-itemActions 0 @background-color_TileView-title;
    background-color: @background-color_TileView-title;
 }
 
+.controls-TileView__itemActions:before {
+   content: '';
+   width: @width_TileView-itemActions-shadow;
+   height: 100%;
+   position: absolute;
+   top: 0;
+   left: -@width_TileView-itemActions-shadow;
+   background: linear-gradient(to right, transparent, @background-color_TileView-title);
+}
+
+//Internal variable required to reduce the height of the image under the title.
+@height_TileView-title: @min-height_TileView-title + @border-width_TileView-title + @spacing_TileView-between-title-topBorder + @spacing_TileView-between-title-bottomBorder;
 .controls-TileView__resizer {
-   margin-bottom: -@height_TileView-title_visible;
+   margin-bottom: -@height_TileView-title;
 }
 
 .controls-TileView__imageWrapper_reduced {
-   border-bottom: @height_TileView-title_visible solid transparent;
-   margin-bottom: -@height_TileView-title_visible;
+   border-bottom: @height_TileView-title solid transparent;
+   margin-bottom: -@height_TileView-title;
    box-sizing: border-box;
 }
 
