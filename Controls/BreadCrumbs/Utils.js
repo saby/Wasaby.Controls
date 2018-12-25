@@ -23,7 +23,7 @@ define('Controls/BreadCrumbs/Utils', [
             return;
          }
          if (window) {
-            ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward icon-primary action-hover"></span>');
+            ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>');
             BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
             DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
                itemData: {

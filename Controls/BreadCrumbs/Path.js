@@ -54,7 +54,7 @@ define('Controls/BreadCrumbs/Path', [
                   size: 'm'
                }
             }));
-            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__home icon-size icon-Home3 icon-primary"></div>');
+            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
             _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, containerWidth - homeWidth);
 
             availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
@@ -74,6 +74,7 @@ define('Controls/BreadCrumbs/Path', [
     * @class Controls/BreadCrumbs/Path
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
+    * @mixes Controls/BreadCrumbs/PathStyles
     * @control
     * @public
     * @author Зайцев А.С.

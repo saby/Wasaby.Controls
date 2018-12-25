@@ -15,6 +15,11 @@ define(['Controls/Search/Misspell/getSwitcherStrFromData', 'WS.Data/Collection/R
             })
          });
          assert.equal(getSwitchedStrFromData(rs), 'testStr');
+   
+         rs.setMetaData({
+            switchedStr: 'testStr2'
+         });
+         assert.equal(getSwitchedStrFromData(rs), 'testStr2');
       });
    });
    
