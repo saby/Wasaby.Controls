@@ -15,7 +15,7 @@
          value="{{calculateValueForTemplate()}}"
          class="controls-Base__nativeField controls-Area__realField
                       {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
-         placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
+         placeholder="{{hidePlaceholderUsingCSS ? '&#65279;'}}"
          on:keyup="_keyUpHandler()"
          on:click="_clickHandler()"
          on:input="_inputHandler()"

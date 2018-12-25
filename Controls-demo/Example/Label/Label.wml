@@ -1,0 +1,58 @@
+<div class="example-Label">
+   <div class="example-Base__title">
+      Design of labels
+      <div class="icon-24 icon-primary action-hover
+                  {{_lock ? 'icon-Lock' : 'icon-Unlock'}}"
+           on:click="_switchBlocker()"></div>
+   </div>
+   <div>
+      <div class="ws-flexbox ControlsDemo-Label__example1">
+         <Controls.Label caption="Label"
+                         underline="none"
+                         readOnly="{{_lock}}"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox ControlsDemo-Label__example2">
+         <Controls.Label caption="Label"
+                         underline="none"
+                         required="{{true}}"
+                         readOnly="{{_lock}}"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox ControlsDemo-Label__example3">
+         <Controls.Label underline="none"
+                         readOnly="{{_lock}}"
+                         caption="{{_limitedCaption}}"
+                         attr:title="{{_limitedCaption}}"
+                         attr:class="example-Label_limit"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox ControlsDemo-Label__example4">
+         <Controls.Label underline="none"
+                         required="{{true}}"
+                         readOnly="{{_lock}}"
+                         caption="{{_limitedCaption}}"
+                         attr:title="{{_limitedCaption}}"
+                         attr:class="example-Label_limit"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox ControlsDemo-Label__example5">
+         <Controls.Label underline="hovered"
+                         readOnly="{{_lock}}"
+                         caption="Label as a link"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+      <div class="ws-flexbox ControlsDemo-Label__example6">
+         <Controls.Label underline="fixed"
+                         readOnly="{{_lock}}"
+                         caption="Label as a link"/>
+         <Controls.Input.Text bind:value="_value"/>
+         <Controls.Button caption="Button" viewMode="link"/>
+      </div>
+   </div>
+</div>

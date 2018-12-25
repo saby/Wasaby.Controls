@@ -4,7 +4,7 @@
       type="{{type}}"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
-      placeholder="{{hidePlaceholderUsingCSS ? ' '}}"
+      placeholder="{{hidePlaceholderUsingCSS ? '&#65279;'}}"
       autocomplete="{{options.autoComplete ? 'on' : 'new-password'}}"
       class="controls-Base__nativeField
             {{isEdge ? 'controls-Base__nativeField_edge'}}
