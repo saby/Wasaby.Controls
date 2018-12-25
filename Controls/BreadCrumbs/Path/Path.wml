@@ -10,8 +10,8 @@
                      on:click="_onArrowClick()"></div>
             </div>
         </ws:if>
-        <ws:if data="{{_visibleItems || _options.showHome}}">
-            <div class="controls-BreadCrumbsPath__homeContainer {{ _options.styledItemKey === _options.root ? 'controls-BreadCrumbsView__dropTarget'}}"
+        <ws:if data="{{_visibleItems || _options.rootVisible}}">
+            <div class="controls-BreadCrumbsPath__homeContainer {{ _applyHighlighter(_options.highlighter, _options.root) }}"
                          on:mouseEnter="_notifyHandler('hoveredItemChanged', _options.root)"
                          on:mouseLeave="_notifyHandler('hoveredItemChanged')"
                          on:click="_onHomeClick()">
@@ -24,7 +24,7 @@
                                        visibleItems="{{_visibleItems}}"
                                        keyProperty="{{_options.keyProperty}}"
                                        displayProperty="{{_options.displayProperty}}"
-                                       styledItemKey="{{_options.styledItemKey}}"
+                                       highlighter="{{_options.highlighter}}"
                                        on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                                        on:itemClick="_notifyHandler('itemClick')"/>
         </ws:if>

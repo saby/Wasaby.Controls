@@ -1,6 +1,7 @@
 define('Controls/BreadCrumbs/View', [
    'Core/Control',
    'WS.Data/Collection/RecordSet',
+   'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/View/View',
    'wml!Controls/BreadCrumbs/View/resources/itemTemplate',
    'wml!Controls/BreadCrumbs/View/resources/itemsTemplate',
@@ -10,6 +11,7 @@ define('Controls/BreadCrumbs/View', [
 ], function(
    Control,
    RecordSet,
+   applyHighlighter,
    template,
    itemTemplate,
    itemsTemplate,
@@ -65,6 +67,8 @@ define('Controls/BreadCrumbs/View', [
             this._notify('itemClick', [itemData.item.get(this._options.keyProperty)]);
          }
       },
+
+      _applyHighlighter: applyHighlighter,
 
       _onHoveredItemChanged: function(event, itemKey) {
          this._notify('hoveredItemChanged', [itemKey]);

@@ -42,7 +42,7 @@ define('Controls-demo/DragNDrop/List', [
             firstItem = this._items.getRecordById(items[0]);
 
          items.forEach(function(item) {
-            if (item === '0') {
+            if (item === 0) {
                hasBadItems = true;
             }
          });

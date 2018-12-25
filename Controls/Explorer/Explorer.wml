@@ -7,8 +7,8 @@
                                     displayProperty="{{_options.displayProperty}}"
                                     items="{{_breadCrumbsItems}}"
                                     root="{{_options.root}}"
-                                    styledItemKey="{{_dragOnBreadCrumbs ? _hoveredBreadCrumb}}"
-                                    showHome="{{_dragOnBreadCrumbs}}"
+                                    rootVisible="{{_dragOnBreadCrumbs}}"
+                                    highlighter="{{[_breadCrumbsDrugHighlighter]}}"
                                     on:hoveredItemChanged="_hoveredCrumbChanged()"
                                     on:arrowActivated="_notifyHandler('arrowActivated')"
                                     on:itemClick="_onBreadCrumbsClick()" />

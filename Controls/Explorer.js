@@ -5,6 +5,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
+   'Controls/Utils/applyHighlighter',
    'WS.Data/Chain',
    'Core/core-instance',
    'Controls/List/TreeTileView/TreeTileView',
@@ -21,6 +22,7 @@ define('Controls/Explorer', [
    TreeGridViewModel,
    TreeTileViewModel,
    tmplNotify,
+   applyHighlighter,
    chain,
    cInstance
 ) {
@@ -112,6 +114,7 @@ define('Controls/Explorer', [
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
          this._root = this._options.root;
+         this._breadCrumbsDrugHighlighter = this._drugHighlighter.bind(this);
          _private.setViewMode(this, cfg.viewMode);
       },
       _beforeUpdate: function(cfg) {
@@ -123,6 +126,9 @@ define('Controls/Explorer', [
          if (this._hoveredBreadCrumb !== undefined) {
             this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
          }
+      },
+      _drugHighlighter: function(itemKey) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
       },
       _documentDragEnd: function() {
          this._dragOnBreadCrumbs = false;
@@ -158,7 +164,8 @@ define('Controls/Explorer', [
       reload: function() {
          return this._children.treeControl.reload();
       },
-      _notifyHandler: tmplNotify
+      _notifyHandler: tmplNotify,
+      _applyHighlighter: applyHighlighter
    });
 
    Explorer._private = _private;

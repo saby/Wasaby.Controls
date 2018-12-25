@@ -5,6 +5,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
    'Controls/Utils/tmplNotify',
+   'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Heading/Back/Back',
    'Controls/Heading/Back',
@@ -16,6 +17,7 @@ define('Controls/BreadCrumbs/Path', [
    ItemsUtil,
    FontLoadUtil,
    tmplNotify,
+   applyHighlighter,
    template,
    backButtonTemplate
 ) {
@@ -74,6 +76,7 @@ define('Controls/BreadCrumbs/Path', [
     * @class Controls/BreadCrumbs/Path
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
+    * @mixes Controls/interface/IHighlighter
     * @control
     * @public
     * @author Зайцев А.С.
@@ -116,6 +119,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _notifyHandler: tmplNotify,
+      _applyHighlighter: applyHighlighter,
 
       _onBackButtonClick: function() {
          this._notify('itemClick', [this._options.items[this._options.items.length - 1].get(this._options.parentProperty)]);

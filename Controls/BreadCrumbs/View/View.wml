@@ -1,7 +1,12 @@
 <div attr:class="controls-BreadCrumbsView">
     <ws:if data="{{_options.visibleItems.length > 0}}">
         <div attr:class="controls-BreadCrumbsView__wrapper">
-            <ws:partial template="{{_itemsTemplate}}" keyProperty="{{_options.keyProperty}}" styledItemKey="{{_options.styledItemKey}}" items="{{_options.visibleItems}}" itemTemplate="{{_itemTemplate}}" />
+            <ws:partial template="{{_itemsTemplate}}"
+                        keyProperty="{{_options.keyProperty}}"
+                        highlighter="{{_options.highlighter}}"
+                        applyHighlighter="{{_applyHighlighter}}"
+                        items="{{_options.visibleItems}}"
+                        itemTemplate="{{_itemTemplate}}" />
         </div>
     </ws:if>
 
