@@ -1,49 +1,55 @@
-.controls-LabelV {
-   padding: @padding_Label;
-   height:  @height_Label;
-}
-.controls-LabelV__caption {
-   height: 100%;
-}
-.controls-LabelV__caption_required:after {
-   content: ' *';
-}
-.controls-LabelV__caption_required_enabled:after {
-   color: @color_Label-caption-after_enabled;
-}
-.controls-LabelV_enabled {
-   color: @color_Label-caption_enabled;
-}
-.controls-LabelV_disabled {
-   color: @color_Label-caption_disabled;
-}
-.controls-LabelV when not (@font-size_Label = 0) {
-   font-size: @font-size_Label;
-}
-.ws-is-no-touch {
-   .controls-Label_underline-hovered:hover {
-      text-decoration: underline;
-   }
-   .controls-Label_underline_color-hovered:hover {
-      color: @color_Link-main-text_hovered;
-   }
-}
-.controls-Label_underline-hovered:active {
-   text-decoration: underline;
-}
-.controls-Label_underline_color-hovered:active {
-   color: @color_Link-main-text_hovered;
-}
-.controls-Label_underline_color-hovered, .controls-Label_underline-hovered {
-   cursor: pointer;
+.controls-Label {
    display: inline-block;
 }
-//TODO: убрать когда лэйбл будет переписан: https://online.sbis.ru/opendoc.html?guid=5c635b8d-46df-44be-ab8d-8d763fa7bc7c
-.controls-Label_underline_color-hovered,
-.controls-Label_underline-hovered {
-   padding: 0 !important;
-   height:  auto !important;
+.controls-Label_underline_none {
+   height:  @height_Label;
+   padding: @padding_Label;
 }
-.controls-Label_underline_color-hovered {
+.controls-Label__wrapper {
+   height: 100%;
+   position: relative;
+   align-items: center;
+   display: inline-flex;
+}
+.controls-Label__caption {
+   .text-overflow();
+}
+.controls-Label__caption_underline_none {
+   color: @color_Label-caption_underline_none;
+}
+.controls-Label__caption_underline_hovered_edit {
+   cursor: pointer;
+   color: @color_Label-caption_underline_hovered;
+}
+.controls-Label__caption_underline_hovered_read {
+   color: @color_Label-caption_underline_hovered_readOnly;
+}
+.ws-is-no-touch .controls-Label__caption_underline_hovered_edit:hover,
+.controls-Label__caption_underline_hovered_edit:active {
    text-decoration: underline;
+   color: @color_Label-caption_underline_hovered_hover;
+}
+.controls-Label__caption_underline_fixed {
+   text-decoration: underline;
+}
+.controls-Label__caption_underline_fixed_edit {
+   cursor: pointer;
+   color: @color_Label-caption_underline_fixed;
+}
+.controls-Label__caption_underline_fixed_read {
+   color: @color_Label-caption_underline_fixed_readOnly;
+}
+.ws-is-no-touch .controls-Label__caption_underline_fixed_edit:hover,
+.controls-Label__caption_underline_fixed_edit:active {
+   color: @color_Label-caption_underline_fixed_hover;
+}
+.controls-Label__asterisk {
+   color: @color_Label-asterisk;
+}
+.controls-Label__fakeLink {
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   position: absolute;
 }
