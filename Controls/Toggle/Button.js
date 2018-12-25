@@ -15,31 +15,74 @@ define('Controls/Toggle/Button', [
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
+    * @mixes Controls/Button/interface/IHref
+    * @mixes Controls/Button/interface/IIconStyle
+    * @mixes Controls/Toggle/Button/Styles
     * @control
     * @public
     * @author Михайловский Д.С.
     * @category Toggle
     *
-    * @demo Controls-demo/Buttons/Toggle/ToggleDemo
+    * @demo Controls-demo/Buttons/Toggle/ToggleButtonPG
     */
 
    /**
     * @name Controls/Toggle/Button#icons
-    * @cfg {Array} Set of icons.
-    * Button with one icon have one icon and it isn't toggled.
-    * Button with two icons display one icon, but it is different in free and toggled states.
+    * @cfg {Array} Pair of icons.
+    * Toggle button with one icon have one icon and it isn't toggled.
+    * Toggle button with two icons display one icon, but it is different in free and toggled states.
     * If button has more than two icons, it work only with first and second icons.
+    * @example
+    * Primary link with one icon.
+    * <pre>
+    *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
+    * </pre>
+    * Primary link with two icons.
+    * <pre>
+    *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
+    * </pre>
     */
 
    /**
     * @name Controls/Toggle/Button#captions
-    * @cfg {Array} Set of captions.
-    * Button with one caption have one caption and it isn't toggled.
-    * Button with two captions display one caption, but it is different in free and toggled states.
+    * @cfg {Array} Pair of captions.
+    * Toggle button with one caption have one caption and it isn't toggled.
+    * Toggle button with two captions display one caption, but it is different in free and toggled states.
     * If button has more than two captions, it work only with first and second captions.
+    * @example
+    * Toggle button with two removable captions.
+    * <pre>
+    *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
+    * </pre>
+    * Toggle button with one caption.
+    * <pre>
+    *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Save']}}" style="info" viewMode="link"/>
+    * </pre>
+    */
+
+   /**
+    * @name Controls/Toggle/Button#viewMode
+    * @cfg {Enum} Button view mode.
+    * @variant link Decorated hyperlink.
+    * @variant pushButton Decorated hyperlink transform to toolbar button.
+    * @variant toolButton Toolbar button.
+    * @default button
+    * @example
+    * Toggle button with 'link' viewMode.
+    * <pre>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="link" size="xl"/>
+    * </pre>
+    * Toggle button with 'toolButton' viewMode.
+    * <pre>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="danger" viewMode="toolButton"/>
+    * </pre>
+    * Toggle button with 'pushButton' viewMode.
+    * <pre>
+    *    <Controls.Toggle.Button captions="{{['Send document']}}" style="primary" viewMode="pushButton"/>
+    * </pre>
     */
    var stickyButton = [
-      'toggledLink',
+      'pushButton',
       'toolButton'
    ];
 
@@ -47,7 +90,6 @@ define('Controls/Toggle/Button', [
       optionsGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-         self._toggleButton = true;
          self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
          self._transparent = options.transparent;
          self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;

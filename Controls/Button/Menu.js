@@ -25,6 +25,7 @@ define('Controls/Button/Menu',
        * @mixes Controls/interface/IDropdown
        * @mixes Controls/interface/IButton
        * @mixes Controls/Button/interface/IIcon
+       * @mixes Controls/Button/interface/IIconStyle
        * @control
        * @public
        * @author Михайловский Д.С.
