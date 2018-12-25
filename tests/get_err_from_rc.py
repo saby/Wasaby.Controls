@@ -51,7 +51,7 @@ class RC:
         if rc_set == new_set and bool(new_set):
             # print('rc_set == new_set')
             return "OK|Эти ошибки уже попали в RC."
-        elif new_set.issubset(rc_set):
+        elif new_set.issubset(rc_set) and bool(new_set):
             # print('new_set.issubset(rc_set)')
             return "OK|Эти ошибки уже попали в RC."
         elif rc_set.issubset(new_set) or not bool(rc_set.intersection(new_set)):
