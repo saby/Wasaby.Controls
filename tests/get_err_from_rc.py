@@ -36,6 +36,17 @@ class RC:
             for k, v in list(zip(self.test_names, self.err_links)):
                 self.err_dict[v].append(k)
 
+    def get_errors_mock(self, jobs):
+        for job in jobs:
+            if 'reg' in job:
+                self.test_names = ['RegressionVDOMBreadCrumbs.test_06_opened_menu','RegressionVDOMBreadCrumbs.test_04_2_crumbs',
+                                         'RegressionVDOMBreadCrumbs.test_02_half_crumbs', 'RegressionVDOMBreadCrumbs.test_01_all_crumbs',
+                                         'RegressionVDOMBreadCrumbs.test_05_resize','RegressionVDOMBreadCrumbs.test_03_half_crumbs_2']
+                self.err_dict = {'http://err.ru':self.test_names}
+            elif 'int' in job:
+                pass
+
+
     def get_status_title(self, rc_list, new_list):
         """Возвращает статус сборки с описанием
         - списки ошибок равны ОК
@@ -92,7 +103,7 @@ if __name__ == '__main__':
     parser.add_argument('-s', '--skip', help='Test was skipped.', action='store_true', default=False)
     args = parser.parse_args()
     rc = RC()
-    rc.get_errors(args.jobs)
+    rc.get_errors_mock(args.jobs)
     result = rc.description(args.fail_tests_path, args.skip)
     if rc.err_exist or rc.head:
         print('{}\n{}'.format(rc.head, result))
