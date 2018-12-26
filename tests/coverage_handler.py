@@ -83,8 +83,9 @@ class Coverage:
         test_result = []
         def validate(path_test):
             test_name = os.path.basename(path_test)
-            if path_test.startswith('int/SBIS3.CONTROLS') or path_test.startswith('int/VDOM') or \
-                    path_test.startswith('reg/SBIS3.CONTROLS') or path_test.startswith('reg/VDOM') and test_name.startswith('test') and test_name.endswith('.py'):
+            if path_test.startswith('tests/int/SBIS3.CONTROLS') or path_test.startswith('tests/int/VDOM') or \
+                    path_test.startswith('tests/reg/SBIS3.CONTROLS') or path_test.startswith('tests/reg/VDOM') \
+                    and test_name.startswith('test') and test_name.endswith('.py'):
                 return True
             else:
                 return False
@@ -114,5 +115,5 @@ if __name__ == '__main__':
         else:
             regression_test = coverage.get_test_for_regression_test(args.changelist)
             if regression_test:
-                print(' '.join(set(test_result)))
+                print(' '.join(set(regression_test)))
 
