@@ -17,7 +17,6 @@
 .controls-BreadCrumbsPath__home {
    .icon(@font-size_Path-home);
    cursor: pointer;
-   padding-right: @spacing_Path-between-home-and-crumbs;
    color: @color_Path-home;
 }
 
@@ -43,7 +42,18 @@
 
 .controls-BreadCrumbsPath__breadCrumbs {
    flex-grow: 1;
-   overflow: hidden;
+   padding-left: @spacing_Path-between-home-and-crumbs;
+}
+
+.controls-BreadCrumbsPath__homeContainer {
+   .baseline-fix();
+   position: relative;
+   display: inline-flex;
+   align-items: baseline;
+}
+
+.controls-BreadCrumbsPath__homeContainer_withoutBackButton {
+   margin-left: @spacing_Path-between-home-and-backButton;
 }
 
 .controls-BreadCrumbsPath__backButton_short {
