@@ -695,7 +695,7 @@ node('controls') {
                                         type_tests = tests_files.split(';')
                                         temp_var = type_tests[0].split('reg:')
                                         if ( temp_var[1]) {
-                                            tests_for_run_reg = --files_to_start ${temp_var[1]}
+                                            tests_for_run_reg = "--files_to_start ${temp_var[1]}"
                                         }
                                         temp_var = type_tests[1].split('int:')
                                         if ( temp_var[1] ) {
