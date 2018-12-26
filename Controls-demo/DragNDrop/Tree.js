@@ -22,16 +22,12 @@ define('Controls-demo/DragNDrop/Tree', [
             parentProperty: 'Раздел'
          });
          this._gridColumns = [{
-            displayProperty: 'id'
-         }, {
             displayProperty: 'title'
          }, {
             displayProperty: 'additional',
             width: '150px'
          }];
          this._gridHeader = [{
-            title: 'ID'
-         }, {
             title: 'Title'
          }, {
             title: 'Additional'
