@@ -5,7 +5,6 @@
             <Controls.List.Container>
                <Controls.Grid
                   ladderProperties="{{_ladderProperties}}"
-                  stickyColumn="{{_stickyColumn}}"
                   multiSelectVisibility="hidden"
                   columns="{{_viewColumns}}">
                </Controls.Grid>
