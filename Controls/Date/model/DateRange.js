@@ -1,13 +1,11 @@
 define('Controls/Date/model/DateRange', [
    'Core/core-simpleExtend',
-   'Core/helpers/Function/runDelayed',
    'WS.Data/Entity/ObservableMixin',
    'WS.Data/Entity/VersionableMixin',
    'Controls/Utils/DateRangeUtil',
    'Controls/Utils/Date'
 ], function(
    cExtend,
-   runDelayed,
    ObservableMixin,
    VersionableMixin,
    dateRangeUtil,
@@ -19,11 +17,29 @@ define('Controls/Date/model/DateRange', [
     * @public
     * @noShow
     */
+   var _private = {
+      setStartValue: function(self, value) {
+         if (DateUtil.isDatesEqual(self._startValue, value)) {
+            return false;
+         }
+         self._startValue = value;
+         self._nextVersion();
+         return true;
+      },
+      setEndValue: function(self, value) {
+         if (DateUtil.isDatesEqual(self._endValue, value)) {
+            return false;
+         }
+         self._endValue = value;
+         self._nextVersion();
+         return true;
+      }
+   };
+
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
       _startValue: null,
       _endValue: null,
       _state: null,
-      _rangeChanged: false,
 
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
@@ -35,13 +51,11 @@ define('Controls/Date/model/DateRange', [
          if (!DateUtil.isDatesEqual(options.startValue, this._state.startValue)) {
             this._startValue = options.startValue;
             this._state.startValue = options.startValue;
-            this._notifyRangeChanged();
             changed = true;
          }
          if (!DateUtil.isDatesEqual(options.endValue, this._state.endValue)) {
             this._endValue = options.endValue;
             this._state.endValue = options.endValue;
-            this._notifyRangeChanged();
             changed = true;
          }
          return changed;
@@ -52,13 +66,10 @@ define('Controls/Date/model/DateRange', [
       },
 
       set startValue(value) {
-         if (DateUtil.isDatesEqual(this._startValue, value)) {
-            return;
+         if (_private.setStartValue(this, value)) {
+            this._notify('startValueChanged', [value]);
+            this._notify('rangeChanged', [value]);
          }
-         this._startValue = value;
-         this._nextVersion();
-         this._notify('startValueChanged', [value]);
-         this._notifyRangeChanged();
       },
 
       get endValue() {
@@ -66,29 +77,25 @@ define('Controls/Date/model/DateRange', [
       },
 
       set endValue(value) {
-         if (DateUtil.isDatesEqual(this._endValue, value)) {
-            return;
+         if (_private.setEndValue(this, value)) {
+            this._notify('endValueChanged', [value]);
+            this._notify('rangeChanged', [value]);
          }
-         this._endValue = value;
-         this._nextVersion();
-         this._notify('endValueChanged', [value]);
-         this._notifyRangeChanged();
       },
 
-      /**
-         * Notification about rangeChanged event. runDelayed for waiting both events:
-         * startValueChanged and endValueChanged.
-      */
-
-      _notifyRangeChanged: function(value) {
-         if (this._rangeChanged) {
-            return;
+      setRange: function(startValue, endValue) {
+         var changed = false;
+         if (_private.setStartValue(this, startValue)) {
+            this._notify('startValueChanged', [startValue]);
+            changed = true;
          }
-         this._rangeChanged = true;
-         runDelayed(function() {
-            this._rangeChanged = false;
-            this._notify('rangeChanged', [this.startValue, this.endValue]);
-         }.bind(this));
+         if (_private.setEndValue(this, endValue)) {
+            this._notify('endValueChanged', [endValue]);
+            changed = true;
+         }
+         if (changed) {
+            this._notify('rangeChanged', [startValue, endValue]);
+         }
       },
 
       /**
@@ -97,8 +104,7 @@ define('Controls/Date/model/DateRange', [
        */
       shiftForward: function() {
          var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.FORWARD);
-         this.startValue = range[0];
-         this.endValue = range[1];
+         this.setRange(range[0], range[1]);
       },
 
       /**
@@ -107,10 +113,10 @@ define('Controls/Date/model/DateRange', [
        */
       shiftBack: function() {
          var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.BACK);
-         this.startValue = range[0];
-         this.endValue = range[1];
+         this.setRange(range[0], range[1]);
       }
    });
 
+   ModuleClass._private = _private;
    return ModuleClass;
 });

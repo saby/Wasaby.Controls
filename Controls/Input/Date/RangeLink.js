@@ -78,8 +78,7 @@ define('Controls/Input/Date/RangeLink', [
          this._onResult(startValue, endValue);
       },
       _onResult: function(startValue, endValue) {
-         this._rangeModel.startValue = startValue;
-         this._rangeModel.endValue = endValue;
+         this._rangeModel.setRange(startValue, endValue);
          this._children.opener.close();
          this._forceUpdate();
       },
