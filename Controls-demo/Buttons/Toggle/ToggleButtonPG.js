@@ -69,10 +69,7 @@ define('Controls-demo/Buttons/Toggle/ToggleButtonPG',
                         items: this._singleIcon
                      }],
                   value: 'list/tile',
-                  showClickEvent: {
-                     value: true,
-                     type: 'none'
-                  }
+                  showClickEvent: true
                },
                captions: {
                   items: [
