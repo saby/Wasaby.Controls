@@ -1,0 +1,40 @@
+<div attr:class="controls-demo__indicator_container">
+   <div attr:class="controls-demo__indicator_buttons">
+      <Controls.Button caption="Open" class="controls-demo__indicator_open" on:click="_open()"/>
+      <Controls.Button caption="Close" class="controls-demo__indicator_close" on:click="_close()"/>
+   </div>
+
+   <Controls.Container.LoadingIndicator
+         name="loadingIndicator"
+         attr:class="controls-demo__indicator_inst"
+
+         isGlobal="{{ _options.isGlobal }}"
+         message="{{ _options.message }}"
+         scroll="{{ _options.scroll }}"
+         small="{{ _options.small }}"
+         overlay="{{ _options.overlay }}"
+         mods="{{ _options.mods }}"
+         delay="{{ _options.delay }}"
+   >
+      <div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+      </div>
+   </Controls.Container.LoadingIndicator>
+</div>

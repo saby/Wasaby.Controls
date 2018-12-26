@@ -220,7 +220,6 @@ define('Controls/FormController', [
                         def.callback(true);
                      }
                   }
-                  return def;
                }
             }], { bubbling: true });
          }

@@ -1544,6 +1544,71 @@
       }
     }
   },
+  "Controls-demo/PendingRegistrator/PendingRegistrator": {
+    "name": "Controls-demo/PendingRegistrator/RegistratorExample",
+    "title": "Control that show pending registrator working",
+    "className": "Controls-demo/PendingRegistrator/RegistratorExample",
+    "kind": "control",
+    "inPublic": true,
+    "fullname": "Controls-demo/PendingRegistrator/RegistratorExample",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+        }
+      }
+    }
+  },
+  "Controls-demo/LoadingIndicator/IndicatorContainer": {
+    "name": "Controls-demo/LoadingIndicator/IndicatorContainer",
+    "title": "Control that show loading indicator",
+    "className": "Controls-demo/LoadingIndicator/IndicatorContainer",
+    "kind": "control",
+    "inPublic": true,
+    "fullname": "Controls-demo/LoadingIndicator/IndicatorContainer",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "isGlobal": {
+            "default": false,
+            "title": "isGlobal",
+            "type": "Boolean"
+          },
+          "message": {
+            "default": "message",
+            "title": "message",
+            "type": "String"
+          },
+          "scroll": {
+            "default": "",
+            "title": "scroll",
+            "type": "String"
+          },
+          "small": {
+            "default": "",
+            "title": "small",
+            "type": "String"
+          },
+          "overlay": {
+            "default": "default",
+            "title": "Overlay",
+            "type": "String"
+          },
+          "mods": {
+            "default": [],
+            "title": "mods",
+            "type": "Array"
+          },
+          "delay": {
+            "default": 0,
+            "title": "delay",
+            "type": "Number"
+          }
+        }
+      }
+    }
+  },
   "Controls/Popup/InfoBox": {
     "name": "Controls/Popup/InfoBox",
     "title": "Component that opens a popup that is positioned relative to a specified element",

@@ -1,0 +1,3 @@
+<div attr:class="controls-demo__content_container">
+   <Controls.Button caption="send registerPending event" class="controls-demo__pending-register" on:click="_register()"/>
+</div>

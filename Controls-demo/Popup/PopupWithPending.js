@@ -29,7 +29,6 @@ define('Controls-demo/Popup/PopupWithPending',
                   showLoadingIndicator: false,
                   onPendingFail: function(forceFinishValue) {
                      self._showConfirmDialog(def, forceFinishValue);
-                     return def;
                   }
                }], { bubbling: true });
             }

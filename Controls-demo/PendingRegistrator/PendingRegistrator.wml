@@ -1,0 +1,33 @@
+<div>
+   Resolve pending by onPendingFail property:
+   <br/>
+   <Controls-demo.PendingRegistrator.RegistratorExample>
+      <Controls-demo.PendingRegistrator.Content/>
+   </Controls-demo.PendingRegistrator.RegistratorExample>
+
+   <br/>
+   Cancel pending resolving waiter:
+   <br/>
+   <Controls-demo.PendingRegistrator.RegistratorExample>
+      <Controls-demo.PendingRegistrator.Content2/>
+   </Controls-demo.PendingRegistrator.RegistratorExample>
+
+   <br/>
+   Multiple pending senders:
+   <br/>
+   <Controls-demo.PendingRegistrator.RegistratorExample>
+      <div>
+         <Controls-demo.PendingRegistrator.Content />
+         <Controls-demo.PendingRegistrator.Content />
+      </div>
+   </Controls-demo.PendingRegistrator.RegistratorExample>
+
+   <br/>
+   PendingRegistrator inside PendingRegistrator:
+   <br/>
+   <Controls-demo.PendingRegistrator.RegistratorExample>
+      <Controls-demo.PendingRegistrator.RegistratorExample>
+         <Controls-demo.PendingRegistrator.Content/>
+      </Controls-demo.PendingRegistrator.RegistratorExample>
+   </Controls-demo.PendingRegistrator.RegistratorExample>
+</div>
