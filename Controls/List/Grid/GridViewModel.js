@@ -478,6 +478,24 @@ define('Controls/List/Grid/GridViewModel', [
          getMarkedKey: function() {
             return this._model.getMarkedKey();
          },
+         getFirstItemKey: function() {
+            return this._model.getFirstItemKey.apply(this._model, arguments);
+         },
+         getIndexByKey: function() {
+            return this._model.getIndexByKey.apply(this._model, arguments);
+         },
+
+         getSelectionStatus: function() {
+            return this._model.getSelectionStatus.apply(this._model, arguments);
+         },
+
+         getNextItemKey: function() {
+            return this._model.getNextItemKey.apply(this._model, arguments);
+         },
+
+         getPreviousItemKey: function() {
+            return this._model.getPreviousItemKey.apply(this._model, arguments);
+         },
 
          setSorting: function(sorting) {
             this._model.setSorting(sorting);

@@ -193,9 +193,16 @@ define('Controls/List/TileView/TileView', [
          _private.onScroll(this);
       },
 
+      getItemsContainer: function() {
+         return this._children.tileContainer;
+      },
+
       _beforeUnmount: function() {
          this._notify('unregister', ['controlResize', this], {bubbling: true});
          this._notify('unregister', ['scroll', this], {bubbling: true});
+      },
+
+      _onTileViewKeyDown: function() {
       }
    });
 

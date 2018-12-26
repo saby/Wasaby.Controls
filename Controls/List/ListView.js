@@ -4,6 +4,7 @@
 define('Controls/List/ListView', [
    'Core/Control',
    'Core/helpers/Function/debounce',
+   'Core/constants',
    'wml!Controls/List/ListView/ListView',
    'wml!Controls/List/ItemTemplate',
    'wml!Controls/List/GroupTemplate',
@@ -12,6 +13,7 @@ define('Controls/List/ListView', [
    'css!theme?Controls/List/ListView/ListView'
 ], function(BaseControl,
    cDebounce,
+   cConstants,
    ListViewTpl,
    defaultItemTemplate,
    GroupTemplate,
@@ -112,6 +114,13 @@ define('Controls/List/ListView', [
 
          getItemsContainer: function() {
             return this._children.itemsContainer;
+         },
+
+         _onItemKeyDown: function(e, dispItem) {
+            if (e.nativeEvent.keyCode === cConstants.key.enter) {
+               var item = dispItem.getContents();
+               this._notify('itemClick', [item, e], { bubbling: true });
+            }
          },
 
          _onItemClick: function(e, dispItem) {

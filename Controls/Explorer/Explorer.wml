@@ -28,5 +28,6 @@
                       on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
                       on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
                       on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+                      on:keyDown="_onExplorerKeyDown()"
                       dataLoadCallback="{{_dataLoadCallback}}"/>
 </div>

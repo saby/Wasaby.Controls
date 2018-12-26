@@ -11,10 +11,13 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
+   'Core/constants',
+   'Controls/Utils/scrollToElement',
    'WS.Data/Collection/RecordSet',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
+   'Controls/Utils/keysHandler',
    'wml!Controls/List/BaseControl/Footer',
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(
@@ -30,10 +33,13 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
+   cConstants,
+   scrollToElement,
    RecordSet,
    tUtil,
    aUtil,
-   tmplNotify
+   tmplNotify,
+   keysHandler
 ) {
    'use strict';
 
@@ -42,6 +48,13 @@ define('Controls/List/BaseControl', [
    var
       defaultSelectedKeys = [],
       defaultExcludedKeys = [];
+
+   var
+      HOT_KEYS = {
+         moveMarkerToNext: cConstants.key.down,
+         moveMarkerToPrevious: cConstants.key.up,
+         toggleSelection: cConstants.key.space
+      };
 
    var LOAD_TRIGGER_OFFSET = 100;
 
@@ -52,6 +65,9 @@ define('Controls/List/BaseControl', [
             sorting = cClone(cfg.sorting),
             navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
+         if (self._listViewModel) {
+            self._restoreMarkedKey = self._listViewModel.getMarkedKey();
+         }
          if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
@@ -106,7 +122,32 @@ define('Controls/List/BaseControl', [
          });
          return resDeferred;
       },
-
+      scrollToItem: function(self, key) {
+         scrollToElement(self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)], true);
+      },
+      setMarkedKey: function(self, key) {
+         if (key !== undefined) {
+            self.getViewModel().setMarkedKey(key);
+            _private.scrollToItem(self, key);
+         }
+      },
+      moveMarkerToNext: function(self) {
+         var
+            model = self.getViewModel();
+         _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
+      },
+      moveMarkerToPrevious: function(self) {
+         var
+            model = self.getViewModel();
+         _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+      },
+      toggleSelection: function(self) {
+         var
+            model = self.getViewModel(),
+            markedKey = model.getMarkedKey();
+         self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
+         _private.moveMarkerToNext(self);
+      },
       prepareFooter: function(self, navigation, sourceController) {
          var
             loadedDataCount, allDataCount;
@@ -562,6 +603,7 @@ define('Controls/List/BaseControl', [
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
+      _restoreMarkedKey: undefined,
 
       _listViewModel: null,
       _viewModelConstructor: null,
@@ -722,8 +764,21 @@ define('Controls/List/BaseControl', [
       },
 
       _afterUpdate: function(oldOptions) {
+         var
+            restoredKey;
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
+            if (this._restoreMarkedKey !== undefined) {
+               if (this._listViewModel.getIndexByKey(this._restoreMarkedKey) !== -1) {
+                  _private.setMarkedKey(this, this._restoreMarkedKey);
+               } else {
+                  restoredKey = this._listViewModel.getFirstItemKey(this._restoreMarkedKey);
+                  if (restoredKey !== undefined) {
+                     _private.setMarkedKey(this, restoredKey);
+                  }
+               }
+               this._restoreMarkedKey = undefined;
+            }
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
@@ -923,7 +978,9 @@ define('Controls/List/BaseControl', [
             this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
          }
       },
-
+      _onViewKeyDown: function(event) {
+         keysHandler(event, HOT_KEYS, _private, this);
+      },
       _dragEnter: function(event, dragObject) {
          var
             dragEnterResult,

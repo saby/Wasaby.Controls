@@ -37,7 +37,7 @@
          on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
          on:itemSwipe="_listSwipe()">
          <ws:viewTemplate>
-            <ws:partial template="{{_options.viewName}}"/>
+            <ws:partial template="{{_options.viewName}}" on:keyDown="_onViewKeyDown()"/>
          </ws:viewTemplate>
          <ws:footerTemplate>
             <ws:if data="{{_loadingIndicatorState}}">

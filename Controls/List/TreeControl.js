@@ -3,15 +3,25 @@ define('Controls/List/TreeControl', [
    'wml!Controls/List/TreeControl/TreeControl',
    'Controls/Controllers/SourceController',
    'Core/core-clone',
-   'Core/Deferred'
+   'Core/constants',
+   'Core/Deferred',
+   'Controls/Utils/keysHandler'
 ], function(
    Control,
    TreeControlTpl,
    SourceController,
    cClone,
-   Deferred
+   cConstants,
+   Deferred,
+   keysHandler
 ) {
    'use strict';
+
+   var
+      HOT_KEYS = {
+         expandMarkedItem: cConstants.key.right,
+         collapseMarkedItem: cConstants.key.left
+      };
 
    var DRAG_MAX_OFFSET = 15,
       DEFAULT_COLUMNS_VALUE = [];
@@ -28,6 +38,24 @@ define('Controls/List/TreeControl', [
       toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
          listViewModel.toggleExpanded(dispItem, expanded);
          self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
+      },
+      expandMarkedItem: function(self) {
+         var
+            model = self._children.baseControl.getViewModel(),
+            markedItemKey = model.getMarkedKey(),
+            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+         if (!model.isExpanded(markedItem)) {
+            self.toggleExpanded(markedItemKey);
+         }
+      },
+      collapseMarkedItem: function(self) {
+         var
+            model = self._children.baseControl.getViewModel(),
+            markedItemKey = model.getMarkedKey(),
+            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+         if (model.isExpanded(markedItem)) {
+            self.toggleExpanded(markedItemKey);
+         }
       },
       toggleExpanded: function(self, dispItem) {
          var
@@ -235,6 +263,10 @@ define('Controls/List/TreeControl', [
                }
             }
          }
+      },
+
+      _onTreeViewKeyDown: function(event) {
+         keysHandler(event, HOT_KEYS, _private, this);
       },
 
       _beforeUnmount: function() {
