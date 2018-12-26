@@ -22,7 +22,7 @@
             />
          </div>
          <!-- Fake container that stretches control to the correct width. -->
-         <div class="controls-Mask__stretcher">{{_options.value}}</div>
+         <div class="controls-Mask__stretcher">{{_viewModel.getDisplayValue()}}</div>
       </ws:if>
       <ws:else>
          <ws:partial
