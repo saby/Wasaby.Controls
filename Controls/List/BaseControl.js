@@ -771,7 +771,7 @@ define('Controls/List/BaseControl', [
             restoredKey;
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
-            if (this._restoreMarkedKey !== undefined) {
+            if (this._restoreMarkedKey !== undefined && this._restoreMarkedKey !== null) {
                if (this._listViewModel.getIndexByKey(this._restoreMarkedKey) !== -1) {
                   _private.setMarkedKey(this, this._restoreMarkedKey);
                } else {
