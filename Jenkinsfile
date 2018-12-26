@@ -173,7 +173,7 @@ node('controls') {
         def skip_tests_int = ""
         def skip_tests_reg = ""
         def tests_for_run_int = ""
-        def test_for_run_reg = ""
+        def tests_for_run_reg = ""
         def smoke_result = true
         try {
         echo "Назначаем переменные"
@@ -694,7 +694,7 @@ node('controls') {
                                         type_tests = tests_files.split(';')
                                         temp_var = type_tests[0].split('reg:')
                                         if ( temp_var[1]) {
-                                            test_for_run_reg = temp_var[1]
+                                            tests_for_run_reg = temp_var[1]
                                         }
                                         temp_var = type_tests[1].split('int:')
                                         if ( temp_var[1] ) {
