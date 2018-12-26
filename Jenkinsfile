@@ -680,6 +680,22 @@ node('controls') {
                     }
                     if ( (inte || regr) && !only_fail && changed_files ) {
                         dir("./controls/tests") {
+                        if ( boss ) {
+                            def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
+                            if ( tests_files ) {
+                                echo "Будут запущены ${tests_files}"
+                                echo "Делим общий список на int и reg тесты"
+                                type_tests = tests_files.split(';')
+                                temp_var = type_tests[0].split('reg:')
+                                if ( temp_var[1]) {
+                                    tests_for_run_reg = "--files_to_start ${temp_var[1]}"
+                                }
+                                temp_var = type_tests[1].split('int:')
+                                if ( temp_var[1] ) {
+                                    tests_for_run_int = "--files_to_start ${temp_var[1]}"
+                                }
+                            }
+                        } else {
                             echo "Выкачиваем файл с зависимостями"
                             url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
                             script = """
@@ -688,28 +704,14 @@ node('controls') {
                                 else rm -f result.json
                                 fi
                                 """
-                                sh returnStdout: true, script: script
+                            sh returnStdout: true, script: script
                             def exist_json = fileExists 'result.json'
                             if ( exist_json ) {
                                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
                                 if ( tests_files ) {
                                     tests_files = tests_files.replace('\n', '')
                                     echo "Будут запущены ${tests_files}"
-                                    if ( boss ) {
-                                        echo "Делим общий список на int и reg тесты"
-                                        type_tests = tests_files.split(';')
-                                        temp_var = type_tests[0].split('reg:')
-                                        if ( temp_var[1]) {
-                                            tests_for_run_reg = "--files_to_start ${temp_var[1]}"
-                                        }
-                                        temp_var = type_tests[1].split('int:')
-                                        if ( temp_var[1] ) {
-                                            tests_for_run_int = "--files_to_start ${temp_var[1]}"
-                                        }
-                                    } else {
-                                        tests_for_run_int = "--files_to_start ${tests_files}"
-                                    }
-
+                                     tests_for_run_int = "--files_to_start ${tests_files}"
                                 } else {
                                     echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                                 }

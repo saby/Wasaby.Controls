@@ -100,6 +100,7 @@ if __name__ == '__main__':
     build.add_argument('-s', '--source_path', help='root path with inner coverage.json ')
     action = parser.add_argument_group('action')
     action.add_argument('-c', '--changelist', nargs='+', help='List changed files')
+    action.add_argument('-d', '--developer', action='store_true', default=False, help='I\'m developer autotest')
     args = parser.parse_args()
     coverage = Coverage()
     if args.source_path:
@@ -108,9 +109,10 @@ if __name__ == '__main__':
         coverage.build(args.source_path)
 
     if args.changelist:
-        test_result = coverage.get_tests(args.changelist)
-        if test_result:
-            print(' '.join(set(test_result)))
+        if not args.developer:
+            test_result = coverage.get_tests(args.changelist)
+            if test_result:
+                print(' '.join(set(test_result)))
         else:
             int_test, reg_test = coverage.get_test_for_regression_test(args.changelist)
             if int_test or reg_test:
