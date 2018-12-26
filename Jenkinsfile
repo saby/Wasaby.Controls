@@ -779,7 +779,8 @@ node('controls') {
 
 
             sh "mkdir logs_ps"
-        /*    if ( exists_dir ){
+             /*
+             if ( exists_dir ){
                 dir('/home/sbis/Controls'){
                     def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
                     if ( files_err.length > 0 ){
@@ -791,7 +792,8 @@ node('controls') {
                         }
                     }
                 }
-            } */
+            }
+            */
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
