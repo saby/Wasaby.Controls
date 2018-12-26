@@ -121,6 +121,7 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
@@ -149,6 +150,7 @@ def regr = params.run_reg
 def unit = params.run_unit
 def inte = params.run_int
 def all_inte = params.run_all_int
+def all_regr = params.run_all_reg
 def only_fail = false
 
 
@@ -530,7 +532,7 @@ node('controls') {
                 sh "date"
             }
         }
-        if ( regr || inte || all_inte) {
+        if ( regr || inte || all_inte || all_regr) {
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -613,7 +615,7 @@ node('controls') {
             }
         }
 
-        if ( regr || inte || all_inte) {
+        if ( regr || inte || all_inte || all_regr) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
@@ -737,7 +739,7 @@ node('controls') {
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( regr && smoke_result){
+                        if ( regr || all_regr && smoke_result){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg"){
                                 sh """
@@ -767,7 +769,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( regr || inte || all_inte){
+    if ( regr || inte || all_inte || all_regr){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -811,7 +813,7 @@ node('controls') {
                          }
                     }
                 }
-                if (regr) {
+                if (regr || all_regr) {
                     reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
@@ -831,7 +833,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( regr ){
+    if ( regr || all_regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
