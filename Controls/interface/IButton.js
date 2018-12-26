@@ -62,13 +62,6 @@ define('Controls/interface/IButton', [
     * @variant l Large button size.
     * @variant xl Extra large button size.
     * @default m
-    * @remark
-    * Button size is different for different button viewModes.
-    * Sizes 's' and 'xl' don't supported by viewModes:
-    * <ul>
-    *     <li>button,</li>
-    *     <li>toolButton</li>
-    * </ul>
     * @example
     * 'L' size of primary button.
     * <pre>

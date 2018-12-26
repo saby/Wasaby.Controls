@@ -17,7 +17,7 @@ define('Controls/Button/interface/IIconStyle', [
     * @variant warning Warning field display style.
     * @variant danger Danger field display style.
     * @variant info Information field display style.
-    * @default Default
+    * @default secondary
     * @remark Default display style is different for different button styles.
     * @example
     * Primary button with default icon style.
