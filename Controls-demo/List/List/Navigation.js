@@ -1,0 +1,57 @@
+/**
+ * Created by Rodionov E.A. on 09.01.2019.
+ */
+define('Controls-demo/List/List/Navigation', [
+   'Core/Control',
+   'wml!Controls-demo/List/List/resources/Navigation/Navigation',
+   'WS.Data/Source/Memory',
+   'Controls-demo/List/List/resources/Navigation/Data',
+   'css!Controls-demo/List/List/resources/List',
+   'css!Controls-demo/List/List/resources/Navigation/Navigation'
+], function (BaseControl,
+             template,
+             MemorySource,
+             data
+) {
+   'use strict';
+
+   var ModuleClass = BaseControl.extend(
+      {
+         _template: template,
+         _eventsList: '',
+         _navigationViewType: 'infinity',
+
+
+         constructor: function() {
+            ModuleClass.superclass.constructor.apply(this, arguments);
+            this._viewSource = new MemorySource({
+               idProperty: 'id',
+               data: data.srcData
+            });
+            this._navigationViewTypeSource = new MemorySource({
+               idProperty: 'id',
+               data: [
+                  {
+                     id: 1,
+                     title: 'infinity'
+                  },
+                  {
+                     id: 2,
+                     title: 'pages'
+                  },
+                  {
+                     id: 3,
+                     title: 'demand'
+                  }
+               ]
+            });
+         },
+         _onMoreClick: function() {
+            this._children.psina.__loadPage('down');
+         },
+         _clearArea: function() {
+            this._eventsList = '';
+         }
+      });
+   return ModuleClass;
+});

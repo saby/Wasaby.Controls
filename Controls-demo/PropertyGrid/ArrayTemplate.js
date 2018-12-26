@@ -18,6 +18,10 @@ define('Controls-demo/PropertyGrid/ArrayTemplate',
             this._notify('valueChanged', [tmp]);
          },
 
+         _valueChangedHandlerObj: function(event, tmp) {
+            this._notify('valueChanged', [tmp]);
+         },
+
          _chooseSuggestHandler: function(event, item) {
             this._notify('valueChanged', [item.get('items')]);
          }
