@@ -60,7 +60,7 @@ define('Controls/Container/PendingRegistrator', [
    // pending identificator counter
    var cnt = 0;
 
-   var module = Control.extend({
+   var module = Control.extend(/** @lends Controls/Container/PendingRegistrator.prototype */{
       _template: tmpl,
       _pendings: null,
       _parallelDef: null,
