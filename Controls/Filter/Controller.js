@@ -240,7 +240,7 @@ define('Controls/Filter/Controller',
 
          getHistoryData: function(filterButtonItems, fastFilterItems) {
 
-            /* A blank filter should not appear in the history, but should be applied when loading data from the history.
+            /* An empty filter should not appear in the history, but should be applied when loading data from the history.
                To understand this, save an empty object in history. */
 
             if (_private.isFilterChanged(filterButtonItems, fastFilterItems)) {
