@@ -85,10 +85,10 @@ class Coverage:
         def validate(path_test):
             test_name = os.path.basename(path_test)
             if test_name.startswith('test') and test_name.endswith('.py'):
-               if path_test.startswith('tests/int/SBIS3.CONTROLS') or path_test.startswith('tests/int/VDOM'):
-                   int_tests.append(path_test)
-               elif path_test.startswith('tests/reg/SBIS3.CONTROLS') or path_test.startswith('tests/reg/VDOM'):
-                   reg_tests.append(path_test)
+                if path_test.startswith('tests/int/'):
+                    int_tests.append(path_test.replace('tests/int/', ''))
+                elif path_test.startswith('tests/reg/'):
+                    reg_tests.append(path_test.replace('tests/reg/', ''))
 
         for file in change_files:
             validate(file)
