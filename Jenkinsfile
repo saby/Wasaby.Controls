@@ -689,13 +689,19 @@ node('controls') {
                                     tests_files = tests_files.replace('\n', '')
                                     echo "Будут запущены ${tests_files}"
 
-                                    if tests_files.contains(';') {
+                                    if ( tests_files.contains(';')) {
                                         echo "Делим общий список на int и reg тесты"
                                         type_tests = tests_files.split(';')
-                                        test_for_run_reg = type_tests[0].split('reg')[1]
-                                        tests_for_run_int = type_tests[1].split('int')[1]
+                                        temp_var = type_tests[0].split('reg')
+                                        if ( temp_var[1]) {
+                                            test_for_run_reg = temp_var[1]
+                                        }
+                                        temp_var = type_tests[1].split('int')
+                                        if ( temp_var[1] ) {
+                                            tests_for_run_int = temp_var[1]
+                                        }
                                     } else {
-                                    tests_for_run_int = "--files_to_start ${tests_files}"
+                                        tests_for_run_int = "--files_to_start ${tests_files}"
                                     }
                                 } else {
                                     echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
