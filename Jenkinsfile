@@ -692,11 +692,11 @@ node('controls') {
                                     if ( tests_files.contains(';')) {
                                         echo "Делим общий список на int и reg тесты"
                                         type_tests = tests_files.split(';')
-                                        temp_var = type_tests[0].split('reg')
+                                        temp_var = type_tests[0].split('reg:')
                                         if ( temp_var[1]) {
                                             test_for_run_reg = temp_var[1]
                                         }
-                                        temp_var = type_tests[1].split('int')
+                                        temp_var = type_tests[1].split('int:')
                                         if ( temp_var[1] ) {
                                             tests_for_run_int = temp_var[1]
                                         }
