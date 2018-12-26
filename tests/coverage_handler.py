@@ -80,20 +80,19 @@ class Coverage:
     def get_test_for_regression_test(self, change_files):
         """Получить список тестов для запуска, в которых делались изменения"""
 
-        test_result = []
+        int_tests = []
+        reg_tests = []
         def validate(path_test):
             test_name = os.path.basename(path_test)
-            if path_test.startswith('tests/int/SBIS3.CONTROLS') or path_test.startswith('tests/int/VDOM') or \
-                    path_test.startswith('tests/reg/SBIS3.CONTROLS') or path_test.startswith('tests/reg/VDOM') \
-                    and test_name.startswith('test') and test_name.endswith('.py'):
-                return True
-            else:
-                return False
+            if test_name.startswith('test') and test_name.endswith('.py'):
+               if path_test.startswith('tests/int/SBIS3.CONTROLS') or path_test.startswith('tests/int/VDOM'):
+                   int_tests.append(path_test)
+               elif path_test.startswith('tests/reg/SBIS3.CONTROLS') or path_test.startswith('tests/reg/VDOM'):
+                   reg_tests.append(path_test)
 
         for file in change_files:
-            if validate(file):
-                test_result.append(file)
-        return test_result
+            validate(file)
+        return int_tests, reg_tests
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -113,7 +112,7 @@ if __name__ == '__main__':
         if test_result:
             print(' '.join(set(test_result)))
         else:
-            regression_test = coverage.get_test_for_regression_test(args.changelist)
-            if regression_test:
-                print(' '.join(set(regression_test)))
+            int_test, reg_test = coverage.get_test_for_regression_test(args.changelist)
+            if int_test or reg_test:
+                print('reg:{reg};int:{int}'.format(reg=' '.join(set(reg_test)), int=' '.join(set(int_test))))
 
