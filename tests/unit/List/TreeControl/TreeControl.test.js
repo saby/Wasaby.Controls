@@ -4,6 +4,7 @@ define([
    'Core/Deferred',
    'Core/core-merge',
    'Core/core-instance',
+   'Core/constants',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Source/Memory'
@@ -13,6 +14,7 @@ define([
    Deferred,
    cMerge,
    cInstance,
+   cConstants,
    TreeGridViewModel,
    RecordSet,
    Memory
@@ -67,6 +69,70 @@ define([
                done();
             }, 10);
          }, 10);
+      });
+      it('List navigation by keys', function(done) {
+         // mock function working with DOM
+         BaseControl._private.scrollToItem = function() {};
+
+         var
+            stopImmediateCalled = false,
+            preventDefaultCalled = false,
+
+            lnSource = new Memory({
+               idProperty: 'id',
+               data: [
+                  { id: 1, type: true, parent: null },
+                  { id: 2, type: true, parent: 1 }
+               ]
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/TreeGridView',
+               source: lnSource,
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               markedKey: 1,
+               columns: [],
+               viewModelConstructor: TreeGridViewModel
+            },
+            lnTreeControl = correctCreateTreeControl(lnCfg),
+            treeGridViewModel = lnTreeControl._children.baseControl.getViewModel();
+
+         setTimeout(function () {
+            assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+
+            lnTreeControl._onTreeViewKeyDown({
+               stopImmediatePropagation: function() {
+                  stopImmediateCalled = true;
+               },
+               preventDefault: function() {
+                  preventDefaultCalled = true;
+               },
+               nativeEvent: {
+                  keyCode: cConstants.key.right
+               }
+            });
+            setTimeout(function () {
+               assert.deepEqual({ 1: true }, treeGridViewModel._model._expandedItems);
+
+               lnTreeControl._onTreeViewKeyDown({
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  },
+                  nativeEvent: {
+                     keyCode: cConstants.key.left
+                  }
+               });
+               assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+
+               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
+               done();
+            }, 1);
+         }, 1);
       });
       it('TreeControl._beforeUpdate', function(done) {
          var

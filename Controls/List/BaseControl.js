@@ -143,10 +143,13 @@ define('Controls/List/BaseControl', [
       },
       toggleSelection: function(self) {
          var
-            model = self.getViewModel(),
+            model, markedKey;
+         if (self._children.selectionController) {
+            model = self.getViewModel();
             markedKey = model.getMarkedKey();
-         self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
-         _private.moveMarkerToNext(self);
+            self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
+            _private.moveMarkerToNext(self);
+         }
       },
       prepareFooter: function(self, navigation, sourceController) {
          var
