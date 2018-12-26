@@ -1,0 +1,49 @@
+define('Controls-demo/List/List/resources/BasePG/ItemPaddingEditor', [
+   'Core/Control',
+   'wml!Controls-demo/List/List/resources/BasePG/ItemPaddingEditor',
+   'Types/source'
+], function(
+   Control,
+   template,
+   TSource
+) {
+   'use strict';
+
+   var
+      EditableConfigEditor = Control.extend({
+         _template: template,
+         _source: null,
+         _left: null,
+         _right: null,
+         _top: null,
+         _bottom: null,
+
+         _beforeMount: function(cfg) {
+            this._source = new TSource.Memory({
+               data: [
+                  { id: 'null', title: 'null' },
+                  { id: 'xs', title: 'xs' },
+                  { id: 's', title: 's' },
+                  { id: 'm', title: 'm' },
+                  { id: 'l', title: 'l' },
+                  { id: 'xl', title: 'xl' },
+                  { id: 'xxl', title: 'xxl' }
+               ],
+               idProperty: 'id'
+            });
+            this._left = cfg.value.left;
+            this._right = cfg.value.right;
+            this._top = cfg.value.top;
+            this._bottom = cfg.value.bottom;
+         },
+         _onValueChanged: function() {
+            this._notify('valueChanged', [{
+               left: this._left,
+               right: this._right,
+               top: this._top,
+               bottom: this._bottom
+            }]);
+         }
+      });
+   return EditableConfigEditor;
+});

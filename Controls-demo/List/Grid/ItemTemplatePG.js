@@ -1,0 +1,80 @@
+define('Controls-demo/List/Grid/ItemTemplatePG',
+   [
+      'Core/Control',
+      'WS.Data/Source/Memory',
+      'Controls-demo/List/Grid/resources/DataDemoPG',
+      'tmpl!Controls-demo/PropertyGrid/DemoPG',
+      'json!Controls-demo/List/Grid/resources/ItemTemplatePG/cfg',
+      'wml!Controls-demo/List/Grid/resources/ItemTemplatePG/noHighlightOnHover',
+      'wml!Controls-demo/List/Grid/resources/DemoMoney',
+      'wml!Controls-demo/List/Grid/resources/DemoRating',
+      'wml!Controls-demo/List/Grid/resources/DemoItem',
+   ],
+
+   function(Control, MemorySource, data, template, config) {
+      'use strict';
+      var Component = Control.extend({
+         _template: template,
+         _metaData: null,
+         _content: 'Controls/Grid',
+         _dataObject: null,
+         _componentOptions: null,
+
+
+         _beforeMount: function() {
+
+            this._dataObject = {
+               itemTemplate: {
+                  readOnly: false,
+                  value: 'default',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'default',
+                        value: 'wml!Controls/List/Grid/Item'
+                     },
+                     {
+                        id: '2',
+                        title: 'without highlighting hovered item',
+                        value: 'wml!Controls-demo/List/Grid/resources/ItemTemplatePG/noHighlightOnHover'
+                     }
+                  ]
+               },
+               itemTemplateProperty: {
+                  value: 'none',
+                  items: [
+                     {
+                        id: 1,
+                        title: 'none',
+                        value: ''
+                     },
+                     {
+                        id: 2,
+                        title: 'without highlighting hovered item',
+                        value: 'noHighlightOnHover'
+                     }
+                  ]
+               }
+            };
+
+
+            this._componentOptions = {
+               name: 'ItemTemplateGridPG',
+               keyProperty: 'id',
+               source: new MemorySource({
+                  idProperty: 'id',
+                  data: data.catalog
+               }),
+               columns: data.fullColumns,
+               header: data.fullHeader,
+               markedKey: '4',
+               displayProperty: 'title',
+               itemTemplate: 'wml!Controls/List/Grid/Item',
+               itemTemplateProperty: ''
+            };
+            this._metaData = config[this._content].properties['ws-config'].options;
+         },
+
+      });
+      return Component;
+   });

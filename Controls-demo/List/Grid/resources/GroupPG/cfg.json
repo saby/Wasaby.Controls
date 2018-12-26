@@ -1,0 +1,22 @@
+{
+  "Controls/Grid": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "groupingKeyCallback": {
+            "title": "groupingKeyCallback",
+            "type": "function"
+          },
+          "collapsedGroups": {
+            "type": "Array",
+            "readOnly": "true"
+          },
+          "groupTemplate": {
+            "type": "function|String"
+          }
+        }
+      }
+    }
+  }
+}

@@ -28,14 +28,30 @@ define('Controls/List/ListView', [
 
    var _private = {
       checkDeprecated: function(cfg) {
+         // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+         if (cfg.leftSpacing !== undefined) {
+            IoC.resolve('ILogger').warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+         }
+         if (cfg.leftPadding !== undefined) {
+            IoC.resolve('ILogger').warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+         }
+         if (cfg.rightSpacing !== undefined) {
+            IoC.resolve('ILogger').warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+         }
+         if (cfg.rightPadding !== undefined) {
+            IoC.resolve('ILogger').warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+         }
+         if (cfg.rowSpacing !== undefined) {
+            IoC.resolve('ILogger').warn('IList', 'Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".');
+         }
          if (cfg.contextMenuEnabled !== undefined) {
             IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
          }
          if (cfg.markerVisibility === 'always') {
-            IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead');
+            IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
          }
          if (cfg.markerVisibility === 'demand') {
-            IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead');
+            IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
          }
          if (cfg.results) {
             IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');
@@ -113,6 +129,26 @@ define('Controls/List/ListView', [
             }
             if (this._options.groupTemplate !== newOptions.groupTemplate) {
                this._groupTemplate = newOptions.groupTemplate;
+            }
+            if (this._options.itemPadding !== newOptions.itemPadding) {
+               this._listModel.setItemPadding(newOptions.itemPadding);
+            }
+
+            // TODO https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            if (this._options.leftSpacing !== newOptions.leftSpacing) {
+               this._listModel.setLeftSpacing(newOptions.leftSpacing);
+            }
+            if (this._options.leftPadding !== newOptions.leftPadding) {
+               this._listModel.setLeftPadding(newOptions.leftPadding);
+            }
+            if (this._options.rightSpacing !== newOptions.rightSpacing) {
+               this._listModel.setRightSpacing(newOptions.rightSpacing);
+            }
+            if (this._options.rightPadding !== newOptions.rightPadding) {
+               this._listModel.setRightPadding(newOptions.rightPadding);
+            }
+            if (this._options.rowSpacing !== newOptions.rowSpacing) {
+               this._listModel.setRowSpacing(newOptions.rowSpacing);
             }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
             this._lockForUpdate = true;

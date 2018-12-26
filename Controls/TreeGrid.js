@@ -41,6 +41,7 @@ define('Controls/TreeGrid', [
     * @public
     * @author Авраменко А.С.
     * @category List
+    * @demo Controls-demo/List/TreeGrid/BasePG
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{
