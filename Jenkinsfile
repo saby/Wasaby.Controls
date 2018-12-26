@@ -118,12 +118,12 @@ def getParams(user) {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Используется автотестровщиками", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
+            booleanParam(defaultValue: false, description: "Я разработчик автотестов", name: 'run_boss'),
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
@@ -150,7 +150,7 @@ def regr = params.run_reg
 def unit = params.run_unit
 def inte = params.run_int
 def all_inte = params.run_all_int
-def all_regr = params.run_all_reg
+def boss = params.run_boss
 def only_fail = false
 
 
@@ -229,6 +229,9 @@ node('controls') {
         }
         if ( inte || all_inte || regr ) {
             unit = true
+        }
+        if ( boss ) {
+            unit = false
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -532,7 +535,7 @@ node('controls') {
                 sh "date"
             }
         }
-        if ( regr || inte || all_inte || all_regr) {
+        if ( regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -615,7 +618,7 @@ node('controls') {
             }
         }
 
-        if ( regr || inte || all_inte || all_regr) {
+        if ( regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
@@ -692,7 +695,7 @@ node('controls') {
                                 if ( tests_files ) {
                                     tests_files = tests_files.replace('\n', '')
                                     echo "Будут запущены ${tests_files}"
-                                    if ( tests_files.contains(';')) {
+                                    if ( boss ) {
                                         echo "Делим общий список на int и reg тесты"
                                         type_tests = tests_files.split(';')
                                         temp_var = type_tests[0].split('reg:')
@@ -739,7 +742,7 @@ node('controls') {
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( regr || all_regr && smoke_result){
+                        if ( regr && smoke_result){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg"){
                                 sh """
@@ -769,7 +772,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( regr || inte || all_inte || all_regr){
+    if ( regr || inte || all_inte ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -813,7 +816,7 @@ node('controls') {
                          }
                     }
                 }
-                if (regr || all_regr) {
+                if (regr) {
                     reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
@@ -833,7 +836,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( regr || all_regr ){
+    if ( regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
