@@ -36,28 +36,46 @@ class RC:
             for k, v in list(zip(self.test_names, self.err_links)):
                 self.err_dict[v].append(k)
 
+    def get_status_title(self, rc_list, new_list):
+        """Возвращает статус сборки с описанием
+        - списки ошибок равны ОК
+        - список в сборке - подмножество ошибок в RC OK
+        - список в рц подмножество ошибок в сборке FAIL
+        - списка в рц нет, в сборке есть FAIL
+        """
+        rc_set = set(rc_list)
+        new_set = set(new_list)
+
+        if rc_set == new_set and bool(new_set):
+            return "OK|Ошибки в сборке уже попали в RC."
+        elif new_set.issubset(rc_set) and bool(new_set):
+            return "OK|Ошибки в сборке уже попали в RC."
+        elif rc_set.issubset(new_set) or not bool(rc_set.intersection(new_set)):
+            return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
+        elif not bool(rc_set) and bool(new_set):
+            return "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
+
     def description(self, fail_tests_path, skip):
         """Формируем описаниена основе полученных данных из RC сборки и упавших тестов в текущей"""
 
+        description = ''
         with open(fail_tests_path, mode='r', encoding='utf-8') as f:
             now_list = sorted(f.read().split())
             self.test_names = sorted(self.test_names)
+            if not now_list:
+                return ''
             if not skip:
-                if self.test_names == now_list and self.test_names:
-                    self.head = "ОК|Эти ошибки уже попали в RC."
-                elif now_list:
-                    self.head = "FAIL|В сборке падает UI тесты по новым ошибкам! В RC таких нет."
-                elif not self.test_names and not now_list:
-                    return ''
+                self.head = self.get_status_title(self.test_names, now_list)
+                if self.err_dict:
+                    description = 'Список известных:<br><pre><ul>'
+                    for err in self.err_dict:
+                        description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(
+                            self.err_dict[err]))
+                    description += "</ul>"
             else:
                 if now_list:
-                    self.head = "FAIL WITH SKIP|Тесты по ошибкам из RC не запускались. В сборке появились новые ошибки!"
-                    return ''   # не показываем ошибки из RC
-
-        description = '<pre><ul>'
-        for err in self.err_dict:
-            description += "<b><a href='{0}'>{0}</a></b><li>{1}</li><br>".format(err, '</li><li>'.join(self.err_dict[err]))
-        description += "</ul>"
+                    self.head = "FAIL WITH SKIP|Тесты по ошибкам в RC не запускались. В сборке появились новые ошибки!"
+                return ''   # не показываем ошибки из RC
         return description
 
 
