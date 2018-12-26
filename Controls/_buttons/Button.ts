@@ -1,7 +1,7 @@
 import * as Control from 'Core/Control';
-import template = require('wml!Controls/_button/Button');
-import {classesUtil} from './classesUtil'
-import {iconsUtil} from './iconsUtil'
+import template = require('wml!Controls/_buttons/Button');
+import classesUtil from './classesUtil'
+import iconsUtil from './iconsUtil'
 import * as IoC from 'Core/IoC';
 
 
