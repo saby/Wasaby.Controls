@@ -174,7 +174,8 @@ node('controls') {
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
-        def tests_for_run = ""
+        def tests_for_run_int = ""
+        def tests_for_run_reg = ""
         def smoke_result = true
         try {
         echo "Назначаем переменные"
@@ -672,7 +673,7 @@ node('controls') {
                     if ( only_fail ) {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
-                    if ( inte && !only_fail && changed_files ) {
+                    if ( (inte || regr) && !only_fail && changed_files ) {
                         dir("./controls/tests") {
                             echo "Выкачиваем файл с зависимостями"
                             url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
@@ -689,7 +690,21 @@ node('controls') {
                                 if ( tests_files ) {
                                     tests_files = tests_files.replace('\n', '')
                                     echo "Будут запущены ${tests_files}"
-                                    tests_for_run = "--files_to_start ${tests_files}"
+                                    if ( tests_files.contains(';')) {
+                                        echo "Делим общий список на int и reg тесты"
+                                        type_tests = tests_files.split(';')
+                                        temp_var = type_tests[0].split('reg:')
+                                        if ( temp_var[1]) {
+                                            tests_for_run_reg = --files_to_start ${temp_var[1]}
+                                        }
+                                        temp_var = type_tests[1].split('int:')
+                                        if ( temp_var[1] ) {
+                                            tests_for_run_int = "--files_to_start ${temp_var[1]}"
+                                        }
+                                    } else {
+                                        tests_for_run_int = "--files_to_start ${tests_files}"
+                                    }
+
                                 } else {
                                     echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                                 }
@@ -713,7 +728,7 @@ node('controls') {
 
                                 sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                 deactivate
                                 """
                             }
@@ -727,7 +742,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                     deactivate
                                 """
                             }
