@@ -43,13 +43,15 @@ def build_description(job, path, skip_test) {
     }
     def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
     if (description) {
-        echo "${description}"
         title = description.tokenize('|')[0]
         description = description.tokenize('|')[1]
         echo "${title}"
+        echo "${description}"
+        if (title && description) {
+            return [title, description]
+        }
 
     }
-    return [title, description]
 }
 
 def build_title(t_int, t_reg) {
@@ -61,13 +63,13 @@ def build_title(t_int, t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     } else if (t_int && t_reg && t_int==t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+    } else if (t_int.contains('FAIL')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+    }else if (t_reg.contains('FAIL')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     }
-
 }
+
 @NonCPS
 def getBuildUser() {
     def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
@@ -172,8 +174,7 @@ node('controls') {
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
-        def tests_for_run_int = ""
-        def tests_for_run_reg = ""
+        def tests_for_run = ""
         def smoke_result = true
         try {
         echo "Назначаем переменные"
@@ -224,7 +225,7 @@ node('controls') {
             inte = false
         }
         if ( inte || all_inte || regr ) {
-            unit = false
+            unit = true
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -496,7 +497,6 @@ node('controls') {
             }
             echo items
         }
-
         stage ("Unit тесты"){
             if ( unit ){
                 echo "Запускаем юнит тесты"
@@ -504,7 +504,7 @@ node('controls') {
                 dir("./controls"){
                     sh """
                     npm cache clean --force
-                    npm config set registry http://npmregistry.sbis.ru:81/
+                    npm set registry https://registry.npmjs.org/
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
                     sh ./bin/test-isolated
@@ -530,6 +530,7 @@ node('controls') {
             }
         }
         if ( regr || inte || all_inte) {
+
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -671,7 +672,7 @@ node('controls') {
                     if ( only_fail ) {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
-                    if ( (inte || reg) && !only_fail && changed_files ) {
+                    if ( inte && !only_fail && changed_files ) {
                         dir("./controls/tests") {
                             echo "Выкачиваем файл с зависимостями"
                             url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
@@ -688,21 +689,7 @@ node('controls') {
                                 if ( tests_files ) {
                                     tests_files = tests_files.replace('\n', '')
                                     echo "Будут запущены ${tests_files}"
-
-                                    if ( tests_files.contains(';')) {
-                                        echo "Делим общий список на int и reg тесты"
-                                        type_tests = tests_files.split(';')
-                                        temp_var = type_tests[0].split('reg:')
-                                        if ( temp_var[1]) {
-                                            tests_for_run_reg = temp_var[1]
-                                        }
-                                        temp_var = type_tests[1].split('int:')
-                                        if ( temp_var[1] ) {
-                                            tests_for_run_int = temp_var[1]
-                                        }
-                                    } else {
-                                        tests_for_run_int = "--files_to_start ${tests_files}"
-                                    }
+                                    tests_for_run = "--files_to_start ${tests_files}"
                                 } else {
                                     echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                                 }
@@ -726,7 +713,7 @@ node('controls') {
 
                                 sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                 deactivate
                                 """
                             }
@@ -740,7 +727,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    echo python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                     deactivate
                                 """
                             }
@@ -793,31 +780,37 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        dir("./controls/tests") {
-            def int_title = ''
-            def reg_title = ''
-            def description = ''
-            if (inte || all_inte) {
-                 int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                 int_title = int_data[0]
-                 int_description= int_data[1]
-                 print("in int ${int_description}")
-                 if ( int_description ) {
-                    description += "${int_description}"
-                 }
-            }
-            if (regr) {
-                reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                reg_title = reg_data[0]
-                reg_description = reg_data[1]
-                print("in reg ${reg_description}")
-                if ( description != reg_description ) {
-                    description += "${reg_description}"
+        if ( smoke_result ) {
+            dir("./controls/tests") {
+                def int_title = ''
+                def reg_title = ''
+                def description = ''
+                if (inte || all_inte) {
+                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
+                     if ( int_data ) {
+                         int_title = int_data[0]
+                         int_description= int_data[1]
+                         print("in int ${int_description}")
+                         if ( int_description ) {
+                            description += "[INT] ${int_description}"
+                         }
+                    }
                 }
-            }
+                if (regr) {
+                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
+                    if ( reg_data ) {
+                        reg_title = reg_data[0]
+                        reg_description = reg_data[1]
+                        print("in reg ${reg_description}")
+                        if ( description != reg_description ) {
+                            description += "<br>[REG] ${reg_description}"
+                        }
+                    }
+                }
 
-            build_title(int_title, reg_title)
-            currentBuild.description = "${description}"
+                build_title(int_title, reg_title)
+                currentBuild.description = "${description}"
+            }
         }
     }
     if ( unit ){
