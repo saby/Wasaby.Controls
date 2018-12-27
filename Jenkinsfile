@@ -315,8 +315,11 @@ node('controls') {
                         git pull
                         git merge origin/rc-${version}
                         """
-
-                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        def status_filter = ""
+                        if ( boss ) {
+                            status_filter="--diff-filter=MAR"   // добавление, изменения, переименование
+                        }
+                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version} --name-only ${status_filter}| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
