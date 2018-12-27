@@ -15,7 +15,6 @@ define('Controls/Toggle/Button', [
     * @mixes Controls/Toggle/interface/ICheckable
     * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/IButton
-    * @mixes Controls/Button/interface/IHref
     * @mixes Controls/Button/interface/IIconStyle
     * @mixes Controls/Toggle/Button/Styles
     * @control
@@ -66,7 +65,7 @@ define('Controls/Toggle/Button', [
     * @variant link Decorated hyperlink.
     * @variant pushButton Decorated hyperlink transform to toolbar button.
     * @variant toolButton Toolbar button.
-    * @default button
+    * @default link
     * @example
     * Toggle button with 'link' viewMode.
     * <pre>
@@ -116,7 +115,8 @@ define('Controls/Toggle/Button', [
 
    ToggleButton.getDefaultOptions = function() {
       return {
-         style: 'linkMain',
+         viewMode: 'link',
+         style: 'secondary',
          size: 'l',
          iconStyle: 'secondary'
       };

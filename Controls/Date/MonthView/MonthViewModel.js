@@ -49,12 +49,13 @@ define('Controls/Date/MonthView/MonthViewModel', [
          return {
             month: DateUtil.normalizeDate(state.month),
             mode: state.mode,
-            enabled: state.enabled
+            enabled: state.enabled,
+            daysData: state.daysData
          };
       },
 
       _isStateChanged: function(state) {
-         return !DateUtil.isDatesEqual(state.month, this._state.month);
+         return !DateUtil.isDatesEqual(state.month, this._state.month) || state.daysData !== this._state.daysData;
       },
 
       _validateWeeksArray: function(state) {
@@ -87,6 +88,10 @@ define('Controls/Date/MonthView/MonthViewModel', [
 
          if (state.dayFormatter) {
             coreMerge(obj, state.dayFormatter(date) || {});
+         }
+
+         if (state.daysData) {
+            obj.extData = state.daysData[obj.day - 1];
          }
 
          return obj;

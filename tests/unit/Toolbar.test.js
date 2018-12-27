@@ -212,7 +212,7 @@ define(
                      target: 'target'
                   },
                   config = {
-                     className: 'controls-Toolbar_buttonViewMode_size popupClassName',
+                     className: 'controls-Toolbar_menu popupClassName',
                      corner: {
                         horizontal: 'left',
                         vertical: 'top'
@@ -250,14 +250,10 @@ define(
                      className: 'controls-Toolbar__menu-position popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
-                        items: 'menuItems',
-                        iconSize: 'size'
+                        items: 'menuItems'
                      }
                   };
                assert.deepEqual(Toolbar._private.generateMenuConfig(testSelf), config);
-            });
-            it('getItemClassName', () => {
-               assert.equal('controls-Toolbar_link_s', Toolbar._private.getItemClassName(records.at(3), 's'));
             });
             it('toolbar closed by his parent', () => {
                let isMenuClosed = false;
