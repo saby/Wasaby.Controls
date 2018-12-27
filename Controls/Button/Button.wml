@@ -1,1 +1,15 @@
-<ws:partial template="Controls/buttons:ButtonTemplate" />
+<ws:partial
+    template="Controls/buttons:buttonTemplate"
+    _options="{{_options}}"
+    _caption="{{_caption}}"
+    _stringCaption="{{_stringCaption}}"
+    _viewMode="{{_viewMode}}"
+    _style="{{_style}}"
+    _isTransparent="{{_isTransparent}}"
+    _transparent="{{_transparent}}"
+    _state="{{_state}}"
+    _clickHandler="{{_clickHandler}}"
+    _keyUpHandler="{{_keyUpHandler}}"
+    _icon="{{_icon}}"
+    _iconStyle="{{_iconStyle}}"
+/>
