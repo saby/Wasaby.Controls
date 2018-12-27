@@ -298,7 +298,7 @@ node('controls') {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
-                             sh "cp -rf ./atf/ /home/sbis/venv_for_test/lib/python3.4/site-packages/atf/"
+                             sh "cp -rf ./atf/ ../atf/"
                             }
                         },
                         checkout_engine: {
@@ -683,6 +683,7 @@ node('controls') {
                         if ( boss ) {
                             def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
                             if ( tests_files ) {
+                                tests_files = tests_files.replace('\n', '')
                                 echo "Будут запущены ${tests_files}"
                                 echo "Делим общий список на int и reg тесты"
                                 type_tests = tests_files.split(';')
