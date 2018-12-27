@@ -11,13 +11,13 @@ define('Controls/interface/IButton', [
    /**
     * @name Controls/interface/IButton#style
     * @cfg {Enum} Button display style.
-    * @variant primary The display style of the attracting attention button.
-    * @variant success The display style of the success button.
-    * @variant warning The display style of the warning button.
-    * @variant danger The display style of the danger button.
-    * @variant info The display style of the simple information button.
-    * @variant secondary The display style of the secondary button.
-    * @variant default The display style of button as default text.
+    * @variant primary
+    * @variant success
+    * @variant warning
+    * @variant danger
+    * @variant info
+    * @variant secondary
+    * @variant default
     * @default secondary
     * @example
     * Primary link button with 'primary' style.
@@ -62,13 +62,6 @@ define('Controls/interface/IButton', [
     * @variant l Large button size.
     * @variant xl Extra large button size.
     * @default m
-    * @remark
-    * Button size is different for different button viewModes.
-    * Sizes 's' and 'xl' don't supported by viewModes:
-    * <ul>
-    *     <li>button,</li>
-    *     <li>toolButton</li>
-    * </ul>
     * @example
     * 'L' size of primary button.
     * <pre>
