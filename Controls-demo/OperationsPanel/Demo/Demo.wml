@@ -54,13 +54,16 @@
                                                            nodeProperty="Раздел@"
                                                            parentProperty="Раздел"
                                                            on:beforeItemsRemove="_beforeItemsRemove()"/>
-                                    <Controls.List.DialogMover name="dialogMover"
-                                                               columns="{{_moveDialogColumns}}"
-                                                               parentProperty="Раздел"
-                                                               on:afterItemsMove="_afterItemsMove()"
-                                                               filter="{{_moveDialogFilter}}"
-                                                               nodeProperty="Раздел@"
-                                                               rootValue="{{null}}"/>
+                                    <Controls.List.Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
+                                        <ws:moveDialogTemplate>
+                                            <Controls.List.Mover.MoveDialog
+                                               root="{{null}}"
+                                               columns="{{_moveDialogColumns}}"
+                                               filter="{{_moveDialogFilter}}"
+                                               parentProperty="Раздел"
+                                               nodeProperty="Раздел@"/>
+                                        </ws:moveDialogTemplate>
+                                    </Controls.List.Mover>
                                 </ws:actions>
                                 <ws:content>
                                     <Controls.TreeGrid
