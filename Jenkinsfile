@@ -783,7 +783,6 @@ node('controls') {
 } catch (err) {
     echo "ERROR: ${err}"
     currentBuild.result = 'FAILURE'
-    gitlabStatusUpdate()
 } finally {
     sh """
         sudo chmod -R 0777 ${workspace}
