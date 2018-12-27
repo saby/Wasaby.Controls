@@ -1,1 +1,1 @@
-<Controls.buttons:ButtonTemplate />
+<ws:partial template="Controls/buttons:ButtonTemplate" />
