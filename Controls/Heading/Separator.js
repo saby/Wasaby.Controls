@@ -27,8 +27,8 @@ define('Controls/Heading/Separator', [
    /**
     * @name Controls/Heading/Separator#style
     * @cfg {String} Icon display style. In the online theme has only one display style.
-    * @variant primary Primary display style.
-    * @variant secondary Secondary display style.
+    * @variant primary
+    * @variant secondary
     * @default secondary
     */
 
