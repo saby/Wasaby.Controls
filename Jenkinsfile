@@ -746,7 +746,6 @@ node('controls') {
                     }
                 }
             }
-        }
             parallel (
                 int_test: {
                     stage("Инт.тесты"){
