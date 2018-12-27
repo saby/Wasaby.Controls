@@ -12,7 +12,7 @@
       "Controls-demo/*"
    ],
    "scripts": {
-      "prepare": "saby-typescript --install",
+      "prepare": "saby-typescript --install --tsconfig=tsconfig.base.json",
       "build": "node build-app",
       "compile": "tsc",
       "start": "node app",
