@@ -57,6 +57,8 @@ def build_description(job, path, skip_test) {
 def return_test_for_run(tests_files, autotests) {
     tests_files = tests_files.replace('\n', '')
     echo "Будут запущены ${tests_files}"
+    def run_reg = ""
+    def run_int = ""
     if (autotests) {
         echo "Делим общий список на int и reg тесты"
         type_tests = tests_files.split(';')
@@ -68,12 +70,11 @@ def return_test_for_run(tests_files, autotests) {
         if ( temp_var.length == 2 ) {
             run_int = "--files_to_start ${temp_var[1]}"
         }
-        return [run_reg, run_int]
+
     } else {
-        tests_files = tests_files.replace('\n', '')
-        echo "Будут запущены ${tests_files}"
-        return "--files_to_start ${tests_files}"
+        run_int = "--files_to_start ${tests_files}"
     }
+    return [run_reg, run_int]
 }
 
 def download_coverage_json(version) {
@@ -723,22 +724,19 @@ node('controls') {
                     }
                     if ( (inte || regr) && !only_fail && changed_files ) {
                         dir("./controls/tests") {
+                        def script_handler = "python3 coverage_handler.py -c ${changed_files}"
                         if ( boss ) {
-                            def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
+                            script_handler+=" -d" //оверайдим флаг
+                        }
+                        if ( download_coverage_json(version) ) {
+                            def tests_files = sh returnStdout: true, script: script_handler
                             if ( tests_files ) {
-                                (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, true)
-
+                                (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, boss)
+                            } else {
+                                echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                             }
                         } else {
-                            if ( download_coverage_json(version) ) {
-                                def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
-                                if ( tests_files ) {
-                                    tests_for_run_int = return_test_for_run(tests_files, false)
-                                } else {
-                                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
-                                }
-                            } else {
-                                echo "Файл с покрытием не найден. Будут запущены все тесты."
+                            echo "Файл с покрытием не найден. Будут запущены все тесты."
                             }
                         }
                     }
