@@ -19,6 +19,7 @@ define('Controls/Input/Search/Suggest',
        * @mixes Controls/interface/IFilter
        * @mixes Controls/Input/interface/ISuggest
        * @mixes Controls/interface/INavigation
+       * @demo Controls-demo/Input/Search/Suggest/SuggestPG
        * @control
        * @public
        * @category Input
@@ -28,6 +29,7 @@ define('Controls/Input/Search/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
+         _suggestState: false,
          
          _changeValueHandler: function(event, value) {
             this._notify('valueChanged', [value]);

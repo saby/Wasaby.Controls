@@ -190,9 +190,16 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
             assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
             done();
          };
-         Suggest._private.searchErrback(self);
+         Suggest._private.searchErrback(self, {canceled: false});
          
          assert.isFalse(self._loading);
+      });
+      
+      it('Suggest::_searchErrback', function() {
+         var suggest = new Suggest();
+         suggest._loading = true;
+         suggest._searchErrback({canceled: true});
+         assert.isFalse(suggest._loading);
       });
    
       it('Suggest::check footer template', function(done) {
@@ -353,12 +360,20 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
       });
    
       it('Suggest::_beforeUpdate', function() {
-         var suggestComponent = new Suggest();
+         var options = {
+            emptyTemplate: 'anyTpl',
+            footerTemplate: 'anyTp',
+            suggestState: true
+         };
+         var suggestComponent = new Suggest(options);
+         suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
-         suggestComponent._beforeUpdate({suggestState: false});
+         suggestComponent._dependenciesDeferred = true;
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl'});
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
+         assert.equal(suggestComponent._dependenciesDeferred, null);
       });
    
       it('Suggest::_updateSuggestState', function() {
