@@ -16,7 +16,7 @@
       </ws:if>
       <ws:if data="{{_options.items.getCount() > 1 && !_options.readOnly}}">
          <Controls.Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"
-                          attr:class="controls-SelectorButtonV_button-reset"/>
+                          attr:class="controls-SelectorButton__button-reset"/>
       </ws:if>
    </ws:if>
    <ws:else>
