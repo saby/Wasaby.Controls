@@ -1,7 +1,6 @@
 <div attr:class="controls-demo__indicator_container">
    <div attr:class="controls-demo__indicator_buttons">
-      <Controls.Button caption="Open" class="controls-demo__indicator_open" on:click="_open()"/>
-      <Controls.Button caption="Close" class="controls-demo__indicator_close" on:click="_close()"/>
+      <Controls.Button caption="Open (will be closed after 3s)" class="controls-demo__indicator_open" on:click="_open()"/>
    </div>
 
    <Controls.Container.LoadingIndicator

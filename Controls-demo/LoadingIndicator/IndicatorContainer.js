@@ -8,11 +8,10 @@ define('Controls-demo/LoadingIndicator/IndicatorContainer', [
    var module = Control.extend({
       _template: tmpl,
       _open: function() {
-         this._children.loadingIndicator.show({
-         });
-      },
-      _close: function() {
-         this._children.loadingIndicator.hide();
+         this._children.loadingIndicator.show({});
+         setTimeout(function() {
+            this._children.loadingIndicator.hide();
+         }.bind(this), 3000);
       }
    });
 

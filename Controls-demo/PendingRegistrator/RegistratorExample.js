@@ -11,6 +11,8 @@ define('Controls-demo/PendingRegistrator/RegistratorExample', [
    var pendingProcessFinishing = 'pending finishing with timeout = ';
    var pendingProcessFinished = 'pending finished';
    var pendingFinished = 'callback of finished pendings with result = ';
+   var waitingPendings = 'waiting finish of pendings...';
+   var cancelledPendings = 'finish pendings waiter cancelled';
 
    var module = Control.extend({
       _template: tmpl,
@@ -19,9 +21,9 @@ define('Controls-demo/PendingRegistrator/RegistratorExample', [
       _pendingCount: 0,
       _finish: function() {
          var self = this;
-         this._pendingMessage = 'waiting finish of pendings...';
+         this._pendingMessage = waitingPendings;
          this._children.registrator.finishPendingOperations().addCallback(function(res) {
-            self._pendingMessage = pendingFinished + res[0];
+            self._pendingMessage = pendingFinished + '[' + res.toString() + ']';
             self._forceUpdate();
             return res;
          }).addErrback(function(err) {
@@ -45,7 +47,7 @@ define('Controls-demo/PendingRegistrator/RegistratorExample', [
          this._forceUpdate();
       },
       _cancelFinishingPending: function() {
-         this._pendingMessage = 'finish pendings waiter cancelled';
+         this._pendingMessage = cancelledPendings;
          this._forceUpdate();
       }
    });
