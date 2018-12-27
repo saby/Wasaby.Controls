@@ -78,7 +78,7 @@ define([
 
       it('_beforeMount', function() {
          var lookup = new Lookup();
-         lookup._beforeMount({});
+         lookup._beforeMount({multiLine: true});
          assert.isNotNull(lookup._simpleViewModel);
       });
    
@@ -107,7 +107,7 @@ define([
       it('_beforeUpdate', function() {
          var lookup = new Lookup();
 
-         lookup._beforeMount({});
+         lookup._beforeMount({multiLine: true});
          lookup._beforeUpdate({
             items: new List()
          });
@@ -154,7 +154,7 @@ define([
             isActivate = true;
          };
 
-         lookup._beforeMount({});
+         lookup._beforeMount({multiLine: true});
          lookup._choose();
          assert.isFalse(isActivate);
 
