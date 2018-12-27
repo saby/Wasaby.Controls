@@ -1,43 +1,12 @@
 #!/bin/sh
 # Run unit testing via browser
 
-paths=(Controls SBIS3.CONTROLS)
-
 node -v
-npm install
-
-# создаем темповую папку и копируем туда Controls и components
-# делаем это чтобы nyc правильно прописывал пути для инструментированных файлов
-for item in ${paths[*]}
-do
-    mkdir -p temp/${item}
-    cp -rf ${item}/* temp/${item}/
-done
-
-# запускаем инструментирование JavaScript кода
-node node_modules/nyc/bin/nyc instrument temp temp-covered
-
-# копируем в инструментируемый код css, tmpl, wml
-# чистим темповые дирректории
-for item in ${paths[*]}
-do
-    mv ${item} ${item}-origin
-    mv temp-covered/${item} ${item}
-    cp -nR ${item}-origin/* ${item}
-done
-rm -rf temp/
-rm -rf temp-covered/
 
 # собираем зависимости и запускаем сбор покрытия
+npm install
 node build-app
-node node_modules/saby-units/queue test-server test-browser-coverage
-
-# удаляем папки с инструментированным кодом
-for item in ${paths[*]}
-do
-    rm -rf ${item}
-    mv ${item}-origin ${item}
-done
+npm run test:browser-coverage
 
 # подготавливаем файлы покрытия для создания отчетов
 mkdir -p artifacts/{all,controls,file,components}
