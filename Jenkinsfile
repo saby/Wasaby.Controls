@@ -309,10 +309,10 @@ node('controls') {
                     echo "Обновляемся из rc-${version}"
                     dir("./controls"){
                         sh """
-                        git clean -fd
-                        git fetch --all
                         git checkout ${env.BRANCH_NAME}
+                        git clean -fd
                         git git reset --hard origin/rc-${version}
+                        git fetch --all
                         git pull
                         git merge origin/rc-${version}
                         """
