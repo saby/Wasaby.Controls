@@ -3,6 +3,7 @@ define('Controls/Application/HeadData', [
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
    'Core/cookie',
+   'Core/constants',
    'Core/Themes/ThemesController',
    'View/Request'
 
@@ -10,6 +11,7 @@ define('Controls/Application/HeadData', [
    DepsCollector,
    Deferred,
    cookie,
+   constants,
    ThemesController,
    Request) {
    var bundles, modDeps, contents;
@@ -35,15 +37,15 @@ define('Controls/Application/HeadData', [
    try {
       // TODO https://online.sbis.ru/opendoc.html?guid=7e096cc5-d95a-48b9-8b71-2a719bd9886f
       // Need to fix this, to remove hardcoded paths
-      modDeps = require('json!resources/module-dependencies');
+      modDeps = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'module-dependencies']));
    } catch (e) {
    }
    try {
-      contents = require('json!resources/contents');
+      contents = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'contents']));
    } catch (e) {
    }
    try {
-      bundles = require('json!resources/bundlesRoute');
+      bundles = require('json!' + joinPaths([constants.appRoot, constants.resourceRoot, 'bundlesRoute']));
    } catch (e) {
    }
 
