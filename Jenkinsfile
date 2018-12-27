@@ -61,11 +61,11 @@ def return_test_for_run(tests_files, autotests) {
         echo "Делим общий список на int и reg тесты"
         type_tests = tests_files.split(';')
         temp_var = type_tests[0].split('reg:')
-        if ( temp_var[1]) {
+        if ( temp_var.length == 2) {
             run_reg = "--files_to_start ${temp_var[1]}"
         }
         temp_var = type_tests[1].split('int:')
-        if ( temp_var[1] ) {
+        if ( temp_var.length == 2 ) {
             run_int = "--files_to_start ${temp_var[1]}"
         }
         return [run_reg, run_int]
