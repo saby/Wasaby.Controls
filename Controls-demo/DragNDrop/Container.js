@@ -7,9 +7,9 @@ define('Controls-demo/DragNDrop/Container', [
 
    var ModuleClass = BaseControl.extend({
       _template: template,
-      _hasList: false,
+      _hasList: true,
       _hasGrid: false,
-      _hasTree: true,
+      _hasTree: false,
       _hasNotes: false,
       _hasMasterDetail: false,
       _selectedKeys: []
