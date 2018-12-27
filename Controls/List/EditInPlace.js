@@ -329,7 +329,7 @@ define('Controls/List/EditInPlace', [
       },
 
       _onItemClick: function(e, record, originalEvent) {
-         if (this._options.editingConfig && this._options.editingConfig.editOnClick && !this._options.readOnly) {
+         if (this._options.editingConfig && this._options.editingConfig.editOnClick && !this._options.readOnly && originalEvent.type === 'click') {
             if (originalEvent.target.closest('.js-controls-ListView__notEditable')) {
                this.commitEdit();
             } else {
