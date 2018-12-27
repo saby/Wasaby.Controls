@@ -2,9 +2,10 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/DialogTemplate',
+      'Core/IoC',
       'css!theme?Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
-   function(Control, template) {
+   function(Control, template, IoC) {
       'use strict';
 
       var DialogTemplate = Control.extend({
@@ -67,6 +68,14 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           */
 
          _template: template,
+         _beforeMount: function(options) {
+            if (options.contentArea) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+            }
+            if (options.topArea) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте footerContentTemplate');
+            }
+         },
 
          /**
           * Close popup.

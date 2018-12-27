@@ -17,7 +17,7 @@ define('Controls/Popup/Opener/Dialog',
          getDialogConfig: function(config) {
             config = config || {};
 
-            //The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+            // The dialog is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;
          }
@@ -65,7 +65,7 @@ define('Controls/Popup/Opener/Dialog',
           * @see close
           */
          open: function(config) {
-            config = _private.getDialogConfig(config);
+            config = _private.getDialogConfig(config, this);
             Base.prototype.open.call(this, config, 'Controls/Popup/Opener/Dialog/DialogController');
          }
       });
@@ -78,6 +78,82 @@ define('Controls/Popup/Opener/Dialog',
    /**
     * @name Controls/Popup/Opener/Dialog#closePopupBeforeUnmount
     * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#autofocus
+    * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#isModal
+    * @cfg {Boolean} Determines whether the window is modal.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#closeByExternalClick
+    * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#className
+    * @cfg {String} Class names of popup.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#opener
+    * @cfg {Object} Control, which is the logical initiator of popup opening.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#template
+    * @cfg {String|Function} Template inside popup.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#templateOptions
+    * @cfg {String|Function} Template options inside popup.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#draggable
+    * @cfg {Boolean} Determines whether the control can be moved by d'n'd.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#minWidth
+    * @cfg {Number} The minimum width of popup.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#maxWidth
+    * @cfg {Number} The maximum width of popup.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#minHeight
+    * @cfg {Number} The minimum height of popup.
+    */
+
+   /**
+    * @name Controls/Popup/Opener/Dialog#maxHeight
+    * @cfg {Number} The maximum height of popup.
+    */
+   /**
+    * @name Controls/Popup/Opener/Dialog#maximize
+    * @cfg {Boolean} Determines whether the control is displayed in full screen.
+    */
+   /**
+    * @name Controls/Popup/Opener/Dialog#resizable
+    * @cfg {Boolean} Determines whether popup can be resized.
+    */
+   /**
+    * @name Controls/Popup/Opener/Dialog#top
+    * @cfg {Number} Distance from the window to the top of the screen.
+    */
+   /**
+    * @name Controls/Popup/Opener/Dialog#left
+    * @cfg {Number} Distance from the window to the left border of the screen.
     */
 
    /**
@@ -122,28 +198,5 @@ define('Controls/Popup/Opener/Dialog',
     * @name Controls/Popup/Opener/Dialog#isOpened
     * @function
     * @description Popup opened status.
-    */
-
-   /**
-    * @typedef {Object} PopupOptions
-    * @description Dialog popup options.
-    * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
-    * @property {Boolean} isModal Determines whether the window is modal.
-    * @property {String} className Class names of popup.
-    * @property {Boolean} closeByExternalClick Determines whether possibility of closing the popup when clicking past.
-    * @property {Object} opener Control, which is the logical initiator of popup opening.
-    * @property {String|Template} template Template inside popup.
-    * @property {String|Template} templateOptions Template options inside popup.
-    * @property {Object} eventHandlers Callback functions on popup events.
-    * @property {Boolean} draggable Determines whether the control can be moved by d'n'd.
-    * @property {Integer} minWidth The minimum width of popup.
-    * @property {Integer} maxWidth The maximum width of popup.
-    * @property {Integer} minHeight The minimum height of popup.
-    * @property {Integer} maxHeight The maximum height of popup.
-    * @property {Boolean} maximize Determines whether the control is displayed in full screen.
-    * @property {Boolean} resizable Determines whether popup can be resized.
-    * @property {Integer} top Distance from the window to the top of the screen.
-    * @property {Integer} left Distance from the window to the left border of the screen.
-    * @property {Boolean} draggable Determines whether the component can be moved.
     */
 );

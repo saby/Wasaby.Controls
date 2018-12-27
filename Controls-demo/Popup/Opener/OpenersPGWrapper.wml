@@ -1,0 +1,33 @@
+<div class="controls-demo_Wrapper">
+    <div class="controls-demo_options-wrapper">
+        <Controls.PropertyGrid items="{{_options.description}}"
+                               data="{{_options.dataObject}}"
+                               scopeObject="{{_exampleControlOptions}}"
+                               name="PropertyGrid"
+                               dataTemplates="{{dataTemplates}}"
+                               templateName="wml!Controls-demo/PropertyGrid/PropertyGridTemplate"
+                               on:itemsChanged="_valueChangedHandler()">
+        </Controls.PropertyGrid>
+    </div>
+    <div class="controls-demo_event-example__wrapper " >
+        <div class="controls-demo_example-wrapper">
+            <Controls.Button caption="Open" on:click="_openHandler()"/>
+            <ws:partial template="{{_options.content}}"
+                        scope="{{_exampleControlOptions}}"
+                        name="{{_options.nameOpener}}"
+                        attr:class="js-Controls_{{_demoName}}_mainField{{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>
+        </div>
+        <div class="controls-demo_event-wrapper">
+
+            <Controls.Container.Scroll
+                    attr:style="height: 100px; border-width:thin"
+                    scrollbarVisible="{{true}}"
+                    shadowVisible="{{true}}"
+                    attr:class="PropertyGrid_events">
+                <div attr:style="width:200px; word-spacing:200px;">{{myEvent}}</div>
+            </Controls.Container.Scroll>
+            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+
+        </div>
+    </div>
+</div>

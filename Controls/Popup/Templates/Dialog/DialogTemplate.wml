@@ -1,14 +1,14 @@
 <Controls.DragNDrop.Controller name="dragNDrop" on:dragmove="_onDragMove()" on:dragend="_onDragEnd()" >
     <div class="controls-DialogTemplate">
-        <div if="{{_options.caption || _options.topArea}}" class="controls-DialogTemplate__top-area {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
+        <div if="{{_options.caption || _options.topArea || _options.footerContentTemplate }}" class="controls-DialogTemplate__top-area {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
             <div class="controls-DialogTemplate__top-area-content" on:mousedown="_onMouseDown()" on:touchstart="_onMouseDown()">
                 <ws:if data="{{_options.caption}}">
                     <div class="controls-DialogTemplate__caption" title="{{_options.caption}}">
                         <div class="controls-DialogTemplate__caption_text">{{_options.caption}}</div>
                     </div>
                 </ws:if>
-                <ws:if data="{{_options.topArea}}" >
-                    <ws:partial template="{{_options.topArea}}" scope="{{_options.topAreaOptions}}"></ws:partial>
+                <ws:if data="{{_options.topArea || _options.footerContentTemplate}}" >
+                    <ws:partial template="{{_options.topArea || _options.footerContentTemplate}}" scope="{{_options.topAreaOptions}}"></ws:partial>
                 </ws:if>
             </div>
         </div>
@@ -16,7 +16,7 @@
             <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}"/>
         </ws:if>
         <div class="controls-DialogTemplate__content-area">
-            <ws:partial template="{{_options.contentArea}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
+            <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
         </div>
     </div>
 </Controls.DragNDrop.Controller>
