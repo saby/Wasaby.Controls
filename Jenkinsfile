@@ -127,7 +127,7 @@ def getParams(user) {
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
     }
-    if ( ["ls.baranova", "da.dubenec", "mitin"].contains(user) ) {
+    if ( ["ls.baranova", "da.dubenec", "mitin", "ea.proshin"].contains(user) ) {
         common_params.add(booleanParam(defaultValue: false, description: "Я разработчик автотестов", name: 'run_boss'))
     }
     return common_params
