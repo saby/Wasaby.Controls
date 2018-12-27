@@ -311,7 +311,7 @@ node('controls') {
                         sh """
                         git checkout ${env.BRANCH_NAME}
                         git clean -fd
-                        git git reset --hard origin/rc-${version}
+                        git reset --hard origin/rc-${version}
                         git fetch --all
                         git pull
                         git merge origin/rc-${version}
