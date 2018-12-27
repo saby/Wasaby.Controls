@@ -2,6 +2,7 @@
 *.log
 /contents.json
 /contents.js
+/tsconfig.json
 /Examples/**/*.css
 /pages/**/*.css
 /Controls-demo/**/*.css
