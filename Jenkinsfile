@@ -725,19 +725,21 @@ node('controls') {
                     if ( (inte || regr) && !only_fail && changed_files ) {
                         dir("./controls/tests") {
                         def script_handler = "python3 coverage_handler.py -c ${changed_files}"
+                        def tests_files
                         if ( boss ) {
                             script_handler+=" -d" //оверайдим флаг
-                        }
-                        if ( download_coverage_json(version) ) {
-                            def tests_files = sh returnStdout: true, script: script_handler
-                            if ( tests_files ) {
-                                (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, boss)
-                            } else {
-                                echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
-                            }
+                            tests_files = sh returnStdout: true, script: script_handler
                         } else {
-                            echo "Файл с покрытием не найден. Будут запущены все тесты."
+                            if ( download_coverage_json(version) ) {
+                                tests_files = sh returnStdout: true, script: script_handler
+                            } else {
+                                echo "Файл с покрытием не найден. Будут запущены все тесты."
                             }
+                        }
+                        if ( tests_files ) {
+                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, boss)
+                        } else {
+                            echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                         }
                     }
                     if ( skip ) {
