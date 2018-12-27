@@ -42,11 +42,11 @@ define('Controls/Filter/Button/Panel', [
    var _private = {
 
       resolveItems: function(self, options, context) {
+         self._contextOptions = context && context.filterPanelOptionsField && context.filterPanelOptionsField.options;
          if (options.items) {
             self._items = this.cloneItems(options.items);
-         } else if (context && context.filterPanelOptionsField && context.filterPanelOptionsField.options) {
+         } else if (self._contextOptions) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
-            self._contextOptions = context.filterPanelOptionsField.options;
             IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
          } else {
             throw new Error('Controls/Filter/Button/Panel::items option is required');
@@ -56,7 +56,7 @@ define('Controls/Filter/Button/Panel', [
       resolveHistoryId: function(self, options, context) {
          if (options.historyId) {
             self._historyId = options.historyId;
-         } else if (context) {
+         } else if (context && context.historyId) {
             self._historyId = context.historyId;
             IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
          }
