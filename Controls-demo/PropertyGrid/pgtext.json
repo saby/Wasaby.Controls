@@ -1146,20 +1146,33 @@
             "type": "enum",
             "title": "Displaying icon style.",
             "enum": {
-              "default": "Default icon display style.  It is different for different toggle button styles. It is default value.",
-              "attention": "Attention icon display style.",
-              "error": "Error icon display style.",
-              "done": "Done icon display style."
+              "secondary": "The icon display style of the secondary button.",
+              "info": "The icon display style of the simple information button.",
+              "danger": "The icon display style of the danger button.",
+              "warning": "The icon display style of the warning button.",
+              "success": "The icon display style of the success button.",
+              "primary": "The icon display style of the attracting attention button."
+            }
+          },
+          "viewMode": {
+            "type": "enum",
+            "title": "Button view mode.",
+            "enum": {
+              "toolButton": "Bordered icon toggle button display style.",
+              "pushButton": "Main link toggle button display style. It is default value.",
+              "link": "Main link button display style."
             }
           },
           "style": {
             "type": "enum",
-            "title": "Display style of button.",
+            "title": "Button display style",
             "enum": {
-              "iconButtonBordered": "Bordered icon toggle button display style.",
-              "linkMain": "Main link toggle button display style. It is default value.",
-              "buttonLinkMain": "Main link button display style.",
-              "buttonLinkAdditional": "Additional link button display style."
+              "secondary": "The display style of the secondary button.",
+              "info": "The display style of the simple information button.",
+              "danger": "The display style of the danger button.",
+              "warning": "The display style of the warning button.",
+              "success": "The display style of the success button.",
+              "primary": "The display style of the attracting attention button."
             }
           },
           "size": {
@@ -1168,7 +1181,8 @@
             "enum": {
               "s": "Small button size.",
               "m": "Medium button size.",
-              "l": "Large button size. It is default value."
+              "l": "Large button size. It is default value.",
+              "xl": "Extralarge button size."
             }
           },
           "icons": {
@@ -1178,6 +1192,11 @@
           "captions": {
             "type": "Array",
             "title": "Set of captions"
+          },
+          "readOnly": {
+            "default": "false",
+            "title": "Determines whether user can change control's value (or interact with the control if its value is not editable).",
+            "type": "Boolean"
           }
         }
       }

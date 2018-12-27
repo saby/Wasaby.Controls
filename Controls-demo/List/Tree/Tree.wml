@@ -6,7 +6,8 @@
    <div class="demo-Grid" style="border-bottom: 12px solid #55AA55;">
       <div class="demo-Grid__container">
          <Controls.Container.Data source="{{_viewSource}}"
-                                  keyProperty="id">
+                                  keyProperty="id"
+                                  attr:class="ControlsDemo-Grid__Container">
             <Controls.Container.MultiSelector>
                <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
                   <Controls.List.Container>

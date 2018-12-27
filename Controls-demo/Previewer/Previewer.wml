@@ -12,13 +12,13 @@
    <ws:for data="image in ['Andrey', 'Valera', 'Maksim']">
       <Controls.Popup.Previewer trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
          <ws:content>
-               <img id="target_{{image}}" src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
+               <img id="target_{{image}}" src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
          </ws:content>
          <ws:template>
             <Controls.Popup.Templates.Dialog.DialogTemplate>
                <ws:contentArea>
                   <div id="popup_{{image}}" attr:style="padding: 50px; border: 2px solid red;">
-                     <img src="{{_options.imgRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
+                     <img src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png" style="height: 150px; width: 150px;"/>
                   </div>
                </ws:contentArea>
             </Controls.Popup.Templates.Dialog.DialogTemplate>
