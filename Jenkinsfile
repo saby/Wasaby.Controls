@@ -298,7 +298,7 @@ node('controls') {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
-                             sh "cp -rf ./atf/ ../atf/"
+                             sh "cp -rf ./atf/ ../reg/atf/"
                             }
                         },
                         checkout_engine: {
