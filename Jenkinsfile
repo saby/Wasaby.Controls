@@ -805,9 +805,9 @@ node('controls') {
 
 
             sh "mkdir logs_ps"
-             if ( exists_dir ){
+            if ( exists_dir ){
                 dir('/home/sbis/Controls'){
-                    def files_err = findFiles(glob: "intest*/logs/**/*_errors.log")
+                    def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
                     if ( files_err.length > 0 ){
                         sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
                         sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
