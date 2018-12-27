@@ -61,6 +61,7 @@
    },
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
+      "Router": "git+https://github.com/saby/Router.git#rc-3.19.100",
       "body-parser": "^1.18.3",
       "cookie-parser": "^1.4.3",
       "eslint": "^5.7.0",
