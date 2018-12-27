@@ -122,11 +122,13 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
-            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip'),
-            booleanParam(defaultValue: false, description: "Я разработчик автотестов", name: 'run_boss'),
+            booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
+    }
+    if ( ["ea.proshin", "ls.baranova", "da.dubenec", "mitin"].contains(user) ) {
+        common_params.add(booleanParam(defaultValue: false, description: "Я разработчик автотестов", name: 'run_boss'))
     }
     return common_params
 }
