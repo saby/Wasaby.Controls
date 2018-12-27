@@ -6,7 +6,8 @@ define('Controls-demo/Input/Area/AreaPG',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
+      'css!Controls-demo/Wrapper/Wrapper',
+      'css!Controls-demo/Input/Area/AreaPG'
    ],
 
    function(Control, template, config) {
@@ -45,6 +46,13 @@ define('Controls-demo/Input/Area/AreaPG',
                      value: 'title',
                      comment: 'example'
                   }
+               },
+               style: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {
@@ -58,7 +66,7 @@ define('Controls-demo/Input/Area/AreaPG',
                selectOnClick: true,
                readOnly: false,
                tooltip: 'myTooltip',
-               validationErrors: '',
+               style: undefined,
                minLines: 3,
                maxLines: 6,
                newLineKey: undefined
