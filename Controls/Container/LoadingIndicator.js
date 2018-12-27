@@ -28,6 +28,7 @@ define('Controls/Container/LoadingIndicator', [
     *    -  mods - It can be using for custom tuning of indicator (If not setted, by default use value of similar control option)
     *    -  delay - timeout before indicator will be visible (If not setted, by default use value of similar control option)
     * waitPromise - when this promise will be resolved, indicator hides (not necessary property)
+    * showIndicator returns id value using as argument of hideIndicator.
     *
     * hideIndicator is using for remove request of indicator showing.
     * hideIndicator has 1 argument: [id].
