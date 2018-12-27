@@ -1,5 +1,19 @@
 <div>
-	<p>baseline <Controls.Input.Text bind:value="_text1" />&nbsp;<Controls.Input.Number bind:value="_number1" attr:test_name="number" />&nbsp;<Controls.Input.Password bind:value="_pass1" placeholder="Пароль" attr:test_name="password" /></p><br/>
-   <p>baseline <Controls.Input.Area bind:value="_area1" size="m" minLines="{{2}}" />&nbsp;<Controls.Input.Area bind:value="_area2" size="l" minLines="{{2}}" /> <Controls.Input.Area placeholder="тест" minLines="{{2}}" /></p><br/>
-   <p>baseline <Controls.Input.Text bind:value="_text2" size="m" attr:class="ControlsDemo-InputThemesDemo_TextWithScroll" /></p>
+   <p>baseline
+      <Controls.Input.Text bind:value="_text1"/>&nbsp;<Controls.Input.Number bind:value="_number1"
+                                                                             attr:test_name="number"/>&nbsp;<Controls.Input.Password
+         bind:value="_pass1" placeholder="Пароль" attr:test_name="password"/>
+   </p>
+   <br/>
+   <p>baseline
+      <Controls.Input.Area attr:class="controlsDemo-ThemesDemo__area" bind:value="_area1" minLines="{{2}}"/>&nbsp;<Controls.Input.Area
+         attr:class="controlsDemo-ThemesDemo__area"
+         fontStyle="primary"
+         bind:value="_area2" minLines="{{2}}"/>
+      <Controls.Input.Area attr:class="controlsDemo-ThemesDemo__area" placeholder="тест" minLines="{{2}}"/>
+   </p>
+   <br/>
+   <p>baseline
+      <Controls.Input.Text bind:value="_text2" size="m" attr:class="ControlsDemo-InputThemesDemo_TextWithScroll"/>
+   </p>
 </div>
