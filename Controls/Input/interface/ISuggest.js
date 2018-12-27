@@ -72,7 +72,7 @@ define('Controls/Input/interface/ISuggest', [
     */
    
    /**
-    * @name Controls/Input/interface/ISuggest#suggestFooterTemplate
+    * @name Controls/Input/interface/ISuggest#footerTemplate
     * @cfg {suggestFooterTemplate} Footer template of suggest.
     * @example
     * myFooter.wml
