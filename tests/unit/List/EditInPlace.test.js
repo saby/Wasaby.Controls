@@ -1148,7 +1148,8 @@ define([
                nativeEvent: {
                   clientX: 10,
                   clientY: 20
-               }
+               },
+               type: 'click'
             });
             assert.equal(eip._clickItemInfo.item, newItem);
             assert.equal(eip._clickItemInfo.clientX, 10);
@@ -1174,7 +1175,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
 
@@ -1198,7 +1200,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
 
@@ -1229,7 +1232,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
 
@@ -1253,7 +1257,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
       });
