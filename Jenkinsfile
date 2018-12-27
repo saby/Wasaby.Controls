@@ -54,6 +54,44 @@ def build_description(job, path, skip_test) {
     }
 }
 
+def return_test_for_run(tests_files, autotests) {
+    tests_files = tests_files.replace('\n', '')
+    echo "Будут запущены ${tests_files}"
+    if (autotests) {
+        echo "Делим общий список на int и reg тесты"
+        type_tests = tests_files.split(';')
+        temp_var = type_tests[0].split('reg:')
+        if ( temp_var[1]) {
+            run_reg = "--files_to_start ${temp_var[1]}"
+        }
+        temp_var = type_tests[1].split('int:')
+        if ( temp_var[1] ) {
+            run_int = "--files_to_start ${temp_var[1]}"
+        }
+        return [run_reg, run_int]
+    } else {
+        tests_files = tests_files.replace('\n', '')
+        echo "Будут запущены ${tests_files}"
+        return "--files_to_start ${tests_files}"
+    }
+}
+
+def download_coverage_json(version) {
+    echo "Выкачиваем файл с зависимостями"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+    script = """
+        if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+        echo "result.json exitsts"; cp -fr tmp_result.json result.json
+        else rm -f result.json
+        fi
+        """
+    sh returnStdout: true, script: script
+    def exist_json = fileExists 'result.json'
+    return exist_json
+
+}
+
+
 def build_title(t_int, t_reg) {
     if (!t_int && !t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER}"
@@ -685,36 +723,14 @@ node('controls') {
                         if ( boss ) {
                             def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
                             if ( tests_files ) {
-                                tests_files = tests_files.replace('\n', '')
-                                echo "Будут запущены ${tests_files}"
-                                echo "Делим общий список на int и reg тесты"
-                                type_tests = tests_files.split(';')
-                                temp_var = type_tests[0].split('reg:')
-                                if ( temp_var[1]) {
-                                    tests_for_run_reg = "--files_to_start ${temp_var[1]}"
-                                }
-                                temp_var = type_tests[1].split('int:')
-                                if ( temp_var[1] ) {
-                                    tests_for_run_int = "--files_to_start ${temp_var[1]}"
-                                }
+                                (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, true)
+
                             }
                         } else {
-                            echo "Выкачиваем файл с зависимостями"
-                            url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
-                            script = """
-                                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-                                echo "result.json exitsts"; cp -fr tmp_result.json result.json
-                                else rm -f result.json
-                                fi
-                                """
-                            sh returnStdout: true, script: script
-                            def exist_json = fileExists 'result.json'
-                            if ( exist_json ) {
+                            if ( download_coverage_json(version) ) {
                                 def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
                                 if ( tests_files ) {
-                                    tests_files = tests_files.replace('\n', '')
-                                    echo "Будут запущены ${tests_files}"
-                                     tests_for_run_int = "--files_to_start ${tests_files}"
+                                    tests_for_run_int = return_test_for_run(tests_files, false)
                                 } else {
                                     echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                                 }
