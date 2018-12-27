@@ -11,13 +11,31 @@ define('Controls/Date/model/DateRange', [
    dateRangeUtil,
    DateUtil
 ) {
-
    /**
     * Model for date range controls.
     * @author Александр Миронов
     * @public
     * @noShow
     */
+   var _private = {
+      setStartValue: function(self, value) {
+         if (DateUtil.isDatesEqual(self._startValue, value)) {
+            return false;
+         }
+         self._startValue = value;
+         self._nextVersion();
+         return true;
+      },
+      setEndValue: function(self, value) {
+         if (DateUtil.isDatesEqual(self._endValue, value)) {
+            return false;
+         }
+         self._endValue = value;
+         self._nextVersion();
+         return true;
+      }
+   };
+
    var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
       _startValue: null,
       _endValue: null,
@@ -48,12 +66,10 @@ define('Controls/Date/model/DateRange', [
       },
 
       set startValue(value) {
-         if (DateUtil.isDatesEqual(this._startValue, value)) {
-            return;
+         if (_private.setStartValue(this, value)) {
+            this._notify('startValueChanged', [value]);
+            this._notify('rangeChanged', [value]);
          }
-         this._startValue = value;
-         this._nextVersion();
-         this._notify('startValueChanged', [value]);
       },
 
       get endValue() {
@@ -61,12 +77,25 @@ define('Controls/Date/model/DateRange', [
       },
 
       set endValue(value) {
-         if (DateUtil.isDatesEqual(this._endValue, value)) {
-            return;
+         if (_private.setEndValue(this, value)) {
+            this._notify('endValueChanged', [value]);
+            this._notify('rangeChanged', [value]);
          }
-         this._endValue = value;
-         this._nextVersion();
-         this._notify('endValueChanged', [value]);
+      },
+
+      setRange: function(startValue, endValue) {
+         var changed = false;
+         if (_private.setStartValue(this, startValue)) {
+            this._notify('startValueChanged', [startValue]);
+            changed = true;
+         }
+         if (_private.setEndValue(this, endValue)) {
+            this._notify('endValueChanged', [endValue]);
+            changed = true;
+         }
+         if (changed) {
+            this._notify('rangeChanged', [startValue, endValue]);
+         }
       },
 
       /**
@@ -75,8 +104,7 @@ define('Controls/Date/model/DateRange', [
        */
       shiftForward: function() {
          var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.FORWARD);
-         this.startValue = range[0];
-         this.endValue = range[1];
+         this.setRange(range[0], range[1]);
       },
 
       /**
@@ -85,10 +113,10 @@ define('Controls/Date/model/DateRange', [
        */
       shiftBack: function() {
          var range = dateRangeUtil.shiftPeriod(this.startValue, this.endValue, dateRangeUtil.SHIFT_DIRECTION.BACK);
-         this.startValue = range[0];
-         this.endValue = range[1];
+         this.setRange(range[0], range[1]);
       }
    });
 
+   ModuleClass._private = _private;
    return ModuleClass;
 });

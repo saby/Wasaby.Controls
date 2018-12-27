@@ -281,6 +281,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: комбобокс
+      '/demo-ws4-input-combobox': function(req, res) {
+         requirejs('Controls-demo/Combobox/ComboboxApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Combobox/ComboboxApplication',
+            initDependencies: false
+         }, []);
+      },
+
 
 
       /*
