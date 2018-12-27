@@ -1,0 +1,5 @@
+<div
+   class="ws-flexbox ws-flex-grow-1 ws-justify-content-center ws-align-items-center"
+   style="height: 100%; {{value.extData.isEven ? 'background: rgba(255, 0, 0, 0.1'}}">
+   {{value.day}}
+</div>
