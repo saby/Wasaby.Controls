@@ -1,10 +1,10 @@
 <div key="scripts">
    <ws:if data="{{!_options.compat && _options.onServer}}">
       <script key="init_script">
-         require(['Controls/Application/AppData'], function(AppData){
+         require(['Core/polyfill', 'Core/app', 'Controls/Application/AppData'], function(polyfill, app, AppData){
             window.startContextData = {AppData: new AppData({})};
             var deps = {{ __setHTMLUnsafe(getDeps()) }};
-            require(['Core/app'], function(app) { app(deps); });
+            app(deps);
          });
       </script>
    </ws:if>
