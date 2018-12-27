@@ -8,11 +8,11 @@
   "deprecatedWebPageTemplates": true,
   "htmlWml": true,
   "themes": true,
-  "minimize": true,
-  "wml": true,
-  "customPack": true,
-  "dependenciesGraph": true,
-  "resourcesUrl": true,
+  "minimize": false,
+  "wml": false,
+  "customPack": false,
+  "dependenciesGraph": false,
+  "resourcesUrl": false,
   "modules": [
     {
       "name": "Controls",

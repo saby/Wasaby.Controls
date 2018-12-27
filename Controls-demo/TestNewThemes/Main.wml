@@ -1,4 +1,0 @@
-<div>
-   <Controls-demo.TestNewThemes.TestControl theme="online"/>
-   <Controls-demo.TestNewThemes.TestControl theme="presto"/>
-</div>

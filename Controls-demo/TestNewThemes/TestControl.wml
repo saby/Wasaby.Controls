@@ -1,3 +1,0 @@
-<div class="test-control demo__Themes-theme-{{ _options.theme }}">
-   test
-</div>
