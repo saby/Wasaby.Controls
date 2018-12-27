@@ -27,7 +27,8 @@ define('Controls-demo/LoadingIndicator/LoadingIndicatorPG',
                scroll: '',
                small: '',
                overlay: 'dark',
-               mods: ''
+               mods: '',
+               delay: 0
             };
             this._dataObject = {
                isGlobal: {
