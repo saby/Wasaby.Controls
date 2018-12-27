@@ -310,8 +310,9 @@ node('controls') {
                     dir("./controls"){
                         sh """
                         git clean -fd
-                        git fetch
+                        git fetch --all
                         git checkout ${env.BRANCH_NAME}
+                        git git reset --hard origin/rc-${version}
                         git pull
                         git merge origin/rc-${version}
                         """
