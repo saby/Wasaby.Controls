@@ -42,7 +42,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          };
       };
 
-      Suggest._private.getRecentIdentificators = function() {
+      Suggest._private.getRecentKeys = function() {
          return {
             addCallback: function(func) {
                func(IDENTIFICATORS);

@@ -114,27 +114,29 @@
                   });
                   self._historyServiceLoad.callback(self._historyService);
                });
-            } else {
-               self._historyServiceLoad.addCallback(function() {
-                  return self._historyService;
-               });
             }
 
             return self._historyServiceLoad;
          },
-         getRecentIdentificators: function(self) {
+         getRecentKeys: function(self) {
+            var deferredWithKeys = new Deferred();
+
             //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
-            return _private.getHistoryService(self).addCallback(function(historyService) {
-               return historyService.query().addCallback(function(dataSet) {
-                  var identificators = [];
+            _private.getHistoryService(self).addCallback(function(historyService) {
+               historyService.query().addCallback(function(dataSet) {
+                  var keys = [];
 
                   dataSet.getRow().get('recent').each(function(item) {
-                     identificators.push(item.get('ObjectId'));
+                     keys.push(item.get('ObjectId'));
                   });
 
-                  return identificators;
+                  deferredWithKeys.callback(keys);
                });
+
+               return historyService;
             });
+
+            return deferredWithKeys;
          }
       };
 
@@ -246,8 +248,8 @@
             this._inputActive = true;
             if (this._options.autoDropDown && !this._options.readOnly) {
                if (this._options.historyId) {
-                  _private.getRecentIdentificators(this).addCallback(function(identificators) {
-                     self._filter[self._options.keyProperty] = identificators;
+                  _private.getRecentKeys(this).addCallback(function(keys) {
+                     self._filter[self._options.keyProperty] = keys;
                      _private.open(self);
                   });
                } else {
@@ -284,6 +286,7 @@
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
+                  return historyService;
                });
             }
          },
