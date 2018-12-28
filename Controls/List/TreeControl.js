@@ -95,7 +95,7 @@ define('Controls/List/TreeControl', [
          return expandedItems instanceof Array && expandedItems[0] === null;
       },
       beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
-         var parentProperty = self._options.parentProperty;
+         var parentProperty = cfg.parentProperty;
          var baseControl = self._children.baseControl;
          var expandedItemsKeys;
          
