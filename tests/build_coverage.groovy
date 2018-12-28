@@ -43,10 +43,6 @@ def building(workspace, scheduler=null) {
         triggers
     ])
 
-    echo "Определяем рабочую директорию"
-
-    ws(workspace) {
-
         try {
         echo "Чистим рабочую директорию"
         deleteDir()
@@ -455,6 +451,6 @@ def building(workspace, scheduler=null) {
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
 
         }
-    }
+
 }
 return this
