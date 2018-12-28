@@ -40,6 +40,12 @@ define('Controls/Input/Search/Suggest',
             this._notify('choose', [item]);
             this._notify('valueChanged', [item.get(this._options.displayProperty)]);
          },
+         
+         _beforeUpdate: function(newOptions) {
+            if (this._options.suggestState !== newOptions.suggestState) {
+               this._suggestState = newOptions.suggestState;
+            }
+         },
    
          _suggestStateChanged: function(event, value) {
             /**
@@ -54,6 +60,7 @@ define('Controls/Input/Search/Suggest',
              * Всплытие будет удалено по задаче.
              * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
              */
+            this._suggestState = false;
             this._notify('suggestStateChanged', [false], {bubbling: true});
          },
    
