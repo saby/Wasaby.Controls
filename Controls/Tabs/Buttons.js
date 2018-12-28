@@ -128,8 +128,8 @@ define('Controls/Tabs/Buttons', [
    /**
     * @name Controls/Tabs/Buttons#style
     * @cfg {Enum} Tabs buttons display style.
-    * @variant primary The display style of the attracting attention to selected tab.
-    * @variant secondary The display style of the explicitly highlighted to selected tab.
+    * @variant primary
+    * @variant secondary
     * @default primary
     * @remark
     * If the standard theme does not suit you, you can override the variables:
