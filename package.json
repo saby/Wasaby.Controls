@@ -16,6 +16,7 @@
       "build": "node build-app",
       "compile": "tsc",
       "start": "node app",
+      "start:units": "node node_modules/saby-units/cli/server",
       "test": "saby-units --isolated",
       "test:node": "saby-units --isolated --report",
       "test:node-coverage": "saby-units --isolated --report --coverage",
