@@ -27,8 +27,8 @@ define('Controls/Heading/Back', [
    /**
     * @name Controls/Heading/Back#style
     * @cfg {String} Back heading display style.
-    * @variant primary Primary display style.
-    * @variant secondary Secondary display style.
+    * @variant primary
+    * @variant secondary
     * @default primary
     * @example
     * Back heading has default style.

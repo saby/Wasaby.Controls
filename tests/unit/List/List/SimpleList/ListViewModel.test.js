@@ -106,7 +106,7 @@ define([
          var
             cfg = {
                keyProperty: 'id',
-               markerVisibility: 'always'
+               markerVisibility: 'visible'
             },
             listModel = new ListViewModel(cfg);
 

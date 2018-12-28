@@ -11,7 +11,9 @@ define('Controls/Input/ComboBox',
 
    function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
       /**
-       * Control "ComboBox"
+       * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
+       * The full list of options is displayed when you click on the control.
+       * <a href="/materials/demo-ws4-input-combobox">Demo-example</a>.
        * @class Controls/Input/ComboBox
        * @extends Core/Control
        * @mixes Controls/interface/ISource

@@ -13,7 +13,7 @@ define('Controls-demo/Input/Area/Area', [
       _placeholder: 'Input text',
       _constraint: '',
       _trim: false,
-      _maxLength: '10',
+      _maxLength: '1000',
       _minLines: 1,
       _maxLines: 5,
       _readOnly: false,

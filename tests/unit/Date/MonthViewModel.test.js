@@ -30,5 +30,40 @@ define([
          });
 
       });
+      describe('_getDayObject', function() {
+         let state = {
+            mode: 'mode',
+            month: new Date(2018, 0, 1),
+            enabled: true
+         };
+
+         it('should create the object with correct extData', function() {
+            let extData = 'some data',
+               mvm, dayObj;
+
+            mvm = new MonthViewModel(config);
+            dayObj = mvm._getDayObject(
+               new Date(2018, 0, 1),
+               coreMerge({ daysData: [extData] }, state, { preferSource: true })
+            );
+
+            assert.equal(dayObj.extData, extData);
+         });
+
+      });
+      describe('_isStateChanged', function() {
+         it('should return true if new state the same', function() {
+            let mvm = new MonthViewModel(config);
+            assert.isFalse(mvm._isStateChanged(config));
+         });
+
+         it('should return false if new state contain changed daysData', function() {
+            let mvm = new MonthViewModel(config);
+            assert.isTrue(mvm._isStateChanged(
+               coreMerge({ daysData: [2] }, config, { preferSource: true })
+            ));
+         });
+
+      });
    });
 });

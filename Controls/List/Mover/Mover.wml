@@ -1,1 +1,3 @@
-<div></div>
+<Controls.Popup.Opener.Dialog name="dialogOpener" on:popupResult="_onDialogResult()">
+   <ws:popupOptions isModal="{{true}}" template="{{_options.moveDialogTemplate}}"/>
+</Controls.Popup.Opener.Dialog>

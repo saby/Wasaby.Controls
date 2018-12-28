@@ -7,7 +7,7 @@ define('Controls/Date/MonthView', [
    'Controls/Utils/Date',
    'wml!Controls/Date/MonthView/MonthView',
    'wml!Controls/Date/MonthView/MonthViewTableBody',
-   'wml!Controls/Date/MonthView/day',
+   'wml!Controls/Date/MonthView/dayTemplate',
    'Controls/Date/interface/IMonth',
    'css!theme?Controls/Date/MonthView/MonthView'
 ], function(
@@ -19,7 +19,7 @@ define('Controls/Date/MonthView', [
    DateUtil,
    dotTplFn,
    tableBodyTmpl,
-   dayTmpl,
+   dayTemplate,
    IMonth
 ) {
 
@@ -63,8 +63,6 @@ define('Controls/Date/MonthView', [
       _template: dotTplFn,
       _tableBodyTmpl: tableBodyTmpl,
 
-      _dayTmpl: null,
-
       _month: null,
       _showWeekdays: null,
       _monthViewModel: null,
@@ -73,7 +71,6 @@ define('Controls/Date/MonthView', [
       _themeCssClass: '',
 
       _beforeMount: function(options) {
-         this._dayTmpl = options.dayTemplate || dayTmpl;
 
          // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
          if (options.theme === 'accordion') {
@@ -88,6 +85,10 @@ define('Controls/Date/MonthView', [
          _private._updateView(this, newOptions);
 
          this._monthViewModel.updateOptions(newOptions);
+      },
+
+      _getDayData: function() {
+         return {};
       },
 
       _dayClickHandler: function(event, item) {
@@ -110,7 +111,9 @@ define('Controls/Date/MonthView', [
    MonthView._private = _private;
 
    MonthView.getDefaultOptions = function() {
-      return coreMerge({}, IMonth.getDefaultOptions());
+      return coreMerge({
+         dayTemplate: dayTemplate,
+      }, IMonth.getDefaultOptions());
    };
 
    MonthView.getOptionTypes = function() {

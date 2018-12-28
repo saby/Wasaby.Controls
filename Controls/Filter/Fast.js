@@ -49,9 +49,10 @@ define('Controls/Filter/Fast',
             }
          },
 
-         loadItemsFromSource: function(instance, source, keyProperty, filter) {
+         loadItemsFromSource: function(instance, source, keyProperty, filter, navigation) {
             var sourceController = new SourceController({
                source: source,
+               navigation: navigation,
                idProperty: keyProperty
             });
             return sourceController.load(filter).addCallback(function(items) {
@@ -70,7 +71,7 @@ define('Controls/Filter/Fast',
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
             } if (properties.source) {
-               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter);
+               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter, properties.navigation);
             }
          },
 

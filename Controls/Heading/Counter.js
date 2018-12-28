@@ -35,9 +35,9 @@ define('Controls/Heading/Counter', [
    /**
     * @name Controls/Heading/Counter#style
     * @cfg {String} Counter displaying style.
-    * @variant primary Primary counter style.
-    * @variant secondary Secondary counter style.
-    * @variant disabled Disabled counter style.
+    * @variant primary
+    * @variant secondary
+    * @variant disabled
     * @default primary
     */
 
