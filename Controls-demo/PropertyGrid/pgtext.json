@@ -1652,6 +1652,18 @@
             "type": "function",
             "title": "List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)"
           },
+          "suggestTemplate": {
+            "type": "function",
+            "title": "Template for suggest, that showing search results."
+          },
+          "footerTemplate": {
+            "type": "function",
+            "title": "Footer template of suggest."
+          },
+          "emptyTemplate": {
+            "type": "function",
+            "title": "Template for suggest when no results were found."
+          },
           "searchParam": {
             "type": "enum",
             "title": "Name of the field that search should operate on. Search value will insert in filter by this parameter.",
@@ -1679,18 +1691,6 @@
             "type": "Number",
             "title": "The delay between when a symvol was typed and when a search is performed.",
             "default": 300
-          },
-          "suggestTemplate": {
-            "type": "function",
-            "title": "Template for suggest, that showing search results."
-          },
-          "footerTemplate": {
-            "type": "function",
-            "title": "Footer template of suggest."
-          },
-          "emptyTemplate": {
-            "type": "function",
-            "title": "Template for suggest when no results were found."
           }
         }
       }
@@ -1728,6 +1728,18 @@
             "type": "function",
             "title": "List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)"
           },
+          "suggestTemplate": {
+            "type": "function",
+            "title": "Template for suggest, that showing search results."
+          },
+          "footerTemplate": {
+            "type": "function",
+            "title": "Footer template of suggest."
+          },
+          "emptyTemplate": {
+            "type": "function",
+            "title": "Template for suggest when no results were found."
+          },
           "searchParam": {
             "type": "enum",
             "title": "Name of the field that search should operate on. Search value will insert in filter by this parameter.",
@@ -1755,18 +1767,6 @@
             "type": "Number",
             "title": "The delay between when a symvol was typed and when a search is performed.",
             "default": 300
-          },
-          "suggestTemplate": {
-            "type": "function",
-            "title": "Template for suggest, that showing search results."
-          },
-          "footerTemplate": {
-            "type": "function",
-            "title": "Footer template of suggest."
-          },
-          "emptyTemplate": {
-            "type": "function",
-            "title": "Template for suggest when no results were found."
           }
         }
       }

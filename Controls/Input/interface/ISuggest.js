@@ -11,26 +11,27 @@ define('Controls/Input/interface/ISuggest', [
    
    /**
     * @typedef {Object} suggestTemplateProp
-    * @property {String} templateName component name, that will be displayed in suggest.
-    * @property {Object} templateOptions options for component, that will be displayed in suggest.
+    * @property {String} templateName Control name, that will be displayed list of items in suggest.
+    * @property {Object} templateOptions Options for control , which is specified in the templateName field.
     */
    
    /**
     * @typedef {Object} emptyTemplateProp
-    * @property {String} templateName template, that will be displayed if suggest is empty.
-    * @property {Object} templateOptions option for template, that will be displayed if suggest is empty.
+    * @property {String} templateName Template name for suggest, which will showing when no result were found.
+    * @property {Object} templateOptions Options for template, which is specified in the templateName field.
     */
    
    /**
     * @typedef {Object} suggestFooterTemplate
-    * @property {String} [templateName] name of the template that will be showed in footer.
-    * @property {Object} [templateOptions] options for the footerTemplate
+    * @property {String} templateName Name of template, which will showing in bottom of suggest.
+    * @property {Object} templateOptions Options for template, which is specified in the templateName field.
     */
    
    
    /**
     * @name Controls/Input/interface/ISuggest#suggestTemplate
     * @cfg {suggestTemplateProp|null} Template for suggest, that showing search results.
+    * @remark Root control of suggest must be Controls/Container/Suggest/List, for this control you can pass in content option a control (such Controls/List or Controls/Grid), that will displaying a list.
     * @example
     * suggestTemplate.wml
     * <pre>
