@@ -370,6 +370,12 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          /**
+          * @type {Boolean}
+          * @protected
+          */
+         _multiline: false,
+
+         /**
           * @type {Number} The number of skipped save the current field selection to the model.
           * @private
           */
@@ -466,7 +472,7 @@ define('Controls/Input/Base',
             var viewModelCtr = this._getViewModelConstructor();
             var viewModelOptions = this._getViewModelOptions(options);
 
-            this._initProperties(this);
+            this._initProperties(options);
             _private.initViewModel(this, viewModelCtr, viewModelOptions, options.value);
 
             if (options.autoComplete) {
@@ -505,8 +511,8 @@ define('Controls/Input/Base',
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
-          * @private
+          * @param {Object} options Control options.
+          * @protected
           */
          _initProperties: function() {
             this._field = {
@@ -775,11 +781,15 @@ define('Controls/Input/Base',
                model.changesHaveBeenApplied();
 
                if (_private.isFieldFocused(this)) {
-                  _private.recalculateLocationVisibleArea(this, field, model.displayValue, model.selection);
+                  this._recalculateLocationVisibleArea(field, model.displayValue, model.selection);
                }
             }
 
             return model.displayValue;
+         },
+
+         _recalculateLocationVisibleArea: function(field, displayValue, selection) {
+            _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
          paste: function(text) {

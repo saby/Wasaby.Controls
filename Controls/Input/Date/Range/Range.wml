@@ -1,17 +1,20 @@
 <div attr:class="controls-Input-DateRange">
    <Controls.Input.DateTime
+      name="startValueField"
       bind:value="_rangeModel.startValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
       tagStyle="{{ _options.tagStyle }}"
       selectOnClick="{{_options.selectOnClick}}"
       validationErrors="{{_options.validationErrors}}"
+      on:keyup="_keyUpHandler()"
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
    </Controls.Input.DateTime>
    <div class="controls-Input-DateRange__dash"></div>
    <Controls.Input.DateTime
+      name="endValueField"
       bind:value="_rangeModel.endValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
