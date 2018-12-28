@@ -36,6 +36,7 @@ define('Controls/Input/Date/Link', [
 
    var Component = BaseControl.extend({
       _template: componentTmpl,
+
       _openDialog: function(event) {
          this._children.opener.open({
             opener: this,
@@ -67,6 +68,9 @@ define('Controls/Input/Date/Link', [
          this._notify('valueChanged', [value]);
          this._children.opener.close();
          this._forceUpdate();
+      },
+      _rangeChangedHandler: function(event, value) {
+         this._notify('valueChanged', [value]);
       }
    });
 
