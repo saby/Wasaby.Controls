@@ -193,9 +193,14 @@ def building(workspace, scheduler=null) {
 
             dir(workspace){
                 echo "подкидываем istanbul в Controls"
-
                 sh 'istanbul instrument -x **/bin/** -x **/tests/** -x **/viewsettings/** -x **/engine/** --complete-copy --output ./controls-cover ./controls'
                 sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
+            }
+            dir (workspace) {
+                echo "подкидываем оргинальные файлы"
+                sh 'cp -rf ./controls-orig/tests/ ./controls/tests/'
+                sh 'cp -rf ./controls-orig/viewsettings/ ./controls/viewsettings/'
+                sh 'cp -rf ./controls-orig/engine/ ./controls/engine/'
             }
 
             echo "Собираем controls"
