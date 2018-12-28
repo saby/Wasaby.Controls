@@ -20,12 +20,12 @@ define('Controls/Input/Date/Link', [
    'use strict';
 
    /**
-    * A link button that displays the period. Supports the change of periods to adjacent.
+    * Controls that allows user to select date value in calendar.
     *
     * @class Controls/Input/Date/Lite
     * @extends Core/Control
     * @mixes Controls/Input/Date/interface/ILinkView
-    * @mixes Controls/Date/interface/IRangeSelectable
+    * @mixes Controls/Input/Date/interface/ILink
     * @control
     * @public
     * @category Input
