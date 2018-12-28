@@ -20,38 +20,38 @@
 /* ATTENTION styles */
 .icon-attention
 {
-  color: @icon-color-attention;
+  color: @color_warning;
 }
 
 /* DONE styles */
 .icon-done
 {
-  color: @icon-color-done;
+  color: @color_success;
 }
 
 /* ERROR styles */
 .icon-error
 {
-  color: @icon-color-error;
+  color: @color_danger;
 }
 
 /* PRIMARY styles */
 .icon-primary
 {
-  color: @color_primary;
-  fill: @color_primary;
+  color: @color_secondary;
+  fill: @color_secondary;
 }
 
 /* DISABLED styles */
 .icon-disabled
 {
-  color: @icon-color-disabled;
-  fill: @icon-color-disabled;
+  color: @color_readOnly;
+  fill: @color_readOnly;
 }
 
 /* Для тех, кто поддерживает... */
 .icon-primary:disabled {
-  color: @icon-color-disabled;
+  color: @color_readOnly;
 }
 
 /* Цвет основного текста */
@@ -62,7 +62,7 @@
 
 //HOVER styles
 .icon-hover{
-  color: @color_hover;
+  color: @color_primaryV;
 }
 
 .gray-color {
@@ -95,13 +95,13 @@
 }
 
 .icon-small, .icon-16  { // icon-16 coprolite
-   .icon-size(@default-icon-size, @default-icon-small-font);
+   .icon-size(@size_icon_s, @font-family_icon_size-s);
 }
 .icon-medium, .icon-24  { // icon-24 coprolite
-   .icon-size(@default-icon-size-medium, @default-icon-medium-font);
+   .icon-size(@size_icon_m, @font-family_icon_size-m);
 }
 .icon-large, .icon-32 {// icon-32 coprolite
-   .icon-size(@default-icon-size-large, @default-icon-large-font);
+   .icon-size(@size_icon_l, @font-family_icon_size-l);
 }
 
 .svg-icon-size-small, .svg-icon-size-16 {
