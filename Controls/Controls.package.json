@@ -154,9 +154,8 @@
     "Controls/List/ItemActions/ItemActionsControl",
     "Controls/List/Swipe/*",
     "Controls/List/Mover",
+    "Controls/List/Mover/*",
     "Controls/List/Remover",
-    "Controls/List/DialogMover/*",
-    "Controls/List/DialogMover",
     "Controls/List/Paging/*",
     "Controls/List/Paging"
   ],
@@ -178,10 +177,10 @@
   "output": "controls-itemactions.package.js"
 }, {
   "include": [
-    "Controls/List/DialogMover/*",
-    "Controls/List/DialogMover"
+    "Controls/List/Mover/*",
+    "Controls/List/Mover"
   ],
-  "output": "controls-dialogmover.package.js"
+  "output": "controls-mover.package.js"
 }, {
   "include": [
     "Controls/Popup/*"

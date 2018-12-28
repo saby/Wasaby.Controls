@@ -90,6 +90,19 @@ define('Controls/Input/Date/Range', [
          this._rangeModel.endValue = endValue;
          this._children.opener.close();
          this._forceUpdate();
+      },
+
+      // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
+
+      _keyUpHandler: function() {
+         this._focusChanger();
+      },
+
+      _focusChanger: function() {
+         var datetimeStart = this._children.startValueField._container.querySelector('input');
+         if (datetimeStart.selectionStart === this._options.mask.length) {
+            this._children.endValueField.activate();
+         }
       }
    });
 
@@ -100,7 +113,5 @@ define('Controls/Input/Date/Range', [
    Component.getOptionTypes = function() {
       return coreMerge({}, IDateTimeMask.getOptionTypes());
    };
-
    return Component;
-
 });

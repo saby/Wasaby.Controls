@@ -62,7 +62,7 @@ define('Controls/Input/Date/LinkView', [
       constructor: function() {
          Component.superclass.constructor.apply(this, arguments);
          this._rangeModel = new DateRangeModel();
-         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged']);
+         CalendarControlsUtils.proxyModelEvents(this, this._rangeModel, ['startValueChanged', 'endValueChanged', 'rangeChanged']);
       },
 
       _beforeMount: function(options) {
@@ -96,7 +96,6 @@ define('Controls/Input/Date/LinkView', [
       _beforeUnmount: function() {
          this._rangeModel.destroy();
       }
-
    });
 
    Component.EMPTY_CAPTIONS = IDateLinkView.EMPTY_CAPTIONS;

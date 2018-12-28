@@ -1,7 +1,8 @@
 <Controls.Popup.Templates.Stack.StackTemplate caption="Notify Stack Test">
    <ws:contentArea>
       <div style="width: 700px">
-         <Controls.Input.Text bind:value="_textValue" attr:class="ControlsDemo-NotifyStack__input" />
+         <Controls.Input.Text bind:value="_textValue1" attr:class="ControlsDemo-NotifyStack__input1" />
+         <Controls.Input.Text bind:value="_textValue2" attr:class="ControlsDemo-NotifyStack__input2" />
          <Controls.Button caption="Отправить текст в опенер" on:click="_sendResult()" attr:class="ControlsDemo-NotifyStack__input" />
       </div>
    </ws:contentArea>

@@ -59,6 +59,23 @@ define([
          mover.destroy();
       });
 
+      it('moveItemsWithDialog', function(done) {
+         var items = [1, 2, 3];
+
+         mover._children = {
+            dialogOpener: {
+               open: function(openArgs) {
+                  assert.equal(openArgs.templateOptions.movedItems, items);
+                  assert.equal(openArgs.templateOptions.source, mover._source);
+                  assert.equal(openArgs.templateOptions.keyProperty, mover._keyProperty);
+                  done();
+               }
+            }
+         };
+
+         mover.moveItemsWithDialog(items);
+      });
+
       it('beforeItemsMove notify event with params', function(done) {
          var
             movedItems,

@@ -43,13 +43,15 @@ def build_description(job, path, skip_test) {
     }
     def description = sh returnStdout: true, script: "python3 get_err_from_rc.py -j '${job}' -f ${path} ${param_skip}"
     if (description) {
-        echo "${description}"
         title = description.tokenize('|')[0]
         description = description.tokenize('|')[1]
         echo "${title}"
+        echo "${description}"
+        if (title && description) {
+            return [title, description]
+        }
 
     }
-    return [title, description]
 }
 
 def build_title(t_int, t_reg) {
@@ -61,13 +63,13 @@ def build_title(t_int, t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     } else if (t_int && t_reg && t_int==t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL') && t_reg.contains('OK')) {
+    } else if (t_int.contains('FAIL')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL') && t_int.contains('OK')) {
+    }else if (t_reg.contains('FAIL')) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
     }
-
 }
+
 @NonCPS
 def getBuildUser() {
     def cause = currentBuild.rawBuild.getCause(Cause.UserIdCause)
@@ -495,18 +497,26 @@ node('controls') {
             }
             echo items
         }
-        stage ("Unit тесты"){
-            if ( unit ){
-                echo "Запускаем юнит тесты"
-                sh "date"
-                dir("./controls"){
-                    sh """
-                    npm cache clean --force
-                    npm config set registry http://npmregistry.sbis.ru:81/
+        if ( unit ){
+            dir("./controls"){
+                sh """
+                npm cache clean --force
+                npm set registry https://registry.npmjs.org/
+                """
+                stage ("Unit тесты node"){
+                    sh returnStatus: true, script: """
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
                     sh ./bin/test-isolated
-
+                    """
+                    junit keepLongStdio: true, testResults: "**/artifacts/test-isolated-report.xml"
+                    unit_result = currentBuild.result == null
+                    if (!unit_result) {
+                        exception('Unit тесты node падают с ошибками.', 'UNIT TEST FAIL')
+                    }
+                }
+                stage ("Unit тесты browser"){
+                    sh returnStatus: true, script: """
                     echo "run browser"
                     export test_url_host=${env.NODE_NAME}
                     export test_server_port=10253
@@ -517,14 +527,12 @@ node('controls') {
                     export test_report=artifacts/test-browser-report.xml
                     sh ./bin/test-browser
                     """
-                    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                    junit keepLongStdio: true, testResults: "**/artifacts/test-browser-report.xml"
                     unit_result = currentBuild.result == null
                     if (!unit_result) {
-                        exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+                        exception('Unit тесты browser падают с ошибками.', 'UNIT TEST FAIL')
                     }
                 }
-                echo "Юнит тесты завершились"
-                sh "date"
             }
         }
         if ( regr || inte || all_inte) {
@@ -778,32 +786,38 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        /*dir("./controls/tests") {
-            def int_title = ''
-            def reg_title = ''
-            def description = ''
-            if (inte || all_inte) {
-                 int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                 int_title = int_data[0]
-                 int_description= int_data[1]
-                 print("in int ${int_description}")
-                 if ( int_description ) {
-                    description += "${int_description}"
-                 }
-            }
-            if (regr) {
-                reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                reg_title = reg_data[0]
-                reg_description = reg_data[1]
-                print("in reg ${reg_description}")
-                if ( description != reg_description ) {
-                    description += "${reg_description}"
+        if ( smoke_result ) {
+            dir("./controls/tests") {
+                def int_title = ''
+                def reg_title = ''
+                def description = ''
+                if (inte || all_inte) {
+                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
+                     if ( int_data ) {
+                         int_title = int_data[0]
+                         int_description= int_data[1]
+                         print("in int ${int_description}")
+                         if ( int_description ) {
+                            description += "[INT] ${int_description}"
+                         }
+                    }
                 }
-            }
+                if (regr) {
+                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
+                    if ( reg_data ) {
+                        reg_title = reg_data[0]
+                        reg_description = reg_data[1]
+                        print("in reg ${reg_description}")
+                        if ( description != reg_description ) {
+                            description += "<br>[REG] ${reg_description}"
+                        }
+                    }
+                }
 
-            build_title(int_title, reg_title)
-            currentBuild.description = "${description}"
-        } */
+                build_title(int_title, reg_title)
+                currentBuild.description = "${description}"
+            }
+        }
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
