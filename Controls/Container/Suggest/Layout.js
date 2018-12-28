@@ -252,7 +252,7 @@
                if (this._options.historyId) {
                   _private.getRecentKeys(this).addCallback(function(keys) {
                      if (keys) {
-                        filter = clone(self._options.filter);
+                        filter = clone(self._options.filter || {});
                         filter['historyKeys'] = keys;
                         _private.setFilter(self, filter);
                      }
