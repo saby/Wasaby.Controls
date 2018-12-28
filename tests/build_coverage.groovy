@@ -44,9 +44,6 @@ def building(workspace, scheduler=null) {
     ])
 
         try {
-        echo "Чистим рабочую директорию"
-        deleteDir()
-
 		echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
 		def stream_number=props["snit"]
