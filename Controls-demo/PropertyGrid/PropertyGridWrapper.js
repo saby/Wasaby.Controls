@@ -24,7 +24,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
    ],
 
    function(Control, Deferred, cMerge, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
-            datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
+      datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 
       var PGWrapper = Control.extend({
@@ -46,7 +46,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'function|String': functOrString,
                'function': functionTmpl,
                'enum': enumTmpl,
-               'Object': objTmpl,
+               'Object': objTmpl
             };
             var testName = opts.content.split('/');
             testName.splice(0, 1);

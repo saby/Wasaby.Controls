@@ -17,7 +17,8 @@ define('Controls/Date/MonthList', [
    /**
     * Прокручивающийся список с месяцами. Позволяет выбирать период.
     *
-    * @class Controls/Calendar/DateRangePicker
+    * @class Controls/Date/MonthList
+    * @mixes Controls/Date/interface/IMonthListCustomDays
     * @extends Core/Control
     * @author Миронов А.Ю.
     * @noShow
@@ -79,8 +80,11 @@ define('Controls/Date/MonthList', [
 
       selectionChangedHandler: function(event, start, end) {
          this._notify('selectionChanged', [start, end]);
-      }
+      },
 
+      _getMonth: function(year, month) {
+         return new Date(year, month, 1);
+      }
    });
 
    ModuleComponent.getDefaultOptions = function() {

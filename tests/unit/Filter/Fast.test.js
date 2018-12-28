@@ -76,7 +76,8 @@ define(
                   source: new Memory({
                      data: items[0],
                      idProperty: 'key'
-                  })
+                  }),
+                  navigation: {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}}
                }
             }
          ];
@@ -163,6 +164,15 @@ define(
             FastData._private.reload(fastDataItems).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(2), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), [{ key: 0, title: 'все страны' }]);
+                  done();
+               });
+            });
+         });
+
+         it('load config from items with navigation', function(done) {
+            FastData._private.reload(fastDataItems).addCallback(function() {
+               FastData._private.loadItems(fastData, fastData._items.at(3), 0).addCallback(function() {
+                  assert.equal(fastData._configs[0]._items.getCount(), 2);
                   done();
                });
             });

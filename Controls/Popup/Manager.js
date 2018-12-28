@@ -179,7 +179,7 @@ define('Controls/Popup/Manager',
             var args = Array.prototype.slice.call(arguments, 2);
             if (item) {
                if (item.popupOptions._events) {
-                  item.popupOptions._events[event].apply(item.popupOptions, Array.prototype.slice.call(arguments, 1));
+                  item.popupOptions._events[event](event, args);
                }
                if (item.popupOptions.eventHandlers && typeof item.popupOptions.eventHandlers[event] === 'function') {
                   item.popupOptions.eventHandlers[event].apply(item.popupOptions, args);

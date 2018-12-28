@@ -1,62 +1,37 @@
-<ws:template name="enabledArea">
-   <textarea
-      name="realArea"
-      spellcheck="false"
-      value="{{ value }}"
-   ></textarea>
-</ws:template>
-
-<ws:template name="disabledArea">
-   <div attr:tabindex="-1">{{ value }}</div>
-</ws:template>
-
-<Controls.Input.resources.InputRender.InputRender
-           size="{{ _options.size }}"
-           autocomplete="{{_options.autocomplete}}"
-           sidePadding="Left"
-           multiline="{{ _multiline }}"
-           name="inputRender"
-           value="{{ _options.value }}"
-           selectOnClick="{{_options.selectOnClick}}"
-           viewModel="{{_textViewModel}}"
-           tagStyle="{{_options.tagStyle}}"
-           validationErrors="{{_options.validationErrors}}"
-           tooltip="{{_options.tooltip}}"
-           attr:class="controls-InputArea"
-           on:valueChanged="_valueChangedHandler()"
-           on:inputCompleted="_inputCompletedHandler()">
-      <ws:placeholder>
-         <div class="controls-InputArea__fieldPadding">{{_options.placeholder}}</div>
-      </ws:placeholder>
-      <ws:content>
-            <!--TODO контейнер убрать https://online.sbis.ru/opendoc.html?guid=25000158-64ff-4db9-9605-a986cbc37b0f-->
-            <div class="controls-InputRender__wrapper">
-               <ws:partial
-                     template="{{ _options.readOnly ? 'disabledArea' : 'enabledArea' }}"
-                     attr:class="controls-InputArea__field
-                       controls-InputArea__realField
-                       controls-InputRender__field
-                       controls-InputArea__fieldPadding
-                       {{_hasScroll ? 'controls-InputArea__realField_scroll-scroll' : 'controls-InputArea__realField_scroll-hidden'}}
-                       controls-InputArea__field_size_{{_options.size || 'default'}}"
-                     value="{{ _options.value }}"
-                     on:keydown="_keyDownHandler()"
-                     on:scroll="_scrollHandler()"
-                  />
-
-
-               <div class="controls-fakeTextArea__firstWrapper controls-InputArea__fieldPadding">
-                  <div class="controls-fakeTextArea__secondWrapper controls-fakeTextArea__secondWrapper_size_{{_options.size || 'default'}}" name="fakeAreaWrapper">
-                     <div
-                        name="fakeArea"
-                        class="controls-InputArea__field controls-InputArea__fakeField controls-InputRender__field controls-InputArea__field_size_{{_options.size || 'default'}}"
-                        style="{{_options.minLines ? ('min-height: ' + _options.minLines * 100 + '%;')}} {{_options.maxLines ? 'max-height: ' + _options.maxLines * 100 + '%'}}">
-                        <span name="fakeAreaValue"><!--Вернуть {{_options.value}} по https://online.sbis.ru/opendoc.html?guid=8ea92dc1-38ed-4fd6-8ac2-01266f668caa--></span>
-                        <br/>
-                     </div>
-                  </div>
-                  <div class="controls-InputArea__clear"></div>
-               </div>
-            </div>
-      </ws:content>
-   </Controls.Input.resources.InputRender.InputRender>
+<Controls.Input.Render attr:title="{{_tooltip}}"
+                       viewModel="{{_viewModel}}"
+                       size="{{_options.size}}"
+                       style="{{_options.style}}"
+                       multiline="{{_multiline}}"
+                       tagStyle="{{_options.tagStyle}}"
+                       fontStyle="{{_options.fontStyle}}"
+                       textAlign="{{_options.textAlign}}"
+                       placeholder="{{_options.placeholder}}"
+                       on:mouseenter="_mouseEnterHandler()"
+                       on:tagClick="_notifyHandler('tagClick')"
+                       on:tagHover="_notifyHandler('tagHover')">
+   <Controls.Container.Scroll name="scroll"
+                              attr:class="controls-Base__field"
+                              attr:style="{{'min-height: ' + _calculateHeightContainer(_options.minLines, true) + 'px;'}}
+                                          {{_options.maxLines ? 'max-height: ' + _calculateHeightContainer(_options.maxLines, true) + 'px;'}}">
+      <ws:if data="{{_options.readOnly}}">
+         <ws:partial options="{{_options}}"
+                     scope="{{_readOnlyField.scope}}"
+                     value="{{_viewModel.displayValue}}"
+                     selection="{{_viewModel.selection}}"
+                     template="{{_readOnlyField.template}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial type="{{_type}}"
+                     options="{{_options}}"
+                     scope="{{_field.scope}}"
+                     fieldName="{{_fieldName}}"
+                     template="{{_field.template}}"
+                     value="{{_viewModel.displayValue}}"
+                     selection="{{_viewModel.selection}}"
+                     hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                     calculateHeightContainer="{{_calculateHeightContainer}}"
+                     isEdge="{{_isEdge}}" />
+      </ws:else>
+   </Controls.Container.Scroll>
+</Controls.Input.Render>

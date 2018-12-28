@@ -8,7 +8,6 @@ define('Controls/Input/Render',
       'css!theme?Controls/Input/Render/Render'
    ],
    function(Control, descriptor, tmplNotify, template) {
-
       'use strict';
 
       var Render = Control.extend({
@@ -18,12 +17,17 @@ define('Controls/Input/Render',
 
          _getState: function() {
             if (this._options.readOnly) {
+               if (this._options.multiline) {
+                  return '_readOnly_multiline';
+               }
+
                return '_readOnly';
-            } else if (this._active) {
-               return '_active';
-            } else {
-               return '';
             }
+            if (this._active) {
+               return '_active';
+            }
+
+            return '';
          }
       });
 
@@ -32,6 +36,7 @@ define('Controls/Input/Render',
             content: descriptor(Function).required(),
             afterFieldWrapper: descriptor(Function),
             beforeFieldWrapper: descriptor(Function),
+            multiline: descriptor(Boolean),
             size: descriptor(String).oneOf([
                's',
                'm',
@@ -66,5 +71,4 @@ define('Controls/Input/Render',
       };
 
       return Render;
-   }
-);
+   });

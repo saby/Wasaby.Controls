@@ -27,9 +27,9 @@ define('Controls/Button/Separator', [
    /**
     * @name Controls/Button/Separator#style
     * @cfg {String} Separator display style.
-    * @variant secondary Secondary display style. It is default value.
-    * @variant additional Additional display style.
-    * @variant primary Primary display style.
+    * @variant secondary
+    * @variant additional
+    * @variant primary
     */
 
    /**
