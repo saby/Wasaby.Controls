@@ -22,24 +22,6 @@ def building(workspace, scheduler=null) {
             artifactNumToKeepStr: '3',
             daysToKeepStr: '3',
             numToKeepStr: '3')),
-        parameters([
-            string(
-                defaultValue: props["engine"],
-                description: '',
-                name: 'branch_engine'),
-            string(
-                defaultValue: "",
-                description: '',
-                name: 'branch_atf'),
-            string(
-                defaultValue: '',
-                description: '',
-                name: 'branch_themes'),
-             string(
-                defaultValue: '',
-                description: '',
-                name: 'branch_viewsettings'),
-            ]),
         triggers
     ])
 
@@ -51,39 +33,11 @@ def building(workspace, scheduler=null) {
         def SDK = ""
         def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_theme:${workspace}/controls"
 
-		def branch_atf
-		if (params.branch_atf) {
-			branch_atf = params.branch_atf
-		} else {
-			branch_atf = props["atf_co"]
-		}
-
-        def branch_engine
-		if (params.branch_engine) {
-			branch_engine = params.branch_engine
-		} else {
-			branch_engine = props["engine"]
-		}
-
-        def branch_navigation
-		if (params.branch_navigation) {
-			branch_navigation = params.branch_navigation
-		} else {
-			branch_navigation = props["navigation"]
-		}
-
-        def branch_themes
-        if (params.branch_themes) {
-            branch_themes = params.branch_themes
-        } else {
-            branch_themes = props["themes"]
-        }
-        def branch_viewsettings
-        if (params.branch_viewsettings) {
-            branch_viewsettings = params.branch_viewsettings
-        } else {
-            branch_viewsettings = props["viewsettings"]
-        }
+		def branch_atf = props["atf_co"]
+        def branch_engine = props["engine"]
+        def branch_navigation = props["navigation"]
+        def branch_themes = props["themes"]
+        def branch_viewsettings = props["viewsettings"]
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
@@ -235,95 +189,17 @@ def building(workspace, scheduler=null) {
                 SDK = SDK.trim()
                 echo SDK
             }
-            parallel(
-                ws: {
-                    echo "Выкачиваем ws"
-                    ws_revision = sh returnStdout: true, script: "python3 ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
-                    dir(workspace) {
-                        checkout([$class: 'GitSCM',
-                        branches: [[name: ws_revision]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[
-                            $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: "WIS-git-temp"
-                            ]],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[
-                            credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                            url: 'git@git.sbis.ru:sbis/ws.git']]
-                        ])
-                    }
-                },
-                ws_data: {
-                    echo "Выкачиваем ws.data"
-                    ws_data_revision = sh returnStdout: true, script: "python3 ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws_data"
-                    dir(workspace) {
-                        checkout([$class: 'GitSCM',
-                        branches: [[name: ws_data_revision]],
-                        doGenerateSubmoduleConfigurations: false,
-                        extensions: [[
-                            $class: 'RelativeTargetDirectory',
-                            relativeTargetDir: "ws_data"
-                            ]],
-                            submoduleCfg: [],
-                            userRemoteConfigs: [[
-                            credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
-                            url: 'git@git.sbis.ru:ws/data.git']]
-                        ])
-                    }
-                },
-                controls: {
-                    echo "Переключаемся на controls из последнего sdk"
-                    controls_revision = sh returnStdout: true, script: "python3 ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info controls"
 
-            })
-            echo "Собираем controls"
-            dir("./controls"){
-                echo "подкидываем istanbul в Controls"
-
-                sh 'istanbul instrument --complete-copy --output ./SBIS3.CONTROLS-cover ./SBIS3.CONTROLS'
-                sh 'sudo mv ./SBIS3.CONTROLS ./SBIS3.CONTROLS-orig && sudo mv ./SBIS3.CONTROLS-cover ./SBIS3.CONTROLS'
-
-                sh 'istanbul instrument --complete-copy --output ./controls-cover ./Controls'
-                sh 'istanbul instrument --complete-copy --output ./controls-demo-cover ./Controls-demo'
-
-                sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./controls-cover ./Controls'
-                sh 'sudo mv ./Controls-demo ./Controls-demo-orig && sudo mv ./controls-demo-cover ./Controls-demo'
-
-            }
-            dir("./WIS-git-temp") {
-                echo "подкидываем istanbul в WS"
-                sh 'istanbul instrument -x "lib/Ext/" -x "ext/" --complete-copy --output ws/core-covered ws/core'
-                sh 'istanbul instrument --complete-copy --output View-covered View'
-                sh 'sudo mv ./ws/core ./ws/core-orig && sudo mv ./ws/core-covered ./ws/core'
-                sh 'sudo mv ./View ./View-orig && sudo mv ./View-covered ./View'
-            }
-            dir("./ws_data"){
-                echo "подкидываем istanbul в WS.DATA"
-                sh 'istanbul instrument --complete-copy --output WS.Data-covered WS.Data'
-                sh 'sudo mv ./WS.Data ./WS.Data-orig && sudo mv ./WS.Data-covered ./WS.Data'
-            }
-            dir("./controls/sbis3-app-engine"){
-                echo "подкидываем istanbul в SBIS3.ENGINE"
-                sh 'istanbul instrument --complete-copy --output engine-covered ./client'
-                sh 'sudo mv ./client ./client-orig && sudo mv ./engine-covered ./client'
-            }
-
-            sh "python3 ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
 
             dir(workspace){
-                echo "Собираем ws"
-                sh "rm -rf ${workspace}/WIS-git-temp2"
-                sh "mkdir ${workspace}/WIS-git-temp2"
-                sh "python3 ${workspace}/constructor/build_ws.py ${workspace}/WIS-git-temp 'release' ${workspace}/WIS-git-temp2 ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
-                echo "Добавляем в items"
-                items = items + ", ws:${workspace}/WIS-git-temp2, view:${workspace}/WIS-git-temp2, vdom:${workspace}/WIS-git-temp2, ws_deprecated:${workspace}/WIS-git-temp2, ws_core:${workspace}/WIS-git-temp2"
+                echo "подкидываем istanbul в Controls"
 
-                echo "Собираем ws.data"
-                echo "Добавляем в items"
-                items = items + ", ws_data:${workspace}/ws_data"
-
+                sh 'istanbul instrument -x **/bin/** -x **/tests/** -x **/viewsettings/** -x **/engine/** --complete-copy --output ./controls-cover ./controls'
+                sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
             }
+
+            echo "Собираем controls"
+            sh "python3 ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
             echo items
         }
         stage("Разворот стенда"){
