@@ -48,10 +48,12 @@ class RC:
 
         if (rc_set == new_set and bool(new_set)) or ((new_set.issubset(rc_set) and bool(new_set))):
             return "OK|Все тесты упали по ошибкам из RC."
-        elif rc_set.issubset(new_set) or not bool(rc_set.intersection(new_set)):
+        elif bool(rc_set) and rc_set.issubset(new_set) :
             return "FAIL|Изменения в ветке сломали тесты + падают тесты по ошибкам из RC."
         elif not bool(rc_set) and bool(new_set):
             return "FAIL|Изменения в ветке сломали тесты. RC зеленая."
+        elif not bool(rc_set.intersection(new_set)):
+            return "FAIL|Изменения в ветке сломали тесты. В RC такие не падают."
 
     def description(self, fail_tests_path, skip):
         """Формируем описаниена основе полученных данных из RC сборки и упавших тестов в текущей"""
