@@ -55,7 +55,6 @@
                                 bind:value="_value2"
                                 placeholder="Email"
                                 tagStyle="primary"
-								attr:class="ControlsDemo-ValidateInfobox_inputValidate3"
                         />
                     </ws:content>
                 </Controls.Validate.Controller>
