@@ -137,7 +137,7 @@ define('Controls/Popup/Compatible/Layer', [
             data = window.userInfo;
          }
       } else {
-         moduleStubs.require(['EngineUser/Info']).addCallbacks(function(modules) {
+         moduleStubs.require(['EngineUser/Info:Info']).addCallbacks(function(modules) {
             data = modules[0].getAll();
          }, function(err) {
             IoC.resolve('ILogger').error('Layer', 'Can\'t load EngineUser/Info', err);
