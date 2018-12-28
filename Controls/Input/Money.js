@@ -8,7 +8,6 @@ define('Controls/Input/Money',
       'css!theme?Controls/Input/Money/Money'
    ],
    function(Base, ViewModel, readOnlyFieldTemplate) {
-
       'use strict';
 
       /**
@@ -27,14 +26,14 @@ define('Controls/Input/Money',
          PRECISION: 2,
 
          integerPart: function(value) {
-            return value.slice(0, -_private.precision);
+            return value.slice(0, -_private.PRECISION);
          },
 
          fractionPart: function(value) {
-            return value.slice(-_private.precision);
+            return value.slice(-_private.PRECISION);
          }
       };
-      
+
       var Money = Base.extend({
          _initProperties: function() {
             Money.superclass._initProperties.apply(this, arguments);
@@ -58,5 +57,4 @@ define('Controls/Input/Money',
       });
 
       return Money;
-   }
-);
+   });
