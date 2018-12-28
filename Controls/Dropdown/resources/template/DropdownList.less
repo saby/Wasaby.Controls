@@ -104,6 +104,12 @@
    .flex-shrink(0);
 }
 
+.controls-DropdownList-header-caption {
+   overflow: hidden;
+   text-overflow: ellipsis;
+   white-space: nowrap;
+}
+
 .controls-DropdownList__subMenu_margin {
    margin-top: @offset_DropdownList-submenu;
 }
@@ -132,6 +138,7 @@
 .controls-DropdownList-header {
    .flexbox();
    .align-items(center);
+   overflow: hidden;
 }
 
 .controls-MenuButton-duplicate-header {
