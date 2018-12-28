@@ -1,7 +1,7 @@
 #!/usr/bin/env groovy
-{scheduler=null -> building(scheduler=null)}
+{workspace, scheduler=null -> building(workspace, scheduler=null)}
 
-def building(scheduler=null) {
+def building(workspace, scheduler=null) {
     echo "Задаем параметры сборки"
     def version = env.JOB_BASE_NAME.split('_')[1]
     echo "Читаем настройки из файла version_application.txt"
@@ -45,7 +45,6 @@ def building(scheduler=null) {
 
     echo "Определяем рабочую директорию"
 
-    def workspace = "/home/sbis/workspace/controls_${version}/${env.JOB_BASE_NAME}"
     ws(workspace) {
 
         try {
