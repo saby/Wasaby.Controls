@@ -8,9 +8,10 @@
       'Core/core-clone',
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
+      'Core/helpers/Object/isEqual',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, Deferred) {
+   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
@@ -201,7 +202,7 @@
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
-            if (this._options.filter !== newOptions.filter) {
+            if (!isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
 
@@ -244,12 +245,17 @@
          },
          _inputActivated: function() {
             var self = this;
+            var filter;
 
             this._inputActive = true;
             if (this._options.autoDropDown && !this._options.readOnly) {
                if (this._options.historyId) {
                   _private.getRecentKeys(this).addCallback(function(keys) {
-                     self._filter[self._options.keyProperty] = keys;
+                     if (keys) {
+                        filter = clone(self._options.filter);
+                        filter['historyKeys'] = keys;
+                        _private.setFilter(self, filter);
+                     }
                      _private.open(self);
                   });
                } else {
