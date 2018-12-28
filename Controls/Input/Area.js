@@ -4,13 +4,14 @@ define('Controls/Input/Area',
       'Core/constants',
       'Controls/Input/Text',
       'WS.Data/Type/descriptor',
+      'wml!Controls/Input/Area/Area',
       'wml!Controls/Input/Area/Field',
       'wml!Controls/Input/Area/ReadOnly',
       'Core/helpers/Function/runDelayed',
 
       'css!theme?Controls/Input/Area/Area'
    ],
-   function(IoC, constants, Text, descriptor, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
+   function(IoC, constants, Text, descriptor, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
       'use strict';
 
       /**
@@ -171,22 +172,43 @@ define('Controls/Input/Area',
          },
 
          validateLines: function(min, max) {
+            var validated = true;
+
             if (min > max) {
+               validated = false;
                IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
-               return false;
             }
 
-            return true;
+            if (min < 1) {
+               validated = false;
+               IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines options are not set correctly. The minLines less than one.');
+            }
+
+            if (max < 1) {
+               validated = false;
+               IoC.resolve('ILogger').error('Controls/Input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
+            }
+
+            return validated;
          }
       };
 
       var Area = Text.extend({
+         _template: template,
+
          _multiline: true,
 
          _beforeMount: function(options) {
             Area.superclass._beforeMount.apply(this, arguments);
 
             _private.validateLines(options.minLines, options.maxLines);
+
+            this._sizes = typeof window === 'undefined' ? {
+               rowHeight: 0,
+               indents: 0
+            } : _private.calcSizesByMeasuredBlock(options.size);
+
+            this._calculateHeightContainer = this._calculateHeightContainer.bind(this);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -218,16 +240,10 @@ define('Controls/Input/Area',
 
             this._field.template = fieldTemplate;
             this._readOnlyField.template = readOnlyFieldTemplate;
+         },
 
-            if (typeof window !== 'undefined') {
-               var sizes = _private.calcSizesByMeasuredBlock(options.size);
-               var calculateHeightContainer = function(count, hasIndents) {
-                  return _private.calculateHeightContainer(sizes, count, hasIndents);
-               };
-
-               this._field.scope.calculateHeightContainer = calculateHeightContainer;
-               this._readOnlyField.scope.calculateHeightContainer = calculateHeightContainer;
-            }
+         _calculateHeightContainer: function(count, hasIndents) {
+            return _private.calculateHeightContainer(this._sizes, count, hasIndents);
          }
       });
 
