@@ -88,7 +88,7 @@ define(
                });
             });
          });
-   
+
          it('itemsChanged', function(done) {
             var config = {source: source, keyProperty: 'id'};
             var data = getDataWithConfig(config);
@@ -98,14 +98,14 @@ define(
                   propagationStopped = true;
                }
             };
-      
+
             data._beforeMount(config).addCallback(function() {
                data._itemsChanged(event, data._items);
                assert.isTrue(propagationStopped);
                done();
             });
          });
-   
+
          it('query returns error', function(done) {
             var source = {
                query: function() {
@@ -116,11 +116,11 @@ define(
                   });
                },
                _mixins: [],
-               "[WS.Data/Source/ICrud]": true
+               "[Types/_source/ICrud]": true
             };
             var config = {source: source, keyProperty: 'id'};
             var data = getDataWithConfig(config);
-            
+
             data._beforeMount(config).addCallback(function() {
                assert.isFalse(!!data._dataOptionsContext.prefetchSource);
                assert.equal(data._dataOptionsContext.source, source);
