@@ -497,18 +497,26 @@ node('controls') {
             }
             echo items
         }
-        stage ("Unit тесты"){
-            if ( unit ){
-                echo "Запускаем юнит тесты"
-                sh "date"
-                dir("./controls"){
-                    sh """
-                    npm cache clean --force
-                    npm set registry https://registry.npmjs.org/
+        if ( unit ){
+            dir("./controls"){
+                sh """
+                npm cache clean --force
+                npm set registry https://registry.npmjs.org/
+                """
+                stage ("Unit тесты node"){
+                    sh returnStatus: true, script: """
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
                     sh ./bin/test-isolated
-
+                    """
+                    junit keepLongStdio: true, testResults: "**/artifacts/test-isolated-report.xml"
+                    unit_result = currentBuild.result == null
+                    if (!unit_result) {
+                        exception('Unit тесты node падают с ошибками.', 'UNIT TEST FAIL')
+                    }
+                }
+                stage ("Unit тесты browser"){
+                    sh returnStatus: true, script: """
                     echo "run browser"
                     export test_url_host=${env.NODE_NAME}
                     export test_server_port=10253
@@ -519,14 +527,12 @@ node('controls') {
                     export test_report=artifacts/test-browser-report.xml
                     sh ./bin/test-browser
                     """
-                    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                    junit keepLongStdio: true, testResults: "**/artifacts/test-browser-report.xml"
                     unit_result = currentBuild.result == null
                     if (!unit_result) {
-                        exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+                        exception('Unit тесты browser падают с ошибками.', 'UNIT TEST FAIL')
                     }
                 }
-                echo "Юнит тесты завершились"
-                sh "date"
             }
         }
         if ( regr || inte || all_inte) {
