@@ -4,6 +4,13 @@
         on:mouseenter="_mouseEnterHandler(value.date)"
         attr:class="controls-MonthViewVDOM__item {{ monthViewModel._prepareClass({'value': value}) }} {{_themeCssClass}}"
    >
-      <ws:partial template="{{_dayTmpl}}" value="{{value}}" _themeCssClass="{{_themeCssClass}}" mode="{{mode}}"/>
+      <ws:partial
+         template="{{_options.dayTemplate}}"
+         dayTemplate="{{_options.dayTemplate}}"
+         value="{{value}}"
+         _themeCssClass="{{_themeCssClass}}"
+         mode="{{mode}}"
+         _options="{{_options}}"
+      />
    </div>
 </div>

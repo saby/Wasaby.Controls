@@ -64,7 +64,7 @@ define('Controls/interface/IDropdown', [], function() {
 
    /**
     * @name Controls/interface/IDropdown#itemTemplateProperty
-    * @cfg {Function} Template for item render.
+    * @cfg {Function} Name of the item property that contains template for item render.
     * @remark
     * To determine the template, you should call the base template "wml!Controls/Dropdown/resources/template/itemTemplate".
     * The template should be placed in the component using the <ws:partial> tag with the template attribute.

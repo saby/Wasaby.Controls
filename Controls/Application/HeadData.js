@@ -97,9 +97,11 @@ define('Controls/Application/HeadData', [
             var additionalDeps = depsCollector.collectDependencies(additionalDepsArray);
 
             files.js = files.js || [];
-            for (var i = 0; i < additionalDeps.js.length; i++) {
-               if (!~files.js.indexOf(additionalDeps.js[i])) {
-                  files.js.push(additionalDeps.js[i]);
+            if (!self.isDebug) {
+               for (var i = 0; i < additionalDeps.js.length; i++) {
+                  if (!~files.js.indexOf(additionalDeps.js[i])) {
+                     files.js.push(additionalDeps.js[i]);
+                  }
                }
             }
             self._version++;

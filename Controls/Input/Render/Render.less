@@ -2,8 +2,10 @@
    position: relative;
    display: inline-block;
    box-sizing: border-box;
-   height: @height_Render;
-   padding: 0 @spacing-between_Render_border-text;
+}
+
+.controls-Render_multiline {
+   height: auto;
 }
 
 .controls-Render__wrapper {
@@ -13,9 +15,9 @@
 }
 
 .controls-Render__baseline {
+   height: 100%;
    display: flex;
    align-items: center;
-   height: 100%;
 }
 
 .controls-Render__placeholder {
@@ -71,6 +73,11 @@
    .for(@variants, { &_@{_item}_readOnly {
       border-color: ~"@{border-color_Render_style_@{_item}_readOnly}";
       background: ~"@{background_Render_style_@{_item}_readOnly}";
+   } });
+
+   .for(@variants, { &_@{_item}_readOnly_multiline {
+      border-color: ~"@{border-color_Render_style_@{_item}_readOnly_multiline}";
+      background: ~"@{background_Render_style_@{_item}_readOnly_multiline}";
    } });
 }
 

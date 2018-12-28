@@ -1,0 +1,6 @@
+<Controls.List.BaseControl scope="{{_options}}"
+                           dataLoadCallback="{{_dataLoadCallback}}"
+                           name="baseControl">
+   <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
+   <ws:partial template="{{content.viewTemplate}}" itemTemplate="{{_options.itemTemplate}}"/>
+</Controls.List.BaseControl>

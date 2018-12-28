@@ -98,8 +98,8 @@ define('Controls/List/Mover', [
       updateDataOptions: function(self, dataOptions) {
          if (dataOptions) {
             self._items = dataOptions.items;
-            self._source = dataOptions.source;
-            self._keyProperty = dataOptions.keyProperty;
+            self._source = self._options.source || dataOptions.source;
+            self._keyProperty = self._options.keyProperty || dataOptions.keyProperty;
          }
       },
 
@@ -164,24 +164,31 @@ define('Controls/List/Mover', [
    };
 
    /**
-    * A class that describes the action of moving list items.
+    * Сontrol to move the list items in recordSet and dataSource.
+    * Сontrol must be in one Controls.Container.Data with a list.
+    * <a href="/materials/demo/demo-ws4-operations-panel">Demo examples.</a>.
     * @class Controls/List/Mover
     * @extends Core/Control
     * @mixes Controls/interface/IMovable
     * @control
-    * @author Крайнов Д.О.
     * @public
+    * @author Авраменко А.С.
     * @category List
     */
 
    var Mover = Control.extend({
       _template: template,
       _beforeMount: function(options, context) {
+         this._onDialogResult = this._onDialogResult.bind(this);
          _private.updateDataOptions(this, context.dataOptions);
       },
 
       _beforeUpdate: function(options, context) {
          _private.updateDataOptions(this, context.dataOptions);
+      },
+
+      _onDialogResult: function(event, target, items) {
+         this.moveItems(items, target, ISource.MOVE_POSITION.on);
       },
 
       moveItemUp: function(item) {
@@ -212,6 +219,16 @@ define('Controls/List/Mover', [
                _private.afterItemsMove(self, items, target, position, result);
             });
          }
+      },
+
+      moveItemsWithDialog: function(items) {
+         this._children.dialogOpener.open({
+            templateOptions: {
+               movedItems: items,
+               source: this._source,
+               keyProperty: this._keyProperty
+            }
+         });
       }
    });
 

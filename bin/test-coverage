@@ -2,7 +2,7 @@
 # Run coverage via Node.js
 
 node -v
-npm install
 
-node build-app
-node node_modules/saby-units/cover --amd test-isolated
+npm install
+npm run build
+npm run test:node-coverage

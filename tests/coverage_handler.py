@@ -17,7 +17,6 @@ class Coverage:
 
     path_result = {}
     build_result = {}
-    test_result = []
     fullpath = []
 
     def get_fullpath_test_name(self):
@@ -68,14 +67,32 @@ class Coverage:
     def get_tests(self, change_files):
         """Возвращает список файлов, которые нужно запустить"""
 
+        test_result = []
         with open(RESULT_JSON, encoding='utf-8') as f:
             data = json.load(f, encoding='utf-8')
             for test_name in data:
                 for source in data[test_name]:
                     for file in change_files:
                         if file in source:
-                            self.test_result.append(test_name)
+                            test_result.append(test_name)
+        return test_result
 
+    def get_test_for_regression_test(self, change_files):
+        """Получить список тестов для запуска, в которых делались изменения"""
+
+        int_tests = []
+        reg_tests = []
+        def validate(path_test):
+            test_name = os.path.basename(path_test)
+            if test_name.startswith('test') and test_name.endswith('.py'):
+                if path_test.startswith('tests/int/'):
+                    int_tests.append(path_test.replace('tests/int/', ''))
+                elif path_test.startswith('tests/reg/'):
+                    reg_tests.append(path_test.replace('tests/reg/', ''))
+
+        for file in change_files:
+            validate(file)
+        return int_tests, reg_tests
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -83,6 +100,7 @@ if __name__ == '__main__':
     build.add_argument('-s', '--source_path', help='root path with inner coverage.json ')
     action = parser.add_argument_group('action')
     action.add_argument('-c', '--changelist', nargs='+', help='List changed files')
+    action.add_argument('-d', '--developer', action='store_true', default=False, help='I\'m developer autotest')
     args = parser.parse_args()
     coverage = Coverage()
     if args.source_path:
@@ -91,6 +109,12 @@ if __name__ == '__main__':
         coverage.build(args.source_path)
 
     if args.changelist:
-        coverage.get_tests(args.changelist)
-        if coverage.test_result:
-            print(' '.join(set(coverage.test_result)))
+        if not args.developer:
+            test_result = coverage.get_tests(args.changelist)
+            if test_result:
+                print(' '.join(set(test_result)))
+        else:
+            int_test, reg_test = coverage.get_test_for_regression_test(args.changelist)
+            if int_test or reg_test:
+                print('reg:{reg};int:{int}'.format(reg=' '.join(set(reg_test)), int=' '.join(set(int_test))))
+
