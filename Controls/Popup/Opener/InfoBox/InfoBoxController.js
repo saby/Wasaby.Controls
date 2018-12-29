@@ -112,14 +112,14 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             ManagerController.remove(this._openedPopupId); //Инфобокс при скролле или ресайзе скрывается
          },
 
-         elementDestroyed: function(item, container, id) {
-            if (id === this._openedPopupId) {
+         elementDestroyed: function(item) {
+            if (item.id === this._openedPopupId) {
                this._openedPopupId = null;
             }
 
             this._destroyDeferred[item.id] = new Deferred();
 
-            container.classList.add('controls-PreviewerController_close');
+            item.popupOptions.className += ' controls-PreviewerController_close';
 
             return this._destroyDeferred[item.id];
          },

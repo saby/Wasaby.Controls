@@ -69,6 +69,18 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
+         it('find popup', () => {
+            let Manager = getManager();
+            id = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            element = Manager.find(id);
+            assert.equal(element.popupOptions.testOption, 'created');
+            element.popupState = 'destroyed';
+            element = Manager.find(id);
+            assert.equal(element, null);
+         });
+
          it('update popup', function() {
             let Manager = getManager();
             id = Manager.show({
@@ -185,7 +197,8 @@ define(
                popupDeactivated: () => {
                   isDeactivated = true;
                },
-               getDefaultConfig: () => { return {}}
+               getDefaultConfig: () => { return {}},
+               POPUP_STATE_INITIALIZING: 'initializing'
             };
             let id = Manager.show({
                closeByExternalClick: true
