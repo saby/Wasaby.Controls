@@ -63,7 +63,7 @@ def building(workspace, scheduler=null) {
                         },
                         checkout_engine: {
                             echo " Выкачиваем engine"
-                            dir('${workspace}/controls'){
+                            dir("${workspace}/controls"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_engine]],
                                 doGenerateSubmoduleConfigurations: false,
