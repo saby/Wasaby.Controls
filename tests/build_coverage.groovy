@@ -203,7 +203,6 @@ def building(workspace, scheduler=null) {
                 sh 'cp -rf ./controls-orig/viewsettings/ ./controls/viewsettings/'
                 sh 'cp -rf ./controls-orig/sbis3-app-engine/ ./controls/sbis3-app-engine/'
                 sh 'cp -rf ./controls-orig/grunt/ ./controls/grunt/'
-                sh 'cp -rf ./controls-orig/constructor/ ./controls/constructor/'
             }
 
             echo "Собираем controls"
