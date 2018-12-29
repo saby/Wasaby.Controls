@@ -207,11 +207,11 @@ define('Controls/List/ItemsViewModel', [
          return this._display ? this._display.getCount() : 0;
       },
 
-      _onCollectionChange: function() {
-         this._onBeginCollectionChange();
+      _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+         this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._nextVersion();
          this._notify('onListChange');
-         this._onEndCollectionChange();
+         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {
          // method may be implemented
