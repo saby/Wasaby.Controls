@@ -22,7 +22,7 @@ define('Controls/Input/Date/Link', [
    /**
     * A link button that displays the period. Supports the change of periods to adjacent.
     *
-    * @class Controls/Input/Date/Lite
+    * @class Controls/Input/Date/Link
     * @extends Core/Control
     * @mixes Controls/Input/Date/interface/ILinkView
     * @mixes Controls/Date/interface/IRangeSelectable
