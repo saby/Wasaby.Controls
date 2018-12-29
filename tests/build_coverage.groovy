@@ -46,7 +46,7 @@ def building(workspace, scheduler=null) {
                     parallel (
                         checkout_atf:{
                             echo " Выкачиваем atf"
-                            dir("./controls/tests/int") {
+                            dir("${workspace}/controls/tests/int") {
                             checkout([$class: 'GitSCM',
                                 branches: [[name: branch_atf]],
                                 doGenerateSubmoduleConfigurations: false,
@@ -63,7 +63,7 @@ def building(workspace, scheduler=null) {
                         },
                         checkout_engine: {
                             echo " Выкачиваем engine"
-                            dir('./controls'){
+                            dir('${workspace}/controls'){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_engine]],
                                 doGenerateSubmoduleConfigurations: false,
@@ -80,7 +80,7 @@ def building(workspace, scheduler=null) {
                         },
                         checkout_navigation: {
                             echo " Выкачиваем Navigation"
-                            dir("./controls/tests"){
+                            dir("${workspace}/controls/tests"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_navigation]],
                                 doGenerateSubmoduleConfigurations: false,
@@ -97,7 +97,7 @@ def building(workspace, scheduler=null) {
                         },
                         checkout_viewsettings: {
                             echo " Выкачиваем viewsettings"
-                            dir("./controls"){
+                            dir("${workspace}/controls"){
                                 checkout([$class: 'GitSCM',
                                 branches: [[name: branch_viewsettings]],
                                 doGenerateSubmoduleConfigurations: false,
@@ -131,7 +131,7 @@ def building(workspace, scheduler=null) {
                                 url: 'git@git.sbis.ru:sbis-ci/platform.git']]
                         ])
                     }
-                    dir("./constructor") {
+                    dir("${workspace}/constructor") {
                         checkout([$class: 'GitSCM',
                         branches: [[name: "rc-${version}"]],
                         doGenerateSubmoduleConfigurations: false,
@@ -193,7 +193,7 @@ def building(workspace, scheduler=null) {
 
             dir(workspace){
                 echo "подкидываем istanbul в Controls"
-                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** -x grunt/** -x constructor/** --complete-copy --output ./controls-cover ./controls'
+                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** -x grunt/** --complete-copy --output ./controls-cover ./controls'
                 sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
             }
             dir (workspace) {
@@ -285,7 +285,7 @@ def building(workspace, scheduler=null) {
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/"""
 
-        dir("./controls/tests/int"){
+        dir("${workspace}/controls/tests/int"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
@@ -302,7 +302,7 @@ def building(workspace, scheduler=null) {
         }
 
             echo "Запускаем интеграционные тесты"
-            dir("./controls/tests/int"){
+            dir("${workspace}/controls/tests/int"){
                 sh """
                 source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
@@ -313,7 +313,7 @@ def building(workspace, scheduler=null) {
         }
         stage("Coverage") {
             echo "Записываем результаты в файл"
-            dir("./controls/tests"){
+            dir("${workspace}/controls/tests"){
                 sh """
                 python3 coverage_handler.py -s ${workspace}/controls/tests/int/coverage
                 """
