@@ -221,3 +221,45 @@ html>body .clearfix {
 .icon-large, .icon-32 {
    .icon-size(@size_icon_l, @font-family_icon_size-l);
 }
+/* ATTENTION styles */
+.icon-attention
+{
+   color: @color_warning;
+}
+
+/* DONE styles */
+.icon-done
+{
+   color: @color_success;
+}
+
+/* ERROR styles */
+.icon-error
+{
+   color: @color_danger;
+}
+
+/* PRIMARY styles */
+.icon-primary
+{
+   color: @color_secondary;
+   fill: @color_secondary;
+}
+
+/* DISABLED styles */
+.icon-disabled
+{
+   color: @color_readOnly;
+   fill: @color_readOnly;
+}
+
+/* Для тех, кто поддерживает... */
+.icon-small, .icon-medium, .icon-large, .icon-size, .icon-16, .icon-24, .icon-32, .icon-default {
+   speak: none;
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   display: inline-block;
+}
