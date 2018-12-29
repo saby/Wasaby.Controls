@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Suggest, List, RecordSet, Model){
+define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model', 'Controls/History/Service'], function(Suggest, List, RecordSet, Model){
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -253,7 +253,7 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
 
          suggestComponent._dependenciesDeferred.addCallback(function() {
             assert.isTrue(suggestState);
-            assert.deepEqual(suggestComponent._filter[self._options.keyProperty], IDENTIFICATORS);
+            assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
             
             suggestComponent._changeValueHandler(null, '');
             assert.isTrue(suggestState);
