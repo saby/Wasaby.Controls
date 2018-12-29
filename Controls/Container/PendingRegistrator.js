@@ -10,7 +10,7 @@ define('Controls/Container/PendingRegistrator', [
     * PendingRegistrator is control (HOC) that helps to distribute order of action executions in the system.
     * Or, more specifically, it's controlling execution of necessary actions that must be complete before starting current action.
     * Current action requests Deferred instance that will be resolved when all necessary actions ends.
-    * For example, panel must be closed only after resolving the question about saving of changed data containing this panel.
+    * For example, popup must be closed only after resolving the question about saving of changed data containing this popup.
     *
     * Pending is registered necessary action that must ends before current action starts.
     * It would be some pendings registered in current PendingRegistrator instance. Therefore, all of pendings must be ends
@@ -27,19 +27,23 @@ define('Controls/Container/PendingRegistrator', [
     * registerPending has 2 arguments: [deferred, config].
     * dererred - pending will be unregistered when this deferred resolves
     * config is object having properties:
-    *    - showLoadingIndicator - show loading indicator or not (during time while pending is registered)
-    *    - onPendingFail - helps to resolve deferred of pending. It will be called when finishPendingOperations calls.
+    *    - showLoadingIndicator (Boolean) - show loading indicator or not (during time while pending is registered)
+    *    - onPendingFail (Function) - helps to resolve deferred of pending. It will be called when finishPendingOperations calls.
     *
-    * onPendingFail has 1 argument - forceFinishValue. forceFinishValue give additional information how to resolve deferred.
+    * onPendingFail has 2 arguments - [forceFinishValue, deferred].
+    * forceFinishValue give additional information how to resolve deferred.
+    * forceFinishValue is taken from finishPendingOperations argument (finishPendingOperations defines additional information of resolving).
+    * User can use this argument in it's own onPendingFail function or not.
     * For example, if pending registered by changed record and we need to save changes, by default we can ask a question about it.
     * But forceFinishValue can means forced answer and we can save (or not) record without asking a question.
+    * second argument is deferred value of pending.
     *
     * cancelFinishingPending - cancels deferred returned by finishPendingOperations. This deferred never resolve. It's need
     * to request new deferred by finishPendingOperations for setting callback on pendings finish.
     * It can be useful when pending can't be resolved now but will be resolve later another way.
-    * For example, panel waiting finish of pendings before close, but record can not be saved because of validation errors.
-    * In this case, if we don't cancel deferred by finishPendingOperations, panel will be closed later when validation errors
-    * will be corrected. It will be unexpected closing of panel for user who maybe don't want to close panel anymore
+    * For example, popup waiting finish of pendings before close, but record can not be saved because of validation errors.
+    * In this case, if we don't cancel deferred by finishPendingOperations, popup will be closed later when validation errors
+    * will be corrected. It will be unexpected closing of popup for user who maybe don't want to close popup anymore
     * in the light of developments.
     *
     * @class Controls/Container/LoadingIndicator
@@ -151,7 +155,7 @@ define('Controls/Container/PendingRegistrator', [
          Object.keys(this._pendings).forEach(function(key) {
             var pending = self._pendings[key];
             if (pending.onPendingFail) {
-               pending.onPendingFail(forceFinishValue);
+               pending.onPendingFail(forceFinishValue, pending.def);
             }
 
             // pending is waiting its def finish
