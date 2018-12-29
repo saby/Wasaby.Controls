@@ -2,7 +2,7 @@
 # Run unit testing via browser
 
 node -v
-npm install
 
-node build-app
-node node_modules/saby-units/queue test-server test-browser
+npm install
+npm run build
+npm run test:browser

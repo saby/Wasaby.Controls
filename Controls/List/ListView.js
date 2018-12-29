@@ -181,7 +181,8 @@ define('Controls/List/ListView', [
 
    ListView.getDefaultOptions = function() {
       return {
-         contextMenuEnabled: true
+         contextMenuEnabled: true,
+         markerVisibility: 'demand'
       };
    };
 

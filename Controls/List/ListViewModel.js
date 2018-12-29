@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
-   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance) {
+   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Core/IoC'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance, IOC) {
       /**
        *
        * @author Авраменко А.С.
@@ -254,7 +254,10 @@ define('Controls/List/ListViewModel',
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
-            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items.getCount()) {
+            if (this._options.markerVisibility === 'always') {
+               IOC.resolve('ILogger').warn('ListControl', 'Value "always" for property Controls/List/interface/IListControl#markerVisibility is deprecated, use value "visible" instead');
+            }
+            if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always' && this._items.getCount())) {
                this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }

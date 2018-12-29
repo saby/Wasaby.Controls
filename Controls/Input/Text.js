@@ -1,10 +1,11 @@
 define('Controls/Input/Text',
    [
+      'Core/IoC',
       'Controls/Input/Base',
       'WS.Data/Type/descriptor',
       'Controls/Input/Text/ViewModel'
    ],
-   function(Base, descriptor, ViewModel) {
+   function(IoC, Base, descriptor, ViewModel) {
       'use strict';
 
       /**
@@ -80,6 +81,17 @@ define('Controls/Input/Text',
        * </pre>
        */
 
+      var _private = {
+         validateConstraint: function(constraint) {
+            if (constraint && !/^\[.+?\]$/.test(constraint)) {
+               IoC.resolve('ILogger').error('Controls/Input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/Input/Text/options/constraint/');
+               return false;
+            }
+
+            return true;
+         }
+      };
+
       var Text = Base.extend({
          _getViewModelOptions: function(options) {
             return {
@@ -103,6 +115,20 @@ define('Controls/Input/Text',
             }
 
             Text.superclass._changeHandler.apply(this, arguments);
+         },
+
+         _beforeMount: function(options) {
+            Text.superclass._beforeMount.apply(this, arguments);
+
+            _private.validateConstraint(options.constraint);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            Text.superclass._beforeUpdate.apply(this, arguments);
+
+            if (this._options.constraint !== newOptions.constraint) {
+               _private.validateConstraint(newOptions.constraint);
+            }
          }
       });
 

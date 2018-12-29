@@ -100,6 +100,10 @@ define(
                _events: {
                   onClose: () => {
                      eventOnCloseFired = true;
+                  },
+                  onResult: (event, args) => {
+                     assert.equal(args[0], '1');
+                     assert.equal(args[1], '2');
                   }
                }
             });
@@ -108,6 +112,8 @@ define(
 
             assert.isTrue(eventCloseFired, 'event is not fired.');
             assert.isTrue(eventOnCloseFired, 'event is not fired.');
+
+            Manager._private.fireEventHandler(id, 'onResult', '1', '2');
          });
 
          it('remove popup', function() {
