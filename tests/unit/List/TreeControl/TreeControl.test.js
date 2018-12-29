@@ -100,9 +100,13 @@ define([
             reloadCalled = true;
             return reloadOriginal.apply(this, arguments);
          };
+         treeGridViewModel.setExpandedItems(['testRoot']);
          setTimeout(function() {
             treeControl._beforeUpdate({ root: 'testRoot' });
+            assert.deepEqual(treeGridViewModel.getExpandedItems, {'testRoot': true});
+            
             treeControl._afterUpdate({ root: null });
+            assert.deepEqual(treeGridViewModel.getExpandedItems, {});
             setTimeout(function() {
                assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
                assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
