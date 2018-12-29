@@ -41,12 +41,14 @@ define('Controls/Container/Suggest/Layout',
                }
             });
          },
-         searchErrback: function(self) {
+         searchErrback: function(self, error) {
             self._loading = false;
-            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
-               self._emptyTemplate = result;
-               self._forceUpdate();
-            });
+            if (!error || !error.canceled) {
+               requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+                  self._emptyTemplate = result;
+                  self._forceUpdate();
+               });
+            }
          },
          shouldSearch: function(self, value) {
             return self._active && value.length >= self._options.minSearchLength;
@@ -82,6 +84,9 @@ define('Controls/Container/Suggest/Layout',
          setFilter: function(self, filter) {
             self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey);
          },
+         getEmptyTemplate: function(emptyTemplate) {
+            return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
+         },
          updateSuggestState: function(self) {
             if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
                _private.setFilter(self, self._options.filter);
@@ -92,12 +97,19 @@ define('Controls/Container/Suggest/Layout',
             }
          },
          loadDependencies: function(self) {
+            var getTemplatesToLoad = function(options) {
+               var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
+               var templatesToLoad = [];
+               templatesToCheck.forEach(function(tpl) {
+                  if (options[tpl] && options[tpl].templateName) {
+                     templatesToLoad.push(options[tpl].templateName);
+                  }
+               });
+               return templatesToLoad;
+            };
+            
             if (!self._dependenciesDeferred) {
-               var deps = DEPS.concat([self._options.suggestTemplate.templateName, self._options.layerName]);
-               if (self._options.footerTemplate !== null) {
-                  deps = deps.concat([self._options.footerTemplate.templateName]);
-               }
-               self._dependenciesDeferred = mStubs.require(deps);
+               self._dependenciesDeferred = mStubs.require(DEPS.concat(getTemplatesToLoad(self._options).concat([self._options.layerName])));
             }
             return self._dependenciesDeferred;
          },
@@ -149,7 +161,7 @@ define('Controls/Container/Suggest/Layout',
             this._searchErrback = this._searchErrback.bind(this);
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
-            this._emptyTemplate = options.emptyTemplate;
+            this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
@@ -169,13 +181,22 @@ define('Controls/Container/Suggest/Layout',
             if (this._options.filter !== newOptions.filter) {
                _private.setFilter(this, newOptions.filter);
             }
-
+      
             if (this._options.value !== newOptions.value) {
                this._searchValue = newOptions.value;
             }
-
-            if (this._emptyTemplate !== newOptions.emptyTemplate) {
-               this._emptyTemplate = newOptions.emptyTemplate;
+      
+            if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
+               this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
+               this._dependenciesDeferred = null;
+            }
+      
+            if (this._options.footerTemplate !== newOptions.footerTemplate) {
+               this._dependenciesDeferred = null;
+            }
+            
+            if (this._options.searchDelay !== newOptions.searchDelay) {
+               this._searchDelay = newOptions.searchDelay;
             }
          },
          _afterUpdate: function() {
@@ -259,8 +280,8 @@ define('Controls/Container/Suggest/Layout',
             }
             this._forceUpdate();
          },
-         _searchErrback: function() {
-            _private.searchErrback(this);
+         _searchErrback: function(error) {
+            _private.searchErrback(this, error);
          },
          _showAllClick: function() {
             var self = this;
