@@ -3,7 +3,7 @@
 
 def building(workspace, scheduler=null) {
     echo "Задаем параметры сборки"
-    def version = env.JOB_BASE_NAME.split('_')[1]
+    def version = env.JOB_BASE_NAME.split('_')[2]
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
