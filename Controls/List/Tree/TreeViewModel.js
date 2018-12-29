@@ -120,7 +120,7 @@ define('Controls/List/Tree/TreeViewModel', [
             self._thereIsChildItem = thereIsChildItem;
          },
 
-         onCollectionChange: function(self, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+         onBeginCollectionChange: function(self, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
             if (action === IBindCollection.ACTION_REMOVE) {
                _private.checkRemovedNodes(self, removedItems);
             }
@@ -309,9 +309,9 @@ define('Controls/List/Tree/TreeViewModel', [
             return data;
          },
 
-         _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-            TreeViewModel.superclass._onCollectionChange.apply(this, arguments);
-            _private.onCollectionChange(this, event, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+         _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+            TreeViewModel.superclass._onBeginCollectionChange.apply(this, arguments);
+            _private.onBeginCollectionChange(this, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          },
 
          setItems: function() {

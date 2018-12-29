@@ -5,7 +5,9 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
+   'Controls/Utils/applyHighlighter',
    'WS.Data/Chain',
+   'Core/core-instance',
    'Core/constants',
    'Controls/Utils/keysHandler',
    'Controls/List/TreeTileView/TreeTileView',
@@ -22,7 +24,9 @@ define('Controls/Explorer', [
    TreeGridViewModel,
    TreeTileViewModel,
    tmplNotify,
+   applyHighlighter,
    chain,
+   cInstance,
    cConstants,
    keysHandler
 ) {
@@ -72,7 +76,7 @@ define('Controls/Explorer', [
          },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
-               self._root = typeof self._options.root !== 'undefined' ? self._options.root : null;
+               self._root = self._options.root;
             }
             self._viewMode = viewMode;
             self._swipeViewMode = viewMode === 'search' ? 'list' : viewMode;
@@ -122,19 +126,38 @@ define('Controls/Explorer', [
       _viewMode: null,
       _viewModelConstructor: null,
       _leftPadding: null,
-      constructor: function() {
-         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
-         Explorer.superclass.constructor.apply(this, arguments);
-      },
+      _dragOnBreadCrumbs: false,
+      _hoveredBreadCrumb: undefined,
+
       _beforeMount: function(cfg) {
+         this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
+         this._root = this._options.root;
+         this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          _private.setViewMode(this, cfg.viewMode);
-         Explorer.superclass._beforeMount.apply(this, arguments);
       },
       _beforeUpdate: function(cfg) {
-         Explorer.superclass._beforeUpdate.apply(this, arguments);
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
          }
+      },
+      _dragEndBreadCrumbs: function(event, dragObject) {
+         if (this._hoveredBreadCrumb !== undefined) {
+            this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
+         }
+      },
+      _dragHighlighter: function(itemKey) {
+         return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
+      },
+      _documentDragEnd: function() {
+         this._dragOnBreadCrumbs = false;
+      },
+      _documentDragStart: function(event, dragObject) {
+         if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
+            this._dragOnBreadCrumbs = true;
+         }
+      },
+      _hoveredCrumbChanged: function(event, item) {
+         this._hoveredBreadCrumb = item;
       },
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
@@ -162,7 +185,8 @@ define('Controls/Explorer', [
       reload: function() {
          return this._children.treeControl.reload();
       },
-      _notifyHandler: tmplNotify
+      _notifyHandler: tmplNotify,
+      _applyHighlighter: applyHighlighter
    });
 
    Explorer._private = _private;
@@ -176,7 +200,8 @@ define('Controls/Explorer', [
    Explorer.getDefaultOptions = function() {
       return {
          multiSelectVisibility: 'hidden',
-         viewMode: DEFAULT_VIEW_MODE
+         viewMode: DEFAULT_VIEW_MODE,
+         root: null
       };
    };
 
