@@ -69,6 +69,24 @@ define([
             sandbox.restore();
          });
       });
+      describe('_rangeChangedHandler', function() {
+         it('should generate valueChangedEvent', function() {
+            const
+               sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(DateLink, options),
+               value = new Date(2018, 11, 10);
+
+            component._children.opener = {
+               close: sinon.fake()
+            };
+            sandbox.stub(component, '_notify');
+
+            component._rangeChangedHandler(null, value);
+
+            sinon.assert.calledWith(component._notify, 'valueChanged');
+            sandbox.restore();
+         });
+      });
 
    });
 });
