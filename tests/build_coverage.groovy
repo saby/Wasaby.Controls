@@ -193,7 +193,7 @@ def building(workspace, scheduler=null) {
 
             dir(workspace){
                 echo "подкидываем istanbul в Controls"
-                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** -x grunt/** --complete-copy --output ./controls-cover ./controls'
+                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** -x grunt/** -x constructor/** --complete-copy --output ./controls-cover ./controls'
                 sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
             }
             dir (workspace) {
@@ -203,6 +203,7 @@ def building(workspace, scheduler=null) {
                 sh 'cp -rf ./controls-orig/viewsettings/ ./controls/viewsettings/'
                 sh 'cp -rf ./controls-orig/sbis3-app-engine/ ./controls/sbis3-app-engine/'
                 sh 'cp -rf ./controls-orig/grunt/ ./controls/grunt/'
+                sh 'cp -rf ./controls-orig/constructor/ ./controls/constructor/'
             }
 
             echo "Собираем controls"
