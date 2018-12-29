@@ -1,0 +1,37 @@
+<Controls.Input.Render attr:title="{{_tooltip}}"
+                       viewModel="{{_viewModel}}"
+                       size="{{_options.size}}"
+                       style="{{_options.style}}"
+                       multiline="{{_multiline}}"
+                       tagStyle="{{_options.tagStyle}}"
+                       fontStyle="{{_options.fontStyle}}"
+                       textAlign="{{_options.textAlign}}"
+                       placeholder="{{_options.placeholder}}"
+                       on:mouseenter="_mouseEnterHandler()"
+                       on:tagClick="_notifyHandler('tagClick')"
+                       on:tagHover="_notifyHandler('tagHover')">
+   <Controls.Container.Scroll name="scroll"
+                              attr:class="controls-Base__field"
+                              attr:style="{{'min-height: ' + _calculateHeightContainer(_options.minLines, true) + 'px;'}}
+                                          {{_options.maxLines ? 'max-height: ' + _calculateHeightContainer(_options.maxLines, true) + 'px;'}}">
+      <ws:if data="{{_options.readOnly}}">
+         <ws:partial options="{{_options}}"
+                     scope="{{_readOnlyField.scope}}"
+                     value="{{_viewModel.displayValue}}"
+                     selection="{{_viewModel.selection}}"
+                     template="{{_readOnlyField.template}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial type="{{_type}}"
+                     options="{{_options}}"
+                     scope="{{_field.scope}}"
+                     fieldName="{{_fieldName}}"
+                     template="{{_field.template}}"
+                     value="{{_viewModel.displayValue}}"
+                     selection="{{_viewModel.selection}}"
+                     hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                     calculateHeightContainer="{{_calculateHeightContainer}}"
+                     isEdge="{{_isEdge}}" />
+      </ws:else>
+   </Controls.Container.Scroll>
+</Controls.Input.Render>

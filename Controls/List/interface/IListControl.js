@@ -129,9 +129,9 @@ define('Controls/List/interface/IListControl', [
    /**
     * @name Controls/List/interface/IListControl#markerVisibility
     * @cfg {String} Determines when marker is visible.
-    * @variant always The marker is always displayed, even if the marked key entry is not specified.
-    * @variant '' Behavior not defined.
-    * @default ''
+    * @variant visible The marker is always displayed, even if the marked key entry is not specified.
+    * @variant demand The marker is displayed by demand. For example, when user mark a record.
+    * @default demand
     */
 
    /**
