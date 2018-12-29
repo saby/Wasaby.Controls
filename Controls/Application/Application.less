@@ -198,10 +198,24 @@ html>body .clearfix {
    cursor: pointer; /* Add a pointer on hover */
 }
 
-
 /*import basic style to application.less*/
 @import "Controls-theme/themes/default/fonts/TensorFont";
 @import "Controls-theme/themes/default/fonts/cbus-icons";
-@import "Controls-theme/themes/default/helpers/general";
+
+@import "Controls-theme/themes/default/helpers/AreaBlocks";
+@import "Controls-theme/themes/default/helpers/_header";
+@import "Controls-theme/themes/default/helpers/_mixins";
+
 @import "Controls-theme/themes/default/helpers/_flex";
 @import "Controls-theme/themes/default/helpers/_typography";
+
+//icons compatibility with new params
+.icon-small, .icon-16  {
+   .icon-size(@size_icon_s, @font-family_icon_size-s);
+}
+.icon-medium, .icon-24  {
+   .icon-size(@size_icon_m, @font-family_icon_size-m);
+}
+.icon-large, .icon-32 {
+   .icon-size(@size_icon_l, @font-family_icon_size-l);
+}
