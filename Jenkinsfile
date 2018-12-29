@@ -79,7 +79,7 @@ def return_test_for_run(tests_files, autotests) {
 
 def download_coverage_json(version) {
     echo "Выкачиваем файл с зависимостями"
-    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
     script = """
         if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
         echo "result.json exitsts"; cp -fr tmp_result.json result.json
