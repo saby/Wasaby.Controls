@@ -210,6 +210,8 @@ html>body .clearfix {
 @import "Controls-theme/themes/default/helpers/_typography";
 
 //icons compatibility with new params
+//тут определяю только размеры иконок. Делаю это через новые алиасы, чтоб работала темизация. Вообще от этих иконок избавлюсь по проекту
+//иконки на старых страницах будут работать чеоез стили определенные в теме, в oldIcons.less
 .icon-small, .icon-16  {
    .icon-size(@size_icon_s, @font-family_icon_size-s);
 }
