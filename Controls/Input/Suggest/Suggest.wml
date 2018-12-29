@@ -7,6 +7,8 @@
         footerTemplate="{{_options.footerTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        historyId="{{_options.historyId}}"
         trim="{{_options.trim}}"
         searchParam="{{_options.searchParam}}"
         navigation="{{_options.navigation}}"

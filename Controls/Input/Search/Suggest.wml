@@ -9,6 +9,8 @@
         emptyTemplate="{{_options.emptyTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
         source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        historyId="{{_options.historyId}}"
         navigation="{{_options.navigation}}"
         searchParam="{{_options.searchParam}}"
         searchDelay="{{_options.searchDelay}}"

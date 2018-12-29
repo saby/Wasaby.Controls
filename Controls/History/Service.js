@@ -72,11 +72,16 @@ define('Controls/History/Service', [
          }
          return self._historyDataSource;
       },
+      
+      getMethodNameByIdType: function(stringMethod, intMethod, id) {
+         return typeof id === 'number' ? intMethod : stringMethod;
+      },
 
       updateHistory: function(self, data) {
-         _private.getHistoryDataSource(self).call('Add', {
+         var id = data.getId();
+         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
             history_id: data.get('HistoryId') || self._historyId,
-            id: data.getId(),
+            id: id,
             history_context: null
          });
       },
@@ -89,9 +94,10 @@ define('Controls/History/Service', [
       },
 
       updatePinned: function(self, data, meta) {
-         _private.getHistoryDataSource(this).call('SetPin', {
+         var id = data.getId();
+         _private.getHistoryDataSource(this).call(_private.getMethodNameByIdType('SetPin', 'SetIntPin', id), {
             history_id: data.get('HistoryId') || self._historyId,
-            id: data.getId(),
+            id: id,
             history_context: null,
             pin: !!meta['$_pinned']
          });

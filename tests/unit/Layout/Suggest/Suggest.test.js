@@ -1,7 +1,8 @@
-define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Suggest, List, RecordSet, Model){
-   
+define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model', 'Controls/History/Service'], function(Suggest, List, RecordSet, Model){
+
    describe('Controls.Container.Suggest.Layout', function() {
-   
+      var IDENTIFICATORS = [1, 2, 3];
+
       var hasMoreTrue = {
          hasMore: true
       };
@@ -40,6 +41,28 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
             }
          };
       };
+
+      Suggest._private.getRecentKeys = function() {
+         return {
+            addCallback: function(func) {
+               func(IDENTIFICATORS);
+            }
+         }
+      };
+
+      Suggest._private.getHistoryService = function() {
+         return {
+            addCallback: function(func) {
+               func({
+                  update: function(item) {
+                     item._isUpdateHistory = true;
+                  }
+               });
+            }
+         }
+      };
+
+
       
       it('Suggest::_private.hasMore', function () {
          assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
@@ -224,23 +247,27 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          self._options.autoDropDown = true;
          self._options.minSearchLength = 3;
          self._options.readOnly = false;
+         self._options.historyId = 'testFieldHistoryId';
+         self._options.keyProperty = 'Identificator';
          suggestComponent.saveOptions(self._options);
+         Suggest._private.setFilter(suggestComponent, {});
          suggestComponent._notify = function(event, val) {
             if (event === 'suggestStateChanged') {
                suggestState = val[0];
             }
          };
          suggestComponent._inputActivated();
-   
+
          suggestComponent._dependenciesDeferred.addCallback(function() {
             assert.isTrue(suggestState);
+            assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
             
             suggestComponent._changeValueHandler(null, '');
             assert.isTrue(suggestState);
    
             suggestComponent._close();
             suggestComponent._inputClicked();
-            
+
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
    
@@ -416,6 +443,21 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          
          Suggest._private.setMissSpellingCaption(self, 'test');
          assert.equal(self._misspellingCaption, 'test');
+      });
+
+      it('Suggest::_select', function() {
+         var
+            item = {
+               _isUpdateHistory: false
+            },
+            suggestComponent = new Suggest();
+
+         suggestComponent._select(item);
+         assert.isFalse(item._isUpdateHistory);
+
+         suggestComponent._options.historyId = 'testFieldHistoryId';
+         suggestComponent._select(item);
+         assert.isTrue(item._isUpdateHistory);
       });
       
    });
