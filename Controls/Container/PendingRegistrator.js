@@ -28,15 +28,17 @@ define('Controls/Container/PendingRegistrator', [
     * dererred - pending will be unregistered when this deferred resolves
     * config is object having properties:
     *    - showLoadingIndicator (Boolean) - show loading indicator or not (during time while pending is registered)
-    *    - onPendingFail (Function) - helps to resolve deferred of pending. It will be called when finishPendingOperations calls.
+    *    - onPendingFail (Function) - It will be called when trying to finish pendings (finishPendingOperations calls).
+    *    function helps to resolve deferred of pending. User must resolve this deferred (second argument) in this function.
+    *    It would be synchronous or asynchronous resolving.
     *
     * onPendingFail has 2 arguments - [forceFinishValue, deferred].
-    * forceFinishValue give additional information how to resolve deferred.
+    * first argument (forceFinishValue) give additional information how to resolve deferred.
+    * second argument is deferred value of pending. User must resolve this deferred in onPendingFail function.
     * forceFinishValue is taken from finishPendingOperations argument (finishPendingOperations defines additional information of resolving).
     * User can use this argument in it's own onPendingFail function or not.
     * For example, if pending registered by changed record and we need to save changes, by default we can ask a question about it.
     * But forceFinishValue can means forced answer and we can save (or not) record without asking a question.
-    * second argument is deferred value of pending.
     *
     * cancelFinishingPending - cancels deferred returned by finishPendingOperations. This deferred never resolve. It's need
     * to request new deferred by finishPendingOperations for setting callback on pendings finish.
