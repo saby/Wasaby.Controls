@@ -1,0 +1,476 @@
+.controls-Button_style-danger_viewMode-button {
+   border-color: @color_danger;
+}
+
+.controls-Button_style-info_viewMode-button {
+   border-color: @color_info;
+}
+
+.controls-Button_style-primary_viewMode-button {
+   color: @color_Button__text_primary;
+   border-color: @border-color_Button_primary;
+   background: @background_Button_primary;
+}
+
+.controls-Button_style-warning_viewMode-button {
+   border-color: @color_warning;
+}
+
+.controls-Button_style-success_viewMode-button {
+   border-color: @color_success;
+}
+
+.controls-Button_style-primary_viewMode-button:active {
+   border-color: @border-color_Button_primary_hovered;
+   background: @background_Button_primary_active;
+}
+
+.controls-Button_style-primary_viewMode-button_readOnly {
+   background: @background_Button-primary_readOnly;
+}
+
+.controls-Button_style-secondary_viewMode-button {
+   color: @color_Button__text_secondary;
+   border-color: @border-color_Button_secondary;
+   background: @background_Button_secondary;
+}
+
+.controls-Button_style-secondary_viewMode-button:active {
+   border-color: @border-color_Button_secondary_hovered;
+   background: @background_Button_secondary_active;
+}
+
+.controls-Button_style-secondary_viewMode-button_readOnly {
+   background: @background_Button-secondary_readOnly;
+}
+
+.controls-Button_viewMode-button_readOnly{
+   min-width: @min-width_Button;
+   cursor: default;
+   color: @color_Button_readOnly;
+   border-color: @border-color_Button_readOnly;
+}
+
+.controls-Button_viewMode-button_size-m {
+   height: @height_Button_size_m;
+   font-size: @font-size_Button_size_m;
+   border-style: solid;
+   border-width: @thickness_Button__border;
+   .border-radius(@border-radius_Button_size_m);
+}
+
+.controls-Button_viewMode-button_size-l {
+   font-size: @font-size_Button_size_l;
+   border-style: solid;
+   height: @height_Button_size_l;
+   border-width: @thickness_Button__border;
+   .border-radius(@border-radius_Button_size_l);
+}
+
+.controls-Button__wrapper_viewMode-button_size-m {
+   padding: @padding_Button-wrapper_size_m;
+   .justify-content(center);
+}
+
+.controls-Button__wrapper_viewMode-button_size-l {
+   padding: @padding_Button__wrapper_size_l;
+   .justify-content(center);
+}
+
+.controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
+   color: @color_secondary;
+}
+
+.controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
+   color: @color_primaryV;
+}
+
+.controls-Button__icon-secondary_iconStyle-default_viewMode-button {
+   color: @color_secondary;
+}
+
+.controls-Button__icon-primary_iconStyle-default_viewMode-button {
+   color: @color_primaryV;
+}
+
+.controls-Button_viewMode-link_readOnly {
+   color: @disabled-color;
+}
+
+.ws-is-no-touch {
+   //root tag "a" should be without underline
+   .controls-BaseButton:hover {
+      text-decoration: none;
+   }
+
+   .controls-Button_style-primary_viewMode-button:hover {
+      border-color: @border-color_Button_primary_hovered;
+      background: @background_Button_primary_hovered;
+   }
+
+   .controls-Button_style-secondary_viewMode-button:hover {
+      border-color: @border-color_Button_secondary_hovered;
+      background: @background_Button_secondary_hovered;
+   }
+
+   .controls-Button_style-secondary_viewMode-button:active {
+      border-color: @border-color_Button_secondary_hovered;
+      background: @background_Button_secondary_active;
+   }
+
+   .controls-Button_style-primary_viewMode-button:active {
+      border-color: @border-color_Button_primary_hovered;
+      background: @background_Button_primary_active;
+   }
+
+   .controls-Button_style-danger_viewMode-toolButton:hover {
+      border-color: @color_danger;
+   }
+
+   .controls-Button_style-warning_viewMode-toolButton:hover {
+      border-color: @color_warning;
+   }
+
+   .controls-Button_style-success_viewMode-toolButton:hover {
+      border-color: @color_success;
+   }
+
+   .controls-Button_style-info_viewMode-toolButton:hover {
+      border-color: @color_info;
+   }
+
+   .controls-Button_style-primary_viewMode-toolButton:hover {
+      border-color: @color_primaryV;
+   }
+
+   .controls-Button_style-secondary_viewMode-toolButton:hover {
+      border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
+   }
+
+   .controls-Button_style-secondary_viewMode-toolButton:hover {
+      .controls-Button__icon-secondary {
+         color: @color_Link_secondary_hovered;
+      }
+   }
+
+   .controls-Button_style-secondary_viewMode-link:hover {
+      .controls-Button__icon-secondary {
+         color: @color_Link_secondary_hovered;
+      }
+   }
+}
+
+.controls-Button__icon-info {
+   color: @color_info;
+}
+
+.controls-Button__icon-success {
+   color: @color_success;
+}
+
+.controls-Button__icon-danger {
+   color: @color_danger;
+}
+
+.controls-Button__icon-warning {
+   color: @color_warning;
+}
+
+.controls-Button__icon-secondary {
+   color: @color_secondary;
+}
+
+.controls-Button__icon-primary {
+   color: @color_primaryV;
+}
+
+.controls-Button__icon-default {
+   color: @color_text_default;
+}
+
+.controls-BaseButton {
+   display: inline-block;
+   box-sizing: border-box;
+   .user-select();
+   text-decoration: none;
+}
+
+.controls-BaseButton:active {
+   text-decoration: none;
+}
+
+.controls-BaseButton__text {
+   .text-overflow();
+}
+
+.controls-Button__wrapper_viewMode-toolButton_size-m, .controls-Button__wrapper_viewMode-toolButton_size-l,
+.controls-Button__wrapper_viewMode-toolButton_size-xl {
+   justify-content: center;
+}
+
+.controls-Button_viewMode-toolButton_withBackground {
+   background-color: @background-color-ToolButton;
+}
+
+.controls-Button_viewMode-toolButton_transparent {
+   background-color: @background-color-ToolButton_transparent;
+}
+
+.controls-Button_viewMode-toolButton, .controls-Button_viewMode-toolButton_readOnly {
+   border-radius: @border-radius-ToolButton;
+   border-style: @border-style-ToolButton;
+   border-width: @border-width-ToolButton;
+   box-shadow: @box-shadow-ToolButton;
+}
+
+.controls-Button_viewMode-toolButton {
+   cursor: pointer;
+   text-shadow: @text-shadow_ToolButton;
+}
+
+.controls-Button_viewMode-toolButton_style-common {
+   border-color: @border-color-ToolButton;
+}
+
+.controls-Button_viewMode-toolButton_size-m {
+   height: @height-ToolButton_size-m;
+   min-width: @width-ToolButton_size-m;
+}
+
+.controls-Button_viewMode-toolButton_size-l {
+   height: @height-ToolButton_size-l;
+   min-width: @width-ToolButton_size-l;
+}
+
+.controls-Button_viewMode-toolButton_size-xl {
+   height: @height-ToolButton_size-xl;
+   min-width: @width-ToolButton_size-xl;
+}
+
+.controls-Button_viewMode-toolButton_readOnly {
+   color: @color-ToolButton_readOnly;
+   border-color: @border-color-ToolButton_readOnly;
+   text-shadow: @text-shadow_ToolButton_readOnly;
+}
+
+.ws-is-no-touch {
+   .controls-Button_viewMode-toolButton:hover {
+      background-color: @background-color-ToolButton_hovered;
+   }
+
+   .controls-Button_viewMode-toolButton_transparent:hover {
+      background-color: @background-color-IconButton_transparent_hovered;
+   }
+}
+
+.controls-Button_viewMode-toolButton:active {
+   box-shadow: @box-shadow-ToolButton_activated;
+}
+
+.controls-Button_viewMode-toolButton_withBackground:active {
+   background-color: @background-color-ToolButton_hovered;
+}
+
+.controls-Button_viewMode-toolButton_transparent:active {
+   background-color: @background-color-IconButton_transparent_hovered;
+}
+
+.controls-Button_viewMode-link {
+   cursor: pointer;
+}
+
+.controls-Button__wrapper_viewMode-link_size-s{
+   font-size: @font-size_Link-s;
+}
+
+.controls-Button__wrapper_viewMode-link_size-m{
+   font-size: @font-size_Link-m;
+}
+
+.controls-Button__wrapper_viewMode-link_size-l{
+   font-size: @font-size_Link-l;
+}
+
+.controls-Button__wrapper_viewMode-link_size-xl{
+   font-size: @font-size_Link-xl;
+}
+
+.controls-Button_style-secondary_viewMode-link {
+   color: @color_Link_secondary;
+   text-decoration: @text-decoration_Link_secondary;
+}
+
+.controls-Button_style-success_viewMode-link {
+   color: @color_Link_success;
+   text-decoration: @text-decoration_Link_success;
+}
+
+.controls-Button_style-danger_viewMode-link {
+   color: @color_Link_danger;
+   text-decoration: @text-decoration_Link_danger;
+}
+
+.controls-Button_style-info_viewMode-link {
+   color: @color_Link_info;
+   text-decoration: @text-decoration_Link_info;
+}
+
+.controls-Button_style-warning_viewMode-link {
+   color: @color_Link_warning;
+   text-decoration: @text-decoration_Link_warning;
+}
+
+.controls-Button_style-primary_viewMode-link {
+   color: @color_Link_primary;
+   text-decoration: @text-decoration_Link_primary;
+}
+
+.controls-Button_style-default_viewMode-link {
+   color: @color_text_default;
+   text-decoration: @text-decoration_Link_default;
+}
+
+.controls-Button_style-magic_viewMode-link {
+   color: @color_Link_magic;
+}
+
+.ws-is-no-touch {
+   .controls-Button_style-secondary_viewMode-link:hover {
+      .controls-Button__icon-secondary_viewMode-link_iconStyle-default {
+         color: @color_Link_secondary_hovered;
+      }
+      color: @color_Link_secondary_hovered;
+   }
+   .controls-Button_style-primary_viewMode-link:hover {
+      color: @color_Link_primary_hovered;
+   }
+   .controls-Button_style-info_viewMode-link:hover {
+      color: @color_Link_info_hovered;
+   }
+   .controls-Button_style-success_viewMode-link:hover {
+      color: @color_Link_success_hovered;
+   }
+   .controls-Button_style-danger_viewMode-link:hover {
+      color: @color_Link_danger_hovered;
+   }
+   .controls-Button_style-warning_viewMode-link:hover {
+      color: @color_Link_warning_hovered;
+   }
+   .controls-Button_style-default_viewMode-link:hover {
+      color: @color_Link_default_hovered;
+   }
+}
+
+.controls-Button_viewMode-button {
+   cursor: pointer;
+   min-width: @min-width_Button;
+   box-shadow: @box-shadow_Button;
+   text-shadow: @text-shadow_Button;
+}
+
+.controls-Button_viewMode-button:active {
+   box-shadow: @box-shadow_Button_active;
+}
+
+.controls-Button_viewMode-button_readOnly {
+   min-width: @min-width_Button;
+   cursor: default;
+   color: @color_Button_readOnly;
+   border-color: @border-color_Button_readOnly;
+   text-shadow: @text-shadow_Button_readOnly;
+}
+
+.controls-Button_style-secondary_viewMode-Button_readOnly {
+   background: @background_Button-secondary_readOnly;
+}
+
+.controls-Button_style-primary_viewMode-Button_readOnly {
+   background: @background_Button-primary_readOnly;
+}
+
+.controls-Button__wrapper_viewMode-button_size-m {
+   height: @height_Button_size_m;
+   font-size: @font-size_Button_size_m;
+   .border-radius(@border-radius_Button_size_m);
+}
+
+.controls-Button__wrapper_viewMode-button_size-l {
+   font-size: @font-size_Button_size_l;
+   height: @height_Button_size_l;
+   .border-radius(@border-radius_Button_size_l);
+}
+
+.controls-Button__icon-default_iconStyle-default, .controls-Button__icon-default-big_iconStyle-default {
+   color: @color_secondary;
+}
+
+.controls-Button__icon-primary_iconStyle-default, .controls-Button__icon-primary-big_iconStyle-default {
+   color: @color_primaryV;
+}
+
+.controls-Button_style-secondary_viewMode-link:active {
+   .controls-Button__icon-secondary_viewMode_iconStyle-default {
+      color: @color_Link-main-text_hovered;
+   }
+   color: @color_Link-main-text_hovered;
+}
+
+.controls-Button_viewMode-link:active{
+   .controls-BaseButton__text {
+      text-decoration: underline;
+   }
+}
+
+.controls-Button__wrapper_type-button_size-m {
+   padding: @padding_Button-wrapper_size_m;
+   .justify-content(center);
+}
+
+.controls-Button__wrapper_type-button_size-l {
+   padding: @padding_Button__wrapper_size_l;
+   .justify-content(center);
+}
+.controls-Button__text_gap {
+   margin-left: @spacing_Button-between-icon-text;
+}
+.ws-is-no-touch {
+   .controls-Label_underline-hovered:hover {
+      text-decoration: underline;
+   }
+   .controls-Label_underline_color-hovered:hover {
+      color: @color_Link_secondary_hovered;
+   }
+}
+.controls-Label_underline-hovered:active {
+   text-decoration: underline;
+}
+.controls-Label_underline_color-hovered:active {
+   color: @color_Link_secondary_hovered;
+}
+.controls-Label_underline_color-hovered {
+   text-decoration: underline;
+}
+// перенес в vDom, чтобы не было пересечения со старыми кнопками
+// изменено имя в остальном стили аналогичны
+.controls-BaseButton__content {
+   .button-wrapper-default-style();
+   &:before {
+      content: "\200b";
+   }
+}
+
+.ws-is-no-touch {
+   .controls-Button_viewMode-link:hover {
+      .controls-BaseButton__text {
+         text-decoration: underline;
+      }
+   }
+}
+// баг ие10, дочерний элемент контейнера с флексом неправильно рассчитывает свои размеры
+// вследствии чего обрезание текста происходит неверно
+.ws-is-ie10 {
+   .controls-Button__text {
+      display: inline-block;
+      -ms-flex-negative: 1;
+   }
+}

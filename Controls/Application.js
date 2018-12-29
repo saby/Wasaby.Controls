@@ -82,6 +82,7 @@ define('Controls/Application',
     * @name Controls/Application#width
     * @cfg {String} Used by Controls.Popup.Manager
     *
+    * @css @font-size_App__body Font size of page body. This size inherits to other elements in page.
     */
 
    function(Base,
