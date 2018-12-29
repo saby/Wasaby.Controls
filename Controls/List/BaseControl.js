@@ -65,9 +65,6 @@ define('Controls/List/BaseControl', [
             sorting = cClone(cfg.sorting),
             navigation = cClone(cfg.navigation),
             resDeferred = new Deferred();
-         if (self._listViewModel) {
-            self._restoreMarkedKey = self._listViewModel.getMarkedKey();
-         }
          if (cfg.beforeReloadCallback) {
             // todo parameter cfg removed by task: https://online.sbis.ru/opendoc.html?guid=f5fb685f-30fb-4adc-bbfe-cb78a2e32af2
             cfg.beforeReloadCallback(filter, sorting, navigation, cfg);
@@ -78,22 +75,34 @@ define('Controls/List/BaseControl', [
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
+               var
+                  markedKey,
+                  listModel = self._listViewModel;
+
                if (cfg.dataLoadCallback instanceof Function) {
                   cfg.dataLoadCallback(list);
                }
 
                _private.hideIndicator(self);
 
-               if (self._listViewModel) {
-                  self._listViewModel.setItems(list);
-                  self._items = self._listViewModel.getItems();
+               if (listModel) {
+                  listModel.setItems(list);
+                  self._items = listModel.getItems();
+                  markedKey = listModel.getMarkedKey();
+                  if (markedKey !== null) {
+                     if (listModel.getIndexByKey(markedKey) === -1) {
+                        markedKey = listModel.getFirstItemKey();
+                     }
+                     listModel.setMarkedKey(markedKey);
+                     self._restoreMarkedKey = markedKey;
+                  }
                }
 
                /* Перезагрузка полностью обновляет данные в рекордсете, а значит индексы, высоты элементов и распорок
                   потеряли актуальность, сбрасываем их. */
                if (self._virtualScroll) {
                   self._virtualScroll.resetItemsIndexes();
-                  self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                  self._virtualScroll.setItemsCount(listModel.getCount());
                   self._virtualScroll.updateItemsIndexes('down');
                   _private.applyVirtualScroll(self);
                }
@@ -129,6 +138,12 @@ define('Controls/List/BaseControl', [
          if (key !== undefined) {
             self.getViewModel().setMarkedKey(key);
             _private.scrollToItem(self, key);
+         }
+      },
+      restoreMarkedKey: function(self) {
+         if (self._restoreMarkedKey !== null) {
+            _private.scrollToItem(self, self._restoreMarkedKey);
+            self._restoreMarkedKey = null;
          }
       },
       moveMarkerToNext: function(self) {
@@ -606,7 +621,7 @@ define('Controls/List/BaseControl', [
       _template: BaseControlTpl,
       iWantVDOM: true,
       _isActiveByClick: false,
-      _restoreMarkedKey: undefined,
+      _restoreMarkedKey: null,
 
       _listViewModel: null,
       _viewModelConstructor: null,
@@ -767,21 +782,9 @@ define('Controls/List/BaseControl', [
       },
 
       _afterUpdate: function(oldOptions) {
-         var
-            restoredKey;
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
-            if (this._restoreMarkedKey !== undefined && this._restoreMarkedKey !== null) {
-               if (this._listViewModel.getIndexByKey(this._restoreMarkedKey) !== -1) {
-                  _private.setMarkedKey(this, this._restoreMarkedKey);
-               } else {
-                  restoredKey = this._listViewModel.getFirstItemKey(this._restoreMarkedKey);
-                  if (restoredKey !== undefined) {
-                     _private.setMarkedKey(this, restoredKey);
-                  }
-               }
-               this._restoreMarkedKey = undefined;
-            }
+            _private.restoreMarkedKey(this);
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
