@@ -4,7 +4,7 @@ define('Controls-demo/Popup/Opener/DialogPG',
       'tmpl!Controls-demo/Popup/Opener/OpenerDemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'wml!Controls-demo/Popup/Opener/DialogTpl',
-      'wml!Controls-demo/Popup/Opener/ConfirmationTpl',
+
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
@@ -50,8 +50,8 @@ define('Controls-demo/Popup/Opener/DialogPG',
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Opener/ConfirmationTpl',
-                        template: 'wml!Controls-demo/Popup/Opener/ConfirmationTpl'
+                        title: 'Controls-demo/Popup/Opener/ConfirmationTpl',
+                        template: 'Controls-demo/Popup/Opener/ConfirmationTpl'
                      }
                   ],
                   value: 'wml!Controls-demo/Popup/Opener/DialogTpl'

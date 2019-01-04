@@ -1,0 +1,10 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager" showMaximizedButton="{{true}}">
+    <ws:headerContentTemplate>
+        <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+            <Controls.Button caption="Закрыть" on:click="_close()"/>
+        </div>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
+        <Controls.Input.Text value="maximized"/>
+    </ws:bodyContentTemplate>
+</Controls.Popup.Templates.Stack.StackTemplate>

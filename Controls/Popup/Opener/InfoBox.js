@@ -61,9 +61,26 @@ define('Controls/Popup/Opener/InfoBox',
          showDelay: INFOBOX_SHOW_DELAY
       };
 
+      var _private = {
+         prepareDisplayStyle: function(color) {
+            var resColor = color;
+            if (color === 'light') {
+               resColor = 'secondary';
+            }
+            if (color === 'error') {
+               resColor = 'danger';
+            }
+            if (color === 'help') {
+               resColor = 'primary';
+            }
+            return resColor;
+         }
+      };
+
       var InfoBox = Base.extend({
          _openId: null,
          _closeId: null,
+         _style: null,
 
          /**
           * @name Controls/Popup/Opener/Infobox#isOpened
@@ -101,6 +118,7 @@ define('Controls/Popup/Opener/InfoBox',
             if (options.float) {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
+
          },
 
          open: function(cfg) {
@@ -123,6 +141,16 @@ define('Controls/Popup/Opener/InfoBox',
             if (cfg.float) {
                newCfg.floatCloseButton = cfg.float;
             }
+            if (cfg.style === 'light') {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style light, используйте secondary');
+            }
+            if (cfg.style === 'help') {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style help, используйте primary');
+            }
+            if (cfg.style === 'error') {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
+            }
+            newCfg.style =  _private.prepareDisplayStyle(cfg.style);
 
             // TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
             if (newCfg.showDelay > 0) {

@@ -18,9 +18,49 @@ define('Controls/Popup/Opener/Confirmation',
        */
 
       /**
-       * @name Controls/Popup/Opener/Confirmation#closePopupBeforeUnmount
-       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+       * @name Controls/Popup/Opener/Confirmation#type
+       * @cfg {String} Type of dialog. Determines  the result of  the confirmation window closed.
+       * @variant ok (undefined)
+       * @variant yesno  ( true/false)
+       * @variant yesnocancel  (true/false/undefined)
        */
+
+      /**
+       * @name Controls/Popup/Opener/Confirmation#style
+       * @cfg {String} Confirmation display style
+       * @variant default
+       * @variant success
+       * @variant danger
+       */
+
+      /**
+       * @name Controls/Popup/Opener/Confirmation#message
+       * @cfg {String} Main text
+       */
+
+      /**
+       * @name Controls/Popup/Opener/Confirmation#details
+       * @cfg {String} Additional text
+       */
+
+      /**
+       * @name Controls/Popup/Opener/Confirmation#yesCaption
+       * @cfg {String} Сonfirmation button text
+       */
+
+      /**
+       * @name Controls/Popup/Opener/Confirmation#noCaption
+       * @cfg {String} Negation button text
+       */
+      /**
+       * @name Controls/Popup/Opener/Confirmation#cancelCaption
+       * @cfg {String} 	Cancel button text
+       */
+      /**
+       * @name Controls/Popup/Opener/Confirmation#okCaption
+       * @cfg {String} Accept button text
+       */
+
 
       var _private = {
          compatibleOptions: function(self, popupOptions) {
@@ -115,16 +155,3 @@ define('Controls/Popup/Opener/Confirmation',
 
       return Confirmation;
    });
-
-/**
- * @typedef {Object} popupOptions
- * @description Confirmation configuration.
- * @property {String} type Type of dialog.
- * @property {String} style Confirmation display style.
- * @property {String} message Main text.
- * @property {String} details Additional text.
- * @property {String} yesCaption Сonfirmation button text.
- * @property {String} noCaption Negation button text.
- * @property {String} cancelCaption Cancel button text.
- * @property {String} okCaption Accept text button.
- */

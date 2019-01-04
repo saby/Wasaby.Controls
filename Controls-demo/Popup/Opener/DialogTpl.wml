@@ -1,7 +1,9 @@
 <div style="height: 200px; min-width: 500px; max-width: 700px;">
     <Controls.Popup.Templates.Dialog.DialogTemplate caption="Создание категории" draggable="{{draggable}}">
         <ws:footerContentTemplate>
-                <Controls.Button caption="Сохранить"/>
+            <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+                <Controls.Button caption="Button"/>
+            </div>
         </ws:footerContentTemplate>
         <ws:bodyContentTemplate>
             <div class="dialog-content">

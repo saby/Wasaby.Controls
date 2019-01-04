@@ -2,7 +2,7 @@
         on:keyup="_keyPressed()" ws-tab-cycling="true"
         ws-delegates-tabfocus="true" style="{{_options.style}}"
         hideCross="{{true}}" size="{{_options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? 'big' : 'standart'}}">
-   <ws:contentArea>
+   <ws:bodyContentTemplate>
       <ws:partial
               template="{{_contentTemplate}}"
               message="{{_options.message}}"
@@ -10,8 +10,8 @@
               details="{{_options.details}}"
               detailsTemplate="{{_detailsTemplate}}">
       </ws:partial>
-   </ws:contentArea>
-   <ws:footerArea>
+   </ws:bodyContentTemplate>
+   <ws:footerContentTemplate>
       <ws:partial
               template="{{_footerTemplate}}"
               type="{{_options.type}}"
@@ -20,5 +20,5 @@
               cancelCaption="{{_options.cancelCaption}}"
               okCaption="{{_options.okCaption}}">
       </ws:partial>
-   </ws:footerArea>
+   </ws:footerContentTemplate>
 </Controls.Popup.Templates.Dialog.ConfirmationTemplate>

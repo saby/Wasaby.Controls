@@ -1,6 +1,6 @@
     <Controls-demo.PropertyGrid.BooleanTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{newName}}">
     </Controls-demo.PropertyGrid.BooleanTemplate>
 

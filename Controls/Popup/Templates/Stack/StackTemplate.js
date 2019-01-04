@@ -2,9 +2,10 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Stack/StackTemplate',
+      'Core/IoC',
       'css!theme?Controls/Popup/Templates/Stack/StackTemplate'
    ],
-   function(Control, template) {
+   function(Control, template, IoC) {
       'use strict';
 
       var DialogTemplate = Control.extend({
@@ -66,6 +67,17 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           */
 
          _template: template,
+         _beforeMount: function(options) {
+            if (options.contentArea) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+            }
+            if (options.topArea) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+            }
+            if (options.topArea) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
+            }
+         },
 
          /**
           * Закрыть всплывающее окно

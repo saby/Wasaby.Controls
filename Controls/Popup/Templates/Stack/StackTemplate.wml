@@ -1,13 +1,13 @@
 <div class="controls-StackTemplate">
-    <div if="{{_options.caption || _options.topArea}}" class="controls-StackTemplate__top-area">
+    <div if="{{_options.caption || _options.topArea || _options.headerContentTemplate}}" class="controls-StackTemplate__top-area">
         <div class="controls-StackTemplate__top-area-content controls-StackTemplate__top-area-margin-{{_options.showMaximizedButton ? 'maximized' : 'default'}}">
             <ws:if data="{{_options.caption}}">
                 <div class="controls-StackTemplate__caption controls-StackTemplate__caption_style_{{_options.captionStyle}}" title="{{_options.caption}}">
                     <div class="controls-StackTemplate__caption_text">{{_options.caption}}</div>
                 </div>
             </ws:if>
-            <ws:if data="{{_options.topArea}}">
-                <ws:partial template="{{_options.topArea}}"></ws:partial>
+            <ws:if data="{{_options.topArea || _options.headerContentTemplate}}">
+                <ws:partial template="{{_options.topArea || _options.headerContentTemplate}}"></ws:partial>
             </ws:if>
         </div>
     </div>
@@ -16,9 +16,9 @@
     </ws:if>
     <Controls.Button.Close attr:class="controls-StackTemplate__close_button" style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}" on:click="close()"/>
     <div class="controls-StackTemplate__content-area">
-        <ws:partial template="{{_options.contentArea}}"></ws:partial>
+        <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}"></ws:partial>
     </div>
-    <div if="{{_options.bottomArea}}" class="controls-StackTemplate__bottomArea">
-        <ws:partial template="{{_options.bottomArea}}"></ws:partial>
+    <div if="{{_options.bottomArea || _options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea">
+        <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}"></ws:partial>
     </div>
 </div>

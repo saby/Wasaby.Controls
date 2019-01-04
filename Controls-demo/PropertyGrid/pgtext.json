@@ -245,7 +245,7 @@
       }
     }
   },
-    "Controls/Toggle/Switch": {
+  "Controls/Toggle/Switch": {
     "name": "Controls/Toggle/Switch",
     "title": "Switch control.",
     "className": "Controls/Toggle/Switch",
@@ -416,7 +416,6 @@
       }
     }
   },
-
   "Controls/Input/ComboBox": {
     "name": "Controls/Input/ComboBox",
     "title": "Control \"ComboBox\"",
@@ -604,7 +603,8 @@
         }
       }
     }
-  },"Controls/Input/Date/RangeLinkLite": {
+  },
+  "Controls/Input/Date/RangeLinkLite": {
     "name": "Controls/Input/Date/RangeLinkLite",
     "title": "Input for selection date range links in Light Calendar.",
     "className": "Controls/Input/Date/RangeLinkLite",
@@ -1032,8 +1032,8 @@
             "type": "enum",
             "title": "Sets the direction in which the popup panel will open.",
             "enum": {
-              "right" : "The panel opens to the left",
-              "left" : "The panel opens to the right"
+              "right": "The panel opens to the left",
+              "left": "The panel opens to the right"
             }
           },
           "historyId": {
@@ -1601,9 +1601,9 @@
             "title": "Infobox display style.",
             "enum": {
               "default": "default",
-              "lite": "lite",
-              "help": "help",
-              "error": "error"
+              "secondary": "secondary",
+              "primary": "primary",
+              "danger": "danger"
             }
           },
           "trigger": {
@@ -1616,6 +1616,118 @@
               "demand": "Opening when requested (content clicked).",
               "hover|touch": "Opening by hover or touch on the content. Closing by hover not on the content or template."
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Opener/Confirmation": {
+    "name": "Controls/Popup/Opener/Confirmation",
+    "title": "Component that opens the confirmation popup.",
+    "className": "Controls/Popup/Opener/Confirmation",
+    "kind": "control",
+    "isPublic": true,
+    "category": "Popup",
+    "fullname": "Controls/Popup/Opener/Confirmation",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "default": "default",
+            "enum": {
+              "default": "default",
+              "success": "success",
+              "danger": "danger"
+            }
+          },
+          "type": {
+            "type": "enum",
+            "default": "yesnocancel",
+            "enum": {
+              "ok": "ok",
+              "yesno": "yesno",
+              "yesnocancel": "yesnocancel"
+            }
+          },
+          "message": {
+            "type": "String",
+            "default": ""
+          },
+          "details": {
+            "type": "String",
+            "default": ""
+          },
+          "yesCaption": {
+            "type": "String",
+            "default": ""
+          },
+          "noCaption": {
+            "type": "String",
+            "default": ""
+          },
+          "okCaption": {
+            "type": "String",
+            "default": ""
+          },
+          "cancelCaption": {
+            "type": "String",
+            "default": ""
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Opener/Stack": {
+    "name": "Controls/Popup/Opener/Stack",
+    "title": "Component that opens the popup to the right of content area at the full height of the screen",
+    "className": "Controls/Popup/Opener/Stack",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Popup/Opener/Stack",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "autofocus": {
+            "title": "Determines whether focus is set to the template when popup is opened.",
+            "type": "Boolean"
+          },
+          "isModal": {
+            "title": "Determines whether the window is modal.",
+            "newName": "modal",
+            "type": "Boolean"
+          },
+          "className": {
+            "title": "Class names of popup.",
+            "type": "String"
+          },
+          "closeByExternalClick": {
+            "title": "Determines whether possibility of closing the popup when clicking past.",
+            "type": "Boolean",
+            "newName": "closeOnOutsideClick"
+          },
+          "template": {
+            "title": "Template inside popup.",
+            "type": "function|String"
+          },
+          "minWidth": {
+            "title": "The minimum width of popup.",
+            "type": "Number"
+          },
+          "maxWidth": {
+            "title": "The maximum width of popup.",
+            "type": "Number"
+          },
+          "width": {
+            "title": "Determines whether the control is displayed in full screen.",
+            "type": "Number"
           }
         }
       }

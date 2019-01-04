@@ -4,8 +4,7 @@
         <div  style="text-align: center"> Hello, It is Confirmation Template </div>
     </ws:bodyContentTemplate>
     <ws:footerContentTemplate >
-        <div  style="text-align: center">  <Controls.Button caption="ok"/> </div>
+        <div  style="text-align: center">  <Controls.Button caption="ok" on:click="_closeHandler()"/> </div>
     </ws:footerContentTemplate>
 </Controls.Popup.Templates.Dialog.ConfirmationTemplate>
-
 </div>
