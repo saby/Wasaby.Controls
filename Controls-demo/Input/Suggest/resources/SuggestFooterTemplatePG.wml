@@ -1,0 +1,3 @@
+<div class="controls-demo__SuggestPG-footerButton">
+    <Controls.Button viewMode="link" on:click="_click()" caption="{{_caption}}"/>
+</div>

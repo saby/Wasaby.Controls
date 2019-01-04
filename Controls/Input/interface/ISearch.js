@@ -33,7 +33,7 @@ define('Controls/Input/interface/ISearch', [
 
    /**
     * @name Controls/Input/interface/ISearch#searchDelay
-    * @cfg {Number} The delay between when a symvol was typed and when a search is performed.
+    * @cfg {Number} The delay between when a symbol was typed and when a search is performed.
     * @remark
     * A zero-delay makes sense for local data (more responsive), but can produce a lot of load for remote data, while being less responsive.
     * Value is set in milliseconds.

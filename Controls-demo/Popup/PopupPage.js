@@ -77,8 +77,8 @@ define('Controls-demo/Popup/PopupPage',
             this._notifyStackText = 'Стековая панель открылась';
          },
 
-         _notifyResultHandler: function(event, result) {
-            this._notifyStackText = 'Результат из стековой панели ' + result;
+         _notifyResultHandler: function(event, result1, result2) {
+            this._notifyStackText = 'Результат из стековой панели ' + result1 + ' : ' + result2;
          },
 
          openMaximizedStack: function () {

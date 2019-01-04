@@ -1,25 +1,15 @@
-<a attr:class="controls-BaseButton controls-Button_style-{{_style}}{{_state}}
-             controls-Button_viewMode-{{_viewMode}}{{_isTransparent ? '_transparent'}}{{_options.readOnly ? '_readOnly':''}}
-             controls-Button_viewMode-{{_viewMode}}_size-{{_options.size}}
-             controls-Button_viewMode-{{_viewMode}}{{_state}}_style-common
-             controls-Button_viewMode-{{_viewMode}}{{_transparent ? '_transparent' : '_withBackground'}}
-             controls-Button_style-{{_style}}_viewMode-{{_viewMode}}{{_state}}
-             {{_options.readOnly ?  '':'controls-Button_viewMode-' + _viewMode + '_iconStyle-' + _iconStyle + _state}}"
-    attr:title="{{_options.tooltip}}"
-    on:click="_clickHandler()"
-    on:keypress="_keyUpHandler()"
-    attr:href="{{_options.href}}">
-    <span attr:class="controls-BaseButton__content controls-Button__wrapper_viewMode-{{_viewMode}}_size-{{_options.size}}">
-        <ws:if data="{{!!_icon}}">
-            <i attr:class="controls-Button__icon {{_icon}}
-                            {{_options.readOnly ? '':'controls-Button__icon-' + _iconStyle + _state}}
-                            {{_options.readOnly ? '':'controls-Button__icon-' + _style + '_iconStyle-' + _iconStyle + '_viewMode-' +_viewMode + _state}}"/>
-        </ws:if>
-        <ws:if data="{{!!_caption}}">
-           <span attr:class="controls-BaseButton__text controls-Button__text_style-{{_style}} controls-Button__text_viewMode-{{_viewMode}} {{_options.icon ? ' controls-Button__text_gap'}}">
-              <ws:if data="{{_stringCaption}}">{{_caption}}</ws:if>
-              <ws:else><ws:partial template="{{_caption}}"/></ws:else>
-           </span>
-        </ws:if>
-    </span>
-</a>
+<ws:partial
+    template="Controls/buttons:buttonTemplate"
+    _options="{{_options}}"
+    _caption="{{_caption}}"
+    _stringCaption="{{_stringCaption}}"
+    _viewMode="{{_viewMode}}"
+    _style="{{_style}}"
+    _isTransparent="{{_isTransparent}}"
+    _transparent="{{_transparent}}"
+    _state="{{_state}}"
+    _clickHandler="{{_clickHandler}}"
+    _keyUpHandler="{{_keyUpHandler}}"
+    _icon="{{_icon}}"
+    _iconStyle="{{_iconStyle}}"
+/>

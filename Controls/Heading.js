@@ -36,8 +36,8 @@ define('Controls/Heading', [
    /**
     * @name Controls/Heading#style
     * @cfg {String} Heading display style.
-    * @variant primary Primary display style.
-    * @variant secondary Secondary display style.
+    * @variant primary
+    * @variant secondary
     * @default primary
     */
 

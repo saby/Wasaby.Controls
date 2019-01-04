@@ -172,21 +172,16 @@ define('Controls/Toolbar', [
                keyProperty: newOptions.keyProperty,
                parentProperty: newOptions.parentProperty,
                nodeProperty: newOptions.nodeProperty,
-               iconSize: newOptions.size,
                showClose: true
             }
          };
-      },
-
-      getItemClassName: function(item, size) {
-         return 'controls-Toolbar_' + item.get('buttonViewMode') + '_' + size;
       },
 
       generateItemPopupConfig: function(item, event, self) {
          return {
             corner: { vertical: 'top', horizontal: 'left' },
             horizontalAlign: { side: 'right' },
-            className: this.getItemClassName(item, self._options.size) + ' ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar_menu ' + (item.get('popupClassName') || ''),
             templateOptions: {
                items: self._items,
                rootKey: item.get(self._options.keyProperty),
@@ -205,8 +200,7 @@ define('Controls/Toolbar', [
          return {
             className: 'controls-Toolbar__menu-position ' + (self._options.popupClassName || ''),
             templateOptions: {
-               items: self._menuItems,
-               iconSize: self._options.size
+               items: self._menuItems
             },
             target: self._children.popupTarget
          };
@@ -250,7 +244,6 @@ define('Controls/Toolbar', [
          if (newOptions.keyProperty !== this._options.keyProperty ||
             this._options.parentProperty !== newOptions.parentProperty ||
             this._options.nodeProperty !== newOptions.nodeProperty ||
-            this._options.size !== newOptions.size ||
             this._options.popupClassName !== newOptions.popupClassName) {
             _private.setPopupOptions(this, newOptions);
          }
@@ -299,12 +292,6 @@ define('Controls/Toolbar', [
          this._notify('menuClosed', [], { bubbling: true });
       }
    });
-
-   Toolbar.getDefaultOptions = function() {
-      return {
-         size: 'm'
-      };
-   };
 
    Toolbar._private = _private;
 

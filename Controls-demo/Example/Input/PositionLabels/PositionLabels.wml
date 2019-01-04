@@ -12,7 +12,7 @@
                          attr:class="example-BaseDemoInput__content_normalSpacing"
                          on:click="_labelClickHandler('text3')"/>
       </div>
-      <div class="ws-flexbox ws-flex-column example-BaseDemoInput__content">
+      <div class="example-Base__wrapper example-BaseDemoInput__content">
          <Controls.Input.Text name="text1"
                               placeholder="Tooltip"
                               bind:value="_value1"/>
@@ -39,7 +39,7 @@
                          attr:class="example-BaseDemoInput__content_normalSpacing ws-flexbox ws-justify-content-end"
                          on:click="_labelClickHandler('text6')"/>
       </div>
-      <div class="ws-flexbox ws-flex-column example-BaseDemoInput__content">
+      <div class="example-Base__wrapper example-BaseDemoInput__content">
          <Controls.Input.Text name="text4"
                               placeholder="Tooltip"
                               bind:value="_value4"/>

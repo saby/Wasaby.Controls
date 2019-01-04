@@ -1,4 +1,4 @@
-<div style="margin: 50px;">
+<div style="margin: 50px;" >
    <div>month: {{_month}}</div>
    <div>startValue: {{_startValue}}</div>
    <div>endValue: {{_endValue}}</div>
@@ -6,7 +6,8 @@
    <div>selectionBaseValue: {{_selectionBaseValue}}</div>
    <div>selectionHoveredValue: {{_selectionHoveredValue}}</div>
    <Controls.Date.MonthList
-      attr:style="margin: 10px; height: 700px; border: red;"
+      attr:style="margin: 10px; border: red;"
+      calendarSource="{{_source}}"
       bind:startValue="_startValue"
       bind:endValue="_endValue"
       bind:month="_month"
@@ -14,6 +15,15 @@
       bind:selectionHoveredValue="_selectionHoveredValue"
       bind:selectionBaseValue="_selectionBaseValue"
    >
+      <ws:dayTemplate>
+         <ws:partial template="wml!Controls/Date/MonthView/dayTemplate"
+                     value="{{dayTemplate.value}}"
+         >
+            <ws:contentTemplate>
+               <ws:partial template="{{_dayTemplate}}" value="{{dayTemplate.value}}"/>
+            </ws:contentTemplate>
+         </ws:partial>
+      </ws:dayTemplate>
    </Controls.Date.MonthList>
    <Controls.Button caption="_setEndValue" style="buttonAdd" on:click="_setEndValue()"/>
    <Controls.Button caption="_setselectionProcessing" style="buttonAdd" on:click="_setSelectionProcessing()"/>

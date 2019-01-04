@@ -135,5 +135,22 @@ define([
          });
       });
 
+      describe('.setRange', function() {
+         it('should make notification about changes of startValue and endValue', function(done) {
+            let model = new DateRange(),
+               options = {
+                  startValue: new Date(2018, 0, 1),
+                  endValue: new Date(2018, 0, 3)
+               };
+            const sandbox = sinon.sandbox.create();
+            sandbox.stub(model, '_notify');
+            model.setRange();
+            setTimeout(function() {
+               sinon.assert.calledWith(model._notify, 'rangeChanged');
+               sandbox.restore();
+               done();
+            }, 10);
+         });
+      });
    });
 });

@@ -69,6 +69,18 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
+         it('find popup', () => {
+            let Manager = getManager();
+            id = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            element = Manager.find(id);
+            assert.equal(element.popupOptions.testOption, 'created');
+            element.popupState = 'destroyed';
+            element = Manager.find(id);
+            assert.equal(element, null);
+         });
+
          it('update popup', function() {
             let Manager = getManager();
             id = Manager.show({
@@ -100,6 +112,10 @@ define(
                _events: {
                   onClose: () => {
                      eventOnCloseFired = true;
+                  },
+                  onResult: (event, args) => {
+                     assert.equal(args[0], '1');
+                     assert.equal(args[1], '2');
                   }
                }
             });
@@ -108,6 +124,8 @@ define(
 
             assert.isTrue(eventCloseFired, 'event is not fired.');
             assert.isTrue(eventOnCloseFired, 'event is not fired.');
+
+            Manager._private.fireEventHandler(id, 'onResult', '1', '2');
          });
 
          it('remove popup', function() {
@@ -179,7 +197,8 @@ define(
                popupDeactivated: () => {
                   isDeactivated = true;
                },
-               getDefaultConfig: () => { return {}}
+               getDefaultConfig: () => { return {}},
+               POPUP_STATE_INITIALIZING: 'initializing'
             };
             let id = Manager.show({
                closeByExternalClick: true

@@ -8,10 +8,11 @@ define('Controls-demo/Popup/NotifyStack',
 
       var NotifyStack = Control.extend({
          _template: template,
-         _textValue: '',
+         _textValue1: '',
+         _textValue2: '',
 
          _sendResult: function() {
-            this._notify('sendResult', [this._textValue], { bubbling: true });
+            this._notify('sendResult', [this._textValue1, this._textValue2], { bubbling: true });
          }
       });
 

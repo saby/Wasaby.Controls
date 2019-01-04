@@ -5,8 +5,19 @@ define('Controls/Input/Money/ViewModel',
       'Controls/Input/Number/SplitValueHelper'
    ],
    function(BaseViewModel, InputProcessor, SplitValueHelper) {
-
       'use strict';
+
+      var _private = {
+         prepareData: function(result) {
+            var position = result.position;
+            return {
+               before: result.value.substring(0, position),
+               after: result.value.substring(position, result.value.length),
+               insert: '',
+               delete: ''
+            };
+         }
+      };
 
       var ViewModel = BaseViewModel.extend({
          handleInput: function(splitValue, inputType) {
@@ -35,16 +46,9 @@ define('Controls/Input/Money/ViewModel',
                   break;
             }
 
-            this._value = result.value;
-            this._selection.start = result.position;
-            this._selection.end = result.position;
-
-            this._shouldBeChanged = true;
-
-            return true;
+            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
          }
       });
 
       return ViewModel;
-   }
-);
+   });

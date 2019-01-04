@@ -1,21 +1,21 @@
 <div class="controls-PeriodDialog-DateRangeItem">
    <div class="controls-PeriodDialog-DateRangeItem__months">
-      <ws:for data="monthIndex, month in item.months">
+      <ws:for data="month in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]">
          <div class="controls-PeriodDialog-DateRangeItem__months-btn">
-            {{ _formatDate(month, 'MMMM') }}
+            {{_formatDate(_getMonth(item.id, month), 'MMMM') }}
          </div>
       </ws:for>
       <div class="controls-PeriodDialog-DateRangeItem__months-nextyearBtn"
             >
-         {{ item.months[0].getFullYear() + 1 }}
+         {{ item.id }}
       </div>
    </div>
    <div class="controls-PeriodDialog-DateRangeItem__monthList">
-      <div for="monthIndex, month in item.months">
+      <div for="month in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]">
          <div class="controls-PeriodDialog-DateRangeItem__monthList_title{{
                      _monthSelectionEnabled ? ' controls-PeriodDialog-DateRangeItem__monthList_title_selectable'}}"
                on:click="_monthCaptionClick(month)">
-            {{ _formatDate(month, 'MMMM') }}
+            {{ _formatDate(_getMonth(item.id, month), 'MMMM') }}
          </div>
          <Controls.Date.MonthView
             attr:class="controls-DateRangeBigChoose-DateRangePicker__item"
@@ -23,7 +23,9 @@
             selectionType="{{_options.selectionType}}"
             quantum="{{_options.quantum}}"
             showWeekdays="{{false}}"
-            month="{{month}}"
+            month="{{_getMonth(item.id, month)}}"
+            daysData="{{item.extData[month]}}"
+            dayTemplate="{{_options.dayTemplate}}"
 
             startValue="{{_options.startValue}}"
             endValue="{{_options.endValue}}"
