@@ -28,9 +28,8 @@ define('Controls/Toggle/Button', [
    /**
     * @name Controls/Toggle/Button#icons
     * @cfg {Array} Pair of icons.
-    * Toggle button with one icon have one icon and it isn't toggled.
-    * Toggle button with two icons display one icon, but it is different in free and toggled states.
-    * If button has more than two icons, it work only with first and second icons.
+    * First icon display in not sticked state.
+    * Second icon display in sticked state.
     * @example
     * Primary link with one icon.
     * <pre>
@@ -45,9 +44,8 @@ define('Controls/Toggle/Button', [
    /**
     * @name Controls/Toggle/Button#captions
     * @cfg {Array} Pair of captions.
-    * Toggle button with one caption have one caption and it isn't toggled.
-    * Toggle button with two captions display one caption, but it is different in free and toggled states.
-    * If button has more than two captions, it work only with first and second captions.
+    * First caption display in not sticked state.
+    * Second caption display in sticked state.
     * @example
     * Toggle button with two removable captions.
     * <pre>
