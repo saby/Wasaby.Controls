@@ -10,7 +10,7 @@ define('Controls-demo/Demo/PageThemes',
       'Controls/Container/Scroll/Context',
       'css!Controls-demo/Demo/Page',
       'Controls/Application',
-      'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'
+      'Vdom/Vdom'
    ],
    function(Control, Deferred, template, AppData, ScrollData) {
       'use strict';
