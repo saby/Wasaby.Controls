@@ -186,8 +186,8 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                assert.deepEqual(listLayout._filter, {});
                assert.deepEqual(listLayout._source._$data, listSourceData);
                done();
-            }, 50);
-         }, 50);
+            }, 100);
+         }, 100);
       });
    
       it('.getSearchController', function() {
