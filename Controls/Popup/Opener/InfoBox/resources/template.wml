@@ -11,7 +11,7 @@
       <ws:partial
          template="{{_options.template}}"
          scope="{{_options.templateOptions}}"
-         class="{{!_options.float ? 'controls-InfoBox__message_margin'}}">
+         class="controls-InfoBox__content{{!_options.float ? ' controls-InfoBox__message_margin'}}">
       </ws:partial>
    </ws:if>
    <ws:else>
