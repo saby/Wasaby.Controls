@@ -215,7 +215,7 @@ define('Controls/List/ListViewModel',
          },
 
          _onBeginCollectionChange: function() {
-            _private.updateIndexes(this, 0, this.getItems().getCount());
+            _private.updateIndexes(this, 0, this.getCount());
          },
 
          _setEditingItemData: function(itemData) {
