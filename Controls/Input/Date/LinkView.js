@@ -72,6 +72,10 @@ define('Controls/Input/Date/LinkView', [
          _private._updateCaption(this, options);
          _private._updateEnabled(this, options.readOnly);
 
+         if (options.showPrevArrow || options.showNextArrow) {
+            IoC.resolve('ILogger').error('LinkView', rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'));
+         }
+
          // clearButtonVisibility is option of clearButton visibility state
 
          if ((options.prevArrowVisibility && options.clearButtonVisibility) || (options.nextArrowVisibility && options.clearButtonVisibility)) {
