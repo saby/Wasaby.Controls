@@ -28,8 +28,8 @@ define('Controls/Toggle/Button', [
    /**
     * @name Controls/Toggle/Button#icons
     * @cfg {Array} Pair of icons.
-    * First icon display in not sticked state.
-    * Second icon display in sticked state.
+    * First icon displayed when toggle switch is off.
+    * Second icon displayed when toggle switch is on.
     * @example
     * Primary link with one icon.
     * <pre>
@@ -44,8 +44,8 @@ define('Controls/Toggle/Button', [
    /**
     * @name Controls/Toggle/Button#captions
     * @cfg {Array} Pair of captions.
-    * First caption display in not sticked state.
-    * Second caption display in sticked state.
+    * First caption displayed when toggle switch is off.
+    * Second caption displayed when toggle switch is on.
     * @example
     * Toggle button with two removable captions.
     * <pre>
