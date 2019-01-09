@@ -34,28 +34,36 @@ define('Controls/History/Service', [
      * </pre>
      * @name Controls/MenuButton#historyId
      * @cfg {String} unique service history identifier
+     *
      * @name Controls/MenuButton#historyIds
      * @cfg {Array of String} unique service history identifiers
+     *
      * @name Controls/MenuButton#pinned
      * @cfg {Boolean} Loads pinned items from BL
-     * @variant true Load items
-     * @variant false No load items
+     * @remark
+     * true - Load items
+     * false - No load items
      *
      * @name Controls/MenuButton#frequent
      * @cfg {Boolean} Loads frequent items from BL
-     * @variant true Load items
-     * @variant false No load items
+     * @remark
+     * true - Load items
+     * false - No load items
      *
      * @name Controls/MenuButton#recent
      * @cfg {Boolean} Loads recent items from BL
-     * @variant true Load items
-     * @variant false No load items
+     * @remark
+     * true - Load items
+     * false - No load items
      *
      * @name Controls/MenuButton#dataLoaded
      * @cfg {Boolean} Items loaded with object data
-     * @variant true BL return items with data
-     * @variant false BL return items without data
-     * */
+     * @remark
+     * true - BL return items with data
+     * false - BL return items without data
+     *
+     */
+
    var STORAGES = {};
 
    var STORAGES_USAGE = {};
@@ -72,11 +80,16 @@ define('Controls/History/Service', [
          }
          return self._historyDataSource;
       },
+      
+      getMethodNameByIdType: function(stringMethod, intMethod, id) {
+         return typeof id === 'number' ? intMethod : stringMethod;
+      },
 
       updateHistory: function(self, data) {
-         _private.getHistoryDataSource(self).call('Add', {
+         var id = data.getId();
+         _private.getHistoryDataSource(self).call(_private.getMethodNameByIdType('Add', 'AddInt', id), {
             history_id: data.get('HistoryId') || self._historyId,
-            id: data.getId(),
+            id: id,
             history_context: null
          });
       },
@@ -89,9 +102,10 @@ define('Controls/History/Service', [
       },
 
       updatePinned: function(self, data, meta) {
-         _private.getHistoryDataSource(this).call('SetPin', {
+         var id = data.getId();
+         _private.getHistoryDataSource(this).call(_private.getMethodNameByIdType('SetPin', 'SetIntPin', id), {
             history_id: data.get('HistoryId') || self._historyId,
-            id: data.getId(),
+            id: id,
             history_context: null,
             pin: !!meta['$_pinned']
          });

@@ -1,0 +1,6 @@
+<ws:partial template="wml!Controls/List/emptyTemplate">
+    <ws:contentTemplate>
+        <h2>No data for this search request</h2>
+        <h3>Try to search something else</h3>
+    </ws:contentTemplate>
+</ws:partial>

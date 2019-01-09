@@ -6,7 +6,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent',
+      'Vdom/Vdom',
       'Core/Control',
       'Core/IoC',
       'Core/Deferred',
@@ -15,7 +15,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    function(CompoundControl,
       template,
       ComponentWrapper,
-      SyntheticEvent,
+      Vdom,
       control,
       IoC,
       Deferred) {
@@ -54,7 +54,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                this._modifyInnerOptionsByHandlers();
 
-               require([this._options.template, 'Vdom/Synchronizer/Synchronizer'], function() {
+               require([this._options.template, 'Vdom/Vdom'], function() {
                   // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;
@@ -178,7 +178,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                if (handler) {
                   this._compoundHandlers = this._compoundHandlers || {};
                   this._compoundHandlers[eventName] = function(event) {
-                     handler.apply(emitter, [new SyntheticEvent(event)]);
+                     handler.apply(emitter, [new Vdom.SyntheticEvent(event)]);
                   };
                   document.body.addEventListener(eventName, this._compoundHandlers[eventName]);
                } else if (this._compoundHandlers && this._compoundHandlers[eventName]) {
@@ -198,7 +198,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             moduleClass.superclass.destroy.apply(this, arguments);
             this._isVDomTemplateMounted = true;
             if (this._vDomTemplate) {
-               var Sync = require('Vdom/Synchronizer/Synchronizer');
+               var Sync = require('Vdom/Vdom').Synchronizer;
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
             }
          },

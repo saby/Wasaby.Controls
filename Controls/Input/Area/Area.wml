@@ -11,7 +11,7 @@
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
    <Controls.Container.Scroll name="scroll"
-                              attr:class="controls-Base__field"
+                              attr:class="controls-Base__field controls-Area__field_size_{{options.size}}"
                               attr:style="{{'min-height: ' + _calculateHeightContainer(_options.minLines, true) + 'px;'}}
                                           {{_options.maxLines ? 'max-height: ' + _calculateHeightContainer(_options.maxLines, true) + 'px;'}}">
       <ws:if data="{{_options.readOnly}}">

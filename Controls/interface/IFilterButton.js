@@ -10,8 +10,9 @@ define('Controls/interface/IFilterButton', [
 
    /**
     * @typedef {Boolean} Visibility
-    * @variant true The filter editor is located in the main block.
-    * @variant false The filter editor is located in the additional block.
+    * @remark
+    * true - The filter editor is located in the main block.
+    * false - The filter editor is located in the additional block.
     */
 
    /**

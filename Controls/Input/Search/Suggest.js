@@ -19,6 +19,7 @@ define('Controls/Input/Search/Suggest',
        * @mixes Controls/interface/IFilter
        * @mixes Controls/Input/interface/ISuggest
        * @mixes Controls/interface/INavigation
+       * @demo Controls-demo/Input/Search/Suggest/SuggestPG
        * @control
        * @public
        * @category Input
@@ -28,6 +29,7 @@ define('Controls/Input/Search/Suggest',
       var Suggest = Control.extend({
          
          _template: template,
+         _suggestState: false,
          
          _changeValueHandler: function(event, value) {
             this._notify('valueChanged', [value]);
@@ -37,6 +39,12 @@ define('Controls/Input/Search/Suggest',
             this.activate();
             this._notify('choose', [item]);
             this._notify('valueChanged', [item.get(this._options.displayProperty)]);
+         },
+         
+         _beforeUpdate: function(newOptions) {
+            if (this._options.suggestState !== newOptions.suggestState) {
+               this._suggestState = newOptions.suggestState;
+            }
          },
    
          _suggestStateChanged: function(event, value) {
@@ -52,6 +60,7 @@ define('Controls/Input/Search/Suggest',
              * Всплытие будет удалено по задаче.
              * https://online.sbis.ru/opendoc.html?guid=2dbbc7f1-2e81-4a76-89ef-4a30af713fec
              */
+            this._suggestState = false;
             this._notify('suggestStateChanged', [false], {bubbling: true});
          },
    

@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="ws-flexbox ws-flex-column">
+                  <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Header</div>
                      <Controls.Input.Text fontStyle="secondary"
                                           placeholder="Tooltip"
@@ -14,7 +14,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <div class="ws-flexbox ws-flex-column">
+                  <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Accent header</div>
                      <Controls.Input.Text style="primary"
                                           placeholder="Tooltip"

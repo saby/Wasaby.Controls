@@ -1,4 +1,5 @@
-define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], function(TreeGridViewModel, cInstance) {
+define(['Controls/List/TreeGridView/TreeGridViewModel',
+   'Core/core-instance', 'WS.Data/Collection/RecordSet'], function(TreeGridViewModel, cInstance, RecordSet) {
 
    describe('Controls.List.TreeGrid.TreeGridViewModel', function() {
       var
@@ -16,6 +17,42 @@ define(['Controls/List/TreeGridView/TreeGridViewModel', 'Core/core-instance'], f
          };
          treeGridViewModel.toggleExpanded();
          assert.isTrue(toggleExpandedCalled, 'Invalid call toggleExpanded on model instance.');
+      });
+
+      it('toggleExpanded and ladder', function() {
+         var
+            initialColumns = [{
+               width: '1fr',
+               displayProperty: 'title'
+            }],
+            resultLadderBeforeExpand = {
+               0: { date: { ladderLength: 1 } }
+            },
+            resultLadderAfterExpand = {
+               0: { date: { ladderLength: 1 } },
+               1: { date: { ladderLength: 3 } },
+               2: { date: { } },
+               3: { date: { } }
+            },
+            ladderViewModel = new TreeGridViewModel({
+               items: new RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },
+                     { id: 1, title: 'i1', date: '03 янв', parent: 0, type: null },
+                     { id: 2, title: 'i2', date: '03 янв', parent: 0, type: null },
+                     { id: 3, title: 'i3', date: '03 янв', parent: 0, type: null }
+                  ]
+               }),
+               keyProperty: 'id',
+               nodeProperty: 'type',
+               parentProperty: 'parent',
+               columns: initialColumns,
+               ladderProperties: ['date']
+            });
+         assert.deepEqual(ladderViewModel._ladder.ladder, resultLadderBeforeExpand, 'Incorrect value prepared ladder before expand.');
+         ladderViewModel.toggleExpanded(ladderViewModel._model._display.at(0));
+         assert.deepEqual(ladderViewModel._ladder.ladder, resultLadderAfterExpand, 'Incorrect value prepared ladder after expand.');
       });
       it('setExpandedItems', function() {
          treeGridViewModel._model._display = {

@@ -1,4 +1,4 @@
-define('Controls/Container/Suggest/Layout',
+﻿define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
       'wml!Controls/Container/Suggest/Layout',
@@ -7,9 +7,11 @@ define('Controls/Container/Suggest/Layout',
       'Core/moduleStubs',
       'Core/core-clone',
       'Controls/Search/Misspell/getSwitcherStrFromData',
+      'Core/Deferred',
+      'Core/helpers/Object/isEqual',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData) {
+   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
@@ -41,12 +43,14 @@ define('Controls/Container/Suggest/Layout',
                }
             });
          },
-         searchErrback: function(self) {
+         searchErrback: function(self, error) {
             self._loading = false;
-            requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
-               self._emptyTemplate = result;
-               self._forceUpdate();
-            });
+            if (!error || !error.canceled) {
+               requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
+                  self._emptyTemplate = result;
+                  self._forceUpdate();
+               });
+            }
          },
          shouldSearch: function(self, value) {
             return self._active && value.length >= self._options.minSearchLength;
@@ -82,6 +86,9 @@ define('Controls/Container/Suggest/Layout',
          setFilter: function(self, filter) {
             self._filter = this.prepareFilter(self, filter, self._searchValue, self._tabsSelectedKey);
          },
+         getEmptyTemplate: function(emptyTemplate) {
+            return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
+         },
          updateSuggestState: function(self) {
             if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
                _private.setFilter(self, self._options.filter);
@@ -92,17 +99,57 @@ define('Controls/Container/Suggest/Layout',
             }
          },
          loadDependencies: function(self) {
+            var getTemplatesToLoad = function(options) {
+               var templatesToCheck = ['footerTemplate', 'suggestTemplate', 'emptyTemplate'];
+               var templatesToLoad = [];
+               templatesToCheck.forEach(function(tpl) {
+                  if (options[tpl] && options[tpl].templateName) {
+                     templatesToLoad.push(options[tpl].templateName);
+                  }
+               });
+               return templatesToLoad;
+            };
+            
             if (!self._dependenciesDeferred) {
-               var deps = DEPS.concat([self._options.suggestTemplate.templateName, self._options.layerName]);
-               if (self._options.footerTemplate !== null) {
-                  deps = deps.concat([self._options.footerTemplate.templateName]);
-               }
-               self._dependenciesDeferred = mStubs.require(deps);
+               self._dependenciesDeferred = mStubs.require(DEPS.concat(getTemplatesToLoad(self._options).concat([self._options.layerName])));
             }
             return self._dependenciesDeferred;
          },
          setMissSpellingCaption: function(self, value) {
             self._misspellingCaption = value;
+         },
+         getHistoryService: function(self) {
+            if (!self._historyService) {
+               self._historyServiceLoad = new Deferred();
+               require(['Controls/History/Service'], function(HistoryService) {
+                  self._historyService = new HistoryService({
+                     historyId: self._options.historyId
+                  });
+                  self._historyServiceLoad.callback(self._historyService);
+               });
+            }
+
+            return self._historyServiceLoad;
+         },
+         getRecentKeys: function(self) {
+            var deferredWithKeys = new Deferred();
+
+            //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
+            _private.getHistoryService(self).addCallback(function(historyService) {
+               historyService.query().addCallback(function(dataSet) {
+                  var keys = [];
+
+                  dataSet.getRow().get('recent').each(function(item) {
+                     keys.push(item.get('ObjectId'));
+                  });
+
+                  deferredWithKeys.callback(keys);
+               });
+
+               return historyService;
+            });
+
+            return deferredWithKeys;
          }
       };
 
@@ -131,6 +178,7 @@ define('Controls/Container/Suggest/Layout',
          _searchResult: null,
          _searchDelay: null,
          _dependenciesDeferred: null,
+         _historyService: null,
          _showContent: false,
          _inputActive: false,
 
@@ -149,7 +197,7 @@ define('Controls/Container/Suggest/Layout',
             this._searchErrback = this._searchErrback.bind(this);
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
-            this._emptyTemplate = options.emptyTemplate;
+            this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
@@ -166,16 +214,25 @@ define('Controls/Container/Suggest/Layout',
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
-            if (this._options.filter !== newOptions.filter) {
+            if (!isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-
+      
             if (this._options.value !== newOptions.value) {
                this._searchValue = newOptions.value;
             }
-
-            if (this._emptyTemplate !== newOptions.emptyTemplate) {
-               this._emptyTemplate = newOptions.emptyTemplate;
+      
+            if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
+               this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
+               this._dependenciesDeferred = null;
+            }
+      
+            if (this._options.footerTemplate !== newOptions.footerTemplate) {
+               this._dependenciesDeferred = null;
+            }
+            
+            if (this._options.searchDelay !== newOptions.searchDelay) {
+               this._searchDelay = newOptions.searchDelay;
             }
          },
          _afterUpdate: function() {
@@ -208,9 +265,23 @@ define('Controls/Container/Suggest/Layout',
             _private.updateSuggestState(this);
          },
          _inputActivated: function() {
+            var self = this;
+            var filter;
+
             this._inputActive = true;
             if (this._options.autoDropDown && !this._options.readOnly) {
-               _private.open(this);
+               if (this._options.historyId) {
+                  _private.getRecentKeys(this).addCallback(function(keys) {
+                     if (keys) {
+                        filter = clone(self._options.filter || {});
+                        filter['historyKeys'] = keys;
+                        _private.setFilter(self, filter);
+                     }
+                     _private.open(self);
+                  });
+               } else {
+                  _private.open(this);
+               }
             }
          },
    
@@ -239,6 +310,12 @@ define('Controls/Container/Suggest/Layout',
             item = item || event;
             _private.close(this);
             this._notify('choose', [item]);
+            if (this._options.historyId) {
+               _private.getHistoryService(this).addCallback(function(historyService) {
+                  historyService.update(item, {$_history: true});
+                  return historyService;
+               });
+            }
          },
          _searchStart: function() {
             this._loading = true;
@@ -259,8 +336,8 @@ define('Controls/Container/Suggest/Layout',
             }
             this._forceUpdate();
          },
-         _searchErrback: function() {
-            _private.searchErrback(this);
+         _searchErrback: function(error) {
+            _private.searchErrback(this, error);
          },
          _showAllClick: function() {
             var self = this;

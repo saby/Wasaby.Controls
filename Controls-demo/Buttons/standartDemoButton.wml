@@ -236,7 +236,7 @@
                 <div class="demo-Button__Label">History</div>
             </div>
             <div attr:class="test_element">
-                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Favourite" style="linkMain" size="m"/>
+                <Controls.Button readOnly="{{false}}" icon="icon-16 icon-Favorite" style="linkMain" size="m"/>
                 <div class="demo-Button__Label">Favorites</div>
             </div>
             <div attr:class="test_element">
@@ -271,7 +271,7 @@
                 <div class="demo-Button__Label">History</div>
             </div>
             <div attr:class="test_element">
-                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Favourite" style="linkMain" size="m"/>
+                <Controls.Button readOnly="{{false}}" icon="icon-24 icon-Favorite" style="linkMain" size="m"/>
                 <div class="demo-Button__Label">Favorites</div>
             </div>
             <div attr:class="test_element">

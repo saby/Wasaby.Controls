@@ -55,6 +55,16 @@ define([
          bc.destroy();
          bc = null;
       });
+      it('_onHoveredItemChanged', function() {
+         var hoveredItem = 'hoveredItem';
+
+         bc._notify = function(e, args) {
+            if (e === 'hoveredItemChanged') {
+               assert.equal(hoveredItem, args[0]);
+            }
+         };
+         bc._onHoveredItemChanged({}, hoveredItem);
+      });
       describe('_onItemClick', function() {
          it('item', function() {
             var itemData = {
