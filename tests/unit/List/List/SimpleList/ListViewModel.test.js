@@ -55,7 +55,8 @@ define([
                rawData: [
                   { id: 1, title: 'item 1' },
                   { id: 2, title: 'item 2' },
-                  { id: 3, title: 'item 3' }
+                  { id: 3, title: 'item 3' },
+                  { id: 4, title: 'item 4' }
                ],
                idProperty: 'id'
             }),
@@ -70,12 +71,17 @@ define([
          assert.equal(model._stopIndex, 0, 'Invalid value of "_stopIndex" after constructor.');
          model.setItems(items);
          assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after setItems(items).');
-         assert.equal(model._stopIndex, 3, 'Invalid value of "_stopIndex" after setItems(items).');
+         assert.equal(model._stopIndex, 4, 'Invalid value of "_stopIndex" after setItems(items).');
          model.subscribe('onListChange', function() {
             assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after items.removeAt(0) in onListChange handler.');
-            assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0) in onListChange handler.');
+            assert.equal(model._stopIndex, 3, 'Invalid value of "_stopIndex" after items.removeAt(0) in onListChange handler.');
          });
          model.getItems().removeAt(0);
+         assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after items.removeAt(0).');
+         assert.equal(model._stopIndex, 3, 'Invalid value of "_stopIndex" after items.removeAt(0).');
+         model._display.setFilter(function(item) {
+            return item.getId() !== 3;
+         });
          assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after items.removeAt(0).');
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
       });
