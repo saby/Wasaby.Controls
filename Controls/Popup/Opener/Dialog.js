@@ -76,11 +76,6 @@ define('Controls/Popup/Opener/Dialog',
    }
 
    /**
-    * @name Controls/Popup/Opener/Dialog#closePopupBeforeUnmount
-    * @cfg {Object} Determines whether to close the popup when the component is destroyed.
-    */
-
-   /**
     * @name Controls/Popup/Opener/Dialog#autofocus
     * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
     */

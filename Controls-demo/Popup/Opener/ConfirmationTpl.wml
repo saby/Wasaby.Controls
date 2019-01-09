@@ -1,5 +1,5 @@
 <div style="height: 200px; min-width: 500px; max-width: 700px;">
-<Controls.Popup.Templates.Dialog.ConfirmationTemplate style="success" hideCross="false" draggable="{{draggable}}">
+<Controls.Popup.Templates.Dialog.ConfirmationTemplate style="success"  draggable="{{draggable}}">
     <ws:bodyContentTemplate>
         <div  style="text-align: center"> Hello, It is Confirmation Template </div>
     </ws:bodyContentTemplate>

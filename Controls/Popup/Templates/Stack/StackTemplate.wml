@@ -1,17 +1,18 @@
 <div class="controls-StackTemplate">
-    <ws:if data="{{_options.caption || _options.topArea || _options.headerContentTemplate}}">
+    <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate}}">
         <div class="controls-StackTemplate__top-area">
             <div class="controls-StackTemplate__top-area-content">
-                <ws:if data="{{_options.caption}}">
-                    <div class="controls-StackTemplate__caption controls-StackTemplate__caption_style_{{_options.captionStyle}}" title="{{_options.caption}}">
-                        <div class="controls-StackTemplate__caption_text">{{_options.caption}}</div>
+                <ws:if data="{{_options.caption || _options.headingCaption}}">
+                    <div class="controls-StackTemplate__caption controls-StackTemplate__caption_style_{{_options.headingStyle || _options.captionStyle }}"
+                         title="{{_options.caption || _options.headingCaption}}">
+                        <div class="controls-StackTemplate__caption_text">{{_options.caption || _options.headingCaption}}</div>
                     </div>
                 </ws:if>
                 <ws:if data="{{_options.topArea || _options.headerContentTemplate}}">
                     <ws:partial template="{{_options.topArea || _options.headerContentTemplate}}" attr:class="controls-StackTemplate__headerContentTemplate"></ws:partial>
                 </ws:if>
                 <div class="controls-StackTemplate__command_buttons">
-                    <ws:if data="{{_options.showMaximizedButton}}">
+                    <ws:if data="{{_options.showMaximizedButton || _options.maximizeButtonVisibility}}">
                         <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"></div>
                     </ws:if>
                     <Controls.Button.Close attr:class="controls-StackTemplate__close_button" style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}" on:click="close()"/>
@@ -21,7 +22,7 @@
     </ws:if>
     <ws:else>
         <div class="controls-StackTemplate__command_buttons_without_head">
-            <ws:if data="{{_options.showMaximizedButton}}">
+            <ws:if data="{{_options.showMaximizedButton || _options.maximizeButtonVisibility}}">
                 <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"></div>
             </ws:if>
             <Controls.Button.Close attr:class="controls-StackTemplate__close_button" style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}" on:click="close()"/>
@@ -32,6 +33,6 @@
         <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}"></ws:partial>
     </div>
     <div if="{{_options.bottomArea || _options.footerContentTemplate }}" class="controls-StackTemplate__bottomArea">
-        <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}"></ws:partial>
-    </div>
+    <ws:partial template="{{_options.bottomArea || _options.footerContentTemplate}}"></ws:partial>
+</div>
 </div>

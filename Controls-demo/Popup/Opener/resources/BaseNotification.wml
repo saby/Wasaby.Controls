@@ -1,0 +1,7 @@
+<div style="width: 200px">
+    <Controls.Popup.Templates.Notification.Base style="success" >
+<ws:bodyContentTemplate>
+    <div> New Notification  </div>
+</ws:bodyContentTemplate>
+</Controls.Popup.Templates.Notification.Base>
+</div>

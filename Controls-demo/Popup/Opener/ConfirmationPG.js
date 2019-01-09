@@ -23,8 +23,9 @@ define('Controls-demo/Popup/Opener/ConfirmationPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-
-
+               name: {
+                  readOnly: true
+               }
             };
             this._componentOptions = {
                name: 'Dialog',

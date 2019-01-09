@@ -74,9 +74,7 @@ define('Controls-demo/Popup/Opener/DialogPG',
                minHeight: 200,
                maxHeight: 200,
                maximize: false,
-               resizable: true,
-               top: 50,
-               left: 50
+               resizable: true
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -22,28 +22,31 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#caption
+          * @name Controls/Popup/Templates/Stack/StackTemplate#headingCaption
           * @cfg {String} Header title.
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#captionStyle
+          * @name Controls/Popup/Templates/Stack/StackTemplate#headingStyle
           * @cfg {String} Caption display style.
+          * @variant default
+          * @variant accent
+          * @variant small
           */
 
          /**
           * @name Controls/Popup/Templates/Stack/StackTemplate#headerContentTemplate
-          * @cfg {Content} The content between the header and the cross closure.
+          * @cfg {function|String} The content between the header and the cross closure.
           */
 
          /**
           * @name Controls/Popup/Templates/Stack/StackTemplate#bodyContentTemplate
-          * @cfg {Content} Main content.
+          * @cfg {function|String} Main content.
           */
 
          /**
           * @name Controls/Popup/Templates/Stack/StackTemplate#footerContentTemplate
-          * @cfg {Content} Content at the bottom of the stack panel.
+          * @cfg {function|String} Content at the bottom of the stack panel.
           */
 
          /**
@@ -51,19 +54,18 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @cfg {Boolean} Determines whether display of the close button.
           */
 
-         /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#maximized
-          * @cfg {Boolean} Determines the initial state in which there is a panel at the opening: folded/deployed.
-          */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#showMaximizeButton
+          * @name Controls/Popup/Templates/Stack/StackTemplate#maximizeButtonVisibility
           * @cfg {Boolean} Determines the display maximize button.
           */
 
          /**
           * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonStyle
           * @cfg {String} Close button display style.
+          * @variant default
+          * @variant lite
+          * @variant primary
           */
 
          _template: template,
@@ -72,8 +74,18 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.topArea) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+            }
+            if (options.topArea) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+            }
+            if (options.topArea) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
+            }
+            if (options.topArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
+
             if (options.topArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
             }
@@ -98,7 +110,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
 
       DialogTemplate.getDefaultOptions = function() {
          return {
-            captionStyle: 'default'
+            headingStyle: 'default'
          };
       };
 

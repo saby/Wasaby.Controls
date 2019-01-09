@@ -245,7 +245,7 @@
       }
     }
   },
-    "Controls/Toggle/Switch": {
+  "Controls/Toggle/Switch": {
     "name": "Controls/Toggle/Switch",
     "title": "Switch control.",
     "className": "Controls/Toggle/Switch",
@@ -610,7 +610,8 @@
         }
       }
     }
-  },"Controls/Input/Date/RangeLinkLite": {
+  },
+  "Controls/Input/Date/RangeLinkLite": {
     "name": "Controls/Input/Date/RangeLinkLite",
     "title": "Input for selection date range links in Light Calendar.",
     "className": "Controls/Input/Date/RangeLinkLite",
@@ -1767,7 +1768,6 @@
       }
     }
   },
-
   "Controls/Input/Search/Suggest": {
     "name": "Controls/Input/Search/Suggest",
     "title": "A suggest box control is similar to a textbox control, since the user can type any text into a suggest box, but offers suggested options to the user to help guide the input.",
@@ -2018,14 +2018,204 @@
           "resizable": {
             "title": "Determines whether popup can be resized.",
             "type": "Boolean"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Opener/Notification": {
+    "name": "Controls/Popup/Opener/Notification",
+    "title": "Component that opens a popup that is positioned in the lower right corner of the browser window",
+    "className": "Controls/Popup/Opener/Notification",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Popup/Opener/Notification",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
           },
-          "top": {
-            "title": "Distance from the window to the top of the screen.",
-            "type": "Number"
+          "className": {
+            "title": "Class names of popup.",
+            "type": "String"
           },
-          "left": {
-            "title": "Distance from the window to the left border of the screen.",
-            "type": "Number"
+          "template": {
+            "title": "Template inside popup.",
+            "type": "function|String"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Templates/Dialog/ConfirmationTemplate": {
+    "name": "Controls/Popup/Templates/Dialog/ConfirmationTemplate",
+    "title": "Base template of confirm dialog.",
+    "className": "Controls/Popup/Templates/Dialog/ConfirmationTemplate",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Popup/Templates/Dialog/ConfirmationTemplate",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "style": {
+            "type": "enum",
+            "default": "default",
+            "title": "Option description.",
+            "enum": {
+              "default": "default",
+              "success": "success",
+              "danger": "danger"
+            }
+          },
+          "size": {
+            "type": "enum",
+            "default": "m",
+            "title": "Option description.",
+            "enum": {
+              "m": "m",
+              "l": "l"
+            }
+          },
+          "bodyContentTemplate": {
+            "type": "function|String",
+            "title": "Main content."
+          },
+          "footerContentTemplate": {
+            "type": "function|String",
+            "title": "Content at the bottom of the confirm panel."
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Templates/Dialog/DialogTemplate": {
+    "name": "Controls/Popup/Templates/Dialog/DialogTemplate",
+    "title": "Layout of the dialog template",
+    "className": "Controls/Popup/Templates/Dialog/DialogTemplate",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Popup/Templates/Dialog/DialogTemplate",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "headingCaption": {
+            "type": "String",
+            "title": "Header title."
+          },
+          "headingStyle": {
+            "type": "enum",
+            "default": "default",
+            "title": "Caption display style.",
+            "enum": {
+              "default": "default",
+              "accent": "accent",
+              "additional": "additional"
+            }
+          },
+          "headerContentTemplate": {
+            "type": "function|String",
+            "title": "The content between the header and the cross closure."
+          },
+          "bodyContentTemplate": {
+            "type": "function|String",
+            "title": "Main content."
+          },
+          "footerContentTemplate": {
+            "type": "function|String",
+            "title": "Content at the bottom of the stack panel."
+          },
+          "closeButtonVisibility": {
+            "type": "Boolean",
+            "title": "Determines whether display of the close button."
+          },
+          "closeButtonStyle": {
+            "type": "enum",
+            "default": "default",
+            "title": "Close button display style.",
+            "enum": {
+              "default": "default",
+              "lite": "lite",
+              "primary": "primary"
+            }
+          },
+          "draggable": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Determines whether the control can be moved by d'n'd."
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Templates/Stack/StackTemplate": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "name": {
+            "title": "Имя контрола",
+            "type": "String",
+            "default": ""
+          },
+          "headingCaption": {
+            "type": "String",
+            "title": "Header title."
+          },
+          "headingStyle": {
+            "type": "enum",
+            "default": "default",
+            "title": "Caption display style.",
+            "enum": {
+              "default": "default",
+              "accent": "accent",
+              "additional": "small"
+            }
+          },
+          "headerContentTemplate": {
+            "type": "function|String",
+            "title": "The content between the header and the cross closure."
+          },
+          "bodyContentTemplate": {
+            "type": "function|String",
+            "title": "Main content."
+          },
+          "footerContentTemplate": {
+            "type": "function|String",
+            "title": "Content at the bottom of the stack panel."
+          },
+          "closeButtonVisibility": {
+            "type": "Boolean",
+            "title": "Determines whether display of the close button."
+          },
+          "maximizeButtonVisibility": {
+            "type": "Boolean",
+            "title": "Determines the display maximize button."
+          },
+          "closeButtonStyle": {
+            "type": "enum",
+            "default": "default",
+            "title": "Close button display style.",
+            "enum": {
+              "default": "default",
+              "lite": "lite",
+              "primary": "primary"
+            }
           }
         }
       }
