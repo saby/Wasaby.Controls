@@ -12,8 +12,9 @@
       "Controls-demo/*"
    ],
    "scripts": {
-      "postinstall": "saby-typescript --install --tsconfig=tsconfig.base.json",
-      "build": "node build-app",
+      "build": "npm run build:typescript && npm run build:app",
+      "build:typescript": "saby-typescript --install --tsconfig=tsconfig.base.json",
+      "build:app": "node build-app",
       "compile": "tsc",
       "start": "node app",
       "start:units": "node node_modules/saby-units/cli/server",
@@ -48,7 +49,6 @@
       "report-dir": "./artifacts/coverage"
    },
    "dependencies": {
-      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.100"
    },
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
@@ -75,6 +75,7 @@
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.100",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.100",
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.100",
+      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.100",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.100"
    }
 }
