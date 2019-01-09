@@ -6,7 +6,7 @@
 
 1. Клонируйте репозиторий с контролами `sbis3-controls`:
 
-		git clone git@git.sbis.ru:sbis/controls.git /path/to/sbis3-controls
+        git clone git@git.sbis.ru:sbis/controls.git /path/to/sbis3-controls
 
 2. Переключите репозиторий `sbis3-controls` на нужную ветку, например rc-3.18.150.
 
