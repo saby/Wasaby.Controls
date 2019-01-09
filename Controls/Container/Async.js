@@ -60,7 +60,8 @@ define('Controls/Container/Async',
              * */
 
             self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
-            var headData = Request.getCurrent().getStorage('HeadData');
+            var request = Request.getCurrent();
+            var headData = request && request.getStorage('HeadData');
 
             if (self.optionsForComponent.resolvedTemplate && headData && headData.pushDepComponent) {
                if (options.templateName) {
