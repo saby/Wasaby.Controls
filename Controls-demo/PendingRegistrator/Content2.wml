@@ -1,0 +1,7 @@
+<div attr:class="controls-demo__content2_container">
+   <Controls.Button caption="send registerPending event" class="controls-demo__pending-register2" on:click="_register()"/>
+   <br/>
+   <Controls.Button caption="cancel finish waiting" class="controls-demo__pending-cancel" on:click="_cancel()"/>
+   <br/>
+   <Controls.Button caption="finish pending" class="controls-demo__pending-finish" on:click="_finish()"/>
+</div>

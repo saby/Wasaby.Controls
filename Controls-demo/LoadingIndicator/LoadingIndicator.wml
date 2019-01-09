@@ -23,4 +23,12 @@
    </div>
    <br/>
    <Controls.Button caption="Open Indicator with overlay" name="controls-demo__indicator_overlay" class="controls-demo__indicator_overlay" on:click="_overlay()"/>
+   <br/><br/>
+   Local indicator:
+   <br/><br/>
+   <Controls-demo.LoadingIndicator.IndicatorContainer
+      isGlobal="{{false}}"
+      overlay="dark"
+      delay="{{0}}"
+   ></Controls-demo.LoadingIndicator.IndicatorContainer>
 </div>

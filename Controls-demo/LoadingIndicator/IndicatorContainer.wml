@@ -1,0 +1,39 @@
+<div attr:class="controls-demo__indicator_container">
+   <div attr:class="controls-demo__indicator_buttons">
+      <Controls.Button caption="Open (will be closed after 3s)" class="controls-demo__indicator_open" on:click="_open()"/>
+   </div>
+
+   <Controls.Container.LoadingIndicator
+         name="loadingIndicator"
+         attr:class="controls-demo__indicator_inst"
+
+         isGlobal="{{ _options.isGlobal }}"
+         message="{{ _options.message }}"
+         scroll="{{ _options.scroll }}"
+         small="{{ _options.small }}"
+         overlay="{{ _options.overlay }}"
+         mods="{{ _options.mods }}"
+         delay="{{ _options.delay }}"
+   >
+      <div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+         <div>
+            text
+         </div>
+      </div>
+   </Controls.Container.LoadingIndicator>
+</div>
