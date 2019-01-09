@@ -1,4 +1,28 @@
-.controls-Lookup__link.controls-BaseButton {
+.controls-Lookup__link {
   color: @color_LookupLink;
   pointer-events: auto;
+  cursor: pointer;
+  text-decoration: underline;
+  display: inline-block;
+}
+
+.ws-is-no-touch {
+  .controls-Lookup__link:hover {
+    color: @color_LookupLink_hovered;
+  }
+}
+
+.controls-Lookup__link:active {
+  color: @color_LookupLink_active;
+}
+
+.controls-Lookup__link__content {
+  .button-wrapper-default-style();
+  &:before {
+    content: "\200b";
+  }
+}
+
+.controls-Lookup__link__text {
+  .text-overflow();
 }
