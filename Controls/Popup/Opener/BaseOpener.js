@@ -4,7 +4,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'wml!Controls/Popup/Opener/BaseOpener',
       'Controls/Popup/Manager/ManagerController',
       'Vdom/Utils/DefaultOpenerFinder',
-      'View/Runner/requireHelper',
+      'View/Executor/Utils',
       'Core/core-clone',
       'Core/core-merge',
       'Core/IoC',
@@ -16,7 +16,7 @@ define('Controls/Popup/Opener/BaseOpener',
       Template,
       ManagerController,
       DefaultOpenerFinder,
-      requireHelper,
+      Utils,
       CoreClone,
       CoreMerge,
       IoC,
@@ -144,7 +144,7 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _needRequireModule: function(module) {
-            return typeof module === 'string' && !requireHelper.defined(module);
+            return typeof module === 'string' && !Utils.RequireHelper.defined(module);
          },
 
          _getRequiredModules: function(template, controller) {

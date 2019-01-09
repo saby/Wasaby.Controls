@@ -23,7 +23,7 @@ define('Controls/Popup/Compatible/Layer', [
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
-      'View/Runner/Text/markupGeneratorCompatible',
+      'View/Executor/GeneratorCompatible',
       'Core/nativeExtensions',
 
       //так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
