@@ -3,8 +3,6 @@ define('Controls/Input/Date/Link', [
    'Core/core-merge',
    'Controls/Input/Date/interface/ILinkView',
    'Controls/Date/interface/IRangeSelectable',
-   'Controls/Date/model/DateRange',
-   'Controls/Calendar/Utils',
    'wml!Controls/Input/Date/Link/Link',
    'css!theme?Controls/Input/Date/Link/Link'
 ], function(
@@ -12,8 +10,6 @@ define('Controls/Input/Date/Link', [
    coreMerge,
    ILinkView,
    IRangeSelectable,
-   DateRangeModel,
-   CalendarControlsUtils,
    componentTmpl
 ) {
 
