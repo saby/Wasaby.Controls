@@ -32,9 +32,10 @@ define('Controls/Decorator/Money',
       /**
        * @name Controls/Decorator/Money#delimiters
        * @cfg {Boolean} Determines whether the number should be split into triads.
-       * @variant true - the number split into triads.
-       * @variant false - does not do anything.
        * @default false
+       * @remark
+       * true - the number split into triads.
+       * false - does not do anything.
        */
 
       /**

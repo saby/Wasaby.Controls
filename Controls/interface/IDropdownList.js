@@ -29,7 +29,8 @@ define('Controls/interface/IDropdownList', [], function() {
 
    /**
     * @typedef {String|Boolean} EmptyText
-    * @variant true Add empty item with text 'Не выбрано'
+    * @remark
+    * true - Add empty item with text 'Не выбрано'
     */
 
    /**
