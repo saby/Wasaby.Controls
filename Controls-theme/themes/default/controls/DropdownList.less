@@ -1,0 +1,76 @@
+@max-width_DropdownList:                  700px;
+@background_DropdownList:                 @background-color_default;
+
+//border
+@border-width_DropdownList:               @thickness_border_default;
+@border-color_DropdownList:               @color_border;
+
+@spacing_DropdownList-between-topBorder-content:               @spacing_default_xxs;
+@spacing_DropdownList-between-bottomBorder-content:            @spacing_default_xxs;
+@spacing_DropdownList-item-between-leftBorder-content:              @spacing_default_l;
+@spacing_DropdownList-item-between-rightBorder-content:             @spacing_default_l;
+@spacing_DropdownList-withNodes-item-between-rightBorder-content:        @spacing_default_s + @size_icon_s + @spacing_default_s;
+@spacing_DropdownList_withClose-item-between-rightBorder-content:       @spacing_default_m + @size_icon_m + @spacing_default_s;
+
+//shadow
+@box-shadow-color_DropdownList:                          @color_shadow_default;
+@box-shadow-size_DropdownList-shadowStyle_center:        @size_shadow_default;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom:  0 6px 12px;
+@box-shadow-size_DropdownList-shadowStyle_centerTop:     0 -6px 12px;
+
+//list
+@height_DropdownList-row:                          @height_control_l;
+@font-size_DropdownList:                           @font-size_text_l;
+@background_DropdownList-row_hover:                @background-color_item_hovered;
+@background_DropdownList-row_active:               @background-color_item_hovered;
+@color_DropdownList-emptyItem:                     @color_info;
+@spacing_DropdownList-header-between-icon-text:    @spacing_default_s;
+@spacing_DropdownList-item-between-icon-text:      @spacing_default_s;
+
+@color_DropdownList-icon-iconStyle_secondary:    @color_secondary;
+@color_DropdownList-icon-iconStyle_warning:      @color_warning;
+@color_DropdownList-icon-iconStyle_danger:       @color_danger;
+@color_DropdownList-icon-iconStyle_success:      @color_success;
+
+//marker
+@background_DropdownList-marker:             @color12;
+@width_DropdownList-marker:                  6px;
+@height_DropdownList-marker:                 8px;
+
+//header
+@background_DropdownList-header:             @color27;
+@color_DropdownList-heading:                 @color_Heading_secondary;
+
+@spacing_DropdownList-iconSize_medium-between-iconHead-topBorder:          @spacing_DropdownList-between-topBorder-content + @border-width_DropdownList + (@height_DropdownList-row - @size_icon_m)/2;
+@spacing_DropdownList-iconSize_medium-between-iconHead-leftBorder:         @spacing_DropdownList-item-between-leftBorder-content + @border-width_DropdownList;
+@spacing_DropdownList-iconSize_small-between-iconHead-topBorder:           @spacing_DropdownList-between-topBorder-content + @border-width_DropdownList + (@height_DropdownList-row - @size_icon_s)/2;
+@spacing_DropdownList-iconSize_small-between-iconHead-leftBorder:          @spacing_DropdownList-item-between-leftBorder-content + @border-width_DropdownList;
+
+//submenu
+@shift-top_DropdownList-submenu:                      -(@spacing_DropdownList-between-topBorder-content + @border-width_DropdownList);
+
+//arrow
+@icon-size_DropdownList-arrow:                              @size_icon_s;
+@color_DropdownList-arrow:                                  @color_secondary;
+@spacing_DropdownList-item-between-arrow-topBorder:         (@height_DropdownList-row - @icon-size_DropdownList-arrow) / 2;
+@spacing_DropdownList-item-between-arrow-rightBorder:       @spacing_default_s;
+
+//cross
+@spacing_DropdownList-between-close-rightBorder:      @spacing_default_s + @border-width_DropdownList;
+@spacing_DropdownList-between-close-topBorder:        @spacing_default_s + @border-width_DropdownList;
+
+@height_DropdownList-arrowSeparator:                  @spacing_default_xxs*2 + @size-BigSeparator__icon;
+
+//grouping
+@thickness_DropdownList-group-separator:                       @thickness_border_default;
+@height_DropdownList-group-separator:                          1px;
+@color_DropdownList-group-separator:                           @color4;
+
+@spacing_DropdownList-group-between-content-topBorder:         @spacing_default_xs;
+@spacing_DropdownList-group-between-content-rightBorder:       @spacing_default_l;
+@spacing_DropdownList-group-between-content-bottomBorder:      @spacing_default_xs;
+@spacing_DropdownList-group-between-content-leftBorder:        @spacing_default_l;
+@spacing_DropdownList-group-between-text-separator:            @spacing_default_l;
+
+@color_DropdownList-group-text:                                @color_additional;
+@font-size_DropdownList-group-text:                            @font-size_text_s;
