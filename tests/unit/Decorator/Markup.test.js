@@ -69,6 +69,7 @@ define([
             'www.ya.ru'
          ],
          decoratedLinkService,
+         nbsp = String.fromCharCode(160),
          openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
          deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
          linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
@@ -109,6 +110,7 @@ define([
             var html =
                '<p>' + linkHtml + '</p>' +
                '<p>https://ya.ru</p>' +
+               '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
                '<p><strong>https://ya.ru</strong></p>' +
                '<p>https://ya.ru: text</p>' +
@@ -124,6 +126,7 @@ define([
             var json = [
                ['p', linkNode],
                ['p', linkNode],
+               ['p', linkNode, nbsp, linkNode, nbsp],
                ['p', '  ', linkNode, '  '],
                ['p', ['strong', linkNode]],
                ['p', linkNode, ': text'],
@@ -282,7 +285,7 @@ define([
          it('with linkDecorate resolver', function() {
             var json = [
                ['p', linkNode],
-               ['p', linkNode, '   '],
+               ['p', linkNode, nbsp + '   '],
                ['p', linkNode, '   ', Converter.deepCopyJson(linkNode)],
                ['p', linkNode, 'text '],
                ['p', linkNode, ['br'], 'text'],
@@ -302,7 +305,7 @@ define([
             ];
             var html = '<div>' +
                '<p>' + decoratedLinkHtml + '</p>' +
-               '<p>' + decoratedLinkHtml + '   </p>' +
+               '<p>' + decoratedLinkHtml + nbsp + '   </p>' +
                '<p>' + linkHtml + '   ' + decoratedLinkHtml + '</p>' +
                '<p>' + linkHtml + 'text </p>' +
                '<p>' + decoratedLinkHtml + '<br />text</p>' +
