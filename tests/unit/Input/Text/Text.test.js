@@ -3,9 +3,9 @@ define(
       'Core/core-instance',
       'Controls/Input/Text',
       'tests/resources/ProxyCall',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Vdom/Vdom'
    ],
-   function(instance, Text, ProxyCall, SyntheticEvent) {
+   function(instance, Text, ProxyCall, Vdom) {
       'use strict';
 
       describe('Controls.Input.Text', function() {
@@ -154,7 +154,7 @@ define(
                ctrl._getField().value = 'text';
                ctrl._getField().selectionStart = 4;
                ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.equal(ctrl._viewModel.value, '');
                assert.deepEqual(ctrl._viewModel.selection, {
@@ -170,7 +170,7 @@ define(
                ctrl._getField().value = 'text';
                ctrl._getField().selectionStart = 4;
                ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.equal(ctrl._viewModel.value, 'tex');
                assert.deepEqual(ctrl._viewModel.selection, {
