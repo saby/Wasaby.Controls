@@ -1,9 +1,0 @@
-<Controls.Button.Menu
-   source="{{_source}}"
-   keyProperty="id"
-   attr:title="{[Вставить/Удалить список]}"
-   showHeader="{{false}}"
-   icon="icon-ListMarked icon-medium"
-   style="secondary"
-   viewMode="link"
-   on:onMenuItemActivate="_menuItemActivateHandler()"/>
