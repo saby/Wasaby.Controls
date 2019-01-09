@@ -196,7 +196,7 @@ define('Controls/FormController', [
          return def;
       },
       _onPropertyChange: function() {
-         if (!this._propertyChangeNotified) {
+         if (!this._propertyChangeNotified && this._record.isChanged()) {
             var def = new Deferred();
             this._propertyChangedDef = def;
             var self = this;
@@ -222,6 +222,11 @@ define('Controls/FormController', [
                   }
                }
             }], { bubbling: true });
+         }
+
+         // if record actually is not changed after onPropertyChange, we must resolve pending
+         if (this._propertyChangeNotified && !this._record.isChanged()) {
+            this._propertyChangedDef.callback(true);
          }
       },
       _showConfirmDialog: function(def, forceFinishValue) {
