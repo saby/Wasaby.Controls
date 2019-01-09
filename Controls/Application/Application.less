@@ -198,10 +198,71 @@ html>body .clearfix {
    cursor: pointer; /* Add a pointer on hover */
 }
 
-
 /*import basic style to application.less*/
 @import "Controls-theme/themes/default/fonts/TensorFont";
 @import "Controls-theme/themes/default/fonts/cbus-icons";
-@import "Controls-theme/themes/default/helpers/general";
+
+@import "Controls-theme/themes/default/helpers/AreaBlocks";
+@import "Controls-theme/themes/default/helpers/_header";
+@import "Controls-theme/themes/default/helpers/_mixins";
+@import "Controls-theme/themes/default/helpers/_misc";
+
 @import "Controls-theme/themes/default/helpers/_flex";
 @import "Controls-theme/themes/default/helpers/_typography";
+
+//icons compatibility with new params
+//тут определяю только размеры иконок. Делаю это через новые алиасы, чтоб работала темизация. Вообще от этих иконок избавлюсь по проекту
+//иконки на старых страницах будут работать чеоез стили определенные в теме, в oldIcons.less
+.icon-small, .icon-16  {
+   .icon-size(@size_icon_s, @font-family_icon_size-s);
+}
+.icon-medium, .icon-24  {
+   .icon-size(@size_icon_m, @font-family_icon_size-m);
+}
+.icon-large, .icon-32 {
+   .icon-size(@size_icon_l, @font-family_icon_size-l);
+}
+/* ATTENTION styles */
+.icon-attention
+{
+   color: @color_warning;
+}
+
+/* DONE styles */
+.icon-done
+{
+   color: @color_success;
+}
+
+/* ERROR styles */
+.icon-error
+{
+   color: @color_danger;
+}
+
+/* PRIMARY styles */
+.icon-primary
+{
+   color: @color_secondary;
+   fill: @color_secondary;
+}
+
+/* DISABLED styles */
+.icon-disabled
+{
+   color: @color_readOnly;
+   fill: @color_readOnly;
+}
+.icon-hover{
+   color: @color_primaryV;
+}
+/* Для тех, кто поддерживает... */
+.icon-small, .icon-medium, .icon-large, .icon-size, .icon-16, .icon-24, .icon-32, .icon-default {
+   speak: none;
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   display: inline-block;
+}

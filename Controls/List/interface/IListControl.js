@@ -137,8 +137,9 @@ define('Controls/List/interface/IListControl', [
    /**
     * @name Controls/List/interface/IListControl#uniqueKeys
     * @cfg {String} Strategy for loading new list items.
-    * @variant true Merge, items with the same identifier will be combined into one.
-    * @variant false Add, items with the same identifier will be shown in the list.
+    * @remark
+    * true - Merge, items with the same identifier will be combined into one.
+    * false - Add, items with the same identifier will be shown in the list.
     */
 
    /**
