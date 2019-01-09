@@ -3,8 +3,8 @@
       <div class="PageBlock__title"></div>
       <div class="PageBlock__componentWrap ws-flexbox" style="justify-content: space-evenly;">
          <Controls.Input.Date.LinkView
-               prevArrowVisibility="{{true}}"
-               nextArrowVisibility="{{true}}"
+               showPrevArrow="{{true}}"
+               showNextArrow="{{true}}"
          />
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
