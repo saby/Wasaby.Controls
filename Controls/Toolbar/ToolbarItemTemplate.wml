@@ -8,7 +8,7 @@
     </ws:if>
     <ws:else>
         <ws:if data="{{item.icon || item[iconProperty]}}">
-            <i class="controls-Toolbar__item_icon_{{(item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}} controls-Toolbar__item_icon_{{size}} {{item['icon'] || item[iconProperty]}}"/>
+            <i class="controls-Toolbar__item_icon_{{(item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}} controls-Toolbar__item_icon {{item['icon'] || item[iconProperty]}}"/>
         </ws:if>
         <ws:else data="{{!!item['buttonStyle']}}">
             <Controls.Button readOnly="{{buttonReadOnly || item['buttonReadOnly']}}"
@@ -18,7 +18,7 @@
                              icon="{{item['buttonIcon'] || item['icon']}}"
                              style="{{buttonStyle || item['buttonStyle']}}"
                              viewMode="{{buttonViewMode || item['buttonViewMode']}}"
-                             size="{{size}}"/>
+                             size="l"/>
         </ws:else>
         <ws:if data="{{(item['title'] || item[displayProperty]) && !item['buttonViewMode']}}">
             <span class="controls-Toolbar__item_title {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item['title'] || item[displayProperty]}}</span>

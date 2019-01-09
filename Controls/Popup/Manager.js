@@ -90,6 +90,7 @@ define('Controls/Popup/Manager',
             if (item) {
                item.waitDeactivated = false;
             }
+            _private.activeElement = {};
          },
 
          popupDeactivated: function(id) {
@@ -167,9 +168,9 @@ define('Controls/Popup/Manager',
          },
 
          popupAnimated: function(id) {
-            var element = ManagerController.find(id);
-            if (element) {
-               return element.controller.elementAnimated(element, _private.getItemContainer(id));
+            var item = _private.findItemById(this, id);
+            if (item) {
+               return item.controller.elementAnimated(item, _private.getItemContainer(id));
             }
             return false;
          },
@@ -179,7 +180,7 @@ define('Controls/Popup/Manager',
             var args = Array.prototype.slice.call(arguments, 2);
             if (item) {
                if (item.popupOptions._events) {
-                  item.popupOptions._events[event].apply(item.popupOptions, Array.prototype.slice.call(arguments, 1));
+                  item.popupOptions._events[event](event, args);
                }
                if (item.popupOptions.eventHandlers && typeof item.popupOptions.eventHandlers[event] === 'function') {
                   item.popupOptions.eventHandlers[event].apply(item.popupOptions, args);
@@ -246,6 +247,14 @@ define('Controls/Popup/Manager',
                focusedContainer = focusedContainer.parentElement;
             }
             return false;
+         },
+
+         findItemById: function(self, id) {
+            var index = self._popupItems.getIndexByValue('id', id);
+            if (index > -1) {
+               return self._popupItems.at(index);
+            }
+            return null;
          },
 
          // TODO Compatible
@@ -364,13 +373,13 @@ define('Controls/Popup/Manager',
           * @param id идентификатор попапа
           */
          find: function(id) {
-            var
-               element,
-               index = this._popupItems.getIndexByValue('id', id);
-            if (index > -1) {
-               element = this._popupItems.at(index);
+            var item = _private.findItemById(this, id);
+
+            if (!item || item.popupState === item.controller.POPUP_STATE_DESTROYING || item.popupState === item.controller.POPUP_STATE_DESTROYED) {
+               return null;
             }
-            return element;
+
+            return item;
          },
 
          /**

@@ -18,6 +18,8 @@
       showCaption="{{_options.showCaption}}"
       showWeekdays="{{_options.showWeekdays}}"
       dayFormatter="{{_dayFormatter}}"
+      dayTemplate="{{_options.dayTemplate}}"
+      daysData="{{_options.daysData}}"
       monthViewModel="{{_monthViewModel}}"
       mode="{{_options.mode}}"
    />

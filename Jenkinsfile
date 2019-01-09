@@ -54,6 +54,45 @@ def build_description(job, path, skip_test) {
     }
 }
 
+def return_test_for_run(tests_files, autotests) {
+    tests_files = tests_files.replace('\n', '')
+    echo "Будут запущены ${tests_files}"
+    def run_reg = ""
+    def run_int = ""
+    if (autotests) {
+        echo "Делим общий список на int и reg тесты"
+        type_tests = tests_files.split(';')
+        temp_var = type_tests[0].split('reg:')
+        if ( temp_var.length == 2) {
+            run_reg = "--files_to_start ${temp_var[1]}"
+        }
+        temp_var = type_tests[1].split('int:')
+        if ( temp_var.length == 2 ) {
+            run_int = "--files_to_start ${temp_var[1]}"
+        }
+
+    } else {
+        run_int = "--files_to_start ${tests_files}"
+    }
+    return [run_reg, run_int]
+}
+
+def download_coverage_json(version) {
+    echo "Выкачиваем файл с зависимостями"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+    script = """
+        if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
+        echo "result.json exitsts"; cp -fr tmp_result.json result.json
+        else rm -f result.json
+        fi
+        """
+    sh returnStdout: true, script: script
+    def exist_json = fileExists 'result.json'
+    return exist_json
+
+}
+
+
 def build_title(t_int, t_reg) {
     if (!t_int && !t_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER}"
@@ -118,14 +157,17 @@ def getParams(user) {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов.", name: 'run_all_int'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
         common_params.add(choice(choices: "default\n1", description: "Запустить сборку с приоритетом. 'default' - по умолчанию, '1' - самый высокий", name: 'build_priority'))
+    }
+    if ( ["ls.baranova", "da.dubenec", "mitin", "ea.proshin"].contains(user) ) {
+        common_params.add(booleanParam(defaultValue: false, description: "Я разработчик автотестов", name: 'run_boss'))
     }
     return common_params
 }
@@ -149,6 +191,7 @@ def regr = params.run_reg
 def unit = params.run_unit
 def inte = params.run_int
 def all_inte = params.run_all_int
+def boss = params.run_boss
 def only_fail = false
 
 
@@ -174,7 +217,8 @@ node('controls') {
         def changed_files
         def skip_tests_int = ""
         def skip_tests_reg = ""
-        def tests_for_run = ""
+        def tests_for_run_int = ""
+        def tests_for_run_reg = ""
         def smoke_result = true
         try {
         echo "Назначаем переменные"
@@ -227,6 +271,9 @@ node('controls') {
         if ( inte || all_inte || regr ) {
             unit = true
         }
+        if ( boss ) {
+            unit = false
+        }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
             sh "ls | grep -v -E 'controls' | xargs rm -rf"
@@ -264,13 +311,16 @@ node('controls') {
                     dir("./controls"){
                         sh """
                         git clean -fd
-                        git fetch
+                        git fetch --all
                         git checkout ${env.BRANCH_NAME}
                         git pull
                         git merge origin/rc-${version}
                         """
-
-                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version}..${env.BRANCH_NAME} --name-only| tr '\n' ' '")
+                        def status_filter = ""
+                        if ( boss ) {
+                            status_filter="--diff-filter=MAR"   // добавление, изменения, переименование
+                        }
+                        changed_files = sh (returnStdout: true, script: "git diff origin/rc-${version} --name-only ${status_filter}| tr '\n' ' '")
                         if ( changed_files ) {
                             echo "Изменения были в файлах: ${changed_files}"
                         }
@@ -292,7 +342,7 @@ node('controls') {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
-                             sh "cp -R ./atf/ ../reg/atf/"
+                             sh "cp -rf ./atf/ ../reg/atf/"
                             }
                         },
                         checkout_engine: {
@@ -497,18 +547,26 @@ node('controls') {
             }
             echo items
         }
-        stage ("Unit тесты"){
-            if ( unit ){
-                echo "Запускаем юнит тесты"
-                sh "date"
-                dir("./controls"){
-                    sh """
-                    npm cache clean --force
-                    npm set registry https://registry.npmjs.org/
+        if ( unit ){
+            dir("./controls"){
+                sh """
+                npm cache clean --force
+                npm set registry https://registry.npmjs.org/
+                """
+                stage ("Unit тесты node"){
+                    sh returnStatus: true, script: """
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
                     sh ./bin/test-isolated
-
+                    """
+                    junit keepLongStdio: true, testResults: "**/artifacts/test-isolated-report.xml"
+                    unit_result = currentBuild.result == null
+                    if (!unit_result) {
+                        exception('Unit тесты node падают с ошибками.', 'UNIT TEST FAIL')
+                    }
+                }
+                stage ("Unit тесты browser"){
+                    sh returnStatus: true, script: """
                     echo "run browser"
                     export test_url_host=${env.NODE_NAME}
                     export test_server_port=10253
@@ -519,17 +577,15 @@ node('controls') {
                     export test_report=artifacts/test-browser-report.xml
                     sh ./bin/test-browser
                     """
-                    junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
+                    junit keepLongStdio: true, testResults: "**/artifacts/test-browser-report.xml"
                     unit_result = currentBuild.result == null
                     if (!unit_result) {
-                        exception('Unit тесты падают с ошибками.', 'UNIT TEST FAIL')
+                        exception('Unit тесты browser падают с ошибками.', 'UNIT TEST FAIL')
                     }
                 }
-                echo "Юнит тесты завершились"
-                sh "date"
             }
         }
-        if ( regr || inte || all_inte) {
+        if ( regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -612,7 +668,7 @@ node('controls') {
             }
         }
 
-        if ( regr || inte || all_inte) {
+        if ( regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
@@ -672,35 +728,30 @@ node('controls') {
                     if ( only_fail ) {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
-                    if ( inte && !only_fail && changed_files ) {
+                    if ( (inte || regr) && !only_fail && changed_files ) {
                         dir("./controls/tests") {
-                            echo "Выкачиваем файл с зависимостями"
-                            url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
-                            script = """
-                                if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-                                echo "result.json exitsts"; cp -fr tmp_result.json result.json
-                                else rm -f result.json
-                                fi
-                                """
-                                sh returnStdout: true, script: script
-                            def exist_json = fileExists 'result.json'
-                            if ( exist_json ) {
-                                def tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files}"
-                                if ( tests_files ) {
-                                    tests_files = tests_files.replace('\n', '')
-                                    echo "Будут запущены ${tests_files}"
-                                    tests_for_run = "--files_to_start ${tests_files}"
-                                } else {
-                                    echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
-                                }
+                        def script_handler = "python3 coverage_handler.py -c ${changed_files}"
+                        def tests_files
+                        if ( boss ) {
+                            script_handler+=" -d" //оверайдим флаг
+                            tests_files = sh returnStdout: true, script: script_handler
+                        } else {
+                            if ( download_coverage_json(version) ) {
+                                tests_files = sh returnStdout: true, script: script_handler
                             } else {
                                 echo "Файл с покрытием не найден. Будут запущены все тесты."
                             }
+                        }
+                        if ( tests_files ) {
+                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, boss)
+                        } else {
+                            echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                         }
                     }
                     if ( skip ) {
                          skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
                          skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
+                    }
                     }
                 }
             }
@@ -713,7 +764,7 @@ node('controls') {
 
                                 sh """
                                 source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                 deactivate
                                 """
                             }
@@ -727,7 +778,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
                                     deactivate
                                 """
                             }
@@ -741,7 +792,6 @@ node('controls') {
 } catch (err) {
     echo "ERROR: ${err}"
     currentBuild.result = 'FAILURE'
-    gitlabStatusUpdate()
 } finally {
     sh """
         sudo chmod -R 0777 ${workspace}
@@ -752,7 +802,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( regr || inte || all_inte){
+    if ( regr || inte || all_inte ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -767,7 +817,7 @@ node('controls') {
             if ( exists_dir ){
                 dir('/home/sbis/Controls'){
                     def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-                    if ( files_err.length > 0 ){
+                    if ( files_err.length > 1 ){
                         sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
                         sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
                         dir ( workspace ){

@@ -1,0 +1,5 @@
+<ws:partial template="wml!Controls/List/emptyTemplate">
+    <ws:contentTemplate>
+        <span>No data</span>
+    </ws:contentTemplate>
+</ws:partial>

@@ -48,6 +48,14 @@ define('Controls/Label',
             if (container.classList.contains(className)) {
                IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + className + ' не поддерживается. Используйте опцию underline со значением ' + optionValue);
             }
+         },
+
+         getDOMContainer: function(element) {
+            //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            if (element.get) {
+               return element.get(0);
+            }
+            return element;
          }
       };
 
@@ -55,7 +63,7 @@ define('Controls/Label',
          _template: template,
 
          _afterMount: function() {
-            var container = this._container;
+            var container = _private.getDOMContainer(this._container);
 
             /**
              * Способ смены внешнего вида контрола переведен с модификаторов на опцию.

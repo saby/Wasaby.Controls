@@ -1,10 +1,12 @@
 <div class="controls-PropertyGrid__items">
    <ws:for data="index,item in _options.items">
+       <ws:if data="{{item.type}}">
             <ws:partial template="{{_options.templateName}}"
                         dataTemplates="{{_options.dataTemplates}}"
                         item="{{item}}"
                         index="{{index}}"
                         itemsProperty="{{_options.scopeObject}}"
                         on:valueChanged="_valueChangedHandler(index)" />
+       </ws:if>
    </ws:for>
 </div>

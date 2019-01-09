@@ -19,7 +19,7 @@
                            on:dragEnter="_dragEnterMaster()"
                            parentProperty="Раздел"
                            style="master"
-                           markerVisibility='always'
+                           markerVisibility='visible'
                            nodeProperty="Раздел@"
                            expanderDisplayMode="adaptive"
                            columns="{{gridColumns}}"

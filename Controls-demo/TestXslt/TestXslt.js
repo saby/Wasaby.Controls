@@ -26,9 +26,9 @@ define('Controls-demo/TestXslt/TestXslt', [
 
    return Control.extend({
       _template: template,
-      xml: '',
-      xsl: '',
-      result: '',
+      _xml: '',
+      _xsl: '',
+      _result: '',
       status: 'Не проверено',
       change: function(e, target) {
          if (this.status !== 'Не проверено') {
@@ -38,14 +38,14 @@ define('Controls-demo/TestXslt/TestXslt', [
       },
       check: function() {
          var self = this;
-         var a = new Xslt({xml: self.xml, xsl: self.xsl, errback: self.refused});
+         var a = new Xslt({xml: self._xml, xsl: self._xsl, errback: self.refused});
          a.execute().addCallback(function() {
             if (a.checkDocument(a._xmlDoc)) {
                self.refused();
                return;
             }
             a.transformToText().addCallback(function(result) {
-               self.checkResult(result, self.result) ? self.passed() : self.refused();
+               self.checkResult(result, self._result) ? self.passed() : self.refused();
             });
          });
       },

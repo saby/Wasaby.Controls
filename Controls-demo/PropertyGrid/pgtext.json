@@ -352,10 +352,17 @@
               "warning": "warning"
             }
           },
-          "validationErrors": {
-            "type": "Array",
-            "arrayElementType": "String",
-            "title": "List of validation errors."
+          "style": {
+            "type": "enum",
+            "title": "Display style of the field.",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "invalid": "invalid"
+            }
           },
           "placeholder": {
             "type": "function|String",
@@ -1616,6 +1623,157 @@
               "demand": "Opening when requested (content clicked).",
               "hover|touch": "Opening by hover or touch on the content. Closing by hover not on the content or template."
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Suggest": {
+    "name": "Controls/Input/Suggest",
+    "title": "A suggest box control is similar to a textbox control, since the user can type any text into a suggest box, but offers suggested options to the user to help guide the input.",
+    "className": "Controls/Input/Suggest",
+    "kind": "class",
+    "isPublic": true,
+    "fullname": "Controls/Input/Suggest",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "autoDropDown": {
+            "type": "Boolean",
+            "title": "Show suggest when the input get focused"
+          },
+          "source": {
+            "type": "Array",
+            "title": "Object that implements ISource interface for data access."
+          },
+          "navigation": {
+            "type": "function",
+            "title": "List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)"
+          },
+          "suggestTemplate": {
+            "type": "function",
+            "title": "Template for suggest, that showing search results."
+          },
+          "footerTemplate": {
+            "type": "function",
+            "title": "Footer template of suggest."
+          },
+          "emptyTemplate": {
+            "type": "function",
+            "title": "Template for suggest when no results were found."
+          },
+          "searchParam": {
+            "type": "enum",
+            "title": "Name of the field that search should operate on. Search value will insert in filter by this parameter.",
+            "default": "city",
+            "enum": {
+              "city": "",
+              "name": ""
+            }
+          },
+          "displayProperty": {
+            "type": "enum",
+            "title": "Defines which field from suggest list will be used as text after selecting an option.",
+            "default": "city",
+            "enum": {
+              "city": "",
+              "name": ""
+            }
+          },
+          "minSearchLength": {
+            "type": "Number",
+            "title": "The minimum number of characters a user must type before a search is performed.",
+            "default": 3
+          },
+          "searchDelay": {
+            "type": "Number",
+            "title": "The delay between when a symvol was typed and when a search is performed.",
+            "default": 300
+          }
+        }
+      }
+    }
+  },
+
+  "Controls/Input/Search/Suggest": {
+    "name": "Controls/Input/Search/Suggest",
+    "title": "A suggest box control is similar to a textbox control, since the user can type any text into a suggest box, but offers suggested options to the user to help guide the input.",
+    "className": "Controls/Input/Search/Suggest",
+    "kind": "class",
+    "isPublic": true,
+    "fullname": "Controls/Input/Search/Suggest",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "value": {
+            "type": "String",
+            "title": "Field value."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "autoDropDown": {
+            "type": "Boolean",
+            "title": "Show suggest when the input get focused"
+          },
+          "source": {
+            "type": "Array",
+            "title": "Object that implements ISource interface for data access."
+          },
+          "navigation": {
+            "type": "function",
+            "title": "List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)"
+          },
+          "suggestTemplate": {
+            "type": "function",
+            "title": "Template for suggest, that showing search results."
+          },
+          "footerTemplate": {
+            "type": "function",
+            "title": "Footer template of suggest."
+          },
+          "emptyTemplate": {
+            "type": "function",
+            "title": "Template for suggest when no results were found."
+          },
+          "searchParam": {
+            "type": "enum",
+            "title": "Name of the field that search should operate on. Search value will insert in filter by this parameter.",
+            "default": "city",
+            "enum": {
+              "city": "",
+              "name": ""
+            }
+          },
+          "displayProperty": {
+            "type": "enum",
+            "title": "Defines which field from suggest list will be used as text after selecting an option.",
+            "default": "city",
+            "enum": {
+              "city": "",
+              "name": ""
+            }
+          },
+          "minSearchLength": {
+            "type": "Number",
+            "title": "The minimum number of characters a user must type before a search is performed.",
+            "default": 3
+          },
+          "searchDelay": {
+            "type": "Number",
+            "title": "The delay between when a symvol was typed and when a search is performed.",
+            "default": 300
           }
         }
       }

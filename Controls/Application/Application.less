@@ -1,94 +1,3 @@
-/* copy from index.less*/
-@globalFontFamily : 'TensorFont', sans-serif;
-@globalDefaultFontSize: 14px;
-@globalDefaultColor: #000000;
-@globalDefaultLabelColor: #999999;
-@globalAsLinkColor: #0055BB;
-@globalAsLinkColorDisabled: #ccc;
-@globalPlaceholderColor: #ccc;
-@globalTabHeadColor: #0055BB;
-@globalHoverColor: #ff7033;
-@globalControlsHoverColor: #313E78;
-@globalImagesPath: "resources/images/";
-@commonZIndex: 30000;
-@kingOfHillZIndex: 32767;
-@globalErrorColor: #EF463A;
-@globalBGColor: #ffffff;
-@borderTransferButton: #aaa;
-@toolbarSeparator: #e5e5e5;
-@toolbarMenuBorder: #D4D4D4;
-@toolbarBackground: #dee3f3;
-@defaultBorderColor: #aaa;
-@globalEditAtPlaceColor: #EAEAEA;
-@globalEditAtPlaceBottomColor: #CCCCCC;
-@disabledButtonTextColor: #CCCCCC;
-@fieldValidationErrorBorderColor: #FF302B;
-@fieldValidationErrorBackgroundColor: #fadadd;
-@floatAreaStackShadow: -4px -8px 12px -4px rgba(0,0,0,0.4); //-8px смещение по y из-за бага хрома, который из-за тени добавляет скролл
-@filterPanelShadow:  0px 0px 12px 0px rgba(0,0,0,0.25);
-@areaWindowTitlebarHeight: 40px;
-@areaWindowBorderColor: #bdbdbd;
-@filterPanelBorderColor: #CCC;
-@windowBorder: 1px;
-@ie8: \0screen;
-
-.rounded-corners(@radius: 0) {
-   border-radius: @radius;
-   -webkit-border-radius: @radius;
-   -moz-border-radius: @radius;
-   -o-border-radius: @radius;
-}
-.window-borders(@border: 0) {
-   border-color: @areaWindowBorderColor;
-   border-width: @border;
-   border-style: solid;
-}
-.box-shadow(@offsetX: 0, @offsetY: 0, @blurRadius: 0, @color: rgba(0, 0, 0, 0.5)) when (@offsetX = none) {
-   -moz-box-shadow: none !important;
-   -webkit-box-shadow: none !important;
-   box-shadow: none !important;
-}
-.box-shadow(@offsetX: 0, @offsetY: 0, @blurRadius: 0, @color: rgba(0, 0, 0, 0.5)) when not (@offsetX = none) {
-   -moz-box-shadow: @offsetX @offsetY @blurRadius @color;
-   -webkit-box-shadow: @offsetX @offsetY @blurRadius @color;
-   box-shadow: @offsetX @offsetY @blurRadius @color;
-}
-.box-shadow-str(@string) {
-   -webkit-box-shadow: @string;
-   -moz-box-shadow: @string;
-   box-shadow: @string;
-}
-
-.box-sizing (@type: border-box) {
-   -webkit-box-sizing: @type;
-   -moz-box-sizing:    @type;
-   box-sizing:         @type;
-}
-.placeholder(@color: @globalPlaceholderColor) {
-   &::-webkit-input-placeholder{
-      color: @color !important;
-   }
-   &::-moz-placeholder{
-      color: darken(@color, 17%) !important;
-   }
-   &:-moz-placeholder{
-      color: darken(@color, 17%) !important;
-   }
-   &:-ms-input-placeholder{
-      color: @color !important;
-   }
-}
-
-.no-select() {
-   -webkit-user-select: none;
-   -khtml-user-select: none;
-   -moz-user-select: -moz-none;
-   -o-user-select: none;
-   user-select: none;
-}
-
-
-
 /* сброс стилей. copy normilize.less*/
 * {
    margin: 0;
@@ -110,6 +19,9 @@ html {
 }
 
 body {
+   font-family: @font-family_text_default;
+   font-size: @font-size_App__body;
+   color: @color_text_default;
    text-decoration-skip-ink: none;
 
    /* Better Font Rendering =========== */
@@ -177,12 +89,6 @@ input[type="reset"]::-moz-focus-inner {
    white-space: nowrap;
 }
 
-body {
-   font-family: @globalFontFamily;
-   font-size: @globalDefaultFontSize;
-   text-decoration-skip-ink: none;
-}
-
 .ws-component {
    & > option, & > options, & > opt, & > opts {
       display: none;
@@ -236,8 +142,8 @@ component {
    }
 
    > .ws-Label-title{
-      font-size: @globalDefaultFontSize;
-      font-family: @globalFontFamily;
+      font-size: @font-size_App__body;
+      font-family: @font-family_text_default;
       color: #999999;
       font-style: normal;
       font-weight: normal;
@@ -292,10 +198,71 @@ html>body .clearfix {
    cursor: pointer; /* Add a pointer on hover */
 }
 
-
 /*import basic style to application.less*/
 @import "Controls-theme/themes/default/fonts/TensorFont";
 @import "Controls-theme/themes/default/fonts/cbus-icons";
-@import "Controls-theme/themes/default/helpers/general";
+
+@import "Controls-theme/themes/default/helpers/AreaBlocks";
+@import "Controls-theme/themes/default/helpers/_header";
+@import "Controls-theme/themes/default/helpers/_mixins";
+@import "Controls-theme/themes/default/helpers/_misc";
+
 @import "Controls-theme/themes/default/helpers/_flex";
 @import "Controls-theme/themes/default/helpers/_typography";
+
+//icons compatibility with new params
+//тут определяю только размеры иконок. Делаю это через новые алиасы, чтоб работала темизация. Вообще от этих иконок избавлюсь по проекту
+//иконки на старых страницах будут работать чеоез стили определенные в теме, в oldIcons.less
+.icon-small, .icon-16  {
+   .icon-size(@size_icon_s, @font-family_icon_size-s);
+}
+.icon-medium, .icon-24  {
+   .icon-size(@size_icon_m, @font-family_icon_size-m);
+}
+.icon-large, .icon-32 {
+   .icon-size(@size_icon_l, @font-family_icon_size-l);
+}
+/* ATTENTION styles */
+.icon-attention
+{
+   color: @color_warning;
+}
+
+/* DONE styles */
+.icon-done
+{
+   color: @color_success;
+}
+
+/* ERROR styles */
+.icon-error
+{
+   color: @color_danger;
+}
+
+/* PRIMARY styles */
+.icon-primary
+{
+   color: @color_secondary;
+   fill: @color_secondary;
+}
+
+/* DISABLED styles */
+.icon-disabled
+{
+   color: @color_readOnly;
+   fill: @color_readOnly;
+}
+.icon-hover{
+   color: @color_primaryV;
+}
+/* Для тех, кто поддерживает... */
+.icon-small, .icon-medium, .icon-large, .icon-size, .icon-16, .icon-24, .icon-32, .icon-default {
+   speak: none;
+   font-style: normal;
+   font-weight: normal;
+   font-variant: normal;
+   text-transform: none;
+   line-height: 1;
+   display: inline-block;
+}

@@ -8,6 +8,8 @@
       on:suggestStateChanged="_suggestStateChanged()"
       minSearchLength="{{_options.minSearchLength}}"
       source="{{_options.source}}"
+      keyProperty="{{_options.keyProperty}}"
+      historyId="{{_options.historyId}}"
       searchParam="{{_options.searchParam}}"
       searchDelay="{{_options.searchDelay}}"
       trim="{{_options.trim}}"
