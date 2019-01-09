@@ -11,6 +11,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
       var _private = {
          prepareStatusStyle: function(color) {
             var resColor = color;
+
             // поддержка старых цветов, чтоб не ломать старые
             if (color === 'error') {
                resColor = 'danger';
@@ -19,6 +20,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          },
          prepareSize: function(size) {
             var resSize = size;
+
             // поддержка старых цветов, чтоб не ломать старые
             if (size === 'big') {
                resSize = 'l';

@@ -190,9 +190,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // Опции берем либо с _options.popupOptions, либо с options
             for (var i = 0; i < options.length; i++) {
                var option = options[i];
-               if (config[option] !== undefined) {
-                  baseConfig[option] = config[option];
-               } else if (this._options[option] !== undefined) {
+               if (this._options[option] !== undefined) {
                   baseConfig[option] = this._options[option];
                }
             }
