@@ -461,7 +461,7 @@ define([
          var oldItems = treeControl._children.baseControl.getViewModel().getItems();
          assert.deepEqual(oldItems.getRawData(), getHierarchyData());
          
-         treeControl.reloadItem(0, {}, 'deep').addCallback(function() {
+         treeControl.reloadItem(0, {}, 'depth').addCallback(function() {
             var newItems = treeControl._children.baseControl.getViewModel().getItems();
             assert.deepEqual(
                newItems.getRawData(),

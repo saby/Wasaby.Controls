@@ -257,13 +257,13 @@ define('Controls/List/TreeControl', [
          return this._children.baseControl.reload();
       },
       
-      reloadItem: function(key, meta, direction) {
+      reloadItem: function(key, readMeta, direction) {
          var result;
          
-         if (direction === 'deep') {
+         if (direction === 'depth') {
             result = _private.reloadItem(this, key);
          } else {
-            result = this._children.baseControl.reloadItem(key, meta);
+            result = this._children.baseControl.reloadItem(key, readMeta);
          }
          
          return result;

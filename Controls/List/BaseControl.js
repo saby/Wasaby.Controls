@@ -704,7 +704,7 @@ define('Controls/List/BaseControl', [
          }
       },
    
-      reloadItem: function(key, meta, replaceItem) {
+      reloadItem: function(key, readMeta, replaceItem) {
          var items = this._listViewModel.getItems();
          var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
       
@@ -712,7 +712,7 @@ define('Controls/List/BaseControl', [
             throw new Error('BaseControl::reloadItem no item with key ' + key);
          }
       
-         return this._sourceController.read(key, meta).addCallback(function(item) {
+         return this._sourceController.read(key, readMeta).addCallback(function(item) {
             if (replaceItem) {
                items.replace(item, currentItemIndex);
             } else {
