@@ -119,6 +119,56 @@ define([
          }, self);
       });
 
+      it('itemsReadyCallback', function() {
+         var
+            items = {},
+            itemsReadyCallbackArgs,
+            itemsReadyCallback = function(items) {
+               itemsReadyCallbackArgs = items;
+            },
+            cfg = {
+               itemsReadyCallback: itemsReadyCallback
+            },
+            explorer = new Explorer(cfg);
+         explorer.saveOptions(cfg);
+
+         Explorer._private.itemsReadyCallback(explorer, items);
+         assert.equal(itemsReadyCallbackArgs, items);
+         assert.equal(explorer._items, items);
+      });
+
+      it('dragItemsFromRoot', function() {
+         var
+            items = new RecordSet({
+               rawData: [
+                  { id: 1, title: 'item1' },
+                  { id: 2, title: 'item2', parent: 1 },
+                  { id: 3, title: 'item3', parent: 2 }
+               ],
+               idProperty: 'id'
+            }),
+            cfg = {
+               parentProperty: 'parent'
+            },
+            explorer = new Explorer(cfg);
+
+         explorer.saveOptions(cfg);
+         explorer._beforeMount(cfg);
+         explorer._items = items;
+
+         //item from the root
+         assert.isTrue(Explorer._private.dragItemsFromRoot(explorer, [1]));
+
+         //item is not from the root
+         assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [2]));
+
+         //item is not from the root and from the root
+         assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [1, 2]));
+
+         //an item that is not in the list.
+         assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [4]));
+      });
+
       it('setViewMode', function() {
          var
             cfg = {
@@ -269,11 +319,11 @@ define([
          it('_documentDragStart', function() {
             var explorer = new Explorer({});
 
-
             explorer._documentDragStart({}, {
                entity: 'notDragEntity'
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
+
             explorer._documentDragStart({}, {
                entity: new DragEntity()
             });
