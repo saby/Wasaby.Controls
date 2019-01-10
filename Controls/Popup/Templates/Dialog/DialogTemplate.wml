@@ -14,7 +14,7 @@
                 </ws:if>
             </div>
         </div>
-        <ws:if data="{{ _options.closeButtonVisibility}}">
+        <ws:if data="{{ !_options.hideCross || _options.closeButtonVisibility}}">
             <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}"/>
         </ws:if>
         <div class="controls-DialogTemplate__content-area">
