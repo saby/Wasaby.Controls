@@ -119,6 +119,14 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             });
          });
 
+         // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+         if (popupCfg.revertPositionStyle) {
+            // When positioning from the top of the target we consider' bottom ' coordinates
+            if (direction === 'vertical' && popupCfg.align.vertical.side === 'top') {
+               coordinate = this.getWindowSizes().height - Math.max(0, coordinate) - (size || popupCfg.sizes.height);
+            }
+         }
+
          return {
             coordinate: coordinate,
             size: size
@@ -138,13 +146,20 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
          var horizontalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
          var verticalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
-
-         return {
+         var position = {
             left: horizontalPosition.coordinate,
-            top: verticalPosition.coordinate,
             width: horizontalPosition.size || popupCfg.config.maxWidth,
             height: verticalPosition.size || popupCfg.config.maxHeight
          };
+
+         // When positioning from the top of the target we consider' bottom ' coordinates
+         if (popupCfg.revertPositionStyle && popupCfg.align.vertical.side === 'top') {
+            position.bottom = verticalPosition.coordinate;
+         } else {
+            position.top = verticalPosition.coordinate;
+         }
+
+         return position;
       },
       _private: _private // для тестов
    };
