@@ -26,6 +26,7 @@ define('Controls/Controllers/_Search',
          resolveOptions: function(self, options) {
             self._searchDelay = options.searchDelay;
             self._sorting = options.sorting;
+            self._searchStartCallback = options.searchStartCallback;
          },
          
          searchCallback: function(self, result) {
@@ -66,6 +67,7 @@ define('Controls/Controllers/_Search',
    
          _searchDeferred: null,
          _searchDelay: null,
+         _searchStartCallback: null,
          
          constructor: function(options) {
             Search.superclass.constructor.apply(this, arguments);
@@ -87,6 +89,9 @@ define('Controls/Controllers/_Search',
             this._searchDeferred = new Deferred();
    
             this._searchDelayTimer = setTimeout(function() {
+               if (self._searchStartCallback) {
+                  self._searchStartCallback(filter);
+               }
                self._sourceController.load(filter, self._sorting)
                   .addCallback(function(result) {
                      _private.searchCallback(self, result);

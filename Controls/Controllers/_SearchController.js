@@ -21,7 +21,8 @@ define('Controls/Controllers/_SearchController',
                      filter: self._options.filter,
                      sorting: self._options.sorting,
                      navigation: self._options.navigation,
-                     searchDelay: self._options.searchDelay
+                     searchDelay: self._options.searchDelay,
+                     searchStartCallback: self._options.searchStartCallback
                   });
                }
                return self._search;
@@ -34,10 +35,6 @@ define('Controls/Controllers/_SearchController',
                
                filter = clone(filter);
                filter[self._options.searchParam] = value;
-               
-               if (self._options.searchStartCallback) {
-                  self._options.searchStartCallback(filter);
-               }
                
                search.search(filter)
                   .addCallback(function(result) {
