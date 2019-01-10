@@ -48,6 +48,7 @@
 
 .controls-BreadCrumbsView__title {
    .text-overflow();
+   font-size: @font-size_BreadCrumbs-title;
    color: @color_BreadCrumbs-title;
    font-size: @font-size_BreadCrumbs-title;
 }
@@ -92,14 +93,10 @@
 }
 
 .controls-BreadCrumbsView__indentation {
-   display: inline-flex;
+   .icon(@font-size_BreadCrumbs-hierarchyIcon);
+   color: @color_BreadCrumbs-hierarchyIcon;
+   align-self: flex-start;
    flex-shrink: 0;
-   height: @height_BreadCrumbs-corner;
-   width: @width_BreadCrumbs-corner;
-   &:last-of-type {
-      background: @background_BreadCrumbs-corner no-repeat;
-      align-self: flex-start;
-   }
 }
 
 .ws-is-no-touch {

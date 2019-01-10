@@ -6,7 +6,9 @@
                                        caption="{{_backButtonCaption}}"
                                        style="secondary"
                                        on:click="_onBackButtonClick()"/>
-                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
+                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View
+                {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}
+                {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly'}}"
                      title="{[Подробнее]}"
                      on:click="_onArrowClick()"></div>
             </div>
