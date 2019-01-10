@@ -52,6 +52,18 @@ define(
             assert.isTrue(panel._isChanged);
          });
 
+         it('Init::historyItems', function(done) {
+            var config2 = {
+               items: items,
+               historyId: 'TEST_PANEL_HISTORY_ID'
+            };
+            var panel2 = new FilterPanel(config2);
+            FilterPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+               assert.equal(items.getCount(), 2);
+               done();
+            });
+         });
+
          it('before update', function() {
             panel._items[2].visibility = false;
             panel._beforeMount(config);
@@ -87,10 +99,50 @@ define(
          });
 
          it('reset and filter', function() {
-            panel._beforeMount(config);
-            panel._resetFilter();
-            assert.deepEqual({}, FilterPanel._private.getFilter(panel));
-            assert.isFalse(panel._isChanged);
+            var changedItems = [
+               {
+                  id: 'list',
+                  value: 5,
+                  resetValue: 1
+               },
+               {
+                  id: 'text',
+                  value: '123',
+                  resetValue: '',
+                  visibility: true
+               },
+               {
+                  id: 'bool',
+                  value: true,
+                  resetValue: false,
+                  visibility: false
+               }
+            ];
+            var resetedItems = [
+               {
+                  id: 'list',
+                  value: 1,
+                  resetValue: 1
+               },
+               {
+                  id: 'text',
+                  value: '',
+                  resetValue: '',
+                  visibility: false
+               },
+               {
+                  id: 'bool',
+                  value: false,
+                  resetValue: false,
+                  visibility: false
+               }
+            ];
+            var panel2 = new FilterPanel();
+            panel2.saveOptions({ items: changedItems });
+            panel2._resetFilter();
+            assert.deepEqual({}, FilterPanel._private.getFilter(panel2));
+            assert.deepEqual(panel2._items, resetedItems);
+            assert.isFalse(panel2._isChanged);
          });
 
          it('isChangeValue', function() {
