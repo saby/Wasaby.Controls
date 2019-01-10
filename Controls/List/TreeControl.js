@@ -260,7 +260,7 @@ define('Controls/List/TreeControl', [
       reloadItem: function(key, meta, direction) {
          var result;
          
-         if (direction === 'inside') {
+         if (direction === 'deep') {
             result = _private.reloadItem(this, key);
          } else {
             result = this._children.baseControl.reloadItem(key, meta);
