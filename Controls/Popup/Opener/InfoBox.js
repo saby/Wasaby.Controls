@@ -64,7 +64,7 @@ define('Controls/Popup/Opener/InfoBox',
       var _private = {
          prepareDisplayStyle: function(color) {
             var resColor = color;
-            if (color === 'light') {
+            if (color === 'lite') {
                resColor = 'secondary';
             }
             if (color === 'error') {
@@ -141,7 +141,7 @@ define('Controls/Popup/Opener/InfoBox',
             if (cfg.float) {
                newCfg.floatCloseButton = cfg.float;
             }
-            if (cfg.style === 'light') {
+            if (cfg.style === 'lite') {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style light, используйте secondary');
             }
             if (cfg.style === 'help') {
@@ -173,7 +173,7 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   floatCloseButton: cfg.floatCloseButton
                },
-               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
+               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + (cfg.style || 'default'),
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },
