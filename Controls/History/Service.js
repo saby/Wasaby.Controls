@@ -5,7 +5,8 @@ define('Controls/History/Service', [
    'WS.Data/Source/SbisService',
    'Controls/History/Constants',
    'Core/Deferred',
-   'Core/core-clone'
+   'Core/core-clone',
+   'Core/constants'
 ], function(
    CoreExtend,
    OptionsMixin,
@@ -13,7 +14,8 @@ define('Controls/History/Service', [
    SbisService,
    Constants,
    Deferred,
-   coreClone
+   coreClone,
+   coreConstants
 ) {
    'use strict';
 
@@ -163,7 +165,7 @@ define('Controls/History/Service', [
          var self = this;
          var getValueDef = new Deferred();
 
-         if (!STORAGES[self._historyId]) {
+         if (!STORAGES[self._historyId] || coreConstants.isBuildOnServer) {
             getValueDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
                params: {
                   historyIds: this._historyId ? [this._historyId] : this._historyIds,
