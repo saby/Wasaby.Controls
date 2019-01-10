@@ -222,7 +222,7 @@ node('controls') {
         def smoke_result = true
         try {
         echo "Назначаем переменные"
-        def server_address=props["SERVER_ADDRESS"]
+        def server_address="http://autotest100:9999/wd/hub"
         def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
         def python_ver = 'python3'
@@ -778,7 +778,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
                                     deactivate
                                 """
                             }
