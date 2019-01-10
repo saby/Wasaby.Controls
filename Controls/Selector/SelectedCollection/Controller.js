@@ -155,14 +155,18 @@ define('Controls/Selector/SelectedCollection/Controller', [
             this._setItems([]);
          }
 
-         if ((sourceIsChanged || keysChanged) && this._selectedKeys.length) {
-            return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
-               _private.notifyItemsChanged(self, result);
-               _private.notifyTextValueChanged(self, _private.getTextValue(self));
-               self._forceUpdate();
+         if (sourceIsChanged || keysChanged) {
+            if (this._selectedKeys.length) {
+               return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
+                  _private.notifyItemsChanged(self, result);
+                  _private.notifyTextValueChanged(self, _private.getTextValue(self));
+                  self._forceUpdate();
 
-               return result;
-            });
+                  return result;
+               });
+            } else {
+               this._setItems([]);
+            }
          }
       },
 
