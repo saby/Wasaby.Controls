@@ -8,16 +8,19 @@ define('Controls/Selector/Lookup/Link', [
 ], function(Control, template) {
    'use strict';
 
-   var Link = Control.extend({
-      _template: template
+   return Control.extend({
+      _template: template,
+
+      _keyUpHandler: function(e) {
+         if (e.nativeEvent.keyCode === 13 && !this._options.readOnly) {
+            this._notify('click');
+         }
+      },
+
+      _clickHandler: function(e) {
+         if (this._options.readOnly) {
+            e.stopPropagation();
+         }
+      }
    });
-
-   Link.getDefaultOptions = function() {
-      return {
-         viewMode: 'link',
-         style: 'secondary'
-      };
-   };
-
-   return Link;
 });
