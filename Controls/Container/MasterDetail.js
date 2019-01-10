@@ -3,6 +3,27 @@ define('Controls/Container/MasterDetail', [
    'wml!Controls/Container/MasterDetail/MasterDetail',
    'css!theme?Controls/Container/MasterDetail/MasterDetail'
 ], function(Control, template) {
+
+   /**
+    * Component MasterDetail
+    * Control that allow to implement the Master-Detail interface
+    * @class Controls/Container/MasterDetail
+    * @extends Core/Control
+    * @control
+    * @author Волоцкой В.Д.
+    * @demo Controls-demo/MasterDetail/Demo
+    */
+
+   /**
+    * @name Controls/Container/MasterDetail#master
+    * @cfg {Function} Master content template
+    */
+
+   /**
+    * @name Controls/Container/MasterDetail#detail
+    * @cfg {Function} Detail content template
+    */
+
    return Control.extend({
       _template: template,
       _selected: null,
