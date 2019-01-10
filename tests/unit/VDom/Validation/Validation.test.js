@@ -83,14 +83,14 @@ define([
          FC.onValidateCreated(null, validator2);
 
          FC.submit().addCallback((result) => {
-            assert.equal(validator1._validateCall, true);
-            assert.equal(validator2._validateCall, true);
+            assert.equal(validator1._validateCall, true, 'is validate1 call');
+            assert.equal(validator2._validateCall, true, 'is validate2 call');
 
-            assert.equal(result[0], true);
-            assert.equal(result[1], false);
+            assert.equal(result[0], true, 'validate1 result');
+            assert.equal(result[1], false, 'validate2 result');
 
-            assert.equal(validator1._activateCall, false);
-            assert.equal(validator2._activateCall, true);
+            assert.equal(validator1._activateCall, true, 'is validate1 activate');
+            assert.equal(validator2._activateCall, false, 'is validate2 activate');
          });
          FC.destroy();
       });
