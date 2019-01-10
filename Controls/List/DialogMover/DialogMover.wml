@@ -15,7 +15,8 @@
                              columns="{{_options.columns}}"
                              rootValue="{{_options.rootValue}}"
                              nodeProperty="{{_options.nodeProperty}}"
-                             parentProperty="{{_options.parentProperty}}"/>
+                             parentProperty="{{_options.parentProperty}}"
+                             hasChildrenProperty="{{_options.hasChildrenProperty}}"/>
       </ws:popupOptions>
    </Controls.Popup.Opener.Dialog>
 </div>
