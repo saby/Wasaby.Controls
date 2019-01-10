@@ -1,132 +1,98 @@
 define([
-   'Core/helpers/Function/runDelayed'
-], function (runDelayed) {
+   'Controls/Validate/FormController',
+   'Core/Deferred'
+], function(ValidateFC, Deferred) {
    'use strict';
 
-   describe('Validation-tests', function () {
-      var testControl, testElement;
-      beforeEach(function () {
-         if (typeof $ === 'undefined') {//Проверка того, что тесты выполняются в браузере
-            this.skip();
+   function getValidator(validateResult) {
+      let validator = {
+         _validateCall: false,
+         _activateCall: false,
+         _validationResult: false,
+         _isValidCall: false,
+         validate: () => {
+            validator._validateCall = true;
+            return (new Deferred()).callback(validateResult);
+         },
+         activate: () => {
+            validator._activateCall = true;
+         },
+         setValidationResult: (result) => {
+            validator._validationResult = result;
+         },
+         isValid: () => {
+            validator._isValidCall = true; return true;
          }
-         testElement = $('<div id="component123"></div>');
-         $('#mocha').append(testElement);//Для добавления верстки на страницу
+      };
+
+      return validator;
+   }
+
+   describe('Validate/FormController', () => {
+      it('add/remove validator', () => {
+         let FC = new ValidateFC();
+         let validator1 = getValidator();
+         let validator2 = getValidator();
+
+         FC.onValidateCreated(null, validator1);
+         FC.onValidateCreated(null, validator2);
+
+         assert.equal(FC._validates.length, 2);
+
+         FC.onValidateDestroyed(null, validator1);
+         FC.onValidateDestroyed(null, validator2);
+
+         assert.equal(FC._validates.length, 0);
+
+         FC.destroy();
       });
 
-      function check(done, control, expected, callback) {
-         control.validate().addCallback(function(res) {
-            try {
-               assert.deepEqual(res, expected);
-            } catch (e) {
-               done(e);
-               return;
-            }
+      it('isValid', () => {
+         let FC = new ValidateFC();
+         let validator1 = getValidator();
+         let validator2 = getValidator();
+         FC.onValidateCreated(null, validator1);
+         FC.onValidateCreated(null, validator2);
 
-            callback();
-         });
-      }
+         let results = FC.isValid();
+         assert.equal(validator1._isValidCall, results[0], true);
+         assert.equal(validator2._isValidCall, results[1], true);
 
-      it('SimpleCase - Validation1 - single validator', function (done) {
-         global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Validation1/Validation1'], function (CoreControl, Component) {
-            var element = $('#component123');
-            testControl = CoreControl.createControl(Component, {element: element}, element);
-            testControl._afterMount = function () {
-               runDelayed(function() {
-                  $(document).ready(function () {
-                     setTimeout(function () { // ждем когда оживятся дети
-
-                        testControl._children.validate._deactivatedHandler();
-                        runDelayed(function () { // ждем синхронизатор
-                           runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
-                              runDelayed(function () { // ждем когда пройдет валидация
-                                 assert.deepEqual(testControl._children.textBox._options.style, 'invalid');
-
-                                 testControl.setText('ya@ya.ya');
-                                 runDelayed(function () { // ждем синхронизатор
-                                    runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
-                                       testControl._children.validate._deactivatedHandler();
-                                       runDelayed(function () { // ждем синхронизатор
-                                          runDelayed(function () { // ждем runDelayed из DOMEnvironment который нужен для reviveSuperOldControls
-                                             runDelayed(function () { // ждем когда пройдет валидация
-                                                assert.deepEqual(testControl._children.textBox._options.style, 'info');
-                                                done();
-                                             });
-                                          });
-                                       });
-                                    });
-                                 });
-
-                              });
-                           });
-                        });
-                     }, 200);
-                  });
-               });
-            };
-         });
+         FC.destroy();
       });
 
-      it('SimpleCase - Form1 - single validator', function (done) {
-         global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Form1/Form1'], function (CoreControl, Component) {
-            var element = $('#component123');
-            testControl = CoreControl.createControl(Component, {element: element}, element);
+      it('setValidationResult', () => {
+         let FC = new ValidateFC();
+         let validator1 = getValidator();
+         let validator2 = getValidator();
+         FC.onValidateCreated(null, validator1);
+         FC.onValidateCreated(null, validator2);
 
-            testControl._afterMount = function () {
-               runDelayed(function() {
-                  $(document).ready(function () {
-                     setTimeout(function () { // ждем когда оживятся дети
-                        check(done, testControl, {0: [false] }, function () {
-                           testControl._afterUpdate = function () {
-                              check(done, testControl, {0: null }, function () {
-                                 done();
-                              });
-                           };
-                           testControl.setText('ya@ya.ya');
-                        });
-                     }, 200);
-                  });
-               });
-            };
-         });
+         FC.setValidationResult();
+         assert.equal(validator1._validationResult, null);
+         assert.equal(validator2._validationResult, null);
+
+         FC.destroy();
       });
 
-      it('SimpleCase - Form2 - multiple validators', function (done) {
-         global.requirejs(['Core/Control', 'ControlsSandbox/Validation/Form2/Form2'], function (CoreControl, Component) {
-            var element = $('#component123');
-            testControl = CoreControl.createControl(Component, {element: element}, element);
-            testControl._afterMount = function () {
-               runDelayed(function() {
-                  $(document).ready(function () {
-                     setTimeout(function () { // ждем когда оживятся дети
-                        check(done, testControl, {0: [false, "IsRequiredDef: undefined не является строкой"] }, function () {
-                           testControl._afterUpdate = function () {
-                              check(done, testControl, {0: [false, "IsRequiredDef: пустая строка"] }, function () {
-                                 testControl._afterUpdate = function () {
-                                    check(done, testControl, {0: [false] }, function () {
-                                       testControl._afterUpdate = function () {
-                                          check(done, testControl, {0: null }, function () {
-                                             done();
-                                          });
-                                       };
-                                       testControl.setText('ya@ya.ya');
-                                    });
-                                 };
-                                 testControl.setText('123');
-                              });
-                           };
-                           testControl.setText('');
-                        });
-                     }, 200);
-                  });
-               });
-            };
-         });
-      });
+      it('submit', () => {
+         let FC = new ValidateFC();
+         let validator1 = getValidator(true);
+         let validator2 = getValidator(false);
+         FC.onValidateCreated(null, validator1);
+         FC.onValidateCreated(null, validator2);
 
-      afterEach(function () {
-         testControl && testControl.destroy();
-         testElement && testElement.remove();
+         FC.submit().addCallback((result) => {
+            assert.equal(validator1._validateCall, true);
+            assert.equal(validator2._validateCall, true);
+
+            assert.equal(result[0], true);
+            assert.equal(result[1], false);
+
+            assert.equal(validator1._activateCall, false);
+            assert.equal(validator2._activateCall, true);
+         });
+         FC.destroy();
       });
    });
-
 });
