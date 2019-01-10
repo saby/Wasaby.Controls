@@ -31,11 +31,11 @@ define('Controls/Toggle/Button', [
     * First icon displayed when toggle switch is off.
     * Second icon displayed when toggle switch is on.
     * @example
-    * Primary link with one icon.
+    * Toggle button with one icon.
     * <pre>
     *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03']}}" viewMode="link"/>
     * </pre>
-    * Primary link with two icons.
+    * Toggle button with two icons.
     * <pre>
     *    <Controls.Toggle.Button icons="{{['icon-small icon-ArrangeList03', 'icon-small icon-ArrangeList04']}}" iconStyle="success" style="primary" viewMode="link"/>
     * </pre>
@@ -47,7 +47,7 @@ define('Controls/Toggle/Button', [
     * First caption displayed when toggle switch is off.
     * Second caption displayed when toggle switch is on.
     * @example
-    * Toggle button with two removable captions.
+    * Toggle button with two captions.
     * <pre>
     *    <Controls.Toggle.Button readOnly="{{false}}" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link"/>
     * </pre>
@@ -59,7 +59,7 @@ define('Controls/Toggle/Button', [
 
    /**
     * @name Controls/Toggle/Button#viewMode
-    * @cfg {Enum} Button view mode.
+    * @cfg {Enum} Toggle button view mode.
     * @variant link Decorated hyperlink.
     * @variant pushButton Decorated hyperlink transform to toolbar button.
     * @variant toolButton Toolbar button.
