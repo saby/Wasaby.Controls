@@ -54,10 +54,6 @@ define('Controls/Button/Menu',
             }
          },
 
-         _onOpen: function() {
-            require(['css!Controls/Button/Menu/MenuPopup']);
-         },
-
          _onItemClickHandler: function(event, result) {
             this._notify('onMenuItemActivate', [result[0]]);
          }

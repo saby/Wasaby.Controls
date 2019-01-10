@@ -206,8 +206,9 @@ define('Controls/Toolbar', [
          };
       },
       openPopup: function(config, self) {
-         require(['css!Controls/Toolbar/ToolbarPopup']);
-         self._children.menuOpener.open(config, self);
+         require(['css!Controls/Toolbar/ToolbarPopup'], function() {
+            self._children.menuOpener.open(config, self);
+         });
       }
    };
 
