@@ -231,6 +231,9 @@ define('Controls/Application',
 
             headData.pushDepComponent(self.application, false);
 
+            // Временно положим это в HeadData, потом это переедет в константы реквеста
+            headData.isNewEnvironment = !self.isCompatible;
+
             if (receivedState.csses && !headData.isDebug) {
                ThemesController.getInstance().initCss({
                   themedCss: receivedState.csses.themedCss,
