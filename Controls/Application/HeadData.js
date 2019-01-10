@@ -124,6 +124,9 @@ define('Controls/Application/HeadData', [
          this.themesActive = true;
          this.cssLinks = cssLinks || [];
          this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
+
+         // переедет в константы реквеста, изменяется в Controls/Application
+         this.isNewEnvironment = false;
       },
       pushCssLink: function(url) {
          this.cssLinks.push(url);
