@@ -27,9 +27,8 @@ define('Controls-demo/Popup/PopupWithPending',
                self._propertyChangeNotified = true;
                self._notify('registerPending', [def, {
                   showLoadingIndicator: false,
-                  onPendingFail: function(forceFinishValue) {
-                     self._showConfirmDialog(def, forceFinishValue);
-                     return def;
+                  onPendingFail: function(forceFinishValue, deferred) {
+                     self._showConfirmDialog(deferred, forceFinishValue);
                   }
                }], { bubbling: true });
             }
