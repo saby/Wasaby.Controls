@@ -426,6 +426,7 @@ define('Controls/List/BaseControl', [
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
+            require(['css!Controls/Toolbar/ToolbarPopup']);
             self._children.itemActionsOpener.open({
                opener: self._children.listView,
                target: !context ? childEvent.target : false,
@@ -444,7 +445,7 @@ define('Controls/List/BaseControl', [
                closeByExternalClick: true,
                corner: { vertical: 'top', horizontal: 'right' },
                horizontalAlign: { side: context ? 'right' : 'left' },
-               className: 'controls-Toolbar__menu-position',
+               className: 'controls-Toolbar__popup_list',
                nativeEvent: context ? childEvent.nativeEvent : false
             });
             self._menuIsShown = true;

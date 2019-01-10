@@ -20,6 +20,7 @@
         navigation="{{_options.navigation}}"
         filter="{{_options.filter}}"
         lazyItemsLoad="{{true}}"
+        on:open="_onOpen()"
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"
         attr:class="controls-MenuButton__Wrapper">

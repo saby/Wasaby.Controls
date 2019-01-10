@@ -160,7 +160,7 @@ define('Controls/Toolbar', [
 
       setPopupOptions: function(self, newOptions) {
          self._popupOptions = {
-            className: (newOptions.popupClassName || '') + ' controls-Toolbar__menu-position',
+            className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup_list',
             corner: { vertical: 'top', horizontal: 'right' },
             horizontalAlign: { side: 'left' },
             eventHandlers: {
@@ -181,7 +181,7 @@ define('Controls/Toolbar', [
          return {
             corner: { vertical: 'top', horizontal: 'left' },
             horizontalAlign: { side: 'right' },
-            className: 'controls-Toolbar_menu ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar__popup ' + (item.get('popupClassName') || ''),
             templateOptions: {
                items: self._items,
                rootKey: item.get(self._options.keyProperty),
@@ -198,12 +198,15 @@ define('Controls/Toolbar', [
 
       generateMenuConfig: function(self) {
          return {
-            className: 'controls-Toolbar__menu-position ' + (self._options.popupClassName || ''),
             templateOptions: {
                items: self._menuItems
             },
             target: self._children.popupTarget
          };
+      },
+      openPopup: function(config, self) {
+         require(['css!Controls/Toolbar/ToolbarPopup']);
+         self._children.menuOpener.open(config, self);
       }
    };
 
@@ -257,8 +260,8 @@ define('Controls/Toolbar', [
       },
       _onItemClick: function(event, item) {
          if (item.get(this._nodeProperty)) {
-            var config =  _private.generateItemPopupConfig(item,  event, this);
-            this._children.menuOpener.open(config, this);
+            var config = _private.generateItemPopupConfig(item, event, this);
+            _private.openPopup(config, this);
 
             // TODO нотифай событий menuOpened и menuClosed нужен для работы механизма корректного закрытия превьювера переделать
             // TODO по задаче https://online.sbis.ru/opendoc.html?guid=76ed6751-9f8c-43d7-b305-bde84c1e8cd7
@@ -273,7 +276,7 @@ define('Controls/Toolbar', [
       _showMenu: function() {
          var config = _private.generateMenuConfig(this);
          this._notify('menuOpened', [], { bubbling: true });
-         this._children.menuOpener.open(config, this);
+         _private.openPopup(config, this);
       },
 
       _onResult: function(result) {

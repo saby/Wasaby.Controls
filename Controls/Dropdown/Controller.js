@@ -225,6 +225,7 @@ define('Controls/Dropdown/Controller',
             if (opener.isOpened()) {
                opener.close();
             } else {
+               this._notify('open');
                this._open();
             }
          },
