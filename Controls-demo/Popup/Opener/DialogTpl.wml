@@ -1,0 +1,16 @@
+<div style="height: 200px; min-width: 500px; max-width: 700px;">
+    <Controls.Popup.Templates.Dialog.DialogTemplate caption="Создание категории" closeButtonVisibility="true" draggable="{{draggable}}">
+        <ws:headerContentTemplate>
+            <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+                <Controls.Button caption="Button"/>
+            </div>
+        </ws:headerContentTemplate>
+        <ws:bodyContentTemplate>
+            <div class="dialog-content">
+                <Controls.Input.Text placeholder="Название" />
+                <Controls.Input.Text placeholder="Описание" />
+            </div>
+        </ws:bodyContentTemplate>
+    </Controls.Popup.Templates.Dialog.DialogTemplate>
+
+</div>

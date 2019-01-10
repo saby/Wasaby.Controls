@@ -16,15 +16,20 @@ define('Controls/Popup/Opener/Notification',
        */
 
       /**
-       * @name Controls/Popup/Opener/Notification#closePopupBeforeUnmount
-       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
+       * @name Controls/Popup/Opener/Dialog#className
+       * @cfg {String} Class names of popup.
        */
 
       /**
-       * @typedef {Object} popupOptions
-       * @property {Function} template Шаблон отображения внутреннего содержимого
-       * @property {Object} templateOptions Шаблон отображения внутреннего содержимого
+       * @name Controls/Popup/Opener/Dialog#template
+       * @cfg {String|Function} Template inside popup.
        */
+
+      /**
+       * @name Controls/Popup/Opener/Dialog#templateOptions
+       * @cfg {String|Function} Template options inside popup.
+       */
+
 
       var _private = {
          compatibleOpen: function(self, popupOptions) {
@@ -107,13 +112,4 @@ define('Controls/Popup/Opener/Notification',
  * @description Popup opened status.
  */
 
-/**
- * @typedef {Object} PopupOptions
- * @description Sets the popup configuration.
- * @property {} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {} className Class names of popup.
- * @property {} opener Control, which is the logical initiator of popup opening.
- * @property {} template Template inside popup.
- * @property {} templateOptions Template options inside popup.
- * @property {} eventHandlers Callback functions on popup events.
- */
+
