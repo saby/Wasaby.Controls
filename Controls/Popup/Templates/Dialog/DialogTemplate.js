@@ -89,7 +89,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
                IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
          },
-         _beforeUpdate: function(options){
+         _beforeUpdate: function(options) {
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
          },
 
