@@ -4,7 +4,7 @@
          <ws:Array>
             <ws:Object>
                <ws:template>
-                  <div class="ws-flexbox ws-flex-column">
+                  <div class="example-Base__wrapper">
                      <div class="example-Base__specify">SNILS</div>
                      <Controls.Input.Mask placeholder="SNILS"
                                           mask="ddd-ddd-ddd dd"
@@ -14,7 +14,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <div class="ws-flexbox ws-flex-column">
+                  <div class="example-Base__wrapper">
                      <div class="example-Base__specify">Bank card number</div>
                      <Controls.Input.Mask placeholder="Card number"
                                           mask="dddd dddd dddd dddd"
@@ -24,7 +24,7 @@
             </ws:Object>
             <ws:Object spacing="normal">
                <ws:template>
-                  <div class="ws-flexbox ws-flex-column">
+                  <div class="example-Base__wrapper">
                      <div class="example-Base__specify example-Base__specify_detached">Mobile phone</div>
                      <Controls.Input.Mask mask="+7 (ddd) ddd-dd-dd"
                                           bind:value="_mobilePhone"/>

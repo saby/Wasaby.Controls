@@ -13,7 +13,7 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
       var PreviewerController = StickyController.constructor.extend({
          _openedPopupId: null,
 
-         _destroyDeferred: null,
+         _destroyDeferred: {},
 
          elementCreated: function(element, container, id) {
             /**
@@ -27,21 +27,22 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
             return PreviewerController.superclass.elementCreated.apply(this, arguments);
          },
 
-         elementDestroyed: function(element) {
-            this._openedPopupId = null;
-            this._destroyDeferred = new Deferred();
+         elementDestroyed: function(item) {
+            if (item.id === this._openedPopupId) {
+               this._openedPopupId = null;
+            }
 
-            //https://online.sbis.ru/opendoc.html?guid=0970b6a0-e38d-4b46-bd83-4e994444671a
-            element.popupState = 'destroying';
-            element.popupOptions.className = (element.popupOptions.className || '') + ' controls-PreviewerController_close';
+            this._destroyDeferred[item.id] = new Deferred();
 
-            return this._destroyDeferred;
+            item.popupOptions.className = (item.popupOptions.className || '') + ' controls-PreviewerController_close';
+
+            return this._destroyDeferred[item.id];
          },
 
-         elementAnimated: function(element) {
-            if (element.popupState === 'destroying') {
-               element.popupState = 'destroyed';
-               this._destroyDeferred.callback();
+         elementAnimated: function(item) {
+            if (this._destroyDeferred[item.id]) {
+               this._destroyDeferred[item.id].callback();
+               delete this._destroyDeferred[item.id];
             }
          }
       });

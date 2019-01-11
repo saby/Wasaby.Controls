@@ -208,16 +208,18 @@ define('Controls/Popup/Opener/Stack/StackController',
             var maxPanelWidth = StackStrategy.getMaxPanelWidth();
             var cache = {};
             this._stack.each(function(item) {
-               item.position = _private.getItemPosition(item);
-               var currentWidth = item.containerWidth || item.position.width;
-               if (!cache[currentWidth]) {
-                  cache[currentWidth] = 1;
-                  _private.addShadowClass(item);
-               } else {
-                  _private.removeShadowClass(item);
-               }
-               if (StackStrategy.isMaximizedPanel(item)) {
-                  _private.prepareMaximizedState(maxPanelWidth, item);
+               if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
+                  item.position = _private.getItemPosition(item);
+                  var currentWidth = item.containerWidth || item.position.width;
+                  if (!cache[currentWidth]) {
+                     cache[currentWidth] = 1;
+                     _private.addShadowClass(item);
+                  } else {
+                     _private.removeShadowClass(item);
+                  }
+                  if (StackStrategy.isMaximizedPanel(item)) {
+                     _private.prepareMaximizedState(maxPanelWidth, item);
+                  }
                }
             });
          },

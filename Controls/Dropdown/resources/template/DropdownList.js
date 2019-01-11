@@ -81,24 +81,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       /**
        *
-       * Действие открытия прилипающего окна
+       * Template for controls, that opens dropdown list.
        * @control
+       * @mixes Controls/Dropdown/template/DropdownListStyles
        * @public
        * @category Popup
        */
 
-      /**
-        * @name Controls/Menu#menuStyle
-        * @cfg {String} Отображения меню
-        * @variant defaultHead Стандартный заголовок
-        * @variant duplicateHead Иконка вызывающего элемента дублрируется в первый пункт. Заголовка с фоном нет.
-        */
-      /**
-        * @name Controls/Menu#showHeader
-        * @cfg {Boolean} Показывать ли заголовок в меню.
-        * @variant true Заголовок есть
-        * @variant false Заголовка нет.
-        */
       var DropdownList = Control.extend([], {
          _template: MenuItemsTpl,
          _expanded: false,

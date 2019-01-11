@@ -149,8 +149,8 @@ define([
             path._beforeUpdate({
                items: []
             });
-            assert.equal(path._visibleItems.length, 0);
-            assert.equal(path._breadCrumbsItems.length, 0);
+            assert.isNull(path._visibleItems);
+            assert.isNull(path._breadCrumbsItems);
          });
       });
 
@@ -164,11 +164,17 @@ define([
       });
 
       it('_onHomeClick', function() {
+         var root = null;
+
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.isNull(args[0]);
+               assert.equal(root, args[0]);
             }
          };
+         path._onHomeClick();
+
+         root = 'itemsRoot';
+         path._options.root = root;
          path._onHomeClick();
       });
 

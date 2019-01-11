@@ -22,7 +22,7 @@ define('Controls/Input/Date/Link', [
    /**
     * Controls that allows user to select date value in calendar.
     *
-    * @class Controls/Input/Date/Lite
+    * @class Controls/Input/Date/Link
     * @extends Core/Control
     * @mixes Controls/Input/Date/interface/ILinkView
     * @mixes Controls/Input/Date/interface/ILink
@@ -36,6 +36,7 @@ define('Controls/Input/Date/Link', [
 
    var Component = BaseControl.extend({
       _template: componentTmpl,
+
       _openDialog: function(event) {
          this._children.opener.open({
             opener: this,
@@ -67,6 +68,9 @@ define('Controls/Input/Date/Link', [
          this._notify('valueChanged', [value]);
          this._children.opener.close();
          this._forceUpdate();
+      },
+      _rangeChangedHandler: function(event, value) {
+         this._notify('valueChanged', [value]);
       }
    });
 

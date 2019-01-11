@@ -189,13 +189,12 @@ define('Controls/Popup/Opener/BaseController',
          }
       });
 
-      BaseController.POPUP_STATE_INITIALIZING = 'initializing';
-      BaseController.prototype.POPUP_STATE_INITIALIZING = BaseController.POPUP_STATE_INITIALIZING; // For Manager Controller that uses the BaseController inheritor
-      BaseController.POPUP_STATE_CREATING = 'creating';
-      BaseController.POPUP_STATE_CREATED = 'created';
-      BaseController.POPUP_STATE_UPDATING = 'updating';
-      BaseController.POPUP_STATE_UPDATED = 'updated';
-      BaseController.POPUP_STATE_DESTROYING = 'destroying';
-      BaseController.POPUP_STATE_DESTROYED = 'destroyed';
+      BaseController.prototype.POPUP_STATE_INITIALIZING = BaseController.POPUP_STATE_INITIALIZING = 'initializing';
+      BaseController.prototype.POPUP_STATE_CREATING = BaseController.POPUP_STATE_CREATING = 'creating';
+      BaseController.prototype.POPUP_STATE_CREATED = BaseController.POPUP_STATE_CREATED = 'created';
+      BaseController.prototype.POPUP_STATE_UPDATING = BaseController.POPUP_STATE_UPDATING = 'updating';
+      BaseController.prototype.POPUP_STATE_UPDATED = BaseController.POPUP_STATE_UPDATED = 'updated';
+      BaseController.prototype.POPUP_STATE_DESTROYING = BaseController.POPUP_STATE_DESTROYING = 'destroying';
+      BaseController.prototype.POPUP_STATE_DESTROYED = BaseController.POPUP_STATE_DESTROYED = 'destroyed';
       return BaseController;
    });

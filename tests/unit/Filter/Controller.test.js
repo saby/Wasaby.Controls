@@ -471,6 +471,13 @@ define(['Controls/Filter/Controller'], function(Filter) {
          assert.deepEqual(Filter._private.getHistoryData(filterButtonItems2), {});
       });
 
+      it('_private.getHistoryItems', function(done) {
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
+            assert.deepEqual(items.length, 15);
+            done();
+         });
+      });
+
    });
 
 });

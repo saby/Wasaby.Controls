@@ -5,6 +5,7 @@
          bind:startValue="_options.value"
          bind:endValue="_options.value"
          on:linkClick="_openDialog()"
+         on:rangeChanged="_rangeChangedHandler()"
          attr:class="controls-DateLink__view"
       />
 

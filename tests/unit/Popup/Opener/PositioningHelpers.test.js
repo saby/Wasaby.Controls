@@ -523,6 +523,8 @@ define(
                StackController._stack.add({ position: { width: 840 }, popupOptions: { stackClassName: '' } });
                StackController._stack.add({ containerWidth: 500, popupOptions: { stackClassName: '' } });
                StackController._stack.add({ containerWidth: 720, popupOptions: { stackClassName: '' } });
+               StackController._stack.add({containerWidth: 200, popupState: 'destroying', popupOptions: {stackClassName: ''}});
+               StackController._stack.add({containerWidth: 200, popupOptions: {stackClassName: ''}});
                StackController._update();
                StackController._update();
                StackController._update();
@@ -533,6 +535,8 @@ define(
                assert.isTrue(StackController._stack.at(4).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
                assert.isTrue(StackController._stack.at(5).popupOptions.stackClassName.indexOf('controls-Stack__shadow') >= 0);
                assert.isTrue(StackController._stack.at(6).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+               assert.isTrue(StackController._stack.at(7).popupOptions.stackClassName.indexOf('controls-Stack__shadow') < 0);
+               assert.isTrue(StackController._stack.at(8).popupOptions.stackClassName.indexOf('controls-Stack__shadow') > 0);
                StackController._private.getItemPosition = baseGetItemPosition;
             });
 

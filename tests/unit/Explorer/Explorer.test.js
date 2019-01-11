@@ -2,12 +2,14 @@ define([
    'Controls/Explorer',
    'Core/Deferred',
    'WS.Data/Collection/RecordSet',
-   'WS.Data/Chain'
+   'WS.Data/Chain',
+   'Controls/DragNDrop/Entity/Items'
 ], function(
    Explorer,
    Deferred,
    RecordSet,
-   chain
+   chain,
+   DragEntity
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -252,6 +254,60 @@ define([
             var result = instance.commitEdit();
             assert.instanceOf(result, Deferred);
             assert.isTrue(result.isSuccessful());
+         });
+      });
+
+      describe('DragNDrop', function() {
+         it('_hoveredCrumbChanged', function() {
+            var
+               hoveredBreadCrumb = {},
+               explorer = new Explorer({});
+
+            explorer._hoveredCrumbChanged({}, hoveredBreadCrumb);
+            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb);
+         });
+         it('_documentDragStart', function() {
+            var explorer = new Explorer({});
+
+
+            explorer._documentDragStart({}, {
+               entity: 'notDragEntity'
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+            explorer._documentDragStart({}, {
+               entity: new DragEntity()
+            });
+            assert.isTrue(explorer._dragOnBreadCrumbs);
+         });
+         it('_documentDragEnd', function() {
+            var explorer = new Explorer({});
+
+            explorer._dragOnBreadCrumbs = true;
+            explorer._documentDragEnd();
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+         });
+         it('_dragEndBreadCrumbs', function() {
+            var
+               dragEnrArgs,
+               dragEntity = new DragEntity(),
+               explorer = new Explorer({});
+
+            explorer._notify = function(e, args) {
+               if (e === 'dragEnd') {
+                  dragEnrArgs = args;
+               }
+            };
+
+            explorer._dragEndBreadCrumbs({}, {});
+            assert.equal(dragEnrArgs, undefined);
+
+            explorer._hoveredBreadCrumb = 'hoveredItemKey';
+            explorer._dragEndBreadCrumbs({}, {
+               entity: dragEntity
+            });
+            assert.equal(dragEnrArgs[0], dragEntity);
+            assert.equal(dragEnrArgs[1], 'hoveredItemKey');
+            assert.equal(dragEnrArgs[2], 'on');
          });
       });
    });

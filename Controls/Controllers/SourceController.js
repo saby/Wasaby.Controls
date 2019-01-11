@@ -14,7 +14,7 @@ define('Controls/Controllers/SourceController',
    function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred, cClone) {
       var _private = {
          prepareSource: function(sourceOpt) {
-            if (!cInstance.instanceOfMixin(sourceOpt, 'WS.Data/Source/ICrud')) {
+            if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
                IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
             return sourceOpt;

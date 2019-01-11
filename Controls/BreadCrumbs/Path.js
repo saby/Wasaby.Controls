@@ -5,6 +5,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/Utils/FontLoadUtil',
    'Controls/Utils/tmplNotify',
+   'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Heading/Back/Back',
    'Controls/Heading/Back',
@@ -16,6 +17,7 @@ define('Controls/BreadCrumbs/Path', [
    ItemsUtil,
    FontLoadUtil,
    tmplNotify,
+   applyHighlighter,
    template,
    backButtonTemplate
 ) {
@@ -60,8 +62,8 @@ define('Controls/BreadCrumbs/Path', [
             availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
          } else {
-            self._visibleItems = [];
-            self._breadCrumbsItems = [];
+            self._visibleItems = null;
+            self._breadCrumbsItems = null;
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
          }
@@ -75,6 +77,7 @@ define('Controls/BreadCrumbs/Path', [
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @mixes Controls/BreadCrumbs/PathStyles
+    * @mixes Controls/interface/IHighlighter
     * @control
     * @public
     * @author Зайцев А.С.
@@ -90,8 +93,8 @@ define('Controls/BreadCrumbs/Path', [
    var BreadCrumbsPath = Control.extend({
       _template: template,
       _backButtonCaption: '',
-      _visibleItems: [],
-      _breadCrumbsItems: [],
+      _visibleItems: null,
+      _breadCrumbsItems: null,
       _backButtonClass: '',
       _breadCrumbsClass: '',
       _oldWidth: 0,
@@ -117,6 +120,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _notifyHandler: tmplNotify,
+      _applyHighlighter: applyHighlighter,
 
       _onBackButtonClick: function() {
          this._notify('itemClick', [this._options.items[this._options.items.length - 1].get(this._options.parentProperty)]);
@@ -127,7 +131,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.items[0].get(this._options.parentProperty)]);
+         this._notify('itemClick', [this._options.root]);
       },
 
       _onArrowClick: function() {
@@ -137,7 +141,8 @@ define('Controls/BreadCrumbs/Path', [
 
    BreadCrumbsPath.getDefaultOptions = function() {
       return {
-         displayProperty: 'title'
+         displayProperty: 'title',
+         root: null
       };
    };
 

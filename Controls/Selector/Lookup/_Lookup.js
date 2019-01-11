@@ -232,6 +232,10 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       getMultiLineState: function(lastRowCollectionWidth, availableWidth, allItemsInOneRow) {
          return lastRowCollectionWidth > availableWidth || !allItemsInOneRow;
+      },
+
+      isNeedUpdate: function(itemsCount, multiLine, readOnly, maxVisibleItems) {
+         return multiLine || !readOnly || itemsCount > maxVisibleItems;
       }
    };
 
@@ -251,6 +255,12 @@ define('Controls/Selector/Lookup/_Lookup', [
          this._simpleViewModel = new BaseViewModel({
             value: options.value
          });
+
+         if (options.multiLine) {
+            this._maxVisibleItems = options.maxVisibleItems;
+         } else {
+            this._maxVisibleItems = options.items.getCount();
+         }
       },
 
       _afterMount: function() {
@@ -262,7 +272,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);
 
-            if (this._options.multiLine || !this._options.readOnly || itemsCount <= this._maxVisibleItems) {
+            if (_private.isNeedUpdate(itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
                this._forceUpdate();
             }
          }

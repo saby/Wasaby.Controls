@@ -28,7 +28,7 @@ define('Controls/Input/Suggest',
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Input/Suggest/Suggest
+       * @demo Controls-demo/Input/Suggest/SuggestPG
        * @author Герасимов А.М.
        */
       

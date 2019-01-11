@@ -6,14 +6,12 @@
 .controls-BreadCrumbsView__wrapper {
    display: flex;
    align-items: baseline;
-   overflow: hidden;
    width: 100%;
 }
 
 .controls-BreadCrumbsView__items {
    display: inline-flex;
    align-items: center;
-   overflow: hidden;
    height: @height_BreadCrumbs-items;
    width: 100%;
 }
@@ -23,6 +21,21 @@
    align-items: center;
    flex-shrink: 0;
    min-width: 0;
+   position: relative;
+}
+
+.controls-BreadCrumbsView__dropTarget:after {
+   content: '';
+   height: @height_BreadCrumbs-items;
+   border: @border-width_BreadCrumbs-item_dropTarget solid @border-color_BreadCrumbs-item_dropTarget;
+   box-sizing: border-box;
+   position: absolute;
+   display: block;
+   border-radius: @border-radius_BreadCrumbs-item_dropTarget;
+   z-index: 10;
+   align-self: center;
+   width: calc(100% + 2 * @border-width_BreadCrumbs-item_dropTarget);
+   left: -@border-width_BreadCrumbs-item_dropTarget;
 }
 
 .controls-BreadCrumbsView__titleWrapper {
@@ -102,4 +115,13 @@
 //Класс сделан только для удобства замеров
 .controls-BreadCrumbsView__crumbMeasurer {
    font-family: @font-family_BreadCrumbs, "Courier New";
+}
+
+.ws-is-ie {
+   .controls-BreadCrumbsView__dropTarget:after {
+      //IE can't correctly align absolutely-positioned flex children: https://codepen.io/anon/pen/MqazJv
+      top: 50%;
+      bottom: 50%;
+      transform: translateY(-50%);
+   }
 }

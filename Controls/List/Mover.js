@@ -114,7 +114,7 @@ define('Controls/List/Mover', [
          }
 
          if (self._options.parentProperty) {
-            if (target !== null && position === ISource.MOVE_POSITION.on && target.get(self._options.nodeProperty) === null) {
+            if (target && position === ISource.MOVE_POSITION.on && target.get(self._options.nodeProperty) === null) {
                return false;
             }
             parentsMap = _private.getParentsMap(self, _private.getIdByItem(self, target));
@@ -144,8 +144,8 @@ define('Controls/List/Mover', [
             id = item.get(self._options.parentProperty);
             item = items.getRecordById(id);
          }
-         if (items.getMetaData().path) {
-            path.each(function(elem) {
+         if (path) {
+            path.forEach(function(elem) {
                if (toMap.indexOf(elem.get(self._keyProperty)) === -1) {
                   toMap.push('' + elem.get(self._keyProperty));
                }

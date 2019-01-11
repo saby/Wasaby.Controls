@@ -11,13 +11,27 @@ define('Controls/Input/interface/ISuggest', [
    
    /**
     * @typedef {Object} suggestTemplateProp
-    * @property {String} templateName component name, that will be displayed in suggest.
-    * @property {String} templateOptions options for component, that will be displayed in suggest.
+    * @property {String} templateName Control name, that will be displayed list of items in suggest.
+    * @property {Object} templateOptions Options for control , which is specified in the templateName field.
     */
-
+   
+   /**
+    * @typedef {Object} emptyTemplateProp
+    * @property {String} templateName Template name for suggest, which will showing when no result were found.
+    * @property {Object} templateOptions Options for template, which is specified in the templateName field.
+    */
+   
+   /**
+    * @typedef {Object} suggestFooterTemplate
+    * @property {String} templateName Name of template, which will showing in bottom of suggest.
+    * @property {Object} templateOptions Options for template, which is specified in the templateName field.
+    */
+   
+   
    /**
     * @name Controls/Input/interface/ISuggest#suggestTemplate
-    * @cfg {suggestTemplateProp} Template for suggest, that showing search results.
+    * @cfg {suggestTemplateProp|null} Template for suggest, that showing search results.
+    * @remark Root control of suggest must be Controls/Container/Suggest/List, for this control you can pass in content option a control (such Controls/List or Controls/Grid), that will displaying a list.
     * @example
     * suggestTemplate.wml
     * <pre>
@@ -42,8 +56,8 @@ define('Controls/Input/interface/ISuggest', [
    
    /**
     * @name Controls/Input/interface/ISuggest#emptyTemplate
-    * @cfg {Function} Template for suggest when no results were found.
-    * @remark If option isn't set, empty suggest won't appear.
+    * @cfg {emptyTemplateProp|null} Template for suggest when no results were found.
+    * @remark If option set to null, empty suggest won't appear.
     * @example
     * emptyTemplate.wml:
     * <pre>
@@ -51,20 +65,16 @@ define('Controls/Input/interface/ISuggest', [
     * </pre>
     *
     * MySuggest.wml:
-    * <Controls.Input.Suggest emptyTemplate="wml!emptyTemplate">
+    * <Controls.Input.Suggest>
+    *    <ws:emptyTemplate templateName="wml!emptyTemplate">
+    *       <ws:templateOptions showImage={{_showImage}}/>
+    *    </ws:emptyTemplate>
     * </Controls.Input.Suggest>
     */
    
    /**
-    * @typedef {Object} suggestFooterTemplate
-    * @property {String} [templateName] name of the template that will be showed in footer.
-    * @property {Object} [templateOptions] options for the footerTemplate
-    * @property {String} [direction] Направление просмотра индекса по умолчанию (при первом запросе):
-    */
-   
-   /**
-    * @name Controls/Input/interface/ISuggest#suggestFooterTemplate
-    * @cfg {suggestFooterTemplate} Footer template ('show all' button).
+    * @name Controls/Input/interface/ISuggest#footerTemplate
+    * @cfg {suggestFooterTemplate} Footer template of suggest.
     * @example
     * myFooter.wml
     * <pre>
@@ -93,11 +103,21 @@ define('Controls/Input/interface/ISuggest', [
    /**
     * @name Controls/Input/interface/ISuggest#historyId
     * @cfg {String} Unique id to save input history.
+    * @remark If items were previously selected, suggest with this items will be displayed after input get focused.
+    * @example
+    * <pre>
+    *    <Controls.Input.Suggest historyId="myHistoryId"/>
+    * </pre>
     */
 
    /**
     * @name Controls/Input/interface/ISuggest#autoDropDown
     * @cfg {Boolean} Show suggest when the input get focused.
+    * @example
+    * In this example suggest will shown after input get focused.
+    * <pre>
+    *    <Controls.Input.Suggest autoSuggest={{true}}/>
+    * </pre>
     */
    
    /**
@@ -105,13 +125,73 @@ define('Controls/Input/interface/ISuggest', [
     * @cfg {String} Defines which field from suggest list will be used as text after selecting an option.
     * @remark
     * @example
+    * myModule.js
     * <pre>
-    *    <Controls.Input.Suggest displayProperty="name"/>
+    *    define('myModule', ['Core/Control', 'wml!myModule', 'WS.Data/Source/Memory'], function(Control, template, Memory) {
+    *       return Control.extend({
+    *          _template: template,
+    *          _suggestValue: null,
+    *          _source: null,
+    *
+    *          _beforeMount: function() {
+    *             this._source = new Memory({
+    *                rawData: [
+    *                   {id: 0, city: 'Yaroslavl'},
+    *                   {id: 1, city: 'Moscow'}
+    *                ]
+    *                idProperty: 'id'
+    *             });
+    *          },
+    *
+    *          _choose: function(event, value) {
+    *             this._suggestValue = value;
+    *          }
+    *       });
+    *    });
+    * </pre>
+    * myModule.wml
+    * <pre>
+    *    <div>
+    *       <Controls.Input.Suggest displayProperty="city" on:choose="_choose()"/>
+    *    </div>
+    *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
     * </pre>
     */
 
    /**
     * @event Controls/Input/interface/ISuggest#choose Occurs when user selects item from suggest.
     * @param {String} value Selected value.
+    * @example
+    * myModule.js
+    * <pre>
+    *    define('myModule', ['Core/Control', 'wml!myModule', 'WS.Data/Source/Memory'], function(Control, template, Memory) {
+    *       return Control.extend({
+    *          _template: template,
+    *          _suggestValue: null,
+    *          _source: null,
+    *
+    *          _beforeMount: function() {
+    *             this._source = new Memory({
+    *                rawData: [
+    *                   {id: 0, city: 'Yaroslavl'},
+    *                   {id: 1, city: 'Moscow'}
+    *                ]
+    *                idProperty: 'id'
+    *             });
+    *          },
+    *
+    *          _choose: function(event, value) {
+    *             this._suggestValue = value;
+    *          }
+    *       });
+    *    });
+    * </pre>
+    * myModule.wml
+    * <pre>
+    *    <div>
+    *       <Controls.Input.Suggest displayProperty='city' on:choose="_choose()"/>
+    *    </div>
+    *    ChosenValue: {{_suggestValue || 'Nothing were chosen'}}
+    * </pre>
     */
 });
