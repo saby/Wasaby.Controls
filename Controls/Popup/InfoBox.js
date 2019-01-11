@@ -312,6 +312,7 @@ define('Controls/Popup/InfoBox',
       InfoBox.getDefaultOptions = function() {
          return {
             position: 'tl',
+            style: 'default',
             showDelay: 300,
             hideDelay: 300,
             trigger: 'hover'

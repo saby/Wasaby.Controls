@@ -38,7 +38,7 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       }
 
       function getHistorySource(historyId) {
-         if (Constants.isServerScript) {
+         if (Constants.isBuildOnServer) {
             return createHistorySource(historyId);
          } else {
             HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId);
