@@ -93,8 +93,10 @@ define('Controls/List/BaseControl', [
                      if (listModel.getIndexByKey(markedKey) === -1) {
                         markedKey = listModel.getFirstItemKey();
                      }
-                     listModel.setMarkedKey(markedKey);
-                     self._restoreMarkedKey = markedKey;
+                     if (markedKey !== undefined) {
+                        listModel.setMarkedKey(markedKey);
+                        self._restoreMarkedKey = markedKey;
+                     }
                   }
                }
 
