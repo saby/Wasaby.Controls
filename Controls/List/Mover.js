@@ -113,7 +113,8 @@ define('Controls/List/Mover', [
             target = _private.getModelByItem(self, target);
          }
 
-         if (self._options.parentProperty) {
+         //Check for a item to be moved because it may not be in the current recordset
+         if (self._options.parentProperty && movedItem) {
             if (target !== null && position === ISource.MOVE_POSITION.on && target.get(self._options.nodeProperty) === null) {
                return false;
             }

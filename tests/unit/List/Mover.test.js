@@ -183,6 +183,19 @@ define([
          mover.moveItems([1, 2], target, 'after');
       });
 
+      it('moveItems not from recordSet', function(done) {
+         var moveItems = [6];
+
+         mover._notify = function(event, args) {
+            if (event === 'afterItemsMove') {
+               assert.deepEqual(args[0], moveItems);
+               done();
+            }
+         };
+
+         mover.moveItems(moveItems, 1, 'on');
+      });
+
       it('moveItems in folder', function(done) {
          mover._notify = function(event) {
             if (event === 'afterItemsMove') {
