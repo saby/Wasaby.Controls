@@ -1,9 +1,9 @@
-define('Controls-demo/PropertyGrid/PropertyGridWrapper',
+define('Controls-demo/Popup/Opener/OpenersPGWrapper',
    [
       'Core/Control',
       'Core/Deferred',
       'Core/core-merge',
-      'wml!Controls-demo/PropertyGrid/PropertyGridWrapper',
+      'wml!Controls-demo/Popup/Opener/OpenersPGWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'wml!Controls-demo/PropertyGrid/Types/booleanOrNull',
       'wml!Controls-demo/PropertyGrid/Types/string',
@@ -34,6 +34,8 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          myEvent: '',
          _my: myTmpl,
          _demoName: '',
+         _popupOptions: null,
+         _nameOpener: '',
          _exampleControlOptions: {},
          _beforeMount: function(opts) {
             this.dataTemplates = {
@@ -46,12 +48,13 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'function|String': functOrString,
                'function': functionTmpl,
                'enum': enumTmpl,
-               'Object': objTmpl
+               'Object': objTmpl,
             };
             var testName = opts.content.split('/');
             testName.splice(0, 1);
             this._demoName = testName.join('');
             this._exampleControlOptions = opts.componentOpt;
+            this._nameOpener = opts.nameOpener;
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
@@ -63,13 +66,9 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _afterMount: function(opts) {
             var self = this,
-               container = this._children[opts.componentOpt.name]._container,
-               controlNodes = container.controlNodes || container[0].controlNodes;
+               container = this._children[opts.nameOpener]._container;
 
-            // TODO: https://online.sbis.ru/doc/d7b89438-00b0-404f-b3d9-cc7e02e61bb3
-
-
-            controlNodes.forEach(function(config) {
+            container.controlNodes.forEach(function(config) {
                var notOrigin = config.control._notify;
 
                config.control._notify = function(event, arg) {
@@ -77,16 +76,15 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                   if (event === opts.eventType) {
                      opts.componentOpt[opts.nameOption] = arg[0];
                   }
-                  notOrigin.apply(this, arguments);
+                  var result= notOrigin.apply(this, arguments);
                   self._forceUpdate();
                   self._children.PropertyGrid._forceUpdate();
+                  return result;
                };
             });
          },
-         _clickHandler: function() {
-            if (this._options.dataObject.showClickEvent === true) {
-               this.myEvent += 'click ';
-            }
+         _openHandler: function() {
+            this._children[this._nameOpener].open(this._exampleControlOptions);
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;

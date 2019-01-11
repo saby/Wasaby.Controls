@@ -17,7 +17,7 @@ define('Controls/Popup/Opener/BaseOpener',
       ManagerController,
       Vdom,
       Utils,
-      CoreClone,
+      coreClone,
       CoreMerge,
       IoC,
       Deferred,
@@ -155,13 +155,50 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _getConfig: function(popupOptions) {
-            var cfg = this._options.popupOptions ? CoreClone(this._options.popupOptions) : {};
-            CoreMerge(cfg, popupOptions || {});
+            var baseConfig = coreClone(this._options.popupOptions || {});
+            var config = coreClone(popupOptions || {});
+            CoreMerge(baseConfig, config);
+
+            // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
+            var options = [
+               'closeByExternalClick',
+               'type',
+               'style',
+               'message',
+               'details',
+               'yesCaption',
+               'noCaption',
+               'cancelCaption',
+               'okCaption',
+               'autofocus',
+               'isModal',
+               'className',
+               'template',
+               'templateOptions',
+               'minWidth',
+               'maxWidth',
+               'maximize',
+               'width',
+               'resizable',
+               'top',
+               'left',
+               'maxHeight',
+               'minHeight',
+               'draggable'
+            ];
+
+            // Опции берем либо с _options.popupOptions, либо с options
+            for (var i = 0; i < options.length; i++) {
+               var option = options[i];
+               if (this._options[option] !== undefined) {
+                  baseConfig[option] = this._options[option];
+               }
+            }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
-            cfg.opener = cfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
-            this._prepareNotifyConfig(cfg);
-            return cfg;
+            baseConfig.opener = baseConfig.opener || Vdom.DefaultOpenerFinder.find(this) || this;
+            this._prepareNotifyConfig(baseConfig);
+            return baseConfig;
          },
 
          _prepareNotifyConfig: function(cfg) {
