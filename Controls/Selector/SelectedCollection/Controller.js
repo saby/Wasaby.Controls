@@ -153,9 +153,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
          if (!newOptions.multiSelect && this._selectedKeys.length > 1) {
             this._setItems([]);
-         }
-
-         if (sourceIsChanged || keysChanged) {
+         } else if (sourceIsChanged || keysChanged) {
             if (this._selectedKeys.length) {
                return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
                   _private.notifyItemsChanged(self, result);
@@ -164,7 +162,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
                   return result;
                });
-            } else {
+            } else if (keysChanged) {
                this._setItems([]);
             }
          }
