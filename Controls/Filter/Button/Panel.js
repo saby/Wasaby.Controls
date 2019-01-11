@@ -179,12 +179,10 @@ define('Controls/Filter/Button/Panel', [
       _resetFilter: function() {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
          Chain(this._items).each(function(item) {
-            if (getPropValue(item, 'visibility') === undefined) {
-               setPropValue(item, 'value', getPropValue(item, 'resetValue'));
-            }
             if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }
+            setPropValue(item, 'value', getPropValue(item, 'resetValue'));
          });
          this._isChanged = false;
       }
