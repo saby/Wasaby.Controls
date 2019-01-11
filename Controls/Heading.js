@@ -38,6 +38,7 @@ define('Controls/Heading', [
     * @cfg {String} Heading display style.
     * @variant primary
     * @variant secondary
+    * @variant info
     * @default primary
     */
 
