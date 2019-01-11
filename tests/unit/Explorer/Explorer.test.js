@@ -137,38 +137,6 @@ define([
          assert.equal(explorer._items, items);
       });
 
-      it('dragItemsFromRoot', function() {
-         var
-            items = new RecordSet({
-               rawData: [
-                  { id: 1, title: 'item1' },
-                  { id: 2, title: 'item2', parent: 1 },
-                  { id: 3, title: 'item3', parent: 2 }
-               ],
-               idProperty: 'id'
-            }),
-            cfg = {
-               parentProperty: 'parent'
-            },
-            explorer = new Explorer(cfg);
-
-         explorer.saveOptions(cfg);
-         explorer._beforeMount(cfg);
-         explorer._items = items;
-
-         //item from the root
-         assert.isTrue(Explorer._private.dragItemsFromRoot(explorer, [1]));
-
-         //item is not from the root
-         assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [2]));
-
-         //item is not from the root and from the root
-         assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [1, 2]));
-
-         //an item that is not in the list.
-         assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [4]));
-      });
-
       it('setViewMode', function() {
          var
             cfg = {
@@ -308,30 +276,96 @@ define([
       });
 
       describe('DragNDrop', function() {
-         it('_hoveredCrumbChanged', function() {
+         var explorer;
+
+         beforeEach(function() {
             var
-               hoveredBreadCrumb = {},
-               explorer = new Explorer({});
+               items = new RecordSet({
+                  rawData: [
+                     { id: 1, title: 'item1', parent: null },
+                     { id: 2, title: 'item2', parent: 1 },
+                     { id: 3, title: 'item3', parent: 2 }
+                  ],
+                  idProperty: 'id'
+               }),
+               cfg = {
+                  parentProperty: 'parent',
+                  root: null
+               };
+
+            explorer = new Explorer(cfg);
+
+            explorer.saveOptions(cfg);
+            explorer._beforeMount(cfg);
+            explorer._items = items;
+         });
+
+         it('_hoveredCrumbChanged', function() {
+            var hoveredBreadCrumb = {};
 
             explorer._hoveredCrumbChanged({}, hoveredBreadCrumb);
             assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb);
          });
-         it('_documentDragStart', function() {
-            var explorer = new Explorer({});
+         it('dragItemsFromRoot', function() {
 
+            //item from the root
+            assert.isTrue(Explorer._private.dragItemsFromRoot(explorer, [1]));
+
+            //item is not from the root
+            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [2]));
+
+            //item is not from the root and from the root
+            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [1, 2]));
+
+            //an item that is not in the list.
+            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [4]));
+         });
+         it('_dragHighlighter', function() {
+            explorer._hoveredBreadCrumb = 2;
+
+            assert.equal(explorer._dragHighlighter(), '');
+
+            explorer._dragOnBreadCrumbs = true;
+            assert.equal(explorer._dragHighlighter(1), '');
+            assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget');
+         });
+         it('_documentDragStart', function() {
             explorer._documentDragStart({}, {
                entity: 'notDragEntity'
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
 
+            //drag in the root
             explorer._documentDragStart({}, {
-               entity: new DragEntity()
+               entity: new DragEntity({
+                  items: [1]
+               })
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [2]
+               })
+            });
+            assert.isTrue(explorer._dragOnBreadCrumbs);
+
+            //drag not in root
+            explorer._root = 'notnull';
+
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [1]
+               })
+            });
+            assert.isTrue(explorer._dragOnBreadCrumbs);
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [2]
+               })
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
          });
          it('_documentDragEnd', function() {
-            var explorer = new Explorer({});
-
             explorer._dragOnBreadCrumbs = true;
             explorer._documentDragEnd();
             assert.isFalse(explorer._dragOnBreadCrumbs);
@@ -339,8 +373,7 @@ define([
          it('_dragEndBreadCrumbs', function() {
             var
                dragEnrArgs,
-               dragEntity = new DragEntity(),
-               explorer = new Explorer({});
+               dragEntity = new DragEntity();
 
             explorer._notify = function(e, args) {
                if (e === 'dragEnd') {
