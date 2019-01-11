@@ -32,7 +32,6 @@ define('Controls/BreadCrumbs/View', [
 
    var BreadCrumbsView = Control.extend({
       _template: template,
-      _itemTemplate: itemTemplate,
       _itemsTemplate: itemsTemplate,
 
       _beforeMount: function() {
@@ -87,6 +86,12 @@ define('Controls/BreadCrumbs/View', [
          this._children.menuOpener.close();
       }
    });
+   
+   BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
+      return {
+         itemTemplate: itemTemplate
+      }
+   };
 
    return BreadCrumbsView;
 });

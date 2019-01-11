@@ -10,7 +10,17 @@
                colspan="{{true}}"
                on:click="_onSearchItemClick(itemData.dispItem)">
       <ws:colspanTemplate>
-         <Controls.BreadCrumbs items="{{colspanTemplate.itemData.item}}" on:itemClick="_onSearchPathClick()"/>
+         <Controls.BreadCrumbs items="{{colspanTemplate.itemData.item}}" on:itemClick="_onSearchPathClick()">
+            <ws:itemTemplate>
+               <ws:partial template="wml!Controls/BreadCrumbs/View/resources/itemTemplate">
+                  <ws:contentTemplate>
+                     <Controls.Decorator.Highlight
+                             highlight="{{itemData.searchValue}}"
+                             text="{{content.itemData.getPropValue(itemData.item, displayProperty || 'title')}}"/>
+                  </ws:contentTemplate>
+               </ws:partial>
+            </ws:itemTemplate>
+         </Controls.BreadCrumbs>
       </ws:colspanTemplate>
    </ws:partial>
 </ws:else>

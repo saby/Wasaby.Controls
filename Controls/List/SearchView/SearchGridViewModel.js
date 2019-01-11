@@ -9,6 +9,12 @@ define('Controls/List/SearchView/SearchGridViewModel', [
       SearchGridViewModel = TreeGridViewModel.extend({
          _createModel: function(cfg) {
             return new SearchViewModel(cfg);
+         },
+   
+         getItemDataByItem: function() {
+            var itemsModelCurrent = SearchGridViewModel.superclass.getItemDataByItem.apply(this, arguments);
+            itemsModelCurrent.searchValue = this._options.searchValue;
+            return itemsModelCurrent;
          }
       });
 
