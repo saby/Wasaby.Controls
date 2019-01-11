@@ -83,10 +83,6 @@ define('Controls/Popup/Opener/Stack',
       return Stack;
    });
 
-/**
- * @name Controls/Popup/Opener/Stack#closePopupBeforeUnmount
- * @cfg {Boolean} Determines whether to close the popup when the component is destroyed.
- */
 
 /**
  * @name Controls/Popup/Opener/Stack#close
@@ -132,18 +128,47 @@ define('Controls/Popup/Opener/Stack',
  */
 
 /**
- * @typedef {Object} PopupOptions
- * @description Stack popup options.
- * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {Boolean} isModal Determines whether the window is modal.
- * @property {String} className Class names of popup.
- * @property {Boolean} closeByExternalClick Determines whether possibility of closing the popup when clicking past.
- * @property {Object} opener Control, which is the logical initiator of popup opening.
- * @property {String|Template} template Template inside popup.
- * @property {String|Template} templateOptions Template options inside popup.
- * @property {Object} eventHandlers Callback functions on popup events.
- * @property {Integer} minWidth The minimum width of popup.
- * @property {Integer} maxWidth The maximum width of popup.
- * @property {Integer} minimizedWidth The width of the panel in a minimized state.
- * @property {Boolean} maximize Determines whether the control is displayed in full screen.
+ * @name Controls/Popup/Opener/Stack#autofocus
+ * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
  */
+
+/**
+ * @name Controls/Popup/Opener/Stack#modal
+ * @cfg {Boolean} Determines whether the window is modal.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#className
+ * @cfg {String} Class names of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#closeOnOutsideClick
+ * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#template
+ * @cfg {String|Function} Template inside popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#templateOptions
+ * @cfg {String|Function} Template options inside popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#minWidth
+ * @cfg {Number} The minimum width of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#maxWidth
+ * @cfg {Number} The maximum width of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Stack#width
+ * @cfg {Number} The minimum width of popup.
+ */
+

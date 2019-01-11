@@ -34,6 +34,8 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
          myEvent: '',
          _my: myTmpl,
          _demoName: '',
+         _dialogRes: undefined,
+         _result: undefined,
          _popupOptions: null,
          _nameOpener: '',
          _exampleControlOptions: {},
@@ -52,6 +54,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
             };
             var testName = opts.content.split('/');
             testName.splice(0, 1);
+            this._dialogRes= opts.dialogResult;
             this._demoName = testName.join('');
             this._exampleControlOptions = opts.componentOpt;
             this._nameOpener = opts.nameOpener;
@@ -67,6 +70,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
          _afterMount: function(opts) {
             var self = this,
                container = this._children[opts.nameOpener]._container;
+            this._exampleControlOptions.target = container,
 
             container.controlNodes.forEach(function(config) {
                var notOrigin = config.control._notify;
@@ -76,7 +80,7 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
                   if (event === opts.eventType) {
                      opts.componentOpt[opts.nameOption] = arg[0];
                   }
-                  var result= notOrigin.apply(this, arguments);
+                  var result = notOrigin.apply(this, arguments);
                   self._forceUpdate();
                   self._children.PropertyGrid._forceUpdate();
                   return result;
@@ -84,7 +88,13 @@ define('Controls-demo/Popup/Opener/OpenersPGWrapper',
             });
          },
          _openHandler: function() {
-            this._children[this._nameOpener].open(this._exampleControlOptions);
+            var self = this;
+            var res = this._children[this._nameOpener].open(this._exampleControlOptions);
+            if(this._dialogRes) {
+               res.addCallback(function (result) {
+                  self._result = '' + result;
+               });
+            }
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;

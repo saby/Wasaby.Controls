@@ -1685,9 +1685,12 @@
             "enum": {
               "click": "Opening by click on the content. Closing by click not on the content or template.",
               "hover": "Opening by hover on the content. Closing by hover not on the content or template.\nOpening is ignored on touch devices.",
-              "demand": "Opening when requested (content clicked).",
               "hover|touch": "Opening by hover or touch on the content. Closing by hover not on the content or template."
             }
+          },
+          "templateOptions": {
+            "title": "Шаблон отображения внутреннего содержимого",
+            "type": "Object"
           }
         }
       }
@@ -1950,6 +1953,10 @@
           "width": {
             "title": "Determines whether the control is displayed in full screen.",
             "type": "Number"
+          },
+          "templateOptions": {
+            "title": "Шаблон отображения внутреннего содержимого",
+            "type": "Object"
           }
         }
       }
@@ -1975,9 +1982,14 @@
             "title": "Determines whether focus is set to the template when popup is opened.",
             "type": "Boolean"
           },
+          "templateOptions": {
+            "title": "Шаблон отображения внутреннего содержимого",
+            "type": "Object"
+          },
           "isModal": {
             "title": "Determines whether the window is modal.",
-            "type": "Boolean"
+            "type": "Boolean",
+            "newName": "modal"
           },
           "className": {
             "title": "Class names of popup.",
@@ -1985,15 +1997,12 @@
           },
           "closeByExternalClick": {
             "title": "Determines whether possibility of closing the popup when clicking past.",
-            "type": "Boolean"
+            "type": "Boolean",
+            "newName": "closeOnOutsideClick"
           },
           "template": {
             "title": "Template inside popup.",
             "type": "function|String"
-          },
-          "draggable": {
-            "title": "Determines whether the component can be moved.",
-            "type": "Boolean"
           },
           "minWidth": {
             "title": "The minimum width of popup.",
@@ -2046,6 +2055,10 @@
           "template": {
             "title": "Template inside popup.",
             "type": "function|String"
+          },
+          "templateOptions": {
+            "title": "Шаблон отображения внутреннего содержимого",
+            "type": "Object"
           }
         }
       }
@@ -2120,12 +2133,12 @@
           },
           "headingStyle": {
             "type": "enum",
-            "default": "default",
+            "default": "secondary",
             "title": "Caption display style.",
             "enum": {
-              "default": "default",
-              "accent": "accent",
-              "additional": "additional"
+              "secondary": "secondary",
+              "primary": "primary",
+              "info": "info"
             }
           },
           "headerContentTemplate": {
@@ -2147,10 +2160,11 @@
           "closeButtonStyle": {
             "type": "enum",
             "default": "default",
+            "newName": "closeButtonViewMode",
             "title": "Close button display style.",
             "enum": {
               "default": "default",
-              "lite": "lite",
+              "light": "light",
               "primary": "primary"
             }
           },
@@ -2179,12 +2193,12 @@
           },
           "headingStyle": {
             "type": "enum",
-            "default": "default",
+            "default": "secondary",
             "title": "Caption display style.",
             "enum": {
-              "default": "default",
-              "accent": "accent",
-              "additional": "small"
+              "secondary": "secondary",
+              "primary": "primary",
+              "info": "info"
             }
           },
           "headerContentTemplate": {
@@ -2210,12 +2224,52 @@
           "closeButtonStyle": {
             "type": "enum",
             "default": "default",
+            "newName": "closeButtonViewMode",
             "title": "Close button display style.",
             "enum": {
               "default": "default",
-              "lite": "lite",
+              "light": "light",
               "primary": "primary"
             }
+          }
+        }
+      }
+    }
+  },
+  "Controls/Popup/Templates/Notification/Base": {
+    "name": "Controls/Popup/Templates/Notification/Base",
+    "title": "Base template of notification popup.",
+    "className": "Controls/Popup/Templates/Notification/Base",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Popup/Templates/Notification/Base",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "style": {
+            "type": "enum",
+            "default": "primary",
+            "title": "Notification display style.",
+            "enum": {
+              "warning": "warning",
+              "primary": "primary",
+              "success": "success",
+              "danger": "danger"
+            }
+          },
+          "closeButtonVisibility": {
+            "type": "Boolean",
+            "title": "Determines whether display of the close button."
+          },
+          "bodyContentTemplate": {
+            "type": "function|String",
+            "title": "Main content."
+          },
+          "name": {
+            "default": "",
+            "title": "Имя контрола",
+            "type": "String"
           }
         }
       }

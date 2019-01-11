@@ -19,6 +19,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           * @category Popup
           * @author Красильников А.С.
           * @mixes Controls/Popup/Templates/Dialog/DialogTmplStyles
+          * @demo Controls-demo/Popup/Templates/DialogTemplatePG
           */
 
          /**
@@ -29,9 +30,9 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          /**
           * @name Controls/Popup/Templates/Dialog/DialogTemplate#headingStyle
           * @cfg {String} Caption display style.
-          * @variant default
-          * @variant accent
-          * @variant additional
+          * @variant secondary
+          * @variant primary
+          * @variant info
           */
 
          /**
@@ -68,7 +69,10 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           */
 
          _template: template,
+         _closeButtonVisibility: true,
          _beforeMount: function(options) {
+            this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
+
             if (options.contentArea) {
                IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
@@ -85,13 +89,16 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
                IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
          },
+         _beforeUpdate: function(options){
+            this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
+         },
 
          /**
           * Close popup.
           * @function Controls/Popup/Templates/Dialog/DialogTemplate#close
           */
          close: function() {
-            this._notify('close', [], {bubbling: true});
+            this._notify('close', [], { bubbling: true });
          },
 
          _onMouseDown: function(event) {
@@ -101,14 +108,19 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          },
 
          _onDragEnd: function() {
-            this._notify('popupDragEnd', [], {bubbling: true});
+            this._notify('popupDragEnd', [], { bubbling: true });
          },
 
          _onDragMove: function(event, dragObject) {
-            this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
+            this._notify('popupDragStart', [dragObject.offset], { bubbling: true });
          }
-
       });
+      DialogTemplate.getDefaultOptions = function() {
+         return {
+            headingStyle: 'secondary',
+            closeButtonVisibility: true
+         };
+      };
+
       return DialogTemplate;
-   }
-);
+   });
