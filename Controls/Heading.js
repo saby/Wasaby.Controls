@@ -50,7 +50,8 @@ define('Controls/Heading', [
          caption: types(String),
          style: types(String).oneOf([
             'secondary',
-            'primary'
+            'primary',
+            'info'
          ]),
          size: types(String).oneOf([
             'xl',
