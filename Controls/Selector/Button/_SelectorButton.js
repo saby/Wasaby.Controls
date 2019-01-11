@@ -21,10 +21,10 @@ define('Controls/Selector/Button/_SelectorButton', [
       },
 
       _itemClickHandler: function(item) {
-         if (!this._options.multiSelect) {
-            this._open();
-         } else {
+         if (this._options.multiSelect) {
             this._notify('itemClick', [item]);
+         } else if (!this._options.readOnly) {
+            this._open();
          }
       }
    });
