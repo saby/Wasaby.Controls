@@ -64,12 +64,12 @@ define(
          it('search', function(done) {
             var filter = {};
             var aborted = false;
-            var searchStarted = false
+            var searchStarted = false;
             var searchController = new Search({
                minSearchLength: 3,
                source: source,
                navigation: navigation,
-               searchDelay: 0,
+               searchDelay: 50,
                searchParam: 'name',
                filter: filter,
                searchCallback: function(res, resFilter) {
@@ -78,7 +78,6 @@ define(
                   assert.isTrue(aborted);
                   assert.isTrue(searchStarted);
                   assert.isTrue(filter !== resFilter);
-                  done();
                },
                abortCallback: function() {
                   aborted = true;
@@ -88,8 +87,14 @@ define(
                }
             });
             
-            searchController.search('');
             searchController.search('Sasha');
+            assert.isFalse(searchStarted);
+   
+            setTimeout(function() {
+               searchController.search('');
+               searchController.search('Sasha');
+               done();
+            }, 60);
          });
    
          it('search with sorting', function(done) {
