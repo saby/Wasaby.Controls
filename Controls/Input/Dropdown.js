@@ -39,6 +39,35 @@ define('Controls/Input/Dropdown',
       /**
        * @name Controls/Input/Dropdown#contentTemplate
        * @cfg {Function} Template that will be render calling element.
+       * @remark
+       * To determine the template, you should call the base template "wml!Controls/Input/Dropdown/resources/defaultContentTemplate".
+       * The template should be placed in the component using the <ws:partial> tag with the template attribute.
+       * You can redefine content using the contentTemplate option.
+       * By default, the base template wml!Controls/Input/Dropdown/resources/defaultContentTemplate will display only text.
+       * To display the icon and text, use the "wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon" template.
+       * @example
+       * Display text and icon
+       *
+       * WML:
+       * <pre>
+       * <Controls.Input.Dropdown
+       *       bind:selectedKeys="_selectedKeys"
+       *       keyProperty="id"
+       *       displayProperty="title"
+       *       source="{{_source)}}"
+       *       contentTemplate="wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon">
+       * </Controls.Input.Dropdown>
+       * </pre>
+       * JS:
+       * <pre>
+       * this._source = new Memory({
+       *    idProperty: 'id',
+       *    data: [
+       *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+       *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+       *    ]
+       * });
+       * </pre>
        */
 
 

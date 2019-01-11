@@ -34,8 +34,8 @@ define('Controls/interface/IDropdown', [], function() {
     *             template="wml!Controls/Dropdown/resources/template/itemTemplate" >
     *          <ws:contentTemplate>
     *             <div class="demo-combobox__item">
-    *                <div class="demo-combobox__title">{{itemTemplate.itemData.item.get('title')}}</div>
-    *                <div class="demo-combobox__comment">{{itemTemplate.itemData.item.get('comment')}}</div>
+    *                <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
+    *                <div class="demo-comment">{{itemTemplate.itemData.item.get('comment')}}</div>
     *             </div>
     *          </ws:contentTemplate>
     *          </ws:partial>
@@ -88,9 +88,9 @@ define('Controls/interface/IDropdown', [], function() {
     * <pre>
     *    <ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate" >
     *       <ws:contentTemplate>
-    *          <div class="demo-combobox__item">
-    *             <div class="demo-combobox__title">{{itemTemplate.itemData.item.get('title')}}</div>
-    *             <div class="demo-combobox__comment">{{itemTemplate.itemData.item.get('comment')}}</div>
+    *          <div class="demo-item">
+    *             <div class="demo-title">{{itemTemplate.itemData.item.get('title')}}</div>
+    *             <div class="demo-comment">{{itemTemplate.itemData.item.get('comment')}}</div>
     *          </div>
     *       </ws:contentTemplate>
     *    </ws:partial>
