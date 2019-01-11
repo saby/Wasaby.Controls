@@ -183,7 +183,6 @@ define(
          });
 
          it('recordSet', function() {
-            FilterPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
 
             var rs = new RecordSet({
                   idProperty: 'id',
@@ -314,6 +313,7 @@ define(
 
          it('_historyItemsChanged', function() {
             var panel = getFilterPanel(config);
+            FilterPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
             panel._historyId = 'TEST_PANEL_HISTORY_ID';
             panel._historyItemsChanged();
          });
