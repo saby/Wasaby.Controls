@@ -196,6 +196,10 @@ define('Controls/Controllers/SourceController',
          update: function(item) {
             return this._source.update(item);
          },
+         
+         read: function(key, meta) {
+            return this._source.read(key, meta);
+         },
 
          destroy: function() {
             if (this._queryParamsController) {
