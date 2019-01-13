@@ -40,7 +40,7 @@
     },
     {
       "name": "Transport",
-      "path": "%cd%/node_modules/sbis3-ws/ws/transport"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core/transport"
     },
     {
       "name": "View",
