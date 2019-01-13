@@ -32,15 +32,7 @@
     },
     {
       "name": "WS.Core",
-      "path": "%cd%/node_modules/sbis3-ws/ws"
-    },
-    {
-      "name": "Lib",
-      "path": "%cd%/node_modules/sbis3-ws/ws/lib"
-    },
-    {
-      "name": "Ext",
-      "path": "%cd%/node_modules/sbis3-ws/ws/lib/Ext"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core"
     },
     {
       "name": "WS.Deprecated",
