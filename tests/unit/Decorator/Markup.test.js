@@ -283,6 +283,8 @@ define([
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json), html));
          });
          it('with linkDecorate resolver', function() {
+            // Link with length 1500.
+            var longLink = 'https://ya.ru/' + 'a'.repeat(1486);
             var json = [
                ['p', linkNode],
                ['p', linkNode, nbsp + '   '],
@@ -301,6 +303,7 @@ define([
                      'https:\\\\ya.ru'
                   ]
                ],
+               ['p', ['a', { href: longLink }, longLink]],
                ['p', ['a', { href: 'https://ya.ru' }, 'text']]
             ];
             var html = '<div>' +
@@ -312,6 +315,7 @@ define([
                '<p>' + decoratedLinkHtml + '   <br />text</p>' +
                '<p><strong>' + linkHtml + '</strong>text</p>' +
                '<p>' + decoratedLinkHtml + '</p>' +
+               '<p><a href="' + longLink + '">' + longLink + '</a></p>' +
                '<p><a href="https://ya.ru">text</a></p>' +
             '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json, linkDecorateResolver), html));
