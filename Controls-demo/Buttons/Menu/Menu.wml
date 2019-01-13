@@ -98,7 +98,7 @@
       <h4>Icon with text displayed in the header</h4>
       <Controls.Button.Menu
               keyProperty="id"
-              size="m"
+              size="s"
               icon="icon-small icon-AddButtonNew"
               viewMode="toolButton"
               style="secondary"
@@ -112,7 +112,7 @@
               icon="icon-medium icon-AddButtonNew"
               viewMode="toolButton"
               style="secondary"
-              size="l"
+              size="m"
               source="{{_createMemory(_iconAddMedium)}}"
               attr:class="ControlsDemo-ButtonsMenu__item"
               tooltip="Add">
