@@ -64,10 +64,10 @@ define('Controls/Container/Async',
          },
 
          _setErrorState: function(errorState, message) {
-            if(errorState) {
-               this.error = 'Couldn\'t load module '
-                  + this._options.templateName + ' '
-                  + (message ? message : "");
+            if (errorState) {
+               this.error = 'Couldn\'t load module ' +
+                  this._options.templateName + ' ' +
+                  (message || '');
             } else {
                this.error = null;
             }
@@ -79,8 +79,8 @@ define('Controls/Container/Async',
                tpl = this._loadFileSync(name);
                this._pushDepToHeadData(name);
                this._updateContent(tpl, options);
-            } catch(e) {
-               IoC.resolve("ILogger").error('Couldn\'t load ' + name, e);
+            } catch (e) {
+               IoC.resolve('ILogger').error('Couldn\'t load ' + name, e);
                this._setErrorState(true, e);
             }
          },
@@ -100,7 +100,7 @@ define('Controls/Container/Async',
          _pushDepToHeadData: function(dep) {
             var request = Request.getCurrent();
             var headData = request && request.getStorage('HeadData');
-            if(headData && headData.pushDepComponent) {
+            if (headData && headData.pushDepComponent) {
                headData.pushDepComponent(dep, true);
             }
          },
