@@ -20,6 +20,7 @@ define('Controls-demo/Popup/Opener/ConfirmationPG',
          _content: 'Controls/Popup/Opener/Confirmation',
          _nameOpener: 'confirmationOpener',
          _dataObject: null,
+         _dialogResult: true,
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
@@ -31,12 +32,12 @@ define('Controls-demo/Popup/Opener/ConfirmationPG',
                name: 'Dialog',
                type: 'yesnocancel',
                style: 'success',
-               message: 'Do you want to close this window?',
-               details: 'So just shoose yes but only if you really want to',
-               yesCaption: 'yes!!!',
-               noCaption: 'no!!!',
-               cancelCaption: 'cancel!!!',
-               okCaption: 'ok!!!'
+               message: ' Do you like football?',
+               details: ' just give me an honest answer',
+               yesCaption: 'yes',
+               noCaption: 'no',
+               cancelCaption: 'cancel',
+               okCaption: 'ok'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

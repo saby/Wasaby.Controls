@@ -24,6 +24,7 @@ define('Controls-demo/Popup/Templates/DialogTemplatePG',
          _dataOptions: null,
          _content: 'Controls/Popup/Templates/Dialog/DialogTemplate',
          _dataObject: null,
+         _componentClass: 'controls-demo_OpenerTemplate',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
@@ -34,51 +35,51 @@ define('Controls-demo/Popup/Templates/DialogTemplatePG',
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
+                        title: 'default',
                         template: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/customBodyContent',
+                        title: 'custom',
                         template: 'wml!Controls-demo/Popup/Templates/resources/customBodyContent'
                      }
                   ],
-                  value: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent'
+                  value: 'default'
                },
                headerContentTemplate: {
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/headerContent',
+                        title: 'default',
                         template: 'wml!Controls-demo/Popup/Templates/resources/headerContent'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/customHeaderContent',
+                        title: 'custom',
                         template: 'wml!Controls-demo/Popup/Templates/resources/customHeaderContent'
                      }
                   ],
-                  value: 'wml!Controls-demo/Popup/Templates/resources/headerContent'
+                  value: 'default'
                },
                footerContentTemplate: {
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
+                        title: 'default',
                         template: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/customFooterContent',
+                        title: 'custom',
                         template: 'wml!Controls-demo/Popup/Templates/resources/customFooterContent'
                      }
                   ],
-                  value: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent'
+                  value: 'default'
                },
             };
             this._componentOptions = {
                name: 'DialogTemplate',
-               headingCaption: 'default',
+               headingCaption: 'secondary',
                headerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/headerContent',
                bodyContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
                footerContentTemplate: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
