@@ -9,50 +9,45 @@ define('Controls/Application/TouchDetector', [
    compatibility,
    TouchContextField
 ) {
-   var
-      _private = {
-         moveInRow: 1,
-
-         //При инициализации необходимо корректно проставить значение, далее значение определяется в зависимости от событий
-         state: compatibility.touch,
-
-         lastState: compatibility.touch
-      };
    return Control.extend({
+      moveInRow: 1,
 
+      // При инициализации необходимо корректно проставить значение, далее значение определяется в зависимости от событий
+      state: compatibility.touch,
+      lastState: compatibility.touch,
       _template: template,
 
       _updateTouchObject: function() {
-         if (_private.state !== _private.lastState) {
-            this._touchObjectContext.setIsTouch(_private.state);
-            _private.lastState = _private.state;
+         if (this.state !== this.lastState) {
+            this._touchObjectContext.setIsTouch(this.state);
+            this.lastState = this.state;
          }
       },
 
       _beforeMount: function() {
-         this._touchObjectContext = new TouchContextField(_private.state);
+         this._touchObjectContext = new TouchContextField(this.state);
       },
 
       touchHandler: function() {
-         _private.state = true;
+         this.state = true;
          this._updateTouchObject();
-         _private.moveInRow = 0;
+         this.moveInRow = 0;
       },
 
       moveHandler: function() {
-         if (_private.moveInRow > 0) {
-            _private.state = false;
+         if (this.moveInRow > 0) {
+            this.state = false;
             this._updateTouchObject();
          }
-         _private.moveInRow++;
+         this.moveInRow++;
       },
 
       isTouch: function() {
-         return _private.state;
+         return !!this.state;
       },
 
       getClass: function() {
-         return _private.state ? 'ws-is-touch' : 'ws-is-no-touch';
+         return this.state ? 'ws-is-touch' : 'ws-is-no-touch';
       },
 
       // Объявляем функцию, которая возвращает поля Контекста и их значения.
