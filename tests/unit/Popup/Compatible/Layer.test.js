@@ -21,7 +21,7 @@ define(
                assert.isTrue(require.defined('Lib/Control/BaseCompatible/BaseCompatible'));
                assert.isTrue(require.defined('Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'));
                assert.isTrue(require.defined('Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator'));
-               assert.isTrue(require.defined('View/Runner/Text/markupGeneratorCompatible'));
+               assert.isTrue(require.defined('View/Executor/GeneratorCompatible'));
                assert.isTrue(require.defined('Core/nativeExtensions'));
                done();
                return deferred;
