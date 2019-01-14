@@ -6,7 +6,7 @@ define([
    'WS.Data/Entity/Model',
    'WS.Data/Collection/List'
 ], function(Lookup, Model, List) {
-   
+
    describe('Controls/Selector/Lookup/_Lookup', function() {
       it('getAdditionalCollectionWidth', function() {
          var afterFieldWrapperWidth = 20;
@@ -76,30 +76,41 @@ define([
          assert.isTrue(Lookup._private.getMultiLineState(200, 300, false));
       });
 
+      it('isNeedUpdate', function() {
+         assert.isFalse(Lookup._private.isNeedUpdate(5, false, true, 10));
+         assert.isTrue(Lookup._private.isNeedUpdate(5, true, true, 10));
+         assert.isTrue(Lookup._private.isNeedUpdate(5, false, false, 10));
+         assert.isTrue(Lookup._private.isNeedUpdate(5, false, true, 3));
+      });
+
       it('_beforeMount', function() {
          var lookup = new Lookup();
-         lookup._beforeMount({});
+         lookup._beforeMount({multiLine: true, maxVisibleItems: 10});
          assert.isNotNull(lookup._simpleViewModel);
+         assert.equal(lookup._maxVisibleItems, 10);
+
+         lookup._beforeMount({items: {getCount: function() {return 5}}});
+         assert.equal(lookup._maxVisibleItems, 5);
       });
-   
+
       it('_beforeUnmount', function() {
          var lookup = new Lookup();
          lookup._simpleViewModel = true;
          lookup._beforeUnmount();
-         
+
          assert.isNull(lookup._simpleViewModel);
       });
-   
+
       it('_afterUpdate', function() {
          var lookup = new Lookup();
          lookup._needSetFocusInInput = true;
          lookup._active = true;
-         
+
          var activated = false;
          lookup.activate = function() {
             activated = true;
          };
-      
+
          lookup._afterUpdate();
          assert.isTrue(activated);
       });
@@ -107,7 +118,7 @@ define([
       it('_beforeUpdate', function() {
          var lookup = new Lookup();
 
-         lookup._beforeMount({});
+         lookup._beforeMount({multiLine: true});
          lookup._beforeUpdate({
             items: new List()
          });
@@ -154,7 +165,7 @@ define([
             isActivate = true;
          };
 
-         lookup._beforeMount({});
+         lookup._beforeMount({multiLine: true});
          lookup._choose();
          assert.isFalse(isActivate);
 
@@ -162,7 +173,7 @@ define([
          lookup._choose();
          assert.isTrue(isActivate);
       });
-   
+
       it('_deactivated', function() {
          var lookup = new Lookup();
          lookup._suggestState = true;
@@ -181,7 +192,7 @@ define([
          lookup._options.readOnly = true;
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
-   
+
          lookup._suggestState = true;
          lookup._infoboxOpened = true;
          lookup._options.readOnly = false;

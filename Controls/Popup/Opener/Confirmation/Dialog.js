@@ -76,9 +76,10 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
    /**
        * @typedef {Boolean|undefined} Result
-       * @variant true Нажата кнопка "Да"
-       * @variant false Нажата кнопка "Нет"
-       * @variant undefined Нажата кнопка "ОК" или "Отмена"
+       * @remark
+       * true - Нажата кнопка "Да"
+       * false - Нажата кнопка "Нет"
+       * undefined - Нажата кнопка "ОК" или "Отмена"
        */
 
    /**

@@ -39,6 +39,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   maxHeight: cfg.popupOptions.maxHeight
                },
                sizes: sizes,
+               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
                locationStrategy: cfg.popupOptions.locationStrategy
             };
 

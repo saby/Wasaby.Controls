@@ -43,10 +43,11 @@ define('Controls/Input/Number',
 
       /**
        * @name Controls/Input/Number#onlyPositive
-       * @cfg {Boolean} Determines whether only positive numbers can be entered in the field..
-       * @variant true - only positive numbers can be entered in the field.
-       * @variant false - positive and negative numbers can be entered in the field.
+       * @cfg {Boolean} Determines whether only positive numbers can be entered in the field.
        * @default false
+       * @remark
+       * true - only positive numbers can be entered in the field.
+       * false - positive and negative numbers can be entered in the field.
        * @example
        * In this example you _inputValue in the control state will store only a positive number.
        * <pre>
@@ -69,11 +70,11 @@ define('Controls/Input/Number',
       /**
        * @name Controls/Input/Number#showEmptyDecimals
        * @cfg {Boolean} Determines whether trailing zeros are shown in the fractional part.
-       * @variant true - trailing zeros are hidden in the fractional part.
-       * @variant false - trailing zeros are shown in the fractional part.
        * @default false
        * @remark
        * The option is applied after the completed of the input.
+       * true - trailing zeros are hidden in the fractional part.
+       * false - trailing zeros are shown in the fractional part.
        * @example
        * In this example you the _inputValue in the control state will store a number with a trailing  zeros in the fractional part.
        * <pre>

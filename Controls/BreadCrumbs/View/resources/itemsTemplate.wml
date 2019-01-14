@@ -1,12 +1,13 @@
 <div attr:class="controls-BreadCrumbsView__items">
     <ws:for data="itemData in items">
         <ws:if data="{{itemData.isDots}}">
-            <ws:partial template="{{itemTemplate}}" itemData="{{itemData}}" on:click="_onItemClick(itemData)"/>
+            <ws:partial template="{{itemTemplate}}" displayProperty="{{ displayProperty }}" itemData="{{itemData}}" on:click="_onItemClick(itemData)"/>
         </ws:if>
         <ws:else>
             <ws:partial attr:class="{{applyHighlighter(highlighter, itemData.item.getId())}}"
                         template="{{itemTemplate}}"
                         itemData="{{itemData}}"
+                        displayProperty="{{ displayProperty }}"
                         on:mouseEnter="_onHoveredItemChanged(itemData.item.getId())"
                         on:mouseLeave="_onHoveredItemChanged()"
                         on:click="_onItemClick(itemData)"/>

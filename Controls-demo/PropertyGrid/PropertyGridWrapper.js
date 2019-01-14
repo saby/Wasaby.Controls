@@ -63,9 +63,13 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _afterMount: function(opts) {
             var self = this,
-               container = this._children[opts.componentOpt.name]._container;
+               container = this._children[opts.componentOpt.name]._container,
+               controlNodes = container.controlNodes || container[0].controlNodes;
 
-            container.controlNodes.forEach(function(config) {
+            // TODO: https://online.sbis.ru/doc/d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+
+
+            controlNodes.forEach(function(config) {
                var notOrigin = config.control._notify;
 
                config.control._notify = function(event, arg) {

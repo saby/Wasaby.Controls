@@ -17,6 +17,18 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
                resColor = 'danger';
             }
             return resColor;
+         },
+         prepareSize: function(size) {
+            var resSize = size;
+
+            // поддержка старых цветов, чтоб не ломать старые
+            if (size === 'big') {
+               resSize = 'l';
+            }
+            if (size === 'default') {
+               resSize = 'm';
+            }
+            return resSize;
          }
       };
 
@@ -36,22 +48,16 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          /**
           * @name Controls/Popup/Opener/Confirmation/Dialog#size
           * @cfg {String} Option description.
-          * @variant default Default size
-          * @variant big Big Size
+          * @variant m
+          * @variant l
           */
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#style
           * @cfg {String} Option description.
-          * @variant default Default
-          * @variant success Success
-          * @variant danger Danger
-          */
-
-         /**
-          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#closeButtonVisibility
-          * @cfg {Boolean} Determines whether display of the close button.
-          * @default false
+          * @variant default default
+          * @variant success success
+          * @variant danger danger
           */
 
          /**
@@ -65,20 +71,29 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           */
 
          _template: template,
+         _size: null,
          _beforeMount: function(options) {
             if (options.style === 'error') {
                IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
             }
             options._style = _private.prepareStatusStyle(options.style);
+            this._size = _private.prepareSize(options.size);
             if (options.contentArea) {
                IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.footerArea) {
                IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
             }
+            if (options.size === 'big') {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - big, используйте l');
+            }
+            if (options.size === 'default') {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - default, используйте m');
+            }
          },
          _beforeUpdate: function(options) {
             options._style = _private.prepareStatusStyle(options.style);
+            this._size = _private.prepareSize(options.size);
          },
 
          /**

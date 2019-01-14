@@ -94,7 +94,7 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([6], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([6], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({6: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(1, selectionInstance.getCount());
             });
 
@@ -109,13 +109,13 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([2], selection.excluded);
-               assert.deepEqual([1, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(2, selectionInstance.getCount());
                selectionInstance.select([4]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1, 4], selection.selected);
                assert.deepEqual([2], selection.excluded);
-               assert.deepEqual([1, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(3, selectionInstance.getCount());
             });
 
@@ -134,12 +134,12 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([3], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([3], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null, 3: true}, selectionInstance.getSelectedKeysForRender());
                selectionInstance.select([4]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([3, 4], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([3, 4], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null, 3: true, 4: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(2, selectionInstance.getCount());
             });
 
@@ -158,17 +158,17 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                selectionInstance.select([6]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1, 6], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5, 6], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true}, selectionInstance.getSelectedKeysForRender());
                selectionInstance.select([7]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1, 6, 7], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(7, selectionInstance.getCount());
             });
 
@@ -188,7 +188,7 @@ define([
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
                assert.equal(7, selectionInstance.getCount());
-               assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
             });
 
             it('select previously excluded child', function() {
@@ -202,19 +202,19 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([2, 5], selection.excluded);
-               assert.deepEqual([1, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(3, selectionInstance.getCount());
                selectionInstance.select([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([5], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: true, 3: true, 4: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(6, selectionInstance.getCount());
                selectionInstance.select([5]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(7, selectionInstance.getCount());
             });
          });
@@ -233,13 +233,13 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(5, selectionInstance.getCount());
                selectionInstance.unselect([1]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
                assert.equal(0, selectionInstance.getCount());
             });
 
@@ -254,13 +254,13 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([2], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([2, 3, 4], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: true, 3: true, 4: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(3, selectionInstance.getCount());
                selectionInstance.unselect([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
                assert.equal(0, selectionInstance.getCount());
             });
 
@@ -275,13 +275,13 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([3], selection.excluded);
-               assert.deepEqual([1, 2, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(4, selectionInstance.getCount());
                selectionInstance.unselect([1]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
                assert.equal(0, selectionInstance.getCount());
             });
 
@@ -296,13 +296,13 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([3], selection.excluded);
-               assert.deepEqual([1, 2, 4, 5, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(6, selectionInstance.getCount());
                selectionInstance.unselect([null]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
                assert.equal(0, selectionInstance.getCount());
             });
 
@@ -317,19 +317,19 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(5, selectionInstance.getCount());
                selectionInstance.unselect([5]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([5], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: true, 3: true, 4: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(4, selectionInstance.getCount());
                selectionInstance.unselect([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([5, 2], selection.excluded);
-               assert.deepEqual([1], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null}, selectionInstance.getSelectedKeysForRender());
                assert.equal(1, selectionInstance.getCount());
             });
 
@@ -344,49 +344,49 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5, 6, 7], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(7, selectionInstance.getCount());
                selectionInstance.unselect([7]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5, 6], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(6, selectionInstance.getCount());
                selectionInstance.unselect([6]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(5, selectionInstance.getCount());
                selectionInstance.unselect([5]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: true, 3: true, 4: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(4, selectionInstance.getCount());
                selectionInstance.unselect([4]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5, 4], selection.excluded);
-               assert.deepEqual([1, 2, 3], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null, 3: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(3, selectionInstance.getCount());
                selectionInstance.unselect([3]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5, 4, 3], selection.excluded);
-               assert.deepEqual([1, 2], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null, 2: null}, selectionInstance.getSelectedKeysForRender());
                assert.equal(2, selectionInstance.getCount());
                selectionInstance.unselect([2]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 5, 2], selection.excluded);
-               assert.deepEqual([1], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: null}, selectionInstance.getSelectedKeysForRender());
                assert.equal(1, selectionInstance.getCount());
                selectionInstance.unselect([1]);
                selection = selectionInstance.getSelection();
                assert.deepEqual([null], selection.selected);
                assert.deepEqual([7, 6, 1], selection.excluded);
-               assert.deepEqual([], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({}, selectionInstance.getSelectedKeysForRender());
                assert.equal(0, selectionInstance.getCount());
             });
 
@@ -401,13 +401,13 @@ define([
                selection = selectionInstance.getSelection();
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(5, selectionInstance.getCount());
                selectionInstance._items.remove(selectionInstance._items.getRecordById(2));
                selectionInstance.unselect([2]);
                assert.deepEqual([1], selection.selected);
                assert.deepEqual([], selection.excluded);
-               assert.deepEqual([1, 5], selectionInstance.getSelectedKeysForRender());
+               assert.deepEqual({1: true, 5: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(2, selectionInstance.getCount());
             });
          });
@@ -434,7 +434,7 @@ define([
             selection = selectionInstance.getSelection();
             assert.deepEqual([1], selection.selected);
             assert.deepEqual([], selection.excluded);
-            assert.deepEqual([1, 2, 3, 4, 5], selectionInstance.getSelectedKeysForRender());
+            assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
          });
       });
    });

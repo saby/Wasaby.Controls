@@ -37,7 +37,7 @@ define('Controls/Decorator/Markup/Converter', [
       return json;
    }
 
-   var linkParseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|(<[^>]*>)))/g,
+   var linkParseRegExp = /(?:(((?:https?|ftp|file):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|&nbsp;|(<[^>]*>)))/g,
       hasOpenATagRegExp = /<a(( )|(>))/i;
 
    // Wrap all links and email addresses placed not in tag a.

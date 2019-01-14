@@ -23,7 +23,7 @@ define('Controls/Popup/Compatible/Layer', [
       'Lib/Control/BaseCompatible/BaseCompatible',
       'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible',
       'Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator',
-      'View/Runner/Text/markupGeneratorCompatible',
+      'View/Executor/GeneratorCompatible',
       'Core/nativeExtensions',
 
       //так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
@@ -138,7 +138,7 @@ define('Controls/Popup/Compatible/Layer', [
          }
       } else {
          moduleStubs.require(['EngineUser/Info']).addCallbacks(function(modules) {
-            data = modules[0].getAll();
+            data = modules[0].Info.getAll();
          }, function(err) {
             IoC.resolve('ILogger').error('Layer', 'Can\'t load EngineUser/Info', err);
          });

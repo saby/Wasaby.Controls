@@ -49,10 +49,14 @@ define(
             sorting = [{name: 'DESC'}];
    
          it('.search', function(done) {
+            var searchStarted = false;
             var search = new Search({
                source: source,
                searchDelay: 50,
-               navigation: navigation
+               navigation: navigation,
+               searchStartCallback: function() {
+                  searchStarted = true;
+               }
             });
             var searchWithSorting = new Search({
                source: source,
@@ -64,6 +68,7 @@ define(
             search.search({name: 'Sasha'}).addCallback(function(result) {
                assert.equal(result.data.getCount(), 1);
                assert.equal(result.data.at(0).get('name'), 'Sasha');
+               assert.isTrue(searchStarted);
    
                searchWithSorting.search().addCallback(function (result) {
                   assert.equal(result.data.getCount(), 4);

@@ -52,6 +52,9 @@ define('Controls/Popup/Templates/Notification/Base',
             if (options.autoClose) {
                this._autoClose();
             }
+            if (options.iconClose) {
+               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
+            }
             if (options.contentTemplate) {
                IoC.resolve('ILogger').warn('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
             }
