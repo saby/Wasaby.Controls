@@ -3,7 +3,7 @@
       <div>
          <a href="/Controls-demo/demo.html?cname=Controls-demo/Example/Example">Example</a>
       </div>
-      <h1>RouterController</h1>
+      
       <div>
          <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
             <a href="{{content.href}}">RootRouter</a>
