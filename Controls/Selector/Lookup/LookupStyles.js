@@ -15,5 +15,6 @@ define('Controls/Selector/Lookup/LookupStyles', function() {}
     * @css @spacing_Lookup-between-clearRecords-border Spacing between button that clears all selected entries and borders.
     * @css @color_Lookup-clearRecords The color of the button that clears all selected entries.
     * @css @color_Lookup-clearRecords-hovered The color of the button when the hover that clears all selected entries.
+    * @css @shift-right_Lookup_afterFieldWrapper Shift the container afterFieldWrapper to the right.
     */
 );
