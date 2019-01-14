@@ -34,10 +34,9 @@ define('Controls/Input/Password',
       /**
        * @name Controls/Input/Password#revealable
        * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
-       * @variant true - Enables the reveal toggle button that will show the password in clear text.
-       * @variant false - does not do anything.
        * @default true
        * @remark
+       *
        * The button does not appear in {@link readOnly read mode} or in an empty field.
        */
 

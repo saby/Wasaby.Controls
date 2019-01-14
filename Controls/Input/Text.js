@@ -44,11 +44,12 @@ define('Controls/Input/Text',
       /**
        * @name Controls/Input/Text#trim
        * @cfg {Boolean} Determines whether the field value should be trimmed when input is completed.
-       * @variant true - removes whitespaces from both ends of the string when input is completed.
-       * @variant false - does not do anything.
        * @default false
        * @remark
-       * String is trimmed only when input is completed. If you bind control's state to the value in the field, the state will contain spaces when user types, and will be trimmed only when input is completed.
+       * String is trimmed only when input is completed.
+       * If you bind control's state to the value in the field, the state will contain spaces when user types, and will be trimmed only when input is completed.
+       * true - removes whitespaces from both ends of the string when input is completed.
+       * false - does not do anything.
        * @example
        * In this example, extra spaces with both side will be trimmed when the focus leaves the text box.
        * <pre>

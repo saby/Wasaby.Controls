@@ -26,10 +26,11 @@ define('Controls/Toggle/Checkbox', [
    /**
     * @name Controls/Toggle/Checkbox#triState
     * @cfg {Boolean} Determines whether the Checkbox will allow three check status rather than two.
-    * @variant True Enable triState.
-    * @variant False Disable triState.
     * @default False
-    * @remark If the triState mode is set, then the value can be null.
+    * @remark
+    * True - Enable triState.
+    * False - Disable triState.
+    * If the triState mode is set, then the value can be null.
     * @example
     * Checkbox with enabled triState.
     * <pre>
@@ -50,11 +51,12 @@ define('Controls/Toggle/Checkbox', [
    /**
     * @name Controls/Toggle/Checkbox#value
     * @cfg {Boolean|null} Current value, it's determines current state.
-    * @variant True Selected checkbox state.
-    * @variant False Unselected checkbox state. It is default state.
-    * @variant Null TriState checkbox state.
     * @default False
-    * @remark Variant null of value this option is possible only when the triState option is enabled.
+    * @remark
+    * True - Selected checkbox state.
+    * False - Unselected checkbox state. It is default state.
+    * Null - TriState checkbox state.
+    * Variant null of value this option is possible only when the triState option is enabled.
     * @example
     * Checkbox regulate theme in control.
     * <pre>

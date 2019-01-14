@@ -6,9 +6,9 @@ define('Controls/Popup/Compatible/ManagerWrapper',
       'Core/Control',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'wml!Controls/Popup/Compatible/ManagerWrapper/ManagerWrapper',
-      'Vdom/Synchronizer/resources/SyntheticEvent'
+      'Vdom/Vdom'
    ],
-   function(Control, Controller, template, SyntheticEvent) {
+   function(Control, Controller, template, Vdom) {
       'use strict';
 
       var ManagerWrapper = Control.extend({
@@ -42,7 +42,7 @@ define('Controls/Popup/Compatible/ManagerWrapper',
 
          _eventRegistratorHandler: function(registratorName, event) {
             // vdom control used synthetic event
-            this._children[registratorName].start(new SyntheticEvent(event));
+            this._children[registratorName].start(new Vdom.SyntheticEvent(event));
          },
 
          _scrollHandler: function() {

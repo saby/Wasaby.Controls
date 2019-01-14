@@ -11,6 +11,7 @@
         historyId="{{_options.historyId}}"
         trim="{{_options.trim}}"
         searchParam="{{_options.searchParam}}"
+        searchDelay="{{_options.searchDelay}}"
         navigation="{{_options.navigation}}"
         autoDropDown="{{_options.autoDropDown}}"
         emptyTemplate="{{_options.emptyTemplate}}"

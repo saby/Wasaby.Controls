@@ -1,0 +1,15 @@
+<div attr:class="controls-demo__pending_container">
+   pending status: {{ _message }}
+   <br/>
+   waiting status: {{ _pendingMessage }}
+   <Controls.Container.PendingRegistrator name="registrator">
+      <ws:partial template="{{_options.content}}"
+            on:registerPending="_registerPending()"
+            on:finishingPendingProcess="_finishingPendingProcess()"
+            on:finishedPendingProcess="_finishedPendingProcess()"
+            on:cancelFinishingPending="_cancelFinishingPending()"
+            attr:class="controls-demo__indicator_content"
+      />
+   </Controls.Container.PendingRegistrator>
+   <Controls.Button caption="call finishPendingOperations" class="controls-demo__pending-finish" on:click="_finish()"/>
+</div>

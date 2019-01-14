@@ -1,0 +1,13 @@
+<Controls.Popup.Templates.Stack.StackTemplate caption="Stack Template">
+    <ws:headerContentTemplate>
+        <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
+            <Controls.Button caption="Закрыть" on:click="_close()"/>
+        </div>
+    </ws:headerContentTemplate>
+    <ws:bodyContentTemplate>
+        <div style="width: {{ _options.width || '700px'}}">
+
+
+        </div>
+    </ws:bodyContentTemplate>
+</Controls.Popup.Templates.Stack.StackTemplate>

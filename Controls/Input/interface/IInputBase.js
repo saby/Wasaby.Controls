@@ -74,11 +74,15 @@ define('Controls/Input/interface/IInputBase', [], function() {
    /**
     * @name Controls/Input/interface/IInputBase#autoComplete
     * @cfg {Boolean} Determines whether to use browser-based auto-complete field.
-    * @variant true The browser is allowed to automatically complete the input.
-    * @variant false The browser is not permitted to automatically enter or select a value for this field.
     * @default false
     * @remark
-    * Values for auto-complete are taken by the browser from its storage. The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another, the fields must have different names. To do this, we proxy the name of the control to the name of the native field. Therefore, if you use true as the value of the option and do not want to cross the auto-completion values, specify the name of the control. Choose a name based on the scope of the field. For example, for a login and password registration form, it is preferable to use the login and password names.
+    * true - The browser is allowed to automatically complete the input.
+    * false - The browser is not permitted to automatically enter or select a value for this field.
+    * Values for auto-complete are taken by the browser from its storage.
+    * The field name is used to access them. Therefore, to prevent values stored in one field from being applied to another,
+    * the fields must have different names. To do this, we proxy the name of the control to the name of the native field.
+    * Therefore, if you use true as the value of the option and do not want to cross the auto-completion values, specify the name of the control.
+    * Choose a name based on the scope of the field. For example, for a login and password registration form, it is preferable to use the login and password names.
     * @example
     * In this example, when the field is clicked, a browser menu appears with the previously entered values in this field.
     * <pre>

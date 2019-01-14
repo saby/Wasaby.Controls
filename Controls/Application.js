@@ -133,8 +133,8 @@ define('Controls/Application',
 
             // Find opener for Infobox
             if (!config.opener) {
-               requirejs(['Vdom/Utils/DefaultOpenerFinder'], function(DefaultOpenerFinder) {
-                  config.opener = DefaultOpenerFinder.find(config.target);
+               requirejs(['Vdom/Vdom'], function(Vdom) {
+                  config.opener = Vdom.DefaultOpenerFinder.find(config.target);
                   def.callback(config);
                });
                return def;
@@ -278,6 +278,9 @@ define('Controls/Application',
             // LinkResolver.getInstance().init(context.headData.isDebug, self.buildnumber, self.appRoot, self.resourceRoot);
 
             headData.pushDepComponent(self.application, false);
+
+            // Временно положим это в HeadData, потом это переедет в константы реквеста
+            headData.isNewEnvironment = !self.isCompatible;
 
             if (receivedState.csses && !headData.isDebug) {
                ThemesController.getInstance().initCss({

@@ -35,7 +35,8 @@ define('Controls/BreadCrumbs/Utils', [
                   },
                   isDots: true,
                   hasArrow: true
-               }
+               },
+               displayProperty: 'title'
             }));
          }
          initialized = true;
@@ -53,13 +54,14 @@ define('Controls/BreadCrumbs/Utils', [
          };
       },
 
-      getItemsSizes: function(items) {
+      getItemsSizes: function(items, displayProperty) {
          var
             measurer = document.createElement('div'),
             itemsSizes = [];
 
          measurer.innerHTML = itemsTemplate({
             itemTemplate: itemTemplate,
+            displayProperty: displayProperty,
             applyHighlighter: applyHighlighter,
             items: items.map(function(item, index) {
                return _private.getItemData(index, items);
@@ -85,7 +87,7 @@ define('Controls/BreadCrumbs/Utils', [
          _private.initializeConstants();
 
          var
-            itemsSizes = _private.getItemsSizes(items),
+            itemsSizes = _private.getItemsSizes(items, self._options.displayProperty),
             length = items.length,
             currentWidth,
             shrinkedItemIndex;
@@ -154,10 +156,10 @@ define('Controls/BreadCrumbs/Utils', [
          }
       },
 
-      getMaxCrumbsWidth: function(items) {
+      getMaxCrumbsWidth: function(items, displayProperty) {
          _private.initializeConstants();
 
-         return _private.getItemsSizes(items, itemsTemplate, itemTemplate).reduce(function(acc, width) {
+         return _private.getItemsSizes(items, displayProperty).reduce(function(acc, width) {
             return acc + width;
          }, 0);
       },

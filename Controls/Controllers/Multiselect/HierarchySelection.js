@@ -87,30 +87,6 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             return parentSelected;
          },
 
-         isParentExcluded: function(hierarchyRelation, key, selectedKeys, excludedKeys, items) {
-            var
-               parentId = _private.getParentId(key, items, hierarchyRelation.getParentProperty()),
-               parentExcluded;
-
-            while (parentId) {
-               if (selectedKeys.indexOf(parentId) !== -1) {
-                  parentExcluded = false;
-                  break;
-               }
-               if (excludedKeys.indexOf(parentId) !== -1) {
-                  parentExcluded = true;
-                  break;
-               }
-               parentId = _private.getParentId(parentId, items, hierarchyRelation.getParentProperty());
-            }
-
-            if (parentId === null && selectedKeys[0] === null) {
-               parentExcluded = false;
-            }
-
-            return parentExcluded;
-         },
-
          getSelectedChildrenCount: function(hierarchyRelation, rootId, selectedKeys, excludedKeys, items) {
             var
                parentSelected = selectedKeys.indexOf(rootId) !== -1 || _private.isParentSelected(hierarchyRelation, rootId, selectedKeys, excludedKeys, items),
@@ -134,6 +110,19 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                   }
                }
             }, 0);
+         },
+
+         hasExcludedChildren: function(hierarchyRelation, rootId, excludedKeys, items) {
+            var
+               hasExcludedChildren = false,
+               childrenIds = _private.getChildrenIds(hierarchyRelation, rootId, items);
+            for (var i = 0; i < childrenIds.length; i++) {
+               if (excludedKeys.indexOf(childrenIds[i]) !== -1) {
+                  hasExcludedChildren = true;
+                  break;
+               }
+            }
+            return hasExcludedChildren;
          }
       };
 
@@ -208,33 +197,34 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          return _private.getSelectedChildrenCount(this._hierarchyRelation, null, this._selectedKeys, this._excludedKeys, this._items);
       },
 
-      getSelectedKeysForRender: function() {
+      _getSelectionStatus: function(item) {
          var
-            res = [],
-            self = this,
-            itemId,
-            isParentSelected,
-            isParentExcluded,
-            excluded;
+            itemId = item.get(this._options.keyProperty),
+            isParentSelected = _private.isParentSelected(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items),
+            hasSelectedChildren = _private.getSelectedChildrenCount(this._hierarchyRelation, itemId, this._selectedKeys, this._excludedKeys, this._items) > 0,
+            hasExcludedChildren;
 
-         this._items.forEach(function(item) {
-            itemId = item.get(self._options.keyProperty);
-            isParentSelected = _private.isParentSelected(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items);
-            isParentExcluded = _private.isParentExcluded(self._hierarchyRelation, itemId, self._selectedKeys, self._excludedKeys, self._items);
-            excluded = self._excludedKeys.indexOf(itemId) !== -1 || isParentExcluded;
-            if ((self._selectedKeys[0] === null || isParentSelected) && !excluded || self._selectedKeys.indexOf(itemId) !== -1) {
-               res.push(itemId);
+         if (this._excludedKeys.indexOf(itemId) !== -1) {
+            return hasSelectedChildren ? null : false;
+         }
+
+         if (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected || hasSelectedChildren) {
+            if (this._hierarchyRelation.isNode(item)) {
+               hasExcludedChildren = _private.hasExcludedChildren(this._hierarchyRelation, itemId, this._excludedKeys, this._items);
+               if (hasExcludedChildren) {
+                  return null;
+               }
+               return this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected ? true : null;
             }
-         });
+            return true;
+         }
 
-         return res.filter(function(key, index) {
-            return res.indexOf(key) === index;
-         });
+         return false;
       },
 
       _getParams: function(rootId) {
          var params = HierarchySelection.superclass._getParams.apply(this, arguments);
-         params.rootId = rootId ? rootId : null;
+         params.rootId = rootId || null;
          params.hierarchyRelation = this._hierarchyRelation;
          return params;
       },
