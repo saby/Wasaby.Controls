@@ -121,7 +121,14 @@ define('Controls/Decorator/Markup/resources/template', [
          value = data._options.value;
       if (value && value.length) {
          // Need just one root node.
-         value = ['div', value];
+
+         // Mobile can't work with tags yet, so can be value like ["text"].
+         // TODO: cancel this merge in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99
+         if (value.length === 1 && isString(value[0])) {
+            value = ['div', value[0]];
+         } else {
+            value = ['div', value];
+         }
       }
       if (isVdom) {
          // Protect view of text from needless unescape in inferno.
