@@ -5,6 +5,8 @@ define('Controls/Container/Async',
       'View/Request',
       'wml!Controls/Container/Async/Async',
       'View/Executor/Utils',
+      'Core/library',
+      'Types/entity',
       'Core/IoC'
    ],
 
@@ -13,6 +15,8 @@ define('Controls/Container/Async',
       Request,
       template,
       Utils,
+      library,
+      entity,
       IoC) {
       'use strict';
 
@@ -24,77 +28,103 @@ define('Controls/Container/Async',
        * @extends Core/Control
        * @control
        * @public
+       * @author Белотелов Н.В.
        * @category Container
-       *
+       */
+
+      /**
        * @name Controls/Container/Async#content
        * @cfg {Content} Container contents.
-       *
+       */
+
+      /**
        * @name Controls/Container/Async#templateName
        * @cfg {String} Name of asynchronously loading component
        */
+
+      /**
+       * @name Controls/Container/Async#templateOptions
+       * @cfg {Object} Options for content of Async
+       */
+
       var Async = Base.extend({
          _template: template,
          optionsForComponent: {},
          _beforeMount: function(options) {
             var self = this;
-            self.optionsForComponent = options.templateOptions || {};
             if (typeof window !== 'undefined') {
-               if (!Utils.RequireHelper.defined(options.templateName)) {
-                  var def = new Deferred();
-                  require([options.templateName], function(tpl) {
-                     self.optionsForComponent.resolvedTemplate = tpl;
-                     def.callback();
-                  }, function() {
-                     self.error = 'Error loading ' + options.templateName;
-                     IoC.resolve('ILogger').error('Async render error', self.error);
-                     def.callback();
-                  });
-                  return def;
-               }
-               self.optionsForComponent.resolvedTemplate = Utils.RequireHelper.require(options.templateName);
-               return;
+               return self._loadContentAsync(options.templateName, options.templateOptions);
             }
-
-            /*
-             * It can work without Controls.Application
-             * */
-
-            self.optionsForComponent.resolvedTemplate = Utils.RequireHelper.require(options.templateName);
-            var request = Request.getCurrent();
-            var headData = request && request.getStorage('HeadData');
-
-            if (self.optionsForComponent.resolvedTemplate && headData && headData.pushDepComponent) {
-               if (options.templateName) {
-                  headData.pushDepComponent(options.templateName, true);
-               } else {
-                  self.error = 'Error loading ' + options.templateName;
-                  IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
-               }
-            } else if (!self.optionsForComponent.resolvedTemplate) {
-               self.error = 'Error loading ' + options.templateName;
-               IoC.resolve('ILogger').error('Async got wrong templateName option: ' + options.templateName + ' typeof: ' + typeof options.templateName);
-            }
+            this._loadServerSide(options.templateName, options.templateOptions);
+            return true;
          },
 
          _beforeUpdate: function(options) {
-            var self = this;
-            if (!Utils.RequireHelper.defined(options.templateName)) {
-               var def = new Deferred();
-               require([options.templateName], function(tpl) {
-                  self.optionsForComponent = options.templateOptions || {};
-                  self.optionsForComponent.resolvedTemplate = tpl;
-                  self._forceUpdate();
-                  def.callback();
-               }, function() {
-                  def.errback('Error loading ' + options.templateName);
-               });
+            this._loadContentAsync(options.templateName, options.templateOptions);
+         },
 
-               return;
+         _setErrorState: function(errorState, message) {
+            if(errorState) {
+               this.error = 'Couldn\'t load module '
+                  + this._options.templateName + ' '
+                  + (message ? message : "");
+            } else {
+               this.error = null;
             }
-            self.optionsForComponent = options.templateOptions || {};
-            self.optionsForComponent.resolvedTemplate = Utils.RequireHelper.require(options.templateName);
+         },
+
+         _loadServerSide: function(name, options) {
+            var tpl;
+            try {
+               tpl = this._loadFileSync(name);
+               this._pushDepToHeadData(name);
+               this._updateContent(tpl, options);
+            } catch(e) {
+               IoC.resolve("ILogger").error('Couldn\'t load ' + name, e);
+               this._setErrorState(true, e);
+            }
+         },
+
+         _loadContentAsync: function(name, options) {
+            var self = this;
+            var promise = this._loadFileAsync(name);
+            promise.then(function(res) {
+               self._setErrorState(false);
+               self._updateContent(res, options);
+            }, function(err) {
+               self._setErrorState(true, err);
+            });
+            return promise;
+         },
+
+         _pushDepToHeadData: function(dep) {
+            var request = Request.getCurrent();
+            var headData = request && request.getStorage('HeadData');
+            if(headData && headData.pushDepComponent) {
+               headData.pushDepComponent(dep, true);
+            }
+         },
+
+         _updateContent: function(tpl, opts) {
+            this.optionsForComponent = opts || {};
+            this.optionsForComponent.resolvedTemplate = tpl;
+            this._forceUpdate();
+         },
+
+         _loadFileSync: function(name) {
+            return Utils.RequireHelper.require(name);
+         },
+
+         _loadFileAsync: function(name) {
+            return library.load(name);
          }
       });
+
+      Async.getOptionTypes = function getOptionTypes() {
+         return {
+            templateName: entity.descriptor(String).required()
+         };
+      };
 
       return Async;
    });
