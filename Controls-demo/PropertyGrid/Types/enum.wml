@@ -1,5 +1,5 @@
 <Controls-demo.PropertyGrid.EnumTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
-            caption="{{name}}">
+            caption="{{newName}}">
 </Controls-demo.PropertyGrid.EnumTemplate>

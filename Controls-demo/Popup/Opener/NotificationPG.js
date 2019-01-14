@@ -24,9 +24,6 @@ define('Controls-demo/Popup/Opener/NotificationPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               className: {
-                  readOnly: true
-               },
                name: {
                   readOnly: true
                },
@@ -34,22 +31,30 @@ define('Controls-demo/Popup/Opener/NotificationPG',
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Opener/resources/BaseNotification',
+                        title: 'Base',
                         template: 'wml!Controls-demo/Popup/Opener/resources/BaseNotification'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Opener/resources/CustomNotification',
+                        title: 'Custom',
                         template: 'wml!Controls-demo/Popup/Opener/resources/CustomNotification'
                      }
                   ],
-                  value: 'wml!Controls-demo/Popup/Opener/resources/BaseNotification'
+                  value: 'Base'
                },
+               templateOptions: {
+                  items: [
+                     { id: '1', title: '{ value: \'Base text\'}', items: { value: 'Base text'}},
+                     { id: '2', title: '{ value: \'Custom text\'}', items: { value: 'Custom text'} }
+                  ],
+                  value: '{ value: \'Base text\'}'
+               }
             };
             this._componentOptions = {
                name: 'Notification',
                className: 'controls-Notification-demoPG',
-               template: 'wml!Controls-demo/Popup/Opener/resources/BaseNotification'
+               template: 'wml!Controls-demo/Popup/Opener/resources/BaseNotification',
+               templateOptions: { value: 'Base text'}
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
