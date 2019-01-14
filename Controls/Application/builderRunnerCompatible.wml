@@ -17,7 +17,6 @@
             'Core/helpers/Hcontrol/makeInstanceCompatible', 'Core/Control',
             {{_options.dependencies | unescape}}], function(AppData, AppStart, Core, tclosure, makeInstanceCompatible, Control) {
             var templCtr = new Control({});
-            //patch prototype
             makeInstanceCompatible(templCtr);
             window.startContextData = {AppData: new AppData({})};
             var templateFn = {{_options.builder | unescape}};
