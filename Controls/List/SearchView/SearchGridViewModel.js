@@ -19,7 +19,7 @@ define('Controls/List/SearchView/SearchGridViewModel', [
       
       getCurrent: function() {
          var current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
-             superGetCurrentColumn = current.getCurrentColumn;
+            superGetCurrentColumn = current.getCurrentColumn;
          
          current.getCurrentColumn = function() {
             var currentColumn = superGetCurrentColumn();

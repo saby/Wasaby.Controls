@@ -90,7 +90,7 @@ define('Controls/BreadCrumbs/View', [
    BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
       return {
          itemTemplate: itemTemplate
-      }
+      };
    };
 
    return BreadCrumbsView;
