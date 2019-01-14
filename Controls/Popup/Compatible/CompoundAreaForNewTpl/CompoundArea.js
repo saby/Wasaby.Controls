@@ -35,6 +35,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._onResizeHandler = this._onResizeHandler.bind(this);
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
+            this._onActivatedHandler = this._onActivatedHandler.bind(this);
+            this._onDeactivatedHandler = this._onDeactivatedHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
 
             this._panel = this.getParent();
@@ -155,6 +157,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             innerOptions._onResultHandler = this._onResultHandler;
             innerOptions._onResizeHandler = this._onResizeHandler;
             innerOptions._onRegisterHandler = this._onRegisterHandler;
+            innerOptions._onActivatedHandler = this._onActivatedHandler;
+            innerOptions._onDeactivatedHandler = this._onDeactivatedHandler;
          },
          _onResizeHandler: function() {
             this._notifyOnSizeChanged();
@@ -186,6 +190,17 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   this._compoundHandlers[eventName] = null;
                }
             }
+         },
+         _onActivatedHandler: function(event, opts) {
+            // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
+            this._$onBringToFront = this.onBringToFront;
+            this.onBringToFront = function() {
+               opts._$to.activate();
+            };
+         },
+         _onDeactivatedHandler: function() {
+            // активность уходит - восстановим onBringToFront
+            this.onBringToFront = this._$onBringToFront;
          },
 
          _getRootContainer: function() {
