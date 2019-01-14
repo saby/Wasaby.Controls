@@ -1,1 +1,1 @@
-<div>{{ result }}</div>
+<div class="ControlsDemo-SerializerDepsStorage__result">{{ result }}</div>
