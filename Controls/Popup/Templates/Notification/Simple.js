@@ -65,12 +65,16 @@ define('Controls/Popup/Templates/Notification/Simple',
 
 /**
  * @name Controls/Popup/Templates/Notification/Simple#autoClose
- * @cfg {Integer} Close by timeout after open.
+ * @cfg {Number} Close by timeout after open
  */
 
 /**
  * @name Controls/Popup/Templates/Notification/Simple#style
  * @cfg {String} Notification display style.
+ * @variant warning
+ * @variant primary
+ * @variant success
+ * @variant danger
  */
 
 /**

@@ -29,9 +29,9 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
          /**
           * @name Controls/Popup/Templates/Stack/StackTemplate#headingStyle
           * @cfg {String} Caption display style.
-          * @variant default
-          * @variant accent
-          * @variant small
+          * @variant secondary
+          * @variant primary
+          * @variant info
           */
 
          /**
@@ -110,7 +110,8 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
 
       DialogTemplate.getDefaultOptions = function() {
          return {
-            headingStyle: 'default'
+            headingStyle: 'secondary',
+            closeButtonVisibility: true
          };
       };
 

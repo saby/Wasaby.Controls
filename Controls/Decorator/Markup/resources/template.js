@@ -2,7 +2,7 @@
  * Created by rn.kondakov on 18.10.2018.
  */
 define('Controls/Decorator/Markup/resources/template', [
-   'View/Runner/tclosure',
+   'View/Executor/TClosure',
    'Core/validHtml'
 ], function(thelpers,
    validHtml) {
