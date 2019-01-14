@@ -130,7 +130,7 @@ define('Controls/List/TreeControl', [
          if (baseControl) {
             expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
          } else {
-            expandedItemsKeys = cfg.expandedItems;
+            expandedItemsKeys = cfg.expandedItems || [];
          }
          
          if (expandedItemsKeys.length && !_private.isExpandAll(expandedItemsKeys)) {
