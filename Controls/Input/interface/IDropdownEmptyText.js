@@ -12,6 +12,7 @@ define('Controls/Input/interface/IDropdownEmptyText', [
    /**
     * @name Controls/Input/interface/IDropdownEmptyText#emptyText
     * @cfg {String} Add an empty item to the list with the given text.
-    * @variant true Add empty item with text 'Не выбрано'
+    * @remark
+    * true - Add empty item with text 'Не выбрано'
     */
 });

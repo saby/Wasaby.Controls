@@ -6,7 +6,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent',
+      'Vdom/Vdom',
       'Core/Control',
       'Core/IoC',
       'Core/Deferred',
@@ -15,7 +15,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    function(CompoundControl,
       template,
       ComponentWrapper,
-      SyntheticEvent,
+      Vdom,
       control,
       IoC,
       Deferred) {
@@ -35,6 +35,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._onResizeHandler = this._onResizeHandler.bind(this);
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
+            this._onActivatedHandler = this._onActivatedHandler.bind(this);
+            this._onDeactivatedHandler = this._onDeactivatedHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
 
             this._panel = this.getParent();
@@ -54,7 +56,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                this._modifyInnerOptionsByHandlers();
 
-               require([this._options.template, 'Vdom/Synchronizer/Synchronizer'], function() {
+               require([this._options.template, 'Vdom/Vdom'], function() {
                   // Пока грузили шаблон, компонент могли задестроить
                   if (self.isDestroyed()) {
                      return;
@@ -155,6 +157,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             innerOptions._onResultHandler = this._onResultHandler;
             innerOptions._onResizeHandler = this._onResizeHandler;
             innerOptions._onRegisterHandler = this._onRegisterHandler;
+            innerOptions._onActivatedHandler = this._onActivatedHandler;
+            innerOptions._onDeactivatedHandler = this._onDeactivatedHandler;
          },
          _onResizeHandler: function() {
             this._notifyOnSizeChanged();
@@ -178,7 +182,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                if (handler) {
                   this._compoundHandlers = this._compoundHandlers || {};
                   this._compoundHandlers[eventName] = function(event) {
-                     handler.apply(emitter, [new SyntheticEvent(event)]);
+                     handler.apply(emitter, [new Vdom.SyntheticEvent(event)]);
                   };
                   document.body.addEventListener(eventName, this._compoundHandlers[eventName]);
                } else if (this._compoundHandlers && this._compoundHandlers[eventName]) {
@@ -186,6 +190,17 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   this._compoundHandlers[eventName] = null;
                }
             }
+         },
+         _onActivatedHandler: function(event, opts) {
+            // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
+            this._$onBringToFront = this.onBringToFront;
+            this.onBringToFront = function() {
+               opts._$to.activate();
+            };
+         },
+         _onDeactivatedHandler: function() {
+            // активность уходит - восстановим onBringToFront
+            this.onBringToFront = this._$onBringToFront;
          },
 
          _getRootContainer: function() {
@@ -198,7 +213,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             moduleClass.superclass.destroy.apply(this, arguments);
             this._isVDomTemplateMounted = true;
             if (this._vDomTemplate) {
-               var Sync = require('Vdom/Synchronizer/Synchronizer');
+               var Sync = require('Vdom/Vdom').Synchronizer;
                Sync.unMountControlFromDOM(this._vDomTemplate, this._vDomTemplate._container);
             }
          },

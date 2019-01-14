@@ -196,7 +196,7 @@ define('Controls/FormController', [
          return def;
       },
       _onPropertyChange: function() {
-         if (!this._propertyChangeNotified) {
+         if (!this._propertyChangeNotified && this._record.isChanged()) {
             var def = new Deferred();
             this._propertyChangedDef = def;
             var self = this;
@@ -204,10 +204,10 @@ define('Controls/FormController', [
             self._propertyChangeNotified = true;
             self._notify('registerPending', [def, {
                showLoadingIndicator: false,
-               onPendingFail: function(forceFinishValue) {
+               onPendingFail: function(forceFinishValue, deferred) {
                   if (self._record.isChanged()) {
-                     self._showConfirmDialog(def, forceFinishValue);
-                     def.addCallbacks(function(res) {
+                     self._showConfirmDialog(deferred, forceFinishValue);
+                     deferred.addCallbacks(function(res) {
                         self._propertyChangeNotified = false;
                         return res;
                      }, function(e) {
@@ -216,13 +216,17 @@ define('Controls/FormController', [
                      });
                   } else {
                      self._propertyChangeNotified = false;
-                     if (!def.isReady()) {
-                        def.callback(true);
+                     if (!deferred.isReady()) {
+                        deferred.callback(true);
                      }
                   }
-                  return def;
                }
             }], { bubbling: true });
+         }
+
+         // if record actually is not changed after onPropertyChange, we must resolve pending
+         if (this._propertyChangeNotified && !this._record.isChanged()) {
+            this._propertyChangedDef.callback(true);
          }
       },
       _showConfirmDialog: function(def, forceFinishValue) {

@@ -34,6 +34,7 @@ define('Controls/Container/List',
                   navigation: options.navigation,
                   sorting: options.sorting,
                   searchDelay: options.searchDelay,
+                  searchStartCallback: options.searchStartCallback,
                   searchCallback: _private.searchCallback.bind(self, self),
                   searchErrback: _private.searchErrback.bind(self, self),
                   abortCallback: _private.abortCallback.bind(self, self)
@@ -128,10 +129,6 @@ define('Controls/Container/List',
          
          searchValueChanged: function(self, value, filter) {
             var searchController = _private.getSearchController(self);
-            
-            if (self._options.searchStartCallback) {
-               self._options.searchStartCallback();
-            }
    
             _private.cancelSearchDeferred(self);
             

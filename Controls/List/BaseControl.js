@@ -765,6 +765,24 @@ define('Controls/List/BaseControl', [
             _private.reload(this, newOptions);
          }
       },
+   
+      reloadItem: function(key, readMeta, replaceItem) {
+         var items = this._listViewModel.getItems();
+         var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+      
+         if (currentItemIndex === -1) {
+            throw new Error('BaseControl::reloadItem no item with key ' + key);
+         }
+      
+         return this._sourceController.read(key, readMeta).addCallback(function(item) {
+            if (replaceItem) {
+               items.replace(item, currentItemIndex);
+            } else {
+               items.at(currentItemIndex).merge(item);
+            }
+            return item;
+         });
+      },
 
       _beforeUnmount: function() {
          if (this._sourceController) {

@@ -7,6 +7,7 @@ define('Controls/BreadCrumbs/BreadCrumbsStyles',
        * @interface Controls/BreadCrumbs/BreadCrumbsStyles
        * @css @height_BreadCrumbs-items Height of the breadcrumbs.
        * @css @font-size_BreadCrumbs-arrow Font size of the arrow icon.
+       * @css @font-size_BreadCrumbs-title Font size of the breadcrumb's text.
        * @css @color_BreadCrumbs-title Color of the breadcrumbs's text.
        * @css @color_BreadCrumbs-title_hovered Color of the breadcrumbs's text on hover.
        * @css @color_BreadCrumbs-arrow Color of the arrow icon.

@@ -79,7 +79,7 @@ define('Controls/Input/Suggest',
             /* move focus to input after select, because focus will be lost after closing popup  */
             this.activate();
             this._notify('choose', [item]);
-            this._notify('valueChanged', [item.get(this._options.displayProperty)]);
+            this._notify('valueChanged', [item.get(this._options.displayProperty || '')]);
          },
          
          _clearClick: function() {

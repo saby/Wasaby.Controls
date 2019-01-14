@@ -57,7 +57,7 @@ define('Controls/BreadCrumbs/Path', [
                }
             }));
             homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
-            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, containerWidth - homeWidth);
+            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, self._options.displayProperty), backButtonWidth, containerWidth - homeWidth);
 
             availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
             BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
@@ -82,7 +82,7 @@ define('Controls/BreadCrumbs/Path', [
     * @public
     * @author Зайцев А.С.
     *
-    * @demo Controls-demo/BreadCrumbs/BreadCrumbs
+    * @demo Controls-demo/BreadCrumbs/PathPG
     */
 
    /**
