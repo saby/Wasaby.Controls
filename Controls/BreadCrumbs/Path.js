@@ -133,6 +133,7 @@ define('Controls/BreadCrumbs/Path', [
 
       _notifyHandler: tmplNotify,
       _applyHighlighter: applyHighlighter,
+      _getRootModel: _private.getRootModel,
 
       _onBackButtonClick: function() {
          var item;
@@ -140,7 +141,7 @@ define('Controls/BreadCrumbs/Path', [
          if (this._options.items.length > 1) {
             item = this._options.items[this._options.items.length - 2];
          } else {
-            item = _private.getRootModel(this._options.root, this._options.keyProperty);
+            item = this._getRootModel(this._options.root, this._options.keyProperty);
          }
    
          this._notify('itemClick', [item]);
@@ -151,7 +152,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [_private.getRootModel(this._options.root, this._options.keyProperty)]);
+         this._notify('itemClick', [this._getRootModel(this._options.root, this._options.keyProperty)]);
       },
 
       _onArrowClick: function() {

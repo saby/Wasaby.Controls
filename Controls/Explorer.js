@@ -182,7 +182,7 @@ define('Controls/Explorer', [
          }
       },
       _hoveredCrumbChanged: function(event, item) {
-         this._hoveredBreadCrumb = item;
+         this._hoveredBreadCrumb = item.getId();
       },
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {

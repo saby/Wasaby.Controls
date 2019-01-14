@@ -69,8 +69,8 @@ define('Controls/BreadCrumbs/View', [
 
       _applyHighlighter: applyHighlighter,
 
-      _onHoveredItemChanged: function(event, itemKey) {
-         this._notify('hoveredItemChanged', [itemKey]);
+      _onHoveredItemChanged: function(event, item) {
+         this._notify('hoveredItemChanged', [item]);
       },
 
       _onResize: function() {
