@@ -189,8 +189,8 @@ define('Controls/Explorer', [
             _private.setRoot(this, item.getId());
          }
       },
-      _onBreadCrumbsClick: function(event, itemId) {
-         _private.setRoot(this, itemId);
+      _onBreadCrumbsClick: function(event, item) {
+         _private.setRoot(this, item.getId());
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

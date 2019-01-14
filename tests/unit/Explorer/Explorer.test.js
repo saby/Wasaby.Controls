@@ -168,7 +168,8 @@ define([
                   { id: 1, title: 'item1' },
                   { id: 2, title: 'item2', parent: 1 },
                   { id: 3, title: 'item3', parent: 2 }
-               ]
+               ],
+               idProperty: 'id'
             }),
             instance = new Explorer();
 
@@ -176,10 +177,10 @@ define([
             parentProperty: 'parent',
             keyProperty: 'id'
          });
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1).get('parent'));
-         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1));
+         assert.equal(instance._root, testBreadCrumbs.at(1).get('id'));
       });
 
       it('_notifyHandler', function() {

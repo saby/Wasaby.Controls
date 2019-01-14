@@ -1,1 +1,0 @@
-{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}

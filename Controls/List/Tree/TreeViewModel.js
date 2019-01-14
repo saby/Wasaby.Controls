@@ -302,7 +302,7 @@ define('Controls/List/Tree/TreeViewModel', [
          getItemDataByItem: function(dispItem) {
             var
                current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
-            current.isExpanded = !current.isGroup && this.isExpanded(dispItem);
+            current.isExpanded = current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
             current.expanderDisplayMode = this._options.expanderDisplayMode;
@@ -315,7 +315,7 @@ define('Controls/List/Tree/TreeViewModel', [
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
             current.expanderTemplate = this._options.expanderTemplate;
 
-            if (!current.isGroup) {
+            if (current.item.get) {
                current.level = current.dispItem.getLevel();
             }
 
@@ -330,7 +330,7 @@ define('Controls/List/Tree/TreeViewModel', [
             }
 
 
-            if (!current.isGroup && current.item.get(current.nodeProperty) !== null) {
+            if (current.item.get && current.item.get(current.nodeProperty) !== null) {
                if (current.isExpanded) {
                   current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
 
