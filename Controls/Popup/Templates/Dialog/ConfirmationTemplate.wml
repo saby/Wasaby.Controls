@@ -1,10 +1,7 @@
-<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options._style}}{{_options.size == 'big' ? ' controls-ConfirmationTemplate__size-l' : ' controls-ConfirmationTemplate__size-m'}} controls-Popup__isolatedFocusingContext"
+<div class="controls-ConfirmationTemplate controls-ConfirmationTemplate__status-{{_options._style}}{{_size == 'l' ? ' controls-ConfirmationTemplate__size-l' : ' controls-ConfirmationTemplate__size-m'}} controls-Popup__isolatedFocusingContext"
     ws-tab-cycling="true"
     ws-delegates-tabfocus="true">
     <div class="controls-ConfirmationTemplate__body">
-        <ws:if data="{{!_options.hideCross}}">
-            <Controls.Button.Close attr:class="controls-DialogTemplate__close_button" on:click="close()"/>
-        </ws:if>
         <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
         <div class="controls-ConfirmationTemplate__main">
             <ws:partial template="{{_options.contentArea||_options.bodyContentTemplate}}"/>

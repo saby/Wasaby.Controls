@@ -55,6 +55,10 @@ define('Controls/List', [
       reload: function() {
          return this._children.listControl.reload();
       },
+      
+      reloadItem: function(key, readMeta) {
+         return this._children.listControl.reloadItem(key, readMeta);
+      },
 
       beginEdit: function(options) {
          return this._options.readOnly ? Deferred.fail() : this._children.listControl.beginEdit(options);

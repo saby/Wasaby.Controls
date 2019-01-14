@@ -2,7 +2,7 @@
    <script>
       window.receivedStates = '{"ThemesController": { "themes" : {"' + (window.defaultStaticTheme || 'default') + '": true}}}';
 
-      require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/HeadData', 'View/Request', 'Core/app-init', 'Core/Control', 'View/Runner/tclosure'],
+      require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/HeadData', 'View/Request', 'Core/app-init', 'Core/Control', 'View/Executor/TClosure'],
       function(AppData, AppStart, HeadData, Request, appInit, Core) {
 
          /*Первый шаг - иницализация ядра и темы. Второй шаг - загрузка ресурсов*/
