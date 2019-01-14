@@ -42,10 +42,10 @@ define('Controls/Filter/Fast',
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
                self._items = new List({
-                  items: items
+                  items: Utils.clone(items)
                });
             } else {
-               self._items = items;
+               self._items = Utils.clone(items);
             }
          },
 
@@ -108,7 +108,8 @@ define('Controls/Filter/Fast',
             // Get the key of the selected item
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
-            this._setText();
+            this._configs[this.lastOpenIndex].text = getPropValue(item, this._configs[this.lastOpenIndex].displayProperty);
+            _private.setTextValue(this._items.at(this.lastOpenIndex), this._configs[this.lastOpenIndex].text);
          },
 
          onResult: function(result) {
@@ -122,6 +123,16 @@ define('Controls/Filter/Fast',
             if (getPropValue(item, 'textValue') !== undefined) {
                setPropValue(item, 'textValue', textValue);
             }
+         },
+
+         itemsPropertiesChanged: function(oldItems, newItems) {
+            var isChanged = false;
+            Chain(newItems).each(function(item, index) {
+               if (!isEqual(item.properties, oldItems[index].properties)) {
+                  isChanged = true;
+               }
+            });
+            return isChanged;
          }
       };
 
@@ -132,7 +143,6 @@ define('Controls/Filter/Fast',
 
          _beforeMount: function(options) {
             this._configs = {};
-            this._items = [];
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
@@ -151,9 +161,13 @@ define('Controls/Filter/Fast',
          _beforeUpdate: function(newOptions) {
             var self = this,
                resultDef;
-            if (newOptions.items && !isEqual(newOptions.items, this._options.items)) {
+            if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               resultDef = _private.reload(this);
+               if (_private.itemsPropertiesChanged(this._options.items, newOptions.items)) {
+                  resultDef = _private.reload(this);
+               } else {
+                  this._setText();
+               }
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
@@ -199,7 +213,6 @@ define('Controls/Filter/Fast',
                Chain(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
                      config.text = getPropValue(item, config.displayProperty);
-                     _private.setTextValue(self._items.at(index), getPropValue(item, config.displayProperty));
                   }
                });
             });
