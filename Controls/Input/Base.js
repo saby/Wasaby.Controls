@@ -155,14 +155,16 @@ define('Controls/Input/Base',
           * But on some devices, the size of the workspace does not change and controls do not react.
           * To enable them to respond, this method is used.
           * @param {Controls/Input/Base} self Control instance.
-          * @param {Controls/Input/Base/Types/FocusState.typedef} focusState Focus state in the field.
+          * @param {Boolean} hasFocus Does the field have focus.
           */
-         notifyChangeOfFocusState: function(self, focusState) {
+         notifyChangeOfFocusState: function(self, hasFocus) {
             /**
              * After showing the keyboard only on ios, the workspace size does not change.
              */
             if (self._isMobileIOS) {
-               EventBus.globalChannel().notify('MobileInput' + focusState);
+               var eventName = hasFocus ? 'MobileInputFocus' : 'MobileInputFocusOut';
+
+               EventBus.globalChannel().notify(eventName);
             }
          },
 
@@ -692,7 +694,7 @@ define('Controls/Input/Base',
 
             this._focusByMouseDown = false;
 
-            _private.notifyChangeOfFocusState(this, 'Focus');
+            _private.notifyChangeOfFocusState(this, true);
 
             this._displayValueAfterFocusIn = this._viewModel.displayValue;
          },
@@ -709,7 +711,7 @@ define('Controls/Input/Base',
              */
             this._getField().scrollLeft = 0;
 
-            _private.notifyChangeOfFocusState(this, 'FocusOut');
+            _private.notifyChangeOfFocusState(this, false);
 
             _private.callChangeHandler(this);
          },
