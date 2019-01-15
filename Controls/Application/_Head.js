@@ -3,9 +3,10 @@ define('Controls/Application/_Head',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Application/_Head',
-      'View/Request'
+      'View/Request',
+      'Core/Themes/ThemesControllerNew'
    ],
-   function(Base, Deferred, template, Request) {
+   function(Base, Deferred, template, Request, ThemesControllerNew) {
       'use strict';
 
       // Component for <head> html-node, it contents all css depends
@@ -62,6 +63,8 @@ define('Controls/Application/_Head',
             var innerDef = new Deferred();
             self.cssLinks = [];
             def.addCallback(function(res) {
+               self.newSimple = ThemesControllerNew.getInstance().getSimpleCssList();
+               self.newThemed = ThemesControllerNew.getInstance().getThemedCssList();
                self.themedCss = res.css.themedCss;
                self.simpleCss = res.css.simpleCss;
                self.errorState = res.errorState;
