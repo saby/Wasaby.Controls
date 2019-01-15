@@ -27,6 +27,21 @@ define('Controls/StickyHeader',
        */
 
       /**
+       * @name Controls/StickyHeader#mode
+       * @cfg {String} Sticky header mode.
+       * @variant replaceable Replaceable header. The next header replaces the current one.
+       * @variant stackable Stackable header.  The next header is stick to the bottom of the current one.
+       */
+
+      /**
+       * @name Controls/StickyHeader#shadowVisibility
+       * @cfg {String} Shadow visibility.
+       * @variant visible Show.
+       * @variant hidden Do not show.
+       * @default visible
+       */
+
+      /**
        * @event Controls/StickyHeader#fixed Change the fixation state.
        * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} event Event descriptor.
        * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} information Information about the fixation event.
