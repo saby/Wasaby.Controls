@@ -31,4 +31,11 @@ define('Controls/List/interface/IExplorer', [
     * @event Controls/List/interface/IExplorer#itemOpened Occurs after the folder was opened.
     */
 
+   /**
+    * @name Controls/List/interface/IExplorer#backButtonStyle
+    * @cfg {String} Back heading display style.
+    * @default secondary
+    * @see Controls/Heading/Back#style
+    */
+
 });

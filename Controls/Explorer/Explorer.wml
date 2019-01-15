@@ -1,45 +1,55 @@
+<ws:template name="treeTemplate">
+   <Controls.List.TreeControl root="{{_root}}"
+                              header="{{header}}"
+                              scope="{{_options}}"
+                              name="treeControl"
+                              viewName="{{_viewName}}"
+                              swipeViewMode="{{_swipeViewMode}}"
+                              viewModelConstructor="{{_viewModelConstructor}}"
+                              leftPadding="{{_leftPadding}}"
+                              itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
+                              on:itemClick="_onItemClick()"
+                              on:checkboxClick="_notifyHandler('checkboxClick')"
+                              on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
+                              on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
+                              on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
+                              on:afterEndEdit="_notifyHandler('afterEndEdit')"
+                              on:itemActionsClick="_notifyHandler('itemActionsClick')"
+                              on:dragStart="_notifyHandler('dragStart')"
+                              on:dragEnd="_notifyHandler('dragEnd')"
+                              on:changeDragTarget="_notifyHandler('changeDragTarget')"
+                              on:dragEnter="_notifyHandler('dragEnter')"
+                              on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
+                              on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
+                              on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
+                              on:keyDown="_onExplorerKeyDown()"
+                              itemsReadyCallback="{{_itemsReadyCallback}}"
+                              dataLoadCallback="{{_dataLoadCallback}}"/>
+</ws:template>
 <div class="controls-Explorer">
    <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:dragEnd="_dragEndBreadCrumbs()" on:documentDragEnd="_documentDragEnd()">
       <ws:if data="{{_breadCrumbsItems || _dragOnBreadCrumbs}}">
-         <Controls.BreadCrumbs.Path name="explorerPath"
+         <Controls.BreadCrumbs.Path header="{{ _options.header }}"
                                     keyProperty="{{_options.keyProperty}}"
                                     parentProperty="{{ _options.parentProperty }}"
                                     displayProperty="{{_options.displayProperty}}"
+                                    backButtonStyle="{{ _options.backButtonStyle }}"
                                     items="{{_breadCrumbsItems}}"
                                     root="{{_options.root}}"
                                     rootVisible="{{_dragOnBreadCrumbs}}"
                                     highlighter="{{[_breadCrumbsDragHighlighter]}}"
                                     on:hoveredItemChanged="_hoveredCrumbChanged()"
                                     on:arrowActivated="_notifyHandler('arrowActivated')"
-                                    on:itemClick="_onBreadCrumbsClick()" />
+                                    on:itemClick="_onBreadCrumbsClick()">
+            <!--TODO: undefined в header передаётся из-за того, что Path нужно модифицировать header для того, чтобы отрисовать кнопку назад в заголовке.
+            Если не передавать undefined, то значение прикладников всегда будет перебивать значение из Path.
+            Написал ошибку, чтобы то, как опции перебиваются, зависело от того, в каком порядке они переданы:
+            https://online.sbis.ru/opendoc.html?guid=87a926b1-704c-4284-be75-f1f954687011-->
+            <ws:partial template="treeTemplate" header="{{undefined}}" />
+         </Controls.BreadCrumbs.Path>
       </ws:if>
       <ws:else>
-         <div></div>
+         <ws:partial template="treeTemplate" header="{{_options.header}}" />
       </ws:else>
    </Controls.DragNDrop.Controller>
-   <Controls.List.TreeControl root="{{_root}}"
-                      scope="{{_options}}"
-                      name="treeControl"
-                      viewName="{{_viewName}}"
-                      swipeViewMode="{{_swipeViewMode}}"
-                      viewModelConstructor="{{_viewModelConstructor}}"
-                      leftPadding="{{_leftPadding}}"
-                      itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
-                      on:itemClick="_onItemClick()"
-                      on:checkboxClick="_notifyHandler('checkboxClick')"
-                      on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-                      on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
-                      on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-                      on:afterEndEdit="_notifyHandler('afterEndEdit')"
-                      on:itemActionsClick="_notifyHandler('itemActionsClick')"
-                      on:dragStart="_notifyHandler('dragStart')"
-                      on:dragEnd="_notifyHandler('dragEnd')"
-                      on:changeDragTarget="_notifyHandler('changeDragTarget')"
-                      on:dragEnter="_notifyHandler('dragEnter')"
-                      on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-                      on:selectedKeysChanged="_notifyHandler('selectedKeysChanged')"
-                      on:excludedKeysChanged="_notifyHandler('excludedKeysChanged')"
-                      on:keyDown="_onExplorerKeyDown()"
-                      itemsReadyCallback="{{_itemsReadyCallback}}"
-                      dataLoadCallback="{{_dataLoadCallback}}"/>
 </div>

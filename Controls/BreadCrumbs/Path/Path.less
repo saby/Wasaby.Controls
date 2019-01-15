@@ -2,6 +2,10 @@
    height: @height_BreadCrumbs-items;
 }
 
+.controls-BreadCrumbsPath__twoRows {
+   margin-left: @spacing_Path-between-home-and-leftEdge;
+}
+
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
    align-items: baseline;
@@ -10,8 +14,10 @@
 
 .controls-BreadCrumbsPath__backButton {
    white-space: nowrap;
-   position: relative;
-   padding-right: @spacing_Path-between-home-and-backButton;
+}
+
+.controls-BreadCrumbsPath__backButton_inHeader {
+   margin-left: -@width_CheckBox__clickArea;
 }
 
 .controls-BreadCrumbsPath__home {
@@ -24,6 +30,7 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
+   padding-right: @spacing_Path-between-home-and-backButton;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
@@ -42,6 +49,10 @@
 
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
    margin-right: -@font-size_Path-backButtonArrow;
+}
+
+.controls-BreadCrumbsPath__counter {
+   margin-left: @spacing_Path-between-back-and-counter;
 }
 
 .controls-BreadCrumbsPath__breadCrumbs {

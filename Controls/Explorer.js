@@ -188,6 +188,8 @@ define('Controls/Explorer', [
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
          }
+         event.stopPropagation();
+         this._notify('onItemClick', Array.prototype.slice.call(arguments, 1));
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
@@ -226,7 +228,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         root: null
+         root: null,
+         backButtonStyle: 'secondary'
       };
    };
 

@@ -2,7 +2,9 @@
    <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" mode="stackable" fixedZIndex="3">
       <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
          <ws:if data="{{!!headerColumn.column.template}}">
-            <ws:partial template="{{headerColumn.column.template}}" colData="{{headerColumn}}"/>
+            <ws:partial template="{{headerColumn.column.template}}"
+                        scope="{{ headerColumn.column.templateOptions }}"
+                        colData="{{headerColumn}}"/>
          </ws:if>
          <ws:else>
             <ws:partial template="{{defaultHeaderContent}}" colData="{{headerColumn}}"/>

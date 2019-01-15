@@ -7,7 +7,8 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/tmplNotify',
    'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/Path/Path',
-   'wml!Controls/Heading/Back/Back',
+   'wml!Controls/BreadCrumbs/Path/_Back',
+   'Controls/BreadCrumbs/Path/_Back',
    'Types/entity',
    'Controls/Heading/Back',
    'css!theme?Controls/BreadCrumbs/Path/Path'
@@ -21,6 +22,7 @@ define('Controls/BreadCrumbs/Path', [
    applyHighlighter,
    template,
    backButtonTemplate,
+   PathBack,
    entity
 ) {
    'use strict';
@@ -42,33 +44,55 @@ define('Controls/BreadCrumbs/Path', [
          }
       },
 
-      calculateItems: function(self, items, containerWidth) {
+      calculateItems: function(self, options, containerWidth) {
          var
             backButtonWidth,
             availableWidth,
             homeWidth;
 
-         self._backButtonCaption = ItemsUtil.getPropertyValue(items[items.length - 1], self._options.displayProperty);
-         if (items.length > 1) {
-            self._breadCrumbsItems = items.slice(0, items.length - 1);
-            backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
-               _options: {
-                  caption: self._backButtonCaption,
-                  style: 'default',
-                  size: 'm'
-               }
-            }));
-            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
-            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, self._options.displayProperty), backButtonWidth, containerWidth - homeWidth);
+         self._header = _private.getHeader(options);
+         self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty);
+         if (options.items.length > 1) {
+            self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
+            if (!options.header) {
+               backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
+                  _options: {
+                     backButtonCaption: self._backButtonCaption,
+                     counterCaption: options.counterCaption
+                  }
+               }));
+               homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
+               _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, containerWidth - homeWidth);
 
-            availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
+               availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
+               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
+            } else {
+               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth);
+            }
          } else {
             self._visibleItems = null;
             self._breadCrumbsItems = null;
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
          }
+      },
+
+      getHeader: function(options) {
+         var newHeader = options.header;
+         if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
+            newHeader = options.header.slice();
+            newHeader[0] = {
+               template: PathBack,
+               templateOptions: {
+                  backButtonClass: 'controls-BreadCrumbsPath__backButton_inHeader',
+                  backButtonStyle: options.backButtonStyle,
+                  backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
+                  counterCaption: options.counterCaption
+               },
+               width: options.header[0].width
+            };
+         }
+         return newHeader;
       },
 
       getRootModel: function(root, keyProperty) {
@@ -102,6 +126,13 @@ define('Controls/BreadCrumbs/Path', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
 
+   /**
+    * @name Controls/BreadCrumbs/Path#backButtonStyle
+    * @cfg {String} Back heading display style.
+    * @default secondary
+    * @see Controls/Heading/Back#style
+    */
+
    var BreadCrumbsPath = Control.extend({
       _template: template,
       _backButtonCaption: '',
@@ -111,12 +142,16 @@ define('Controls/BreadCrumbs/Path', [
       _breadCrumbsClass: '',
       _oldWidth: 0,
 
+      _beforeMount: function(options) {
+         this._header = _private.getHeader(options);
+      },
+
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function() {
                FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function() {
-                  _private.calculateItems(this, this._options.items, this._oldWidth);
+                  _private.calculateItems(this, this._options, this._oldWidth);
                   this._forceUpdate();
                }.bind(this));
             }.bind(this));
@@ -125,9 +160,9 @@ define('Controls/BreadCrumbs/Path', [
 
       _beforeUpdate: function(newOptions) {
          var containerWidth = this._container.clientWidth;
-         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
+         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth) || this._options.header !== newOptions.header) {
             this._oldWidth = containerWidth;
-            _private.calculateItems(this, newOptions.items, containerWidth);
+            _private.calculateItems(this, newOptions, containerWidth);
          }
       },
 
@@ -135,7 +170,7 @@ define('Controls/BreadCrumbs/Path', [
       _applyHighlighter: applyHighlighter,
       _getRootModel: _private.getRootModel,
 
-      _onBackButtonClick: function() {
+      _onBackButtonClick: function(e) {
          var item;
 
          if (this._options.items.length > 1) {
@@ -145,6 +180,7 @@ define('Controls/BreadCrumbs/Path', [
          }
 
          this._notify('itemClick', [item]);
+         e.stopPropagation();
       },
 
       _onResize: function() {
@@ -155,15 +191,17 @@ define('Controls/BreadCrumbs/Path', [
          this._notify('itemClick', [this._getRootModel(this._options.root, this._options.keyProperty)]);
       },
 
-      _onArrowClick: function() {
+      _onArrowClick: function(e) {
          this._notify('arrowActivated');
+         e.stopPropagation();
       }
    });
 
    BreadCrumbsPath.getDefaultOptions = function() {
       return {
          displayProperty: 'title',
-         root: null
+         root: null,
+         backButtonStyle: 'secondary'
       };
    };
 
