@@ -30,18 +30,20 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
                   {
                      id: '1',
                      title: 'Yaroslavl',
-                     text: 'Yaroslavl',
+                     text: 'YAROSLAVL',
                      comment: '76',
                      myTemplate: 'wml!Controls-demo/Input/ComboBox/itemMyTemplateCustom'
                   },
                   {
                      id: '2',
                      title: 'Moscow',
+                     text: 'MOSCOW',
                      comment: '77'
                   },
                   {
                      id: '3',
                      title: 'St-Petersburg',
+                     text: 'ST-PETERSBURG',
                      comment: '78',
                      myTemplate: 'wml!Controls-demo/Input/ComboBox/itemMyTemplateCustom'
                   }
@@ -77,6 +79,20 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
                      { id: '2', title: 'Not specified', value: '' }
                   ],
                   value: 'Not specified'
+               },
+               filter: {
+                  items: [
+                     { id: '1', title: 'Loads items with id is 1, 2', items: { id: ['1', '2'] } },
+                     { id: '2', title: 'Not specified', items: {} }
+                  ],
+                  value: 'Not specified'
+               },
+               displayProperty: {
+                  items: [
+                     { id: '1', title: 'title', value: 'title' },
+                     { id: '2', title: 'text', value: 'text' }
+                  ],
+                  value: 'title'
                }
             };
             this._componentOptions = {
@@ -88,6 +104,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
                itemTemplate: undefined,
                itemTemplateProperty: '',
                emptyText: '',
+               filter: undefined,
                displayProperty: 'title',
                keyProperty: 'id',
                readOnly: false

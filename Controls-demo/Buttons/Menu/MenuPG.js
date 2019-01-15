@@ -154,7 +154,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                   ],
                   value: 'Not specified'
                },
-               headTemplate: {
+               headerTemplate: {
                   items: [
                      { id: '1', title: 'Default template', template: '' },
                      { id: '2', title: 'Custom template', template: 'wml!Controls-demo/Buttons/Menu/headerTemplate' }
@@ -216,7 +216,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                },
                filter: {
                   items: [
-                     { id: '1', title: 'Loads items with id is 1, 2 or 3', items: { id: [1, 2, 3] } },
+                     { id: '1', title: 'Loads items with id is 1, 2 and 3', items: { id: [1, 2, 3] } },
                      { id: '2', title: 'Not specified', items: {} }
                   ],
                   value: 'Not specified'
