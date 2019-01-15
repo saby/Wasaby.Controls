@@ -38,7 +38,7 @@ define('Controls/Controllers/QueryParamsController/Offset',
 
          prepareSource: function(source) {
             var options = source.getOptions();
-            options.navigationType = SbisService.prototype.NAVIGATION_TYPE.OFFSET;
+            options.navigationType = sourceLib.SbisService.NAVIGATION_TYPE.OFFSET;
             source.setOptions(options);
          },
 

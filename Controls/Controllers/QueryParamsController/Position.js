@@ -179,7 +179,7 @@ define('Controls/Controllers/QueryParamsController/Position',
 
          prepareSource: function(source) {
             var options = source.getOptions();
-            options.navigationType = SbisService.prototype.NAVIGATION_TYPE.POSITION;
+            options.navigationType = sourceLib.SbisService.NAVIGATION_TYPE.POSITION;
             source.setOptions(options);
          },
 
