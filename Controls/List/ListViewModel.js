@@ -152,7 +152,7 @@ define('Controls/List/ListViewModel',
             return this._markedKey;
          },
          getSelectionStatus: function(key) {
-            return this._selectedKeys.indexOf(key) !== -1;
+            return this._selectedKeys[key] !== undefined;
          },
 
          getSwipeItem: function() {

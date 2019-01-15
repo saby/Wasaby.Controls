@@ -261,6 +261,7 @@ define('Controls/List/TreeControl', [
          TreeControl.superclass._afterUpdate.apply(this, arguments);
          if (this._updatedRoot) {
             this._updatedRoot = false;
+            _private.clearSourceControllers(this);
             this._children.baseControl.getViewModel().setExpandedItems([]);
             this._children.baseControl.getViewModel().setRoot(this._root);
             this.reload();
