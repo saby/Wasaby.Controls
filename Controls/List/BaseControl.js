@@ -910,7 +910,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item, originalEvent) {
-         if (originalEvent.target.closest('.js-controls-ListView__checkbox') && originalEvent.type === 'click') {
+         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
              We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
