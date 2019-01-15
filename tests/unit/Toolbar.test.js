@@ -128,18 +128,18 @@ define(
                let eventString = '';
                toolbar._beforeMount(config, null, records);
                let isHeadConfigCorrect = false;
-               toolbar._children.menuOpener.open = function(config) {
-                  let standart = {
-                     icon: 'icon-Ezy',
-                     caption: 'Запись 2',
-                     iconStyle: 'super'
-                  };
-                  if (standart.caption === config.templateOptions.headConfig.caption &&
-                     standart.icon === config.templateOptions.headConfig.icon &&
-                     standart.iconStyle === config.templateOptions.headConfig.iconStyle) {
-                     isHeadConfigCorrect = true;
-                  }
+               let standart = {
+                  icon: 'icon-Ezy',
+                  caption: 'Запись 2',
+                  iconStyle: 'super'
                };
+               let itemConfig = Toolbar._private.generateItemPopupConfig(itemWithMenu, {}, toolbar);
+               if (standart.caption === itemConfig.templateOptions.headConfig.caption &&
+                  standart.icon === itemConfig.templateOptions.headConfig.icon &&
+                  standart.iconStyle === itemConfig.templateOptions.headConfig.iconStyle) {
+                  isHeadConfigCorrect = true;
+               }
+               assert.isTrue(isHeadConfigCorrect);
                toolbar._notify = (e) => {
                   eventString += e;
                   isNotify = true;
@@ -147,7 +147,6 @@ define(
                toolbar._onItemClick({ stopPropagation: () => {} }, itemWithMenu);
                assert.equal(eventString, 'menuOpeneditemClick');
                assert.equal(isNotify, true);
-               assert.equal(isHeadConfigCorrect, true);
             });
             it('before update source', () => {
                defaultItems.push({
@@ -212,7 +211,7 @@ define(
                      target: 'target'
                   },
                   config = {
-                     className: 'controls-Toolbar_menu popupClassName',
+                     className: 'controls-Toolbar__popup popupClassName',
                      corner: {
                         horizontal: 'left',
                         vertical: 'top'
@@ -247,7 +246,7 @@ define(
                      _menuItems: 'menuItems'
                   },
                   config = {
-                     className: 'controls-Toolbar__menu-position popupClassName',
+                     className: 'controls-Toolbar__popup_list popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
                         items: 'menuItems'

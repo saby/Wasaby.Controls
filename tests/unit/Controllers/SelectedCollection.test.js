@@ -182,7 +182,7 @@ define([
          assert.notEqual(collectionWithReceivedState._selectedKeys, selectedKeys);
       });
 
-      it('_beforeUpdate', function() {
+      it('_beforeUpdate', function(done) {
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
          var textValue = '';
@@ -254,14 +254,17 @@ define([
             selectedKeys: [1, 2],
             source: source,
             keyProperty: 'id'
-         });
-         assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
+         }).addCallback(function() {
+            assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
+            assert.equal(selectedCollection._items.getCount(), 2);
 
-         selectedCollection._beforeUpdate({
-            keyProperty: 'title'
+            selectedCollection._beforeUpdate({
+               selectedKeys: []
+            });
+            assert.deepEqual(selectedCollection._selectedKeys, []);
+            assert.equal(selectedCollection._items.getCount(), 0);
+            done();
          });
-         // т.к items еще не загрузились.
-         assert.deepEqual(selectedCollection._selectedKeys, []);
       });
 
       it('_setItems', function() {

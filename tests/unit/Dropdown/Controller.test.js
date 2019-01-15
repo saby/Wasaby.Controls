@@ -360,8 +360,10 @@ define(
                }
             };
             dropdownController._mousedown();
-            assert.isTrue(opened);
-   
+            setTimeout(function() {
+               assert.isTrue(opened);
+            }, 100);
+
             dropdownController._mousedown();
             assert.isFalse(opened);
          });

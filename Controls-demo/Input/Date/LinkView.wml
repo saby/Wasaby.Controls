@@ -7,21 +7,24 @@
                showNextArrow="{{true}}"
          />
          <Controls.Input.Date.LinkView
-               startValue="{{_startValue}}"
-               endValue="{{_endValue}}"
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
+               clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                bind:startValue="_startValue"
                bind:endValue="_endValue"
-               showPrevArrow="{{true}}"
-               showNextArrow="{{true}}"
+               prevArrowVisibility="{{true}}"
+               nextArrowVisibility="{{true}}"
+               clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
-               startValue="{{_startValue}}"
-               endValue="{{_endValue}}"
+               bind:startValue="_startValue"
+               bind:endValue="_endValue"
                style="linkMain"
+               clearButtonVisibility="{{true}}"
          />
          <Controls.Input.Date.LinkView
                startValue="{{_startValue}}"

@@ -4,6 +4,7 @@ define([
    'Core/Deferred',
    'Core/core-merge',
    'Core/core-instance',
+   'Core/constants',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Source/Memory'
@@ -13,6 +14,7 @@ define([
    Deferred,
    cMerge,
    cInstance,
+   cConstants,
    TreeGridViewModel,
    RecordSet,
    Memory
@@ -41,6 +43,17 @@ define([
       };
       return treeControl;
    }
+   
+   function getHierarchyData() {
+      return [
+         {id: 0, 'Раздел@': true, "Раздел": null},
+         {id: 1, 'Раздел@': true, "Раздел": 0},
+         {id: 2, 'Раздел@': null, "Раздел": 0},
+         {id: 3, 'Раздел@': null, "Раздел": 1},
+         {id: 4, 'Раздел@': null, "Раздел": null}
+      ];
+   }
+   
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function(done) {
          var
@@ -62,11 +75,75 @@ define([
          setTimeout(function() {
             treeControl.reload();
             setTimeout(function() {
-               assert.deepEqual({}, treeControl._nodesSourceControllers, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
-               assert.isTrue(isSourceControllerDestroyed, 'Invalid value "isSourceControllerDestroyed" after call "treeControl.reload()".');
+               assert.isTrue(!!Object.keys(treeControl._nodesSourceControllers).length, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
+               assert.isFalse(isSourceControllerDestroyed, 'Invalid value "isSourceControllerDestroyed" after call "treeControl.reload()".');
                done();
             }, 10);
          }, 10);
+      });
+      it('List navigation by keys', function(done) {
+         // mock function working with DOM
+         BaseControl._private.scrollToItem = function() {};
+
+         var
+            stopImmediateCalled = false,
+            preventDefaultCalled = false,
+
+            lnSource = new Memory({
+               idProperty: 'id',
+               data: [
+                  { id: 1, type: true, parent: null },
+                  { id: 2, type: true, parent: 1 }
+               ]
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/TreeGridView',
+               source: lnSource,
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: 'type',
+               markedKey: 1,
+               columns: [],
+               viewModelConstructor: TreeGridViewModel
+            },
+            lnTreeControl = correctCreateTreeControl(lnCfg),
+            treeGridViewModel = lnTreeControl._children.baseControl.getViewModel();
+
+         setTimeout(function () {
+            assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+
+            lnTreeControl._onTreeViewKeyDown({
+               stopImmediatePropagation: function() {
+                  stopImmediateCalled = true;
+               },
+               preventDefault: function() {
+                  preventDefaultCalled = true;
+               },
+               nativeEvent: {
+                  keyCode: cConstants.key.right
+               }
+            });
+            setTimeout(function () {
+               assert.deepEqual({ 1: true }, treeGridViewModel._model._expandedItems);
+
+               lnTreeControl._onTreeViewKeyDown({
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  },
+                  nativeEvent: {
+                     keyCode: cConstants.key.left
+                  }
+               });
+               assert.deepEqual({}, treeGridViewModel._model._expandedItems);
+
+               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
+               done();
+            }, 1);
+         }, 1);
       });
       it('TreeControl._beforeUpdate', function(done) {
          var
@@ -89,9 +166,16 @@ define([
             reloadCalled = true;
             return reloadOriginal.apply(this, arguments);
          };
+         treeGridViewModel._model._display = {
+            setFilter: function() {}
+         };
+         treeGridViewModel.setExpandedItems(['testRoot']);
          setTimeout(function() {
             treeControl._beforeUpdate({ root: 'testRoot' });
+            assert.deepEqual(treeGridViewModel.getExpandedItems(), {'testRoot': true});
+            
             treeControl._afterUpdate({ root: null });
+            assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
             setTimeout(function() {
                assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
                assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
@@ -278,7 +362,7 @@ define([
                })
             });
          treeControl.reload();
-         assert.deepEqual({}, treeControl._children.baseControl.getViewModel()._model._expandedItems);
+         assert.deepEqual({2246: true, 452815: true, 457244: true, 471641: true}, treeControl._children.baseControl.getViewModel().getExpandedItems());
       });
       it('Expand all', function(done) {
          var
@@ -404,6 +488,142 @@ define([
          assert.deepEqual(11, treeGridViewModel._model._markedKey);
       });
 
+      it('reloadItem', function(done) {
+         var source = new Memory({
+            data: [{id: 0, 'Раздел@': false, "Раздел": null}],
+            rawData: [{id: 0, 'Раздел@': false, "Раздел": null}],
+            idProperty: 'id',
+            filter: function(item, filter) {
+               if (filter['Раздел'] && filter['Раздел'] instanceof Array) {
+                  return filter['Раздел'].indexOf(item.get('id')) !== -1 || filter['Раздел'].indexOf(item.get('Раздел')) !== -1;
+               }
+               return true;
+            }
+         });
+         var cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+            filter: {}
+         };
+   
+         var treeGridViewModel = new TreeGridViewModel(cfg);
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         }));
+         var treeControl = new TreeControl(cfg);
+         treeControl.saveOptions(cfg);
+         treeControl._children = {
+            baseControl: {
+               getViewModel: function() {
+                  return treeGridViewModel;
+               }
+            }
+         };
+   
+         var oldItems = treeControl._children.baseControl.getViewModel().getItems();
+         assert.deepEqual(oldItems.getRawData(), getHierarchyData());
+         
+         treeControl.reloadItem(0, {}, 'depth').addCallback(function() {
+            var newItems = treeControl._children.baseControl.getViewModel().getItems();
+            assert.deepEqual(
+               newItems.getRawData(),
+               [
+                  {id: 0, 'Раздел@': false, "Раздел": null},
+                  {id: 3, 'Раздел@': null, "Раздел": 1},
+                  {id: 4, 'Раздел@': null, "Раздел": null}
+               ]
+            );
+            done();
+         });
+      });
+   
+      it('_private.getReloadableNodes', function() {
+         var source = new Memory({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         });
+         var cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+         };
+   
+         var treeGridViewModel = new TreeGridViewModel(cfg);
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         }));
+         
+         assert.deepEqual(TreeControl._private.getReloadableNodes(treeGridViewModel, 0, 'id', 'Раздел@'), [1]);
+      });
+   
+      it('_private.applyReloadedNodes', function() {
+         var source = new Memory({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         });
+         var cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+         };
+   
+         var treeGridViewModel = new TreeGridViewModel(cfg);
+         var newItems = new RecordSet({
+            rawData: [{id: 0, 'Раздел@': false, "Раздел": null}],
+            idProperty: 'id'
+         });
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         }));
+   
+         TreeControl._private.applyReloadedNodes(treeGridViewModel, 0, 'id', 'Раздел@', newItems);
+         
+         assert.equal(treeGridViewModel.getItems().getCount(), 3);
+         assert.deepEqual(treeGridViewModel.getItems().at(0).getRawData(), {id: 0, 'Раздел@': false, "Раздел": null});
+      });
+   
+      it('_private.nodeChildsIterator', function() {
+         var source = new Memory({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         });
+         var cfg = {
+            source: source,
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+         };
+   
+         var treeGridViewModel = new TreeGridViewModel(cfg);
+         treeGridViewModel.setItems(new RecordSet({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         }));
+         var nodes = [];
+         var lists = [];
+   
+         TreeControl._private.nodeChildsIterator(treeGridViewModel, 0, 'Раздел@',
+            function(elem) {
+               nodes.push(elem.get('id'));
+            },
+            function(elem) {
+               lists.push(elem.get('id'));
+            });
+         
+         assert.deepEqual(nodes, [1]);
+         assert.deepEqual(lists, [2]);
+      });
 
    });
 });

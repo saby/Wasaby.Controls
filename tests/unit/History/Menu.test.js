@@ -57,18 +57,18 @@ define(
          it('_beforeMount', function() {
             var menu = getHistoryMenu(menuConfig);
             menu._beforeMount(menuConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_link_small');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_popup');
          });
          it('_beforeUpdate', function() {
             var menu = getHistoryMenu(menuConfig);
             var newConfig = Clone(menuConfig);
             newConfig.viewMode = 'button';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button_small');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_small_popup');
             newConfig.size = 'm';
             newConfig.icon = '';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button__m');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__m_popup');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
