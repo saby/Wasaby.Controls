@@ -68,7 +68,7 @@ define('Controls/Popup/Opener/Sticky',
          },
 
          _setCompatibleConfig: function(config) {
-            config._type = 'sticky'; //for compoundArea
+            config._type = 'sticky'; // for compoundArea
          }
       });
 
@@ -76,13 +76,7 @@ define('Controls/Popup/Opener/Sticky',
          return coreMerge(Base.getDefaultOptions(), {});
       };
       return Sticky;
-   }
-);
-
-/**
- * @name Controls/Popup/Opener/Sticky#closePopupBeforeUnmount
- * @cfg {Boolean} closePopupBeforeUnmount Determines whether to close the popup when the component is destroyed.
- */
+   });
 
 /**
  * @name Controls/Popup/Opener/Sticky#targetTracking
@@ -147,23 +141,76 @@ define('Controls/Popup/Opener/Sticky',
  */
 
 /**
- * @typedef {Object} PopupOptions
- * @description Stack popup options.
- * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
- * @property {Boolean} isModal Determines whether the window is modal.
- * @property {String} className Class names of popup.
- * @property {Boolean} closeByExternalClick Determines whether possibility of closing the popup when clicking past.
- * @property {Object} opener Control, which is the logical initiator of popup opening.
- * @property {String|Template} template Template inside popup.
- * @property {String|Template} templateOptions Template options inside popup.
- * @property {Object} eventHandlers Callback functions on popup events.
- * @property {Integer} corner Sets the popup build point relative target.
- * @property {Integer} horizontalAlign Sets the horizontal alignment of the popup.
- * @property {Integer} verticalAlign Sets the vertical alignment of the popup.
- * @property {Integer} target The maximum width of the panel in a maximized state.
- * @property {Integer} minWidth The target relative to which the popup is positioned.
- * @property {Integer} maxWidth The minimum width of popup.
- * @property {Integer} minHeight The maximum height of popup.
- * @property {Integer} maxHeight The maximum height of popup.
- * @property {String} locationStrategy A method of adjusting the popup panel to the free space next to the target.
+ * @name Controls/Popup/Opener/Sticky#autofocus
+ * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#modal
+ * @cfg {Boolean} Determines whether the window is modal.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#className
+ * @cfg {String} Class names of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#closeOnOutsideClick
+ * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#template
+ * @cfg {String|Function} Template inside popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#templateOptions
+ * @cfg {String|Function} Template options inside popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#minWidth
+ * @cfg {Number} The minimum width of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#maxWidth
+ * @cfg {Number} The maximum width of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#minHeight
+ * @cfg {Number} The minimum height of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#maxHeight
+ * @cfg {Number} The maximum height of popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#corner
+ * @cfg {Object} Sets the popup build point relative target.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#horizontalAlign
+ * @cfg {Object} Sets the horizontal alignment of the popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#verticalAlign
+ * @cfg {Object} Sets the vertical alignment of the popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#target
+ * @cfg {Object} The target relative to which the popup is positioned.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#locationStrategy
+ * @cfg {Object} A method of adjusting the popup panel to the free space next to the target.
  */
