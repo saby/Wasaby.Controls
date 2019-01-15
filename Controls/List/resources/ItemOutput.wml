@@ -1,6 +1,7 @@
 <ws:template name="baseTemplate">
    <ws:partial
       on:click="_onItemClick(itemData.dispItem)"
+      on:keyDown="_onItemKeyDown(itemData.dispItem)"
       on:contextmenu="_onItemContextMenu(itemData)"
       on:swipe="_onItemSwipe(itemData)"
       on:mousedown="_onItemMouseDown(itemData)"

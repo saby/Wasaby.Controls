@@ -67,6 +67,7 @@
          <Controls.Button
             style="secondary"
             viewMode="toolButton"
+            size="s"
             transparent="{{true}}"
             icon="icon-small icon-Home3"
             on:click="_onHomeClick()"
