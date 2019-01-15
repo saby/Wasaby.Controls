@@ -32,10 +32,10 @@ define('Controls-demo/Popup/TestDialog',
       });
 
       TestDialog.dimensions = {
-         minWidth: 400,
-         maxWidth: 400,
-         minHeight: 400,
-         maxHeight: 400,
+         minWidth: 600,
+         maxWidth: 600,
+         minHeight: 600,
+         maxHeight: 600,
       };
 
       return TestDialog;
