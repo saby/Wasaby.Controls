@@ -1,3 +1,8 @@
+//The scrollContainer z-index is set to auto, and if the content is set to z-index, it will be above the shadows and scrollbar
+//Set a large z-index for shadows and scrollbar, leaving the ability to show content on top of them.
+//Show content above the shadows and scrollbar in a tile where items are zoomed out of the scrollContainer.
+@z-index_Scroll-contentEnvironment: 50;
+
 .controls-Scroll {
    position: relative;
    // Таким образом мы скрываем нативный скролл.
@@ -21,7 +26,7 @@
    top: 0;
    right: 0;
    bottom: 0;
-   z-index: 2;
+   z-index: @z-index_Scroll-contentEnvironment;
 }
 
 .controls-Scroll__content {
@@ -31,7 +36,8 @@
    max-height: inherit;
    flex-direction: column;
 
-   z-index: 1;
+   //We enable the contents of the scrollContainer to be displayed on top of the scrollbar and shadows by specifying a z-index greater than them.
+   z-index: auto;
 }
 
 .controls-Scroll__userContent {
@@ -51,7 +57,7 @@
 .controls-Scroll__shadow {
    left: 0;
    right: 0;
-   z-index: 2;
+   z-index: @z-index_Scroll-contentEnvironment;
    position: absolute;
    pointer-events: none;
    height: @height-gradient_Scroll-shadow;
@@ -102,7 +108,7 @@
    position: absolute;
    bottom: 0;
    right: 0;
-   z-index: 2;
+   z-index: @z-index_Scroll-contentEnvironment;
 }
 
 .controls-Scroll__content_paging {
