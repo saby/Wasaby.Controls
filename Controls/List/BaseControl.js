@@ -53,7 +53,8 @@ define('Controls/List/BaseControl', [
       HOT_KEYS = {
          moveMarkerToNext: cConstants.key.down,
          moveMarkerToPrevious: cConstants.key.up,
-         toggleSelection: cConstants.key.space
+         toggleSelection: cConstants.key.space,
+         enterHandler: cConstants.key.enter
       };
 
    var LOAD_TRIGGER_OFFSET = 100;
@@ -76,7 +77,7 @@ define('Controls/List/BaseControl', [
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                var
-                  markedKey,
+                  markedKey, isActive,
                   listModel = self._listViewModel;
 
                if (cfg.dataLoadCallback instanceof Function) {
@@ -86,6 +87,9 @@ define('Controls/List/BaseControl', [
                _private.hideIndicator(self);
 
                if (listModel) {
+                  if (self._isActive) {
+                     isActive = true;
+                  }
                   listModel.setItems(list);
                   self._items = listModel.getItems();
                   markedKey = listModel.getMarkedKey();
@@ -97,6 +101,9 @@ define('Controls/List/BaseControl', [
                         listModel.setMarkedKey(markedKey);
                         self._restoreMarkedKey = markedKey;
                      }
+                  }
+                  if (isActive === true) {
+                     self._children.listView.activate();
                   }
                }
 
@@ -157,6 +164,14 @@ define('Controls/List/BaseControl', [
          var
             model = self.getViewModel();
          _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+      },
+      enterHandler: function(self) {
+         var
+            model = self.getViewModel(),
+            markedKey = model.getMarkedKey();
+         if (markedKey !== null) {
+            self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
+         }
       },
       toggleSelection: function(self) {
          var
@@ -715,6 +730,14 @@ define('Controls/List/BaseControl', [
          return this._sourceController;
       },
 
+      _onActivated: function() {
+         this._isActive = true;
+      },
+
+      _onDeactivated: function() {
+         this._isActive = false;
+      },
+
       _afterMount: function() {
          if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
@@ -887,7 +910,7 @@ define('Controls/List/BaseControl', [
       },
 
       _onItemClick: function(e, item, originalEvent) {
-         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
+         if (originalEvent.target.closest('.js-controls-ListView__checkbox') && originalEvent.type === 'click') {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
              We can't stop click on checkbox from propagating because we can only subscribe to valueChanged event and then
