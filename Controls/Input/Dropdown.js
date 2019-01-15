@@ -11,8 +11,9 @@ define('Controls/Input/Dropdown',
    ],
    function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
       /**
-       * Input for selection from the list of options.
-       *
+       * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
+       * The full list of options is displayed when you click on the control.
+       * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
@@ -32,7 +33,7 @@ define('Controls/Input/Dropdown',
        * @public
        * @author Красильников А.С.
        * @category Input
-       * @demo Controls-demo/Input/Dropdown/Dropdown
+       * @demo Controls-demo/Input/Dropdown/DropdownPG
        */
 
       /**
