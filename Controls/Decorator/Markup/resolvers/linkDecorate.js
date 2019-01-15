@@ -57,6 +57,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       }
       linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + 'LinkDecorator__linkWrap';
       linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
+      linkAttrs.target = '_blank';
 
       var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +
          cConstants.decoratedLinkService + '?method=LinkDecorator.DecorateAsSvg&params=' +
