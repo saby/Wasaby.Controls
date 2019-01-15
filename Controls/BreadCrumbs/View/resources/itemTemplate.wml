@@ -9,7 +9,7 @@
                 <ws:partial template="{{contentTemplate}}" displayProperty="{{displayProperty}}" itemData="{{itemData}}"/>
             </ws:if>
             <ws:else>
-                {{ itemData.getPropValue(itemData.item, displayProperty || 'title') }}
+                {{itemData.getPropValue(itemData.item, displayProperty || 'title')}}
             </ws:else>
         </div>
     </div>
