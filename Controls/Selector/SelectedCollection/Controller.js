@@ -153,16 +153,18 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
          if (!newOptions.multiSelect && this._selectedKeys.length > 1) {
             this._setItems([]);
-         }
+         } else if (sourceIsChanged || keysChanged) {
+            if (this._selectedKeys.length) {
+               return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
+                  _private.notifyItemsChanged(self, result);
+                  _private.notifyTextValueChanged(self, _private.getTextValue(self));
+                  self._forceUpdate();
 
-         if ((sourceIsChanged || keysChanged) && this._selectedKeys.length) {
-            return _private.loadItems(this, newOptions.filter, newOptions.keyProperty, this._selectedKeys, newOptions.source, sourceIsChanged).addCallback(function(result) {
-               _private.notifyItemsChanged(self, result);
-               _private.notifyTextValueChanged(self, _private.getTextValue(self));
-               self._forceUpdate();
-
-               return result;
-            });
+                  return result;
+               });
+            } else if (keysChanged) {
+               this._setItems([]);
+            }
          }
       },
 
