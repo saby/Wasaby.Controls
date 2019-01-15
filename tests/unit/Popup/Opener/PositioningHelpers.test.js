@@ -252,7 +252,7 @@ define(
                   marginTop: '1px',
                   marginLeft: '2px',
                };
-               BCInstacne._private.getFakeDivMargins = () => margins;
+               BCInstacne._private.getFakeDivStyles = () => margins;
                let config = {
                   popupOptions: {
                      maxWidth: 200,

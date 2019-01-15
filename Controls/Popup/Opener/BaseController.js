@@ -29,7 +29,7 @@ define('Controls/Popup/Opener/BaseController',
             }
             config.className = config.popupOptions.className;
 
-            var style = _private.getFakeDivMargins(config);
+            var style = _private.getFakeDivStyles(config);
 
             config.margins = {
                top: parseInt(style.marginTop, 10),
@@ -38,11 +38,11 @@ define('Controls/Popup/Opener/BaseController',
             return config.margins;
          },
 
-         getFakeDivMargins: function(config) {
+         getFakeDivStyles: function(config) {
             if (!document) {
                return {
-                  left: 0,
-                  top: 0
+                  marginLeft: 0,
+                  marginTop: 0
                };
             }
 
