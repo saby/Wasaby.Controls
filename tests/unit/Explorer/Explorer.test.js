@@ -3,13 +3,15 @@ define([
    'Core/Deferred',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Chain',
-   'Controls/DragNDrop/Entity/Items'
+   'Controls/DragNDrop/Entity/Items',
+   'WS.Data/Entity/Model'
 ], function(
    Explorer,
    Deferred,
    RecordSet,
    chain,
-   DragEntity
+   DragEntity,
+   Model
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -302,10 +304,16 @@ define([
          });
 
          it('_hoveredCrumbChanged', function() {
-            var hoveredBreadCrumb = {};
+            var hoveredBreadCrumb = new Model({
+                  rawData: {
+                     id: 1
+                  },
+                  idProperty: 'id'
+               }),
+                explorer = new Explorer({});
 
             explorer._hoveredCrumbChanged({}, hoveredBreadCrumb);
-            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb);
+            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb.get('id'));
          });
          it('dragItemsFromRoot', function() {
 
