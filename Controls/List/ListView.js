@@ -116,13 +116,6 @@ define('Controls/List/ListView', [
             return this._children.itemsContainer;
          },
 
-         _onItemKeyDown: function(e, dispItem) {
-            if (e.nativeEvent.keyCode === cConstants.key.enter) {
-               var item = dispItem.getContents();
-               this._notify('itemClick', [item, e], { bubbling: true });
-            }
-         },
-
          _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
             this._notify('itemClick', [item, e], {bubbling: true});
