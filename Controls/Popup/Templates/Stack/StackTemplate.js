@@ -64,7 +64,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonStyle
           * @cfg {String} Close button display style.
           * @variant default
-          * @variant lite
+          * @variant light
           * @variant primary
           */
 
