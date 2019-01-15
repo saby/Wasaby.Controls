@@ -56,6 +56,20 @@ define(
 
             assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Base/ViewModel'));
          });
+         it('Pass null as the value option.', function() {
+            ctrl._getActiveElement = function() {
+               return ctrl._getField();
+            };
+            ctrl._beforeMount({
+               value: null
+            });
+            ctrl._template(ctrl);
+
+            assert.equal(ctrl._viewModel.value, null);
+            assert.equal(ctrl._viewModel.displayValue, '');
+            assert.equal(ctrl._viewModel.selection.start, 0);
+            assert.equal(ctrl._viewModel.selection.end, 0);
+         });
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
                ctrl._options.readOnly = false;
