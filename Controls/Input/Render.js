@@ -13,6 +13,12 @@ define('Controls/Input/Render',
       var Render = Control.extend({
          _template: template,
 
+         /**
+          * @type {Boolean} The content has active.
+          * @private
+          */
+         _contentActive: false,
+
          _notifyHandler: tmplNotify,
 
          _getState: function() {
@@ -23,11 +29,19 @@ define('Controls/Input/Render',
 
                return '_readOnly';
             }
-            if (this._active) {
+            if (this._contentActive) {
                return '_active';
             }
 
             return '';
+         },
+
+         _contentFocusInHandler: function() {
+            this._contentActive = true;
+         },
+
+         _contentFocusOutHandler: function() {
+            this._contentActive = false;
          }
       });
 
