@@ -4,7 +4,7 @@
             {{marker !== false && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
             {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}"
         attr:style="{{'flex-basis: ' + (folderWidth || itemData.defaultFolderWidth)+ 'px;'}}">
-      <ws:partial if="{{itemData.multiSelectVisibility}}"
+      <ws:partial if="{{itemData.multiSelectVisibility !== 'hidden'}}"
                   template="{{multiSelectTpl}}"
                   attr:class="controls-TileView__checkbox controls-TreeTileView__checkbox">
          <ws:templateOptions triState="{{true}}"
