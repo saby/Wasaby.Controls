@@ -6,9 +6,9 @@ define(
       'Controls/Input/Base',
       'tests/resources/ProxyCall',
       'tests/resources/TemplateUtil',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'Vdom/Vdom'
    ],
-   function(EventBus, constants, instance, Base, ProxyCall, TemplateUtil, SyntheticEvent) {
+   function(EventBus, constants, instance, Base, ProxyCall, TemplateUtil, Vdom) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
@@ -188,12 +188,41 @@ define(
                ctrl._getField().value = 'text';
                ctrl._getField().selectionStart = 4;
                ctrl._getField().selectionEnd = 4;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.equal(ctrl._getField().value, '');
                assert.equal(ctrl._getField().selectionStart, 0);
                assert.equal(ctrl._getField().selectionEnd, 0);
                assert.equal(ctrl._viewModel.value, 'text');
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
+            it('In the value field " 12345". Select the value of "34". Enter "s" and " d " without synchronization cycle.', function() {
+               ctrl._beforeMount({
+                  value: '12345'
+               });
+
+               ctrl._getField().selectionStart = 2;
+               ctrl._getField().selectionEnd = 4;
+               ctrl._selectHandler();
+               ctrl._beforeUpdate({
+                  value: '12345'
+               });
+               ctrl._template(ctrl);
+
+               ctrl._getField().value = '12s5';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '12d5';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.equal(ctrl._viewModel.value, '12sd5');
                assert.deepEqual(ctrl._viewModel.selection, {
                   start: 4,
                   end: 4
@@ -225,7 +254,7 @@ define(
                   ctrl._getField().value = '0123456780123456789';
                   ctrl._getField().selectionStart = 9;
                   ctrl._getField().selectionEnd = 9;
-                  ctrl._inputHandler(new SyntheticEvent({}));
+                  ctrl._inputHandler(new Vdom.SyntheticEvent({}));
                   ctrl._template(ctrl);
 
                   assert.equal(ctrl._getField().scrollLeft, 41);
@@ -239,7 +268,7 @@ define(
                   ctrl._getField().value = '0123456789t0123456789';
                   ctrl._getField().selectionStart = 11;
                   ctrl._getField().selectionEnd = 11;
-                  ctrl._inputHandler(new SyntheticEvent({}));
+                  ctrl._inputHandler(new Vdom.SyntheticEvent({}));
                   ctrl._template(ctrl);
 
                   assert.equal(ctrl._getField().scrollLeft, 50);
@@ -253,7 +282,7 @@ define(
                   ctrl._getField().value = '0123456789a0123456789';
                   ctrl._getField().selectionStart = 11;
                   ctrl._getField().selectionEnd = 11;
-                  ctrl._inputHandler(new SyntheticEvent({}));
+                  ctrl._inputHandler(new Vdom.SyntheticEvent({}));
                   ctrl._template(ctrl);
 
                   assert.equal(ctrl._getField().scrollLeft, 61);
@@ -325,7 +354,7 @@ define(
                ctrl._getField().value = '';
                ctrl._getField().selectionStart = 0;
                ctrl._getField().selectionEnd = 0;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
                ctrl._selectHandler();
 
                assert.deepEqual(calls, [{
@@ -443,7 +472,7 @@ define(
                ctrl._getField().selectionEnd = 10;
             });
             it('Pressing the up arrow', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.up
                }));
 
@@ -456,7 +485,7 @@ define(
                }]);
             });
             it('Pressing the right arrow', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.right
                }));
 
@@ -469,7 +498,7 @@ define(
                }]);
             });
             it('Pressing the down arrow', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.down
                }));
 
@@ -482,7 +511,7 @@ define(
                }]);
             });
             it('Pressing the left arrow', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.left
                }));
 
@@ -495,7 +524,7 @@ define(
                }]);
             });
             it('Pressing the key end', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.end
                }));
 
@@ -508,7 +537,7 @@ define(
                }]);
             });
             it('Pressing the key home', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.home
                }));
 
@@ -521,7 +550,7 @@ define(
                }]);
             });
             it('Pressing the key which no changed selection', function() {
-               ctrl._keyUpHandler(new SyntheticEvent({
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
                   keyCode: constants.key.b
                }));
 
@@ -540,7 +569,7 @@ define(
                ctrl._getField().value = 'test auto-complete value';
                ctrl._getField().selectionStart = 24;
                ctrl._getField().selectionEnd = 24;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.deepEqual(calls, [{
                   name: 'notify',
@@ -558,7 +587,7 @@ define(
                ctrl._getField().value = 'test auto-complete value';
                ctrl._getField().selectionStart = 24;
                ctrl._getField().selectionEnd = 24;
-               ctrl._inputHandler(new SyntheticEvent({}));
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
 
                assert.deepEqual(calls, [{
                   name: 'notify',

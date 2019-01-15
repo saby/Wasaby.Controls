@@ -11,7 +11,7 @@ define('Controls-demo/Demo/Page',
       'css',
       'css!Controls-demo/Demo/Page',
       'Controls/Application',
-      'Core/vdom/Synchronizer/resources/DirtyCheckingCompatible'
+      'Vdom/Vdom'
    ],
    function(Control, Deferred, template, AppData, ScrollData, cssPlugin) {
       'use strict';

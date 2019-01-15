@@ -5,7 +5,8 @@ define('Controls/History/Service', [
    'WS.Data/Source/SbisService',
    'Controls/History/Constants',
    'Core/Deferred',
-   'Core/core-clone'
+   'Core/core-clone',
+   'Core/constants'
 ], function(
    CoreExtend,
    OptionsMixin,
@@ -13,7 +14,8 @@ define('Controls/History/Service', [
    SbisService,
    Constants,
    Deferred,
-   coreClone
+   coreClone,
+   coreConstants
 ) {
    'use strict';
 
@@ -34,28 +36,36 @@ define('Controls/History/Service', [
      * </pre>
      * @name Controls/MenuButton#historyId
      * @cfg {String} unique service history identifier
+     *
      * @name Controls/MenuButton#historyIds
      * @cfg {Array of String} unique service history identifiers
+     *
      * @name Controls/MenuButton#pinned
      * @cfg {Boolean} Loads pinned items from BL
-     * @variant true Load items
-     * @variant false No load items
+     * @remark
+     * true - Load items
+     * false - No load items
      *
      * @name Controls/MenuButton#frequent
      * @cfg {Boolean} Loads frequent items from BL
-     * @variant true Load items
-     * @variant false No load items
+     * @remark
+     * true - Load items
+     * false - No load items
      *
      * @name Controls/MenuButton#recent
      * @cfg {Boolean} Loads recent items from BL
-     * @variant true Load items
-     * @variant false No load items
+     * @remark
+     * true - Load items
+     * false - No load items
      *
      * @name Controls/MenuButton#dataLoaded
      * @cfg {Boolean} Items loaded with object data
-     * @variant true BL return items with data
-     * @variant false BL return items without data
-     * */
+     * @remark
+     * true - BL return items with data
+     * false - BL return items without data
+     *
+     */
+
    var STORAGES = {};
 
    var STORAGES_USAGE = {};
@@ -155,7 +165,7 @@ define('Controls/History/Service', [
          var self = this;
          var getValueDef = new Deferred();
 
-         if (!STORAGES[self._historyId]) {
+         if (!STORAGES[self._historyId] || coreConstants.isBuildOnServer) {
             getValueDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
                params: {
                   historyIds: this._historyId ? [this._historyId] : this._historyIds,

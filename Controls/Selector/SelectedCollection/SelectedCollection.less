@@ -68,12 +68,16 @@
     cursor: pointer;
 }
 
-.controls-SelectedCollection__item__caption {
+.controls-SelectedCollection__item__caption-wrapper {
     .text-overflow();
     .flex-shrink(1);
     display: inline-block;
     max-width: 100%;
     line-height: @line-height_SelectedCollection_item;
+}
+
+.controls-SelectedCollection__item__caption {
+    .text-overflow();
 }
 
 .controls-SelectedCollection__item__caption-size-default, .controls-SelectedCollection__item__caption-size-s {
@@ -136,4 +140,8 @@
     box-shadow: @shadow_SelectedCollection_popup;
     background-color: @background-color_SelectedCollection_popup;
     padding: @spacing_SelectedCollection_popup_between_content_border;
+}
+
+.controls-SelectedCollection__popup-wrapper {
+    height: 100%;
 }

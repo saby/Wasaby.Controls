@@ -27,10 +27,8 @@ define('Controls/Popup/Opener/InfoBox',
       /**
        * @typedef {Object} Config
        * @description Infobox configuration.
-       * @property {Object} opener Control, which is the logical initiator of popup opening.
        * @property {String|Function} template Template inside popup
        * @property {Object} templateOptions Template options inside popup.
-       * @property {Object} eventHandlers Callback functions on popup events
        * @property {domNode} target The target relative to which the popup is positioned.
        * @property {String} position Point positioning of the target relative to infobox.
        * @property {String} message The text in the body popup.
@@ -39,10 +37,6 @@ define('Controls/Popup/Opener/InfoBox',
        * @property {Number} showDelay Delay before opening.
        */
 
-      /**
-       * @name Controls/Popup/Opener/Infobox#closePopupBeforeUnmount
-       * @cfg {Object} Determines whether to close the popup when the component is destroyed.
-       */
 
       /**
        * @name Controls/interface/IInfoboxOptions#config
@@ -61,9 +55,26 @@ define('Controls/Popup/Opener/InfoBox',
          showDelay: INFOBOX_SHOW_DELAY
       };
 
+      var _private = {
+         prepareDisplayStyle: function(color) {
+            var resColor = color;
+            if (color === 'lite') {
+               resColor = 'secondary';
+            }
+            if (color === 'error') {
+               resColor = 'danger';
+            }
+            if (color === 'help') {
+               resColor = 'primary';
+            }
+            return resColor;
+         }
+      };
+
       var InfoBox = Base.extend({
          _openId: null,
          _closeId: null,
+         _style: null,
 
          /**
           * @name Controls/Popup/Opener/Infobox#isOpened
@@ -101,6 +112,7 @@ define('Controls/Popup/Opener/InfoBox',
             if (options.float) {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
+
          },
 
          open: function(cfg) {
@@ -123,6 +135,16 @@ define('Controls/Popup/Opener/InfoBox',
             if (cfg.float) {
                newCfg.floatCloseButton = cfg.float;
             }
+            if (cfg.style === 'lite') {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style light, используйте secondary');
+            }
+            if (cfg.style === 'help') {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style help, используйте primary');
+            }
+            if (cfg.style === 'error') {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
+            }
+            newCfg.style =  _private.prepareDisplayStyle(cfg.style);
 
             // TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
             if (newCfg.showDelay > 0) {
@@ -145,7 +167,7 @@ define('Controls/Popup/Opener/InfoBox',
                   message: cfg.message,
                   floatCloseButton: cfg.floatCloseButton
                },
-               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + cfg.style,
+               className: 'controls-InfoBox__popup controls-PreviewerController controls-InfoBox-style-' + (cfg.style || 'default'),
                template: 'Controls/Popup/Opener/InfoBox/resources/template'
             }, 'Controls/Popup/Opener/InfoBox/InfoBoxController');
          },

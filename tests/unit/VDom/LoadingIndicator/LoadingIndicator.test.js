@@ -57,9 +57,10 @@ define([
          assert.equal(Loading._stack.at(2).message, 'message 0');
       });
 
-      it('LoadingIndicator - hide', () => {
+      it('LoadingIndicator - remove indicator from stack', () => {
          let resultVisible;
          let resultConfigMessage;
+         let baseToggleMethod = Loading._toggleIndicator;
          Loading._toggleIndicator = (visible, config) => {
             assert.equal(resultVisible, visible);
             assert.equal(resultConfigMessage, config && config.message);
@@ -80,6 +81,20 @@ define([
          resultConfigMessage = undefined;
          resultVisible = false;
          Loading._hide(id);
+         assert.equal(Loading._stack.getCount(), 0);
+
+         Loading._toggleIndicator = baseToggleMethod;
+      });
+
+      it('LoadingIndicator - hide', () => {
+         let config = {
+            message: 'message 1',
+            delay: 1
+         };
+         Loading._show(config);
+         Loading._show(config);
+         Loading._show(config);
+         Loading.hide();
          assert.equal(Loading._stack.getCount(), 0);
       });
 

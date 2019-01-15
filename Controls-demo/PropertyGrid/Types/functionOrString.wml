@@ -1,5 +1,15 @@
+<ws:if data="{{item.items}}" >
+    <Controls-demo.PropertyGrid.StringOrFunctionTemplate
+            bind:value="item.value"
+            scope="{{item}}"
+            caption="{{name}}">
+    </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
+
+</ws:if>
+<ws:else>
     <Controls-demo.PropertyGrid.StringOrFunctionTemplate
             bind:value="itemValue[name]"
             scope="{{item}}"
             caption="{{name}}">
     </Controls-demo.PropertyGrid.StringOrFunctionTemplate>
+</ws:else>

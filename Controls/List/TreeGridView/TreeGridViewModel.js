@@ -25,6 +25,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          setExpandedItems: function(expandedItems) {
             this._model.setExpandedItems(expandedItems);
          },
+         getExpandedItems: function() {
+            return this._model.getExpandedItems();
+         },
          setRoot: function(root) {
             this._model.setRoot(root);
          },
