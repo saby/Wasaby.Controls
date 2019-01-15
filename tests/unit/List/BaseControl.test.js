@@ -1707,9 +1707,11 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(itemData, instance._listViewModel._activeItem);
-            assert.isTrue(itemData.contextEvent);
-            assert.equal(callBackCount, 3);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.isTrue(itemData.contextEvent);
+               assert.equal(callBackCount, 3);
+            }, 100);
 
             // dont show by long tap
             instance._isTouch = true;
@@ -1890,9 +1892,11 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(itemData, instance._listViewModel._activeItem);
-            assert.isFalse(itemData.contextEvent);
-            assert.equal(callBackCount, 3);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.isFalse(itemData.contextEvent);
+               assert.equal(callBackCount, 3);
+            }, 100);
          });
 
          it('closeActionsMenu', function() {

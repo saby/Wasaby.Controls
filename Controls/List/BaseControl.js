@@ -426,28 +426,30 @@ define('Controls/List/BaseControl', [
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            self._children.itemActionsOpener.open({
-               opener: self._children.listView,
-               target: !context ? childEvent.target : false,
-               templateOptions: {
-                  items: rs,
-                  keyProperty: 'id',
-                  parentProperty: 'parent',
-                  nodeProperty: 'parent@',
-                  dropdownClassName: 'controls-itemActionsV__popup',
-                  showClose: true
-               },
-               eventHandlers: {
-                  onResult: self._closeActionsMenu,
-                  onClose: self._closeActionsMenu
-               },
-               closeByExternalClick: true,
-               corner: { vertical: 'top', horizontal: 'right' },
-               horizontalAlign: { side: context ? 'right' : 'left' },
-               className: 'controls-Toolbar__menu-position',
-               nativeEvent: context ? childEvent.nativeEvent : false
+            require(['css!Controls/Toolbar/ToolbarPopup'], function() {
+               self._children.itemActionsOpener.open({
+                  opener: self._children.listView,
+                  target: !context ? childEvent.target : false,
+                  templateOptions: {
+                     items: rs,
+                     keyProperty: 'id',
+                     parentProperty: 'parent',
+                     nodeProperty: 'parent@',
+                     dropdownClassName: 'controls-itemActionsV__popup',
+                     showClose: true
+                  },
+                  eventHandlers: {
+                     onResult: self._closeActionsMenu,
+                     onClose: self._closeActionsMenu
+                  },
+                  closeByExternalClick: true,
+                  corner: {vertical: 'top', horizontal: 'right'},
+                  horizontalAlign: {side: context ? 'right' : 'left'},
+                  className: 'controls-Toolbar__popup_list',
+                  nativeEvent: context ? childEvent.nativeEvent : false
+               });
+               self._menuIsShown = true;
             });
-            self._menuIsShown = true;
          }
       },
 
