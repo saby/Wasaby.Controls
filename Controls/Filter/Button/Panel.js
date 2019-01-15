@@ -100,11 +100,11 @@ define('Controls/Filter/Button/Panel', [
          return isChanged;
       },
 
-      hasResetValue: function (items) {
+      hasResetValue: function(items) {
          var hasReset = false;
          Chain(items).each(function(item) {
-            if(hasReset) {
-               return
+            if (hasReset) {
+               return;
             }
             hasReset = getPropValue(item, 'resetValue') !== undefined;
          });
@@ -185,7 +185,7 @@ define('Controls/Filter/Button/Panel', [
                   filter: _private.getFilter(self),
                   items: _private.prepareItems(items || self._items)
                }]);
-               self._notify('close',[], {bubbling: true});
+               self._notify('close', [], {bubbling: true});
             }
          });
       },

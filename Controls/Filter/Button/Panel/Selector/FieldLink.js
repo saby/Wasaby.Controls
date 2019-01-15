@@ -24,11 +24,9 @@ define('Controls/Filter/Button/Panel/Selector/FieldLink', [
 
       showSelector: function() {
          this._children.lookup.showSelector();
-         // this._options.selectorTemplate = this._options.selectorTemplate || this._options.lookupTemplate;
-         // SelectorController._private.showSelector.call(this);
       },
 
-      showLookup: function () {
+      showLookup: function() {
          this._passed = true;
       }
    });
