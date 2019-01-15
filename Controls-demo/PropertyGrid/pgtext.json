@@ -495,7 +495,7 @@
   },
   "Controls/Input/ComboBox": {
     "name": "Controls/Input/ComboBox",
-    "title": "Control \"ComboBox\"",
+    "title": "Control that shows list of options",
     "className": "Controls/Input/ComboBox",
     "kind": "control",
     "isPublic": true,
@@ -504,45 +504,43 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "placeholder": {
-            "type": "function|String",
-            "title": "Input's placeholder text."
-          },
-          "emptyText": {
-            "type": "enum",
-            "title": "Add an empty item to the list with the given text.",
-            "enum": {
-              "true": "Add empty item with text 'Не выбрано'"
-            }
-          },
-          "selectedKey": {
-            "type": "Number",
-            "title": "Identifier of selected item."
+          "displayProperty": {
+            "type": "String",
+            "title": "The name of the field whose value is displayed when you select an item from the list."
           },
           "itemTemplate": {
             "type": "function",
+            "default": "wml!Controls/Dropdown/resources/template/itemTemplate",
             "title": "Template for item render."
-          },
-          "keyProperty": {
-            "type": "String",
-            "title": "Name of the item property that uniquely identifies collection item."
           },
           "itemTemplateProperty": {
             "type": "String",
             "title": "Name of the item property that contains template for item render"
           },
+          "placeholder": {
+            "type": "String|function",
+            "title": "Field placeholder."
+          },
+          "emptyText": {
+            "type": "String",
+            "title": "Add an empty item to the list with the given text."
+          },
+          "selectedKey": {
+            "type": "String",
+            "default": "Undefined",
+            "title": "Selected item key."
+          },
+          "source": {
+            "type": "Array",
+            "title": "Object that implements ISource interface for data access."
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "Name of the item property that uniquely identifies collection item."
+          },
           "readOnly": {
             "type": "Boolean",
             "title": "Determines whether control will react to user actions."
-          },
-          "name": {
-            "title": "Имя контрола",
-            "type": "String",
-            "default": ""
-          },
-          "displayProperty": {
-            "type": "String",
-            "title": "Name of the item property that content will be displayed"
           }
         }
       }
