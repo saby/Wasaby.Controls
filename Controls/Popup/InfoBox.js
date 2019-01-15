@@ -20,7 +20,7 @@ define('Controls/Popup/InfoBox',
        *
        * @public
        * @author Красильников А.С.
-       * @demo Controls-demo/InfoBox/InfoBox
+       * @demo Controls-demo/InfoBox/InfoBoxPG
        *
        * @css @spacing_Infobox-between-content-border-top Spacing between content and border-top .
        * @css @spacing_Infobox-between-content-border-right Spacing between content and border-right.
@@ -106,7 +106,6 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#trigger
        * @cfg {String} Event name trigger the opening or closing of the template.
        * @variant click Opening by click on the content. Closing by click not on the content or template.
-       * @variant demand Opening when requested (content clicked).
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
        * @variant hover|touch Opening by hover or touch on the content. Closing by hover not on the content or template.

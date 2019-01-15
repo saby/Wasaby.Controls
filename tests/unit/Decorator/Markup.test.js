@@ -166,6 +166,11 @@ define([
             assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
             assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<div></div>'));
          });
+         it('only text', function() {
+            // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
+            assert.equal(Converter.jsonToHtml(['some text']), '<div>some text</div>');
+            assert.equal(Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
+         });
          it('escape', function() {
             var json = ['p', { title: '"&lt;<>' }, '&gt;&lt;><'];
             var vdomTemplate = template({ '_options': { 'value': json } }, {}, undefined, true);
