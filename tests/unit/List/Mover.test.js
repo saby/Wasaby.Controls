@@ -1,10 +1,10 @@
 define([
    'Controls/List/Mover',
-   'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/collection',
    'Core/Deferred',
    'Core/core-clone'
-], function(Mover, MemorySource, RecordSet, Deferred, cClone) {
+], function(Mover, source, collection, Deferred, cClone) {
    describe('Controls.List.Mover', function() {
       var
          items,
@@ -39,7 +39,7 @@ define([
                'folder@': null
             }];
 
-         items = new RecordSet({
+         items = new collection.RecordSet({
             idProperty: 'id',
             rawData: cClone(data)
          });
@@ -47,7 +47,7 @@ define([
          mover._options.parentProperty = 'folder';
          mover._options.nodeProperty = 'folder@';
          mover._items = items;
-         mover._source = new MemorySource({
+         mover._source = new source.Memory({
             idProperty: 'id',
             data: cClone(data)
          });

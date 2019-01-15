@@ -109,7 +109,7 @@ define('Controls/List/interface/IListControl', [
     * @event Controls/List/interface/IListControl#itemActionsClick
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {ItemAction} action Object with configuration of the clicked action.
-    * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
+    * @param {Types/entity:Model} item Instance of the item whose action was clicked.
     * @param {HTMLElement} itemContainer Container of the item whose action was clicked.
     */
 
@@ -117,7 +117,7 @@ define('Controls/List/interface/IListControl', [
     * @name Controls/List/interface/IListControl#itemActionVisibilityCallback
     * @cfg {function} item operation visibility filter function
     * @param {ItemAction} action Object with configuration of an action.
-    * @param {WS.Data/Entity/Model} item Instance of the item whose action is being processed.
+    * @param {Types/entity:Model} item Instance of the item whose action is being processed.
     * @returns {Boolean} Determines whether the action should be rendered.
     */
 
@@ -189,7 +189,7 @@ define('Controls/List/interface/IListControl', [
    /**
     * @event Controls/List/interface/IListControl#hoveredItemChanged The event fires when the user hovers over a list item with a cursor.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Model} item Instance of the item whose action was clicked.
+    * @param {Types/entity:Model} item Instance of the item whose action was clicked.
     * @param {HTMLElement} itemContainer Container of the item.
     */
 

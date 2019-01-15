@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Core/IoC'],
-   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance, IOC) {
+   ['Controls/List/ItemsViewModel', 'Types/entity', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Core/IoC'],
+   function(ItemsViewModel, entityLib, ItemsUtil, cInstance, IOC) {
       /**
        *
        * @author Авраменко А.С.
@@ -17,7 +17,7 @@ define('Controls/List/ListViewModel',
          }
       };
 
-      var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
+      var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
          _markedItem: null,
          _dragEntity: null,
          _draggingItemData: null,

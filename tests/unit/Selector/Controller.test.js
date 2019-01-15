@@ -1,10 +1,10 @@
-define(['Controls/Selector/Controller', 'WS.Data/Entity/Model', 'WS.Data/Source/Memory', 'WS.Data/Collection/List'], function(Controller, Model, Memory, List) {
+define(['Controls/Selector/Controller', 'Types/entity', 'Types/source', 'Types/collection'], function(Controller, entity, source, collection) {
 
    var getSelectedItems = function() {
-      var items = new List();
+      var items = new collection.List();
       
       for (var i = 0; i < 5; i++) {
-         items.add(new Model({
+         items.add(new entity.Model({
             rawData: {
                id: i,
                title: 'title-' + i
@@ -19,20 +19,20 @@ define(['Controls/Selector/Controller', 'WS.Data/Entity/Model', 'WS.Data/Source/
    describe('Controls.Selector.Controller', function() {
    
       it('prepareItems', function() {
-         var itemList = new List({items: [1, 2]});
+         var itemList = new collection.List({items: [1, 2]});
          
          assert.equal(Controller._private.prepareItems()._moduleName, 'WS.Data/Collection/List');
          assert.deepEqual();
       });
    
       it('addItemToSelected', function() {
-         var itemNew = new Model({
+         var itemNew = new entity.Model({
             rawData: {
                id: 'test',
                title: 'test'
             }
          });
-         var itemToReplace = new Model({
+         var itemToReplace = new entity.Model({
             rawData: {
                id: 0,
                title: 'test'

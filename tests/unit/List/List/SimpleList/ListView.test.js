@@ -4,11 +4,11 @@
 define([
    'Controls/List/ListView',
    'Controls/List/ListViewModel',
-   'WS.Data/Collection/RecordSet'
+   'Types/collection'
 ], function(
    ListView,
    ListViewModel,
-   RecordSet
+   collection
 ) {
    describe('Controls.List.ListView', function() {
       var data, data2, display;
@@ -254,7 +254,7 @@ define([
       describe('_afterMount', function() {
          it('should fire markedKeyChanged if _options.markerVisibility is \'always\'', function() {
             var model = new ListViewModel({
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
                }),
@@ -282,7 +282,7 @@ define([
 
          it('should not fire markedKeyChanged if _options.markerVisibility is \'always\', but markedKey is not undefined', function() {
             var model = new ListViewModel({
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
                }),
@@ -312,7 +312,7 @@ define([
 
          it('should not fire markedKeyChanged if _options.markerVisibility is not \'always\'', function() {
             var model = new ListViewModel({
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   rawData: data,
                   idProperty: 'id'
                }),

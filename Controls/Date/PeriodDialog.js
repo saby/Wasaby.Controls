@@ -1,7 +1,7 @@
 define('Controls/Date/PeriodDialog', [
    'Core/Control',
    'Core/core-merge',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/Date/interface/IRangeSelectable',
    'Controls/Date/Mixin/EventProxy',
    'Controls/Date/model/DateRange',
@@ -15,7 +15,7 @@ define('Controls/Date/PeriodDialog', [
 ], function(
    BaseControl,
    coreMerge,
-   types,
+   entity,
    IRangeSelectable,
    EventProxyMixin,
    DateRangeModel,
@@ -279,7 +279,7 @@ define('Controls/Date/PeriodDialog', [
 
    Component.getOptionTypes = function() {
       return coreMerge({
-         headerType: types(String).oneOf([
+         headerType: entity.descriptor(String).oneOf([
             HEADER_TYPES.link,
             HEADER_TYPES.input
          ]),

@@ -3,18 +3,18 @@ define('Controls/Filter/Fast',
       'Core/Control',
       'wml!Controls/Filter/Fast/Fast',
       'Controls/Controllers/SourceController',
-      'WS.Data/Chain',
-      'WS.Data/Collection/List',
+      'Types/chain',
+      'Types/collection',
       'Core/core-instance',
       'Core/ParallelDeferred',
       'Core/Deferred',
-      'WS.Data/Utils',
+      'Types/util',
       'Core/helpers/Object/isEqual',
       'css!theme?Controls/Filter/Fast/Fast',
       'css!theme?Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {
+   function(Control, template, SourceController, chain, collection, cInstance, pDeferred, Deferred, Utils, isEqual) {
       'use strict';
 
       /**
@@ -34,14 +34,14 @@ define('Controls/Filter/Fast',
        */
 
 
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
-      var setPropValue = Utils.setItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+      var setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
       var _private = {
 
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
-               self._items = new List({
+               self._items = new collection.List({
                   items: items
                });
             } else {
@@ -77,7 +77,7 @@ define('Controls/Filter/Fast',
 
          reload: function(self) {
             var pDef = new pDeferred();
-            Chain(self._items).each(function(item, index) {
+            chain.factory(self._items).each(function(item, index) {
                var result = _private.loadItems(self, item, index);
                pDef.push(result);
             });
@@ -96,7 +96,7 @@ define('Controls/Filter/Fast',
 
          getFilter: function(items) {
             var filter = {};
-            Chain(items).each(function(item) {
+            chain.factory(items).each(function(item) {
                if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
                   filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
                }
@@ -191,12 +191,12 @@ define('Controls/Filter/Fast',
 
          _setText: function() {
             var self = this;
-            Chain(this._configs).each(function(config, index) {
+            chain.factory(this._configs).each(function(config, index) {
                var sKey = getPropValue(self._items.at(index), 'value');
                if (sKey instanceof Array) {
                   sKey = sKey[0];
                }
-               Chain(config._items).each(function(item) {
+               chain.factory(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
                      config.text = getPropValue(item, config.displayProperty);
                      _private.setTextValue(self._items.at(index), getPropValue(item, config.displayProperty));

@@ -1,10 +1,9 @@
 define('Controls-demo/Explorer/ExplorerMemory', [
-   'WS.Data/Source/Memory',
-   'WS.Data/Source/DataSet',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/collection',
    'Core/Deferred',
    'Core/core-clone'
-], function(MemorySource, DataSet, RecordSet, Deferred, cClone) {
+], function(source, collection, Deferred, cClone) {
 
    'use strict';
 
@@ -25,14 +24,14 @@ define('Controls-demo/Explorer/ExplorerMemory', [
          currentNode = getById(items, currentNode.parent);
          path.unshift(currentNode);
       }
-      return new RecordSet({
+      return new collection.RecordSet({
          rawData: path,
          idProperty: 'id'
       });
    }
 
    var
-      TreeMemory = MemorySource.extend({
+      TreeMemory = source.Memory.extend({
          query: function(query) {
             var
                self = this,
@@ -65,7 +64,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                   }
                }
                data.concat(rootData);
-               result.callback(new DataSet({
+               result.callback(new source.DataSet({
                   rawData: data,
                   adapter: this.getAdapter(),
                   idProperty: 'id'

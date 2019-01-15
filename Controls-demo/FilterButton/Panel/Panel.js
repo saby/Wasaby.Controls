@@ -1,7 +1,7 @@
 define('Controls-demo/FilterButton/Panel/Panel',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/FilterButton/Panel/Panel',
       'Controls/Filter/Button/Panel',
       'wml!Controls-demo/FilterButton/Panel/resources/additionalItemsTemplate2',
@@ -13,7 +13,7 @@ define('Controls-demo/FilterButton/Panel/Panel',
       'wml!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate'
    ],
 
-   function(Control, MemorySource, template) {
+   function(Control, source, template) {
 
       /**
        * @class Controls/Container/Search
@@ -32,7 +32,7 @@ define('Controls-demo/FilterButton/Panel/Panel',
             this._text += 'Стреляет filterChanged\n';
          },
          _beforeMount: function() {
-            this.sourceDropdown = new MemorySource({
+            this.sourceDropdown = new source.Memory({
                data: [
                   {key: 1, title: 'все страны'},
                   {key: 2, title: 'Россия'},

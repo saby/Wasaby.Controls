@@ -2,16 +2,16 @@
 define('Controls-demo/RadioGroup/RadioGroupDemo', [
    'Core/Control',
    'wml!Controls-demo/RadioGroup/RadioGroupDemo',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/RadioGroup/resources/RadioItemTemplate',
    'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
    'wml!Controls-demo/RadioGroup/resources/ContentTemplate',
    'css!Controls-demo/RadioGroup/RadioGroupDemo',
    'css!Controls-demo/Headers/resetButton',
-   'WS.Data/Collection/RecordSet'// Удалить после мержа https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
+   'Types/collection'// Удалить после мержа https://online.sbis.ru/opendoc.html?guid=6989b29a-8e1d-4c3b-bb7d-23b09736ef2c
 ], function(Control,
              template,
-             MemorySource,
+             sourceLib,
              CustomItemTemplate,
              SingleItemTemplate
 ) {
@@ -31,7 +31,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
       source2: null,
       _displayProperty: 'title',
       _beforeMount: function() {
-         this.source2 = new MemorySource({
+         this.source2 = new sourceLib.Memory({
             idProperty: 'id',
             data: [
                {
@@ -56,7 +56,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                }
             ]
          });
-         this._source = new MemorySource({
+         this._source = new sourceLib.Memory({
             idProperty: 'id',
             displayProperty: 'caption',
             data: [
@@ -93,7 +93,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                }
             ]
          });
-         this._sourceOfSource = new MemorySource({
+         this._sourceOfSource = new sourceLib.Memory({
             idProperty: 'title',
             data: [
                {
@@ -106,7 +106,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                }
             ]
          });
-         this._directionSource = new MemorySource({
+         this._directionSource = new sourceLib.Memory({
             idProperty: 'title',
             data: [
                {
@@ -117,7 +117,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemo', [
                }
             ]
          });
-         this._sourceContentTemplate = new MemorySource({
+         this._sourceContentTemplate = new sourceLib.Memory({
             idProperty: 'title',
             data: [
                {

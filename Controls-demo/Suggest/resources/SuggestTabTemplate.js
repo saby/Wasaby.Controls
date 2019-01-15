@@ -1,9 +1,9 @@
 define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
    'Core/Control',
    'wml!Controls-demo/Suggest/resources/SuggestTabTemplate',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/List'
-], function(Control, template, MemorySource) {
+], function(Control, template, sourceLib) {
    
    'use strict';
    
@@ -18,7 +18,7 @@ define('Controls-demo/Suggest/resources/SuggestTabTemplate', [
       
       _beforeMount: function() {
             this._tabsOptions = {
-               source: new MemorySource({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: tabSourceData
                }),

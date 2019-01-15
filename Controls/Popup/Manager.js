@@ -4,13 +4,13 @@ define('Controls/Popup/Manager',
       'wml!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/Number/randomId',
-      'WS.Data/Collection/List',
+      'Types/collection',
       'Core/EventBus',
       'Core/detection',
       'Core/IoC'
    ],
 
-   function(Control, template, ManagerController, randomId, List, EventBus, cDetection, IoC) {
+   function(Control, template, ManagerController, randomId, collection, EventBus, cDetection, IoC) {
       'use strict';
 
       var _private = {
@@ -271,7 +271,7 @@ define('Controls/Popup/Manager',
          _afterMount: function() {
             ManagerController.setManager(this);
             this._hasMaximizePopup = false;
-            this._popupItems = new List();
+            this._popupItems = new collection.List();
             if (cDetection.isMobileIOS) {
                _private.controllerVisibilityChangeHandler = _private.controllerVisibilityChangeHandler.bind(_private, this);
                EventBus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);

@@ -3,13 +3,13 @@ define('Controls/Selector/SelectedCollection',
       'Core/Control',
       'wml!Controls/Selector/SelectedCollection/SelectedCollection',
       'wml!Controls/Selector/SelectedCollection/ItemTemplate',
-      'WS.Data/Chain',
+      'Types/chain',
       'Controls/Utils/tmplNotify',
       'Controls/Selector/SelectedCollection/Utils',
       'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, Chain, tmplNotify, selectedCollectionUtils) {
+   function(Control, template, ItemTemplate, chain, tmplNotify, selectedCollectionUtils) {
       'use strict';
 
       /**
@@ -33,7 +33,7 @@ define('Controls/Selector/SelectedCollection',
          },
 
          getItemsInArray: function(items) {
-            return Chain(items).value();
+            return chain.factory(items).value();
          },
 
          getVisibleItems: function(items, maxVisibleItems) {

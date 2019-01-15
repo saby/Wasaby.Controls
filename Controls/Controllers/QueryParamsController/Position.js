@@ -1,6 +1,6 @@
 define('Controls/Controllers/QueryParamsController/Position',
-   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService', 'Core/IoC'],
-   function(cExtend, SbisService, IoC) {
+   ['Core/core-simpleExtend', 'Types/source', 'Core/IoC'],
+   function(cExtend, sourceLib, IoC) {
       var _private = {
          resolveField: function(optField) {
             return (optField instanceof Array) ? optField : [optField];

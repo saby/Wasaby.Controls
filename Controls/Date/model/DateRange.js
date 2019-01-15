@@ -1,13 +1,11 @@
 define('Controls/Date/model/DateRange', [
    'Core/core-simpleExtend',
-   'WS.Data/Entity/ObservableMixin',
-   'WS.Data/Entity/VersionableMixin',
+   'Types/entity',
    'Controls/Utils/DateRangeUtil',
    'Controls/Utils/Date'
 ], function(
    cExtend,
-   ObservableMixin,
-   VersionableMixin,
+   entity,
    dateRangeUtil,
    DateUtil
 ) {
@@ -36,7 +34,7 @@ define('Controls/Date/model/DateRange', [
       }
    };
 
-   var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
+   var ModuleClass = cExtend.extend([entity.ObservableMixin, entity.VersionableMixin], {
       _startValue: null,
       _endValue: null,
       _state: null,

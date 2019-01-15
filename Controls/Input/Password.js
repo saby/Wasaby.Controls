@@ -1,7 +1,7 @@
 define('Controls/Input/Password',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/Password/Password',
       'Controls/Input/Password/ViewModel',
@@ -9,7 +9,7 @@ define('Controls/Input/Password',
       'css!theme?Controls/Input/Password/Password'
    ],
 
-   function(Control, descriptor, tmplNotify, template, ViewModel) {
+   function(Control, entity, tmplNotify, template, ViewModel) {
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
@@ -103,7 +103,7 @@ define('Controls/Input/Password',
          return {
 
             /* placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421 */
-            revealable: descriptor(Boolean)
+            revealable: entity.descriptor(Boolean)
          };
       };
 

@@ -1,9 +1,9 @@
 define('Controls-demo/Input/Area/Area', [
    'Core/Control',
    'wml!Controls-demo/Input/Area/Area',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/Input/resources/VdomInputs'
-], function(Control, template, MemorySource) {
+], function(Control, template, source) {
 
    'use strict';
 
@@ -31,7 +31,7 @@ define('Controls-demo/Input/Area/Area', [
             {title: '[a-z]', example: 'You can use only lowercase letters'},
             {title: '[A-Z]', example: 'You can use only uppercase letters'}
          ];
-         this._newLineKeySource = new MemorySource({
+         this._newLineKeySource = new source.Memory({
             idProperty: 'title',
             data: [
                { title: 'enter' },

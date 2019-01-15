@@ -2,7 +2,7 @@ define('Controls/Popup/Opener/Stack/StackController',
    [
       'Controls/Popup/Opener/BaseController',
       'Controls/Popup/Opener/Stack/StackStrategy',
-      'WS.Data/Collection/List',
+      'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
       'Core/constants',
@@ -10,7 +10,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants, cClone) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone) {
       'use strict';
       var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
       var STACK_CLASS = 'controls-Stack';
@@ -150,7 +150,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          _destroyDeferred: {},
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
-            this._stack = new List();
+            this._stack = new collection.List();
             _private.elementDestroyed.bind(this);
             this._fixTemplateAnimation.bind(this);
          },

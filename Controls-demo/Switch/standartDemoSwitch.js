@@ -1,10 +1,10 @@
 define('Controls-demo/Switch/standartDemoSwitch', [
    'Core/Control',
    'wml!Controls-demo/Switch/standartDemoSwitch',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'tmpl!Controls-demo/Switch/resources/customCaptionTemplate',
    'css!Controls-demo/Switch/standartDemoSwitch'
-], function(Control, template, MemorySource, customCaptionTemplate) {
+], function(Control, template, source, customCaptionTemplate) {
    'use strict';
    var ModuleClass = Control.extend({
       _template: template,
@@ -22,7 +22,7 @@ define('Controls-demo/Switch/standartDemoSwitch', [
       value6: true,
       _customCaptionTemplate: customCaptionTemplate,
       _beforeMount: function() {
-         this._source = new MemorySource({
+         this._source = new source.Memory({
             idProperty: 'id',
             displayProperty: 'caption',
             data: [
@@ -36,7 +36,7 @@ define('Controls-demo/Switch/standartDemoSwitch', [
                }
             ]
          });
-         this._sourceAdditional = new MemorySource({
+         this._sourceAdditional = new source.Memory({
             data: [
                {
                   id: '1',

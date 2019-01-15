@@ -1,6 +1,6 @@
 define('Controls/Controllers/QueryParamsController/Offset',
-   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
-   function(cExtend, SbisService) {
+   ['Core/core-simpleExtend', 'Types/source'],
+   function(cExtend, sourceLib) {
       /**
        *
        * @author Крайнов Дмитрий

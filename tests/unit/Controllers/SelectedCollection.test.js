@@ -1,9 +1,9 @@
 define([
    'Controls/Selector/SelectedCollection/Controller',
-   'WS.Data/Entity/Model',
-   'WS.Data/Collection/List',
-   'WS.Data/Source/Memory'
-], function(SelectedCollection, Model, List, Memory) {
+   'Types/entity',
+   'Types/collection',
+   'Types/source'
+], function(SelectedCollection, entity, collection, sourceLib) {
 
    function getBaseSelectedCollection() {
       return {
@@ -39,7 +39,7 @@ define([
             _notify: function() {},
             _options : {
                selectedKeys : [1,2],
-               source: new Memory({
+               source: new sourceLib.Memory({
                   data: [
                      {id: 1, title: 'Alex', text: 'Alex'},
                      {id: 2, title: 'Ilya', text: 'Ilya'},
@@ -72,13 +72,13 @@ define([
             textValue = '',
             keysChanged = false,
             self = getBaseSelectedCollection(),
-            item = new Model({
+            item = new entity.Model({
                rawData: {
                   id: 1,
                   title: 'Roman'
                }
             }),
-            item2 = new Model({
+            item2 = new entity.Model({
                rawData: {
                   id: 2,
                   title: 'Aleksey'
@@ -118,12 +118,12 @@ define([
          var
             keysChanged = false,
             self = getBaseSelectedCollection(),
-            item = new Model({
+            item = new entity.Model({
                rawData: {
                   id: 1
                }
             }),
-            fakeItem = new Model({
+            fakeItem = new entity.Model({
                rawData: {
                   id: 2
                }
@@ -156,7 +156,7 @@ define([
          var emptySelectedKeys = [];
          var beforeMountResult = selectedCollection._beforeMount({
             selectedKeys: selectedKeys,
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
             })
@@ -168,12 +168,12 @@ define([
          var collectionWithReceivedState = new SelectedCollection();
          collectionWithReceivedState._beforeMount({
             selectedKeys: selectedKeys,
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
             })
-         }, null, new List({
-            items: [new Model({
+         }, null, new collection.List({
+            items: [new entity.Model({
                rawData: {id: 1},
                idProperty: 'id'
             })]
@@ -187,7 +187,7 @@ define([
          var selectedKeys = [1];
          var textValue = '';
          var result;
-         var source = new Memory({
+         var source = new sourceLib.Memory({
             data: [
                {id: 1, title: 'Alex', text: 'Alex'},
                {id: 2, title: 'Ilya', text: 'Ilya'},
@@ -205,7 +205,7 @@ define([
 
          result = selectedCollection._beforeMount({
             selectedKeys: [],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
             })
@@ -214,7 +214,7 @@ define([
 
          result = selectedCollection._beforeMount({
             selectedKeys: selectedKeys,
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
             })
@@ -233,7 +233,7 @@ define([
 
          selectedCollection._beforeUpdate({
             selectedKeys: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   {id: 1, title: 'Alex', text: 'Alex'}
                ],
@@ -271,9 +271,9 @@ define([
          var
             selectedCollection = new SelectedCollection(),
             items = [
-               new Model({
+               new entity.Model({
                   rawData: {id: 1}
-               }), new Model({
+               }), new entity.Model({
                   rawData: {id: 2}
                })
             ];
@@ -281,7 +281,7 @@ define([
          selectedCollection._options.keyProperty = 'id';
 
          selectedCollection._setItems(
-            new List({
+            new collection.List({
                items: items
             })
          );

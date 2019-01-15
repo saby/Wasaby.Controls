@@ -6,7 +6,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
    'Controls/Utils/applyHighlighter',
-   'WS.Data/Chain',
+   'Types/chain',
    'Core/core-instance',
    'Core/constants',
    'Controls/Utils/keysHandler',
@@ -14,7 +14,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
-   'WS.Data/Entity/VersionableMixin',
+   'Types/entity',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'
 ], function(
@@ -65,7 +65,7 @@ define('Controls/Explorer', [
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
             if (metaData.path && metaData.path.getCount() > 0) {
-               self._breadCrumbsItems = chain(metaData.path).toArray();
+               self._breadCrumbsItems = chain.factory(metaData.path).toArray();
             } else {
                self._breadCrumbsItems = null;
             }

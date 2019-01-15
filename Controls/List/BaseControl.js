@@ -13,7 +13,7 @@ define('Controls/List/BaseControl', [
    'Core/Deferred',
    'Core/constants',
    'Controls/Utils/scrollToElement',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
@@ -35,7 +35,7 @@ define('Controls/List/BaseControl', [
    Deferred,
    cConstants,
    scrollToElement,
-   RecordSet,
+   collection,
    tUtil,
    aUtil,
    tmplNotify,
@@ -482,7 +482,7 @@ define('Controls/List/BaseControl', [
             });
          if (showActions && showActions.length) {
             var
-               rs = new RecordSet({ rawData: showActions });
+               rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;

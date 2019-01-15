@@ -1,4 +1,4 @@
-define(['Controls/List/TileView/TileViewModel', 'WS.Data/Collection/RecordSet'], function(TileViewModel, RecordSet) {
+define(['Controls/List/TileView/TileViewModel', 'Types/collection'], function(TileViewModel, collection) {
    'use strict';
 
    describe('Controls/List/TileView/TileViewModel', function() {
@@ -8,7 +8,7 @@ define(['Controls/List/TileView/TileViewModel', 'WS.Data/Collection/RecordSet'],
             itemsHeight: 300,
             imageProperty: 'image',
             keyProperty: 'id',
-            items: new RecordSet({
+            items: new collection.RecordSet({
                rawData: [{
                   'id': 1
                }, {

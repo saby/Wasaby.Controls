@@ -3,34 +3,26 @@
  */
 define('Controls/History/FilterSource', [
    'Core/core-extend',
-   'WS.Data/Entity/OptionsMixin',
-   'WS.Data/Source/ISource',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/History/Constants',
-   'WS.Data/Entity/Model',
-   'WS.Data/Source/DataSet',
-   'WS.Data/Chain',
-   'WS.Data/Collection/Factory/RecordSet',
-   'WS.Data/Adapter/Sbis',
+   'Types/source',
+   'Types/chain',
+   'Types/entity',
    'Core/helpers/Object/isEqual',
    'Core/Serializer'
 ], function(CoreExtend,
-   OptionsMixin,
-   ISource,
-   RecordSet,
+   collection,
    Constants,
-   Model,
-   DataSet,
-   Chain,
-   recordSetFactory,
-   SbisAdapter,
+   sourceLib,
+   chain,
+   entity,
    cEqual,
    Serializer) {
    /**
     * A proxy that works only takes data from the history source
     * @class Controls/History/FilterSource
-    * @extends WS.Data/Entity/Abstract
-    * @mixes WS.Data/Entity/OptionsMixin
+    * @extends Types/entity:Abstract
+    * @mixes Types/entity:OptionsToPropertyMixin
     * @control
     * @public
     * @author Герасимов А.М.
@@ -95,8 +87,8 @@ define('Controls/History/FilterSource', [
       },
 
       getItemsWithHistory: function(self, history) {
-         var items = new RecordSet({
-            adapter: new SbisAdapter(),
+         var items = new collection.RecordSet({
+            adapter: new entity.adapter.Sbis(),
             idProperty: 'ObjectId'
          });
 
@@ -112,13 +104,13 @@ define('Controls/History/FilterSource', [
 
       fillPinned: function(self, history, items) {
          var config = {
-            adapter: new SbisAdapter()
+            adapter: new entity.adapter.Sbis()
          };
          var item, rawData;
 
-         Chain(history.pinned).filter(function(element) {
+         chain.factory(history.pinned).filter(function(element) {
             return element.get('ObjectData') !== DEFAULT_FILTER;
-         }).value(recordSetFactory, config).forEach(function(element) {
+         }).value(collection.factory.recordSet, config).forEach(function(element) {
             rawData = {
                d: [
                   element.getId(),
@@ -131,7 +123,7 @@ define('Controls/History/FilterSource', [
                   {n: 'HistoryId', t: 'Строка'}
                ]
             };
-            item = new Model({
+            item = new entity.Model({
                rawData: rawData,
                adapter: element.getAdapter(),
                format: items.getFormat()
@@ -144,19 +136,19 @@ define('Controls/History/FilterSource', [
 
       fillRecent: function(self, history, items) {
          var config = {
-            adapter: new SbisAdapter()
+            adapter: new entity.adapter.Sbis()
          };
          var maxLength = Constants.MAX_HISTORY - history.pinned.getCount();
          var currentCount = 0;
          var item, rawData, condition;
 
-         Chain(history.recent).filter(function(element) {
+         chain.factory(history.recent).filter(function(element) {
             condition = !history.pinned.getRecordById(element.getId());
             if (condition) {
                currentCount++;
             }
             return condition && currentCount <= maxLength && element.get('ObjectData') !== DEFAULT_FILTER;
-         }).value(recordSetFactory, config).forEach(function(element) {
+         }).value(collection.factory.recordSet, config).forEach(function(element) {
             rawData = {
                d: [
                   element.getId(),
@@ -169,7 +161,7 @@ define('Controls/History/FilterSource', [
                   {n: 'HistoryId', t: 'Строка'}
                ]
             };
-            item = new Model({
+            item = new entity.Model({
                rawData: rawData,
                adapter: element.getAdapter()
             });
@@ -209,7 +201,7 @@ define('Controls/History/FilterSource', [
             recent.remove(hItem);
          }
 
-         records = new RecordSet({
+         records = new collection.RecordSet({
             items: [this.getRawHistoryItem(self, item.getId(), item.get('ObjectData'), item.get('HistoryId'))]
          });
          recent.prepend(records);
@@ -217,7 +209,7 @@ define('Controls/History/FilterSource', [
       },
 
       getRawHistoryItem: function(self, id, objectData, hId) {
-         return new Model({
+         return new entity.Model({
             rawData: {
                d: [ id, objectData, hId || self.historySource.getHistoryId()],
                s: [
@@ -258,7 +250,7 @@ define('Controls/History/FilterSource', [
       }
    };
 
-   var Source = CoreExtend.extend([ISource, OptionsMixin], {
+   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
       _history: null,
       _serialize: false,
 
@@ -322,7 +314,7 @@ define('Controls/History/FilterSource', [
                _private.initHistory(self, data);
                newItems = _private.getItemsWithHistory(self, self._history);
                self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-               return new DataSet({
+               return new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
                   idProperty: newItems.getIdProperty()
                });

@@ -2,7 +2,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls/Constants',
       'json!Controls-demo/PropertyGrid/pgtext',
       'wml!Controls-demo/Buttons/Menu/itemTemplateComment',
@@ -17,7 +17,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
       'css!Controls-demo/Buttons/Menu/Menu'
    ],
 
-   function(Control, template, MemorySource, ControlsConstants, config) {
+   function(Control, template, sourceLib, ControlsConstants, config) {
       'use strict';
 
       var MenuPG = Control.extend({
@@ -28,7 +28,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
          _componentOptions: null,
 
          _beforeMount: function() {
-            this._commentItems = new MemorySource({
+            this._commentItems = new sourceLib.Memory({
                data: [
                   {
                      id: 1,
@@ -65,7 +65,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                   }],
                idProperty: 'id'
             });
-            this._hierarchyItems = new MemorySource({
+            this._hierarchyItems = new sourceLib.Memory({
                data: [
                   {
                      id: 1,

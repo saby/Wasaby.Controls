@@ -2,7 +2,7 @@ define('Controls/Popup/Opener/BaseController',
    [
       'Core/core-extend',
       'Core/Deferred',
-      'WS.Data/Utils'
+      'Types/util'
    ],
    function(CoreExtend, Deferred, Utils) {
       var _private = {

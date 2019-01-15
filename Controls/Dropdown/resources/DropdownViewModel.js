@@ -6,12 +6,11 @@ define('Controls/Dropdown/resources/DropdownViewModel',
       'Controls/List/BaseViewModel',
       'Controls/List/resources/utils/ItemsUtil',
       'Controls/List/ItemsViewModel',
-      'WS.Data/Entity/Model',
-      'WS.Data/Relation/Hierarchy',
+      'Types/entity',
       'Controls/List/ItemActions/Utils/getStyle'
    ],
 
-   function(BaseViewModel, ItemsUtil, ItemsViewModel, Model, Hierarchy, getStyle) {
+   function(BaseViewModel, ItemsUtil, ItemsViewModel, entity, getStyle) {
       var _private = {
          filterHierarchy: function(item) {
             var parent;
@@ -72,7 +71,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
             });
-            this._hierarchy = new Hierarchy({
+            this._hierarchy = new entity.relation.Hierarchy({
                idProperty: cfg.keyProperty,
                parentProperty: cfg.parentProperty,
                nodeProperty: cfg.nodeProperty
@@ -209,7 +208,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                var itemData = {};
                itemData[this._options.displayProperty] = this._options.emptyText;
                itemData[this._options.keyProperty] = null;
-               var item = new Model({
+               var item = new entity.Model({
                   rawData: itemData
                });
                emptyItem.item = item;

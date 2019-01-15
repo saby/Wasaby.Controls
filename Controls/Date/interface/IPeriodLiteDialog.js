@@ -1,8 +1,8 @@
 define('Controls/Date/interface/IPeriodLiteDialog', [
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/Calendar/Utils'
 ], function(
-   types,
+   entity,
    dateControlsUtils
 ) {
    'use strict';
@@ -160,12 +160,12 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
 
       getOptionTypes: function() {
          return {
-            chooseMonths: types(Boolean),
-            chooseQuarters: types(Boolean),
-            chooseHalfyears: types(Boolean),
-            chooseYears: types(Boolean),
-            emptyCaption: types(String),
-            captionFormatter: types(Function)
+            chooseMonths: entity.descriptor(Boolean),
+            chooseQuarters: entity.descriptor(Boolean),
+            chooseHalfyears: entity.descriptor(Boolean),
+            chooseYears: entity.descriptor(Boolean),
+            emptyCaption: entity.descriptor(String),
+            captionFormatter: entity.descriptor(Function)
          };
       }
    };

@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(GridViewModel, cMerge, RecordSet) {
+define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection'], function(GridViewModel, cMerge, collection) {
    var
       gridData = [
          {
@@ -79,7 +79,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          multiSelectVisibility: 'visible',
          header: gridHeader,
          columns: gridColumns,
-         items: new RecordSet({
+         items: new collection.RecordSet({
             rawData: gridData,
             idProperty: 'id'
          }),
@@ -431,7 +431,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                9: { ladderLength: 1 }
             },
             ladderViewModel = new GridViewModel({
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
                      { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
@@ -458,7 +458,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
 
          var
-            newItems = new RecordSet({
+            newItems = new collection.RecordSet({
                idProperty: 'id',
                rawData: [
                   { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },

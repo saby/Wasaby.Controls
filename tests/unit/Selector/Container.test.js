@@ -1,11 +1,11 @@
-define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/Memory', 'WS.Data/Collection/List'], function(Container, Model, Memory, List) {
+define(['Controls/Selector/Container', 'Types/entity', 'Types/source', 'Types/collection'], function(Container, entity, sourceLib, collection) {
    
    var getItems = function() {
       var items = [];
       var i;
    
       for (i = 0; i < 5; i++) {
-         items.push(new Model(
+         items.push(new entity.Model(
             {
                rawData: {
                   id: i
@@ -38,7 +38,7 @@ define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/M
       });
    
       it('getEmptyItems', function() {
-         var listWithItems = new List({items: getItems()});
+         var listWithItems = new collection.List({items: getItems()});
          
          assert.equal(Container._private.getEmptyItems(listWithItems).getCount(), 0);
          assert.equal(Container._private.getEmptyItems(listWithItems)._moduleName, 'WS.Data/Collection/List');
@@ -78,7 +78,7 @@ define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/M
             selected: [1, 2],
             excluded: [3, 4]
          };
-         var source = new Memory();
+         var source = new sourceLib.Memory();
          
          var preparedFilter = Container._private.prepareFilter(filter, selection, source);
          
@@ -99,7 +99,7 @@ define(['Controls/Selector/Container', 'WS.Data/Entity/Model', 'WS.Data/Source/M
       });
    
       it('getSourceController', function() {
-         var source = new Memory();
+         var source = new sourceLib.Memory();
          var navigation = {};
          var sourceController = Container._private.getSourceController(source, navigation);
          

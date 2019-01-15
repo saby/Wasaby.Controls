@@ -1,9 +1,9 @@
 define(
    [
       'Controls/Button/Menu',
-      'WS.Data/Source/Memory'
+      'Types/source'
    ],
-   (MenuButton, Memory) => {
+   (MenuButton, sourceLib) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -46,7 +46,7 @@ define(
             viewMode: 'link',
             style: 'secondary',
             keyProperty: 'id',
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             })

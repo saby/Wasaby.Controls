@@ -3,14 +3,14 @@ define('Controls/Input/OldText',
       'Core/Control',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/OldText/OldText',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Input/OldText/OldViewModel',
       'Controls/Input/resources/InputHelper',
 
       'css!theme?Controls/Input/resources/InputRender/InputRender',
       'wml!Controls/Input/resources/input'
    ],
-   function(Control, tmplNotify, template, types, TextViewModel, inputHelper) {
+   function(Control, tmplNotify, template, entity, TextViewModel, inputHelper) {
 
       'use strict';
 
@@ -150,13 +150,13 @@ define('Controls/Input/OldText',
 
       TextBox.getOptionTypes = function() {
          return {
-            trim: types(Boolean),
-            selectOnClick: types(Boolean),
+            trim: entity.descriptor(Boolean),
+            selectOnClick: entity.descriptor(Boolean),
 
             /*placeholder: types(String), вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
-            constraint: types(String),
-            value: types(String),
-            maxLength: types(Number)
+            constraint: entity.descriptor(String),
+            value: entity.descriptor(String),
+            maxLength: entity.descriptor(Number)
          };
       };
 

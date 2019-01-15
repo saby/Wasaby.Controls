@@ -2,12 +2,12 @@ define('Controls/Label',
    [
       'Core/IoC',
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Label/Label',
 
       'css!theme?Controls/Label/Label'
    ],
-   function(IoC, Control, descriptor, template) {
+   function(IoC, Control, entity, template) {
       'use strict';
 
       /**
@@ -84,14 +84,14 @@ define('Controls/Label',
 
       Label.getOptionTypes = function() {
          return {
-            href: descriptor(String),
-            caption: descriptor(String).required(),
-            underline: descriptor(String).oneOf([
+            href: entity.descriptor(String),
+            caption: entity.descriptor(String).required(),
+            underline: entity.descriptor(String).oneOf([
                'none',
                'fixed',
                'hovered'
             ]),
-            required: descriptor(Boolean)
+            required: entity.descriptor(Boolean)
          };
       };
 

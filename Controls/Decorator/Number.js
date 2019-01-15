@@ -1,10 +1,10 @@
 define('Controls/Decorator/Number',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Decorator/Number/Number'
    ],
-   function(Control, descriptor, template) {
+   function(Control, entity, template) {
 
       'use strict';
 
@@ -123,9 +123,9 @@ define('Controls/Decorator/Number',
 
       NumberDecorator.getOptionTypes = function() {
          return {
-            number: descriptor(Number).required(),
-            fractionSize: descriptor(Number),
-            roundMode: descriptor(String).oneOf([
+            number: entity.descriptor(Number).required(),
+            fractionSize: entity.descriptor(Number),
+            roundMode: entity.descriptor(String).oneOf([
                'trunc',
                'round'
             ])

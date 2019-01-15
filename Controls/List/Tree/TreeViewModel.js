@@ -3,16 +3,16 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
    'Core/core-clone',
-   'WS.Data/Relation/Hierarchy',
-   'WS.Data/Collection/IBind',
+   'Types/entity',
+   'Types/collection',
    'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
    cClone,
-   HierarchyRelation,
-   IBindCollection,
+   _entity,
+   collection,
    ArraySimpleValuesUtil
 ) {
 
@@ -95,7 +95,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          onBeginCollectionChange: function(self, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-            if (action === IBindCollection.ACTION_REMOVE) {
+            if (action === collection.IBind.ACTION_REMOVE) {
                _private.checkRemovedNodes(self, removedItems);
             }
             if (self._options.expanderDisplayMode === 'adaptive') {
@@ -207,7 +207,7 @@ define('Controls/List/Tree/TreeViewModel', [
             this._options = cfg;
             this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
-            this._hierarchyRelation = new HierarchyRelation({
+            this._hierarchyRelation = new _entity.relation.Hierarchy({
                idProperty: cfg.keyProperty || 'id',
                parentProperty: cfg.parentProperty || 'Раздел',
                nodeProperty: cfg.nodeProperty || 'Раздел@'

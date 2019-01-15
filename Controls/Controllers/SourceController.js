@@ -6,12 +6,12 @@ define('Controls/Controllers/SourceController',
       'Controls/Controllers/QueryParamsController/Page',
       'Controls/Controllers/QueryParamsController/Offset',
       'Controls/Controllers/QueryParamsController/Position',
-      'WS.Data/Query/Query',
+      'Types/source',
       'Core/Deferred',
       'Core/core-clone',
       'require'
    ],
-   function(cExtend, cInstance, IoC, Page, Offset, Position, Query, cDeferred, cClone) {
+   function(cExtend, cInstance, IoC, Page, Offset, Position, sourceLib, cDeferred, cClone) {
       var _private = {
          prepareSource: function(sourceOpt) {
             if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
@@ -21,7 +21,7 @@ define('Controls/Controllers/SourceController',
          },
 
          getQueryInstance: function(filter, sorting, offset, limit) {
-            var query = new Query();
+            var query = new sourceLib.Query();
             query.where(filter)
                .offset(offset)
                .limit(limit)

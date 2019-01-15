@@ -1,13 +1,13 @@
 define([
    'Controls/Explorer',
    'Core/Deferred',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Chain',
+   'Types/collection',
+   'Types/chain',
    'Controls/DragNDrop/Entity/Items'
 ], function(
    Explorer,
    Deferred,
-   RecordSet,
+   collection,
    chain,
    DragEntity
 ) {
@@ -33,7 +33,7 @@ define([
                }
             },
             testRoot = 'testRoot',
-            testBreadCrumbs = new RecordSet({
+            testBreadCrumbs = new collection.RecordSet({
                rawData: [
                   { id: 1, title: 'item1', parent: null },
                   { id: 2, title: 'item2', parent: 1 },
@@ -55,7 +55,7 @@ define([
             testData3 = {
                getMetaData: function() {
                   return {
-                     path: new RecordSet({
+                     path: new collection.RecordSet({
                         rawData: []
                      })
                   };
@@ -89,7 +89,7 @@ define([
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: chain(testBreadCrumbs).toArray(),
+            _breadCrumbsItems: chain.factory(testBreadCrumbs).toArray(),
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -145,7 +145,7 @@ define([
 
       it('_onBreadCrumbsClick', function() {
          var
-            testBreadCrumbs = new RecordSet({
+            testBreadCrumbs = new collection.RecordSet({
                rawData: [
                   { id: 1, title: 'item1' },
                   { id: 2, title: 'item2', parent: 1 },

@@ -1,8 +1,8 @@
 define('Controls/Date/MonthList/CalendarSource', [
    'Core/Deferred',
-   'WS.Data/Source/Base',
+   'Types/source',
    'Controls/Utils/Date'
-], function(Deferred, Base, dateUtils) {
+], function(Deferred, source, dateUtils) {
    'use strict';
 
    /**
@@ -10,10 +10,10 @@ define('Controls/Date/MonthList/CalendarSource', [
     * Каждый элемент это год содержащий массив месяцев.
     *
     * @class Controls/Date/MonthList/CalendarSource
-    * @extends WS.Data/Source/Base
+    * @extends Types/source:Base
     * @author Миронов А.Ю.
     */
-   var CalendarSource = Base.extend({
+   var CalendarSource = source.Base.extend({
       _moduleName: 'Controls.Date.MonthList.CalendarSource',
       $protected: {
          _dataSetItemsProperty: 'items',

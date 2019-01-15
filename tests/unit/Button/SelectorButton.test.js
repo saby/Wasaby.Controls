@@ -1,10 +1,10 @@
 define(
    [
       'Controls/Selector/Button/_SelectorButton',
-      'WS.Data/Collection/List',
+      'Types/collection',
       'Core/core-clone'
    ],
-   function(SelectorButton, List, Clone) {
+   function(SelectorButton, collection, Clone) {
       describe('Controls/Selector/Button/_SelectorButton', function() {
          let config = {
             multiSelect: true,

@@ -2,14 +2,14 @@ define('Controls-demo/Combobox/ComboboxVDom',
    [
       'Core/Control',
       'wml!Controls-demo/Combobox/ComboboxVDom',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/Combobox/historySourceCombobox',
       'Controls/Input/ComboBox',
       'wml!Controls-demo/Combobox/itemTemplateCombobox',
       'wml!Controls-demo/Combobox/itemTemplateMultiline',
       'css!Controls-demo/Combobox/ComboboxVDom'
    ],
-   function(Control, template, Memory, historySourceCombobox) {
+   function(Control, template, source, historySourceCombobox) {
 
       'use strict';
 
@@ -93,7 +93,7 @@ define('Controls-demo/Combobox/ComboboxVDom',
          },
 
          _createMemory: function(items) {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'id',
                data: items
             });

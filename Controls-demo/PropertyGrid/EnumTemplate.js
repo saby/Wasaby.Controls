@@ -2,12 +2,12 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/EnumTemplate',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/core-merge',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],
-   function(Control, template, Memory, cMerge) {
+   function(Control, template, sourceLib, cMerge) {
       'use strict';
       var stringTmpl = Control.extend({
          _template: template,
@@ -30,7 +30,7 @@ define('Controls-demo/PropertyGrid/EnumTemplate',
                selectedKey: this._selectedKey,
                displayProperty: 'title',
                keyProperty: 'id',
-               source: new Memory({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: this._source
                })

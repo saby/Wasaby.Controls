@@ -1,7 +1,7 @@
 define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
@@ -10,7 +10,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Core/EventBus',
       'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
+   function(Control, entity, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
       'use strict';
 
       /**
@@ -330,9 +330,9 @@ define('Controls/Input/resources/InputRender/InputRender',
 
       InputRender.getOptionTypes = function() {
          return {
-            value: types(String),
-            selectOnClick: types(Boolean),
-            tagStyle: types(String).oneOf([
+            value: entity.descriptor(String),
+            selectOnClick: entity.descriptor(Boolean),
+            tagStyle: entity.descriptor(String).oneOf([
                'secondary',
                'success',
                'primary',
@@ -340,8 +340,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                'info',
                'warning'
             ]),
-            autocomplete: types(Boolean),
-            tooltip: types(String)
+            autocomplete: entity.descriptor(Boolean),
+            tooltip: entity.descriptor(String)
          };
       };
 

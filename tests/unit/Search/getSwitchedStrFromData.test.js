@@ -1,14 +1,14 @@
-define(['Controls/Search/Misspell/getSwitcherStrFromData', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(getSwitchedStrFromData, RecordSet, Model) {
+define(['Controls/Search/Misspell/getSwitcherStrFromData', 'Types/collection', 'Types/entity'], function(getSwitchedStrFromData, collection, entity) {
    
    describe('Controls.Search.Misspell.getSwitchedStrFromData', function() {
       
       it('getSwitchedStrFromData', function() {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             rawData: [],
             idProperty: 'id'
          });
          rs.setMetaData({
-            results: new Model({
+            results: new entity.Model({
                rawData: {
                   switchedStr: 'testStr'
                }

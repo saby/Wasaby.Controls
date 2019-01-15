@@ -1,14 +1,14 @@
 define('Controls-demo/List/EditAndRemoveOperations', [
    'Core/Control',
    'wml!Controls-demo/List/EditAndRemoveOperations/EditAndRemoveOperations',
-   'WS.Data/Source/Memory',
-   'WS.Data/Entity/Model',
+   'Types/source',
+   'Types/entity',
    'Controls/EditableArea/Constants',
    'Controls/Validate/Validators/IsRequired'
 ], function(Control,
             template,
-            MemorySource,
-            Model,
+            source,
+            entity,
             EditConstants
 ) {
    'use strict';
@@ -113,7 +113,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                title: 'Notebook Lenovo IdeaPad G5030 (80G0001FRK) 17'
             }
          ];
-         this._editingItem = new Model({
+         this._editingItem = new entity.Model({
             rawData: {
                id: 2,
                title: 'редактирование стартует по опции',
@@ -121,7 +121,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                randomField: 'поле, которого нет'
             }
          });
-         this._addItem = new Model({
+         this._addItem = new entity.Model({
             rawData: {
                id: 3,
                title: 'добавление стартует по опции',
@@ -165,23 +165,23 @@ define('Controls-demo/List/EditAndRemoveOperations', [
             }
          ];
 
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: this.srcData
          });
-         this._viewSource2 = new MemorySource({
+         this._viewSource2 = new source.Memory({
             idProperty: 'id',
             data: this.srcData2
          });
-         this._viewSource3 = new MemorySource({
+         this._viewSource3 = new source.Memory({
             idProperty: 'id',
             data: this.srcData3
          });
-         this._viewSource4 = new MemorySource({
+         this._viewSource4 = new source.Memory({
             idProperty: 'id',
             data: this.srcData4
          });
-         this._viewSource5 = new MemorySource({
+         this._viewSource5 = new source.Memory({
             idProperty: 'id',
             data: this.srcData5
          });
@@ -203,7 +203,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
                return EditConstants.CANCEL;
             case 2:
                return {
-                  item: new Model({
+                  item: new entity.Model({
                      rawData: {
                         id: 2,
                         title: 'Другая запись',
@@ -220,7 +220,7 @@ define('Controls-demo/List/EditAndRemoveOperations', [
 
       _onBeginAdd: function(e, item) {
          return {
-            item: new Model({
+            item: new entity.Model({
                rawData: {
                   id: counter++,
                   title: '',

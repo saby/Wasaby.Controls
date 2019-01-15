@@ -5,10 +5,10 @@
 define(
    [
       'Controls/Controllers/_Search',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/Deferred'
    ],
-   function (Search, Memory, Deferred) {
+   function (Search, sourceLib, Deferred) {
       
       'use strict';
       
@@ -27,7 +27,7 @@ define(
                   name: 'Dmitry'
                }
             ],
-            source = new Memory({
+            source = new sourceLib.Memory({
                data: data
             }),
             navigation = {
@@ -124,7 +124,7 @@ define(
          });
    
          it('error Search', function(done) {
-            var sourceErr = new Memory();
+            var sourceErr = new sourceLib.Memory();
             sourceErr.query = function() {
                return Deferred.fail();
             };

@@ -3,16 +3,15 @@
  */
 define([
    'Controls/Utils/ToSourceModel',
-   'WS.Data/Collection/List',
-   'WS.Data/Source/SbisService',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Entity/Model'
-], function (ToSourceModel, List, SbisService, RecordSet, Model) {
+   'Types/collection',
+   'Types/source',
+   'Types/entity'
+], function (ToSourceModel, collection, sourceLib, entity) {
    'use strict';
    
    /* Сделаем кастомную модель,
       чтобы не совпадал _moduleName */
-   let customModel = Model.extend({
+   let customModel = entity.Model.extend({
       _moduleName: 'customModel',
       _$properties: {
          isCustom: {
@@ -23,12 +22,12 @@ define([
       }
    });
    
-   let dataSource = new SbisService({model: customModel});
-   let list = new List();
-   let recordSet = new RecordSet();
-   let model = new Model();
+   let dataSource = new sourceLib.SbisService({model: customModel});
+   let list = new collection.List();
+   let recordSet = new collection.RecordSet();
+   let model = new entity.Model();
    
-   list.add(new Model());
+   list.add(new entity.Model());
    model.set('recordSet', recordSet);
    recordSet._getMediator().addRelationship(model, recordSet, 'customRelationship');
    

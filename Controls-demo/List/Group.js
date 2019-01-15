@@ -5,12 +5,12 @@ define('Controls-demo/List/Group', [
    'Core/Control',
    'wml!Controls-demo/List/Group',
    'Controls/Constants',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/List/DemoGroupTemplate'
 ], function (BaseControl,
              template,
              ControlsConstants,
-             MemorySource) {
+             source) {
    'use strict';
    var srcData = [
       {
@@ -71,7 +71,7 @@ define('Controls-demo/List/Group', [
 
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: srcData
             });
