@@ -262,8 +262,8 @@ define('Controls/List/TreeControl', [
          if (this._updatedRoot) {
             this._updatedRoot = false;
             this._children.baseControl.getViewModel().setExpandedItems([]);
-            this.reload();
             this._children.baseControl.getViewModel().setRoot(this._root);
+            this.reload();
          }
       },
       toggleExpanded: function(key) {
