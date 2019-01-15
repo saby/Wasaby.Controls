@@ -9,8 +9,8 @@
       spellcheck="false"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
-      class="controls-Base__nativeField controls-Area__realField
-                   {{hidePlaceholderUsingCSS ? 'controls-Base__nativeField_hideCustomPlaceholder'}}"
+      class="controls-InputBase__nativeField controls-Area__realField
+                   {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
       placeholder="{{hidePlaceholderUsingCSS ? '&#65279;'}}"
       on:keyup="_keyUpHandler()"
       on:click="_clickHandler()"
@@ -22,7 +22,7 @@
       on:mousedown="_mouseDownHandler()"
    ></textarea>
    <ws:if data="{{!value}}">
-      <div class="controls-Base__placeholder">
+      <div class="controls-InputBase__placeholder">
          <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
       </div>
    </ws:if>

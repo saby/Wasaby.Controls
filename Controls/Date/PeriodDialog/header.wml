@@ -58,7 +58,7 @@
       style="success"
       icon="icon-medium icon-Yes"
       iconStyle="success"
-      size="l"
+      size="m"
       attr:class="controls-PeriodDialog__applyButton"
       on:click="_applyClick()"
    />

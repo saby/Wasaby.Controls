@@ -46,14 +46,14 @@ define('Controls/Button/ButtonStyles',
     * @css @background_Button_secondary_active Background color of button in hovered state with options style 'secondary' and viewMode 'button'.
     * @css @background_Button-secondary_readOnly Background color of button with options style 'secondary', readOnly 'true' and viewMode 'button'.
     *
+    * @css @height-ToolButton_size-s Height of button with options viewMode 'toolButton' and size 's'.
+    * @css @width-ToolButton_size-s Minimum width of button with options viewMode 'toolButton' and size 's'.
+    *
     * @css @height-ToolButton_size-m Height of button with options viewMode 'toolButton' and size 'm'.
     * @css @width-ToolButton_size-m Minimum width of button with options viewMode 'toolButton' and size 'm'.
     *
     * @css @height-ToolButton_size-l Height of button with options viewMode 'toolButton' and size 'l'.
     * @css @width-ToolButton_size-l Minimum width of button with options viewMode 'toolButton' and size 'l'.
-    *
-    * @css @height-ToolButton_size-xl Height of button with options viewMode 'toolButton' and size 'xl'.
-    * @css @width-ToolButton_size-xl Minimum width of button with options viewMode 'toolButton' and size 'xl'.
     *
     * @css @border-radius-ToolButton Border radius of button with option viewMode 'toolButton'.
     * @css @border-width-ToolButton Border width of button with option viewMode 'toolButton'.

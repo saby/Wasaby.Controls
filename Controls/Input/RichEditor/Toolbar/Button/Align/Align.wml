@@ -1,9 +1,0 @@
-<Controls.Button.Menu
-   keyProperty="id"
-   style="secondary"
-   viewMode="link"
-   showHeader="{{false}}"
-   attr:title="{[Выравнивание текста]}"
-   icon="{{_selectedAlign.icon}} icon-medium"
-   on:onMenuItemActivate="_menuItemActivateHandler()"
-   source="{{_source}}"/>
