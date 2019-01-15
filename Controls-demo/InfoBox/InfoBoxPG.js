@@ -34,31 +34,38 @@ define('Controls-demo/InfoBox/InfoBoxPG',
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/InfoBox/resources/DefaultTemplate',
+                        title: 'Default',
                         template: 'wml!Controls-demo/InfoBox/resources/DefaultTemplate'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/InfoBox/resources/CustomTemplate',
+                        title: 'Custom',
                         template: 'wml!Controls-demo/InfoBox/resources/CustomTemplate'
                      }
                   ],
-                  value: 'wml!Controls-demo/InfoBox/resources/DefaultTemplate'
+                  value: 'Default'
                },
                content: {
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/InfoBox/resources/DefaultContent',
+                        title: 'Button',
                         template: 'wml!Controls-demo/InfoBox/resources/DefaultContent'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/InfoBox/resources/CustomContent',
+                        title: 'Input',
                         template: 'wml!Controls-demo/InfoBox/resources/CustomContent'
                      }
                   ],
-                  value: 'wml!Controls-demo/InfoBox/resources/DefaultContent'
+                  value: 'Button'
+               },
+               templateOptions: {
+                  items: [
+                     { id: '1', title: '{ value: \'My text\' }', items: { value: 'My text' }},
+                     { id: '2', title: '{ value: \'Custom text\' }', items: { value: 'Custom text' } }
+                  ],
+                  value: '{ value: \'My text\' }'
                }
             };
             this._componentOptions = {
@@ -69,6 +76,7 @@ define('Controls-demo/InfoBox/InfoBoxPG',
                showDelay: 300,
                trigger: 'hover',
                floatCloseButton: true,
+               templateOptions:{ value: 'My text' },
                style: 'default',
                template: 'wml!Controls-demo/InfoBox/resources/DefaultTemplate'
             };
