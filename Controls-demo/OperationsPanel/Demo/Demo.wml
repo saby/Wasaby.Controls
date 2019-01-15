@@ -61,6 +61,7 @@
                                                columns="{{_moveDialogColumns}}"
                                                filter="{{_moveDialogFilter}}"
                                                parentProperty="Раздел"
+                                               hasChildrenProperty="Раздел$"
                                                nodeProperty="Раздел@"/>
                                         </ws:moveDialogTemplate>
                                     </Controls.List.Mover>
