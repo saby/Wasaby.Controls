@@ -136,12 +136,13 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _beforeUpdate: function(newOptions, context) {
          var args = [this, newOptions, context.isTouch.isTouch];
 
-         if (newOptions.listModel && (this._options.listModel !== newOptions.listModel)) {
+         if (
+            this._options.listModel !== newOptions.listModel ||
+            this._options.itemActions !== newOptions.itemActions ||
+            this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
+            this._options.toolbarVisibility !== newOptions.toolbarVisibility
+         ) {
             _private.updateModel.apply(null, args);
-         }
-
-         if (newOptions.itemActions && (this._options.itemActions !== newOptions.itemActions || this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback)) {
-            _private.updateActions.apply(null, args);
          }
       },
 
