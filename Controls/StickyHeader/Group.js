@@ -36,7 +36,8 @@ define('Controls/StickyHeader/Group',
                [{
                   id: self._index,
                   offsetHeight: fixedHeaderData.offsetHeight,
-                  shouldBeFixed: fixedHeaderData.shouldBeFixed
+                  shouldBeFixed: fixedHeaderData.shouldBeFixed,
+                  mode: fixedHeaderData.mode
                }],
                { bubbling: true }
             );
@@ -46,12 +47,13 @@ define('Controls/StickyHeader/Group',
       var Component = Control.extend({
 
          _template: template,
-
+         _index: null,
          _isStickySupport: null,
 
          _fixed: null,
 
          _stickyHeaderIds: null,
+         _shadowVisible: false,
 
          _beforeMount: function(options, context, receivedState) {
             this._isStickySupport = stickyUtils.isStickySupport();
@@ -63,6 +65,9 @@ define('Controls/StickyHeader/Group',
             event.stopImmediatePropagation();
             if (fixedHeaderData.shouldBeFixed) {
                this._stickyHeaderIds.push(fixedHeaderData.id);
+               if (this._shadowVisible === true) {
+                  this._children.stickyHeaderShadow.start(this._stickyHeaderIds);
+               }
             } else if (this._stickyHeaderIds.indexOf(fixedHeaderData.id) > -1) {
                this._stickyHeaderIds.splice(this._stickyHeaderIds.indexOf(fixedHeaderData.id), 1);
             }
@@ -78,7 +83,14 @@ define('Controls/StickyHeader/Group',
 
          _updateStickyShadow: function(e, ids) {
             if (ids.indexOf(this._index) !== -1) {
-               this._children.stickyHeader.start(this._stickyHeaderIds);
+               this._shadowVisible = true;
+               this._children.stickyHeaderShadow.start(this._stickyHeaderIds);
+            }
+         },
+
+         _updateStickyHeight: function(e, height) {
+            if (!this._fixed) {
+               this._children.updateStickyHeight.start(height);
             }
          }
       });

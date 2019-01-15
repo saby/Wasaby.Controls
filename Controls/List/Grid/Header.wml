@@ -1,5 +1,5 @@
 <ws:template name="cell">
-   <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" fixedZIndex="3">
+   <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" mode="stackable" fixedZIndex="3">
       <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
          <ws:if data="{{!!headerColumn.column.template}}">
             <ws:partial template="{{headerColumn.column.template}}" colData="{{headerColumn}}"/>
