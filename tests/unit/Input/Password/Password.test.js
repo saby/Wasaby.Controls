@@ -90,6 +90,9 @@ define(
                   inst._hasHorizontalScroll = function() {
                      return !valueFits;
                   };
+                  inst._beforeUpdate({
+                     value: 'test value'
+                  });
                };
 
                it('The password is hidden and the value fits into the field.', function() {

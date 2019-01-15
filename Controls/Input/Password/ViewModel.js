@@ -50,12 +50,6 @@ define('Controls/Input/Password/ViewModel',
             return _private.calcDisplayValue(replaceWithAsterisks, value);
          },
 
-         _updateOptions: function(newOptions) {
-            var replaceWithAsterisks = _private.isReplaceWithAsterisks(newOptions);
-
-            this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
-         },
-
          handleInput: function(splitValue, inputType) {
             var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
 

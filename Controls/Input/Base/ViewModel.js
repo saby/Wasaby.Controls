@@ -27,20 +27,12 @@ define('Controls/Input/Base/ViewModel',
       };
 
       var ViewModel = simpleExtend.extend({
-         _value: '',
-
-         _displayValue: '',
-
          _convertToValue: function(displayValue) {
             return displayValue;
          },
 
          _convertToDisplayValue: function(value) {
             return value;
-         },
-
-         _updateOptions: function() {
-            /* override */
          },
 
          get shouldBeChanged() {
@@ -105,16 +97,15 @@ define('Controls/Input/Base/ViewModel',
          },
 
          set options(value) {
-            this._updateOptions(value);
             this._options = clone(value);
+            _private.setDisplayValue(this, this._convertToDisplayValue(this._value));
          },
 
          constructor: function(options, value) {
-            this._options = {};
             this._selection = {};
             this._oldSelection = {};
+            this._options = clone(options);
 
-            this.options = options;
             this.value = value;
 
             this.changesHaveBeenApplied();
