@@ -5,6 +5,7 @@
      on:mouseleave="_mouseOutHandler()">
    <ws:if data="{{_options.showHeader || _options.headerTemplate}}">
       <ws:partial template="{{_options.headTemplate || _options.headerTemplate || _defaultHeadTemplate}}"
+                  defaultContentHeadTemplate="{{_defaultContentHeadTemplate}}"
                   duplicateHeadClassName="{{_duplicateHeadClassName}}"
                   on:click="_headerClick()"
                   scope="{{_headConfig}}"/>
