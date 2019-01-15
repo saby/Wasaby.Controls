@@ -12,7 +12,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          prepareStatusStyle: function(color) {
             var resColor = color;
 
-            // поддержка старых цветов, чтоб не ломать старые
+            // Todo: remove
             if (color === 'error') {
                resColor = 'danger';
             }
@@ -21,7 +21,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          prepareSize: function(size) {
             var resSize = size;
 
-            // поддержка старых цветов, чтоб не ломать старые
+            // Todo: remove
             if (size === 'big') {
                resSize = 'l';
             }

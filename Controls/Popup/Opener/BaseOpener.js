@@ -32,7 +32,7 @@ define('Controls/Popup/Opener/BaseOpener',
       };
 
       /**
-       * Базовый опенер
+       * Base Popup opener
        * @category Popup
        * @class Controls/Popup/Opener/Base
        * @mixes Controls/interface/IOpener
@@ -59,7 +59,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   this._popupIds.forEach(function(popupId) {
                      ManagerController.remove(popupId);
                   });
-               } else if (this._action) { // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
+               } else if (this._action) { // todo Compatible
                   this._action.destroy();
                   this._action = null;
                }
@@ -67,10 +67,10 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          /**
-          * Открыть всплывающую панель
+          * Opens a popup
           * @function Controls/Popup/Opener/Base#open
-          * @param popupOptions конфигурация попапа
-          * @param controller стратегия позиционирования попапа
+          * @param popupOptions Popup configuration
+          * @param controller Popup Controller
           */
          open: function(popupOptions, controller) {
             var self = this;
@@ -119,7 +119,7 @@ define('Controls/Popup/Opener/BaseOpener',
             });
          },
 
-         // Ленивая загрузка шаблона
+         // Lazy load template
          _requireModules: function(config, controller) {
             if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
                return (new Deferred()).errback('Protection against multiple invocation of the open method');
@@ -187,7 +187,7 @@ define('Controls/Popup/Opener/BaseOpener',
                'draggable'
             ];
 
-            // Опции берем либо с _options.popupOptions, либо с options
+            // merge _options to popupOptions
             for (var i = 0; i < options.length; i++) {
                var option = options[i];
                if (this._options[option] !== undefined) {
@@ -236,15 +236,12 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          /**
-          * Закрыть всплывающую панель
-          * @function Controls/Popup/Opener/Base#show
+          * Closes a popup
+          * @function Controls/Popup/Opener/Base#close
           */
          close: function() {
-            // TODO переработать метод close по задаче: https://online.sbis.ru/opendoc.html?guid=aec286ce-4116-472e-8267-f85a6a82a188
             if (this._getCurrentPopupId()) {
                ManagerController.remove(this._getCurrentPopupId());
-
-               // Ещё нужно удалить текущий id из массива всех id
                this._popupIds.pop();
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.closeDialog();
@@ -252,7 +249,6 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          _scrollHandler: function(event) {
-            // listScroll стреляет событием много раз, нужно обработать только непосредственно скролл списка
             if (this.isOpened() && event.type === 'scroll') {
                if (this._options.targetTracking) {
                   this._updatePopup();
@@ -275,9 +271,9 @@ define('Controls/Popup/Opener/BaseOpener',
          },
 
          /**
-          * Получить признак, открыта или закрыта связанная всплывающая панель
+          * State of whether the popup is open
           * @function Controls/Popup/Opener/Base#isOpened
-          * @returns {Boolean} Признак открыта ли связанная всплывающая панель
+          * @returns {Boolean} Is popup opened
           */
          isOpened: function() {
             // todo Compatible: Для старого окружения не вызываем методы нового Manager'a
@@ -349,7 +345,7 @@ define('Controls/Popup/Opener/BaseOpener',
                var dialog = action.getDialog(),
                   compoundArea = dialog && dialog._getTemplateComponent();
                if (compoundArea && !isFormController) {
-                  // Перерисовываем открытый шаблон по новым опциям
+                  // Redraw template with new options
                   CompatibleOpener._prepareConfigForNewTemplate(newCfg);
                   compoundArea.setTemplateOptions(newCfg.componentOptions.templateOptions);
                   dialog.setTarget && dialog.setTarget($(newCfg.target));
@@ -377,14 +373,12 @@ define('Controls/Popup/Opener/BaseOpener',
          return {
             closePopupBeforeUnmount: true,
             displayMode: 'single',
-            _vdomOnOldPage: false // Всегда открываем вдомную панель
+            _vdomOnOldPage: false // Always open vdom panel
          };
       };
 
       // TODO Compatible
       Base.isVDOMTemplate = function(templateClass) {
-         // на VDOM классах есть св-во _template.
-         // Если его нет, но есть _stable, значит это функция от tmpl файла
          return !!(templateClass.prototype && templateClass.prototype._template) || !!templateClass.stable || !!(templateClass[0] && templateClass[0].func);
       };
 
@@ -405,7 +399,7 @@ define('Controls/Popup/Opener/BaseOpener',
             require(['Core/Control', 'Controls/Popup/Compatible/ManagerWrapper'], function(control, ManagerWrapper) {
                var wrapper = control.createControl(ManagerWrapper, {}, managerContainer);
 
-               // mount не синхронный, дожидаемся когда менеджер добавится в дом
+               // wait until the Manager is added to the DOM
                if (!wrapper._mounted) {
                   var intervalId = setInterval(function() {
                      if (wrapper._mounted) {

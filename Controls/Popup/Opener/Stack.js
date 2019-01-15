@@ -3,7 +3,6 @@ define('Controls/Popup/Opener/Stack',
       'Controls/Popup/Opener/BaseOpener'
    ],
    function(BaseOpener) {
-
       /**
        * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
@@ -20,7 +19,7 @@ define('Controls/Popup/Opener/Stack',
          getStackConfig: function(config) {
             config = config || {};
 
-            //The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
+            // The stack is isDefaultOpener by default. For more information, see  {@link Controls/interface/ICanBeDefaultOpener}
             config.isDefaultOpener = config.isDefaultOpener !== undefined ? config.isDefaultOpener : true;
             return config;
          }
@@ -171,4 +170,3 @@ define('Controls/Popup/Opener/Stack',
  * @name Controls/Popup/Opener/Stack#width
  * @cfg {Number} The minimum width of popup.
  */
-
