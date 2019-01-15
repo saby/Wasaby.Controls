@@ -2,7 +2,7 @@
 	<div class="ControlsDemo-standartDemoHeader_Headers">
     <h1>Headers</h1>
     <h2>Header without click event</h2>
-    <div>
+    <div class="ControlsDemo-standartDemoHeader_withoutClickEvent">
         <div>
             <div attr:class="test_element__wrapper">
                 <span attr:class="test_element">xl size</span>
@@ -49,7 +49,7 @@
         </div>
     </div>
     <h2>Header with click event (with hover)</h2>
-    <div>
+    <div class="ControlsDemo-standartDemoHeader_withClickEvent">
         <div>
             <div attr:class="test_element__wrapper">
                 <span attr:class="test_element">l size</span>
@@ -85,6 +85,7 @@
         </div>
     </div>
     <h2>Header with counter</h2>
+    <div class="ControlsDemo-standartDemoHeader_withCounter">
     <div>
         <div attr:class="test_element__wrapper">
             <span attr:class="test_element">l size</span>
@@ -117,6 +118,7 @@
                 <Controls.Heading.Counter attr:class="counter" caption="12" style="secondary" size="m"/>
             </div>
         </div>
+    </div>
     </div>
 	</div>
 	<div class="ControlsDemo-standartDemoHeader_Separator">
