@@ -43,4 +43,10 @@ define('Controls/Input/Base/Types', [], function() {
     * @type {Function} CallbackForField
     * @param {Node} field The field being processed.
     */
+
+   /**
+    * @type {String} FocusState
+    * @variant Focus The focus in the control.
+    * @variant FocusOut Focus is out of control.
+    */
 });

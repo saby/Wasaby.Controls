@@ -148,6 +148,25 @@ define('Controls/Input/Base',
          },
 
          /**
+          * Notify to global channel about receiving or losing focus in field.
+          * @remark
+          * When the field gets focus, the keyboard on the touch devices is shown.
+          * This changes the size of the workspace and may require repositioning controls on the page, such as popup.
+          * But on some devices, the size of the workspace does not change and controls do not react.
+          * To enable them to respond, this method is used.
+          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/Input/Base/Types/FocusState.typedef} focusState Focus state in the field.
+          */
+         notifyChangeOfFocusState: function(self, focusState) {
+            /**
+             * After showing the keyboard only on ios, the workspace size does not change.
+             */
+            if (self._isMobileIOS) {
+               EventBus.globalChannel().notify('MobileInput' + focusState);
+            }
+         },
+
+         /**
           * @param {Controls/Input/Base} self Control instance.
           * @param splitValue Parsed value after user input.
           * @param inputType Type of user input.
@@ -673,9 +692,7 @@ define('Controls/Input/Base',
 
             this._focusByMouseDown = false;
 
-            if (this._isMobileIOS) {
-               EventBus.globalChannel().notify('MobileInputFocus');
-            }
+            _private.notifyChangeOfFocusState(this, 'Focus');
 
             this._displayValueAfterFocusIn = this._viewModel.displayValue;
          },
@@ -692,9 +709,7 @@ define('Controls/Input/Base',
              */
             this._getField().scrollLeft = 0;
 
-            if (this._isMobileIOS) {
-               EventBus.globalChannel().notify('MobileInputFocusOut');
-            }
+            _private.notifyChangeOfFocusState(this, 'FocusOut');
 
             _private.callChangeHandler(this);
          },
