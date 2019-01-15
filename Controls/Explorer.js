@@ -8,6 +8,8 @@ define('Controls/Explorer', [
    'Controls/Utils/applyHighlighter',
    'WS.Data/Chain',
    'Core/core-instance',
+   'Core/constants',
+   'Controls/Utils/keysHandler',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
@@ -24,9 +26,16 @@ define('Controls/Explorer', [
    tmplNotify,
    applyHighlighter,
    chain,
-   cInstance
+   cInstance,
+   cConstants,
+   keysHandler
 ) {
    'use strict';
+
+   var
+      HOT_KEYS = {
+         backByPath: cConstants.key.backspace
+      };
 
    var
       ITEM_TYPES = {
@@ -70,10 +79,19 @@ define('Controls/Explorer', [
                self._root = self._options.root;
             }
             self._viewMode = viewMode;
-            self._swipeViewMode = viewMode === 'search' ? 'list' : viewMode;
+            self._swipeViewMode = viewMode === 'search' ? 'table' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
             self._leftPadding = viewMode === 'search' ? 'search' : undefined;
+         },
+         backByPath: function(self) {
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               if (self._breadCrumbsItems.length > 1) {
+                  _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 2].getId());
+               } else {
+                  _private.setRoot(self, self._options.root);
+               }
+            }
          }
       };
 
@@ -148,6 +166,9 @@ define('Controls/Explorer', [
       },
       _onBreadCrumbsClick: function(event, itemId) {
          _private.setRoot(this, itemId);
+      },
+      _onExplorerKeyDown: function(event) {
+         keysHandler(event, HOT_KEYS, _private, this);
       },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);

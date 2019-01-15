@@ -20,6 +20,7 @@
                on:click="commitEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
                viewMode="toolButton"
+               size="s"
                iconStyle="success"
                icon="icon-small icon-Yes"
                style="secondary"
@@ -30,6 +31,7 @@
                icon="icon-small icon-Close"
                viewMode="toolButton"
                style="secondary"
+               size="s"
             />
          </div>
       </ws:if>

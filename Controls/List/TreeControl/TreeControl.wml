@@ -8,6 +8,6 @@
            class="{{expanderTemplate.itemData.prepareExpanderClasses(expanderTemplate.itemData, expanderTemplate.expanderIcon, expanderTemplate.expanderSize)}}"></div>
    </ws:expanderTemplate>
    <ws:content>
-      <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()"/>
+      <ws:partial template="{{content.viewTemplate}}" on:expanderClick="_onExpanderClick()" on:loadMoreClick="_onLoadMoreClick()" on:keyDown="_onTreeViewKeyDown()"/>
    </ws:content>
 </Controls.List.BaseControl>

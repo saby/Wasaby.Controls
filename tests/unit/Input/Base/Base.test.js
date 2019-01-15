@@ -199,6 +199,35 @@ define(
                   end: 4
                });
             });
+            it('In the value field " 12345". Select the value of "34". Enter "s" and " d " without synchronization cycle.', function() {
+               ctrl._beforeMount({
+                  value: '12345'
+               });
+
+               ctrl._getField().selectionStart = 2;
+               ctrl._getField().selectionEnd = 4;
+               ctrl._selectHandler();
+               ctrl._beforeUpdate({
+                  value: '12345'
+               });
+               ctrl._template(ctrl);
+
+               ctrl._getField().value = '12s5';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '12d5';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.equal(ctrl._viewModel.value, '12sd5');
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
          });
          describe('Synchronize the field with the model.', function() {
             describe('Scroll left in the field, depending on the cursor position.', function() {
