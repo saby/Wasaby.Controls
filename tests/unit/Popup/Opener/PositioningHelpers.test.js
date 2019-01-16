@@ -249,10 +249,10 @@ define(
             it('Controller popup sizes', function() {
                let BCInstacne = new BaseController();
                let margins = {
-                  marginTop: '1px',
-                  marginLeft: '2px',
+                  top: 1,
+                  left: 2,
                };
-               BCInstacne._private.getFakeDivStyles = () => margins;
+               BCInstacne._private.getFakeDivMargins = () => margins;
                let config = {
                   popupOptions: {
                      maxWidth: 200,
@@ -277,8 +277,8 @@ define(
                assert.equal(config.sizes.margins.left, 2);
 
                margins = {
-                  marginTop: '3px',
-                  marginLeft: '4px',
+                  top: 3,
+                  left: 4,
                };
 
                BCInstacne._getPopupSizes(config, container);

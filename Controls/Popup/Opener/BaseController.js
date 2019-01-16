@@ -28,21 +28,15 @@ define('Controls/Popup/Opener/BaseController',
                return config.margins;
             }
             config.className = config.popupOptions.className;
-
-            var style = _private.getFakeDivStyles(config);
-
-            config.margins = {
-               top: parseInt(style.marginTop, 10),
-               left: parseInt(style.marginLeft, 10)
-            };
+            config.margins = _private.getFakeDivMargins(config);
             return config.margins;
          },
 
-         getFakeDivStyles: function(config) {
+         getFakeDivMargins: function(config) {
             if (!document) {
                return {
-                  marginLeft: 0,
-                  marginTop: 0
+                  left: 0,
+                  top: 0
                };
             }
 
@@ -51,7 +45,11 @@ define('Controls/Popup/Opener/BaseController',
             fakeDiv.className = config.popupOptions.className;
             document.body.appendChild(fakeDiv);
 
-            var sizes = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
+            var styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
+            var sizes = {
+               top: parseInt(styles.marginTop, 10),
+               left: parseInt(styles.marginLeft, 10)
+            };
             document.body.removeChild(fakeDiv);
             return sizes;
          },
