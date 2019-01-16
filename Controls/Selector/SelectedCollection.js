@@ -41,9 +41,14 @@ define('Controls/Selector/SelectedCollection',
          },
 
          getTemplateOptions: function(self, options) {
-            var templateOptions = self._templateOptions || {};
+            var
+               templateOptions = self._templateOptions || {},
+               itemsIsChanged = self._options.items !== options.items;
 
-            templateOptions.items = options.items;
+            if (options.items.clone && (!templateOptions.items || itemsIsChanged)) {
+               templateOptions.items = options.items.clone();
+            }
+
             templateOptions.readOnly = options.readOnly;
             templateOptions.displayProperty = options.displayProperty;
             templateOptions.itemTemplate = options.itemTemplate;
