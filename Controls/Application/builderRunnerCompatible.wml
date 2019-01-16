@@ -13,7 +13,11 @@
          constants.$body = body;
          constants.$window = window;
          appinit();
-         require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/Core', 'View/Runner/tclosure', {{_options.dependencies | unescape}}], function(AppData, AppStart, Core, tclosure) {
+         require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/Core', 'View/Executor/TClosure',
+            'Core/helpers/Hcontrol/makeInstanceCompatible', 'Core/Control',
+            {{_options.dependencies | unescape}}], function(AppData, AppStart, Core, tclosure, makeInstanceCompatible, Control) {
+            var templCtr = new Control({});
+            makeInstanceCompatible(templCtr);
             window.startContextData = {AppData: new AppData({})};
             var templateFn = {{_options.builder | unescape}};
             templateFn.stable = true;
@@ -21,7 +25,7 @@
                _template: templateFn
             });
             AppStart._shouldStart = false;
-            AppStart.createControl(cnt, {}, document.getElementById('root'));
+            AppStart.createControl(cnt, {iWantBeWS3: true}, document.getElementById('root'));
          });
       });
    </script>

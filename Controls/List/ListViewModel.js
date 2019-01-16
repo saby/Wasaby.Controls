@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/IoC'],
-   function(ItemsViewModel, VersionableMixin, ItemsUtil, IOC) {
+   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Core/IoC'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance, IOC) {
       /**
        *
        * @author Авраменко А.С.
@@ -55,7 +55,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
-            itemsModelCurrent.multiSelectStatus = this._selectedKeys.indexOf(itemsModelCurrent.key) !== -1;
+            itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             if (itemsModelCurrent.itemActions) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
@@ -103,9 +103,56 @@ define('Controls/List/ListViewModel',
             this._notify('onListChange');
             this._notify('onMarkedKeyChanged', key);
          },
-
+         getFirstItemKey: function() {
+            var
+               nextItemId = 0,
+               nextItem,
+               itemsCount = this._display.getCount();
+            while (nextItemId < itemsCount) {
+               nextItem = this._display.at(nextItemId).getContents();
+               if (cInstance.instanceOfModule(nextItem, 'WS.Data/Entity/Model')) {
+                  return this._display.at(nextItemId).getContents().getId();
+               }
+               nextItemId++;
+            }
+         },
+         getIndexByKey: function(key) {
+            var
+               item = this.getItemById(key, this._options.keyProperty);
+            return this._display.getIndex(item);
+         },
+         getNextItemKey: function(key) {
+            var
+               itemIdx = this.getIndexByKey(key),
+               nextItemId = itemIdx + 1,
+               nextItem,
+               itemsCount = this._display.getCount();
+            while (nextItemId < itemsCount) {
+               nextItem = this._display.at(nextItemId).getContents();
+               if (cInstance.instanceOfModule(nextItem, 'WS.Data/Entity/Model')) {
+                  return this._display.at(nextItemId).getContents().getId();
+               }
+               nextItemId++;
+            }
+         },
+         getPreviousItemKey: function(key) {
+            var
+               itemIdx = this.getIndexByKey(key),
+               prevItemId = itemIdx - 1,
+               prevItem;
+            while (prevItemId >= 0) {
+               prevItem = this._display.at(prevItemId).getContents();
+               if (cInstance.instanceOfModule(prevItem, 'WS.Data/Entity/Model')) {
+                  return this._display.at(prevItemId).getContents().getId();
+               }
+               prevItemId--;
+            }
+         },
          getMarkedKey: function() {
             return this._markedKey;
+         },
+         getSelectionStatus: function(key) {
+            return this._selectedKeys[key] !== undefined;
          },
 
          getSwipeItem: function() {

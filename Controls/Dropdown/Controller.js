@@ -219,13 +219,16 @@ define('Controls/Dropdown/Controller',
                itemsLoadCallback(this._items);
             }
          },
-   
+
          _mousedown: function() {
             var opener = this._children.DropdownOpener;
             if (opener.isOpened()) {
                opener.close();
             } else {
-               this._open();
+               var self = this;
+               require(this._options.additionalDependencies, function() {
+                  self._open();
+               });
             }
          },
 

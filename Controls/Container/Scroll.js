@@ -156,8 +156,14 @@ define('Controls/Container/Scroll',
             updateFixationState: function(self, data) {
                if (data.shouldBeFixed) {
                   self._stickyHeaderIds.push(data.id);
+                  if (data.mode === 'stackable') {
+                     self._stickyHeaderHeight += data.offsetHeight;
+                  }
                } else if (self._stickyHeaderIds.indexOf(data.id) > -1) {
                   self._stickyHeaderIds.splice(self._stickyHeaderIds.indexOf(data.id), 1);
+                  if (data.mode === 'stackable') {
+                     self._stickyHeaderHeight -= data.offsetHeight;
+                  }
                }
             }
          },
@@ -203,6 +209,7 @@ define('Controls/Container/Scroll',
              * @private
              */
             _stickyHeaderIds: null,
+            _stickyHeaderHeight: 0,
 
             /**
              * @type {Controls/StickyHeader/Context|null}
@@ -430,7 +437,8 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
-               this._children.stickyHeader.start([this._stickyHeaderIds[this._stickyHeaderIds.length - 1]]);
+               this._children.stickyHeaderShadow.start([this._stickyHeaderIds[this._stickyHeaderIds.length - 1]]);
+               this._children.stickyHeaderHeight.start(this._stickyHeaderHeight);
 
                event.stopPropagation();
             },

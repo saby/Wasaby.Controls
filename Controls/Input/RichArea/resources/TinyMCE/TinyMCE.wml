@@ -1,8 +1,0 @@
-<div name="editorContainer" class="controls-TinyMCE__editorContainer">
-   <div class="controls-TinyMCE ws-basic-style controls-TinyMCE__mceContainer"
-        name="mceContainer">
-   </div>
-   <ws:if data="{{_placeHolderActive}}">
-      <div class="controls-TinyMCE__placeholder" name="placeholder">{{_options.placeholder}}</div>
-   </ws:if>
-</div>

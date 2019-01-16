@@ -38,6 +38,7 @@ define('Controls/Heading', [
     * @cfg {String} Heading display style.
     * @variant primary
     * @variant secondary
+    * @variant info
     * @default primary
     */
 
@@ -50,7 +51,8 @@ define('Controls/Heading', [
          caption: types(String),
          style: types(String).oneOf([
             'secondary',
-            'primary'
+            'primary',
+            'info'
          ]),
          size: types(String).oneOf([
             'xl',

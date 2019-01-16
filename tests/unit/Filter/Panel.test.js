@@ -33,34 +33,60 @@ define(
          config.itemTemplate = template;
          config.additionalTemplate = template;
 
-         var panel = new FilterPanel(config);
-         panel._options = config;
-         var isNotifyClose,
-            filter;
-
-         panel._notify = (e, args) => {
-            if (e == 'close') {
-               isNotifyClose = true;
-            } else if (e == 'sendResult') {
-               filter = args[0].filter;
-            }
-         };
+         function getFilterPanel(FPconfig) {
+            var panel2 = new FilterPanel(FPconfig);
+            panel2.saveOptions(FPconfig);
+            return panel2;
+         }
 
          it('Init', function() {
+            var panel = getFilterPanel(config);
             panel._beforeMount(config);
             assert.deepEqual(panel._items, config.items);
             assert.isTrue(panel._isChanged);
          });
 
+         it('Init::historyItems', function(done) {
+            var config2 = {
+               items: items,
+               historyId: 'TEST_PANEL_HISTORY_ID'
+            };
+            var panel2 = getFilterPanel(config2);
+            FilterPanel._private.loadHistoryItems(panel2, 'TEST_PANEL_HISTORY_ID').addCallback(function(items) {
+               assert.equal(items.getCount(), 2);
+               done();
+            });
+         });
+
          it('before update', function() {
-            panel._items[2].visibility = false;
+            var panel = getFilterPanel(config);
             panel._beforeMount(config);
+            panel._items[2].visibility = false;
             panel._beforeUpdate(config);
             assert.isTrue(panel._isChanged);
             assert.isTrue(panel._hasAdditionalParams);
          });
 
+         it('before update new historyId', function() {
+            var changedConfig = Clone(config);
+            changedConfig.historyId = 'new_history_id';
+            var panel2 = getFilterPanel(config);
+            panel2._beforeMount(config);
+            assert.equal(panel2._historyId, undefined);
+            panel2._beforeUpdate(changedConfig);
+            assert.equal(panel2._historyId, changedConfig.historyId);
+         });
+
          it('apply', function() {
+            var panel = getFilterPanel(config),
+               isNotifyClose, filter;
+            panel._notify = (e, args) => {
+               if (e == 'close') {
+                  isNotifyClose = true;
+               } else if (e == 'sendResult') {
+                  filter = args[0].filter;
+               }
+            };
             isNotifyClose = false;
             panel._beforeMount(config);
             panel._children = {
@@ -81,31 +107,83 @@ define(
          });
 
          it('apply history filter', function() {
+            var panel = getFilterPanel(config),
+               isNotifyClose, filter;
+            panel._notify = (e, args) => {
+               if (e == 'sendResult') {
+                  filter = args[0].filter;
+               } else if (e == 'close') {
+                  isNotifyClose = true;
+               }
+            };
             panel._beforeMount(config);
+            panel._children = { formController: { submit: ()=>{return Deferred.success([])} } };
             panel._applyHistoryFilter();
             assert.deepEqual({ text: '123' }, filter);
+            assert.isTrue(isNotifyClose);
          });
 
          it('reset and filter', function() {
-            panel._beforeMount(config);
-            panel._resetFilter();
-            assert.deepEqual({}, FilterPanel._private.getFilter(panel));
-            assert.isFalse(panel._isChanged);
+            var changedItems = [
+               {
+                  id: 'list',
+                  value: 5,
+                  resetValue: 1
+               },
+               {
+                  id: 'text',
+                  value: '123',
+                  resetValue: '',
+                  visibility: true
+               },
+               {
+                  id: 'bool',
+                  value: true,
+                  resetValue: false,
+                  visibility: false
+               }
+            ];
+            var resetedItems = [
+               {
+                  id: 'list',
+                  value: 1,
+                  resetValue: 1
+               },
+               {
+                  id: 'text',
+                  value: '',
+                  resetValue: '',
+                  visibility: false
+               },
+               {
+                  id: 'bool',
+                  value: false,
+                  resetValue: false,
+                  visibility: false
+               }
+            ];
+            var panel2 = getFilterPanel({ items: changedItems });
+            panel2._resetFilter();
+            assert.deepEqual({}, FilterPanel._private.getFilter(panel2));
+            assert.deepEqual(panel2._items, resetedItems);
+            assert.isFalse(panel2._isChanged);
          });
 
          it('isChangeValue', function() {
-            panel._beforeMount(config);
+            var panel = getFilterPanel(config);
             panel._resetFilter();
             assert.isFalse(FilterPanel._private.isChangedValue(panel._items));
          });
 
          it('without add params', function() {
+            var panel = getFilterPanel(config);
             panel._beforeMount(config);
             panel._items[2].visibility = true;
             assert.isFalse(FilterPanel._private.hasAdditionalParams(panel._items));
          });
 
          it('recordSet', function() {
+
             var rs = new RecordSet({
                   idProperty: 'id',
                   rawData: items
@@ -121,6 +199,7 @@ define(
          });
 
          it('valueChanged, visibilityChanged', function() {
+            var panel = getFilterPanel(config);
             panel._beforeMount(config);
             var newItems = Clone(items);
             newItems[0].value = 'testValue2';
@@ -230,6 +309,13 @@ define(
                   }
                ];
             assert.deepEqual(FilterPanel._private.prepareItems(changeItems), resetItems);
+         });
+
+         it('_historyItemsChanged', function() {
+            var panel = getFilterPanel(config);
+            FilterPanel._private.loadHistoryItems = (self, historyId) => {assert.equal(historyId, 'TEST_PANEL_HISTORY_ID')};
+            panel._historyId = 'TEST_PANEL_HISTORY_ID';
+            panel._historyItemsChanged();
          });
       });
    }

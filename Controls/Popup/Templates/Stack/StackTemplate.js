@@ -29,9 +29,9 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
          /**
           * @name Controls/Popup/Templates/Stack/StackTemplate#headingStyle
           * @cfg {String} Caption display style.
-          * @variant default
-          * @variant accent
-          * @variant small
+          * @variant secondary
+          * @variant primary
+          * @variant info
           */
 
          /**
@@ -64,7 +64,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonStyle
           * @cfg {String} Close button display style.
           * @variant default
-          * @variant lite
+          * @variant light
           * @variant primary
           */
 
@@ -73,20 +73,20 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
             if (options.contentArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
-            if (options.topArea) {
+            if (options.caption) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
-            if (options.topArea) {
+            if (options.captionStyle) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
-            if (options.topArea) {
+            if (options.showMaximizeButton) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
             }
             if (options.topArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
 
-            if (options.topArea) {
+            if (options.bottomArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
             }
          },
@@ -110,7 +110,8 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
 
       DialogTemplate.getDefaultOptions = function() {
          return {
-            headingStyle: 'default'
+            headingStyle: 'secondary',
+            closeButtonVisibility: true
          };
       };
 

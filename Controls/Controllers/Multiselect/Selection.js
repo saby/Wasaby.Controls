@@ -154,22 +154,27 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       /**
        * Transforms selection to single array of selectedKeys and returns it. Used for rendering checkboxes in lists.
-       * @returns {Array}
+       * @returns {Object}
        */
       getSelectedKeysForRender: function() {
          var
-            res = [],
+            res = {},
             self = this,
-            itemId;
+            status;
 
          this._items.forEach(function(item) {
-            itemId = item.get(self._options.keyProperty);
-            if (self._selectedKeys[0] === null && self._excludedKeys.indexOf(itemId) === -1 || self._selectedKeys.indexOf(itemId) !== -1) {
-               res.push(itemId);
+            status = self._getSelectionStatus(item);
+            if (status !== false) {
+               res[item.get(self._options.keyProperty)] = status;
             }
          });
 
          return res;
+      },
+
+      _getSelectionStatus: function(item) {
+         var itemId = item.get(this._options.keyProperty);
+         return this._selectedKeys[0] === null && this._excludedKeys.indexOf(itemId) === -1 || this._selectedKeys.indexOf(itemId) !== -1;
       },
 
       _getParams: function() {

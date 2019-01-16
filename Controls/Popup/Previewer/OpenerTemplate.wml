@@ -11,6 +11,7 @@
    <ws:else>
       <ws:partial
          template="{{_options.content}}"
+         scope="{{_options.contentTemplateOptions}}"
          on:mousedown="_sendResult()"
          on:mouseenter="_sendResult()"
          on:mouseleave="_sendResult()"

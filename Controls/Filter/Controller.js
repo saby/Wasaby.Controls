@@ -90,10 +90,10 @@ define('Controls/Filter/Controller',
             }
 
             return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = historyUtils.getHistorySource(id).getRecent();
+               recent = source.getRecent();
                if (recent.getCount()) {
                   lastFilter = recent.at(0);
-                  return historyUtils.getHistorySource(id).getDataObject(lastFilter.get('ObjectData'));
+                  return source.getDataObject(lastFilter.get('ObjectData'));
                }
             });
          },

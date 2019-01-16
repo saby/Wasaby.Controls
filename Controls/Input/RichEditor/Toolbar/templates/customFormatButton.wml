@@ -1,5 +1,0 @@
-<ws:partial template="wml!Controls/Toolbar/ToolbarItemTemplate">
-   <ws:contentTemplate>
-      <Controls.Input.RichEditor.Toolbar.Button.CustomFormat attr:ws-no-focus="true"/>
-   </ws:contentTemplate>
-</ws:partial>

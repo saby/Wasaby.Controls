@@ -11,6 +11,7 @@ define('Controls/Popup/Opener/Dialog',
        * @author Красильников А.С.
        * @category Popup
        * @mixes Controls/interface/IDialogOptions
+       * @demo Controls-demo/Popup/Opener/DialogPG
        */
 
       var _private = {
@@ -81,23 +82,18 @@ define('Controls/Popup/Opener/Dialog',
     */
 
    /**
-    * @name Controls/Popup/Opener/Dialog#isModal
+    * @name Controls/Popup/Opener/Dialog#modal
     * @cfg {Boolean} Determines whether the window is modal.
     */
 
    /**
-    * @name Controls/Popup/Opener/Dialog#closeByExternalClick
+    * @name Controls/Popup/Opener/Dialog#closeOnOutsideClick
     * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
     */
 
    /**
     * @name Controls/Popup/Opener/Dialog#className
     * @cfg {String} Class names of popup.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#opener
-    * @cfg {Object} Control, which is the logical initiator of popup opening.
     */
 
    /**
@@ -108,11 +104,6 @@ define('Controls/Popup/Opener/Dialog',
    /**
     * @name Controls/Popup/Opener/Dialog#templateOptions
     * @cfg {String|Function} Template options inside popup.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#draggable
-    * @cfg {Boolean} Determines whether the control can be moved by d'n'd.
     */
 
    /**
