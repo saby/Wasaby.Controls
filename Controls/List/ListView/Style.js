@@ -51,7 +51,14 @@ define('Controls/List/ListView/Styles', [],
     * @css @color_ListView-groupExpander_hover color of hovered group expander
     * @css @color_ListView-groupExpander_active color of active group expander
     * @css @spacing_ListView-group-between-rightTemplate-separator color of right template and text in group separator
-    */
+    * @css @border-width_List-masterList-right right border-width of masterList
+    * @css @border-width_List-masterList-item_selected border-width of selected item in master list
+    * @css @border-color_List-masterList-item_selected border-color of selected item in master list
+    * @css @box-shadow_List-masterList-item_selected box-shadow of selected item in master list
+    * @css @background-color_List-masterList-item_selected background-color of selected item in master list
+    * @css @background-color_List-masterList-item_marked background-color of marked item in master list
+    * @css @background-color_List-masterList-item_hover background-color of hovered item in master list
+    * /
 );
 
 

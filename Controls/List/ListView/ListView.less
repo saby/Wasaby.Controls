@@ -262,3 +262,52 @@
    margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xxl;
 }
 
+//MasterList styles
+
+.controls-ListView_master {
+   padding-right: @border-width_List-masterList-right;
+   box-sizing: border-box;
+}
+
+.controls-ListView__item__marked_master {
+   background-color: @background-color_List-masterList-item_selected;
+   position: sticky;
+   top: 0;
+   bottom: 0;
+   z-index: 1;
+   &:before {
+      content: '';
+      z-index: 2;
+      box-sizing: border-box;
+      border-width: @border-width_List-masterList-item_selected;
+      border-style: solid;
+      border-color: @border-color_List-masterList-item_selected;
+      box-shadow: @box-shadow_List-masterList-item_selected;
+      width: ~'calc(100% + @{border-width_List-masterList-right})';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      height: 100%;
+   }
+   &:after {
+      content: '';
+      z-index: 1;
+      height: 100%;
+      top: 0;
+      width: @border-width_List-masterList-right;
+      position: absolute;
+      right: -@border-width_List-masterList-right;
+      background-color: @background-color_List-masterList-item_marked;
+   }
+}
+
+//Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
+//TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_master {
+      &:hover {
+         background-color: @background-color_List-masterList-item_hover;
+      }
+   }
+}
