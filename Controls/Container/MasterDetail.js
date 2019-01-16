@@ -5,7 +5,7 @@ define('Controls/Container/MasterDetail', [
 ], function(Control, template) {
 
    /**
-    * Control that allow to implement the Master-Detail interface
+    * Control that allows to implement the Master-Detail interface
     * @class Controls/Container/MasterDetail
     * @extends Core/Control
     * @control
