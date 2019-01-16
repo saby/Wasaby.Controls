@@ -21,6 +21,11 @@ define('Controls/List/EditInPlace/EditingRow', [
          }, 0);
       },
 
+      _onKeyDown: function(event) {
+         this._notify('editingRowKeyDown', [event.nativeEvent], { bubbling: true });
+         event.stopPropagation();
+      },
+
       _onClickHandler: function(e) {
          /*
          Останавливаем всплытие любых кликов, если строка редактируется. Если клики будут всплывать, то их будет ловить список

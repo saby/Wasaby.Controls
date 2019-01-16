@@ -6,6 +6,7 @@
    selectOnClick="{{_options.selectOnClick}}"
    placeholder="{{_options.placeholder}}"
    tagStyle="{{ _options.tagStyle }}"
+   style="{{_options.style}}"
    validationErrors="{{_options.validationErrors}}"
    tooltip="{{_options.tooltip}}"
    formatMaskChars="{{_formatMaskChars}}"
