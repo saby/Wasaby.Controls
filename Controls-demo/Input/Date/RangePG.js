@@ -24,13 +24,37 @@ define('Controls-demo/Input/Date/RangePG',
                },
                endValue: {
                   readOnly: true
+               },
+               style: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
+               fontStyle: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
+               startTagStyle: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title'
+               },
+               endTagStyle: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title'
                }
             };
             this._componentOptions = {
                name: 'DateRange',
-               readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: ''
+               readOnly: false
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

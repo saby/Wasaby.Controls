@@ -1,6 +1,7 @@
 <Controls.Input.resources.InputRender.InputRender
    autocomplete="{{_options.autocomplete}}"
    viewModel="{{_viewModel}}"
+   style="{{_options.style}}"
    tagStyle="{{_options.tagStyle}}"
    placeholder="{{_options.placeholder}}"
    selectOnClick="{{_options.selectOnClick}}"

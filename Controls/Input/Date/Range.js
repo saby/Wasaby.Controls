@@ -25,10 +25,16 @@ define('Controls/Input/Date/Range', [
     * @mixes Controls/Input/interface/IInputBase
     * @mixes Controls/Date/interface/IRange
     * @mixes Controls/Input/interface/IInputDateRange
-    * @mixes Controls/Input/interface/IInputTag
+    * @mixes Controls/Input/interface/IInputDateTag
     * @mixes Controls/Input/interface/IDateMask
     * @mixes Controls/Input/interface/IValidation
+    *
+    * @css @width_DateRange-dash Width of dash between input fields.
+    * @css @spacing_DateRange-between-dash-date Spacing between dash and input fields.
+    * @css @thickness_DateRange-dash Thickness of dash between input fields.
+    * @css @color_DateRange-dash Color of dash between input fields.
     * @css @spacing_DateRange-between-input-button Spacing between input field and button.
+    *
     * @control
     * @public
     * @demo Controls-demo/Input/Date/RangePG
