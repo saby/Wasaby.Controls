@@ -30,7 +30,7 @@ define('Controls/List/ListView/Styles', [],
     * @css @width_ListView-marker marker width
     * @css @color_ListView-marker marker color
     * @css @spacing_ListView-item-between-checkbox-borderTop spacing between checkbox in item of list and top item border
-    * @css @spacing-ListView-between-content-checkbox spacing between checkbox in item of list and item content
+    * @css @spacing_ListView-between-content-checkbox spacing between checkbox in item of list and item content
     * @css @spacing_ListView-item-between-content-borderLeft spacing between item content and item left border in list without checkboxes
     * @css @spacing_ListView-item-between-content-borderTop spacing between item content and item top border in list without checkboxes
     * @css @spacing_ListView-item-between-content-borderBottom spacing between item content and item bottom border in list without checkboxes
