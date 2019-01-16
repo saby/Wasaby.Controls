@@ -34,7 +34,7 @@ define('Controls/Date/model/DateRange', [
       }
    };
 
-   var ModuleClass = cExtend.extend([entity.ObservableMixin, entity.VersionableMixin], {
+   var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _startValue: null,
       _endValue: null,
       _state: null,

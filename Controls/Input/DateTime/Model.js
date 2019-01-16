@@ -32,7 +32,7 @@ define('Controls/Input/DateTime/Model', [
       }
    };
 
-   var ModuleClass = cExtend.extend([entity.ObservableMixin, entity.VersionableMixin], {
+   var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
       _lastValue: null,

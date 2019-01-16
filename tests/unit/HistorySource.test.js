@@ -2,7 +2,6 @@ define(
    [
       'Controls/History/Source',
       'Controls/History/Service', // for otladka
-      'WS.Data/Source/Memory',
       'Types/collection',
       'Types/entity',
       'Core/Deferred',

@@ -13,7 +13,7 @@ define('Controls/List/BaseViewModel',
        * @author Авраменко А.С.
        * @public
        */
-      var BaseViewModel = cExtend.extend([entity.ObservableMixin, entity.VersionableMixin], {
+      var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
 
          constructor: function(cfg) {
             this._options = cfg;
