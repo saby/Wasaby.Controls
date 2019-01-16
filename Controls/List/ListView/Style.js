@@ -58,7 +58,8 @@ define('Controls/List/ListView/Style', [],
     * @css @background-color_List-masterList-item_selected background-color of selected item in master list
     * @css @background-color_List-masterList-item_marked background-color of marked item in master list
     * @css @background-color_List-masterList-item_hover background-color of hovered item in master list
-    * /
+    *
+    */
 );
 
 
