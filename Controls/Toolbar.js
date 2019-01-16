@@ -192,7 +192,7 @@ define('Controls/Toolbar', [
                   iconStyle: item.get('iconStyle')
                }
             },
-            target: event.target
+            target: event.currentTarget
          };
       },
 
