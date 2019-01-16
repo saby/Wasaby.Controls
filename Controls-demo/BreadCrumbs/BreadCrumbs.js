@@ -95,8 +95,8 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             });
          });
       },
-      _onItemClick: function(e, itemId) {
-         this.info = '' + itemId;
+      _onItemClick: function(e, item) {
+         this.info = '' + item.getId();
          this._arrowActivated = false;
       },
 

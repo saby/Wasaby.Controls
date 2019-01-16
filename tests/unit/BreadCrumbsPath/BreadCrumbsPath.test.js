@@ -79,7 +79,8 @@ define([
                });
             }),
             keyProperty: 'id',
-            parentProperty: 'parent'
+            parentProperty: 'parent',
+            root: null
          });
       });
       afterEach(function() {
@@ -157,7 +158,7 @@ define([
       it('_onBackButtonClick', function() {
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[path._options.items.length - 1].get('parent'), args[0]);
+               assert.equal(path._options.items[path._options.items.length - 2].get('parent'), args[0].get('parent'));
             }
          };
          path._onBackButtonClick();
@@ -168,7 +169,7 @@ define([
 
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(root, args[0]);
+               assert.equal(root, args[0].get('id'));
             }
          };
          path._onHomeClick();

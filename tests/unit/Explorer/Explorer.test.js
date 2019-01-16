@@ -3,13 +3,15 @@ define([
    'Core/Deferred',
    'WS.Data/Collection/RecordSet',
    'WS.Data/Chain',
-   'Controls/DragNDrop/Entity/Items'
+   'Controls/DragNDrop/Entity/Items',
+   'WS.Data/Entity/Model'
 ], function(
    Explorer,
    Deferred,
    RecordSet,
    chain,
-   DragEntity
+   DragEntity,
+   Model
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -168,7 +170,8 @@ define([
                   { id: 1, title: 'item1' },
                   { id: 2, title: 'item2', parent: 1 },
                   { id: 3, title: 'item3', parent: 2 }
-               ]
+               ],
+               idProperty: 'id'
             }),
             instance = new Explorer();
 
@@ -176,10 +179,10 @@ define([
             parentProperty: 'parent',
             keyProperty: 'id'
          });
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1).get('parent'));
-         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1));
+         assert.equal(instance._root, testBreadCrumbs.at(1).get('id'));
       });
 
       it('_notifyHandler', function() {
@@ -301,10 +304,16 @@ define([
          });
 
          it('_hoveredCrumbChanged', function() {
-            var hoveredBreadCrumb = {};
+            var hoveredBreadCrumb = new Model({
+                  rawData: {
+                     id: 1
+                  },
+                  idProperty: 'id'
+               }),
+                explorer = new Explorer({});
 
             explorer._hoveredCrumbChanged({}, hoveredBreadCrumb);
-            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb);
+            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb.get('id'));
          });
          it('dragItemsFromRoot', function() {
 

@@ -77,7 +77,7 @@ define([
             };
             bc._notify = function(e, args) {
                if (e === 'itemClick') {
-                  assert.equal(itemData.item.get('id'), args[0]);
+                  assert.equal(itemData.item.get('id'), args[0].get('id'));
                }
             };
             bc._onItemClick({}, itemData);
@@ -126,7 +126,7 @@ define([
          };
          bc._notify = function(e, eventArgs) {
             if (e === 'itemClick') {
-               assert.equal(bc._options.items[0].get('id'), eventArgs[0]);
+               assert.equal(bc._options.items[0].get('id'), eventArgs[0].get('id'));
             }
          };
          bc._children = {

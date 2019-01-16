@@ -16,7 +16,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
       }
    }
 
-   function getFullPath(items, currentRoot) {
+   function getFullPath(items, currentRoot, needRecordSet) {
       var
          path = [],
          currentNode = getById(items, currentRoot);
@@ -25,10 +25,13 @@ define('Controls-demo/Explorer/ExplorerMemory', [
          currentNode = getById(items, currentNode.parent);
          path.unshift(currentNode);
       }
-      return new RecordSet({
-         rawData: path,
-         idProperty: 'id'
-      });
+      if (needRecordSet) {
+         return new RecordSet({
+            rawData: path,
+            idProperty: 'id'
+         });
+      }
+      return path;
    }
 
    var
@@ -86,7 +89,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                         result = originalGetAll.apply(this, arguments),
                         meta = result.getMetaData();
                      if (parent !== undefined && parent !== null) {
-                        meta.path = getFullPath(self._$data, parent);
+                        meta.path = getFullPath(self._$data, parent, true);
                      }
                      result.setMetaData(meta);
                      return result;

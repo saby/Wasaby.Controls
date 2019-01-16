@@ -2,7 +2,9 @@ define('Controls/List/SearchView', [
    'Controls/List/Grid/GridView',
    'wml!Controls/List/SearchView/Item',
    'css!theme?Controls/List/SearchView/SearchView',
-   'Controls/BreadCrumbs'
+   'Controls/BreadCrumbs',
+   'Controls/Decorator/Highlight',
+   'wml!Controls/List/SearchView/SearchBreadCrumbsContent'
 ], function(GridView, DefaultItemTpl) {
 
    'use strict';
