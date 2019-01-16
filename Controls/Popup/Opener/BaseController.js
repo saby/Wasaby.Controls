@@ -25,11 +25,15 @@ define('Controls/Popup/Opener/BaseController',
                      left: 0
                   };
                }
-               return config.margins;
+            } else {
+               config.className = config.popupOptions.className;
+               config.margins = _private.getFakeDivMargins(config);
             }
-            config.className = config.popupOptions.className;
-            config.margins = _private.getFakeDivMargins(config);
-            return config.margins;
+
+            return {
+               top: config.margins.top,
+               left: config.margins.left
+            };
          },
 
          getFakeDivMargins: function(config) {
