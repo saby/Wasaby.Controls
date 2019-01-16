@@ -95,7 +95,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          onBeginCollectionChange: function(self, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-            if (action === collection.IBind.ACTION_REMOVE) {
+            if (action === collection.IObservable.ACTION_REMOVE) {
                _private.checkRemovedNodes(self, removedItems);
             }
             if (self._options.expanderDisplayMode === 'adaptive') {
@@ -225,7 +225,7 @@ define('Controls/List/Tree/TreeViewModel', [
             this._nextVersion();
             this._notify('onListChange');
          },
-   
+
          getExpandedItems: function() {
             return this._expandedItems;
          },

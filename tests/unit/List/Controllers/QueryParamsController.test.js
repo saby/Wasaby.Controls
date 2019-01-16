@@ -133,7 +133,7 @@ define(
                });
                pNav.prepareSource(source);
                var options = source.getOptions();
-               assert.equal(sourceLib.SbisService.prototype.NAVIGATION_TYPE.OFFSET, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
+               assert.equal(sourceLib.SbisService.NAVIGATION_TYPE.OFFSET, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
 
             });
          });
@@ -152,7 +152,7 @@ define(
                });
                pNav.prepareSource(source);
                var options = source.getOptions();
-               assert.equal(sourceLib.SbisService.prototype.NAVIGATION_TYPE.POSITION, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
+               assert.equal(sourceLib.SbisService.NAVIGATION_TYPE.POSITION, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
 
             });
 

@@ -11,7 +11,11 @@ define('Controls/List/Mover', [
       CUSTOM: 'Custom',
       MOVE_IN_ITEMS: 'MoveInItems'
    };
-
+   var MOVE_POSITION = {
+      on: 'on',
+      before: 'before',
+      after: 'after'
+   };
    var _private = {
       beforeItemsMove: function(self, items, target, position) {
          var beforeItemsMoveResult = self._notify('beforeItemsMove', [items, target, position]);
@@ -22,7 +26,7 @@ define('Controls/List/Mover', [
       },
 
       moveInItems: function(self, items, target, position) {
-         if (position === sourceLib.ISource.MOVE_POSITION.on) {
+         if (position === MOVE_POSITION.on) {
             _private.hierarchyMove(self, items, target);
          } else {
             _private.reorderMove(self, items, target, position);
@@ -52,9 +56,9 @@ define('Controls/List/Mover', [
                   movedItem.set(parentProperty, targetItem.get(parentProperty));
                }
 
-               if (position === sourceLib.ISource.MOVE_POSITION.after && targetIndex < itemIndex) {
+               if (position === MOVE_POSITION.after && targetIndex < itemIndex) {
                   targetIndex = (targetIndex + 1) < self._items.getCount() ? targetIndex + 1 : self._items.getCount();
-               } else if (position === sourceLib.ISource.MOVE_POSITION.before && targetIndex > itemIndex) {
+               } else if (position === MOVE_POSITION.before && targetIndex > itemIndex) {
                   targetIndex = targetIndex !== 0 ? targetIndex - 1 : 0;
                }
                self._items.move(itemIndex, targetIndex);
@@ -88,7 +92,7 @@ define('Controls/List/Mover', [
       moveItemToSiblingPosition: function(self, item, position) {
          var
             itemIndex = self._items.getIndex(_private.getModelByItem(self, item)),
-            target = self._items.at(position === sourceLib.ISource.MOVE_POSITION.before ? --itemIndex : ++itemIndex);
+            target = self._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
 
          if (target) {
             self.moveItems([item], target, position);
@@ -115,7 +119,7 @@ define('Controls/List/Mover', [
 
          //Check for a item to be moved because it may not be in the current recordset
          if (self._options.parentProperty && movedItem) {
-            if (target && position === sourceLib.ISource.MOVE_POSITION.on && target.get(self._options.nodeProperty) === null) {
+            if (target && position === MOVE_POSITION.on && target.get(self._options.nodeProperty) === null) {
                return false;
             }
             parentsMap = _private.getParentsMap(self, _private.getIdByItem(self, target));
@@ -189,15 +193,15 @@ define('Controls/List/Mover', [
       },
 
       _onDialogResult: function(event, target, items) {
-         this.moveItems(items, target, sourceLib.ISource.MOVE_POSITION.on);
+         this.moveItems(items, target, MOVE_POSITION.on);
       },
 
       moveItemUp: function(item) {
-         _private.moveItemToSiblingPosition(this, item, sourceLib.ISource.MOVE_POSITION.before);
+         _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
       },
 
       moveItemDown: function(item) {
-         _private.moveItemToSiblingPosition(this, item, sourceLib.ISource.MOVE_POSITION.after);
+         _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
       },
 
       moveItems: function(items, target, position) {

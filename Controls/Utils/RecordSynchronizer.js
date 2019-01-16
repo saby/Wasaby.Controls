@@ -11,7 +11,7 @@ define('Controls/Utils/RecordSynchronizer', [
       createRecord: function(editRecord, items) {
          var syncRecord;
 
-         syncRecord = Di.resolve(items.getModel(), {
+         syncRecord = Di.create(items.getModel(), {
             adapter: items.getAdapter(),
             format: items.getFormat(),
             idProperty: items.getIdProperty()

@@ -15,7 +15,7 @@ define('Controls-demo/FilterButton/FilterButton',
          sourceDropdown: null,
          _beforeMount: function() {
             this.sourceDropdown = {
-               module: 'WS.Data/Source/Memory',
+               module: 'Types/source:Memory',
                options: {
                   data: [
                      { key: 1, title: 'все страны' },

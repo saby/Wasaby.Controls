@@ -767,15 +767,15 @@ define('Controls/List/BaseControl', [
             _private.reload(this, newOptions);
          }
       },
-   
+
       reloadItem: function(key, readMeta, replaceItem) {
          var items = this._listViewModel.getItems();
          var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-      
+
          if (currentItemIndex === -1) {
             throw new Error('BaseControl::reloadItem no item with key ' + key);
          }
-      
+
          return this._sourceController.read(key, readMeta).addCallback(function(item) {
             if (replaceItem) {
                items.replace(item, currentItemIndex);
@@ -812,8 +812,8 @@ define('Controls/List/BaseControl', [
                this._virtualScroll.updateItemsSizes();
             }
          }
-   
-   
+
+
          //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
          //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
          if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
