@@ -16,17 +16,19 @@ define('Controls/interface/IBreadCrumbs', [
 
    /**
     * @name Controls/interface/IBreadCrumbs#keyProperty
-    * @cfg {String="id"} Name of the item property that uniquely identifies collection item.
+    * @cfg {String} Name of the item property that uniquely identifies collection item.
     */
 
    /**
     * @name Controls/interface/IBreadCrumbs#parentProperty
-    * @cfg {String} Name of the field that contains information about parent node..
+    * @cfg {String} Name of the field that contains information about parent node.
     */
 
    /**
     * @name Controls/interface/IBreadCrumbs#displayProperty
-    * @cfg {String="title"} Name of the item property which content will be displayed.
+    * @cfg {String} Name of the item property which content will be displayed.
+    * @default
+    * title
     */
 
    /**

@@ -167,10 +167,16 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
       });
       
       it('.searchValueChanged', function(done) {
-         var listLayout = new List(listOptions);
-         listLayout._beforeMount(listOptions);
+         var opts = clone(listOptions);
+         var searchStarted = false;
+         opts.searchStartCallback = function() {
+            searchStarted = true;
+         };
+         var listLayout = new List(opts);
+         listLayout._beforeMount(opts);
          List._private.searchValueChanged(listLayout, 'Sasha');
          assert.equal(listLayout._searchValue, 'Sasha');
+         assert.isFalse(searchStarted);
          
          setTimeout(function() {
             //FIXME вернуть как будет cached source
@@ -180,14 +186,15 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
                ]);
+            assert.isTrue(searchStarted);
             List._private.searchValueChanged(listLayout, '');
             assert.equal(listLayout._searchValue, '');
             setTimeout(function() {
                assert.deepEqual(listLayout._filter, {});
                assert.deepEqual(listLayout._source._$data, listSourceData);
                done();
-            }, 50);
-         }, 50);
+            }, 100);
+         }, 100);
       });
    
       it('.getSearchController', function() {

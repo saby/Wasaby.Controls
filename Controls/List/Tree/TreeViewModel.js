@@ -70,32 +70,6 @@ define('Controls/List/Tree/TreeViewModel', [
             return filter;
          },
 
-         getAllChildren: function(hierarchyRelation, rootId, items) {
-            var children = [];
-
-            hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
-               if (hierarchyRelation.isNode(child)) {
-                  ArraySimpleValuesUtil.addSubArray(children, _private.getAllChildren(hierarchyRelation, child.getId(), items));
-               }
-               ArraySimpleValuesUtil.addSubArray(children, [child]);
-            });
-
-            return children;
-         },
-
-         allChildrenSelected: function(hierarchyRelation, key, items, selectedKeys) {
-            var
-               res = true;
-
-            _private.getAllChildren(hierarchyRelation, key, items).forEach(function(child) {
-               if (selectedKeys.indexOf(child.getId()) === -1) {
-                  res = false;
-               }
-            });
-
-            return res;
-         },
-
          hasChildItem: function(self, key) {
             if (self._options.hasChildrenProperty) {
                return !!self._items.getRecordById(key).get(self._options.hasChildrenProperty);
@@ -251,6 +225,10 @@ define('Controls/List/Tree/TreeViewModel', [
             this._nextVersion();
             this._notify('onListChange');
          },
+   
+         getExpandedItems: function() {
+            return this._expandedItems;
+         },
 
          resetExpandedItems: function() {
             _private.resetExpandedItems(this);
@@ -366,13 +344,6 @@ define('Controls/List/Tree/TreeViewModel', [
                         current.footerStorage = {};
                      }
                      current.footerStorage.hasMoreStorage = this._hasMoreStorage[current.item.getId()];
-                  }
-               }
-               if (this._selectedKeys.indexOf(current.key) !== -1) {
-                  if (_private.allChildrenSelected(this._hierarchyRelation, current.key, this._items, this._selectedKeys)) {
-                     current.multiSelectStatus = true;
-                  } else {
-                     current.multiSelectStatus = null;
                   }
                }
             }

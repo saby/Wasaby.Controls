@@ -4,7 +4,7 @@ define('Controls/Container/Async',
       'Core/Deferred',
       'View/Request',
       'wml!Controls/Container/Async/Async',
-      'View/Runner/requireHelper',
+      'View/Executor/Utils',
       'Core/IoC'
    ],
 
@@ -12,7 +12,7 @@ define('Controls/Container/Async',
       Deferred,
       Request,
       template,
-      requireHelper,
+      Utils,
       IoC) {
       'use strict';
 
@@ -39,7 +39,7 @@ define('Controls/Container/Async',
             var self = this;
             self.optionsForComponent = options.templateOptions || {};
             if (typeof window !== 'undefined') {
-               if (!requireHelper.defined(options.templateName)) {
+               if (!Utils.RequireHelper.defined(options.templateName)) {
                   var def = new Deferred();
                   require([options.templateName], function(tpl) {
                      self.optionsForComponent.resolvedTemplate = tpl;
@@ -51,7 +51,7 @@ define('Controls/Container/Async',
                   });
                   return def;
                }
-               self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
+               self.optionsForComponent.resolvedTemplate = Utils.RequireHelper.require(options.templateName);
                return;
             }
 
@@ -59,8 +59,9 @@ define('Controls/Container/Async',
              * It can work without Controls.Application
              * */
 
-            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
-            var headData = Request.getCurrent().getStorage('HeadData');
+            self.optionsForComponent.resolvedTemplate = Utils.RequireHelper.require(options.templateName);
+            var request = Request.getCurrent();
+            var headData = request && request.getStorage('HeadData');
 
             if (self.optionsForComponent.resolvedTemplate && headData && headData.pushDepComponent) {
                if (options.templateName) {
@@ -77,7 +78,7 @@ define('Controls/Container/Async',
 
          _beforeUpdate: function(options) {
             var self = this;
-            if (!requireHelper.defined(options.templateName)) {
+            if (!Utils.RequireHelper.defined(options.templateName)) {
                var def = new Deferred();
                require([options.templateName], function(tpl) {
                   self.optionsForComponent = options.templateOptions || {};
@@ -91,7 +92,7 @@ define('Controls/Container/Async',
                return;
             }
             self.optionsForComponent = options.templateOptions || {};
-            self.optionsForComponent.resolvedTemplate = requireHelper.require(options.templateName);
+            self.optionsForComponent.resolvedTemplate = Utils.RequireHelper.require(options.templateName);
          }
       });
 

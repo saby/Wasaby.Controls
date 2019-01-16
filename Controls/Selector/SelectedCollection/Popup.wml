@@ -1,4 +1,4 @@
-<div>
+<Controls.Container.Scroll attr:class="controls-SelectedCollection__popup-wrapper">
    <Controls.Heading caption="Выбрано" size="s" readOnly="{{true}}"/>
    <div>
       <Controls.Selector.SelectedCollection
@@ -12,4 +12,4 @@
               attr:style="width: {{_options.width}}px">
       </Controls.Selector.SelectedCollection>
    </div>
-</div>
+</Controls.Container.Scroll>

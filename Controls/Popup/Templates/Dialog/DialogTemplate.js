@@ -2,9 +2,10 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/DialogTemplate',
+      'Core/IoC',
       'css!theme?Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
-   function(Control, template) {
+   function(Control, template, IoC) {
       'use strict';
 
       var DialogTemplate = Control.extend({
@@ -18,19 +19,20 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           * @category Popup
           * @author Красильников А.С.
           * @mixes Controls/Popup/Templates/Dialog/DialogTmplStyles
+          * @demo Controls-demo/Popup/Templates/DialogTemplatePG
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#caption
+          * @name Controls/Popup/Templates/Dialog/DialogTemplate#headingCaption
           * @cfg {String} Header title.
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#captionStyle
+          * @name Controls/Popup/Templates/Dialog/DialogTemplate#headingStyle
           * @cfg {String} Caption display style.
-          * @variant default
-          * @variant accent
-          * @variant small
+          * @variant secondary
+          * @variant primary
+          * @variant info
           */
 
          /**
@@ -67,13 +69,36 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           */
 
          _template: template,
+         _closeButtonVisibility: true,
+         _beforeMount: function(options) {
+            this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
+
+            if (options.contentArea) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+            }
+            if (options.caption) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+            }
+            if (options.captionStyle) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+            }
+            if (options.topArea) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+            }
+            if (options.hideCross) {
+               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
+            }
+         },
+         _beforeUpdate: function(options) {
+            this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
+         },
 
          /**
           * Close popup.
           * @function Controls/Popup/Templates/Dialog/DialogTemplate#close
           */
          close: function() {
-            this._notify('close', [], {bubbling: true});
+            this._notify('close', [], { bubbling: true });
          },
 
          _onMouseDown: function(event) {
@@ -83,14 +108,19 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          },
 
          _onDragEnd: function() {
-            this._notify('popupDragEnd', [], {bubbling: true});
+            this._notify('popupDragEnd', [], { bubbling: true });
          },
 
          _onDragMove: function(event, dragObject) {
-            this._notify('popupDragStart', [dragObject.offset], {bubbling: true});
+            this._notify('popupDragStart', [dragObject.offset], { bubbling: true });
          }
-
       });
+      DialogTemplate.getDefaultOptions = function() {
+         return {
+            headingStyle: 'secondary',
+            closeButtonVisibility: true
+         };
+      };
+
       return DialogTemplate;
-   }
-);
+   });

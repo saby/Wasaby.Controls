@@ -1,7 +1,0 @@
-<Controls.Button
-   viewMode="link"
-   style="secondary"
-   attr:title="{[Убрать ссылку]}"
-   icon="icon-Unlink icon-medium {{_readOnly ? 'icon-disabled' : 'icon-primary'}}"
-   readOnly="{{_readOnly}}"
-   on:click="_clickHandler()"/>

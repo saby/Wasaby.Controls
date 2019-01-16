@@ -42,7 +42,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                items = {},
                parents,
                filter = query.getWhere(),
-               parent = filter.parent;
+               parent = filter.parent instanceof Array ? filter.parent[0] : filter.parent;
 
             // if search mode
             if (filter.title) {
