@@ -1,7 +1,7 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
    'Core/Serializer',
    'Core/IoC',
-   'View/Runner/common'], function(extend, Serializer, IoC, common) {
+   'View/Executor/Utils'], function(extend, Serializer, IoC, Utils) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -50,7 +50,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
 
          slr = new Serializer();
          var serializedState = JSON.stringify(serializedMap, slr.serialize);
-         common.componentOptsReArray.forEach(function(re) {
+         Utils.Common.componentOptsReArray.forEach(function(re) {
             serializedState = serializedState.replace(re.toFind, re.toReplace);
          });
          serializedState = serializedState.replace(/\\"/g, '\\\\"');

@@ -1,3 +1,0 @@
-<div on:routerUpdated="routerUpdatedHandler()" on:routerCreated="routerCreatedHandler()" on:routerDestroyed="routerDestroyedHandler()">
-   <Controls-demo.Router.Panel name="panelInst"/>
-</div>

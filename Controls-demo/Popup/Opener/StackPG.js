@@ -25,34 +25,44 @@ define('Controls-demo/Popup/Opener/StackPG',
          _componentOptions: null,
          _beforeMount: function() {
             this._dataObject = {
-               className: {
-                  readOnly: true,
+               width: {
+                  readOnly: true
                },
                template: {
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Opener/DefaultStack',
+                        title: 'Default',
                         template: 'wml!Controls-demo/Popup/Opener/DefaultStack'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Opener/MaximazedStack',
+                        title: 'Maximized',
                         template: 'wml!Controls-demo/Popup/Opener/MaximazedStack',
                      }
                   ],
+                  value: 'Default'
                },
+               templateOptions: {
+                  items: [
+                     { id: '1', title: '{ value: \'My text\' }', items: { value: 'My text' }},
+                     { id: '2', title: '{   }', items: {} }
+                  ],
+                  value: '{ value: \'My text\' }'
+               }
             };
             this._componentOptions = {
                name: 'Stack',
                autofocus: true,
-               isModal: true,
+               isModal: false,
                className: 'stack_demoPG',
                closeByExternalClick: true,
                 template: 'wml!Controls-demo/Popup/Opener/DefaultStack',
+               templateOptions: { value: 'My text' },
                width: 300,
-               winWidth: 300,
-               maxWidth: 500,
+               minWidth: 300,
+               maxWidth: 500
+               //minimizedWidth: 200
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

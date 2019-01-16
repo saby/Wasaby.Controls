@@ -3,15 +3,25 @@ define('Controls/List/TreeControl', [
    'wml!Controls/List/TreeControl/TreeControl',
    'Controls/Controllers/SourceController',
    'Core/core-clone',
-   'Core/Deferred'
+   'Core/constants',
+   'Core/Deferred',
+   'Controls/Utils/keysHandler'
 ], function(
    Control,
    TreeControlTpl,
    SourceController,
    cClone,
-   Deferred
+   cConstants,
+   Deferred,
+   keysHandler
 ) {
    'use strict';
+
+   var
+      HOT_KEYS = {
+         expandMarkedItem: cConstants.key.right,
+         collapseMarkedItem: cConstants.key.left
+      };
 
    var DRAG_MAX_OFFSET = 15,
       DEFAULT_COLUMNS_VALUE = [];
@@ -34,6 +44,24 @@ define('Controls/List/TreeControl', [
       toggleExpandedOnModel: function(self, listViewModel, dispItem, expanded) {
          listViewModel.toggleExpanded(dispItem, expanded);
          self._notify(expanded ? 'itemExpanded' : 'itemCollapsed', [dispItem.getContents()]);
+      },
+      expandMarkedItem: function(self) {
+         var
+            model = self._children.baseControl.getViewModel(),
+            markedItemKey = model.getMarkedKey(),
+            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+         if (!model.isExpanded(markedItem)) {
+            self.toggleExpanded(markedItemKey);
+         }
+      },
+      collapseMarkedItem: function(self) {
+         var
+            model = self._children.baseControl.getViewModel(),
+            markedItemKey = model.getMarkedKey(),
+            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+         if (model.isExpanded(markedItem)) {
+            self.toggleExpanded(markedItemKey);
+         }
       },
       toggleExpanded: function(self, dispItem) {
          var
@@ -102,7 +130,7 @@ define('Controls/List/TreeControl', [
          if (baseControl) {
             expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
          } else {
-            expandedItemsKeys = cfg.expandedItems;
+            expandedItemsKeys = cfg.expandedItems || [];
          }
          
          if (expandedItemsKeys.length && !_private.isExpandAll(expandedItemsKeys)) {
@@ -233,9 +261,10 @@ define('Controls/List/TreeControl', [
          TreeControl.superclass._afterUpdate.apply(this, arguments);
          if (this._updatedRoot) {
             this._updatedRoot = false;
+            _private.clearSourceControllers(this);
             this._children.baseControl.getViewModel().setExpandedItems([]);
-            this.reload();
             this._children.baseControl.getViewModel().setRoot(this._root);
+            this.reload();
          }
       },
       toggleExpanded: function(key) {
@@ -319,6 +348,10 @@ define('Controls/List/TreeControl', [
                }
             }
          }
+      },
+
+      _onTreeViewKeyDown: function(event) {
+         keysHandler(event, HOT_KEYS, _private, this);
       },
 
       _beforeUnmount: function() {

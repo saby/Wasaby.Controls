@@ -4,6 +4,7 @@
 define('Controls/List/ListView', [
    'Core/Control',
    'Core/helpers/Function/debounce',
+   'Core/constants',
    'wml!Controls/List/ListView/ListView',
    'wml!Controls/List/ItemTemplate',
    'wml!Controls/List/GroupTemplate',
@@ -12,6 +13,7 @@ define('Controls/List/ListView', [
    'css!theme?Controls/List/ListView/ListView'
 ], function(BaseControl,
    cDebounce,
+   cConstants,
    ListViewTpl,
    defaultItemTemplate,
    GroupTemplate,

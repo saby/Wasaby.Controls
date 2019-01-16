@@ -10,7 +10,7 @@ define('Controls/Button/Menu/MenuUtils', [
       currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
-      var offsetClassName = 'controls-MenuButton controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
+      var offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);
 
       if ((!options.icon || currentButtonClass.viewMode === 'iconButtonBordered') && currentButtonClass.viewMode !== 'button') {
          offsetClassName += ('__' + options.size);
@@ -27,7 +27,7 @@ define('Controls/Button/Menu/MenuUtils', [
          // поэтому необходимо это учесть при сдвиге
          offsetClassName += '_' + iconSize;
       }
-      offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '');
+      offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '') + '_popup';
       return offsetClassName;
    }
 

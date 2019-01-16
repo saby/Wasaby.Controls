@@ -31,31 +31,31 @@ define('Controls-demo/Popup/Templates/ConfirmationTemplatePG',
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent',
+                        title: 'default',
                         template: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/customBodyContent',
+                        title: 'custom',
                         template: 'wml!Controls-demo/Popup/Templates/resources/customBodyContent'
                      }
                   ],
-                  value: 'wml!Controls-demo/Popup/Templates/resources/defaultBodyContent'
+                  value: 'default'
                },
                footerContentTemplate: {
                   items: [
                      {
                         id: '1',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent',
+                        title: 'default',
                         template: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent'
                      },
                      {
                         id: '2',
-                        title: 'wml!Controls-demo/Popup/Templates/resources/customFooterContent',
+                        title: 'custom',
                         template: 'wml!Controls-demo/Popup/Templates/resources/customFooterContent'
                      }
                   ],
-                  value: 'wml!Controls-demo/Popup/Templates/resources/defaultFooterContent'
+                  value: 'default'
                },
             };
             this._componentOptions = {

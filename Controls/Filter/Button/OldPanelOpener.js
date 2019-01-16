@@ -2,7 +2,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    [
       'Core/CommandDispatcher',
       'Lib/Control/CompoundControl/CompoundControl',
-      'View/Runner/requireHelper',
+      'View/Executor/Utils',
       'tmpl!SBIS3.CONTROLS/Filter/Button/FilterComponentTemplate',
       'SBIS3.CONTROLS/Mixins/FilterMixin',
       'SBIS3.CONTROLS/Mixins/PickerMixin',
@@ -16,7 +16,7 @@ define('Controls/Filter/Button/OldPanelOpener',
    function(
       CommandDispatcher,
       CompoundControl,
-      requireHelper,
+      Utils,
       dotTplForComp,
       FilterMixin,
       PickerMixin,
@@ -24,7 +24,7 @@ define('Controls/Filter/Button/OldPanelOpener',
       FilterPanelUtils,
       converterFilterStructure
    ) {
-      
+
       'use strict';
 
       /**
@@ -45,14 +45,14 @@ define('Controls/Filter/Button/OldPanelOpener',
        * @author Герасимов А.М.
        * @category Filtering
        */
-      
+
       var TEMPLATES = {
          _area: '_areaTemplate',
          main: 'template',
          header: 'topTemplate',
          additional: 'additionalFilterParamsTemplate'
       };
-      
+
       var OldPanelOpener = CompoundControl.extend([FilterMixin, PickerMixin], /** @lends SBIS3.CONTROLS/Filter/Button.prototype */{
          $protected: {
             _options: {
@@ -139,18 +139,18 @@ define('Controls/Filter/Button/OldPanelOpener',
                 */
                internalContextFilterName: 'sbis3-controls-filter-button'
             },
-            
+
             _pickerContext: null,        /* Контекст пикера */
             _filterStructure: null,      /* Структура фильтра */
             _filterTemplates: {},      /* Компонент, который будет отображаться на панели фильтрации */
             _dTemplatesReady: null
          },
-         
+
          $constructor: function() {
             var dispatcher = CommandDispatcher,
                declareCmd = dispatcher.declareCommand.bind(dispatcher, this),
                showPicker = this.showPicker.bind(this);
-            
+
             declareCmd('apply-filter', this.applyFilter.bind(this));
             declareCmd('reset-filter-internal', this._resetFilter.bind(this, true));
             declareCmd('reset-filter', this._resetFilter.bind(this, false));
@@ -158,32 +158,32 @@ define('Controls/Filter/Button/OldPanelOpener',
             declareCmd('change-field-internal', this._changeFieldInternal.bind(this));
             declareCmd('close', this.hidePicker.bind(this));
          },
-   
+
          _modifyOptions: function() {
             var opts = OldPanelOpener.superclass._modifyOptions.apply(this, arguments);
             opts.filterStructure = opts.items ? converterFilterStructure.convertToFilterStructure(opts.items) : opts.filterStructure;
             return opts;
          },
-         
+
          showPicker: function() {
             var self = this;
-            
+
             /* Не показываем кнопку фильтров, если она выключена */
             if (this._options.readOnly) {
                return;
             }
-            
+
             if (!this._dTemplatesReady) {
                this._dTemplatesReady = FilterPanelUtils.initTemplates(self, TEMPLATES, function(name) {
                   self._filterTemplates[name] = true;
                });
             }
-            
+
             this._dTemplatesReady.done().getResult().addCallback(function() {
                OldPanelOpener.superclass.showPicker.call(self);
             });
          },
-         
+
          applyFilter: function() {
             if (this._picker && !this._picker.validate()) {
                return false;
@@ -191,15 +191,15 @@ define('Controls/Filter/Button/OldPanelOpener',
             OldPanelOpener.superclass.applyFilter.call(this);
             this._picker && this.hidePicker();
          },
-         
+
          _changeFieldInternal: function(field, val) {
             var pickerContext = this._getCurrentContext();
-            
+
             if (pickerContext) {
                pickerContext.setValueSelf(field, val);
             }
          },
-         
+
          _getAreaOptions: function() {
             var prepTpl = TemplateUtil.prepareTemplate,
                components = this._filterTemplates,
@@ -213,36 +213,36 @@ define('Controls/Filter/Button/OldPanelOpener',
                },
                self = this,
                templateProperty;
-            
+
             /* Если шаблон указали как имя компонента (SBIS3.* || js!SBIS3.*) */
             function getCompTpl(tpl) {
-               return prepTpl(dotTplForComp({component: (requireHelper.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
+               return prepTpl(dotTplForComp({component: (Utils.RequireHelper.defined(tpl) ? tpl : 'js!' + tpl), componentOptions: self.getProperty('componentOptions')}));
             }
-            
+
             /* Если в качестве шаблона передали вёрстку */
             function getTpl(tpl) {
                return prepTpl(tpl);
             }
-            
+
             for (var key in TEMPLATES) {
                if (TEMPLATES.hasOwnProperty(key)) {
                   templateProperty = self.getProperty(TEMPLATES[key]);
                   config[TEMPLATES[key]] = components[TEMPLATES[key]] ? getCompTpl(templateProperty) : getTpl(templateProperty);
                }
             }
-            
+
             return config;
          },
-         
+
          _setPickerConfig: function() {
             var isRightAlign = this._options.filterAlign === 'right',
                self = this;
-            
+
             this._pickerContext = FilterPanelUtils.createFilterContext(this.getLinkedContext(),
                this._options.internalContextFilterName,
                this._filterStructure,
                self);
-            
+
             return FilterPanelUtils.getPanelConfig({
                className: 'controls-FilterButton__popup-index',
                corner: isRightAlign ? 'tl' : 'tr',
@@ -277,11 +277,11 @@ define('Controls/Filter/Button/OldPanelOpener',
                }
             });
          },
-         
+
          _getCurrentContext: function() {
             return this._pickerContext;
          },
-         
+
          _syncContext: function(fromContext) {
             var context = this._getCurrentContext(),
                pickerVisible = this._picker && this._picker.isVisible(),
@@ -289,11 +289,11 @@ define('Controls/Filter/Button/OldPanelOpener',
                filterPath = internalName + '/filter',
                descriptionPath = internalName + '/visibility',
                toSet;
-            
+
             if (!this._picker) {
                return false;
             }
-            
+
             if (fromContext) {
                this._updateFilterStructure(
                   undefined,
@@ -308,24 +308,24 @@ define('Controls/Filter/Button/OldPanelOpener',
                this._changeFieldInternal(toSet);
             }
          },
-         
-         
+
+
          /* Заглушка для resetLinkText */
          getResetLinkText: function() {},
-         
+
          destroy: function() {
             if (this._dTemplatesReady) {
                this._dTemplatesReady.getResult().cancel();
                this._dTemplatesReady = null;
             }
-            
+
             this._filterTemplates = null;
             this._pickerContext = null;
-   
+
             OldPanelOpener.superclass.destroy.apply(this, arguments);
          }
-         
+
       });
-      
+
       return OldPanelOpener;
    });

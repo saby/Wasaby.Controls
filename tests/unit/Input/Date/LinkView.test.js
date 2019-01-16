@@ -78,5 +78,18 @@ define([
             sandbox.restore();
          });
       });
+      describe('_clearDate', function() {
+         it('should clear startValue and endValue', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(LinkView, config);
+
+            sandbox.stub(component, '_notify');
+            component._clearDate();
+
+            assert.strictEqual(component._rangeModel.startValue, null);
+            assert.strictEqual(component._rangeModel.endValue, null);
+            sandbox.restore();
+         });
+      });
    });
 });
