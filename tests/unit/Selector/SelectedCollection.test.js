@@ -5,7 +5,8 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
             items = [1, 2, 3, 4],
             items2 = [1, 5, 7],
             self = {
-               _options: {}
+               _options: {},
+               _onResult: function(){}
             };
 
 
@@ -14,7 +15,7 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
          });
          assert.isFalse(!!self._templateOptions.items);
 
-         items.clone = function(){};
+         items.clone = function(){ return items.slice(); };
          self._templateOptions = SelectedCollection._private.getTemplateOptions(self, {
             items: items
          });
