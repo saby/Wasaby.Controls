@@ -1,26 +1,26 @@
-define('Controls/List/ListView/Styles', [],
+define('Controls/List/ListView/Style', [],
    function() {
    }
 
    /**
     * @author Родионов Е.А.
-    * @mixin Controls/List/Styles
+    * @mixin Controls/List/Style
     * @public
     *
     *
     * @css @color_ListView-empty text color of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderTop_xs top xs-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderTop_s top s-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderTop_m top m-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderTop_l top l-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderTop_xl top xl-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderTop_xxl top xxl-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderBottom_xs bottom xs-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderBottom_s bottom s-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderBottom_m bottom m-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderBottom_l bottom l-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderBottom_xl bottom xl-spacing of empty ListView
-    * @css @spacing_ListView-empty-between-content--BorderBottom_xxl bottom xxl-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderTop_xs top xs-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderTop_s top s-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderTop_m top m-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderTop_l top l-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderTop_xl top xl-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderTop_xxl top xxl-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderBottom_xs bottom xs-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderBottom_s bottom s-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderBottom_m bottom m-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderBottom_l bottom l-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderBottom_xl bottom xl-spacing of empty ListView
+    * @css @spacing_ListView-empty-between-content-borderBottom_xxl bottom xxl-spacing of empty ListView
     * @css @spacing_ListView-item-around-content_xs xs-spacing around ListView items
     * @css @spacing_ListView-item-around-content_s s-spacing around ListView items
     * @css @spacing_ListView-item-around-content_m m-spacing around ListView items
