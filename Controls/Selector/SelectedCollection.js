@@ -120,5 +120,6 @@ define('Controls/Selector/SelectedCollection',
          };
       };
 
+      Collection._private = _private;
       return Collection;
    });
