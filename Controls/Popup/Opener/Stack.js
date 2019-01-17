@@ -78,6 +78,7 @@ define('Controls/Popup/Opener/Stack',
       Stack._private = _private;
 
       return Stack;
+
       /**
        * @typedef {Object} PopupOptions
        * @description Stack popup options.
