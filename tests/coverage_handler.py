@@ -54,15 +54,15 @@ class Coverage:
                     d = json.load(f, encoding='utf-8')
                     # получаем зависимости
                     for k in d:
-                        # обрезаем пути, переменная берется из сборки
-                        k = k.replace(os.sep.join([env, 'controls']), '')
-                        coverage_result.append(k)
                         component_path = os.path.splitext(k)[0]
                         if os.path.exists(component_path):
                             for style in os.listdir(component_path):
                                 if os.path.isfile(style):
                                     style = style.replace(os.sep.join([env, 'controls']), '')
                                     coverage_result.append(style)
+                        # обрезаем пути, переменная берется из сборки
+                        k = k.replace(os.sep.join([env, 'controls']), '')
+                        coverage_result.append(k)
 
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
