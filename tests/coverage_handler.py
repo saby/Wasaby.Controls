@@ -55,7 +55,7 @@ class Coverage:
                     for k in d:
                         # обрезаем пути, переменная берется из сборки
                         env = os.environ["WORKSPACE"]
-                        k = k.replace(env, '')
+                        k = k.replace(os.sep.join(env, 'controls'), '')
                         coverage_result.append(k)
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
@@ -73,7 +73,7 @@ class Coverage:
             for test_name in data:
                 for source in data[test_name]:
                     for file in change_files:
-                        if file in source:
+                        if os.path.dirname(file) == os.path.dirname(source):
                             test_result.append(test_name)
         return test_result
 
