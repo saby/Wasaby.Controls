@@ -835,8 +835,8 @@ define('Controls/Input/Base',
             /**
              * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
              * placeholder: descriptor(String|Function),
+             * value: descriptor(String|null),
              */
-            value: descriptor(String),
             autoComplete: descriptor(Boolean),
             selectOnClick: descriptor(Boolean),
             size: descriptor(String).oneOf([
