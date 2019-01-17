@@ -664,9 +664,49 @@
             "type": "DateTime",
             "title": "Field value."
           },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
+          "style": {
+            "type": "enum",
+            "title": "Display style of the field.",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "invalid": "invalid"
+            }
+          },
+          "fontStyle": {
+            "type": "enum",
+            "title": "Fonts of the text in field.",
+            "enum": {
+              "default": "default",
+              "primary": "primary"
+            }
+          },
+          "startTagStyle": {
+            "type": "enum",
+            "title": "Style of the tag (colored indicator shown at the top right corner of the field).",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "secondary": "secondary"
+            }
+          },
+          "endTagStyle": {
+            "type": "enum",
+            "title": "Style of the tag (colored indicator shown at the top right corner of the field).",
+            "enum": {
+              "info": "info",
+              "danger": "danger",
+              "success": "success",
+              "primary": "primary",
+              "warning": "warning",
+              "secondary": "secondary"
+            }
           },
           "readOnly": {
             "type": "Boolean",

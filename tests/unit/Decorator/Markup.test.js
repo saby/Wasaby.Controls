@@ -302,8 +302,7 @@ define([
                   ['a',
                      {
                         rel: 'noreferrer',
-                        href: 'https:\\\\ya.ru',
-                        target: '_blank'
+                        href: 'https:\\\\ya.ru'
                      },
                      'https:\\\\ya.ru'
                   ]

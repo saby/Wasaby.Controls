@@ -4,7 +4,7 @@ define('Controls/Input/interface/IInputDateRange', [
 
    /**
     * Interface for date range inputs..
-    * mixin Controls/Input/interface/IInputDateRange
+    * @interface Controls/Input/interface/IInputDateRange
     * @author Миронов А.Ю.
     */
 
@@ -13,9 +13,9 @@ define('Controls/Input/interface/IInputDateRange', [
     * @cfg {Date} Beginning of period
     * @example
     * In this example you bind _startValue in control's state to the value of input field.
-    * At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+    * At any time of control's lifecycle, _startValue will contain the current start value of the input field.
     * <pre>
-    *    <Controls.Input.DatePicker bind:value="_startValue" />
+    *    <Controls.Input.DateRande bind:startValue="_startValue" />
     *    <Controls.Button on:click="_sendButtonClick()" />
     * </pre>
     * <pre>
@@ -35,9 +35,9 @@ define('Controls/Input/interface/IInputDateRange', [
     * @cfg {Date} End of period
     * @example
     * In this example you bind _endValue in control's state to the value of input field.
-    * At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+    * At any time of control's lifecycle, _endValue will contain the current ens value of the input field.
     * <pre>
-    *    <Controls.Input.DatePicker bind:value="_endValue" />
+    *    <Controls.Input.DateRange bind:endValue="_endValue" />
     *    <Controls.Button on:click="_sendButtonClick()" />
     * </pre>
     * <pre>

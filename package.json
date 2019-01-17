@@ -9,7 +9,8 @@
       "Data/*",
       "Controls/*",
       "Controls-theme/*",
-      "Controls-demo/*"
+      "Controls-demo/*",
+      "SBIS3.CONTROLS/*"
    ],
    "scripts": {
       "build": "npm run build:typescript && npm run build:app",
@@ -30,6 +31,9 @@
       "moduleType": "amd",
       "root": "application",
       "tests": "tests",
+      "report": "./application/artifacts/xunit-report.xml",
+      "htmlCoverageReport": "./application/artifacts/coverage/index.html",
+      "jsonCoverageReport": "./application/artifacts/coverage.json",
       "initializer": "testing-init.js",
       "url": {
          "port": 1025
@@ -46,7 +50,7 @@
       ],
       "cache": false,
       "eager": true,
-      "report-dir": "./artifacts/coverage"
+      "report-dir": "./application/artifacts/coverage"
    },
    "dependencies": {},
    "devDependencies": {

@@ -21,11 +21,23 @@ define(
          };
 
          it('_itemClickHandler singleSelect', function() {
+            let isShowSelector = false;
             let singleConfig = Clone(config);
             singleConfig.multiSelect = false;
+            singleConfig.readOnly = true;
             let button = getButton(singleConfig);
+            button._notify = (e) => {
+               if (e === 'showSelector') {
+                  isShowSelector = true;
+               }
+            };
             button._children = { 'selectorOpener': { open: setTrue.bind(this, assert) } };
             button._itemClickHandler([]);
+            assert.isFalse(isShowSelector);
+
+            button._options.readOnly = false;
+            button._itemClickHandler([]);
+            assert.isTrue(isShowSelector);
          });
 
          it('_itemClickHandler multiSelect', function() {

@@ -14,6 +14,7 @@ define(
 
          beforeEach(function() {
             inst = {
+               _stickyHeadersHeight: 0,
                _context: {
                   stickyHeader: new Context({shadowVisible: false})
                },
@@ -40,8 +41,8 @@ define(
                inst._options.content = TemplateUtil.content;
 
                assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader" style="top: 0px;">' +
-                                                '<div></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div></div><div></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
@@ -54,6 +55,8 @@ define(
                ctrl = new _StickyHeader({});
                inst._getStyle = ctrl._getStyle;
                inst._isShadowVisible = ctrl._isShadowVisible;
+               inst._getTopObserverStyle = ctrl._getTopObserverStyle;
+               inst._options.shadowVisibility = 'visible';
                template = TemplateUtil.clearTemplate(ctrl._template);
             });
 
@@ -62,7 +65,8 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
@@ -73,7 +77,8 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -1px; padding-top: 1px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
@@ -84,7 +89,8 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 10px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
@@ -95,7 +101,8 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
@@ -110,7 +117,8 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px; z-index: 1;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow"></div>' +
                                              '</div>');
@@ -124,7 +132,8 @@ define(
 
                assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px; z-index: 2;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
-                                                '<div class="controls-StickyHeader__observationTargetTop"></div>' +
+                                                '<div data-component="Controls/Event/Listener"></div>' +
+                                                '<div class="controls-StickyHeader__observationTargetTop" style="top: -2px;"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetBottom"></div>' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow controls-StickyHeader__shadowVisible"></div>' +
                                              '</div>');

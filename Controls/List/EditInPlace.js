@@ -311,21 +311,20 @@ define('Controls/List/EditInPlace', [
          return _private.endItemEdit(this, false);
       },
 
-      _onKeyDown: function(e) {
-         if (this._editingItem) {
-            switch (e.nativeEvent.keyCode) {
-               case 13: // Enter
-                  if (this._options.editingConfig && !this._sequentialEditing) {
-                     this.commitEdit();
-                  } else {
-                     _private.editNextRow(this, true);
-                  }
-                  break;
-               case 27: // Esc
-                  this.cancelEdit();
-                  break;
-            }
+      _onKeyDown: function(e, nativeEvent) {
+         switch (nativeEvent.keyCode) {
+            case 13: // Enter
+               if (this._options.editingConfig && !this._sequentialEditing) {
+                  this.commitEdit();
+               } else {
+                  _private.editNextRow(this, true);
+               }
+               break;
+            case 27: // Esc
+               this.cancelEdit();
+               break;
          }
+         nativeEvent.stopPropagation();
       },
 
       _onItemClick: function(e, record, originalEvent) {

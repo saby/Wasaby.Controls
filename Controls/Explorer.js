@@ -74,6 +74,13 @@ define('Controls/Explorer', [
                self._options.dataLoadCallback(data);
             }
          },
+         itemsReadyCallback: function(self, items) {
+            self._items = items;
+
+            if (self._options.itemsReadyCallback) {
+               self._options.itemsReadyCallback(items);
+            }
+         },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
                self._root = self._options.root;
@@ -92,6 +99,21 @@ define('Controls/Explorer', [
                   _private.setRoot(self, self._options.root);
                }
             }
+         },
+         dragItemsFromRoot: function(self, dragItems) {
+            var
+               item,
+               itemFromRoot = true;
+
+            for (var i = 0; i < dragItems.length; i++) {
+               item = self._items.getRecordById(dragItems[i]);
+               if (!item || item.get(self._options.parentProperty) !== self._root) {
+                  itemFromRoot = false;
+                  break;
+               }
+            }
+
+            return itemFromRoot;
          }
       };
 
@@ -131,7 +153,8 @@ define('Controls/Explorer', [
 
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
-         this._root = this._options.root;
+         this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
+         this._root = cfg.root;
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          _private.setViewMode(this, cfg.viewMode);
       },
@@ -153,7 +176,9 @@ define('Controls/Explorer', [
       },
       _documentDragStart: function(event, dragObject) {
          if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
-            this._dragOnBreadCrumbs = true;
+
+            //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
+            this._dragOnBreadCrumbs = this._root !== this._options.root || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
