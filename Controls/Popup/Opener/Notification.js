@@ -12,21 +12,20 @@ define('Controls/Popup/Opener/Notification',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/interface/INotificationOptions
+       * @demo Controls-demo/Popup/Opener/NotificationPG
        */
 
       /**
-       * @name Controls/Popup/Opener/Dialog#className
+       * @name Controls/Popup/Opener/Notification#className
        * @cfg {String} Class names of popup.
        */
-
       /**
-       * @name Controls/Popup/Opener/Dialog#template
+       * @name Controls/Popup/Opener/Notification#template
        * @cfg {String|Function} Template inside popup.
        */
 
       /**
-       * @name Controls/Popup/Opener/Dialog#templateOptions
+       * @name Controls/Popup/Opener/Notification#templateOptions
        * @cfg {String|Function} Template options inside popup.
        */
 

@@ -12,8 +12,8 @@ define('Controls/Popup/Opener/Stack',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/interface/IStackOptions
        * @mixes Controls/Popup/Opener/Stack/StackStyles
+       * @demo Controls-demo/Popup/Opener/StackPG
        */
 
       var _private = {

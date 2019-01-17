@@ -10,11 +10,11 @@ define('Controls/Popup/Opener/Confirmation',
       /**
        * Component that opens the confirmation popup.
        * @class Controls/Popup/Opener/Confirmation
-       * @mixes Controls/interface/IConfirmationOptions
        * @control
        * @public
        * @category Popup
        * @author Красильников А.С.
+       * @demo Controls-demo/Popup/Opener/ConfirmationPG
        */
 
       /**

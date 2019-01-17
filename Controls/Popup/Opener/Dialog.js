@@ -10,7 +10,6 @@ define('Controls/Popup/Opener/Dialog',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/interface/IDialogOptions
        * @demo Controls-demo/Popup/Opener/DialogPG
        */
 
@@ -107,31 +106,18 @@ define('Controls/Popup/Opener/Dialog',
     */
 
    /**
-    * @name Controls/Popup/Opener/Dialog#minWidth
-    * @cfg {Number} The minimum width of popup.
+    * @name Controls/Popup/Opener/Dialog#width
+    * @cfg {Number} Width of popup.
     */
 
    /**
-    * @name Controls/Popup/Opener/Dialog#maxWidth
-    * @cfg {Number} The maximum width of popup.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#minHeight
-    * @cfg {Number} The minimum height of popup.
+    * @name Controls/Popup/Opener/Dialog#height
+    * @cfg {Number} Height of popup.
     */
 
    /**
     * @name Controls/Popup/Opener/Dialog#maxHeight
     * @cfg {Number} The maximum height of popup.
-    */
-   /**
-    * @name Controls/Popup/Opener/Dialog#maximize
-    * @cfg {Boolean} Determines whether the control is displayed in full screen.
-    */
-   /**
-    * @name Controls/Popup/Opener/Dialog#resizable
-    * @cfg {Boolean} Determines whether popup can be resized.
     */
    /**
     * @name Controls/Popup/Opener/Dialog#top
