@@ -30,6 +30,9 @@
       "moduleType": "amd",
       "root": "application",
       "tests": "tests",
+      "report": "./application/artifacts/xunit-report.xml",
+      "htmlCoverageReport": "./application/artifacts/coverage/index.html",
+      "jsonCoverageReport": "./application/artifacts/coverage.json",
       "initializer": "testing-init.js",
       "url": {
          "port": 1025
@@ -46,7 +49,7 @@
       ],
       "cache": false,
       "eager": true,
-      "report-dir": "./artifacts/coverage"
+      "report-dir": "./application/artifacts/coverage"
    },
    "dependencies": {
    },
