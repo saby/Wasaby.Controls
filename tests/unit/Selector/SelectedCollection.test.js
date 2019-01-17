@@ -9,13 +9,6 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
                _onResult: function(){}
             };
 
-
-         self._templateOptions = SelectedCollection._private.getTemplateOptions(self, {
-            items: items
-         });
-         assert.isFalse(!!self._templateOptions.items);
-
-         items.clone = function(){ return items.slice(); };
          self._templateOptions = SelectedCollection._private.getTemplateOptions(self, {
             items: items
          });
