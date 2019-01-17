@@ -55,7 +55,7 @@ class Coverage:
                     for k in d:
                         # обрезаем пути, переменная берется из сборки
                         env = os.environ["WORKSPACE"]
-                        k = k.replace(os.sep.join(env, 'controls'), '')
+                        k = k.replace(os.sep.join([env, 'controls']), '')
                         coverage_result.append(k)
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
