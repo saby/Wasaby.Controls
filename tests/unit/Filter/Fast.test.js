@@ -261,9 +261,9 @@ define(
                newItems = Clone(source),
                newItems2 = Clone(source);
             newItems[0].properties.displayProperty = 'text';
-            var result = FastData._private.itemsPropertiesChanged(oldItems, newItems);
+            var result = FastData._private.isItemsPropertiesChanged(oldItems, newItems);
             assert.isTrue(result);
-            result = FastData._private.itemsPropertiesChanged(oldItems, newItems2);
+            result = FastData._private.isItemsPropertiesChanged(oldItems, newItems2);
             assert.isFalse(result);
          });
 

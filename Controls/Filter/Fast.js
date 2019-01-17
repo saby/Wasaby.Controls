@@ -108,8 +108,7 @@ define('Controls/Filter/Fast',
             // Get the key of the selected item
             var key = getPropValue(item, this._configs[this.lastOpenIndex].keyProperty);
             setPropValue(this._items.at(this.lastOpenIndex), 'value', key);
-            this._configs[this.lastOpenIndex].text = getPropValue(item, this._configs[this.lastOpenIndex].displayProperty);
-            _private.setTextValue(this._items.at(this.lastOpenIndex), this._configs[this.lastOpenIndex].text);
+            this._setText();
          },
 
          onResult: function(result) {
@@ -125,7 +124,7 @@ define('Controls/Filter/Fast',
             }
          },
 
-         itemsPropertiesChanged: function(oldItems, newItems) {
+         isItemsPropertiesChanged: function(oldItems, newItems) {
             var isChanged = false;
             Chain(newItems).each(function(item, index) {
                if (!isEqual(item.properties, oldItems[index].properties)) {
@@ -163,7 +162,7 @@ define('Controls/Filter/Fast',
                resultDef;
             if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               if (_private.itemsPropertiesChanged(this._options.items, newOptions.items)) {
+               if (_private.isItemsPropertiesChanged(this._options.items, newOptions.items)) {
                   resultDef = _private.reload(this);
                } else {
                   this._setText();
@@ -213,6 +212,7 @@ define('Controls/Filter/Fast',
                Chain(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
                      config.text = getPropValue(item, config.displayProperty);
+                     _private.setTextValue(self._items.at(index), getPropValue(item, config.displayProperty));
                   }
                });
             });
