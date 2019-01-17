@@ -35,10 +35,8 @@ define('Controls/Popup/Opener/Dialog',
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Dialog name="dialog">
-          *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+          *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
           *          <ws:templateOptions key="111"/>
-          *       </ws:popupOptions>
           *    </Controls.Popup.Opener.Dialog>
           *
           *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
@@ -136,10 +134,8 @@ define('Controls/Popup/Opener/Dialog',
     * @example
     * wml
     * <pre>
-    *    <Controls.Popup.Opener.Dialog name="dialog">
-    *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+    *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
     *          <ws:templateOptions key="111"/>
-    *       </ws:popupOptions>
     *    </Controls.Popup.Opener.Dialog>
     *
     *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
@@ -171,4 +167,21 @@ define('Controls/Popup/Opener/Dialog',
     * @function
     * @description Popup opened status.
     */
+
+   /**
+    * @typedef {Object} PopupOptions
+    * @description Dialog popup options.
+    * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+    * @property {Boolean} modal Determines whether the window is modal.
+    * @property {String} className Class names of popup.
+    * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+    * @property {function|String} template Template inside popup.
+    * @property {function|String} templateOptions Template options inside popup.
+    * @property {Number} width Width of popup.
+    * @property {Number} height Height of popup.
+    * @property {Number} maxHeight The maximum height of popup.
+    * @property {Number} top Distance from the window to the top of the screen.
+    * @property {Number} left Distance from the window to the left border of the screen.
+    */
+
 );

@@ -263,6 +263,7 @@ define('Controls/Popup/InfoBox',
          /**
           * Open InfoBox
           * @function Controls/Popup/InfoBox#open
+          * @param {PopupOptions[]} popupOptions InfoBox popup options.
           */
          open: function() {
             this._open();
@@ -320,4 +321,20 @@ define('Controls/Popup/InfoBox',
       InfoBox._private = _private;
 
       return InfoBox;
+
+      /**
+       * @typedef {Object} PopupOptions
+       * @description Infobox configuration.
+       * @property {function|String} content The content to which the logic of opening and closing the template is added.
+       * @property {function|String} template Template inside popup
+       * @property {Object} templateOptions Template options inside popup.
+       * @property {String} trigger Event name trigger the opening or closing of the template.
+       * @property {String} position Point positioning of the target relative to infobox.
+       * @property {Boolean} floatCloseButton Whether the content should wrap around the cross closure.
+       * @property {String} style Infobox display style.
+       * @property {Number} showDelay Delay before opening.
+       * @property {Number} showDelay Delay before closing.
+       */
    });
+
+
