@@ -207,7 +207,7 @@ define('Controls/Filter/Button/Panel', [
          headingCaption: rk('Отбираются'),
          headingStyle: 'secondary',
          orientation: 'vertical',
-         applyCaption: rk('Отобрать')
+         applyButtonCaption: rk('Отобрать')
       };
    };
 

@@ -1,24 +1,24 @@
-define('Controls/Filter/Button/Panel/Selector/FieldLink', [
+define('Controls/Filter/Button/Panel/Lookup', [
    'Core/Control',
-   'wml!Controls/Filter/Button/Panel/Selector/FieldLink',
-   'css!theme?Controls/Filter/Button/Panel/Selector/FieldLink'
+   'wml!Controls/Filter/Button/Panel/Lookup/Lookup',
+   'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup'
 ], function(Control, template) {
    /**
     * Control link with lookup
-    * @class Controls/Filter/Button/Panel/Selector/FieldLink
+    * @class Controls/Filter/Button/Panel/Lookup
     * @extends Controls/Control
     * @control
     * @public
     */
 
    /**
-    * @name Controls/Filter/Button/Panel/Selector/FieldLink#caption
+    * @name Controls/Filter/Button/Panel/Lookup#caption
     * @cfg {Object} Caption
     */
 
    'use strict';
 
-   var FieldLink = Control.extend({
+   var Lookup = Control.extend({
       _template: template,
       _passed: false,
 
@@ -26,10 +26,10 @@ define('Controls/Filter/Button/Panel/Selector/FieldLink', [
          this._children.lookup.showSelector();
       },
 
-      showLookup: function() {
+      _showLookup: function() {
          this._passed = true;
       }
    });
 
-   return FieldLink;
+   return Lookup;
 });

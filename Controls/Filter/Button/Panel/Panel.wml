@@ -46,7 +46,7 @@
                              attr:class="controls-FilterPanel__resetButton"/>
          </ws:if>
 
-         <Controls.Button viewMode="button" style="primary" caption="{{_options.applyCaption}}" on:click="_applyFilter()"
+         <Controls.Button viewMode="button" style="primary" caption="{{_options.applyButtonCaption}}" on:click="_applyFilter()"
                           attr:class="controls-FilterPanel__filterButton"/>
       </div>
    </ws:topArea>
