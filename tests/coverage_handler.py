@@ -33,6 +33,7 @@ class Coverage:
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
 
+        env = os.environ["WORKSPACE"]
         test_path = os.listdir(path)
         for tdir in test_path:
             path_list = []
@@ -54,9 +55,15 @@ class Coverage:
                     # получаем зависимости
                     for k in d:
                         # обрезаем пути, переменная берется из сборки
-                        env = os.environ["WORKSPACE"]
                         k = k.replace(os.sep.join([env, 'controls']), '')
                         coverage_result.append(k)
+                        component_path = os.path.splitext(k)[0]
+                        if os.path.exists(component_path):
+                            for style in os.listdir(component_path):
+                                if os.path.isfile(style):
+                                    style = style.replace(os.sep.join([env, 'controls']), '')
+                                    coverage_result.append(style)
+
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
 
@@ -73,7 +80,7 @@ class Coverage:
             for test_name in data:
                 for source in data[test_name]:
                     for file in change_files:
-                        if os.path.dirname(file) == os.path.dirname(source):
+                        if file in source:
                             test_result.append(test_name)
         return test_result
 
