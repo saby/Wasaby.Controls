@@ -29,6 +29,9 @@
    left: 0;
    right: 0;
    bottom: 0;
+
+   //the z-index is larger than itemActions so that itemActions does not overlap the folder border when drag'n'drop.
+   z-index: 2;
 }
 .controls-TreeGridView__dragTargetNode_first {
    border-left: @border-width_TreeGridView-item_dragging solid @border-color_TreeGridView-item_dragging;
