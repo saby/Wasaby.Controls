@@ -1,17 +1,32 @@
 .controls-TreeGrid__row-expander_size_s {
-   padding: @padding_TreeGridView-expander_size_s;
+   padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_s;
+   padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_s;
+   padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_s;
+   padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
 .controls-TreeGrid__row-expander_size_m {
-   padding: @padding_TreeGridView-expander_size_m;
+   padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_m;
+   padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_m;
+   padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_m;
+   padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_m;
 }
 .controls-TreeGrid__row-expander_size_l {
-   padding: @padding_TreeGridView-expander_size_l;
+   padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_l;
+   padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_l;
+   padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_l;
+   padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_l;
 }
 .controls-TreeGrid__row-expander_size_xl {
-   padding: @padding_TreeGridView-expander_size_xl;
+   padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_xl;
+   padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_xl;
+   padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_xl;
+   padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_xl;
 }
 .controls-TreeGrid__row-expander_size_default, .controls-TreeGrid__row-expanderPadding {
-   padding: @padding_TreeGridView-expander_size_default;
+   padding-top: @spacing_TreeGridView-row-expander-between-content_borderTop_s;
+   padding-bottom: @spacing_TreeGridView-row-expander-between-content_borderBottom_s;
+   padding-left: @spacing_TreeGridView-row-expander-between-content_borderLeft_s;
+   padding-right: @spacing_TreeGridView-row-expander-between-content_borderRight_s;
 }
 .controls-TreeGrid__row-expander, .controls-TreeGrid__row-expanderPadding {
    // Line-height description: https://habr.com/company/pt/blog/337450/
@@ -45,7 +60,7 @@
 }
 .controls-TreeGrid__row-expander_node:before,
 .controls-TreeGrid__row-expander_hiddenNode:before {
-   font-family: @icon-font;
+   font-family: @font-family-TreeGridView-icons;
    font-size: @font-size_TreeGridView-expander;
 }
 
@@ -66,16 +81,16 @@
    position: absolute;
 }
 .controls-TreeGrid__row-expander_node_collapsed:before {
-   content: @icon_TreeGridView-expander_node_collapsed;
+   content: @icon_TreeGridView-expander_node-collapsed;
 }
 .controls-TreeGrid__row-expander_node_expanded:before {
-   content: @icon_TreeGridView-expander_node_expanded;
+   content: @icon_TreeGridView-expander_node-expanded;
 }
 .controls-TreeGrid__row-expander_hiddenNode_collapsed:before {
-   content: @icon_TreeGridView-expander_hiddenNode_collapsed;
+   content: @icon_TreeGridView-expander_hiddenNode-collapsed;
 }
 .controls-TreeGrid__row-expander_hiddenNode_expanded:before {
-   content: @icon_TreeGridView-expander_hiddenNode_expanded;
+   content: @icon_TreeGridView-expander_hiddenNode-expanded;
 }
 .controls-TreeGrid__row {
    display: inline-flex;
@@ -89,10 +104,11 @@
    align-items: center;
 }
 .controls-TreeGrid__nodeFooterLoadMore {
-   padding: @padding_TreeGridView-nodeFooterHasMore;
+   padding-top: @spacing_TreeGridView-nodeFooterHasMore-between-content-borderTop;
+   padding-bottom: @spacing_TreeGridView-nodeFooterHasMore-between-content-borderBottom;
 }
 .controls-TreeGrid__row-levelPadding_size_default {
-   width: @width-TreeViewGrid-levelPadding_size_default;
+   width: @width-TreeViewGrid-levelPadding_size_s;
 }
 .controls-TreeGrid__row-levelPadding_size_s {
    width: @width-TreeViewGrid-levelPadding_size_s;
