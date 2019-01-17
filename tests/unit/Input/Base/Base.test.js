@@ -25,6 +25,9 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
+                  selectionStart: 0,
+                  selectionEnd: 0,
+                  value: '',
                   focus: function() {},
                   setSelectionRange: function(start, end) {
                      this.selectionStart = start;
@@ -55,6 +58,21 @@ define(
             });
 
             assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Base/ViewModel'));
+         });
+         it('Insert the value into the unfocused field.', function() {
+            ctrl._getActiveElement = function() {
+               return {};
+            };
+
+            ctrl._beforeMount({
+               value: ''
+            });
+            ctrl.paste('test');
+            ctrl._template(ctrl);
+
+            assert.equal(ctrl._getField().value, 'test');
+            assert.equal(ctrl._getField().selectionStart, 0);
+            assert.equal(ctrl._getField().selectionEnd, 0);
          });
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
@@ -194,6 +212,35 @@ define(
                assert.equal(ctrl._getField().selectionStart, 0);
                assert.equal(ctrl._getField().selectionEnd, 0);
                assert.equal(ctrl._viewModel.value, 'text');
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
+            it('In the value field " 12345". Select the value of "34". Enter "s" and " d " without synchronization cycle.', function() {
+               ctrl._beforeMount({
+                  value: '12345'
+               });
+
+               ctrl._getField().selectionStart = 2;
+               ctrl._getField().selectionEnd = 4;
+               ctrl._selectHandler();
+               ctrl._beforeUpdate({
+                  value: '12345'
+               });
+               ctrl._template(ctrl);
+
+               ctrl._getField().value = '12s5';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               ctrl._getField().value = '12d5';
+               ctrl._getField().selectionStart = 3;
+               ctrl._getField().selectionEnd = 3;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.equal(ctrl._viewModel.value, '12sd5');
                assert.deepEqual(ctrl._viewModel.selection, {
                   start: 4,
                   end: 4

@@ -11,8 +11,9 @@ define([
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
+   'Core/constants',
    'Controls/List/ListView'
-], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance) {
+], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -999,6 +1000,102 @@ define([
          }, 100);
       });
 
+      it('List navigation by keys and after reload', function(done) {
+         // mock function working with DOM
+         BaseControl._private.scrollToItem = function() {};
+
+         var
+            stopImmediateCalled = false,
+            preventDefaultCalled = false,
+
+            lnSource = new MemorySource({
+               idProperty: 'id',
+               data: data
+            }),
+            lnCfg = {
+               viewName: 'Controls/List/ListView',
+               source: lnSource,
+               keyProperty: 'id',
+               markedKey: 1,
+               viewModelConstructor: ListViewModel
+            },
+            lnCfg2 = {
+               viewName: 'Controls/List/ListView',
+               source: new MemorySource({
+                  idProperty: 'id',
+                  data: [{
+                     id: 'firstItem',
+                     title: 'firstItem'
+                  }]
+               }),
+               keyProperty: 'id',
+               markedKey: 1,
+               viewModelConstructor: ListViewModel
+            },
+            lnBaseControl = new BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+
+         setTimeout(function() {
+            assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid initial value of markedKey.');
+            lnBaseControl.reload();
+            setTimeout(function () {
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after reload.');
+
+               lnBaseControl._onViewKeyDown({
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  },
+                  nativeEvent: {
+                     keyCode: cConstants.key.down
+                  }
+               });
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
+
+               lnBaseControl._onViewKeyDown({
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  },
+                  nativeEvent: {
+                     keyCode: cConstants.key.space
+                  }
+               });
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "space".');
+
+               lnBaseControl._onViewKeyDown({
+                  stopImmediatePropagation: function() {
+                     stopImmediateCalled = true;
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
+                  },
+                  nativeEvent: {
+                     keyCode: cConstants.key.up
+                  }
+               });
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after press "up".');
+
+               assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
+               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
+
+               // reload with new source (first item with id "firstItem")
+               lnBaseControl._beforeUpdate(lnCfg2);
+
+               setTimeout(function() {
+                  assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 'firstItem', 'Invalid value of markedKey after set new source.');
+                  done();
+               }, 1);
+            }, 1);
+         }, 1);
+      });
+
       it('_onCheckBoxClick', function() {
          var rs = new RecordSet({
             idProperty: 'id',
@@ -1707,9 +1804,11 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(itemData, instance._listViewModel._activeItem);
-            assert.isTrue(itemData.contextEvent);
-            assert.equal(callBackCount, 3);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.isTrue(itemData.contextEvent);
+               assert.equal(callBackCount, 3);
+            }, 100);
 
             // dont show by long tap
             instance._isTouch = true;
@@ -1890,9 +1989,11 @@ define([
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            assert.equal(itemData, instance._listViewModel._activeItem);
-            assert.isFalse(itemData.contextEvent);
-            assert.equal(callBackCount, 3);
+            setTimeout(function() {
+               assert.equal(itemData, instance._listViewModel._activeItem);
+               assert.isFalse(itemData.contextEvent);
+               assert.equal(callBackCount, 3);
+            }, 100);
          });
 
          it('closeActionsMenu', function() {

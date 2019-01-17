@@ -60,6 +60,60 @@ define([
             assert.notInclude(component._stickyHeaderIds, headerId);
          });
       });
+
+      describe('_updateStickyShadow', function() {
+         it('should transfer an event if the header identifier is equal to the current one', function() {
+            const
+               component = createComponent(StickyHeader, options);
+
+            component._children.stickyHeaderShadow = {
+               start: sinon.fake()
+            };
+
+            component._updateStickyShadow(null, [component._index]);
+            sinon.assert.called(component._children.stickyHeaderShadow.start);
+         });
+
+         it('should not transfer an event if the header identifier is not equal to the current one', function() {
+            const
+               component = createComponent(StickyHeader, options);
+
+            component._children.stickyHeaderShadow = {
+               start: sinon.fake()
+            };
+
+            component._updateStickyShadow(null, [component._index + 1]);
+            sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
+         });
+      });
+
+      describe('_updateStickyHeight', function() {
+         it('should transfer an event if group is not fixed', function() {
+            const
+               component = createComponent(StickyHeader, options);
+
+            component._fixed = false;
+            component._children.updateStickyHeight = {
+               start: sinon.fake()
+            };
+
+            component._updateStickyHeight(null, 10);
+            sinon.assert.calledWith(component._children.updateStickyHeight.start, 10);
+         });
+
+         it('should not transfer an event if group is fixed', function() {
+            const
+               component = createComponent(StickyHeader, options);
+
+            component._fixed = true;
+            component._children.updateStickyHeight = {
+               start: sinon.fake()
+            };
+
+            component._updateStickyHeight(null, 10);
+            sinon.assert.notCalled(component._children.updateStickyHeight.start);
+         });
+      });
    });
 
 });

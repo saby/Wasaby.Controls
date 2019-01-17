@@ -1,1 +1,0 @@
-<div class="controls_ToolbarButton_Color_item controls_ToolbarButton_Color_item-{{itemData.item.color}}" title="{{itemData.item.title}}"></div>

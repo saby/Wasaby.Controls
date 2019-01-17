@@ -66,7 +66,7 @@ define(
 
          it('_beforeMount', () => {
             menu._beforeMount(config);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_link_medium');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_medium_popup');
          });
 
          it('_beforeUpdate', function() {
@@ -75,13 +75,13 @@ define(
                viewMode: 'link'
             };
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_link_small');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_popup');
             newOptions = {
                icon: 'icon-small icon-Doge icon-primary',
                viewMode: 'button'
             };
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton controls-MenuButton_button_small');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_small_popup');
          });
       });
    }

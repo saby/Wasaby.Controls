@@ -8,10 +8,7 @@ define('Controls-demo/Popup/Edit/Opener',
       'wml!Controls-demo/List/Grid/DemoBalancePrice',
       'wml!Controls-demo/List/Grid/DemoCostPrice',
       'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
-      'wml!Controls-demo/List/Grid/DemoName',
-      'wml!Controls-demo/List/Grid/DemoTasksPhoto',
-      'wml!Controls-demo/List/Grid/DemoTasksDescr',
-      'wml!Controls-demo/List/Grid/DemoTasksReceived',
+      'wml!Controls-demo/List/Grid/DemoName'
    ],
    function(Control, template, MemorySource, GridData) {
       'use strict';

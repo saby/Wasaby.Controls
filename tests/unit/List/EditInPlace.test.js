@@ -611,10 +611,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -633,10 +632,9 @@ define([
             });
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -653,10 +651,9 @@ define([
             eip._sequentialEditing = true;
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -678,10 +675,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -697,10 +693,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 27
-               }
+            eip._onKeyDown({}, {
+               keyCode: 27,
+               stopPropagation: function() {}
             });
          });
 
@@ -944,10 +939,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -964,10 +958,9 @@ define([
                treeModel.setExpandedItems([1, 2]);
                eip._editingItem = treeModel.at(5).getContents();
                eip._setEditingItemData(treeModel.at(5).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -987,10 +980,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -1008,10 +1000,9 @@ define([
                eip._sequentialEditing = true;
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -1034,10 +1025,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -1148,7 +1138,8 @@ define([
                nativeEvent: {
                   clientX: 10,
                   clientY: 20
-               }
+               },
+               type: 'click'
             });
             assert.equal(eip._clickItemInfo.item, newItem);
             assert.equal(eip._clickItemInfo.clientX, 10);
@@ -1174,7 +1165,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
 
@@ -1198,7 +1190,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
 
@@ -1229,7 +1222,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
 
@@ -1253,7 +1247,8 @@ define([
                nativeEvent: {
                   clientX: 0,
                   clientY: 0
-               }
+               },
+               type: 'click'
             });
          });
       });
