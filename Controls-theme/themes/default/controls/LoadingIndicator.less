@@ -1,18 +1,21 @@
-@size_LoadingIndicator:               @height_control_l;
-@size_LoadingIndicator-small:         @height_control_s;
-@size_LoadingIndicator-gap:           @spacing_default_m;
-@size_LoadingIndicator-gap-small:     @spacing_default_xxs;
-@border-radius_LoadingIndicator:      @size_LoadingIndicator-gap;
+@size_LoadingIndicator-l:             @height_control_l;
+@size_LoadingIndicator-s:             @height_control_s;
+
+@spacing_LoadingIndicator-between-content-border-l:     @spacing_default_m;
+@spacing_LoadingIndicator-between-content-border-s:     @spacing_default_xxs;
+
+@border-radius_LoadingIndicator:      @spacing_LoadingIndicator-between-content-border-l;
+
 @font-size_LoadingIndicator:          @font-size_text_m;
 @line-height_LoadingIndicator:        @line-height_default;
-@spacing_LoadingIndicator-small:      @spacing_default_s;
+@color_LoadingIndicator-text:         @color_text_default;
 
+@color_LoadingIndicator-gradient-white:      @color9; //TODO Delete unnecessary variable
+@color_LoadingIndicator-gradient-gray:       @color4; //TODO Delete unnecessary variable
 
-@color_LoadingIndicator-white-gradient:      @color9;
-@color_LoadingIndicator-gray-gradient:       @color4;
+@background-url_LoadingIndicator-l:          url('img/ajax-loader-indicator.gif');
+@background-url_LoadingIndicator-s:          url('img/ajax-loader-16x16-wheel.gif');
 @background-color_LoadingIndicator:          @background-color_default;
-@background-url_LoadingIndicator:            url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
-@background-url_LoadingIndicator-small:      url('img/ajax-loader-16x16-wheel.gif');
-@color_LoadingIndicator-text:                @color_text_default;
+
 @color_LoadingIndicator-overlay-default:     transparent;
 @color_LoadingIndicator-overlay-dark:        @color_overlay_default;
