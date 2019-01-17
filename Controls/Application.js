@@ -39,12 +39,12 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#head
-    * @cfg {Content} Additional content of <head></head>. Can accept more than one root node
+    * @cfg {Content} Additional content of HEAD tag. Can accept more than one root node
     */
 
    /**
     * @name Controls/Application#content
-    * @cfg {Content} Content of <body></body>
+    * @cfg {Content} Content of BODY tag
     */
 
    /**
@@ -85,7 +85,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#title
-    * @cfg {String} <title></title> tag value
+    * @cfg {String} title of the tab
     */
 
    /**
