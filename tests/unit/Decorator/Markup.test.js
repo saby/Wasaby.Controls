@@ -328,12 +328,14 @@ define([
             var json = [
                ['p', ['strong', 'BaBare;gjwergo'], 'aBaweruigerhw', ['em', 'aBa']],
                ['p', 'aba, abA, aBa, aBA, Aba, AbA, ABa, ABA'],
-               ['p', 'abababababa']
+               ['p', 'abababababa'],
+               ['p', 'no highlight']
             ];
             var html = '<div>' +
-               '<p><strong>B<span class="controls-Highlight_found">aBa</span>re;gjwergo</strong><span class="controls-Highlight_found">aBa</span>weruigerhw<em><span class="controls-Highlight_found">aBa</span></em></p>' +
-               '<p><span class="controls-Highlight_found">aba</span>, <span class="controls-Highlight_found">abA</span>, <span class="controls-Highlight_found">aBa</span>, <span class="controls-Highlight_found">aBA</span>, <span class="controls-Highlight_found">Aba</span>, <span class="controls-Highlight_found">AbA</span>, <span class="controls-Highlight_found">ABa</span>, <span class="controls-Highlight_found">ABA</span></p>' +
-               '<p><span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span></p>' +
+               '<p><strong>B<span class="controls-MarkupDecorator_highlight">aBa</span>re;gjwergo</strong><span class="controls-MarkupDecorator_highlight">aBa</span>weruigerhw<em><span class="controls-MarkupDecorator_highlight">aBa</span></em></p>' +
+               '<p><span class="controls-MarkupDecorator_highlight">aba</span>, <span class="controls-MarkupDecorator_highlight">abA</span>, <span class="controls-MarkupDecorator_highlight">aBa</span>, <span class="controls-MarkupDecorator_highlight">aBA</span>, <span class="controls-MarkupDecorator_highlight">Aba</span>, <span class="controls-MarkupDecorator_highlight">AbA</span>, <span class="controls-MarkupDecorator_highlight">ABa</span>, <span class="controls-MarkupDecorator_highlight">ABA</span></p>' +
+               '<p><span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span></p>' +
+               '<p>no highlight</p>' +
                '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
          });
