@@ -6,7 +6,6 @@
       attr:class="xml ControlsDemo-TestXslt__xml ControlsDemo-TestXslt__area"
       minLines="{{20}}"
       maxLines="{{20}}"
-      on:input="change('xml')"
       bind:value="_xml"
    />
 
@@ -16,7 +15,6 @@
       attr:class="xsl ControlsDemo-TestXslt__xsl ControlsDemo-TestXslt__area"
       minLines="{{20}}"
       maxLines="{{20}}"
-      on:input="change('xsl')"
       bind:value="_xsl"
    />
 
@@ -26,7 +24,6 @@
       attr:class="result ControlsDemo-TestXslt__result ControlsDemo-TestXslt__area"
       minLines="{{20}}"
       maxLines="{{20}}"
-      on:input="change('result')"
       bind:value="_result"
    />
    

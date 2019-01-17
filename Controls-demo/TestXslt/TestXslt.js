@@ -30,12 +30,6 @@ define('Controls-demo/TestXslt/TestXslt', [
       _xsl: '',
       _result: '',
       status: 'Не проверено',
-      change: function(e, target) {
-         if (this.status !== 'Не проверено') {
-            this.status = 'Не проверено';
-         }
-         this[target] = e.target.value;
-      },
       check: function() {
          var self = this;
          var a = new Xslt({xml: self._xml, xsl: self._xsl, errback: self.refused});
