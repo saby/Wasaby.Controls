@@ -25,6 +25,9 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
+                  selectionStart: 0,
+                  selectionEnd: 0,
+                  value: '',
                   focus: function() {},
                   setSelectionRange: function(start, end) {
                      this.selectionStart = start;
@@ -55,6 +58,21 @@ define(
             });
 
             assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Base/ViewModel'));
+         });
+         it('Insert the value into the unfocused field.', function() {
+            ctrl._getActiveElement = function() {
+               return {};
+            };
+
+            ctrl._beforeMount({
+               value: ''
+            });
+            ctrl.paste('test');
+            ctrl._template(ctrl);
+
+            assert.equal(ctrl._getField().value, 'test');
+            assert.equal(ctrl._getField().selectionStart, 0);
+            assert.equal(ctrl._getField().selectionEnd, 0);
          });
          it('Pass null as the value option.', function() {
             ctrl._getActiveElement = function() {

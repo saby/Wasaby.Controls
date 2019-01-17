@@ -8,6 +8,8 @@ define('Controls/Explorer', [
    'Controls/Utils/applyHighlighter',
    'WS.Data/Chain',
    'Core/core-instance',
+   'Core/constants',
+   'Controls/Utils/keysHandler',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
@@ -24,9 +26,16 @@ define('Controls/Explorer', [
    tmplNotify,
    applyHighlighter,
    chain,
-   cInstance
+   cInstance,
+   cConstants,
+   keysHandler
 ) {
    'use strict';
+
+   var
+      HOT_KEYS = {
+         backByPath: cConstants.key.backspace
+      };
 
    var
       ITEM_TYPES = {
@@ -65,15 +74,46 @@ define('Controls/Explorer', [
                self._options.dataLoadCallback(data);
             }
          },
+         itemsReadyCallback: function(self, items) {
+            self._items = items;
+
+            if (self._options.itemsReadyCallback) {
+               self._options.itemsReadyCallback(items);
+            }
+         },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
                self._root = self._options.root;
             }
             self._viewMode = viewMode;
-            self._swipeViewMode = viewMode === 'search' ? 'list' : viewMode;
+            self._swipeViewMode = viewMode === 'search' ? 'table' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
             self._leftPadding = viewMode === 'search' ? 'search' : undefined;
+         },
+         backByPath: function(self) {
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               if (self._breadCrumbsItems.length > 1) {
+                  _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 2].getId());
+               } else {
+                  _private.setRoot(self, self._options.root);
+               }
+            }
+         },
+         dragItemsFromRoot: function(self, dragItems) {
+            var
+               item,
+               itemFromRoot = true;
+
+            for (var i = 0; i < dragItems.length; i++) {
+               item = self._items.getRecordById(dragItems[i]);
+               if (!item || item.get(self._options.parentProperty) !== self._root) {
+                  itemFromRoot = false;
+                  break;
+               }
+            }
+
+            return itemFromRoot;
          }
       };
 
@@ -113,7 +153,8 @@ define('Controls/Explorer', [
 
       _beforeMount: function(cfg) {
          this._dataLoadCallback = _private.dataLoadCallback.bind(null, this);
-         this._root = this._options.root;
+         this._itemsReadyCallback = _private.itemsReadyCallback.bind(null, this);
+         this._root = cfg.root;
          this._breadCrumbsDragHighlighter = this._dragHighlighter.bind(this);
          _private.setViewMode(this, cfg.viewMode);
       },
@@ -135,7 +176,9 @@ define('Controls/Explorer', [
       },
       _documentDragStart: function(event, dragObject) {
          if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
-            this._dragOnBreadCrumbs = true;
+
+            //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
+            this._dragOnBreadCrumbs = this._root !== this._options.root || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
@@ -148,6 +191,9 @@ define('Controls/Explorer', [
       },
       _onBreadCrumbsClick: function(event, itemId) {
          _private.setRoot(this, itemId);
+      },
+      _onExplorerKeyDown: function(event) {
+         keysHandler(event, HOT_KEYS, _private, this);
       },
       beginEdit: function(options) {
          return this._children.treeControl.beginEdit(options);
