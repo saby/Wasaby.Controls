@@ -141,9 +141,8 @@ define('Controls/Popup/InfoBox',
                   onResult: self._resultHandler
                },
                templateOptions: {
-                  content: self._options.template,
-                  contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions,
+                  template: self._options.templateName || self._options.template,
+                  templateOptions: self._options.templateOptions,
                }
             };
          }
@@ -162,6 +161,9 @@ define('Controls/Popup/InfoBox',
             this._resultHandler = this._resultHandler.bind(this);
             if (options.float) {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+            }
+            if (options.templateName) {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 
