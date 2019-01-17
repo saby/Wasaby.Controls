@@ -17,8 +17,26 @@ define('Controls/Popup/Opener/BaseController',
             };
          },
          getMargins: function(config) {
-            // create fakeDiv for calculate margins
+            // If the classes have not changed, then the indents remain the same
+            if (config.className === config.popupOptions.className) {
+               if (!config.margins) {
+                  config.margins = {
+                     top: 0,
+                     left: 0
+                  };
+               }
+            } else {
+               config.className = config.popupOptions.className;
+               config.margins = _private.getFakeDivMargins(config);
+            }
 
+            return {
+               top: config.margins.top,
+               left: config.margins.left
+            };
+         },
+
+         getFakeDivMargins: function(config) {
             if (!document) {
                return {
                   left: 0,
@@ -26,18 +44,18 @@ define('Controls/Popup/Opener/BaseController',
                };
             }
 
+            // create fakeDiv for calculate margins
             var fakeDiv = document.createElement('div');
             fakeDiv.className = config.popupOptions.className;
             document.body.appendChild(fakeDiv);
 
-            var style = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
-            var margins = {
-               top: parseInt(style.marginTop, 10),
-               left: parseInt(style.marginLeft, 10)
+            var styles = fakeDiv.currentStyle || window.getComputedStyle(fakeDiv);
+            var sizes = {
+               top: parseInt(styles.marginTop, 10),
+               left: parseInt(styles.marginLeft, 10)
             };
-
             document.body.removeChild(fakeDiv);
-            return margins;
+            return sizes;
          },
 
          // Get manager Controller dynamically, it cannot be loaded immediately due to cyclic dependencies
@@ -167,14 +185,14 @@ define('Controls/Popup/Opener/BaseController',
 
          _getPopupSizes: function(config, container) {
             var containerSizes = _private.getContentSizes(container);
-            var sizes = {
+
+            config.sizes = {
                width: config.popupOptions.maxWidth || containerSizes.width,
                height: config.popupOptions.maxHeight || containerSizes.height,
 
                // Optimization: to consider the styles on each update is expensive
-               margins: config.sizes.margin || _private.getMargins(config, container)
+               margins: _private.getMargins(config, container)
             };
-            config.sizes = sizes;
             return config.sizes;
          },
          _checkContainer: function(item, container, stage) {
@@ -186,7 +204,8 @@ define('Controls/Popup/Opener/BaseController',
                return false;
             }
             return true;
-         }
+         },
+         _private: _private
       });
 
       BaseController.prototype.POPUP_STATE_INITIALIZING = BaseController.POPUP_STATE_INITIALIZING = 'initializing';

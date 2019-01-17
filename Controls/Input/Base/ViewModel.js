@@ -32,7 +32,7 @@ define('Controls/Input/Base/ViewModel',
          },
 
          _convertToDisplayValue: function(value) {
-            return value;
+            return value === null ? '' : value;
          },
 
          get shouldBeChanged() {
