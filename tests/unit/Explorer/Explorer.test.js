@@ -280,7 +280,7 @@ define([
 
          beforeEach(function() {
             var
-               items = new RecordSet({
+               items = new collection.RecordSet({
                   rawData: [
                      { id: 1, title: 'item1', parent: null },
                      { id: 2, title: 'item2', parent: 1 },
