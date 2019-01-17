@@ -275,6 +275,7 @@ define('Controls/List/ListViewModel',
             } else {
                this._nextVersion();
             }
+            this._notify('onListChange');
          },
 
          setItemActions: function(item, actions) {
