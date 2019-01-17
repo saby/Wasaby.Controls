@@ -21,12 +21,9 @@ define('Controls/Input/Password/ViewModel',
          isReplaceWithAsterisks: function(options) {
             return !(options.autoComplete || options.passwordVisible);
          },
-         calcCachedValue: function(splitValue, value) {
-            var cachedValue = value.substring(0, splitValue.before.length);
-            cachedValue += splitValue.insert;
-            cachedValue += value.substring(value.length - splitValue.after.length);
-
-            return cachedValue;
+         adjustSplitValue: function(splitValue, value) {
+            splitValue.before = value.substring(0, splitValue.before.length);
+            splitValue.after = value.substring(value.length - splitValue.after.length);
          },
          calcDisplayValue: function(replaceWithAsterisks, value) {
             return replaceWithAsterisks ? _private.replaceOnAsterisks(value) : value;
@@ -34,16 +31,6 @@ define('Controls/Input/Password/ViewModel',
       };
 
       var ViewModel = BaseViewModel.extend({
-         _cachedValue: null,
-
-         _convertToValue: function(displayValue) {
-            if (this._cachedValue === null) {
-               return displayValue;
-            }
-
-            return this._cachedValue;
-         },
-
          _convertToDisplayValue: function(value) {
             var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
 
@@ -53,16 +40,13 @@ define('Controls/Input/Password/ViewModel',
          handleInput: function(splitValue, inputType) {
             var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
 
-            this._cachedValue = _private.calcCachedValue(splitValue, this._value);
-
             if (replaceWithAsterisks) {
-               this._cachedValue = _private.calcCachedValue(splitValue, this._value);
-               splitValue.insert = _private.replaceOnAsterisks(splitValue.insert);
+               _private.adjustSplitValue(splitValue, this._value);
             }
 
             var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
 
-            this._cachedValue = null;
+            this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
 
             return result;
          }
