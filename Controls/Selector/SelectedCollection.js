@@ -6,10 +6,11 @@ define('Controls/Selector/SelectedCollection',
       'Types/chain',
       'Controls/Utils/tmplNotify',
       'Controls/Selector/SelectedCollection/Utils',
+      'WS.Data/Utils',
       'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, chain, tmplNotify, selectedCollectionUtils) {
+   function(Control, template, ItemTemplate, Chain, tmplNotify, selectedCollectionUtils, utils) {
       'use strict';
 
       /**
@@ -45,8 +46,8 @@ define('Controls/Selector/SelectedCollection',
                templateOptions = self._templateOptions || {},
                itemsIsChanged = self._options.items !== options.items;
 
-            if (options.items.clone && (!templateOptions.items || itemsIsChanged)) {
-               templateOptions.items = options.items.clone();
+            if (options.items && (!templateOptions.items || itemsIsChanged)) {
+               templateOptions.items = utils.clone(options.items);
             }
 
             templateOptions.readOnly = options.readOnly;
