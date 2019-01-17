@@ -7,7 +7,6 @@ define('Controls-demo/Example/Input/Tag',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
    function(Control, template) {
-
       'use strict';
 
       return Control.extend({
@@ -26,17 +25,15 @@ define('Controls-demo/Example/Input/Tag',
          _value5: '10 500.00',
 
          _showInfoBox: function(event, target) {
-            var infoBox = this._children.infoBox;
+            var cfg = {
+               target: target,
+               message: 'Tooltip text',
+               position: 'tl'
+            };
 
-            if (this._currentActiveTag !== target) {
-               infoBox.open({
-                  target: target,
-                  message: 'Tooltip text',
-                  position: 'tl'
-               });
-               this._currentActiveTag = target;
-            }
+            this._notify('openInfoBox', [cfg], {
+               bubbling: true
+            });
          }
       });
-   }
-);
+   });

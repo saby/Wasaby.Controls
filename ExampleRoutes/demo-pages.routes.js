@@ -290,6 +290,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: дропдаун
+      '/demo-ws4-input-dropdown': function(req, res) {
+         requirejs('Controls-demo/Input/Dropdown/DropdownApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Input/Dropdown/DropdownApplication',
+            initDependencies: false
+         }, []);
+      },
+
 
 
       /*

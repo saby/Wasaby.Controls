@@ -3,9 +3,10 @@ define('Controls/Popup/Previewer',
       'Core/Control',
       'wml!Controls/Popup/Previewer/Previewer',
       'Core/helpers/Function/debounce',
-      'Controls/Popup/Opener/Previewer'
+      'Controls/Popup/Opener/Previewer',
+      'Core/IoC'
    ],
-   function(Control, template, debounce, PreviewerOpener) {
+   function(Control, template, debounce, PreviewerOpener, IoC) {
 
       'use strict';
 
@@ -52,9 +53,8 @@ define('Controls/Popup/Previewer',
                   onResult: self._resultHandler
                },
                templateOptions: {
-                  content: self._options.template,
-                  contentTemplateName: self._options.templateName,
-                  contentTemplateOptions: self._options.templateOptions
+                  template: self._options.templateName || self._options.template,
+                  templateOptions: self._options.templateOptions
                },
                closeChildWindows: self._options.closeChildWindows
             };
@@ -67,10 +67,13 @@ define('Controls/Popup/Previewer',
 
          _isNewEnvironment: PreviewerOpener.isNewEnvironment,
 
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
+            if (options.templateName) {
+               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+            }
          },
 
          _open: function(event) {
