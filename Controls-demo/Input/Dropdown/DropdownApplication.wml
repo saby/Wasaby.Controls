@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Dropdown">
+   <ws:content>
+      <Controls-demo.Input.Dropdown.Dropdown/>
+   </ws:content>
+</Controls.Application.ApplicationWrapper>
