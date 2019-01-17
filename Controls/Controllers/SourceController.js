@@ -41,7 +41,7 @@ define('Controls/Controllers/SourceController',
                return dataSet.getAll ? dataSet.getAll() : dataSet;
             }));
 
-            if (cInstance.instanceOfModule(dataSource, 'WS.Data/Source/Memory')) {
+            if (cInstance.instanceOfModule(dataSource, 'Types/source:Memory')) {
 
                /*Проблема в том что деферред с синхронным кодом статического источника выполняется сихронно.
                 в итоге в коолбэк релоада мы приходим в тот момент, когда еще не отработал _beforeMount и заполнение опций, и не можем обратиться к this._options*/

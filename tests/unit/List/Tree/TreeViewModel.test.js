@@ -389,9 +389,9 @@ define([
                   notifiedOnNodeRemoved = true;
                }
             };
-            treeViewModel._onCollectionChange(null, collection.IBind.ACTION_REMOVE, null, null, removedItems1, null);
+            treeViewModel._onCollectionChange(null, collection.IObservable.ACTION_REMOVE, null, null, removedItems1, null);
             assert.deepEqual(treeViewModel.getExpandedItems(), { 'mi2': true }, 'Invalid value "_expandedItems" after "onCollectionChange".');
-            treeViewModel._onCollectionChange(null, collection.IBind.ACTION_REMOVE, null, null, removedItems2, null);
+            treeViewModel._onCollectionChange(null, collection.IObservable.ACTION_REMOVE, null, null, removedItems2, null);
             assert.deepEqual(treeViewModel.getExpandedItems(), {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });

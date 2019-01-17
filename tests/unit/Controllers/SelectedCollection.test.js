@@ -63,8 +63,8 @@ define([
 
          var items = SelectedCollection._private.getItems(self);
 
-         assert.isTrue(items['[WS.Data/Collection/List]']);
-         assert.isTrue(self._items['[WS.Data/Collection/List]']);
+         assert.isTrue(items['[Types/_collection/List]']);
+         assert.isTrue(self._items['[Types/_collection/List]']);
       });
 
       it('addItem', function() {
