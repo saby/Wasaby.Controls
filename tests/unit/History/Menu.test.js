@@ -30,6 +30,7 @@ define(
          filter: { id: 'test' },
          viewMode: 'link',
          icon: 'icon-small',
+         showHeader: true,
          source: new Memory({
             data: items,
             idProperty: 'id'
