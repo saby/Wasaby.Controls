@@ -394,6 +394,12 @@ define('Controls/Input/Base',
          _hasHorizontalScroll: hasHorizontalScroll,
 
          /**
+          * @type {Boolean} Determines whether was a touch to the field.
+          * @private
+          */
+         _fromTouch: false,
+
+         /**
           * @type {Number|null} The version of IE browser in which the control is build.
           * @private
           */
@@ -667,7 +673,7 @@ define('Controls/Input/Base',
 
             this._focusByMouseDown = false;
 
-            if (this._isMobileIOS) {
+            if (this._isMobileIOS && this._fromTouch) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
 
@@ -686,11 +692,16 @@ define('Controls/Input/Base',
              */
             this._getField().scrollLeft = 0;
 
-            if (this._isMobileIOS) {
+            if (this._isMobileIOS && this._fromTouch) {
                EventBus.globalChannel().notify('MobileInputFocusOut');
+               this._fromTouch = false;
             }
 
             _private.callChangeHandler(this);
+         },
+
+         _touchStartHandler: function() {
+            this._fromTouch = true;
          },
 
          _mouseDownHandler: function() {
