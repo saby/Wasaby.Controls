@@ -37,8 +37,8 @@ define('Controls/Search/Input/Container',
             }
          },
 
-         _notifySearch: function(value) {
-            this._notify('search', [value], {bubbling: true});
+         _notifySearch: function(value, force) {
+            this._notify('search', [value || '', force], {bubbling: true});
          },
          
          _valueChanged: function(event, value) {
@@ -47,7 +47,7 @@ define('Controls/Search/Input/Container',
          },
          
          _searchClick: function() {
-            this._notifySearch(this._value);
+            this._notifySearch(this._value, true);
          },
          
          _resetClick: function() {
@@ -56,7 +56,7 @@ define('Controls/Search/Input/Container',
          
          _keyDown: function(event) {
             if (event.nativeEvent.keyCode === 13) {
-               this._notifySearch(this._value);
+               this._notifySearch(this._value, true);
             }
          }
       });
