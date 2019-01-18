@@ -211,15 +211,18 @@
             this._select = null;
          },
          _beforeUpdate: function(newOptions) {
+            var valueChanged = this._options.value !== newOptions.value;
+            
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
-            if (!isEqual(this._options.filter, newOptions.filter)) {
-               _private.setFilter(this, newOptions.filter);
-            }
       
-            if (this._options.value !== newOptions.value) {
+            if (valueChanged) {
                this._searchValue = newOptions.value;
+            }
+   
+            if (valueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+               _private.setFilter(this, newOptions.filter);
             }
       
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {

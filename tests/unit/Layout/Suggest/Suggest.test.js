@@ -390,7 +390,9 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          var options = {
             emptyTemplate: 'anyTpl',
             footerTemplate: 'anyTp',
-            suggestState: true
+            suggestState: true,
+            value: '',
+            searchParam: 'testSearchParam'
          };
          var suggestComponent = new Suggest(options);
          suggestComponent.saveOptions(options);
@@ -401,6 +403,10 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
          assert.equal(suggestComponent._dependenciesDeferred, null);
+   
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
+         assert.equal(suggestComponent._searchValue, 'test');
       });
    
       it('Suggest::_updateSuggestState', function() {
