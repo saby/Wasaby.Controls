@@ -94,8 +94,8 @@ define('Controls/Controllers/_SearchController',
             this._options = options;
          },
          
-         search: function(value) {
-            if (value.length >= this._options.minSearchLength) {
+         search: function(value, force) {
+            if (value.length >= this._options.minSearchLength || force && value.length) {
                _private.search(this, value);
             } else {
                _private.abort(this);
@@ -115,6 +115,7 @@ define('Controls/Controllers/_SearchController',
          }
          
       });
-      
+   
+      SearchController._private = _private;
       return SearchController;
    });

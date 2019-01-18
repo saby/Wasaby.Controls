@@ -52,8 +52,7 @@
       "eager": true,
       "report-dir": "./application/artifacts/coverage"
    },
-   "dependencies": {
-   },
+   "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
       "body-parser": "^1.18.3",

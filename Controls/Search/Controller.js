@@ -139,8 +139,8 @@ define('Controls/Search/Controller',
             }
          },
 
-         _search: function(event, value) {
-            _private.getSearchController(this).search(value);
+         _search: function(event, value, force) {
+            _private.getSearchController(this).search(value, force);
             this._searchValue = value;
          },
    
