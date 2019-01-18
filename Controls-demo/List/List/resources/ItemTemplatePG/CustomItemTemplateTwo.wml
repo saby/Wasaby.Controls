@@ -1,0 +1,13 @@
+<ws:partial template="wml!Controls/List/ItemTemplate"
+            marker="{{true}}"
+            itemData="{{itemData}}">
+    <ws:contentTemplate>
+        <div>
+            <div style="display: flex; flex-direction: row; justify-content: space-between">
+                <span>{{itemData.item.get('title')}}</span>
+                <span style="color: #EF463A; font-size: 16px">Sale!</span>
+            </div>
+            <div><s>999 &#8364;</s>&nbsp;&nbsp;&nbsp;<b>499 &#8364;</b></div>
+        </div>
+    </ws:contentTemplate>
+</ws:partial>

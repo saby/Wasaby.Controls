@@ -12,6 +12,9 @@ define('Controls/List/resources/utils/ItemsUtil', [
          if (cfg.groupMethod) {
             projCfg.group = cfg.groupMethod;
          }
+         if (cfg.groupingKeyCallback) {
+            projCfg.group = cfg.groupingKeyCallback;
+         }
          if (cfg.loadItemsStrategy === 'merge') {
             projCfg.unique = true;
          }

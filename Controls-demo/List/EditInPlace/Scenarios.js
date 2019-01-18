@@ -470,7 +470,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          this._counter = 5;
       },
 
-      _itemsGroupMethod: function(item) {
+      _groupingKeyCallback: function(item) {
          return item.get('type');
       },
 

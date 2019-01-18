@@ -16,7 +16,7 @@
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
       </ws:editingConfig>
-      <ws:itemsGroup method="{{_itemsGroupMethod}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
+      <ws:itemsGroup method="{{_groupingKeyCallback}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
    </Controls.Grid>
    <div class="ControlsDemo-EipScenarios__tableFooter">
       <Controls.List.AddButton caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
@@ -30,11 +30,11 @@
       columns="{{ _gridColumns2 }}"
       dataLoadCallback="{{_dataLoadCallback}}"
       showRowSeparator="{{ true }}"
-      keyProperty="id">
+      keyProperty="id"
+      resultsPosition="top">
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
       </ws:editingConfig>
-      <ws:results position="top" />
    </Controls.Grid>
    <div class="ControlsDemo-EipScenarios__tableFooter">
       <Controls.List.AddButton caption="{[Наименование]}" />
@@ -62,10 +62,10 @@
       columns="{{ _gridColumns5 }}"
       dataLoadCallback="{{_dataLoadCallback}}"
       showRowSeparator="{{ true }}"
-      keyProperty="id">
+      keyProperty="id"
+      resultsPosition="top">
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
       </ws:editingConfig>
-      <ws:results position="top" />
    </Controls.Grid>
 </div>

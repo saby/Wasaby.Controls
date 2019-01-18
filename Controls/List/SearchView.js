@@ -1,7 +1,6 @@
 define('Controls/List/SearchView', [
    'Controls/List/Grid/GridView',
    'wml!Controls/List/SearchView/Item',
-   'css!theme?Controls/List/SearchView/SearchView',
    'Controls/BreadCrumbs'
 ], function(GridView, DefaultItemTpl) {
 

@@ -11,7 +11,7 @@ define('Controls/interface/ISource', [
 
    /**
     * @name Controls/interface/ISource#source
-    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
+    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for working with data.
     * @example
     * The list will be rendered data from _source
     * <pre>
@@ -45,8 +45,8 @@ define('Controls/interface/ISource', [
    /**
     * @name Controls/interface/ISource#keyProperty
     * @cfg {String} Name of the item property that uniquely identifies collection item.
+    * @remark For example, the identifier may be the primary key of the record in the database.
     * @example
-    * The option selectedKey contains a value from the "key" field of the selected record.
     * <pre>
     *    <Controls.List
     *       source = "{{_source}}"

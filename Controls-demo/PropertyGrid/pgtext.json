@@ -1658,7 +1658,7 @@
             "type": "function|String",
             "title": "Group template."
           },
-          "groupMethod": {
+          "groupingKeyCallback": {
             "type": "function",
             "title": "Function that returns group identifier."
           },
@@ -2193,29 +2193,17 @@
             "title": "Template inside popup.",
             "type": "function|String"
           },
-          "minWidth": {
+          "width": {
             "title": "The minimum width of popup.",
             "type": "Number"
           },
-          "maxWidth": {
-            "title": "The maximum width of popup.",
-            "type": "Number"
-          },
-          "minHeight": {
+          "height": {
             "title": "The minimum height of popup.",
             "type": "Number"
           },
           "maxHeight": {
             "title": "The maximum height of popup.",
             "type": "Number"
-          },
-          "maximize": {
-            "title": "Determines whether the control is displayed in full screen.",
-            "type": "Boolean"
-          },
-          "resizable": {
-            "title": "Determines whether popup can be resized.",
-            "type": "Boolean"
           }
         }
       }

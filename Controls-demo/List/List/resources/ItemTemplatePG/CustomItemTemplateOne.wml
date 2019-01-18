@@ -1,0 +1,10 @@
+<ws:partial template="wml!Controls/List/ItemTemplate"
+            marker="{{true}}"
+            itemData="{{itemData}}">
+    <ws:contentTemplate>
+        <div>
+            <h5>It is a custom tpl of</h5>
+            <div>{{itemData.item.get('title')}}</div>
+        </div>
+    </ws:contentTemplate>
+</ws:partial>

@@ -19,6 +19,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @category Popup
           * @author Красильников А.С.
           * @mixes Controls/Popup/Templates/Stack/StackTemplateStyles
+          * @demo Controls-demo/Popup/Templates/StackTemplatePG
           */
 
          /**
@@ -61,7 +62,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonStyle
+          * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonViewMode
           * @cfg {String} Close button display style.
           * @variant default
           * @variant light
