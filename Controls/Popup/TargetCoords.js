@@ -4,10 +4,8 @@ define('Controls/Popup/TargetCoords',
    ],
 
    function(getDimensions) {
-
       return {
          get: function(target) {
-
             if (!target) {
                throw new Error('Target parameter is required');
             }
@@ -52,5 +50,4 @@ define('Controls/Popup/TargetCoords',
             };
          }
       };
-   }
-);
+   });
