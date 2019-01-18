@@ -1918,40 +1918,15 @@
             "default": false,
             "title": "Determines whether text is selected when input is clicked."
           },
-          "autoComplete": {
+          "autocomplete": {
             "type": "Boolean",
             "default": false,
             "title": "Determines whether to use browser-based auto-complete field."
-          },
-          "style": {
-            "type": "enum",
-            "default": "info",
-            "title": "Field style.",
-            "enum": {
-              "primary": "- display style to attract attention.",
-              "success": "-  the display style of the field with success.",
-              "warning": "-  the display style of the field with warning.",
-              "danger": "- the display style of the field with danger.",
-              "info": "- information field display style.",
-              "default": "Gray field.",
-              "header": "White field."
-            }
           },
           "value": {
             "type": "String",
             "default": "'' (empty string)",
             "title": "Text in the field."
-          },
-          "tagStyle": {
-            "type": "enum",
-            "title": "Style of the tag (colored indicator shown at the top right corner of the field).",
-            "enum": {
-              "secondary": "secondary",
-              "success": "success",
-              "primary": "primary",
-              "danger": "danger",
-              "info": "info"
-            }
           },
           "readOnly": {
             "type": "Boolean",

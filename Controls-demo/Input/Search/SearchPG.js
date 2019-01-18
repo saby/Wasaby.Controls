@@ -25,11 +25,6 @@ define('Controls-demo/Input/Search/SearchPG',
                value: {
                   readOnly: true
                },
-               tagStyle: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  selectedKey: 0
-               },
 
                constraint: {
                   items: [
@@ -47,15 +42,14 @@ define('Controls-demo/Input/Search/SearchPG',
             };
             this._componentOptions = {
                name: 'inputSearch',
-               tagStyle: 'primary',
                constraint: '',
                trim: false,
                value: '',
                maxLength: 100,
                selectOnClick: true,
+               autocomplete: true,
                readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: ''
+               tooltip: 'myTooltip'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

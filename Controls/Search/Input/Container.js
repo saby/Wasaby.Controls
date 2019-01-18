@@ -7,7 +7,7 @@ define('Controls/Search/Input/Container',
    function(Control, template) {
       
       /**
-       * Special container for component with {@link Controls/Input/interface/IInputText}.
+       * Special container for component with {@link Controls/Input/interface/IInputField}.
        * Listens for child's "valueChanged" event and notify bubbling event "search".
        * NOTE: must be located inside {@link Controls/Search/Controller}.
        *

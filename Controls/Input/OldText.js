@@ -22,7 +22,7 @@ define('Controls/Input/OldText',
        * @extends Core/Control
        *
        * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputField
        * @mixes Controls/Input/interface/IPaste
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputPlaceholder
@@ -73,7 +73,7 @@ define('Controls/Input/OldText',
        *       ...
        *    });
        * </pre>
-       * @see Controls/Input/interface/IInputText#inputCompleted
+       * @see Controls/Input/interface/IInputField#inputCompleted
        */
 
       /**

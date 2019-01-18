@@ -18,7 +18,11 @@ define('Controls/Input/Search',
        * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
        *
        * @class Controls/Input/Search
-       * @extends Controls/Input/Text
+       * @mixes Controls/Input/interface/IInputField
+       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IPaste
+       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/interface/ITooltip
        *
        * @mixes Controls/Input/Search/Styles
        *
