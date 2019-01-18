@@ -2,7 +2,7 @@ define('Controls/Input/Search',
    [
       'Core/Control',
       'wml!Controls/Input/Search/Search',
-      'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/Input/OldText/OldViewModel',
       'Core/constants',
       'css!theme?Controls/Input/Search/Search'
    ],
@@ -24,7 +24,7 @@ define('Controls/Input/Search',
        *
        * @control
        * @public
-       * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+       * @demo Controls-demo/Input/Search/SearchPG
        *
        * @category Input
        * @author Золотова Э.Е.
@@ -32,7 +32,7 @@ define('Controls/Input/Search',
 
       /**
        * @event Controls/Input/Search#searchClick Occurs when search button is clicked.
-       * @event Controls/Input/resetClick#searchClick Occurs when reset button is clicked.
+       * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
        */
 
       var Search = Control.extend({
@@ -41,14 +41,33 @@ define('Controls/Input/Search',
 
          _beforeMount: function(options) {
             this._baseViewModel = new BaseViewModel({
-               value: options.value
+               value: options.value,
+               maxLength: options.maxLength,
+               constraint: options.constraint
             });
          },
-   
+
          _beforeUpdate: function(newOptions) {
             this._baseViewModel.updateOptions({
-               value: newOptions.value
+               value: newOptions.value,
+               maxLength: newOptions.maxLength,
+               constraint: newOptions.constraint
             });
+         },
+
+         _focusOutHandler: function() {
+            if (this._options.trim) {
+               var trimmedValue = this._options.value.trim();
+
+               if (trimmedValue !== this._options.value) {
+                  this._baseViewModel.updateOptions({
+                     value: trimmedValue,
+                     maxLength: this._options.maxLength,
+                     constraint: this._options.constraint
+                  });
+                  this._notifyOnValueChanged(trimmedValue);
+               }
+            }
          },
 
          _notifyOnValueChanged: function(value) {
@@ -71,13 +90,13 @@ define('Controls/Input/Search',
             this.activate();
             this._notify('searchClick');
          },
-   
+
          _keyUpHandler: function(event) {
             if (event.nativeEvent.which === constants.key.enter) {
                this._searchClick();
             }
          }
-         
+
       });
 
       Search.getOptionTypes = function getOptionsTypes() {

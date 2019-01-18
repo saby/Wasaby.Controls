@@ -1885,6 +1885,95 @@
       }
     }
   },
+  "Controls/Input/Search": {
+    "name": "Controls/Input/Search",
+    "title": "Search input.",
+    "className": "Controls/Input/Search",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Search",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "placeholder": {
+            "type": "String|function",
+            "title": "Field placeholder."
+          },
+          "textAlign": {
+            "type": "enum",
+            "default": "left",
+            "title": "Horizontal alignment of the text in field.",
+            "enum": {
+              "left": "- The text are aligned to the left edge of the line box.",
+              "right": "- The text are aligned to the right edge of the line box."
+            }
+          },
+          "tooltip": {
+            "type": "String",
+            "title": "Text of the tooltip shown when the control is hovered over."
+          },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Determines whether text is selected when input is clicked."
+          },
+          "autoComplete": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Determines whether to use browser-based auto-complete field."
+          },
+          "style": {
+            "type": "enum",
+            "default": "info",
+            "title": "Field style.",
+            "enum": {
+              "primary": "- display style to attract attention.",
+              "success": "-  the display style of the field with success.",
+              "warning": "-  the display style of the field with warning.",
+              "danger": "- the display style of the field with danger.",
+              "info": "- information field display style.",
+              "default": "Gray field.",
+              "header": "White field."
+            }
+          },
+          "value": {
+            "type": "String",
+            "default": "'' (empty string)",
+            "title": "Text in the field."
+          },
+          "tagStyle": {
+            "type": "enum",
+            "title": "Style of the tag (colored indicator shown at the top right corner of the field).",
+            "enum": {
+              "secondary": "secondary",
+              "success": "success",
+              "primary": "primary",
+              "danger": "danger",
+              "info": "info"
+            }
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "maxLength": {
+            "type": "Number",
+            "title": "Maximum number of characters that can be entered in the field."
+          },
+          "trim": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Determines whether the field value should be trimmed when input is completed."
+          },
+          "constraint": {
+            "type": "String",
+            "title": "Regular expression for input filtration."
+          }
+        }
+      }
+    }
+  },
   "Controls/Input/Suggest": {
     "name": "Controls/Input/Suggest",
     "title": "A suggest box control is similar to a textbox control, since the user can type any text into a suggest box, but offers suggested options to the user to help guide the input.",
