@@ -744,7 +744,6 @@ node('controls') {
                              }
                         }
                         if (boss) {
-                            script_handler+=" -d" //оверайдим флаг
                             tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
                             if ( tests_files ) {
                             (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files)
