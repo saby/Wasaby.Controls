@@ -42,10 +42,10 @@ define('Controls/Filter/Fast',
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
                self._items = new collection.List({
-                  items: Utils.clone(items)
+                  items: Utils.object.clone(items)
                });
             } else {
-               self._items = Utils.clone(items);
+               self._items = Utils.object.clone(items);
             }
          },
 
