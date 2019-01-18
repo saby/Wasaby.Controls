@@ -13,7 +13,7 @@
                 </ws:if>
                 <div class="controls-StackTemplate__command_buttons">
                     <ws:if data="{{_options.showMaximizedButton || _options.maximizeButtonVisibility}}">
-                        <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"></div>
+                        <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
                     </ws:if>
                     <ws:if data="{{ _options.closeButtonVisibility}}">
                     <Controls.Button.Close attr:class="controls-StackTemplate__close_button" style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}" on:click="close()"/>
@@ -25,7 +25,7 @@
     <ws:else>
         <div class="controls-StackTemplate__command_buttons_without_head">
             <ws:if data="{{_options.showMaximizedButton || _options.maximizeButtonVisibility}}">
-                <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()"></div>
+                <div class="controls-StackTemplate__maximized_button" on:click="changeMaximizedState()" attr:title="{{_maximizeButtonTitle}}"></div>
             </ws:if>
             <ws:if data="{{_options.closeButtonVisibility}}">
                 <Controls.Button.Close attr:class="controls-StackTemplate__close_button" style="{{_options.closeButtonStyle ? _options.closeButtonStyle : 'default'}}" on:click="close()"/>

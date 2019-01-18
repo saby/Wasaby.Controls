@@ -16,6 +16,7 @@
                  itemTemplateProperty="{{_options.itemTemplateProperty}}"
                  itemTemplate="{{_options.itemTemplate}}"
                  headTemplate="{{_options.headTemplate}}"
+                 headerTemplate="{{_options.headerTemplate}}"
                  groupTemplate="{{_options.groupTemplate}}"
                  groupMethod="{{_options.groupMethod}}"
                  dropdownClassName="{{_options.dropdownClassName}}"

@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="FilterSearch">
+<Controls.Application.ApplicationWrapper caption="ComboBox">
    <ws:content>
       <Controls-demo.Combobox.ComboboxVDom/>
    </ws:content>

@@ -27,7 +27,7 @@ define('Controls/Button/Menu/MenuUtils', [
          // поэтому необходимо это учесть при сдвиге
          offsetClassName += '_' + iconSize;
       }
-      offsetClassName += (menuStyle === 'duplicateHead' ? '_duplicate' : '') + '_popup';
+      offsetClassName += (((menuStyle === 'duplicateHead' && options.showHeader) || (!options.headerTemplate && !options.showHeader)) ? '_duplicate' : '') + '_popup';
       return offsetClassName;
    }
 
