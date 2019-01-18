@@ -32,6 +32,7 @@ define('Controls/Popup/Manager',
                self._hasMaximizePopup = false;
             }
 
+            self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
                self._popupItems.remove(element);
                _private.updateOverlay.call(self);
