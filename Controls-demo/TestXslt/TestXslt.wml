@@ -4,8 +4,8 @@
       name="xml"
       placeholder="xml"
       attr:class="xml ControlsDemo-TestXslt__xml ControlsDemo-TestXslt__area"
-      minLines="{{20}}"
-      maxLines="{{20}}"
+      minLines="{{3}}"
+      maxLines="{{2000}}"
       bind:value="_xml"
    />
 
@@ -13,8 +13,8 @@
       name="xsl"
       placeholder="xsl"
       attr:class="xsl ControlsDemo-TestXslt__xsl ControlsDemo-TestXslt__area"
-      minLines="{{20}}"
-      maxLines="{{20}}"
+      minLines="{{3}}"
+      maxLines="{{2000}}"
       bind:value="_xsl"
    />
 
@@ -22,8 +22,8 @@
       name="result"
       placeholder="result"
       attr:class="result ControlsDemo-TestXslt__result ControlsDemo-TestXslt__area"
-      minLines="{{20}}"
-      maxLines="{{20}}"
+      minLines="{{3}}"
+      maxLines="{{2000}}"
       bind:value="_result"
    />
    
