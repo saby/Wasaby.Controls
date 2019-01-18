@@ -33,7 +33,8 @@ define('Controls/Container/Suggest/__ContentLayer',
             };
             var result;
             var oldHeight = self._container.style.height;
-   
+            
+            //reset height to get real height of content
             self._container.style.height = '';
             
             var suggestBCR = boundingClientToJSON(self._container.getBoundingClientRect());
@@ -51,6 +52,8 @@ define('Controls/Container/Suggest/__ContentLayer',
                suggest: fixSizesByDDContainer(suggestBCR),
                container: fixSizesByDDContainer(containerBCR)
             };
+            
+            //after reset height need to return old height, new height will be set by VDOM after synchronization
             self._container.style.height = oldHeight;
             return result;
          },
