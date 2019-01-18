@@ -83,14 +83,14 @@ define('Controls/Input/Search',
          },
 
          _resetClick: function() {
-            //move focus from clear button to input
+            // move focus from clear button to input
             this.activate();
             this._notify('resetClick');
             this._notifyOnValueChanged('');
          },
 
          _searchClick: function() {
-            //move focus from search button to input
+            // move focus from search button to input
             this.activate();
             this._notify('searchClick');
          },
@@ -106,7 +106,7 @@ define('Controls/Input/Search',
       Search.getOptionTypes = function getOptionsTypes() {
          return {
 
-            /*placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421*/
+            /* placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421 */
          };
       };
 
