@@ -56,10 +56,11 @@ class Coverage:
                     for k in d:
                         component_path = os.path.splitext(k)[0]
                         if os.path.exists(component_path):
-                            for style in os.listdir(component_path):
-                                if os.path.isfile(style):
-                                    style = style.replace(os.sep.join([env, 'controls']), '')
-                                    coverage_result.append(style)
+                            for other in os.listdir(component_path):
+                                other_component_file = os.path.join(component_path, other)
+                                if os.path.isfile(other_component_file):
+                                    other_component_file = other_component_file.replace(os.sep.join([env, 'controls']), '')
+                                    coverage_result.append(other_component_file)
                         # обрезаем пути, переменная берется из сборки
                         k = k.replace(os.sep.join([env, 'controls']), '')
                         coverage_result.append(k)
