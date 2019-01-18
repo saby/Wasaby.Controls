@@ -599,6 +599,9 @@ define('Controls/List/BaseControl', [
                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : newOptions;
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
+               if (receivedState) {
+                  viewModelConfig.items = receivedState;
+               }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.initListViewModelHandler(self, self._listViewModel);
@@ -612,7 +615,6 @@ define('Controls/List/BaseControl', [
 
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
-                  self._listViewModel.setItems(receivedState);
                   self._items = self._listViewModel.getItems();
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {
