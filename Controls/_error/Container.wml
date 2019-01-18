@@ -1,0 +1,19 @@
+<div class="ErrorContainer">
+    <Controls.Popup.Opener.Dialog name="dialog" />
+    <ws:partial
+        template="{{ _options.controller? _options.controller: __controller }}"
+        name="controller"
+        on:showError="__showError()"
+    />
+    <ws:if data="{{ __error }}">
+        <div class="ErrorContainer__{{ __error.mode }}">
+            <ws:partial
+                template="{{ __error.template }}"
+                scope="{{ __error.options }}"
+            />
+        </div>
+    </ws:if>
+    <ws:else>
+        <ws:partial template="{{ _options.content }}"/>
+    </ws:else>
+</div>

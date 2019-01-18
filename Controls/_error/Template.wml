@@ -1,0 +1,14 @@
+<div class="ErrorTemplate ErrorTemplate_mode_{{ mode }}">
+    <div class="ErrorTemplate__message">
+        {{ error.message }}
+    </div>
+    <ws:if data="{{ _options.error.details }}">
+        <div class="ErrorTemplate__details">
+            {{ error.details }}
+        </div>
+    </ws:if>
+</div>
+
+
+
+
