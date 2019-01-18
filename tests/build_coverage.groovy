@@ -267,7 +267,7 @@ def building(workspace, scheduler=null) {
                 sudo chmod -R 0777 /home/sbis/Controls
             """
         }
-        stage("Инт.тесты"){
+        stage("Рег. тесты"){
             writeFile file: "./controls/tests/int/config.ini", text:
             """# UTF-8
             [general]
@@ -283,6 +283,23 @@ def building(workspace, scheduler=null) {
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/"""
+
+            writeFile file: "./controls/tests/reg/config.ini", text:
+            """# UTF-8
+            [general]
+            browser = chrome
+            SITE = http://${NODE_NAME}:30010
+            DO_NOT_RESTART = True
+            SOFT_RESTART = False
+            NO_RESOURCES = True
+            DELAY_RUN_TESTS = 2
+            TAGS_TO_START = online
+            ELEMENT_OUTPUT_LOG = locator
+            WAIT_ELEMENT_LOAD = 20
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg/
+            SERVER = test-autotest-db1:5434
+            BASE_VERSION = css_${NODE_NAME}${ver}1"""
+
 
         dir("${workspace}/controls/tests/int"){
             sh"""
@@ -301,21 +318,42 @@ def building(workspace, scheduler=null) {
         }
 
             echo "Запускаем интеграционные тесты"
-            dir("${workspace}/controls/tests/int"){
+            parallel(
+            int: {
+                dir("${workspace}/controls/tests/int"){
+                    sh """
+                    source /home/sbis/venv_for_test/bin/activate
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
+                    deactivate
+                    """
+                }
+            },
+            layout: {
+                dir("${workspace}/controls/tests/reg"){
                 sh """
                 source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
                 deactivate
                 """
                 }
-
+            }
+            )
         }
         stage("Coverage") {
             echo "Записываем результаты в файл"
             dir("${workspace}/controls/tests"){
-                sh """
-                python3 coverage_handler.py -s ${workspace}/controls/tests/int/coverage
-                """
+            parallel(
+                int: {
+                    sh """
+                    python3 coverage_handler.py -s ${workspace}/controls/tests/int/coverage
+                    """
+                },
+                reg: {
+                    sh """
+                    python3 coverage_handler.py -s ${workspace}/controls/tests/reg/coverage
+                    """
+                }
+            )
             }
         }
 
