@@ -70,11 +70,11 @@ class Coverage:
         with open(os.path.join(path, RESULT_JSON), mode='a+', encoding='utf-8') as f:
             f.write(json.dumps(OrderedDict(sorted(self.build_result.items(), key=lambda t: t[0])), indent=2))
 
-    def get_tests(self, change_files):
+    def get_tests(self, result_json, change_files):
         """Возвращает список файлов, которые нужно запустить"""
 
         test_result = []
-        with open(RESULT_JSON, encoding='utf-8') as f:
+        with open(result_json, encoding='utf-8') as f:
             data = json.load(f, encoding='utf-8')
             for test_name in data:
                 for source in data[test_name]:
@@ -106,6 +106,7 @@ if __name__ == '__main__':
     build.add_argument('-s', '--source_path', help='root path with inner coverage.json ')
     action = parser.add_argument_group('action')
     action.add_argument('-c', '--changelist', nargs='+', help='List changed files')
+    action.add_argument('-rj', '--result_json', help='Location result.json with coverage')
     action.add_argument('-d', '--developer', action='store_true', default=False, help='I\'m developer autotest')
     args = parser.parse_args()
     coverage = Coverage()
@@ -116,7 +117,7 @@ if __name__ == '__main__':
 
     if args.changelist:
         if not args.developer:
-            test_result = coverage.get_tests(args.changelist)
+            test_result = coverage.get_tests(args.result_json, args.changelist)
             if test_result:
                 print(' '.join(set(test_result)))
         else:
