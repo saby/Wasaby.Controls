@@ -1,0 +1,18 @@
+{
+  "Controls/List": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "itemTemplate": {
+            "type": "String"
+          },
+          "itemTemplateProperty": {
+            "title": "itemTemplateProperty",
+            "type": "String"
+          }
+        }
+      }
+    }
+  }
+}

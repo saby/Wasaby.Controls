@@ -154,7 +154,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                   ],
                   value: 'Not specified'
                },
-               headTemplate: {
+               headerTemplate: {
                   items: [
                      { id: '1', title: 'Default template', template: '' },
                      { id: '2', title: 'Custom template', template: 'wml!Controls-demo/Buttons/Menu/headerTemplate' }
@@ -184,8 +184,8 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                },
                groupTemplate: {
                   items: [
-                     { id: '1', title: 'Default groupTemplate', comment: 'groupMethod must be set', template: 'wml!Controls/Dropdown/resources/template/defaultGroupTemplate' },
-                     { id: '2', title: 'With text', comment: 'groupMethod must be set', template: 'wml!Controls-demo/Buttons/Menu/groupTemplate' },
+                     { id: '1', title: 'Default groupTemplate', comment: 'groupingKeyCallback must be set', template: 'wml!Controls/Dropdown/resources/template/defaultGroupTemplate' },
+                     { id: '2', title: 'With text', comment: 'groupingKeyCallback must be set', template: 'wml!Controls-demo/Buttons/Menu/groupTemplate' },
                      { id: '3', title: 'Not specified', template: '' }
                   ],
                   config: {
@@ -195,7 +195,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                   },
                   value: 'Not specified'
                },
-               groupMethod: {
+               groupingKeyCallback: {
                   items: [
                      { id: '1', title: 'Property is group', template: function(item) {
                         if (item.get('group') === 'hidden' || !item.get('group')) {
@@ -216,7 +216,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                },
                filter: {
                   items: [
-                     { id: '1', title: 'Loads items with id is 1, 2 or 3', items: { id: [1, 2, 3] } },
+                     { id: '1', title: 'Loads items with id is 1, 2 and 3', items: { id: [1, 2, 3] } },
                      { id: '2', title: 'Not specified', items: {} }
                   ],
                   value: 'Not specified'
@@ -233,7 +233,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                tooltip: '',
                source: this._commentItems,
                groupTemplate: undefined,
-               groupMethod: undefined,
+               groupingKeyCallback: undefined,
                nodeProperty: '',
                parentProperty: '',
                navigation: undefined,

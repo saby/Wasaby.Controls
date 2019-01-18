@@ -10,8 +10,7 @@ define('Controls-demo/InfoBox/InfoBoxPG',
       'wml!Controls-demo/InfoBox/resources/CustomContent',
       'wml!Controls-demo/InfoBox/resources/DefaultContent',
       'wml!Controls-demo/InfoBox/resources/CustomTemplate',
-      'wml!Controls-demo/InfoBox/resources/DefaultTemplate',
-      'wml!Controls-demo/Validate/ErrorMessage'
+      'wml!Controls-demo/InfoBox/resources/DefaultTemplate'
    ],
 
    function(Control, template, config) {

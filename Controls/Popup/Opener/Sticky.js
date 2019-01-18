@@ -7,13 +7,32 @@ define('Controls/Popup/Opener/Sticky',
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
        * @class Controls/Popup/Opener/Sticky
-       * @mixes Controls/interface/IStickyOptions
        * @control
        * @author Красильников А.С.
        * @category Popup
        * @public
        */
       var Sticky = Base.extend({
+
+         /**
+          * @typedef {Object} PopupOptions
+          * @description Sticky popup options.
+          * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+          * @property {Boolean} modal Determines whether the window is modal.
+          * @property {String} className Class names of popup.
+          * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+          * @property {function|String} template Template inside popup.
+          * @property {function|String} templateOptions Template options inside popup.
+          * @property {Number} corner Sets the popup build point relative target.
+          * @property {Number} horizontalAlign Sets the horizontal alignment of the popup.
+          * @property {Number} verticalAlign Sets the vertical alignment of the popup.
+          * @property {Number} target The maximum width of the panel in a maximized state.
+          * @property {Number} minWidth The target relative to which the popup is positioned.
+          * @property {Number} maxWidth The minimum width of popup.
+          * @property {Number} minHeight The maximum height of popup.
+          * @property {Number} maxHeight The maximum height of popup.
+          * @property {String} locationStrategy A method of adjusting the popup panel to the free space next to the target.
+          */
 
          /**
           * Open sticky popup.
@@ -24,12 +43,10 @@ define('Controls/Popup/Opener/Sticky',
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Sticky name="sticky">
-          *       <ws:popupOptions template="Controls-demo/Popup/TestDialog">
+          *    <Controls.Popup.Opener.Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
           *          <ws:verticalAlign side="bottom"/>
           *          <ws:horizontalAlign side="left"/>
           *          <ws:corner vertical="bottom" horizontal="left"/>
-          *       </ws:popupOptions>
           *   </Controls.Popup.Opener.Sticky>
           *
           *   <div name="target">{{_text}}</div>
@@ -96,12 +113,10 @@ define('Controls/Popup/Opener/Sticky',
  * @example
  * wml
  * <pre>
- *    <Controls.Popup.Opener.Sticky name="sticky">
- *       <ws:popupOptions template="Controls-demo/Popup/TestDialog">
+ *    <Controls.Popup.Opener.Sticky name="sticky" template="Controls-demo/Popup/TestDialog">
  *          <ws:verticalAlign side="bottom"/>
  *          <ws:horizontalAlign side="left"/>
  *          <ws:corner vertical="bottom" horizontal="left"/>
- *       </ws:popupOptions>
  *    </Controls.Popup.Opener.Sticky>
  *
  *    <div name="target">{{_text}}</div>
