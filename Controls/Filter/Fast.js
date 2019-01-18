@@ -42,10 +42,10 @@ define('Controls/Filter/Fast',
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
                self._items = new List({
-                  items: items
+                  items: Utils.clone(items)
                });
             } else {
-               self._items = items;
+               self._items = Utils.clone(items);
             }
          },
 
@@ -122,6 +122,16 @@ define('Controls/Filter/Fast',
             if (getPropValue(item, 'textValue') !== undefined) {
                setPropValue(item, 'textValue', textValue);
             }
+         },
+
+         isItemsPropertiesChanged: function(oldItems, newItems) {
+            var isChanged = false;
+            Chain(newItems).each(function(item, index) {
+               if (!isEqual(item.properties, oldItems[index].properties)) {
+                  isChanged = true;
+               }
+            });
+            return isChanged;
          }
       };
 
@@ -132,7 +142,6 @@ define('Controls/Filter/Fast',
 
          _beforeMount: function(options) {
             this._configs = {};
-            this._items = [];
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
@@ -151,9 +160,13 @@ define('Controls/Filter/Fast',
          _beforeUpdate: function(newOptions) {
             var self = this,
                resultDef;
-            if (newOptions.items && !isEqual(newOptions.items, this._options.items)) {
+            if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               resultDef = _private.reload(this);
+               if (_private.isItemsPropertiesChanged(this._options.items, newOptions.items)) {
+                  resultDef = _private.reload(this);
+               } else {
+                  this._setText();
+               }
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
