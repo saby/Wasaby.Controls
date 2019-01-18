@@ -23,7 +23,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
 
-            // Если задано одно значение - приравниваем minWidth и maxWidth
+            // Validate the configuration
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
             item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
 
@@ -139,7 +139,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       };
 
       /**
-       * Контроллер стековых панелей.
+       * Stack Popup Controller
        * @class Controls/Popup/Opener/Stack/StackController
        * @control
        * @private
@@ -252,10 +252,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             };
          },
 
-         // Метод, который проверяет работу анимации. Если анимация через пол секунды не сообщила о своем завершении -
-         // завершает ее вручную. Необходимость вызвана изощренной логикой прикладных разработчиков, которые сами
-         // по непонятным никому причинам из js кода удаляют шаблон или отписываются от всех его событий, что мешает
-         // работе анимации
+         // TODO: For Compatible
          _fixTemplateAnimation: function(element) {
             var self = this;
             setTimeout(function() {

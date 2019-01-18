@@ -47,5 +47,4 @@ define('Controls/Popup/Compatible/ShowDialogHelper', ['require', 'Core/Deferred'
       DialogHelper._private = _private;
 
       return DialogHelper;
-
    });

@@ -2,8 +2,11 @@
  * Created by as.krasilnikov on 21.03.2018.
  */
 define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
-   var PANEL_SHADOW_WIDTH = 8; // Отступ контейнера под тень
-   var MINIMAL_PANEL_DISTANCE = 20; // минимальный отступ стековой панели от правого края
+   // Container indent for shadow
+   var PANEL_SHADOW_WIDTH = 8;
+
+   // Minimum popup indentation from the right edge
+   var MINIMAL_PANEL_DISTANCE = 20;
 
    var _private = {
       getPanelWidth: function(item, tCoords, maxPanelWidth) {
@@ -14,22 +17,22 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
 
          if (_private.isMaximizedPanel(item) && !_private.isMaximizedState(item)) {
             panelWidth = item.popupOptions.minimizedWidth;
-         } else if (!minWidth || !maxWidth) { // Если не заданы размеры - строимся по размерам контейнера
+         } else if (!minWidth || !maxWidth) { // If no configuration is specified then get the size of the container
             if (item.containerWidth > maxPanelWidthWithOffset) {
-               panelWidth = maxPanelWidthWithOffset; //По ширине контента, но не больше допустимого значения
+               panelWidth = maxPanelWidthWithOffset; // returns the width of the content no larger than the allowed width
             }
          } else if (maxWidth <= maxPanelWidthWithOffset) {
             panelWidth = maxWidth;
-         } else if (minWidth > maxPanelWidthWithOffset) { // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна
+         } else if (minWidth > maxPanelWidthWithOffset) { // If the minimum width does not fit into the screen - positioned on the right edge of the window
             if (_private.isMaximizedPanel(item)) {
                minWidth = item.popupOptions.minimizedWidth;
             }
             if (minWidth > maxPanelWidthWithOffset) {
-               tCoords.right = 0; // Если минимальная ширина не умещается в экран - позиционируемся по правому краю окна
+               tCoords.right = 0;
             }
             panelWidth = minWidth;
          } else {
-            panelWidth = maxPanelWidthWithOffset; //Возвращаем допустимую ширину
+            panelWidth = maxPanelWidthWithOffset; // return allowed width
          }
 
          return panelWidth;
@@ -46,10 +49,10 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
    return {
 
       /**
-       * Возвращает позицию стек-панели
-       * @function Controls/Popup/Opener/Stack/StackController#stack
-       * @param tCoords Координаты контейнера, относительно которого показывается панель
-       * @param item Конфиг позиционируемой панели
+       * Returns popup position
+       * @function Controls/Popup/Opener/Stack/StackController#getPosition
+       * @param tCoords Coordinates of the container relative to which the panel is displayed
+       * @param item Popup configuration
        */
       getPosition: function(tCoords, item) {
          return {
@@ -61,9 +64,8 @@ define('Controls/Popup/Opener/Stack/StackStrategy', [], function() {
       },
 
       /**
-       * Расчитываает максимально возможную ширину панели
+       * Returns the maximum possible width of popup
        * @function Controls/Popup/Opener/Stack/StackController#getMaxPanelWidth
-       * @param wWidth ширина окна
        */
       getMaxPanelWidth: function() {
          return window.innerWidth - MINIMAL_PANEL_DISTANCE - PANEL_SHADOW_WIDTH;

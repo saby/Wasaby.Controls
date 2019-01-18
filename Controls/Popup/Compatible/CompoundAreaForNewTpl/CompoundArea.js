@@ -127,10 +127,8 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                self._isVDomTemplateMounted = true;
                if (self._closeAfterMount) {
                   self.sendCommand('close');
-               } else {
-                  if (self._options.catchFocus) {
-                     self._vDomTemplate.activate && self._vDomTemplate.activate();
-                  }
+               } else if (self._options.catchFocus) {
+                  self._vDomTemplate.activate && self._vDomTemplate.activate();
                }
             };
          },
