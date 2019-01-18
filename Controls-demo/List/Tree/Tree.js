@@ -14,7 +14,7 @@ define('Controls-demo/List/Tree/Tree', [
       ModuleClass = BaseControl.extend({
          _template: template,
          _actionClicked: '',
-         _groupMethod: null,
+         _groupingKeyCallback: null,
          _itemActions: null,
          _viewSource: null,
          gridData: null,
@@ -85,7 +85,7 @@ define('Controls-demo/List/Tree/Tree', [
                   }
                }
             ];
-            this._groupMethod = function(item, index, displayItem) {
+            this._groupingKeyCallback = function(item, index, displayItem) {
                return item.get('Группа');
             };
          },

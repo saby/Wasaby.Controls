@@ -33,7 +33,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             },
             cfg1 = {
                itemsFilterMethod : filterFnc,
-               groupMethod: groupFnc
+               groupingKeyCallback: groupFnc
             };
          });
          

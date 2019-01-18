@@ -26,6 +26,10 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
                displayProperties.group = cfg.groupMethod;
             }
 
+            if (cfg.groupingKeyCallback) {
+               displayProperties.group = cfg.groupingKeyCallback;
+            }
+
             if (typeof cfg.root !== 'undefined') {
                root = cfg.root;
             } else {

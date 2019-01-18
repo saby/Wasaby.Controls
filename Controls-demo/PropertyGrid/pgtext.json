@@ -1658,7 +1658,7 @@
             "type": "function|String",
             "title": "Group template."
           },
-          "groupMethod": {
+          "groupingKeyCallback": {
             "type": "function",
             "title": "Function that returns group identifier."
           },

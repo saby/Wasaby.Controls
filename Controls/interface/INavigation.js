@@ -10,51 +10,63 @@ define('Controls/interface/INavigation', [
     */
 
    /**
-    * @typedef {String} ListNavigationSource
+    * @typedef {String} NavigationSource
     * @variant position Position-based navigation (cursor).
-    * @variant offset Offset-based navigation.
     * @variant page Page-based navigation.
     */
 
    /**
-    * @typedef {String} ListNavigationView
+    * @typedef {String} NavigationView
     * @variant infinity Infinite scroll.
-    * @variant pages Pages with aging control.
-    * @variant demand Load next when requested (button clicked).
+    * @variant pages Pages with paging control.
+    * @variant demand Load next when requested (for example, hasMore button clicked).
     */
 
    /**
-    * @typedef {Object} ListNavigationPositionSourceConfig
-    * @property {String} field Field used for position-based navigation.
-    * @property {String} direction Direction.
+    * @typedef {Object} PositionSourceConfig Source configuration for position-based (cursor) navigation.
+    * @property {String|Array} field Field (fields array) used for position-based navigation.
+    * @property {String|Array} position Value of field (fields array) used for position-based navigation.
+    * @property {String} direction Loading direction.
+    * The following values are supported:
+    * <ul>
+    *    <li><b>after</b> -  loading data after positional record.
+    *    <li><b>before</b> -  loading data before positional record.
+    *    <li><b>both</b> -  loading data in both directions relative to the positional record.
+    * </ul>
+    * @property {Number} limit Limit of records requested for a single load.
+    * @property {String} mode Loading mode.
+    * The following values are supported:
+    * <ul>
+    *    <li><b>totalCount</b> -  In response to a request to the source, instead of receiving a flag for the presence of records (boolean value), the total count of records is expected.</li>
+    * </ul>
     */
 
    /**
-    * @typedef {Object} ListNavigationOffsetSourceConfig
-    * @property {Number} limit Number of items in data portion.
+    * @typedef {Object} PageSourceConfig Source configuration for page-based navigation.
+    * @property {Number} page Loading page number.
+    * @property {Number} pageSize Loading page size.
     */
 
    /**
-    * @typedef {Object} ListNavigationInfinityViewConfig
+    * @typedef {Object} NavigationViewConfig
     * @property {String} pagingMode Paging display mode.
+    * The following values are supported:
+    * <ul>
+    *    <li><b>direct</b> - paging is displayed in the forward direction: from the first page to the last.</li>
+    * </ul>
     */
 
    /**
-    * @typedef {Object} ListNavigationPagesViewConfig
-    * @property {Boolean} pagesCountSelector Configure number of items on a page.
-    */
-
-   /**
-    * @typedef {Object} ListNavigation
-    * @property {ListNavigationSource} source Type of data source.
-    * @property {ListNavigationView} view Visual interface for navigation (paging buttons, etc.)
-    * @property {ListNavigationPositionSourceConfig|ListNavigationOffsetSourceConfig} sourceConfig Configuration for data source.
-    * @property {ListNavigationInfinityViewConfig|ListNavigationPagesViewConfig} viewConfig Configuration for navigation view.
+    * @typedef {Object} Navigation
+    * @property {NavigationSource} source Algorithm with which the data source works.
+    * @property {NavigationView} view Visual interface for navigation (paging buttons, etc.).
+    * @property {PositionSourceConfig|PageSourceConfig} sourceConfig Configuration for data source.
+    * @property {NavigationViewConfig} viewConfig Configuration for navigation view.
     */
 
    /**
     * @name Controls/interface/INavigation#navigation
-    * @cfg {ListNavigation} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
+    * @cfg {Navigation} List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.)
     * @example
     * In this example, 2 items will be displayed in the list.
     * TMPL:
