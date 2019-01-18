@@ -35,6 +35,7 @@ define('Controls/Container/Suggest/__ContentLayer',
             var oldHeight = self._container.style.height;
             
             //reset height to get real height of content
+            //the only solution is to get height avoiding synchronization
             self._container.style.height = '';
             
             var suggestBCR = boundingClientToJSON(self._container.getBoundingClientRect());
