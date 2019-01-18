@@ -54,26 +54,22 @@ def build_description(job, path, skip_test) {
     }
 }
 
-def return_test_for_run(tests_files, autotests) {
+def return_test_for_run(tests_files) {
     tests_files = tests_files.replace('\n', '')
     echo "Будут запущены ${tests_files}"
     def run_reg = ""
     def run_int = ""
-    if (autotests) {
-        echo "Делим общий список на int и reg тесты"
-        type_tests = tests_files.split(';')
-        temp_var = type_tests[0].split('reg:')
-        if ( temp_var.length == 2) {
-            run_reg = "--files_to_start ${temp_var[1]}"
-        }
-        temp_var = type_tests[1].split('int:')
-        if ( temp_var.length == 2 ) {
-            run_int = "--files_to_start ${temp_var[1]}"
-        }
-
-    } else {
-        run_int = "--files_to_start ${tests_files}"
+    echo "Делим общий список на int и reg тесты"
+    type_tests = tests_files.split(';')
+    temp_var = type_tests[0].split('reg:')
+    if ( temp_var.length == 2) {
+        run_reg = "--files_to_start ${temp_var[1]}"
     }
+    temp_var = type_tests[1].split('int:')
+    if ( temp_var.length == 2 ) {
+        run_int = "--files_to_start ${temp_var[1]}"
+    }
+
     return [run_reg, run_int]
 }
 
@@ -728,31 +724,39 @@ node('controls') {
                     if ( only_fail ) {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
-                    if ( (inte || regr) && !only_fail && changed_files ) {
+                    if ( !only_fail && changed_files ) {
                         dir("./controls/tests") {
-                        def script_handler = "python3 coverage_handler.py -c ${changed_files}"
-                        def tests_files
-                        if ( boss ) {
+                        if (inte) {
+                             if ( download_coverage_json(version, 'int') ) {
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj int/coverage/result.json"
+                                if (tests_files_int) {
+                                    tests_for_run_int = "--files_to_start ${tests_files}"
+                                }
+
+                             }
+                        }
+                        if (reg) {
+                            if ( download_coverage_json(version, 'reg') ) {
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj reg/coverage/result.json"
+                                 if (tests_files_reg) {
+                                     tests_for_run_reg = "--files_to_start ${tests_files}"
+                                 }
+                             }
+                        }
+                        if (boss) {
                             script_handler+=" -d" //оверайдим флаг
-                            tests_files = sh returnStdout: true, script: script_handler
-                        } else {
-                            if ( download_coverage_json(version) ) {
-                                tests_files = sh returnStdout: true, script: script_handler
-                            } else {
-                                echo "Файл с покрытием не найден. Будут запущены все тесты."
+                            tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
+                            if ( tests_files ) {
+                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files)
                             }
                         }
-                        if ( tests_files ) {
-                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, boss)
-                        } else {
-                            echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                         }
                     }
                     if ( skip ) {
                          skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
                          skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
                     }
-                    }
+
                 }
             }
             parallel (
