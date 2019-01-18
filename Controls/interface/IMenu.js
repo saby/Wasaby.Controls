@@ -49,7 +49,7 @@ define('Controls/interface/IMenu', [], function() {
     */
 
    /**
-    * @name Controls/interface/IMenu#groupMethod
+    * @name Controls/interface/IMenu#groupingKeyCallback
     * @cfg {Function} Function that returns group identifier.
     * @example
     * TMPL:
@@ -58,11 +58,11 @@ define('Controls/interface/IMenu', [], function() {
     *          keyProperty="id"
     *          icon="icon-small icon-AddButtonNew"
     *          source="{{_source}}"
-    *          groupMethod="{{_groupMethod}}"/>
+    *          groupingKeyCallback="{{_groupingKeyCallback}}"/>
     * </pre>
     * JS:
     * <pre>
-    *    this._groupMethod = function(item) {
+    *    this._groupingKeyCallback = function(item) {
     *        return item.get('group');
     *    }
     *    this._source = new Memory({
@@ -91,14 +91,14 @@ define('Controls/interface/IMenu', [], function() {
     * By default, the base template wml!Controls/Dropdown/resources/template/defaultGroupTemplate only displays a separator.  You can change the separator display by setting the option:
     *    -  showText - sets the display of the group name.
     * You can redefine content using the contentTemplate option.
-    * The groupMethod option must also be set.
+    * The groupingKeyCallback option must also be set.
     * @example
     * TMPL:
     * <pre>
     *    <Controls.Button.Menu
     *          keyProperty="id"
     *          icon="icon-small icon-AddButtonNew"
-    *          groupMethod="{{_groupMethod}}"
+    *          groupingKeyCallback="{{_groupingKeyCallback}}"
     *          source="{{_source}}">
     *       <ws:groupTemplate>
     *          <ws:partial template="wml!Controls/Dropdown/resources/template/defaultGroupTemplate" showText="{{true}}" />
@@ -107,7 +107,7 @@ define('Controls/interface/IMenu', [], function() {
     * </pre>
     * JS:
     * <pre>
-    *    this._groupMethod = function(item) {
+    *    this._groupingKeyCallback = function(item) {
     *        return item.get('group');
     *    }
     *    this._source = new Memory({

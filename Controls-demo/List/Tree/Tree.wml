@@ -15,7 +15,7 @@
                         <Controls.TreeGrid
                                 attr:class="demo-Grid__control ControlsDemo-TreeDemo__groupsDefault"
                                 parentProperty="Раздел"
-                                groupMethod="{{_groupMethod}}"
+                                groupingKeyCallback="{{_groupingKeyCallback}}"
                                 nodeProperty="Раздел@"
                                 columns="{{gridColumns}}"
                                 multiSelectVisibility="visible"
@@ -56,7 +56,7 @@
                                 multiSelectVisibility="visible"
                                 itemActions="{{_itemActions}}"
                                 itemActionsPosition="inside"
-                                groupMethod="{{_groupMethod}}"
+                                groupingKeyCallback="{{_groupingKeyCallback}}"
                                 on:itemActionsClick="_onActionClick()"
                                 itemActionVisibilityCallback="{{_showAction}}">
 
