@@ -31,6 +31,7 @@ define('Controls/Popup/Templates/Notification/Base',
        * @category popup
        * @author Красильников А.С.
        * @mixes Controls/Popup/Templates/Notification/NotificationStyles
+       * @demo Controls-demo/Popup/Templates/NotificationTemplatePG
        */
 
       var timeAutoClose = 5000;

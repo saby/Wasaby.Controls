@@ -12,8 +12,8 @@ define('Controls/Popup/Opener/Stack',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/interface/IStackOptions
        * @mixes Controls/Popup/Opener/Stack/StackStyles
+       * @demo Controls-demo/Popup/Opener/StackPG
        */
 
       var _private = {
@@ -33,15 +33,12 @@ define('Controls/Popup/Opener/Stack',
           * @function Controls/Popup/Opener/Stack#open
           * @returns {Undefined}
           * @param {PopupOptions[]} popupOptions Stack popup options.
-          * @remark {@link https://wi.sbis.ru/docs/js/Controls/interface/IStackOptions#popupOptions popupOptions}
           * @example
           * Open stack with specified configuration.
           * wml
           * <pre>
-          *     <Controls.Popup.Opener.Stack name="stack">
-          *         <ws:popupOptions template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+          *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" isModal="{{true}}">
           *             <ws:templateOptions key="111"/>
-          *         </ws:popupOptions>
           *     </Controls.Popup.Opener.Stack>
           *
           *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
@@ -81,6 +78,22 @@ define('Controls/Popup/Opener/Stack',
       Stack._private = _private;
 
       return Stack;
+
+      /**
+       * @typedef {Object} PopupOptions
+       * @description Stack popup options.
+       * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+       * @property {Boolean} modal Determines whether the window is modal.
+       * @property {String} className Class names of popup.
+       * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+       * @property {function|String} template Template inside popup.
+       * @property {function|String} templateOptions Template options inside popup.
+       * @property {Number} minWidth The minimum width of popup.
+       * @property {Number} maxWidth The maximum width of popup.
+       * @property {Number} width Width of popup.
+
+       */
+
    });
 
 
@@ -91,10 +104,8 @@ define('Controls/Popup/Opener/Stack',
  * @example
  * wml
  * <pre>
- *     <Controls.Popup.Opener.Stack name="stack">
- *         <ws:popupOptions template="Controls-demo/Popup/TestStack" isModal="{{true}}">
+ *     <Controls.Popup.Opener.Stack name="stack" template="Controls-demo/Popup/TestStack" isModal="{{true}}">
  *             <ws:templateOptions key="111"/>
- *         </ws:popupOptions>
  *     </Controls.Popup.Opener.Stack>
  *
  *     <Controls.Button name="openStackButton" caption="open stack" on:click="_openStack()"/>
