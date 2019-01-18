@@ -200,7 +200,7 @@ define([
          }, 150); //150 === DEBOUNCE_HOVERED_ITEM_CHANGED
       });
       describe('_onItemContextMenu', function() {
-         it('contextMenuEnabled: true', function() {
+         it('contextMenuVisibility: true', function() {
             var
                model = new ListViewModel({
                   items: data,
@@ -209,7 +209,7 @@ define([
                cfg = {
                   listModel: model,
                   keyProperty: 'id',
-                  contextMenuEnabled: true
+                  contextMenuVisibility: true
                },
                lv = new ListView(cfg),
                fakeItemData = {},
@@ -227,7 +227,7 @@ define([
             };
             lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
          });
-         it('contextMenuEnabled: false', function() {
+         it('contextMenuVisibility: false', function() {
             var
                model = new ListViewModel({
                   items: data,
@@ -236,7 +236,7 @@ define([
                cfg = {
                   listModel: model,
                   keyProperty: 'id',
-                  contextMenuEnabled: false
+                  contextMenuVisibility: false
                },
                lv = new ListView(cfg),
                fakeItemData = {},
@@ -245,26 +245,26 @@ define([
             lv._beforeMount(cfg);
 
             lv._notify = function() {
-               throw new Error('itemContextMenu event shouldn\'t fire if contextMenuEnabled is false');
+               throw new Error('itemContextMenu event shouldn\'t fire if contextMenuVisibility is false');
             };
             lv._onItemContextMenu(fakeNativeEvent, fakeItemData);
          });
       });
 
       describe('_afterMount', function() {
-         it('should fire markedKeyChanged if _options.markerVisibility is \'always\'', function() {
+         it('should fire markedKeyChanged if _options.markerVisibility is \'visible\'', function() {
             var model = new ListViewModel({
                items: new RecordSet({
                   rawData: data,
                   idProperty: 'id'
                }),
                keyProperty: 'id',
-               markerVisibility: 'always'
+               markerVisibility: 'visible'
             });
             var cfg = {
                listModel: model,
                keyProperty: 'id',
-               markerVisibility: 'always'
+               markerVisibility: 'visible'
             };
             var lv = new ListView(cfg);
             lv.saveOptions(cfg);
@@ -280,19 +280,19 @@ define([
             lv._afterMount();
          });
 
-         it('should not fire markedKeyChanged if _options.markerVisibility is \'always\', but markedKey is not undefined', function() {
+         it('should not fire markedKeyChanged if _options.markerVisibility is \'visible\', but markedKey is not undefined', function() {
             var model = new ListViewModel({
                items: new RecordSet({
                   rawData: data,
                   idProperty: 'id'
                }),
                keyProperty: 'id',
-               markerVisibility: 'always'
+               markerVisibility: 'visible'
             });
             var cfg = {
                listModel: model,
                keyProperty: 'id',
-               markerVisibility: 'always',
+               markerVisibility: 'visible',
                markedKey: null
             };
             var lv = new ListView(cfg);
@@ -310,7 +310,7 @@ define([
             assert.isFalse(notifyCalled);
          });
 
-         it('should not fire markedKeyChanged if _options.markerVisibility is not \'always\'', function() {
+         it('should not fire markedKeyChanged if _options.markerVisibility is not \'visible\'', function() {
             var model = new ListViewModel({
                items: new RecordSet({
                   rawData: data,

@@ -126,11 +126,11 @@ define('Controls/Explorer', [
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
     * @mixes Controls/interface/IEditableList
-    * @mixes Controls/interface/IGroupedView
+    * @mixes Controls/interface/IGrouped
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
     * @mixes Controls/List/interface/IExplorer

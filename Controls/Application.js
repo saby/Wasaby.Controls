@@ -39,12 +39,12 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#head
-    * @cfg {Content} Additional content of <head></head>. Can accept more than one root node
+    * @cfg {Content} Additional content of HEAD tag. Can accept more than one root node
     */
 
    /**
     * @name Controls/Application#content
-    * @cfg {Content} Content of <body></body>
+    * @cfg {Content} Content of BODY tag
     */
 
    /**
@@ -85,7 +85,7 @@ define('Controls/Application',
 
    /**
     * @name Controls/Application#title
-    * @cfg {String} <title></title> tag value
+    * @cfg {String} title of the tab
     */
 
    /**
@@ -156,21 +156,6 @@ define('Controls/Application',
             }
 
             return bodyClasses;
-         },
-
-         getPopupConfig: function(config) {
-            var def = new Deferred();
-
-            // Find opener for Infobox
-            if (!config.opener) {
-               requirejs(['Vdom/Vdom'], function(Vdom) {
-                  config.opener = Vdom.DefaultOpenerFinder.find(config.target);
-                  def.callback(config);
-               });
-               return def;
-            }
-
-            return def.callback(config);
          }
       };
       var Page = Base.extend({
@@ -339,40 +324,6 @@ define('Controls/Application',
             return def;
          },
 
-         _openInfoBoxHandler: function(event, config) {
-            var self = this;
-            this._activeInfobox = event.target;
-            _private.getPopupConfig(config).addCallback(function(popupConfig) {
-               self._children.infoBoxOpener.open(popupConfig);
-            });
-         },
-
-         _closeInfoBoxHandler: function(event) {
-            if (this._activeInfobox === event.target) {
-               this._activeInfobox = null;
-               this._children.infoBoxOpener.close();
-            }
-         },
-
-         // Needed to immediately hide the infobox after its target or one
-         // of their parent components are hidden
-         // Will be removed:
-         // https://online.sbis.ru/opendoc.html?guid=1b793c4f-848a-4735-b96a-f0c1cf479fab
-         _forceCloseInfoBoxHandler: function() {
-            if (this._activeInfobox) {
-               this._activeInfobox = null;
-               this._children.infoBoxOpener.close(0);
-            }
-         },
-
-         _openPreviewerHandler: function(event, config, type) {
-            this._children.previewerOpener.open(config, type);
-         },
-
-         _closePreviewerHandler: function(event, type) {
-            this._children.previewerOpener.close(type);
-         },
-
          _keyPressHandler: function(event) {
             if (this._isPopupShow) {
                if (constants.browser.safari) {
@@ -384,10 +335,6 @@ define('Controls/Application',
                   }
                }
             }
-         },
-
-         _cancelPreviewerHandler: function(event, action) {
-            this._children.previewerOpener.cancel(action);
          }
       });
 

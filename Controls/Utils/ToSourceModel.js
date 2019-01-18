@@ -24,7 +24,7 @@ define('Controls/Utils/ToSourceModel', [
       var dataSourceModel, dataSourceModelInstance, parent, changedFields, newRec;
 
       if (items) {
-         if (dataSource && cInstance.instanceOfMixin(dataSource, 'WS.Data/Source/ISource')) {
+         if (dataSource && (cInstance.instanceOfMixin(dataSource, 'WS.Data/Source/ISource') || cInstance.instanceOfMixin(dataSource, 'Types/_source/ICrud'))) {
             dataSourceModel = dataSource.getModel();
 
             /* Создадим инстанс модели, который указан в dataSource,

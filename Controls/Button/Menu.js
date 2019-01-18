@@ -20,6 +20,8 @@ define('Controls/Button/Menu',
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IFilter
        * @mixes Controls/List/interface/IHierarchy
+       * @mixes Controls/Dropdown/interface/IFooterTemplate
+       * @mixes Controls/Dropdown/interface/IHeaderTemplate
        * @mixes Controls/interface/INavigation
        * @mixes Controls/interface/IMenu
        * @mixes Controls/interface/IDropdown

@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance', 'Core/IoC'],
-   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance, IOC) {
+   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
+   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance) {
       /**
        *
        * @author Авраменко А.С.
@@ -35,7 +35,7 @@ define('Controls/List/ListViewModel',
                this._markedKey = cfg.markedKey;
                this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
             }
-            if (!this._markedItem && this._options.markerVisibility === 'always' && this._items && this._items.getCount()) {
+            if (!this._markedItem && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible') && this._items && this._items.getCount()) {
                this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
@@ -57,6 +57,8 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
+            itemsModelCurrent.markerVisibility = this._options.markerVisibility;
+            itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
             if (itemsModelCurrent.itemActions) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
@@ -103,6 +105,13 @@ define('Controls/List/ListViewModel',
             this._notify('onListChange');
             this._notify('onMarkedKeyChanged', key);
          },
+
+         setMarkerVisibility: function(markerVisibility) {
+            this._options.markerVisibility = markerVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
          getFirstItemKey: function() {
             var
                nextItemId = 0,
@@ -254,10 +263,7 @@ define('Controls/List/ListViewModel',
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
-            if (this._options.markerVisibility === 'always') {
-               IOC.resolve('ILogger').warn('ListControl', 'Value "always" for property Controls/List/interface/IListControl#markerVisibility is deprecated, use value "visible" instead');
-            }
-            if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always' && this._items.getCount())) {
+            if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always') && this._items.getCount()) {
                this._markedKey = this._items.at(0).getId();
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
@@ -285,6 +291,9 @@ define('Controls/List/ListViewModel',
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
             }
          },
+         setItemActionVisibilityCallback: function(callback) {
+            this._options.itemActionVisibilityCallback = callback;
+         },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
          },
@@ -303,6 +312,10 @@ define('Controls/List/ListViewModel',
 
          getActiveItem: function() {
             return this._activeItem;
+         },
+
+         setItemTemplateProperty: function(itemTemplateProperty) {
+            this._options.itemTemplateProperty = itemTemplateProperty;
          },
 
          setMultiSelectVisibility: function(multiSelectVisibility) {

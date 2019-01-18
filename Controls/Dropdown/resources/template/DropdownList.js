@@ -1,6 +1,7 @@
 define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
+      'Core/IoC',
       'wml!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
@@ -10,9 +11,13 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, IoC, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
       var _private = {
-
+         checkDeprecated: function(cfg) {
+            if (cfg.groupMethod) {
+               IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            }
+         },
          setPopupOptions: function(self, horizontalAlign) {
             var align = horizontalAlign || 'right';
             self._popupOptions = {
@@ -134,6 +139,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
          },
          _beforeMount: function(newOptions) {
+            _private.checkDeprecated(newOptions);
             if (newOptions.items) {
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
@@ -147,6 +153,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   parentProperty: newOptions.parentProperty,
                   emptyText: newOptions.emptyText,
                   groupTemplate: newOptions.groupTemplate,
+                  groupingKeyCallback: newOptions.groupingKeyCallback,
                   groupMethod: newOptions.groupMethod
                });
                this._hasHierarchy = this._listModel.hasHierarchy();
