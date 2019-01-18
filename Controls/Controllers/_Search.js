@@ -81,14 +81,9 @@ define('Controls/Controllers/_Search',
           * @cfg {Object} filter
           * @returns {Core/Deferred}
           */
-         search: function(filter) {
+         search: function(filter, force) {
             var self = this;
-            
-            //aborting current query
-            this.abort();
-            this._searchDeferred = new Deferred();
-   
-            this._searchDelayTimer = setTimeout(function() {
+            var load = function() {
                if (self._searchStartCallback) {
                   self._searchStartCallback(filter);
                }
@@ -105,8 +100,17 @@ define('Controls/Controllers/_Search',
                      self._searchDeferred = null;
                      return result;
                   });
-            }, this._searchDelay);
+            };
             
+            //aborting current query
+            this.abort();
+            this._searchDeferred = new Deferred();
+   
+            if (force) {
+               load();
+            } else {
+               this._searchDelayTimer = setTimeout(load, this._searchDelay);
+            }
       
             return this._searchDeferred;
          },
