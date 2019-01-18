@@ -160,6 +160,44 @@
    }
 }
 
+//toolbutton active style
+.controls-Button_style-danger_viewMode-toolButton:active {
+   border-color: @color_danger;
+}
+
+.controls-Button_style-warning_viewMode-toolButton:active {
+   border-color: @color_warning;
+}
+
+.controls-Button_style-success_viewMode-toolButton:active {
+   border-color: @color_success;
+}
+
+.controls-Button_style-info_viewMode-toolButton:active {
+   border-color: @color_info;
+}
+
+.controls-Button_style-primary_viewMode-toolButton:active {
+   border-color: @color_primaryV;
+}
+
+.controls-Button_style-secondary_viewMode-toolButton:active {
+   border-color: @color-ToolButton__border_iconStyle-secondary_hovered;
+}
+
+.controls-Button_style-secondary_viewMode-toolButton:active {
+   .controls-Button__icon-secondary {
+      color: @color_Link_secondary_hovered;
+   }
+}
+
+.controls-Button_style-secondary_viewMode-link:active {
+   .controls-Button__icon-secondary {
+      color: @color_Link_secondary_hovered;
+   }
+}
+
+/**/
 .controls-Button__icon-info {
    color: @color_info;
 }
@@ -334,6 +372,33 @@
    color: @color_Link_magic;
 }
 
+//link active state
+.controls-Button_style-secondary_viewMode-link:active {
+   .controls-Button__icon-secondary_viewMode-link_iconStyle-default {
+      color: @color_Link_secondary_hovered;
+   }
+   color: @color_Link_secondary_hovered;
+}
+.controls-Button_style-primary_viewMode-link:active {
+   color: @color_Link_primary_hovered;
+}
+.controls-Button_style-info_viewMode-link:active {
+   color: @color_Link_info_hovered;
+}
+.controls-Button_style-success_viewMode-link:active {
+   color: @color_Link_success_hovered;
+}
+.controls-Button_style-danger_viewMode-link:active {
+   color: @color_Link_danger_hovered;
+}
+.controls-Button_style-warning_viewMode-link:active {
+   color: @color_Link_warning_hovered;
+}
+.controls-Button_style-default_viewMode-link:active {
+   color: @color_Link_default_hovered;
+}
+
+//link hover state
 .ws-is-no-touch {
    .controls-Button_style-secondary_viewMode-link:hover {
       .controls-Button__icon-secondary_viewMode-link_iconStyle-default {

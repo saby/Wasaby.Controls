@@ -1,7 +1,5 @@
-@height_BaseControl-loadMore: 24px;
-
 .controls-BaseControl__loadMore {
-   height: @height_BaseControl-loadMore;
+   height: @height_BaseControl-button-loadMore;
 }
 .controls-BaseControl__pagingContainer {
    pointer-events: none;
@@ -17,8 +15,8 @@
 }
 .controls-BaseControl__scrollPaging {
    pointer-events: auto;
-   border: solid @color_primary;
-   border-width: @border-width_ScrollPaging;
+   border: 0 solid @border-color_BaseControl-scrollPaging;
+   border-top-width: @border-width_BaseControl-scrollPaging-top;
 }
 .controls-BaseControl__loadingIndicator {
    left: 0;
@@ -44,17 +42,10 @@
    bottom: 0;
 }
 .controls-BaseControl__loadingIndicatorImg {
-   background: url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif') 0 0 no-repeat;/**/
-   width: 32px;
-   height: 32px;
+   background: @background-image_BaseControl-loadingIndicator 0 0 no-repeat;/**/
+   width: @width_BaseControl-loadingIndicator-img;
+   height: @height_BaseControl-loadingIndicator-img;
 }
 .controls-BaseControl__trigger  {
    position: relative;
-}
-// for correct view actions in last row
-.controls-BaseControl__lastRowActions_outside {
-   margin-bottom: @margin-bottom_Actions_outside;
-}
-.controls-BaseControl__lastRowActions_inside {
-   margin-bottom: @margin-bottom_Actions_inside;
 }
