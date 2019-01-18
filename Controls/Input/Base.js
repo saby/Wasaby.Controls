@@ -554,6 +554,14 @@ define('Controls/Input/Base',
                template: readOnlyFieldTemplate,
                scope: {}
             };
+            this._beforeFieldWrapper = {
+               template: null,
+               scope: {}
+            };
+            this._afterFieldWrapper = {
+               template: null,
+               scope: {}
+            };
          },
 
          /**
