@@ -126,7 +126,7 @@ define([
             items: items.clone(),
             keyProperty: 'id',
             displayProperty: 'title',
-            groupMethod: function(item) {
+            groupingKeyCallback: function(item) {
                return item.get('type');
             }
          });

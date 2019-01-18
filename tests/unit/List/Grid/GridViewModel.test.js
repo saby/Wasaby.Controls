@@ -611,8 +611,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             gridViewModel.resetHeaderColumns();
             assert.equal(0, gridViewModel._curHeaderColumnIndex, 'Incorrect value "_curHeaderColumnIndex" after "resetHeaderColumns()".');
          });
-         it('getResults', function() {
-            assert.deepEqual(undefined, gridViewModel.getResults(), 'Incorrect value "getResults()".');
+         it('getResultsPosition()', function() {
+            assert.deepEqual(undefined, gridViewModel.getResultsPosition(), 'Incorrect value "getResultsPosition()".');
          });
          it('_prepareResultsColumns', function() {
             assert.deepEqual([{}].concat(gridColumns), gridViewModel._resultsColumns, 'Incorrect value "_headerColumns" before "_prepareResultsColumns([])" without multiselect.');

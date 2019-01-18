@@ -144,7 +144,7 @@ define(
                let newConfig = {
                   keyProperty: 'id',
                };
-               newConfig.groupMethod = function (item) {
+               newConfig.groupingKeyCallback = function (item) {
                   if (item.get('group') === 'hidden' || !item.get('group')) {
                      return ControlsConstants.view.hiddenGroup;
                   }

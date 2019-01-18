@@ -160,10 +160,12 @@ define('Controls/Input/Base',
          notifyChangeOfFocusState: function(self, hasFocus) {
             /**
              * After showing the keyboard only on ios, the workspace size does not change.
+             * The keyboard is shown only if the field has received focus as a result of a user touch.
              */
-            if (self._isMobileIOS) {
+            if (self._isMobileIOS && self._fromTouch) {
                var eventName = hasFocus ? 'MobileInputFocus' : 'MobileInputFocusOut';
 
+               self._fromTouch = hasFocus;
                EventBus.globalChannel().notify(eventName);
             }
          },
@@ -419,6 +421,12 @@ define('Controls/Input/Base',
           * @private
           */
          _hasHorizontalScroll: hasHorizontalScroll,
+
+         /**
+          * @type {Boolean} Determines whether was a touch to the field.
+          * @private
+          */
+         _fromTouch: false,
 
          /**
           * @type {Number|null} The version of IE browser in which the control is build.
@@ -714,6 +722,10 @@ define('Controls/Input/Base',
             _private.notifyChangeOfFocusState(this, false);
 
             _private.callChangeHandler(this);
+         },
+
+         _touchStartHandler: function() {
+            this._fromTouch = true;
          },
 
          _mouseDownHandler: function() {

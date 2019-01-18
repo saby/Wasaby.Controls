@@ -80,6 +80,21 @@ define(
                return result;
             });
          });
+   
+         it('.search forced', function(done) {
+            var search = new Search({
+               source: source,
+               searchDelay: 1000,
+               navigation: navigation
+            });
+            var now = +new Date();
+      
+            search.search({}, true).addCallback(function(result) {
+               assert.isTrue((now - (+new Date())) > -50);
+               done();
+               return result;
+            });
+         });
          
          it('abort Search', function(done) {
             var search  = new Search(

@@ -65,6 +65,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
+               groupingKeyCallback: cfg.groupingKeyCallback,
                groupMethod: cfg.groupMethod,
                groupTemplate: cfg.groupTemplate,
                items: cfg.items,

@@ -38,7 +38,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#beforeBeginEdit Happens before the start of editing.
+    * @event Controls/interface/IEditableList#beforeBeginEdit Occurs before the start of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {ItemEditOptions} options Options of editing.
     * @param {Boolean} isAdd
@@ -102,7 +102,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#afterBeginEdit Happens after the start of editing\adding.
+    * @event Controls/interface/IEditableList#afterBeginEdit Occurs after the start of editing\adding.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
@@ -130,7 +130,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#beforeEndEdit Happens before the end of editing\adding.
+    * @event Controls/interface/IEditableList#beforeEndEdit Occurs before the end of editing\adding.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} willSave Determines whether changes to editing item will be saved.
@@ -159,7 +159,7 @@ define('Controls/interface/IEditableList', [
     */
 
    /**
-    * @event Controls/interface/IEditableList#afterEndEdit Happens after the end of editing\adding.
+    * @event Controls/interface/IEditableList#afterEndEdit Occurs after the end of editing\adding.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
@@ -188,6 +188,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @cfg {EditingConfig} Configuration for editing in place.
+    * <a href="/materials/demo-ws4-editable-list">Example</a>.
     * @name Controls/interface/IEditableList#editingConfig
     * @example
     * WML:

@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Demo-example: item actions.">
+    <ws:content>
+        <Controls-demo.List.List.ItemActionsPG/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

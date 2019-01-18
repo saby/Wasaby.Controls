@@ -117,6 +117,25 @@ define(
       
             searchController.search('Dmitry');
          });
-         
+   
+         it('search forced', function(done) {
+            var searchController = new Search({
+               minSearchLength: 3,
+               source: source,
+               filter: {}
+            });
+   
+            Search._private.getSearch(searchController).addCallback(function(search) {
+               var searched = false;
+               search.search = function() {
+                  searched = true;
+               };
+   
+               searchController.search('1', true);
+               assert.isTrue(searched);
+               done();
+               return search;
+            });
+         });
       });
    });

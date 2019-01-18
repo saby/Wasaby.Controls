@@ -223,7 +223,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _createHistoryMemory: function() {
             return HistorySourceMenu.createMemory();
          },
-         _groupMethod: function(item) {
+         _groupingKeyCallback: function(item) {
             if (item.get('group') === 'hidden' || !item.get('group')) {
                return ControlsConstants.view.hiddenGroup;
             }

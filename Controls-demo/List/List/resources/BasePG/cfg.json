@@ -1,0 +1,46 @@
+{
+  "Controls/List": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "source": {
+            "title": "source",
+            "type": "Array"
+          },
+          "keyProperty": {
+            "type": "String",
+            "title": "keyProperty",
+            "readOnly": "true"
+          },
+          "markedKey": {
+            "title": "markedKey",
+            "type": "String"
+          },
+          "markerVisibility": {
+            "title": "markerVisibility",
+            "type": "enum",
+            "default": "visible",
+            "enum": {
+              "visible": "visible",
+              "hidden": "hidden",
+              "onactivated": "onactivated"
+            }
+          },
+          "filter": {
+            "title": "filter",
+            "type": "Array"
+          },
+          "emptyTemplate": {
+            "type": "function",
+            "title": "emptyTemplate"
+          },
+          "footerTemplate": {
+            "type": "function",
+            "title": "footerTemplate"
+          }
+        }
+      }
+    }
+  }
+}

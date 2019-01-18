@@ -33,7 +33,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/so
             },
             cfg1 = {
                itemsFilterMethod : filterFnc,
-               groupMethod: groupFnc
+               groupingKeyCallback: groupFnc
             };
          });
          

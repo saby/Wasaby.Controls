@@ -62,7 +62,7 @@ define('Controls-demo/List/Group', [
                }
             });
          },
-         _itemsGroupMethod: function(item) {
+         _groupingKeyCallback: function(item) {
             if (item.get('brand') === 'apple') {
                return ControlsConstants.view.hiddenGroup;
             }

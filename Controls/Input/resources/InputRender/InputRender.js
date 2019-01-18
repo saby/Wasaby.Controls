@@ -143,6 +143,9 @@ define('Controls/Input/resources/InputRender/InputRender',
          // text field has focus
          _inputActive: false,
 
+         // Determines whether was a touch to the field.
+         _fromTouch: false,
+
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
@@ -259,7 +262,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusinHandler: function(e) {
             this._inputActive = true;
 
-            if (cDetection.isMobileIOS) {
+            if (cDetection.isMobileIOS && this._fromTouch) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
 
@@ -278,11 +281,16 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusoutHandler: function(e) {
             this._inputActive = false;
 
-            if (cDetection.isMobileIOS) {
+            if (cDetection.isMobileIOS && this._fromTouch) {
                EventBus.globalChannel().notify('MobileInputFocusOut');
+               this._fromTouch = false;
             }
 
             e.target.scrollLeft = 0;
+         },
+
+         _touchstartHandler: function() {
+            this._fromTouch = true;
          },
 
          /**

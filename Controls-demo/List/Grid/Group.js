@@ -85,7 +85,7 @@ define('Controls-demo/List/Grid/Group', [
             ]
          }),
 
-         _itemsGroupMethod: function(item) {
+         _groupingKeyCallback: function(item) {
             return item.get('type');
          },
          _gridColumns: [
