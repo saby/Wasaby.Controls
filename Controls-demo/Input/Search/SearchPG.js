@@ -47,7 +47,7 @@ define('Controls-demo/Input/Search/SearchPG',
                value: '',
                maxLength: 100,
                selectOnClick: true,
-               autocomplete: true,
+               autocomplete: false,
                readOnly: false,
                tooltip: 'myTooltip'
             };
