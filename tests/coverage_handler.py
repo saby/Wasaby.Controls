@@ -53,16 +53,16 @@ class Coverage:
                     # получаем зависимости
                     for k in d:
                         component_path = os.path.splitext(k)[0]
+                        # если есть папка с названием компонента
                         if os.path.exists(component_path):
                             for other in os.listdir(component_path):
                                 other_component_file = os.path.join(component_path, other)
                                 if os.path.isfile(other_component_file):
-                                    other_component_file = other_component_file.replace(os.sep.join([env, 'controls']), '')
                                     coverage_result.append(other_component_file)
-                        # обрезаем пути, переменная берется из сборки
-                        k = k.replace(os.sep.join([env, 'controls']), '')
                         coverage_result.append(k)
-
+            # обрезаем пути, переменная берется из сборки
+            for i, filename in enumerate(coverage_result):
+                coverage_result[i] = filename.replace(os.sep.join([env, 'controls']), '')
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
 
