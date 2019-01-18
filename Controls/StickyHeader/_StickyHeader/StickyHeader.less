@@ -19,8 +19,7 @@
    bottom: -2px;
 }
 
-.controls-StickyHeader__shadow {
-   visibility: hidden;
+.controls-StickyHeader__shadow-bottom {
    bottom: -@height-gradient_Scroll-shadow;
    background: linear-gradient(
       to bottom,
@@ -28,6 +27,10 @@
    );
 }
 
-.controls-StickyHeader__shadowVisible {
-   visibility: visible;
+.controls-StickyHeader__shadow-top {
+   top: -@height-gradient_Scroll-shadow;
+   background: linear-gradient(
+      to top,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
 }
