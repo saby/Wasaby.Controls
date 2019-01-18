@@ -44,7 +44,7 @@ define(
                   }, 'insert', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '12. 3',
-                     position: 2,
+                     position: 3,
                      format: format
                   });
                });
@@ -73,7 +73,7 @@ define(
                   }, 'insert', '', format, format);
                   assert.deepEqual(result, {
                      value: '12.3',
-                     position: 2,
+                     position: 3,
                      format: format
                   });
                });
@@ -142,7 +142,7 @@ define(
                   }, 'deleteForward', replacer, format, format);
                   assert.deepEqual(result, {
                      value: '1 . 4',
-                     position: 2,
+                     position: 3,
                      format: format
                   });
                });
