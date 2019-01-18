@@ -25,7 +25,6 @@ define('Controls-demo/Input/Search/SearchPG',
                value: {
                   readOnly: true
                },
-
                constraint: {
                   items: [
                      { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
@@ -47,7 +46,6 @@ define('Controls-demo/Input/Search/SearchPG',
                value: '',
                maxLength: 100,
                selectOnClick: true,
-               autocomplete: false,
                readOnly: false,
                tooltip: 'myTooltip'
             };

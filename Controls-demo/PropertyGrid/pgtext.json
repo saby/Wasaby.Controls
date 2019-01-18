@@ -1900,15 +1900,6 @@
             "type": "String|function",
             "title": "Field placeholder."
           },
-          "textAlign": {
-            "type": "enum",
-            "default": "left",
-            "title": "Horizontal alignment of the text in field.",
-            "enum": {
-              "left": "- The text are aligned to the left edge of the line box.",
-              "right": "- The text are aligned to the right edge of the line box."
-            }
-          },
           "tooltip": {
             "type": "String",
             "title": "Text of the tooltip shown when the control is hovered over."
@@ -1917,11 +1908,6 @@
             "type": "Boolean",
             "default": false,
             "title": "Determines whether text is selected when input is clicked."
-          },
-          "autocomplete": {
-            "type": "Boolean",
-            "default": false,
-            "title": "Determines whether to use browser-based auto-complete field."
           },
           "value": {
             "type": "String",
