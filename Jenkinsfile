@@ -78,7 +78,7 @@ def download_coverage_json(version, type) {
     url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controlsdebug_${version}/lastSuccessfulBuild/artifact/controls/tests/${type}/coverage/result.json"
     script = """
         if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-        echo "result.json exitsts"; cp -fr tmp_result.json result.json
+        echo "result.json exitsts"; mv -f tmp_result.json result.json
         else rm -f result.json
         fi
         """
@@ -730,7 +730,7 @@ node('controls') {
                              if ( download_coverage_json(version, 'int') ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json"
                                 if (tests_files_int) {
-                                    echo ${tests_files_int}
+                                    echo "${tests_files_int}"
                                     tests_for_run_int = "--files_to_start ${tests_files_int}"
                                 }
 
@@ -740,7 +740,7 @@ node('controls') {
                             if ( download_coverage_json(version, 'reg') ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json"
                                  if (tests_files_reg) {
-                                 echo ${tests_files_reg}
+                                 echo "${tests_files_reg}"
                                      tests_for_run_reg = "--files_to_start ${tests_files_reg}"
                                  }
                              }
