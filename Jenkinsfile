@@ -666,6 +666,7 @@ node('controls') {
 
         if ( regr || inte || all_inte ) {
                 def soft_restart = "True"
+                def smoke_result
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
                 }
