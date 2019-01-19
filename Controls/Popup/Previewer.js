@@ -35,9 +35,8 @@ define('Controls/Popup/Previewer',
          getType: function(eventType) {
             if (eventType === 'mouseenter' || eventType === 'mouseleave') {
                return 'hover';
-            } else {
-               return 'click';
             }
+            return 'click';
          },
          getCfg: function(self, event) {
             return {
@@ -92,7 +91,7 @@ define('Controls/Popup/Previewer',
             var type = _private.getType(event.type);
 
             if (this._isNewEnvironment()) {
-               this._notify('closePreviewer', [type], {bubbling: true});
+               this._notify('closePreviewer', [type], { bubbling: true });
             } else {
                this._children.openerPreviewer.close(type);
             }
@@ -113,7 +112,7 @@ define('Controls/Popup/Previewer',
 
          _cancel: function(event, action) {
             if (this._isNewEnvironment()) {
-               this._notify('cancelPreviewer', [action], {bubbling: true});
+               this._notify('cancelPreviewer', [action], { bubbling: true });
             } else {
                this._children.openerPreviewer.cancel(action);
             }
@@ -133,7 +132,6 @@ define('Controls/Popup/Previewer',
          _contentMouseenterHandler: function(event) {
             if (!this._isPopupOpened()) {
                this._debouncedAction('_open', [event]);
-
             }
             this._cancel(event, 'closing');
          },
@@ -181,5 +179,4 @@ define('Controls/Popup/Previewer',
       };
 
       return Previewer;
-   }
-);
+   });

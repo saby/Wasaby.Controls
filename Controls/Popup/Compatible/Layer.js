@@ -26,8 +26,8 @@ define('Controls/Popup/Compatible/Layer', [
       'View/Executor/GeneratorCompatible',
       'Core/nativeExtensions',
 
-      //так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
-      //для того чтобы корректно работали стили, которые используют прикладные программисты в старых окнах
+      // так как для VDOM страниц была отделена минимизированная тема онлайна, то необходимо подгружать полную тему
+      // для того чтобы корректно работали стили, которые используют прикладные программисты в старых окнах
       'css!SBIS3.CONTROLS/themes/online/online'
    ];
    var defaultLicense = {
@@ -243,8 +243,8 @@ define('Controls/Popup/Compatible/Layer', [
             var self = this;
             loadDeferred = new Deferred();
 
-            /*Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
-            * например, autosize*/
+            /* Если jQuery есть, то не будем его перебивать. В старом функционале могли подтянуться плагины
+            * например, autosize */
             if (window && window.jQuery) {
                compatibleDeps.splice(0, 1);
 
@@ -260,7 +260,7 @@ define('Controls/Popup/Compatible/Layer', [
 
             // Сначала отдельно загрузим jQuery, чтобы можно было безопасно загружать другие модули,
             // которые могут ее использовать
-            //load jquery if it was not loaded
+            // load jquery if it was not loaded
             if (window && window.$ && window.$.fn && window.$.fn.jquery === '3.3.1') {
                mainDeferred = new Deferred();
                mainDeferred.callback();

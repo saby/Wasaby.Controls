@@ -10,7 +10,7 @@ define('Controls/Utils/ToSourceModel', [
 ], function(Di, cInstance, coreClone, chain, Utils) {
 
    function getModel(model, config) {
-      return typeof model === 'string' ? Di.resolve(model, config) : new model(config);
+      return typeof model === 'string' ? Di.create(model, config) : new model(config);
    }
 
    /**

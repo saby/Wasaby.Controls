@@ -709,6 +709,9 @@ define('Controls/List/BaseControl', [
                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
+               if (receivedState) {
+                  viewModelConfig.items = receivedState;
+               }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                _private.initListViewModelHandler(self, self._listViewModel);
             }
@@ -721,7 +724,6 @@ define('Controls/List/BaseControl', [
 
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
-                  self._listViewModel.setItems(receivedState);
                   self._items = self._listViewModel.getItems();
                   if (newOptions.dataLoadCallback instanceof Function) {
                      newOptions.dataLoadCallback(self._items);

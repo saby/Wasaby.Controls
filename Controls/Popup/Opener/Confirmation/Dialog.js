@@ -16,7 +16,6 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    messageTemplate,
    detailsTemplate,
    template) {
-
    'use strict';
 
    /**
@@ -142,5 +141,4 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    };
 
    return Submit;
-}
-);
+});

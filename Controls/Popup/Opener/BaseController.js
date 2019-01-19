@@ -7,9 +7,6 @@ define('Controls/Popup/Opener/BaseController',
    function(CoreExtend, Deferred, Utils) {
       var _private = {
 
-         /*
-          * Вернуть размеры контента
-          * */
          getContentSizes: function(container) {
             return {
                width: container.offsetWidth,
@@ -67,7 +64,7 @@ define('Controls/Popup/Opener/BaseController',
       };
 
       /**
-       * Базовая стратегия
+       * Base Popup Controller
        * @category Popup
        * @class Controls/Popup/Opener/BaseController
        * @author Красильников А.С.
@@ -82,7 +79,7 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          /**
-          * Добавление нового элемента
+          * Adding a new popup
           * @function Controls/Popup/Opener/BaseController#elementCreated
           * @param element
           * @param container
@@ -103,7 +100,7 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          /**
-          * Обновление размеров элемента
+          * Updating popup
           * @function Controls/Popup/Opener/BaseController#elementUpdated
           * @param element
           * @param container
@@ -150,7 +147,7 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          /**
-          * Удаление элемента
+          * Removing popup
           * @function Controls/Popup/Opener/BaseController#elementDestroyed
           * @param element
           */
@@ -199,7 +196,7 @@ define('Controls/Popup/Opener/BaseController',
             if (!container) {
                // if popup has initializing state then container doesn't created yet
                if (item.popupState !== BaseController.POPUP_STATE_INITIALIZING) {
-                  Utils.logger.error(this._moduleName, 'Ошибка при построении шаблона ' + item.popupOptions.template + ' на этапе ' + stage);
+                  Utils.logger.error(this._moduleName, 'Error when building the template ' + item.popupOptions.template + ' on stage ' + stage);
                }
                return false;
             }

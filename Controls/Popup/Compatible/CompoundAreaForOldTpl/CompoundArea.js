@@ -832,7 +832,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
                   var popupAfterUpdated = function popupAfterUpdated(item, container) {
                      if (item.isHiddenForRecalc) {
-
                         // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
                         self._notifyVDOM('controlResize', [], { bubbling: true });
 

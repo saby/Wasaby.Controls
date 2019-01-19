@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/Notification/NotificationController',
    ],
    function(Deferred, collection, BaseController, NotificationStrategy) {
       /**
-       * Стратегия позиционирования нотификационного окна.
+       * Notification Popup Controller
        * @class Controls/Popup/Opener/Notification/NotificationController
        * @control
        * @private
@@ -44,8 +44,9 @@ define('Controls/Popup/Opener/Notification/NotificationController',
             var height = 0;
 
             /**
-             * В item.height лежит высота попапа. В ней учитываются отступы между нотификационными окнами,
-             * задаваемые в шаблоне, через css. Это сделано для поддержки тематизации.
+             * In item.height is the height of the popup.
+             * It takes into account the indentation between the notification popups,
+             * specified in the template via css. This is done to support theming.
              */
             this._stack.each(function(item) {
                item.position = NotificationStrategy.getPosition(height);
@@ -55,5 +56,4 @@ define('Controls/Popup/Opener/Notification/NotificationController',
       });
 
       return new NotificationController();
-   }
-);
+   });

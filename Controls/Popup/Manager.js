@@ -49,7 +49,7 @@ define('Controls/Popup/Manager',
          popupCreated: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               // при создании попапа, зарегистрируем его
+               // Register new popup
                _private.fireEventHandler(id, 'onOpen');
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
@@ -196,9 +196,7 @@ define('Controls/Popup/Manager',
             var item = popupContainer && popupContainer._children[id];
             var container = item && item._container;
 
-            // При работе popup'ов внутри слоя совместимости, _container может быть обернут
-            // в jQuery. Так как система работает с нативными элементами, нужно в таком случае
-            // снять jQuery-обертку
+            // todo https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             if (container && container.jquery) {
                container = container[0];
             }
@@ -267,6 +265,15 @@ define('Controls/Popup/Manager',
          }
       };
 
+      /**
+       * Popups Manager
+       * @class Controls/Popup/Manager
+       * @private
+       * @singleton
+       * @category Popup
+       * @author Красильников Андрей
+       */
+
       var Manager = Control.extend({
          _template: template,
          _afterMount: function() {
@@ -281,19 +288,10 @@ define('Controls/Popup/Manager',
          },
 
          /**
-          * Менеджер окон
-          * @class Controls/Popup/Manager
-          * @private
-          * @singleton
-          * @category Popup
-          * @author Красильников Андрей
-          */
-
-         /**
-          * Показать всплывающее окно
+          * Show
           * @function Controls/Popup/Manager#show
-          * @param options конфигурация попапа
-          * @param controller стратегия позиционирования попапа
+          * @param options popup configuration
+          * @param controller popup controller
           */
          show: function(options, controller) {
             var item = this._createItemConfig(options, controller);
@@ -329,10 +327,10 @@ define('Controls/Popup/Manager',
          },
 
          /**
-          * Обновить опции существующего попапа
+          * Upgrade options of an existing popup
           * @function Controls/Popup/Manager#update
-          * @param id идентификатор попапа, для которого нужно обновить опции
-          * @param options новые опции
+          * @param id popup id
+          * @param options new options of popup
           */
          update: function(id, options) {
             var element = this.find(id);
@@ -351,10 +349,9 @@ define('Controls/Popup/Manager',
          },
 
          /**
-          * Удалить окно
+          * Remove popup
           * @function Controls/Popup/Manager#remove
-          * @param id идентификатор попапа
-          * @param container контейнер
+          * @param id popup id
           */
          remove: function(id) {
             var self = this;
@@ -369,9 +366,9 @@ define('Controls/Popup/Manager',
          },
 
          /**
-          * Найти конфиг попапа
+          * Find popup configuration
           * @function Controls/Popup/Manager#find
-          * @param id идентификатор попапа
+          * @param id popup id
           */
          find: function(id) {
             var item = _private.findItemById(this, id);
@@ -384,8 +381,7 @@ define('Controls/Popup/Manager',
          },
 
          /**
-          * Переиндексировать набор попапов, например после изменения конфигурации
-          * одного из них
+          * Reindex a set of popups, for example, after changing the configuration of one of them
           * @function Controls/Popup/Manager#reindex
           */
          reindex: function() {
