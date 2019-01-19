@@ -1,48 +1,56 @@
 define('Controls/Input/Password/ViewModel',
    [
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/Base/ViewModel'
    ],
    function(BaseViewModel) {
-
       'use strict';
 
       /**
        * @class Controls/Input/Password/ViewModel
+       * @extends Controls/Input/Base/ViewModel
+       *
        * @private
+       *
        * @author Журавлев М.С.
        */
-      var ViewModel = BaseViewModel.extend({
-         updateOptions: function(newOptions) {
-            this._options.autoComplete = newOptions.autoComplete;
-            this._options.passwordVisible = newOptions.passwordVisible;
 
-            ViewModel.superclass.updateOptions.call(this, newOptions);
+      var _private = {
+         replaceOnAsterisks: function(value) {
+            return '•'.repeat(value.length);
+         },
+         isReplaceWithAsterisks: function(options) {
+            return !(options.autoComplete || options.passwordVisible);
+         },
+         adjustSplitValue: function(splitValue, value) {
+            splitValue.before = value.substring(0, splitValue.before.length);
+            splitValue.after = value.substring(value.length - splitValue.after.length);
+         },
+         calcDisplayValue: function(replaceWithAsterisks, value) {
+            return replaceWithAsterisks ? _private.replaceOnAsterisks(value) : value;
+         }
+      };
+
+      var ViewModel = BaseViewModel.extend({
+         _convertToDisplayValue: function(value) {
+            var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
+
+            return _private.calcDisplayValue(replaceWithAsterisks, value);
          },
 
          handleInput: function(splitValue, inputType) {
-            splitValue.before = this._options.value.substring(0, splitValue.before.length);
-            splitValue.after = this._options.value.substring(this._options.value.length - splitValue.after.length);
+            var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
+
+            if (replaceWithAsterisks) {
+               _private.adjustSplitValue(splitValue, this._value);
+            }
 
             var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
 
-            result.value = this.getDisplayValue();
+            this._displayValue = _private.calcDisplayValue(replaceWithAsterisks, this._value);
 
             return result;
-         },
-
-         getDisplayValue: function() {
-            var displayValue = ViewModel.superclass.getDisplayValue.call(this);
-            var autoComplete = this._options.autoComplete;
-            var passwordVisible = this._options.passwordVisible;
-
-            /**
-             * If auto-completion is true, then the displayed value can be saved to the browser history.
-             * Therefore, the field must have a value that is not replaced by •.
-             */
-            return autoComplete || passwordVisible ? displayValue : '•'.repeat(displayValue.length);
          }
       });
 
       return ViewModel;
-   }
-);
+   });

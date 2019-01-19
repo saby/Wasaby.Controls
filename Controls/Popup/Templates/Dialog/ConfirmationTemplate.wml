@@ -2,7 +2,6 @@
     ws-tab-cycling="true"
     ws-delegates-tabfocus="true">
     <div class="controls-ConfirmationTemplate__body">
-        <!--Если размер текста сообщения и описания превышает заданные рамки, то увеличиваем размер окна-->
         <div class="controls-ConfirmationTemplate__main">
             <ws:partial template="{{_options.contentArea||_options.bodyContentTemplate}}"/>
         </div>
