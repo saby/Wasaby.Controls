@@ -73,9 +73,9 @@ def return_test_for_run(tests_files) {
     return [run_reg, run_int]
 }
 
-def download_coverage_json(version) {
+def download_coverage_json(version, type) {
     echo "Выкачиваем файл с зависимостями"
-    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controlsdebug_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controlsdebug_${version}/lastSuccessfulBuild/artifact/controls/tests/${type}/coverage/result.json"
     script = """
         if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
         echo "result.json exitsts"; cp -fr tmp_result.json result.json
@@ -657,7 +657,7 @@ node('controls') {
             """
             sh """
                 sudo chmod -R 0777 ${workspace}
-                ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
+                echo ${python_ver} "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
@@ -666,7 +666,6 @@ node('controls') {
 
         if ( regr || inte || all_inte ) {
                 def soft_restart = "True"
-                def smoke_result
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
                 }
@@ -729,7 +728,7 @@ node('controls') {
                         dir("./controls/tests") {
                         if (inte) {
                              if ( download_coverage_json(version, 'int') ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj int/coverage/result.json"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json"
                                 if (tests_files_int) {
                                     tests_for_run_int = "--files_to_start ${tests_files}"
                                 }
@@ -738,7 +737,7 @@ node('controls') {
                         }
                         if (reg) {
                             if ( download_coverage_json(version, 'reg') ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj reg/coverage/result.json"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json"
                                  if (tests_files_reg) {
                                      tests_for_run_reg = "--files_to_start ${tests_files}"
                                  }
