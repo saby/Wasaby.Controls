@@ -117,14 +117,14 @@ function(cMerge,
 
          if (cfg.canMaximize && cfg.maxWidth !== cfg.minWidth) {
             cfg.minimizedWidth = cfg.minWidth;
-            cfg.minWidth += 100; //minWidth и minimizedWidth должны различаться.
+            cfg.minWidth += 100; // minWidth и minimizedWidth должны различаться.
             cfg.templateOptions.canMaximize = true;
             cfg.templateOptions.templateOptions.isPanelMaximized = cfg.maximized;
          }
       },
 
       prepareNotificationConfig: function(config) {
-         var template = typeof config.template === 'string' ?  requirejs(config.template) : config.template;
+         var template = typeof config.template === 'string' ? requirejs(config.template) : config.template;
          config.opener = null;
          config.className = 'controls-OldNotification';
          config.isVDOM = true;
@@ -217,13 +217,13 @@ function(cMerge,
          if (cfg.hasOwnProperty('verticalAlign') && typeof cfg.verticalAlign !== 'object') {
             cfg.corner = cfg.corner || {};
 
-            //Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
+            // Если object - значит api popupMixin'a, которое совпадает с новым api => ничего не меняем
             cfg.corner.vertical = cfg.verticalAlign;
             delete cfg.verticalAlign;
          }
 
          if (!cfg.hasOwnProperty('direction')) {
-            //Значения по умолчанию. взято из floatArea.js
+            // Значения по умолчанию. взято из floatArea.js
             var side = cfg.hasOwnProperty('side') ? cfg.side : 'left';
             if (side === 'left') {
                cfg.direction = 'right';
@@ -235,14 +235,14 @@ function(cMerge,
          if (cfg.hasOwnProperty('direction')) {
             if (cfg.direction === 'right' || cfg.direction === 'left') {
                if (typeof cfg.horizontalAlign !== 'object') {
-                  cfg.horizontalAlign = {side: cfg.direction};
+                  cfg.horizontalAlign = { side: cfg.direction };
                }
             } else if (typeof cfg.verticalAlign !== 'object') {
-               cfg.verticalAlign = {side: cfg.direction};
+               cfg.verticalAlign = { side: cfg.direction };
 
-               //magic of old floatarea
+               // magic of old floatarea
                if (typeof cfg.horizontalAlign !== 'object' && cfg.side !== 'center') {
-                  cfg.horizontalAlign = {side: cfg.side === 'right' ? 'left' : 'right'};
+                  cfg.horizontalAlign = { side: cfg.side === 'right' ? 'left' : 'right' };
                }
             }
          }
@@ -262,7 +262,7 @@ function(cMerge,
             cfg.isModal = cfg.modal;
          }
 
-         if (cfg._popupComponent === 'dialog') { //у window всегда есть drag
+         if (cfg._popupComponent === 'dialog') { // у window всегда есть drag
             cfg.templateOptions.draggable = true;
          }
 
@@ -317,7 +317,7 @@ function(cMerge,
                target: cfg.target,
                modal: cfg.isModal,
                handlers: cfg.handlers,
-               border: !isVDOMTemplate(template) //Если шаблон вдомный - кнопка закрытия не нужна
+               border: !isVDOMTemplate(template) // Если шаблон вдомный - кнопка закрытия не нужна
             },
             mode: (cfg._type === 'stack' || cfg._type === 'sticky' || cfg.target) ? 'floatArea' : 'dialog'
          });
@@ -380,9 +380,9 @@ function(cMerge,
          if (cfg.corner && cfg.corner.horizontal) {
             newCfg.dialogOptions.side = cfg.corner.horizontal;
          }
-         
+
          newCfg.dialogOptions.title = cfg.title;
-         
+
          if (cfg.offset) {
             newCfg.dialogOptions.offset = cfg.offset;
          }

@@ -11,13 +11,11 @@ define('Controls/Popup/Opener/Edit',
       'Core/Deferred'
    ],
    function(Control, template, CoreClone, CoreMerge, cInstance, Deferred) {
-
       /**
        * The control opens a popup with a record editing dialog. When in the edit dialog the action takes place with the entry, control synchronize editable entry with recordsets.
        * @class Controls/Popup/Opener/Edit
        * @control
        * @public
-       * @author Красильников А.С.
        * @category Popup
        */
 
@@ -171,7 +169,6 @@ define('Controls/Popup/Opener/Edit',
 
          _onResult: function(data) {
             if (data && data.formControllerEvent) {
-
                /**
                 * @event Controls/Popup/Opener/Edit#beforeItemEndEdit The event is called before the synchronization with the recordset.
                 */

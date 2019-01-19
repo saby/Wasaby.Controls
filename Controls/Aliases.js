@@ -7,7 +7,7 @@ define('Controls/Aliases',
        * @interface Controls/Aliases
        * @css @color_shadow_default shadow color used by default
        * @css @color_shadow_secondary secondary shadow color
-       * @css @color_shadow_error color of shadows using with elements meaning "danger"
+       * @css @color_shadow_danger color of shadows using with elements meaning "danger"
        * @css @color_warning color of functional elements meaning "warning"
        * @css @color_success color of functional elements meaning "success"
        * @css @color_danger color of functional elements meaning "danger"
@@ -27,13 +27,13 @@ define('Controls/Aliases',
        * @css @color_text_additional color of additional text elements
        * @css @background-color_footer background color of elements used in footer area
        * @css @background-color_default default background color of elements
-       * @css @background-color_error background color of elements meaning "danger"
+       * @css @background-color_danger background color of elements meaning "danger"
        * @css @background-color_toolbar background color of toolbars
        * @css @background_color_editing background color of specific editing controls
        * @css @background-color_additional background color of additional elements
        * @css @background-color_item_hovered background color of list items in hover mode
        * @css @color_border primary color of borders
-       * @css @color_border_error color of borders for elements meaning "danger"
+       * @css @color_border_danger color of borders for elements meaning "danger"
        * @css @color_border_disabled color of borders for elements in read-only state
        * @css @color_border_secondary secondary color of borders
        * @css @color_Heading_primary primary color of headings

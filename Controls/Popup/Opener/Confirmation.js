@@ -119,7 +119,7 @@ define('Controls/Popup/Opener/Confirmation',
           *
           *        _open() {
           *           var config= {
-          *              message: 'Сохранить изменения?'
+          *              message: 'Save changes?'
           *              type: 'yesnocancel'
           *           }
           *           this._children.confirmationOpener.open(config)
