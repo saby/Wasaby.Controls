@@ -126,7 +126,7 @@ define('Controls/Filter/Fast',
 
          isItemsPropertiesChanged: function(oldItems, newItems) {
             var isChanged = false;
-            Chain(newItems).each(function(item, index) {
+            chain.factory(newItems).each(function(item, index) {
                if (!isEqual(item.properties, oldItems[index].properties)) {
                   isChanged = true;
                }
