@@ -730,7 +730,7 @@ node('controls') {
                              if ( download_coverage_json(version, 'int') ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json"
                                 if (tests_files_int) {
-                                    tests_for_run_int = "--files_to_start ${tests_files}"
+                                    tests_for_run_int = "--files_to_start ${tests_files_int}"
                                 }
 
                              }
@@ -739,7 +739,7 @@ node('controls') {
                             if ( download_coverage_json(version, 'reg') ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json"
                                  if (tests_files_reg) {
-                                     tests_for_run_reg = "--files_to_start ${tests_files}"
+                                     tests_for_run_reg = "--files_to_start ${tests_files_reg}"
                                  }
                              }
                         }
