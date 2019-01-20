@@ -13,7 +13,7 @@ define('Controls/Date/MonthList/CalendarSource', [
     * @extends Types/source:Base
     * @author Миронов А.Ю.
     */
-   var CalendarSource = source.Base.extend({
+   var CalendarSource = source.Memory.extend({
       _moduleName: 'Controls.Date.MonthList.CalendarSource',
       $protected: {
          _dataSetItemsProperty: 'items',
