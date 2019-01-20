@@ -14,7 +14,7 @@ define('Controls/List/Mover/MoveDialog', [
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/ISource
     *
-    * @mixes Controls/List/Mover/MoveDialogStyles
+    * @mixes Controls/List/Mover/MoveDialog/Styles
     * @control
     * @public
     * @author Авраменко А.С.

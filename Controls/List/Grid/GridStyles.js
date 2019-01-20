@@ -1,10 +1,10 @@
-define('Controls/List/Grid/Grid/Style', [],
+define('Controls/List/Grid/GridStyles', [],
    function() {
    }
 
    /**
     * @author Родионов Е.А.
-    * @mixin Controls/List/Grid/Grid/Style
+    * @mixin Controls/List/Grid/GridStyles
     * @public
     *
     *

@@ -648,6 +648,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/BaseControl/Styles
     * @control
     * @public
     * @author Авраменко А.С.

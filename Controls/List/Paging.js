@@ -44,6 +44,12 @@ define('Controls/List/Paging', [
       }
    };
 
+   /**
+    *
+    * @mixes Controls/List/Paging/Styles
+    * @mixes Controls/List/Paging/DigitButtons/Styles
+    *
+    */
    ModuleClass = BaseControl.extend({
       _template: template,
       _stateBegin: 'normal',
