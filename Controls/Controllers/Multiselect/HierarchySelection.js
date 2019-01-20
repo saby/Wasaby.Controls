@@ -1,11 +1,11 @@
 define('Controls/Controllers/Multiselect/HierarchySelection', [
    'Controls/Controllers/Multiselect/Selection',
    'Controls/Utils/ArraySimpleValuesUtil',
-   'WS.Data/Relation/Hierarchy'
+   'Types/entity'
 ], function(
    Selection,
    ArraySimpleValuesUtil,
-   HierarchyRelation
+   _entity
 ) {
    'use strict';
 
@@ -132,7 +132,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
       constructor: function(options) {
          HierarchySelection.superclass.constructor.apply(this, arguments);
 
-         this._hierarchyRelation = new HierarchyRelation({
+         this._hierarchyRelation = new _entity.relation.Hierarchy({
             idProperty: options.keyProperty || 'id',
             parentProperty: options.parentProperty || 'Раздел',
             nodeProperty: options.nodeProperty || 'Раздел@'

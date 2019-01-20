@@ -1,11 +1,11 @@
 define('Controls/Popup/Opener/Notification/NotificationController',
    [
       'Core/Deferred',
-      'WS.Data/Collection/List',
+      'Types/collection',
       'Controls/Popup/Opener/BaseController',
       'Controls/Popup/Opener/Notification/NotificationStrategy'
    ],
-   function(Deferred, List, BaseController, NotificationStrategy) {
+   function(Deferred, collection, BaseController, NotificationStrategy) {
       /**
        * Notification Popup Controller
        * @class Controls/Popup/Opener/Notification/NotificationController
@@ -17,7 +17,7 @@ define('Controls/Popup/Opener/Notification/NotificationController',
       var NotificationController = BaseController.extend({
          constructor: function(cfg) {
             NotificationController.superclass.constructor.call(this, cfg);
-            this._stack = new List();
+            this._stack = new collection.List();
          },
 
          elementCreated: function(item, container) {

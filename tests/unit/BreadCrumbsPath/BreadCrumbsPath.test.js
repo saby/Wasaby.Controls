@@ -4,14 +4,14 @@ define([
    'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred',
-   'WS.Data/Entity/Model'
+   'Types/entity'
 ], function(
    Path,
    BreadCrumbsUtil,
    getWidthUtil,
    FontLoadUtil,
    Deferred,
-   Model
+   entity
 ) {
    describe('Controls.BreadCrumbs.Path', function() {
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
@@ -74,7 +74,7 @@ define([
          path = new Path();
          path.saveOptions({
             items: data.map(function(item) {
-               return new Model({
+               return new entity.Model({
                   rawData: item
                });
             }),
