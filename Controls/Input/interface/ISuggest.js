@@ -128,7 +128,7 @@ define('Controls/Input/interface/ISuggest', [
     * @example
     * myModule.js
     * <pre>
-    *    define('myModule', ['Core/Control', 'wml!myModule', 'WS.Data/Source/Memory'], function(Control, template, Memory) {
+    *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
     *       return Control.extend({
     *          _template: template,
     *          _suggestValue: null,
@@ -165,7 +165,7 @@ define('Controls/Input/interface/ISuggest', [
     * @example
     * myModule.js
     * <pre>
-    *    define('myModule', ['Core/Control', 'wml!myModule', 'WS.Data/Source/Memory'], function(Control, template, Memory) {
+    *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
     *       return Control.extend({
     *          _template: template,
     *          _suggestValue: null,

@@ -1,10 +1,10 @@
 define(
    [
       'Controls/Button/Menu',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/core-clone'
    ],
-   (MenuButton, Memory, Clone) => {
+   (MenuButton, sourceLib, Clone) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -48,7 +48,7 @@ define(
             style: 'secondary',
             showHeader: true,
             keyProperty: 'id',
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             })

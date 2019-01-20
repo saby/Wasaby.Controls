@@ -1,11 +1,11 @@
 define('Controls-demo/BreadCrumbs/BreadCrumbs', [
    'Core/Control',
    'wml!Controls-demo/BreadCrumbs/BreadCrumbs',
-   'WS.Data/Entity/Model'
+   'Types/entity'
 ], function(
    Control,
    template,
-   Model
+   entity
 ) {
    var BreadCrumbs = Control.extend({
       _template: template,
@@ -54,7 +54,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
                parent: 5
             }
          ].map(function(item) {
-            return new Model({
+            return new entity.Model({
                rawData: item,
                idProperty: 'id'
             });
@@ -64,7 +64,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             title: 'Настолько длинное название папки что оно не влезет в максимальный размер 1',
             secondTitle: 'тест1'
          }].map(function(item) {
-            return new Model({
+            return new entity.Model({
                rawData: item,
                idProperty: 'id'
             });
@@ -78,7 +78,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
             title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
             secondTitle: 'тест6'
          }].map(function(item) {
-            return new Model({
+            return new entity.Model({
                rawData: item,
                idProperty: 'id'
             });
@@ -89,7 +89,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
                title: 'Record3eqweqweqeqweqweedsadeqweqewqeqweqweqw',
                secondTitle: 'тест6'
             }].map(function(item) {
-            return new Model({
+            return new entity.Model({
                rawData: item,
                idProperty: 'id'
             });
@@ -139,7 +139,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbs', [
                parent: 5
             }
          ].map(function(item) {
-            return new Model({
+            return new entity.Model({
                rawData: item,
                idProperty: 'id'
             });

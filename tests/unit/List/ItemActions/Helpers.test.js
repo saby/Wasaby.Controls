@@ -3,9 +3,9 @@
  */
 define([
    'Controls/List/ItemActions/Helpers',
-   'WS.Data/Entity/Model',
-   'WS.Data/Collection/RecordSet'
-], function(Helpers, Model, RecordSet) {
+   'Types/entity',
+   'Types/collection'
+], function(Helpers, entity, collection) {
 
    describe('Controls.List.ItemActions.Helpers', function() {
       describe('reorderMoveActionsVisibility', function() {
@@ -36,7 +36,7 @@ define([
                parent: null,
                'parent@': null
             }];
-            rs = new RecordSet({
+            rs = new collection.RecordSet({
                idProperty: 'id',
                rawData: data
             });

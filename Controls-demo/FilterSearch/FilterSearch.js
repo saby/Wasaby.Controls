@@ -4,7 +4,7 @@
 define('Controls-demo/FilterSearch/FilterSearch', [
    'Core/Control',
    'wml!Controls-demo/FilterSearch/FilterSearch',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/FilterSearch/FilterSearch',
@@ -12,7 +12,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
    'Controls/Search/Input/Container',
    'Controls/Filter/Button/Container',
    'Controls/Filter/Fast/Container'
-], function(Control, template, MemorySource, memorySourceData, memorySourceFilter) {
+], function(Control, template, sourceLib, memorySourceData, memorySourceFilter) {
    'use strict';
    var SearchContainer = Control.extend({
       _template: template,
@@ -51,7 +51,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                properties: {
                   keyProperty: 'owner',
                   displayProperty: 'title',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      data: [
                         { id: 0, title: 'По ответственному', owner: '0' },
                         { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
@@ -73,7 +73,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                properties: {
                   keyProperty: 'owner',
                   displayProperty: 'title',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      data: [
                         { id: 0, title: 'По ответственному', owner: '0' },
                         { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
@@ -93,7 +93,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      data: [
                         { id: 0, title: 'По департаменту' },
                         { id: 1, title: 'Разработка' },
@@ -113,7 +113,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
             id: 'owner',
             resetValue: '0',
             value: '0',
-            source: new MemorySource({
+            source: new sourceLib.Memory({
                data: [
                   { id: 0, title: 'По ответственному', lastName: '0' },
                   { id: 1, title: 'Новиков Д.В.', lastName: 'Новиков Д.В.' },
@@ -124,17 +124,17 @@ define('Controls-demo/FilterSearch/FilterSearch', [
                idProperty: 'id'
             })
          }];
-         this._source = new MemorySource({
+         this._source = new sourceLib.Memory({
             data: memorySourceData,
             idProperty: 'id'
          });
 
-         this._sourceWithoutFilter = new MemorySource({
+         this._sourceWithoutFilter = new sourceLib.Memory({
             data: memorySourceData,
             idProperty: 'id'
          });
 
-         this._tabSource = new MemorySource({
+         this._tabSource = new sourceLib.Memory({
             data: [
                {
                   id: 'employees',
@@ -147,7 +147,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
       },
 
       _afterMount: function() {
-         this._source = new MemorySource({
+         this._source = new sourceLib.Memory({
             data: memorySourceData,
             filter: memorySourceFilter({
                'owner': '0',

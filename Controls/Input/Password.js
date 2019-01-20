@@ -1,7 +1,7 @@
 define('Controls/Input/Password',
    [
       'Controls/Input/Base',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Input/Password/ViewModel',
 
       'wml!Controls/Input/Password/PasswordVisibilityButton',
@@ -9,7 +9,7 @@ define('Controls/Input/Password',
       'css!theme?Controls/Input/Password/Password'
    ],
 
-   function(Base, descriptor, ViewModel, passwordVisibilityButtonTemplate) {
+   function(Base, entity, ViewModel, passwordVisibilityButtonTemplate) {
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
@@ -124,7 +124,7 @@ define('Controls/Input/Password',
       Password.getOptionTypes = function getOptionsTypes() {
          var optionTypes = Base.getOptionTypes();
 
-         optionTypes.revealable = descriptor(Boolean);
+         optionTypes.revealable = entity.descriptor(Boolean);
 
          return optionTypes;
       };

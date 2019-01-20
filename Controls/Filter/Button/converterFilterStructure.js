@@ -1,10 +1,10 @@
 define('Controls/Filter/Button/converterFilterStructure',
    [
-      'WS.Data/Chain',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Utils'
+      'Types/chain',
+      'Types/collection',
+      'Types/util'
    ],
-   function(Chain, RecordSet, Util) {
+   function(chain, collection, Utils) {
       
       'use strict';
       
@@ -26,11 +26,11 @@ define('Controls/Filter/Button/converterFilterStructure',
       }
 
       function convertToFilterStructure(items) {
-         return Chain(items).map(function(item) {
+         return chain.factory(items).map(function(item) {
             var itemStructureItem = {};
             for (var i in structureMap) {
-               if (Util.getItemPropertyValue(item, structureMap[i]) !== undefined && structureMap.hasOwnProperty(i)) {
-                  itemStructureItem[i] = Util.getItemPropertyValue(item, structureMap[i]);
+               if (Utils.object.getPropertyValue(item, structureMap[i]) !== undefined && structureMap.hasOwnProperty(i)) {
+                  itemStructureItem[i] = Utils.object.getPropertyValue(item, structureMap[i]);
                }
             }
             return itemStructureItem;
@@ -40,17 +40,17 @@ define('Controls/Filter/Button/converterFilterStructure',
       function convertToSourceData(filterStructure) {
          var dataArray = [];
 
-         Chain(filterStructure)
+         chain.factory(filterStructure)
             .each(function(item) {
                var rsItem = {};
                for (var i in recordToSructureElemMap) {
-                  if (Util.getItemPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
-                     rsItem[i] = Util.getItemPropertyValue(item, recordToSructureElemMap[i]);
+                  if (Utils.object.getPropertyValue(item, recordToSructureElemMap[i]) && recordToSructureElemMap.hasOwnProperty(i)) {
+                     rsItem[i] = Utils.object.getPropertyValue(item, recordToSructureElemMap[i]);
                   }
                }
                dataArray.push(rsItem);
             });
-         return new RecordSet({
+         return new collection.RecordSet({
             rawData: dataArray
          });
 

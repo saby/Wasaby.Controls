@@ -1,17 +1,14 @@
 define(
    [
       'Controls/History/Source',
-      'Controls/History/Service',
-      'WS.Data/Source/DataSet', // for otladka
-      'WS.Data/Source/Memory',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Adapter/Sbis',
-      'WS.Data/Entity/Model',
+      'Controls/History/Service', // for otladka
+      'Types/collection',
+      'Types/entity',
       'Core/Deferred',
-      'WS.Data/Query/Query',
+      'Types/source',
       'Controls/History/Constants'
    ],
-   (historySource, historyService, DataSet, Memory, RecordSet, SbisAdapter, Model, Deferred, Query, Constants) => {
+   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants) => {
       describe('History Source', () => {
          let items = [
             {
@@ -112,14 +109,14 @@ define(
          };
 
          function createRecordSet(data) {
-            return new RecordSet({
+            return new collection.RecordSet({
                rawData: data,
                idProperty: 'ObjectId',
-               adapter: new SbisAdapter()
+               adapter: new entity.adapter.Sbis()
             });
          }
 
-         let data = new DataSet({
+         let data = new sourceLib.DataSet({
             rawData: {
                frequent: createRecordSet(frequentData),
                pinned: createRecordSet(pinnedData),
@@ -129,7 +126,7 @@ define(
             idProperty: 'ObjectId'
          });
 
-         let myItem = new Model({
+         let myItem = new entity.Model({
             rawData: {
                _type: 'record',
                d: ['7', 'Запись 7', '3', null],
@@ -140,7 +137,7 @@ define(
                   {n: 'pinned', t: 'Строка'}
                ]
             },
-            adapter: new SbisAdapter(),
+            adapter: new entity.adapter.Sbis(),
             idProperty: 'id',
             format: [
                {name: 'id', type: 'string'},
@@ -150,7 +147,7 @@ define(
             ]
          });
          let config = {
-            originSource: new Memory({
+            originSource: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             }),
@@ -204,7 +201,7 @@ define(
          });
          describe('checkHistory', function() {
             it('query', function() {
-               let query = new Query().where();
+               let query = new sourceLib.Query().where();
                let historyDef = hSource.query(query);
 
                historyDef.addCallback(function(data) {
@@ -212,7 +209,7 @@ define(
                   assert.equal(records.at(0).get('pinned'), null);
                });
 
-               query = new Query().where({
+               query = new sourceLib.Query().where({
                   $_history: true
                });
                historyDef = hSource.query(query);
@@ -248,10 +245,10 @@ define(
                assert.equal(historyItems.at('1').get('pinned'), false);
             });
             it('checkPinnedAmount', function() {
-               let list = new RecordSet();
+               let list = new collection.RecordSet();
 
                for (var i = 0; i < Constants.MAX_HISTORY; i++) {
-                  list.add(new Model());
+                  list.add(new entity.Model());
                }
 
                assert.isFalse(historySource._private.checkPinnedAmount(list));
@@ -271,7 +268,7 @@ define(
                assert.equal(hSource._history.recent.at(0).getId(), '7');
             });
             it('prepareHistoryBySourceItems', function(done){
-               let newData = new DataSet({
+               let newData = new sourceLib.DataSet({
                   rawData: {
                      frequent: createRecordSet(frequentData),
                      pinned: createRecordSet(pinnedData),
@@ -280,7 +277,7 @@ define(
                   itemsProperty: '',
                   idProperty: 'ObjectId'
                });
-               let memorySource = new Memory({
+               let memorySource = new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                });

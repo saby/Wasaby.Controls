@@ -1,14 +1,13 @@
 define('Controls-demo/HighCharts/DemoSource', [
-   'WS.Data/Source/Memory',
    'Core/Deferred',
-   'WS.Data/Source/DataSet'
-], function(MemorySource, Deferred, DataSet) {
-   var DemoSource = MemorySource.extend({
+   'Types/source'
+], function(Deferred, source) {
+   var DemoSource = source.Memory.extend({
       query: function(filter) {
          var arr = null;
          switch (filter) {
             case '1':
-               arr = new DataSet({
+               arr = new source.DataSet({
                   rawData: [
                      {
                         title: 'hello',
@@ -22,7 +21,7 @@ define('Controls-demo/HighCharts/DemoSource', [
                });
                break;
             case '2':
-               arr = new DataSet({
+               arr = new source.DataSet({
                   rawData: [
                      {
                         title: 'Bye',

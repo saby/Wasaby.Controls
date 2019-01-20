@@ -1,14 +1,14 @@
 define(
    [
       'Controls/Dropdown/Controller',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/core-clone',
-      'WS.Data/Collection/RecordSet',
+      'Types/collection',
       'Controls/History/Source',
       'Controls/History/Service',
       'Core/Deferred'
    ],
-   (Dropdown, Memory, Clone, RecordSet, historySource, historyService, Deferred) => {
+   (Dropdown, sourceLib, Clone, collection, historySource, historyService, Deferred) => {
       describe('Dropdown/Controller', () => {
          let items = [
             {
@@ -46,7 +46,7 @@ define(
             }
          ];
 
-         let itemsRecords = new RecordSet({
+         let itemsRecords = new collection.RecordSet({
             idProperty: 'id',
             rawData: items
          });
@@ -60,7 +60,7 @@ define(
             dataLoadCallback: function(items) {
                selectItem = items[0];
             },
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             }),
@@ -71,7 +71,7 @@ define(
             lazyItemsLoad: true,
             selectedKeys: '[2]',
             keyProperty: 'id',
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             })
@@ -126,7 +126,7 @@ define(
                dataLoadCallback: function() {
                   dataLoadCallbackCalled = true;
                },
-               source: new Memory({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                })
@@ -145,7 +145,7 @@ define(
                dataLoadCallback: function() {
                   dataLoadCallbackCalled = true;
                },
-               source: new Memory({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                })
@@ -187,7 +187,7 @@ define(
                dropdownController._beforeUpdate({
                   selectedKeys: '[2]',
                   keyProperty: 'id',
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      idProperty: 'id',
                      data: items
                   })
@@ -201,7 +201,7 @@ define(
          it('_beforeUpdate new historySource', function() {
             let dropdownController = getDropdownController(config);
             let historyS = new historySource({
-               originSource: new Memory({
+               originSource: new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                }),
@@ -274,7 +274,7 @@ define(
          });
          it('open one item', () => {
             let dropdownController = getDropdownController(config);
-            let item = new RecordSet({
+            let item = new collection.RecordSet({
                idProperty: 'id',
                rawData: [ {id: 1, title: 'Запись 1'} ]
             });
@@ -303,7 +303,7 @@ define(
                lazyItemsLoad: true,
                selectedKeys: '[2]',
                keyProperty: 'id',
-               source: new Memory({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                })
@@ -343,7 +343,7 @@ define(
          it('mousedown', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             let opened = false;
-            let items = new RecordSet({
+            let items = new collection.RecordSet({
                idProperty: 'id',
                rawData: [ {id: 1, title: 'Запись 1'}, {id: 2, title: 'Запись 2'} ]
             });
@@ -371,7 +371,7 @@ define(
          it('getFilter', () => {
             var filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
             assert.deepEqual(filter, {$_history: true, id: 'test'});
-            filter = Dropdown._private.getFilter({id: 'test2'}, new Memory({}));
+            filter = Dropdown._private.getFilter({id: 'test2'}, new sourceLib.Memory({}));
             assert.deepEqual(filter, {id: 'test2'});
             filter = Dropdown._private.getFilter(undefined, new historySource({}));
             assert.deepEqual(filter, {$_history: true});

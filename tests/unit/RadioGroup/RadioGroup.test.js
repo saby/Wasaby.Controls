@@ -1,17 +1,17 @@
 define(
    [
       'Controls/Toggle/RadioGroup',
-      'WS.Data/Entity/Model',
-      'WS.Data/Source/Memory',
-      'WS.Data/Collection/RecordSet'
+      'Types/entity',
+      'Types/source',
+      'Types/collection'
    ],
-   function(RadioGroup, Model, MemorySource, RecordSet) {
+   function(RadioGroup, entity, sourceLib, collection) {
       'use strict';
       describe('Controls/Toggle/RadioGroup', function () {
          it('change selected key', function() {
             var radio = new RadioGroup();
             var keyChanged = false;
-            var item = new Model();
+            var item = new entity.Model();
             item.set("2", "test");
 
             radio._notify = function (event, value) {
@@ -27,7 +27,7 @@ define(
 
          it('_beforeMount', function(done) {
             var radio = new RadioGroup();
-            var source = new MemorySource({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -53,7 +53,7 @@ define(
 
          it('_beforeUpdate', function(done) {
             var radio = new RadioGroup();
-            var source = new MemorySource({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -72,7 +72,7 @@ define(
 
             radio.saveOptions(options);
 
-            source = new MemorySource({
+            source = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {

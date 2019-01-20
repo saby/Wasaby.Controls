@@ -3,10 +3,10 @@ define('Controls/Toggle/DoubleSwitch', [
    'wml!Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchToggle',
    'wml!Controls/Toggle/DoubleSwitch/resources/DoubleSwitchText',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Toggle/DoubleSwitch/DoubleSwitch',
    'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
-], function(Control, template, toggleTemplate, textTemplate, types) {
+], function(Control, template, toggleTemplate, textTemplate, entity) {
 
    /**
     * Switch with two captions and with support two orientation.
@@ -98,14 +98,14 @@ define('Controls/Toggle/DoubleSwitch', [
 
    Switch.getOptionTypes = function getOptionTypes() {
       return {
-         value: types(Boolean),
-         orientation: types(String).oneOf([
+         value: entity.descriptor(Boolean),
+         orientation: entity.descriptor(String).oneOf([
             'vertical',
             'horizontal'
          ]),
 
          //TODO: сделать проверку на массив когда будет сделана задача https://online.sbis.ru/opendoc.html?guid=2016ea16-ed0d-4413-82e5-47c3aeaeac59
-         captions: types(Object)
+         captions: entity.descriptor(Object)
       };
    };
 

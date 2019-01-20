@@ -1,9 +1,9 @@
 define([
    'Controls/Controllers/Multiselect/HierarchySelection',
-   'WS.Data/Collection/RecordSet'
+   'Types/collection'
 ], function(
    HierarchySelection,
-   RecordSet
+   collection
 ) {
    'use strict';
    describe('Controls.Controllers.Multiselect.HierarchySelection', function() {
@@ -52,7 +52,7 @@ define([
          7 (лист)
        */
       beforeEach(function() {
-         allData = new RecordSet({
+         allData = new collection.RecordSet({
             rawData: items.slice(),
             idProperty: 'id'
          });
@@ -424,7 +424,7 @@ define([
             cfg = {
                selectedKeys: [1],
                excludedKeys: [],
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   rawData: itemsWithDuplicateIds,
                   idProperty: 'id'
                }),

@@ -1,11 +1,11 @@
 define('Controls-demo/Toolbar/ToolbarVdom', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Toolbar/ToolbarVdom',
    'css!Controls-demo/Toolbar/ToolbarVdom',
    'wml!Controls-demo/Toolbar/resources/itemTemplate',
    'wml!Controls-demo/Toolbar/resources/itemTemplateContent'
-], function(Control, Memory, template) {
+], function(Control, source, template) {
    'use strict';
    var ModuleClass = Control.extend(
       {
@@ -15,14 +15,14 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
          _currentClick: 'Нажми на тулбар',
 
          _getDefaultMemory: function() {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'id',
                data: this._defaultItems
             });
          },
 
          _getMemorySource: function(items) {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'id',
                data: items
             });

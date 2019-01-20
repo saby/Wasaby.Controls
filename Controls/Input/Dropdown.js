@@ -3,13 +3,13 @@ define('Controls/Input/Dropdown',
       'Core/Control',
       'wml!Controls/Input/Dropdown/Dropdown',
       'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
-      'WS.Data/Utils',
-      'WS.Data/Chain',
+      'Types/util',
+      'Types/chain',
       'Controls/Dropdown/Util',
       'Core/helpers/Object/isEqual',
       'css!theme?Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
+   function(Control, template, defaultContentTemplate, Utils, chain, dropdownUtils, isEqual) {
       /**
        * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
        * The full list of options is displayed when you click on the control.
@@ -44,12 +44,12 @@ define('Controls/Input/Dropdown',
 
       'use strict';
 
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
       var _private = {
          getSelectedKeys: function(items, keyProperty) {
             var keys = [];
-            Chain(items).each(function(item) {
+            chain.factory(items).each(function(item) {
                keys.push(getPropValue(item, keyProperty));
             });
             return keys;

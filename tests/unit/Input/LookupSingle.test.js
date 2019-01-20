@@ -3,9 +3,9 @@
  */
 define([
    'Controls/Selector/Lookup/_Lookup',
-   'WS.Data/Entity/Model',
-   'WS.Data/Collection/List'
-], function(Lookup, Model, List) {
+   'Types/entity',
+   'Types/collection'
+], function(Lookup, entity, collection) {
 
    describe('Controls/Selector/Lookup/_Lookup', function() {
       it('getAdditionalCollectionWidth', function() {
@@ -36,16 +36,16 @@ define([
       it('getLastSelectedItems', function() {
          var
             lookup = new Lookup(),
-            item = new Model({
+            item = new entity.Model({
                rawData: {id: 1},
                idProperty: 'id'
             }),
-            item2 = new Model({
+            item2 = new entity.Model({
                rawData: {id: 2},
                idProperty: 'id'
             });
 
-         lookup._options.items = new List({
+         lookup._options.items = new collection.List({
             items: [item, item2]
          });
 
@@ -120,13 +120,13 @@ define([
 
          lookup._beforeMount({multiLine: true});
          lookup._beforeUpdate({
-            items: new List()
+            items: new collection.List()
          });
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 
          lookup._beforeUpdate({
-            items: new List(),
+            items: new collection.List(),
             multiLine: true
          });
          assert.notEqual(lookup._multiLineState, undefined);
@@ -134,7 +134,7 @@ define([
          assert.equal(lookup._maxVisibleItems, undefined);
 
          lookup._beforeUpdate({
-            items: new List(),
+            items: new collection.List(),
             maxVisibleItems: 10
          });
          assert.notEqual(lookup._maxVisibleItems, undefined);

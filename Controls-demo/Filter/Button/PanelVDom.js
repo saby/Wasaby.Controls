@@ -1,8 +1,8 @@
 define('Controls-demo/Filter/Button/PanelVDom',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
-      'WS.Data/Chain',
+      'Types/source',
+      'Types/chain',
       'wml!Controls-demo/Filter/Button/PanelVDom',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
 
@@ -20,7 +20,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Filter/Button/PanelVDom'
    ],
 
-   function(Control, MemorySource, Chain, template) {
+   function(Control, sourceLib, chain, template) {
 
       /**
        * @class Controls/Container/Search
@@ -39,7 +39,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
          _sourcePeriod: null,
          _stateSource: null,
          _beforeMount: function() {
-            this._periodSource = new MemorySource({
+            this._periodSource = new sourceLib.Memory({
                data: [
                   {key: 1, title: 'All time'},
                   {key: 2, title: 'Today'},
@@ -49,7 +49,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                ],
                idProperty: 'key'
             });
-            this._stateSource = new MemorySource({
+            this._stateSource = new sourceLib.Memory({
                data: [
                   {key: 1, title: 'All states'},
                   {key: 2, title: 'In progress'},
@@ -59,7 +59,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                ],
                idProperty: 'key'
             });
-            this._limitSource = new MemorySource({
+            this._limitSource = new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   {key: 1, title: 'Due date'},
@@ -89,7 +89,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                {id: 'responsible', value: '', resetValue: '', visibility: false},
                {id: 'tagging', value: '', resetValue: '', textValue: 'Marks', visibility: false},
                {id: 'operation', value: '', resetValue: '', visibility: false},
-               {id: 'group', value: [1], resetValue: '', visibility: false, source: new MemorySource({
+               {id: 'group', value: [1], resetValue: '', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
                   data: [
                      { key: 1, title: 'My' },
@@ -98,7 +98,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                })},
                {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: false},
                {id: 'loose', value: true, resetValue: '', textValue: 'Loose', visibility: false},
-               {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false, source: new MemorySource({
+               {id: 'own', value: [2], resetValue: '', textValue: 'On department', visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
                   data: [
                      { key: 1, title: 'On me' },
@@ -107,7 +107,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
                })},
                {id: 'our organisation', value: '', resetValue: '', visibility: false},
                {id: 'document', value: '', resetValue: '', visibility: false},
-               {id: 'activity', value: [1], resetValue: [1], visibility: false, source: new MemorySource({
+               {id: 'activity', value: [1], resetValue: [1], visibility: false, source: new sourceLib.Memory({
                   idProperty: 'key',
                   data: [
                      { key: 1, title: 'Activity for the last month' },
@@ -119,7 +119,7 @@ define('Controls-demo/Filter/Button/PanelVDom',
             this._itemsHistory = this._items;
          },
          _filterChangedHandler: function(event, filter) {
-            Chain(this._items).each(function(item) {
+            chain.factory(this._items).each(function(item) {
                item.textValue = filter[item.id];
             });
          }

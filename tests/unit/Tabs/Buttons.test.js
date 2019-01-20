@@ -3,9 +3,9 @@
  */
 define([
    'Controls/Tabs/Buttons',
-   'WS.Data/Source/Memory',
-   'WS.Data/Entity/Record'
-], function(TabsButtons, MemorySource, Record) {
+   'Types/source',
+   'Types/entity'
+], function(TabsButtons, sourceLib, entity) {
    describe('Controls.Tabs.Buttons', function() {
       it('prepareItemOrder', function() {
          var
@@ -74,7 +74,7 @@ define([
                   title: 'Тринадцатый'
                }
             ],
-            source = new MemorySource({
+            source = new sourceLib.Memory({
                data: data,
                idProperty: 'id'
             });
@@ -92,28 +92,28 @@ define([
       });
       it('prepareItemClass', function() {
          var
-            item = new Record({
+            item = new entity.Record({
                rawData: {
                   align: 'left',
                   karambola: '15',
                   _order: '144'
                }
             }),
-            item2 = new Record({
+            item2 = new entity.Record({
                rawData: {
                   karambola: '10',
                   _order: '2',
                   type: 'photo'
                }
             }),
-            item3 = new Record({
+            item3 = new entity.Record({
                rawData: {
                   karambola: '10',
                   _order: '2',
                   isMainTab: true
                }
             }),
-            item4 = new Record({
+            item4 = new entity.Record({
                rawData: {
                   karambola: '10',
                   _order: '2',
@@ -156,7 +156,7 @@ define([
                   title: 'test1'
                }
             ],
-            source = new MemorySource({
+            source = new sourceLib.Memory({
                data: data,
                idProperty: 'id'
             }),
@@ -178,7 +178,7 @@ define([
                   title: 'test1'
                }
             ],
-            source = new MemorySource({
+            source = new sourceLib.Memory({
                data: data,
                idProperty: 'id'
             }),
