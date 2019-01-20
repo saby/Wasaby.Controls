@@ -2,10 +2,10 @@ define(
    [
       'Controls/Input/ComboBox',
       'Core/core-clone',
-      'WS.Data/Source/Memory',
-      'WS.Data/Collection/RecordSet'
+      'Types/source',
+      'Types/collection'
    ],
-   (Combobox, Clone, Memory, RecordSet) => {
+   (Combobox, Clone, sourceLib, collection) => {
       describe('Input.Combobox', () => {
          let items = [
             {
@@ -22,7 +22,7 @@ define(
             }
          ];
 
-         let itemsRecords = new RecordSet({
+         let itemsRecords = new collection.RecordSet({
             idProperty: 'id',
             rawData: items
          });
@@ -33,7 +33,7 @@ define(
             keyProperty: 'id',
             value: 'New text',
             placeholder: 'This is placeholder',
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             })
@@ -54,7 +54,7 @@ define(
 
          it('_setText empty item', function() {
             let emptyConfig = Clone(config),
-               emptyItems = new RecordSet({
+               emptyItems = new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [{ id: null, title: 'Не выбрано' }]
                });

@@ -14,7 +14,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
       'Controls/Popup/Manager/ManagerController',
-      'WS.Data/Entity/InstantiableMixin',
+      'Types/entity',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
       'Vdom/Vdom',
@@ -35,7 +35,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       DialogRecord,
       cEventBus,
       ManagerController,
-      InstantiableMixin,
+      entity,
       callNext,
       cInstance,
       Vdom
@@ -60,7 +60,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
        * Слой совместимости для открытия старых шаблонов в новых попапах
       * */
       var CompoundArea = CompoundContainer.extend([
-         InstantiableMixin,
+         entity.InstantiableMixin,
          LikeWindowMixin
       ], {
          _template: template,

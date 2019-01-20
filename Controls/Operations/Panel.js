@@ -2,7 +2,7 @@ define('Controls/Operations/Panel', [
    'Core/Control',
    'wml!Controls/Operations/Panel/Panel',
    'wml!Controls/Operations/Panel/ItemTemplate',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/Operations/Panel/Utils',
    'Controls/Button/validateIconStyle',
    'css!theme?Controls/Operations/Panel/Panel'
@@ -10,7 +10,7 @@ define('Controls/Operations/Panel', [
    Control,
    template,
    ItemTemplate,
-   Memory,
+   sourceLib,
    WidthUtils,
    validateIconStyle
 ) {
@@ -20,7 +20,7 @@ define('Controls/Operations/Panel', [
       recalculateToolbarItems: function(self, items, toolbarWidth) {
          if (items) {
             self._oldToolbarWidth = toolbarWidth;
-            self._toolbarSource = new Memory({
+            self._toolbarSource = new sourceLib.Memory({
                idProperty: self._options.keyProperty,
                data: WidthUtils.fillItemsType(self._options.keyProperty, self._options.parentProperty, items, toolbarWidth).getRawData()
             });
@@ -84,7 +84,7 @@ define('Controls/Operations/Panel', [
    /**
     * @event Controls/Operations/Panel#itemClick Occurs when an item was clicked.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} item Clicked item.
+    * @param {Types/entity:Record} item Clicked item.
     * @example
     * TMPL:
     * <pre>

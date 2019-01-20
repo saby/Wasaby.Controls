@@ -1,6 +1,6 @@
 define('Controls-demo/Input/Dropdown/Dropdown', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Input/Dropdown//historySourceDropdown',
    'wml!Controls-demo/Input/Dropdown/Dropdown',
    'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown',
@@ -12,7 +12,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
    'wml!Controls-demo/Input/Dropdown/headTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
    'wml!Controls-demo/Input/Dropdown/StackTemplateDdl'
-], function(Control, Memory, historySource, template) {
+], function(Control, source, historySource, template) {
 
    'use strict';
 
@@ -168,7 +168,7 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeysHistory = [1];
       },
       _createMemory: function(items) {
-         return new Memory({
+         return new source.Memory({
             idProperty: 'id',
             data: items
          });

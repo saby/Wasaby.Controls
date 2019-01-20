@@ -4,11 +4,11 @@
 define(
    [
       'Controls/Utils/RecordSynchronizer',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Entity/Model'
+      'Types/collection',
+      'Types/entity'
    ],
-   (RecordSynchronizer, RecordSet, Record) => {
-      let items = new RecordSet({
+   (RecordSynchronizer, collection, entity) => {
+      let items = new collection.RecordSet({
          idProperty: 'id',
          rawData: [
             {
@@ -27,7 +27,7 @@ define(
       });
       describe('RecordSynchronizer', () => {
          it('add record', () => {
-            let editRecord = new Record({
+            let editRecord = new entity.Model({
                rawData: {
                   id: 4,
                   title: 'Lukaku'
@@ -44,7 +44,7 @@ define(
          });
 
          it('merge record', () => {
-            let editRecord = new Record({
+            let editRecord = new entity.Model({
                rawData: {
                   id: 0,
                   title: 'Rashford',

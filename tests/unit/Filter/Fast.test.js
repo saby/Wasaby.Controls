@@ -1,10 +1,10 @@
 define(
    [
       'Controls/Filter/Fast',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/core-clone'
    ],
-   function(FastData, Memory, Clone) {
+   function(FastData, sourceLib, Clone) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -28,7 +28,7 @@ define(
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      data: items[0],
                      idProperty: 'key'
                   })
@@ -56,7 +56,7 @@ define(
                   filter: {
                      key: 0
                   },
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      data: items[0],
                      idProperty: 'key'
                   })
@@ -70,7 +70,7 @@ define(
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      data: items[0],
                      idProperty: 'key'
                   }),
@@ -80,7 +80,7 @@ define(
          ];
 
          var config = {};
-         config.source = new Memory({
+         config.source = new sourceLib.Memory({
             idProperty: 'id',
             data: source
          });
@@ -141,7 +141,7 @@ define(
                newSource = Clone(source);
             fastFilter._beforeMount(config);
             newSource[0].value = 'США';
-            newConfigSource.source = new Memory({
+            newConfigSource.source = new sourceLib.Memory({
                idProperty: 'id',
                data: newSource
             });

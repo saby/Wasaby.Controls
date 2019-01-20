@@ -55,7 +55,7 @@ define('Controls/Controllers/_Search',
       
       /**
        * @name Controls/Controllers/_Search#source
-       * @cfg {WS.Data/Source/ISource} source
+       * @cfg {Types/source:ISource} source
        */
       
       /**

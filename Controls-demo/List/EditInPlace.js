@@ -1,16 +1,16 @@
 define('Controls-demo/List/EditInPlace', [
    'Core/Control',
    'wml!Controls-demo/List/EditInPlace/EditInPlace',
-   'WS.Data/Source/Memory',
-   'WS.Data/Entity/Model',
+   'Types/source',
+   'Types/entity',
    'Core/Deferred',
    'Controls/EditableArea/Constants',
    'Controls/Validate/Validators/IsRequired',
    'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function (Control,
              template,
-             MemorySource,
-             Model,
+             source,
+             entity,
              Deferred,
              EditConstants
 ) {
@@ -29,7 +29,7 @@ define('Controls-demo/List/EditInPlace', [
       _editingItem: null,
       _addItem: null,
       _beforeMount: function() {
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -58,7 +58,7 @@ define('Controls-demo/List/EditInPlace', [
                }
             ]
          });
-         this._viewSource2 = new MemorySource({
+         this._viewSource2 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -71,7 +71,7 @@ define('Controls-demo/List/EditInPlace', [
                }
             ]
          });
-         this._viewSource3 = new MemorySource({
+         this._viewSource3 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -84,7 +84,7 @@ define('Controls-demo/List/EditInPlace', [
                }
             ]
          });
-         this._viewSource4 = new MemorySource({
+         this._viewSource4 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -97,7 +97,7 @@ define('Controls-demo/List/EditInPlace', [
                }
             ]
          });
-         this._viewSource5 = new MemorySource({
+         this._viewSource5 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -110,14 +110,14 @@ define('Controls-demo/List/EditInPlace', [
                }
             ]
          });
-         this._editingItem = new Model({
+         this._editingItem = new entity.Model({
             rawData: {
                id: 2,
                title: 'Editing starts before mounting to DOM',
                randomField: 'text'
             }
          });
-         this._addItem = new Model({
+         this._addItem = new entity.Model({
             rawData: {
                id: 3,
                title: 'Adding starts before mounting to DOM',
@@ -135,7 +135,7 @@ define('Controls-demo/List/EditInPlace', [
                return EditConstants.CANCEL;
             case 2:
                return {
-                  item: new Model({
+                  item: new entity.Model({
                      rawData: {
                         id: 2,
                         title: 'Another record'
@@ -146,7 +146,7 @@ define('Controls-demo/List/EditInPlace', [
                var def = new Deferred();
                setTimeout(function() {
                   def.callback({
-                     item: new Model({
+                     item: new entity.Model({
                         rawData: {
                            id: 3,
                            title: 'Record from Deferred'
@@ -160,7 +160,7 @@ define('Controls-demo/List/EditInPlace', [
 
       _onItemAdd: function(e, item) {
          return {
-               item: new Model({
+               item: new entity.Model({
                   rawData: {
                      id: counter++,
                      title: '',
@@ -179,7 +179,7 @@ define('Controls-demo/List/EditInPlace', [
       _deferredItemAdd: function() {
          var
             options = {
-               item: new Model({
+               item: new entity.Model({
                   rawData: {
                      id: 3,
                      title: '',

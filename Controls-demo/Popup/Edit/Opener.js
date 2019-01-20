@@ -2,7 +2,7 @@ define('Controls-demo/Popup/Edit/Opener',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/Edit/Opener',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/List/Grid/GridData',
       'wml!Controls-demo/List/Grid/DemoItem',
       'wml!Controls-demo/List/Grid/DemoBalancePrice',
@@ -10,7 +10,7 @@ define('Controls-demo/Popup/Edit/Opener',
       'wml!Controls-demo/List/Grid/DemoHeaderCostPrice',
       'wml!Controls-demo/List/Grid/DemoName'
    ],
-   function(Control, template, MemorySource, GridData) {
+   function(Control, template, source, GridData) {
       'use strict';
 
       var EditOpener = Control.extend({
@@ -20,7 +20,7 @@ define('Controls-demo/Popup/Edit/Opener',
          _openRecordByNewKey: false,
 
          _beforeMount: function(opt, context) {
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: GridData.catalog.slice(0, 10)
             });

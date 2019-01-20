@@ -1,11 +1,11 @@
 define('Controls/Container/Data/getPrefetchSource',
    [
       'Controls/Controllers/SourceController',
-      'WS.Data/Source/PrefetchProxy',
+      'Types/source',
       'Core/Deferred'
    ],
    
-   function(SourceController, PrefetchProxy, Deferred) {
+   function(SourceController, sourceLib, Deferred) {
       
       'use strict';
       
@@ -20,7 +20,7 @@ define('Controls/Container/Data/getPrefetchSource',
          
          return dataReady.addCallback(function(resultData) {
             return {
-               source: new PrefetchProxy({
+               source: new sourceLib.PrefetchProxy({
                   target: sourceOptions.source,
                   data: {
                      query: resultData

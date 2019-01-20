@@ -3,9 +3,9 @@
  */
 define([
    'Controls/List/ListViewModel',
-   'WS.Data/Collection/RecordSet'
+   'Types/collection'
 ], function(
-   ListViewModel, RecordSet
+   ListViewModel, collection
 ) {
    describe('Controls.List.ListControl.ListViewModel', function() {
       var data;
@@ -51,7 +51,7 @@ define([
 
       it('updateIndexes', function() {
          var
-            items = new RecordSet({
+            items = new collection.RecordSet({
                rawData: [
                   { id: 1, title: 'item 1' },
                   { id: 2, title: 'item 2' },
@@ -62,7 +62,7 @@ define([
             }),
             model = new ListViewModel({
                keyProperty: 'id',
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   rawData: [],
                   idProperty: 'id'
                })
@@ -116,7 +116,7 @@ define([
             },
             listModel = new ListViewModel(cfg);
 
-         listModel.setItems(new RecordSet({rawData: data, idProperty: 'id'}));
+         listModel.setItems(new collection.RecordSet({rawData: data, idProperty: 'id'}));
          assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
          assert.equal(listModel._markedItem, listModel._display.at(0), 'Incorrect _markedItem after setItems.');
       });

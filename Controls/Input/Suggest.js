@@ -2,12 +2,12 @@ define('Controls/Input/Suggest',
    [
       'Core/Control',
       'wml!Controls/Input/Suggest/Suggest',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Input/OldText/OldViewModel',
       'Controls/Utils/tmplNotify',
       'css!theme?Controls/Input/Suggest/Suggest'
    ],
-   function(Control, template, types, BaseViewModel, tmplNotify) {
+   function(Control, template, entity, BaseViewModel, tmplNotify) {
       
       /**
        * The Input/Suggest control is a normal text input enhanced by a panel of suggested options.
@@ -112,9 +112,9 @@ define('Controls/Input/Suggest',
       
       Suggest.getOptionTypes = function() {
          return {
-            displayProperty: types(String).required(),
-            suggestTemplate: types(Object).required(),
-            searchParam: types(String).required()
+            displayProperty: entity.descriptor(String).required(),
+            suggestTemplate: entity.descriptor(Object).required(),
+            searchParam: entity.descriptor(String).required()
          };
       };
    

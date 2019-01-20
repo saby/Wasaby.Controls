@@ -2,11 +2,11 @@ define('Controls-demo/Popup/TestStack',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/TestStack',
-      'WS.Data/Entity/Record',
+      'Types/entity',
       'require',
       'wml!Controls-demo/Popup/resources/InfoboxTemplate'
    ],
-   function(Control, template, Record, require) {
+   function(Control, template, entity, require) {
       'use strict';
 
       var TestDialog = Control.extend({
@@ -41,7 +41,7 @@ define('Controls-demo/Popup/TestStack',
                new OpenEditDialog().execute({
                   template: tplName,
                   mode: mode,
-                  item: new Record(),
+                  item: new entity.Record(),
                   dialogOptions: {
                      isStack: isStack
                   }

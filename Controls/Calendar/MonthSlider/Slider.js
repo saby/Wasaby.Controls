@@ -1,13 +1,13 @@
 define('Controls/Calendar/MonthSlider/Slider', [
    'Core/Control',
    'Core/core-merge',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'wml!Controls/Calendar/MonthSlider/Slider/Slider',
    'css!theme?Controls/Calendar/MonthSlider/Slider/Slider'
 ], function(
    BaseControl,
    coreMerge,
-   types,
+   entity,
    tmpl//,
    // IMonth
 ) {
@@ -168,7 +168,7 @@ define('Controls/Calendar/MonthSlider/Slider', [
           * @see inAnimation
           * @see outAnimation
           */
-         animation: types(String).required(),
+         animation: entity.descriptor(String).required(),
 
          /**
           * @name Controls/Calendar/MonthSlider/Slider#inAnimation
@@ -176,7 +176,7 @@ define('Controls/Calendar/MonthSlider/Slider', [
           * @see animation
           * @see outAnimation
           */
-         inAnimation: types(String),
+         inAnimation: entity.descriptor(String),
 
          /**
           * @name Controls/Calendar/MonthSlider/Slider#outAnimation
@@ -184,7 +184,7 @@ define('Controls/Calendar/MonthSlider/Slider', [
           * @see animation
           * @see inAnimation
           */
-         outAnimation: types(String),
+         outAnimation: entity.descriptor(String),
 
          /**
           * @name Controls/Calendar/MonthSlider/Slider#data
@@ -193,7 +193,7 @@ define('Controls/Calendar/MonthSlider/Slider', [
           * @see inAnimation
           * @see outAnimation
           */
-         data: types(Object)
+         data: entity.descriptor(Object)
 
          /**
           * @name Controls/Calendar/MonthSlider/Slider#content

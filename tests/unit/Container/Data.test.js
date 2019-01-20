@@ -1,11 +1,11 @@
 define(
    [
       'Controls/Container/Data',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls/Container/Data/ContextOptions',
       'Core/Deferred'
    ],
-   function(Data, Memory, ContextOptions, Deferred) {
+   function(Data, sourceLib, ContextOptions, Deferred) {
       describe('Container/Data', function() {
 
          var sourceData = [
@@ -26,7 +26,7 @@ define(
             {id: 6, title: 'Petr'}
          ];
 
-         var source = new Memory({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: sourceData
          });
@@ -39,7 +39,7 @@ define(
 
          it('update source', function(done) {
             var data = getDataWithConfig({source: source, keyProperty: 'id'});
-            var newSource = new Memory({
+            var newSource = new sourceLib.Memory({
                idProperty: 'id',
                data: sourceDataEdited
             });
@@ -59,7 +59,7 @@ define(
             data._beforeMount(config).addCallback(function() {
                items = data._items;
 
-               data._beforeUpdate({source: new Memory({
+               data._beforeUpdate({source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: sourceDataEdited
                }), idProperty: 'id'}).addCallback(function() {
@@ -78,7 +78,7 @@ define(
             data._beforeMount(config).addCallback(function() {
                items = data._items;
 
-               data._beforeUpdate({source: new Memory({
+               data._beforeUpdate({source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: sourceDataEdited,
                   adapter: 'adapter.sbis'

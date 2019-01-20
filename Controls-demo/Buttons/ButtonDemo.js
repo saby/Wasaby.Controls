@@ -1,12 +1,12 @@
 define('Controls-demo/Buttons/ButtonDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Buttons/ButtonDemo',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function(Control,
-   MemorySource,
+   source,
    template) {
    'use strict';
    var ModuleClass = Control.extend(
@@ -24,7 +24,7 @@ define('Controls-demo/Buttons/ButtonDemo', [
          _eventName: 'no event',
          maximumNumberOfSize: null,
          _beforeMount: function() {
-            this._sizeSource = new MemorySource({
+            this._sizeSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -35,7 +35,7 @@ define('Controls-demo/Buttons/ButtonDemo', [
                   }
                ]
             });
-            this.maximumNumberOfSize = new MemorySource({
+            this.maximumNumberOfSize = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -52,7 +52,7 @@ define('Controls-demo/Buttons/ButtonDemo', [
                   }
                ]
             });
-            this._styleSource = new MemorySource({
+            this._styleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -109,7 +109,7 @@ define('Controls-demo/Buttons/ButtonDemo', [
                   }
                ]
             });
-            this._iconStyleSource = new MemorySource({
+            this._iconStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
