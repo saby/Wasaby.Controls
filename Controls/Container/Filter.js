@@ -4,8 +4,8 @@ define('Controls/Container/Filter',
       'wml!Controls/Container/Filter/Filter',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
-      'WS.Data/Chain',
-      'WS.Data/Utils',
+      'Types/chain',
+      'Types/util',
       'Core/helpers/Object/isEqual',
       'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
@@ -13,12 +13,12 @@ define('Controls/Container/Filter',
       'Core/IoC'
    ],
    
-   function(Control, template, FilterContextField, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject, IoC) {
+   function(Control, template, FilterContextField, Deferred, chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject, IoC) {
       
       'use strict';
       
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
-      var setPropValue = Utils.setItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+      var setPropValue = Utils.object.setPropertyValue.bind(Utils);
       
       var _private = {
          getItemsByOption: function(option, history) {
@@ -71,7 +71,7 @@ define('Controls/Container/Filter',
             var filter = {};
             
             function processItems(items) {
-               Chain(items).each(function(elem) {
+               chain.factory(items).each(function(elem) {
                   var value = getPropValue(elem, 'value');
                   
                   if (!isEqual(value, getPropValue(elem, 'resetValue'))) {
@@ -100,8 +100,8 @@ define('Controls/Container/Filter',
          },
          
          mergeFilterItems: function(items, historyItems) {
-            Chain(items).each(function(item) {
-               Chain(historyItems).each(function(historyItem) {
+            chain.factory(items).each(function(item) {
+               chain.factory(historyItems).each(function(historyItem) {
                   if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');

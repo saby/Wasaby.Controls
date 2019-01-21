@@ -1,13 +1,13 @@
 define(
    [
       'Controls/Dropdown/resources/DropdownViewModel',
-      'WS.Data/Collection/RecordSet',
+      'Types/collection',
       'Controls/Constants',
-      'WS.Data/Entity/Model'
+      'Types/entity'
    ],
-   (DropdownViewModel, RecordSet, ControlsConstants, Model) => {
+   (DropdownViewModel, collectionLib, ControlsConstants, entity) => {
       describe('DropdownViewModel', () => {
-         let rs = new RecordSet({
+         let rs = new collectionLib.RecordSet({
             idProperty: 'id',
             rawData: [
                {
@@ -56,7 +56,7 @@ define(
                }
             ]
          });
-         const rs2 = new RecordSet({
+         const rs2 = new collectionLib.RecordSet({
             idProperty: 'id',
             rawData: [
                {
@@ -144,13 +144,13 @@ define(
                let newConfig = {
                   keyProperty: 'id',
                };
-               newConfig.groupMethod = function (item) {
+               newConfig.groupingKeyCallback = function (item) {
                   if (item.get('group') === 'hidden' || !item.get('group')) {
                      return ControlsConstants.view.hiddenGroup;
                   }
                   return item.get('group');
                };
-               newConfig.items = new RecordSet({
+               newConfig.items = new collectionLib.RecordSet({
                   idProperty: 'id',
                   rawData: [
                      {id: '1', title: 'Запись 1', parent: null, '@parent': false, recent: true},
@@ -199,10 +199,10 @@ define(
          });
 
          it('_private.isHistoryItem', () => {
-            var historyItem = new Model({rawData: {
+            var historyItem = new entity.Model({rawData: {
                pinned: true
             }});
-            var simpleItem = new Model({rawData: {
+            var simpleItem = new entity.Model({rawData: {
                any: 'any'
             }});
             
@@ -220,14 +220,14 @@ define(
                _options: {}
             };
             
-            var itemWithAdditionalProperty = new Model({rawData: {
+            var itemWithAdditionalProperty = new entity.Model({rawData: {
                additionalProperty: true
             }});
-            var historyItem = new Model({rawData: {
+            var historyItem = new entity.Model({rawData: {
                pinned: true,
                additionalProperty: false
             }});
-            var simpleItem = new Model({rawData: {
+            var simpleItem = new entity.Model({rawData: {
                any: 'any'
             }});
    

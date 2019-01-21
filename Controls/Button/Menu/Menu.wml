@@ -11,6 +11,7 @@
         footerTemplate="{{_options.footerTemplate}}"
         headConfig="{{_options.headConfig}}"
         icon="{{_options.icon}}"
+        groupingKeyCallback="{{_options.groupingKeyCallback}}"
         groupMethod="{{_options.groupMethod}}"
         groupTemplate="{{_options.groupTemplate}}"
         caption="{{_options.caption}}"

@@ -38,7 +38,8 @@ define('Controls-demo/Input/Password/PasswordPG',
                readOnly: false,
                revealable: true,
                tooltip: 'myTooltip',
-               validationErrors: ''
+               validationErrors: '',
+               autoComplete: false
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

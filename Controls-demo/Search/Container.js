@@ -4,11 +4,11 @@
 define('Controls-demo/Search/Container', [
    'Core/Control',
    'wml!Controls-demo/Search/Container',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Utils/MemorySourceData',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Search/Container'
-], function(Control, template, MemorySource, memorySourceData, memorySourceFilter) {
+], function(Control, template, sourceLib, memorySourceData, memorySourceFilter) {
    
    'use strict';
    
@@ -29,7 +29,7 @@ define('Controls-demo/Search/Container', [
                mode: 'totalCount'
             }
          };
-         this._source = new MemorySource({
+         this._source = new sourceLib.Memory({
             data: memorySourceData,
             filter: this._filterFunc,
             idProperty: 'id'

@@ -3,12 +3,12 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
       'Core/Control',
       'tmpl!Controls-demo/Popup/Opener/Compatible/demoOpener',
       'SBIS3.CONTROLS/Action/List/OpenEditDialog',
-      'WS.Data/Entity/Record',
+      'Types/entity',
       'require',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'css!Controls-demo/Popup/Opener/Compatible/demoOpener'
    ],
-   function (Control, template, OpenEditDialog, Record, require, Memory) {
+   function (Control, template, OpenEditDialog, entity, require, source) {
       'use strict';
 
       var TestOpener = Control.extend({
@@ -83,7 +83,7 @@ define('Controls-demo/Popup/Opener/Compatible/demoOpener',
          },
 
          _createMemory: function(items) {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'title',
                data: items
             });

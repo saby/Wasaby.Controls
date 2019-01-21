@@ -6,10 +6,10 @@ define('Controls-demo/Popup/Edit/MyFormController',
       'Core/Control',
       'Controls-demo/List/Grid/GridData',
       'wml!Controls-demo/Popup/Edit/MyFormController',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'css!Controls-demo/Popup/Edit/MyFormController'
    ],
-   function (Control, GridData, template, MemorySource) {
+   function (Control, GridData, template, source) {
       'use strict';
 
       var MyFormController = Control.extend({
@@ -18,7 +18,7 @@ define('Controls-demo/Popup/Edit/MyFormController',
          _key: null,
          _beforeMount: function (options) {
             this._record = options.record;
-            this._dataSource = new MemorySource({
+            this._dataSource = new source.Memory({
                idProperty: 'id',
                data: GridData.catalog.slice(0, 11)
             });

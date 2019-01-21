@@ -1,13 +1,13 @@
 define('Controls-demo/OperationsPanel/Demo', [
    'Core/Control',
    'wml!Controls-demo/OperationsPanel/Demo/Demo',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/OperationsPanel/Demo/Data',
    'Controls/List/ItemActions/Helpers',
    'css!Controls-demo/OperationsPanel/Demo/Demo',
    'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
-], function(Control, template, Memory, TreeMemory, Data, visibilityCallback) {
+], function(Control, template, source, TreeMemory, Data, visibilityCallback) {
    'use strict';
 
    var filterButtonData = [{
@@ -170,7 +170,7 @@ define('Controls-demo/OperationsPanel/Demo', [
             items.unshift(Data.moveOperation);
          }
 
-         return new Memory({
+         return new source.Memory({
             idProperty: 'id',
             data: items
          });

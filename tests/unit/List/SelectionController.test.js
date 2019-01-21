@@ -1,12 +1,12 @@
 define([
    'Controls/List/BaseControl/SelectionController',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Entity/Record',
+   'Types/collection',
+   'Types/entity',
    'Controls/Controllers/Multiselect/Selection'
 ], function(
    SelectionController,
-   RecordSet,
-   Record,
+   collection,
+   entity,
    Selection
 ) {
    'use strict';
@@ -49,7 +49,7 @@ define([
          cfg;
 
       beforeEach(function() {
-         rs = new RecordSet({
+         rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: items
          });
@@ -126,7 +126,7 @@ define([
             instance._beforeMount(cfg).addCallback(function() {
                instance._afterMount();
                eventQueue = [];
-               var newItems = new RecordSet({
+               var newItems = new collection.RecordSet({
                   idProperty: 'id',
                   rawData: items.slice(0)
                });
@@ -319,7 +319,7 @@ define([
                instance._multiselection.unselect = function() {
                   throw new Error('unselect shouldn\'t be called after adding.');
                };
-               instance._options.items.add(new Record({
+               instance._options.items.add(new entity.Record({
                   rawData: {
                      'id': 11,
                      'Раздел': null,

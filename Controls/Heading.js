@@ -1,9 +1,9 @@
 define('Controls/Heading', [
    'Core/Control',
    'wml!Controls/Heading/Heading',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Heading/Heading'
-], function(Control, template, types) {
+], function(Control, template, entity) {
    'use strict';
 
    /**
@@ -48,13 +48,13 @@ define('Controls/Heading', [
 
    Header.getOptionTypes =  function getOptionTypes() {
       return {
-         caption: types(String),
-         style: types(String).oneOf([
+         caption: entity.descriptor(String),
+         style: entity.descriptor(String).oneOf([
             'secondary',
             'primary',
             'info'
          ]),
-         size: types(String).oneOf([
+         size: entity.descriptor(String).oneOf([
             'xl',
             'l',
             'm',

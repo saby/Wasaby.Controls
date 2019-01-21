@@ -3,13 +3,13 @@
  */
 define([
    'Controls/List/ItemActions/ItemActionsControl',
-   'WS.Data/Source/Memory',
-   'WS.Data/Entity/Model',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/entity',
+   'Types/collection',
    'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
-], function(ItemActionsControl, MemorySource, Model, RecordSet, ListViewModel, aUtil, tUtil) {
+], function(ItemActionsControl, source, entity, collection, ListViewModel, aUtil, tUtil) {
 
    describe('Controls.List.ItemActions', function() {
       var data, listViewModel, rs, actions;
@@ -46,7 +46,7 @@ define([
                type: 2
             }
          ];
-         rs = new RecordSet({
+         rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });

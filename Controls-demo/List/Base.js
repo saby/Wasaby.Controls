@@ -4,11 +4,11 @@
 define('Controls-demo/List/Base', [
    'Core/Control',
    'wml!Controls-demo/List/Base/Base',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/List/ScrollPaging/ScrollPaging'
 ], function (BaseControl,
              template,
-             MemorySource
+             source
 ) {
    'use strict';
 
@@ -37,7 +37,7 @@ define('Controls-demo/List/Base', [
 
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: srcData
             });

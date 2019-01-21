@@ -2,12 +2,12 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
    [
       'Core/Control',
       'wml!Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Input/Suggest/Suggest'
    ],
-   function(Control, template, Memory) {
+   function(Control, template, source) {
       'use strict';
 
       var sugTmpl = Control.extend({
@@ -17,7 +17,7 @@ define('Controls-demo/PropertyGrid/SuggestTemplate/SuggestTemplate',
 
          _beforeMount: function(options) {
             this._viewValue = options.value;
-            this._source = new Memory({
+            this._source = new source.Memory({
                idProperty: 'title',
                data: options.items,
                filter: function(record, filter) {

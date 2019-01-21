@@ -4,14 +4,14 @@
 define('Controls-demo/Filter/Container', [
    'Core/Control',
    'wml!Controls-demo/Filter/Container',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Utils/MemorySourceData',
    'css!Controls-demo/Filter/Container',
    'Controls/Container/List',
    'Controls/Search/Input/Container',
    'Controls/Filter/Button/Container',
    'Controls/Filter/Fast/Container'
-], function(Control, template, MemorySource, memorySourceData) {
+], function(Control, template, sourceLib, memorySourceData) {
    'use strict';
    var SearchContainer = Control.extend({
       _template: template,
@@ -41,7 +41,7 @@ define('Controls-demo/Filter/Container', [
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      data: [
                         { id: 0, title: 'По департаменту' },
                         { id: 1, title: 'Разработка' },
@@ -62,7 +62,7 @@ define('Controls-demo/Filter/Container', [
                properties: {
                   keyProperty: 'owner',
                   displayProperty: 'title',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      data: [
                         { id: 0, title: 'По ответственному', owner: '0' },
                         { id: 1, title: 'Новиков Д.В.', owner: 'Новиков Д.В.' },
@@ -78,7 +78,7 @@ define('Controls-demo/Filter/Container', [
             id: 'owner',
             resetValue: '0',
             value: '0',
-            source: new MemorySource({
+            source: new sourceLib.Memory({
                data: [
                   { id: '0', title: 'По ответственному', lastName: '0' },
                   { id: '1', title: 'Новиков Д.В.', lastName: 'Новиков Д.В.' },
@@ -89,7 +89,7 @@ define('Controls-demo/Filter/Container', [
                idProperty: 'id'
             })
          }];
-         this._source = new MemorySource({
+         this._source = new sourceLib.Memory({
             data: memorySourceData,
             idProperty: 'id'
          });

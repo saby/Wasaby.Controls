@@ -2,12 +2,12 @@ define('Controls-demo/DragNDrop/Notes', [
    'Core/Control',
    'Core/core-clone',
    'Core/core-instance',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/DragNDrop/Notes/Notes',
    'Controls-demo/DragNDrop/Notes/EntityTriangle',
    'Controls-demo/DragNDrop/Notes/EntityNote',
    'css!Controls-demo/DragNDrop/Notes/Notes'
-], function(BaseControl, cClone, cInstance, Memory, template, EntityTriangle, EntityNote) {
+], function(BaseControl, cClone, cInstance, source, template, EntityTriangle, EntityNote) {
    'use strict';
 
    var Notes = BaseControl.extend({
@@ -61,7 +61,7 @@ define('Controls-demo/DragNDrop/Notes', [
                height: 50
             }
          }];
-         this._viewSource = new Memory({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: this._items
          });

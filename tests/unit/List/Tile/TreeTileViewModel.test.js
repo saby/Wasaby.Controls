@@ -1,4 +1,4 @@
-define(['Controls/List/TreeTileView/TreeTileViewModel', 'WS.Data/Collection/RecordSet'], function(TreeTileViewModel, RecordSet) {
+define(['Controls/List/TreeTileView/TreeTileViewModel', 'Types/collection'], function(TreeTileViewModel, collection) {
    'use strict';
 
    describe('Controls/List/TreeTileView/TreeTileViewModel', function() {
@@ -10,7 +10,7 @@ define(['Controls/List/TreeTileView/TreeTileViewModel', 'WS.Data/Collection/Reco
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
-            items: new RecordSet({
+            items: new collection.RecordSet({
                rawData: [{
                   'id': 1,
                   'parent': null,

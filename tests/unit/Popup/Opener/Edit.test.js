@@ -4,12 +4,12 @@
 define(
    [
       'Controls/Popup/Opener/Edit',
-      'WS.Data/Collection/RecordSet',
+      'Types/collection',
       'Core/Deferred',
-      'WS.Data/Entity/Model'
+      'Types/entity'
    ],
-   (Edit, RecordSet, Deferred) => {
-      let dataRS = new RecordSet({
+   (Edit, collection, Deferred) => {
+      let dataRS = new collection.RecordSet({
          idProperty: 'id',
          rawData: [
             {

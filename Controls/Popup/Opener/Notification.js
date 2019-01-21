@@ -68,7 +68,7 @@ define('Controls/Popup/Opener/Notification',
           *          var popupOptions = {
           *              templateOptions: {
           *                 style: "done",
-          *                 text: "Сообщение отправлено",
+          *                 text: "Message was send",
           *                 icon: "Admin"
           *              }
           *          }
@@ -119,5 +119,3 @@ define('Controls/Popup/Opener/Notification',
  * @function
  * @description Popup opened status.
  */
-
-

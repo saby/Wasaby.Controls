@@ -1,9 +1,9 @@
 define('Controls/Heading/Counter', [
    'Core/Control',
    'wml!Controls/Heading/Counter/Counter',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Heading/Counter/Counter'
-], function(Control, template, types) {
+], function(Control, template, entity) {
    'use strict';
 
    /**
@@ -47,13 +47,13 @@ define('Controls/Heading/Counter', [
 
    Counter.getOptionTypes =  function getOptionTypes() {
       return {
-         value: types(Number),
-         style: types(String).oneOf([
+         value: entity.descriptor(Number),
+         style: entity.descriptor(String).oneOf([
             'primary',
             'secondary',
             'disabled'
          ]),
-         size: types(String).oneOf([
+         size: entity.descriptor(String).oneOf([
             'm',
             's',
             'l'

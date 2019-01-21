@@ -52,10 +52,10 @@
       "eager": true,
       "report-dir": "./application/artifacts/coverage"
    },
-   "dependencies": {
-   },
+   "dependencies": {},
    "devDependencies": {
       "@tensor-corp/eslint-config": "^2.0.3",
+      "@types/typedef": "git+https://git.sbis.ru/av.zalyaev/typedef.git#master",
       "body-parser": "^1.18.3",
       "cookie-parser": "^1.4.3",
       "eslint": "^5.7.0",

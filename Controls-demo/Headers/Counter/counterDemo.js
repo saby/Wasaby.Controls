@@ -1,12 +1,12 @@
 define('Controls-demo/Headers/Counter/counterDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Headers/Counter/counterDemo',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function (Control,
-             MemorySource,
+             source,
              template) {
    'use strict';
    var ModuleClass = Control.extend(
@@ -19,7 +19,7 @@ define('Controls-demo/Headers/Counter/counterDemo', [
          _counterCaption: '12',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._counterSizeSource = new MemorySource({
+            this._counterSizeSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -33,7 +33,7 @@ define('Controls-demo/Headers/Counter/counterDemo', [
                   }
                ]
             });
-            this._counterStyleSource = new MemorySource({
+            this._counterStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {

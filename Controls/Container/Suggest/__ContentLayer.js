@@ -31,6 +31,13 @@ define('Controls/Container/Suggest/__ContentLayer',
          
                return resultObj;
             };
+            var result;
+            var oldHeight = self._container.style.height;
+            
+            //reset height to get real height of content
+            //the only solution is to get height avoiding synchronization
+            self._container.style.height = '';
+            
             var suggestBCR = boundingClientToJSON(self._container.getBoundingClientRect());
             var containerBCR =  boundingClientToJSON(self._options.target.getBoundingClientRect());
             var dropDownContainerBCR = _private.getDropDownContainerSize(dropDownContainer);
@@ -41,11 +48,15 @@ define('Controls/Container/Suggest/__ContentLayer',
                size.bottom -= dropDownContainerBCR.top;
                return size;
             }
-      
-            return {
+   
+            result = {
                suggest: fixSizesByDDContainer(suggestBCR),
                container: fixSizesByDDContainer(containerBCR)
             };
+            
+            //after reset height need to return old height, new height will be set by VDOM after synchronization
+            self._container.style.height = oldHeight;
+            return result;
          },
    
          getDropDownContainerSize: function(container) {
@@ -73,6 +84,8 @@ define('Controls/Container/Suggest/__ContentLayer',
                height = suggestSize.height + suggestBottomSideCoord + 'px';
             } else if (suggestBottomSideCoord > dropDownContainerSize.height) {
                height = suggestSize.height - (suggestBottomSideCoord - dropDownContainerSize.height) + 'px';
+            } else if (height) {
+               height = 'auto';
             }
       
             return height;

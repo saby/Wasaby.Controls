@@ -1,11 +1,11 @@
 define('Controls-demo/List/EditInPlace/Hover', [
    'Core/Control',
    'wml!Controls-demo/List/EditInPlace/Hover',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function(Control,
    template,
-   MemorySource
+   source
 ) {
    'use strict';
 
@@ -26,7 +26,7 @@ define('Controls-demo/List/EditInPlace/Hover', [
       _enabled: true,
 
       _beforeMount: function() {
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: srcData
          });
