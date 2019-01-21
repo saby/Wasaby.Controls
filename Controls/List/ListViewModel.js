@@ -293,6 +293,8 @@ define('Controls/List/ListViewModel',
          },
          setItemActionVisibilityCallback: function(callback) {
             this._options.itemActionVisibilityCallback = callback;
+            this._nextVersion();
+            this._notify('onListChange');
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);

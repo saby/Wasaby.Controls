@@ -182,10 +182,10 @@ define('Controls/List/Grid/GridViewModel', [
                stickyLadder: stickyLadder
             };
          },
-   
+
          getSortingDirectionByProp: function(sorting, prop) {
             var sortingDirection;
-      
+
             if (sorting) {
                sorting.forEach(function(elem) {
                   if (elem[prop]) {
@@ -193,7 +193,7 @@ define('Controls/List/Grid/GridViewModel', [
                   }
                });
             }
-      
+
             return sortingDirection;
          }
       },
@@ -671,6 +671,10 @@ define('Controls/List/Grid/GridViewModel', [
          _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
             this._nextVersion();
+         },
+
+         setItemActionVisibilityCallback: function(callback) {
+            this._model.setItemActionVisibilityCallback(callback);
          },
 
          _prepareDisplayItemForAdd: function(item) {
