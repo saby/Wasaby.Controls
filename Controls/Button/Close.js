@@ -76,10 +76,10 @@ define('Controls/Button/Close', [
    var _private = {
       //TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
       compatibleViewMode: function(options, self) {
-         if (options.style === 'default' || options.style === 'toolButton') {
-            self._viewMode = 'toolButton';
-         } else {
+         if (options.style === 'light' || options.viewMode === 'link') {
             self._viewMode = 'link';
+         } else {
+            self._viewMode = 'toolButton';
          }
       }
    };
