@@ -114,11 +114,17 @@ define([
                keyProperty: 'id',
                markerVisibility: 'visible'
             },
-            listModel = new ListViewModel(cfg);
+            listModel = new ListViewModel(cfg),
+            markedKeyChangedFired = false;
 
+         listModel.subscribe('onMarkedKeyChanged', function(e, key) {
+            assert.equal(key, 1);
+            markedKeyChangedFired = true;
+         });
          listModel.setItems(new collection.RecordSet({rawData: data, idProperty: 'id'}));
          assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
          assert.equal(listModel._markedItem, listModel._display.at(0), 'Incorrect _markedItem after setItems.');
+         assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
       });
 
       it('_updateSelection', function() {
