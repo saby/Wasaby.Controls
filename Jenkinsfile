@@ -820,15 +820,18 @@ node('controls') {
             sh "mkdir logs_ps"
             if ( exists_dir ){
                 dir('/home/sbis/Controls'){
-                    def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-                    if ( files_err.length > 1 ){
+                    def files_err = findFiles(glob: 'intest/logs/**/*_errors.log')
+                    def files_ps_err = findFiles(glob: 'intest-ps/logs/**/*_errors.log')
+                    if ( files_err.length > 0 ){
                         sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-                        dir ( workspace ){
-                            sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-                        }
                     }
+					if (files_ps_err.length > 0){
+                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+                    }
+					dir ( workspace ){
+						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+					}
                 }
             }
         }
