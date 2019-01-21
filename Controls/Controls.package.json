@@ -138,7 +138,8 @@
     "Controls/List/Mover/*",
     "Controls/List/Remover",
     "Controls/List/Paging/*",
-    "Controls/List/Paging"
+    "Controls/List/Paging",
+    "css!Controls/List/AddButton/AddButton"
   ],
   "output": "controls-list.package.js"
 }, {
