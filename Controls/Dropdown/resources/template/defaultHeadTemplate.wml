@@ -23,6 +23,6 @@
 </ws:if>
 <ws:if data="{{menuStyle === 'titleHead'}} {{headerClass}}">
    <div class="controls-DropdownList__head">
-      {{caption}}
+      <div class="controls-DropdownList-header-caption">{{caption}}</div>
    </div>
 </ws:if>
