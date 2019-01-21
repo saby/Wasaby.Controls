@@ -1,7 +1,7 @@
 define([
    'Controls/HighCharts/resources/ParseDataUtil',
-   'WS.Data/Collection/RecordSet'
-], function(ParseDataUtil, RecordSet) {
+   'Types/collection'
+], function(ParseDataUtil, collection) {
    describe('Controls.HighCharts.resources.ParseDataUtil', function() {
       function labelsFormatterFunc() {
          return 1;
@@ -45,7 +45,7 @@ define([
             xAxis: 2,
             yAxis: 2
          }],
-         highChartsData = new RecordSet({
+         highChartsData = new collection.RecordSet({
             rawData: [
                {
                   title: 'hello',
@@ -63,7 +63,7 @@ define([
             sourceFieldY: 'value',
             type: 'pie'
          }];
-      highChartsData2 = new RecordSet({
+      highChartsData2 = new collection.RecordSet({
          rawData: [
             {
                value: 5,

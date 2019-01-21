@@ -32,7 +32,7 @@ define('Controls/Input/Base/ViewModel',
          },
 
          _convertToDisplayValue: function(value) {
-            return value;
+            return value === null ? '' : value;
          },
 
          get shouldBeChanged() {
@@ -98,15 +98,15 @@ define('Controls/Input/Base/ViewModel',
 
          set options(value) {
             this._options = clone(value);
+            _private.setDisplayValue(this, this._convertToDisplayValue(this._value));
          },
 
          constructor: function(options, value) {
-            this._options = {};
             this._selection = {};
             this._oldSelection = {};
+            this._options = clone(options);
 
             this.value = value;
-            this.options = options;
 
             this.changesHaveBeenApplied();
          },

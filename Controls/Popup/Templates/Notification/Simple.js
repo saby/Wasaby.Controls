@@ -4,7 +4,6 @@ define('Controls/Popup/Templates/Notification/Simple',
       'wml!Controls/Popup/Templates/Notification/Simple'
    ],
    function(Control, template) {
-
       /**
        * Template (WML) of simple notification.
        *
@@ -60,8 +59,7 @@ define('Controls/Popup/Templates/Notification/Simple',
       };
 
       return Notification;
-   }
-);
+   });
 
 /**
  * @name Controls/Popup/Templates/Notification/Simple#autoClose

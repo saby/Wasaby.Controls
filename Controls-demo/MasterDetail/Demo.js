@@ -3,11 +3,11 @@ define('Controls-demo/MasterDetail/Demo', [
    'wml!Controls-demo/MasterDetail/Demo',
    'Controls-demo/MasterDetail/Data',
    'Core/core-clone',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/MasterDetail/itemTemplates/masterItemTemplate',
    'Controls-demo/MasterDetail/DemoSource',
    'css!Controls-demo/MasterDetail/Demo'
-], function(Control, template, data, cClone, Memory, itemTemplate, DemoSource) {
+], function(Control, template, data, cClone, source, itemTemplate, DemoSource) {
    return Control.extend({
       _template: template,
 
@@ -17,7 +17,7 @@ define('Controls-demo/MasterDetail/Demo', [
 
          this._detailSource = new DemoSource({idProperty: 'id'});
 
-         this._masterSource = new Memory({
+         this._masterSource = new source.Memory({
             idProperty: 'id',
             data: cClone(data.master)
          });

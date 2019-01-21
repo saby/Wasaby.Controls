@@ -50,7 +50,7 @@ define('Controls/List/ItemsViewModel', [
       getDisplayFilter: function(data, cfg) {
          var
             filter = [];
-         if (cfg.groupMethod) {
+         if (cfg.groupMethod || cfg.groupingKeyCallback) {
             filter.push(_private.displayFilterGroups.bind({ collapsedGroups: data.collapsedGroups }));
          }
          if (cfg.itemsFilterMethod) {
@@ -150,7 +150,7 @@ define('Controls/List/ItemsViewModel', [
                },
                spacingClassList: this.getSpacingClassList()
             };
-         if (this._options.groupMethod) {
+         if (this._options.groupMethod || this._options.groupingKeyCallback) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
                itemData.isGroup = true;
                itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
@@ -168,6 +168,18 @@ define('Controls/List/ItemsViewModel', [
          }
          classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
          return classList;
+      },
+
+      setCollapsedGroups: function(collapsedGroups) {
+         this._options.collapsedGroups = collapsedGroups;
+         this._collapsedGroups = {};
+
+         for (var i = 0; i < collapsedGroups.length; i++) {
+            this._collapsedGroups[collapsedGroups[i]] = true;
+         }
+         this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
+         this._nextVersion();
+         this._notify('onListChange');
       },
 
       toggleGroup: function(group, state) {
@@ -201,6 +213,12 @@ define('Controls/List/ItemsViewModel', [
 
       getDisplayFilter: function(data, cfg) {
          return _private.getDisplayFilter(data, cfg);
+      },
+
+      setGroupMethod: function(groupMethod) {
+         this._options.groupMethod = groupMethod;
+         this._nextVersion();
+         this._notify('onListChange');
       },
 
       getNext: function() {

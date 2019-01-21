@@ -3,12 +3,12 @@ define('Controls-demo/Input/Mask/Mask',
       'Core/Control',
       'wml!Controls-demo/Input/Mask/Mask',
       'Controls/Input/Mask/Formatter',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls/Input/Mask',
       'css!Controls-demo/Input/resources/VdomInputs'
 
    ],
-   function(Control, template, Formatter, Memory) {
+   function(Control, template, Formatter, source) {
       'use strict';
       var Mask = Control.extend({
          _template: template,
@@ -52,7 +52,7 @@ define('Controls-demo/Input/Mask/Mask',
             }
          },
          _suggestSource: function() {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'title',
                data: this._items,
                filter: function(record, filter) {

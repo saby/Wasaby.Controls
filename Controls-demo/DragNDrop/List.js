@@ -1,13 +1,13 @@
 define('Controls-demo/DragNDrop/List', [
    'Core/Control',
    'Core/core-clone',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/DragNDrop/ListEntity',
    'Controls-demo/DragNDrop/DemoData',
    'wml!Controls-demo/DragNDrop/List/List',
    'css!Controls-demo/DragNDrop/List/List',
    'Controls/DragNDrop/DraggingTemplate'
-], function(BaseControl, cClone, Memory, ListEntity, DemoData, template) {
+], function(BaseControl, cClone, source, ListEntity, DemoData, template) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -22,7 +22,7 @@ define('Controls-demo/DragNDrop/List', [
             showType: 2,
             id: 0
          }];
-         this._viewSource = new Memory({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: cClone(DemoData)
          });

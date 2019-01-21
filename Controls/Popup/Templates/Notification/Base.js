@@ -10,7 +10,7 @@ define('Controls/Popup/Templates/Notification/Base',
          prepareDisplayStyle: function(color) {
             var resColor = color;
 
-            // поддержка старых цветов, чтоб не ломать старые
+            // TODO Remove.
             if (color === 'done') {
                resColor = 'success';
             }
@@ -31,6 +31,7 @@ define('Controls/Popup/Templates/Notification/Base',
        * @category popup
        * @author Красильников А.С.
        * @mixes Controls/Popup/Templates/Notification/NotificationStyles
+       * @demo Controls-demo/Popup/Templates/NotificationTemplatePG
        */
 
       var timeAutoClose = 5000;

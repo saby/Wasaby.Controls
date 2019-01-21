@@ -1,9 +1,9 @@
 define('Controls/Button/Separator', [
    'Core/Control',
    'wml!Controls/Button/Separator/Separator',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Button/Separator/Separator'
-], function(Control, template, types) {
+], function(Control, template, entity) {
    'use strict';
 
    /**
@@ -70,13 +70,13 @@ define('Controls/Button/Separator', [
 
    ButtonSeparator.getOptionTypes =  function getOptionTypes() {
       return {
-         bold: types(Boolean),
-         style: types(String).oneOf([
+         bold: entity.descriptor(Boolean),
+         style: entity.descriptor(String).oneOf([
             'secondary',
             'additional',
             'primary'
          ]),
-         value: types(Boolean)
+         value: entity.descriptor(Boolean)
       };
    };
 

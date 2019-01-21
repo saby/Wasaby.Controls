@@ -47,7 +47,7 @@
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
          <div attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
               attr:style="{{(itemData.getCurrentColumn().styleForLadder ? itemData.getCurrentColumn().styleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility !== 'hidden' ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility !== 'hidden' ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
-            <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
+            <ws:if data="{{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0}}">
                <div attr:class="controls-ListView__itemV_marker"></div>
             </ws:if>
             <ws:partial template="columnContent" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>

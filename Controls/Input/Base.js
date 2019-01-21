@@ -4,7 +4,7 @@ define('Controls/Input/Base',
       'Core/EventBus',
       'Core/detection',
       'Core/constants',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
       'Controls/Utils/getTextWidth',
@@ -21,7 +21,7 @@ define('Controls/Input/Base',
       'css!theme?Controls/Input/Base/Base'
    ],
    function(
-      Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
+      Control, EventBus, detection, constants, entity, tmplNotify, isEqual,
       getTextWidth, randomName, InputUtil, ViewModel, runDelayed, hasHorizontalScroll,
       template, fieldTemplate, readOnlyFieldTemplate
    ) {
@@ -160,10 +160,12 @@ define('Controls/Input/Base',
          notifyChangeOfFocusState: function(self, hasFocus) {
             /**
              * After showing the keyboard only on ios, the workspace size does not change.
+             * The keyboard is shown only if the field has received focus as a result of a user touch.
              */
-            if (self._isMobileIOS) {
+            if (self._isMobileIOS && self._fromTouch) {
                var eventName = hasFocus ? 'MobileInputFocus' : 'MobileInputFocusOut';
 
+               self._fromTouch = hasFocus;
                EventBus.globalChannel().notify(eventName);
             }
          },
@@ -421,6 +423,12 @@ define('Controls/Input/Base',
          _hasHorizontalScroll: hasHorizontalScroll,
 
          /**
+          * @type {Boolean} Determines whether was a touch to the field.
+          * @private
+          */
+         _fromTouch: false,
+
+         /**
           * @type {Number|null} The version of IE browser in which the control is build.
           * @private
           */
@@ -544,6 +552,14 @@ define('Controls/Input/Base',
             };
             this._readOnlyField = {
                template: readOnlyFieldTemplate,
+               scope: {}
+            };
+            this._beforeFieldWrapper = {
+               template: null,
+               scope: {}
+            };
+            this._afterFieldWrapper = {
+               template: null,
                scope: {}
             };
          },
@@ -716,6 +732,10 @@ define('Controls/Input/Base',
             _private.callChangeHandler(this);
          },
 
+         _touchStartHandler: function() {
+            this._fromTouch = true;
+         },
+
          _mouseDownHandler: function() {
             if (!_private.isFieldFocused(this)) {
                this._focusByMouseDown = true;
@@ -835,25 +855,25 @@ define('Controls/Input/Base',
             /**
              * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
              * placeholder: descriptor(String|Function),
+             * value: descriptor(String|null),
              */
-            value: descriptor(String),
-            autoComplete: descriptor(Boolean),
-            selectOnClick: descriptor(Boolean),
-            size: descriptor(String).oneOf([
+            autoComplete: entity.descriptor(Boolean),
+            selectOnClick: entity.descriptor(Boolean),
+            size: entity.descriptor(String).oneOf([
                's',
                'm',
                'l'
             ]),
-            fontStyle: descriptor(String).oneOf([
+            fontStyle: entity.descriptor(String).oneOf([
                'default',
                'primary',
                'secondary'
             ]),
-            textAlign: descriptor(String).oneOf([
+            textAlign: entity.descriptor(String).oneOf([
                'left',
                'right'
             ]),
-            style: descriptor(String).oneOf([
+            style: entity.descriptor(String).oneOf([
                'info',
                'danger',
                'invalid',
@@ -861,7 +881,7 @@ define('Controls/Input/Base',
                'success',
                'warning'
             ]),
-            tagStyle: descriptor(String).oneOf([
+            tagStyle: entity.descriptor(String).oneOf([
                'info',
                'danger',
                'primary',

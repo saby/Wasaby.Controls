@@ -1,10 +1,10 @@
 define('Controls/Decorator/WrapURLs',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Decorator/WrapURLs/WrapURLs'
    ],
-   function(Control, descriptor, template) {
+   function(Control, entity, template) {
 
       'use strict';
 
@@ -93,7 +93,7 @@ define('Controls/Decorator/WrapURLs',
 
       WrapURLs.getOptionTypes = function() {
          return {
-            text: descriptor(String).required()
+            text: entity.descriptor(String).required()
          };
       };
 

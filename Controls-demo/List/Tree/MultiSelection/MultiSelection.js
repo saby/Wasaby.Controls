@@ -2,9 +2,9 @@ define('Controls-demo/List/Tree/MultiSelection/MultiSelection', [
    'Core/Control',
    'Controls-demo/List/Tree/MultiSelection/MultiSelectionData',
    'wml!Controls-demo/List/Tree/MultiSelection/MultiSelection',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/List/Tree/MultiSelection/MultiSelection'
-], function(Control, Data, template, Memory) {
+], function(Control, Data, template, source) {
    'use strict';
 
    var
@@ -22,7 +22,7 @@ define('Controls-demo/List/Tree/MultiSelection/MultiSelection', [
                }
             ];
             this.gridData = Data;
-            this._viewSource = new Memory({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: Data.catalog
             });

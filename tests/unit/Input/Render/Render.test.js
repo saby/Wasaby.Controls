@@ -23,13 +23,13 @@ define(
                });
                it('Control in active mode.', function() {
                   ctrl._options.readOnly = false;
-                  ctrl._active = true;
+                  ctrl._contentActive = true;
 
                   assert.equal(ctrl._getState(), '_active');
                });
                it('Control in inactive mode.', function() {
                   ctrl._options.readOnly = false;
-                  ctrl._active = false;
+                  ctrl._contentActive = false;
 
                   assert.equal(ctrl._getState(), '');
                });

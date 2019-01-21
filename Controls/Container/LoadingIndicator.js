@@ -2,10 +2,10 @@ define('Controls/Container/LoadingIndicator', [
    'Core/Control',
    'wml!Controls/Container/LoadingIndicator/LoadingIndicator',
    'Core/helpers/Number/randomId',
-   'WS.Data/Collection/List',
+   'Types/collection',
    'Core/IoC',
    'css!theme?Controls/Container/LoadingIndicator/LoadingIndicator'
-], function(Control, tmpl, randomId, List, IoC) {
+], function(Control, tmpl, randomId, collection, IoC) {
    'use strict';
 
    /**
@@ -133,7 +133,7 @@ define('Controls/Container/LoadingIndicator', [
 
       _beforeMount: function(cfg) {
          this.mods = [];
-         this._stack = new List();
+         this._stack = new collection.List();
          this._updateProperties(cfg);
       },
       _afterMount: function(cfg) {
