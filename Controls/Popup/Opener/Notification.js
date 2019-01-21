@@ -12,21 +12,20 @@ define('Controls/Popup/Opener/Notification',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/interface/INotificationOptions
+       * @demo Controls-demo/Popup/Opener/NotificationPG
        */
 
       /**
-       * @name Controls/Popup/Opener/Dialog#className
+       * @name Controls/Popup/Opener/Notification#className
        * @cfg {String} Class names of popup.
        */
-
       /**
-       * @name Controls/Popup/Opener/Dialog#template
+       * @name Controls/Popup/Opener/Notification#template
        * @cfg {String|Function} Template inside popup.
        */
 
       /**
-       * @name Controls/Popup/Opener/Dialog#templateOptions
+       * @name Controls/Popup/Opener/Notification#templateOptions
        * @cfg {String|Function} Template options inside popup.
        */
 
@@ -49,7 +48,7 @@ define('Controls/Popup/Opener/Notification',
          /**
           * Open dialog popup.
           * @function Controls/Popup/Opener/Notification#open
-          * @param {popupOptions[]} popupOptions Notification popup options.
+          * @param {PopupOptions[]} popupOptions Notification popup options.
           * @returns {Undefined}
           * @example
           * wml
@@ -69,7 +68,7 @@ define('Controls/Popup/Opener/Notification',
           *          var popupOptions = {
           *              templateOptions: {
           *                 style: "done",
-          *                 text: "Сообщение отправлено",
+          *                 text: "Message was send",
           *                 icon: "Admin"
           *              }
           *          }
@@ -102,6 +101,15 @@ define('Controls/Popup/Opener/Notification',
    });
 
 /**
+ * @typedef {Object} PopupOptions
+ * @description Sets the popup configuration.
+ * @property {} autofocus Determines whether focus is set to the template when popup is opened.
+ * @property {} className Class names of popup.
+ * @property {} template Template inside popup.
+ * @property {} templateOptions Template options inside popup.
+ */
+
+/**
  * @name Controls/Popup/Opener/Notification#close
  * @description Close popup.
  * @function
@@ -111,5 +119,3 @@ define('Controls/Popup/Opener/Notification',
  * @function
  * @description Popup opened status.
  */
-
-

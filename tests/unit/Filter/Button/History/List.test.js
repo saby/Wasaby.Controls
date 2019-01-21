@@ -2,11 +2,11 @@ define(
    [
       'Controls/Filter/Button/History/List',
       'Core/Serializer',
-      'WS.Data/Chain',
+      'Types/chain',
       'tests/Filter/Button/History/testHistorySource',
       'Controls/Filter/Button/History/resources/historyUtils'
    ],
-   function(List, Serializer, Chain, HistorySourceDemo, historyUtils) {
+   function(List, Serializer, chain, HistorySourceDemo, historyUtils) {
       describe('FilterHistoryList', function() {
          var items2 = [
             {id: 'period', value: [3], resetValue: [1], textValue: 'Past month'},
@@ -97,7 +97,7 @@ define(
                }
             };
             var savedList = list;
-            Chain(list._options.items).each(function(item, index) {
+            chain.factory(list._options.items).each(function(item, index) {
                if (item) {
                   savedList._contentClick('click', item);
                   assert.deepEqual(histItems, itemsHistory[index]);
@@ -107,7 +107,7 @@ define(
 
          it('pin click', function() {
             var savedList = list;
-            Chain(list._options.items).each(function(item) {
+            chain.factory(list._options.items).each(function(item) {
                if (item) {
                   savedList._onPinClick('click', item);
                }

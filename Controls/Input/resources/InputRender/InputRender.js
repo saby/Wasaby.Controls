@@ -1,7 +1,7 @@
 define('Controls/Input/resources/InputRender/InputRender',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
@@ -10,7 +10,7 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Core/EventBus',
       'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, types, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
+   function(Control, entity, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
       'use strict';
 
       /**
@@ -143,6 +143,9 @@ define('Controls/Input/resources/InputRender/InputRender',
          // text field has focus
          _inputActive: false,
 
+         // Determines whether was a touch to the field.
+         _fromTouch: false,
+
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
@@ -259,7 +262,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusinHandler: function(e) {
             this._inputActive = true;
 
-            if (cDetection.isMobileIOS) {
+            if (cDetection.isMobileIOS && this._fromTouch) {
                EventBus.globalChannel().notify('MobileInputFocus');
             }
 
@@ -278,11 +281,16 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusoutHandler: function(e) {
             this._inputActive = false;
 
-            if (cDetection.isMobileIOS) {
+            if (cDetection.isMobileIOS && this._fromTouch) {
                EventBus.globalChannel().notify('MobileInputFocusOut');
+               this._fromTouch = false;
             }
 
             e.target.scrollLeft = 0;
+         },
+
+         _touchstartHandler: function() {
+            this._fromTouch = true;
          },
 
          /**
@@ -330,9 +338,9 @@ define('Controls/Input/resources/InputRender/InputRender',
 
       InputRender.getOptionTypes = function() {
          return {
-            value: types(String),
-            selectOnClick: types(Boolean),
-            tagStyle: types(String).oneOf([
+            value: entity.descriptor(String),
+            selectOnClick: entity.descriptor(Boolean),
+            tagStyle: entity.descriptor(String).oneOf([
                'secondary',
                'success',
                'primary',
@@ -340,8 +348,8 @@ define('Controls/Input/resources/InputRender/InputRender',
                'info',
                'warning'
             ]),
-            autocomplete: types(Boolean),
-            tooltip: types(String)
+            autocomplete: entity.descriptor(Boolean),
+            tooltip: entity.descriptor(String)
          };
       };
 

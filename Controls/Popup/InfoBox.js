@@ -9,7 +9,6 @@ define('Controls/Popup/InfoBox',
       'Core/IoC'
    ],
    function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, IoC) {
-
       'use strict';
 
       /**
@@ -174,7 +173,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             }
          },
 
@@ -182,7 +181,7 @@ define('Controls/Popup/InfoBox',
             var config = _private.getCfg(this);
 
             if (this._isNewEnvironment()) {
-               this._notify('openInfoBox', [config], {bubbling: true});
+               this._notify('openInfoBox', [config], { bubbling: true });
             } else {
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
@@ -200,7 +199,7 @@ define('Controls/Popup/InfoBox',
 
          _close: function() {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             } else {
                this._children.infoBoxOpener.close();
             }
@@ -265,6 +264,7 @@ define('Controls/Popup/InfoBox',
          /**
           * Open InfoBox
           * @function Controls/Popup/InfoBox#open
+          * @param {PopupOptions[]} popupOptions InfoBox popup options.
           */
          open: function() {
             this._open();
@@ -322,4 +322,20 @@ define('Controls/Popup/InfoBox',
       InfoBox._private = _private;
 
       return InfoBox;
+
+      /**
+       * @typedef {Object} PopupOptions
+       * @description Infobox configuration.
+       * @property {function|String} content The content to which the logic of opening and closing the template is added.
+       * @property {function|String} template Template inside popup
+       * @property {Object} templateOptions Template options inside popup.
+       * @property {String} trigger Event name trigger the opening or closing of the template.
+       * @property {String} position Point positioning of the target relative to infobox.
+       * @property {Boolean} floatCloseButton Whether the content should wrap around the cross closure.
+       * @property {String} style Infobox display style.
+       * @property {Number} showDelay Delay before opening.
+       * @property {Number} showDelay Delay before closing.
+       */
    });
+
+

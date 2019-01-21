@@ -2,10 +2,10 @@ define('Controls-demo/Popup/PopupWithPending',
    [
       'Core/Control',
       'wml!Controls-demo/Popup/PopupWithPending',
-      'WS.Data/Entity/Record',
+      'Types/entity',
       'Core/Deferred'
    ],
-   function (Control, template, Record, Deferred) {
+   function (Control, template, entity, Deferred) {
       'use strict';
 
       var TestDialog = Control.extend({
@@ -16,7 +16,7 @@ define('Controls-demo/Popup/PopupWithPending',
          },
          _afterMount: function () {
             this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
-            this._record = new Record();
+            this._record = new entity.Record();
             this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
          },
          _onPropertyChange: function() {

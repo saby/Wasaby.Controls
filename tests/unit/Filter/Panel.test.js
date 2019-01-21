@@ -1,11 +1,11 @@
 define(
    [
       'Controls/Filter/Button/Panel',
-      'WS.Data/Collection/RecordSet',
+      'Types/collection',
       'Core/core-clone',
       'Core/Deferred'
    ],
-   function(FilterPanel, RecordSet, Clone, Deferred) {
+   function(FilterPanel, collection, Clone, Deferred) {
       describe('FilterPanelVDom', function() {
          var template = 'tmpl!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate';
          var config = {},
@@ -184,7 +184,7 @@ define(
 
          it('recordSet', function() {
 
-            var rs = new RecordSet({
+            var rs = new collection.RecordSet({
                   idProperty: 'id',
                   rawData: items
                }),

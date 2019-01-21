@@ -1,5 +1,13 @@
 {
   "extends": "./tsconfig.base",
+  "compilerOptions": {
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "types": [
+      "typedef"
+    ]
+  },
   "include": [
     "Controls/**/*.ts"
   ]

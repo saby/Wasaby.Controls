@@ -4,9 +4,9 @@
 define([
    'Controls/List/ItemsViewModel',
    'Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/Constants'
-], function(ItemsViewModel, ItemsUtil, RecordSet, ControlsConstants){
+], function(ItemsViewModel, ItemsUtil, collection, ControlsConstants){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
       var data, data2, display;
       beforeEach(function() {
@@ -104,11 +104,11 @@ define([
       });
 
       it('setItems', function () {
-         var rs1 = new RecordSet({
+         var rs1 = new collection.RecordSet({
             rawData: data,
             idProperty : 'id'
          });
-         var rs2 = new RecordSet({
+         var rs2 = new collection.RecordSet({
             rawData: data2,
             idProperty : 'id'
          });
@@ -142,11 +142,11 @@ define([
       });
 
       it('Append', function () {
-         var rs1 = new RecordSet({
+         var rs1 = new collection.RecordSet({
             rawData: data,
             idProperty : 'id'
          });
-         var rs2 = new RecordSet({
+         var rs2 = new collection.RecordSet({
             rawData: data2,
             idProperty : 'id'
          });
@@ -190,11 +190,11 @@ define([
       });
 
       it('Prepend', function () {
-         var rs1 = new RecordSet({
+         var rs1 = new collection.RecordSet({
             rawData: data,
             idProperty : 'id'
          });
-         var rs2 = new RecordSet({
+         var rs2 = new collection.RecordSet({
             rawData: data2,
             idProperty : 'id'
          });
@@ -214,11 +214,11 @@ define([
       });
 
       it('itemsReadyCallback', function () {
-         var rs1 = new RecordSet({
+         var rs1 = new collection.RecordSet({
             rawData: data,
             keyProperty : 'id'
          });
-         var rs2 = new RecordSet({
+         var rs2 = new collection.RecordSet({
             rawData: data2,
             keyProperty : 'id'
          });
@@ -248,7 +248,7 @@ define([
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
 
-      it('groupMethod', function() {
+      it('groupingKeyCallback', function() {
          var
             current,
             data = [
@@ -259,14 +259,14 @@ define([
                { id: 4, title: 'item_5', group: 'group_2' },
                { id: 5, title: 'item_6', group: 'group_2' }
             ],
-            items = new RecordSet({
+            items = new collection.RecordSet({
                rawData: data,
                keyProperty : 'id'
             }),
             cfg = {
                items: items,
                keyProperty: 'id',
-               groupMethod: function(item) {
+               groupingKeyCallback: function(item) {
                   if (item.get('group') === 'hidden') {
                      return ControlsConstants.view.hiddenGroup;
                   }
@@ -275,7 +275,7 @@ define([
                displayProperty: 'title'
             },
             itemsViewModel = new ItemsViewModel(cfg);
-         assert.equal(itemsViewModel._display.getGroup(), cfg.groupMethod, 'Grouping for display not applied. Error sending to display grouping method.');
+         assert.equal(itemsViewModel._display.getGroup(), cfg.groupingKeyCallback, 'Grouping for display not applied. Error sending to display grouping method.');
          assert.equal(itemsViewModel._display.getCount(), 9, 'Grouping for display not applied. Display items count (with groups) not equal 7.');
          itemsViewModel.toggleGroup('group_1');
          assert.equal(itemsViewModel._display.getCount(), 6, 'Invalid display items count after collapsing "group_1".');

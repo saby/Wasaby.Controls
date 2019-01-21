@@ -68,6 +68,33 @@ define([
             },
             'www.ya.ru'
          ],
+         ftpLinkNode = ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer',
+               href: 'ftp://ya.ru',
+               target: '_blank'
+            },
+            'ftp://ya.ru'
+         ],
+         fileLinkNode = ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer',
+               href: 'file://ya.ru',
+               target: '_blank'
+            },
+            'file://ya.ru'
+         ],
+         smbLinkNode = ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer',
+               href: 'smb://ya.ru',
+               target: '_blank'
+            },
+            'smb://ya.ru'
+         ],
          decoratedLinkService,
          nbsp = String.fromCharCode(160),
          openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
@@ -118,6 +145,9 @@ define([
                '<p>http://ya.ru, text</p>' +
                '<p>www.ya.ru</p>' +
                '<p>www.ya.ru. Text</p>' +
+               '<p>ftp://ya.ru</p>' +
+               '<p>file://ya.ru</p>' +
+               '<p>smb://ya.ru</p>' +
                '<p><a> https://ya.ru </a></p>' +
                '<p>e@mail.ru</p>' +
                '<p><a>e@mail.ru</a></p>' +
@@ -134,6 +164,9 @@ define([
                ['p', httpLinkNode, ', text'],
                ['p', wwwLinkNode],
                ['p', wwwLinkNode, '. Text'],
+               ['p', ftpLinkNode],
+               ['p', fileLinkNode],
+               ['p', smbLinkNode],
                ['p', ['a', ' https://ya.ru ']],
                ['p', ['a', { href: 'mailto:e@mail.ru' }, 'e@mail.ru']],
                ['p', ['a', 'e@mail.ru']],
@@ -328,12 +361,14 @@ define([
             var json = [
                ['p', ['strong', 'BaBare;gjwergo'], 'aBaweruigerhw', ['em', 'aBa']],
                ['p', 'aba, abA, aBa, aBA, Aba, AbA, ABa, ABA'],
-               ['p', 'abababababa']
+               ['p', 'abababababa'],
+               ['p', 'no highlight']
             ];
             var html = '<div>' +
-               '<p><strong>B<span class="controls-Highlight_found">aBa</span>re;gjwergo</strong><span class="controls-Highlight_found">aBa</span>weruigerhw<em><span class="controls-Highlight_found">aBa</span></em></p>' +
-               '<p><span class="controls-Highlight_found">aba</span>, <span class="controls-Highlight_found">abA</span>, <span class="controls-Highlight_found">aBa</span>, <span class="controls-Highlight_found">aBA</span>, <span class="controls-Highlight_found">Aba</span>, <span class="controls-Highlight_found">AbA</span>, <span class="controls-Highlight_found">ABa</span>, <span class="controls-Highlight_found">ABA</span></p>' +
-               '<p><span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span>b<span class="controls-Highlight_found">aba</span></p>' +
+               '<p><strong>B<span class="controls-MarkupDecorator_highlight">aBa</span>re;gjwergo</strong><span class="controls-MarkupDecorator_highlight">aBa</span>weruigerhw<em><span class="controls-MarkupDecorator_highlight">aBa</span></em></p>' +
+               '<p><span class="controls-MarkupDecorator_highlight">aba</span>, <span class="controls-MarkupDecorator_highlight">abA</span>, <span class="controls-MarkupDecorator_highlight">aBa</span>, <span class="controls-MarkupDecorator_highlight">aBA</span>, <span class="controls-MarkupDecorator_highlight">Aba</span>, <span class="controls-MarkupDecorator_highlight">AbA</span>, <span class="controls-MarkupDecorator_highlight">ABa</span>, <span class="controls-MarkupDecorator_highlight">ABA</span></p>' +
+               '<p><span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span>b<span class="controls-MarkupDecorator_highlight">aba</span></p>' +
+               '<p>no highlight</p>' +
                '</div>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json, highlightResolver, { textToHighlight: 'aBa' }), html));
          });

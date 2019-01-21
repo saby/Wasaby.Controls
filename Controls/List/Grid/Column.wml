@@ -3,6 +3,15 @@
       <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
    </ws:if>
    <ws:else>
-      {{itemData.item[itemData.column.displayProperty]}}
+      <ws:if data="{{itemData.column.needSearchHighlight}}">
+         <Controls.Decorator.Highlight highlight="{{itemData.searchValue}}">
+            <ws:text>
+               <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
+            </ws:text>
+         </Controls.Decorator.Highlight>
+      </ws:if>
+      <ws:else>
+         {{itemData.item[itemData.column.displayProperty]}}
+      </ws:else>
    </ws:else>
 </div>

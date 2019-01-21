@@ -26,10 +26,9 @@ define('Controls/Popup/Previewer/OpenerTemplate',
          },
 
          _sendResult: function(event) {
-            this._notify('sendResult', [event], {bubbling: true});
+            this._notify('sendResult', [event], { bubbling: true });
          }
       });
 
       return OpenerTemplate;
-   }
-);
+   });

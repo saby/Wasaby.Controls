@@ -55,12 +55,12 @@ define('Controls/List/Grid/GridView', [
             });
             return result;
          },
-         prepareHeaderAndResultsIfFullGridSupport: function(results, header, container) {
+         prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
                resultsPadding,
                cells;
-            if (results) {
-               if (results.position === 'top') {
+            if (resultsPosition) {
+               if (resultsPosition === 'top') {
                   if (header) {
                      resultsPadding = container.getElementsByClassName('controls-Grid__header-cell')[0].getBoundingClientRect().height + 'px';
                   } else {
@@ -116,13 +116,13 @@ define('Controls/List/Grid/GridView', [
             if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                this._listModel.setColumns(newCfg.columns);
                if (!cDetection.isNotFullGridSupport) {
-                  _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+                  _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                }
             }
             if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                this._listModel.setHeader(newCfg.header);
                if (!cDetection.isNotFullGridSupport) {
-                  _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+                  _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                }
             }
          },
@@ -134,7 +134,7 @@ define('Controls/List/Grid/GridView', [
          _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
             if (!cDetection.isNotFullGridSupport) {
-               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResults(), this._listModel.getHeader(), this._container);
+               _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
          }
       });

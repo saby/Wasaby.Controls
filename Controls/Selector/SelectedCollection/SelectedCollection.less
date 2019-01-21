@@ -2,14 +2,14 @@
     .flex-shrink(0);
     .inline-flexbox();
     .align-items(baseline);
-    padding-right: @spacing_SelectedCollection_between_items;
+    padding-right: @spacing_SelectedCollection-between-items;
     box-sizing: border-box;
     max-width: 100%;
 }
 
 .controls-SelectedCollection__InfoBox {
     display: inline-block;
-    line-height: @line-height_SelectedCollection_item;
+    line-height: @line-height_SelectedCollection-item;
 }
 
 .controls-SelectedCollection__InfoBox_fixed {
@@ -23,8 +23,8 @@
 .controls-SelectedCollection__InfoBox_fixed:after {
     content: '';
     position: absolute;
-    right: -@width_SelectedCollection_counter_shadow;
-    width: @width_SelectedCollection_counter_shadow;
+    right: -@width_SelectedCollection-counter-shadow;
+    width: @width_SelectedCollection-counter-shadow;
     top: 0;
     bottom: 0;
     .horizontal-gradient(@background_SelectedCollection, rgba(255, 255, 255, 0));
@@ -32,24 +32,24 @@
 }
 
 .controls-SelectedCollection__counterItems {
-    color: @color_SelectedCollection_counter;
-    padding-right: @spacing_SelectedCollection_between_counter_items;
+    color: @color_SelectedCollection-counter;
+    padding-right: @spacing_SelectedCollection-between-counter-items;
     box-sizing: border-box;
     cursor: pointer;
 }
 
 .ws-is-no-touch {
   .controls-SelectedCollection__counterItems:hover {
-      color: @color_SelectedCollection_counter_hover;
+      color: @color_SelectedCollection-counter_hover;
   }
 }
 
 .controls-SelectedCollection__counterItems:active {
-    color: @color_SelectedCollection_counter_active;
+    color: @color_SelectedCollection-counter_active;
 }
 
 .controls-SelectedCollection__counter {
-    margin-right: @spacing_SelectedCollection_between_counter_items;
+    margin-right: @spacing_SelectedCollection-between-counter-items;
 }
 
 .controls-SelectedCollection__item-single {
@@ -62,9 +62,9 @@
 }
 
 .controls-SelectedCollection__item__cross {
-    .icon-size-without-important(@icon-size_SelectedCollection_cross);
+    .icon-size-without-important(@icon-size_SelectedCollection-cross);
     .flex-shrink(0);
-    color: @color_SelectedCollection_cross;
+    color: @color_SelectedCollection-cross;
     cursor: pointer;
 }
 
@@ -73,7 +73,7 @@
     .flex-shrink(1);
     display: inline-block;
     max-width: 100%;
-    line-height: @line-height_SelectedCollection_item;
+    line-height: @line-height_SelectedCollection-item;
 }
 
 .controls-SelectedCollection__item__caption {
@@ -81,15 +81,15 @@
 }
 
 .controls-SelectedCollection__item__caption-size-default, .controls-SelectedCollection__item__caption-size-s {
-    font-size: @font-size_SelectedCollection_size_s;
+    font-size: @font-size_SelectedCollection-size_s;
 }
 
 .controls-SelectedCollection__item__caption-size-m {
-    font-size: @font-size_SelectedCollection_size_m;
+    font-size: @font-size_SelectedCollection-size_m;
 }
 
 .controls-SelectedCollection__item__caption-size-l {
-    font-size: @font-size_SelectedCollection_size_l;
+    font-size: @font-size_SelectedCollection-size_l;
 }
 
 .controls-SelectedCollection__item__caption-style-bold,
@@ -104,11 +104,11 @@
 }
 
 .controls-SelectedCollection__item__caption-style-accent {
-    color: @color_SelectedCollection_item_accent;
+    color: @color_SelectedCollection-item_accent;
 }
 
 .controls-SelectedCollection__item__caption-style-primary {
-    color: @color_SelectedCollection_item_primary;
+    color: @color_SelectedCollection-item_primary;
 }
 
 .controls-SelectedCollection__collection {
@@ -131,15 +131,15 @@
 }
 
 .controls-SelectedCollection__popup-margins {
-    margin-top: @shift-top_SelectedCollection_popup;
-    margin-left: @shift-left_SelectedCollection_popup;
+    margin-top: @shift-top_SelectedCollection-popup;
+    margin-left: @shift-left_SelectedCollection-popup;
 }
 
 .controls-SelectedCollection__popup {
-    border: @border-width_SelectedCollection_popup solid @border-color_SelectedCollection_popup;
-    box-shadow: @shadow_SelectedCollection_popup;
-    background-color: @background-color_SelectedCollection_popup;
-    padding: @spacing_SelectedCollection_popup_between_content_border;
+    border: @border-width_SelectedCollection-popup solid @border-color_SelectedCollection-popup;
+    box-shadow: @shadow_SelectedCollection-popup;
+    background-color: @background-color_SelectedCollection-popup;
+    padding: @spacing_SelectedCollection-popup-between-content_border;
 }
 
 .controls-SelectedCollection__popup-wrapper {

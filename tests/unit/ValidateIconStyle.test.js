@@ -1,4 +1,4 @@
-define(['Controls/Button/validateIconStyle', 'WS.Data/Collection/RecordSet'], function(Validator, RecordSet) {
+define(['Controls/Button/validateIconStyle', 'Types/collection'], function(Validator, collection) {
    'use strict';
 
    describe('Controls.Button.validateIconStyle', function() {
@@ -19,7 +19,7 @@ define(['Controls/Button/validateIconStyle', 'WS.Data/Collection/RecordSet'], fu
          assert.equal(Validator.iconColorFromOptIconToIconStyle(icon), 'error');
       });
       it('itemsSetOldIconStyle', function() {
-         var items = new RecordSet({
+         var items = new collection.RecordSet({
                idProperty: 'id',
                rawData: [
                   { id: 1, iconStyle: 'test', icon: 'icon-Send icon-error icon-small' },

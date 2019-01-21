@@ -5,11 +5,11 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Core/Deferred',
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
-   'WS.Data/Collection/List',
+   'Types/collection',
    'Core/core-merge',
    'Controls/Utils/tmplNotify',
    'Controls/Utils/ToSourceModel'
-], function(Control, template, clone, Deferred, SourceController, isEqual, List, merge, tmplNotify, ToSourceModel) {
+], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel) {
    'use strict';
 
    var _private = {
@@ -110,7 +110,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
       getItems: function(self) {
          if (!self._items) {
-            self._items = new List();
+            self._items = new collection.List();
          }
          return self._items;
       }

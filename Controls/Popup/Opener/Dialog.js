@@ -10,7 +10,6 @@ define('Controls/Popup/Opener/Dialog',
        * @public
        * @author Красильников А.С.
        * @category Popup
-       * @mixes Controls/interface/IDialogOptions
        * @demo Controls-demo/Popup/Opener/DialogPG
        */
 
@@ -36,10 +35,8 @@ define('Controls/Popup/Opener/Dialog',
           * @example
           * wml
           * <pre>
-          *    <Controls.Popup.Opener.Dialog name="dialog">
-          *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+          *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
           *          <ws:templateOptions key="111"/>
-          *       </ws:popupOptions>
           *    </Controls.Popup.Opener.Dialog>
           *
           *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
@@ -107,31 +104,18 @@ define('Controls/Popup/Opener/Dialog',
     */
 
    /**
-    * @name Controls/Popup/Opener/Dialog#minWidth
-    * @cfg {Number} The minimum width of popup.
+    * @name Controls/Popup/Opener/Dialog#width
+    * @cfg {Number} Width of popup.
     */
 
    /**
-    * @name Controls/Popup/Opener/Dialog#maxWidth
-    * @cfg {Number} The maximum width of popup.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#minHeight
-    * @cfg {Number} The minimum height of popup.
+    * @name Controls/Popup/Opener/Dialog#height
+    * @cfg {Number} Height of popup.
     */
 
    /**
     * @name Controls/Popup/Opener/Dialog#maxHeight
     * @cfg {Number} The maximum height of popup.
-    */
-   /**
-    * @name Controls/Popup/Opener/Dialog#maximize
-    * @cfg {Boolean} Determines whether the control is displayed in full screen.
-    */
-   /**
-    * @name Controls/Popup/Opener/Dialog#resizable
-    * @cfg {Boolean} Determines whether popup can be resized.
     */
    /**
     * @name Controls/Popup/Opener/Dialog#top
@@ -150,10 +134,8 @@ define('Controls/Popup/Opener/Dialog',
     * @example
     * wml
     * <pre>
-    *    <Controls.Popup.Opener.Dialog name="dialog">
-    *       <ws:popupOptions template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
+    *    <Controls.Popup.Opener.Dialog name="dialog" template="Controls-demo/Popup/TestDialog" isModal="{{true}}">
     *          <ws:templateOptions key="111"/>
-    *       </ws:popupOptions>
     *    </Controls.Popup.Opener.Dialog>
     *
     *    <Controls.Button name="openDialogButton" caption="open dialog" on:click="_openDialog()"/>
@@ -185,4 +167,21 @@ define('Controls/Popup/Opener/Dialog',
     * @function
     * @description Popup opened status.
     */
+
+   /**
+    * @typedef {Object} PopupOptions
+    * @description Dialog popup options.
+    * @property {Boolean} autofocus Determines whether focus is set to the template when popup is opened.
+    * @property {Boolean} modal Determines whether the window is modal.
+    * @property {String} className Class names of popup.
+    * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
+    * @property {function|String} template Template inside popup.
+    * @property {function|String} templateOptions Template options inside popup.
+    * @property {Number} width Width of popup.
+    * @property {Number} height Height of popup.
+    * @property {Number} maxHeight The maximum height of popup.
+    * @property {Number} top Distance from the window to the top of the screen.
+    * @property {Number} left Distance from the window to the left border of the screen.
+    */
+
 );

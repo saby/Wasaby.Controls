@@ -1,8 +1,8 @@
 define('Controls-demo/EditableArea/EditableArea', [
    'Core/Control',
    'wml!Controls-demo/EditableArea/EditableArea',
-   'WS.Data/Entity/Record',
-   'WS.Data/Source/Memory',
+   'Types/entity',
+   'Types/source',
    'wml!Controls-demo/EditableArea/resources/exampleTabTemplate',
    'wml!Controls-demo/EditableArea/resources/exampleTabTemplate2',
 
@@ -10,8 +10,8 @@ define('Controls-demo/EditableArea/EditableArea', [
 ], function(
    Control,
    template,
-   Record,
-   MemorySource,
+   entity,
+   source,
    exampleTabTemplate,
    exampleTabTemplate2
 ) {
@@ -73,21 +73,21 @@ define('Controls-demo/EditableArea/EditableArea', [
       _tabSource: null,
 
       _beforeMount: function() {
-         this._record = new Record({
+         this._record = new entity.Record({
             rawData: {
                id: 1,
                text1: 'Мой отдел'
             }
          });
-         this._tabSource = new MemorySource({
+         this._tabSource = new source.Memory({
             idProperty: 'id',
             data: tabsData
          });
-         this._tabSource2 = new MemorySource({
+         this._tabSource2 = new source.Memory({
             idProperty: 'id',
             data: tabsData2
          });
-         this._toolbarSource = new MemorySource({
+         this._toolbarSource = new source.Memory({
             idProperty: 'id',
             data: toolbarItems
          });

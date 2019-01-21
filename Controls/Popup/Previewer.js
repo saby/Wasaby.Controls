@@ -35,9 +35,8 @@ define('Controls/Popup/Previewer',
          getType: function(eventType) {
             if (eventType === 'mouseenter' || eventType === 'mouseleave') {
                return 'hover';
-            } else {
-               return 'click';
             }
+            return 'click';
          },
          getCfg: function(self, event) {
             return {
@@ -63,7 +62,6 @@ define('Controls/Popup/Previewer',
 
       var Previewer = Control.extend({
          _template: template,
-         _isPopupOpened: false,
 
          _isNewEnvironment: PreviewerOpener.isNewEnvironment,
 
@@ -79,10 +77,9 @@ define('Controls/Popup/Previewer',
          _open: function(event) {
             var type = _private.getType(event.type);
 
-            if (!this._isPopupOpened) {
+            if (!this._isPopupOpened()) {
                if (this._isNewEnvironment()) {
                   this._close(event); // close opened popup to avoid jerking the content for repositioning
-                  this._isPopupOpened = true;
                   this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
                } else {
                   this._children.openerPreviewer.open(_private.getCfg(this, event), type);
@@ -93,12 +90,18 @@ define('Controls/Popup/Previewer',
          _close: function(event) {
             var type = _private.getType(event.type);
 
-            this._isPopupOpened = false;
             if (this._isNewEnvironment()) {
-               this._notify('closePreviewer', [type], {bubbling: true});
+               this._notify('closePreviewer', [type], { bubbling: true });
             } else {
                this._children.openerPreviewer.close(type);
             }
+         },
+
+         _isPopupOpened: function() {
+            if (this._isNewEnvironment()) {
+               return this._notify('isPreviewerOpened', [], {bubbling: true});
+            }
+            return this._children.openerPreviewer.isOpened();
          },
 
          // Pointer action on hover with content and popup are executed sequentially.
@@ -109,7 +112,7 @@ define('Controls/Popup/Previewer',
 
          _cancel: function(event, action) {
             if (this._isNewEnvironment()) {
-               this._notify('cancelPreviewer', [action], {bubbling: true});
+               this._notify('cancelPreviewer', [action], { bubbling: true });
             } else {
                this._children.openerPreviewer.cancel(action);
             }
@@ -119,7 +122,7 @@ define('Controls/Popup/Previewer',
             /**
              * When trigger is set to 'hover', preview shouldn't be shown when user clicks on content.
              */
-            if (!this._isPopupOpened) {
+            if (!this._isPopupOpened()) {
                this._debouncedAction('_open', [event]);
             }
             event.preventDefault();
@@ -127,9 +130,8 @@ define('Controls/Popup/Previewer',
          },
 
          _contentMouseenterHandler: function(event) {
-            if (!this._isPopupOpened) {
+            if (!this._isPopupOpened()) {
                this._debouncedAction('_open', [event]);
-
             }
             this._cancel(event, 'closing');
          },
@@ -156,7 +158,6 @@ define('Controls/Popup/Previewer',
                   event.stopPropagation();
                   break;
                case 'mouseenter':
-                  this._isPopupOpened = true;
                   this._debouncedAction('_cancel', [event, 'closing']);
                   break;
                case 'mouseleave':
@@ -178,5 +179,4 @@ define('Controls/Popup/Previewer',
       };
 
       return Previewer;
-   }
-);
+   });

@@ -5,10 +5,10 @@ define('Controls/Container/Adapter/Enum',
    [
       'Core/Control',
       'wml!Controls/Container/Adapter/Enum/Enum',
-      'WS.Data/Source/Memory'
+      'Types/source'
    ],
 
-   function(Control, template, Memory) {
+   function(Control, template, source) {
       var _private = {
          getArrayFromEnum: function(enumInstance) {
             var arr = [];
@@ -22,7 +22,7 @@ define('Controls/Container/Adapter/Enum',
 
          getSourceFromEnum: function(enumInstance) {
             var data = _private.getArrayFromEnum(enumInstance);
-            return new Memory({
+            return new source.Memory({
                data: data,
                idProperty: 'title'
             });

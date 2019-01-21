@@ -162,7 +162,7 @@ define('Controls/Tabs/Buttons', [
 
    /**
     * @name Controls/Tabs/Buttons#source
-    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
+    * @cfg {Types/source:Base} Object that implements ISource interface for data access.
     * @default undefined
     * @remark
     * The item can have an property 'align'. It's determine align of item tab.

@@ -3,9 +3,9 @@
  */
 define([
    'Controls/Controllers/SourceController',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/core-instance'
-], function(SourceController, MemorySource, cInstance){
+], function(SourceController, sourceLib, cInstance){
    describe('Controls.Controllers.SourceController', function () {
       var data, source;
       beforeEach(function() {
@@ -26,7 +26,7 @@ define([
                type: 2
             }
          ];
-         source = new MemorySource({
+         source = new sourceLib.Memory({
             data: data,
             idProperty: 'id'
          });

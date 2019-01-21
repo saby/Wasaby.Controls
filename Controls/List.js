@@ -26,16 +26,17 @@ define('Controls/List', [
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
-    * @mixes Controls/interface/IGroupedView
+    * @mixes Controls/interface/IGrouped
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/List/interface/IList
     * @mixes Controls/interface/IEditableList
     * @control
     * @author Авраменко А.С.
     * @public
     * @category List
+    * @demo Controls-demo/List/List/BasePG
     */
 
    var ListControl = Control.extend(/** @lends Controls/List.prototype */{

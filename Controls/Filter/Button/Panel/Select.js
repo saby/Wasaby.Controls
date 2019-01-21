@@ -1,6 +1,6 @@
 define('Controls/Filter/Button/Panel/Select', [
    'Core/Control',
-   'WS.Data/Utils',
+   'Types/util',
    'wml!Controls/Filter/Button/Panel/Select/Select'
 ], function(Control, Utils, template) {
    /**
@@ -29,8 +29,8 @@ define('Controls/Filter/Button/Panel/Select', [
       _template: template,
 
       _clickHandler: function(event, item) {
-         this._notify('textValueChanged', [Utils.getItemPropertyValue(item, this._options.displayProperty)]);
-         this._notify('valueChanged', [[Utils.getItemPropertyValue(item, this._options.keyProperty)]]);
+         this._notify('textValueChanged', [Utils.object.getPropertyValue(item, this._options.displayProperty)]);
+         this._notify('valueChanged', [[Utils.object.getPropertyValue(item, this._options.keyProperty)]]);
       }
 
    });

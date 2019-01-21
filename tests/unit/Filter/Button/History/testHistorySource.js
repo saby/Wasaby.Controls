@@ -1,19 +1,17 @@
 define('tests/Filter/Button/History/testHistorySource',
    [
       'Core/Control',
-      'WS.Data/Di',
-      'WS.Data/Source/Memory',
+      'Types/di',
       'Controls/History/Service',
       'Core/Deferred',
-      'WS.Data/Source/DataSet',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Adapter/Sbis',
+      'Types/source',
+      'Types/collection',
+      'Types/entity',
       'Core/Serializer',
-      'WS.Data/Entity/Model',
       'Controls/History/Source'
    ],
 
-   function(Control, Di, Memory, HistoryService, Deferred, DataSet, RecordSet, SbisAdapter, Serializer, Model, HistorySource) {
+   function(Control, Di, HistoryService, Deferred, source, collection, entity, Serializer, HistorySource) {
 
       'use strict';
 
@@ -72,7 +70,7 @@ define('tests/Filter/Button/History/testHistorySource',
       ];
 
       var config = {
-         originSource: new Memory({
+         originSource: new source.Memory({
             idProperty: 'id',
             data: items
          }),
@@ -130,14 +128,14 @@ define('tests/Filter/Button/History/testHistorySource',
       };
 
       function createRecordSet(data) {
-         return new RecordSet({
+         return new collection.RecordSet({
             rawData: data,
             idProperty: 'ObjectId',
-            adapter: new SbisAdapter()
+            adapter: new entity.adapter.Sbis()
          });
       }
 
-      var data = new DataSet({
+      var data = new source.DataSet({
          rawData: {
             frequent: createRecordSet(frequentData),
             pinned: createRecordSet(pinnedData),
@@ -159,7 +157,7 @@ define('tests/Filter/Button/History/testHistorySource',
          },
 
          update: function(dataHistory, meta) {
-            data = new DataSet({
+            data = new source.DataSet({
                rawData: {
                   frequent: createRecordSet(frequentData),
                   pinned: createRecordSet(pinnedData),

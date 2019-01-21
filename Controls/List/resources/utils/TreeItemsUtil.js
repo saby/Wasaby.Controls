@@ -1,8 +1,8 @@
 define('Controls/List/resources/utils/TreeItemsUtil', [
-   'WS.Data/Display/Tree',
-   'WS.Data/Entity/Model',
+   'Types/display',
+   'Types/entity',
    'Core/helpers/Object/isPlainObject'
-], function(DisplayTree, Model, isPlainObject) {
+], function(display, entity, isPlainObject) {
    var
       _private = {
 
@@ -26,6 +26,10 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
                displayProperties.group = cfg.groupMethod;
             }
 
+            if (cfg.groupingKeyCallback) {
+               displayProperties.group = cfg.groupingKeyCallback;
+            }
+
             if (typeof cfg.root !== 'undefined') {
                root = cfg.root;
             } else {
@@ -33,13 +37,13 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             }
             rootAsNode = isPlainObject(root);
             if (rootAsNode) {
-               root = Model.fromObject(root, 'adapter.sbis');
+               root = entity.Model.fromObject(root, 'Types/entity:adapter.Sbis');
                root.keyProperty = cfg.keyProperty;
                displayProperties.rootEnumerable = true;
             }
             displayProperties.root = root;
 
-            return new DisplayTree(displayProperties);
+            return new display.Tree(displayProperties);
          }
       };
    return TreeItemsUtil;

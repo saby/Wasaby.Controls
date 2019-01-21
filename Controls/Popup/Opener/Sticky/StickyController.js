@@ -53,7 +53,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          updateClasses: function(cfg, popupCfg) {
-            // Удаляем предыдущие классы характеризующие направление и добавляем новые
+            // Remove the previous classes of direction and add new ones
             _private.removeOrientationClasses(cfg);
             cfg.popupOptions.className = (cfg.popupOptions.className || '') + ' ' + _private.getOrientationClasses(popupCfg);
          },
@@ -137,7 +137,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       };
 
       /**
-       * Стратегия позиционирования прилипающего диалога.
+       * Sticky Popup Controller
        * @class Controls/Popup/Opener/Sticky/StickyController
        * @control
        * @private
@@ -178,21 +178,21 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          },
 
          elementAfterUpdated: function(item, container) {
-            /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            /* start: We remove the set values that affect the size and positioning to get the real size of the content */
             var width = container.style.width;
             var height = container.style.height;
             container.style.width = 'auto';
             container.style.height = 'auto';
 
-            /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            /* end: We remove the set values that affect the size and positioning to get the real size of the content */
 
             this.prepareConfig(item, container);
 
-            /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+            /* start: Return all values to the node. Need for vdom synchronizer */
             container.style.width = width;
             container.style.height = height;
 
-            /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+            /* end: Return all values to the node. Need for vdom synchronizer */
             return true;
          },
 
@@ -203,9 +203,9 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                left: -10000,
                maxWidth: _private.getWindowWidth(),
 
-               // Плавающая ошибка на ios, когда position:absolute контейнер создается за пределами экрана и растягивает страницу
-               // что влечет за собой неправильное позиционирование ввиду неверных координат. + на странице стреляют события скролла
-               // Лечится position:fixed при позиционировании попапа за пределами экрана
+               // Error on ios when position: absolute container is created outside the screen and stretches the page
+               // which leads to incorrect positioning due to incorrect coordinates. + on page scroll event firing
+               // Treated position:fixed when positioning pop-up outside the screen
                position: 'fixed'
             };
          },

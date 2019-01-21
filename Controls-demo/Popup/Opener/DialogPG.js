@@ -27,26 +27,15 @@ define('Controls-demo/Popup/Opener/DialogPG',
                name: {
                   readOnly: true
                },
-               minWidth: {
+               width: {
                   readOnly: true
                },
-               maxWidth: {
-                  readOnly: true
-               },
-               minHeight: {
+               height: {
                   readOnly: true
                },
                maxHeight: {
                   readOnly: true
                },
-               maximize: {
-                  readOnly: true
-               },
-               resizable: {
-
-                  readOnly: true
-               },
-
                template: {
                   items: [
                      {
@@ -79,12 +68,9 @@ define('Controls-demo/Popup/Opener/DialogPG',
                closeByExternalClick: true,
                template:  'wml!Controls-demo/Popup/Opener/DialogTpl',
                templateOptions:  { value: 'My text' },
-               minWidth: 500,
-               maxWidth: 700,
-               minHeight: 200,
+               width: 500,
+               height: 200,
                maxHeight: 200,
-               maximize: false,
-               resizable: false
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
