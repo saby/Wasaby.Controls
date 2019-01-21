@@ -54,35 +54,31 @@ def build_description(job, path, skip_test) {
     }
 }
 
-def return_test_for_run(tests_files, autotests) {
+def return_test_for_run(tests_files) {
     tests_files = tests_files.replace('\n', '')
     echo "Будут запущены ${tests_files}"
     def run_reg = ""
     def run_int = ""
-    if (autotests) {
-        echo "Делим общий список на int и reg тесты"
-        type_tests = tests_files.split(';')
-        temp_var = type_tests[0].split('reg:')
-        if ( temp_var.length == 2) {
-            run_reg = "--files_to_start ${temp_var[1]}"
-        }
-        temp_var = type_tests[1].split('int:')
-        if ( temp_var.length == 2 ) {
-            run_int = "--files_to_start ${temp_var[1]}"
-        }
-
-    } else {
-        run_int = "--files_to_start ${tests_files}"
+    echo "Делим общий список на int и reg тесты"
+    type_tests = tests_files.split(';')
+    temp_var = type_tests[0].split('reg:')
+    if ( temp_var.length == 2) {
+        run_reg = "--files_to_start ${temp_var[1]}"
     }
+    temp_var = type_tests[1].split('int:')
+    if ( temp_var.length == 2 ) {
+        run_int = "--files_to_start ${temp_var[1]}"
+    }
+
     return [run_reg, run_int]
 }
 
-def download_coverage_json(version) {
+def download_coverage_json(version, type) {
     echo "Выкачиваем файл с зависимостями"
-    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/int/coverage/result.json"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/${type}/coverage/result.json"
     script = """
         if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-        echo "result.json exitsts"; cp -fr tmp_result.json result.json
+        echo "result.json exitsts"; mv -f tmp_result.json result.json
         else rm -f result.json
         fi
         """
@@ -157,9 +153,10 @@ def getParams(user) {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
@@ -188,6 +185,7 @@ echo "Генерируем параметры"
     ])
 
 def regr = params.run_reg
+def all_regr = params.run_all_reg
 def unit = params.run_unit
 def inte = params.run_int
 def all_inte = params.run_all_int
@@ -196,7 +194,7 @@ def only_fail = false
 
 
 node('master') {
-    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( all_regr|| regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -268,7 +266,10 @@ node('controls') {
         if ( inte && all_inte ) {
             inte = false
         }
-        if ( inte || all_inte || regr ) {
+        if ( regr && all_regr ) {
+            regr = false
+        }
+        if ( inte || all_inte || regr || all_regr) {
             unit = true
         }
         if ( boss ) {
@@ -585,7 +586,7 @@ node('controls') {
                 }
             }
         }
-        if ( regr || inte || all_inte ) {
+        if ( all_regr|| regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -668,7 +669,7 @@ node('controls') {
             }
         }
 
-        if ( regr || inte || all_inte ) {
+        if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
@@ -728,31 +729,40 @@ node('controls') {
                     if ( only_fail ) {
                         step([$class: 'CopyArtifact', fingerprintArtifacts: true, projectName: "${env.JOB_NAME}", selector: [$class: 'LastCompletedBuildSelector']])
                     }
-                    if ( (inte || regr) && !only_fail && changed_files ) {
+                    if ( !only_fail && changed_files ) {
                         dir("./controls/tests") {
-                        def script_handler = "python3 coverage_handler.py -c ${changed_files}"
-                        def tests_files
-                        if ( boss ) {
-                            script_handler+=" -d" //оверайдим флаг
-                            tests_files = sh returnStdout: true, script: script_handler
-                        } else {
-                            if ( download_coverage_json(version) ) {
-                                tests_files = sh returnStdout: true, script: script_handler
-                            } else {
-                                echo "Файл с покрытием не найден. Будут запущены все тесты."
+                        if (inte && !boss) {
+                             if ( download_coverage_json(version, 'int') ) {
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                if (tests_files_int) {
+                                    echo "${tests_files_int}"
+                                    tests_for_run_int = "--files_to_start ${tests_files_int}"
+                                }
+
+                             }
+                        }
+                        if (regr && !boss) {
+                            if ( download_coverage_json(version, 'reg') ) {
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 if (tests_files_reg) {
+                                 echo "${tests_files_reg}"
+                                     tests_for_run_reg = "--files_to_start ${tests_files_reg}"
+                                 }
+                             }
+                        }
+                        if (boss) {
+                            tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
+                            if ( tests_files ) {
+                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files)
                             }
                         }
-                        if ( tests_files ) {
-                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files, boss)
-                        } else {
-                            echo "Тесты для запуска по внесенным изменениям не найдены. Будут запущены все тесты."
                         }
                     }
                     if ( skip ) {
                          skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
                          skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
                     }
-                    }
+
                 }
             }
             parallel (
@@ -773,7 +783,7 @@ node('controls') {
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( regr && smoke_result){
+                        if ( all_regr || regr && smoke_result){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg"){
                                 sh """
@@ -803,7 +813,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( regr || inte || all_inte ){
+    if ( all_regr|| regr || inte || all_inte ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -847,7 +857,7 @@ node('controls') {
                          }
                     }
                 }
-                if (regr) {
+                if (regr || all_regr) {
                     reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
@@ -867,7 +877,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( regr ){
+    if ( regr || all_regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
