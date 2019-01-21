@@ -153,8 +153,9 @@ def getParams(user) {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_reg'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов по ws, engine, controls, ws-data", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск тестов dthcnrb по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
@@ -184,6 +185,7 @@ echo "Генерируем параметры"
     ])
 
 def regr = params.run_reg
+def all_regr = params.run_all_reg
 def unit = params.run_unit
 def inte = params.run_int
 def all_inte = params.run_all_int
@@ -192,7 +194,7 @@ def only_fail = false
 
 
 node('master') {
-    if ( "${env.BUILD_NUMBER}" != "1" && !( regr || unit|| inte || all_inte || only_fail)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( all_regr|| regr || unit|| inte || all_inte || only_fail)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -264,7 +266,10 @@ node('controls') {
         if ( inte && all_inte ) {
             inte = false
         }
-        if ( inte || all_inte || regr ) {
+        if ( regr && all_regr ) {
+            regr = false
+        }
+        if ( inte || all_inte || regr || all_regr) {
             unit = false
         }
         if ( boss ) {
@@ -581,7 +586,7 @@ node('controls') {
                 }
             }
         }
-        if ( regr || inte || all_inte ) {
+        if ( all_regr|| regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
@@ -664,7 +669,7 @@ node('controls') {
             }
         }
 
-        if ( regr || inte || all_inte ) {
+        if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
                     soft_restart = "False"
@@ -726,7 +731,7 @@ node('controls') {
                     }
                     if ( !only_fail && changed_files ) {
                         dir("./controls/tests") {
-                        if (inte) {
+                        if (inte && !boss) {
                              if ( download_coverage_json(version, 'int') ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
                                 if (tests_files_int) {
@@ -736,7 +741,7 @@ node('controls') {
 
                              }
                         }
-                        if (regr) {
+                        if (regr && !boss) {
                             if ( download_coverage_json(version, 'reg') ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
                                  if (tests_files_reg) {
@@ -778,7 +783,7 @@ node('controls') {
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( regr && smoke_result){
+                        if ( all_regr || regr && smoke_result){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg"){
                                 sh """
@@ -808,7 +813,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( regr || inte || all_inte ){
+    if ( all_regr|| regr || inte || all_inte ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -852,7 +857,7 @@ node('controls') {
                          }
                     }
                 }
-                if (regr) {
+                if (regr || all_regr) {
                     reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
@@ -872,7 +877,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( regr ){
+    if ( regr || all_regr ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
