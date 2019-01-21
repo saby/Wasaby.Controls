@@ -68,7 +68,7 @@ define(
 
          it('_beforeMount', () => {
             menu._beforeMount(config);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_medium_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-medium_popup');
          });
 
          it('_beforeUpdate', function() {
@@ -76,15 +76,15 @@ define(
             newOptions.icon = 'icon-small icon-Doge icon-primary';
             newOptions.viewMode = 'link';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_popup');
             newOptions.icon = 'icon-small icon-Doge icon-primary';
             newOptions.viewMode = 'button';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_popup');
             newOptions.showHeader = false;
             newOptions.viewMode = 'link';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_duplicate_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_duplicate_popup');
          });
       });
    }
