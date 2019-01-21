@@ -12,7 +12,7 @@ define('Controls/interface/IEditableList', [
 
    /**
     * @typedef {Object} ItemEditOptions
-    * @property {WS.Data/Entity/Record} [options.item] Record with initial data.
+    * @property {Types/entity:Record} [options.item] Record with initial data.
     */
 
    /**
@@ -21,11 +21,11 @@ define('Controls/interface/IEditableList', [
     * @property {Boolean} [editingConfig.autoAdd=false] If true, after the end of editing of the last list item, new item adds automatically and its editing begins.
     * @property {Boolean} [editingConfig.sequentialEditing=false] If true, after the end of editing of any list item other than the last, editing of the next list item starts automatically.
     * @property {Boolean} [editingConfig.toolbarVisibility=false] Determines whether buttons 'Save' and 'Cancel' should be displayed.
-    * @property {WS.Data/Entity/Record} [editingConfig.item=undefined] If present, editing of this item will begin on first render.
+    * @property {Types/entity:Record} [editingConfig.item=undefined] If present, editing of this item will begin on first render.
     */
 
    /**
-    * @typedef {String|WS.Data/Entity/Record|Core/Deferred} ItemEditResult
+    * @typedef {String|Types/entity:Record|Core/Deferred} ItemEditResult
     * @variant {String} Cancel Cancel start of editing.
     * @variant {ItemEditOptions} options Options of editing.
     * @variant {Core/Deferred} Deferred is used for asynchronous preparation of edited record. It is necessary to fullfill deferred with {@link ItemEditOptions ItemEditOptions} or 'Cancel'. If deferred takes too long to resolve then loading indicator will be shown.
@@ -104,7 +104,7 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#afterBeginEdit Occurs after the start of editing\adding.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} item Editing record.
+    * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @remark
     * This event is useful if you want to do something after the editing has started, for example hide an add button.
@@ -132,7 +132,7 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#beforeEndEdit Occurs before the end of editing\adding.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} item Editing record.
+    * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} willSave Determines whether changes to editing item will be saved.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @returns {EndEditResult}
@@ -161,7 +161,7 @@ define('Controls/interface/IEditableList', [
    /**
     * @event Controls/interface/IEditableList#afterEndEdit Occurs after the end of editing\adding.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} item Editing record.
+    * @param {Types/entity:Record} item Editing record.
     * @param {Boolean} isAdd Flag which allows to differentiate between editing and adding.
     * @remark
     * This event is useful if you want to do something after the end of editing, for example show an add button.
@@ -233,7 +233,7 @@ define('Controls/interface/IEditableList', [
     * @param {ItemEditOptions} options Options of adding.
     * @returns {Core/Deferred}
     * @remark
-    * If you don't pass the options then {@link WS.Data/Source/ICrud#create create} method of the list's source will be called and the result will be added to the list.
+    * If you don't pass the options then {@link Types/source:ICrud#create create} method of the list's source will be called and the result will be added to the list.
     * @example
     * The following example shows how to start editing of an item.
     * WML:

@@ -1,10 +1,10 @@
 define('Controls/Toggle/Switch', [
    'Core/Control',
    'wml!Controls/Toggle/Switch/Switch',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Toggle/Switch/Switch',
    'css!theme?Controls/Toggle/resources/SwitchCircle/SwitchCircle'
-], function(Control, template, types) {
+], function(Control, template, entity) {
 
    /**
     * Switch button with single caption. Frequently used for 'on-off' settings.
@@ -55,9 +55,9 @@ define('Controls/Toggle/Switch', [
 
    Switch.getOptionTypes = function getOptionTypes() {
       return {
-         value: types(Boolean),
-         caption: types(String),
-         captionPosition: types(String).oneOf([
+         value: entity.descriptor(Boolean),
+         caption: entity.descriptor(String),
+         captionPosition: entity.descriptor(String).oneOf([
             'left',
             'right'
          ])

@@ -16,6 +16,7 @@
       on:focusin="_focusInHandler()"
       on:focusout="_focusOutHandler()"
       on:mousedown="_mouseDownHandler()"
+      on:touchstart="_touchStartHandler()"
    />
    <ws:if data="{{!value}}">
       <div class="controls-InputBase__placeholder">

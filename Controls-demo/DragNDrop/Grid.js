@@ -1,12 +1,12 @@
 define('Controls-demo/DragNDrop/Grid', [
    'Core/Control',
    'Core/core-clone',
-   'WS.Data/Entity/Record',
+   'Types/entity',
    'Controls-demo/DragNDrop/DemoData',
    'Controls-demo/DragNDrop/ListEntity',
    'wml!Controls-demo/DragNDrop/Grid/Grid',
-   'WS.Data/Source/Memory'
-], function(BaseControl, cClone, Record, DemoData, ListEntity, template, MemorySource) {
+   'Types/source'
+], function(BaseControl, cClone, entityLib, DemoData, ListEntity, template, source) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -16,7 +16,7 @@ define('Controls-demo/DragNDrop/Grid', [
       _gridHeader: null,
 
       _beforeMount: function() {
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: cClone(DemoData)
          });

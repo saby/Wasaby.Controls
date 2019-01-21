@@ -1,9 +1,9 @@
 define('Controls-demo/Input/Number/Number', [
    'Core/Control',
    'wml!Controls-demo/Input/Number/Number',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/Input/resources/VdomInputs'
-], function(Control, template, Memory) {
+], function(Control, template, source) {
    'use strict';
 
    var VdomDemoNumber = Control.extend({
@@ -47,7 +47,7 @@ define('Controls-demo/Input/Number/Number', [
          }
       },
       _createMemory: function() {
-         return new Memory({
+         return new source.Memory({
             idProperty: 'title',
             data: this._items
          });

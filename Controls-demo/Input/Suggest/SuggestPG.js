@@ -2,9 +2,9 @@ define('Controls-demo/Input/Suggest/SuggestPG', [
    'Core/Control',
    'tmpl!Controls-demo/PropertyGrid/DemoPG',
    'json!Controls-demo/PropertyGrid/pgtext',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/Input/Suggest/SuggestPG'
-], function(Control, template, propertyGridConfig, Memory) {
+], function(Control, template, propertyGridConfig, sourceLib) {
    
    'use strict';
    
@@ -43,12 +43,12 @@ define('Controls-demo/Input/Suggest/SuggestPG', [
             return true;
          };
          
-         this._citiesSource = new Memory({
+         this._citiesSource = new sourceLib.Memory({
             idProperty: 'id',
             data: cityData,
             filter: sourceFilter
          });
-         this._namesSource = new Memory({
+         this._namesSource = new sourceLib.Memory({
             idProperty: 'id',
             data: namesData,
             filter: sourceFilter

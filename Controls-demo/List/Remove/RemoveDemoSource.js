@@ -1,8 +1,8 @@
 define('Controls-demo/List/Remove/RemoveDemoSource', [
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/Deferred'
-], function (MemorySource, Deferred) {
-   var RemoveDemoSource = MemorySource.extend({
+], function (source, Deferred) {
+   var RemoveDemoSource = source.Memory.extend({
       destroy: function(keys) {
          var
             result,
