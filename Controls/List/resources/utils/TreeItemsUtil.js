@@ -37,7 +37,7 @@ define('Controls/List/resources/utils/TreeItemsUtil', [
             }
             rootAsNode = isPlainObject(root);
             if (rootAsNode) {
-               root = entity.Model.fromObject(root, 'adapter.sbis');
+               root = entity.Model.fromObject(root, 'Types/entity:adapter.Sbis');
                root.keyProperty = cfg.keyProperty;
                displayProperties.rootEnumerable = true;
             }
