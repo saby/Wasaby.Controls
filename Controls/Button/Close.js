@@ -3,7 +3,6 @@ define('Controls/Button/Close', [
    'wml!Controls/Button/Close',
    'css!theme?Controls/Button/Close'
 ], function(Control, template) {
-
    /**
     * Specialized type of button for closing windows.
     *
@@ -74,7 +73,8 @@ define('Controls/Button/Close', [
     */
 
    var _private = {
-      //TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
+
+      // TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
       compatibleViewMode: function(options, self) {
          if (options.style === 'light' || options.viewMode === 'link') {
             self._viewMode = 'link';
