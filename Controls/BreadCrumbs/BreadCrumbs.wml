@@ -8,4 +8,3 @@
     <Controls.Event.Listener event="controlResize"
                             on:controlResize="_onResize()"/>
 </div>
-
