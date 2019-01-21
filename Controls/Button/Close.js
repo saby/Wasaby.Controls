@@ -23,15 +23,15 @@ define('Controls/Button/Close', [
    /**
     * @name Controls/Button/Close#viewMode
     * @cfg {String} Close button display view mode.
-    * @variant default Default display style.
-    * @variant light Light display style.
-    * @default default
+    * @variant toolButton  Close display style as button toolButton.
+    * @variant link Close display style as button link.
+    * @default toolButton
     * @example
-    * Close button display as light.
+    * Close button display as link.
     * <pre>
     *    <Controls.Button.Close viewMode="link" size="l"/>
     * </pre>
-    * Close button display as default.
+    * Close button display as toolButton.
     * <pre>
     *    <Controls.Button.Close viewMode="toolButton" size="l"/>
     * </pre>
@@ -61,7 +61,7 @@ define('Controls/Button/Close', [
     * @variant m Large button size.
     * @default m
     * @remark
-    * Close button has this size only in default view mode.
+    * Close button has this size only in toolButton view mode.
     * @example
     * Close button has l size.
     * <pre>
@@ -79,7 +79,7 @@ define('Controls/Button/Close', [
 
    CloseButton.getDefaultOptions = function() {
       return {
-         style: 'default',
+         viewMode: 'toolButton',
          size: 'l',
          transparent: true
       };

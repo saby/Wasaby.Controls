@@ -1,29 +1,29 @@
-//style default and primary
-@font-size_CloseButton_default_l: 23px;
-@font-size_CloseButton_default_m: 20px;
-@width_CloseButton_default_l: 36px;
-@height_CloseButton_default_l: 28px;
-@width_CloseButton_default_m: 29px;
-@height_CloseButton_default_m: 24px;
-@font-family_CloseButton_default: @default-icon-font;
-@color_CloseButton-icon_default: #587AB0;
-@color_CloseButton-icon_default_hover: #313E78;
-@color_CloseButton-icon_default_active: @color_CloseButton-icon_default_hover;
-@background-color_CloseButton_default_transparent: transparent;
-@background-color_CloseButton_primary_untransparent: #F8F8F8;
-@border-color_CloseButton_default: @border-color-ToolButton;
-@border-color_CloseButton_default_hover: @default-border-color-second;
-@border-width_CloseButton_default: 1px 0 1px 1px;
-@border-radius_CloseButton_default: 2px 0 0 2px;
-@box-shadow_CloseButton_default: @box-shadow-ToolButton;
-//style light
-@font-size_CloseButton_light: 24px;
-@color_CloseButton-icon_light_active: #313E78;
-@color_CloseButton-icon_light_hover: @color_CloseButton-icon_light_active;
-@font-family_CloseButton_light: @default-icon-medium-font;
-@width_CloseButton_light: 24px;
-@height_CloseButton_light: 24px;
-@color_CloseButton-icon_light: #CCC;
+//style toolButton and primary
+@font-size_CloseButton_toolButton_l:                                                23px;
+@font-size_CloseButton_toolButton_m:                                                @font-size_text_4xl;
+@width_CloseButton_toolButton_l:                                                    36px;
+@height_CloseButton_toolButton_l:                                                   28px;
+@width_CloseButton_toolButton_m:                                                    29px;
+@height_CloseButton_toolButton_m:                                                   @height_control_default;
+@font-family_CloseButton_toolButton:                                                @font-family_icon_size-l;
+@color_CloseButton-icon_toolButton:                                                 @color_secondary;
+@color_CloseButton-icon_toolButton_hover:                                           @color_link-hover;
+@color_CloseButton-icon_toolButton_active:                                          @color_CloseButton-icon_toolButton_hover;
+@background-color_CloseButton_toolButton_transparent:                               transparent;
+@background-color_CloseButton_primary_untransparent:                                @background-color_additional;
+@border-color_CloseButton_toolButton:                                               @border-color-ToolButton;
+@border-color_CloseButton_toolButton_hover:                                         @color_border;
+@border-width_CloseButton_toolButton:                                               @thickness_border_default 0 @thickness_border_default @thickness_border_default;
+@border-radius_CloseButton_toolButton:                                              2px 0 0 2px;
+@box-shadow_CloseButton_toolButton:                                                 @box-shadow-ToolButton;
+//style link
+@font-size_CloseButton_link:                                                        @font-size_text_5xl;
+@color_CloseButton-icon_link_active:                                                @color_link-hover;
+@color_CloseButton-icon_link_hover:                                                 @color_CloseButton-icon_link_active;
+@font-family_CloseButton_link:                                                      @default-icon-medium-font;
+@width_CloseButton_link:                                                            @height_CloseButton_link;
+@height_CloseButton_link:                                                           @height_control_default;
+@color_CloseButton-icon_link:                                                       @color_info;
 //common
-@content_CloseButton_icon: "\e66c";
-@text-shadow_CloseButton: @text-shadow_Button;
+@content_CloseButton_icon:                                                          "\e66c";
+@text-shadow_CloseButton:                                                           @text-shadow_Button;
