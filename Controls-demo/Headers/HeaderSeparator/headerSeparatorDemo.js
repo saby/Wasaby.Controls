@@ -1,12 +1,12 @@
 define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function (Control,
-             MemorySource,
+             source,
              template) {
    'use strict';
    var ModuleClass = Control.extend(
@@ -16,7 +16,7 @@ define('Controls-demo/Headers/HeaderSeparator/headerSeparatorDemo', [
          _iconStyleSource: null,
          _eventName: 'no event',
          _beforeMount: function() {
-            this._iconStyleSource = new MemorySource({
+            this._iconStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {

@@ -6,7 +6,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
    function(BaseController, DialogStrategy) {
       var _private = {
          prepareConfig: function(item, sizes) {
-            // After popup will be transferred to the synchronous change of coordinates, 
+            // After popup will be transferred to the synchronous change of coordinates,
             // we need to return the calculation of the position with the keyboard.
             var windowData = {
                width: document.body.clientWidth,
@@ -19,7 +19,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
             _private.fixCompatiblePosition(item);
          },
          fixCompatiblePosition: function(cfg) {
-            //COMPATIBLE: for old windows user can set the coordinates relative to the body
+            // COMPATIBLE: for old windows user can set the coordinates relative to the body
             if (cfg.popupOptions.top && cfg.popupOptions.left) {
                cfg.position.top = cfg.popupOptions.top;
                cfg.position.left = cfg.popupOptions.left;
@@ -28,7 +28,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
       };
 
       /**
-       * Стратегия позиционирования окна.
+       * Dialog Popup Controller
        * @class Controls/Popup/Opener/Dialog/DialogController
        * @control
        * @private
@@ -41,7 +41,7 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          },
 
          elementUpdated: function(cfg, container) {
-            /* start: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            /* start: We remove the set values that affect the size and positioning to get the real size of the content */
             var width = container.style.width;
             var height = container.style.height;
             container.style.width = 'auto';
@@ -53,16 +53,16 @@ define('Controls/Popup/Opener/Dialog/DialogController',
                container.style.maxHeight = cfg.popupOptions.maxHeight + 'px';
             }
 
-            /* end: Снимаем установленные значения, влияющие на размер и позиционирование, чтобы получить размеры контента */
+            /* end: We remove the set values that affect the size and positioning to get the real size of the content */
             this.prepareConfig(cfg, container);
 
-            /* start: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+            /* start: Return all values to the node. Need for vdom synchronizer */
             container.style.width = width;
             container.style.height = height;
             container.style.maxWidth = '';
             container.style.maxHeight = '';
 
-            /* end: Возвращаем все значения но узел, чтобы vdom не рассинхронизировался */
+            /* end: Return all values to the node. Need for vdom synchronizer */
          },
 
          getDefaultConfig: function(item) {
@@ -106,5 +106,4 @@ define('Controls/Popup/Opener/Dialog/DialogController',
          _private: _private
       });
       return new DialogController();
-   }
-);
+   });

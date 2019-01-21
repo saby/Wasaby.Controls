@@ -6,7 +6,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeTileView/TreeTileViewModel',
    'Controls/Utils/tmplNotify',
    'Controls/Utils/applyHighlighter',
-   'WS.Data/Chain',
+   'Types/chain',
    'Core/core-instance',
    'Core/constants',
    'Controls/Utils/keysHandler',
@@ -14,7 +14,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
-   'WS.Data/Entity/VersionableMixin',
+   'Types/entity',
    'Controls/TreeGrid',
    'Controls/BreadCrumbs/Path'
 ], function(
@@ -65,7 +65,7 @@ define('Controls/Explorer', [
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
             if (metaData.path && metaData.path.getCount() > 0) {
-               self._breadCrumbsItems = chain(metaData.path).toArray();
+               self._breadCrumbsItems = chain.factory(metaData.path).toArray();
             } else {
                self._breadCrumbsItems = null;
             }
@@ -182,15 +182,15 @@ define('Controls/Explorer', [
          }
       },
       _hoveredCrumbChanged: function(event, item) {
-         this._hoveredBreadCrumb = item;
+         this._hoveredBreadCrumb = item.getId();
       },
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
          }
       },
-      _onBreadCrumbsClick: function(event, itemId) {
-         _private.setRoot(this, itemId);
+      _onBreadCrumbsClick: function(event, item) {
+         _private.setRoot(this, item.getId());
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

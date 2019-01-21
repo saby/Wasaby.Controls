@@ -1,11 +1,11 @@
 define('Controls-demo/List/Tree/ExpandAll', [
    'Core/Control',
    'wml!Controls-demo/List/Tree/resources/ExpandAll/ExpandAll',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/List/Tree/resources/Data',
    'Controls/TreeGrid',
    'css!Controls-demo/List/Tree/resources/ExpandAll/ExpandAll'
-], function (Control, template, MemorySource, TreeData) {
+], function (Control, template, source, TreeData) {
    'use strict';
 
    var
@@ -20,7 +20,7 @@ define('Controls-demo/List/Tree/ExpandAll', [
          _expandedItems: [null],
 
          _beforeMount: function() {
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: TreeData.generate()
             });

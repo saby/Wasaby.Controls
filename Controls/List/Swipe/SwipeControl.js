@@ -4,7 +4,7 @@ define('Controls/List/Swipe/SwipeControl', [
    'Controls/Context/TouchContextField',
    'Controls/List/ItemActions/Utils/Actions',
    'Core/Deferred',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/Utils/Toolbar',
    'css!theme?Controls/List/Swipe/Swipe'
 ], function(
@@ -13,7 +13,7 @@ define('Controls/List/Swipe/SwipeControl', [
    TouchContextField,
    aUtil,
    Deferred,
-   types
+   entity
 ) {
    'use strict';
 
@@ -168,7 +168,7 @@ define('Controls/List/Swipe/SwipeControl', [
 
    SwipeControl.getOptionTypes = function() {
       return {
-         swipeViewMode: types(String).oneOf([
+         swipeViewMode: entity.descriptor(String).oneOf([
             'table',
             'tile'
          ])

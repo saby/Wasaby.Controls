@@ -11,7 +11,7 @@ define('Controls/interface/ISource', [
 
    /**
     * @name Controls/interface/ISource#source
-    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for working with data.
+    * @cfg {Types/source:Base} Object that implements ISource interface for working with data.
     * @example
     * The list will be rendered data from _source
     * <pre>

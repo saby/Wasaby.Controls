@@ -1,12 +1,12 @@
 define('Controls-demo/Utils/ScrollToElementDemo', [
    'Core/Control',
    'Controls/Utils/scrollToElement',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Utils/ScrollToElementDemo'
 ], function(
    Control,
    scrollToElement,
-   Memory,
+   source,
    template
 ) {
    'use strict';
@@ -22,7 +22,7 @@ define('Controls-demo/Utils/ScrollToElementDemo', [
                title: i
             });
          }
-         this._viewSource = new Memory({
+         this._viewSource = new source.Memory({
             data: data,
             idProperty: 'id'
          });

@@ -1,9 +1,9 @@
 define('Controls/List/AddButton', [
    'Core/Control',
    'wml!Controls/List/AddButton/AddButton',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/List/AddButton/AddButton'
-], function(Control, template, types) {
+], function(Control, template, entity) {
 
    var AddButton = Control.extend({
       _template: template,
@@ -17,7 +17,7 @@ define('Controls/List/AddButton', [
 
    AddButton.getOptionTypes = function getOptionTypes() {
       return {
-         caption: types(String)
+         caption: entity.descriptor(String)
       };
    };
 
