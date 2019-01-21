@@ -20,7 +20,7 @@
             </div>
         </ws:if>
         <ws:if data="{{_visibleItems}}">
-            <Controls.BreadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
+            <Controls._breadCrumbs.View attr:class="controls-BreadCrumbsPath__breadCrumbs {{_breadCrumbsClass}}"
                                        items="{{_breadCrumbsItems}}"
                                        visibleItems="{{_visibleItems}}"
                                        keyProperty="{{_options.keyProperty}}"
