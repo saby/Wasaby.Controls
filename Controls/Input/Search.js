@@ -61,6 +61,7 @@ define('Controls/Input/Search',
          },
 
          _focusOutHandler: function() {
+            //TODO до перехода на новую схему инпутов, Максим делает в январе-феврале 
             if (this._options.trim) {
                var trimmedValue = this._options.value.trim();
 
