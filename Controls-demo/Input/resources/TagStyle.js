@@ -1,10 +1,10 @@
 define('Controls-demo/Input/resources/TagStyle', [
    'Core/Control',
    'wml!Controls-demo/Input/resources/TagStyle',
-   'WS.Data/Source/Memory'
+   'Types/source'
 ],
 function(
-   Base, template, Memory
+   Base, template, source
 ) {
    'use strict';
    var TagStyle = Base.extend({
@@ -23,7 +23,7 @@ function(
          ];
       },
       _createMemory: function() {
-         return new Memory({
+         return new source.Memory({
             idProperty: 'id',
             data: this._items
          });

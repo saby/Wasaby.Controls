@@ -2,7 +2,7 @@ define('Controls/List/EditInPlace', [
    'Core/Control',
    'wml!Controls/List/EditInPlace/EditInPlace',
    'Core/Deferred',
-   'WS.Data/Entity/Record',
+   'Types/entity',
    'Controls/Utils/getWidth',
    'Controls/Utils/hasHorizontalScroll',
    'Controls/EditableArea/Constants',
@@ -11,7 +11,7 @@ define('Controls/List/EditInPlace', [
    Control,
    template,
    Deferred,
-   Record,
+   entity,
    getWidthUtil,
    hasHorizontalScrollUtil,
    EditConstants
@@ -56,7 +56,7 @@ define('Controls/List/EditInPlace', [
                   return defResult;
                });
                result = eventResult;
-            } else if ((eventResult && eventResult.item instanceof Record) || (options && options.item instanceof Record)) {
+            } else if ((eventResult && eventResult.item instanceof entity.Record) || (options && options.item instanceof entity.Record)) {
                result = Deferred.success(eventResult || options);
             } else if (isAdd) {
                result = _private.createModel(self, eventResult || options);
@@ -176,7 +176,7 @@ define('Controls/List/EditInPlace', [
 
             while (index + offset < count) {
                result = listModel.at(index + offset).getContents();
-               if (result instanceof Record) {
+               if (result instanceof entity.Record) {
                   return result;
                }
                offset++;
@@ -201,7 +201,7 @@ define('Controls/List/EditInPlace', [
 
             while (index + offset >= count) {
                result = listModel.at(index + offset).getContents();
-               if (result instanceof Record) {
+               if (result instanceof entity.Record) {
                   return result;
                }
                offset--;
@@ -311,21 +311,20 @@ define('Controls/List/EditInPlace', [
          return _private.endItemEdit(this, false);
       },
 
-      _onKeyDown: function(e) {
-         if (this._editingItem) {
-            switch (e.nativeEvent.keyCode) {
-               case 13: // Enter
-                  if (this._options.editingConfig && !this._sequentialEditing) {
-                     this.commitEdit();
-                  } else {
-                     _private.editNextRow(this, true);
-                  }
-                  break;
-               case 27: // Esc
-                  this.cancelEdit();
-                  break;
-            }
+      _onKeyDown: function(e, nativeEvent) {
+         switch (nativeEvent.keyCode) {
+            case 13: // Enter
+               if (this._options.editingConfig && !this._sequentialEditing) {
+                  this.commitEdit();
+               } else {
+                  _private.editNextRow(this, true);
+               }
+               break;
+            case 27: // Esc
+               this.cancelEdit();
+               break;
          }
+         nativeEvent.stopPropagation();
       },
 
       _onItemClick: function(e, record, originalEvent) {

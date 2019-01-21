@@ -1,10 +1,10 @@
 define('Controls/Button/BigSeparator', [
    'Core/Control',
    'wml!Controls/Button/BigSeparator/BigSeparator',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
 
    'css!theme?Controls/Button/BigSeparator/BigSeparator'
-], function(Control, template, types) {
+], function(Control, template, entity) {
    'use strict';
 
    /**
@@ -57,7 +57,7 @@ define('Controls/Button/BigSeparator', [
 
    BigSeparator.getOptionTypes =  function getOptionTypes() {
       return {
-         value: types(Boolean)
+         value: entity.descriptor(Boolean)
       };
    };
 

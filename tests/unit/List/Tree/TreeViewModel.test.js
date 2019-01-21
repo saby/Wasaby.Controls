@@ -1,15 +1,13 @@
 define([
    'Controls/List/Tree/TreeViewModel',
    'Core/core-merge',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Entity/Record',
-   'WS.Data/Collection/IBind'
+   'Types/entity',
+   'Types/collection'
 ], function(
    TreeViewModel,
    cMerge,
-   RecordSet,
-   Record,
-   IBindCollection
+   entity,
+   collection
 ) {
    function MockedDisplayItem(cfg) {
       var
@@ -106,7 +104,7 @@ define([
          displayProperty: 'title',
          parentProperty: 'parent',
          nodeProperty: 'parent@',
-         items: new RecordSet({
+         items: new collection.RecordSet({
             rawData: treeData,
             idProperty: 'id'
          })
@@ -295,7 +293,7 @@ define([
                baseExpandedItems = [1, 2, 3],
                treeViewModel = new TreeViewModel({
                   expandedItems: baseExpandedItems,
-                  items: new RecordSet({
+                  items: new collection.RecordSet({
                      rawData: [
                         { id: 1, parent: null, type: true },
                         { id: 2, parent: null, type: true },
@@ -344,7 +342,7 @@ define([
             treeViewModel.toggleExpanded(treeViewModel.getItemById('123', cfg.keyProperty), true);
             treeViewModel.toggleExpanded(treeViewModel.getItemById('234', cfg.keyProperty), true);
             assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after expand "123" and "234".');
-            treeViewModel.setItems(new RecordSet({
+            treeViewModel.setItems(new collection.RecordSet({
                rawData: treeData,
                idProperty: 'id'
             }));
@@ -352,7 +350,7 @@ define([
          });
 
          it('hasChildren should be true when an item gets added to an empty folder', function() {
-            var newItem = new Record({
+            var newItem = new entity.Record({
                rawData: {
                   'id': '4',
                   'title': 'четыре',
@@ -391,9 +389,9 @@ define([
                   notifiedOnNodeRemoved = true;
                }
             };
-            treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems1, null);
+            treeViewModel._onCollectionChange(null, collection.IObservable.ACTION_REMOVE, null, null, removedItems1, null);
             assert.deepEqual(treeViewModel.getExpandedItems(), { 'mi2': true }, 'Invalid value "_expandedItems" after "onCollectionChange".');
-            treeViewModel._onCollectionChange(null, IBindCollection.ACTION_REMOVE, null, null, removedItems2, null);
+            treeViewModel._onCollectionChange(null, collection.IObservable.ACTION_REMOVE, null, null, removedItems2, null);
             assert.deepEqual(treeViewModel.getExpandedItems(), {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });
@@ -429,7 +427,7 @@ define([
             ];
          function checkExpanderDisplayMode(params, result) {
             var
-               items = new RecordSet({
+               items = new collection.RecordSet({
                   rawData: params.items,
                   idProperty: 'id'
                }),

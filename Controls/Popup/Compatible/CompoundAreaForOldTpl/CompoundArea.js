@@ -14,7 +14,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
       'Core/EventBus',
       'Controls/Popup/Manager/ManagerController',
-      'WS.Data/Entity/InstantiableMixin',
+      'Types/entity',
       'Core/helpers/Function/callNext',
       'Core/core-instance',
       'Vdom/Vdom',
@@ -35,7 +35,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       DialogRecord,
       cEventBus,
       ManagerController,
-      InstantiableMixin,
+      entity,
       callNext,
       cInstance,
       Vdom
@@ -60,7 +60,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
        * Слой совместимости для открытия старых шаблонов в новых попапах
       * */
       var CompoundArea = CompoundContainer.extend([
-         InstantiableMixin,
+         entity.InstantiableMixin,
          LikeWindowMixin
       ], {
          _template: template,
@@ -832,7 +832,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
                   var popupAfterUpdated = function popupAfterUpdated(item, container) {
                      if (item.isHiddenForRecalc) {
-
                         // Перед тем как снять ws-insivible - пересчитаем размеры попапа, т.к. верстка могла измениться
                         self._notifyVDOM('controlResize', [], { bubbling: true });
 

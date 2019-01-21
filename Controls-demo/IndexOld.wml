@@ -3,11 +3,27 @@
       <div>
          <a href="/Controls-demo/demo.html?cname=Controls-demo/Example/Example">Example</a>
       </div>
-      
+
       <div>
          <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
             <a href="{{content.href}}">RootRouter</a>
          </Router.Link>
+      </div>
+      <h1>List <small style="color: #CCC; font-size: 16px">PG</small></h1>
+      <div>
+         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FList%252FBasePG'}}">List/Base</a>
+      </div>
+      <div>
+         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FList%252FItemTemplatePG'}}">List/ItemTemplate</a>
+      </div>
+      <div>
+         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FList%252FGroupPG'}}">List/Group</a>
+      </div>
+      <div>
+         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FList%252FMultiselectPG'}}">List/Multiselect</a>
+      </div>
+      <div>
+         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FList%252FItemActionsPG'}}">List/ItemActions</a>
       </div>
 
       <h1>List</h1>

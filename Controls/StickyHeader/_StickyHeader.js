@@ -2,6 +2,7 @@ define('Controls/StickyHeader/_StickyHeader',
    [
       'Core/Control',
       'Core/detection',
+      'WS.Data/Type/descriptor',
       'Controls/StickyHeader/Context',
       'Controls/StickyHeader/Utils',
       'Controls/Utils/IntersectionObserver',
@@ -10,7 +11,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
       'css!theme?Controls/StickyHeader/_StickyHeader/StickyHeader'
    ],
-   function(Control, detection, Context, stickyUtils, IntersectionObserver, Model, template) {
+   function(Control, detection, types, Context, stickyUtils, IntersectionObserver, Model, template) {
 
       'use strict';
 
@@ -55,6 +56,7 @@ define('Controls/StickyHeader/_StickyHeader',
          _isMobilePlatform: detection.isMobilePlatform,
 
          _shadowVisible: true,
+         _stickyHeadersHeight: 0,
 
          _index: null,
 
@@ -107,7 +109,8 @@ define('Controls/StickyHeader/_StickyHeader',
             var information = {
                id: this._index,
                shouldBeFixed: this._model.shouldBeFixed,
-               offsetHeight: this._container.offsetHeight
+               offsetHeight: this._container.offsetHeight,
+               mode: this._options.mode
             };
 
             this._shadowVisible = this._model.shouldBeFixed;
@@ -120,7 +123,7 @@ define('Controls/StickyHeader/_StickyHeader',
             var top = 0;
 
             if (this._context.stickyHeader) {
-               top = this._context.stickyHeader.position;
+               top = this._context.stickyHeader.position + this._stickyHeadersHeight;
             }
 
             /**
@@ -148,13 +151,27 @@ define('Controls/StickyHeader/_StickyHeader',
             return style;
          },
 
+         _getTopObserverStyle: function() {
+            // The top observer has a height of 1 pixel. In order to track when it is completely hidden
+            // beyond the limits of the scrollable container, taking into account round-off errors,
+            // it should be located with an offset of -2 pixels from the upper border of the container.
+            return 'top: -' + (this._stickyHeadersHeight + 2) + 'px;';
+         },
+
          _updateStickyShadow: function(e, ids) {
             this._shadowVisible = ids.indexOf(this._index) !== -1;
          },
 
+         _updateStickyHeight: function(e, height) {
+            if (!this._model.shouldBeFixed) {
+               this._stickyHeadersHeight = height;
+            }
+         },
+
          _isShadowVisible: function() {
             return (!this._context.stickyHeader || this._context.stickyHeader.shadowVisible) &&
-               this._shadowVisible && this._model && this._model.shouldBeFixed;
+               this._model && this._model.shouldBeFixed && this._options.shadowVisibility === 'visible' &&
+               (this._options.mode === 'stackable' || this._shadowVisible);
          }
       });
 
@@ -170,7 +187,22 @@ define('Controls/StickyHeader/_StickyHeader',
          return {
 
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
-            fixedZIndex: 2
+            fixedZIndex: 2,
+            shadowVisibility: 'visible',
+            mode: 'replaceable'
+         };
+      };
+
+      StickyHeader.getOptionTypes = function() {
+         return {
+            shadowVisibility: types(String).oneOf([
+               'visible',
+               'hidden'
+            ]),
+            mode: types(String).oneOf([
+               'replaceable',
+               'stackable'
+            ])
          };
       };
 

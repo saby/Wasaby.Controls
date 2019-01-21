@@ -1,11 +1,11 @@
 define('Controls/Input/resources/InputRender/BaseViewModel',
    [
       'Core/core-simpleExtend',
-      'WS.Data/Entity/VersionableMixin'
+      'Types/entity'
    ],
    function(
       simpleExtend,
-      VersionableMixin
+      entity
    ) {
       'use strict';
 
@@ -16,7 +16,7 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
        * @author Журавлев М.С.
        */
 
-      return simpleExtend.extend([VersionableMixin], {
+      return simpleExtend.extend([entity.VersionableMixin], {
          constructor: function(options) {
             this._options = options || {};
          },

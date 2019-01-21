@@ -25,6 +25,9 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
+                  selectionStart: 0,
+                  selectionEnd: 0,
+                  value: '',
                   focus: function() {},
                   setSelectionRange: function(start, end) {
                      this.selectionStart = start;
@@ -55,6 +58,35 @@ define(
             });
 
             assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Base/ViewModel'));
+         });
+         it('Insert the value into the unfocused field.', function() {
+            ctrl._getActiveElement = function() {
+               return {};
+            };
+
+            ctrl._beforeMount({
+               value: ''
+            });
+            ctrl.paste('test');
+            ctrl._template(ctrl);
+
+            assert.equal(ctrl._getField().value, 'test');
+            assert.equal(ctrl._getField().selectionStart, 0);
+            assert.equal(ctrl._getField().selectionEnd, 0);
+         });
+         it('Pass null as the value option.', function() {
+            ctrl._getActiveElement = function() {
+               return ctrl._getField();
+            };
+            ctrl._beforeMount({
+               value: null
+            });
+            ctrl._template(ctrl);
+
+            assert.equal(ctrl._viewModel.value, null);
+            assert.equal(ctrl._viewModel.displayValue, '');
+            assert.equal(ctrl._viewModel.selection.start, 0);
+            assert.equal(ctrl._viewModel.selection.end, 0);
          });
          describe('Notify parents when a value changes, if the browser automatically filled the field.', function() {
             beforeEach(function() {
@@ -381,7 +413,7 @@ define(
             it('Notification to the global channel about the occurrence of the focus in event. The environment is mobile IOS.', function() {
                ctrl._isMobileIOS = true;
 
-               ctrl._mouseDownHandler();
+               ctrl._touchStartHandler();
                ctrl._focusInHandler();
                ctrl._clickHandler();
 
@@ -421,6 +453,7 @@ define(
             it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
                ctrl._isMobileIOS = true;
 
+               ctrl._touchStartHandler();
                ctrl._focusOutHandler();
 
                assert.deepEqual(calls, [{

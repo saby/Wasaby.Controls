@@ -1,8 +1,8 @@
 define('Controls-demo/List/Tree/TreeData', [
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/core-merge',
    'Core/core-clone'
-], function(Memory, cMerge, cClone) {
+], function(source, cMerge, cClone) {
 
    var
       tasksMemoryData = [
@@ -175,10 +175,10 @@ define('Controls-demo/List/Tree/TreeData', [
 
    return {
       getTasksMemory: function(additionalParams) {
-         return new Memory(prepareParams(tasksMemoryDefaultParams, additionalParams));
+         return new source.Memory(prepareParams(tasksMemoryDefaultParams, additionalParams));
       },
       getTasksFoldersMemory: function(additionalParams) {
-         return new Memory(prepareParams(tasksFoldersMemoryDefaultParams, additionalParams));
+         return new source.Memory(prepareParams(tasksFoldersMemoryDefaultParams, additionalParams));
       }
    };
 });

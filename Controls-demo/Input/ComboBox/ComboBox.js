@@ -2,12 +2,12 @@ define('Controls-demo/Input/ComboBox/ComboBox',
    [
       'Core/Control',
       'wml!Controls-demo/Input/ComboBox/ComboBox',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/Input/ComboBox/resources/ItemTemplate',
       'Controls/Input/ComboBox',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
-   function(Control, template, Memory, myTmpl) {
+   function(Control, template, sourceLib, myTmpl) {
       'use strict';
       var _cmbSource = {
          createMemory: function(self) {
@@ -18,7 +18,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
                cfg.data = self._customItems;
             }
             cfg.idProperty = 'id';
-            self._source = new Memory(cfg);
+            self._source = new sourceLib.Memory(cfg);
          }
       };
       var ComboBox = Control.extend({
@@ -115,7 +115,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             }
          },
          _props: function() { // keyProperty, displayProperty
-            return new Memory({
+            return new sourceLib.Memory({
                idProperty: 'title',
                data: this._parameters,
                filter: function(record, filter) {
@@ -126,7 +126,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             });
          },
          _mainSource: function() { // source
-            return new Memory({
+            return new sourceLib.Memory({
                idProperty: 'title',
                data: this._sourceData,
                filter: function(record, filter) {
@@ -137,7 +137,7 @@ define('Controls-demo/Input/ComboBox/ComboBox',
             });
          },
          _kindsOfBox: function() { // itemTemplate
-            return new Memory({
+            return new sourceLib.Memory({
                idProperty: 'id',
                data: this._itemTemp,
                filter: function(record, filter) {

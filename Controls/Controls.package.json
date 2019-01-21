@@ -6,8 +6,7 @@
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
     "Controls/Application/HeadDataContext",
-    "Controls/Application/AppData",
-    "Controls/Application/DepsCollector/DepsCollector"
+    "Controls/Application/AppData"
   ],
   "output": "controls-application.package.js"
 }, {
@@ -139,7 +138,8 @@
     "Controls/List/Mover/*",
     "Controls/List/Remover",
     "Controls/List/Paging/*",
-    "Controls/List/Paging"
+    "Controls/List/Paging",
+    "css!Controls/List/AddButton/AddButton"
   ],
   "output": "controls-list.package.js"
 }, {

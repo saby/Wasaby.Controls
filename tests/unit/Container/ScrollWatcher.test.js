@@ -6,9 +6,9 @@
  */
 define([
    'Controls/Container/Scroll/Watcher',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/core-instance'
-], function(ScrollWatcher, MemorySource, cInstance){
+], function(ScrollWatcher, source, cInstance){
    describe('Controls.Container.Scroll.Watcher', function () {
       var registrarMock, containerMock, evType = [];
       beforeEach(function() {

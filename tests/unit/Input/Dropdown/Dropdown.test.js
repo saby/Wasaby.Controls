@@ -2,10 +2,10 @@ define(
    [
       'Controls/Input/Dropdown',
       'Core/core-clone',
-      'WS.Data/Source/Memory',
-      'WS.Data/Collection/RecordSet'
+      'Types/source',
+      'Types/collection'
    ],
-   (Dropdown, Clone, Memory, RecordSet) => {
+   (Dropdown, Clone, sourceLib, collection) => {
       describe('Dropdown', () => {
          let items = [
             {
@@ -43,7 +43,7 @@ define(
             }
          ];
 
-         let itemsRecords = new RecordSet({
+         let itemsRecords = new collection.RecordSet({
             idProperty: 'id',
             rawData: items
          });
@@ -52,7 +52,7 @@ define(
             selectedKeys: ['2'],
             displayProperty: 'title',
             keyProperty: 'id',
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             })

@@ -1,15 +1,17 @@
 define([
    'Controls/Explorer',
    'Core/Deferred',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Chain',
-   'Controls/DragNDrop/Entity/Items'
+   'Types/collection',
+   'Types/chain',
+   'Controls/DragNDrop/Entity/Items',
+   'WS.Data/Entity/Model'
 ], function(
    Explorer,
    Deferred,
-   RecordSet,
+   collection,
    chain,
-   DragEntity
+   DragEntity,
+   Model
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -33,7 +35,7 @@ define([
                }
             },
             testRoot = 'testRoot',
-            testBreadCrumbs = new RecordSet({
+            testBreadCrumbs = new collection.RecordSet({
                rawData: [
                   { id: 1, title: 'item1', parent: null },
                   { id: 2, title: 'item2', parent: 1 },
@@ -55,7 +57,7 @@ define([
             testData3 = {
                getMetaData: function() {
                   return {
-                     path: new RecordSet({
+                     path: new collection.RecordSet({
                         rawData: []
                      })
                   };
@@ -89,7 +91,7 @@ define([
             _root: 'testRoot',
             _forceUpdate: forceUpdate,
             _notify: notify,
-            _breadCrumbsItems: chain(testBreadCrumbs).toArray(),
+            _breadCrumbsItems: chain.factory(testBreadCrumbs).toArray(),
             _options: {
                dataLoadCallback: dataLoadCallback,
                itemOpenHandler: itemOpenHandler
@@ -119,6 +121,24 @@ define([
          }, self);
       });
 
+      it('itemsReadyCallback', function() {
+         var
+            items = {},
+            itemsReadyCallbackArgs,
+            itemsReadyCallback = function(items) {
+               itemsReadyCallbackArgs = items;
+            },
+            cfg = {
+               itemsReadyCallback: itemsReadyCallback
+            },
+            explorer = new Explorer(cfg);
+         explorer.saveOptions(cfg);
+
+         Explorer._private.itemsReadyCallback(explorer, items);
+         assert.equal(itemsReadyCallbackArgs, items);
+         assert.equal(explorer._items, items);
+      });
+
       it('setViewMode', function() {
          var
             cfg = {
@@ -145,12 +165,13 @@ define([
 
       it('_onBreadCrumbsClick', function() {
          var
-            testBreadCrumbs = new RecordSet({
+            testBreadCrumbs = new collection.RecordSet({
                rawData: [
                   { id: 1, title: 'item1' },
                   { id: 2, title: 'item2', parent: 1 },
                   { id: 3, title: 'item3', parent: 2 }
-               ]
+               ],
+               idProperty: 'id'
             }),
             instance = new Explorer();
 
@@ -158,10 +179,10 @@ define([
             parentProperty: 'parent',
             keyProperty: 'id'
          });
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(0));
          assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
-         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1).get('parent'));
-         assert.equal(instance._root, testBreadCrumbs.at(0).get('id'));
+         instance._onBreadCrumbsClick({}, testBreadCrumbs.at(1));
+         assert.equal(instance._root, testBreadCrumbs.at(1).get('id'));
       });
 
       it('_notifyHandler', function() {
@@ -258,30 +279,102 @@ define([
       });
 
       describe('DragNDrop', function() {
-         it('_hoveredCrumbChanged', function() {
+         var explorer;
+
+         beforeEach(function() {
             var
-               hoveredBreadCrumb = {},
-               explorer = new Explorer({});
+               items = new collection.RecordSet({
+                  rawData: [
+                     { id: 1, title: 'item1', parent: null },
+                     { id: 2, title: 'item2', parent: 1 },
+                     { id: 3, title: 'item3', parent: 2 }
+                  ],
+                  idProperty: 'id'
+               }),
+               cfg = {
+                  parentProperty: 'parent',
+                  root: null
+               };
+
+            explorer = new Explorer(cfg);
+
+            explorer.saveOptions(cfg);
+            explorer._beforeMount(cfg);
+            explorer._items = items;
+         });
+
+         it('_hoveredCrumbChanged', function() {
+            var hoveredBreadCrumb = new Model({
+                  rawData: {
+                     id: 1
+                  },
+                  idProperty: 'id'
+               }),
+                explorer = new Explorer({});
 
             explorer._hoveredCrumbChanged({}, hoveredBreadCrumb);
-            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb);
+            assert.equal(explorer._hoveredBreadCrumb, hoveredBreadCrumb.get('id'));
+         });
+         it('dragItemsFromRoot', function() {
+
+            //item from the root
+            assert.isTrue(Explorer._private.dragItemsFromRoot(explorer, [1]));
+
+            //item is not from the root
+            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [2]));
+
+            //item is not from the root and from the root
+            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [1, 2]));
+
+            //an item that is not in the list.
+            assert.isFalse(Explorer._private.dragItemsFromRoot(explorer, [4]));
+         });
+         it('_dragHighlighter', function() {
+            explorer._hoveredBreadCrumb = 2;
+
+            assert.equal(explorer._dragHighlighter(), '');
+
+            explorer._dragOnBreadCrumbs = true;
+            assert.equal(explorer._dragHighlighter(1), '');
+            assert.equal(explorer._dragHighlighter(2), 'controls-BreadCrumbsView__dropTarget');
          });
          it('_documentDragStart', function() {
-            var explorer = new Explorer({});
-
-
             explorer._documentDragStart({}, {
                entity: 'notDragEntity'
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
+
+            //drag in the root
             explorer._documentDragStart({}, {
-               entity: new DragEntity()
+               entity: new DragEntity({
+                  items: [1]
+               })
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [2]
+               })
+            });
+            assert.isTrue(explorer._dragOnBreadCrumbs);
+
+            //drag not in root
+            explorer._root = 'notnull';
+
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [1]
+               })
+            });
+            assert.isTrue(explorer._dragOnBreadCrumbs);
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [2]
+               })
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
          });
          it('_documentDragEnd', function() {
-            var explorer = new Explorer({});
-
             explorer._dragOnBreadCrumbs = true;
             explorer._documentDragEnd();
             assert.isFalse(explorer._dragOnBreadCrumbs);
@@ -289,8 +382,7 @@ define([
          it('_dragEndBreadCrumbs', function() {
             var
                dragEnrArgs,
-               dragEntity = new DragEntity(),
-               explorer = new Explorer({});
+               dragEntity = new DragEntity();
 
             explorer._notify = function(e, args) {
                if (e === 'dragEnd') {

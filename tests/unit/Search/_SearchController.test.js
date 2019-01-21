@@ -5,9 +5,9 @@
 define(
    [
       'Controls/Controllers/_SearchController',
-      'WS.Data/Source/Memory'
+      'Types/source'
    ],
-   function(Search, Memory) {
+   function(Search, sourceLib) {
       
       'use strict';
       
@@ -29,7 +29,7 @@ define(
                id: 3
             }
          ],
-         source = new Memory({
+         source = new sourceLib.Memory({
             data: data
          }),
          navigation = {
@@ -117,6 +117,25 @@ define(
       
             searchController.search('Dmitry');
          });
-         
+   
+         it('search forced', function(done) {
+            var searchController = new Search({
+               minSearchLength: 3,
+               source: source,
+               filter: {}
+            });
+   
+            Search._private.getSearch(searchController).addCallback(function(search) {
+               var searched = false;
+               search.search = function() {
+                  searched = true;
+               };
+   
+               searchController.search('1', true);
+               assert.isTrue(searched);
+               done();
+               return search;
+            });
+         });
       });
    });

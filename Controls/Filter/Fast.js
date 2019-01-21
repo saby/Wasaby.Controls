@@ -3,18 +3,18 @@ define('Controls/Filter/Fast',
       'Core/Control',
       'wml!Controls/Filter/Fast/Fast',
       'Controls/Controllers/SourceController',
-      'WS.Data/Chain',
-      'WS.Data/Collection/List',
+      'Types/chain',
+      'Types/collection',
       'Core/core-instance',
       'Core/ParallelDeferred',
       'Core/Deferred',
-      'WS.Data/Utils',
+      'Types/util',
       'Core/helpers/Object/isEqual',
       'css!theme?Controls/Filter/Fast/Fast',
       'css!theme?Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, Chain, List, cInstance, pDeferred, Deferred, Utils, isEqual) {
+   function(Control, template, SourceController, chain, collection, cInstance, pDeferred, Deferred, Utils, isEqual) {
       'use strict';
 
       /**
@@ -34,18 +34,18 @@ define('Controls/Filter/Fast',
        */
 
 
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
-      var setPropValue = Utils.setItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+      var setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
       var _private = {
 
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
-               self._items = new List({
-                  items: items
+               self._items = new collection.List({
+                  items: Utils.object.clone(items)
                });
             } else {
-               self._items = items;
+               self._items = Utils.object.clone(items);
             }
          },
 
@@ -77,7 +77,7 @@ define('Controls/Filter/Fast',
 
          reload: function(self) {
             var pDef = new pDeferred();
-            Chain(self._items).each(function(item, index) {
+            chain.factory(self._items).each(function(item, index) {
                var result = _private.loadItems(self, item, index);
                pDef.push(result);
             });
@@ -96,7 +96,7 @@ define('Controls/Filter/Fast',
 
          getFilter: function(items) {
             var filter = {};
-            Chain(items).each(function(item) {
+            chain.factory(items).each(function(item) {
                if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
                   filter[getPropValue(item, 'id')] = getPropValue(item, 'value');
                }
@@ -122,6 +122,16 @@ define('Controls/Filter/Fast',
             if (getPropValue(item, 'textValue') !== undefined) {
                setPropValue(item, 'textValue', textValue);
             }
+         },
+
+         isItemsPropertiesChanged: function(oldItems, newItems) {
+            var isChanged = false;
+            chain.factory(newItems).each(function(item, index) {
+               if (!isEqual(item.properties, oldItems[index].properties)) {
+                  isChanged = true;
+               }
+            });
+            return isChanged;
          }
       };
 
@@ -132,7 +142,6 @@ define('Controls/Filter/Fast',
 
          _beforeMount: function(options) {
             this._configs = {};
-            this._items = [];
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
@@ -151,9 +160,13 @@ define('Controls/Filter/Fast',
          _beforeUpdate: function(newOptions) {
             var self = this,
                resultDef;
-            if (newOptions.items && !isEqual(newOptions.items, this._options.items)) {
+            if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               resultDef = _private.reload(this);
+               if (_private.isItemsPropertiesChanged(this._options.items, newOptions.items)) {
+                  resultDef = _private.reload(this);
+               } else {
+                  this._setText();
+               }
             } else if (newOptions.source && !isEqual(newOptions.source, this._options.source)) {
                resultDef = _private.loadItemsFromSource(self, newOptions.source).addCallback(function() {
                   return _private.reload(self);
@@ -179,7 +192,7 @@ define('Controls/Filter/Fast',
                   footerTemplate: getPropValue(item, 'footerTemplate'),
                   selectedKeys: getPropValue(this._items.at(index), 'value')
                },
-               
+
                //FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]
             };
@@ -191,12 +204,12 @@ define('Controls/Filter/Fast',
 
          _setText: function() {
             var self = this;
-            Chain(this._configs).each(function(config, index) {
+            chain.factory(this._configs).each(function(config, index) {
                var sKey = getPropValue(self._items.at(index), 'value');
                if (sKey instanceof Array) {
                   sKey = sKey[0];
                }
-               Chain(config._items).each(function(item) {
+               chain.factory(config._items).each(function(item) {
                   if (getPropValue(item, config.keyProperty) === sKey) {
                      config.text = getPropValue(item, config.displayProperty);
                      _private.setTextValue(self._items.at(index), getPropValue(item, config.displayProperty));

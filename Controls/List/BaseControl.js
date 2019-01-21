@@ -13,7 +13,7 @@ define('Controls/List/BaseControl', [
    'Core/Deferred',
    'Core/constants',
    'Controls/Utils/scrollToElement',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
@@ -35,7 +35,7 @@ define('Controls/List/BaseControl', [
    Deferred,
    cConstants,
    scrollToElement,
-   RecordSet,
+   collection,
    tUtil,
    aUtil,
    tmplNotify,
@@ -53,12 +53,21 @@ define('Controls/List/BaseControl', [
       HOT_KEYS = {
          moveMarkerToNext: cConstants.key.down,
          moveMarkerToPrevious: cConstants.key.up,
-         toggleSelection: cConstants.key.space
+         toggleSelection: cConstants.key.space,
+         enterHandler: cConstants.key.enter
       };
 
    var LOAD_TRIGGER_OFFSET = 100;
 
    var _private = {
+      checkDeprecated: function(cfg) {
+         if (cfg.historyIdCollapsedGroups) {
+            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+         }
+         if (cfg.groupMethod) {
+            IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+         }
+      },
       reload: function(self, cfg) {
          var
             filter = cClone(cfg.filter),
@@ -76,7 +85,7 @@ define('Controls/List/BaseControl', [
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                var
-                  markedKey,
+                  markedKey, isActive,
                   listModel = self._listViewModel;
 
                if (cfg.dataLoadCallback instanceof Function) {
@@ -86,6 +95,9 @@ define('Controls/List/BaseControl', [
                _private.hideIndicator(self);
 
                if (listModel) {
+                  if (self._isActive) {
+                     isActive = true;
+                  }
                   listModel.setItems(list);
                   self._items = listModel.getItems();
                   markedKey = listModel.getMarkedKey();
@@ -97,6 +109,9 @@ define('Controls/List/BaseControl', [
                         listModel.setMarkedKey(markedKey);
                         self._restoreMarkedKey = markedKey;
                      }
+                  }
+                  if (isActive === true) {
+                     self._children.listView.activate();
                   }
                }
 
@@ -157,6 +172,14 @@ define('Controls/List/BaseControl', [
          var
             model = self.getViewModel();
          _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
+      },
+      enterHandler: function(self) {
+         var
+            model = self.getViewModel(),
+            markedKey = model.getMarkedKey();
+         if (markedKey !== null) {
+            self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
+         }
       },
       toggleSelection: function(self) {
          var
@@ -482,7 +505,7 @@ define('Controls/List/BaseControl', [
             });
          if (showActions && showActions.length) {
             var
-               rs = new RecordSet({ rawData: showActions });
+               rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
@@ -543,18 +566,21 @@ define('Controls/List/BaseControl', [
       },
 
       groupsExpandChangeHandler: function(self, changes) {
-         self._notify(changes.changeType === 'expand' ? 'onGroupExpanded' : 'onGroupCollapsed', [changes.group], { bubbling: true });
-         requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
-            GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups);
-         });
+         self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
+         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
+         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
+            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+               GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
+            });
+         }
       },
 
       prepareCollapsedGroups: function(config) {
          var
             result = new Deferred();
-         if (config.historyIdCollapsedGroups) {
+         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
             requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
-               GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups).addCallback(function(collapsedGroupsFromStore) {
+               GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
                   result.callback(collapsedGroupsFromStore || config.collapsedGroups);
                });
             });
@@ -609,7 +635,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
-    * @mixes Controls/interface/IGroupedView
+    * @mixes Controls/interface/IGrouped
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
@@ -659,6 +685,8 @@ define('Controls/List/BaseControl', [
          var
             self = this;
 
+         _private.checkDeprecated(newOptions);
+
          _private.bindHandlers(this);
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
@@ -678,9 +706,12 @@ define('Controls/List/BaseControl', [
 
          return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             var
-               viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : newOptions;
+               viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
+               if (receivedState) {
+                  viewModelConfig.items = receivedState;
+               }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                _private.initListViewModelHandler(self, self._listViewModel);
             }
@@ -693,8 +724,10 @@ define('Controls/List/BaseControl', [
 
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
-                  self._listViewModel.setItems(receivedState);
                   self._items = self._listViewModel.getItems();
+                  if (newOptions.dataLoadCallback instanceof Function) {
+                     newOptions.dataLoadCallback(self._items);
+                  }
                   if (self._virtualScroll) {
                      // При серверной верстке применяем начальные значения
                      var indexes = self._virtualScroll.getItemsIndexes();
@@ -717,6 +750,14 @@ define('Controls/List/BaseControl', [
          return this._sourceController;
       },
 
+      _onActivated: function() {
+         this._isActive = true;
+      },
+
+      _onDeactivated: function() {
+         this._isActive = false;
+      },
+
       _afterMount: function() {
          if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
@@ -732,17 +773,34 @@ define('Controls/List/BaseControl', [
              !isEqualObject(newOptions.navigation, this._options.navigation);
          var sortingChanged = newOptions.sorting !== this._options.sorting;
 
-         if (newOptions.viewModelConstructor !== this._viewModelConstructor) {
+         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(newOptions);
             _private.initListViewModelHandler(this, this._listViewModel);
+         }
+
+         if (newOptions.groupMethod !== this._options.groupMethod) {
+            _private.reload(this, newOptions);
+         }
+
+         if (newOptions.collapsedGroups !== this._options.collapsedGroups) {
+            this._listViewModel.setCollapsedGroups(newOptions.collapsedGroups);
          }
 
          if (newOptions.markedKey !== this._options.markedKey) {
             this._listViewModel.setMarkedKey(newOptions.markedKey);
          }
 
+         if (newOptions.markerVisibility !== this._options.markerVisibility) {
+            this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
+         }
+
+         if (newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback) {
+            this._listViewModel.setItemActionVisibilityCallback(newOptions.itemActionVisibilityCallback);
+         }
+
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
+
 
          if (recreateSource) {
             if (this._sourceController) {
@@ -766,16 +824,17 @@ define('Controls/List/BaseControl', [
          if (filterChanged || recreateSource || sortingChanged) {
             _private.reload(this, newOptions);
          }
+
       },
-   
+
       reloadItem: function(key, readMeta, replaceItem) {
          var items = this._listViewModel.getItems();
          var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-      
+
          if (currentItemIndex === -1) {
             throw new Error('BaseControl::reloadItem no item with key ' + key);
          }
-      
+
          return this._sourceController.read(key, readMeta).addCallback(function(item) {
             if (replaceItem) {
                items.replace(item, currentItemIndex);
@@ -812,8 +871,8 @@ define('Controls/List/BaseControl', [
                this._virtualScroll.updateItemsSizes();
             }
          }
-   
-   
+
+
          //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
          //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
          if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
@@ -1074,6 +1133,7 @@ define('Controls/List/BaseControl', [
       return {
          uniqueKeys: true,
          multiSelectVisibility: 'hidden',
+         markerVisibility: 'onactivated',
          style: 'default',
          selectedKeys: defaultSelectedKeys,
          excludedKeys: defaultExcludedKeys

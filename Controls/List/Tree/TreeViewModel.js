@@ -3,16 +3,16 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Controls/List/resources/utils/TreeItemsUtil',
    'Core/core-clone',
-   'WS.Data/Relation/Hierarchy',
-   'WS.Data/Collection/IBind',
+   'Types/entity',
+   'Types/collection',
    'Controls/Utils/ArraySimpleValuesUtil'
 ], function(
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
    cClone,
-   HierarchyRelation,
-   IBindCollection,
+   _entity,
+   collection,
    ArraySimpleValuesUtil
 ) {
 
@@ -95,7 +95,7 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          onBeginCollectionChange: function(self, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
-            if (action === IBindCollection.ACTION_REMOVE) {
+            if (action === collection.IObservable.ACTION_REMOVE) {
                _private.checkRemovedNodes(self, removedItems);
             }
             if (self._options.expanderDisplayMode === 'adaptive') {
@@ -207,7 +207,7 @@ define('Controls/List/Tree/TreeViewModel', [
             this._options = cfg;
             this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
-            this._hierarchyRelation = new HierarchyRelation({
+            this._hierarchyRelation = new _entity.relation.Hierarchy({
                idProperty: cfg.keyProperty || 'id',
                parentProperty: cfg.parentProperty || 'Раздел',
                nodeProperty: cfg.nodeProperty || 'Раздел@'
@@ -225,7 +225,7 @@ define('Controls/List/Tree/TreeViewModel', [
             this._nextVersion();
             this._notify('onListChange');
          },
-   
+
          getExpandedItems: function() {
             return this._expandedItems;
          },
@@ -302,7 +302,7 @@ define('Controls/List/Tree/TreeViewModel', [
          getItemDataByItem: function(dispItem) {
             var
                current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
-            current.isExpanded = !current.isGroup && this.isExpanded(dispItem);
+            current.isExpanded = current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
             current.expanderDisplayMode = this._options.expanderDisplayMode;
@@ -315,7 +315,7 @@ define('Controls/List/Tree/TreeViewModel', [
             // todo https://online.sbis.ru/opendoc.html?guid=0649e69a-d507-4024-9f99-c70205f535ef
             current.expanderTemplate = this._options.expanderTemplate;
 
-            if (!current.isGroup) {
+            if (current.item.get) {
                current.level = current.dispItem.getLevel();
             }
 
@@ -330,7 +330,7 @@ define('Controls/List/Tree/TreeViewModel', [
             }
 
 
-            if (!current.isGroup && current.item.get(current.nodeProperty) !== null) {
+            if (current.item.get && current.item.get(current.nodeProperty) !== null) {
                if (current.isExpanded) {
                   current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
 

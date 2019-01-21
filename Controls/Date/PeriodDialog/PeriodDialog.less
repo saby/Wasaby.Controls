@@ -19,23 +19,12 @@
    }
 }
 
-// TODO: Выпилить как сделают https://online.sbis.ru/opendoc.html?guid=8de68fe7-5462-472c-9d79-3e1d3637d67b
-.controls-PeriodDialog__header-datePickerStart,
-.controls-PeriodDialog__header-datePickerEnd {
-   width: 63px;
-}
-
-.controls-PeriodDialog__picker {
-   margin: @margin_PeriodDialog-picker;
-}
-
-.controls-PeriodDialog__picker-withoutModeBtn {
-   margin: @margin_PeriodDialog-picker-withoutModeBtn;
-}
-
 .controls-PeriodDialog {
+   display: flex;
+   flex-direction: column;
    background-color: @background-color_PeriodDialog;
    width: @width_PeriodDialog;
+   max-height: @height_PeriodDialog;
    border: @border-width_PeriodDialog solid @border-color_PeriodDialog;
    box-shadow: @float-area-shadow;
 }
@@ -43,8 +32,9 @@
 
 // Header
 .controls-PeriodDialog__header {
+   flex-shrink: 0;
    background-color: @background-color__PeriodDialog-header;
-   padding-left: @padding-left_PeriodDialog-header;
+   padding-left: @spacing_PeriodDialog-header-between-borderLeft-content;
    box-sizing: border-box;
    display: flex;
    align-items: center;
@@ -52,7 +42,7 @@
 }
 
 .controls-PeriodDialog__stateButton {
-   padding-right: @padding-right_PeriodDialog-state-button;
+   padding-right: @spacing_PeriodDialog-header-between-stateButton-date;
 }
 
 .controls-PeriodDialog__header-period {
@@ -68,13 +58,20 @@
 .controls-PeriodDialog__header-rangeDash {
    width: @width_PeriodDialog-header-dash;
    border-bottom: 1px solid black;
-   margin: @margin_PeriodDialog-header-dash;
+   margin-right: 0 @spacing_PeriodDialog-header-between-dash-date;
 }
 
 .controls-PeriodDialog__applyButton {
-   margin: 0 @margin_PeriodDialog-header-applyButton;
+   margin: 0 @spacing_PeriodDialog-header-between-applyButton-otherElements;
 }
 
 .controls-PeriodDialog__cursor-pointer {
    cursor: pointer;
+}
+
+.controls-DateRangeBigChoose__months {
+   display: flex;
+   flex-direction: column;
+   flex-shrink: 1;
+   min-height: 1px;
 }

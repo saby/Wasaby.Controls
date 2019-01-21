@@ -35,15 +35,13 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
 
       var _private = {
 
-         // Проверяет хватает ли ширины таргета для корректного позиционирования стрелки.
-         // Возвращает offset на который нужно сдвинуть инфобокс.
+         // Checks if the target width is enough for the correct positioning of the arrow.
+         // Returns offset to which you want to move the popup.
          getOffset: function(targetSize, alignSide, arrowOffset, arrowWidth) {
             var align = INVERTED_SIDES[alignSide];
 
-            /*
-             * Проверяем, хватает ли нам ширины таргета для правильного позиционирования стрелки, если нет, то просто
-             * сдвигаем стрелку инфобокса на центр таргета
-             * */
+            // Check if we have enough width of the target for the correct positioning of the arrow, if not, just
+            // move the popup arrow to the center of the target
             if (align !== 'center' && targetSize < arrowWidth + arrowOffset) {
                switch (align) {
                   case 'top':
@@ -57,7 +55,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             return 0;
          },
 
-         // Возвращаем конфигурацию подготовленную для StickyStrategy
+         // Return the configuration prepared for StickyStrategy
          prepareConfig: function(position, target) {
             var side = position[0];
             var alignSide = position[1];
@@ -87,7 +85,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       };
 
       /**
-       * Стратегия позиционирования инфобокса
+       * InfoBox Popup Controller
        * @class Controls/Popup/Opener/InfoBox/InfoBoxController
        * @control
        * @private
@@ -99,7 +97,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
          _destroyDeferred: {},
 
          elementCreated: function(cfg, container, id) {
-            // Открыто может быть только одно окно
+            // Only one popup can be opened
             if (this._openedPopupId) {
                ManagerController.remove(this._openedPopupId);
             }
@@ -109,7 +107,8 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
          },
 
          elementUpdated: function() {
-            ManagerController.remove(this._openedPopupId); //Инфобокс при скролле или ресайзе скрывается
+            // Hide popup then page scroll or resize
+            ManagerController.remove(this._openedPopupId);
          },
 
          elementDestroyed: function(item) {
@@ -136,7 +135,6 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             return InfoBoxController.superclass.prepareConfig.apply(this, arguments);
          }
       });
-      InfoBoxController.prototype._private = _private; //todo для тестов. нужно их подправить и выпилить это
+      InfoBoxController.prototype._private = _private;
       return new InfoBoxController();
-   }
-);
+   });

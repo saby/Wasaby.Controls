@@ -1,6 +1,6 @@
 define('Controls/BreadCrumbs/View', [
    'Core/Control',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/View/View',
    'wml!Controls/BreadCrumbs/View/resources/itemTemplate',
@@ -10,7 +10,7 @@ define('Controls/BreadCrumbs/View', [
    'css!theme?Controls/BreadCrumbs/View/View'
 ], function(
    Control,
-   RecordSet,
+   collection,
    applyHighlighter,
    template,
    itemTemplate,
@@ -32,7 +32,6 @@ define('Controls/BreadCrumbs/View', [
 
    var BreadCrumbsView = Control.extend({
       _template: template,
-      _itemTemplate: itemTemplate,
       _itemsTemplate: itemsTemplate,
 
       _beforeMount: function() {
@@ -42,7 +41,7 @@ define('Controls/BreadCrumbs/View', [
 
       _onItemClick: function(e, itemData) {
          if (itemData.isDots) {
-            var rs = new RecordSet({
+            var rs = new collection.RecordSet({
                rawData: this._options.items.map(function(item) {
                   var newItem = {};
                   item.each(function(field) {
@@ -64,14 +63,14 @@ define('Controls/BreadCrumbs/View', [
             });
             e.stopPropagation();
          } else {
-            this._notify('itemClick', [itemData.item.get(this._options.keyProperty)]);
+            this._notify('itemClick', [itemData.item]);
          }
       },
 
       _applyHighlighter: applyHighlighter,
 
-      _onHoveredItemChanged: function(event, itemKey) {
-         this._notify('hoveredItemChanged', [itemKey]);
+      _onHoveredItemChanged: function(event, item) {
+         this._notify('hoveredItemChanged', [item]);
       },
 
       _onResize: function() {
@@ -82,11 +81,17 @@ define('Controls/BreadCrumbs/View', [
          var actionName = args && args.action;
 
          if (actionName === 'itemClick') {
-            this._notify('itemClick', [args.data[0].get(this._options.keyProperty)]);
+            this._notify('itemClick', [args.data[0]]);
          }
          this._children.menuOpener.close();
       }
    });
+   
+   BreadCrumbsView.getDefaultOptions = function getDefaultOptions() {
+      return {
+         itemTemplate: itemTemplate
+      };
+   };
 
    return BreadCrumbsView;
 });

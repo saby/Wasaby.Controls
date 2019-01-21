@@ -2,14 +2,13 @@ define('Controls-demo/Input/Lookup/Collection',
    [
       'Core/Control',
       'wml!Controls-demo/Input/Lookup/Collection',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Source/Memory',
-      'WS.Data/Source/DataSet',
-      'WS.Data/Entity/Model',
+      'Types/collection',
+      'Types/source',
+      'Types/entity',
 
       'css!Controls-demo/Input/Lookup/Collection'
    ],
-   function(Control, template, RecordSet) {
+   function(Control, template, collection) {
       
       'use strict';
       var Collection = Control.extend({
@@ -17,7 +16,7 @@ define('Controls-demo/Input/Lookup/Collection',
          _sourceMulti: null,
          _sourceSingle: null,
          _beforeMount: function() {
-            this._sourceMulti = new RecordSet({
+            this._sourceMulti = new collection.RecordSet({
                idProperty: 'id',
                rawData: [
                   {
@@ -42,7 +41,7 @@ define('Controls-demo/Input/Lookup/Collection',
                   }
                ]
             });
-            this._sourceSingle = new RecordSet({
+            this._sourceSingle = new collection.RecordSet({
                idProperty: 'id',
                rawData: [
                   {

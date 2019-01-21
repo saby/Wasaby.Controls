@@ -1,7 +1,7 @@
 define('Controls/Input/interface/IDateTimeMask', [
-   'WS.Data/Type/descriptor'
+   'Types/entity'
 ], function(
-   types
+   entity
 ) {
 
    /**
@@ -84,7 +84,7 @@ define('Controls/Input/interface/IDateTimeMask', [
 
       getOptionTypes: function() {
          return {
-            mask: types(String).oneOf([
+            mask: entity.descriptor(String).oneOf([
                'DD.MM.YYYY',
                'DD.MM.YY',
                'DD.MM',

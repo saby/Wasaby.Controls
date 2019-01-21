@@ -4,8 +4,8 @@
 define('Controls-demo/List/Multiselect', [
    'Core/Control',
    'wml!Controls-demo/List/Multiselect/Multiselect',
-   'WS.Data/Source/Memory'
-], function(BaseControl, template, MemorySource) {
+   'Types/source'
+], function(BaseControl, template, source) {
    'use strict';
 
    var srcData = [
@@ -31,7 +31,7 @@ define('Controls-demo/List/Multiselect', [
       _template: template,
       constructor: function() {
          ModuleClass.superclass.constructor.apply(this, arguments);
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: srcData
          });

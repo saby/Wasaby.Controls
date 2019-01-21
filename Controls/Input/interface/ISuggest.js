@@ -32,6 +32,7 @@ define('Controls/Input/interface/ISuggest', [
     * @name Controls/Input/interface/ISuggest#suggestTemplate
     * @cfg {suggestTemplateProp|null} Template for suggest, that showing search results.
     * @remark Root control of suggest must be Controls/Container/Suggest/List, for this control you can pass in content option a control (such Controls/List or Controls/Grid), that will displaying a list.
+    * @editor function
     * @example
     * suggestTemplate.wml
     * <pre>
@@ -127,7 +128,7 @@ define('Controls/Input/interface/ISuggest', [
     * @example
     * myModule.js
     * <pre>
-    *    define('myModule', ['Core/Control', 'wml!myModule', 'WS.Data/Source/Memory'], function(Control, template, Memory) {
+    *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
     *       return Control.extend({
     *          _template: template,
     *          _suggestValue: null,
@@ -164,7 +165,7 @@ define('Controls/Input/interface/ISuggest', [
     * @example
     * myModule.js
     * <pre>
-    *    define('myModule', ['Core/Control', 'wml!myModule', 'WS.Data/Source/Memory'], function(Control, template, Memory) {
+    *    define('myModule', ['Core/Control', 'wml!myModule', 'Types/source:Memory'], function(Control, template, Memory) {
     *       return Control.extend({
     *          _template: template,
     *          _suggestValue: null,

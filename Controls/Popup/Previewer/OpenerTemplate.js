@@ -3,10 +3,10 @@ define('Controls/Popup/Previewer/OpenerTemplate',
       'Core/Control',
       'Core/Deferred',
       'wml!Controls/Popup/Previewer/OpenerTemplate',
-
+      'View/Executor/Utils',
       'Controls/Container/Async'
    ],
-   function(Control, Deferred, template) {
+   function(Control, Deferred, template, Utils) {
 
       'use strict';
 
@@ -14,20 +14,21 @@ define('Controls/Popup/Previewer/OpenerTemplate',
          _template: template,
 
          _beforeMount: function(options) {
-            if (typeof window !== 'undefined' && options.contentTemplateName) {
+            if (typeof window !== 'undefined' && this._needRequireModule(options.template)) {
                var def = new Deferred();
-               require([options.contentTemplateName], function() {
-                  def.callback();
-               });
+               require([options.template], def.callback.bind(def), def.callback.bind(def));
                return def;
             }
          },
 
+         _needRequireModule: function(module) {
+            return typeof module === 'string' && !Utils.RequireHelper.defined(module);
+         },
+
          _sendResult: function(event) {
-            this._notify('sendResult', [event], {bubbling: true});
+            this._notify('sendResult', [event], { bubbling: true });
          }
       });
 
       return OpenerTemplate;
-   }
-);
+   });
