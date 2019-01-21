@@ -270,7 +270,7 @@ node('controls') {
             regr = false
         }
         if ( inte || all_inte || regr || all_regr) {
-            unit = false
+            unit = true
         }
         if ( boss ) {
             unit = false
