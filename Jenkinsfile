@@ -303,7 +303,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
 
@@ -340,7 +340,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
                              sh "cp -rf ./atf/ ../reg/atf/"
@@ -358,7 +358,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:sbis/engine.git']]
                                 ])
                             }
@@ -375,7 +375,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:navigation-configuration/navigation.git']]
                                 ])
                             }
@@ -392,7 +392,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:engine/viewsettings.git']]
                                 ])
                             }
@@ -411,7 +411,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis-ci/platform.git']]
                         ])
                     }
@@ -425,7 +425,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
                         ])
                     }
@@ -442,7 +442,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
                         ])
                     }
@@ -459,7 +459,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:retail/themes.git']]
                         ])
                     }
@@ -497,7 +497,7 @@ node('controls') {
                                 ]],
                                 submoduleCfg: [],
                                 userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis/ws.git']]
                             ])
                         }
@@ -520,7 +520,7 @@ node('controls') {
                                 ]],
                                 submoduleCfg: [],
                                 userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:ws/data.git']]
                             ])
                         }
