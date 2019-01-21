@@ -8,6 +8,7 @@ define('Controls/Aliases',
        * @css @color_shadow_default shadow color used by default
        * @css @color_shadow_secondary secondary shadow color
        * @css @color_shadow_danger color of shadows using with elements meaning "danger"
+       * @css @color_overlay_default overlay color used by default
        * @css @color_warning color of functional elements meaning "warning"
        * @css @color_success color of functional elements meaning "success"
        * @css @color_danger color of functional elements meaning "danger"
@@ -40,6 +41,7 @@ define('Controls/Aliases',
        * @css @color_Heading_secondary secondary color of headings
        * @css @thickness_border_default default border thickness
        * @css @thickness_border_accent
+       * @css @height_control_s height of small control
        * @css @height_control_default default height of control
        * @css @height_control_l height of large control
        * @css @size_shadow_default default sizes of shadows
