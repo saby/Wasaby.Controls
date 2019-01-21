@@ -74,11 +74,13 @@ define('Controls/Button/Close', [
     */
 
    var _private = {
-      compatibleViewMode: function(viewMode, self) {
-         if (viewMode === 'default' || viewMode === 'toolButton') {
+      //TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
+      compatibleViewMode: function(options, self) {
+         if (options.style === 'default' || options.style === 'toolButton') {
             self._viewMode = 'toolButton';
+         } else {
+            self._viewMode = 'link';
          }
-         self._viewMode = 'link';
       }
    };
 
@@ -87,10 +89,10 @@ define('Controls/Button/Close', [
       _viewMode: null,
 
       _beforeMount: function(options) {
-         _private.compatibleViewMode(options.viewMode, this);
+         _private.compatibleViewMode(options, this);
       },
       _beforeUpdate: function(newOptions) {
-         _private.compatibleViewMode(newOptions.viewMode, this);
+         _private.compatibleViewMode(newOptions, this);
       }
    });
 
