@@ -2,7 +2,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Core/Control',
    'Controls-demo/List/Grid/GridWithEditingData',
    'wml!Controls-demo/List/Grid/GridWithEditing',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/List/Tree/treeEditingTemplate',
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoBalancePrice',
@@ -14,7 +14,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
    'Controls/Container/Scroll',
    'Controls/Grid',
    'Controls/Render/Money/Money'
-], function(BaseControl, GridData, template, MemorySource) {
+], function(BaseControl, GridData, template, source) {
    'use strict';
    var ModuleClass = BaseControl.extend({
       _template: template,
@@ -81,7 +81,7 @@ define('Controls-demo/List/Grid/GridWithEditing', [
                }
             }
          ];
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: GridData.catalog
          });

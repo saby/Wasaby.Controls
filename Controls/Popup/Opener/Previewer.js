@@ -4,7 +4,6 @@ define('Controls/Popup/Opener/Previewer',
       'Controls/Popup/Opener/BaseOpener'
    ],
    function(cClone, Base) {
-
       'use strict';
 
       var _private = {
@@ -60,7 +59,7 @@ define('Controls/Popup/Opener/Previewer',
                _private.open(self, cfg);
             }
          },
-         
+
          close: function(type) {
             var self = this;
 

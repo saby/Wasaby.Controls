@@ -2,7 +2,7 @@ define('Controls-demo/List/Grid/Grid', [
    'Core/Control',
    'Controls-demo/List/Grid/GridData',
    'wml!Controls-demo/List/Grid/Grid',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/List/Grid/DemoItem',
    'wml!Controls-demo/List/Grid/DemoBalancePrice',
    'wml!Controls-demo/List/Grid/DemoCostPrice',
@@ -14,7 +14,7 @@ define('Controls-demo/List/Grid/Grid', [
    'Controls/Grid',
    'Controls/Render/Money/Money',
    'Controls/List/Grid/SortButton'
-], function(BaseControl, GridData, template, MemorySource) {
+], function(BaseControl, GridData, template, source) {
    'use strict';
    var
       partialColumns = [
@@ -145,7 +145,7 @@ define('Controls-demo/List/Grid/Grid', [
                // show only in Toolbar
                TOOLBAR: 2
             };
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: GridData.catalog
             });

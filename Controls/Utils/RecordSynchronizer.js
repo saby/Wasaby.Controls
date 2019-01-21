@@ -2,9 +2,9 @@
  * Created by as.krasilnikov on 21.09.2018.
  */
 define('Controls/Utils/RecordSynchronizer', [
-   'WS.Data/Entity/Record',
-   'WS.Data/Di'
-], function(Record, Di) {
+   'Types/entity',
+   'Types/di'
+], function(entity, Di) {
    'use strict';
 
    var _private = {
@@ -31,7 +31,7 @@ define('Controls/Utils/RecordSynchronizer', [
          var newValues = {};
          var recValue;
 
-         Record.prototype.each.call(syncRecord, function(key, value) {
+         entity.Record.prototype.each.call(syncRecord, function(key, value) {
             if (editRecord.has(key)) {
                recValue = editRecord.get(key);
 

@@ -1,12 +1,12 @@
 define('Controls/Date/MonthList/ListControl', [
-   'WS.Data/Chain',
-   'WS.Data/Query/Query',
+   'Types/chain',
+   'Types/source',
    'Controls/List/ListControl',
    'wml!Controls/Date/MonthList/ListControl',
    'wml!Controls/List/ListControl/ListControl'
 ], function(
    chain,
-   Query,
+   sourceLib,
    ListControl,
    tmpl,
    baseControlTmpl
@@ -24,10 +24,10 @@ define('Controls/Date/MonthList/ListControl', [
 
    var _private = {
       getQuery: function(items) {
-         var length = chain(items).toArray().length,
+         var length = chain.factory(items).toArray().length,
             startId = items.at(0).getId(),
             endId = items.at(length - 1).getId(),
-            query = new Query();
+            query = new sourceLib.Query();
 
          return query.where({ 'id>=': (startId < endId ? startId : endId) - 1 }).limit(length);
       },

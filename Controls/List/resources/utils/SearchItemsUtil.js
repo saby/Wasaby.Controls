@@ -1,6 +1,6 @@
 define('Controls/List/resources/utils/SearchItemsUtil', [
-   'WS.Data/Display/Search'
-], function(DisplaySearch) {
+   'Types/display'
+], function(display) {
    var
       TreeItemsUtil = {
          getDefaultDisplaySearch: function(items, cfg, filter) {
@@ -14,7 +14,7 @@ define('Controls/List/resources/utils/SearchItemsUtil', [
                   filter: filter,
                   root: null
                };
-            return new DisplaySearch(displayProperties);
+            return new display.Search(displayProperties);
          }
       };
    return TreeItemsUtil;

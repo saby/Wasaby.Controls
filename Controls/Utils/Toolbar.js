@@ -3,7 +3,7 @@
  *  - содержит константы
  *  - фильтр для элементов меню
  */
-define('Controls/Utils/Toolbar', ['WS.Data/Chain'], function(Chain) {
+define('Controls/Utils/Toolbar', ['Types/chain'], function(chain) {
 
    'use strict';
 
@@ -23,7 +23,7 @@ define('Controls/Utils/Toolbar', ['WS.Data/Chain'], function(Chain) {
 
       getMenuItems: function(items) {
          var self = this;
-         return Chain(items).filter(function(item) {
+         return chain.factory(items).filter(function(item) {
             return item.get('showType') !== self.showType.TOOLBAR;
          });
       }

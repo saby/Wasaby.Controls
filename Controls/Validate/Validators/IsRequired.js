@@ -17,7 +17,7 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
             isEmpty = isNaN(args.value);
             break;
          case 'object':
-            if (cInstance.instanceOfModule(args.value, 'WS.Data/Collection/List')) {
+            if (cInstance.instanceOfModule(args.value, 'Types/collection:List')) {
                isEmpty = !Boolean(args.value.getCount());
             } else if (args.value instanceof Array) {
                isEmpty = !Boolean(args.value.length);

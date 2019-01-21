@@ -4,10 +4,10 @@
 define('Controls-demo/List/Paging', [
    'Core/Control',
    'wml!Controls-demo/List/Paging/Paging',
-   'WS.Data/Source/Memory'
+   'Types/source'
 ], function (BaseControl,
              template,
-             MemorySource
+             source
    ) {
    'use strict';
 

@@ -1,7 +1,7 @@
 define(['Controls/List/TileView/TileView',
    'Controls/List/TreeTileView/TreeTileViewModel',
-   'WS.Data/Collection/RecordSet'
-], function(TileView, TreeTileViewModel, RecordSet) {
+   'Types/collection'
+], function(TileView, TreeTileViewModel, collection) {
    'use strict';
 
    var hoveredSize = {
@@ -18,7 +18,7 @@ define(['Controls/List/TileView/TileView',
             keyProperty: 'id',
             parentProperty: 'parent',
             nodeProperty: 'parent@',
-            items: new RecordSet({
+            items: new collection.RecordSet({
                rawData: [{
                   'id': 1,
                   'parent': null,
