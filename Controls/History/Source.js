@@ -274,13 +274,15 @@ define('Controls/History/Source', [
 
       updatePinned: function(self, item, meta) {
          var pinned = self._history.pinned;
+         var id;
          if (item.get('pinned')) {
             item.set('pinned', false);
             pinned.remove(pinned.getRecordById(item.getId()));
          } else {
             if (_private.checkPinnedAmount(pinned)) {
+               id = item.getId();
                item.set('pinned', true);
-               pinned.add(this.getRawHistoryItem(self, item.getId()));
+               pinned.add(this.getRawHistoryItem(self, id, item.get('HistoryId') || id));
             } else {
                return false;
             }
