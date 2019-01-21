@@ -1,13 +1,13 @@
 define('Controls-demo/Input/Suggest/Suggest', [
    'Core/Control',
    'wml!Controls-demo/Input/Suggest/Suggest',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/Deferred',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'wml!Controls-demo/Input/Suggest/resources/SuggestTemplate',
    'css!Controls-demo/Input/Suggest/Suggest',
    'css!Controls-demo/Input/resources/VdomInputs'
-], function(Control, template, MemorySource, Deferred, Model, myTmpl) {
+], function(Control, template, sourceLib, Deferred, entity, myTmpl) {
 
    'use strict';
    var _private = {
@@ -26,7 +26,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
             cfg.data = self.secondData;
          }
          cfg.idProperty = 'id';
-         self._source = new MemorySource(cfg);
+         self._source = new sourceLib.Memory(cfg);
       }
    };
    var VDomSuggest = Control.extend({
@@ -140,7 +140,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
          }
       },
       _kindsOfSuggest: function() { //itemTemplate
-         return new MemorySource({
+         return new sourceLib.Memory({
             idProperty: 'id',
             data: this._itemTpl,
             filter: function(record, filter) {
@@ -151,7 +151,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
          });
       },
       _mainSource: function() { //source
-         return new MemorySource({
+         return new sourceLib.Memory({
             idProperty: 'id',
             filter: function(record, filter) {
                if (record.get('title').indexOf(filter.title) !== -1) {
@@ -162,7 +162,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
          });
       },
       _props: function() { //displayProperty, keyProperty
-         return new MemorySource({
+         return new sourceLib.Memory({
             idProperty: 'title',
             data: this._parameters,
             filter: function(record, filter) {

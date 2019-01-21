@@ -1,6 +1,6 @@
 define('Controls/Controllers/QueryParamsController/Page',
-   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
-   function(cExtend, SbisService) {
+   ['Core/core-simpleExtend', 'Types/source'],
+   function(cExtend, sourceLib) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -92,7 +92,7 @@ define('Controls/Controllers/QueryParamsController/Page',
 
          prepareSource: function(source) {
             var options = source.getOptions();
-            options.navigationType = SbisService.prototype.NAVIGATION_TYPE.PAGE;
+            options.navigationType = sourceLib.SbisService.NAVIGATION_TYPE.PAGE;
             source.setOptions(options);
          },
 

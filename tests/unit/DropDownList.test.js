@@ -1,5 +1,5 @@
 
-define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection/RecordSet'], function(DropdownList, RecordSet) {
+define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection'], function(DropdownList, collection) {
 
    'use strict';
 
@@ -36,7 +36,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'WS.Data/Collection
       }
    ];
 
-   var items =  new RecordSet({rawData: rawData, idProperty: 'id'});
+   var items =  new collection.RecordSet({rawData: rawData, idProperty: 'id'});
 
    var getDropDownConfig = function() {
       return {

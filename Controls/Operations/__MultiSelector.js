@@ -1,11 +1,11 @@
 define('Controls/Operations/__MultiSelector', [
    'Core/Control',
    'wml!Controls/Operations/__MultiSelector',
-   'WS.Data/Source/Memory'
+   'Types/source'
 ], function(
    Control,
    template,
-   Memory
+   source
 ) {
    'use strict';
    var _defaultItems = [{
@@ -31,7 +31,7 @@ define('Controls/Operations/__MultiSelector', [
       },
 
       _getMenuSource: function() {
-         return new Memory({
+         return new source.Memory({
             idProperty: 'id',
             data: _defaultItems
          });

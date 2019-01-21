@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel/PropertyGrid', [
    'Core/Control',
    'wml!Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid',
-   'WS.Data/Utils',
+   'Types/util',
    'css!theme?Controls/Filter/Button/Panel/PropertyGrid/PropertyGrid'
 ], function(Control, template, Utils) {
 
@@ -28,8 +28,8 @@ define('Controls/Filter/Button/Panel/PropertyGrid', [
       _template: template,
 
       _isItemVisible: function(item) {
-         return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
-            Utils.getItemPropertyValue(item, 'visibility');
+         return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
+            Utils.object.getPropertyValue(item, 'visibility');
       },
 
       _valueChangedHandler: function(event, index, value) {

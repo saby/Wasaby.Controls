@@ -3,7 +3,7 @@
       'Core/Control',
       'wml!Controls/Container/Suggest/Layout',
       'wml!Controls/Container/Suggest/Layout/empty',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Core/moduleStubs',
       'Core/core-clone',
       'Controls/Search/Misspell/getSwitcherStrFromData',
@@ -11,7 +11,7 @@
       'Core/helpers/Object/isEqual',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, types, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
@@ -370,7 +370,7 @@
       // <editor-fold desc="OptionsDesc">
       SuggestLayout.getOptionTypes = function() {
          return {
-            searchParam: types(String).required()
+            searchParam: entity.descriptor(String).required()
          };
       };
       SuggestLayout.getDefaultOptions = function() {

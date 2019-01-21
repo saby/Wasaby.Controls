@@ -1,11 +1,11 @@
 define(
    [
       'Controls/Toolbar',
-      'WS.Data/Entity/Model',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Source/Memory'
+      'Types/entity',
+      'Types/collection',
+      'Types/source'
    ],
-   (Toolbar, Model, RecordSet, Memory) => {
+   (Toolbar, entity, collection, sourceLib) => {
       describe('Toolbar', () => {
          let defaultItems = [
             {
@@ -45,21 +45,21 @@ define(
             }
          ];
 
-         let records = new RecordSet({
+         let records = new collection.RecordSet({
             rawData: defaultItems
          });
          let config = {
-            items: new Memory({
+            items: new sourceLib.Memory({
                idProperty: 'id',
                data: defaultItems
             }),
             parentProperty: 'parent',
             nodeProperty: '@parent'
          };
-         let itemWithMenu = new Model({
+         let itemWithMenu = new entity.Model({
             rawData: defaultItems[1]
          });
-         let itemWithOutMenu = new Model({
+         let itemWithOutMenu = new entity.Model({
             rawData: defaultItems[5]
          });
          let toolbar = new Toolbar(config);
@@ -156,7 +156,7 @@ define(
                return new Promise((resolve) => {
                   toolbar._beforeUpdate({
                      size: 's',
-                     source: new Memory({
+                     source: new sourceLib.Memory({
                         idProperty: 'id',
                         data: defaultItems
                      })
@@ -188,7 +188,7 @@ define(
             });
             it('item popup config generation', function() {
                var
-                  testItem = new Model({
+                  testItem = new entity.Model({
                      rawData:
                      {
                         buttonViewMode: 'buttonViewMode',

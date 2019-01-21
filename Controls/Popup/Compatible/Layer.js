@@ -9,9 +9,9 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/ExtensionsManager',
    'Core/moduleStubs',
    'Core/IoC',
-   'WS.Data/Source/SbisService',
-   'WS.Data/Chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, SbisService, Chain) {
+   'Types/source',
+   'Types/chain'
+], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, source, chain) {
    'use strict';
 
    var loadDeferred;
@@ -121,10 +121,10 @@ define('Controls/Popup/Compatible/Layer', [
 
    function userInfo() {
       var
-         userSource = new SbisService({
+         userSource = new source.SbisService({
             endpoint: 'Пользователь'
          }),
-         profileSource = new SbisService({
+         profileSource = new source.SbisService({
             endpoint: 'СервисПрофилей'
          }),
          data = {};
@@ -168,9 +168,9 @@ define('Controls/Popup/Compatible/Layer', [
    function getUserLicense() {
       var def = new Deferred();
 
-      new SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
+      new source.SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
          if (record && record.getRow().get('ПараметрыЛицензии')) {
-            var data = Chain(record.getRow().get('ПараметрыЛицензии')).toObject();
+            var data = chain.factory(record.getRow().get('ПараметрыЛицензии')).toObject();
             def.callback(data);
          } else {
             def.callback(defaultLicense);
