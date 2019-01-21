@@ -73,8 +73,25 @@ define('Controls/Button/Close', [
     * </pre>
     */
 
+   var _private = {
+      compatibleViewMode: function(viewMode, self) {
+         if (viewMode === 'default' || viewMode === 'toolButton') {
+            self._viewMode = 'toolButton';
+         }
+         self._viewMode = 'link';
+      }
+   };
+
    var CloseButton = Control.extend({
-      _template: template
+      _template: template,
+      _viewMode: null,
+
+      _beforeMount: function(options) {
+         _private.compatibleViewMode(options.viewMode, this);
+      },
+      _beforeUpdate: function(newOptions) {
+         _private.compatibleViewMode(newOptions.viewMode, this);
+      }
    });
 
    CloseButton.getDefaultOptions = function() {
