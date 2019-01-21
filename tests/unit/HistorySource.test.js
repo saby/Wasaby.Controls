@@ -237,6 +237,8 @@ define(
                historyItems = hSource.getItems();
                pinItem = historyItems.at(1);
                assert.equal(pinItem.get('pinned'), true);
+               assert.equal(hSource._history.pinned.at(1).get('ObjectId'), 7);
+               assert.equal(hSource._history.pinned.at(1).get('HistoryId'), 7);
                meta = {
                   $_pinned: false
                };
