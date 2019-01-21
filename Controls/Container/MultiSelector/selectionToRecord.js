@@ -1,4 +1,4 @@
-define('Controls/Container/MultiSelector/selectionToRecord', ['WS.Data/Entity/Record'], function(Record) {
+define('Controls/Container/MultiSelector/selectionToRecord', ['Types/entity'], function(entity) {
    'use strict';
    
    var prepareArray = function(array) {
@@ -8,7 +8,7 @@ define('Controls/Container/MultiSelector/selectionToRecord', ['WS.Data/Entity/Re
    };
    
    return function(selection, adapter) {
-      var result = new Record({
+      var result = new entity.Record({
          adapter: adapter,
          format: [{
             name: 'marked', type: 'array', kind: 'string'

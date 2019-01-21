@@ -2,7 +2,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'Core/Control',
    'wml!Controls-demo/Dropdown/MenuVdom',
    'Core/core-clone',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/Constants',
    'wml!Controls-demo/Dropdown/resources/itemTemplate1',
    'wml!Controls-demo/Dropdown/resources/itemTemplateContent1',
@@ -12,9 +12,9 @@ define('Controls-demo/Dropdown/MenuVdom', [
    'wml!Controls-demo/Dropdown/resources/footerTemplate',
    'wml!Controls-demo/Dropdown/resources/contentTemplate',
    'css!Controls-demo/Dropdown/MenuVdom',
-   'WS.Data/Collection/RecordSet' // TODO: удалить это когда появится асинк и технология патчинга jsLinks
+   'Types/collection' // TODO: удалить это когда появится асинк и технология патчинга jsLinks
    // сейчас зависимость тянется асинхронно и десериализовать данные пытаемся раньше, чем это произойдет
-], function(Control, template, cClone, Memory, ControlsConstants) {
+], function(Control, template, cClone, source, ControlsConstants) {
    'use strict';
 
    var ModuleClass = Control.extend(
@@ -95,7 +95,7 @@ define('Controls-demo/Dropdown/MenuVdom', [
             this._stateText = data.get('title');
          },
          _createMemory: function(items) {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'id',
                data: items
             });

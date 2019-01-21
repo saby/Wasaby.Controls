@@ -1,10 +1,10 @@
 define('Controls-demo/Checkbox/Checkbox', [
    'Core/Control',
    'wml!Controls-demo/Checkbox/Checkbox',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/Toggle/Checkbox',
    'css!Controls-demo/Checkbox/Checkbox',
-], function(Control, template, MemorySource) {
+], function(Control, template, source) {
    'use strict';
 
    var ModuleClass = Control.extend(
@@ -18,7 +18,7 @@ define('Controls-demo/Checkbox/Checkbox', [
          _eventName: 'no event',
          _source: null,
          _beforeMount: function() {
-            this._source = new MemorySource({
+            this._source = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -46,7 +46,7 @@ define('Controls-demo/Checkbox/Checkbox', [
          },
          setTristate: function(e, value) {
             if (value) {
-               this._source = new MemorySource({
+               this._source = new source.Memory({
                   idProperty: 'title',
                   data: [
                      {
@@ -64,7 +64,7 @@ define('Controls-demo/Checkbox/Checkbox', [
                   ]
                });
             } else {
-               this._source = new MemorySource({
+               this._source = new source.Memory({
                   idProperty: 'title',
                   data: [
                      {

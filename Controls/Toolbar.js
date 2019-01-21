@@ -3,12 +3,12 @@ define('Controls/Toolbar', [
    'Controls/Controllers/SourceController',
    'wml!Controls/Toolbar/Toolbar',
    'wml!Controls/Toolbar/ToolbarItemTemplate',
-   'WS.Data/Collection/Factory/RecordSet',
+   'Types/collection',
    'Controls/Utils/Toolbar',
    'Controls/Button/validateIconStyle',
    'Controls/Button',
    'css!theme?Controls/Toolbar/Toolbar'
-], function(Control, SourceController, template, toolbarItemTemplate, recordSetFactory, tUtil, validateIconStyle) {
+], function(Control, SourceController, template, toolbarItemTemplate, collection, tUtil, validateIconStyle) {
    'use strict';
 
    /**
@@ -25,12 +25,12 @@ define('Controls/Toolbar', [
     * @public
     * @category Toolbar
     * @author Михайловский Д.С.
-    * @demo Controls-demo/Toolbar/ToolbarVdom
+    * @demo Controls-demo/Toolbar/ToolbarPG
     */
 
    /**
     * @name Controls/Toolbar#source
-    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
+    * @cfg {Types/source:Base} Object that implements ISource interface for data access.
     * @default undefined
     * @remark
     * The item can have an property 'title' and 'showType'. 'Title' determine item caption. 'ShowType' determine where display item, 0 - show in menu,
@@ -74,7 +74,7 @@ define('Controls/Toolbar', [
    /**
     * @event Controls/Toolbar#itemClick Occurs when item was clicked.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} item Clicked item.
+    * @param {Types/entity:Record} item Clicked item.
     * @example
     * TMPL:
     * <pre>
@@ -151,7 +151,7 @@ define('Controls/Toolbar', [
       },
 
       getMenuItems: function(items) {
-         return tUtil.getMenuItems(items).value(recordSetFactory, {
+         return tUtil.getMenuItems(items).value(collection.factory.recordSet, {
             adapter: items.getAdapter(),
             idProperty: items.getIdProperty(),
             format: items.getFormat()

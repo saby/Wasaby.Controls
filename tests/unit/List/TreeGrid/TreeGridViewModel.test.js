@@ -1,5 +1,5 @@
 define(['Controls/List/TreeGridView/TreeGridViewModel',
-   'Core/core-instance', 'WS.Data/Collection/RecordSet'], function(TreeGridViewModel, cInstance, RecordSet) {
+   'Core/core-instance', 'Types/collection'], function(TreeGridViewModel, cInstance, collection) {
 
    describe('Controls.List.TreeGrid.TreeGridViewModel', function() {
       var
@@ -35,7 +35,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
                3: { date: { } }
             },
             ladderViewModel = new TreeGridViewModel({
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
                      { id: 0, title: 'i0', date: '01 янв', parent: null, type: true },

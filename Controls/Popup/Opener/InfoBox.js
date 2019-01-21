@@ -46,7 +46,7 @@ define('Controls/Popup/Opener/InfoBox',
       var INFOBOX_HIDE_DELAY = 300;
       var INFOBOX_SHOW_DELAY = 300;
 
-      // Конфигурация инфобокса по умолчанию
+      // Default popup configuration
       var DEFAULT_CONFIG = {
          position: 'tl',
          style: 'default',
@@ -95,7 +95,7 @@ define('Controls/Popup/Opener/InfoBox',
           *
           *      _openInfobox() {
           *          var config= {
-          *              message: 'Всплывающая подсказка'
+          *              message: 'My tooltip'
           *              target: this._children.buttonTarget //dom node
           *          }
           *          this._notify('openInfoBox', [config], {bubbling: true});
@@ -112,13 +112,11 @@ define('Controls/Popup/Opener/InfoBox',
             if (options.float) {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
-
          },
 
          open: function(cfg) {
-            // todo Есть проблема с обновлением в инфобоксе. В update прилетает новый конфиг, но в dom находится
-            // еще старая версия подсказки => нельзя получить актуальные размеры, чтобы правильно спозиционироваться.
-            if (this.isOpened()) { // Инфобокс всегда один
+            // Only one popup can be opened
+            if (this.isOpened()) {
                this.close(0);
             }
             this._clearTimeout();
@@ -144,9 +142,8 @@ define('Controls/Popup/Opener/InfoBox',
             if (cfg.style === 'error') {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
             }
-            newCfg.style =  _private.prepareDisplayStyle(cfg.style);
+            newCfg.style = _private.prepareDisplayStyle(cfg.style);
 
-            // TODO код с задержкой дублируется в Popup/Infobox. По задаче нужно обобщить эти 2 компонента: https://online.sbis.ru/opendoc.html?guid=b8584cee-0310-4e71-a8fb-6c38e4306bb5
             if (newCfg.showDelay > 0) {
                this._openId = setTimeout(this._open.bind(this, newCfg), newCfg.showDelay);
             } else {
@@ -161,9 +158,9 @@ define('Controls/Popup/Opener/InfoBox',
                zIndex: cfg.zIndex || getZIndex(this),
                eventHandlers: cfg.eventHandlers,
                opener: cfg.opener,
-               templateOptions: { // Опции, которые будут переданы в наш шаблон Opener/InfoBox/resources/template
+               templateOptions: { // for template: Opener/InfoBox/resources/template
                   template: cfg.template,
-                  templateOptions: cfg.templateOptions, // Опции, которые будут переданы в прикладной cfg.template (выполняется построение внутри нашего шаблона)
+                  templateOptions: cfg.templateOptions, // for user template: cfg.template
                   message: cfg.message,
                   floatCloseButton: cfg.floatCloseButton
                },

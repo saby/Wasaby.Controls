@@ -1,11 +1,11 @@
 define([
    'Core/core-merge',
    'Controls/Date/MonthList/ListControl',
-   'WS.Data/Collection/RecordSet'
+   'Types/collection'
 ], function(
    coreMerge,
    ListControl,
-   RecordSet
+   collection
 ) {
    'use strict';
 
@@ -13,7 +13,7 @@ define([
       describe('getQuery', function() {
          it('should return correct query object', function() {
             let
-               rs = new RecordSet({
+               rs = new collection.RecordSet({
                   rawData: [{
                      id: 1,
                      title: 'first',

@@ -1,10 +1,10 @@
 define('Controls-demo/Switch/SwitchDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Switch/SwitchDemo',
    'css!Controls-demo/Headers/resetButton',
    'css!Controls-demo/Switch/UnionSwitchDemo'
-], function(Control, MemorySource, template) {
+], function(Control, source, template) {
    'use strict';
    var ModuleClass = Control.extend(
       {
@@ -15,7 +15,7 @@ define('Controls-demo/Switch/SwitchDemo', [
          _tooltip: '',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._captionPositionSource = new MemorySource({
+            this._captionPositionSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {

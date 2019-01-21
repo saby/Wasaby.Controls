@@ -413,7 +413,7 @@ define(
             it('Notification to the global channel about the occurrence of the focus in event. The environment is mobile IOS.', function() {
                ctrl._isMobileIOS = true;
 
-               ctrl._mouseDownHandler();
+               ctrl._touchStartHandler();
                ctrl._focusInHandler();
                ctrl._clickHandler();
 
@@ -453,6 +453,7 @@ define(
             it('Notification to the global channel about the occurrence of the focus out event. The environment is mobile IOS.', function() {
                ctrl._isMobileIOS = true;
 
+               ctrl._touchStartHandler();
                ctrl._focusOutHandler();
 
                assert.deepEqual(calls, [{

@@ -1,4 +1,4 @@
-define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/PrefetchProxy', 'WS.Data/Collection/RecordSet', 'Core/Deferred', 'Core/core-clone'], function(List, Memory, PrefetchProxy, RecordSet, Deferred, clone) {
+define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone'], function(List, sourceLib, collection, Deferred, clone) {
    
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
@@ -42,14 +42,14 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
             { id: 3, title: 'Andrey' },
             { id: 4, title: 'Aleksey' },
             { id: 5, title: 'Sasha' }];
-         listSource = new Memory({
+         listSource = new sourceLib.Memory({
             data: listSourceData,
             idProperty: 'id'
          });
-         listPrefetchSource = new PrefetchProxy({
+         listPrefetchSource = new sourceLib.PrefetchProxy({
             target: listSource,
             data: {
-               query: new RecordSet({
+               query: new collection.RecordSet({
                   rawData: listSourceData
                })
             }
@@ -106,7 +106,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
       });
       
       it('.updateSource', function() {
-         var recordSet = new RecordSet({
+         var recordSet = new collection.RecordSet({
             rawData:[
                { id: 1, title: 'Sasha' },
                { id: 2, title: 'Dmitry' }
@@ -152,7 +152,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
       });
    
       it('.searchCallback', function() {
-         var recordSet = new RecordSet({
+         var recordSet = new collection.RecordSet({
             rawData:[
                { id: 1, title: 'Sasha' },
                { id: 2, title: 'Dmitry' }
@@ -296,7 +296,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
             assert.deepEqual(listLayout._source._$data, listSourceData);
    
             /* change source */
-            var newSource = new Memory({
+            var newSource = new sourceLib.Memory({
                data: listSourceData,
                idProperty: 'id'
             });
@@ -327,7 +327,7 @@ define(['Controls/Container/List', 'WS.Data/Source/Memory', 'WS.Data/Source/Pref
                };
                newOpts = clone(newOpts);
                newOpts.navigation = newNavigation;
-               newOpts.source = new Memory({
+               newOpts.source = new sourceLib.Memory({
                   data: listSourceData,
                   idProperty: 'id'
                });

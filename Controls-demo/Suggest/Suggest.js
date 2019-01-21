@@ -7,13 +7,13 @@
 define('Controls-demo/Suggest/Suggest', [
    'Core/Control',
    'wml!Controls-demo/Suggest/Suggest',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/Deferred',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'Controls-demo/Search/SearchMemory',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Suggest/Suggest'
-], function(Control, template, MemorySource, Deferred, Model, SearchMemory, memorySourceFilter) {
+], function(Control, template, source, Deferred, entity, SearchMemory, memorySourceFilter) {
    
    'use strict';
    

@@ -3,10 +3,10 @@ define('Controls-demo/FastFilter/fastPG',
       'Core/Control',
       'wml!Controls-demo/FastFilter/fastPG',
       'json!Controls-demo/PropertyGrid/pgtext',
-      'WS.Data/Source/Memory'
+      'Types/source'
    ],
 
-   function(Control, template, config, Memory) {
+   function(Control, template, config, sourceLib) {
       'use strict';
       var fastPG = Control.extend({
          _template: template,
@@ -19,7 +19,7 @@ define('Controls-demo/FastFilter/fastPG',
          _nameOption: 'filter',
          _componentOptions: null,
          _beforeMount: function() {
-            this._sourceProjects = new Memory({
+            this._sourceProjects = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -29,7 +29,7 @@ define('Controls-demo/FastFilter/fastPG',
                      properties: {
                         keyProperty: 'title',
                         displayProperty: 'title',
-                        source: new Memory({
+                        source: new sourceLib.Memory({
                            data: [
                               { key: 0, title: 'All projects' },
                               { key: 1, title: 'My projects' },
@@ -46,7 +46,7 @@ define('Controls-demo/FastFilter/fastPG',
                      properties: {
                         keyProperty: 'key',
                         displayProperty: 'text',
-                        source: new Memory({
+                        source: new sourceLib.Memory({
                            data: [
                               { key: 0, text: 'All status' },
                               { key: 1, text: 'Planning' },
@@ -59,7 +59,7 @@ define('Controls-demo/FastFilter/fastPG',
                   }
                ]
             });
-            this._sourceContacts = new Memory({
+            this._sourceContacts = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -69,7 +69,7 @@ define('Controls-demo/FastFilter/fastPG',
                      properties: {
                         keyProperty: 'id',
                         displayProperty: 'title',
-                        source: new Memory({
+                        source: new sourceLib.Memory({
                            idProperty: 'id',
                            data: [
                               { id: '0', title: 'In my circle' },

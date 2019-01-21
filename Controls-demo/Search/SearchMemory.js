@@ -1,17 +1,16 @@
 define('Controls-demo/Search/SearchMemory', [
-   'WS.Data/Source/Memory',
-      'Core/Deferred',
+   'Core/Deferred',
       'Controls-demo/Search/kbLayoutRevert',
-      'WS.Data/Source/DataSet',
-      'WS.Data/Entity/Model',
+      'Types/source',
+      'Types/entity',
       'Core/core-clone'
    ],
    
-   function(Memory, Deferred, kbLayoutRevert, DataSet, Model, clone) {
+   function(Deferred, kbLayoutRevert, source, entity, clone) {
       
       'use strict';
       
-      var BrowserMemory = Memory.extend({
+      var BrowserMemory = source.Memory.extend({
          
          constructor: function(options) {
             BrowserMemory.superclass.constructor.apply(this, arguments);
@@ -39,7 +38,7 @@ define('Controls-demo/Search/SearchMemory', [
                      recordSet.append(revertedRecordSet);
                      rawData = recordSet.getRawData();
                      
-                     var ds = new DataSet({
+                     var ds = new source.DataSet({
                         rawData: rawData,
                         idProperty: recordSet.getIdProperty(),
                         adapter: recordSet.getAdapter()
@@ -48,7 +47,7 @@ define('Controls-demo/Search/SearchMemory', [
                      var getAll = ds.getAll.bind(ds);
                      var originAll = getAll();
                      var originAllMeta = originAll.getMetaData();
-                     var results = new Model({
+                     var results = new entity.Model({
                         rawData: {
                            tabsSelectedKey: queryInst.getWhere()['currentTab'] ? queryInst.getWhere()['currentTab'] : 1,
                            switchedStr: revertedRecordSetCount ? switchedStr : '',
@@ -70,7 +69,7 @@ define('Controls-demo/Search/SearchMemory', [
                   var getAll = dataSet.getAll.bind(dataSet);
                   var originAll = getAll();
                   var originAllMeta = originAll.getMetaData();
-                  var results = new Model({
+                  var results = new entity.Model({
                      rawData: {
                         tabsSelectedKey: queryInst.getWhere()['currentTab'] ? queryInst.getWhere()['currentTab'] : 1,
                         tabs: [{id: 1, title: 'Вкладка'}, {id: 2, title: 'Вкладка2'}],
