@@ -4,10 +4,10 @@
 define(
    [
       'Controls/Container/Adapter/Enum',
-      'WS.Data/Type/Enum',
-      'WS.Data/Query/Query'
+      'Types/collection',
+      'Types/source'
    ],
-   function(EnumContainer, EnumCtr, Query) {
+   function(EnumContainer, collection, sourceLib) {
 
       'use strict';
 
@@ -16,7 +16,7 @@ define(
       describe('Controls.Container.Adapter.Enum', function() {
          describe('private method', function() {
             beforeEach(function(){
-               enumInstance = new EnumCtr({
+               enumInstance = new collection.Enum({
                   dictionary: ['First', 'Second', 'Third'],
                   index: 1
                });
@@ -27,7 +27,7 @@ define(
             });
             it('getSourceFromEnum', function(done) {
                var source = EnumContainer._private.getSourceFromEnum(enumInstance);
-               var queryInstance = new Query();
+               var queryInstance = new sourceLib.Query();
                source.query(queryInstance).addCallback(function(dataSet){
                   var rawData = dataSet.getAll().getRawData();
                   assert.deepEqual([{title : 'First'}, {title : 'Second'}, {title: 'Third'}], rawData, 'getArrayFromEnum: Wrong source');
@@ -38,7 +38,7 @@ define(
          });
          describe('life cycle', function() {
             beforeEach(function(){
-               enumInstance = new EnumCtr({
+               enumInstance = new collection.Enum({
                   dictionary: ['First', 'Second', 'Third'],
                   index: 1
                });
@@ -68,7 +68,7 @@ define(
                assert.equal('Second', containerInstance._selectedKey, '_beforeMount: wrong _selectedKey property');
 
                
-               var newEnumInstance = new EnumCtr({
+               var newEnumInstance = new collection.Enum({
                   dictionary: ['Red', 'Blue', 'Yellow'],
                   index: 0
                });

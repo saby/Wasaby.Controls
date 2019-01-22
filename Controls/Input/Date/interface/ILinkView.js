@@ -1,8 +1,8 @@
 define('Controls/Input/Date/interface/ILinkView', [
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/Calendar/Utils'
 ], function(
-   types,
+   entity,
    dateControlsUtils
 ) {
    'use strict';
@@ -70,17 +70,17 @@ define('Controls/Input/Date/interface/ILinkView', [
 
       getOptionTypes: function() {
          return {
-            style: types(String).oneOf([
+            style: entity.descriptor(String).oneOf([
                'default',
                'linkMain',
                'linkMain2',
                'linkAdditional'
             ]),
-            showNextArrow: types(Boolean),
-            showPrevArrow: types(Boolean),
-            showDeleteButton: types(Boolean),
-            emptyCaption: types(String),
-            captionFormatter: types(Function)
+            showNextArrow: entity.descriptor(Boolean),
+            showPrevArrow: entity.descriptor(Boolean),
+            showDeleteButton: entity.descriptor(Boolean),
+            emptyCaption: entity.descriptor(String),
+            captionFormatter: entity.descriptor(Function)
          };
       }
    };

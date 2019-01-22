@@ -2,8 +2,8 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/ListViewModel',
-   ['Controls/List/ItemsViewModel', 'WS.Data/Entity/VersionableMixin', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
-   function(ItemsViewModel, VersionableMixin, ItemsUtil, cInstance) {
+   ['Controls/List/ItemsViewModel', 'Types/entity', 'Controls/List/resources/utils/ItemsUtil', 'Core/core-instance'],
+   function(ItemsViewModel, entityLib, ItemsUtil, cInstance) {
       /**
        *
        * @author Авраменко А.С.
@@ -17,7 +17,7 @@ define('Controls/List/ListViewModel',
          }
       };
 
-      var ListViewModel = ItemsViewModel.extend([VersionableMixin], {
+      var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
          _markedItem: null,
          _dragEntity: null,
          _draggingItemData: null,
@@ -264,8 +264,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always') && this._items.getCount()) {
-               this._markedKey = this._items.at(0).getId();
-               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+               this.setMarkedKey(this._items.at(0).getId());
             }
             this._nextVersion();
          },
@@ -293,6 +292,8 @@ define('Controls/List/ListViewModel',
          },
          setItemActionVisibilityCallback: function(callback) {
             this._options.itemActionVisibilityCallback = callback;
+            this._nextVersion();
+            this._notify('onListChange');
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);

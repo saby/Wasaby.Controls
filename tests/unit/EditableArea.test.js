@@ -1,11 +1,11 @@
 define([
    'Controls/EditableArea',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'Core/Deferred',
    'Controls/EditableArea/Constants'
 ], function(
    EditableArea,
-   Model,
+   entity,
    Deferred,
    EditConstants
 ) {
@@ -22,13 +22,13 @@ define([
          instance = new EditableArea();
          cfg = {
             editWhenFirstRendered: true,
-            editObject: Model.fromObject({
+            editObject: entity.Model.fromObject({
                text: 'qwerty'
             })
          };
          cfg2 = {
             editWhenFirstRendered: false,
-            editObject: Model.fromObject({
+            editObject: entity.Model.fromObject({
                text: 'test'
             })
          };

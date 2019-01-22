@@ -3,7 +3,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/RadioGroup/resources/itemTemplateWithContent',
       'wml!Controls-demo/RadioGroup/resources/SingleItemTemplate',
 
@@ -12,7 +12,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, MemorySource, itemTmpl) {
+   function(Control, template, config, sourceLib, itemTmpl) {
       'use strict';
       var SwitchDemoPG = Control.extend({
          _template: template,
@@ -21,7 +21,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
-            this._source2 = new MemorySource({
+            this._source2 = new sourceLib.Memory({
                title: 'source1',
                idProperty: 'id',
                data: [
@@ -47,7 +47,7 @@ define('Controls-demo/RadioGroup/RadioGroupDemoPG',
                   }
                ]
             });
-            this._source = new MemorySource({
+            this._source = new sourceLib.Memory({
                title: 'source2',
                idProperty: 'id',
                displayProperty: 'caption',

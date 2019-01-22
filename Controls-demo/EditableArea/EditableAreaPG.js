@@ -1,7 +1,7 @@
 define('Controls-demo/EditableArea/EditableAreaPG', [
    'Core/Control',
-   'WS.Data/Entity/Record',
-   'WS.Data/Source/Memory',
+   'Types/entity',
+   'Types/source',
    'wml!Controls-demo/EditableArea/EditableAreaPG',
    'json!Controls-demo/EditableArea/EAPConfig',
    'wml!Controls-demo/EditableArea/resources/oneField',
@@ -10,8 +10,8 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
    'css!Controls-demo/EditableArea/EditableAreaPG'
 ], function(
    Control,
-   Record,
-   Memory,
+   entity,
+   source,
    template,
    config
 ) {
@@ -36,10 +36,10 @@ define('Controls-demo/EditableArea/EditableAreaPG', [
       _beforeMount: function() {
          this._key = 0;
          this._records = [
-            new Record({
+            new entity.Record({
                rawData: tabsData[0]
             }),
-            new Record({
+            new entity.Record({
                rawData: tabsData2[0]
             })
          ];

@@ -5,7 +5,7 @@ define('Controls-demo/Tabs/Buttons', [
    'wml!Controls-demo/Tabs/Buttons/resources/itemTemplate',
    'wml!Controls-demo/Tabs/Buttons/resources/mainTemplate',
    'wml!Controls-demo/Tabs/Buttons/resources/photoContent',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/Tabs/Buttons/Buttons'
 ], function(
    Control,
@@ -14,7 +14,7 @@ define('Controls-demo/Tabs/Buttons', [
    itemTemplate,
    mainTemplate,
    photoContent,
-   MemorySource
+   source
 ) {
    'use strict';
     var TabButtonsDemo = Control.extend({
@@ -35,7 +35,7 @@ define('Controls-demo/Tabs/Buttons', [
       _source7: null,
       _spaceTemplate: spaceTemplate,
       _beforeMount: function() {
-         this._source1 = new MemorySource({
+         this._source1 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -76,7 +76,7 @@ define('Controls-demo/Tabs/Buttons', [
                }
             ]
          });
-         this._source2 = new MemorySource({
+         this._source2 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -107,7 +107,7 @@ define('Controls-demo/Tabs/Buttons', [
                }
             ]
          });
-         this._source3 = new MemorySource({
+         this._source3 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -137,7 +137,7 @@ define('Controls-demo/Tabs/Buttons', [
                }
             ]
          });
-         this._source4 = new MemorySource({
+         this._source4 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -155,7 +155,7 @@ define('Controls-demo/Tabs/Buttons', [
                }
             ]
          });
-         this._source5 = new MemorySource({
+         this._source5 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -170,7 +170,7 @@ define('Controls-demo/Tabs/Buttons', [
                }
             ]
          });
-         this._source6 = new MemorySource({
+         this._source6 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -189,7 +189,7 @@ define('Controls-demo/Tabs/Buttons', [
                }
             ]
          });
-         this._source7 = new MemorySource({
+         this._source7 = new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -232,7 +232,7 @@ define('Controls-demo/Tabs/Buttons', [
          });
       },
       _setSource: function() {
-         this._source6 = new MemorySource({
+         this._source6 = new source.Memory({
             idProperty: 'id',
             data: [
                {

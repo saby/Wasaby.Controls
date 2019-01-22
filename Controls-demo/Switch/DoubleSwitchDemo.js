@@ -1,11 +1,11 @@
 define('Controls-demo/Switch/DoubleSwitchDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Switch/DoubleSwitchDemo',
    'css!Controls-demo/Headers/resetButton',
    'css!Controls-demo/Switch/UnionSwitchDemo',
    'css!Controls-demo/Switch/DoubleSwitchDemo'
-], function(Control, MemorySource, template) {
+], function(Control, source, template) {
    'use strict';
    var ModuleClass = Control.extend(
       {
@@ -17,7 +17,7 @@ define('Controls-demo/Switch/DoubleSwitchDemo', [
          _tooltip: '',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._orientationSource = new MemorySource({
+            this._orientationSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {

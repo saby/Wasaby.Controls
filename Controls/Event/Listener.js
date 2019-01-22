@@ -8,9 +8,9 @@ define('Controls/Event/Listener',
    [
       'Core/Control',
       'wml!Controls/Event/Listener',
-      'WS.Data/Type/descriptor'
+      'Types/entity'
    ],
-   function(Control, template, types) {
+   function(Control, template, entity) {
 
       'use strict';
 
@@ -29,7 +29,7 @@ define('Controls/Event/Listener',
 
       EventListener.getOptionTypes = function() {
          return {
-            event: types(String).required()
+            event: entity.descriptor(String).required()
          };
       };
 

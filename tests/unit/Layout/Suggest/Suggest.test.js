@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model', 'Controls/History/Service'], function(Suggest, List, RecordSet, Model){
+define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Controls/History/Service'], function(Suggest, collection, entity){
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -162,10 +162,10 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
       it('Suggest::_private.shouldShowSuggest', function () {
          var self = getComponentObject();
          var result = {
-            data: new List({items: [1,2,3]})
+            data: new collection.List({items: [1,2,3]})
          };
          var emptyResult = {
-            data: new List()
+            data: new collection.List()
          };
          
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
@@ -322,12 +322,12 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
       it('Suggest::_private.processResultData', function() {
          var self = getComponentObject();
          self._notify = function() {};
-         var queryRecordSet = new RecordSet({
+         var queryRecordSet = new collection.RecordSet({
             rawData: [{id: 1}, {id: 2}, {id: 3}],
             idProperty: 'id'
          });
          queryRecordSet.setMetaData({
-            results: new Model({
+            results: new entity.Model({
                rawData: {
                   tabsSelectedKey: 'testId',
                   switchedStr: 'testStr'
@@ -341,9 +341,9 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.equal(self._tabsSelectedKey, 'testId');
          assert.equal(self._misspellingCaption, 'testStr');
    
-         var queryRecordSetEmpty = new RecordSet();
+         var queryRecordSetEmpty = new collection.RecordSet();
          queryRecordSetEmpty.setMetaData({
-            results: new Model({
+            results: new entity.Model({
                rawData: {
                   tabsSelectedKey: 'testId2',
                   switchedStr: 'testStr2'
@@ -390,7 +390,9 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          var options = {
             emptyTemplate: 'anyTpl',
             footerTemplate: 'anyTp',
-            suggestState: true
+            suggestState: true,
+            value: '',
+            searchParam: 'testSearchParam'
          };
          var suggestComponent = new Suggest(options);
          suggestComponent.saveOptions(options);
@@ -401,6 +403,10 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
          assert.equal(suggestComponent._dependenciesDeferred, null);
+   
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
+         assert.equal(suggestComponent._searchValue, 'test');
       });
    
       it('Suggest::_updateSuggestState', function() {

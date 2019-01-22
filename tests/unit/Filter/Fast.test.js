@@ -1,10 +1,10 @@
 define(
    [
       'Controls/Filter/Fast',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/core-clone'
    ],
-   function(FastData, Memory, Clone) {
+   function(FastData, sourceLib, Clone) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -28,7 +28,7 @@ define(
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      data: items[0],
                      idProperty: 'key'
                   })
@@ -40,10 +40,7 @@ define(
                value: 'фэнтези',
                textValue: '',
                properties: {
-                  source: new Memory({
-                     data: items[1],
-                     idProperty: 'key'
-                  }),
+                  items: items[1],
                   keyProperty: 'title',
                   displayProperty: 'title'
                }
@@ -59,7 +56,7 @@ define(
                   filter: {
                      key: 0
                   },
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      data: items[0],
                      idProperty: 'key'
                   })
@@ -73,7 +70,7 @@ define(
                properties: {
                   keyProperty: 'title',
                   displayProperty: 'title',
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      data: items[0],
                      idProperty: 'key'
                   }),
@@ -83,7 +80,7 @@ define(
          ];
 
          var config = {};
-         config.source = new Memory({
+         config.source = new sourceLib.Memory({
             idProperty: 'id',
             data: source
          });
@@ -113,17 +110,29 @@ define(
             open: setTrue.bind(this, assert)
          };
 
-         it('beforeUpdate new items', function(done) {
+         it('beforeUpdate new items property not changed', function(done) {
+            var fastFilter = getFastFilter(configWithItems);
+            fastFilter._beforeMount(configWithItems).addCallback(function() {
+               var newConfigItems = Clone(configWithItems);
+               newConfigItems.items[0].value = 'США';
+               fastFilter._beforeUpdate(newConfigItems);
+               assert.equal(fastFilter._items.at(0).value, 'США');
+               fastFilter._beforeUpdate({});
+               done();
+            });
+         });
+
+         it('beforeUpdate new items property changed', function(done) {
             var fastFilter = getFastFilter(configWithItems);
             fastFilter._beforeMount(configWithItems);
             var newConfigItems = Clone(configWithItems);
             newConfigItems.items[0].value = 'США';
+            newConfigItems.items[0].properties.displayProperty = 'text';
             fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                assert.equal(fastFilter._items.at(0).value, 'США');
-               fastFilter._beforeUpdate(configWithItems);
+               assert.equal(fastFilter._configs[0].displayProperty, 'text');
                done();
             });
-            fastFilter._beforeUpdate({});
          });
 
          it('beforeUpdate new source', function(done) {
@@ -132,7 +141,7 @@ define(
                newSource = Clone(source);
             fastFilter._beforeMount(config);
             newSource[0].value = 'США';
-            newConfigSource.source = new Memory({
+            newConfigSource.source = new sourceLib.Memory({
                idProperty: 'id',
                data: newSource
             });
@@ -218,10 +227,10 @@ define(
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function(items) {
                   fastData._setText();
-                  assert.equal(fastData._items.at(0).get('textValue'), 'США');
-                  assert.equal(fastData._items.at(1).get('textValue'), 'фэнтези');
-                  assert.equal(fastData._items.at(2).get('textValue'), 'все страны');
-                  assert.equal(fastData._items.at(3).get('textValue'), 'все страны');
+                  assert.equal(fastData._configs[0].text, 'США');
+                  assert.equal(fastData._configs[1].text, 'фэнтези');
+                  assert.equal(fastData._configs[2].text, 'все страны');
+                  assert.equal(fastData._configs[3].text, 'все страны');
                   done();
                });
             });
@@ -245,6 +254,17 @@ define(
                   fastData._open('itemClick', fastData._items.at(0), 0);
                });
             });
+         });
+
+         it('_private::itemsPropertiesChanged', function() {
+            var oldItems = Clone(source),
+               newItems = Clone(source),
+               newItems2 = Clone(source);
+            newItems[0].properties.displayProperty = 'text';
+            var result = FastData._private.isItemsPropertiesChanged(oldItems, newItems);
+            assert.isTrue(result);
+            result = FastData._private.isItemsPropertiesChanged(oldItems, newItems2);
+            assert.isFalse(result);
          });
 
          function setTrue(assert) {

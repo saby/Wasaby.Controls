@@ -68,6 +68,33 @@ define([
             },
             'www.ya.ru'
          ],
+         ftpLinkNode = ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer',
+               href: 'ftp://ya.ru',
+               target: '_blank'
+            },
+            'ftp://ya.ru'
+         ],
+         fileLinkNode = ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer',
+               href: 'file://ya.ru',
+               target: '_blank'
+            },
+            'file://ya.ru'
+         ],
+         smbLinkNode = ['a',
+            {
+               'class': 'asLink',
+               rel: 'noreferrer',
+               href: 'smb://ya.ru',
+               target: '_blank'
+            },
+            'smb://ya.ru'
+         ],
          decoratedLinkService,
          nbsp = String.fromCharCode(160),
          openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
@@ -118,6 +145,9 @@ define([
                '<p>http://ya.ru, text</p>' +
                '<p>www.ya.ru</p>' +
                '<p>www.ya.ru. Text</p>' +
+               '<p>ftp://ya.ru</p>' +
+               '<p>file://ya.ru</p>' +
+               '<p>smb://ya.ru</p>' +
                '<p><a> https://ya.ru </a></p>' +
                '<p>e@mail.ru</p>' +
                '<p><a>e@mail.ru</a></p>' +
@@ -134,6 +164,9 @@ define([
                ['p', httpLinkNode, ', text'],
                ['p', wwwLinkNode],
                ['p', wwwLinkNode, '. Text'],
+               ['p', ftpLinkNode],
+               ['p', fileLinkNode],
+               ['p', smbLinkNode],
                ['p', ['a', ' https://ya.ru ']],
                ['p', ['a', { href: 'mailto:e@mail.ru' }, 'e@mail.ru']],
                ['p', ['a', 'e@mail.ru']],

@@ -27,10 +27,6 @@
       "path": "%cd%/Controls-theme"
     },
     {
-      "name": "Core",
-      "path": "%cd%/node_modules/sbis3-ws/Core"
-    },
-    {
       "name": "WS.Core",
       "path": "%cd%/node_modules/sbis3-ws/WS.Core"
     },

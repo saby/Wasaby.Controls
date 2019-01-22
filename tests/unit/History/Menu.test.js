@@ -1,14 +1,14 @@
 define(
    [
       'Controls/History/Menu',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/core-clone',
-      'WS.Data/Entity/Model',
+      'Types/entity',
       'Controls/History/Source',
       'Controls/History/Service',
       'Core/Deferred'
    ],
-   function(Menu, Memory, Clone, Model, HistorySource, HistoryService, Deferred) {
+   function(Menu, sourceLib, Clone, entity, HistorySource, HistoryService, Deferred) {
       'use strict';
 
       let items = [
@@ -31,7 +31,7 @@ define(
          viewMode: 'link',
          icon: 'icon-small',
          showHeader: true,
-         source: new Memory({
+         source: new sourceLib.Memory({
             data: items,
             idProperty: 'id'
          })
@@ -45,7 +45,7 @@ define(
 
       describe('Controls/History/Menu', function() {
          it('_private.getMetaPinned', function() {
-            var item = new Model({
+            var item = new entity.Model({
                rawData: {
                   pinned: false
                }
@@ -58,23 +58,26 @@ define(
          it('_beforeMount', function() {
             var menu = getHistoryMenu(menuConfig);
             menu._beforeMount(menuConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_popup');
          });
          it('_beforeUpdate', function() {
             var menu = getHistoryMenu(menuConfig);
             var newConfig = Clone(menuConfig);
             newConfig.viewMode = 'button';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_popup');
             newConfig.size = 'm';
             newConfig.icon = '';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__m_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_popup');
+            newConfig.size = 's';
+            menu._beforeUpdate(newConfig);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_popup');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
             newConfig.source = new HistorySource({
-               originSource: new Memory({
+               originSource: new sourceLib.Memory({
                   idProperty: 'id',
                   data: items
                }),
@@ -101,7 +104,7 @@ define(
                   }
                }
             };
-            menu._onPinClickHandler('pinClicked', [new Model({
+            menu._onPinClickHandler('pinClicked', [new entity.Model({
                rawData: {
                   pinned: false
                }

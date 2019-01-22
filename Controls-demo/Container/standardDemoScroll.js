@@ -1,9 +1,9 @@
 define('Controls-demo/Container/standardDemoScroll', [
     'Core/Control',
     'tmpl!Controls-demo/Container/standardDemoScroll',
-    'WS.Data/Source/Memory',
+    'Types/source',
     'css!Controls-demo/Container/standardDemoScroll'
-], function(Control, template, MemorySource) {
+], function(Control, template, source) {
     'use strict';
 
     var
@@ -64,7 +64,7 @@ define('Controls-demo/Container/standardDemoScroll', [
             var
                 menuItems = ['My Tasks', 'Contacts', 'Business', 'Accounting', 'Employees', 'Documents', 'Companies',
                     'Calendar', 'My Page', 'Our Company'],
-                viewSource = new MemorySource({
+                viewSource = new source.Memory({
                     data: _getDemoData()
                 }),
                 gridColumns = [{

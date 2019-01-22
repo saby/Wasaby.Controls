@@ -4,9 +4,9 @@
 define('Controls-demo/Popup/TestFormController/TestFormController', [
    'Lib/Control/CompoundControl/CompoundControl',
    'wml!Controls-demo/Popup/TestFormController/TestFormController',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Popup/TestFormController/FormController'
-], function(CompoundControl, dotTplFn, Memory) {
+], function(CompoundControl, dotTplFn, sourceLib) {
 
    var moduleClass = CompoundControl.extend({
       _dotTplFn: dotTplFn,
@@ -25,7 +25,7 @@ define('Controls-demo/Popup/TestFormController/TestFormController', [
                initializingWay: 'local',
                item: data,
                mode: 'floatArea',
-               source: new Memory({
+               source: new sourceLib.Memory({
                   data: ListView1._options.items, // Передаём в качестве данных созданный массив
                   idProperty: 'key' // Устанавливаем поле первичного ключа
                }),

@@ -1,6 +1,6 @@
 define('Controls/Controllers/QueryParamsController/Page',
-   ['Core/core-simpleExtend', 'WS.Data/Source/SbisService'],
-   function(cExtend, SbisService) {
+   ['Core/core-simpleExtend', 'Types/source'],
+   function(cExtend, sourceLib) {
       /**
        *
        * @author Крайнов Дмитрий
@@ -42,12 +42,14 @@ define('Controls/Controllers/QueryParamsController/Page',
 
          calculateState: function(list, direction) {
             var meta = list.getMetaData();
-            if (this._options.mode == 'totalCount') {
-               if (typeof meta.more != 'number') {
+            if (this._options.mode === 'totalCount') {
+               // meta.more can be undefined is is not error
+               if (meta.more && (typeof meta.more !== 'number')) {
                   throw new Error('"more" Parameter has incorrect type. Must be numeric');
                }
             } else {
-               if (typeof meta.more != 'boolean') {
+               // meta.more can be undefined is is not error
+               if (meta.more && (typeof meta.more !== 'boolean')) {
                   throw new Error('"more" Parameter has incorrect type. Must be boolean');
                }
             }
@@ -90,7 +92,7 @@ define('Controls/Controllers/QueryParamsController/Page',
 
          prepareSource: function(source) {
             var options = source.getOptions();
-            options.navigationType = SbisService.prototype.NAVIGATION_TYPE.PAGE;
+            options.navigationType = sourceLib.SbisService.NAVIGATION_TYPE.PAGE;
             source.setOptions(options);
          },
 

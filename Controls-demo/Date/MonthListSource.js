@@ -1,11 +1,11 @@
 define('Controls-demo/Date/MonthListSource', [
    'Core/Deferred',
-   'WS.Data/Source/Base',
+   'Types/source',
    'Controls/Utils/Date'
-], function(Deferred, Base, dateUtils) {
+], function(Deferred, source, dateUtils) {
    'use strict';
 
-   var CalendarSource = Base.extend({
+   var CalendarSource = source.Base.extend({
       _moduleName: 'ControlsDemo.Date.MonthListSource',
       $protected: {
          _dataSetItemsProperty: 'items',

@@ -1,12 +1,12 @@
 define('Controls-demo/Headers/headerDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Headers/headerDemo',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function (Control,
-             MemorySource,
+             source,
              template) {
    'use strict';
    var ModuleClass = Control.extend(
@@ -20,7 +20,7 @@ define('Controls-demo/Headers/headerDemo', [
          _readOnly: false,
          _eventName: 'no event',
          _beforeMount: function() {
-            this._headerSizeSource = new MemorySource({
+            this._headerSizeSource = new source.Memory({
                idProperty: 'title',
                data: [
                   { title: 's'  },
@@ -29,7 +29,7 @@ define('Controls-demo/Headers/headerDemo', [
                   { title: 'xl' }
                ]
             });
-            this._headerStyleSource = new MemorySource({
+            this._headerStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   { title: 'primary'   },

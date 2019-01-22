@@ -2,10 +2,10 @@ define('Controls/Input/Number',
    [
       'Core/IoC',
       'Controls/Input/Base',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Input/Number/ViewModel'
    ],
-   function(IoC, Base, descriptor, ViewModel) {
+   function(IoC, Base, entity, ViewModel) {
       'use strict';
 
       /**
@@ -152,8 +152,8 @@ define('Controls/Input/Number',
           */
          delete optionTypes.value;
 
-         optionTypes.onlyPositive = descriptor(Boolean);
-         optionTypes.showEmptyDecimals = descriptor(Boolean);
+         optionTypes.onlyPositive = entity.descriptor(Boolean);
+         optionTypes.showEmptyDecimals = entity.descriptor(Boolean);
 
          return optionTypes;
       };

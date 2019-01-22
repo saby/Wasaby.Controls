@@ -4,24 +4,24 @@ define('Controls/Selector/Container',
       'tmpl!Controls/Selector/Container',
       'Controls/Selector/__ControllerContext',
       'Controls/Container/Data/ContextOptions',
-      'WS.Data/Chain',
-      'WS.Data/Utils',
+      'Types/chain',
+      'Types/util',
       'Controls/Controllers/SourceController',
       'Controls/Container/MultiSelector/selectionToRecord',
       'Core/Deferred'
    ],
    
-   function(Control, template, ControllerContext, ContextOptions, Chain, Utils, SourceController, selectionToRecord, Deferred) {
+   function(Control, template, ControllerContext, ContextOptions, chain, Utils, SourceController, selectionToRecord, Deferred) {
       
       'use strict';
       
       var _private = {
          getFilteredItems: function(items, filterFunc) {
-            return Chain(items).filter(filterFunc).value();
+            return chain.factory(items).filter(filterFunc).value();
          },
    
          getKeysByItems: function(items, keyProperty) {
-            return Chain(items).reduce(function(result, item) {
+            return chain.factory(items).reduce(function(result, item) {
                result.push(item.get(keyProperty));
                return result;
             }, []);
@@ -109,7 +109,7 @@ define('Controls/Selector/Container',
                   selected: this._selectedKeys,
                   excluded: this._excludedKeys
                };
-               loadDef = sourceController.load(_private.prepareFilter(Utils.clone(dataOptions.filter), selection, source));
+               loadDef = sourceController.load(_private.prepareFilter(Utils.object.clone(dataOptions.filter), selection, source));
                
                loadDef.addCallback(function(result) {
                   return prepareResult(result);

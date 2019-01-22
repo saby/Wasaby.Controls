@@ -1,8 +1,8 @@
 define('Controls/Date/interface/IDateRangeSelectable', [
    'Core/core-merge',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/Date/interface/IRangeSelectable'
-], function(coreMerge, types, IRangeSelectable) {
+], function(coreMerge, entity, IRangeSelectable) {
    'use strict';
 
    /**
@@ -35,7 +35,7 @@ define('Controls/Date/interface/IDateRangeSelectable', [
 
       getOptionTypes: function() {
          var optionsTypes = IRangeSelectable.getOptionTypes();
-         optionsTypes.selectionType = types(String).oneOf(Object.keys(selectionTypes));
+         optionsTypes.selectionType = entity.descriptor(String).oneOf(Object.keys(selectionTypes));
          return optionsTypes;
       }
    };
