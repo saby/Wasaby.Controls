@@ -9,7 +9,7 @@
               position="bl"
               on:openInfoBox="_notifyHandler('openInfoBox')"
               on:closeInfoBox="_notifyHandler('closeInfoBox')">
-          <ws:partial template="wml!Controls/Selector/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="width: {{_counterWidth}}px;"/>
+          <ws:partial template="wml!Controls/Selector/SelectedCollection/CounterTemplate" itemsCount="{{_items.length}}" attr:style="{{_counterWidth ? 'width: ' + _counterWidth + 'px;'}}"/>
       </Controls.Popup.InfoBox>
    </ws:if>
    <ws:for data="index, item in _visibleItems">

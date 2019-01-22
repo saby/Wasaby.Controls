@@ -649,18 +649,23 @@ define([
          BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
+         assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
 
          // картинка должен появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
+   
+         BaseControl._private.showIndicator(ctrl);
+         assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
          // и вызовем скрытие
          BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
+         assert.isFalse(!!ctrl._loadingIndicatorTimer);
       });
 
       it('scrollToEdge_load', function(done) {

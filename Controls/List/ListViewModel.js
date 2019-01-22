@@ -264,8 +264,7 @@ define('Controls/List/ListViewModel',
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
             if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always') && this._items.getCount()) {
-               this._markedKey = this._items.at(0).getId();
-               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+               this.setMarkedKey(this._items.at(0).getId());
             }
             this._nextVersion();
          },
@@ -293,6 +292,8 @@ define('Controls/List/ListViewModel',
          },
          setItemActionVisibilityCallback: function(callback) {
             this._options.itemActionVisibilityCallback = callback;
+            this._nextVersion();
+            this._notify('onListChange');
          },
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
