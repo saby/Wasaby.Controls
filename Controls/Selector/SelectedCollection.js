@@ -10,7 +10,7 @@ define('Controls/Selector/SelectedCollection',
       'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, Chain, tmplNotify, selectedCollectionUtils, utils) {
+   function(Control, template, ItemTemplate, chain, tmplNotify, selectedCollectionUtils, utils) {
       'use strict';
 
       /**
