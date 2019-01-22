@@ -259,7 +259,7 @@ define('Controls/Filter/Controller',
          },
 
          cloneItems: function(items) {
-            if (items['[WS.Data/Entity/CloneableMixin]']) {
+            if (items['[Types/_entity/CloneableMixin]']) {
                return items.clone();
             }
             return clone(items);

@@ -9,7 +9,7 @@ define('Controls/FormController', [
 
    var _private = {
       checkRecordType: function(record) {
-         return cInstance.instanceOfModule(record, 'WS.Data/Entity/Record');
+         return cInstance.instanceOfModule(record, 'Types/entity:Record');
       },
       readRecordBeforeMount: function(instance, cfg) {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
