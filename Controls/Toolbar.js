@@ -25,7 +25,7 @@ define('Controls/Toolbar', [
     * @public
     * @category Toolbar
     * @author Михайловский Д.С.
-    * @demo Controls-demo/Toolbar/ToolbarVdom
+    * @demo Controls-demo/Toolbar/ToolbarPG
     */
 
    /**

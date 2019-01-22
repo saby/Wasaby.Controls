@@ -182,15 +182,15 @@ define('Controls/Explorer', [
          }
       },
       _hoveredCrumbChanged: function(event, item) {
-         this._hoveredBreadCrumb = item;
+         this._hoveredBreadCrumb = item.getId();
       },
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
          }
       },
-      _onBreadCrumbsClick: function(event, itemId) {
-         _private.setRoot(this, itemId);
+      _onBreadCrumbsClick: function(event, item) {
+         _private.setRoot(this, item.getId());
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

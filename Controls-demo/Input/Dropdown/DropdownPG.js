@@ -31,26 +31,26 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
             this._sourceTasks = new Memory({
                idProperty: 'id',
                data: [
-                  {id: 1, title: 'Task in development', text: 'Task in development', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
-                  {id: 2, title: 'Error in development', text: 'Error in development', parent: null, '@parent': false, comment: 'develop'},
-                  {id: 3, title: 'Application', text: 'Application', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
-                  {id: 4, title: 'Assignment', text: 'Assignment', parent: null, '@parent': true, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
-                  {id: 5, title: 'Approval', text: 'Approval', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
-                  {id: 6, title: 'Working out', text: 'Working out', parent: null, '@parent': false, comment: 'develop'},
-                  {id: 7, title: 'Assignment for accounting', text: 'Assignment for accounting', parent: 4, '@parent': false, comment: 'develop'},
-                  {id: 8, title: 'Assignment for delivery', text: 'Assignment for delivery', parent: 4, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
-                  {id: 9, title: 'Assignment for logisticians', text: 'Assignment for logisticians', parent: 4, '@parent': false, comment: 'develop'}
+                  {id: 1, title: 'Task in development', text: 'TASK', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
+                  {id: 2, title: 'Error in development', text: 'ERROR', parent: null, '@parent': false, comment: 'develop'},
+                  {id: 3, title: 'Application', text: 'APPLICATION', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
+                  {id: 4, title: 'Assignment', text: 'ASSIGNMENT', parent: null, '@parent': true, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
+                  {id: 5, title: 'Approval', text: 'APPROVAL', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
+                  {id: 6, title: 'Working out', text: 'WORKING OUT', parent: null, '@parent': false, comment: 'develop'},
+                  {id: 7, title: 'Assignment for accounting', text: 'ASSIGNMENT FOR ACCOUNTING', parent: 4, '@parent': false, comment: 'develop'},
+                  {id: 8, title: 'Assignment for delivery', text: 'ASSIGNMENT FOR DELIVERY', parent: 4, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
+                  {id: 9, title: 'Assignment for logisticians', text: 'ASSIGNMENT FOR LOGISTICIANS', parent: 4, '@parent': false, comment: 'develop'}
                ]
             });
             this._sourceIcons = new Memory({
                idProperty: 'id',
                data: [
-                  {id: 1, title: 'In the work', icon: 'icon-small icon-Trade icon-primary', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
-                  {id: 2, title: 'It is planned', icon: 'icon-16 icon-Sandclock icon-primary', parent: null, '@parent': false },
-                  {id: 3, title: 'Completed', icon: 'icon-small icon-Successful icon-done', parent: null, '@parent': true, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
-                  {id: 5, title: 'positive', parent: 3, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
-                  {id: 6, title: 'negative', parent: 3, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
-                  {id: 4, title: 'Not done', icon: 'icon-small icon-Decline icon-error', parent: null, '@parent': false}
+                  {id: 1, title: 'In the work', text: 'IN THE WORK', icon: 'icon-small icon-Trade icon-primary', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
+                  {id: 2, title: 'It is planned', text: 'IT IS PLANNED', icon: 'icon-16 icon-Sandclock icon-primary', parent: null, '@parent': false },
+                  {id: 3, title: 'Completed', text: 'COMPLETED', icon: 'icon-small icon-Successful icon-done', parent: null, '@parent': true, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
+                  {id: 5, title: 'positive', text: 'POSITIVE', parent: 3, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
+                  {id: 6, title: 'negative', text: 'NEGATIVE', parent: 3, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},
+                  {id: 4, title: 'Not done', text: 'NOT DONE', icon: 'icon-small icon-Decline icon-error', parent: null, '@parent': false}
                ]
             });
             this._dataObject = {
@@ -145,7 +145,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
             this._componentOptions = {
                name: 'Dropdown',
                source: this._sourceIcons,
-               selectedKeys: '1',
+               selectedKeys: [1],
                historyId: '',
                itemTemplate: undefined,
                itemTemplateProperty: '',
