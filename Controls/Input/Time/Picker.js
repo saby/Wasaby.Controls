@@ -10,7 +10,7 @@ define('Controls/Input/Time/Picker', [
     *    <li>date and time.</li>
     * </ol>
     * @class Controls/Input/Time/Picker
-    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/Input/interface/IInputField
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/ITimeMask
     * @mixes Controls/Input/interface/IValidation
