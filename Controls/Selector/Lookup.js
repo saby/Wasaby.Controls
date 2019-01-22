@@ -16,7 +16,7 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IMultiSelectable
     * @mixes Controls/Input/interface/IInputPlaceholder
-    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/Input/interface/IInputField
     * @mixes Controls/Selector/Lookup/LookupStyles
     * @control
     * @public
