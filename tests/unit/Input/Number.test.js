@@ -30,10 +30,36 @@ define(
             ctrl._notify = ProxyCall.apply(ctrl._notify, 'notify', calls, true);
          });
 
-         it('getDefault', function() {
-            NumberInput.getOptionTypes();
-            NumberInput.getDefaultOptions();
+         it('Checking default values of options.', function() {
+            assert.deepEqual(NumberInput.getDefaultOptions(), {
+               size: 'm',
+               value: 0,
+               style: 'info',
+               placeholder: '',
+               delimiters: true,
+               textAlign: 'left',
+               autoComplete: false,
+               onlyPositive: false,
+               fontStyle: 'default',
+               selectOnClick: false,
+               showEmptyDecimals: false
+            });
          });
+         it('Checking types of options.', function() {
+            assert.deepEqual(Object.keys(NumberInput.getOptionTypes()).sort(), [
+               'size',
+               'style',
+               'tagStyle',
+               'textAlign',
+               'fontStyle',
+               'delimiters',
+               'autoComplete',
+               'onlyPositive',
+               'selectOnClick',
+               'showEmptyDecimals'
+            ].sort());
+         });
+
          it('The model belongs to the "Controls/Input/Number/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: 0
@@ -67,8 +93,10 @@ define(
             });
             it('The display value divided into triads is correctly converted to a value.', function() {
                ctrl._beforeMount({
-                  value: ''
+                  value: '',
+                  delimiters: true
                });
+
                ctrl._getField().value = '1111';
                ctrl._getField().selectionStart = 4;
                ctrl._getField().selectionEnd = 4;
@@ -77,6 +105,22 @@ define(
                assert.deepEqual(calls, [{
                   name: 'notify',
                   arguments: ['valueChanged', [1111, '1 111.0']]
+               }]);
+            });
+            it('Triad partitioning is disabled. Enter 123456', function() {
+               ctrl._beforeMount({
+                  value: '',
+                  delimiters: false
+               });
+
+               ctrl._getField().value = '123456';
+               ctrl._getField().selectionStart = 6;
+               ctrl._getField().selectionEnd = 6;
+               ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', [123456, '123456.0']]
                }]);
             });
          });

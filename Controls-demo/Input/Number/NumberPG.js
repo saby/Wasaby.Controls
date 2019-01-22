@@ -49,7 +49,8 @@ define('Controls-demo/Input/Number/NumberPG',
                readOnly: false,
                tooltip: 'myTooltip',
                validationErrors: '',
-               selectOnClick: false
+               selectOnClick: false,
+               delimiters: true
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

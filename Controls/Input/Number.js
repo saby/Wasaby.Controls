@@ -82,6 +82,15 @@ define('Controls/Input/Number',
        * </pre>
        */
 
+      /**
+       * @name Controls/Input/Number#delimiters
+       * @cfg {Boolean} Determines whether the number should be split into triads.
+       * @default true
+       * @remark
+       * true - the number split into triads.
+       * false - does not do anything.
+       */
+
       var _private = {
          validateOptions: function(options) {
             if (options.integersLength <= 0) {
@@ -96,6 +105,7 @@ define('Controls/Input/Number',
 
             return {
                precision: options.precision,
+               delimiters: options.delimiters,
                onlyPositive: options.onlyPositive,
                integersLength: options.integersLength,
                showEmptyDecimals: options.showEmptyDecimals
@@ -135,6 +145,7 @@ define('Controls/Input/Number',
          var defaultOptions = Base.getDefaultOptions();
 
          defaultOptions.value = 0;
+         defaultOptions.delimiters = true;
          defaultOptions.onlyPositive = false;
          defaultOptions.showEmptyDecimals = false;
 
@@ -152,6 +163,7 @@ define('Controls/Input/Number',
           */
          delete optionTypes.value;
 
+         optionTypes.delimiters = entity.descriptor(Boolean);
          optionTypes.onlyPositive = entity.descriptor(Boolean);
          optionTypes.showEmptyDecimals = entity.descriptor(Boolean);
 

@@ -1188,6 +1188,10 @@
             "default": true,
             "title": "If true, text is selected when input is clicked."
           },
+          "delimiters": {
+            "default": true,
+            "type": "Boolean"
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
