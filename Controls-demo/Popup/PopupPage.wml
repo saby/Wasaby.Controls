@@ -5,7 +5,7 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Dialog>
    <Controls.Popup.Opener.Dialog name="modalDialog">
-      <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog">
+      <ws:popupOptions isModal="{{true}}" template="Controls-demo/Popup/TestDialog" zIndex="1000">
          <ws:templateOptions type="dialog"/>
       </ws:popupOptions>
    </Controls.Popup.Opener.Dialog>
