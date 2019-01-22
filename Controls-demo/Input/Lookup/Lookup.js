@@ -2,14 +2,14 @@ define('Controls-demo/Input/Lookup/Lookup',
    [
       'Core/Control',
       'wml!Controls-demo/Input/Lookup/Lookup',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/Utils/MemorySourceFilter',
       'Controls-demo/Input/Lookup/LookupData',
       'Controls/Selector/Lookup',
       'css!Controls-demo/Input/Lookup/Collection',
       'css!Controls-demo/Input/Lookup/Lookup'
    ],
-   function(Control, template, Memory, memorySourceFilter, lookupData) {
+   function(Control, template, source, memorySourceFilter, lookupData) {
       'use strict';
       var Lookup = Control.extend({
          _template: template,
@@ -37,7 +37,7 @@ define('Controls-demo/Input/Lookup/Lookup',
             this._selectedKeys5 = [4];
             this._selectedKeys6 = [4, 2, 5 ,3, 8];
             this._selectedKeys7 = [];
-            this._source = new Memory({
+            this._source = new source.Memory({
                data: lookupData.names,
                idProperty: 'id',
                filter: memorySourceFilter()

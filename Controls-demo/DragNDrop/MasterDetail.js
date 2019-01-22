@@ -1,15 +1,15 @@
 define('Controls-demo/DragNDrop/MasterDetail', [
    'Core/Control',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'wml!Controls-demo/DragNDrop/MasterDetail/MasterDetail',
    'Controls-demo/DragNDrop/MasterDetail/Data',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/core-instance',
    'Controls/DragNDrop/Entity/List/Items',
    'Controls-demo/DragNDrop/MasterDetail/TasksEntity',
    'wml!Controls-demo/DragNDrop/MasterDetail/itemTemplates/masterItemTemplate',
    'css!Controls-demo/DragNDrop/MasterDetail/MasterDetail'
-], function(Control, Model, template, data, Memory, cInstance, ListEntity, TasksEntity, itemTemplate) {
+], function(Control, entityLib, template, data, source, cInstance, ListEntity, TasksEntity, itemTemplate) {
    return Control.extend({
       _template: template,
       gridColumns: [{
@@ -19,12 +19,12 @@ define('Controls-demo/DragNDrop/MasterDetail', [
       }],
 
       _initSource: function() {
-         this._detailSource = new Memory({
+         this._detailSource = new source.Memory({
             idProperty: 'id',
             data: data.detail
          });
 
-         this._masterSource = new Memory({
+         this._masterSource = new source.Memory({
             idProperty: 'id',
             data: data.master
          });

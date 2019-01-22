@@ -1,9 +1,9 @@
 define('Controls/Toggle/Checkbox', [
    'Core/Control',
    'wml!Controls/Toggle/Checkbox/Checkbox',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Toggle/Checkbox/Checkbox'
-], function(Control, template, types) {
+], function(Control, template, entity) {
 
    /**
     * Represents a control that a user can select and clear.
@@ -133,8 +133,8 @@ define('Controls/Toggle/Checkbox', [
 
    Checkbox.getOptionTypes = function getOptionTypes() {
       return {
-         triState: types(Boolean),
-         tooltip: types(String)
+         triState: entity.descriptor(Boolean),
+         tooltip: entity.descriptor(String)
       };
    };
 

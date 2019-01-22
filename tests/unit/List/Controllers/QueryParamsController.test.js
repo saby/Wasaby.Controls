@@ -7,12 +7,12 @@ define(
       'Controls/Controllers/QueryParamsController/Page',
       'Controls/Controllers/QueryParamsController/Offset',
       'Controls/Controllers/QueryParamsController/Position',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Source/SbisService'
+      'Types/collection',
+      'Types/source'
    ],
    function (PageNavigation,
              OffsetNavigation,
-             PositionNavigation, RecordSet, SbisService) {
+             PositionNavigation, collection, sourceLib) {
 
       'use strict';
 
@@ -32,12 +32,12 @@ define(
                {id : 7, title : 'Третий', field: 3},
                {id : 8, title : 'Четвертый', field: 3}
             ];
-            dataRs = new RecordSet({
+            dataRs = new collection.RecordSet({
                rawData: data,
                idProperty : 'id'
             });
 
-            dataRsbyLoad = new RecordSet({
+            dataRsbyLoad = new collection.RecordSet({
                rawData: databyLoad,
                keyProperty : 'id'
             })
@@ -127,13 +127,13 @@ define(
                   page: 1,
                   pageSize: 4
                });
-               var source = new SbisService({
+               var source = new sourceLib.SbisService({
                   endpoint: 'ОбъектБл',
                   keyProperty: 'id'
                });
                pNav.prepareSource(source);
                var options = source.getOptions();
-               assert.equal(SbisService.prototype.NAVIGATION_TYPE.OFFSET, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
+               assert.equal(sourceLib.SbisService.NAVIGATION_TYPE.OFFSET, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
 
             });
          });
@@ -146,13 +146,13 @@ define(
                   position: null,
                   limit: 100
                });
-               var source = new SbisService({
+               var source = new sourceLib.SbisService({
                   endpoint: 'ОбъектБл',
                   keyProperty: 'id'
                });
                pNav.prepareSource(source);
                var options = source.getOptions();
-               assert.equal(SbisService.prototype.NAVIGATION_TYPE.POSITION, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
+               assert.equal(sourceLib.SbisService.NAVIGATION_TYPE.POSITION, options.navigationType, 'Method prepareSource doesn\'t set correct navigationType to source');
 
             });
 

@@ -10,20 +10,30 @@
                        on:mouseenter="_mouseEnterHandler()"
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
-   <ws:if data="{{_options.readOnly}}">
-      <ws:partial options="{{_options}}"
-                  scope="{{_readOnlyField.scope}}"
-                  value="{{_viewModel.displayValue}}"
-                  template="{{_readOnlyField.template}}"/>
-   </ws:if>
-   <ws:else>
-      <ws:partial type="{{_type}}"
-                  options="{{_options}}"
-                  scope="{{_field.scope}}"
-                  fieldName="{{_fieldName}}"
-                  template="{{_field.template}}"
-                  value="{{_viewModel.displayValue}}"
-                  hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
-                  isEdge="{{_isEdge}}" />
-   </ws:else>
+   <ws:beforeFieldWrapper>
+      <ws:partial scope="{{_beforeFieldWrapper.scope}}"
+                  template="{{_beforeFieldWrapper.template}}"/>
+   </ws:beforeFieldWrapper>
+   <ws:content>
+      <ws:if data="{{_options.readOnly}}">
+         <ws:partial options="{{_options}}"
+                     scope="{{_readOnlyField.scope}}"
+                     value="{{_viewModel.displayValue}}"
+                     template="{{_readOnlyField.template}}"/>
+      </ws:if>
+      <ws:else>
+         <ws:partial type="{{_type}}"
+                     options="{{_options}}"
+                     scope="{{_field.scope}}"
+                     fieldName="{{_fieldName}}"
+                     template="{{_field.template}}"
+                     value="{{_viewModel.displayValue}}"
+                     hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+                     isEdge="{{_isEdge}}" />
+      </ws:else>
+   </ws:content>
+   <ws:afterFieldWrapper>
+      <ws:partial scope="{{_afterFieldWrapper.scope}}"
+                  template="{{_afterFieldWrapper.template}}"/>
+   </ws:afterFieldWrapper>
 </Controls.Input.Render>

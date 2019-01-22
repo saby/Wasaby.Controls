@@ -2,10 +2,10 @@ define('Controls/Input/Text',
    [
       'Core/IoC',
       'Controls/Input/Base',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Input/Text/ViewModel'
    ],
-   function(IoC, Base, descriptor, ViewModel) {
+   function(IoC, Base, entity, ViewModel) {
       'use strict';
 
       /**
@@ -149,8 +149,8 @@ define('Controls/Input/Text',
           * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
           * optionTypes.maxLength = descriptor(Number|null);
           */
-         optionTypes.trim = descriptor(Boolean);
-         optionTypes.constraint = descriptor(String);
+         optionTypes.trim = entity.descriptor(Boolean);
+         optionTypes.constraint = entity.descriptor(String);
 
          return optionTypes;
       };

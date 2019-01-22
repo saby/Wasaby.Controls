@@ -24,8 +24,8 @@ define('Controls/List/ItemActions/Helpers', [], function() {
       /**
        * Helper to display up/down item actions.
        * @param {MoveDirection} direction
-       * @param {WS.Data/Entity/Record} item Instance of the item whose action is being processed.
-       * @param {WS.Data/Collection/RecordSet} items List of all items.
+       * @param {Types/entity:Record} item Instance of the item whose action is being processed.
+       * @param {Types/collection:RecordSet} items List of all items.
        * @param {Controls/List/interface/IHierarchy#parentProperty} parentProperty Name of the field that contains information about parent node.
        * @param {Controls/List/interface/IHierarchy#nodeProperty} nodeProperty Name of the field describing the type of the node (list, node, hidden node).
        */

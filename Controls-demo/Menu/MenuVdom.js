@@ -2,20 +2,18 @@ define('Controls-demo/Menu/MenuVdom', [
    'Core/Control',
    'wml!Controls-demo/Menu/MenuVdom',
    'Core/core-clone',
-   'WS.Data/Source/DataSet',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Source/Memory',
+   'Types/collection',
    'Controls/History/Source',
    'Controls/History/Service',
    'Controls/Constants',
-   'WS.Data/Query/Query',
+   'Types/source',
    'Core/Deferred',
-   'WS.Data/Adapter/Sbis',
+   'Types/entity',
    'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
    'wml!Controls-demo/Menu/DemoGroupTemplate',
    'css!Controls-demo/Dropdown/MenuVdom',
    'css!Controls-demo/Menu/MenuVdom'
-], function(Control, template, cClone, DataSet, RecordSet, Memory, historySource, historyService, ControlsConstants, Query, Deferred, SbisAdapter) {
+], function(Control, template, cClone, collection, historySource, historyService, ControlsConstants, source, Deferred, entity) {
    'use strict';
    var ModuleClass = Control.extend(
       {
@@ -158,7 +156,7 @@ define('Controls-demo/Menu/MenuVdom', [
             };
          },
          _createMemory: function(items) {
-            var srcData = new DataSet({
+            var srcData = new source.DataSet({
                rawData: {
                   frequent: this._createRecordSet( this.recordData.frequent),
                   pinned: this._createRecordSet( this.recordData.pinned),
@@ -170,7 +168,7 @@ define('Controls-demo/Menu/MenuVdom', [
 
             // возвращаем historySource
             var hs = new historySource({
-               originSource: new Memory({
+               originSource: new source.Memory({
                   idProperty: 'id',
                   data: items
                }),
@@ -184,7 +182,7 @@ define('Controls-demo/Menu/MenuVdom', [
                parentProperty: 'parent',
                nodeProperty: '@parent'
             });
-            var query = new Query().where({
+            var query = new source.Query().where({
                $_history: true
             });
             hs.historySource.query = function() {
@@ -230,10 +228,10 @@ define('Controls-demo/Menu/MenuVdom', [
          },
 
          _createRecordSet: function(data) {
-            return new RecordSet({
+            return new collection.RecordSet({
                rawData: data,
                idProperty: 'ObjectId',
-               adapter: new SbisAdapter()
+               adapter: new entity.adapter.Sbis()
             });
          },
       }

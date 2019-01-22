@@ -5,22 +5,22 @@
  * Created by kraynovdo on 16.11.2017.
  */
 define('Controls/List/BaseViewModel',
-   ['Core/core-simpleExtend', 'WS.Data/Entity/ObservableMixin', 'WS.Data/Entity/VersionableMixin'],
-   function(cExtend, ObservableMixin, VersionableMixin) {
+   ['Core/core-simpleExtend', 'Types/entity'],
+   function(cExtend, entity) {
 
       /**
        *
        * @author Авраменко А.С.
        * @public
        */
-      var BaseViewModel = cExtend.extend([ObservableMixin, VersionableMixin], {
+      var BaseViewModel = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
 
          constructor: function(cfg) {
             this._options = cfg;
          },
 
          destroy: function() {
-            ObservableMixin.destroy.apply(this, arguments);
+            entity.ObservableMixin.prototype.destroy.apply(this, arguments);
             this._options = null;
          }
       });

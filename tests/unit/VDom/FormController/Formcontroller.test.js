@@ -1,11 +1,11 @@
 define([
    'Controls/FormController',
-   'WS.Data/Entity/Record',
+   'Types/entity',
    'Core/helpers/Function/runDelayed',
    'Core/Deferred',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'require'
-], function(FormController, Record, runDelayed, Deferred, MemorySource, require) {
+], function(FormController, entity, runDelayed, Deferred, source, require) {
    'use strict';
 
    describe('FormController-tests', function() {
@@ -17,7 +17,7 @@ define([
             var element =  document.body.querySelectorAll('#formControllerComponent')[0];
             var config = {
                element: element,
-               dataSource: new MemorySource({
+               dataSource: new source.Memory({
                   idProperty: 'id',
                   data: [{ id: 0 }]
                })
@@ -169,7 +169,7 @@ define([
          let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
          let baseCreateRecordBeforeMount = FormController._private.createRecordBeforeMount;
          let cfg = {
-            record: new Record(),
+            record: new entity.Record(),
          };
 
          let isReading = false;
@@ -512,7 +512,7 @@ define([
                      }
                   }, {
                      action: function(control) {
-                        var record = new Record();
+                        var record = new entity.Record();
                         record.set({ testValue: 'testValue' });
                         control._updateValuesByRecord(record);
                      }

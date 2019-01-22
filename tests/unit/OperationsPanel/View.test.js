@@ -1,10 +1,10 @@
 define([
    'Controls/Operations/Panel',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/Operations/Panel/Utils'
 ], function(
    View,
-   Memory,
+   sourceLib,
    WidthUtils
 ) {
    'use strict';
@@ -50,7 +50,7 @@ define([
             title: 'unload'
          }],
          cfg = {
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: data
             }),
@@ -153,7 +153,7 @@ define([
             var
                forceUpdateCalled = false,
                newCfg = {
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      idProperty: 'id',
                      data: data
                   }),
@@ -203,7 +203,7 @@ define([
             var
                forceUpdateCalled = false,
                newCfg = {
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      idProperty: 'id',
                      data: data
                   }),

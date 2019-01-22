@@ -11,7 +11,7 @@ define('Controls/Date/interface/IMonthListCustomDays', [
 
    /**
     * @name Controls/Date/interface/IMonthListCustomDays#calendarSource
-    * @cfg {WS.Data/Source/Base} Object that implements ISource interface for data access.
+    * @cfg {Types/source:Base} Object that implements ISource interface for data access.
     * @remark
     * Must support a list method with paging by cursor. Years are used as identifiers. Each item is a year.
     * It must contain the extData field which is an array of 12 elements from the corresponding months.

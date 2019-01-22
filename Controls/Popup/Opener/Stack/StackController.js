@@ -2,7 +2,7 @@ define('Controls/Popup/Opener/Stack/StackController',
    [
       'Controls/Popup/Opener/BaseController',
       'Controls/Popup/Opener/Stack/StackStrategy',
-      'WS.Data/Collection/List',
+      'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
       'Core/constants',
@@ -10,7 +10,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, List, TargetCoords, Deferred, cConstants, cClone) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone) {
       'use strict';
       var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
       var STACK_CLASS = 'controls-Stack';
@@ -23,7 +23,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.minWidth = parseInt(item.popupOptions.minWidth || defaultOptions.minWidth || templateStyle.minWidth, 10);
             item.popupOptions.maxWidth = parseInt(item.popupOptions.maxWidth || defaultOptions.maxWidth || templateStyle.maxWidth, 10);
 
-            // Если задано одно значение - приравниваем minWidth и maxWidth
+            // Validate the configuration
             item.popupOptions.minWidth = item.popupOptions.minWidth || item.popupOptions.maxWidth;
             item.popupOptions.maxWidth = item.popupOptions.maxWidth || item.popupOptions.minWidth;
 
@@ -139,7 +139,7 @@ define('Controls/Popup/Opener/Stack/StackController',
       };
 
       /**
-       * Контроллер стековых панелей.
+       * Stack Popup Controller
        * @class Controls/Popup/Opener/Stack/StackController
        * @control
        * @private
@@ -150,7 +150,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          _destroyDeferred: {},
          constructor: function(cfg) {
             StackController.superclass.constructor.call(this, cfg);
-            this._stack = new List();
+            this._stack = new collection.List();
             _private.elementDestroyed.bind(this);
             this._fixTemplateAnimation.bind(this);
          },
@@ -252,10 +252,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             };
          },
 
-         // Метод, который проверяет работу анимации. Если анимация через пол секунды не сообщила о своем завершении -
-         // завершает ее вручную. Необходимость вызвана изощренной логикой прикладных разработчиков, которые сами
-         // по непонятным никому причинам из js кода удаляют шаблон или отписываются от всех его событий, что мешает
-         // работе анимации
+         // TODO: For Compatible
          _fixTemplateAnimation: function(element) {
             var self = this;
             setTimeout(function() {

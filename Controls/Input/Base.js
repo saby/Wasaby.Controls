@@ -4,7 +4,7 @@ define('Controls/Input/Base',
       'Core/EventBus',
       'Core/detection',
       'Core/constants',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
       'Controls/Utils/getTextWidth',
@@ -21,7 +21,7 @@ define('Controls/Input/Base',
       'css!theme?Controls/Input/Base/Base'
    ],
    function(
-      Control, EventBus, detection, constants, descriptor, tmplNotify, isEqual,
+      Control, EventBus, detection, constants, entity, tmplNotify, isEqual,
       getTextWidth, randomName, InputUtil, ViewModel, runDelayed, hasHorizontalScroll,
       template, fieldTemplate, readOnlyFieldTemplate
    ) {
@@ -554,6 +554,14 @@ define('Controls/Input/Base',
                template: readOnlyFieldTemplate,
                scope: {}
             };
+            this._beforeFieldWrapper = {
+               template: null,
+               scope: {}
+            };
+            this._afterFieldWrapper = {
+               template: null,
+               scope: {}
+            };
          },
 
          /**
@@ -849,23 +857,23 @@ define('Controls/Input/Base',
              * placeholder: descriptor(String|Function),
              * value: descriptor(String|null),
              */
-            autoComplete: descriptor(Boolean),
-            selectOnClick: descriptor(Boolean),
-            size: descriptor(String).oneOf([
+            autoComplete: entity.descriptor(Boolean),
+            selectOnClick: entity.descriptor(Boolean),
+            size: entity.descriptor(String).oneOf([
                's',
                'm',
                'l'
             ]),
-            fontStyle: descriptor(String).oneOf([
+            fontStyle: entity.descriptor(String).oneOf([
                'default',
                'primary',
                'secondary'
             ]),
-            textAlign: descriptor(String).oneOf([
+            textAlign: entity.descriptor(String).oneOf([
                'left',
                'right'
             ]),
-            style: descriptor(String).oneOf([
+            style: entity.descriptor(String).oneOf([
                'info',
                'danger',
                'invalid',
@@ -873,7 +881,7 @@ define('Controls/Input/Base',
                'success',
                'warning'
             ]),
-            tagStyle: descriptor(String).oneOf([
+            tagStyle: entity.descriptor(String).oneOf([
                'info',
                'danger',
                'primary',

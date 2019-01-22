@@ -1,9 +1,9 @@
 define('Controls/Heading/Separator', [
    'Core/Control',
    'wml!Controls/Heading/Separator/Separator',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'css!theme?Controls/Heading/Separator/Separator'
-], function(Control, template, types) {
+], function(Control, template, entity) {
    'use strict';
 
    /**
@@ -38,7 +38,7 @@ define('Controls/Heading/Separator', [
 
    Separator.getOptionTypes =  function getOptionTypes() {
       return {
-         style: types(String).oneOf([
+         style: entity.descriptor(String).oneOf([
             'secondary',
             'primary'
          ])

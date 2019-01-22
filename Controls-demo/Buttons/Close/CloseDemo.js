@@ -1,12 +1,12 @@
 define('Controls-demo/Buttons/Close/CloseDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Buttons/Close/CloseDemo',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function(Control,
-   MemorySource,
+   source,
    template) {
    'use strict';
 
@@ -17,7 +17,7 @@ define('Controls-demo/Buttons/Close/CloseDemo', [
          _closeStyleSource: null,
          _eventName: 'no event',
          _beforeMount: function() {
-            this._closeStyleSource = new MemorySource({
+            this._closeStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
