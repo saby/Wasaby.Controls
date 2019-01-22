@@ -86,8 +86,6 @@ define('Controls/List/Grid/GridViewModel', [
                });
             }
 
-            cellClasses += ' controls-Grid__row-cell_rowSpacing_default';
-
             if (current.isSelected) {
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
                if (current.columnIndex === 0) {

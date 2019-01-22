@@ -4,13 +4,14 @@ define('Controls/Popup/Manager',
       'wml!Controls/Popup/Manager/Manager',
       'Controls/Popup/Manager/ManagerController',
       'Core/helpers/Number/randomId',
+      'Core/helpers/Function/runDelayed',
       'Types/collection',
       'Core/EventBus',
       'Core/detection',
       'Core/IoC'
    ],
 
-   function(Control, template, ManagerController, randomId, collection, EventBus, cDetection, IoC) {
+   function(Control, template, ManagerController, randomId, runDelayed, collection, EventBus, cDetection, IoC) {
       'use strict';
 
       var _private = {
@@ -35,10 +36,33 @@ define('Controls/Popup/Manager',
             self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
                self._popupItems.remove(element);
+               _private.activatePopup(self._popupItems);
                _private.updateOverlay.call(self);
                self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
                return element;
             });
+         },
+
+         activatePopup: function(items) {
+            var maxId = _private.getMaxZIndexPopupIdForActivate(items);
+            if (maxId) {
+               var popupContainer = ManagerController.getContainer();
+               var child = popupContainer && popupContainer._children[maxId];
+
+               // wait, until closing popup will be removed from DOM
+               if (child) {
+                  runDelayed(child.activate.bind(child));
+               }
+            }
+         },
+
+         getMaxZIndexPopupIdForActivate: function(items) {
+            for (var i = items.getCount() - 1; i > -1; i--) {
+               if (items.at(i).popupOptions.autofocus !== false) {
+                  return items.at(i).id;
+               }
+            }
+            return null;
          },
 
          updateOverlay: function() {
@@ -357,8 +381,8 @@ define('Controls/Popup/Manager',
             var self = this;
             var element = this.find(id);
             if (element) {
-               _private.fireEventHandler(id, 'onClose');
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
+                  _private.fireEventHandler(id, 'onClose');
                   _private.redrawItems(self._popupItems);
                   return element;
                });
