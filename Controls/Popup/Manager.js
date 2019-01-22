@@ -357,8 +357,8 @@ define('Controls/Popup/Manager',
             var self = this;
             var element = this.find(id);
             if (element) {
-               _private.fireEventHandler(id, 'onClose');
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
+                  _private.fireEventHandler(id, 'onClose');
                   _private.redrawItems(self._popupItems);
                   return element;
                });
