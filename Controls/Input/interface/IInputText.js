@@ -9,82 +9,55 @@ define('Controls/Input/interface/IInputText', [], function() {
     */
 
    /**
-    * @name Controls/Input/interface/IInputText#value
-    * @cfg {String} Text in the field.
-    * @default '' (empty string)
-    * @remark If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+    * @name Controls/Input/Text#maxLength
+    * @cfg {Number} Maximum number of characters that can be entered in the field.
+    * @remark
+    * If user tries to enter text longer than the value of maxLength, control will prevent input.
     * @example
-    * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
+    * In this example, only 20 characters can be entered in the field.
     * <pre>
-    *    <Input.Text bind:value="_inputValue" />
-    *    <Controls.Button on:click="_sendButtonClick()" />
+    *    <Controls.Input.Text maxLength="{{20}}"/>
     * </pre>
-    *
-    * <pre>
-    *    Control.extend({
-    *       ...
-    *       _inputValue: '',
-    *
-    *       _sendButtonClick() {
-    *          this._sendData(this._inputValue);
-    *       }
-    *
-    *    });
-    * </pre>
-    * @see valueChanged
-    * @see inputCompleted
     */
 
    /**
-    * @event Controls/Input/interface/IInputText#valueChanged Occurs when field display value was changed.
-    * @param {String} value Value of the field.
-    * @param {String} displayValue Display value of the field.
+    * @name Controls/Input/Text#trim
+    * @cfg {Boolean} Determines whether the field value should be trimmed when input is completed.
+    * @default false
     * @remark
-    * This event should be used to react to changes user makes in the field. Value returned in the event is not inserted in control unless you pass it back to the field as an option. Usually you would use bind notation instead. Example below shows the difference.
+    * String is trimmed only when input is completed.
+    * If you bind control's state to the value in the field, the state will contain spaces when user types, and will be trimmed only when input is completed.
+    * true - removes whitespaces from both ends of the string when input is completed.
+    * false - does not do anything.
     * @example
-    * In this example, we show how you can 'bind' control's value to the field. In the first field, we do it manually using valueChanged event. In the second field we use bind notation. Both fields in this examples will have identical behavior.
+    * In this example, extra spaces with both side will be trimmed when the focus leaves the text box.
     * <pre>
-    *    <Controls.Input.Text value="_fieldValue" on:valueChanged="_valueChangedHandler()" />
-    *
-    *    <Controls.Input.Text bind:value="_anotherFieldValue" />
+    *    <Controls.Input.Text trim="{{true}}" bind:value="_fieldValue" on:inputCompleted="_inputCompletedHandler()"/>
     * </pre>
     *
     * <pre>
     *    Control.extend({
-    *       ...
-    *       _fieldValue: '',
-    *
-    *       _valueChangedHandler(value) {
-    *          this._fieldValue = value;
-    *       },
-    *
-    *       _anotherFieldValue: ''
-    *
-    *    });
+       *       ...
+       *       _fieldValue: '',
+       *
+       *       _inputCompletedHandler(value) {
+       *          // When event fires, both value and _fieldValue will contain trimmed field value
+       *       }
+       *       ...
+       *    });
     * </pre>
-    * @see value
+    * @see Controls/Input/interface/IInputText#inputCompleted
     */
 
    /**
-    * @event Controls/Input/interface/IInputText#inputCompleted Occurs when input is completed (field lost focus or user pressed ‘enter’).
-    * @param {String} value Value of the field.
+    * @name  Controls/Input/Text#constraint
+    * @cfg {String} Regular expression for input filtration.
     * @remark
-    * This event can be used as a trigger to validate the field or send entered data to some other control.
+    * This regular expression is applied to every character that user enters. If entered character doesn't match regular expression, it is not added to the field. When user pastes a value with multiple characters to the field, we check the value characters by characters, and only add the characters that pass regular expression. For example, if you try to paste "1ab2cd" to the field with constraint "[0-9]", only "12" will be inserted in the field.
     * @example
-    * In this example, we subscribe to inputCompleted event and save field's value to the database.
+    * In this example, the user will be able to enter only numbers in the field.
     * <pre>
-    *    <Controls.Input.Text on:inputCompleted="_inputCompletedHandler()" />
+    *    <Controls.Input.Text constraint="[0-9]"/>
     * </pre>
-    *
-    * <pre>
-    *    Control.extend({
-    *       ...
-    *       _inputCompletedHandler(value) {
-    *          this._saveEnteredValueToDatabase(value);
-    *       }
-    *       ...
-    *    });
-    * </pre>
-    * @see value
     */
 });

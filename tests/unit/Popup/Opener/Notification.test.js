@@ -2,10 +2,10 @@ define(
    [
       'Controls/Popup/Opener/Notification/NotificationController'
    ],
-   function(NotificationController) {
+   (NotificationController) => {
       'use strict';
 
-      describe('Controls.Popup.Opener.Notification.NotificationController', function() {
+      describe('Controls/Popup/Opener/Notification', () => {
          const containers = [
             {
                offsetHeight: 10
