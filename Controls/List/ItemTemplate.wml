@@ -1,4 +1,4 @@
-<div attr:class="controls-ListView__itemV{{marker !== false && itemData.isSelected ? (' controls-ListView__itemV_withMarker controls-ListView__item__marked_' + itemData.style)}}
+<div attr:class="controls-ListView__itemV{{marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected ? (' controls-ListView__itemV_withMarker controls-ListView__item__marked_' + itemData.style)}}
     {{highlightOnHover !== false ? 'controls-ListView__item_highlightOnHover_' + itemData.style}}
     controls-ListView__item_{{itemData.style}}
     {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
@@ -14,7 +14,7 @@
         </ws:partial>
     </ws:if>
 
-   <ws:if data="{{itemData.isSelected && marker !== false}}">
+   <ws:if data="{{itemData.isSelected && marker !== false && itemData.markerVisibility !== 'hidden'}}">
       <div class="controls-ListView__itemV_marker"></div>
    </ws:if>
 

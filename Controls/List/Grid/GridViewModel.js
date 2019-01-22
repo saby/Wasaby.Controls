@@ -182,10 +182,10 @@ define('Controls/List/Grid/GridViewModel', [
                stickyLadder: stickyLadder
             };
          },
-   
+
          getSortingDirectionByProp: function(sorting, prop) {
             var sortingDirection;
-      
+
             if (sorting) {
                sorting.forEach(function(elem) {
                   if (elem[prop]) {
@@ -193,7 +193,7 @@ define('Controls/List/Grid/GridViewModel', [
                   }
                });
             }
-      
+
             return sortingDirection;
          }
       },
@@ -349,8 +349,18 @@ define('Controls/List/Grid/GridViewModel', [
          // ---------------------- resultColumns ----------------------
          // -----------------------------------------------------------
 
-         getResults: function() {
-            return this._options.results;
+         getResultsPosition: function() {
+            if (this._options.results) {
+               return this._options.results.position;
+            }
+            return this._options.resultsPosition;
+         },
+
+         getResultsTemplate: function() {
+            if (this._options.results) {
+               return this._options.results.template;
+            }
+            return this._options.resultsTemplate;
          },
 
          _prepareResultsColumns: function(columns, multiSelectVisibility) {
@@ -475,6 +485,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setMarkedKey(key);
          },
 
+         setMarkerVisibility: function(markerVisibility) {
+            this._model.setMarkerVisibility(markerVisibility);
+         },
+
          getMarkedKey: function() {
             return this._model.getMarkedKey();
          },
@@ -544,7 +558,7 @@ define('Controls/List/Grid/GridViewModel', [
                current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (this._options.groupMethod) {
+            if (this._options.groupMethod || this._options.groupingKeyCallback) {
                if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                   current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + (current.rightPadding || 'default');
                   return current;
@@ -657,6 +671,10 @@ define('Controls/List/Grid/GridViewModel', [
          _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
             this._nextVersion();
+         },
+
+         setItemActionVisibilityCallback: function(callback) {
+            this._model.setItemActionVisibilityCallback(callback);
          },
 
          _prepareDisplayItemForAdd: function(item) {

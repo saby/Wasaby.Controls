@@ -1,11 +1,11 @@
 define('Controls-demo/List/Tree/TreeMemory', [
-   'WS.Data/Source/Memory'
-], function(MemorySource) {
+   'Types/source'
+], function(source) {
 
    'use strict';
 
    var
-      TreeMemory = MemorySource.extend({
+      TreeMemory = source.Memory.extend({
          query: function(query) {
             var
                filter = query.getWhere();

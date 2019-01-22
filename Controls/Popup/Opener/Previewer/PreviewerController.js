@@ -7,7 +7,6 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
       'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
    ],
    function(Deferred, ManagerController, StickyController) {
-
       'use strict';
 
       var PreviewerController = StickyController.constructor.extend({
@@ -48,5 +47,4 @@ define('Controls/Popup/Opener/Previewer/PreviewerController',
       });
 
       return new PreviewerController();
-   }
-);
+   });

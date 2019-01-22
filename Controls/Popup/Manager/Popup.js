@@ -12,7 +12,7 @@ define('Controls/Popup/Manager/Popup',
       var Popup = Control.extend({
 
          /**
-          * Компонент "Всплывающее окно"
+          * Control Popup
           * @class Controls/Popup/Manager/Popup
           * @mixes Controls/interface/IOpenerOwner
           * @mixes Controls/interface/ICanBeDefaultOpener
@@ -25,12 +25,12 @@ define('Controls/Popup/Manager/Popup',
 
          /**
           * @name Controls/Popup/Manager/Popup#template
-          * @cfg {Content} Шаблон всплывающего окна
+          * @cfg {Content} Template
           */
 
          /**
           * @name Controls/Popup/Manager/Popup#templateOptions
-          * @cfg {Object} Опции компонента
+          * @cfg {Object} Template options
           */
 
          _template: template,
@@ -40,8 +40,8 @@ define('Controls/Popup/Manager/Popup',
          _openersUpdateCallback: [],
 
          _afterMount: function() {
-            /* TODO: COMPATIBLE. Очень сложный код. Нельзя просто так на afterMount пересчитывать позиции и сигналить о создании
-             * внутри может быть compoundArea и мы должны ее дождаться, а там есть асинхронная фаза. Смотрим по флагу waitForPopupCreated */
+            /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
+             * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
 
             if (this.waitForPopupCreated) {
                this.callbackCreated = (function() {
@@ -51,8 +51,7 @@ define('Controls/Popup/Manager/Popup',
             } else {
                this._notify('popupCreated', [this._options.id], { bubbling: true });
 
-               // Активируем popup, за исключением случаев, когда это старый шаблон. CompoundArea
-               // сама управляет фокусом внутри себя
+               // TODO Compatible
                if (this._options.autofocus && !this._options.isCompoundTemplate) {
                   this.activate();
                }
@@ -67,7 +66,7 @@ define('Controls/Popup/Manager/Popup',
          },
 
          /**
-          * Закрыть popup
+          * Close popup
           * @function Controls/Popup/Manager/Popup#_close
           */
          _close: function() {
@@ -107,7 +106,7 @@ define('Controls/Popup/Manager/Popup',
          },
 
          /**
-          * Обновить popup
+          * Update popup
           * @function Controls/Popup/Manager/Popup#_close
           */
          _update: function() {
@@ -118,13 +117,13 @@ define('Controls/Popup/Manager/Popup',
          },
 
          _delayedUpdate: function() {
-            // На resize многие обработчики могут влиять на размеры и верстку страницы.
-            // Дожидаемся когда они отработают и пересчитываем размеры попапов.
+            // Many processors can affect the size and layout of a page.
+            // Wait for them to work out and recalculate the size of popups.
             runDelayed(this._update.bind(this));
          },
 
          /**
-          * Отправить результат
+          * Proxy popup result
           * @function Controls/Popup/Manager/Popup#_sendResult
           */
          _sendResult: function(event) {
@@ -133,7 +132,7 @@ define('Controls/Popup/Manager/Popup',
          },
 
          /**
-          * Обработчик нажатия на клавиши.
+          * key up handler
           * @function Controls/Popup/Manager/Popup#_keyUp
           * @param event
           */

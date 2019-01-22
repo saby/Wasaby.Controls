@@ -3,22 +3,27 @@ define('Controls/Input/Dropdown',
       'Core/Control',
       'wml!Controls/Input/Dropdown/Dropdown',
       'wml!Controls/Input/Dropdown/resources/defaultContentTemplate',
-      'WS.Data/Utils',
-      'WS.Data/Chain',
+      'Types/util',
+      'Types/chain',
       'Controls/Dropdown/Util',
       'Core/helpers/Object/isEqual',
       'css!theme?Controls/Input/Dropdown/Dropdown'
    ],
-   function(Control, template, defaultContentTemplate, Utils, Chain, dropdownUtils, isEqual) {
+   function(Control, template, defaultContentTemplate, Utils, chain, dropdownUtils, isEqual) {
       /**
-       * Input for selection from the list of options.
-       *
+       * Control that shows list of options. In the default state, the list is collapsed, showing only one choice.
+       * The full list of options is displayed when you click on the control.
+       * <a href="/materials/demo-ws4-input-dropdown">Demo-example</a>.
        * @class Controls/Input/Dropdown
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/List/interface/IHierarchy
+       * @mixes Controls/interface/IFilter
+       * @mixes Controls/interface/INavigation
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/interface/IMultiSelectable
+       * @mixes Controls/Dropdown/interface/IFooterTemplate
+       * @mixes Controls/Dropdown/interface/IHeaderTemplate
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
        * @mixes Controls/interface/IDropdown
@@ -28,23 +33,52 @@ define('Controls/Input/Dropdown',
        * @public
        * @author Красильников А.С.
        * @category Input
-       * @demo Controls-demo/Input/Dropdown/Dropdown
+       * @demo Controls-demo/Input/Dropdown/DropdownPG
        */
 
       /**
        * @name Controls/Input/Dropdown#contentTemplate
        * @cfg {Function} Template that will be render calling element.
+       * @remark
+       * To determine the template, you should call the base template "wml!Controls/Input/Dropdown/resources/defaultContentTemplate".
+       * The template should be placed in the component using the <ws:partial> tag with the template attribute.
+       * You can redefine content using the contentTemplate option.
+       * By default, the base template wml!Controls/Input/Dropdown/resources/defaultContentTemplate will display only text.
+       * To display the icon and text, use the "wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon" template.
+       * @example
+       * Display text and icon
+       *
+       * WML:
+       * <pre>
+       * <Controls.Input.Dropdown
+       *       bind:selectedKeys="_selectedKeys"
+       *       keyProperty="id"
+       *       displayProperty="title"
+       *       source="{{_source)}}"
+       *       contentTemplate="wml!Controls/Input/Dropdown/resources/defaultContentTemplateWithIcon">
+       * </Controls.Input.Dropdown>
+       * </pre>
+       * JS:
+       * <pre>
+       * this._source = new Memory({
+       *    idProperty: 'id',
+       *    data: [
+       *       {id: 1, title: 'Name', icon: 'icon-small icon-TrendUp'},
+       *       {id: 2, title: 'Date of change', icon: 'icon-small icon-TrendDown'}
+       *    ]
+       * });
+       * </pre>
        */
 
 
       'use strict';
 
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
       var _private = {
          getSelectedKeys: function(items, keyProperty) {
             var keys = [];
-            Chain(items).each(function(item) {
+            chain.factory(items).each(function(item) {
                keys.push(getPropValue(item, keyProperty));
             });
             return keys;

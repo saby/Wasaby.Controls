@@ -1,9 +1,10 @@
 define(
    [
       'Controls/Button/Menu',
-      'WS.Data/Source/Memory'
+      'Types/source',
+      'Core/core-clone'
    ],
-   (MenuButton, Memory) => {
+   (MenuButton, sourceLib, Clone) => {
       describe('MenuButton', () => {
          let items = [
             {
@@ -45,8 +46,9 @@ define(
             icon: 'icon-medium icon-Doge icon-primary',
             viewMode: 'link',
             style: 'secondary',
+            showHeader: true,
             keyProperty: 'id',
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
             })
@@ -66,22 +68,23 @@ define(
 
          it('_beforeMount', () => {
             menu._beforeMount(config);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_medium_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-medium_popup');
          });
 
          it('_beforeUpdate', function() {
-            let newOptions = {
-               icon: 'icon-small icon-Doge icon-primary',
-               viewMode: 'link'
-            };
+            let newOptions = Clone(config);
+            newOptions.icon = 'icon-small icon-Doge icon-primary';
+            newOptions.viewMode = 'link';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_popup');
-            newOptions = {
-               icon: 'icon-small icon-Doge icon-primary',
-               viewMode: 'button'
-            };
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_popup');
+            newOptions.icon = 'icon-small icon-Doge icon-primary';
+            newOptions.viewMode = 'button';
             menu._beforeUpdate(newOptions);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_popup');
+            newOptions.showHeader = false;
+            newOptions.viewMode = 'link';
+            menu._beforeUpdate(newOptions);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_duplicate_popup');
          });
       });
    }

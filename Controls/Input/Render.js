@@ -1,17 +1,23 @@
 define('Controls/Input/Render',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/tmplNotify',
 
       'wml!Controls/Input/Render/Render',
       'css!theme?Controls/Input/Render/Render'
    ],
-   function(Control, descriptor, tmplNotify, template) {
+   function(Control, entity, tmplNotify, template) {
       'use strict';
 
       var Render = Control.extend({
          _template: template,
+
+         /**
+          * @type {Boolean} The content has active.
+          * @private
+          */
+         _contentActive: false,
 
          _notifyHandler: tmplNotify,
 
@@ -23,35 +29,43 @@ define('Controls/Input/Render',
 
                return '_readOnly';
             }
-            if (this._active) {
+            if (this._contentActive) {
                return '_active';
             }
 
             return '';
+         },
+
+         _contentFocusInHandler: function() {
+            this._contentActive = true;
+         },
+
+         _contentFocusOutHandler: function() {
+            this._contentActive = false;
          }
       });
 
       Render.getDefaultTypes = function() {
          return {
-            content: descriptor(Function).required(),
-            afterFieldWrapper: descriptor(Function),
-            beforeFieldWrapper: descriptor(Function),
-            multiline: descriptor(Boolean),
-            size: descriptor(String).oneOf([
+            content: entity.descriptor(Function).required(),
+            afterFieldWrapper: entity.descriptor(Function),
+            beforeFieldWrapper: entity.descriptor(Function),
+            multiline: entity.descriptor(Boolean),
+            size: entity.descriptor(String).oneOf([
                's',
                'm',
                'l'
             ]).required(),
-            fontStyle: descriptor(String).oneOf([
+            fontStyle: entity.descriptor(String).oneOf([
                'default',
                'primary',
                'secondary'
             ]).required(),
-            textAlign: descriptor(String).oneOf([
+            textAlign: entity.descriptor(String).oneOf([
                'left',
                'right'
             ]).required(),
-            style: descriptor(String).oneOf([
+            style: entity.descriptor(String).oneOf([
                'info',
                'danger',
                'invalid',
@@ -59,7 +73,7 @@ define('Controls/Input/Render',
                'success',
                'warning'
             ]).required(),
-            tagStyle: descriptor(String).oneOf([
+            tagStyle: entity.descriptor(String).oneOf([
                'info',
                'danger',
                'primary',

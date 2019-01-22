@@ -1,4 +1,4 @@
-import * as Control from 'Core/Control';
+import Control = require('Core/Control');
 import template = require('wml!Controls/_buttons/Button');
 import classesUtil from './classesUtil'
 import iconsUtil from './iconsUtil'
@@ -54,7 +54,7 @@ class Button extends Control {
    private _viewMode: String;
    private _state: String;
    private _caption: String | Function;
-   private _stringCaption: String;
+   private _stringCaption: Boolean;
    private _icon: String;
    private _iconStyle: String;
 

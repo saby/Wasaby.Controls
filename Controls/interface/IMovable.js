@@ -48,7 +48,7 @@ define('Controls/interface/IMovable', [
     * @event Controls/interface/IMovable#beforeItemsMove Occurs before the items are moved.
     * @param {Core/EventObject} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
-    * @param {WS.Data/Entity/Record|String|Number} target Target item to move.
+    * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
     * @returns {BeforeItemsMoveResult}
     * @example
@@ -74,7 +74,7 @@ define('Controls/interface/IMovable', [
     * @event Controls/interface/IMovable#afterItemsMove Occurs after moving items.
     * @param {Core/EventObject} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
-    * @param {WS.Data/Entity/Record|String|Number} target Target item to move.
+    * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
     * @param {*} result Result of moving items.
     * @example

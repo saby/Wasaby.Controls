@@ -1,8 +1,7 @@
 define('Controls-demo/Container/MyScroll',
    [
       'Core/Control',
-      'WS.Data/Query/Query',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'WS.Data/Source/LocalSession',
       'wml!Controls-demo/Container/MyScroll',
       'Controls/List',
@@ -15,7 +14,7 @@ define('Controls-demo/Container/MyScroll',
       'wml!Controls-demo/Container/resources/MessagesList',
       'css!Controls-demo/Container/MyScroll'
    ],
-   function(Control, Query, MemorySource, LocalSession, template) {
+   function(Control, source, LocalSession, template) {
 
       'use strict';
 
@@ -96,7 +95,7 @@ define('Controls-demo/Container/MyScroll',
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
 
-            this._usersSource = new MemorySource({
+            this._usersSource = new source.Memory({
                idProperty: 'id',
                data: srcUsersData
             });
@@ -110,14 +109,14 @@ define('Controls-demo/Container/MyScroll',
          _beforeMount: function() {
             var self = this;
 
-            return this._usersSource.query(new Query()).addCallback(function(dataSet) {
+            return this._usersSource.query(new source.Query()).addCallback(function(dataSet) {
                self._users = dataSet.getAll();
             });
          },
 
          _afterMount: function() {
             var self = this;
-            this._messagesSource.query(new Query()).addCallback(function(dataSet) {
+            this._messagesSource.query(new source.Query()).addCallback(function(dataSet) {
                var
                   data = dataSet.getAll(),
                   count = data.getCount();

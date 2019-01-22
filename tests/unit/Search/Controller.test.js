@@ -1,4 +1,4 @@
-define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(Search, Memory, cInstance, RecordSet, Model) {
+define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Types/collection', 'Types/entity'], function(Search, sourceLib, cInstance, collection, entity) {
    
    var data = [
       {
@@ -19,7 +19,7 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
       }
    ];
    
-   var memorySource = new Memory({
+   var memorySource = new sourceLib.Memory({
       data: data
    });
    
@@ -75,12 +75,12 @@ define(['Controls/Search/Controller', 'WS.Data/Source/Memory', 'Core/core-instan
          assert.isTrue(controller._viewMode === 'search');
    
    
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             rawData: [],
             idProperty: 'id'
          });
          rs.setMetaData({
-            results: new Model({
+            results: new entity.Model({
                rawData: {
                   switchedStr: 'testStr'
                }

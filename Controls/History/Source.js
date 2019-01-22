@@ -3,33 +3,27 @@
  */
 define('Controls/History/Source', [
    'Core/core-extend',
-   'WS.Data/Entity/OptionsMixin',
-   'WS.Data/Source/ISource',
    'Core/ParallelDeferred',
    'Core/Deferred',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/History/Constants',
-   'WS.Data/Entity/Model',
-   'WS.Data/Source/DataSet',
-   'WS.Data/Chain',
-   'WS.Data/Collection/Factory/RecordSet'
+   'Types/entity',
+   'Types/source',
+   'Types/chain'
 ], function(CoreExtend,
-   OptionsMixin,
-   ISource,
    ParallelDeferred,
    Deferred,
-   RecordSet,
+   collection,
    Constants,
-   Model,
-   DataSet,
-   Chain,
-   recordSetFactory) {
+   entity,
+   sourceLib,
+   chain) {
    /**
     * Source
     * Proxy source adding history data to the original source
     * @class Controls/History/Source
-    * @extends WS.Data/Entity/Abstract
-    * @mixes WS.Data/Entity/OptionsMixin
+    * @extends Types/entity:Abstract
+    * @mixes Types/entity:OptionsToPropertyMixin
     * @control
     * @public
     * @author Герасимов А.М.
@@ -170,7 +164,7 @@ define('Controls/History/Source', [
       },
 
       getItemsWithHistory: function(self, history, oldItems) {
-         var items = new RecordSet({
+         var items = new collection.RecordSet({
             adapter: oldItems.getAdapter(),
             idProperty: oldItems.getIdProperty(),
             format: oldItems.getFormat().clone()
@@ -195,7 +189,7 @@ define('Controls/History/Source', [
             var newItem;
 
             if (historyItem === -1 || item.get(self._parentProperty)) {
-               newItem = new Model({
+               newItem = new entity.Model({
                   rawData: item.getRawData(),
                   adapter: items.getAdapter(),
                   format: items.getFormat()
@@ -218,7 +212,7 @@ define('Controls/History/Source', [
             historyItem = self._history[historyType].getRecordById(id);
             historyId = historyItem.get('HistoryId');
 
-            item = new Model({
+            item = new entity.Model({
                rawData: oldItem.getRawData(),
                adapter: items.getAdapter(),
                format: items.getFormat()
@@ -251,19 +245,19 @@ define('Controls/History/Source', [
             idProperty: items.getIdProperty(),
             format: items.getFormat()
          };
-         var frequentItems = new RecordSet(config);
+         var frequentItems = new collection.RecordSet(config);
          var displayProperty = self._displayProperty || 'title';
          var firstName, secondName;
 
          this.fillItems(self, history, 'frequent', oldItems, frequentItems);
 
          // alphabet sorting
-         frequentItems = Chain(frequentItems).sort(function(first, second) {
+         frequentItems = chain.factory(frequentItems).sort(function(first, second) {
             firstName = first.get(displayProperty);
             secondName = second.get(displayProperty);
 
             return (firstName < secondName) ? -1 : (firstName > secondName) ? 1 : 0;
-         }).value(recordSetFactory, config);
+         }).value(collection.factory.recordSet, config);
 
          items.append(frequentItems);
       },
@@ -280,13 +274,15 @@ define('Controls/History/Source', [
 
       updatePinned: function(self, item, meta) {
          var pinned = self._history.pinned;
+         var id;
          if (item.get('pinned')) {
             item.set('pinned', false);
             pinned.remove(pinned.getRecordById(item.getId()));
          } else {
             if (_private.checkPinnedAmount(pinned)) {
+               id = item.getId();
                item.set('pinned', true);
-               pinned.add(this.getRawHistoryItem(self, item.getId()));
+               pinned.add(this.getRawHistoryItem(self, id, item.get('HistoryId') || id));
             } else {
                return false;
             }
@@ -305,7 +301,7 @@ define('Controls/History/Source', [
             if (hItem) {
                recent.remove(hItem);
             }
-            records = new RecordSet({
+            records = new collection.RecordSet({
                items: [this.getRawHistoryItem(self, item.getId(), item.get('HistoryId') || self.historySource.getHistoryId())]
             });
             recent.prepend(records);
@@ -315,7 +311,7 @@ define('Controls/History/Source', [
       },
 
       getRawHistoryItem: function(self, id, hId) {
-         return new Model({
+         return new entity.Model({
             rawData: {
                d: [id, hId],
                s: [
@@ -332,7 +328,7 @@ define('Controls/History/Source', [
       }
    };
 
-   var Source = CoreExtend.extend([ISource, OptionsMixin], {
+   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
       _history: null,
       _oldItems: null,
       _parentProperty: null,
@@ -389,7 +385,7 @@ define('Controls/History/Source', [
                _private.initHistory(self, data[0], self._oldItems);
                newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
                self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
-               return new DataSet({
+               return new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
                   idProperty: newItems.getIdProperty(),
                   adapter: newItems.getAdapter()

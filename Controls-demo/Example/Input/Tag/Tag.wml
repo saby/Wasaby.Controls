@@ -50,6 +50,4 @@
          </ws:Array>
       </ws:contents>
    </Controls-demo.Example.resource.BaseDemoInput>
-
-   <Controls.Popup.Opener.InfoBox name="infoBox"/>
 </div>

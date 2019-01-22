@@ -2,8 +2,14 @@ var root = process.cwd(),
    fs = require('fs'),
    path = require('path');
 
-var gultConfig = JSON.stringify(require('./buildTemplate.json'));
-gultConfig = gultConfig.replace(/%cd%/ig, root).replace(/\\/ig, '/');
+function getBuildMode(gultConfig) {
+   return gultConfig.minimize ? 'release' : 'debug';
+}
+
+var gultConfig = require('./buildTemplate.json');
+var buildMode = getBuildMode(gultConfig);
+var gultConfigStringified = JSON.stringify(gultConfig);
+gultConfigStringified = gultConfigStringified.replace(/%cd%/ig, root).replace(/\\/ig, '/');
 
 if (!fs.existsSync(path.join(root, 'application'))) {
    fs.mkdirSync(path.join(root, 'application'));
@@ -12,7 +18,7 @@ if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
    fs.mkdirSync(path.join(root, 'application', 'resources'));
 }
 
-fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
+fs.writeFile(path.join(root, 'builderCfg.json'), gultConfigStringified, function(){
    const { spawn } = require('child_process');
 
    const child = spawn('node',[
@@ -36,8 +42,8 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
       console.log('child process exited with ' +
          `code ${code} and signal ${signal}`);
 
-      gultConfig = JSON.parse(gultConfig);
-      gultConfig.modules.forEach((one) => {
+      gultConfigStringified = JSON.parse(gultConfigStringified);
+      gultConfigStringified.modules.forEach((one) => {
          let oldName = one.path.split('/');
          oldName = oldName[oldName.length - 1];
          if (one.name !== oldName) {
@@ -47,10 +53,10 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfig, function(){
       });
 
       const allJson = {links: {}, nodes: {}};
-      const contents = { buildMode: '', modules: {} };
+      const contents = { buildMode: buildMode, modules: {} };
       const bundles = {};
 
-      gultConfig.modules.forEach((one) => {
+      gultConfigStringified.modules.forEach((one) => {
          if (one.name.indexOf('WS.Core') === -1)
          {
             let fileName = path.join(root, 'application', one.name, 'module-dependencies.json');

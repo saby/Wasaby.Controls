@@ -2,13 +2,13 @@
 define('Controls/Date/MonthView/MonthViewModel', [
    'Core/core-simpleExtend',
    'Core/core-merge',
-   'WS.Data/Entity/VersionableMixin',
+   'Types/entity',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date'
 ], function(
    cExtend,
    coreMerge,
-   VersionableMixin,
+   entity,
    calendarUtils,
    DateUtil
 ) {
@@ -20,7 +20,7 @@ define('Controls/Date/MonthView/MonthViewModel', [
     * @author Миронов А.Ю.
     */
 
-   var ModuleClass = cExtend.extend([VersionableMixin], {
+   var ModuleClass = cExtend.extend([entity.VersionableMixin], {
       _state: null,
       _modelArray: [],
 

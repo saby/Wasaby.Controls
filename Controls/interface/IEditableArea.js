@@ -24,7 +24,7 @@ define('Controls/interface/IEditableArea', [
    /**
     * @event Controls/interface/IEditableArea#beforeBeginEdit Happens before start of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} editObject Editing record.
+    * @param {Types/entity:Record} editObject Editing record.
     * @returns {BeforeBeginEditResult}
     * @example
     * The following example creates EditableArea and shows how to handle the event.
@@ -48,7 +48,7 @@ define('Controls/interface/IEditableArea', [
    /**
     * @event Controls/interface/IEditableArea#beforeEndEdit Happens before the end of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} editObject Editing record.
+    * @param {Types/entity:Record} editObject Editing record.
     * @param {Boolean} commit If it is true editing ends with saving.
     * @returns {BeforeEndEditResult}
     * @remark
@@ -89,7 +89,7 @@ define('Controls/interface/IEditableArea', [
    /**
     * @event Controls/interface/IEditableArea#afterEndEdit Happens after the end of editing.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
-    * @param {WS.Data/Entity/Record} editObject Editing record.
+    * @param {Types/entity:Record} editObject Editing record.
     * @example
     * The following example shows how to hide and show an image based on the state of editing.
     * WML:
@@ -139,7 +139,7 @@ define('Controls/interface/IEditableArea', [
 
    /**
     * @name Controls/interface/IEditableArea#editObject
-    * @cfg {WS.Data/Entity/Record} Record with initial data.
+    * @cfg {Types/entity:Record} Record with initial data.
     * @example
     * <pre>
     *    <Controls.EditableArea editObject="{{_editObject}}" />

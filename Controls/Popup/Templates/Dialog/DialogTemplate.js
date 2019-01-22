@@ -55,7 +55,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
           */
 
          /**
-          * @name Controls/Popup/Templates/Dialog/DialogTemplate#closeButtonStyle
+          * @name Controls/Popup/Templates/Dialog/DialogTemplate#closeButtonViewMode
           * @cfg {String} Close button display style.
           * @variant default
           * @variant lite

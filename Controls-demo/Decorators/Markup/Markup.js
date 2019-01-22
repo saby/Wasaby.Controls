@@ -3,7 +3,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
    'Core/Control',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
    'Controls/Decorator/Markup/resolvers/highlight',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Decorators/Markup/Markup',
 
    'css!Controls-demo/Decorators/Markup/Markup',
@@ -12,7 +12,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
 ], function(Control,
    linkDecorateResolver,
    highlightResolver,
-   MemorySource,
+   source,
    template) {
    'use strict';
 
@@ -61,7 +61,7 @@ define('Controls-demo/Decorators/Markup/Markup', [
       },
       _beforeMount: function() {
          this.allTagResolvers = [linkDecorateResolver, highlightResolver, this._combineResolver];
-         this._resolversMemorySource = new MemorySource({
+         this._resolversMemorySource = new source.Memory({
             idProperty: 'id',
             data: [
                {

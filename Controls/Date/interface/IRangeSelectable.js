@@ -1,6 +1,6 @@
 define('Controls/Date/interface/IRangeSelectable', [
-   'WS.Data/Type/descriptor'
-], function(types) {
+   'Types/entity'
+], function(entity) {
    'use strict';
 
    /**
@@ -34,7 +34,7 @@ define('Controls/Date/interface/IRangeSelectable', [
 
       getOptionTypes: function() {
          return {
-            selectionType: types(String).oneOf(Object.keys(selectionTypes))
+            selectionType: entity.descriptor(String).oneOf(Object.keys(selectionTypes))
          };
       }
    };

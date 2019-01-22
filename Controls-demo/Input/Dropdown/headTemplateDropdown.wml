@@ -1,1 +1,5 @@
-<ws:partial template="wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate" caption="{{caption}}" attr:style="margin-left: 22px;"/>
+<ws:partial template="wml!Controls/Dropdown/resources/template/defaultHeadTemplate">
+   <ws:headContentTemplate>
+      <ws:partial template="wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate" caption="Add" />
+   </ws:headContentTemplate>
+</ws:partial>

@@ -2,7 +2,7 @@
    <div class="example-Base__title">Position of labels</div>
    <div class="example-Base__specify">Left alignment</div>
    <div class="ws-flexbox">
-      <div class="ws-flex-shrink-0">
+      <div class="example-PositionLabe__wrapper">
          <Controls.Label caption="Label1"
                          on:click="_labelClickHandler('text1')"/>
          <Controls.Label caption="Label2 with long name"
@@ -28,7 +28,7 @@
    </div>
    <div class="example-Base__specify example-BaseDemoInput__content_normalSpacing">Right alignment</div>
    <div class="ws-flexbox">
-      <div class="ws-flex-shrink-0">
+      <div class="example-PositionLabe__wrapper example-PositionLabe__wrapper_right">
          <Controls.Label caption="Label1"
                          attr:class="ws-flexbox ws-justify-content-end"
                          on:click="_labelClickHandler('text4')"/>

@@ -6,9 +6,9 @@
  */
 define([
    'Controls/List/Controllers/ScrollPaging',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/core-instance'
-], function(ScrollPaging, MemorySource, cInstance){
+], function(ScrollPaging, sourceLib, cInstance){
    describe('Controls.Controllers.ScrollPaging', function () {
       var data, source;
       beforeEach(function() {
@@ -29,7 +29,7 @@ define([
                type: 2
             }
          ];
-         source = new MemorySource({
+         source = new sourceLib.Memory({
             data: data,
             idProperty: 'id'
          });
