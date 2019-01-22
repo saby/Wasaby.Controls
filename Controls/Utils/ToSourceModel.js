@@ -35,7 +35,7 @@ define('Controls/Utils/ToSourceModel', [
              Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
              Задача:
              https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
-            if (cInstance.instanceOfMixin(items, 'Types/entity:ManyToManyMixin')) {
+            if (cInstance.instanceOfMixin(items, 'Types/_entity/ManyToManyMixin')) {
                items._getMediator().belongsTo(items, function(master) {
                   if (parent) {
                      Utils.logger.error('ToSourceModel: у переданного рекордсета несколько родителей.');
