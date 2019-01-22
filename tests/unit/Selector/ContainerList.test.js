@@ -1,4 +1,4 @@
-define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Container, Model) {
+define(['Controls/Selector/List/Container', 'Types/entity'], function(Container, entity) {
    
    
    describe('Controls.Selector.Container.List', function() {
@@ -47,7 +47,7 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          var visibilityCallback = function() {
             return actionVisibility;
          };
-         var itemNode = new Model({
+         var itemNode = new entity.Model({
             idProperty: 'id',
             rawData: {
                id: 'test',
@@ -55,7 +55,7 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
             }
          });
    
-         var itemLeaf = new Model({
+         var itemLeaf = new entity.Model({
             idProperty: 'id',
             rawData: {
                id: 'test',
@@ -150,14 +150,14 @@ define(['Controls/Selector/List/Container', 'WS.Data/Entity/Model'], function(Co
          };
          var selectCompleted = false;
          var selectionResult = null;
-         var selectedItem = new Model({
+         var selectedItem = new entity.Model({
             idProperty: 'id',
             rawData: {
                id: 'test',
                'Раздел@': false,
             }
          });
-         var otherSelectedItem = new Model({
+         var otherSelectedItem = new entity.Model({
             idProperty: 'id',
             rawData: {
                id: 'test1',

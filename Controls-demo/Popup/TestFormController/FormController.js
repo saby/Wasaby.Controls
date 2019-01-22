@@ -1,7 +1,7 @@
 define('Controls-demo/Popup/TestFormController/FormController', [
    'SBIS3.CONTROLS/FormController',
    'html!Controls-demo/Popup/TestFormController/FormController',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'SBIS3.CONTROLS/TextBox',
    'SBIS3.CONTROLS/NumberTextBox',
    'SBIS3.CONTROLS/Button',

@@ -4,12 +4,12 @@
 define('Controls-demo/List/ItemActions', [
    'Core/Control',
    'wml!Controls-demo/List/ItemActions/ItemActions',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/List/ItemActions/ItemActions'
 ], function(
    BaseControl,
    template,
-   MemorySource
+   source
 ) {
    'use strict';
    var showType = {
@@ -142,11 +142,11 @@ define('Controls-demo/List/ItemActions', [
                   description: 'пожалейте разрабочиков ' + i
                });
             }
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: srcData
             });
-            this._viewSource2 = new MemorySource({
+            this._viewSource2 = new source.Memory({
                idProperty: 'id',
                data: srcMore
             });
@@ -161,7 +161,7 @@ define('Controls-demo/List/ItemActions', [
                   description: 'в цикле задаю я ' + i
                });
             }
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: srcMore
             });

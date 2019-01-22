@@ -1,10 +1,10 @@
 define([
    'Controls/List/Remover',
-   'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/collection',
    'Core/Deferred',
    'Core/core-clone'
-], function(Remove, MemorySource, RecordSet, Deferred, cClone) {
+], function(Remove, sourceLib, collection, Deferred, cClone) {
    describe('Controls.List.Remover', function() {
       var remover;
 
@@ -20,11 +20,11 @@ define([
                id: 3,
                title: 'Третий'
             }],
-            rs = new RecordSet({
+            rs = new collection.RecordSet({
                idProperty: 'id',
                rawData: cClone(data)
             }),
-            source = new MemorySource({
+            source = new sourceLib.Memory({
                idProperty: 'id',
                data: cClone(data)
             });

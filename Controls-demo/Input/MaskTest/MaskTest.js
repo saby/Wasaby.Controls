@@ -1,7 +1,7 @@
 define('Controls-demo/Input/MaskTest/MaskTest', [
    'Core/Control',
    'wml!Controls-demo/Input/MaskTest/MaskTest',
-   'WS.Data/Source/Memory'
+   'Types/source'
 ], function(Control, template) {
 
    'use strict';

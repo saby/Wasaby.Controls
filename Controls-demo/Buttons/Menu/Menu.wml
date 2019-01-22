@@ -27,7 +27,7 @@
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>With icons</h4>
-      <Controls.Button.MenuButton
+      <Controls.Button.Menu
               keyProperty="id"
               style="primary"
               viewMode="button"
@@ -39,7 +39,7 @@
 
    <div class="ControlsDemo-ButtonsMenu__wrapper">
       <h4>With subparagraphs</h4>
-      <Controls.Button.MenuButton
+      <Controls.Button.Menu
               keyProperty="id"
               style="primary"
               viewMode="button"
@@ -203,7 +203,7 @@
               icon="icon-small icon-AddButtonNew"
               showHeader="{{false}}"
               source="{{_createMemory(_groupItems)}}"
-              groupMethod="{{_groupMethod}}"
+              groupingKeyCallback="{{_groupingKeyCallback}}"
               groupTemplate="wml!Controls/Dropdown/resources/template/defaultGroupTemplate"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
               tooltip="Add">
@@ -213,7 +213,7 @@
               viewMode="link"
               icon="icon-medium icon-Linked"
               source="{{_createMemory(_groupTextItems)}}"
-              groupMethod="{{_groupMethod}}"
+              groupingKeyCallback="{{_groupingKeyCallback}}"
               attr:class="ControlsDemo-ButtonsMenu__item ControlsDemo__groups"
               tooltip="Add">
          <ws:groupTemplate>

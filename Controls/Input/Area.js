@@ -3,7 +3,7 @@ define('Controls/Input/Area',
       'Core/IoC',
       'Core/constants',
       'Controls/Input/Text',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Input/Area/Area',
       'wml!Controls/Input/Area/Field',
       'wml!Controls/Input/Area/ReadOnly',
@@ -11,7 +11,7 @@ define('Controls/Input/Area',
 
       'css!theme?Controls/Input/Area/Area'
    ],
-   function(IoC, constants, Text, descriptor, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
+   function(IoC, constants, Text, entity, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
       'use strict';
 
       /**
@@ -264,7 +264,7 @@ define('Controls/Input/Area',
           * optionTypes.minLines = descriptor(Number);
           * optionTypes.maxLines = descriptor(Number);
           */
-         optionTypes.newLineKey = descriptor(String).oneOf([
+         optionTypes.newLineKey = entity.descriptor(String).oneOf([
             'enter',
             'ctrlEnter'
          ]);

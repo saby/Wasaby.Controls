@@ -2,8 +2,8 @@
  * Created by am.gerasimov on 06.03.2017.
  */
 /* global define, beforeEach, afterEach, describe, context, it, assert, $ws */
-define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet', 'WS.Data/Source/Memory', 'Core/core-instance', 'WS.Data/Types/Enum'],
-   function (ItemsUtil, RecordSet, MemorySource, cInstance, Enum) {
+define(['Controls/List/resources/utils/ItemsUtil', 'Types/collection', 'Types/source', 'Core/core-instance'],
+   function (ItemsUtil, collection, source, cInstance) {
 
       'use strict';
 
@@ -33,7 +33,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             },
             cfg1 = {
                itemsFilterMethod : filterFnc,
-               groupMethod: groupFnc
+               groupingKeyCallback: groupFnc
             };
          });
          
@@ -47,7 +47,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             });
 
             it('Flat display Recordset', function () {
-               var rs = new RecordSet({
+               var rs = new collection.RecordSet({
                   rawData: data,
                   idProperty : 'id'
                });
@@ -58,7 +58,7 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             });
 
             it('getPropertyValue', function () {
-               var rs = new RecordSet({
+               var rs = new collection.RecordSet({
                   rawData: data,
                   idProperty : 'id'
                });
@@ -74,11 +74,11 @@ define(['Controls/List/resources/utils/ItemsUtil', 'WS.Data/Collection/RecordSet
             });
 
             it('getDisplayItemById', function () {
-               var rs = new RecordSet({
+               var rs = new collection.RecordSet({
                   rawData: data,
                      idProperty : 'id'
                }),
-               myEnum = new Enum({
+               myEnum = new collection.Enum({
                   dictionary: ['Первый', 'Второй', 'Третий']
                });
 

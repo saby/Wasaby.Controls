@@ -1,5 +1,1 @@
-<ws:partial template="wml!Controls/Dropdown/resources/template/defaultHeadTemplate">
-   <ws:headContentTemplate>
-      <ws:partial template="wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate" caption="Add" />
-   </ws:headContentTemplate>
-</ws:partial>
+<ws:partial template="wml!Controls/Dropdown/resources/template/defaultHeadTemplate" caption="Add"/>

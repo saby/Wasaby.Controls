@@ -6,7 +6,7 @@ define('Controls/Input/Time/Interval', [
     * Only ISO_8601 dates can be entered.
     *
     * @class Controls/Input/Time/Interval
-    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/Input/interface/IInputField
     * @mixes Controls/Input/interface/IValidation
     * @mixes Controls/Input/interface/IInputTag
     * @control

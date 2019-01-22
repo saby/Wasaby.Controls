@@ -58,14 +58,24 @@ const deprecatedClassesOfButton = {
    }
 };
 
+interface ButtonClass {
+   viewMode: string;
+   style: string;
+   buttonAdd: boolean;
+}
+
 export default {
    /**
     * Получить текущий стиль кнопки
     * @param {String} style
-    * @returns {Object}
+    * @returns {ButtonClass}
     */
    getCurrentButtonClass: function (style) {
-      const currentButtonClass = {};
+      const currentButtonClass: ButtonClass = {
+         viewMode: '',
+         style: '',
+         buttonAdd: false
+      };
       if (deprecatedClassesOfButton.hasOwnProperty(style)) {
          currentButtonClass.viewMode = deprecatedClassesOfButton[style].type;
          currentButtonClass.style = deprecatedClassesOfButton[style].style;

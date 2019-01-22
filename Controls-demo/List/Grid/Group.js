@@ -1,13 +1,13 @@
 define('Controls-demo/List/Grid/Group', [
    'Core/Control',
    'wml!Controls-demo/List/Grid/Group',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/List/Grid/DemoGroupTemplate',
    'wml!Controls-demo/List/Grid/DemoGroupColumnTemplate',
    'Controls/Decorator/Money',
    'wml!Controls/List/GroupContentResultsTemplate',
    'wml!Controls-demo/List/Grid/DemoGroupHeaderTemplate'
-], function (BaseControl, template, MemorySource) {
+], function (BaseControl, template, source) {
    'use strict';
    var
       ModuleClass = BaseControl.extend({
@@ -24,7 +24,7 @@ define('Controls-demo/List/Grid/Group', [
             });
          },
 
-         _viewSource: new MemorySource({
+         _viewSource: new source.Memory({
             idProperty: 'id',
             data: [
                {
@@ -85,7 +85,7 @@ define('Controls-demo/List/Grid/Group', [
             ]
          }),
 
-         _itemsGroupMethod: function(item) {
+         _groupingKeyCallback: function(item) {
             return item.get('type');
          },
          _gridColumns: [

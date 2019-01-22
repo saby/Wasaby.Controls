@@ -69,6 +69,24 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
+         it('getMaxZIndexPopupIdForActivate', function() {
+            let Manager = getManager();
+            let id1 = Manager.show({}, new BaseController());
+            let id2 = Manager.show({autofocus: false}, new BaseController());
+            let id3 = Manager.show({}, new BaseController());
+
+            let maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
+            assert.equal(maxPopupId, id3);
+            Manager.remove(id3);
+
+            maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
+            assert.equal(maxPopupId, id1);
+            Manager.remove(id1);
+
+            maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
+            assert.equal(maxPopupId, null);
+         });
+
          it('find popup', () => {
             let Manager = getManager();
             id = Manager.show({

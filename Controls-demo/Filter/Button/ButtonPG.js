@@ -2,7 +2,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
    [
       'Core/Control',
       'wml!Controls-demo/Filter/Button/ButtonPG',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -16,7 +16,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
       'Controls-demo/Filter/Button/panelOptions/HistorySourceDemo'
    ],
 
-   function(Control, template, MemorySource, config) {
+   function(Control, template, sourceLib, config) {
       'use strict';
 
       var FilterButtonPG = Control.extend({
@@ -38,7 +38,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: 'All',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: '0', title: 'All topics' },
@@ -54,7 +54,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: '',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: '0', title: 'All types' },
@@ -70,7 +70,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: 'All',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: '0', title: 'All' },
@@ -83,7 +83,7 @@ define('Controls-demo/Filter/Button/ButtonPG',
                   value: ['0'],
                   resetValue: ['0'],
                   textValue: '',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: '0', title: 'All states' },

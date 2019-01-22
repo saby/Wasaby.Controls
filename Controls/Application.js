@@ -239,6 +239,29 @@ define('Controls/Application',
             }
          },
 
+
+         // todo: удалить из application по ошибке https://online.sbis.ru/opendoc.html?guid=4713d692-c2c5-4e9c-837f-ff4f54117f85
+         _popupBeforeDestroyedHandler: function(event, popupCfg, popupList, popupContainer) {
+            if (this._activeInfobox) {
+               // If infobox is displayed inside the popup, then close infobox.
+               if (this._needCloseInfoBox(this._activeInfobox, popupContainer)) {
+                  this._activeInfobox = null;
+                  this._children.infoBoxOpener.close(0);
+               }
+            }
+         },
+
+         _needCloseInfoBox: function(infobox, popup) {
+            var parent = infobox.parentElement;
+            while (parent) {
+               if (parent === popup) {
+                  return true;
+               }
+               parent = parent.parentElement;
+            }
+            return false;
+         },
+
          _beforeMount: function(cfg, context, receivedState) {
             var self = this,
                def = new Deferred();

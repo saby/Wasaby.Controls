@@ -10,11 +10,11 @@ define('Controls/Popup/Opener/Confirmation',
       /**
        * Component that opens the confirmation popup.
        * @class Controls/Popup/Opener/Confirmation
-       * @mixes Controls/interface/IConfirmationOptions
        * @control
        * @public
        * @category Popup
        * @author Красильников А.С.
+       * @demo Controls-demo/Popup/Opener/ConfirmationPG
        */
 
       /**
@@ -100,7 +100,7 @@ define('Controls/Popup/Opener/Confirmation',
          /**
           * Open confirmation popup.
           * @function Controls/Popup/Opener/Confirmation#open
-          * @param {PopupOptions[]} popupOptions Confirmation options.
+          * @param {popupOptions[]} popupOptions Confirmation options.
           * @returns {Deferred} The deferral will end with the result when the user closes the popup.
           * @remark
           * If you want use custom layout in the dialog you need to open popup via {@link dialog opener} using the basic template {@link ConfirmationTemplate}.
@@ -119,7 +119,7 @@ define('Controls/Popup/Opener/Confirmation',
           *
           *        _open() {
           *           var config= {
-          *              message: 'Сохранить изменения?'
+          *              message: 'Save changes?'
           *              type: 'yesnocancel'
           *           }
           *           this._children.confirmationOpener.open(config)
@@ -154,4 +154,18 @@ define('Controls/Popup/Opener/Confirmation',
       };
 
       return Confirmation;
+
+      /**
+       * @typedef {Object} popupOptions
+       * @description Confirmation configuration.
+       * @property {String} type Type of dialog.
+       * @property {String} style Confirmation display style.
+       * @property {String} message Main text.
+       * @property {String} details Additional text.
+       * @property {String} yesCaption Сonfirmation button text.
+       * @property {String} noCaption Negation button text.
+       * @property {String} cancelCaption Cancel button text.
+       * @property {String} okCaption Accept text button.
+       */
+
    });

@@ -1,13 +1,13 @@
 define('Controls/List/BaseControl/SelectionController', [
    'Core/Control',
    'Controls/Utils/ArraySimpleValuesUtil',
-   'WS.Data/Collection/IBind',
+   'Types/collection',
    'Core/helpers/Object/isEqual',
    'Core/Deferred'
 ], function(
    Control,
    ArraySimpleValuesUtil,
-   IBind,
+   collection,
    isEqual,
    Deferred
 ) {
@@ -70,7 +70,7 @@ define('Controls/List/BaseControl/SelectionController', [
       },
 
       onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems) {
-         if (action === IBind.ACTION_REMOVE) {
+         if (action === collection.IObservable.ACTION_REMOVE) {
             this._multiselection.unselect(_private.getItemsKeys(removedItems));
          }
          _private.notifyAndUpdateSelection(this, this._options.selectedKeys, this._options.excludedKeys);

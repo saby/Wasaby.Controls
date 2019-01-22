@@ -1,17 +1,15 @@
 define('Controls-demo/Combobox/historySourceCombobox',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
       'Controls/History/Service',
       'Core/Deferred',
-      'WS.Data/Source/DataSet',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Adapter/Sbis',
-      'WS.Data/Query/Query',
+      'Types/collection',
+      'Types/entity',
+      'Types/source',
       'Controls/History/Source'
    ],
 
-   function(Control, Memory, HistoryService, Deferred, DataSet, RecordSet, SbisAdapter, Query, HistorySource) {
+   function(Control, HistoryService, Deferred, collection, entity, source, HistorySource) {
       'use strict';
 
       var items = [
@@ -37,15 +35,15 @@ define('Controls-demo/Combobox/historySourceCombobox',
       };
 
       function createRecordSet(data) {
-         return new RecordSet({
+         return new collection.RecordSet({
             rawData: data,
             idProperty: 'ObjectId',
-            adapter: new SbisAdapter()
+            adapter: new entity.adapter.Sbis()
          });
       }
 
       function createMemory() {
-         var srcData = new DataSet({
+         var srcData = new source.DataSet({
             rawData: {
                frequent: createRecordSet(),
                pinned: createRecordSet(),
@@ -55,7 +53,7 @@ define('Controls-demo/Combobox/historySourceCombobox',
             idProperty: 'ObjectId'
          });
          var hs = new HistorySource({
-            originSource: new Memory({
+            originSource: new source.Memory({
                idProperty: 'id',
                data: items
             }),
@@ -64,7 +62,7 @@ define('Controls-demo/Combobox/historySourceCombobox',
                pinned: true
             })
          });
-         var query = new Query().where({
+         var query = new source.Query().where({
             $_history: true
          });
          hs.historySource.query = function() {

@@ -1,9 +1,8 @@
 define('Controls/List/resources/utils/ItemsUtil', [
-   'WS.Data/Display/Display',
+   'Types/display',
    'Core/core-instance',
-   'WS.Data/Utils',
-   'WS.Data/Display/Enum'
-], function(Display, cInstance, DataUtils) {
+   'Types/util'
+], function(displayLib, cInstance, Utils) {
    var ItemsUtil = {
 
       getDefaultDisplayFlat: function(items, cfg, filter) {
@@ -12,18 +11,21 @@ define('Controls/List/resources/utils/ItemsUtil', [
          if (cfg.groupMethod) {
             projCfg.group = cfg.groupMethod;
          }
+         if (cfg.groupingKeyCallback) {
+            projCfg.group = cfg.groupingKeyCallback;
+         }
          if (cfg.loadItemsStrategy === 'merge') {
             projCfg.unique = true;
          }
          projCfg.filter = filter;
-         return Display.getDefaultDisplay(items, projCfg);
+         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
       },
 
       getPropertyValue: function(itemContents, field) {
          if (!(itemContents instanceof Object)) {
             return itemContents;
          } else {
-            return DataUtils.getItemPropertyValue(itemContents, field);
+            return Utils.object.getPropertyValue(itemContents, field);
          }
       },
 
