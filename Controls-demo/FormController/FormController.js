@@ -136,7 +136,7 @@ define('Controls-demo/FormController/FormController', [
          this._updateValuesByRecord(record);
       },
       _readFailedHandler: function(e, err) {
-         this._alert('FormController demo: read successed');
+         this._alert('FormController demo: read failed');
          this._updateValuesByRecord(new entity.Model());
       },
       _deleteSuccessedHandler: function(e) {
