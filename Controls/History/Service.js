@@ -1,17 +1,15 @@
 define('Controls/History/Service', [
    'Core/core-extend',
-   'WS.Data/Entity/OptionsMixin',
-   'WS.Data/Source/ISource',
-   'WS.Data/Source/SbisService',
+   'Types/entity',
+   'Types/source',
    'Controls/History/Constants',
    'Core/Deferred',
    'Core/core-clone',
    'Core/constants'
 ], function(
    CoreExtend,
-   OptionsMixin,
-   ISource,
-   SbisService,
+   entity,
+   source,
    Constants,
    Deferred,
    coreClone,
@@ -23,9 +21,9 @@ define('Controls/History/Service', [
      * Source working with the service of InputHistory
      *
      * @class Controls/History/Service
-     * @extends WS.Data/Entity/Abstract
-     * @implements WS.Data/Source/ISource
-     * @mixes WS.Data/Entity/OptionsMixin
+     * @extends Types/entity:Abstract
+     * @implements Types/source:ISource
+     * @mixes Types/entity:OptionsToPropertyMixin
      * @public
      * @author Герасимов А.М.
      * @example
@@ -73,7 +71,7 @@ define('Controls/History/Service', [
    var _private = {
       getHistoryDataSource: function(self) {
          if (!self._historyDataSource) {
-            self._historyDataSource = new SbisService({
+            self._historyDataSource = new source.SbisService({
                endpoint: {
                   address: '/input-history/service/',
                   contract: 'InputHistory'
@@ -128,7 +126,7 @@ define('Controls/History/Service', [
       }
    };
 
-   var Service = CoreExtend.extend([ISource, OptionsMixin], {
+   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin], {
       _historyDataSource: null,
       _historyId: null,
       _historyIds: null,

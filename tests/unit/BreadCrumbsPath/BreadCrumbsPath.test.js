@@ -4,14 +4,14 @@ define([
    'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred',
-   'WS.Data/Entity/Model'
+   'Types/entity'
 ], function(
    Path,
    BreadCrumbsUtil,
    getWidthUtil,
    FontLoadUtil,
    Deferred,
-   Model
+   entity
 ) {
    describe('Controls.BreadCrumbs.Path', function() {
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
@@ -74,12 +74,13 @@ define([
          path = new Path();
          path.saveOptions({
             items: data.map(function(item) {
-               return new Model({
+               return new entity.Model({
                   rawData: item
                });
             }),
             keyProperty: 'id',
-            parentProperty: 'parent'
+            parentProperty: 'parent',
+            root: null
          });
       });
       afterEach(function() {
@@ -157,7 +158,7 @@ define([
       it('_onBackButtonClick', function() {
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(path._options.items[path._options.items.length - 1].get('parent'), args[0]);
+               assert.equal(path._options.items[path._options.items.length - 2].get('parent'), args[0].get('parent'));
             }
          };
          path._onBackButtonClick();
@@ -168,7 +169,7 @@ define([
 
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(root, args[0]);
+               assert.equal(root, args[0].get('id'));
             }
          };
          path._onHomeClick();

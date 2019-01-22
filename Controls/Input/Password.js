@@ -1,15 +1,15 @@
 define('Controls/Input/Password',
    [
-      'Core/Control',
-      'WS.Data/Type/descriptor',
-      'Controls/Utils/tmplNotify',
-      'wml!Controls/Input/Password/Password',
+      'Controls/Input/Base',
+      'Types/entity',
       'Controls/Input/Password/ViewModel',
+
+      'wml!Controls/Input/Password/PasswordVisibilityButton',
 
       'css!theme?Controls/Input/Password/Password'
    ],
 
-   function(Control, descriptor, tmplNotify, template, ViewModel) {
+   function(Base, entity, ViewModel, passwordVisibilityButtonTemplate) {
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
@@ -42,70 +42,92 @@ define('Controls/Input/Password',
 
       'use strict';
 
-      var PasswordInput = Control.extend({
-         _template: template,
-
-         _notifyHandler: tmplNotify,
-
-         _passwordVisible: false,
-
-         _getType: function() {
-            return this._passwordVisible ? 'text' : 'password';
+      var _private = {
+         calculateType: function(passwordVisible, autoComplete) {
+            return passwordVisible || !autoComplete ? 'text' : 'password';
          },
 
-         _beforeMount: function(options) {
-            this._simpleViewModel = new ViewModel({
-               value: options.value,
-               autoComplete: options.autocomplete,
-               passwordVisible: this._passwordVisible
-            });
-
-            /**
-             * Browsers use autocomplete to the fields with the previously stored name.
-             * Therefore, if all of the fields will be one name, then AutoFill will apply to the first field.
-             * To avoid this, we will translate the name of the control to the name of the tag.
-             * https://habr.com/company/mailru/blog/301840/
-             */
-            this._inputName = options.name || 'input';
-         },
-
-         _beforeUpdate: function(newOptions) {
-            this._simpleViewModel.updateOptions({
-               value: newOptions.value,
-               autoComplete: newOptions.autocomplete,
-               passwordVisible: this._passwordVisible
-            });
-         },
-
-         _toggleVisibilityHandler: function() {
-            this._passwordVisible = !this._passwordVisible;
-         },
-
-         _isVisibleButton: function() {
+         isVisibleButton: function() {
             return !this._options.readOnly && this._options.value && this._options.revealable;
          },
 
-         _calculateType: function() {
-            return this._passwordVisible || !this._options.autocomplete ? 'text' : 'password';
+         isVisiblePassword: function() {
+            return this._passwordVisible;
+         }
+      };
+
+      var Password = Base.extend({
+         _passwordVisible: false,
+
+         _getViewModelOptions: function(options) {
+            return {
+               autoComplete: options.autoComplete,
+               passwordVisible: this._passwordVisible
+            };
+         },
+
+         _getViewModelConstructor: function() {
+            return ViewModel;
+         },
+
+         _initProperties: function(options) {
+            Password.superclass._initProperties.apply(this, arguments);
+
+            this._type = _private.calculateType(this._passwordVisible, options.autoComplete);
+
+            this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
+            this._afterFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
+            this._afterFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
+         },
+
+         _getTooltip: function() {
+            /**
+             * If the password is hidden, there should be no tooltip. Otherwise, the tooltip is defined as usual.
+             */
+            if (this._passwordVisible) {
+               return Password.superclass._getTooltip.apply(this, arguments);
+            }
+
+            return '';
+         },
+
+         _toggleVisibilityHandler: function() {
+            var passwordVisible = !this._passwordVisible;
+
+            this._passwordVisible = passwordVisible;
+            this._type = _private.calculateType(passwordVisible, this._options.autoComplete);
+         },
+
+         _getDisplayValue: function() {
+            var passwordVisible = this._passwordVisible;
+            var autoComplete = this._options.autoComplete;
+            var displayValue = this._viewModel.displayValue;
+
+            /**
+             * If auto-completion is true, then the displayed value can be saved to the browser history.
+             * Therefore, the field must have a value that is not replaced by •.
+             */
+            return autoComplete || passwordVisible ? displayValue : '•'.repeat(displayValue.length);
          }
       });
 
-      PasswordInput.getDefaultOptions = function() {
-         return {
-            value: '',
-            revealable: true,
-            autocomplete: true,
-            selectOnClick: false
-         };
+      Password.getDefaultOptions = function() {
+         var defaultOptions = Base.getDefaultOptions();
+
+         defaultOptions.value = '';
+         defaultOptions.revealable = true;
+         defaultOptions.autoComplete = true;
+
+         return defaultOptions;
       };
 
-      PasswordInput.getOptionTypes = function getOptionsTypes() {
-         return {
+      Password.getOptionTypes = function getOptionsTypes() {
+         var optionTypes = Base.getOptionTypes();
 
-            /* placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421 */
-            revealable: descriptor(Boolean)
-         };
+         optionTypes.revealable = entity.descriptor(Boolean);
+
+         return optionTypes;
       };
 
-      return PasswordInput;
+      return Password;
    });

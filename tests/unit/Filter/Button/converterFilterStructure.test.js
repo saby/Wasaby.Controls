@@ -1,12 +1,12 @@
 define(
    [
       'Controls/Filter/Button/converterFilterStructure',
-      'WS.Data/Entity/Record',
-      'WS.Data/Collection/RecordSet'
+      'Types/entity',
+      'Types/collection'
    ],
-   function (converterFilterStructure, Record, RecordSet) {
+   function (converterFilterStructure, entity, collection) {
       describe('converterFilter', function () {
-         var initRecordItem = new RecordSet({
+         var initRecordItem = new collection.RecordSet({
             rawData: [
                {
                   id: '1',

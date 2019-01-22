@@ -1,9 +1,9 @@
 define([
    'Controls/BreadCrumbs/View',
-   'WS.Data/Entity/Model'
+   'Types/entity'
 ], function(
    BreadCrumbsView,
-   Model
+   entity
 ) {
    describe('Controls.BreadCrumbs.View', function() {
       var bc, data;
@@ -43,7 +43,7 @@ define([
          bc = new BreadCrumbsView();
          bc.saveOptions({
             items: data.map(function(item) {
-               return new Model({
+               return new entity.Model({
                   rawData: item
                });
             }),
@@ -68,7 +68,7 @@ define([
       describe('_onItemClick', function() {
          it('item', function() {
             var itemData = {
-               item: new Model({
+               item: new entity.Model({
                   rawData: {
                      id: 2,
                      title: 'Notebooks 2'
@@ -77,7 +77,7 @@ define([
             };
             bc._notify = function(e, args) {
                if (e === 'itemClick') {
-                  assert.equal(itemData.item.get('id'), args[0]);
+                  assert.equal(itemData.item.get('id'), args[0].get('id'));
                }
             };
             bc._onItemClick({}, itemData);
@@ -120,13 +120,13 @@ define([
       it('_onResult', function(done) {
          var args = {
             action: 'itemClick',
-            data: [new Model({
+            data: [new entity.Model({
                rawData: data[0]
             })]
          };
          bc._notify = function(e, eventArgs) {
             if (e === 'itemClick') {
-               assert.equal(bc._options.items[0].get('id'), eventArgs[0]);
+               assert.equal(bc._options.items[0].get('id'), eventArgs[0].get('id'));
             }
          };
          bc._children = {

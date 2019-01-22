@@ -3,7 +3,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/Toolbar/resources/itemTemplate',
       'wml!Controls-demo/Toolbar/resources/itemTemplateContent',
 
@@ -12,7 +12,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, MemorySource, itemTmpl) {
+   function(Control, template, config, sourceLib, itemTmpl) {
       'use strict';
       var ToolbarPG = Control.extend({
          _template: template,
@@ -21,7 +21,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
          _dataObject: null,
          _componentOptions: null,
          _beforeMount: function() {
-            this._source2 = new MemorySource({
+            this._source2 = new sourceLib.Memory({
                title: 'source1',
                idProperty: 'id',
                data: [
@@ -81,7 +81,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                   }
                ]
             });
-            this._source = new MemorySource({
+            this._source = new sourceLib.Memory({
                title: 'source2',
                idProperty: 'id',
                displayProperty: 'caption',

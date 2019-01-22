@@ -4,22 +4,22 @@
 define('Controls/Filter/Button/History/List', [
    'Core/Control',
    'wml!Controls/Filter/Button/History/List',
-   'WS.Data/Chain',
+   'Types/chain',
    'Core/helpers/Object/isEqual',
-   'WS.Data/Utils',
+   'Types/util',
    'Controls/Filter/Button/History/resources/historyUtils',
    'css!theme?Controls/Filter/Button/History/List'
-], function(BaseControl, template, Chain, isEqual, Utils, historyUtils) {
+], function(BaseControl, template, chain, isEqual, Utils, historyUtils) {
    'use strict';
 
    var MAX_NUMBER_ITEMS = 5;
 
-   var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+   var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
    var _private = {
       getStringHistoryFromItems: function(items) {
          var textArr = [];
-         Chain(items).each(function(elem) {
+         chain.factory(items).each(function(elem) {
             var value = getPropValue(elem, 'value'),
                resetValue = getPropValue(elem, 'resetValue'),
                textValue = getPropValue(elem, 'textValue'),
@@ -81,7 +81,7 @@ define('Controls/Filter/Button/History/List', [
 
       _getText: function(items, historySource) {
          var itemsText = {};
-         Chain(items).each(function(item, index) {
+         chain.factory(items).each(function(item, index) {
             var text = '';
             var historyItems = historySource.getDataObject(item.get('ObjectData'));
             if (historyItems) {

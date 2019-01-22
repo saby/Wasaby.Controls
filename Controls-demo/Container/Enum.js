@@ -5,10 +5,10 @@ define('Controls-demo/Container/Enum',
    [
       'Core/Control',
       'wml!Controls-demo/Container/Enum',
-      'WS.Data/Type/Enum'
+      'Types/collection'
    ],
 
-   function(Control, template, Enum) {
+   function(Control, template, collection) {
 
 
       var EnumCont = Control.extend({
@@ -18,7 +18,7 @@ define('Controls-demo/Container/Enum',
 
          constructor: function() {
             EnumCont.superclass.constructor.apply(this, arguments);
-            this._enumInst = new Enum({
+            this._enumInst = new collection.Enum({
                dictionary: ['Первый', 'Второй', 'Третий'],
                index: 1
             });

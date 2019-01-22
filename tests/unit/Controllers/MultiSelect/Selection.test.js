@@ -3,10 +3,10 @@
  */
 define([
    'Controls/Controllers/Multiselect/Selection',
-   'WS.Data/Collection/RecordSet'
+   'Types/collection'
 ], function(
    Selection,
-   RecordSet
+   collection
 ) {
    describe('Controls.Controllers.Multiselect.Selection', function() {
       var
@@ -28,7 +28,7 @@ define([
          }, {
             'id': 7
          }],
-         items = new RecordSet({
+         items = new collection.RecordSet({
             rawData: data,
             idProperty: 'id'
          });
@@ -284,7 +284,7 @@ define([
          cfg = {
             selectedKeys: [],
             excludedKeys: [],
-            items: new RecordSet({
+            items: new collection.RecordSet({
                rawData: [],
                idProperty: 'id'
             }),
