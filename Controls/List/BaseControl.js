@@ -414,17 +414,24 @@ define('Controls/List/BaseControl', [
       showIndicator: function(self, direction) {
          self._loadingState = direction || 'all';
          self._loadingIndicatorState = self._loadingState;
-         setTimeout(function() {
-            if (self._loadingState) {
-               self._showLoadingIndicatorImage = true;
-               self._forceUpdate();
-            }
-         }, 2000);
+         if (!self._loadingIndicatorTimer) {
+            self._loadingIndicatorTimer = setTimeout(function() {
+               self._loadingIndicatorTimer = null;
+               if (self._loadingState) {
+                  self._showLoadingIndicatorImage = true;
+                  self._forceUpdate();
+               }
+            }, 2000);
+         }
       },
 
       hideIndicator: function(self) {
          self._loadingState = null;
          self._showLoadingIndicatorImage = false;
+         if (self._loadingIndicatorTimer) {
+            clearTimeout(self._loadingIndicatorTimer);
+            self._loadingIndicatorTimer = null;
+         }
          if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._forceUpdate();
@@ -662,6 +669,7 @@ define('Controls/List/BaseControl', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+      _loadingIndicatorTimer: null,
 
       _pagingCfg: null,
       _pagingVisible: false,
