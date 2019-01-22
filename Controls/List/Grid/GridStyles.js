@@ -13,6 +13,7 @@ define('Controls/List/Grid/GridStyles', [],
     * @css @font-size_Grid-cell_s S font-size of grid text content
     * @css @font-size_Grid-cell_m M font-size of grid text content
     * @css @font-size_Grid-cell_l L font-size of grid text content
+    * @css @font-size_Grid-cell_xl XL font-size of grid text content
     * @css @background-color_Grid-header background color of grid header
     * @css @background-color_Grid-row-sticky background color of sticky grid row
     * @css @background-color_Grid-row_hover background color of hovered grid row
@@ -26,8 +27,6 @@ define('Controls/List/Grid/GridStyles', [],
     * @css @color_Grid-selection-marker color of marker
     * @css @width_Grid-cell-checkbox width of checkboxes
     * @css @box-shadow_Grid-masterList-item_selected shadow of selected item in master list
-    * @css @spacing_Grid-header-between-content-borderTop spacing between header content and top grid border
-    * @css @spacing_Grid-header-between-content-borderBottom spacing between footer content and bottom grid border
     * @css @spacing_Grid-row-between-content-borderTop_s S spacing between row content and top row border
     * @css @spacing_Grid-row-between-content-borderBottom_s S spacing between row content and bottom row border
     * @css @spacing_Grid-row-between-content-borderTop_l L spacing between row content and top row border

@@ -14,10 +14,7 @@
 
 .controls-BreadCrumbsPath__backButton {
    white-space: nowrap;
-}
-
-.controls-BreadCrumbsPath__backButton_inHeader {
-   margin-left: -@width_CheckBox__clickArea;
+   max-width: 100%;
 }
 
 .controls-BreadCrumbsPath__home {
@@ -31,6 +28,7 @@
    display: inline-flex;
    align-items: baseline;
    padding-right: @spacing_Path-between-home-and-backButton;
+   max-width: 100%;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
@@ -71,10 +69,14 @@
    margin-left: @spacing_Path-between-home-and-backButton;
 }
 
-.controls-BreadCrumbsPath__backButton_short {
+.controls-BreadCrumbsPath__backButton_short,
+.controls-BreadCrumbsPath__breadCrumbs_short {
    flex-shrink: 1;
-   min-width: @min-width_BackButton_short;
    overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__backButton_short {
+   min-width: @min-width_BackButton_short;
 }
 
 .controls-BreadCrumbsPath__backButton_half,

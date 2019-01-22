@@ -1,12 +1,12 @@
 <div>
-    <ws:if data="{{_visibleItems || _options.rootVisible}}">
+    <ws:if data="{{_options.header && _breadCrumbsItems || !_options.header && _options.items || _options.rootVisible}}">
         <div class="controls-BreadCrumbsPath{{_options.header ? ' controls-BreadCrumbsPath__twoRows' : ''}}">
             <div class="controls-BreadCrumbsPath__wrapper">
                 <ws:if data="{{ _backButtonCaption && !_options.header }}">
                     <Controls.BreadCrumbs.Path._Back backButtonCaption="{{_backButtonCaption}}"
                                                      backButtonClass="{{_backButtonClass}}"
-                                                     counterCaption="{{ _options.counterCaption }}"
-                                                     showArrowOutsideOfBackButton="{{_breadCrumbsItems || _options.rootVisible}}"
+                                                     counterCaption="{{ _getCounterCaption(_options.items) }}"
+                                                     showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
                                                      backButtonStyle="{{ _options.backButtonStyle }}"
                                                      on:backButtonClick="_onBackButtonClick()"
                                                      on:arrowClick="_onArrowClick()"/>

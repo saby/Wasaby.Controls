@@ -9,7 +9,7 @@
                                 style="disabled"/>
    </ws:if>
    <div class="controls-BreadCrumbsPath__backButtonArrow icon-View
-               {{_options.showArrowOutsideOfBackButton ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}
+               {{_options.showArrowOutsideOfBackButton ? ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton' : ''}}
                {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly'}}"
         title="{[Подробнее]}"
         on:click="_onArrowClick()"></div>

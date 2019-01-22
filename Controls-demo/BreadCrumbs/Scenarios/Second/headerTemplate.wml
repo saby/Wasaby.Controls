@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/List/Grid/HeaderContent" attr:class="controls-Grid__header-cell_spacing_money" colData="{{colData}}"/>

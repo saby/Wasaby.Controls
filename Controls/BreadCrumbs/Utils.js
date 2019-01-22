@@ -26,7 +26,7 @@ define('Controls/BreadCrumbs/Utils', [
          }
          if (window) {
             ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>');
-            BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
+            BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>') + ARROW_WIDTH;
             DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
                itemData: {
                   getPropValue: ItemsUtil.getPropertyValue,
@@ -130,11 +130,14 @@ define('Controls/BreadCrumbs/Utils', [
                      self._visibleItems.push(_private.getItemData(j, items, j === shrinkedItemIndex));
                   }
 
+                  //TODO: если удастся избавить хлебные крошки от displayProperty, то можно снести этот костыль
+                  //Задача на избавление: https://online.sbis.ru/opendoc.html?guid=57359409-a7db-4f0a-affd-5c2f4ceaef3f
+                  var dotsItem = {};
+                  dotsItem[self._options.displayProperty] = '...';
+
                   self._visibleItems.push({
                      getPropValue: ItemsUtil.getPropertyValue,
-                     item: {
-                        title: '...'
-                     },
+                     item: dotsItem,
                      isDots: true,
                      hasArrow: true
                   });

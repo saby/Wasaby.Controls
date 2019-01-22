@@ -1,4 +1,4 @@
-<div class="controls-Grid__header-cell__content">
+<div class="controls-Grid__header-cell__content controls-Grid__row-header__content_baseline">
     <ws:if data="{{colData.column.sortingProperty}}">
         <Controls.List.Grid.SortButton
                 caption="{{colData.column.title}}"

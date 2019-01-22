@@ -16,8 +16,6 @@
    z-index: 1;
    top: 0;
    background-color: @background-color_Grid-header;
-   padding-top: @spacing_Grid-header-between-content-borderTop;
-   padding-bottom: @spacing_Grid-header-between-content-borderBottom;
 }
 
 .controls-Grid__header-cell_spacing_money:after {
@@ -197,6 +195,11 @@
 .controls-Grid__row-cell__content_baseline_S:before {
    content: '\200b';
    font-size: @font-size_Grid-cell_s;
+}
+
+.controls-Grid__row-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-cell_xl;
 }
 
 .controls-Grid__cell_spacingFirstCol_default, .controls-GridView__footer__paddingLeft_default {

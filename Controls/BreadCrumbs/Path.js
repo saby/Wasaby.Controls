@@ -50,24 +50,25 @@ define('Controls/BreadCrumbs/Path', [
             availableWidth,
             homeWidth;
 
-         self._header = _private.getHeader(options);
+         self._header = _private.getHeader(self, options);
          self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty);
          if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
+            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
             if (!options.header) {
                backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
                   _options: {
                      backButtonCaption: self._backButtonCaption,
-                     counterCaption: options.counterCaption
+                     counterCaption: self._getCounterCaption(options.items)
                   }
                }));
-               homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
-               _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems), backButtonWidth, containerWidth - homeWidth);
+               _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty), backButtonWidth, containerWidth - homeWidth);
 
                availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
                BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
             } else {
-               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth);
+               BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth - homeWidth);
+               self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
             }
          } else {
             self._visibleItems = null;
@@ -76,18 +77,16 @@ define('Controls/BreadCrumbs/Path', [
             self._breadCrumbsClass = '';
          }
       },
-
-      getHeader: function(options) {
+      getHeader: function(self, options) {
          var newHeader = options.header;
          if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
                template: PathBack,
                templateOptions: {
-                  backButtonClass: 'controls-BreadCrumbsPath__backButton_inHeader',
                   backButtonStyle: options.backButtonStyle,
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
-                  counterCaption: options.counterCaption
+                  counterCaption: self._getCounterCaption(options.items)
                },
                width: options.header[0].width
             };
@@ -143,7 +142,7 @@ define('Controls/BreadCrumbs/Path', [
       _oldWidth: 0,
 
       _beforeMount: function(options) {
-         this._header = _private.getHeader(options);
+         this._header = _private.getHeader(this, options);
       },
 
       _afterMount: function() {
@@ -162,7 +161,7 @@ define('Controls/BreadCrumbs/Path', [
          var containerWidth = this._container.clientWidth;
          if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth) || this._options.header !== newOptions.header) {
             this._oldWidth = containerWidth;
-            _private.calculateItems(this, newOptions, containerWidth);
+            _private.calculateItems(this, newOptions, containerWidth - 12);
          }
       },
 
@@ -194,6 +193,10 @@ define('Controls/BreadCrumbs/Path', [
       _onArrowClick: function(e) {
          this._notify('arrowActivated');
          e.stopPropagation();
+      },
+
+      _getCounterCaption: function(items) {
+         return items[items.length - 1].get('counterCaption');
       }
    });
 

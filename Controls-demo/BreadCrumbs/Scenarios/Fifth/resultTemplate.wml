@@ -1,0 +1,8 @@
+<ws:if data="{{ column.result }}">
+   <Controls.Decorator.Money number="{{column.result}}"
+                             style="accentResults"
+                             delimiters="{{true}}"/>
+</ws:if>
+<ws:else>
+<invisible-node />
+</ws:else>
