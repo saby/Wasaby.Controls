@@ -58,18 +58,21 @@ define(
          it('_beforeMount', function() {
             var menu = getHistoryMenu(menuConfig);
             menu._beforeMount(menuConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_link_iconSize-small_popup');
          });
          it('_beforeUpdate', function() {
             var menu = getHistoryMenu(menuConfig);
             var newConfig = Clone(menuConfig);
             newConfig.viewMode = 'button';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_small_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_iconSize-small_popup');
             newConfig.size = 'm';
             newConfig.icon = '';
             menu._beforeUpdate(newConfig);
-            assert.equal(menu._offsetClassName, 'controls-MenuButton_button__m_popup');
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_popup');
+            newConfig.size = 's';
+            menu._beforeUpdate(newConfig);
+            assert.equal(menu._offsetClassName, 'controls-MenuButton_button_popup');
          });
          it('_onPinClickHandler', function() {
             var newConfig = Clone(menuConfig);
