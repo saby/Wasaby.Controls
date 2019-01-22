@@ -8,7 +8,7 @@
                         template="{{itemTemplate}}"
                         itemData="{{itemData}}"
                         displayProperty="{{ displayProperty }}"
-                        on:mouseEnter="_onHoveredItemChanged(itemData.item.getId())"
+                        on:mouseEnter="_onHoveredItemChanged(itemData.item)"
                         on:mouseLeave="_onHoveredItemChanged()"
                         on:click="_onItemClick(itemData)"/>
         </ws:else>
