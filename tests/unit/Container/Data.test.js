@@ -81,7 +81,7 @@ define(
                data._beforeUpdate({source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: sourceDataEdited,
-                  adapter: 'adapter.sbis'
+                  adapter: 'Types/entity:adapter.Sbis'
                }), idProperty: 'id'}).addCallback(function() {
                   assert.isFalse(data._items === items);
                   done();
