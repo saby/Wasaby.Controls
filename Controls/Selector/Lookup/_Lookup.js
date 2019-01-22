@@ -328,7 +328,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          /* move focus to input after select, because focus will be lost after closing popup,
           * only in multi-select mode, in single-select mode input is not displayed after selecting a item */
          if (this._options.multiSelect) {
-            // костыль до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
+            // костыль от Андрея Шипина по фокусам до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
             this._children.inputRender._children.divinput.focus();
          }
       },
