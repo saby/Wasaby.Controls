@@ -19,20 +19,19 @@ class Coverage:
     build_result = {}
     fullpath = []
 
-    def get_fullpath_test_name(self):
+    def get_fullpath_test_name(self, src):
         """Получаем пути расположения файлов"""
-        cwd = os.getcwd()
-        os.chdir('int')
+        os.chdir(os.path.join(src, '..'))
         for root_test in ('SBIS3.CONTROLS', 'VDOM'):
-            for root, dirs , filename in os.walk(os.path.join(root_test)):
+            for root, _, filename in os.walk(os.path.join(root_test)):
                 for f in filename:
                     if f.startswith('test_') and f.endswith('.py'):
                         self.fullpath.append(os.path.join(root, f))
-        os.chdir(cwd)
 
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
 
+        env = os.environ["WORKSPACE"]
         test_path = os.listdir(path)
         for tdir in test_path:
             path_list = []
@@ -53,10 +52,17 @@ class Coverage:
                     d = json.load(f, encoding='utf-8')
                     # получаем зависимости
                     for k in d:
-                        # обрезаем пути, переменная берется из сборки
-                        env = os.environ["WORKSPACE"]
-                        k = k.replace(env, '')
+                        component_path = os.path.splitext(k)[0]
+                        # если есть папка с названием компонента
+                        if os.path.exists(component_path):
+                            for other in os.listdir(component_path):
+                                other_component_file = os.path.join(component_path, other)
+                                if os.path.isfile(other_component_file):
+                                    coverage_result.append(other_component_file)
                         coverage_result.append(k)
+            # обрезаем пути, переменная берется из сборки
+            for i, filename in enumerate(coverage_result):
+                coverage_result[i] = filename.replace(os.sep.join([env, 'controls']), '')
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
 
@@ -64,11 +70,11 @@ class Coverage:
         with open(os.path.join(path, RESULT_JSON), mode='a+', encoding='utf-8') as f:
             f.write(json.dumps(OrderedDict(sorted(self.build_result.items(), key=lambda t: t[0])), indent=2))
 
-    def get_tests(self, change_files):
+    def get_tests(self, result_json, change_files):
         """Возвращает список файлов, которые нужно запустить"""
 
         test_result = []
-        with open(RESULT_JSON, encoding='utf-8') as f:
+        with open(result_json, encoding='utf-8') as f:
             data = json.load(f, encoding='utf-8')
             for test_name in data:
                 for source in data[test_name]:
@@ -100,17 +106,18 @@ if __name__ == '__main__':
     build.add_argument('-s', '--source_path', help='root path with inner coverage.json ')
     action = parser.add_argument_group('action')
     action.add_argument('-c', '--changelist', nargs='+', help='List changed files')
+    action.add_argument('-rj', '--result_json', help='Location result.json with coverage')
     action.add_argument('-d', '--developer', action='store_true', default=False, help='I\'m developer autotest')
     args = parser.parse_args()
     coverage = Coverage()
     if args.source_path:
         print('Собираем покрытие', args.source_path)
-        coverage.get_fullpath_test_name()
+        coverage.get_fullpath_test_name(args.source_path)
         coverage.build(args.source_path)
 
     if args.changelist:
         if not args.developer:
-            test_result = coverage.get_tests(args.changelist)
+            test_result = coverage.get_tests(args.result_json, args.changelist)
             if test_result:
                 print(' '.join(set(test_result)))
         else:
