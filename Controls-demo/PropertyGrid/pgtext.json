@@ -978,7 +978,7 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-          "validationErrors": {
+		"validationErrors": {
             "type": "Array",
             "arrayElementType": "String",
             "title": "List of validation errors."
@@ -986,10 +986,6 @@
           "value": {
             "type": "String",
             "title": "Field value."
-          },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
           },
           "tagStyle": {
             "type": "enum",
