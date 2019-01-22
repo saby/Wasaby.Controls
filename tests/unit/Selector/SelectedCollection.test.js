@@ -14,6 +14,11 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
          });
          assert.deepEqual(self._templateOptions.items, items);
 
+         // Проверка на то что список элементов не будет меняться по ссылке
+         self._templateOptions.items.push(10);
+         assert.notDeepEqual(self._templateOptions.items, items);
+
+         // Проверка что items не будут перезаписаны, если не подверглись изменениям(self._options.items === newOptions.items)
          self._options.items = items;
          self._templateOptions.items = items2;
          self._templateOptions = SelectedCollection._private.getTemplateOptions(self, self._options);
