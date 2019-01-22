@@ -978,7 +978,7 @@
             "type": "function|String",
             "title": "Input's placeholder text."
           },
-		"validationErrors": {
+          "validationErrors": {
             "type": "Array",
             "arrayElementType": "String",
             "title": "List of validation errors."

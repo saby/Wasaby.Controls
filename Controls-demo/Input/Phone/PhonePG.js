@@ -35,7 +35,7 @@ define('Controls-demo/Input/Phone/PhonePG',
                placeholder: 'Input text',
                tagStyle: 'primary',
                readOnly: false,
-				validationErrors: ''
+               validationErrors: ''
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
