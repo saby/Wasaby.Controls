@@ -29,7 +29,16 @@ define('Controls/Operations/Panel', [
       },
       checkToolbarWidth: function(self) {
          var newWidth = self._children.toolbarBlock.clientWidth;
-         if (self._oldToolbarWidth !== newWidth) {
+
+         /**
+          * Operations panel checks toolbar width on each update because we don't know if the rightTemplate has changed (will be fixed here: https://online.sbis.ru/opendoc.html?guid=b4ed11ba-1e4f-4076-986e-378d2ffce013 ).
+          * Because of this the panel gets unnecessary redrawn after the mount. Usually this doesn't cause problems because width of the toolbar doesn't change and update is essentially skipped.
+          * But if the panel becomes (or its parent) hidden and then updates, toolbar width is obviously 0 and that causes recalculation of toolbar items.
+          * And it's even worse than that - panel can become visible again without updating and the user will get stuck with the wrong UI.
+          * For example, this can happen if the user opens the panel and then immediately goes to another tab, making the tab with the panel hidden, and then goes back.
+          * The only way to prevent this is to block recalculation of toolbar items if the panel is not visible.
+          */
+         if (self._oldToolbarWidth !== newWidth && self._container.clientWidth !== 0) {
             self._oldToolbarWidth = newWidth;
             _private.recalculateToolbarItems(self, self._items, newWidth);
          }
