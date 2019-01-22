@@ -5,11 +5,11 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import FontLoadUtil = require('Controls/Utils/FontLoadUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import template = require('wml!Controls/_breadCrumbs/HeadingPath/Path');
+import template = require('wml!Controls/_breadCrumbs/HeadingPath/HeadingPath');
 import backButtonTemplate = require('wml!Controls/Heading/Back/Back');
-import Model from 'Types/entity';
+import {Model} from 'Types/entity';
 import 'Controls/Heading/Back';
-import 'css!theme?Controls/_breadCrumbs/HeadingPath/Path';
+import 'css!theme?Controls/_breadCrumbs/HeadingPath/HeadingPath';
 
 var _private = {
     calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {

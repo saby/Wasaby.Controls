@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import RecordSet from 'Types/collection';
+import {RecordSet} from 'Types/collection';
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadCrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadCrumbs/View/resources/itemTemplate');
