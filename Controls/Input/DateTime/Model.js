@@ -1,13 +1,11 @@
 define('Controls/Input/DateTime/Model', [
    'Core/core-simpleExtend',
-   'WS.Data/Entity/ObservableMixin',
-   'WS.Data/Entity/VersionableMixin',
+   'Types/entity',
    'Controls/Input/DateTime/StringValueConverter',
    'Controls/Utils/Date'
 ], function(
    cExtend,
-   ObservableMixin,
-   VersionableMixin,
+   entity,
    StringValueConverter,
    dateUtils
 ) {
@@ -34,7 +32,7 @@ define('Controls/Input/DateTime/Model', [
       }
    };
 
-   var ModuleClass = cExtend.extend([ObservableMixin, VersionableMixin], {
+   var ModuleClass = cExtend.extend([entity.ObservableMixin.prototype, entity.VersionableMixin], {
       _textValue: null,
       _value: null,
       _lastValue: null,

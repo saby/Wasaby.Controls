@@ -65,8 +65,12 @@ define('Controls/Button/Menu',
       Menu.getDefaultOptions = function() {
          return {
             showHeader: true,
+            filter: {},
+            style: 'secondary',
+            viewMode: 'button',
             size: 'm',
-            filter: {}
+            iconStyle: 'secondary',
+            transparent: true
          };
       };
 

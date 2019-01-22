@@ -4,8 +4,8 @@
 define([
    'Controls/List/BaseControl',
    'Controls/List/resources/utils/ItemsUtil',
-   'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/collection',
    'Controls/List/ListViewModel',
    'Controls/List/Tree/TreeViewModel',
    'Controls/Utils/Toolbar',
@@ -13,7 +13,7 @@ define([
    'Core/core-instance',
    'Core/constants',
    'Controls/List/ListView'
-], function(BaseControl, ItemsUtil, MemorySource, RecordSet, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -50,11 +50,11 @@ define([
                type: 2
             }
          ];
-         source = new MemorySource({
+         source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
-         rs = new RecordSet({
+         rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
@@ -96,7 +96,7 @@ define([
          // создаем новый сорс
          var oldSourceCtrl = ctrl._sourceController;
 
-         source = new MemorySource({
+         source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -158,7 +158,7 @@ define([
       });
 
       it('errback to callback', function(done) {
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -203,7 +203,7 @@ define([
 
 
       it('_needScrollCalculation', function(done) {
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -263,7 +263,7 @@ define([
       });
 
       it('loadToDirection down', function(done) {
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -311,7 +311,7 @@ define([
       });
 
       it('Navigation demand', function(done) {
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -481,7 +481,7 @@ define([
       });
 
       it('loadToDirection up', function(done) {
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -520,12 +520,12 @@ define([
       });
 
       it('onScrollLoadEdge', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -573,12 +573,12 @@ define([
       });
 
       it('scrollLoadStarted MODE', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -649,27 +649,32 @@ define([
          BaseControl._private.showIndicator(ctrl);
          assert.equal(ctrl._loadingState, 'all', 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, 'all', 'Wrong loading state');
+         assert.isTrue(!!ctrl._loadingIndicatorTimer, 'all', 'Loading timer should created');
 
          // картинка должен появляться через 2000 мс, проверим, что её нет сразу
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
 
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
+   
+         BaseControl._private.showIndicator(ctrl);
+         assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
          // и вызовем скрытие
          BaseControl._private.hideIndicator(ctrl);
          assert.equal(ctrl._loadingState, null, 'Wrong loading state');
          assert.equal(ctrl._loadingIndicatorState, null, 'Wrong loading indicator state');
          assert.isFalse(!!ctrl._showLoadingIndicatorImage, 'Wrong loading indicator image state');
+         assert.isFalse(!!ctrl._loadingIndicatorTimer);
       });
 
       it('scrollToEdge_load', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -710,12 +715,12 @@ define([
       });
 
       it('ScrollPagingController', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -813,12 +818,12 @@ define([
       });
 
       it('scrollToEdge without load', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -870,12 +875,12 @@ define([
       });
 
       it('__onPagingArrowClick', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -938,12 +943,12 @@ define([
       });
 
       it('__onEmitScroll', function(done) {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });
@@ -1008,7 +1013,7 @@ define([
             stopImmediateCalled = false,
             preventDefaultCalled = false,
 
-            lnSource = new MemorySource({
+            lnSource = new sourceLib.Memory({
                idProperty: 'id',
                data: data
             }),
@@ -1021,7 +1026,7 @@ define([
             },
             lnCfg2 = {
                viewName: 'Controls/List/ListView',
-               source: new MemorySource({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: [{
                      id: 'firstItem',
@@ -1097,12 +1102,12 @@ define([
       });
 
       it('_onCheckBoxClick', function() {
-         var rs = new RecordSet({
+         var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
          });
 
-         var source = new MemorySource({
+         var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
          });

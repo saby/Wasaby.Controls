@@ -4,7 +4,6 @@ define('Controls/Popup/Compatible/Notification/Base',
       'wml!Controls/Popup/Compatible/Notification/Base'
    ],
    function(NotificationBase, template) {
-
       var Notification = NotificationBase.extend({
          _template: template,
 
@@ -18,7 +17,7 @@ define('Controls/Popup/Compatible/Notification/Base',
              */
             _this._contentTemplateOptions.handlers = {
                onAfterShow: function() {
-                  _this._notify('controlResize', [], {bubbling: true});
+                  _this._notify('controlResize', [], { bubbling: true });
                }
             };
 
@@ -27,5 +26,4 @@ define('Controls/Popup/Compatible/Notification/Base',
       });
 
       return Notification;
-   }
-);
+   });

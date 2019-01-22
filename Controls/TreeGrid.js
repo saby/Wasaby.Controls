@@ -1,10 +1,10 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
    'Controls/List/TreeGridView/TreeGridViewModel',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/TreeControl'
-], function(Grid, TreeGridViewModel, types) {
+], function(Grid, TreeGridViewModel, entity) {
    'use strict';
 
    /**
@@ -40,8 +40,8 @@ define('Controls/TreeGrid', [
       },
       getOptionTypes: function() {
          return {
-            keyProperty: types(String).required(),
-            parentProperty: types(String).required()
+            keyProperty: entity.descriptor(String).required(),
+            parentProperty: entity.descriptor(String).required()
          };
       },
       toggleExpanded: function(id) {

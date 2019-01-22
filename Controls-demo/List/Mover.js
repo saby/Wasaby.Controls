@@ -1,12 +1,12 @@
 define('Controls-demo/List/Mover', [
    'Core/Control',
    'Core/core-clone',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/List/Tree/TreeMemory',
    'Controls-demo/List/Tree/GridData',
    'wml!Controls-demo/List/Mover/Mover',
    'css!Controls-demo/List/Mover/Mover'
-], function(BaseControl, cClone, Memory, TreeMemory, GridData, template) {
+], function(BaseControl, cClone, source, TreeMemory, GridData, template) {
    'use strict';
    return BaseControl.extend({
       _template: template,
@@ -26,7 +26,7 @@ define('Controls-demo/List/Mover', [
          var self = this;
          this._private = {
             createSource: function(items) {
-               return new Memory({
+               return new source.Memory({
                   idProperty: 'id',
                   data: cClone(items)
                });

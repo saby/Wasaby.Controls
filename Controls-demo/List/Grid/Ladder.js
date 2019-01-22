@@ -2,7 +2,7 @@ define('Controls-demo/List/Grid/Ladder', [
    'Core/Control',
    'wml!Controls-demo/List/Grid/resources/Ladder/Ladder',
    'Controls-demo/List/Grid/GridData',
-   'WS.Data/Source/Memory',
+   'Types/source',
 
    'css!Controls-demo/List/Grid/resources/Ladder/Ladder',
 
@@ -16,7 +16,7 @@ define('Controls-demo/List/Grid/Ladder', [
    'wml!Controls-demo/List/Grid/resources/Ladder/TasksPhoto',
    'wml!Controls-demo/List/Grid/resources/Ladder/TasksDescr',
    'wml!Controls-demo/List/Grid/resources/Ladder/TasksReceived'
-], function(BaseControl, template, GridData, MemorySource) {
+], function(BaseControl, template, GridData, source) {
    'use strict';
    var
 
@@ -37,7 +37,7 @@ define('Controls-demo/List/Grid/Ladder', [
          _beforeMount: function() {
             this._selectedKeys = [];
 
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: GridData.tasks
             });

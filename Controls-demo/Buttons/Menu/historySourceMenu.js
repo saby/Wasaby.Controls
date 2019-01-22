@@ -1,20 +1,17 @@
 define('Controls-demo/Buttons/Menu/historySourceMenu',
    [
       'Core/Control',
-      'WS.Data/Di',
-      'WS.Data/Source/Memory',
+      'Types/di',
       'Controls/History/Service',
       'Core/Deferred',
-      'WS.Data/Source/DataSet',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Adapter/Sbis',
+      'Types/collection',
+      'Types/entity',
       'Core/Serializer',
-      'WS.Data/Query/Query',
-      'WS.Data/Entity/Model',
+      'Types/source',
       'Controls/History/Source'
    ],
 
-   function(Control, Di, Memory, HistoryService, Deferred, DataSet, RecordSet, SbisAdapter, Serializer, Query, Model, HistorySource) {
+   function(Control, Di, HistoryService, Deferred, collection, entity, Serializer, source, HistorySource) {
 
       'use strict';
 
@@ -95,15 +92,15 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
       };
 
       function createRecordSet(data) {
-         return new RecordSet({
+         return new collection.RecordSet({
             rawData: data,
             idProperty: 'ObjectId',
-            adapter: new SbisAdapter()
+            adapter: new entity.adapter.Sbis()
          });
       }
 
       function createMemory() {
-         var srcData = new DataSet({
+         var srcData = new source.DataSet({
             rawData: {
                frequent: createRecordSet(frequentData),
                pinned: createRecordSet(pinnedData),
@@ -113,7 +110,7 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             idProperty: 'ObjectId'
          });
          var hs = new HistorySource({
-            originSource: new Memory({
+            originSource: new source.Memory({
                idProperty: 'id',
                data: prepareItems()
             }),
@@ -124,7 +121,7 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             parentProperty: 'parent',
             nodeProperty: '@parent'
          });
-         var query = new Query().where({
+         var query = new source.Query().where({
             $_history: true
          });
          hs.historySource.query = function() {

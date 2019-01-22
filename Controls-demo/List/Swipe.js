@@ -4,13 +4,13 @@
 define('Controls-demo/List/Swipe', [
    'Core/Control',
    'wml!Controls-demo/List/Swipe/Swipe',
-   'WS.Data/Source/Memory',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/collection',
    'css!Controls-demo/List/Swipe/Swipe'
 ], function(BaseControl,
    template,
-   MemorySource,
-   RecordSet) {
+   source,
+   collection) {
    'use strict';
    var ModuleClass = BaseControl.extend(
       {
@@ -375,7 +375,7 @@ define('Controls-demo/List/Swipe', [
                ]
             };
             // this._onActClick = this._onActClick.bind(this);
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: [
                   {

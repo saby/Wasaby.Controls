@@ -2,20 +2,20 @@ define('Controls/Selector/Controller',
    [
       'Core/Control',
       'tmpl!Controls/Selector/Controller',
-      'WS.Data/Utils',
+      'Types/util',
       'Controls/Selector/__ControllerContext',
-      'WS.Data/Collection/List',
+      'Types/collection',
       'Core/ParallelDeferred',
-      'WS.Data/Chain'
+      'Types/chain'
    ],
    
-   function(Control, template, Utils, SelectorContext, List, ParallelDeferred, Chain) {
+   function(Control, template, Utils, SelectorContext, collection, ParallelDeferred, chain) {
       
       'use strict';
       
       var _private = {
          prepareItems: function(items) {
-            return items ? Utils.clone(items) : new List();
+            return items ? Utils.object.clone(items) : new collection.List();
          },
          
          addItemToSelected: function(item, selectedItems, keyProperty) {
@@ -50,10 +50,10 @@ define('Controls/Selector/Controller',
                      keyProperty = result[i].keyProperty;
    
                      if (_private.isSelectionChanged(initialSelection, resultSelection, keyProperty)) {
-                        Chain(initialSelection).each(function(itemId) {
+                        chain.factory(initialSelection).each(function(itemId) {
                            _private.removeFromSelected(itemId, selectedItems, keyProperty);
                         });
-                        Chain(resultSelection).each(function(item) {
+                        chain.factory(resultSelection).each(function(item) {
                            _private.addItemToSelected(item, selectedItems, keyProperty);
                         });
                      }

@@ -4,7 +4,7 @@ define('Controls-demo/FilterButton/FilterButton',
       'wml!Controls-demo/FilterButton/FilterButton',
       'Controls/Filter/Button',
       'Controls/Button',
-      'WS.Data/Source/Memory'
+      'Types/source'
    ],
 
    function(Control, template) {
@@ -15,7 +15,7 @@ define('Controls-demo/FilterButton/FilterButton',
          sourceDropdown: null,
          _beforeMount: function() {
             this.sourceDropdown = {
-               module: 'WS.Data/Source/Memory',
+               module: 'Types/source:Memory',
                options: {
                   data: [
                      { key: 1, title: 'все страны' },

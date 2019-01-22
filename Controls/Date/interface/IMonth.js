@@ -1,10 +1,10 @@
 define('Controls/Date/interface/IMonth', [
    'Core/helpers/Date/format',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/Utils/Date'
 ], function(
    dateFormat,
-   types,
+   entity,
    dateUtil
 ) {
    'use strict';
@@ -74,11 +74,11 @@ define('Controls/Date/interface/IMonth', [
          return {
 
             // month: types(Date),
-            showCaption: types(Boolean),
-            captionFormat: types(String),
-            showWeekdays: types(Boolean),
-            dayFormatter: types(Function),
-            mode: types(String).oneOf([
+            showCaption: entity.descriptor(Boolean),
+            captionFormat: entity.descriptor(String),
+            showWeekdays: entity.descriptor(Boolean),
+            dayFormatter: entity.descriptor(Function),
+            mode: entity.descriptor(String).oneOf([
                'current',
                'extended'
             ])

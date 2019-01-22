@@ -2,12 +2,12 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
    'Core/Control',
    'tmpl!Controls-demo/PropertyGrid/DemoPG',
    'json!Controls-demo/PropertyGrid/pgtext',
-   'WS.Data/Entity/Model'
+   'Types/entity'
 ], function(
    Control,
    template,
    config,
-   Model
+   entity
 ) {
    return Control.extend({
       _template: template,
@@ -51,7 +51,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
                   id: 0,
                   title: 'Employees',
                   items: employees.map(function(item) {
-                     return new Model({
+                     return new entity.Model({
                         rawData: item,
                         idProperty: 'id'
                      });
@@ -60,7 +60,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
                   id: 1,
                   title: 'Contacts',
                   items: contacts.map(function(item) {
-                     return new Model({
+                     return new entity.Model({
                         rawData: item,
                         idProperty: 'id'
                      });
@@ -98,7 +98,7 @@ define('Controls-demo/BreadCrumbs/BreadCrumbsPG', [
             displayProperty: 'name',
             name: 'BreadCrumbs',
             items: employees.map(function(item) {
-               return new Model({
+               return new entity.Model({
                   rawData: item,
                   idProperty: 'id'
                });

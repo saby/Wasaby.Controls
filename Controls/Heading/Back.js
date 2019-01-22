@@ -1,10 +1,10 @@
 define('Controls/Heading/Back', [
    'Core/Control',
    'wml!Controls/Heading/Back/Back',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Core/IoC',
    'css!theme?Controls/Heading/Back/Back'
-], function(Control, template, types, IoC) {
+], function(Control, template, entity, IoC) {
    /**
     * Specialized heading to go to the previous level.
     *
@@ -84,13 +84,13 @@ define('Controls/Heading/Back', [
 
    BackButton.getOptionTypes = function getOptionTypes() {
       return {
-         caption: types(String).required(),
-         style: types(String).oneOf([
+         caption: entity.descriptor(String).required(),
+         style: entity.descriptor(String).oneOf([
             'primary',
             'secondary',
             'default'
          ]),
-         size: types(String).oneOf([
+         size: entity.descriptor(String).oneOf([
             's',
             'm',
             'l'

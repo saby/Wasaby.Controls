@@ -1,19 +1,17 @@
 define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
    [
       'Core/Control',
-      'WS.Data/Di',
-      'WS.Data/Source/Memory',
+      'Types/di',
       'Controls/History/Service',
       'Core/Deferred',
-      'WS.Data/Source/DataSet',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Adapter/Sbis',
+      'Types/source',
+      'Types/collection',
+      'Types/entity',
       'Core/Serializer',
-      'WS.Data/Entity/Model',
       'Controls/History/Source'
    ],
 
-   function(Control, Di, Memory, HistoryService, Deferred, DataSet, RecordSet, SbisAdapter, Serializer, Model, HistorySource) {
+   function(Control, Di, HistoryService, Deferred, sourceLib, collection, entity, Serializer, HistorySource) {
       'use strict';
 
       var items = [
@@ -21,7 +19,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             id: 'period',
             value: [1],
             resetValue: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   { key: 1, title: 'All time' },
                   { key: 2, title: 'Today' },
@@ -36,7 +34,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             id: 'state',
             value: [1],
             resetValue: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   { key: 1, title: 'All states' },
                   { key: 2, title: 'In progress' },
@@ -53,7 +51,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: [1],
             textValue: 'Due date',
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'Due date' },
@@ -79,7 +77,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             value: [1],
             resetValue: '',
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'My' },
@@ -100,7 +98,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: '',
             textValue: 'On department',
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'On me' },
@@ -124,7 +122,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             id: 'period',
             value: [1],
             resetValue: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   { key: 1, title: 'All time' },
                   { key: 2, title: 'Today' },
@@ -139,7 +137,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             id: 'state',
             value: [1],
             resetValue: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   { key: 1, title: 'All states' },
                   { key: 2, title: 'In progress' },
@@ -156,7 +154,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: [1],
             textValue: 'Due date',
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'Due date' },
@@ -188,7 +186,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             value: [1],
             resetValue: '',
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'My' },
@@ -208,7 +206,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: '',
             textValue: 'On department',
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'On me' },
@@ -227,7 +225,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             value: [1],
             resetValue: [1],
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'Activity for the last month' },
@@ -243,7 +241,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             id: 'period',
             value: [1],
             resetValue: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   { key: 1, title: 'All time' },
                   { key: 2, title: 'Today' },
@@ -258,7 +256,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             id: 'state',
             value: [1],
             resetValue: [1],
-            source: new Memory({
+            source: new sourceLib.Memory({
                data: [
                   { key: 1, title: 'All states' },
                   { key: 2, title: 'In progress' },
@@ -275,7 +273,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: '',
             textValue: 'Due date',
             visibility: true,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'Due date' },
@@ -307,7 +305,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             value: [1],
             resetValue: [1],
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'My' },
@@ -327,7 +325,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             resetValue: '',
             textValue: 'On department',
             visibility: true,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'On me' },
@@ -346,7 +344,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
             value: [1],
             resetValue: [1],
             visibility: false,
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'key',
                data: [
                   { key: 1, title: 'Activity for the last month' },
@@ -358,7 +356,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
       ];
 
       var config = {
-         originSource: new Memory({
+         originSource: new sourceLib.Memory({
             idProperty: 'id',
             data: items
          }),
@@ -416,14 +414,14 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
       };
 
       function createRecordSet(data) {
-         return new RecordSet({
+         return new collection.RecordSet({
             rawData: data,
             idProperty: 'ObjectId',
-            adapter: new SbisAdapter()
+            adapter: new entity.adapter.Sbis()
          });
       }
 
-      var data = new DataSet({
+      var data = new sourceLib.DataSet({
          rawData: {
             frequent: createRecordSet(frequentData),
             pinned: createRecordSet(pinnedData),
@@ -445,7 +443,7 @@ define('Controls-demo/Filter/Button/panelOptions/HistorySourceDemo',
          },
 
          update: function(dataHistory, meta) {
-            data = new DataSet({
+            data = new sourceLib.DataSet({
                rawData: {
                   frequent: createRecordSet(frequentData),
                   pinned: createRecordSet(pinnedData),

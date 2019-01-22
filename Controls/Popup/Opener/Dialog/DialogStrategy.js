@@ -5,11 +5,11 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
    return {
 
       /**
-       * Возвращает позицию диалогового окна
+       * Returns popup position
        * @function Controls/Popup/Opener/Dialog/Strategy#getPosition
-       * @param windowData параметры окна браузера
-       * @param containerSizes размеры контейенра окна
-       * @param item конфигурация окна
+       * @param windowData The parameters of the browser window
+       * @param containerSizes Popup container sizes
+       * @param item Popup configuration
        */
       getPosition: function(windowData, containerSizes, item) {
          var width, height, left, top, dif;
@@ -18,11 +18,11 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
             left = Math.max(0, item.position.left);
             top = Math.max(0, item.position.top);
 
-            //check overflowX
+            // check overflowX
             dif = (item.position.left + containerSizes.width) - windowData.width;
             left -= Math.max(0, dif);
 
-            //check overflowY
+            // check overflowY
             dif = (item.position.top + containerSizes.height) - windowData.height;
             top -= Math.max(0, dif);
             return {
@@ -46,7 +46,7 @@ define('Controls/Popup/Opener/Dialog/DialogStrategy', [], function() {
          left = this._getLeftCoord(windowData.width, width);
          top = this._getTopCoord(windowData, height);
 
-         //don't limit container size when it fit in window
+         // don't limit container size when it fit in window
          if (!popupOptions.minWidth && !popupOptions.maxWidth && width < windowData.width) {
             width = undefined;
          }

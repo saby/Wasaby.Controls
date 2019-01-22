@@ -2,10 +2,10 @@ define('Controls/Input/Search/Suggest',
    [
       'Core/Control',
       'wml!Controls/Input/Search/Suggest',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Input/Search'
    ],
-   function(Control, template, types) {
+   function(Control, template, entity) {
       
       'use strict';
    
@@ -76,9 +76,9 @@ define('Controls/Input/Search/Suggest',
    
       Suggest.getOptionTypes = function() {
          return {
-            displayProperty: types(String).required(),
-            suggestTemplate: types(Object).required(),
-            searchParam: types(String).required()
+            displayProperty: entity.descriptor(String).required(),
+            suggestTemplate: entity.descriptor(Object).required(),
+            searchParam: entity.descriptor(String).required()
          };
       };
    

@@ -2,11 +2,11 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
    'Core/Control',
    'wml!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
    'Controls-demo/Input/Lookup/LookupData',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
    'Controls/List'
-], function(Control, template, lookupData, Memory, MemorySourceFilter) {
+], function(Control, template, lookupData, source, MemorySourceFilter) {
 
    'use strict';
 
@@ -19,7 +19,7 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
          var keyProperty = this._keyProperty;
 
          this._closeSelectorBind = this._closeSelector.bind(this);
-         this._source = newOptions.source || new Memory({
+         this._source = newOptions.source || new source.Memory({
             data: lookupData.names,
             filter: function(item, queryFilter) {
                var selectionFilterFn = function(item, filter) {

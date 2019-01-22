@@ -9,7 +9,6 @@ define('Controls/Popup/InfoBox',
       'Core/IoC'
    ],
    function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, IoC) {
-
       'use strict';
 
       /**
@@ -174,7 +173,7 @@ define('Controls/Popup/InfoBox',
           */
          _beforeUnmount: function() {
             if (this._opened) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             }
          },
 
@@ -182,7 +181,7 @@ define('Controls/Popup/InfoBox',
             var config = _private.getCfg(this);
 
             if (this._isNewEnvironment()) {
-               this._notify('openInfoBox', [config], {bubbling: true});
+               this._notify('openInfoBox', [config], { bubbling: true });
             } else {
                // To place zIndex in the old environment
                config.zIndex = getZIndex(this._children.infoBoxOpener);
@@ -200,7 +199,7 @@ define('Controls/Popup/InfoBox',
 
          _close: function() {
             if (this._isNewEnvironment()) {
-               this._notify('closeInfoBox', [], {bubbling: true});
+               this._notify('closeInfoBox', [], { bubbling: true });
             } else {
                this._children.infoBoxOpener.close();
             }
