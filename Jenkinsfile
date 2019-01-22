@@ -892,7 +892,7 @@ node('controls') {
         }
     gitlabStatusUpdate()
     if (!run_tests_int && !run_tests_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} TESTS BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }
