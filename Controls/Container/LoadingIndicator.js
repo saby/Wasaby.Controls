@@ -312,7 +312,7 @@ define('Controls/Container/LoadingIndicator', [
          return this._stack.getIndexByValue('id', id);
       },
 
-      _getDelay: function(config){
+      _getDelay: function(config) {
          return typeof config.delay === 'number' ? config.delay : this.delay;
       },
 
