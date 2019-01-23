@@ -242,11 +242,26 @@ define(
                      vertical: 'top',
                      horizontal: 'left'
                   },
-                  verticalAlign: {
-                     side: 'left'
-                  },
                   horizontalAlign: {
+                     side: 'right'
+                  },
+                  verticalAlign: {
                      side: 'bottom'
+                  },
+                  target: {
+                     getBoundingClientRect: () => {
+                        return {
+                           bottom: 201,
+                           height: 1,
+                           left: 200,
+                           right: 0,
+                           top: 200,
+                           width: 1,
+                           x: 200,
+                           y: 200
+                        };
+                     },
+                     children: []
                   }
                }
             };
@@ -256,9 +271,9 @@ define(
                height: 100
             };
             let stickyPosition = {
-               corner: { vertical: 'bottom', horizontal: 'left' },
-               horizontalAlign: { side: 'bottom', offset: 0 },
-               verticalAlign: { side: 'right', offset: -0 }
+               corner: { vertical: 'top', horizontal: 'left' },
+               horizontalAlign: { side: 'right', offset: 0 },
+               verticalAlign: { side: 'bottom', offset: 0 }
             };
             StickyController._private.prepareConfig(itemConfig, sizes);
             assert.deepEqual(itemConfig.popupOptions.stickyPosition, stickyPosition);

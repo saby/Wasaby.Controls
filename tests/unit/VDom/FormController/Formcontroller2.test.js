@@ -159,6 +159,7 @@ define([
       }
 
       beforeEach(function() {
+         return this.skip(); // https://online.sbis.ru/opendoc.html?guid=3cdac997-40da-4f0e-a2a5-80002df264cb
          if (!document || !document.body) {// Проверка того, что тесты выполняются в браузере
             this.skip();
          } else {
@@ -167,60 +168,6 @@ define([
             testElement.setAttribute('id', 'formControllerComponent');
             el.appendChild(testElement);
          }
-      });
-
-      it('initializingWay', () => {
-         let FC = new FormController();
-
-         let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
-         let baseCreateRecordBeforeMount = FormController._private.createRecordBeforeMount;
-         let cfg = {
-            record: new entity.Record(),
-         };
-
-         let isReading = false;
-         let isCreating = false;
-
-         FormController._private.readRecordBeforeMount = () => {
-            isReading = true;
-            return true;
-         };
-
-         FormController._private.createRecordBeforeMount = () => {
-            isCreating = true;
-            return true;
-         };
-
-         let beforeMountResult = FC._beforeMount(cfg);
-         assert.equal(isReading, false);
-         assert.equal(isCreating, false);
-         assert.notEqual(beforeMountResult, true);
-
-         cfg.key = '123';
-         beforeMountResult = FC._beforeMount(cfg);
-         assert.equal(isReading, true);
-         assert.equal(isCreating, false);
-         assert.notEqual(beforeMountResult, true);
-
-         cfg = {
-            key: 123
-         };
-         isReading = false;
-         beforeMountResult = FC._beforeMount(cfg);
-         assert.equal(isReading, true);
-         assert.equal(isCreating, false);
-         assert.equal(beforeMountResult, true);
-
-         isReading = false;
-         isCreating = false;
-         beforeMountResult = FC._beforeMount({});
-         assert.equal(isReading, false);
-         assert.equal(isCreating, true);
-         assert.equal(beforeMountResult, true);
-
-         FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
-         FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
-         FC.destroy();
       });
 
       it('FormController - SimpleCase', function(done) {
