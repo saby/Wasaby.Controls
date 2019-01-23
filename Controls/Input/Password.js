@@ -26,7 +26,7 @@ define('Controls/Input/Password',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Password/Password
-       * @demo Controls-demo/Input/Password/Password
+       * @demo Controls-demo/Input/Password/PasswordPG
        *
        * @author Журавлев М.С.
        */

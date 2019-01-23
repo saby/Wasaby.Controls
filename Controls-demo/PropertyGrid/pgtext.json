@@ -987,10 +987,6 @@
             "type": "String",
             "title": "Field value."
           },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
-          },
           "tagStyle": {
             "type": "enum",
             "title": "Tag style (colored indicator).",
