@@ -7,7 +7,7 @@
    itemActionsTemplate="{{itemActionsTemplate}}"
    swipeTemplate="{{swipeTemplate}}"
    multiSelectTpl="{{multiSelectTpl}}"
-   itemTemplate="{{listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty) || itemTemplate}}"
+   itemTemplate="{{(listModel.getCurrent().item.get && listModel.getCurrent().item.get(listModel.getCurrent().itemTemplateProperty)) || itemTemplate}}"
    itemData="{{listModel.getCurrent()}}"
    itemActionsPosition="{{itemActionsPosition}}" />
 {{listModel.goToNext()}}
