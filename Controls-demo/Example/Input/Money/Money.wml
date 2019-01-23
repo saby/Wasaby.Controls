@@ -1,0 +1,18 @@
+<div class="example-Money">
+   <Controls-demo.Example.resource.BaseDemoInput title="Money input field" blocker="{{true}}">
+      <ws:contents>
+         <ws:Array>
+            <ws:Object>
+               <ws:template>
+                  <Controls.Input.Money bind:value="_value1"/>
+               </ws:template>
+            </ws:Object>
+            <ws:Object spacing="normal">
+               <ws:template>
+                  <Controls.Input.Money textAlign="right" bind:value="_value2"/>
+               </ws:template>
+            </ws:Object>
+         </ws:Array>
+      </ws:contents>
+   </Controls-demo.Example.resource.BaseDemoInput>
+</div>
