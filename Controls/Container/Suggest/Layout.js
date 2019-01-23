@@ -289,6 +289,7 @@
             item = item || event;
             _private.close(this);
             this._notify('choose', [item]);
+            this._inputActive = false;
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
