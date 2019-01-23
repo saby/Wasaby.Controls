@@ -12,10 +12,10 @@
          <div class="controls-TreeGrid__row-expanderPadding js-controls-ListView__notEditable"></div>
       </ws:else>
    </ws:if>
-   <ws:partial template="{{itemData.getCurrentColumn().template}}"
-               attr:class="{{itemData.getCurrentColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + itemData.getCurrentColumn().column.align : ''}}"
-               ladderWrapper="{{itemData.getCurrentColumn().ladderWrapper}}"
-               itemData="{{itemData.getCurrentColumn()}}" />
+   <ws:partial template="{{currentColumn.template}}"
+               attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}"
+               ladderWrapper="{{currentColumn.ladderWrapper}}"
+               itemData="{{currentColumn}}" />
    <ws:if data="{{itemData.getLastColumnIndex() === itemData.columnIndex && itemData.drawActions}}">
       <ws:if data="{{itemData.isSwiped}}">
          <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
@@ -48,18 +48,35 @@
       </ws:else>
    </ws:else>
 </ws:template>
+<ws:template name="colTpl">
+   <div attr:class="{{currentColumn.cellClasses}}
+                                   {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
+                                   {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
+                                   controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+        attr:style="{{(currentColumn.styleForLadder ? currentColumn.styleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
+      <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
+         <div attr:class="controls-ListView__itemV_marker"></div>
+      </ws:if>
+      <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
+                              {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+      <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
+   </div>
+</ws:template>
+<ws:template name="oldColTpl">
+   <td attr:class="{{currentColumn.cellClasses}}
+                            {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
+                            {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
+                            controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
+       attr:style="(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
+      <ws:partial template="columnContent" attr:class="{{itemData.currentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
+      <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
+                        {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
+   </td>
+</ws:template>
 <ws:if data="{{itemData.isNotFullGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
-         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}
-                         {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
-                         {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-                         controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-             attr:style="(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
-            <ws:partial template="columnContent" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
-            <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
-                     {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
-         </td>
+         <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
       </ws:for>
    </tr>
 </ws:if>
@@ -72,18 +89,7 @@
    </ws:if>
    <div attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
-         <div attr:class="{{itemData.getCurrentColumn().cellClasses}}
-                          {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
-                          {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
-                          controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-              attr:style="{{(itemData.getCurrentColumn().styleForLadder ? itemData.getCurrentColumn().styleForLadder:'')+(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'grid-column: ' + (itemData.multiSelectVisibility ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
-            <ws:if data="{{marker !== false && itemData.isSelected && itemData.columnIndex === 0}}">
-               <div attr:class="controls-ListView__itemV_marker"></div>
-            </ws:if>
-            <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
-                     {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
-            <ws:partial template="columnContent" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
-         </div>
+         <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
       </ws:for>
    </div>
 </ws:else>
