@@ -8,15 +8,16 @@ var global = (function() {
    return this || (0, eval)('this');
 })();
 
-var requirejs = require(path.join(root, 'node_modules', 'sbis3-ws', 'WS.Core', 'ext', 'requirejs', 'r.js'));
-
+var requirejs = require('requirejs');
 global.requirejs = requirejs;
 
 // Configuring requirejs
 var createConfig = require(path.join(root, 'node_modules', 'sbis3-ws', 'WS.Core', 'ext', 'requirejs', 'config.js'));
-var config = createConfig(root + '\\application\\',
-   root + '\\application\\WS.Core\\',
-   root + '\\application\\');
+var config = createConfig(
+   path.join(root, 'application'),
+   path.join(root, 'application', 'WS.Core'),
+   path.join(root, 'application')
+);
 requirejs.config(config);
 
 /**
