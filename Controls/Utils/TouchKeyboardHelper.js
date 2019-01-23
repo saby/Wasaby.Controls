@@ -1,7 +1,7 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
  */
-define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus'], function(constants, EventBus) {
+define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus', 'Core/helpers/isNewEnvironment'], function(constants, EventBus, isNewEnvironment) {
    var ipadCoefficient = {
       portrait: 0.3,
       landscape: 0.56
@@ -57,8 +57,8 @@ define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus']
          // Можно обкатать механизм на этих правках и впоследствии избавиться от нотифая глобального события в полях ввода.
          // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
          // Куда пришел фокус, если это input/textarea/contenteditable, то через emitter/listener сообщать
-         // об этом дочерним компонентам.
-         if (!isVisible && document.activeElement) {
+         // об этом дочерним компонентам. Костыль актуален только для старой страницы, на вдом отключил.
+         if (!isNewEnvironment() && !isVisible && document.activeElement) {
             var isInput = document.activeElement.tagName === 'INPUT';
             var isTextArea = document.activeElement.tagName === 'TEXTAREA';
             var isContentEditable = document.activeElement.getAttribute('contenteditable') === 'true';

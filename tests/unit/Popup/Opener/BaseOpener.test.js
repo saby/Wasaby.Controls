@@ -1,17 +1,15 @@
 define(
    [
-      'Controls/Popup/Opener/BaseOpener',
-      'Controls/Popup/Opener/Dialog',
-      'Controls/Popup/Opener/Stack'
+      'Controls/Popup/Opener/BaseOpener'
    ],
-   function(BaseOpener, Dialog, Stack) {
+   (BaseOpener) => {
 
       'use strict';
 
-      describe('Controls.Popup.Opener.BaseOpener', function() {
-         it('clearPopupIds', function() {
-            var clearPopupIds = BaseOpener._private.clearPopupIds;
-            var popupIds = [1, 2, 3];
+      describe('Controls/Popup/Opener/BaseOpener', () => {
+         it('clearPopupIds', () => {
+            let clearPopupIds = BaseOpener._private.clearPopupIds;
+            let popupIds = [1, 2, 3];
 
             clearPopupIds(popupIds, true, 'multiple');
             assert.deepEqual(popupIds, [1, 2, 3]);
@@ -35,29 +33,6 @@ define(
             opener._afterMount();
             opener._notify = () => {};
             opener.destroy();
-         });
-      });
-
-
-      describe('Controls.Popup.Opener.Dialog', () => {
-         it('getConfig', () => {
-            let getDialogConfig = Dialog._private.getDialogConfig;
-            let config = getDialogConfig();
-            assert.equal(config.isDefaultOpener, true);
-
-            config = getDialogConfig({isDefaultOpener: false});
-            assert.equal(config.isDefaultOpener, false);
-         });
-      });
-
-      describe('Controls.Popup.Opener.Stack', () => {
-         it('getConfig', () => {
-            let getStackConfig = Stack._private.getStackConfig;
-            let config = getStackConfig();
-            assert.equal(config.isDefaultOpener, true);
-
-            config = getStackConfig({isDefaultOpener: false});
-            assert.equal(config.isDefaultOpener, false);
          });
       });
    }
