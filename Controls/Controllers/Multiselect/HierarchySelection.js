@@ -45,7 +45,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
             var children = [];
 
             hierarchyRelation.getChildren(rootId, items).forEach(function(child) {
-               if (hierarchyRelation.isNode(child)) {
+               if (hierarchyRelation.isNode(child) !== null) {
                   ArraySimpleValuesUtil.addSubArray(children, _private.getAllChildren(hierarchyRelation, child.getId(), items));
                }
                ArraySimpleValuesUtil.addSubArray(children, [child]);
@@ -97,13 +97,13 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
                if (selectedKeys.indexOf(childId) !== -1 || (parentSelected && excludedKeys.indexOf(rootId) === -1)) {
                   var newCount = excludedKeys.indexOf(childId) === -1 ? acc + 1 : acc;
-                  if (hierarchyRelation.isNode(child)) {
+                  if (hierarchyRelation.isNode(child) !== null) {
                      return newCount + _private.getSelectedChildrenCount(hierarchyRelation, childId, selectedKeys, excludedKeys, items);
                   } else {
                      return newCount;
                   }
                } else {
-                  if (hierarchyRelation.isNode(child) && excludedKeys.indexOf(childId) === -1) {
+                  if (hierarchyRelation.isNode(child) !== null && excludedKeys.indexOf(childId) === -1) {
                      return acc + _private.getSelectedChildrenCount(hierarchyRelation, childId, selectedKeys, excludedKeys, items);
                   } else {
                      return acc;
@@ -209,7 +209,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          }
 
          if (this._selectedKeys.indexOf(itemId) !== -1 || isParentSelected || hasSelectedChildren) {
-            if (this._hierarchyRelation.isNode(item)) {
+            if (this._hierarchyRelation.isNode(item) !== null) {
                hasExcludedChildren = _private.hasExcludedChildren(this._hierarchyRelation, itemId, this._excludedKeys, this._items);
                if (hasExcludedChildren) {
                   return null;
