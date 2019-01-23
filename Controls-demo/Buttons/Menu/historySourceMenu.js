@@ -136,6 +136,9 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             return def;
          };
          hs.query(query);
+         hs.historySource.update = function() {
+            return {};
+         };
          hs.historySource.query();
          return hs;
       }
