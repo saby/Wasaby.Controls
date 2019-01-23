@@ -2,23 +2,23 @@
  * Created by am.gerasimov on 15.02.2017.
  */
 define('Controls/Utils/ToSourceModel', [
-   'WS.Data/Di',
+   'Types/di',
    'Core/core-instance',
    'Core/core-clone',
-   'WS.Data/Chain',
-   'WS.Data/Utils'
-], function(Di, cInstance, coreClone, Chain, Utils) {
+   'Types/chain',
+   'Types/util'
+], function(Di, cInstance, coreClone, chain, Utils) {
 
    function getModel(model, config) {
-      return typeof model === 'string' ? Di.resolve(model, config) : new model(config);
+      return typeof model === 'string' ? Di.create(model, config) : new model(config);
    }
 
    /**
     * Приводит записи к модели источника данных
-    * @param {WS.Data/Collection/IList|Array} items массив записей
-    * @param {WS.Data/Source/ISource} dataSource Источник
+    * @param {Types/collection:IList|Array} items массив записей
+    * @param {Types/source:ISource} dataSource Источник
     * @param {String} idProperty поле элемента коллекции, которое является идентификатором записи.
-    * @returns {WS.Data/Collection/IList|undefined|Array}
+    * @returns {Types/collection:IList|undefined|Array}
     */
    return function toSourceModel(items, dataSource, idProperty, saveParentRecordChanges) {
       var dataSourceModel, dataSourceModelInstance, parent, changedFields, newRec;
@@ -35,7 +35,7 @@ define('Controls/Utils/ToSourceModel', [
              Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
              Задача:
              https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
-            if (cInstance.instanceOfMixin(items, 'WS.Data/Entity/ManyToManyMixin')) {
+            if (cInstance.instanceOfMixin(items, 'Types/_entity/ManyToManyMixin')) {
                items._getMediator().belongsTo(items, function(master) {
                   if (parent) {
                      Utils.logger.error('ToSourceModel: у переданного рекордсета несколько родителей.');
@@ -43,7 +43,7 @@ define('Controls/Utils/ToSourceModel', [
                   parent = master;
                });
 
-               if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
+               if (parent && cInstance.instanceOfModule(parent, 'Types/entity:Model')) {
                   if (saveParentRecordChanges) {
                      changedFields = coreClone(parent._changedFields);
                   } else {
@@ -53,13 +53,13 @@ define('Controls/Utils/ToSourceModel', [
                }
             }
 
-            Chain(items).each(function(rec, index) {
+            chain.factory(items).each(function(rec, index) {
 
                /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
                 чтобы не было конфликтов при мерже полей этих записей */
                if (dataSourceModelInstance._moduleName !==  rec._moduleName) {
                   (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
-                  if (cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+                  if (cInstance.instanceOfModule(items, 'Types/collection:List')) {
                      items.replace(newRec, index);
                   } else {
                      items[index] = newRec;
@@ -75,8 +75,8 @@ define('Controls/Utils/ToSourceModel', [
          /* Элементы, установленные из дилогов выбора / автодополнения могут иметь другой первичный ключ,
             отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
             и не обязательному по первичному ключу у записей в списке. */
-         Chain(items).each(function(rec) {
-            if (cInstance.instanceOfModule(rec, 'WS.Data/Entity/Model') &&  rec.getIdProperty() !== idProperty && rec.get(idProperty) !== undefined) {
+         chain.factory(items).each(function(rec) {
+            if (cInstance.instanceOfModule(rec, 'Types/entity:Model') &&  rec.getIdProperty() !== idProperty && rec.get(idProperty) !== undefined) {
                rec.setIdProperty(idProperty);
             }
          });

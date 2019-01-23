@@ -2,9 +2,9 @@ define('Controls-demo/OperationsPanel/Panel', [
    'Core/Control',
    'wml!Controls-demo/OperationsPanel/Panel/Panel',
    'wml!Controls-demo/OperationsPanel/Panel/RightTemplate',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/OperationsPanel/Panel/Panel'
-], function(Control, template, RightTemplate, MemorySource) {
+], function(Control, template, RightTemplate, source) {
    'use strict';
    var PANEL_ITEMS_FIRST = [{
       id: 'remove',
@@ -63,7 +63,7 @@ define('Controls-demo/OperationsPanel/Panel', [
          if (key === 2) {
             data = data.concat(PANEL_ITEMS_SECOND);
          }
-         return new MemorySource({
+         return new source.Memory({
             idProperty: 'id',
             data: data
          });
@@ -95,11 +95,11 @@ define('Controls-demo/OperationsPanel/Panel', [
       DEMO_ITEMS: null,
       _beforeMount: function() {
          this._rightTemplateTpl = RightTemplate;
-         this._viewSource = new MemorySource({
+         this._viewSource = new source.Memory({
             idProperty: 'id',
             data: DEMO_ITEMS
          });
-         this._sourceConfig = new MemorySource({
+         this._sourceConfig = new source.Memory({
             idProperty: 'id',
             data: DEMO_ITEMS
          });

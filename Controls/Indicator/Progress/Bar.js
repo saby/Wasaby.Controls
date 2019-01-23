@@ -3,14 +3,14 @@ define(
    [
       'Core/Control',
       'wml!Controls/Indicator/Progress/Bar/Bar',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
 
       'css!Controls/Indicator/Progress/Bar/Bar'
    ],
    function(
       Control,
       template,
-      typeDescriptor
+      entity
    ) {
       'use strict';
 
@@ -40,7 +40,7 @@ define(
 
       Bar.getOptionTypes = function() {
          return {
-            value: typeDescriptor(Number).required()
+            value: entity.descriptor(Number).required()
          };
       };
 

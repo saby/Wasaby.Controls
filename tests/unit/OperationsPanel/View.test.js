@@ -1,10 +1,10 @@
 define([
    'Controls/Operations/Panel',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/Operations/Panel/Utils'
 ], function(
    View,
-   Memory,
+   sourceLib,
    WidthUtils
 ) {
    'use strict';
@@ -50,7 +50,7 @@ define([
             title: 'unload'
          }],
          cfg = {
-            source: new Memory({
+            source: new sourceLib.Memory({
                idProperty: 'id',
                data: data
             }),
@@ -59,6 +59,9 @@ define([
 
       beforeEach(function() {
          instance = new View();
+         instance._container = {
+            clientWidth: 100
+         };
          instance.saveOptions(cfg);
          oldFillItemsType = WidthUtils.fillItemsType;
       });
@@ -153,7 +156,7 @@ define([
             var
                forceUpdateCalled = false,
                newCfg = {
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      idProperty: 'id',
                      data: data
                   }),
@@ -203,7 +206,7 @@ define([
             var
                forceUpdateCalled = false,
                newCfg = {
-                  source: new Memory({
+                  source: new sourceLib.Memory({
                      idProperty: 'id',
                      data: data
                   }),
@@ -327,6 +330,29 @@ define([
             assert.equal(item, eventArgs[0]);
          };
          instance._toolbarItemClick({}, item);
+      });
+
+      it('panel is not visible', function(done) {
+         var forceUpdateCalled = false;
+         instance._container = {
+            clientWidth: 0
+         };
+         instance._children = {
+            toolbarBlock: {
+               clientWidth: 100
+            }
+         };
+         WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
+         instance._beforeMount(cfg).addCallback(function() {
+            instance._afterMount();
+            instance._forceUpdate = function() {
+               forceUpdateCalled = true;
+            };
+            instance._children.toolbarBlock.clientWidth = 0;
+            instance._afterUpdate(cfg);
+            assert.isFalse(forceUpdateCalled);
+            done();
+         });
       });
    });
 });

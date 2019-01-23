@@ -2,7 +2,7 @@ define('Controls/Container/List',
    [
       'Core/Control',
       'wml!Controls/Container/List/List',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls/Controllers/_SearchController',
       'Core/core-merge',
       'Core/helpers/Object/isEqual',
@@ -12,7 +12,7 @@ define('Controls/Container/List',
       'Core/core-instance'
    ],
    
-   function(Control, template, Memory, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, cInstance) {
+   function(Control, template, sourceLib, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, cInstance) {
       
       'use strict';
       
@@ -64,7 +64,7 @@ define('Controls/Container/List',
             
             /* TODO will be a cached source */
             _private.cachedSourceFix(self);
-            self._source = new Memory({
+            self._source = new sourceLib.Memory({
                model: data.getModel(),
                idProperty: data.getIdProperty(),
                data: data.getRawData(),
@@ -98,7 +98,7 @@ define('Controls/Container/List',
             if (self._options.searchErrback) {
                self._options.searchErrback(error);
             }
-            self._source = new Memory({
+            self._source = new sourceLib.Memory({
                model: source.getModel(),
                idProperty: source.getIdProperty()
             });
@@ -242,7 +242,7 @@ define('Controls/Container/List',
             if (this._searchMode) {
                _private.cachedSourceFix(this);
                var originSource = _private.getOriginSource(options.source);
-               this._source = new Memory({
+               this._source = new sourceLib.Memory({
                   model: originSource.getModel(),
                   idProperty: originSource.getIdProperty()
                });

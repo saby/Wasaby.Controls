@@ -1,4 +1,4 @@
-define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collection/RecordSet'], function(GridViewModel, cMerge, RecordSet) {
+define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection'], function(GridViewModel, cMerge, collection) {
    var
       gridData = [
          {
@@ -79,7 +79,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          multiSelectVisibility: 'visible',
          header: gridHeader,
          columns: gridColumns,
-         items: new RecordSet({
+         items: new collection.RecordSet({
             rawData: gridData,
             idProperty: 'id'
          }),
@@ -198,17 +198,17 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                current = gridViewModel.getCurrent(),
                expectedResult = [
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
-                  ' controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+                  ' controls-Grid__row-cell-checkbox controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
                   ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top' +
-                  ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
+                  ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom' +
-                  ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
+                  ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle' +
-                  ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+                  ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
                   ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default' ];
             assert.equal(expectedResult[0],
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
@@ -285,7 +285,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
-                  ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default' +
+                  ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox' +
                   ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
                   ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default'
             });
@@ -302,7 +302,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
-               ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top controls-Grid__row-cell_rowSpacing_default ' +
+               ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_top ' +
                'controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default'
             });
 
@@ -319,7 +319,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                ' controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_bottom' +
-               ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default'
+               ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default'
             });
 
             // check last column
@@ -335,7 +335,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_L controls-Grid__row-cell_rowSpacing_L controls-Grid__header-cell_valign_middle' +
-               ' controls-Grid__row-cell_rowSpacing_default controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
+               ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
                ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default'
             });
 
@@ -356,7 +356,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                item: gridData[0],
                template: null,
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
-                  ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_rowSpacing_default' +
+                  ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox' +
                   ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
                   ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default'
             });
@@ -431,7 +431,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
                9: { ladderLength: 1 }
             },
             ladderViewModel = new GridViewModel({
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
                      { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
@@ -458,7 +458,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'WS.Data/Collecti
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, resultStickyLadder, 'Incorrect value prepared stickyLadder.');
 
          var
-            newItems = new RecordSet({
+            newItems = new collection.RecordSet({
                idProperty: 'id',
                rawData: [
                   { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },

@@ -3,8 +3,8 @@ define('Controls/Filter/Controller',
       'Core/Control',
       'wml!Controls/Filter/Controller',
       'Core/Deferred',
-      'WS.Data/Chain',
-      'WS.Data/Utils',
+      'Types/chain',
+      'Types/util',
       'Core/helpers/Object/isEqual',
       'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
@@ -14,11 +14,11 @@ define('Controls/Filter/Controller',
       'Controls/Container/Data/ContextOptions'
    ],
 
-   function(Control, template, Deferred, Chain, Utils, isEqual, historyUtils, SourceController, merge, clone, isEmpty) {
+   function(Control, template, Deferred, chain, Utils, isEqual, historyUtils, SourceController, merge, clone, isEmpty) {
       'use strict';
 
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
-      var setPropValue = Utils.setItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+      var setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
       var _private = {
          getItemsByOption: function(option, history) {
@@ -39,8 +39,8 @@ define('Controls/Filter/Controller',
          },
 
          equalItemsIterator: function(filterButtonItems, fastFilterItems, prepareCallback) {
-            Chain(filterButtonItems).each(function(buttonItem, index) {
-               Chain(fastFilterItems).each(function(fastItem) {
+            chain.factory(filterButtonItems).each(function(buttonItem, index) {
+               chain.factory(fastFilterItems).each(function(fastItem) {
                   if (getPropValue(buttonItem, 'id') === getPropValue(fastItem, 'id') && fastItem.hasOwnProperty('textValue') && buttonItem.hasOwnProperty('textValue')) {
                      prepareCallback(index, fastItem);
                   }
@@ -65,7 +65,7 @@ define('Controls/Filter/Controller',
 
          minimizeFilterItems: function(items) {
             var minItems = [];
-            Chain(items).each(function(item) {
+            chain.factory(items).each(function(item) {
                minItems.push({
                   id: getPropValue(item, 'id'),
                   value: getPropValue(item, 'value'),
@@ -100,7 +100,7 @@ define('Controls/Filter/Controller',
 
          itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
-               Chain(items).each(function(elem) {
+               chain.factory(items).each(function(elem) {
                   var value = getPropValue(elem, 'value');
                   var visibility = getPropValue(elem, 'visibility');
 
@@ -201,8 +201,8 @@ define('Controls/Filter/Controller',
          },
 
          mergeFilterItems: function(items, historyItems) {
-            Chain(items).each(function(item) {
-               Chain(historyItems).each(function(historyItem) {
+            chain.factory(items).each(function(item) {
+               chain.factory(historyItems).each(function(historyItem) {
                   if (getPropValue(item, 'id') === getPropValue(historyItem, 'id')) {
                      var value = getPropValue(historyItem, 'value');
                      var textValue = getPropValue(historyItem, 'textValue');
@@ -259,7 +259,7 @@ define('Controls/Filter/Controller',
          },
 
          cloneItems: function(items) {
-            if (items['[WS.Data/Entity/CloneableMixin]']) {
+            if (items['[Types/_entity/CloneableMixin]']) {
                return items.clone();
             }
             return clone(items);
@@ -282,7 +282,7 @@ define('Controls/Filter/Controller',
 
       /**
        * @name Controls/Filter/Controller#filterButtonSource
-       * @cfg {Array|Function|WS.Data/Collection/IList} FilterButton items or function, that return FilterButton items
+       * @cfg {Array|Function|Types/collection:IList} FilterButton items or function, that return FilterButton items
        * @remark if the historyId option is setted, function will recive filter history
        * @example
        * TMPL:
@@ -317,7 +317,7 @@ define('Controls/Filter/Controller',
 
       /**
        * @name Controls/Filter/Controller#fastFilterSource
-       * @cfg {Array|Function|WS.Data/Collection/IList} FastFilter items or function, that return FastFilter items
+       * @cfg {Array|Function|Types/collection:IList} FastFilter items or function, that return FastFilter items
        * @remark if the historyId option is setted, function will recive filter history
        * @example
        * TMPL:

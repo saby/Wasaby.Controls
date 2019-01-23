@@ -1,12 +1,12 @@
 define('Controls-demo/Buttons/SelectorButtonPG', [
    'Core/Control',
    'tmpl!Controls-demo/PropertyGrid/DemoPG',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls-demo/Input/Lookup/LookupData',
    'json!Controls-demo/PropertyGrid/pgtext',
    'css!Controls-demo/Buttons/SelectorButtonPG'
-], function (Control, template, Memory, memorySourceFilter, sourceData, config) {
+], function (Control, template, sourceLib, memorySourceFilter, sourceData, config) {
    'use strict';
 
    return Control.extend({
@@ -21,13 +21,13 @@ define('Controls-demo/Buttons/SelectorButtonPG', [
       _templateName: 'Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
 
       _beforeMount: function () {
-         this._sourceNames = new Memory({
+         this._sourceNames = new sourceLib.Memory({
             data: sourceData.names,
             idProperty: 'id',
             filter: memorySourceFilter()
          });
 
-         this._sourceCars = new Memory({
+         this._sourceCars = new sourceLib.Memory({
             data: sourceData.cars,
             idProperty: 'id',
             filter: memorySourceFilter()

@@ -8,6 +8,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Heading/Back/Back',
+   'Types/entity',
    'Controls/Heading/Back',
    'css!theme?Controls/BreadCrumbs/Path/Path'
 ], function(
@@ -19,7 +20,8 @@ define('Controls/BreadCrumbs/Path', [
    tmplNotify,
    applyHighlighter,
    template,
-   backButtonTemplate
+   backButtonTemplate,
+   entity
 ) {
    'use strict';
 
@@ -67,6 +69,16 @@ define('Controls/BreadCrumbs/Path', [
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
          }
+      },
+
+      getRootModel: function(root, keyProperty) {
+         var rawData = {};
+
+         rawData[keyProperty] = root;
+         return new entity.Model({
+            idProperty: keyProperty,
+            rawData: rawData
+         });
       }
    };
 
@@ -86,7 +98,7 @@ define('Controls/BreadCrumbs/Path', [
     */
 
    /**
-    * @event Controls/BreadCrumbs/Path#arrowActivated Happens after clicking the button "View record".
+    * @event Controls/BreadCrumbs/Path#arrowActivated Happens after clicking the button "View Model".
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
 
@@ -121,9 +133,18 @@ define('Controls/BreadCrumbs/Path', [
 
       _notifyHandler: tmplNotify,
       _applyHighlighter: applyHighlighter,
+      _getRootModel: _private.getRootModel,
 
       _onBackButtonClick: function() {
-         this._notify('itemClick', [this._options.items[this._options.items.length - 1].get(this._options.parentProperty)]);
+         var item;
+
+         if (this._options.items.length > 1) {
+            item = this._options.items[this._options.items.length - 2];
+         } else {
+            item = this._getRootModel(this._options.root, this._options.keyProperty);
+         }
+
+         this._notify('itemClick', [item]);
       },
 
       _onResize: function() {
@@ -131,7 +152,7 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._options.root]);
+         this._notify('itemClick', [this._getRootModel(this._options.root, this._options.keyProperty)]);
       },
 
       _onArrowClick: function() {

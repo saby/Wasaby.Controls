@@ -1,6 +1,6 @@
 define('Controls-demo/List/List/WI/EditableList', [
    'Core/Control',
-   'wml!Controls-demo/List/List/WI/EditableList'
+   'wml!Controls-demo/List/List/WI/resources/EditableList'
 ], function(Control, template) {
    'use strict';
 

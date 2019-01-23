@@ -1,7 +1,7 @@
 define('Controls/Filter/Button/Panel', [
    'Core/Control',
-   'WS.Data/Chain',
-   'WS.Data/Utils',
+   'Types/chain',
+   'Types/util',
    'Core/core-clone',
    'Core/helpers/Object/isEqual',
    'Controls/Filter/Button/History/resources/historyUtils',
@@ -10,7 +10,7 @@ define('Controls/Filter/Button/Panel', [
    'Core/IoC',
    'css!theme?Controls/Filter/Button/Panel/Panel'
 
-], function(Control, Chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
+], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -36,8 +36,8 @@ define('Controls/Filter/Button/Panel', [
 
    'use strict';
 
-   var getPropValue = Utils.getItemPropertyValue.bind(Utils);
-   var setPropValue = Utils.setItemPropertyValue.bind(Utils);
+   var getPropValue = Utils.object.getPropertyValue.bind(Utils);
+   var setPropValue = Utils.object.setPropertyValue.bind(Utils);
 
    var _private = {
 
@@ -72,7 +72,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       cloneItems: function(items) {
-         if (items['[WS.Data/Entity/CloneableMixin]']) {
+         if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
          }
          return Clone(items);
@@ -80,7 +80,7 @@ define('Controls/Filter/Button/Panel', [
 
       getFilter: function(self, items) {
          var filter = {};
-         Chain(items || self._items).each(function(item) {
+         chain.factory(items || self._items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
                (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                filter[item.id] = getPropValue(item, 'value');
@@ -91,7 +91,7 @@ define('Controls/Filter/Button/Panel', [
 
       isChangedValue: function(items) {
          var isChanged = false;
-         Chain(items).each(function(item) {
+         chain.factory(items).each(function(item) {
             if ((!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
                getPropValue(item, 'visibility') === undefined) || getPropValue(item, 'visibility')) {
                isChanged = true;
@@ -106,7 +106,7 @@ define('Controls/Filter/Button/Panel', [
 
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
-         Chain(items).each(function(item) {
+         chain.factory(items).each(function(item) {
             if (getPropValue(item, 'visibility') === false) {
                hasAdditional = true;
             }
@@ -115,7 +115,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       prepareItems: function(items) {
-         Chain(items).each(function(item) {
+         chain.factory(items).each(function(item) {
             if (getPropValue(item, 'visibility') === true && isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'))) {
                setPropValue(item, 'visibility', false);
             }
@@ -178,7 +178,7 @@ define('Controls/Filter/Button/Panel', [
 
       _resetFilter: function() {
          this._items = _private.cloneItems(this._options.items || this._contextOptions.items);
-         Chain(this._items).each(function(item) {
+         chain.factory(this._items).each(function(item) {
             if (getPropValue(item, 'visibility') !== undefined) {
                setPropValue(item, 'visibility', false);
             }

@@ -3,7 +3,7 @@
  */
 define([
    'Controls/List/Controllers/VirtualScroll',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/core-instance'
 ], function(VirtualScroll) {
    describe('Controls.Controllers.VirtualScroll', function() {

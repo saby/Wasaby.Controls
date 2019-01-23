@@ -13,7 +13,7 @@ define('Controls/List/BaseControl', [
    'Core/Deferred',
    'Core/constants',
    'Controls/Utils/scrollToElement',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
@@ -35,7 +35,7 @@ define('Controls/List/BaseControl', [
    Deferred,
    cConstants,
    scrollToElement,
-   RecordSet,
+   collection,
    tUtil,
    aUtil,
    tmplNotify,
@@ -414,17 +414,24 @@ define('Controls/List/BaseControl', [
       showIndicator: function(self, direction) {
          self._loadingState = direction || 'all';
          self._loadingIndicatorState = self._loadingState;
-         setTimeout(function() {
-            if (self._loadingState) {
-               self._showLoadingIndicatorImage = true;
-               self._forceUpdate();
-            }
-         }, 2000);
+         if (!self._loadingIndicatorTimer) {
+            self._loadingIndicatorTimer = setTimeout(function() {
+               self._loadingIndicatorTimer = null;
+               if (self._loadingState) {
+                  self._showLoadingIndicatorImage = true;
+                  self._forceUpdate();
+               }
+            }, 2000);
+         }
       },
 
       hideIndicator: function(self) {
          self._loadingState = null;
          self._showLoadingIndicatorImage = false;
+         if (self._loadingIndicatorTimer) {
+            clearTimeout(self._loadingIndicatorTimer);
+            self._loadingIndicatorTimer = null;
+         }
          if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._forceUpdate();
@@ -505,7 +512,7 @@ define('Controls/List/BaseControl', [
             });
          if (showActions && showActions.length) {
             var
-               rs = new RecordSet({ rawData: showActions });
+               rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
@@ -662,6 +669,7 @@ define('Controls/List/BaseControl', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+      _loadingIndicatorTimer: null,
 
       _pagingCfg: null,
       _pagingVisible: false,
@@ -709,6 +717,9 @@ define('Controls/List/BaseControl', [
                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
+               if (receivedState) {
+                  viewModelConfig.items = receivedState;
+               }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                _private.initListViewModelHandler(self, self._listViewModel);
             }
@@ -721,7 +732,6 @@ define('Controls/List/BaseControl', [
 
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
-                  self._listViewModel.setItems(receivedState);
                   self._items = self._listViewModel.getItems();
                   if (newOptions.dataLoadCallback instanceof Function) {
                      newOptions.dataLoadCallback(self._items);
@@ -824,15 +834,15 @@ define('Controls/List/BaseControl', [
          }
 
       },
-   
+
       reloadItem: function(key, readMeta, replaceItem) {
          var items = this._listViewModel.getItems();
          var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
-      
+
          if (currentItemIndex === -1) {
             throw new Error('BaseControl::reloadItem no item with key ' + key);
          }
-      
+
          return this._sourceController.read(key, readMeta).addCallback(function(item) {
             if (replaceItem) {
                items.replace(item, currentItemIndex);
@@ -1074,7 +1084,7 @@ define('Controls/List/BaseControl', [
          if (!this._listViewModel.getDragEntity()) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
-            if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
                this._listViewModel.setDragEntity(dragObject.entity);

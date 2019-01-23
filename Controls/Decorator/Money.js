@@ -2,13 +2,13 @@ define('Controls/Decorator/Money',
    [
       'Core/IoC',
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/Utils/splitIntoTriads',
       'wml!Controls/Decorator/Money/Money',
 
       'css!theme?Controls/Decorator/Money/Money'
    ],
-   function(IoC, Control, descriptor, splitIntoTriads, template) {
+   function(IoC, Control, entity, splitIntoTriads, template) {
 
       'use strict';
 
@@ -97,8 +97,8 @@ define('Controls/Decorator/Money',
 
       Money.getOptionTypes = function() {
          return {
-            delimiters: descriptor(Boolean),
-            number: descriptor(Number).required()
+            delimiters: entity.descriptor(Boolean),
+            number: entity.descriptor(Number).required()
          };
       };
 

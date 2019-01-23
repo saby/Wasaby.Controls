@@ -12,14 +12,14 @@ define('Controls/interface/IFastFilter', [
     * @typedef {Object} PropertiesFastFilter
     * @property {String} keyProperty Name of the item property that uniquely identifies collection item.
     * @property {String} displayProperty Name of the item property that content will be displayed. Only affects the value when selecting.
-    * @property {WS.Data/Source/Base} source Object that implements ISource interface for data access. If 'items' is specified, 'source' will be ignored.
+    * @property {Types/source:Base} source Object that implements ISource interface for data access. If 'items' is specified, 'source' will be ignored.
     * @property {Object} filter Filter configuration - object with field names and their values. {@link Controls/interface/IFilter}
     * @property {Object} navigation List navigation configuration. Configures data source navigation (pages, offset, position) and navigation view (pages, infinite scroll, etc.) {@link Controls/interface/INavigation}
-    * @property {WS.Data/Collection/IList} items Special structure for the visual representation of the filter. {@link WS.Data/Collection/IList}.
+    * @property {Types/collection:IList} items Special structure for the visual representation of the filter. {@link Types/collection:IList}.
     */
 
    /**
-    * @typedef {WS.Data/Source/Base} FastFilterSource
+    * @typedef {Types/source:Base} FastFilterSource
     * @property {String} id Name of filter field.
     * @property {*} value Current filter field value.
     * @property {*} resetValue Value for reset.

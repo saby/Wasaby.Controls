@@ -1,7 +1,7 @@
 define('Controls-demo/Example/StickyHeader/NotificationCenter',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'tmpl!Controls-demo/Example/StickyHeader/NotificationCenter/NotificationCenter',
 
       'Controls/Heading',
@@ -13,7 +13,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
       'css!Controls-demo/Example/StickyHeader/NotificationCenter/Violations',
       'css!Controls-demo/Example/StickyHeader/NotificationCenter/NotificationCenter'
    ],
-   function(Control, MemorySource, template) {
+   function(Control, source, template) {
 
       'use strict';
 
@@ -166,7 +166,7 @@ define('Controls-demo/Example/StickyHeader/NotificationCenter',
 
          _beforeMount: function() {
             this._dataset = dataset.map(function(data) {
-               return new MemorySource(data);
+               return new source.Memory(data);
             });
          }
       });

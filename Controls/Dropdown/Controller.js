@@ -3,13 +3,13 @@ define('Controls/Dropdown/Controller',
       'Core/Control',
       'wml!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
-      'WS.Data/Chain',
+      'Types/chain',
       'Core/core-merge',
       'Controls/History/Source',
       'Controls/Dropdown/Util'
    ],
 
-   function(Control, template, SourceController, Chain, Merge, historySource, dropdownUtils) {
+   function(Control, template, SourceController, chain, Merge, historySource, dropdownUtils) {
       'use strict';
 
       /**
@@ -96,7 +96,7 @@ define('Controls/Dropdown/Controller',
             if (selectedKeys[0] === null && emptyText) {
                self._selectedItems.push(null);
             } else {
-               Chain(self._items).each(function(item) {
+               chain.factory(self._items).each(function(item) {
                   // fill the array of selected items from the array of selected keys
                   if (selectedKeys.indexOf(item.get(keyProperty)) > -1) {
                      self._selectedItems.push(item);
@@ -163,7 +163,7 @@ define('Controls/Dropdown/Controller',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys !== this._options.selectedKeys) {
+            if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }

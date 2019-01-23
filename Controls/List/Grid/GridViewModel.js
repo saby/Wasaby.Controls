@@ -86,8 +86,6 @@ define('Controls/List/Grid/GridViewModel', [
                });
             }
 
-            cellClasses += ' controls-Grid__row-cell_rowSpacing_default';
-
             if (current.isSelected) {
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
                if (current.columnIndex === 0) {
@@ -182,10 +180,10 @@ define('Controls/List/Grid/GridViewModel', [
                stickyLadder: stickyLadder
             };
          },
-   
+
          getSortingDirectionByProp: function(sorting, prop) {
             var sortingDirection;
-      
+
             if (sorting) {
                sorting.forEach(function(elem) {
                   if (elem[prop]) {
@@ -193,7 +191,7 @@ define('Controls/List/Grid/GridViewModel', [
                   }
                });
             }
-      
+
             return sortingDirection;
          }
       },
@@ -671,6 +669,10 @@ define('Controls/List/Grid/GridViewModel', [
          _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
             this._nextVersion();
+         },
+
+         setItemActionVisibilityCallback: function(callback) {
+            this._model.setItemActionVisibilityCallback(callback);
          },
 
          _prepareDisplayItemForAdd: function(item) {

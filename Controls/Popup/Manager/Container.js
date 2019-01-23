@@ -14,7 +14,7 @@ define('Controls/Popup/Manager/Container',
       var Container = Control.extend({
 
          /**
-          * Контейнер для отображения окон
+          * Container for displaying popups
           * @class Controls/Popup/Manager/Container
           * @extends Core/Control
           * @control
@@ -31,7 +31,7 @@ define('Controls/Popup/Manager/Container',
          },
 
          /**
-          * Установить индекс попапа, под которым будет отрисован оверлей
+          * Set the index of popup, under which the overlay will be drawn
           * @function Controls/Popup/Manager/Container#setPopupItems
           * @param {Integer} index индекс попапа
           */
@@ -40,9 +40,9 @@ define('Controls/Popup/Manager/Container',
          },
 
          /**
-          * Изменить набор окон
+          * Set a new set of popups
           * @function Controls/Popup/Manager/Container#setPopupItems
-          * @param {List} popupItems новый набор окон
+          * @param {List} popupItems new popup set
           */
          setPopupItems: function(popupItems) {
             this._popupItems = popupItems;
@@ -67,6 +67,10 @@ define('Controls/Popup/Manager/Container',
 
          _overlayClickHandler: function(event) {
             event.preventDefault();
+         },
+
+         _getPopupZIndex: function(item, index) {
+            return item.popupOptions.zIndex || (index + 1) * POPUP_ZINDEX_STEP;
          }
       });
 

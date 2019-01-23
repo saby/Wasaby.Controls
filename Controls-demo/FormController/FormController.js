@@ -1,15 +1,14 @@
 define('Controls-demo/FormController/FormController', [
    'Core/Control',
    'wml!Controls-demo/FormController/FormController',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Core/Deferred',
-   'WS.Data/Entity/Record',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'Core/IoC',
    'css!Controls-demo/FormController/FormController',
    'Controls/Validate/Validators/IsRequired',
    'Controls/Validate/Validators/IsEmail'
-], function(Control, tmpl, MemorySource, Deferred, Record, Model, IoC) {
+], function(Control, tmpl, source, Deferred, entity, IoC) {
    'use strict';
 
    var module = Control.extend({
@@ -20,7 +19,7 @@ define('Controls-demo/FormController/FormController', [
       _record: null,
       _recordAsText: '',
       _beforeMount: function(cfg) {
-         this._dataSource = cfg.dataSource || new MemorySource({
+         this._dataSource = cfg.dataSource || new source.Memory({
             idProperty: 'id',
             data: [{ id: 0 }]
          });
@@ -137,16 +136,16 @@ define('Controls-demo/FormController/FormController', [
          this._updateValuesByRecord(record);
       },
       _readFailedHandler: function(e, err) {
-         this._alert('FormController demo: read successed');
-         this._updateValuesByRecord(new Model());
+         this._alert('FormController demo: read failed');
+         this._updateValuesByRecord(new entity.Model());
       },
       _deleteSuccessedHandler: function(e) {
          this._alert('FormController demo: delete successed');
-         this._updateValuesByRecord(new Model());
+         this._updateValuesByRecord(new entity.Model());
       },
       _deleteFailedHandler: function(e) {
          this._alert('FormController demo: delete failed');
-         this._updateValuesByRecord(new Model());
+         this._updateValuesByRecord(new entity.Model());
       },
       _updateValuesByRecord: function(record) {
          this._record = record;

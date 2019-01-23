@@ -12,7 +12,6 @@ define('Controls/Popup/Opener/Edit/Container',
        * edit container
        * @class Controls/Popup/Opener/Edit/Container
        * @control
-       * @author Красильников А.С.
        * @category Popup
        * @extends Core/Control
        */

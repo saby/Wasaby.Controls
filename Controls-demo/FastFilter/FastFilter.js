@@ -2,12 +2,12 @@ define('Controls-demo/FastFilter/FastFilter',
    [
       'Core/Control',
       'wml!Controls-demo/FastFilter/FastFilter',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls/Filter/Fast',
       'css!Controls-demo/FastFilter/FastFilter'
    ],
 
-   function(Control, template, Memory) {
+   function(Control, template, sourceLib) {
       /**
        * @class Controls/Layout/Search
        * @extends Controls/Control
@@ -22,7 +22,7 @@ define('Controls-demo/FastFilter/FastFilter',
          dataSourceDemoSource: null,
          dataSourceDemoItems: null,
          _beforeMount: function() {
-            this.dataSourceDemoSource = new Memory({
+            this.dataSourceDemoSource = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -32,7 +32,7 @@ define('Controls-demo/FastFilter/FastFilter',
                      properties: {
                         keyProperty: 'title',
                         displayProperty: 'title',
-                        source: new Memory({
+                        source: new sourceLib.Memory({
                            data: [
                               { key: 0, title: 'все страны' },
                               { key: 1, title: 'Россия' },
@@ -49,7 +49,7 @@ define('Controls-demo/FastFilter/FastFilter',
                      properties: {
                         keyProperty: 'key',
                         displayProperty: 'title',
-                        source: new Memory({
+                        source: new sourceLib.Memory({
                            data: [
                               { key: 0, title: 'все жанры' },
                               { key: 1, title: 'фантастика' },
@@ -66,7 +66,7 @@ define('Controls-demo/FastFilter/FastFilter',
                      properties: {
                         keyProperty: 'lastName',
                         displayProperty: 'title',
-                        source: new Memory({
+                        source: new sourceLib.Memory({
                            data: [
                               { id: 0, lastName: '0', title: '0' },
                               { id: 1, lastName: '1', title: '333' },
@@ -87,7 +87,7 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'title',
                      displayProperty: 'title',
-                     source: new Memory({
+                     source: new sourceLib.Memory({
                         data: [
                            { key: 0, title: 'все страны' },
                            { key: 1, title: 'Франция' },
@@ -105,7 +105,7 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'key',
                      displayProperty: 'title',
-                     source: new Memory({
+                     source: new sourceLib.Memory({
                         data: [
                            { key: 0, title: 'все жанры' },
                            { key: 1, title: 'фантастика' },
@@ -122,7 +122,7 @@ define('Controls-demo/FastFilter/FastFilter',
                   properties: {
                      keyProperty: 'lastName',
                      displayProperty: 'title',
-                     source: new Memory({
+                     source: new sourceLib.Memory({
                         data: [
                            { id: 0, lastName: '0', title: 'aaaa' },
                            { id: 1, lastName: '1', title: '333' },
@@ -136,7 +136,7 @@ define('Controls-demo/FastFilter/FastFilter',
             ];
          },
          _createMemory: function(items) {
-            return new Memory({
+            return new sourceLib.Memory({
                idProperty: 'id',
                data: items
             });

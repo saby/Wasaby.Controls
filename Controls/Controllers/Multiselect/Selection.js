@@ -131,7 +131,7 @@ define('Controls/Controllers/Multiselect/Selection', [
 
       /**
        * Set items which will be used to calculate selectedKeys for render.
-       * @param {WS.Data/Collection/RecordSet} items
+       * @param {Types/collection:RecordSet} items
        */
       setItems: function(items) {
          this._items = items;

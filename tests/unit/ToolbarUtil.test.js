@@ -1,11 +1,10 @@
 define(
    [
       'Controls/Utils/Toolbar',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Collection/Factory/RecordSet',
-      'WS.Data/Adapter/Json'
+      'Types/collection',
+      'Types/entity'
    ],
-   (ToolbarUtil, RecordSet, recordSetFactory, JsonAdapter) => {
+   (ToolbarUtil, collection, entity) => {
       describe('ToolbarUtil', () => {
          let defaultItems = [
             {
@@ -31,9 +30,9 @@ define(
             }
          ];
          it('getMenuItems', function() {
-            let rawItems = new RecordSet({rawData: defaultItems});
-            let filtetedItems = ToolbarUtil.getMenuItems(rawItems).value(recordSetFactory, {
-               adapter: new JsonAdapter(),
+            let rawItems = new collection.RecordSet({rawData: defaultItems});
+            let filtetedItems = ToolbarUtil.getMenuItems(rawItems).value(collection.factory.recordSet, {
+               adapter: new entity.adapter.Json(),
                idProperty: 'id'
             });
             let hasOnlyToolbarItem = false;

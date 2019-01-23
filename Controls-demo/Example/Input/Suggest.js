@@ -1,17 +1,17 @@
 define('Controls-demo/Example/Input/Suggest',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/Example/Input/Suggest/Suggest',
 
       'Controls/Input/Suggest',
       'Controls-demo/Example/resource/BaseDemoInput'
    ],
-   function(Control, MemorySource, template) {
+   function(Control, sourceLib, template) {
 
       'strict use';
 
-      var source = new MemorySource({
+      var source = new sourceLib.Memory({
          idProperty: 'id',
          data: [
             {id: 1, title: 'Lozhkin Andrei Sergeevich'},

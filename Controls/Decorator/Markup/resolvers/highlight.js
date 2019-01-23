@@ -1,7 +1,9 @@
 /**
  * Created by rn.kondakov on 30.10.2018.
  */
-define('Controls/Decorator/Markup/resolvers/highlight', function() {
+define('Controls/Decorator/Markup/resolvers/highlight', [
+   'css!theme?Controls/Decorator/Markup/resolvers/highlight'
+], function() {
    'use strict';
 
    // Find all indexes if search value in string.
@@ -52,7 +54,7 @@ define('Controls/Decorator/Markup/resolvers/highlight', function() {
          if (substringNotToHighlight) {
             newValue.push(substringNotToHighlight);
          }
-         newValue.push(['span', { 'class': 'controls-Highlight_found' }, substringToHighlight]);
+         newValue.push(['span', { 'class': 'controls-MarkupDecorator_highlight' }, substringToHighlight]);
       }
       substringNotToHighlight = value.substring(j);
       if (substringNotToHighlight) {

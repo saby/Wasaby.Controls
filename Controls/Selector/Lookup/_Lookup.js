@@ -2,7 +2,7 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Core/Control',
    'wml!Controls/Selector/Lookup/_Lookup',
    'Controls/Input/resources/InputRender/BaseViewModel',
-   'WS.Data/Chain',
+   'Types/chain',
    'Core/core-merge',
    'Controls/Utils/getWidth',
    'Controls/Utils/DOMUtil',
@@ -15,7 +15,7 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Controls/Selector/SelectedCollection/Utils',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, Chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils) {
+], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils) {
    'use strict';
 
    var
@@ -207,7 +207,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       getLastSelectedItems: function(self, itemsCount) {
-         return Chain(self._options.items).last(itemsCount).value();
+         return chain.factory(self._options.items).last(itemsCount).value();
       },
 
       isShowCounter: function(itemsCount, maxVisibleItems) {

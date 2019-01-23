@@ -1,9 +1,9 @@
 define([
    'Controls/Controllers/Multiselect/HierarchySelection',
-   'WS.Data/Collection/RecordSet'
+   'Types/collection'
 ], function(
    HierarchySelection,
-   RecordSet
+   collection
 ) {
    'use strict';
    describe('Controls.Controllers.Multiselect.HierarchySelection', function() {
@@ -40,6 +40,7 @@ define([
             'Раздел': null,
             'Раздел@': false
          }],
+         hiddenNodeWithChildren,
          allData;
 
       /*
@@ -52,8 +53,24 @@ define([
          7 (лист)
        */
       beforeEach(function() {
-         allData = new RecordSet({
+         allData = new collection.RecordSet({
             rawData: items.slice(),
+            idProperty: 'id'
+         });
+         hiddenNodeWithChildren = new collection.RecordSet({
+            rawData: [{
+               'id': 1,
+               'Раздел': null,
+               'Раздел@': false
+            }, {
+               'id': 2,
+               'Раздел': 1,
+               'Раздел@': null
+            }, {
+               'id': 3,
+               'Раздел': 1,
+               'Раздел@': null
+            }],
             idProperty: 'id'
          });
       });
@@ -216,6 +233,44 @@ define([
                assert.deepEqual([], selection.excluded);
                assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true, 6: true, 7: true}, selectionInstance.getSelectedKeysForRender());
                assert.equal(7, selectionInstance.getCount());
+            });
+
+            it('select hidden node', function() {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: hiddenNodeWithChildren,
+                  keyProperty: 'id'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               selectionInstance.select([1]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([1], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.deepEqual({1: true, 2: true, 3: true}, selectionInstance.getSelectedKeysForRender());
+               assert.equal(3, selectionInstance.getCount());
+            });
+
+            it('select child of a hidden node', function() {
+               cfg = {
+                  selectedKeys: [],
+                  excludedKeys: [],
+                  items: hiddenNodeWithChildren,
+                  keyProperty: 'id'
+               };
+               selectionInstance = new HierarchySelection(cfg);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               selectionInstance.select([2]);
+               selection = selectionInstance.getSelection();
+               assert.deepEqual([2], selection.selected);
+               assert.deepEqual([], selection.excluded);
+               assert.deepEqual({1: null, 2: true}, selectionInstance.getSelectedKeysForRender());
+               assert.equal(1, selectionInstance.getCount());
             });
          });
       });
@@ -424,7 +479,7 @@ define([
             cfg = {
                selectedKeys: [1],
                excludedKeys: [],
-               items: new RecordSet({
+               items: new collection.RecordSet({
                   rawData: itemsWithDuplicateIds,
                   idProperty: 'id'
                }),
