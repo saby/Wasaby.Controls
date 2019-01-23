@@ -6,7 +6,8 @@ define('Controls-demo/Input/Search/SearchPG',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
+      'css!Controls-demo/Wrapper/Wrapper',
+      'css!Controls-demo/Input/Search/Search'
    ],
 
    function(Control, template, MemorySource, config) {
@@ -18,6 +19,7 @@ define('Controls-demo/Input/Search/SearchPG',
          _content: 'Controls/Input/Search',
          _dataObject: null,
          _componentOptions: null,
+         _componentClass: 'ControlsDemo__searchPG',
 
          _beforeMount: function() {
 
