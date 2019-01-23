@@ -41,7 +41,6 @@ define('Controls/Aliases',
        * @css @color_Heading_secondary secondary color of headings
        * @css @thickness_border_default default border thickness
        * @css @thickness_border_accent
-       * @css @height_control_s height of small control
        * @css @height_control_default default height of control
        * @css @height_control_l height of large control
        * @css @size_shadow_default default sizes of shadows
@@ -61,10 +60,15 @@ define('Controls/Aliases',
        * @css @spacing_default_xxs spacing between elements that represents double extra small spacing size
        * @css @spacing_default_xs spacing between elements that represents extra small spacing size
        * @css @spacing_default_s spacing between elements that represents small spacing size
-       * @css @spacing_default_m spacing between elements that represents meduim spacing size
+       * @css @spacing_default_m spacing between elements that represents medium spacing size
        * @css @spacing_default_l spacing between elements that represents large spacing size
        * @css @spacing_default_xl spacing between elements that represents extra large spacing size
        * @css @spacing_default_xxl spacing between elements that represents double extra large spacing size
+       * @css @height_xs height of element that represents extra small size
+       * @css @height_s height of element that represents small size
+       * @css @height_m height of element that represents medium size
+       * @css @height_l height of element that represents large size
+       * @css @height_xl height of element that represents extra large size
        * @css @size_icon_s size that represents small sized icons
        * @css @size_icon_m size that represents medium sized icons
        * @css @size_icon_l size that represents large sized icons
