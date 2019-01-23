@@ -26,7 +26,7 @@ define('Controls/Input/Area',
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Input/Area/Area
+       * @demo Controls-demo/Input/Area/AreaPG
        *
        * @author Колесова П.С.
        */

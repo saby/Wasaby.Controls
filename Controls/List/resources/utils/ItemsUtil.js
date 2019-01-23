@@ -32,7 +32,7 @@ define('Controls/List/resources/utils/ItemsUtil', [
       //TODO это наверное к Лехе должно уехать
       getDisplayItemById: function(display, id, keyProperty) {
          var list = display.getCollection();
-         if (cInstance.instanceOfModule(list, 'WS.Data/Collection/RecordSet')) {
+         if (cInstance.instanceOfModule(list, 'Types/collection:RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
          } else {
             var resItem;

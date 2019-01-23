@@ -72,7 +72,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       cloneItems: function(items) {
-         if (items['[WS.Data/Entity/CloneableMixin]']) {
+         if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
          }
          return Clone(items);

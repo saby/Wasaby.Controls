@@ -1084,7 +1084,7 @@ define('Controls/List/BaseControl', [
          if (!this._listViewModel.getDragEntity()) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
-            if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
                this._listViewModel.setDragEntity(dragObject.entity);

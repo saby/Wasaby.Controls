@@ -26,7 +26,7 @@ define('Controls/Input/Phone',
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Input/Phone/Phone
+       * @demo Controls-demo/Input/Phone/PhonePG
        *
        * @author Колесова П.С.
        */

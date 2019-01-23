@@ -40,7 +40,7 @@ define('Controls/Filter/Fast',
       var _private = {
 
          prepareItems: function(self, items) {
-            if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
                self._items = new collection.List({
                   items: Utils.object.clone(items)
                });
