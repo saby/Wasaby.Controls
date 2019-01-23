@@ -1,8 +1,7 @@
 define('Controls-demo/List/List/BasePG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
-      'WS.Data/Source/SbisService',
+      'Types/source',
       'Controls-demo/Utils/MemorySourceFilter',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
@@ -11,7 +10,7 @@ define('Controls-demo/List/List/BasePG',
       'wml!Controls-demo/List/List/resources/BasePG/footerTemplate'
    ],
 
-   function(Control, MemorySource, SbisService, memorySourceFilter, data, template, config, emptyTpl) {
+   function(Control, sourceLib, memorySourceFilter, data, template, config, emptyTpl) {
       'use strict';
       var Component = Control.extend({
          _template: template,
@@ -26,22 +25,22 @@ define('Controls-demo/List/List/BasePG',
 
          _beforeMount: function() {
 
-            this._sourceGadgets = new MemorySource({
+            this._sourceGadgets = new sourceLib.Memory({
                idProperty: 'id',
                data: data.gadgets,
                filter: memorySourceFilter()
             });
-            this._sourceMusic = new MemorySource({
+            this._sourceMusic = new sourceLib.Memory({
                idProperty: 'id',
                data: data.music,
                filter: memorySourceFilter()
             });
-            this._emptySource = new MemorySource({
+            this._emptySource = new sourceLib.Memory({
                idProperty: 'id',
                data: [],
                filter: memorySourceFilter()
             });
-            this._errorSource = new SbisService({});
+            this._errorSource = new sourceLib.SbisService({});
 
             this._dataObject = {
                source: {

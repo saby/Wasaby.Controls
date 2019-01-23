@@ -1,12 +1,12 @@
 define('Controls-demo/List/List/MultiselectPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/List/List/resources/MultiselectPG/cfg'
    ],
-   function(Control, MemorySource, data, template, config) {
+   function(Control, sourceLib, data, template, config) {
       'use strict';
       var Component = Control.extend({
          _template: template,
@@ -20,7 +20,7 @@ define('Controls-demo/List/List/MultiselectPG',
             this._componentOptions = {
                keyProperty: 'id',
                name: 'MultiSelectPG',
-               source: new MemorySource({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: data.gadgets
                }),
