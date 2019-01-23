@@ -18,7 +18,7 @@ define('Controls/Input/Date/LinkView', [
 
    /**
     * A link button that displays the period. Supports the change of periods to adjacent.
-    *
+    * <a href="/materials/demo-ws4-input-date-linkView">Demo examples.</a>.
     * @class Controls/Input/Date/LinkView
     * @extends Core/Control
     * @mixes Controls/Input/Date/interface/ILinkView
