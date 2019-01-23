@@ -1,12 +1,12 @@
 define('Controls-demo/Buttons/Toggle/ToggleDemo', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'wml!Controls-demo/Buttons/Toggle/ToggleDemo',
-   'WS.Data/Collection/RecordSet',
+   'Types/collection',
    'css!Controls-demo/Headers/headerDemo',
    'css!Controls-demo/Headers/resetButton'
 ], function(Control,
-   MemorySource,
+   source,
    template) {
    'use strict';
 
@@ -29,7 +29,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
          _tooltip: '',
          _eventName: 'no event',
          _beforeMount: function() {
-            this._iconStyleSource = new MemorySource({
+            this._iconStyleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -46,7 +46,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                   }
                ]
             });
-            this._styleSource = new MemorySource({
+            this._styleSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -63,7 +63,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                   }
                ]
             });
-            this._sizeSource = new MemorySource({
+            this._sizeSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -77,7 +77,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                   }
                ]
             });
-            this._captionsSource = new MemorySource({
+            this._captionsSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {
@@ -98,7 +98,7 @@ define('Controls-demo/Buttons/Toggle/ToggleDemo', [
                   }
                ]
             });
-            this._iconsSource = new MemorySource({
+            this._iconsSource = new source.Memory({
                idProperty: 'title',
                data: [
                   {

@@ -1,6 +1,6 @@
 define('Controls/Popup/Opener/Confirmation/Dialog', [
    'Core/Control',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Core/constants',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/content',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/footer',
@@ -9,14 +9,13 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    'wml!Controls/Popup/Opener/Confirmation/Dialog/Dialog',
    'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog'
 ], function(Control,
-   types,
+   entity,
    constants,
    contentTemplate,
    footerTemplate,
    messageTemplate,
    detailsTemplate,
    template) {
-
    'use strict';
 
    /**
@@ -125,12 +124,12 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
    Submit.getOptionTypes = function() {
       return {
-         type: types(String).oneOf([
+         type: entity.descriptor(String).oneOf([
             'ok',
             'yesno',
             'yesnocancel'
          ]),
-         style: types(String).oneOf([
+         style: entity.descriptor(String).oneOf([
             'default',
             'secondary',
             'success',
@@ -142,5 +141,4 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    };
 
    return Submit;
-}
-);
+});

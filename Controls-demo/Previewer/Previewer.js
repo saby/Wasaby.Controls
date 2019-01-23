@@ -2,9 +2,9 @@ define('Controls-demo/Previewer/Previewer', [
 	'Core/Control',
 	'Core/constants',
 	'wml!Controls-demo/Previewer/Previewer',
-	'WS.Data/Source/Memory',
+	'Types/source',
 	'css!Controls-demo/Previewer/Previewer',
-], function(Control, constants, template, MemorySource) {
+], function(Control, constants, template, source) {
 		'use strcit';
 
 		var Previewer = Control.extend({
@@ -18,7 +18,7 @@ define('Controls-demo/Previewer/Previewer', [
 
 			_beforeMount: function() {
             this._resourceRoot = constants.resourceRoot;
-				this._triggerSource = new MemorySource({
+				this._triggerSource = new source.Memory({
 					idProperty: 'title',
 					data: [
 						{title: 'hoverAndClick'},

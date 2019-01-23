@@ -5,14 +5,14 @@ define('Controls/Filter/Button',
    [
       'Core/Control',
       'wml!Controls/Filter/Button/Button',
-      'WS.Data/Chain',
-      'WS.Data/Utils',
+      'Types/chain',
+      'Types/util',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'css!theme?Controls/Filter/Button/Button'
    ],
 
-   function(Control, template, Chain, Utils, Deferred, isEqual) {
+   function(Control, template, chain, Utils, Deferred, isEqual) {
       /**
        * Control for data filtering. Consists of an icon-button and a string representation of the selected filter.
        * Clicking on a icon-button or a string opens the panel. {@link Controls/Filter/Button/Panel}
@@ -57,11 +57,11 @@ define('Controls/Filter/Button',
          getText: function(items) {
             var textArr = [];
 
-            Chain(items).each(function(item) {
-               if (!isEqual(Utils.getItemPropertyValue(item, 'value'), Utils.getItemPropertyValue(item, 'resetValue')) &&
-                  (Utils.getItemPropertyValue(item, 'visibility') === undefined || Utils.getItemPropertyValue(item, 'visibility'))
+            chain.factory(items).each(function(item) {
+               if (!isEqual(Utils.object.getPropertyValue(item, 'value'), Utils.object.getPropertyValue(item, 'resetValue')) &&
+                  (Utils.object.getPropertyValue(item, 'visibility') === undefined || Utils.object.getPropertyValue(item, 'visibility'))
                ) {
-                  var textValue = Utils.getItemPropertyValue(item, 'textValue');
+                  var textValue = Utils.object.getPropertyValue(item, 'textValue');
 
                   if (textValue) {
                      textArr.push(textValue);
@@ -111,10 +111,10 @@ define('Controls/Filter/Button',
          },
          
          resetItems: function(self, items) {
-            Chain(items).each(function(item) {
-               Utils.setItemPropertyValue(item, 'value', Utils.getItemPropertyValue(item, 'resetValue'));
-               if (Utils.getItemPropertyValue(item, 'visibility') !== undefined) {
-                  Utils.setItemPropertyValue(item, 'visibility', false);
+            chain.factory(items).each(function(item) {
+               Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
+               if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
+                  Utils.object.setPropertyValue(item, 'visibility', false);
                }
             });
          }

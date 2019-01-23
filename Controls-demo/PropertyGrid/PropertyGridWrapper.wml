@@ -19,6 +19,7 @@
                         bind:endValue="_options.componentOpt.endValue"
                         bind:selectedKey="_options.componentOpt.selectedKey"
                         bind:selectedKeys="_options.componentOpt.selectedKeys"
+                        bind:collapsedGroups="_options.componentOpt.collapsedGroups"
                         on:click="_clickHandler()"
                         attr:class="js-Controls_{{_demoName}}_mainField
                         {{_options.componentClass ? _options.componentClass : 'controls-demo-pg'}}"/>

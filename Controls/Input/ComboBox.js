@@ -3,7 +3,7 @@ define('Controls/Input/ComboBox',
       'Core/Control',
       'wml!Controls/Input/ComboBox/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
-      'WS.Data/Utils',
+      'Types/util',
       'Controls/Dropdown/Util',
       'Controls/Utils/tmplNotify',
       'css!theme?Controls/Input/ComboBox/ComboBox'
@@ -18,6 +18,7 @@ define('Controls/Input/ComboBox',
        * @extends Core/Control
        * @mixes Controls/interface/ISource
        * @mixes Controls/interface/IItemTemplate
+       * @mixes Controls/interface/IFilter
        * @mixes Controls/interface/ISingleSelectable
        * @mixes Controls/Input/interface/IDropdownEmptyText
        * @mixes Controls/Input/interface/IInputDropdown
@@ -29,13 +30,12 @@ define('Controls/Input/ComboBox',
        * @public
        * @category Input
        * @author Золотова Э.Е.
-       * @demo Controls-demo/Input/ComboBox/ComboBox
-       * @demo Controls-demo/Combobox/ComboboxVDom
+       * @demo Controls-demo/Input/ComboBox/ComboBoxPG
        */
 
       'use strict';
 
-      var getPropValue = Utils.getItemPropertyValue.bind(Utils);
+      var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
       var _private = {
          popupVisibilityChanged: function(state) {

@@ -2,14 +2,14 @@ define('Controls-demo/Buttons/Menu/Menu', [
    'Core/Control',
    'wml!Controls-demo/Buttons/Menu/Menu',
    'Core/core-clone',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/Constants',
    'Controls-demo/Buttons/Menu/historySourceMenu',
 
    'css!Controls-demo/Buttons/Menu/Menu',
    'wml!Controls-demo/Buttons/Menu/itemTemplateSub',
    'wml!Controls-demo/Buttons/Menu/itemTemplateComment'
-], function(Control, template, cClone, Memory, ControlsConstants, HistorySourceMenu) {
+], function(Control, template, cClone, source, ControlsConstants, HistorySourceMenu) {
    'use strict';
 
    var ModuleClass = Control.extend(
@@ -214,7 +214,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          },
 
          _createMemory: function(items) {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'id',
                data: items
             });
@@ -223,7 +223,7 @@ define('Controls-demo/Buttons/Menu/Menu', [
          _createHistoryMemory: function() {
             return HistorySourceMenu.createMemory();
          },
-         _groupMethod: function(item) {
+         _groupingKeyCallback: function(item) {
             if (item.get('group') === 'hidden' || !item.get('group')) {
                return ControlsConstants.view.hiddenGroup;
             }

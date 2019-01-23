@@ -7,7 +7,7 @@
 define('Controls-demo/Layouts/SearchLayout', [
    'Core/Control',
    'wml!Controls-demo/Layouts/SearchLayout/SearchLayout',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/Utils/MemorySourceFilter',
    'Controls/List',
    'css!Controls-demo/Layouts/SearchLayout/SearchLayout',
@@ -22,7 +22,7 @@ define('Controls-demo/Layouts/SearchLayout', [
 
 ], function (BaseControl,
              template,
-             MemorySource,
+             sourceLib,
              MemorySourceFilter) {
    'use strict';
    var ModuleClass = BaseControl.extend(
@@ -35,7 +35,7 @@ define('Controls-demo/Layouts/SearchLayout', [
          _navigation: null,
          _fastFilterData: null,
          _beforeMount: function () {
-            this.sourceDropdown = new MemorySource({
+            this.sourceDropdown = new sourceLib.Memory({
                data: [
                   {key: 1, title: 'все страны'},
                   {key: 2, title: 'Россия'},
@@ -44,7 +44,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                ],
                idProperty: 'key'
             });
-            this.sourceId = new MemorySource({
+            this.sourceId = new sourceLib.Memory({
                data: [
                   {key: 0, title: 'все id'},
                   {key: 1, title: '1'},
@@ -53,7 +53,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                ],
                idProperty: 'key'
             });
-            this._dataSource = new MemorySource({
+            this._dataSource = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {id: 1, firstName: 'Sasha', lastName: 'aaaa'},
@@ -132,7 +132,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                   properties: {
                      keyProperty: 'title',
                      displayProperty: 'title',
-                     source: new MemorySource({
+                     source: new sourceLib.Memory({
                         data: [
                            {id: 0, title: 'По имени'},
                            {id: 1, title: 'Sasha'},
@@ -152,7 +152,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                   properties: {
                      keyProperty: 'id',
                      displayProperty: 'title',
-                     source: new MemorySource({
+                     source: new sourceLib.Memory({
                         data: [
                            {id: 0, title: 'По id'},
                            {id: 1, title: '1'},
@@ -172,7 +172,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                   properties: {
                      keyProperty: 'lastName',
                      displayProperty: 'title',
-                     source: new MemorySource({
+                     source: new sourceLib.Memory({
                         data: [
                            {id: 1, title: 'aaaa', lastName: 'aaaa'},
                            {id: 2, title: 'dfsf', lastName: 'dfsf'},
@@ -185,7 +185,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                   }
                }
             ];
-            this._fastFilterSource = new MemorySource({
+            this._fastFilterSource = new sourceLib.Memory({
                idProperty: 'id',
                data: this._fastFilterData
             });
@@ -201,7 +201,7 @@ define('Controls-demo/Layouts/SearchLayout', [
          },
 
          _afterMount: function () {
-            this._dataSource = new MemorySource({
+            this._dataSource = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {id: 1, firstName: 'Sasha', lastName: 'aaaa'},

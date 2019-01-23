@@ -4,11 +4,11 @@
 define('Controls/Decorator/PhoneNumber',
    [
       'Core/Control',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Decorator/PhoneNumber/PhoneNumber',
       'Controls/Decorator/PhoneNumber/Dictionary'
    ],
-   function(Control, descriptor, template, phoneCodeModule) {
+   function(Control, entity, template, phoneCodeModule) {
 
       'use strict';
 
@@ -156,7 +156,7 @@ define('Controls/Decorator/PhoneNumber',
 
       PhoneDecorator.getOptionTypes = function() {
          return {
-            number: descriptor(String)
+            number: entity.descriptor(String)
          };
       };
 

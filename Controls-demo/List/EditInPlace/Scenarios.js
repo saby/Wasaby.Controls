@@ -1,8 +1,8 @@
 define('Controls-demo/List/EditInPlace/Scenarios', [
    'Core/Control',
    'wml!Controls-demo/List/EditInPlace/Scenarios',
-   'WS.Data/Source/Memory',
-   'WS.Data/Entity/Model',
+   'Types/source',
+   'Types/entity',
    'wml!Controls-demo/List/EditInPlace/FirstScenario/Column',
    'wml!Controls-demo/List/Grid/DemoGroupTemplate',
    'wml!Controls-demo/List/EditInPlace/FirstScenario/Header',
@@ -19,8 +19,8 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
 ], function(
    Control,
    template,
-   Memory,
-   Model
+   sourceLib,
+   entity
 ) {
    'use strict';
 
@@ -87,7 +87,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
       }
    ];
 
-   var secondExampleLookupSource = new Memory({
+   var secondExampleLookupSource = new sourceLib.Memory({
       idProperty: 'id',
       data: [
          {
@@ -237,19 +237,19 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
             iconStyle: 'danger'
          }];
 
-         this._viewSource = new Memory({
+         this._viewSource = new sourceLib.Memory({
             idProperty: 'id',
             data: srcData
          });
-         this._viewSource2 = new Memory({
+         this._viewSource2 = new sourceLib.Memory({
             idProperty: 'id',
             data: srcData2
          });
-         this._viewSource4 = new Memory({
+         this._viewSource4 = new sourceLib.Memory({
             idProperty: 'id',
             data: srcData4
          });
-         this._viewSource5 = new Memory({
+         this._viewSource5 = new sourceLib.Memory({
             idProperty: 'id',
             data: srcData5
          });
@@ -470,7 +470,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
          this._counter = 5;
       },
 
-      _itemsGroupMethod: function(item) {
+      _groupingKeyCallback: function(item) {
          return item.get('type');
       },
 
@@ -487,7 +487,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
       _onItemAdd: function(e, xz, isAdd) {
          if (isAdd) {
             return {
-               item: new Model({
+               item: new entity.Model({
                   rawData: {
                      id: ++this._counter,
                      title: '',

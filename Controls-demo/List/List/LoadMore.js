@@ -1,11 +1,11 @@
 define('Controls-demo/List/List/LoadMore', [
    'Core/Control',
    'wml!Controls-demo/List/List/resources/LoadMore/LoadMore',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/List/List/resources/Data',
    'Controls/List',
    'css!Controls-demo/List/List/resources/LoadMore/LoadMore'
-], function (Control, template, MemorySource, ListData) {
+], function (Control, template, sourceLib, ListData) {
    'use strict';
 
    var
@@ -27,11 +27,11 @@ define('Controls-demo/List/List/LoadMore', [
          },
 
          _beforeMount: function() {
-            this._viewSource = new MemorySource({
+            this._viewSource = new sourceLib.Memory({
                idProperty: 'id',
                data: ListData.generate(50)
             });
-            this._gridViewSource = new MemorySource({
+            this._gridViewSource = new sourceLib.Memory({
                idProperty: 'id',
                data: ListData.generate(50)
             });

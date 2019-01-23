@@ -7,6 +7,7 @@
         itemTemplateProperty="{{_options.itemTemplateProperty}}"
         itemTemplate="{{_options.itemTemplate}}"
         headTemplate="{{_options.headTemplate}}"
+        headerTemplate="{{_options.headerTemplate}}"
         headConfig="{{_options.headConfig}}"
         footerTemplate="{{_options.footerTemplate}}"
         selectedKeys="{{_options.selectedKeys}}"

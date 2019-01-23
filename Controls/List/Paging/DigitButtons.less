@@ -1,25 +1,26 @@
 .controls-DigitButtons__ellipsis {
-   width: @width_Paging-ellipsis;
-   color: @color_Paging-ellipsis-text;
-   background-color: @background-color_Paging-ellispis;
-   font-size: @font-size_Paging-button;
+   width: @width_Paging-digitButton-ellipsis;
+   color: @color_Paging-digitButton-ellipsis-text;
+   background-color: @background-color_Paging-digitButton-ellipsis;
+   font-size: @font-size_Paging-digitButton;
 }
 .controls-DigitButtons__digit {
    border-style: solid;
-   border-width: @border-width_Paging-digit-button;
-   min-width: @width_Paging-digit-button;
-   background-color: @background-color_Paging-button;
+   border-bottom-width: @border-bottom-width_Paging-digitButton_marked;
+   min-width: @min-width_Paging-digitButton;
+   padding: 0 @spacing_Paging-digitButton-between-buttons / 2;
+   background-color: @background-color_Paging-digitButton;
    cursor: pointer;
    box-sizing: border-box;
-   color: @color_Paging-digit-text;
-   font-size: @font-size_Paging-button;
+   color: @color_Paging-digitButton-text;
+   font-size: @font-size_Paging-digitButton;
 }
 .ws-is-no-touch .controls-DigitButtons__digit:hover {
-   background-color: @background-color_Paging-button_hover;
+   background-color: @background-color_Paging-digitButton_hover;
 }
 .controls-DigitButtons__digit__unselected {
    border-color: transparent;
 }
 .controls-DigitButtons__digit__selected {
-   border-color: @border-color_Paging-digit_active;
+   border-color: @border-color_Paging-digitButton_marked;
 }

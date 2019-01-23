@@ -13,6 +13,7 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
       
       var getContainer = function(size) {
          return {
+            style: {height: ''},
             getBoundingClientRect: function() {
                return {
                   toJSON: function() {
@@ -83,7 +84,7 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
          var self = getComponentObject();
          var suggestHeight = 200;
    
-         self._container =  getContainer({
+         self._container = getContainer({
             top: 0,
             bottom: 0,
             get height() {
@@ -97,6 +98,8 @@ define(['Controls/Container/Suggest/__ContentLayer'], function(__ContentLayer) {
          self._height = 'auto';
          assert.equal(__ContentLayer._private.calcHeight(self, getDropDownContainer(900)), 'auto');
          assert.equal(__ContentLayer._private.calcHeight(self, getDropDownContainer(400)), '76px');
+         self._height = '76px';
+         assert.equal(__ContentLayer._private.calcHeight(self, getDropDownContainer(900)), 'auto');
       });
       
    });

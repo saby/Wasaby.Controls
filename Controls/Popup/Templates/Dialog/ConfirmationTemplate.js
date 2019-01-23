@@ -12,7 +12,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          prepareStatusStyle: function(color) {
             var resColor = color;
 
-            // поддержка старых цветов, чтоб не ломать старые
+            // Todo: remove
             if (color === 'error') {
                resColor = 'danger';
             }
@@ -21,7 +21,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          prepareSize: function(size) {
             var resSize = size;
 
-            // поддержка старых цветов, чтоб не ломать старые
+            // Todo: remove
             if (size === 'big') {
                resSize = 'l';
             }
@@ -43,10 +43,11 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           * @category Popup
           * @author Красильников А.С.
           * @mixes Controls/Popup/Templates/Dialog/ConfirmationTmplStyles
+          * @demo Controls-demo/Popup/Templates/ConfirmationTemplatePG
           */
 
          /**
-          * @name Controls/Popup/Opener/Confirmation/Dialog#size
+          * @name Controls/Popup/Opener/Confirmation/ConfirmationTemplate#size
           * @cfg {String} Option description.
           * @variant m
           * @variant l
