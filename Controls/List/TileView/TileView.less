@@ -1,3 +1,5 @@
+@import "../../Container/Scroll/_contentEnvironmentZIndex";
+
 .controls-TileView {
    display: flex;
    flex-wrap: wrap;
@@ -13,7 +15,6 @@
    box-shadow: @box-shadow-size_TileView-item @box-shadow-color_TileView-item;
    background-color: @background-color_TileView-item;
    box-sizing: border-box;
-   z-index: 1;
    overflow: hidden;
    position: absolute;
    top: 0;
@@ -53,7 +54,8 @@
 }
 
 .controls-TileView__item_hovered, .controls-TileView__item_active, .controls-TileView__item_swiped {
-   z-index: 10;
+   //Set the value to more than scrollContainer, so that when you increase the tiles appear above the shadows and scrollbar.
+   z-index: @z-index_Scroll-contentEnvironment + 1;
 
    .controls-TileView__title {
       background-color: @background-color_TileView-title;
@@ -64,10 +66,6 @@
    .controls-TileView__title_invisible {
       display: block;
    }
-}
-
-.controls-TileView__item_active {
-   z-index: 20;
 }
 
 .controls-TileView__item_fixed {
