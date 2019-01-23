@@ -236,6 +236,16 @@ define(
             assert.equal(dropdownController._selectedItems.length, 9);
          });
 
+         it('_beforeUpdate without loaded items', () => {
+            let dropdownController = getDropdownController(config);
+            dropdownController._items = null;
+            var newConfig = Clone(config);
+            newConfig.selectedKeys = ['4'];
+            dropdownController._beforeUpdate(newConfig).addCallback(function() {
+               assert.equal(dropdownController._selectedItems.length, 1);
+            });
+         });
+
          it('open dropdown', () => {
             let dropdownController = getDropdownController(config);
             dropdownController._items = itemsRecords;
