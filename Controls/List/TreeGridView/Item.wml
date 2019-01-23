@@ -68,8 +68,8 @@
                             {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                             {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                             controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-       attr:style="{{(colspan && itemData.columnIndex===(itemData.multiSelectVisibility !== 'hidden' ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility !== 'hidden' ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
-         <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
+       attr:style="(colspan && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
+      <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
       <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
                         {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
    </td>
@@ -77,7 +77,7 @@
 <ws:if data="{{itemData.isNotFullGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex && (!colspan || itemData.columnIndex<2); itemData.goToNextColumn();">
-         <ws:partial template="colTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
+         <ws:partial template="oldColTpl" currentColumn="{{itemData.getCurrentColumn()}}"/>
       </ws:for>
    </tr>
 </ws:if>
