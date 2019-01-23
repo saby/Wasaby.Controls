@@ -13,8 +13,15 @@
 @background-color_CloseButton_primary_untransparent:                                @background-color_additional;
 @border-color_CloseButton_toolButton:                                               @border-color-ToolButton;
 @border-color_CloseButton_toolButton_hover:                                         @color_border;
-@border-width_CloseButton_toolButton:                                               @thickness_border_default 0 @thickness_border_default @thickness_border_default;
-@border-radius_CloseButton_toolButton:                                              2px 0 0 2px;
+@border-top-width_CloseButton_toolButton:                                           @thickness_border_default;
+@border-right-width_CloseButton_toolButton:                                         0;
+@border-bottom-width_CloseButton_toolButton:                                        @thickness_border_default;
+@border-left-width_CloseButton_toolButton:                                          @thickness_border_default;
+@border-width_CloseButton_toolButton:                                               @border-top-width_CloseButton_toolButton @border-right-width_CloseButton_toolButton @border-bottom-width_CloseButton_toolButton @border-left-width_CloseButton_toolButton;
+@border-top-radius_CloseButton_toolButton:                                          @border-radius-ToolButton;
+@border-right-radius_CloseButton_toolButton:                                        0;
+@border-bottom-radius_CloseButton_toolButton:                                       0;
+@border-left-radius_CloseButton_toolButton:                                         @border-radius-ToolButton;
 @box-shadow_CloseButton_toolButton:                                                 @box-shadow-ToolButton;
 //style link
 @font-size_CloseButton_link:                                                        @font-size_text_5xl;
