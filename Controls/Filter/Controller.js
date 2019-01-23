@@ -362,16 +362,20 @@ define('Controls/Filter/Controller',
          _filterButtonItems: null,
          _fastFilterItems: null,
 
-         _beforeMount: function(options) {
-            var itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource),
-               self = this;
-
-            itemsDef.addCallback(function() {
-               _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
-               _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
-            });
-
-            return itemsDef;
+         _beforeMount: function(options, context, receivedState) {
+            if (receivedState) {
+               _private.setFilterItems(this, options.filterButtonSource, options.fastFilterSource, receivedState);
+               _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
+               _private.applyItemsToFilter(this, options.filter, this._filterButtonItems, this._fastFilterItems);
+            } else {
+               var self = this,
+                  itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource);
+               return itemsDef.addCallback(function(items) {
+                  _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
+                  _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
+                  return items;
+               });
+            }
          },
 
          _beforeUpdate: function(newOptions) {
