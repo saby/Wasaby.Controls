@@ -14,6 +14,6 @@
             on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
             on:controlResize="_update()">
     </ws:partial>
-    <Controls.Event.Listener event="controlResize" on:controlResize="_delayedUpdate()"/>
+    <Controls.Event.Listener event="controlResize" on:controlResize="_update()"/>
     <Controls.Event.Listener event="scroll" on:scroll="_update()"/>
 </div>
