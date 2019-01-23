@@ -1,7 +1,7 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import ILinkView = require('Controls/Input/Date/interface/ILinkView');
-import IPeriodLiteDialog = require('Controls/Date/interface/IPeriodLiteDialog');
+import ILinkView from './interfaces/ILinkView';
+import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import componentTmpl = require('wml!Controls/Input/Date/RangeLinkLite/RangeLinkLite');
@@ -12,8 +12,8 @@ import 'css!theme?Controls/Input/Date/RangeLinkLite/RangeLinkLite';
  *
  * @class Controls/Input/Date/RangeLinkLite
  * @extends Core/Control
- * @mixes Controls/Input/Date/interface/ILinkView
- * @mixes Controls/Date/interface/IPeriodLiteDialog
+ * @mixes Controls/_dateRange/interfaces/ILinkView
+ * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog
  * @control
  * @public
  * @category Input
