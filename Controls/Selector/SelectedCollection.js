@@ -6,7 +6,7 @@ define('Controls/Selector/SelectedCollection',
       'Types/chain',
       'Controls/Utils/tmplNotify',
       'Controls/Selector/SelectedCollection/Utils',
-      'WS.Data/Utils',
+      'Types/util',
       'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
@@ -47,7 +47,7 @@ define('Controls/Selector/SelectedCollection',
                itemsIsChanged = self._options.items !== options.items;
 
             if (options.items && (!templateOptions.items || itemsIsChanged)) {
-               templateOptions.items = utils.clone(options.items);
+               templateOptions.items = utils.object.clone(options.items);
             }
 
             templateOptions.readOnly = options.readOnly;
