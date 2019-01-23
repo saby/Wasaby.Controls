@@ -8,7 +8,7 @@ define('Controls/Input/Date/interface/ILinkView', [
    'use strict';
 
    /**
-    * mixin Controls/Input/Date/interface/ILinkView
+    * @interface Controls/Input/Date/interface/ILinkView
     * @public
     */
    var EMPTY_CAPTIONS = {

@@ -83,6 +83,7 @@ define('Controls/Input/Mask/Formatter',
                position = 0,
                delimiters = '',
                stopConcatenation = false,
+               isLastPosition = clearData.position === clearData.value.length,
                clearPosition = clearData.position,
                groups = _private.getValueGroups(format, clearData.value),
                pairPosition, every;
@@ -127,17 +128,25 @@ define('Controls/Input/Mask/Formatter',
 
                            // Добавляем закрывающий разделитель.
                            value += group;
-                           position += value.length - position === 1;
+
+                           // Move carret only when we close a group.
+                           // If the closing delimiter closes the last character in field
+                           // the caret must be in front of the delimiter.
+                           if ((value.length - position === 1) && !(isLastPosition && clearPosition === 0)) {
+                              position += 1;
+                           }
                         }
                         break;
                   }
                } else if (group) {
                   value += delimiters + group;
-                  if (clearPosition > 0) {
+
+                  // The width of the separators is taken into account until we reach the place where the cursor is.
+                  if (clearPosition >= 0) {
                      position += delimiters.length;
                      position += clearPosition > group.length ? group.length : clearPosition;
-                     clearPosition -= group.length;
                   }
+                  clearPosition -= group.length;
                   delimiters = '';
                } else {
                   // Прекратим сцеплять группы, когда будет отсутствовать одна из групп.
