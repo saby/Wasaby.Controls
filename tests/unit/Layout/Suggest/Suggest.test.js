@@ -206,6 +206,26 @@ define(['Controls/Container/Suggest/Layout', 'WS.Data/Collection/List', 'WS.Data
          assert.deepEqual(self._filter, resultFilter);
       });
    
+      it('Suggest::_searchEnd', function() {
+         var suggest = new Suggest();
+         var errorFired = false;
+         var options = {
+           searchDelay: 300
+         };
+         suggest.saveOptions(options);
+         suggest._searchDelay = 0;
+         suggest._children = {};
+   
+         try {
+            suggest._searchEnd();
+         } catch (e) {
+            errorFired = true;
+         }
+         
+         assert.equal(options.searchDelay, suggest._searchDelay);
+         assert.isFalse(errorFired);
+      });
+   
       it('Suggest::_private.searchErrback', function(done) {
          var self = getComponentObject();
          self._loading = true;
