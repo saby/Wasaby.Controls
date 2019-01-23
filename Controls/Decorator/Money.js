@@ -9,7 +9,6 @@ define('Controls/Decorator/Money',
       'css!theme?Controls/Decorator/Money/Money'
    ],
    function(IoC, Control, entity, splitIntoTriads, template) {
-
       'use strict';
 
       /**
@@ -35,6 +34,16 @@ define('Controls/Decorator/Money',
        * @default false
        * @remark
        * true - the number split into triads.
+       * false - does not do anything.
+       * @deprecated Use option {@link Controls/Input/Number#useGrouping}
+       */
+
+      /**
+       * @name Controls/Decorator/Money#useGrouping
+       * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
+       * @default true
+       * @remark
+       * true - the number is separated into grouping.
        * false - does not do anything.
        */
 
@@ -70,6 +79,18 @@ define('Controls/Decorator/Money',
                fraction: fraction,
                number: integer + fraction
             };
+         },
+
+         isUseGrouping: function(options, useLogging) {
+            if ('delimiters' in options) {
+               if (useLogging) {
+                  IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
+               }
+
+               return options.delimiters;
+            }
+
+            return options.useGrouping;
          }
       };
 
@@ -79,25 +100,28 @@ define('Controls/Decorator/Money',
          _parsedNumber: null,
 
          _beforeMount: function(options) {
-            this._parsedNumber = _private.parseNumber(options.number, options.delimiters);
+            this._parsedNumber = _private.parseNumber(options.number, _private.isUseGrouping(options, true));
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.number !== this._options.number || newOptions.delimiters !== this._options.delimiters) {
-               this._parsedNumber = _private.parseNumber(newOptions.number, newOptions.delimiters);
+            var newUseGrouping = _private.isUseGrouping(newOptions, false);
+            var oldUseGrouping = _private.isUseGrouping(this._options, false);
+
+            if (newOptions.number !== this._options.number || newUseGrouping !== oldUseGrouping) {
+               this._parsedNumber = _private.parseNumber(newOptions.number, newUseGrouping);
             }
          }
       });
 
       Money.getDefaultOptions = function() {
          return {
-            delimiters: false
+            useGrouping: true
          };
       };
 
       Money.getOptionTypes = function() {
          return {
-            delimiters: entity.descriptor(Boolean),
+            useGrouping: entity.descriptor(Boolean),
             number: entity.descriptor(Number).required()
          };
       };
@@ -105,5 +129,4 @@ define('Controls/Decorator/Money',
       Money._private = _private;
 
       return Money;
-   }
-);
+   });

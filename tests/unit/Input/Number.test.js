@@ -36,7 +36,7 @@ define(
                value: 0,
                style: 'info',
                placeholder: '',
-               delimiters: true,
+               useGrouping: true,
                textAlign: 'left',
                autoComplete: false,
                onlyPositive: false,
@@ -52,7 +52,7 @@ define(
                'tagStyle',
                'textAlign',
                'fontStyle',
-               'delimiters',
+               'useGrouping',
                'autoComplete',
                'onlyPositive',
                'selectOnClick',
@@ -94,7 +94,7 @@ define(
             it('The display value divided into triads is correctly converted to a value.', function() {
                ctrl._beforeMount({
                   value: '',
-                  delimiters: true
+                  useGrouping: true
                });
 
                ctrl._getField().value = '1111';
@@ -110,7 +110,7 @@ define(
             it('Triad partitioning is disabled. Enter 123456', function() {
                ctrl._beforeMount({
                   value: '',
-                  delimiters: false
+                  useGrouping: false
                });
 
                ctrl._getField().value = '123456';

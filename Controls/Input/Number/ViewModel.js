@@ -34,18 +34,18 @@ define('Controls/Input/Number/ViewModel',
             return !!value && value.indexOf('.0') === value.length - 2;
          },
 
-         joinTriads: function(value) {
+         joinGroups: function(value) {
             return value.replace(/ /g, '');
          },
 
-         prepareData: function(result, delimiters) {
+         prepareData: function(result, useGrouping) {
             var position = result.position;
             var before = result.value.substring(0, position);
             var after = result.value.substring(position, result.value.length);
 
-            if (!delimiters) {
-               before = _private.joinTriads(before);
-               after = _private.joinTriads(after);
+            if (!useGrouping) {
+               before = _private.joinGroups(before);
+               after = _private.joinGroups(after);
             }
 
             return {
@@ -70,7 +70,7 @@ define('Controls/Input/Number/ViewModel',
              * You need to remove these gaps to parseFloat processed value completely.
              * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
              */
-            var value = parseFloat(_private.joinTriads(displayValue));
+            var value = parseFloat(_private.joinGroups(displayValue));
 
             return Number.isNaN(value) ? null : value;
          },
@@ -83,7 +83,7 @@ define('Controls/Input/Number/ViewModel',
          _convertToDisplayValue: function(value) {
             var displayValue = value === null ? '' : value.toString();
 
-            if (this._options.delimiters) {
+            if (this._options.useGrouping) {
                displayValue = splitIntoTriads(displayValue);
             }
 
@@ -116,7 +116,7 @@ define('Controls/Input/Number/ViewModel',
                   break;
             }
 
-            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result, this._options.delimiters), inputType);
+            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result, this._options.useGrouping), inputType);
          },
 
          trimTrailingZeros: function(leaveOneZero) {

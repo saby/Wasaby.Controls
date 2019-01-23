@@ -50,7 +50,7 @@ define('Controls-demo/Input/Number/NumberPG',
                tooltip: 'myTooltip',
                validationErrors: '',
                selectOnClick: false,
-               delimiters: true
+               useGrouping: true
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -83,11 +83,11 @@ define('Controls/Input/Number',
        */
 
       /**
-       * @name Controls/Input/Number#delimiters
-       * @cfg {Boolean} Determines whether the number should be split into triads.
+       * @name Controls/Input/Number#useGrouping
+       * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
        * @default true
        * @remark
-       * true - the number split into triads.
+       * true - the number is separated into grouping.
        * false - does not do anything.
        */
 
@@ -105,7 +105,7 @@ define('Controls/Input/Number',
 
             return {
                precision: options.precision,
-               delimiters: options.delimiters,
+               useGrouping: options.useGrouping,
                onlyPositive: options.onlyPositive,
                integersLength: options.integersLength,
                showEmptyDecimals: options.showEmptyDecimals
@@ -145,7 +145,7 @@ define('Controls/Input/Number',
          var defaultOptions = Base.getDefaultOptions();
 
          defaultOptions.value = 0;
-         defaultOptions.delimiters = true;
+         defaultOptions.useGrouping = true;
          defaultOptions.onlyPositive = false;
          defaultOptions.showEmptyDecimals = false;
 
@@ -163,7 +163,7 @@ define('Controls/Input/Number',
           */
          delete optionTypes.value;
 
-         optionTypes.delimiters = entity.descriptor(Boolean);
+         optionTypes.useGrouping = entity.descriptor(Boolean);
          optionTypes.onlyPositive = entity.descriptor(Boolean);
          optionTypes.showEmptyDecimals = entity.descriptor(Boolean);
 

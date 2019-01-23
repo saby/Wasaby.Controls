@@ -1188,7 +1188,7 @@
             "default": true,
             "title": "If true, text is selected when input is clicked."
           },
-          "delimiters": {
+          "useGrouping": {
             "default": true,
             "type": "Boolean"
           },
