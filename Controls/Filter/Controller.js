@@ -98,6 +98,25 @@ define('Controls/Filter/Controller',
             });
          },
 
+         updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
+            var meta = {
+               '$_addFromData': true
+            };
+
+            function update() {
+               historyUtils.getHistorySource(historyId).update(_private.getHistoryData(filterButtonItems, fastFilterItems), meta);
+            }
+
+            if (!historyUtils.getHistorySource(historyId)._history) {
+               // Getting history before updating if it hasn’t already done
+               _private.getHistoryItems(this, historyId).addCallback(function() {
+                  update();
+               });
+            } else {
+               update();
+            }
+         },
+
          itemsIterator: function(filterButtonItems, fastDataItems, differentCallback, equalCallback) {
             function processItems(items) {
                chain.factory(items).each(function(elem) {
@@ -401,16 +420,10 @@ define('Controls/Filter/Controller',
          },
 
          _itemsChanged: function(event, items) {
-            var meta;
-
             _private.updateFilterItems(this, items);
 
             if (this._options.historyId) {
-               meta = {
-                  '$_addFromData': true
-               };
-               var dataForHistory = _private.getHistoryData(this._filterButtonItems, this._fastFilterItems);
-               historyUtils.getHistorySource(this._options.historyId).update(dataForHistory, meta);
+               _private.updateHistory(this, this._filterButtonItems, this._fastFilterItems, this._options.historyId);
             }
 
             _private.applyItemsToFilter(this, this._filter, items);
