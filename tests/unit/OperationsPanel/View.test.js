@@ -60,7 +60,7 @@ define([
       beforeEach(function() {
          instance = new View();
          instance._container = {
-            clientWidth: 100
+            offsetParent: 100
          };
          instance.saveOptions(cfg);
          oldFillItemsType = WidthUtils.fillItemsType;
@@ -335,7 +335,7 @@ define([
       it('panel is not visible', function(done) {
          var forceUpdateCalled = false;
          instance._container = {
-            clientWidth: 0
+            offsetParent: null
          };
          instance._children = {
             toolbarBlock: {
