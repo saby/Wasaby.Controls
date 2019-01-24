@@ -389,7 +389,8 @@ define('Controls/Filter/Controller',
          },
 
          _itemsChanged: function(event, items) {
-            var meta;
+            var meta,
+               self = this;
 
             _private.updateFilterItems(this, items);
 
@@ -398,7 +399,13 @@ define('Controls/Filter/Controller',
                   '$_addFromData': true
                };
                var filter = _private.getOnlyChangesFilter(this._filterButtonItems, this._fastFilterItems);
-               historyUtils.getHistorySource(this._options.historyId).update(isEmpty(filter) ? filter : _private.prepareHistoryItems(this._filterButtonItems, this._fastFilterItems), meta);
+               if (!historyUtils.getHistorySource(this._options.historyId)._history) {
+                  _private.getHistoryItems(this, this._options.historyId).addCallback(function() {
+                     historyUtils.getHistorySource(self._options.historyId).update(isEmpty(filter) ? filter : _private.prepareHistoryItems(self._filterButtonItems, self._fastFilterItems), meta);
+                  });
+               } else {
+                  historyUtils.getHistorySource(self._options.historyId).update(isEmpty(filter) ? filter : _private.prepareHistoryItems(self._filterButtonItems, self._fastFilterItems), meta);
+               }
             }
 
             _private.applyItemsToFilter(this, this._filter, items);
