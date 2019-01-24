@@ -8,7 +8,7 @@ var global = (function() {
    return this || (0, eval)('this');
 })();
 
-var requirejs = require('requirejs');
+var requirejs = require(path.join(root, 'node_modules', 'saby-units', 'lib', 'requirejs', 'r.js'));
 global.requirejs = requirejs;
 
 // Configuring requirejs
