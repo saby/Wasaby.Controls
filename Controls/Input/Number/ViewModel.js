@@ -34,11 +34,23 @@ define('Controls/Input/Number/ViewModel',
             return !!value && value.indexOf('.0') === value.length - 2;
          },
 
-         prepareData: function(result) {
+         joinGroups: function(value) {
+            return value.replace(/ /g, '');
+         },
+
+         prepareData: function(result, useGrouping) {
             var position = result.position;
+            var before = result.value.substring(0, position);
+            var after = result.value.substring(position, result.value.length);
+
+            if (!useGrouping) {
+               before = _private.joinGroups(before);
+               after = _private.joinGroups(after);
+            }
+
             return {
-               before: result.value.substring(0, position),
-               after: result.value.substring(position, result.value.length),
+               before: before,
+               after: after,
                insert: '',
                delete: ''
             };
@@ -58,7 +70,7 @@ define('Controls/Input/Number/ViewModel',
              * You need to remove these gaps to parseFloat processed value completely.
              * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/parseFloat
              */
-            var value = parseFloat(displayValue.replace(/ /g, ''));
+            var value = parseFloat(_private.joinGroups(displayValue));
 
             return Number.isNaN(value) ? null : value;
          },
@@ -71,7 +83,11 @@ define('Controls/Input/Number/ViewModel',
          _convertToDisplayValue: function(value) {
             var displayValue = value === null ? '' : value.toString();
 
-            return splitIntoTriads(displayValue);
+            if (this._options.useGrouping) {
+               displayValue = splitIntoTriads(displayValue);
+            }
+
+            return displayValue;
          },
 
          handleInput: function(splitValue, inputType) {
@@ -100,7 +116,7 @@ define('Controls/Input/Number/ViewModel',
                   break;
             }
 
-            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
+            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result, this._options.useGrouping), inputType);
          },
 
          trimTrailingZeros: function(leaveOneZero) {

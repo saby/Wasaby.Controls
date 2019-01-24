@@ -150,10 +150,7 @@ define('Controls/Container/LoadingIndicator', [
                this.mods = [cfg.mods];
             }
          }
-
-         if (cfg.delay !== undefined) {
-            this.delay = cfg.delay;
-         }
+         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
       },
 
       toggleIndicator: function(isLoading) {
@@ -315,6 +312,10 @@ define('Controls/Container/LoadingIndicator', [
          return this._stack.getIndexByValue('id', id);
       },
 
+      _getDelay: function(config) {
+         return typeof config.delay === 'number' ? config.delay : this.delay;
+      },
+
       _toggleIndicator: function(visible, config, force) {
          clearTimeout(this.delayTimeout);
          if (visible) {
@@ -322,7 +323,7 @@ define('Controls/Container/LoadingIndicator', [
                this.isLoading = true;
                this._updateProperties(config);
             } else {
-               var delay = typeof config.delay === 'number' ? config.delay : this._delay;
+               var delay = this._getDelay(config);
                this.delayTimeout = setTimeout(function() {
                   this.isLoading = true;
                   this._updateProperties(config);

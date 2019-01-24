@@ -1,10 +1,10 @@
-define('Controls/List/Paging/Paging/Style', [],
+define('Controls/List/PagingStyles', [],
    function() {
    }
 
    /**
     * @author Родионов Е.А.
-    * @mixin Controls/List/Paging/Paging/Style
+    * @mixin Controls/List/PagingStyles
     * @public
     *
     *

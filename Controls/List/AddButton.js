@@ -5,6 +5,12 @@ define('Controls/List/AddButton', [
    'css!theme?Controls/List/AddButton/AddButton'
 ], function(Control, template, entity) {
 
+   /**
+    *
+    * @mixes Controls/List/AddButton/Styles
+    *
+    */
+
    var AddButton = Control.extend({
       _template: template,
 

@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Demo-example: Popup-edit.">
+<Controls.Application.ApplicationWrapper caption="Popup-edit" demoname="Controls-demo/Popup/Edit/Opener.wml">
     <ws:content>
         <Controls-demo.Popup.Edit.Opener />
     </ws:content>
