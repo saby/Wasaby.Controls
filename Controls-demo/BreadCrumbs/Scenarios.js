@@ -620,11 +620,13 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
          });
          this._breadCrumbs6 = [
             new entity.Model({
+               idProperty: 'id',
                rawData: {
                   id: 1,
                   title: 'Солнце-море-пляж'
                }
             }), new entity.Model({
+               idProperty: 'id',
                rawData: {
                   id: 2,
                   title: 'Сардиния'

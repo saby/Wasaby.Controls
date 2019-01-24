@@ -8,9 +8,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/BreadCrumbs/Path/_Back',
-   'Controls/BreadCrumbs/Path/_Back',
    'Types/entity',
-   'Controls/Heading/Back',
    'css!theme?Controls/BreadCrumbs/Path/Path'
 ], function(
    Control,
@@ -22,7 +20,6 @@ define('Controls/BreadCrumbs/Path', [
    applyHighlighter,
    template,
    backButtonTemplate,
-   PathBack,
    entity
 ) {
    'use strict';
@@ -50,7 +47,6 @@ define('Controls/BreadCrumbs/Path', [
             availableWidth,
             homeWidth;
 
-         self._header = _private.getHeader(self, options);
          self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty);
          if (options.items.length > 1) {
             self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
@@ -77,23 +73,6 @@ define('Controls/BreadCrumbs/Path', [
             self._breadCrumbsClass = '';
          }
       },
-      getHeader: function(self, options) {
-         var newHeader = options.header;
-         if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
-            newHeader = options.header.slice();
-            newHeader[0] = {
-               template: PathBack,
-               templateOptions: {
-                  backButtonStyle: options.backButtonStyle,
-                  backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
-                  counterCaption: self._getCounterCaption(options.items)
-               },
-               width: options.header[0].width
-            };
-         }
-         return newHeader;
-      },
-
       getRootModel: function(root, keyProperty) {
          var rawData = {};
 
@@ -141,10 +120,6 @@ define('Controls/BreadCrumbs/Path', [
       _breadCrumbsClass: '',
       _oldWidth: 0,
 
-      _beforeMount: function(options) {
-         this._header = _private.getHeader(this, options);
-      },
-
       _afterMount: function() {
          this._oldWidth = this._container.clientWidth;
          if (this._options.items && this._options.items.length > 0) {
@@ -159,9 +134,9 @@ define('Controls/BreadCrumbs/Path', [
 
       _beforeUpdate: function(newOptions) {
          var containerWidth = this._container.clientWidth;
-         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth) || this._options.header !== newOptions.header) {
+         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
-            _private.calculateItems(this, newOptions, containerWidth - 12);
+            _private.calculateItems(this, newOptions, containerWidth);
          }
       },
 
