@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Demo-example: item template.">
+<Controls.Application.ApplicationWrapper caption="Item template." demoname="Controls-demo/List/List/ItemTemplatePG.wml">
     <ws:content>
         <Controls-demo.List.List.ItemTemplatePG/>
     </ws:content>

@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Separator(header), back button.">
+<Controls.Application.ApplicationWrapper caption="Heading" demoname="Controls-demo/Headers/standartDemoHeader.wml">
     <ws:content>
         <Controls-demo.Headers.standartDemoHeader/>
     </ws:content>
