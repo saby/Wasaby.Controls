@@ -57,7 +57,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          received: null,
          parent: null,
          type: true,
-         text: ''
+         text: '',
+         image: null
       }, {
          id: 1,
          title: 'План июнь',
@@ -66,7 +67,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          received: null,
          parent: null,
          type: true,
-         text: ''
+         text: '',
+         image: null
       }, {
          id: 2,
          title: 'Срочно',
@@ -75,7 +77,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          received: null,
          parent: null,
          type: true,
-         text: ''
+         text: '',
+         image: null
       }, {
          id: 3,
          title: 'Перемещение записей',
@@ -84,7 +87,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          received: null,
          parent: 2,
          type: true,
-         text: ''
+         text: '',
+         image: null
       }, {
          id: 4,
          title: 'Крайнов Дмитрий',
@@ -111,7 +115,9 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          id: 0,
          parent: null,
          type: true,
-         title: 'Скриншоты'
+         title: 'Скриншоты',
+         image: null,
+         size: null
       }, {
          id: 1,
          parent: null,
