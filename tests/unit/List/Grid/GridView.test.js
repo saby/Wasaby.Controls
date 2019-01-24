@@ -41,6 +41,25 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
             GridView._private.calcFooterPaddingClass({ }),
             'Incorrect result "calcFooterPaddingClass({ })".');
       });
-      
+      it('beforeUpdate', function() {
+         var
+            superclassBeforeUpdateCalled = false,
+            cfg = {
+               columns: [
+                  { displayProperty: 'field1', template: 'column1' },
+                  { displayProperty: 'field2', template: 'column2' }
+               ]
+            },
+            gridView = new GridView(cfg),
+            superclassBeforeUpdate = GridView.superclass._beforeUpdate;
+         gridView.saveOptions(cfg);
+         GridView.superclass._beforeUpdate = function() {
+            superclassBeforeUpdateCalled = true;
+            superclassBeforeUpdate.apply(this, arguments);
+         };
+         gridView._beforeUpdate(cfg);
+         GridView.superclass._beforeUpdate = superclassBeforeUpdate;
+         assert.isTrue(superclassBeforeUpdateCalled, 'Superclass method not called in "_beforeUpdate".');
+      });
    });
 });
