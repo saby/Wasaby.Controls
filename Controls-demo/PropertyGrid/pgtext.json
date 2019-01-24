@@ -1184,6 +1184,10 @@
             "default": true,
             "title": "If true, text is selected when input is clicked."
           },
+          "useGrouping": {
+            "default": true,
+            "type": "Boolean"
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
@@ -1892,23 +1896,19 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "placeholder": {
-            "type": "String|function",
-            "title": "Field placeholder."
-          },
-          "tooltip": {
+          "value": {
             "type": "String",
-            "title": "Text of the tooltip shown when the control is hovered over."
+            "default": "'' (empty string)",
+            "title": "Text in the field."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Field placeholder."
           },
           "selectOnClick": {
             "type": "Boolean",
             "default": false,
             "title": "Determines whether text is selected when input is clicked."
-          },
-          "value": {
-            "type": "String",
-            "default": "'' (empty string)",
-            "title": "Text in the field."
           },
           "readOnly": {
             "type": "Boolean",

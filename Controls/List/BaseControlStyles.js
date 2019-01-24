@@ -1,10 +1,10 @@
-define('Controls/List/BaseControl/Style', [],
+define('Controls/List/BaseControlStyles', [],
    function() {
    }
 
    /**
     * @author Родионов Е.А.
-    * @mixin Controls/List/BaseControl/Style
+    * @mixin Controls/List/BaseControlStyles
     * @public
     *
     *

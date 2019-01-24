@@ -85,16 +85,20 @@ define('Controls/Input/Search',
          },
 
          _resetClick: function() {
-            // move focus from clear button to input
-            this.activate();
-            this._notify('resetClick');
-            this._notifyOnValueChanged('');
+            if (!this._options.readOnly) {
+               // move focus from clear button to input
+               this.activate();
+               this._notify('resetClick');
+               this._notifyOnValueChanged('');
+            }
          },
 
          _searchClick: function() {
-            // move focus from search button to input
-            this.activate();
-            this._notify('searchClick');
+            if (!this._options.readOnly) {
+               // move focus from search button to input
+               this.activate();
+               this._notify('searchClick');
+            }
          },
 
          _keyUpHandler: function(event) {

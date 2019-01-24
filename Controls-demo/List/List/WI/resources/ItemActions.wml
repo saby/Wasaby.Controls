@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Demo-example: item actions.">
+<Controls.Application.ApplicationWrapper caption="Item actions." demoname="Controls-demo/List/List/ItemActionsPG.wml">
     <ws:content>
         <Controls-demo.List.List.ItemActionsPG/>
     </ws:content>

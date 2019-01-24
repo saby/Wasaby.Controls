@@ -6,7 +6,7 @@
     <ws:content>
         <div>
             <ws:partial template="{{_options.content}}"/>
-            <ws:if data="{{_version}}">
+            <ws:if data="{{_version && _options.demoname}}">
                 <Controls.Button attr:target="_blank"
                                  caption="Source"
                                  viewMode="link"
