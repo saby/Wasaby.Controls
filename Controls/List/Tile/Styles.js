@@ -1,7 +1,7 @@
-define('Controls/List/TileView/TileViewStyles', [],
+define('Controls/List/Tile/Styles', [],
    function() {
       /**
-       * @mixin Controls/List/TileView/TileViewStyles
+       * @mixin Controls/List/Tile/Styles
        * @public
        *
        * @css @spacing_TileView-between-items Spacing between items.

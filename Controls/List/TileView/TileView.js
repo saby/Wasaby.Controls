@@ -83,6 +83,7 @@ define('Controls/List/TileView/TileView', [
       ZOOM_DELAY = 150,
       ZOOM_COEFFICIENT = 1.5;
 
+
    var TileView = ListView.extend({
       _template: template,
       _defaultItemTemplate: defaultItemTpl,

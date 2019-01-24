@@ -1,10 +1,10 @@
-define('Controls/List/Paging/DigitButtons/Style', [],
+define('Controls/List/DigitButtonsStyles', [],
    function() {
    }
 
    /**
     * @author Родионов Е.А.
-    * @mixin Controls/List/Paging/DigitButtons/Style
+    * @mixin Controls/List/DigitButtonsStyles
     * @public
     *
     *
