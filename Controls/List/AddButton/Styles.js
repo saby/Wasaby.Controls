@@ -1,10 +1,10 @@
-define('Controls/List/AddButton/Style', [],
+define('Controls/List/AddButton/Styles', [],
    function() {
    }
 
    /**
     * @author Родионов Е.А.
-    * @mixin Controls/List/AddButton/Style
+    * @mixin Controls/List/AddButton/Styles
     * @public
     *
     *

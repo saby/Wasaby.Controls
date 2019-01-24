@@ -160,11 +160,11 @@ define('Controls/List/Mover', [
       },
 
       getModelByItem: function(self, item) {
-         return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item : self._items.getRecordById(item);
+         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item : self._items.getRecordById(item);
       },
 
       getIdByItem: function(self, item) {
-         return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item.get(self._keyProperty) : item;
+         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
       }
    };
 

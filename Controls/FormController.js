@@ -9,7 +9,7 @@ define('Controls/FormController', [
 
    var _private = {
       checkRecordType: function(record) {
-         return cInstance.instanceOfModule(record, 'WS.Data/Entity/Record');
+         return cInstance.instanceOfModule(record, 'Types/entity:Record');
       },
       readRecordBeforeMount: function(instance, cfg) {
          // если в опции не пришел рекорд, смотрим на ключ key, который попробуем прочитать
@@ -99,6 +99,7 @@ define('Controls/FormController', [
    var FormController = Control.extend({
       _template: tmpl,
       _record: null,
+      _isNewRecord: false,
 
       _beforeMount: function(cfg) {
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
@@ -130,12 +131,18 @@ define('Controls/FormController', [
          }
          this._isMount = true;
       },
-      _beforeUpdate: function(cfg) {
-         if (cfg.record && _private.checkRecordType(cfg.record)) {
-            this._setRecord(cfg.record);
-            if (cfg.isNewRecord) {
-               this._isNewRecord = this._options.isNewRecord;
-            }
+      _beforeUpdate: function(newOptions) {
+         if (newOptions.record && this._options.record !== newOptions.record) {
+            this._setRecord(newOptions.record);
+         }
+         if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
+            this.read(newOptions.key, newOptions.readMetaData);
+         }
+         if (newOptions.key === undefined && !newOptions.record) {
+            this.create(newOptions.initValues);
+         }
+         if (newOptions.isNewRecord !== undefined) {
+            this._isNewRecord = newOptions.isNewRecord;
          }
       },
       _afterUpdate: function() {
@@ -145,16 +152,6 @@ define('Controls/FormController', [
             this._wasCreated = false;
             this._wasRead = false;
             this._wasDestroyed = false;
-         }
-
-         if (this._options.record && _private.checkRecordType(this._options.record)) {
-            // уже установили в _beforeUpdate
-         } else if (this._options.key !== undefined && this._options.key !== null) {
-            // если нет рекорда и есть ключ - прочитаем рекорд
-            this.read(this._options.key, this._options.readMetaData);
-         } else {
-            // если нет ни рекорда ни ключа - создадим рекорд
-            this.create(this._options.initValues);
          }
       },
       _beforeUnmount: function() {
@@ -182,18 +179,16 @@ define('Controls/FormController', [
       },
 
       _tryDeleteNewRecord: function() {
-         var def;
-         if (this._isNewRecord && this._record) {
-            var id = this._getRecordId();
-            def = this._options.dataSource.destroy(id, this._options.destroyMeta);
-            def.addBoth(function() {
-               this._deletedId = id;
-            }.bind(this));
-         } else {
-            def = new Deferred();
-            def.callback();
+         if (this._needDestroyRecord()) {
+            return this._options.dataSource.destroy(this._getRecordId(), this._options.destroyMeta);
          }
-         return def;
+         return (new Deferred()).callback();
+      },
+      _needDestroyRecord: function() {
+         // Destroy record when:
+         // 1. The record obtained by the method "create"
+         // 2. The "create" method returned the key
+         return this._record && this._isNewRecord && this._getRecordId();
       },
       _onPropertyChange: function() {
          if (!this._propertyChangeNotified && this._record.isChanged()) {

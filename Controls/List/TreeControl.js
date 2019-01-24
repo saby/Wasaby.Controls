@@ -212,6 +212,7 @@ define('Controls/List/TreeControl', [
     *
     * @class Controls/List/TreeControl
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/TreeGridView/Styles
     * @extends Controls/List/ListControl
     * @control
     * @public

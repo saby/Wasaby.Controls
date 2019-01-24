@@ -72,7 +72,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       cloneItems: function(items) {
-         if (items['[WS.Data/Entity/CloneableMixin]']) {
+         if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
          }
          return Clone(items);
@@ -100,8 +100,29 @@ define('Controls/Filter/Button/Panel', [
          return isChanged;
       },
 
+      hasResetValue: function(items) {
+         var hasReset = false;
+         Chain(items).each(function(item) {
+            if (hasReset) {
+               return;
+            }
+            hasReset = getPropValue(item, 'resetValue') !== undefined;
+         });
+         return hasReset;
+      },
+
       validate: function(self) {
          return self._children.formController.submit();
+      },
+
+      isPassedValidation: function(result) {
+         var isPassedValidation = true;
+         chain.factory(result).each(function(value) {
+            if (value) {
+               isPassedValidation = false;
+            }
+         });
+         return isPassedValidation;
       },
 
       hasAdditionalParams: function(items) {
@@ -127,6 +148,7 @@ define('Controls/Filter/Button/Panel', [
    var FilterPanel = Control.extend({
       _template: template,
       _isChanged: false,
+      _hasResetValue: false,
       _hasAdditionalParams: false,
 
       _beforeMount: function(options, context) {
@@ -134,12 +156,14 @@ define('Controls/Filter/Button/Panel', [
          _private.resolveHistoryId(this, options, this._contextOptions);
          this._hasAdditionalParams = (options.additionalTemplate || options.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
          this._isChanged = _private.isChangedValue(this._items);
+         this._hasResetValue = _private.hasResetValue(this._items);
          return _private.loadHistoryItems(this, this._historyId);
       },
 
       _beforeUpdate: function(newOptions, context) {
          this._isChanged = _private.isChangedValue(this._items);
          this._hasAdditionalParams = (newOptions.additionalTemplate || newOptions.additionalTemplateProperty) && _private.hasAdditionalParams(this._items);
+         this._hasResetValue = _private.hasResetValue(this._items);
          if (!isEqual(this._options.items, newOptions.items)) {
             _private.resolveItems(this, newOptions, context);
          }
@@ -166,12 +190,12 @@ define('Controls/Filter/Button/Panel', [
       _applyFilter: function(event, items) {
          var self = this;
          _private.validate(this).addCallback(function(result) {
-            if (!result[0]) {
+            if (_private.isPassedValidation(result)) {
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
                   items: _private.prepareItems(items || self._items)
                }]);
-               self._notify('close');
+               self._notify('close', [], {bubbling: true});
             }
          });
       },
@@ -192,7 +216,8 @@ define('Controls/Filter/Button/Panel', [
       return {
          headingCaption: rk('Отбираются'),
          headingStyle: 'secondary',
-         orientation: 'vertical'
+         orientation: 'vertical',
+         applyButtonCaption: rk('Отобрать')
       };
    };
 

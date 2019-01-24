@@ -17,7 +17,7 @@ define('Controls/List/ItemsViewModel', [
 
       // проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
       isEqualItems: function(oldList, newList) {
-         return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet') &&
+         return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
             (newList.getModel() === oldList.getModel()) &&
             (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
             (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);

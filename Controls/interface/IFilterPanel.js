@@ -197,7 +197,7 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#additionalTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render in the additional block. If not set, additionalTemplate is used instead.
+    * @cfg {String} Name of the item property that contains template for item render in the additional block. If not set, additionalTemplate is used instead.
     * @remark
     * To display the filter in the additional block, you need to specify in the settings item visibility: false.
     * When specifying visibility = true, the filter will be displayed in the main block, but when the filter is reset, it will be displayed in the additional block.
@@ -269,7 +269,7 @@ define('Controls/interface/IFilterPanel', [], function() {
 
    /**
     * @name Controls/interface/IFilterPanel#itemTemplateProperty
-    * @cfg {additionalTpl} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
+    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
     * @remark
     * To display in a string, that is formed by the values from items, you must make a bind:textValue="item.textValue".
     * For proper display, templates for all items should be described.

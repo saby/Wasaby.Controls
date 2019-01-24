@@ -145,7 +145,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
             this._componentOptions = {
                name: 'Dropdown',
                source: this._sourceIcons,
-               selectedKeys: '1',
+               selectedKeys: [1],
                historyId: '',
                itemTemplate: undefined,
                itemTemplateProperty: '',

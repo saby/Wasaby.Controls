@@ -987,10 +987,6 @@
             "type": "String",
             "title": "Field value."
           },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
-          },
           "tagStyle": {
             "type": "enum",
             "title": "Tag style (colored indicator).",
@@ -1187,6 +1183,10 @@
             "type": "Boolean",
             "default": true,
             "title": "If true, text is selected when input is clicked."
+          },
+          "useGrouping": {
+            "default": true,
+            "type": "Boolean"
           },
           "textAlign": {
             "type": "enum",
@@ -1880,6 +1880,52 @@
           "templateOptions": {
             "title": "Шаблон отображения внутреннего содержимого",
             "type": "Object"
+          }
+        }
+      }
+    }
+  },
+  "Controls/Input/Search": {
+    "name": "Controls/Input/Search",
+    "title": "Search input.",
+    "className": "Controls/Input/Search",
+    "kind": "control",
+    "isPublic": true,
+    "fullname": "Controls/Input/Search",
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "value": {
+            "type": "String",
+            "default": "'' (empty string)",
+            "title": "Text in the field."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Field placeholder."
+          },
+          "selectOnClick": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Determines whether text is selected when input is clicked."
+          },
+          "readOnly": {
+            "type": "Boolean",
+            "title": "Determines whether control will react to user actions."
+          },
+          "maxLength": {
+            "type": "Number",
+            "title": "Maximum number of characters that can be entered in the field."
+          },
+          "trim": {
+            "type": "Boolean",
+            "default": false,
+            "title": "Determines whether the field value should be trimmed when input is completed."
+          },
+          "constraint": {
+            "type": "String",
+            "title": "Regular expression for input filtration."
           }
         }
       }

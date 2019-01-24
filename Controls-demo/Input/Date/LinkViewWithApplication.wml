@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="LinkView" demoname="Controls-demo/Input/Date/LinkView.wml">
+   <ws:content>
+      <Controls-demo.Input.Date.LinkView/>
+   </ws:content>
+</Controls.Application.ApplicationWrapper>

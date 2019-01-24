@@ -1,7 +1,7 @@
-define('Controls/List/Grid/SortButton/Styles', [], function() {
+define('Controls/List/Grid/SortButtonStyles', [], function() {
    /**
     * @author Gerasimov A.M.
-    * @mixin Controls/List/Grid/SortButton/Styles
+    * @mixin Controls/List/Grid/SortButtonStyles
     * @public
     *
     * @css @font-size_SortButton-icon Font-size of the button icon.

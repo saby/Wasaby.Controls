@@ -36,21 +36,21 @@ define(
          });
 
          it('Divide into triads', function() {
-            result = Number._private.formatNumber(123456.01, 'round');
+            result = Number._private.formatNumber(123456.01, 'round', undefined, true);
             assert.equal(result, '123 456.01');
 
-            result = Number._private.formatNumber(123456, 'round');
+            result = Number._private.formatNumber(123456, 'round', undefined, true);
             assert.equal(result, '123 456');
 
-            result = Number._private.formatNumber(123456.000001, 'round');
+            result = Number._private.formatNumber(123456.000001, 'round', undefined, true);
             assert.equal(result, '123 456.000001');
 
-            result = Number._private.formatNumber(12345, 'round');
+            result = Number._private.formatNumber(12345, 'round', undefined, true);
             assert.equal(result, '12 345');
          });
 
          it('Negative number', function() {
-            result = Number._private.formatNumber(-123456.000001, 'round');
+            result = Number._private.formatNumber(-123456.000001, 'round', undefined, true);
             assert.equal(result, '-123 456.000001');
          });
 

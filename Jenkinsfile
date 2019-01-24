@@ -218,6 +218,9 @@ node('controls') {
         def tests_for_run_int = ""
         def tests_for_run_reg = ""
         def smoke_result = true
+        def run_tests_int = true
+        def run_tests_reg = true
+
         try {
         echo "Назначаем переменные"
         def server_address=props["SERVER_ADDRESS"]
@@ -737,6 +740,8 @@ node('controls') {
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int = false
                                 }
 
                              }
@@ -747,6 +752,8 @@ node('controls') {
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg = false
                                  }
                              }
                         }
@@ -768,29 +775,32 @@ node('controls') {
             parallel (
                 int_test: {
                     stage("Инт.тесты"){
-                        if ( inte || all_inte && smoke_result ){
+                        if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
                             dir("./controls/tests/int"){
-
-                                sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
-                                deactivate
-                                """
+								timeout(time: 10, unit: 'MINUTES', activity: true) {
+									sh """
+									source /home/sbis/venv_for_test/bin/activate
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									deactivate
+									"""
+								}
                             }
                         }
                     }
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( all_regr || regr && smoke_result){
+                        if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg"){
-                                sh """
-                                    source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
-                                    deactivate
-                                """
+								timeout(time: 10, unit: 'MINUTES', activity: true) {
+									sh """
+										source /home/sbis/venv_for_test/bin/activate
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										deactivate
+									"""
+								}
                             }
                         }
                     }
@@ -813,7 +823,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( all_regr|| regr || inte || all_inte ){
+    if ( (all_regr|| regr || inte || all_inte) && (run_tests_int || run_tests_reg) ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -827,15 +837,18 @@ node('controls') {
             sh "mkdir logs_ps"
             if ( exists_dir ){
                 dir('/home/sbis/Controls'){
-                    def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-                    if ( files_err.length > 1 ){
+                    def files_err = findFiles(glob: 'intest/logs/**/*_errors.log')
+                    def files_ps_err = findFiles(glob: 'intest-ps/logs/**/*_errors.log')
+                    if ( files_err.length > 0 ){
                         sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-                        dir ( workspace ){
-                            sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-                        }
                     }
+					if (files_ps_err.length > 0){
+                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+                    }
+					dir ( workspace ){
+						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+					}
                 }
             }
         }
@@ -877,13 +890,17 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( regr || all_regr ){
+    if ( (regr || all_regr) && run_tests_reg ){
         dir("./controls") {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         }
     gitlabStatusUpdate()
+    if (!run_tests_int && !run_tests_reg) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
+        currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
+    }
         }
     }
     LocalDateTime end_time = LocalDateTime.now();

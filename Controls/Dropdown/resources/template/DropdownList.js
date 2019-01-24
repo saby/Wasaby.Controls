@@ -7,11 +7,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
       'wml!Controls/Dropdown/resources/template/itemTemplate',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
-      'wml!Controls/Dropdown/resources/template/defaultContentHeadTemplate',
 
       'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, IoC, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, defaultContentHeadTemplate) {
+   function(Control, IoC, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate) {
       var _private = {
          checkDeprecated: function(cfg) {
             if (cfg.groupMethod) {
@@ -99,7 +98,6 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _groupTemplate: groupTemplate,
          _defaultItemTemplate: itemTemplate,
          _defaultHeadTemplate: defaultHeadTemplate,
-         _defaultContentHeadTemplate: defaultContentHeadTemplate,
          _hasHierarchy: false,
          _listModel: null,
 

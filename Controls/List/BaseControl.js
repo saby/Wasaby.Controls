@@ -648,6 +648,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/BaseControl/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -711,6 +712,7 @@ define('Controls/List/BaseControl', [
                down: false
             };
          }
+         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
          return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             var
@@ -824,6 +826,7 @@ define('Controls/List/BaseControl', [
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
+         this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);
@@ -879,8 +882,13 @@ define('Controls/List/BaseControl', [
                this._virtualScroll.updateItemsSizes();
             }
          }
+         if (this._delayedSelect && this._children.selectionController) {
+            this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
+            this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
+            this._delayedSelect = null;
+         }
 
-
+   
          //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
          //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
          if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
@@ -924,10 +932,16 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
-            var status = itemData.multiSelectStatus;
-            this._children.selectionController.onCheckBoxClick(itemData.key, status);
-            this._notify('checkboxClick', [itemData.key, status]);
+         if (direction === 'right' && !itemData.isSwiped) {
+            /**
+             * After the right swipe the item should get selected.
+             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
+             */
+            this._needSelectionController = true;
+            this._delayedSelect = {
+               key: itemData.key,
+               status: itemData.multiSelectStatus
+            };
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
@@ -1084,7 +1098,7 @@ define('Controls/List/BaseControl', [
          if (!this._listViewModel.getDragEntity()) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
-            if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
                this._listViewModel.setDragEntity(dragObject.entity);

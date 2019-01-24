@@ -163,7 +163,7 @@ define('Controls/Dropdown/Controller',
          },
 
          _beforeUpdate: function(newOptions) {
-            if (newOptions.selectedKeys !== this._options.selectedKeys) {
+            if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
             }

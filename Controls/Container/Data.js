@@ -39,7 +39,7 @@ define('Controls/Container/Data',
 
       var _private = {
          isEqualItems: function(oldList, newList) {
-            return oldList && cInstance.instanceOfModule(oldList, 'WS.Data/Collection/RecordSet') &&
+            return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
                (newList.getModel() === oldList.getModel()) &&
                (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
                (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
@@ -64,10 +64,10 @@ define('Controls/Container/Data',
 
             return CONTEXT_OPTIONS.reduce(reducer, dataOptions);
          },
-   
+
          createPrefetchSource: function(self, data) {
             var resultDef = new Deferred();
-   
+
             getPrefetchSource({
                source: self._source,
                navigation: self._navigation,
@@ -83,7 +83,7 @@ define('Controls/Container/Data',
                   resultDef.callback(null);
                   return error;
                });
-   
+
             return resultDef;
          },
 
