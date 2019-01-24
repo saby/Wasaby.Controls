@@ -1,7 +1,7 @@
 define('Controls-demo/List/List/ItemActionsPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/Utils/MemorySourceFilter',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
@@ -12,7 +12,7 @@ define('Controls-demo/List/List/ItemActionsPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, MemorySource, memorySourceFilter, data, template, config) {
+   function(Control, sourceLib, memorySourceFilter, data, template, config) {
       'use strict';
       var Component = Control.extend({
          _template: template,
@@ -24,7 +24,7 @@ define('Controls-demo/List/List/ItemActionsPG',
 
          _beforeMount: function() {
 
-            this._sourceGadgets = new MemorySource({
+            this._sourceGadgets = new sourceLib.Memory({
                idProperty: 'id',
                data: data.gadgets,
                filter: memorySourceFilter()
