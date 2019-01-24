@@ -478,8 +478,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             },
             suggestComponent = new Suggest();
 
+         suggestComponent._inputActive = true;
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
+         assert.isFalse(suggestComponent._inputActive);
 
          suggestComponent._options.historyId = 'testFieldHistoryId';
          suggestComponent._select(item);
