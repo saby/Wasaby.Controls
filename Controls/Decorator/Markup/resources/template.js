@@ -125,7 +125,7 @@ define('Controls/Decorator/Markup/resources/template', [
          // Mobile can't work with tags yet, so can be value like ["text"].
          // TODO: cancel this merge in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99
          if (value.length === 1 && isString(value[0])) {
-            value = ['div', value[0]];
+            value = ['div', { style: 'white-space: pre;' }, value[0]];
          } else {
             value = ['div', value];
          }
