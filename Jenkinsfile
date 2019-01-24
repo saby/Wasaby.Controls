@@ -186,7 +186,8 @@ echo "Генерируем параметры"
 
 def regr = params.run_reg
 def all_regr = params.run_all_reg
-def unit = params.run_unit
+//def unit = params.run_unit
+def unit = false
 def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
