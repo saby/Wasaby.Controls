@@ -4,7 +4,8 @@ import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_breadCrumbs/View/View');
 import itemTemplate = require('wml!Controls/_breadCrumbs/View/resources/itemTemplate');
 import itemsTemplate = require('wml!Controls/_breadCrumbs/View/resources/itemsTemplate');
-import menuItemTemplate = require('wml!Controls/_breadCrumbs/resources/menuContentTemplate');
+import menuItemTemplate = require('wml!Controls/_breadCrumbs/resources/menuItemTemplate');
+import 'wml!Controls/BreadCrumbs/resources/menuContentTemplate';
 import 'css!theme?Controls/_breadCrumbs/View/View';
 
 /**
