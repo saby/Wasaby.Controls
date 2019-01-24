@@ -38,5 +38,7 @@ define('Controls/Heading/Back/BackStyles',
     * @css @font-size_Back__caption_size-l Font size of back heading with option size 'l'.
     * @css @font-size_Back__caption_size-m Font size of back heading with option size 'm'.
     * @css @font-size_Back__caption_size-s Font size of back heading with option size 's'.
+    * @css @content_Back_primary Content of back heading with option style 'primary'.
+    * @css @content_Back_secondary Content of back heading with option style 'secondary'.
     */
 );
