@@ -289,6 +289,8 @@
             item = item || event;
             _private.close(this);
             this._notify('choose', [item]);
+
+            // cancel opening the popup if focus has been transferred to input
             this._inputActive = false;
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
