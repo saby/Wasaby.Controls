@@ -6,10 +6,11 @@ define('Controls/Selector/SelectedCollection',
       'Types/chain',
       'Controls/Utils/tmplNotify',
       'Controls/Selector/SelectedCollection/Utils',
+      'Types/util',
       'css!theme?Controls/Selector/SelectedCollection/SelectedCollection'
    ],
 
-   function(Control, template, ItemTemplate, chain, tmplNotify, selectedCollectionUtils) {
+   function(Control, template, ItemTemplate, chain, tmplNotify, selectedCollectionUtils, utils) {
       'use strict';
 
       /**
@@ -41,9 +42,14 @@ define('Controls/Selector/SelectedCollection',
          },
 
          getTemplateOptions: function(self, options) {
-            var templateOptions = self._templateOptions || {};
+            var
+               templateOptions = self._templateOptions || {},
+               itemsIsChanged = self._options.items !== options.items;
 
-            templateOptions.items = options.items;
+            if (options.items && (!templateOptions.items || itemsIsChanged)) {
+               templateOptions.items = utils.object.clone(options.items);
+            }
+
             templateOptions.readOnly = options.readOnly;
             templateOptions.displayProperty = options.displayProperty;
             templateOptions.itemTemplate = options.itemTemplate;
@@ -115,5 +121,6 @@ define('Controls/Selector/SelectedCollection',
          };
       };
 
+      Collection._private = _private;
       return Collection;
    });
