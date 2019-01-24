@@ -1,4 +1,4 @@
-import Control = require('Core/Control');
+import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import ILinkView from './interfaces/ILinkView';
 import IRangeSelectable from './interfaces/IRangeSelectable';
