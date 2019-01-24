@@ -104,6 +104,16 @@ define('Controls/Filter/Button/Panel', [
          return self._children.formController.submit();
       },
 
+      isPassedValidation: function(result) {
+         var isPassedValidation = true;
+         chain.factory(result).each(function(value) {
+            if (value) {
+               isPassedValidation = false;
+            }
+         });
+         return isPassedValidation;
+      },
+
       hasAdditionalParams: function(items) {
          var hasAdditional = false;
          chain.factory(items).each(function(item) {
@@ -166,7 +176,7 @@ define('Controls/Filter/Button/Panel', [
       _applyFilter: function(event, items) {
          var self = this;
          _private.validate(this).addCallback(function(result) {
-            if (!result[0]) {
+            if (_private.isPassedValidation(result)) {
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
                   items: _private.prepareItems(items || self._items)
