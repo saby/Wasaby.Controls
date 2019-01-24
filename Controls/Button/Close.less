@@ -59,20 +59,20 @@
 }
 
 .controls-Button__close_toolButton_l {
-   width: @width_CloseButton_toolButton_l - extract(@border-width_CloseButton_toolButton, 2) - extract(@border-width_CloseButton_toolButton, 4);
-   height: @height_CloseButton_toolButton_l - extract(@border-width_CloseButton_toolButton, 1) - extract(@border-width_CloseButton_toolButton, 3);
+   width: @width_CloseButton_toolButton_l - @border-right-width_CloseButton_toolButton - @border-left-width_CloseButton_toolButton;
+   height: @height_CloseButton_toolButton_l - @border-top-width_CloseButton_toolButton - @border-bottom-width_CloseButton_toolButton;
 }
 
 .controls-Button__close_toolButton_l, .controls-Button__close_toolButton_m {
    border: solid @border-color_CloseButton_toolButton;
-   border-width: @border-width_CloseButton_toolButton;
+   border-width: @border-top-width_CloseButton_toolButton @border-right-width_CloseButton_toolButton @border-bottom-width_CloseButton_toolButton @border-left-width_CloseButton_toolButton;
    border-radius: @border-top-radius_CloseButton_toolButton @border-right-radius_CloseButton_toolButton @border-bottom-radius_CloseButton_toolButton @border-left-radius_CloseButton_toolButton;
    box-shadow: @box-shadow_CloseButton_toolButton;
 }
 
 .controls-Button__close_toolButton_m {
-   width: @width_CloseButton_toolButton_m - extract(@border-width_CloseButton_toolButton, 2) - extract(@border-width_CloseButton_toolButton, 4);
-   height: @height_CloseButton_toolButton_m - extract(@border-width_CloseButton_toolButton, 1) - extract(@border-width_CloseButton_toolButton, 3);
+   width: @width_CloseButton_toolButton_m - @border-right-width_CloseButton_toolButton - @border-left-width_CloseButton_toolButton;
+   height: @height_CloseButton_toolButton_m - @border-top-width_CloseButton_toolButton - @border-bottom-width_CloseButton_toolButton;
 }
 
 .controls-Button__close_link_l, .controls-Button__close_link_m {
