@@ -317,6 +317,17 @@ define(
             panel._historyId = 'TEST_PANEL_HISTORY_ID';
             panel._historyItemsChanged();
          });
+
+         it('_private:isPassedValidation', function() {
+            var validationResult = [null];
+            assert.isTrue(FilterPanel._private.isPassedValidation(validationResult));
+
+            validationResult = [null, 'Дата заполнена некорректно.'];
+            assert.isFalse(FilterPanel._private.isPassedValidation(validationResult));
+
+            validationResult = ['Дата заполнена некорректно.', null];
+            assert.isFalse(FilterPanel._private.isPassedValidation(validationResult));
+         });
       });
    }
 );
