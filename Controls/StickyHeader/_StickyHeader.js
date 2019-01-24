@@ -128,6 +128,8 @@ define('Controls/StickyHeader/_StickyHeader',
 
          _getStyle: function() {
             var
+               top,
+               bottom,
                offset,
                position,
                style = '';
@@ -155,13 +157,20 @@ define('Controls/StickyHeader/_StickyHeader',
                style = this._model.fixedPosition + ': ' + (position - offset) + 'px;';
 
                if (offset) {
-                  style += ' padding-' + this._model.fixedPosition + ': ' + offset + 'px;';
+                  style += 'padding-' + this._model.fixedPosition + ': ' + offset + 'px;';
                }
 
-               style += ' z-index: ' + this._options.fixedZIndex + ';';
+               style += 'z-index: ' + this._options.fixedZIndex + ';';
             } else {
-               style += ' top: ' + this._stickyHeadersHeight.top  + 'px;';
-               style += ' bottom: ' + this._stickyHeadersHeight.bottom + 'px;';
+               top = this._stickyHeadersHeight.top;
+               bottom = this._stickyHeadersHeight.bottom;
+
+               if (this._context.stickyHeader) {
+                  top += this._context.stickyHeader.top;
+                  bottom += this._context.stickyHeader.bottom;
+               }
+               style += 'top: ' + top  + 'px;';
+               style += 'bottom: ' + bottom + 'px;';
             }
 
             return style;
@@ -223,7 +232,7 @@ define('Controls/StickyHeader/_StickyHeader',
                'replaceable',
                'stackable'
             ]),
-            position: types(String).oneOf([
+            position: entity.descriptor(String).oneOf([
                'top',
                'bottom',
                'topbottom'

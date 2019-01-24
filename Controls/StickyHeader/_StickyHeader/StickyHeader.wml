@@ -1,6 +1,6 @@
 <!--Styles specified with attr are not merged, so as a temporary solution, we use the option.-->
 <!--https://online.sbis.ru/opendoc.html?guid=e692216c-8a18-4b42-8523-5434d436a502-->
-<div class="controls-StickyHeader" style="{{_getStyle() + ' ' + (_options.style || '')}}">
+<div class="controls-StickyHeader" style="{{_getStyle() + (_options.style || '')}}">
    <ws:if data="{{_isShadowVisible('top')}}">
       <div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>
    </ws:if>

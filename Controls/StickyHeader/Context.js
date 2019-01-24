@@ -27,7 +27,7 @@ define('Controls/StickyHeader/Context',
          shadowPosition: '',
 
          constructor: function(config) {
-            this.shadowPosition = config.shadowPosition;
+            this.shadowPosition = config.shadowPosition || '';
          }
       });
    }

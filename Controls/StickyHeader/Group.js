@@ -53,13 +53,13 @@ define('Controls/StickyHeader/Group',
 
          _fixed: null,
 
-         _stickyHeaderIds: null,
+         _stickyHeadersIds: null,
          _shadowVisible: false,
 
          _beforeMount: function(options, context, receivedState) {
             this._isStickySupport = stickyUtils.isStickySupport();
             this._index = stickyUtils.getNextId();
-            this._stickyHeaderIds = {
+            this._stickyHeadersIds = {
                top: [],
                bottom: []
             };
@@ -78,12 +78,12 @@ define('Controls/StickyHeader/Group',
          _fixedHandler: function(event, fixedHeaderData) {
             event.stopImmediatePropagation();
             if (!!fixedHeaderData.fixedPosition) {
-               this._stickyHeaderIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
+               this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
                if (this._shadowVisible === true) {
-                  this._children.stickyHeaderShadow.start(this._stickyHeaderIds[fixedHeaderData.fixedPosition]);
+                  this._children.stickyHeaderShadow.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
                }
-            } else if (!!fixedHeaderData.prevPosition && this._stickyHeaderIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
-               this._stickyHeaderIds[fixedHeaderData.prevPosition].splice(this._stickyHeaderIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
+            } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
+               this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
             }
 
             if (!!fixedHeaderData.fixedPosition && !this._fixed) {
@@ -99,7 +99,7 @@ define('Controls/StickyHeader/Group',
             if (ids.indexOf(this._index) !== -1) {
                this._shadowVisible = true;
 
-               this._children.stickyHeaderShadow.start(this._stickyHeaderIds.top.concat(this._stickyHeaderIds.bottom));
+               this._children.stickyHeaderShadow.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             }
          },
 

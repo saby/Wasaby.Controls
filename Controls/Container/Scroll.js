@@ -156,12 +156,12 @@ define('Controls/Container/Scroll',
              */
             updateFixationState: function(self, data) {
                if (!!data.fixedPosition) {
-                  self._stickyHeaderIds[data.fixedPosition].push(data.id);
+                  self._stickyHeadersIds[data.fixedPosition].push(data.id);
                   if (data.mode === 'stackable') {
                      self._stickyHeadersHeight[data.fixedPosition] += data.offsetHeight;
                   }
-               } else if (!!data.prevPosition) {
-                  self._stickyHeaderIds[data.prevPosition].splice(self._stickyHeaderIds[data.prevPosition].indexOf(data.id), 1);
+               } else if (!!data.prevPosition && self._stickyHeadersIds[data.prevPosition].indexOf(data.id) !== -1) {
+                  self._stickyHeadersIds[data.prevPosition].splice(self._stickyHeadersIds[data.prevPosition].indexOf(data.id), 1);
                   if (data.mode === 'stackable') {
                      self._stickyHeadersHeight[data.prevPosition] -= data.offsetHeight;
                   }
@@ -209,7 +209,7 @@ define('Controls/Container/Scroll',
              * @type {Object|null}
              * @private
              */
-            _stickyHeaderIds: null,
+            _stickyHeadersIds: null,
             _stickyHeadersHeight: null,
 
             /**
@@ -223,7 +223,7 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
-               this._stickyHeaderIds = {
+               this._stickyHeadersIds = {
                   top: [],
                   bottom: []
                };
@@ -323,7 +323,7 @@ define('Controls/Container/Scroll',
             },
 
             _shadowVisible: function(position) {
-               return this._displayState.shadowPosition.indexOf(position) !== -1 && this._stickyHeaderIds[position].length === 0;
+               return this._displayState.shadowPosition.indexOf(position) !== -1 && this._stickyHeadersIds[position].length === 0;
             },
 
             /**
@@ -445,7 +445,7 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
-               this._children.stickyHeaderShadow.start([this._stickyHeaderIds.top[this._stickyHeaderIds.top.length - 1], this._stickyHeaderIds.bottom[this._stickyHeaderIds.bottom.length - 1]]);
+               this._children.stickyHeaderShadow.start([this._stickyHeadersIds.top[this._stickyHeadersIds.top.length - 1], this._stickyHeadersIds.bottom[this._stickyHeadersIds.bottom.length - 1]]);
 
                //Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
                this._children.stickyHeaderHeight.start(cClone(this._stickyHeadersHeight));
