@@ -601,6 +601,7 @@ define('Controls/List/BaseControl', [
                down: false
             };
          }
+         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
          return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             var
@@ -683,6 +684,7 @@ define('Controls/List/BaseControl', [
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
+         this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
 
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);
@@ -717,6 +719,11 @@ define('Controls/List/BaseControl', [
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.checkLoadToDirectionCapability(this);
+         }
+         if (this._delayedSelect && this._children.selectionController) {
+            this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
+            this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
+            this._delayedSelect = null;
          }
    
    
@@ -763,9 +770,16 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
-            var status = itemData.multiSelectStatus;
-            this._notify('checkboxClick', [itemData.key, status]);
+         if (direction === 'right' && !itemData.isSwiped) {
+            /**
+             * After the right swipe the item should get selected.
+             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
+             */
+            this._needSelectionController = true;
+            this._delayedSelect = {
+               key: itemData.key,
+               status: itemData.multiSelectStatus
+            };
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
