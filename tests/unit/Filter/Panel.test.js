@@ -231,6 +231,17 @@ define(
                ];
             assert.deepEqual(FilterPanel._private.prepareItems(changeItems), resetItems);
          });
+
+         it('_private:isPassedValidation', function() {
+            var validationResult = [null];
+            assert.isTrue(FilterPanel._private.isPassedValidation(validationResult));
+
+            validationResult = [null, 'Дата заполнена некорректно.'];
+            assert.isFalse(FilterPanel._private.isPassedValidation(validationResult));
+
+            validationResult = ['Дата заполнена некорректно.', null];
+            assert.isFalse(FilterPanel._private.isPassedValidation(validationResult));
+         });
       });
    }
 );
