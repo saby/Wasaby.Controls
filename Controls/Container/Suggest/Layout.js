@@ -290,7 +290,8 @@
             _private.close(this);
             this._notify('choose', [item]);
 
-            // cancel opening the popup if focus has been transferred to input
+            // after select from the suggest, focus on input will lost
+            // if the focus should be returned, the control (such Input/Suggest) should do it
             this._inputActive = false;
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
