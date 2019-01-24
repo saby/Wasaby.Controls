@@ -41,7 +41,7 @@
         </ws:else>
     </ws:if>
 </ws:template>
-<ws:if data="{{itemData.isSelected && marker !== false && itemData.markerVisibility !== 'hidden' && itemData.style === 'master'}}">
+<ws:if data="{{itemData.isSticky}}">
    <ws:partial template="itemOutputTpl">
       <Controls.StickyHeader position="topbottom">
          <ws:partial template="itemContentTpl"/>
