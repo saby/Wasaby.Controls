@@ -8,7 +8,8 @@ define('Controls/Filter/Button/Panel', [
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
    'Core/IoC',
-   'css!theme?Controls/Filter/Button/Panel/Panel'
+   'css!theme?Controls/Filter/Button/Panel/Panel',
+   'Controls/Controllers/PrimaryAction'
 
 ], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
    /**
