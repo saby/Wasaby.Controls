@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="SearchContainer">
+<Controls.Application.ApplicationWrapper caption="SearchContainer" demoname="Controls-demo/Search/Container.wml">
     <ws:content>
         <Controls-demo.Search.Container/>
     </ws:content>

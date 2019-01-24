@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="FilterSearch">
+<Controls.Application.ApplicationWrapper caption="Filter + Search"  demoname="Controls-demo/FilterSearch/FilterSearch.wml">
     <ws:content>
         <Controls-demo.FilterSearch.FilterSearch/>
     </ws:content>
