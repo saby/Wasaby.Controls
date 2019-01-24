@@ -56,27 +56,49 @@ define([
    
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function(done) {
-         var
-            treeControl = correctCreateTreeControl({
+         var treeControl = correctCreateTreeControl({
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
                   idProperty: 'id'
                })
-            }),
-            isSourceControllerDestroyed = false;
+            });
+         var isSourceControllerNode1Destroyed = false;
+         var isSourceControllerNode2Destroyed = false;
+         
+         //viewmodel moch
+         treeControl._children = {
+            baseControl: {
+               getViewModel: function() {
+                  return {
+                     getExpandedItems: function() {
+                        return {
+                           '1': true
+                        };
+                     }
+                  };
+               }
+            }
+         };
+         
          treeControl._nodesSourceControllers = {
             1: {
                destroy: function() {
-                  isSourceControllerDestroyed = true;
+                  isSourceControllerNode1Destroyed = true;
+               }
+            },
+            2: {
+               destroy: function() {
+                  isSourceControllerNode2Destroyed = true;
                }
             }
          };
          setTimeout(function() {
             treeControl.reload();
             setTimeout(function() {
-               assert.isTrue(!!Object.keys(treeControl._nodesSourceControllers).length, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
-               assert.isFalse(isSourceControllerDestroyed, 'Invalid value "isSourceControllerDestroyed" after call "treeControl.reload()".');
+               assert.equal(Object.keys(treeControl._nodesSourceControllers).length, 1, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
+               assert.isFalse(isSourceControllerNode1Destroyed, 'Invalid value "isSourceControllerNode1Destroyed" after call "treeControl.reload()".');
+               assert.isTrue(isSourceControllerNode2Destroyed, 'Invalid value "isSourceControllerNode2Destroyed" after call "treeControl.reload()".');
                done();
             }, 10);
          }, 10);
