@@ -136,6 +136,8 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             return def;
          };
          hs.query(query);
+
+         // Заглушка, чтобы не отправлять данные на сервис истории
          hs.historySource.update = function() {
             return {};
          };
