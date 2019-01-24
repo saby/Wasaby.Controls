@@ -102,7 +102,7 @@ define('Controls/Filter/Button/Panel', [
 
       hasResetValue: function(items) {
          var hasReset = false;
-         Chain(items).each(function(item) {
+         chain.factory(items).each(function(item) {
             if (hasReset) {
                return;
             }
