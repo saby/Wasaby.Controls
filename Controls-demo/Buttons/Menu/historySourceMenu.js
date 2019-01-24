@@ -136,6 +136,11 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
             return def;
          };
          hs.query(query);
+
+         // Заглушка, чтобы демка не ломилась не сервис истории
+         hs.historySource.update = function() {
+            return {};
+         };
          hs.historySource.query();
          return hs;
       }
