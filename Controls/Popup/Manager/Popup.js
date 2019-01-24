@@ -116,12 +116,6 @@ define('Controls/Popup/Manager/Popup',
             runDelayed(this._callOpenersUpdate.bind(this));
          },
 
-         _delayedUpdate: function() {
-            // Many processors can affect the size and layout of a page.
-            // Wait for them to work out and recalculate the size of popups.
-            runDelayed(this._update.bind(this));
-         },
-
          /**
           * Proxy popup result
           * @function Controls/Popup/Manager/Popup#_sendResult

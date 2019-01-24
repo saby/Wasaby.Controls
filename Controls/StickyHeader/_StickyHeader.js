@@ -2,7 +2,7 @@ define('Controls/StickyHeader/_StickyHeader',
    [
       'Core/Control',
       'Core/detection',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/StickyHeader/Context',
       'Controls/StickyHeader/Utils',
       'Controls/Utils/IntersectionObserver',
@@ -11,7 +11,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
       'css!theme?Controls/StickyHeader/_StickyHeader/StickyHeader'
    ],
-   function(Control, detection, types, Context, stickyUtils, IntersectionObserver, Model, template) {
+   function(Control, detection, entity, Context, stickyUtils, IntersectionObserver, Model, template) {
 
       'use strict';
 
@@ -215,11 +215,11 @@ define('Controls/StickyHeader/_StickyHeader',
 
       StickyHeader.getOptionTypes = function() {
          return {
-            shadowVisibility: types(String).oneOf([
+            shadowVisibility: entity.descriptor(String).oneOf([
                'visible',
                'hidden'
             ]),
-            mode: types(String).oneOf([
+            mode: entity.descriptor(String).oneOf([
                'replaceable',
                'stackable'
             ]),

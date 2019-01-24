@@ -8,6 +8,7 @@
          <div class="example-Base_footerSpacing ws-flexbox ws-flex-column ws-align-items-center">
             <Controls-demo.Example.Input.Text/>
             <Controls-demo.Example.Input.Number/>
+            <Controls-demo.Example.Input.Money/>
             <Controls-demo.Example.Input.Tag/>
             <Controls-demo.Example.Input.Area/>
             <Controls-demo.Example.Input.Password/>

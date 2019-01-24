@@ -120,7 +120,7 @@ define('Controls/List/ListViewModel',
                itemsCount = this._display.getCount();
             while (nextItemId < itemsCount) {
                nextItem = this._display.at(nextItemId).getContents();
-               if (cInstance.instanceOfModule(nextItem, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(nextItem, 'Types/entity:Model')) {
                   return this._display.at(nextItemId).getContents().getId();
                }
                nextItemId++;
@@ -139,7 +139,7 @@ define('Controls/List/ListViewModel',
                itemsCount = this._display.getCount();
             while (nextItemId < itemsCount) {
                nextItem = this._display.at(nextItemId).getContents();
-               if (cInstance.instanceOfModule(nextItem, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(nextItem, 'Types/entity:Model')) {
                   return this._display.at(nextItemId).getContents().getId();
                }
                nextItemId++;
@@ -152,7 +152,7 @@ define('Controls/List/ListViewModel',
                prevItem;
             while (prevItemId >= 0) {
                prevItem = this._display.at(prevItemId).getContents();
-               if (cInstance.instanceOfModule(prevItem, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(prevItem, 'Types/entity:Model')) {
                   return this._display.at(prevItemId).getContents().getId();
                }
                prevItemId--;

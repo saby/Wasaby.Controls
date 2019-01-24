@@ -102,7 +102,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       updateModel: function(self, newOptions, isTouch) {
          _private.updateActions(self, newOptions, isTouch);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self, self._options, self._context.isTouch.isTouch);
+            _private.updateActions(self, self._options, self._context.isTouch ? self._context.isTouch.isTouch : false);
          });
       },
 
@@ -129,12 +129,12 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _beforeMount: function(newOptions, context) {
          if (newOptions.listModel) {
-            _private.updateModel(this, newOptions, context.isTouch.isTouch);
+            _private.updateModel(this, newOptions, context.isTouch ? context.isTouch.isTouch : false);
          }
       },
 
       _beforeUpdate: function(newOptions, context) {
-         var args = [this, newOptions, context.isTouch.isTouch];
+         var args = [this, newOptions, context.isTouch ? context.isTouch.isTouch : false];
 
          if (
             this._options.listModel !== newOptions.listModel ||
@@ -159,7 +159,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(this, item, this._options, isEditingItem, this._context.isTouch.isTouch);
+         _private.updateItemActions(this, item, this._options, isEditingItem, this._context.isTouch ? this._context.isTouch.isTouch : false);
       }
    });
 

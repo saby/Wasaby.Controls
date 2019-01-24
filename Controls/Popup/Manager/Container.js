@@ -67,6 +67,10 @@ define('Controls/Popup/Manager/Container',
 
          _overlayClickHandler: function(event) {
             event.preventDefault();
+         },
+
+         _getPopupZIndex: function(item, index) {
+            return item.popupOptions.zIndex || (index + 1) * POPUP_ZINDEX_STEP;
          }
       });
 

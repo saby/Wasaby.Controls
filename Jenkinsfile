@@ -778,12 +778,13 @@ node('controls') {
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
                             dir("./controls/tests/int"){
-
-                                sh """
-                                source /home/sbis/venv_for_test/bin/activate
-                                python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
-                                deactivate
-                                """
+								timeout(time: 10, unit: 'MINUTES', activity: true) {
+									sh """
+									source /home/sbis/venv_for_test/bin/activate
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									deactivate
+									"""
+								}
                             }
                         }
                     }
@@ -793,11 +794,13 @@ node('controls') {
                         if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg"){
-                                sh """
-                                    source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
-                                    deactivate
-                                """
+								timeout(time: 10, unit: 'MINUTES', activity: true) {
+									sh """
+										source /home/sbis/venv_for_test/bin/activate
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										deactivate
+									"""
+								}
                             }
                         }
                     }
@@ -834,15 +837,18 @@ node('controls') {
             sh "mkdir logs_ps"
             if ( exists_dir ){
                 dir('/home/sbis/Controls'){
-                    def files_err = findFiles(glob: 'intest*/logs/**/*_errors.log')
-                    if ( files_err.length > 1 ){
+                    def files_err = findFiles(glob: 'intest/logs/**/*_errors.log')
+                    def files_ps_err = findFiles(glob: 'intest-ps/logs/**/*_errors.log')
+                    if ( files_err.length > 0 ){
                         sh "sudo cp -Rf /home/sbis/Controls/intest/logs/**/*_errors.log ${workspace}/logs_ps/intest_errors.log"
-                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
-                        dir ( workspace ){
-                            sh """7za a logs_ps -t7z ${workspace}/logs_ps """
-                            archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
-                        }
                     }
+					if (files_ps_err.length > 0){
+                        sh "sudo cp -Rf /home/sbis/Controls/intest-ps/logs/**/*_errors.log ${workspace}/logs_ps/intest_ps_errors.log"
+                    }
+					dir ( workspace ){
+						sh """7za a logs_ps -t7z ${workspace}/logs_ps """
+						archiveArtifacts allowEmptyArchive: true, artifacts: '**/logs_ps.7z', caseSensitive: false
+					}
                 }
             }
         }
