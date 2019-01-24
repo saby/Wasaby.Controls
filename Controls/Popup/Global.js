@@ -62,5 +62,25 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             }
             return false;
          },
+         _popupBeforeDestroyedHandler: function(event, popupCfg, popupList, popupContainer) {
+            if (this._activeInfobox) {
+               // If infobox is displayed inside the popup, then close infobox.
+               if (this._needCloseInfoBox(this._activeInfobox, popupContainer)) {
+                  this._activeInfobox = null;
+                  this._children.infoBoxOpener.close(0);
+               }
+            }
+         },
+
+         _needCloseInfoBox: function(infobox, popup) {
+            var parent = infobox.parentElement;
+            while (parent) {
+               if (parent === popup) {
+                  return true;
+               }
+               parent = parent.parentElement;
+            }
+            return false;
+         }
       });
    });

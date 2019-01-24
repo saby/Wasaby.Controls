@@ -42,11 +42,11 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @event Controls/interface/IOpener#popupClose Occurs when popup is closed.
+    * @event Controls/interface/IOpener#close Occurs when popup is closed.
     * @example
-    * In this example, we subscribe to popupClose event and remove item at list
+    * In this example, we subscribe to close event and remove item at list
     * <pre>
-    *    <Controls.Popup.Opener.Stack on:popupClose="_popupCloseHandler()" />
+    *    <Controls.Popup.Opener.Stack on:close="_popupCloseHandler()" />
     * </pre>
     *
     * <pre>
@@ -61,12 +61,12 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @event Controls/interface/IOpener#popupResult Occurs when child control of popup notify "sendResult" event.
+    * @event Controls/interface/IOpener#result Occurs when child control of popup notify "sendResult" event.
     * @example
-    * In this example, we subscribe to popupResult event and save user data.
+    * In this example, we subscribe to result event and save user data.
     * <pre>
     *    // MainControl.wml
-    *    <Controls.Popup.Opener.Stack on:popupResult="_popupResultHandler()" />
+    *    <Controls.Popup.Opener.Stack on:result="_popupResultHandler()" />
     * </pre>
     *
     * <pre>
@@ -93,11 +93,11 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @event Controls/interface/IOpener#popupOpen Occurs when popup is opened.
+    * @event Controls/interface/IOpener#open Occurs when popup is opened.
     * @example
-    * In this example, we subscribe to popupOpen event and change text at input control
+    * In this example, we subscribe to open event and change text at input control
     * <pre>
-    *    <Controls.Popup.Opener.Stack on:popupOpen="_popupOpenHandler()" />
+    *    <Controls.Popup.Opener.Stack on:open="_popupOpenHandler()" />
     * </pre>
     *
     * <pre>
