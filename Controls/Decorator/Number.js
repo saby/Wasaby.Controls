@@ -5,7 +5,6 @@ define('Controls/Decorator/Number',
       'wml!Controls/Decorator/Number/Number'
    ],
    function(Control, entity, template) {
-
       'use strict';
 
       /**
@@ -41,6 +40,15 @@ define('Controls/Decorator/Number',
        * @default trunc
        */
 
+      /**
+       * @name Controls/Decorator/Number#useGrouping
+       * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
+       * @default true
+       * @remark
+       * true - the number is separated into grouping.
+       * false - does not do anything.
+       */
+
       var _private = {
 
          /**
@@ -48,8 +56,9 @@ define('Controls/Decorator/Number',
           * @param number {@link number}
           * @param roundMode {@link roundMode}
           * @param [fractionSize] {@link fractionSize}
+          * @param useGrouping {@link useGrouping}
           */
-         formatNumber: function(number, roundMode, fractionSize) {
+         formatNumber: function(number, roundMode, fractionSize, useGrouping) {
             if (typeof fractionSize === 'number') {
                number = _private[roundMode](number, fractionSize);
             } else {
@@ -60,10 +69,13 @@ define('Controls/Decorator/Number',
              * Create an array of integer and fractional parts.
              * Divide the integer part into triads.
              */
-            number = number.split('.');
-            number[0] = number[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
+            if (useGrouping) {
+               number = number.split('.');
+               number[0] = number[0].replace(/(\d)(?=(\d{3})+$)/g, '$& ');
+               number = number.join('.');
+            }
 
-            return number.join('.');
+            return number;
          },
 
          /**
@@ -101,28 +113,37 @@ define('Controls/Decorator/Number',
          _formattedNumber: null,
 
          _beforeMount: function(options) {
-            this._formattedNumber = _private.formatNumber(options.number, options.roundMode, options.fractionSize);
+            this._formattedNumber = _private.formatNumber(
+               options.number, options.roundMode,
+               options.fractionSize, options.useGrouping
+            );
          },
 
          _beforeUpdate: function(newOptions) {
             if (
                newOptions.number !== this._options.number ||
                newOptions.fractionSize !== this._options.fractionSize ||
-               newOptions.roundMode !== this._options.roundMode
+               newOptions.roundMode !== this._options.roundMode ||
+               newOptions.useGrouping !== this._options.useGrouping
             ) {
-               this._formattedNumber = _private.formatNumber(newOptions.number, newOptions.roundMode, newOptions.fractionSize);
+               this._formattedNumber = _private.formatNumber(
+                  newOptions.number, newOptions.roundMode,
+                  newOptions.fractionSize, newOptions.useGrouping
+               );
             }
          }
       });
 
       NumberDecorator.getDefaultOptions = function() {
          return {
+            useGrouping: true,
             roundMode: 'trunc'
          };
       };
 
       NumberDecorator.getOptionTypes = function() {
          return {
+            useGrouping: entity.descriptor(Boolean),
             number: entity.descriptor(Number).required(),
             fractionSize: entity.descriptor(Number),
             roundMode: entity.descriptor(String).oneOf([
@@ -135,5 +156,4 @@ define('Controls/Decorator/Number',
       NumberDecorator._private = _private;
 
       return NumberDecorator;
-   }
-);
+   });

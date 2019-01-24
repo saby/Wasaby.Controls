@@ -1184,6 +1184,10 @@
             "default": true,
             "title": "If true, text is selected when input is clicked."
           },
+          "useGrouping": {
+            "default": true,
+            "type": "Boolean"
+          },
           "textAlign": {
             "type": "enum",
             "default": "left",
