@@ -219,7 +219,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis/controls.git']]
                         ])
                     }
@@ -251,7 +251,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
                              sh "cp -R ./atf/ ../reg/atf/"
@@ -269,7 +269,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:sbis/engine.git']]
                                 ])
                             }
@@ -286,7 +286,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:navigation-configuration/navigation.git']]
                                 ])
                             }
@@ -303,7 +303,7 @@ node('controls') {
                                     ]],
                                     submoduleCfg: [],
                                     userRemoteConfigs: [[
-                                        credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                        credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:engine/viewsettings.git']]
                                 ])
                             }
@@ -322,7 +322,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis-ci/platform.git']]
                         ])
                     }
@@ -336,7 +336,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis-ci/constructor.git']]
                         ])
                     }
@@ -353,7 +353,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:root/sbis3-cdn.git']]
                         ])
                     }
@@ -370,7 +370,7 @@ node('controls') {
                             ]],
                             submoduleCfg: [],
                             userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:retail/themes.git']]
                         ])
                     }
@@ -408,7 +408,7 @@ node('controls') {
                                 ]],
                                 submoduleCfg: [],
                                 userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:sbis/ws.git']]
                             ])
                         }
@@ -431,7 +431,7 @@ node('controls') {
                                 ]],
                                 submoduleCfg: [],
                                 userRemoteConfigs: [[
-                                credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
+                                credentialsId: CREDENTIAL_ID_GIT,
                                 url: 'git@git.sbis.ru:ws/data.git']]
                             ])
                         }
@@ -682,7 +682,7 @@ node('controls') {
                             dir("./controls/tests/reg"){
                                 sh """
                                     source /home/sbis/venv_for_test/bin/activate
-                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+                                    python start_tests.py --RESTART_AFTER_BUILD_MODE ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
                                     deactivate
                                 """
                             }

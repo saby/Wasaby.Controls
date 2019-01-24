@@ -290,17 +290,24 @@ define('Controls/List/BaseControl', [
       showIndicator: function(self, direction) {
          self._loadingState = direction || 'all';
          self._loadingIndicatorState = self._loadingState;
-         setTimeout(function() {
-            if (self._loadingState) {
-               self._showLoadingIndicatorImage = true;
-               self._forceUpdate();
-            }
-         }, 2000);
+         if (!self._loadingIndicatorTimer) {
+            self._loadingIndicatorTimer = setTimeout(function() {
+               self._loadingIndicatorTimer = null;
+               if (self._loadingState) {
+                  self._showLoadingIndicatorImage = true;
+                  self._forceUpdate();
+               }
+            }, 2000);
+         }
       },
 
       hideIndicator: function(self) {
          self._loadingState = null;
          self._showLoadingIndicatorImage = false;
+         if (self._loadingIndicatorTimer) {
+            clearTimeout(self._loadingIndicatorTimer);
+            self._loadingIndicatorTimer = null;
+         }
          if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._forceUpdate();
@@ -555,6 +562,7 @@ define('Controls/List/BaseControl', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+      _loadingIndicatorTimer: null,
 
       _pagingCfg: null,
       _pagingVisible: false,
@@ -599,6 +607,9 @@ define('Controls/List/BaseControl', [
                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : newOptions;
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
+               if (receivedState) {
+                  viewModelConfig.items = receivedState;
+               }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                self._virtualScroll.setItemsCount(self._listViewModel.getCount());
                _private.initListViewModelHandler(self, self._listViewModel);
@@ -612,7 +623,6 @@ define('Controls/List/BaseControl', [
 
                if (receivedState) {
                   self._sourceController.calculateState(receivedState);
-                  self._listViewModel.setItems(receivedState);
                   self._items = self._listViewModel.getItems();
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                } else {

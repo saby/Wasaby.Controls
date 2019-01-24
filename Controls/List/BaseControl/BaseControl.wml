@@ -137,7 +137,8 @@
     <Controls.Popup.Opener.Confirmation
             name="errorMsgOpener"
     />
-   <ws:if data="{{ _items }}">
+   <ws:if data="{{ _items && _options.multiSelectVisibility !== 'hidden' }}">
+      <!--TODO: нельзя сюда добавлять Container.Async, т.к. события перестают стрелять. Ошибка на эту тему: https://online.sbis.ru/opendoc.html?guid=e3ad3d85-8cfc-4dc4-84dd-84b08db05e26-->
       <Controls.List.BaseControl.SelectionController
          name="selectionController"
          keyProperty="{{ _options.keyProperty }}"
