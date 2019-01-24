@@ -109,6 +109,19 @@ define('Controls/Input/Mask',
        * </pre>
        */
 
+      // Add the interface "Controls/Input/interface/IInputBase" and delete "Controls/Input/Mask#tooltip" after remake base control to 'Controls/Input/Base'.
+      /**
+       * @name Controls/Input/Mask#tooltip
+       * @cfg {String} Text of the tooltip shown when the control is hovered over.
+       * @remark
+       * "Title" attribute added to the control's root node and default browser tooltip is shown on hover.
+       * @example
+       * In this example, when you hover over the field, "Enter your name" tooltip will be shown.
+       * <pre>
+       *    <Controls.Input.Mask tooltip="Enter your name"/>
+       * </pre>
+       */
+
       var
          _private = {
             regExpQuantifiers: /\\({.*?}|.)/,
