@@ -1,7 +1,7 @@
-define('Controls/List/TreeTileView/TreeTileViewStyles', [],
+define('Controls/List/TreeTileView/Styles', [],
    function() {
       /**
-       * @mixin Controls/List/TreeTileView/TreeTileViewStyles
+       * @mixin Controls/List/TreeTileView/Styles
        * @public
        *
        * @css @font-size_TreeTileView-title Font size of nodes title.
