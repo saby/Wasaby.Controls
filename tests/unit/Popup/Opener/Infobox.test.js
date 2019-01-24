@@ -62,6 +62,33 @@ define(
                });
             });
          });
+
+         it('InfoBoxController: calculate offset target size', () => {
+            let offsetHeight;
+            InfoBoxController._private.getOffset = (height) => {
+               offsetHeight = height;
+            };
+            let target = {
+               offsetHeight: 100,
+               offsetWidth: 100
+            };
+            InfoBoxController._private.getVerticalOffset(target, false);
+            assert.equal(offsetHeight, 100);
+            offsetHeight = null;
+            InfoBoxController._private.getHorizontalOffset(target, true);
+            assert.equal(offsetHeight, 100);
+
+            target = {
+               clientHeight: 200,
+               clientWidth: 200
+            };
+
+            InfoBoxController._private.getVerticalOffset(target, false);
+            assert.equal(offsetHeight, 200);
+            offsetHeight = null;
+            InfoBoxController._private.getHorizontalOffset(target, true);
+            assert.equal(offsetHeight, 200);
+         })
       });
    }
 );
