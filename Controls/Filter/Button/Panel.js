@@ -106,7 +106,7 @@ define('Controls/Filter/Button/Panel', [
 
       isPassedValidation: function(result) {
          var isPassedValidation = true;
-         Chain(result).each(function(value) {
+         chain.factory(result).each(function(value) {
             if (value) {
                isPassedValidation = false;
             }
