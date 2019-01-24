@@ -4,13 +4,13 @@ import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import IDateTimeMask from './interfaces/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import template = require('wml!Controls/Input/Date/Range/Range');
-import 'css!theme?Controls/Input/Date/Range/Range';
+import template = require('wml!Controls/_dateRange/Input/Input');
+import 'css!theme?Controls/_dateRange/Input/Input';
 
 /**
  * Control for entering date range.
  * <a href="/materials/demo-ws4-input-daterange">Demo examples.</a>.
- * @class Controls/Input/Date/Range
+ * @class Controls/_dateRange/Input
  * @extends Core/Control
  * @mixes Controls/Input/interface/IInputBase
  * @mixes Controls/_dateRange/interfaces/IRange

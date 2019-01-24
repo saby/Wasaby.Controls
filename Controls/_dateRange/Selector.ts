@@ -4,13 +4,13 @@ import ILinkView from './interfaces/ILinkView';
 import IRangeSelectable from './interfaces/IRangeSelectable';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
-import componentTmpl = require('wml!Controls/Input/Date/RangeLink/RangeLink');
-import 'css!theme?Controls/Input/Date/RangeLink/RangeLink';
+import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
+import 'css!theme?Controls/_dateRange/Selector/Selector';
 
 /**
  * Controls that allows user to select date with start and end values in calendar.
  *
- * @class Controls/Input/Date/RangeLink
+ * @class Controls/_dateRange/Selector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IRangeLink

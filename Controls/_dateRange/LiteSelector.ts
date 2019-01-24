@@ -4,13 +4,13 @@ import ILinkView from './interfaces/ILinkView';
 import IPeriodLiteDialog from './interfaces/IPeriodLiteDialog';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
-import componentTmpl = require('wml!Controls/Input/Date/RangeLinkLite/RangeLinkLite');
-import 'css!theme?Controls/Input/Date/RangeLinkLite/RangeLinkLite';
+import componentTmpl = require('wml!Controls/_dateRange/LiteSelector/LiteSelector');
+import 'css!theme?Controls/_dateRange/LiteSelector/LiteSelector';
 
 /**
  * A link button that displays the period. Supports the change of periods to adjacent.
  *
- * @class Controls/Input/Date/RangeLinkLite
+ * @class Controls/_dateRange/LiteSelector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
  * @mixes Controls/_dateRange/interfaces/IPeriodLiteDialog

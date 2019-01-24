@@ -29,7 +29,7 @@
       on:tagClick="_proxyEvent('endTagClick')"
       on:tagHover="_proxyEvent('endTagHover')">
    </Controls.Input.DateTime>
-   <Controls.Button
+   <Controls.buttons:Button
       attr:class="controls-Input-DateRange__button"
       attr:tabindex="-1"
       style="secondary"
