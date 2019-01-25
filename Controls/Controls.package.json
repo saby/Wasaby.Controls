@@ -69,7 +69,7 @@
   "output": "controls-controllers.package.js"
 }, {
   "include": [
-    "Controls/Decorator/Markup/",
+    "Controls/Decorator/Markup",
     "Controls/Decorator/Markup/*"
   ],
   "output": "controls-decorator-markup.package.js"
