@@ -2,5 +2,7 @@
    <Controls.StickyHeader._StickyHeader scope="{{_options}}"/>
 </ws:if>
 <ws:else>
-   <ws:partial template="{{_options.content}}"/>
+   <div>
+      <ws:partial if="{{_options.content}}" template="{{_options.content}}"/>
+   </div>
 </ws:else>
