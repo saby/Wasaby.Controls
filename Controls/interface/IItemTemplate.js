@@ -19,11 +19,12 @@ define('Controls/interface/IItemTemplate', [
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>contentTemplate {Function} - Template for render item content.</li>
+    *    <li>highlightOnHover {Boolean} - Enable highlighting item by hover.</li>
     * </ul>
     * @example
     * Using custom template for item rendering:
     * <pre>
-    *    <Controls.List
+    *    <Controls.List>
     *       <itemTemplate>
     *          <ws:partial template="wml!Controls/List/ItemTemplate">
     *             <ws:contentTemplate>
