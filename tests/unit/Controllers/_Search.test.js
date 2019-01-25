@@ -5,10 +5,10 @@
 define(
    [
       'Controls/Controllers/_Search',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Core/Deferred'
    ],
-   function (Search, Memory, Deferred) {
+   function (Search, sourceLib, Deferred) {
       
       'use strict';
       
@@ -27,7 +27,7 @@ define(
                   name: 'Dmitry'
                }
             ],
-            source = new Memory({
+            source = new sourceLib.Memory({
                data: data
             }),
             navigation = {
@@ -80,6 +80,21 @@ define(
                return result;
             });
          });
+   
+         it('.search forced', function(done) {
+            var search = new Search({
+               source: source,
+               searchDelay: 1000,
+               navigation: navigation
+            });
+            var now = +new Date();
+      
+            search.search({}, true).addCallback(function(result) {
+               assert.isTrue((now - (+new Date())) > -50);
+               done();
+               return result;
+            });
+         });
          
          it('abort Search', function(done) {
             var search  = new Search(
@@ -124,7 +139,7 @@ define(
          });
    
          it('error Search', function(done) {
-            var sourceErr = new Memory();
+            var sourceErr = new sourceLib.Memory();
             sourceErr.query = function() {
                return Deferred.fail();
             };

@@ -1,18 +1,18 @@
 define([
    'Controls/List/EditInPlace',
-   'WS.Data/Collection/RecordSet',
-   'WS.Data/Entity/Model',
+   'Types/collection',
+   'Types/entity',
    'Core/Deferred',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls/List/ListViewModel',
    'Controls/List/Tree/TreeViewModel',
    'Controls/EditableArea/Constants'
 ], function(
    EditInPlace,
-   RecordSet,
-   Model,
+   collection,
+   entity,
    Deferred,
-   Memory,
+   sourceLib,
    ListViewModel,
    TreeViewModel,
    EditConstants
@@ -97,11 +97,11 @@ define([
             'parent@': null,
             title: 'Договор на поставку печатной продукции'
          }];
-         items = new RecordSet({
+         items = new collection.RecordSet({
             rawData: data,
             idProperty: 'id'
          });
-         newItem = new Model({
+         newItem = new entity.Model({
             rawData: {
                id: 4,
                title: 'Четвёртый'
@@ -114,7 +114,7 @@ define([
             displayProperty: 'title'
          });
          treeModel = new TreeViewModel({
-            items: new RecordSet({
+            items: new collection.RecordSet({
                rawData: treeData,
                idProperty: 'id'
             }),
@@ -126,7 +126,7 @@ define([
             items: items.clone(),
             keyProperty: 'id',
             displayProperty: 'title',
-            groupMethod: function(item) {
+            groupingKeyCallback: function(item) {
                return item.get('type');
             }
          });
@@ -246,7 +246,7 @@ define([
          });
 
          it('afterBeginEdit', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: items
             });
@@ -272,7 +272,7 @@ define([
 
       describe('beginAdd', function() {
          it('Without handler', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: items
             });
@@ -283,18 +283,18 @@ define([
             });
 
             eip.beginAdd().addCallback(function() {
-               assert.instanceOf(eip._editingItem, Model);
+               assert.instanceOf(eip._editingItem, entity.Model);
                assert.isTrue(eip._isAdd);
                done();
             });
          });
 
          it('Empty list', function(done) {
-            listModel.setItems(new RecordSet({
+            listModel.setItems(new collection.RecordSet({
                rawData: [],
                idProperty: 'id'
             }));
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: listModel._items
             });
@@ -305,7 +305,7 @@ define([
             });
 
             eip.beginAdd().addCallback(function() {
-               assert.instanceOf(eip._editingItem, Model);
+               assert.instanceOf(eip._editingItem, entity.Model);
                assert.equal(eip._editingItemData.index, 0);
                assert.isTrue(eip._isAdd);
                done();
@@ -313,7 +313,7 @@ define([
          });
 
          it('Object without item', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: items
             });
@@ -331,14 +331,14 @@ define([
             });
 
             eip.beginAdd().addCallback(function() {
-               assert.instanceOf(eip._editingItem, Model);
+               assert.instanceOf(eip._editingItem, entity.Model);
                assert.isTrue(eip._isAdd);
                done();
             });
          });
 
          it('afterBeginEdit', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: items
             });
@@ -362,7 +362,7 @@ define([
          });
 
          it('add item to a folder', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: treeModel._items
             });
@@ -379,7 +379,7 @@ define([
                eip.beginAdd({
                   item: model
                }).addCallback(function() {
-                  assert.instanceOf(eip._editingItem, Model);
+                  assert.instanceOf(eip._editingItem, entity.Model);
                   assert.isTrue(eip._isAdd);
                   assert.equal(2, eip._editingItemData.level);
                   done();
@@ -449,7 +449,7 @@ define([
          });
 
          it('With source', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: data
             });
@@ -472,7 +472,7 @@ define([
          });
 
          it('Add item', function(done) {
-            var source = new Memory({
+            var source = new sourceLib.Memory({
                idProperty: 'id',
                data: data
             });
@@ -523,7 +523,7 @@ define([
 
          describe('afterEndEdit', function() {
             it('add item', function(done) {
-               var source = new Memory({
+               var source = new sourceLib.Memory({
                   idProperty: 'id',
                   data: data
                });
@@ -549,7 +549,7 @@ define([
             });
 
             it('edit item', function(done) {
-               var source = new Memory({
+               var source = new sourceLib.Memory({
                   idProperty: 'id',
                   data: data
                });
@@ -611,10 +611,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -633,10 +632,9 @@ define([
             });
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -653,10 +651,9 @@ define([
             eip._sequentialEditing = true;
             eip._editingItem = listModel.at(2).getContents();
             eip._setEditingItemData(listModel.at(2).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -678,10 +675,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 13
-               }
+            eip._onKeyDown({}, {
+               keyCode: 13,
+               stopPropagation: function() {}
             });
          });
 
@@ -697,10 +693,9 @@ define([
             });
             eip._editingItem = listModel.at(0).getContents();
             eip._setEditingItemData(listModel.at(0).getContents(), eip._options.listModel);
-            eip._onKeyDown({
-               nativeEvent: {
-                  keyCode: 27
-               }
+            eip._onKeyDown({}, {
+               keyCode: 27,
+               stopPropagation: function() {}
             });
          });
 
@@ -944,10 +939,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -964,10 +958,9 @@ define([
                treeModel.setExpandedItems([1, 2]);
                eip._editingItem = treeModel.at(5).getContents();
                eip._setEditingItemData(treeModel.at(5).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -987,10 +980,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -1008,10 +1000,9 @@ define([
                eip._sequentialEditing = true;
                eip._editingItem = treeModel.at(3).getContents();
                eip._setEditingItemData(treeModel.at(3).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 
@@ -1034,10 +1025,9 @@ define([
                treeModel.setExpandedItems([1]);
                eip._editingItem = treeModel.at(1).getContents();
                eip._setEditingItemData(treeModel.at(1).getContents(), eip._options.listModel);
-               eip._onKeyDown({
-                  nativeEvent: {
-                     keyCode: 13
-                  }
+               eip._onKeyDown({}, {
+                  keyCode: 13,
+                  stopPropagation: function() {}
                });
             });
 

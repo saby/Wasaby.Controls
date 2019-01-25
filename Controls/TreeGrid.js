@@ -1,10 +1,10 @@
 define('Controls/TreeGrid', [
    'Controls/Grid',
    'Controls/List/TreeGridView/TreeGridViewModel',
-   'WS.Data/Type/descriptor',
+   'Types/entity',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/TreeControl'
-], function(Grid, TreeGridViewModel, types) {
+], function(Grid, TreeGridViewModel, entity) {
    'use strict';
 
    /**
@@ -19,11 +19,11 @@ define('Controls/TreeGrid', [
     * @mixes Controls/interface/ISource
     * @mixes Controls/interface/IItemTemplate
     * @mixes Controls/interface/IPromisedSelectable
-    * @mixes Controls/interface/IGroupedView
+    * @mixes Controls/interface/IGrouped
     * @mixes Controls/interface/INavigation
     * @mixes Controls/interface/IFilter
     * @mixes Controls/interface/IHighlighter
-    * @mixes Controls/List/interface/IListControl
+    * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
     * @control
@@ -40,8 +40,8 @@ define('Controls/TreeGrid', [
       },
       getOptionTypes: function() {
          return {
-            keyProperty: types(String).required(),
-            parentProperty: types(String).required()
+            keyProperty: entity.descriptor(String).required(),
+            parentProperty: entity.descriptor(String).required()
          };
       },
       toggleExpanded: function(id) {

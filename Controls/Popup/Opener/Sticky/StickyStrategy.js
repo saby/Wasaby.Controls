@@ -20,9 +20,11 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
    var _private = {
 
-      /*
-       * Возвращает точку таргета, относительно которой нужно спозиционироваться окну
-       * */
+      /**
+       * Returns the target point relative to which the popup should be positioned
+       * @param popupCfg Popup configuration
+       * @param targetInfo Target data
+       */
       getTargetPoint: function(popupCfg, targetInfo) {
          var offsetMultipliers = {
             top: 0,
@@ -38,20 +40,24 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          };
       },
 
-      /*
-       * Инвертировать положение окна
-       * В случае если окно не влезает в доступную область, может потребоваться его инвертировать
-       * */
-      invert: function(cfg, direction) {
-         cfg.corner[direction] = INVERTING_CONST[cfg.corner[direction]];
-         cfg.align[direction].side = INVERTING_CONST[cfg.align[direction].side];
-         cfg.align[direction].offset *= -1;
-         cfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+      /**
+       * Invert the position of the popup. If the popup does not fit into the available area, you may need to invert it
+       * @param popupCfg Popup configuration
+       * @param direction Positioning direction: vertical or horizontal
+       */
+      invert: function(popupCfg, direction) {
+         popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
+         popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
+         popupCfg.align[direction].offset *= -1;
+         popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
       },
 
-      /*
-       * Получить горизонтальную или вертикальную координату позиционирования окна
-       * */
+      /**
+       * Returns the horizontal or the vertical coordinate for positioning the popup
+       * @param targetPoint Target point relative to which the popup should be positioned
+       * @param cfg Popup configuration
+       * @param direction Positioning direction: vertical or horizontal
+       */
       getCoordinate: function(targetPoint, cfg, direction) {
          var isHorizontalDirection = direction === 'horizontal';
          return targetPoint[isHorizontalDirection ? 'left' : 'top'] + cfg.align[direction].offset +
@@ -59,9 +65,13 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             cfg.sizes.margins[isHorizontalDirection ? 'left' : 'top'];
       },
 
-      /*
-       * Проверить насколько не влезает окно с обеих сторон относительно переданной координаты и вернуть максимальное значение
-       * */
+      /**
+       * Check how much the popup does not fit on both sides of the transmitted coordinates and return the maximum value
+       * @param coordinate Popup position coordinate
+       * @param popupCfg Popup configuration
+       * @param direction Positioning direction: vertical or horizontal
+       * @param targetCoords Target position
+       */
       getMaxOverflowValue: function(coordinate, popupCfg, direction, targetCoords) {
          return Math.max(
             popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] -
@@ -94,14 +104,14 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             }
          };
 
-         // Проверим, возможно окну достаточно места
+         // Check if the popup has enough space
          checkOverflow(function(firstOverflowValue) {
-            // Попробуем инвертировать окно и проверим снова
+            // Let's try to invert the popup and check again
             self.invert(popupCfg, direction);
             targetPoint = self.getTargetPoint(popupCfg, targetCoords);
 
             checkOverflow(function(secondOverflowValue) {
-               // Если и на этот раз окно не поместилось, отобразим окно в ту сторону, где места было больше
+               // display the popup in the direction where there was more space
                if (firstOverflowValue < secondOverflowValue) {
                   self.invert(popupCfg, direction);
                   targetPoint = self.getTargetPoint(popupCfg, targetCoords);
@@ -161,6 +171,6 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
          return position;
       },
-      _private: _private // для тестов
+      _private: _private
    };
 });

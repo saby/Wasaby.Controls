@@ -3,13 +3,13 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       'Controls/History/FilterSource',
       'Controls/History/Service',
       'Controls/Controllers/SourceController',
-      'WS.Data/Adapter/Sbis',
-      'WS.Data/Collection/RecordSet',
-      'WS.Data/Source/Memory',
+      'Types/entity',
+      'Types/collection',
+      'Types/source',
       'Core/constants',
-      'WS.Data/Di'
+      'Types/di'
    ],
-   function(HistorySource, HistoryService, SourceController, SbisAdapter, RecordSet, MemorySource, Constants, Di) {
+   function(HistorySource, HistoryService, SourceController, entity, collection, sourceLib, Constants, Di) {
       'use strict';
 
       var HISTORY_SOURCE = {};
@@ -28,7 +28,7 @@ define('Controls/Filter/Button/History/resources/historyUtils',
             dataLoaded: true
          };
          return new HistorySource({
-            originSource: new MemorySource({
+            originSource: new sourceLib.Memory({
                idProperty: 'id',
                data: []
             }),
@@ -54,9 +54,9 @@ define('Controls/Filter/Button/History/resources/historyUtils',
          return sourceController.load({
             '$_history': true
          }).addCallback(function(items) {
-            return new RecordSet({
+            return new collection.RecordSet({
                rawData: items.getRawData(),
-               adapter: new SbisAdapter()
+               adapter: new entity.adapter.Sbis()
             });
          });
       }

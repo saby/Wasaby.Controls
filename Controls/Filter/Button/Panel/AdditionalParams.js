@@ -1,12 +1,12 @@
 define('Controls/Filter/Button/Panel/AdditionalParams', [
    'Core/Control',
-   'WS.Data/Utils',
+   'Types/util',
    'Core/helpers/Object/isEqual',
    'Core/core-clone',
    'wml!Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams',
-   'WS.Data/Chain',
+   'Types/chain',
    'css!theme?Controls/Filter/Button/Panel/AdditionalParams/AdditionalParams'
-], function(Control, Utils, isEqual, Clone, template, Chain) {
+], function(Control, Utils, isEqual, Clone, template, chain) {
    /**
     * Control "Additional params". Used in the filter panel.
     * @class Controls/Filter/Button/Panel/AdditionalParams
@@ -40,7 +40,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
       countItems: function(self, items) {
          var result = 0;
-         Chain(items).each(function(elem) {
+         chain.factory(items).each(function(elem) {
             if (!self._isItemVisible(elem)) {
                result++;
             }
@@ -79,8 +79,8 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       },
 
       _isItemVisible: function(item) {
-         return Utils.getItemPropertyValue(item, 'visibility') === undefined ||
-            Utils.getItemPropertyValue(item, 'visibility');
+         return Utils.object.getPropertyValue(item, 'visibility') === undefined ||
+            Utils.object.getPropertyValue(item, 'visibility');
       },
 
       _textValueChangedHandler: function(event, index, textValue) {

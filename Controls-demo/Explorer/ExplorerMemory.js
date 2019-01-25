@@ -1,10 +1,9 @@
 define('Controls-demo/Explorer/ExplorerMemory', [
-   'WS.Data/Source/Memory',
-   'WS.Data/Source/DataSet',
-   'WS.Data/Collection/RecordSet',
+   'Types/source',
+   'Types/collection',
    'Core/Deferred',
    'Core/core-clone'
-], function(MemorySource, DataSet, RecordSet, Deferred, cClone) {
+], function(source, collection, Deferred, cClone) {
 
    'use strict';
 
@@ -16,7 +15,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
       }
    }
 
-   function getFullPath(items, currentRoot) {
+   function getFullPath(items, currentRoot, needRecordSet) {
       var
          path = [],
          currentNode = getById(items, currentRoot);
@@ -25,14 +24,17 @@ define('Controls-demo/Explorer/ExplorerMemory', [
          currentNode = getById(items, currentNode.parent);
          path.unshift(currentNode);
       }
-      return new RecordSet({
-         rawData: path,
-         idProperty: 'id'
-      });
+      if (needRecordSet) {
+         return new collection.RecordSet({
+            rawData: path,
+            idProperty: 'id'
+         });
+      }
+      return path;
    }
 
    var
-      TreeMemory = MemorySource.extend({
+      TreeMemory = source.Memory.extend({
          query: function(query) {
             var
                self = this,
@@ -65,7 +67,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                   }
                }
                data.concat(rootData);
-               result.callback(new DataSet({
+               result.callback(new source.DataSet({
                   rawData: data,
                   adapter: this.getAdapter(),
                   idProperty: 'id'
@@ -86,7 +88,7 @@ define('Controls-demo/Explorer/ExplorerMemory', [
                         result = originalGetAll.apply(this, arguments),
                         meta = result.getMetaData();
                      if (parent !== undefined && parent !== null) {
-                        meta.path = getFullPath(self._$data, parent);
+                        meta.path = getFullPath(self._$data, parent, true);
                      }
                      result.setMetaData(meta);
                      return result;

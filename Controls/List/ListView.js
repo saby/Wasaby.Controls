@@ -3,6 +3,7 @@
  */
 define('Controls/List/ListView', [
    'Core/Control',
+   'Core/IoC',
    'Core/helpers/Function/debounce',
    'Core/constants',
    'wml!Controls/List/ListView/ListView',
@@ -12,6 +13,7 @@ define('Controls/List/ListView', [
    'wml!Controls/List/resources/ItemOutput',
    'css!theme?Controls/List/ListView/ListView'
 ], function(BaseControl,
+   IoC,
    cDebounce,
    cConstants,
    ListViewTpl,
@@ -25,6 +27,21 @@ define('Controls/List/ListView', [
       DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
    var _private = {
+      checkDeprecated: function(cfg) {
+         if (cfg.contextMenuEnabled !== undefined) {
+            IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
+         }
+         if (cfg.markerVisibility === 'always') {
+            IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead');
+         }
+         if (cfg.markerVisibility === 'demand') {
+            IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead');
+         }
+         if (cfg.results) {
+            IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');
+         }
+      },
+
       onListChange: function(self) {
          self._listChanged = true;
          self._forceUpdate();
@@ -74,6 +91,7 @@ define('Controls/List/ListView', [
          },
 
          _beforeMount: function(newOptions) {
+            _private.checkDeprecated(newOptions);
             if (newOptions.groupTemplate) {
                this._groupTemplate = newOptions.groupTemplate;
             }
@@ -90,13 +108,19 @@ define('Controls/List/ListView', [
                this._listModel = newOptions.listModel;
                this._listModel.subscribe('onListChange', this._onListChangeFnc);
             }
+            if (this._options.itemTemplateProperty !== newOptions.itemTemplateProperty) {
+               this._listModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+            }
+            if (this._options.groupTemplate !== newOptions.groupTemplate) {
+               this._groupTemplate = newOptions.groupTemplate;
+            }
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
             this._lockForUpdate = true;
          },
 
          _afterMount: function() {
             _private.resizeNotifyOnListChanged(this);
-            if (this._options.markedKey === undefined && this._options.markerVisibility === 'always') {
+            if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
          },
@@ -116,13 +140,6 @@ define('Controls/List/ListView', [
             return this._children.itemsContainer;
          },
 
-         _onItemKeyDown: function(e, dispItem) {
-            if (e.nativeEvent.keyCode === cConstants.key.enter) {
-               var item = dispItem.getContents();
-               this._notify('itemClick', [item, e], { bubbling: true });
-            }
-         },
-
          _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
             this._notify('itemClick', [item, e], {bubbling: true});
@@ -135,7 +152,7 @@ define('Controls/List/ListView', [
          },
 
          _onItemContextMenu: function(event, itemData) {
-            if (this._options.contextMenuEnabled) {
+            if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false) {
                this._notify('itemContextMenu', [itemData, event, true]);
             }
          },
@@ -181,8 +198,8 @@ define('Controls/List/ListView', [
 
    ListView.getDefaultOptions = function() {
       return {
-         contextMenuEnabled: true,
-         markerVisibility: 'demand'
+         contextMenuVisibility: true,
+         markerVisibility: 'onactivated'
       };
    };
 

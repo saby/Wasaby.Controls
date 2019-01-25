@@ -2,10 +2,10 @@ define('Controls-demo/Input/resources/SuggestTwoLines',
    [
       'Core/Control',
       'wml!Controls-demo/Input/resources/SuggestTwoLines',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'css!Controls-demo/Input/resources/VdomInputs'
    ],
-   function(Base, template, Memory) {
+   function(Base, template, source) {
       'use strict';
 
       var SuggestTwoLines = Base.extend({
@@ -18,7 +18,7 @@ define('Controls-demo/Input/resources/SuggestTwoLines',
             }
          },
          _suggestSource: function() {
-            return new Memory({
+            return new source.Memory({
                idProperty: 'title',
                data: this._options.source,
                filter: function(record, filter) {

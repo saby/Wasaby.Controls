@@ -1,11 +1,11 @@
 define('Controls-demo/List/VirtualScroll', [
    'Core/Control',
    'wml!Controls-demo/List/VirtualScroll/VirtualScroll',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'css!Controls-demo/List/VirtualScroll/VirtualScroll'
 ], function(BaseControl,
             template,
-            MemorySource
+            source
 ) {
    'use strict';
 
@@ -31,7 +31,7 @@ define('Controls-demo/List/VirtualScroll', [
 
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: srcData
             });

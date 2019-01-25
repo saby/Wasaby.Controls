@@ -8,10 +8,10 @@ define('Controls/Event/Registrator',
       'Core/Control',
       'wml!Controls/Event/Registrator',
       'Controls/Event/Registrar',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Application/CompatibleScripts'
    ],
-   function(Control, template, Registrar, types) {
+   function(Control, template, Registrar, entity) {
 
       'use strict';
 
@@ -45,7 +45,7 @@ define('Controls/Event/Registrator',
 
       EventRegistrator.getOptionTypes = function() {
          return {
-            register: types(String).required()
+            register: entity.descriptor(String).required()
          };
       };
 

@@ -1,7 +1,7 @@
 define('Controls-demo/Filter/Button/panelOptions/panelPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/Filter/Button/panelOptions/panelPG',
       'json!Controls-demo/PropertyGrid/pgtext',
 
@@ -15,7 +15,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
       'wml!Controls-demo/Filter/Button/ChooseDate'
    ],
 
-   function(Control, MemorySource, template, config) {
+   function(Control, sourceLib, template, config) {
       'use strict';
       var panelPG = Control.extend({
          _template: template,
@@ -32,7 +32,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   value: [1],
                   resetValue: [1],
                   myItemTemplate: 'wml!Controls-demo/Filter/Button/ChooseDate',
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: 1, title: 'All time' },
@@ -47,7 +47,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   id: 'state',
                   value: [1],
                   resetValue: [1],
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: 1, title: 'All state' },
@@ -64,7 +64,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   resetValue: [1],
                   textValue: 'Due date',
                   visibility: false,
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: 1, title: 'Due date' },
@@ -92,7 +92,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   value: [1],
                   resetValue: [1],
                   visibility: false,
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: 1, title: 'My' },
@@ -112,7 +112,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   resetValue: [2],
                   textValue: 'On department',
                   visibility: false,
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: 1, title: 'On me' },
@@ -138,7 +138,7 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                   id: 'state',
                   value: [1],
                   resetValue: [1],
-                  source: new MemorySource({
+                  source: new sourceLib.Memory({
                      idProperty: 'key',
                      data: [
                         { key: 1, title: 'All state' },

@@ -11,29 +11,28 @@ define('Controls/Input/Search',
       'use strict';
 
       /**
-       * Search input.
+       * Controls that allows user to enter single-line text.
+       * These are functionally identical to text inputs, but may be styled differently.
        *
        * <a href="/materials/demo-ws4-search-container">Demo with Input/Search and List control</a>.
        * <a href="/materials/demo-ws4-filter-search-new">Demo with Filter/Button, Input/Search and List control</a>.
        *
        * @class Controls/Input/Search
        * @extends Controls/Input/Text
-       * @mixes Controls/Input/interface/ISearch
+       *
+       * @mixes Controls/Input/Search/Styles
+       *
        * @control
        * @public
+       * @demo Controls-demo/Input/Search/Suggest/SuggestPG
+       *
        * @category Input
        * @author Золотова Э.Е.
        */
 
       /**
-       * @event Controls/Input/Search#search Occurs when search button is clicked.
-       */
-
-      /**
-       * @name Controls/Input/Search#style
-       * @cfg {String} Field style.
-       * @variant default Gray field.
-       * @variant header White field.
+       * @event Controls/Input/Search#searchClick Occurs when search button is clicked.
+       * @event Controls/Input/resetClick#searchClick Occurs when reset button is clicked.
        */
 
       var Search = Control.extend({

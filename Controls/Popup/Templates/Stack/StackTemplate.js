@@ -19,6 +19,7 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @category Popup
           * @author Красильников А.С.
           * @mixes Controls/Popup/Templates/Stack/StackTemplateStyles
+          * @demo Controls-demo/Popup/Templates/StackTemplatePG
           */
 
          /**
@@ -61,10 +62,10 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           */
 
          /**
-          * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonStyle
+          * @name Controls/Popup/Templates/Stack/StackTemplate#closeButtonViewMode
           * @cfg {String} Close button display style.
           * @variant default
-          * @variant lite
+          * @variant light
           * @variant primary
           */
 
@@ -73,22 +74,34 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
             if (options.contentArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
-            if (options.topArea) {
+            if (options.caption) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
-            if (options.topArea) {
+            if (options.captionStyle) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
-            if (options.topArea) {
+            if (options.showMaximizeButton) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
             }
             if (options.topArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
 
-            if (options.topArea) {
+            if (options.bottomArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
             }
+            this._updateMaximizeButtonTitle(options.maximized);
+         },
+
+         _beforeUpdate: function(newOptions) {
+            if (this._options.maximized !== newOptions.maximized) {
+               this._notify('controlResize', [], { bubbling: true });
+               this._updateMaximizeButtonTitle(newOptions.maximized);
+            }
+         },
+
+         _updateMaximizeButtonTitle: function(maximized) {
+            this._maximizeButtonTitle = maximized ? rk('Свернуть') : rk('Развернуть');
          },
 
          /**
@@ -96,15 +109,14 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
           * @function Controls/Popup/Templates/Stack/StackTemplate#close
           */
          close: function() {
-            this._notify('close', [], {bubbling: true});
+            this._notify('close', [], { bubbling: true });
          },
          changeMaximizedState: function() {
-
             /**
              * @event maximized
              * Occurs when you click the expand / collapse button of the panels.
              */
-            this._notify('maximized', [!this._options.maximized], {bubbling: true});
+            this._notify('maximized', [!this._options.maximized], { bubbling: true });
          }
       });
 
@@ -116,11 +128,9 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
       };
 
       return DialogTemplate;
-   }
-);
+   });
 
 /**
  * @name Controls/Popup/Templates/Stack/StackTemplate#close
  * Close popup.
  */
-

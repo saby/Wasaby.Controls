@@ -6,15 +6,15 @@ define('Controls/Selector/SelectedCollection/SelectedCollectionStyles', [],
     * @public
     * @author Золотова Э.Е.
     *
-    * @css @color_SelectedCollection_item-accent Accent item color.
-    * @css @color_SelectedCollection_item-primary Primary item color.
+    * @css @color_SelectedCollection_item_accent Accent item color.
+    * @css @color_SelectedCollection_item_primary Primary item color.
     * @css @color_SelectedCollection-counter Counter color.
-    * @css @color_SelectedCollection_cross Cross color.
-    * @css @icon-size_SelectedCollection_cross Icon cross size.
+    * @css @color_SelectedCollection-cross Cross color.
+    * @css @icon-size_SelectedCollection-cross Icon cross size.
     * @css @line-height_SelectedCollection-item SelectedCollection items line height.
-    * @css @font-size_SelectedCollection-size-m Font size of item with size m.
-    * @css @font-size_SelectedCollection-size-l Font size of item with size l.
-    * @css @font-size_SelectedCollection-size-h Font size of item with size h.
+    * @css @font-size_SelectedCollection-size_m Font size of item with size m.
+    * @css @font-size_SelectedCollection-size_l Font size of item with size l.
+    * @css @font-size_SelectedCollection-size_h Font size of item with size h.
     * @css @spacing_SelectedCollection-between-items Spacing between items.
     * @css @spacing_SelectedCollection-between-counter-items Spacing between counter and items.
     * @css @padding_SelectedCollection-counter Padding counter.

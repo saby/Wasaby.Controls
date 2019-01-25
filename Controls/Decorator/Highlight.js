@@ -3,12 +3,12 @@ define('Controls/Decorator/Highlight',
       'Core/IoC',
       'Core/Control',
       'Controls/Utils/RegExp',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'wml!Controls/Decorator/Highlight/Highlight',
 
       'css!theme?Controls/Decorator/Highlight/Highlight'
    ],
-   function(IoC, Control, RegExpUtil, descriptor, template) {
+   function(IoC, Control, RegExpUtil, entity, template) {
       'use strict';
 
       /**
@@ -229,13 +229,13 @@ define('Controls/Decorator/Highlight',
 
       Highlight.getOptionTypes = function() {
          return {
-            class: descriptor(String),
-            searchMode: descriptor(String).oneOf([
+            class: entity.descriptor(String),
+            searchMode: entity.descriptor(String).oneOf([
                'word',
                'substring'
             ]),
-            text: descriptor(String).required(),
-            highlight: descriptor(String).required()
+            text: entity.descriptor(String).required(),
+            highlight: entity.descriptor(String).required()
          };
       };
 
