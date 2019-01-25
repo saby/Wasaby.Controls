@@ -253,7 +253,7 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
-         _resizeHandler: function(e, force) {
+         _resizeHandler: function(e, extraOpts, force) {
             var withObserver = !!this._observer;
             if (force) {
                withObserver = false;
