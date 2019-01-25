@@ -15,7 +15,7 @@ define('Controls/interface/IItemTemplate', [
     * <a href="/materials/demo-ws4-list-item-template">Example</a>.
     * @remark
     * Base itemTemplate for Controls/List: "wml!Controls/List/ItemTemplate".
-    * Inside the template scope, object itemDate is available, allowing you to access the render data (for example: item, key, etc.).
+    * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>contentTemplate {Function} - Template for render item content.</li>

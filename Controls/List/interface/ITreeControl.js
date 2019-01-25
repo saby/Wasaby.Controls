@@ -22,11 +22,6 @@ define('Controls/List/interface/ITreeControl', [
     */
 
    /**
-    * @name Controls/List/interface/ITreeControl#singleExpand
-    * @cfg {Boolean} Allow only one node to be expanded. If another one is expanded, the previous one will collapse.
-    */
-
-   /**
     * @name Controls/List/interface/ITreeControl#expandedItems
     * @cfg {{Array.<String>}} Array of identifiers of expanded items.
     * <b>Note:</b>
@@ -61,6 +56,14 @@ define('Controls/List/interface/ITreeControl', [
     * @variant hasChildren Show expander only for nodes with children.
     * @default visible
     * <a href="/materials/demo-ws4-tree-grid-extended">Example</a>.
+    */
+
+   /**
+    * @name Controls/List/interface/ITreeControl#levelIndentSize
+    * @cfg {String} Size of hierarchical indent.
+    * @variant m Medium indent.
+    * @variant null without indent.
+    * @default m
     */
 
 
