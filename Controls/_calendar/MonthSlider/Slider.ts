@@ -1,14 +1,14 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
-import tmpl = require('wml!Controls/Calendar/MonthSlider/Slider/Slider');
-import 'css!theme?Controls/Calendar/MonthSlider/Slider/Slider';
+import tmpl = require('wml!Controls/_calendar/MonthSlider/Slider/Slider');
+import 'css!theme?Controls/_calendar/MonthSlider/Slider/Slider';
 
 /**
  * Slider. Renders the element by template. Redraws with animation when changing data.
  * For example, the previous element leaves to the left, and the next one floats to the right.
  *
- * @class Controls/Calendar/MonthSlider/Slider
+ * @class Controls/_calendar/MonthSlider/Slider
  * @extends Core/Control
  * @control
  * @public
@@ -153,7 +153,7 @@ Component.getOptionTypes = function () {
     return coreMerge({
 
         /**
-         * @name Controls/Calendar/MonthSlider/Slider#animation
+         * @name Controls/_calendar/MonthSlider/Slider#animation
          * @cfg {AnimationType} The type of animation used to turn the items.
          * @see inAnimation
          * @see outAnimation
@@ -161,7 +161,7 @@ Component.getOptionTypes = function () {
         animation: descriptor(String).required(),
 
         /**
-         * @name Controls/Calendar/MonthSlider/Slider#inAnimation
+         * @name Controls/_calendar/MonthSlider/Slider#inAnimation
          * @cfg {AnimationType} The type of animation used when the item appears.
          * @see animation
          * @see outAnimation
@@ -169,7 +169,7 @@ Component.getOptionTypes = function () {
         inAnimation: descriptor(String),
 
         /**
-         * @name Controls/Calendar/MonthSlider/Slider#outAnimation
+         * @name Controls/_calendar/MonthSlider/Slider#outAnimation
          * @cfg {AnimationType} The type of animation used when the item disappears.
          * @see animation
          * @see inAnimation
@@ -177,7 +177,7 @@ Component.getOptionTypes = function () {
         outAnimation: descriptor(String),
 
         /**
-         * @name Controls/Calendar/MonthSlider/Slider#data
+         * @name Controls/_calendar/MonthSlider/Slider#data
          * @cfg {Object} When this option changes, the content disappears smoothly, and in its place the new content drawn with this data smoothly appears.
          * @see animation
          * @see inAnimation
@@ -186,7 +186,7 @@ Component.getOptionTypes = function () {
         data: descriptor(Object)
 
         /**
-         * @name Controls/Calendar/MonthSlider/Slider#content
+         * @name Controls/_calendar/MonthSlider/Slider#content
          * @cfg {Content} Template of displayed content.
          */
     });

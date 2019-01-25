@@ -6,12 +6,12 @@ import dateUtils = require('Controls/Utils/Date');
  * Источник данных который возвращает данные для построения календарей в списочных контролах.
  * Каждый элемент это год содержащий массив месяцев.
  *
- * @class Controls/Date/MonthList/CalendarSource
+ * @class Controls/_calendar/MonthList/CalendarSource
  * @extends Types/source:Base
  * @author Миронов А.Ю.
  */
 var CalendarSource = source.Memory.extend({
-    _moduleName: 'Controls.Date.MonthList.CalendarSource',
+    _moduleName: 'Controls._calendar.MonthList.CalendarSource',
     $protected: {
         _dataSetItemsProperty: 'items',
         _dataSetMetaProperty: 'meta'

@@ -3,7 +3,7 @@ import DateUtil = require('Controls/Utils/Date');
 
 /**
  * Модель для представления месяца с поддержкой выделения.
- * @class Controls/Date/Month/MonthModel
+ * @class Controls/_calendar/Month/Model
  * @author Миронов А.Ю.
  */
 

@@ -1,13 +1,13 @@
 import {factory} from 'Types/chain';
 import {Query} from 'Types/source';
 import ListControl = require('Controls/List/ListControl');
-import tmpl = require('wml!Controls/Date/MonthList/ListControl');
+import tmpl = require('wml!Controls/_calendar/MonthList/ListControl');
 import baseControlTmpl = require('wml!Controls/List/ListControl/ListControl');
 
 /**
  * Plain list control with custom item template. Can load data from data source and and can enrich data from .
  *
- * @class Controls/Date/MonthList/ListControl
+ * @class Controls/_calendar/MonthList/ListControl
  * @extends Controls/List
  * @control
  * @author Миронов А.Ю.
@@ -32,7 +32,7 @@ var _private = {
     }
 };
 
-var ModuleControl = ListControl.extend(/** @lends Controls/Date/MonthList/List.prototype */{
+var ModuleControl = ListControl.extend(/** @lends Controls/_calendar/MonthList/List.prototype */{
     _template: tmpl,
     _baseControlTmpl: baseControlTmpl,
 

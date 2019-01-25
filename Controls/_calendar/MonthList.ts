@@ -8,7 +8,7 @@ import 'wml!Controls/Date/MonthList/MonthListItem';
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
  *
- * @class Controls/Date/MonthList
+ * @class Controls/_calendar/MonthList
  * @mixes Controls/Date/interface/IMonthListCustomDays
  * @extends Core/Control
  * @author Миронов А.Ю.

@@ -1,16 +1,16 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import monthTmpl = require('wml!Controls/Date/Month/Month');
-import IMonth = require('Controls/Date/interface/IMonth');
-import MonthViewModel = require('Controls/Date/Month/Model');
+import monthTmpl = require('wml!Controls/_calendar/Month/Month');
+import IMonth from 'Controls/_calendar/interfaces/IMonth';
+import MonthViewModel from 'Controls/_calendar/Month/Model';
 
 /**
  * Календарь отображающий 1 месяц.
  * Предназначен для задания даты или диапазона дат в рамках одного месяца путём выбора периода с помощью мыши.
  *
- * @class Controls/Date/Month
+ * @class Controls/_calendar/Month
  * @extends Core/Control
- * @mixes Controls/Date/interface/IMonth
+ * @mixes Controls/_calendar/interfaces/IMonth
  * @mixes Controls/Date/interface/IRangeSelectable
  * @mixes Controls/Date/interface/IDateRangeSelectable
  * @control

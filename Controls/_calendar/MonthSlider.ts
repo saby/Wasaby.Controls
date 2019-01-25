@@ -12,7 +12,7 @@ import 'css!theme?Controls/Calendar/MonthSlider/MonthSlider';
  * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
  * Designed to select a date or period within a few months or years.
  *
- * @class Controls/Calendar/MonthSlider
+ * @class Controls/_calendar/MonthSlider
  * @extends Core/Control
  * @mixes Controls/Date/interface/IMonth
  * @mixes Controls/Date/interface/IRangeSelectable
