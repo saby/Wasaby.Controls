@@ -1,3 +1,1 @@
-<div>
-   <ws:partial template="{{ _options.content }}" on:keypress="keyPressHandler()"/>
-</div>
+<ws:partial template="{{ _options.content }}" on:keypress="keyPressHandler()"/>
