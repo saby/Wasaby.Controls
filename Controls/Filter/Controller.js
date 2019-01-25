@@ -262,15 +262,13 @@ define('Controls/Filter/Controller',
          },
 
          getHistoryData: function(filterButtonItems, fastFilterItems) {
-
             /* An empty filter should not appear in the history, but should be applied when loading data from the history.
                To understand this, save an empty object in history. */
 
             if (_private.isFilterChanged(filterButtonItems, fastFilterItems)) {
                return _private.prepareHistoryItems(filterButtonItems, fastFilterItems);
-            } else {
-               return {};
             }
+            return {};
          },
 
          setFilter: function(self, filter) {
@@ -296,7 +294,7 @@ define('Controls/Filter/Controller',
             var calculatedFilter;
             try {
                calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
-            } catch(err) {
+            } catch (err) {
                def.errback(err);
                throw err;
             }
