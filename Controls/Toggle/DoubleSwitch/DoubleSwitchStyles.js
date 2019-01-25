@@ -10,7 +10,7 @@ define('Controls/Toggle/DoubleSwitch/DoubleSwitchStyles',
     * @public
     * @author Михайловский Д.С.
     *
-    * @css @color_Switch-text_enabled_selected Selected text color of enabled switch.
-    * @css @color_Switch-text_disabled_unselected Unselected text color of disabled switch.
+    * @css @color_DoubleSwitch-text_enabled_selected Selected text color of enabled double switch.
+    * @css @color_DoubleSwitch-text_disabled_unselected Unselected text color of disabled double switch.
     */
 );
