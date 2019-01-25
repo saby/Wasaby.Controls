@@ -35,8 +35,6 @@ define('Controls/Popup/Manager',
 
             self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
-               _private.activatePopup(self._popupItems);
-               _private.updateOverlay.call(self);
                self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
                return element;
             });
@@ -383,6 +381,9 @@ define('Controls/Popup/Manager',
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
                   _private.fireEventHandler.call(self, id, 'onClose');
                   self._popupItems.remove(element);
+                  _private.activatePopup(self._popupItems);
+
+                  _private.updateOverlay.call(self);
                   _private.redrawItems(self._popupItems);
                   return element;
                });
