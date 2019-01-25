@@ -42,7 +42,7 @@ define([
          assert.isTrue(controller.isLoading(), 'Wrong _isloading value');
          def.addCallback(function(rs){
             assert.isFalse(controller.isLoading(), 'Wrong _isloading value');
-            assert.isTrue(cInstance.instanceOfModule(rs, 'WS.Data/Collection/RecordSet'), 'load doesn\'t returns recordset instance');
+            assert.isTrue(cInstance.instanceOfModule(rs, 'Types/collection:RecordSet'), 'load doesn\'t returns recordset instance');
             assert.equal(3, rs.getCount(), 'load doesn\'t returns recordset instance');
             controller.destroy();
             done();
@@ -64,7 +64,7 @@ define([
 
          });
          controller.load().addCallback(function(rs){
-            assert.isTrue(cInstance.instanceOfModule(rs, 'WS.Data/Collection/RecordSet'), 'load doesn\'t returns recordset instance');
+            assert.isTrue(cInstance.instanceOfModule(rs, 'Types/collection:RecordSet'), 'load doesn\'t returns recordset instance');
             assert.equal(1, rs.getCount(), 'Load doesn\'t returns correct records count');
 
             assert.isTrue(controller.hasMoreData('down'), 'Wrong has more value after load');

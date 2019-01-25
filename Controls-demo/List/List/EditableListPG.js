@@ -1,14 +1,14 @@
 define('Controls-demo/List/List/EditableListPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/List/List/resources/EditableListPG/cfg',
       'wml!Controls-demo/List/List/resources/EditableListPG/itemTemplate'
    ],
 
-   function(Control, MemorySource, data, template, config, ItemTemplate) {
+   function(Control, sourceLib, data, template, config, ItemTemplate) {
       'use strict';
       var Component = Control.extend({
          _template: template,
@@ -32,7 +32,7 @@ define('Controls-demo/List/List/EditableListPG',
             this._componentOptions = {
                keyProperty: 'id',
                name: 'EditableListPG',
-               source: new MemorySource({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: data.gadgets
                }),
