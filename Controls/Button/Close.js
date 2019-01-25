@@ -1,8 +1,9 @@
 define('Controls/Button/Close', [
    'Core/Control',
    'wml!Controls/Button/Close',
+   'Core/IoC',
    'css!theme?Controls/Button/Close'
-], function(Control, template) {
+], function(Control, template, IoC) {
    /**
     * Specialized type of button for closing windows.
     *
@@ -80,6 +81,9 @@ define('Controls/Button/Close', [
             self._viewMode = options.viewMode;
          } else {
             self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
+            if (options.style !== undefined) {
+               IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
+            }
          }
       }
    };
