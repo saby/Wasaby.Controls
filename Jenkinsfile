@@ -14,9 +14,7 @@ def get_run_commit() {
 env.GIT_COMMIT = get_run_commit()
 
 def gitlabStatusUpdate() {
-    if ( currentBuild.currentResult == "ABORTED" ) {
-        send_status_in_gitlab('canceled')
-    } else if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE"] ) {
+     if ( currentBuild.currentResult in ["UNSTABLE", "FAILURE", "ABORTED"] ) {
         send_status_in_gitlab('failed')
     } else if ( currentBuild.currentResult == "SUCCESS" ) {
         send_status_in_gitlab('success')
@@ -30,7 +28,7 @@ def exception(err, reason) {
 
 def send_status_in_gitlab(state) {
     def request_url = "http://ci-platform.sbis.ru:8000/set_status"
-    def request_data = """{"project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "commit":"${GIT_COMMIT}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
+    def request_data = """{"hub": "gitlab", "project_name":"sbis/controls", "branch_name":"${BRANCH_NAME}", "commit":"${GIT_COMMIT}", "state": "${state}", "build_url":"${BUILD_URL}"}"""
     echo "${request_data}"
     sh """curl -sS --header \"Content-Type: application/json\" --request POST --data  '${request_data}' ${request_url}"""
 }
