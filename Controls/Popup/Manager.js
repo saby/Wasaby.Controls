@@ -35,9 +35,6 @@ define('Controls/Popup/Manager',
 
             self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
-               self._popupItems.remove(element);
-               _private.activatePopup(self._popupItems);
-               _private.updateOverlay.call(self);
                self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
                return element;
             });
@@ -74,7 +71,7 @@ define('Controls/Popup/Manager',
             var element = ManagerController.find(id);
             if (element) {
                // Register new popup
-               _private.fireEventHandler(id, 'onOpen');
+               _private.fireEventHandler.call(this, id, 'onOpen');
                element.controller._elementCreated(element, _private.getItemContainer(id), id);
                this._notify('managerPopupCreated', [element, this._popupItems], { bubbling: true });
                return true;
@@ -170,7 +167,7 @@ define('Controls/Popup/Manager',
 
          popupResult: function(id) {
             var args = Array.prototype.slice.call(arguments, 1);
-            return _private.fireEventHandler.apply(_private, [id, 'onResult'].concat(args));
+            return _private.fireEventHandler.apply(this, [id, 'onResult'].concat(args));
          },
 
          popupClose: function(id) {
@@ -201,7 +198,7 @@ define('Controls/Popup/Manager',
          },
 
          fireEventHandler: function(id, event) {
-            var item = ManagerController.find(id);
+            var item = _private.findItemById(this, id);
             var args = Array.prototype.slice.call(arguments, 2);
             if (item) {
                if (item.popupOptions._events) {
@@ -273,7 +270,7 @@ define('Controls/Popup/Manager',
          },
 
          findItemById: function(self, id) {
-            var index = self._popupItems.getIndexByValue('id', id);
+            var index = self._popupItems && self._popupItems.getIndexByValue('id', id);
             if (index > -1) {
                return self._popupItems.at(index);
             }
@@ -382,7 +379,11 @@ define('Controls/Popup/Manager',
             var element = this.find(id);
             if (element) {
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
-                  _private.fireEventHandler(id, 'onClose');
+                  _private.fireEventHandler.call(self, id, 'onClose');
+                  self._popupItems.remove(element);
+                  _private.activatePopup(self._popupItems);
+
+                  _private.updateOverlay.call(self);
                   _private.redrawItems(self._popupItems);
                   return element;
                });
