@@ -1,4 +1,4 @@
-<div class="controls-Toolbar_item {{item['buttonViewMode'] === 'toolButton' || buttonViewMode === 'toolButton' ? 'controls-Toolbar_spacing_between_toolButton_items' : 'controls-Toolbar_spacing_between_default_items'}}"
+<div class="controls-Toolbar_item"
      title="{{item['tooltip']}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial

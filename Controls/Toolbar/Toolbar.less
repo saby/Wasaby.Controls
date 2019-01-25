@@ -1,6 +1,3 @@
-.controls-Toolbar_content:first-child {
-  margin-left: 0;
-}
 .controls-Toolbar__item_has-title-and-icon {
   padding-left: @spacing_Toolbar-between-icon-text;
 }
@@ -10,13 +7,12 @@
 .controls-Toolbar_item {
   .inline-flexbox();
   cursor: pointer;
+  margin-right: @spacing_Toolbar-between-items;
   .align-items(center);
-}
-.controls-Toolbar_spacing_between_toolButton_items {
-  margin-left: @spacing_Toolbar-between-items - 2px;
-}
-.controls-Toolbar_spacing_between_default_items {
-  margin-left: @spacing_Toolbar-between-items;
+
+  &:last-child {
+    margin-right: 0;
+  }
 }
 .controls-Toolbar_item:before {
   content: "\200b";
@@ -29,9 +25,6 @@
   &:before {
     content: "\200b";
   }
-}
-.controls-Toolbar_content__resetMargin {
-  margin-right: -@spacing_Toolbar-between-items;
 }
 .controls-Toolbar__item_icon {
   .icon(@font-size_Toolbar-icon, 'cbuc-icons24');
