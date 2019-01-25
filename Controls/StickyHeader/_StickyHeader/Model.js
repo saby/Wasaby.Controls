@@ -33,31 +33,33 @@ define('Controls/StickyHeader/_StickyHeader/Model',
          _intersection: null,
 
          /**
-          * type {Boolean} Determines whether the content is fixed.
+          * type {String} Determines whether the content is fixed.
           * @private
           */
-         _shouldBeFixed: false,
+         _fixedPosition: '',
 
-         get shouldBeFixed() {
-            return this._shouldBeFixed;
+         get fixedPosition() {
+            return this._fixedPosition;
          },
 
          /**
           * @param {Object} config
           * @param {Object} config.topTarget DOM element
           * @param {Object} config.bottomTarget DOM element
+          * @param {String} config.position Sticky position
           */
          constructor: function(config) {
             this._intersection = {};
             this._topTarget = config.topTarget;
             this._bottomTarget = config.bottomTarget;
+            this._position = config.position;
             this._updateStateIntersection = this._updateStateIntersection.bind(this);
          },
 
          update: function(entries) {
             entries.forEach(this._updateStateIntersection);
 
-            this._shouldBeFixed = this._isFixed();
+            this._fixedPosition = this._getFixedPosition();
          },
 
          destroy: function() {
@@ -94,11 +96,19 @@ define('Controls/StickyHeader/_StickyHeader/Model',
 
          /**
           * Checks the content is fixed.
-          * @returns {Boolean} Determines whether the content is fixed.
+          * @returns {String} Determines whether the content is fixed.
           * @private
           */
-         _isFixed: function() {
-            return this._intersection.bottom && !this._intersection.top;
+         _getFixedPosition: function() {
+            var result = '';
+
+            if (this._position.indexOf('top') !== -1 && !this._intersection.top && this._intersection.bottom) {
+               result = 'top';
+            } else if (this._position.indexOf('bottom') !== -1 && !this._intersection.bottom) {
+               result = 'bottom';
+            }
+
+            return result;
          }
       });
    }

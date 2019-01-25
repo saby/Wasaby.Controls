@@ -156,7 +156,7 @@
             </div>
             <div class="demo_element">
                 <span class="span_label">buttonAdd, size="l", iconStyle="default"</span>
-                <Controls.Button readOnly="{{false}}" attr:test_name="option_button_9" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="buttonAdd" size="l"/>
+                <Controls.Button readOnly="{{false}}" attr:test_name="option_button_9" icon="icon-24 icon-Send" caption="Кнопка со значком и текстом" style="primary" viewMode="button" iconStyle="default" size="l"/>
             </div>
             <div class="demo_element">
                 <span class="span_label">buttonAdd, size="l", readOnly="true", iconStyle="default"</span>
