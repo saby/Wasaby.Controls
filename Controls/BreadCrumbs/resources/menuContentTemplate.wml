@@ -1,1 +1,1 @@
-<ws:partial template="wml!Controls/breadCrumbs:BC_menuContentTemplate" />
+<ws:partial template="wml!Controls/_breadCrumbs/resources/menuContentTemplate" />
