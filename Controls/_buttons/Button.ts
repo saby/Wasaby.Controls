@@ -46,18 +46,6 @@ import * as IoC from 'Core/IoC';
  * @see style
  */
 
-/**
- * @name Controls/Button#target
- * @cfg {Boolean} Specifies where to open the linked document. Works like html target, option value is same.
- * @default false
- * @example
- * Button open linked document in new tab.
- * <pre>
- *    <Controls.Button target="_blank" caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
- * </pre>
- */
-
-
 class Button extends Control {
    private _template: Function = template;
 
