@@ -7,6 +7,7 @@
                                       bind:value="itemData.item[itemData.column.displayProperty]"
                                       selectOnClick="{{ false }}"
                                       precision="{{ 2 }}"
+                                      textAlign="right"
                                       showEmptyDecimals="{{ true }}" />
             </ws:if>
             <ws:else>
@@ -36,6 +37,7 @@
                   <Controls.Input.Number bind:value="itemData.item[itemData.column.displayProperty]"
                                          selectOnClick="{{ false }}"
                                          precision="{{ 2 }}"
+                                         textAlign="right"
                                          showEmptyDecimals="{{ true }}" />
                </ws:else>
             </ws:editorTemplate>
