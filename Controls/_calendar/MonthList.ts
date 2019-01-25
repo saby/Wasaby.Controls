@@ -1,9 +1,9 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import CalendarSource = require('Controls/Date/MonthList/CalendarSource');
+import CalendarSource from './MonthList/CalendarSource';
 import dateUtils = require('Controls/Utils/Date');
-import template = require('wml!Controls/Date/MonthList/MonthList');
-import 'wml!Controls/Date/MonthList/MonthListItem';
+import template = require('wml!Controls/_calendar/MonthList/MonthList');
+import 'wml!Controls/_calendar/MonthList/MonthListItem';
 
 /**
  * Прокручивающийся список с месяцами. Позволяет выбирать период.
@@ -81,7 +81,7 @@ var ModuleComponent = BaseControl.extend({
 ModuleComponent.getDefaultOptions = function () {
     return coreMerge({
         date: dateUtils.getStartOfMonth(),
-        itemTemplate: 'wml!Controls/Date/MonthList/MonthListItem'
+        itemTemplate: 'wml!Controls/_calendar/MonthList/MonthListItem'
     }, {});
 };
 

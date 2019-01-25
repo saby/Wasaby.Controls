@@ -18,7 +18,7 @@ var _private = {
         var length = factory(items).toArray().length,
             startId = items.at(0).getId(),
             endId = items.at(length - 1).getId(),
-            query = new sourceLib.Query();
+            query = new Query();
 
         return query.where({'id>=': (startId < endId ? startId : endId) - 1}).limit(length);
     },

@@ -10,7 +10,7 @@ import dateUtils = require('Controls/Utils/Date');
  * @extends Types/source:Base
  * @author Миронов А.Ю.
  */
-var CalendarSource = source.Memory.extend({
+var CalendarSource = Memory.extend({
     _moduleName: 'Controls._calendar.MonthList.CalendarSource',
     $protected: {
         _dataSetItemsProperty: 'items',

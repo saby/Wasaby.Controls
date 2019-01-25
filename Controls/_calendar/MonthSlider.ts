@@ -2,11 +2,11 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
 import IMonth = require('Controls/Date/interface/IMonth');
-import Slider = require('Controls/Calendar/MonthSlider/Slider');
+import Slider from './MonthSlider/Slider';
 import calendarUtils = require('Controls/Calendar/Utils');
 import DateUtil = require('Controls/Utils/Date');
-import monthTmpl = require('wml!Controls/Calendar/MonthSlider/MonthSlider');
-import 'css!theme?Controls/Calendar/MonthSlider/MonthSlider';
+import monthTmpl = require('wml!Controls/_calendar/MonthSlider/MonthSlider');
+import 'css!theme?Controls/_calendar/MonthSlider/MonthSlider';
 
 /**
  * A calendar that displays 1 month and allows you to switch to the next and previous months using the buttons.
