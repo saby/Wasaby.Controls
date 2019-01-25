@@ -205,7 +205,7 @@ define('Controls/Toolbar', [
 
       generateMenuConfig: function(self) {
          return {
-            className: 'controls-Toolbar__popup_list ' + (self._options.popupClassName || ''),
+            className: 'controls-Toolbar__popup__list ' + (self._options.popupClassName || ''),
             templateOptions: {
                items: self._menuItems
             },
