@@ -1,5 +1,5 @@
 <div class="controls-Toolbar">
-    <div class="controls-Toolbar_content {{!_needShowMenu ? 'controls-Toolbar_content__resetMargin'}}">
+    <div class="controls-Toolbar_content">
         <ws:for data="item in _items">
             <ws:if data="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}">
                 <ws:partial on:click="_onItemClick(item)"

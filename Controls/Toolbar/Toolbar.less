@@ -1,3 +1,6 @@
+.controls-Toolbar_content:first-child {
+  margin-left: 0;
+}
 .controls-Toolbar__item_has-title-and-icon {
   padding-left: @spacing_Toolbar-between-icon-text;
 }
@@ -7,14 +10,19 @@
 .controls-Toolbar_item {
   .inline-flexbox();
   cursor: pointer;
-  margin-right: @spacing_Toolbar-between-items;
   .align-items(center);
+}
+.controls-Toolbar_spacing_between_toolButton_items {
+  margin-left: @spacing_Toolbar-between-items - 2px;
+}
+.controls-Toolbar_spacing_between_default_items {
+  margin-left: @spacing_Toolbar-between-items;
 }
 .controls-Toolbar_item:before {
   content: "\200b";
 }
 .controls-Toolbar_content {
-  min-width: 100%;
+  width: 100%;
   .inline-flexbox();
   .align-items(center);
 
