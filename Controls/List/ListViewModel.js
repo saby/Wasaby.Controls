@@ -112,9 +112,9 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             itemsModelCurrent.markerVisibility = this._options.markerVisibility;
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
+            itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
             itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
             itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
-
             if (itemsModelCurrent.itemActions) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
