@@ -22,6 +22,7 @@ define('Controls/List/Grid/GridStyles', [],
     * @css @border-color_Grid-lastRow-separator color of row separator (bottom border) in last row
     * @css @border-color_Grid-row-separator color of row separator
     * @css @min-height_Grid-row min height of grid row
+    * @css @min-height_Grid-header min height of a grid header
     * @css @height_Grid-row-separator size of grid row separator (border between grid rows)
     * @css @width_Grid-selection-marker width of marker
     * @css @color_Grid-selection-marker color of marker

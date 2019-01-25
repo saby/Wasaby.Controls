@@ -3,6 +3,7 @@
       <Controls.BreadCrumbs.Path scope="{{_options}}"
                                  name="Path"
                                  header="{{_header}}"
+                                 attr:class="{{_shouldDrawPath() ? '' : 'ws-hidden'}}"
                                  on:backButtonClick="_notifyHandler('backButtonClick')"
                                  on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                                  on:arrowActivated="_notifyHandler('arrowActivated')"

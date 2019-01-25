@@ -52,6 +52,10 @@ define('Controls/Explorer/_PathController', [
          this._children.Path._onBackButtonClick(e);
       },
 
+      _shouldDrawPath: function() {
+         return this._options.rootVisible || this._header && this._options.items.length > 1 || !this._header && this._options.items.length > 0;
+      },
+
       _onArrowClick: function(e) {
          this._children.Path._onArrowClick(e);
       }
