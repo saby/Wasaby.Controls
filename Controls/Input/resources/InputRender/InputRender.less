@@ -138,6 +138,12 @@
    display: inline-flex;
 }
 
+/*
+ *  Когда на поле висит аттрибут readonly, не работает псевдоэлемент invalid.
+ */
+.controls-InputRender__content_ie[readonly=""] + .controls-InputRender__placeholder {
+   display: inline-flex;
+}
 /**
  * При построении браузер может автоматически подставить значение в поле и placeholder-shown не работает пока
  * пользователь не начнет работать с полем.
