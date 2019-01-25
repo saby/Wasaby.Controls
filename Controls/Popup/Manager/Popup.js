@@ -84,7 +84,8 @@ define('Controls/Popup/Manager/Popup',
             this._notify('popupDragEnd', [this._options.id], { bubbling: true });
          },
 
-         _animated: function() {
+         _animated: function(ev) {
+            this._children.resizeDetect.start(ev);
             this._notify('popupAnimated', [this._options.id], { bubbling: true });
          },
 
