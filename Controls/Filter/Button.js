@@ -178,7 +178,6 @@ define('Controls/Filter/Button',
                            items: self._options.items,
                            historyId: self._options.historyId
                         },
-                        autofocus: false,
                         template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
                         target: self._children.panelTarget
                      });
