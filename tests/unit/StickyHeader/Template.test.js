@@ -45,7 +45,7 @@ define(
                inst._isStickySupport = true;
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader" style="top: 0px;bottom: 0px;">' +
+               assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;bottom: 0px;">' +
                                                 '<div></div><div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
@@ -68,7 +68,7 @@ define(
                inst._isMobilePlatform = false;
                inst._model.fixedPosition = 'top';
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;z-index: 2;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -80,7 +80,7 @@ define(
                inst._isMobilePlatform = true;
                inst._model.fixedPosition = 'top';
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: -1px;padding-top: 1px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top: 1px;z-index: 2;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -92,7 +92,7 @@ define(
                inst._context.stickyHeader.top = 10;
                inst._context.stickyHeader.bottom = 0;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 10px;bottom: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 10px;bottom: 0px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -103,7 +103,7 @@ define(
             it('Added content', function() {
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;bottom: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;bottom: 0px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -118,7 +118,7 @@ define(
                inst._model.fixedPosition = 'top';
                inst._options.fixedZIndex = 1;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="top: 0px;z-index: 1;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;z-index: 1;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -133,7 +133,7 @@ define(
                inst._model.fixedPosition = 'bottom';
                inst._options.fixedZIndex = 2;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader" style="bottom: 0px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="bottom: 0px;z-index: 2;">' +
                                                 '<div class="controls-Scroll__shadow controls-StickyHeader__shadow-top"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
