@@ -125,7 +125,7 @@ define('Controls-demo/List/Grid/BasePG', [
             itemTemplate: 'wml!Controls-demo/List/Grid/resources/DemoItem',
             columns: data.fullColumns,
             displayProperty: 'title',
-            showRowSeparator: true,
+            rowSeparatorVisibility: true,
             markerVisibility: 'visible',
             keyProperty: 'id',
             footerTemplate: undefined,
