@@ -98,7 +98,6 @@ define('Controls/Button/Close', [
 
    CloseButton.getDefaultOptions = function() {
       return {
-         viewMode: 'toolButton',
          size: 'l',
          transparent: true
       };
