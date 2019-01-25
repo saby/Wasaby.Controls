@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Demo-example: editable grid.">
+    <ws:content>
+        <Controls-demo.List.Grid.EditableGridPG/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

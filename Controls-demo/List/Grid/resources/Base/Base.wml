@@ -14,7 +14,7 @@
                                     <Controls.Grid
                                             displayProperty="title"
                                             markedKey="{{448390}}"
-                                            showRowSeparator="{{true}}"
+                                            rowSeparatorVisibility="{{true}}"
                                             header="{{gridHeader}}"
                                             itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                                             itemActions="{{_itemActions}}"
