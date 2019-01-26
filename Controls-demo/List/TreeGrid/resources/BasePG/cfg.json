@@ -4,91 +4,17 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "source": {
-            "title": "source",
-            "type": "Array"
-          },
-          "keyProperty": {
-            "type": "String",
-            "title": "keyProperty",
+          "expandedItems": {
+            "type": "Array",
             "readOnly": "true"
           },
-          "showRowSeparator": {
-            "type": "Boolean",
-            "title": "showRowSeparator"
-          },
-          "header": {
+          "collapsedItems": {
             "type": "Array",
-            "title": "header"
+            "readOnly": "true"
           },
-          "columns": {
-            "title": "columns",
-            "type": "Array"
-          },
-          "markerVisibility": {
-            "title": "markerVisibility",
-            "type": "enum",
-            "default": "visible",
-            "enum": {
-              "visible": "visible",
-              "hidden": "hidden",
-              "onactivated": "onactivated"
-            }
-          },
-          "markedKey": {
-            "title": "markedKey",
-            "type": "String"
-          },
-          "filter": {
-            "title": "filter",
-            "type": "Object"
-          },
-          "emptyTemplate": {
-            "type": "function",
-            "title": "emptyTemplate"
-          },
-          "footerTemplate": {
-            "type": "function",
-            "title": "footerTemplate"
-          },
-          "leftPadding": {
-            "title": "leftPadding",
-            "type": "enum",
-            "default": "l",
-            "enum": {
-              "xs": "xs",
-              "s": "s",
-              "m": "m",
-              "l": "l",
-              "xl": "xl",
-              "xxl": "xxl"
-            }
-          },
-          "rightPadding": {
-            "title": "rightPadding",
-            "type": "enum",
-            "default": "l",
-            "enum": {
-              "xs": "xs",
-              "s": "s",
-              "m": "m",
-              "l": "l",
-              "xl": "xl",
-              "xxl": "xxl"
-            }
-          },
-          "rowSpacing": {
-            "title": "rowSpacing",
-            "type": "enum",
-            "default": "m",
-            "enum": {
-              "m": "m",
-              "l": "l"
-            }
-          },
-          "sorting": {
-            "type": "Array",
-            "title": "column.sort"
+          "parentProperty": {
+            "type": "String",
+            "readOnly": "true"
           }
         }
       }

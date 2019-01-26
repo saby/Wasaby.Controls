@@ -1,11 +1,12 @@
-define('Controls-demo/List/TreeGrid/BasePG',
+define('Controls-demo/List/TreeGrid/ExtendedPG',
    [
       'Core/Control',
       'Types/source',
       'Controls-demo/List/TreeGrid/resources/DataDemoPG',
 
-      'tmpl!Controls-demo/List/TreeGrid/resources/BasePG/DemoPG',
-      'json!Controls-demo/List/TreeGrid/resources/BasePG/cfg'
+      'tmpl!Controls-demo/PropertyGrid/DemoPG',
+      'json!Controls-demo/List/TreeGrid/resources/ExtendedPG/cfg',
+      'wml!Controls-demo/List/TreeGrid/resources/ExtendedPG/footerTemplate'
 
    ],
    function(Control, TSource, data, template, config) {
@@ -20,13 +21,28 @@ define('Controls-demo/List/TreeGrid/BasePG',
          _beforeMount: function() {
 
             this._dataObject = {
-
+               nodeFooterTemplate: {
+                  readOnly: false,
+                  value: 'none',
+                  items: [
+                     {
+                        id: '1',
+                        title: 'none',
+                        value: null
+                     },
+                     {
+                        id: '2',
+                        title: 'with add button',
+                        value: 'wml!Controls-demo/List/TreeGrid/resources/ExtendedPG/footerTemplate'
+                     }
+                  ]
+               }
             };
             this._componentOptions = {
                name: 'BasePG',
                source: new TSource.Memory({
                   idProperty: 'id',
-                  data: data.catalog
+                  data: data.smallCatalog
                }),
                markedKey: '2',
                keyProperty: 'id',
@@ -34,9 +50,10 @@ define('Controls-demo/List/TreeGrid/BasePG',
                displayProperty: 'title',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               expandedItems: [],
-               collapsedItems: [],
-               singleExpand: false
+               expandedItems: ['1'],
+               nodeFooterTemplate: undefined,
+               expanderVisibility: 'visible',
+               hasChildrenProperty: 'hasChildren'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

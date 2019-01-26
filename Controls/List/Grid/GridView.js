@@ -150,6 +150,12 @@ define('Controls/List/Grid/GridView', [
             if (this._options.ladderProperties !== newCfg.ladderProperties) {
                this._listModel.setLadderProperties(newCfg.ladderProperties);
             }
+            if (this._options.rowSeparatorVisibility !== newCfg.rowSeparatorVisibility) {
+               this._listModel.setRowSeparatorVisibility(newCfg.rowSeparatorVisibility);
+            }
+            if (this._options.showRowSeparator !== newCfg.showRowSeparator) {
+               this._listModel.setShowRowSeparator(newCfg.showRowSeparator);
+            }
          },
 
          _calcFooterPaddingClass: function(params) {

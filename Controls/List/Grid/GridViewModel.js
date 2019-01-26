@@ -766,6 +766,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._notify('onListChange');
          },
 
+         setRowSeparatorVisibility: function(rowSeparatorVisibility) {
+            this._options.rowSeparatorVisibility = rowSeparatorVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
          updateSelection: function(selectedKeys) {
             this._model.updateSelection(selectedKeys);
             this._nextVersion();

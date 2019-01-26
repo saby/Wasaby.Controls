@@ -14,7 +14,7 @@ define('Controls/interface/IGridItemTemplate', [
     * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
     * @remark
     * Base itemTemplate for Controls/Grid: "wml!Controls/List/Grid/Item".
-    * Inside the template scope, object itemDate is available, allowing you to access the render data (for example: item, key, etc.).
+    * Inside the template scope, object itemData is available, allowing you to access the render data (for example: item, key, etc.).
     * Base itemTemplate supports these parameters:
     * <ul>
     *    <li>highlightOnHover {Boolean} - Enable highlighting item by hover.</li>
