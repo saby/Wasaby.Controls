@@ -61,9 +61,9 @@ define('Controls/Validate/Controller',
          getGlobalPopup: function() {
             // Получаем обработчик глобальных событий по открытию окон, который на вдом
             // Лежит в application
-            var ManagerWrapperController = require('Controls/Popup/Compatible/ManagerWrapper/Controller');
-            if (ManagerWrapperController) {
-               return ManagerWrapperController.getGlobalPopup();
+            var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+            if (requirejs.defined(ManagerWrapperControllerModule)) {
+               return requirejs(ManagerWrapperControllerModule).getGlobalPopup();
             }
          },
 
