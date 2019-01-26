@@ -22,9 +22,9 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
          _afterMount: function() {
             // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
             // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
-            var ManagerWrapperController = requirejs('Controls/Popup/Compatible/ManagerWrapper/Controller');
-            if (ManagerWrapperController) {
-               ManagerWrapperController.registerGlobalPopup(this);
+            var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+            if (requirejs.defined(ManagerWrapperControllerModule)) {
+               requirejs(ManagerWrapperControllerModule).registerGlobalPopup(this);
             }
          },
          _openInfoBoxHandler: function(event, config) {
