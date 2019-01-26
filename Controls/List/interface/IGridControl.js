@@ -1,5 +1,4 @@
-define('Controls/List/interface/IGridControl', [
-], function() {
+define('Controls/List/interface/IGridControl', [], function() {
 
    /**
     * Interface for Grid (table view).
@@ -92,6 +91,7 @@ define('Controls/List/interface/IGridControl', [
    /**
     * @name Controls/List/interface/IGridControl#stickyHeader
     * @cfg {Boolean} Fix the table header.
+    * <a href="/materials/demo-ws4-grid-sticky">Example</a>
     * @default true
     */
 

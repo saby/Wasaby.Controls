@@ -1,6 +1,6 @@
-define('Controls-demo/List/TreeGrid/WI/Base', [
+define('Controls-demo/List/TreeGrid/WI/Extended', [
    'Core/Control',
-   'wml!Controls-demo/List/TreeGrid/WI/resources/Base'
+   'wml!Controls-demo/List/TreeGrid/WI/resources/Extended'
 ], function(Control, template) {
    'use strict';
 

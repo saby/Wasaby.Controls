@@ -13,9 +13,9 @@
             "title": "keyProperty",
             "readOnly": "true"
           },
-          "showRowSeparator": {
+          "rowSeparatorVisibility": {
             "type": "Boolean",
-            "title": "showRowSeparator"
+            "title": "rowSeparatorVisibility"
           },
           "header": {
             "type": "Array",
