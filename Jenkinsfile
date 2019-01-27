@@ -552,7 +552,7 @@ node('controls1') {
             }
             echo items
         } */
-        /*
+
         if ( unit ){
             dir("./controls"){
                 sh """
@@ -591,6 +591,7 @@ node('controls1') {
                 }
             }
         }
+        /*
         if ( all_regr|| regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
