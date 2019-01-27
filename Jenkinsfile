@@ -823,7 +823,7 @@ node('controls1') {
             }
             parallel (
                 int_test: {
-                    stage("Инт.тесты"){
+                    stage("Инт.тесты ${control_type}"){
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
                             dir("./controls/tests/int/${control_type}"){
@@ -839,7 +839,7 @@ node('controls1') {
                     }
                 },
                 reg_test: {
-                    stage("Рег.тесты"){
+                    stage("Рег.тесты ${control_type}"){
                         if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
                             dir("./controls/tests/reg/${control_type}"){
