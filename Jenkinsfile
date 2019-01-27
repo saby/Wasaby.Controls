@@ -680,7 +680,7 @@ node('controls1') {
                 } else {
                     img_dir = "capture"
                 }
-                writeFile file: "./controls/tests/int/config.ini", text:
+                writeFile file: "./controls/tests/int/SBIS3.CONTROLS/config.ini", text:
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
@@ -695,7 +695,26 @@ node('controls1') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
+                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
+
+                writeFile file: "./controls/tests/int/VDOM/config.ini", text:
+                    """# UTF-8
+                    [general]
+                    browser = ${params.browser_type}
+                    SITE = http://${NODE_NAME}:30010
+                    SERVER = test-autotest-db1:5434
+                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    DO_NOT_RESTART = True
+                    SOFT_RESTART = ${soft_restart}
+                    NO_RESOURCES = True
+                    DELAY_RUN_TESTS = 2
+                    TAGS_NOT_TO_START = iOSOnly
+                    ELEMENT_OUTPUT_LOG = locator
+                    WAIT_ELEMENT_LOAD = 20
+                    SHOW_CHECK_LOG = True
+                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
+
+
                 writeFile file: "./controls/tests/reg/config.ini",
                     text:
                         """# UTF-8
@@ -716,7 +735,7 @@ node('controls1') {
                         [regression]
                         IMAGE_DIR = ${img_dir}
                         RUN_REGRESSION=True"""
-                dir("./controls/tests/int"){
+                dir("./controls/tests/int/SBIS3.CONTROLS"){
                     sh"""
                         source /home/sbis/venv_for_test/bin/activate
                         ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
@@ -775,7 +794,7 @@ node('controls1') {
                     stage("Инт.тесты"){
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
-                            dir("./controls/tests/int"){
+                            dir("./controls/tests/int/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
