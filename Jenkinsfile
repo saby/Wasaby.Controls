@@ -273,9 +273,9 @@ node('controls1') {
         if ( regr && all_regr ) {
             regr = false
         }
-        //if ( inte || all_inte || regr || all_regr) {
-        //    unit = true
-        //}
+        if ( inte || all_inte || regr || all_regr) {
+            unit = true
+        }
         if ( boss ) {
             unit = false
         }
@@ -481,7 +481,7 @@ node('controls1') {
             }
         }
     }
-        /*
+
         stage("Сборка компонент"){
             echo " Определяем SDK"
             dir("./constructor/Constructor/SDK") {
@@ -557,7 +557,7 @@ node('controls1') {
                 }
             }
             echo items
-        } */
+        }
 
         if ( unit ){
             dir("./controls"){
@@ -597,7 +597,7 @@ node('controls1') {
                 }
             }
         }
-        /*
+
         if ( all_regr|| regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
@@ -680,7 +680,7 @@ node('controls1') {
             """
             }
         }
-        */
+
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
