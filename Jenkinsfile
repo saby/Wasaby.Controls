@@ -203,7 +203,7 @@ node('master') {
     }
 }
 
-node('controls1') {
+node('controls') {
     LocalDateTime start_time = LocalDateTime.now();
     echo "Время запуска: ${start_time}"
     echo "Читаем настройки из файла version_application.txt"
