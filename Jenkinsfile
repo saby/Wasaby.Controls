@@ -280,7 +280,8 @@ node('controls1') {
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
             sh "ls | grep -v -E 'controls' | xargs rm -rf"
             dir("./controls"){
-                sh "rm -rf ${workspace}/controls/tests/int/atf"
+                sh "rm -rf ${workspace}/controls/tests/int/SBIS3.CONTROLS/atf"
+                sh "rm -rf ${workspace}/controls/tests/int/VDOM/atf"
                 sh "rm -rf ${workspace}/controls/tests/reg/atf"
                 sh "rm -rf ${workspace}/controls/sbis3-app-engine"
                 sh "rm -rf ${workspace}/controls/tests/navigation"
@@ -344,7 +345,8 @@ node('controls1') {
                                         credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
-                             sh "cp -rf ./atf/ ../reg/atf/"
+                             sh "cp -rf ./atf/ ./SBIS3.CONTROLS/atf/"
+                             sh "cp -rf ./atf/ ./VDOM/atf/"
                             }
                         },
                         checkout_engine: {
