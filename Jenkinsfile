@@ -320,7 +320,7 @@ node('controls1') {
                         git fetch --all
                         git checkout ${env.BRANCH_NAME}
                         git pull
-                        git merge origin/rc-${version}
+                        echo git merge origin/rc-${version}
                         """
                         def status_filter = ""
                         if ( boss ) {
