@@ -197,7 +197,7 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         doScroll: function(self, scrollParam, container) {
+         doScroll: function(self, scrollParam, extraParams, container) {
             if (scrollParam === 'top') {
                container.scrollTop = 0;
             } else {
@@ -209,7 +209,14 @@ define('Controls/Container/Scroll/Watcher',
                   if (scrollParam === 'pageUp') {
                      container.scrollTop -= clientHeight;
                   } else {
-                     container.scrollTop += clientHeight;
+                     if (scrollParam === 'pageDown') {
+                        container.scrollTop += clientHeight;
+                     }
+                     else {
+                        if (scrollParam === 'exact' && extraParams) {
+                           container.scrollTop = extraParams;
+                        }
+                     }
                   }
                }
             }
@@ -277,12 +284,12 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         _doScrollHandler: function(e, scrollParam) {
-            _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
+         _doScrollHandler: function(e, scrollParam, extraParams) {
+            _private.doScroll(this, scrollParam, extraParams, _private.getDOMContainer(this._container));
          },
 
-         doScroll: function(scrollParam) {
-            _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
+         doScroll: function(scrollParam, extraParams) {
+            _private.doScroll(this, scrollParam, extraParams, _private.getDOMContainer(this._container));
          },
 
          _unRegisterIt: function(event, registerType, component) {

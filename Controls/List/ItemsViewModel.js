@@ -271,15 +271,7 @@ define('Controls/List/ItemsViewModel', [
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._nextVersion();
 
-         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
-         //при добавлении пачки в начало (подгрузка по скроллу вверх сохраним об этом знание)
-         var extraOpts = {};
-         if ((action === 'a' && newItemsIndex === 0)) {
-            extraOpts.loadtop = true;
-         }
-         /**/
-
-         this._notify('onListChange', extraOpts);
+         this._notify('onListChange');
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {

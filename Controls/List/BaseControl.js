@@ -208,6 +208,14 @@ define('Controls/List/BaseControl', [
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
+         //при добавлении пачки в начало (подгрузка по скроллу вверх нужно чтоб был минимальный проскролл, чтоб пачка ушла за границы видимой части как и должна а не отобразилась сверху)
+         if (direction == 'up') {
+            self._notify('doScroll', ['exact', 1], {bubbling: true});
+         }
+         /**/
+
          if (self._sourceController) {
             return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                if (userCallback && userCallback instanceof Function) {
@@ -895,7 +903,7 @@ define('Controls/List/BaseControl', [
             this._delayedSelect = null;
          }
 
-   
+
          //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
          //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
          if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {

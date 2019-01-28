@@ -58,14 +58,7 @@ define('Controls/List/ListView', [
          }
       },
 
-      onListChange: function(self, extraOpts) {
-         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
-         //при добавлении пачки в начало (подгрузка по скроллу вверх сохраним об этом знание)
-         if (extraOpts && extraOpts.loadtop) {
-            self._isLoadTop = true;
-         }
-         /**/
-
+      onListChange: function(self) {
          self._listChanged = true;
          self._forceUpdate();
       },
@@ -74,20 +67,7 @@ define('Controls/List/ListView', [
          if (self._listChanged) {
             self._listChanged = false;
             //command to scroll watcher
-
-            //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
-            //при добавлении пачки в начало (подгрузка по скроллу вверх сохраним об этом знание)
-            var eventArgs = [];
-            if (self._isLoadTop) {
-               eventArgs.push({
-                  loadtop: true
-               });
-               self._isLoadTop = false;
-            }
-
-            /**/
-
-            self._notify('controlResize', eventArgs, {bubbling: true});
+            self._notify('controlResize', [], {bubbling: true});
 
          }
       },
@@ -111,7 +91,6 @@ define('Controls/List/ListView', [
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: defaultItemTemplate,
          _listChanged: false,
-         _isLoadTop: false,
          _itemOutputWrapper: ItemOutputWrapper,
 
          constructor: function() {
