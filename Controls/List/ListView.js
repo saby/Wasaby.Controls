@@ -66,9 +66,9 @@ define('Controls/List/ListView', [
       resizeNotifyOnListChanged: function(self) {
          if (self._listChanged) {
             self._listChanged = false;
+
             //command to scroll watcher
             self._notify('controlResize', [], {bubbling: true});
-
          }
       },
 
