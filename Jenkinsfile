@@ -815,8 +815,8 @@ node('controls') {
                         }
                     }
                     if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
+                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} ${control_type} controls'"
+                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} ${control_type} controls'"
                     }
 
                 }
@@ -909,7 +909,7 @@ node('controls') {
                 def reg_title = ''
                 def description = ''
                 if (inte || all_inte) {
-                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/${control_type}/build_description.txt", skip)
+                     int_data = build_description("(int-${params.browser_type}) ${version} ${control_type} controls", "./int/${control_type}/build_description.txt", skip)
                      if ( int_data ) {
                          int_title = int_data[0]
                          int_description= int_data[1]
@@ -920,7 +920,7 @@ node('controls') {
                     }
                 }
                 if (regr || all_regr) {
-                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/${control_type}/build_description.txt", skip)
+                    reg_data = build_description("(reg-${params.browser_type}) ${version} ${control_type} controls", "./reg/${control_type}/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
                         reg_description = reg_data[1]
