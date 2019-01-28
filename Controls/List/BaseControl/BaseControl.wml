@@ -27,6 +27,7 @@
          template="{{ _options.content }}"
          scope="{{_options}}"
          listModel="{{_listViewModel}}"
+         on:animationend="_onAnimationEnd()"
          on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
          on:itemClick="_onItemClick()"
          on:groupClick="_onGroupClick()"
