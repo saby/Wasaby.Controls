@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Buttons" demoname="Controls-demo/Buttons/standartDemoButton.wml">
+<Controls.Application.ApplicationWrapper caption="Buttons" demoname="Controls-demo/Tabs/Buttons/Buttons.wml">
     <ws:content>
         <Controls-demo.Tabs.Buttons/>
     </ws:content>
