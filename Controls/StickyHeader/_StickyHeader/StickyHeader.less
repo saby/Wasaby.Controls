@@ -1,6 +1,11 @@
 .controls-StickyHeader {
-   position: sticky;
    background: #fff;
+}
+
+/*A double selector is needed so that the "position" specified on the block that wraps the StickyHeader does not work.*/
+/*Will be fixed by: https://online.sbis.ru/opendoc.html?guid=2c58d954-7fd6-4cb0-8f6a-f17d89622004*/
+.controls-StickyHeader.controls-StickyHeader_position {
+   position: sticky;
 }
 
 .controls-StickyHeader__observationTargetTop,
@@ -19,8 +24,7 @@
    bottom: -2px;
 }
 
-.controls-StickyHeader__shadow {
-   visibility: hidden;
+.controls-StickyHeader__shadow-bottom {
    bottom: -@height-gradient_Scroll-shadow;
    background: linear-gradient(
       to bottom,
@@ -28,6 +32,10 @@
    );
 }
 
-.controls-StickyHeader__shadowVisible {
-   visibility: visible;
+.controls-StickyHeader__shadow-top {
+   top: -@height-gradient_Scroll-shadow;
+   background: linear-gradient(
+      to top,
+      @start-color-gradient_Scroll-shadow, @end-color-gradient_Scroll-shadow
+   );
 }

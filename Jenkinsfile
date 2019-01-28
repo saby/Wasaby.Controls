@@ -151,8 +151,9 @@ def getParams(user) {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
-            booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
+            choice(choices: "SBIS3.CONTROLS\nVDOM", description: 'Тип тип контролов', name: 'control_type'),
+            //booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
+            //booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -189,6 +190,7 @@ def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
 def only_fail = false
+def control_type = params.control_type
 
 
 node('master') {
@@ -209,6 +211,7 @@ node('controls') {
     echo "Определяем рабочую директорию"
     def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws(workspace) {
+        deleteDir()
         def skip = params.skip
         def changed_files
         def skip_tests_int = ""
@@ -280,8 +283,10 @@ node('controls') {
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
             sh "ls | grep -v -E 'controls' | xargs rm -rf"
             dir("./controls"){
-                sh "rm -rf ${workspace}/controls/tests/int/atf"
-                sh "rm -rf ${workspace}/controls/tests/reg/atf"
+                sh "rm -rf ${workspace}/controls/tests/int/SBIS3.CONTROLS/atf"
+                sh "rm -rf ${workspace}/controls/tests/int/VDOM/atf"
+                sh "rm -rf ${workspace}/controls/tests/reg/SBIS3.CONTROLS/atf"
+                sh "rm -rf ${workspace}/controls/tests/reg/VDOM/atf"
                 sh "rm -rf ${workspace}/controls/sbis3-app-engine"
                 sh "rm -rf ${workspace}/controls/tests/navigation"
                 sh "rm -rf ${workspace}/controls/viewsettings"
@@ -316,7 +321,7 @@ node('controls') {
                         git fetch --all
                         git checkout ${env.BRANCH_NAME}
                         git pull
-                        git merge origin/rc-${version}
+                        echo git merge origin/rc-${version}
                         """
                         def status_filter = ""
                         if ( boss ) {
@@ -344,7 +349,10 @@ node('controls') {
                                         credentialsId: CREDENTIAL_ID_GIT,
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
-                             sh "cp -rf ./atf/ ../reg/atf/"
+                            sh "cp -rf ./atf/ ./SBIS3.CONTROLS/atf/"
+                            sh "cp -rf ./atf/ ./VDOM/atf/"
+                            sh "cp -rf ./atf/ ../reg/SBIS3.CONTROLS/atf/"
+                            sh "cp -rf ./atf/ ../reg/VDOM/atf/"
                             }
                         },
                         checkout_engine: {
@@ -473,6 +481,7 @@ node('controls') {
             }
         }
     }
+
         stage("Сборка компонент"){
             echo " Определяем SDK"
             dir("./constructor/Constructor/SDK") {
@@ -549,6 +558,7 @@ node('controls') {
             }
             echo items
         }
+
         if ( unit ){
             dir("./controls"){
                 sh """
@@ -587,6 +597,7 @@ node('controls') {
                 }
             }
         }
+
         if ( all_regr|| regr || inte || all_inte ) {
 
         stage("Разворот стенда"){
@@ -680,7 +691,7 @@ node('controls') {
                 } else {
                     img_dir = "capture"
                 }
-                writeFile file: "./controls/tests/int/config.ini", text:
+                writeFile file: "./controls/tests/int/SBIS3.CONTROLS/config.ini", text:
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
@@ -695,8 +706,27 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/"""
-                writeFile file: "./controls/tests/reg/config.ini",
+                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
+
+                writeFile file: "./controls/tests/int/VDOM/config.ini", text:
+                    """# UTF-8
+                    [general]
+                    browser = ${params.browser_type}
+                    SITE = http://${NODE_NAME}:30010
+                    SERVER = test-autotest-db1:5434
+                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    DO_NOT_RESTART = True
+                    SOFT_RESTART = ${soft_restart}
+                    NO_RESOURCES = True
+                    DELAY_RUN_TESTS = 2
+                    TAGS_NOT_TO_START = iOSOnly
+                    ELEMENT_OUTPUT_LOG = locator
+                    WAIT_ELEMENT_LOAD = 20
+                    SHOW_CHECK_LOG = True
+                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
+
+
+                writeFile file: "./controls/tests/reg/SBIS3.CONTROLS/config.ini",
                     text:
                         """# UTF-8
                         [general]
@@ -709,14 +739,35 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/
+                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS
                         SERVER = test-autotest-db1:5434
                         BASE_VERSION = css_${NODE_NAME}${ver}1
                         #BRANCH=True
                         [regression]
                         IMAGE_DIR = ${img_dir}
                         RUN_REGRESSION=True"""
-                dir("./controls/tests/int"){
+
+                writeFile file: "./controls/tests/reg/VDOM/config.ini",
+                    text:
+                        """# UTF-8
+                        [general]
+                        browser = ${params.browser_type}
+                        SITE = http://${NODE_NAME}:30010
+                        DO_NOT_RESTART = True
+                        SOFT_RESTART = False
+                        NO_RESOURCES = True
+                        DELAY_RUN_TESTS = 2
+                        TAGS_TO_START = ${params.theme}
+                        ELEMENT_OUTPUT_LOG = locator
+                        WAIT_ELEMENT_LOAD = 20
+                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM
+                        SERVER = test-autotest-db1:5434
+                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        #BRANCH=True
+                        [regression]
+                        IMAGE_DIR = ${img_dir}
+                        RUN_REGRESSION=True"""
+                dir("./controls/tests/int/${control_type}"){
                     sh"""
                         source /home/sbis/venv_for_test/bin/activate
                         ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
@@ -772,10 +823,10 @@ node('controls') {
             }
             parallel (
                 int_test: {
-                    stage("Инт.тесты"){
+                    stage("Инт.тесты ${control_type}"){
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
-                            dir("./controls/tests/int"){
+                            dir("./controls/tests/int/${control_type}"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
@@ -788,10 +839,10 @@ node('controls') {
                     }
                 },
                 reg_test: {
-                    stage("Рег.тесты"){
+                    stage("Рег.тесты ${control_type}"){
                         if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
-                            dir("./controls/tests/reg"){
+                            dir("./controls/tests/reg/${control_type}"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 										source /home/sbis/venv_for_test/bin/activate
@@ -858,7 +909,7 @@ node('controls') {
                 def reg_title = ''
                 def description = ''
                 if (inte || all_inte) {
-                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
+                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/${control_type}/build_description.txt", skip)
                      if ( int_data ) {
                          int_title = int_data[0]
                          int_description= int_data[1]
@@ -869,7 +920,7 @@ node('controls') {
                     }
                 }
                 if (regr || all_regr) {
-                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
+                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/${control_type}/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
                         reg_description = reg_data[1]
@@ -890,7 +941,7 @@ node('controls') {
     }
     if ( (regr || all_regr) && run_tests_reg ){
         dir("./controls") {
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/${control_type}/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         }
