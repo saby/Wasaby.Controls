@@ -6,6 +6,7 @@ define('Controls-demo/List/List/ItemTemplatePG',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/List/List/resources/ItemTemplatePG/cfg',
+      'wml!Controls-demo/List/List/resources/ItemTemplatePG/noHighlightOnHover',
       'wml!Controls-demo/List/List/resources/ItemTemplatePG/CustomItemTemplateOne',
       'wml!Controls-demo/List/List/resources/ItemTemplatePG/CustomItemTemplateTwo',
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -45,23 +46,28 @@ define('Controls-demo/List/List/ItemTemplatePG',
                itemTemplate: {
                   readOnly: false,
                   value: 'default',
-                  items: [
-                     {
-                        id: '1',
-                        title: 'default',
-                        value: 'wml!Controls/List/ItemTemplate'
-                     },
-                     {
-                        id: '2',
-                        title: 'Variant one',
-                        value: 'wml!Controls-demo/List/List/resources/ItemTemplatePG/CustomItemTemplateOne'
-                     },
-                     {
-                        id: '3',
-                        title: 'Variant two',
-                        value: 'wml!Controls-demo/List/List/resources/ItemTemplatePG/CustomItemTemplateTwo'
-                     }
-                  ]
+                   items: [
+                       {
+                           id: '1',
+                           title: 'default',
+                           value: 'wml!Controls/List/ItemTemplate'
+                       },
+                       {
+                           id: '2',
+                           title: 'without highlighting hovered item',
+                           value: 'wml!Controls-demo/List/List/resources/ItemTemplatePG/noHighlightOnHover'
+                       },
+                       {
+                           id: '3',
+                           title: 'Variant one',
+                           value: 'wml!Controls-demo/List/List/resources/ItemTemplatePG/CustomItemTemplateOne'
+                       },
+                       {
+                           id: '4',
+                           title: 'Variant two',
+                           value: 'wml!Controls-demo/List/List/resources/ItemTemplatePG/CustomItemTemplateTwo'
+                       }
+                   ]
                }
             };
             this._componentOptions = {

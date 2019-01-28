@@ -10,10 +10,6 @@ export default {
    iconStyleTransformation: function (iconStyle) {
       let newIconStyle;
       switch (iconStyle) {
-         case 'default':
-            newIconStyle = 'secondary';
-            IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение secondary вместо default');
-            break;
          case 'attention':
             newIconStyle = 'warning';
             IoC.resolve('ILogger').warn('Button', 'Используется устаревшее значение опции iconStyle. Используйте значение warning вместо attention');
