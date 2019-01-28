@@ -775,7 +775,7 @@ node('controls') {
                         [regression]
                         IMAGE_DIR = ${img_dir}
                         RUN_REGRESSION=True"""
-                dir("./controls/tests/int/${sbis3_controls}"){
+                dir("./controls/tests/int/SBIS3.CONTROLS"){
                     sh"""
                         source /home/sbis/venv_for_test/bin/activate
                         ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
@@ -831,7 +831,7 @@ node('controls') {
             }
             parallel (
                 int_test: {
-                    stage("Инт.тесты ${control_type}"){
+                    stage("Инт.тесты "){
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
                             if (sbis3_controls) {
@@ -863,7 +863,7 @@ node('controls') {
                     }
                 },
                 reg_test: {
-                    stage("Рег.тесты ${control_type}"){
+                    stage("Рег.тесты SBIS3.CONTROLS"){
                         if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
                             if (sbis3_controls) {
