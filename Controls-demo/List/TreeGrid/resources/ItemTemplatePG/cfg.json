@@ -1,0 +1,14 @@
+{
+  "Controls/TreeGrid": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "itemTemplate": {
+            "type": "String"
+          }
+        }
+      }
+    }
+  }
+}

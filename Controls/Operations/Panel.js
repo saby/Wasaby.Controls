@@ -38,7 +38,7 @@ define('Controls/Operations/Panel', [
           * For example, this can happen if the user opens the panel and then immediately goes to another tab, making the tab with the panel hidden, and then goes back.
           * The only way to prevent this is to block recalculation of toolbar items if the panel is not visible.
           */
-         if (self._oldToolbarWidth !== newWidth && self._container.clientWidth !== 0) {
+         if (self._oldToolbarWidth !== newWidth && self._container.offsetParent !== null) {
             self._oldToolbarWidth = newWidth;
             _private.recalculateToolbarItems(self, self._items, newWidth);
          }

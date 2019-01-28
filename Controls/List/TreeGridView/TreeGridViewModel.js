@@ -31,6 +31,16 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          setRoot: function(root) {
             this._model.setRoot(root);
          },
+         setNodeFooterTemplate: function(nodeFooterTemplate) {
+            this._model.setNodeFooterTemplate(nodeFooterTemplate);
+         },
+         setExpanderDisplayMode: function(expanderDisplayMode) {
+            // Выпилить в 19.200
+            this._model.setExpanderDisplayMode(expanderDisplayMode);
+         },
+         setExpanderVisibility: function(expanderVisibility) {
+            this._model.setExpanderVisibility(expanderVisibility);
+         },
          resetExpandedItems: function() {
             this._model.resetExpandedItems();
          },

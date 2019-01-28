@@ -6,7 +6,15 @@
                <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                   <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
                      <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                        <Controls.Popup.Manager name="Manager">
+                        <Controls.Popup.Manager name="Manager"
+                                                on:openInfoBox="PopupGlobal._openInfoBoxHandler()"
+                                                on:closeInfoBox="PopupGlobal._closeInfoBoxHandler()"
+                                                on:forceCloseInfoBox="PopupGlobal._forceCloseInfoBoxHandler()"
+                                                on:openPreviewer="PopupGlobal._openPreviewerHandler()"
+                                                on:cancelPreviewer="PopupGlobal._cancelPreviewerHandler()"
+                                                on:isPreviewerOpened="PopupGlobal._isPreviewerOpenedHandler()"
+                                                on:closePreviewer="PopupGlobal._closePreviewerHandler()"
+                                                on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()">
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.DragNDrop.Container name="dragNDropContainer">
                                  <div>
@@ -15,7 +23,6 @@
                               </Controls.DragNDrop.Container>
                            </Controls.Application.TouchDetector>
                         </Controls.Popup.Manager>
-
                      </Controls.Event.Registrator>
                   </Controls.Event.Registrator>
                </Controls.Event.Registrator>
@@ -23,4 +30,5 @@
          </Controls.Event.Registrator>
       </Controls.Event.Registrator>
    </Controls.Event.Registrator>
+   <Controls.Popup.Global name="PopupGlobal"></Controls.Popup.Global>
 </div>

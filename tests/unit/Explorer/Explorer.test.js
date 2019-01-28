@@ -4,14 +4,14 @@ define([
    'Types/collection',
    'Types/chain',
    'Controls/DragNDrop/Entity/Items',
-   'WS.Data/Entity/Model'
+   'Types/entity'
 ], function(
    Explorer,
    Deferred,
    collection,
    chain,
    DragEntity,
-   Model
+   entityLib
 ) {
    describe('Controls.Explorer', function() {
       it('_private block', function() {
@@ -304,7 +304,7 @@ define([
          });
 
          it('_hoveredCrumbChanged', function() {
-            var hoveredBreadCrumb = new Model({
+            var hoveredBreadCrumb = new entityLib.Model({
                   rawData: {
                      id: 1
                   },

@@ -10,8 +10,8 @@ define('Controls/StickyHeader',
       'use strict';
 
       /**
-       * Ensures that content sticks to the top of the parent container when scrolling down.
-       * Occurs at the moment of intersection of the upper part of the content and the parent container.
+       * Ensures that content sticks to the top or bottom of the parent container when scrolling.
+       * Occurs at the moment of intersection of the upper or lower part of the content and the parent container.
        * @remark
        * Fixing in ie browser below version 16 is not supported.
        *
@@ -39,6 +39,15 @@ define('Controls/StickyHeader',
        * @variant visible Show.
        * @variant hidden Do not show.
        * @default visible
+       */
+
+      /**
+       * @name Controls/StickyHeader#position
+       * @cfg {String} Determines which side the control can sticky.
+       * @variant top Top side.
+       * @variant bottom Bottom side.
+       * @variant topbottom Top and bottom side.
+       * @default top
        */
 
       /**

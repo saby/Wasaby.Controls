@@ -507,6 +507,17 @@ define(['Controls/Filter/Controller'], function(Filter) {
          });
       });
 
+      it('_private.updateHistory', function(done) {
+         var fastFilterItems = [];
+
+         var filterButtonItems = [];
+         Filter._private.updateHistory({}, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
+            assert.deepEqual(items, {});
+            done();
+         });
+      });
+
    });
 
 });

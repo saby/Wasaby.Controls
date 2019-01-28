@@ -8,6 +8,7 @@
          <ws:editorTemplate>
             <Controls.Input.Number bind:value="itemData.item[itemData.column.displayProperty]"
                                    selectOnClick="{{ false }}"
+                                   textAlign="right"
                                    precision="{{ 0 }}" />
          </ws:editorTemplate>
       </ws:partial>

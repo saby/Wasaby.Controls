@@ -4,7 +4,7 @@
   <description>Новая библиотека контролов реализованных на технологии VDOM</description>
 
     <depends>
-      <bl_module id="f5e3850a-12d1-4805-b5de-8a40474b17ba" name="WS.Data"/>
+      <bl_module id="686f183d-0bcc-4732-b4e4-6016c2a67a0f" name="Types"/>
     </depends>
 
   <load_after/>

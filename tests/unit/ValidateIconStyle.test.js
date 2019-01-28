@@ -6,7 +6,7 @@ define(['Controls/Button/validateIconStyle', 'Types/collection'], function(Valid
          var oldIconStyle = 'test';
          assert.equal(Validator.iconStyleTransformation(oldIconStyle), 'test');
          oldIconStyle = 'default';
-         assert.equal(Validator.iconStyleTransformation(oldIconStyle), 'secondary');
+         assert.equal(Validator.iconStyleTransformation(oldIconStyle), 'default');
          oldIconStyle = 'error';
          assert.equal(Validator.iconStyleTransformation(oldIconStyle), 'danger');
          oldIconStyle = 'attention';

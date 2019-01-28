@@ -17,16 +17,15 @@ define('Controls/Event/Registrator',
 
       var EventRegistrator = Control.extend({
          _template: template,
-         _listner: null,
-         constructor: function() {
-            EventRegistrator.superclass.constructor.apply(this, arguments);
-            this._forceUpdate = function() {
-               // Do nothing
-               // This method will be called because of handling event.
-            };
-         },
+         _registrar: null,
          _beforeMount: function(newOptions) {
-            this._registrar = new Registrar({register: newOptions.register});
+            if (typeof window !== 'undefined') {
+               this._forceUpdate = function() {
+                  // Do nothing
+                  // This method will be called because of handling event.
+               };
+               this._registrar = new Registrar({ register: newOptions.register });
+            }
          },
          _registerIt: function(event, registerType, component, callback) {
             if (registerType === this._options.register) {
@@ -40,6 +39,12 @@ define('Controls/Event/Registrator',
          },
          start: function() {
             this._registrar.start.apply(this._registrar, arguments);
+         },
+         _beforeUnmount: function() {
+            if (this._registrar) {
+               this._registrar.destroy();
+               this._registrar = null;
+            }
          }
       });
 
