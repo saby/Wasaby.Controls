@@ -22,7 +22,8 @@ define(
                   stickyHeader: new Context({shadowPosition: ''})
                },
                _options: {
-                  fixedZIndex: 2
+                  fixedZIndex: 2,
+                  position: 'top'
                },
                _model: {}
             };
@@ -45,7 +46,7 @@ define(
                inst._isStickySupport = true;
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;bottom: 0px;">' +
+               assert.equal(template(inst),  '<div data-component="Controls/StickyHeader/_StickyHeader" class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
                                                 '<div></div><div></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
                                                 '<div class="controls-StickyHeader__content">testing the template</div>' +
@@ -90,9 +91,8 @@ define(
 
             it('Move the header', function() {
                inst._context.stickyHeader.top = 10;
-               inst._context.stickyHeader.bottom = 0;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 10px;bottom: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 10px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
@@ -100,10 +100,22 @@ define(
                                              '</div>');
             });
 
+            it('Move the bottom', function() {
+               inst._context.stickyHeader.bottom = 10;
+               inst._options.position = 'bottom';
+
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="bottom: 10px;">' +
+                  '<div data-component="Controls/Event/Listener"></div>' +
+                  '<div data-component="Controls/Event/Listener"></div>' +
+                  '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
+                  '<div class="controls-StickyHeader__observationTargetBottom" style="bottom: -3px;"></div>' +
+                  '</div>');
+            });
+
             it('Added content', function() {
                inst._options.content = TemplateUtil.content;
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;bottom: 0px;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: 0px;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
