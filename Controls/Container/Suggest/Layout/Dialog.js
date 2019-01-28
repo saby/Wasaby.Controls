@@ -44,14 +44,6 @@ define('Controls/Container/Suggest/Layout/Dialog',
             };
          },
 
-         _afterMount: function() {
-            /* Костыль до 400. В 400 сделано распростронение resize */
-            var self = this;
-            self._resizeTimeout = setTimeout(function() {
-               self._children.scroll._children.scrollWatcher._resizeHandler({}, {}, true);
-            });
-         },
-
          _beforeUnmount: function() {
             clearTimeout(this._resizeTimeout);
             this._resizeTimeout = null;

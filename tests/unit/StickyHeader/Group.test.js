@@ -40,24 +40,36 @@ define([
          it('should add fixed header to list of fixed headers', function() {
             const
                component = createComponent(StickyHeader, options),
-               headerId = stickyUtils.getNextId();
+               headerIdTop = stickyUtils.getNextId(),
+               headerIdBottom = stickyUtils.getNextId();
 
-            component._fixedHandler(event, { shouldBeFixed: true, id: headerId });
+            component._fixedHandler(event, { fixedPosition: 'top', id: headerIdTop });
+            assert.lengthOf(component._stickyHeadersIds.top, 1);
+            assert.lengthOf(component._stickyHeadersIds.bottom, 0);
+            assert.include(component._stickyHeadersIds.top, headerIdTop);
 
-            assert.lengthOf(component._stickyHeaderIds, 1);
-            assert.include(component._stickyHeaderIds, headerId);
+            component._fixedHandler(event, { fixedPosition: 'bottom', id: headerIdBottom });
+            assert.lengthOf(component._stickyHeadersIds.top, 1);
+            assert.lengthOf(component._stickyHeadersIds.bottom, 1);
+            assert.include(component._stickyHeadersIds.bottom, headerIdBottom);
          });
 
          it('should remove fixed header from list of fixed headers on header unfixed', function() {
             const
                component = createComponent(StickyHeader, options),
-               headerId = stickyUtils.getNextId();
+               headerIdTop = stickyUtils.getNextId(),
+               headerIdBottom = stickyUtils.getNextId();
 
-            component._stickyHeaderIds.push(headerId);
-            component._fixedHandler(event, { shouldBeFixed: false, id: headerId });
+            component._stickyHeadersIds.top.push(headerIdTop);
+            component._stickyHeadersIds.bottom.push(headerIdBottom);
 
-            assert.lengthOf(component._stickyHeaderIds, 0);
-            assert.notInclude(component._stickyHeaderIds, headerId);
+            component._fixedHandler(event, { fixedPosition: '', prevPosition: 'top', id: headerIdTop });
+            assert.lengthOf(component._stickyHeadersIds.top, 0);
+            assert.notInclude(component._stickyHeadersIds.top, headerIdTop);
+
+            component._fixedHandler(event, { fixedPosition: '', prevPosition: 'bottom', id: headerIdBottom });
+            assert.lengthOf(component._stickyHeadersIds.bottom, 0);
+            assert.notInclude(component._stickyHeadersIds.bottom, headerIdBottom);
          });
       });
 
@@ -70,7 +82,7 @@ define([
                start: sinon.fake()
             };
 
-            component._updateStickyShadow(null, [component._index]);
+            component._updateStickyShadow([component._index]);
             sinon.assert.called(component._children.stickyHeaderShadow.start);
          });
 
@@ -82,7 +94,7 @@ define([
                start: sinon.fake()
             };
 
-            component._updateStickyShadow(null, [component._index + 1]);
+            component._updateStickyShadow([component._index + 1]);
             sinon.assert.notCalled(component._children.stickyHeaderShadow.start);
          });
       });
@@ -93,12 +105,12 @@ define([
                component = createComponent(StickyHeader, options);
 
             component._fixed = false;
-            component._children.updateStickyHeight = {
+            component._children.stickyHeaderHeight = {
                start: sinon.fake()
             };
 
-            component._updateStickyHeight(null, 10);
-            sinon.assert.calledWith(component._children.updateStickyHeight.start, 10);
+            component._updateStickyHeight(10);
+            sinon.assert.calledWith(component._children.stickyHeaderHeight.start, 10);
          });
 
          it('should not transfer an event if group is fixed', function() {
@@ -106,12 +118,12 @@ define([
                component = createComponent(StickyHeader, options);
 
             component._fixed = true;
-            component._children.updateStickyHeight = {
+            component._children.stickyHeaderHeight = {
                start: sinon.fake()
             };
 
-            component._updateStickyHeight(null, 10);
-            sinon.assert.notCalled(component._children.updateStickyHeight.start);
+            component._updateStickyHeight(10);
+            sinon.assert.notCalled(component._children.stickyHeaderHeight.start);
          });
       });
    });

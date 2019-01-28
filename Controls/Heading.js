@@ -19,6 +19,7 @@ define('Controls/Heading', [
     * @author Михайловский Д.С.
     * @demo Controls-demo/Headers/headerDemo
     *
+    * @mixes Controls/interface/ITooltip
     * @mixes Controls/interface/ICaption
     * @mixes Controls/Heading/HeadingStyles
     */

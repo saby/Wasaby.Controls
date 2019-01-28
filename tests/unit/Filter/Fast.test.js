@@ -85,9 +85,9 @@ define(
             data: source
          });
 
-         var getFastFilter = function(config) {
-            var fastFilter = new FastData(config);
-            fastFilter.saveOptions(config);
+         var getFastFilter = function(configFastFilter) {
+            var fastFilter = new FastData(configFastFilter);
+            fastFilter.saveOptions(configFastFilter);
             return fastFilter;
          };
 
@@ -210,12 +210,12 @@ define(
             FastData._private.notifyChanges(fastFilter, [itemsChanges]);
          });
 
-         it('on result', function(done) {
+         it('on result itemClick', function(done) {
             FastData._private.reload(fastData).addCallback(function() {
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   fastData.lastOpenIndex = 0;
                   isFilterChanged = false;
-                  fastData._onResult({ data: [fastData._configs[0]._items.at(2)] });
+                  fastData._onResult({ data: [fastData._configs[0]._items.at(2)], action: 'itemClick' });
                   assert.isTrue(isFilterChanged);
                   assert.equal(items[0][2].title, 'США');
                   done();
@@ -265,6 +265,19 @@ define(
             assert.isTrue(result);
             result = FastData._private.isItemsPropertiesChanged(oldItems, newItems2);
             assert.isFalse(result);
+         });
+
+         it('_private::getItemPopupConfig', function() {
+            var properties = {
+               displayProperty: 'text',
+               keyProperty: 'key',
+               itemTemplate: 'newItemTemplate',
+               itemTemplateProperty: 'myTemplate',
+               headerTemplate: 'headerTemplateText',
+               footerTemplate: 'footerTemplateText'
+            };
+            var result = FastData._private.getItemPopupConfig(properties);
+            assert.deepEqual(properties, result);
          });
 
          function setTrue(assert) {
