@@ -265,8 +265,8 @@ node('controls') {
         }
 
         if ("${env.BUILD_NUMBER}" == "1"){
-            inte = true
-            regr = true
+            all_inte = true
+            all_regr = true
             unit = true
         }
         if ( inte && all_inte ) {
