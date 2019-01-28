@@ -822,16 +822,16 @@ node('controls') {
                         }
                         }
                     }
-                    if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
-                    }
+                    //if ( skip ) {
+                    //     skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
+                    //     skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
+                    //}
 
                 }
             }
             parallel (
                 int_test: {
-                    stage("Инт.тесты "){
+                    stage("Инт.тесты"){
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
                             if (sbis3_controls) {
@@ -863,7 +863,7 @@ node('controls') {
                     }
                 },
                 reg_test: {
-                    stage("Рег.тесты SBIS3.CONTROLS"){
+                    stage("Рег.тесты"){
                         if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
                             if (sbis3_controls) {
