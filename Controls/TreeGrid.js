@@ -27,6 +27,7 @@ define('Controls/TreeGrid', [
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
     * @mixes Controls/interface/ITreeGridItemTemplates
+    * @mixes Controls/List/interface/IDraggable
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles
