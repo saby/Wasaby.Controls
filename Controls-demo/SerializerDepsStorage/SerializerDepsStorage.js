@@ -7,6 +7,7 @@ define('Controls-demo/SerializerDepsStorage/SerializerDepsStorage', [
 ) {
    'use strict';
 
+   // Данная демка служит для проверки сериализации функции на сервере.
    var DemoControl = Control.extend({
       _template: template,
       result: 'не проверено',
@@ -16,10 +17,12 @@ define('Controls-demo/SerializerDepsStorage/SerializerDepsStorage', [
             if (typeof document === 'undefined') {
                // Выполним на сервере асинхронный require модуля, генерирующего объект, который содержит функцию.
                require(['Controls-demo/SerializerDepsStorage/ModuleToRequire'], function(result) {
+                  // Объект, переданный в resolve в _beforeMount на сервере, сериализуется и приходит в
+                  // _beforeMount на клиенте как receivedState (то есть третьим аргументом).
                   resolve({ opt: result.myFunc });
                });
             } else {
-               // На клиенте функция из модуля, полученного на сервере, должна прийти в третьем аргументе.
+               // Если функция успешно сериализовалась, её можно использовать на клиенте.
                // В зависимости от того, выполнено это условие или нет, в шаблоне отрисуется "верно" или "неверно".
                self.result = typeof rs.opt === 'function' && rs.opt() === 'function result' ? 'верно' : 'неверно';
                resolve();
