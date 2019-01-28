@@ -5,8 +5,9 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/BaseViewModel',
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
-   'Controls/Constants'
-], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants) {
+   'Controls/Constants',
+   'Core/IoC'
+], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, IoC) {
    /**
     *
     * @author Авраменко А.С.
@@ -14,6 +15,31 @@ define('Controls/List/ItemsViewModel', [
     */
 
    var _private = {
+
+      checkDeprecated: function(cfg) {
+
+         if (cfg.leftSpacing && !this.leftSpacing) {
+            this.leftSpacing = true;
+            IoC.resolve('ILogger')
+               .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+         }
+         if (cfg.leftPadding && !this.leftPadding) {
+            this.leftPadding = true;
+            IoC.resolve('ILogger')
+               .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+         }
+         if (cfg.rightSpacing && !this.rightSpacing) {
+            this.rightSpacing = true;
+            IoC.resolve('ILogger')
+               .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+         }
+         if (cfg.rightPadding && !this.rightPadding) {
+            this.rightPadding = true;
+            IoC.resolve('ILogger')
+               .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+         }
+
+      },
 
       // проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
       isEqualItems: function(oldList, newList) {
@@ -140,6 +166,10 @@ define('Controls/List/ItemsViewModel', [
                index: this._display.getIndex(dispItem),
                item: dispItem.getContents(),
                dispItem: dispItem,
+
+               //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+               leftSpacing: this._options.leftSpacing || this._options.leftPadding,
+               rightSpacing: this._options.rightSpacing || this._options.rightPadding,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
                getVersion: function() {
                   // records have defined method nextVersion, groups haven't
@@ -147,8 +177,7 @@ define('Controls/List/ItemsViewModel', [
                      return this.item.getVersion();
                   }
                   return this.item;
-               },
-               spacingClassList: this.getSpacingClassList()
+               }
             };
          if (this._options.groupMethod || this._options.groupingKeyCallback) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
@@ -159,15 +188,6 @@ define('Controls/List/ItemsViewModel', [
             }
          }
          return itemData;
-      },
-
-      getSpacingClassList: function() {
-         var classList = '';
-         if (this._options.multiSelectVisibility === 'hidden') {
-            classList += ' controls-ListView__item-leftPadding_' + (this._options.leftPadding || this._options.leftSpacing || 'default');
-         }
-         classList += ' controls-ListView__item-rightPadding_' + (this._options.rightPadding || this._options.rightSpacing || 'default');
-         return classList;
       },
 
       setCollapsedGroups: function(collapsedGroups) {

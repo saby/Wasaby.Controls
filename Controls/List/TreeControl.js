@@ -257,6 +257,15 @@ define('Controls/List/TreeControl', [
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
          }
+         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
+            this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
+         }
+         if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
+            this._children.baseControl.getViewModel().setExpanderDisplayMode(newOptions.expanderDisplayMode);
+         }
+         if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
+            this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
+         }
       },
       _afterUpdate: function(oldOptions) {
          TreeControl.superclass._afterUpdate.apply(this, arguments);

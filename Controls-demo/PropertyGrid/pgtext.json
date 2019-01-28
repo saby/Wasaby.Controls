@@ -145,10 +145,13 @@
             "type": "enum",
             "title": "Displaying icon style.",
             "enum": {
-              "default": "Icon has default display style in this type of button.",
-              "attention": "Icon has attention display style.",
-              "error": "Icon has error display style.",
-              "done": "Icon has done icon style."
+              "secondary": "Icon display as icon with border.",
+              "primary": "Icon display as main link style.",
+              "success": "Icon display as first nonaccent link style.",
+              "warning": "Icon display as second nonaccent link style.",
+              "danger": "Icon display as third nonaccent link style.",
+              "info": "Icon display as first accent link style.",
+              "default": "Icon display as default tyext."
             }
           }
         }
