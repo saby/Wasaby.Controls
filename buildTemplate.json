@@ -16,7 +16,8 @@
   "modules": [
     {
       "name": "Controls",
-      "path": "%cd%/Controls"
+      "path": "%cd%/Controls",
+      "required": true
     },
     {
       "name": "Controls-demo",
@@ -28,7 +29,8 @@
     },
     {
       "name": "WS.Core",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core"
+      "path": "%cd%/node_modules/sbis3-ws/WS.Core",
+      "required": true
     },
     {
       "name": "WS.Deprecated",
@@ -44,11 +46,13 @@
     },
     {
       "name": "WS.Data",
-      "path": "%cd%/node_modules/ws-data/WS.Data"
+      "path": "%cd%/node_modules/ws-data/WS.Data",
+      "required": true
     },
     {
       "name": "Types",
-      "path": "%cd%/node_modules/saby-types/Types"
+      "path": "%cd%/node_modules/saby-types/Types",
+      "required": true
     },
     {
       "name": "SBIS3.CONTROLS",
@@ -76,15 +80,18 @@
     },
     {
       "name": "Vdom",
-      "path": "%cd%/node_modules/sbis3-ws/Vdom"
+      "path": "%cd%/node_modules/sbis3-ws/Vdom",
+      "required": true
     },
     {
       "name": "Router",
-      "path": "%cd%/node_modules/Router/Router"
+      "path": "%cd%/node_modules/Router/Router",
+      "required": true
     },
     {
       "name": "Inferno",
-      "path": "%cd%/node_modules/sbis3-ws/Inferno"
+      "path": "%cd%/node_modules/sbis3-ws/Inferno",
+      "required": true
     }
   ]
 }
