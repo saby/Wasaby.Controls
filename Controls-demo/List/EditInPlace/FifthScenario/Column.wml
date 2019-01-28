@@ -9,6 +9,7 @@
                   enabled="{{true}}">
          <ws:editorTemplate>
             <Controls.Input.Text bind:value="itemData.item[itemData.column.displayProperty]"
+                                 textAlign="right"
                                  selectOnClick="{{ false }}" />
          </ws:editorTemplate>
       </ws:partial>

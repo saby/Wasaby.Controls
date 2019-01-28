@@ -25,6 +25,7 @@ define('Controls/Grid', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IGridControl
+    * @mixes Controls/interface/IGridItemTemplate
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles
@@ -39,6 +40,7 @@ define('Controls/Grid', [
     * @public
     * @author Авраменко А.С.
     * @category List
+    * @demo Controls-demo/List/Grid/BasePG
     */
 
    var

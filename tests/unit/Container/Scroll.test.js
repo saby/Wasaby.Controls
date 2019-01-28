@@ -26,7 +26,14 @@ define(
 
                return markup;
             };
-            scroll._stickyHeaderIds = [];
+            scroll._stickyHeadersIds = {
+               top: [],
+               bottom: []
+            };
+            scroll._stickyHeadersHeight = {
+               top: 0,
+               bottom: 0
+            };
             scroll._children.stickyHeaderShadow = {
                start: sinon.fake()
             };
@@ -68,97 +75,110 @@ define(
                it('Header with id equal to "sticky" stops being fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky',
-                     shouldBeFixed: false
+                     fixedPosition: ''
                   });
 
-                  assert.isEmpty(scroll._stickyHeaderIds);
+                  assert.isEmpty(scroll._stickyHeadersIds.top);
+                  assert.isEmpty(scroll._stickyHeadersIds.bottom);
                });
                it('Header with id equal to "sticky" fixed', function() {
                   scroll._fixedHandler(event, {
-                     id: 'sticky',
-                     shouldBeFixed: true
+                     id: 'stickyTop',
+                     fixedPosition: 'top'
                   });
+                  assert.include(scroll._stickyHeadersIds.top, 'stickyTop');
 
-                  assert.include(scroll._stickyHeaderIds, 'sticky');
+                  scroll._fixedHandler(event, {
+                     id: 'stickyBottom',
+                     fixedPosition: 'bottom'
+                  });
+                  assert.include(scroll._stickyHeadersIds.bottom, 'stickyBottom');
                });
                it('Header with id equal to "sticky" fixed and then stop being fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky',
-                     shouldBeFixed: true
+                     fixedPosition: 'top'
                   });
                   scroll._fixedHandler(event, {
                      id: 'sticky',
-                     shouldBeFixed: false
+                     fixedPosition: '',
+                     prevPosition: 'top'
                   });
 
-                  assert.isEmpty(scroll._stickyHeaderIds);
+                  assert.isEmpty(scroll._stickyHeadersIds.top);
+                  assert.isEmpty(scroll._stickyHeadersIds.bottom);
                });
                it('Header with id equal to "sticky1" fixed, Header with id equal to "sticky2" stop being fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky1',
-                     shouldBeFixed: true
+                     fixedPosition: 'top'
                   });
                   scroll._fixedHandler(event, {
                      id: 'sticky2',
-                     shouldBeFixed: false
+                     fixedPosition: '',
+                     prevPosition: 'top'
                   });
 
-                  assert.include(scroll._stickyHeaderIds, 'sticky1');
-                  assert.notInclude(scroll._stickyHeaderIds, 'sticky2');
+                  assert.include(scroll._stickyHeadersIds.top, 'sticky1');
+                  assert.notInclude(scroll._stickyHeadersIds.top, 'sticky2');
                });
                it('Header with id equal to "sticky1" stop being fixed, Header with id equal to "sticky2" fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky1',
-                     shouldBeFixed: false
+                     fixedPosition: '',
+                     prevPosition: 'top'
                   });
                   scroll._fixedHandler(event, {
                      id: 'sticky2',
-                     shouldBeFixed: true
+                     fixedPosition: 'top'
                   });
 
-                  assert.include(scroll._stickyHeaderIds, 'sticky2');
-                  assert.notInclude(scroll._stickyHeaderIds, 'sticky1');
+                  assert.include(scroll._stickyHeadersIds.top, 'sticky2');
+                  assert.notInclude(scroll._stickyHeadersIds.top, 'sticky1');
                });
                it('Should increase headers height if stackable header is fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky1',
-                     shouldBeFixed: true,
+                     fixedPosition: 'top',
                      mode: 'stackable',
                      offsetHeight: 10
                   });
 
-                  assert.equal(scroll._stickyHeaderHeight, 10);
+                  assert.equal(scroll._stickyHeadersHeight.top, 10);
                });
                it('Should decrease headers height if stackable header is unfixed', function() {
-                  scroll._stickyHeaderIds = ['sticky1'];
-                  scroll._stickyHeaderHeight = 10;
+                  scroll._stickyHeadersIds.top = ['sticky1'];
+                  scroll._stickyHeadersHeight.top = 10;
                   scroll._fixedHandler(event, {
                      id: 'sticky1',
-                     shouldBeFixed: false,
+                     fixedPosition: '',
+                     prevPosition: 'top',
                      mode: 'stackable',
                      offsetHeight: 10
                   });
-                  assert.equal(scroll._stickyHeaderHeight, 0);
+                  assert.equal(scroll._stickyHeadersHeight.top, 0);
                });
                it('Should not change headers height if replaceable header is fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky1',
-                     shouldBeFixed: true,
+                     fixedPosition: '',
+                     prevPosition: 'top',
                      mode: 'replaceable',
                      offsetHeight: 10
                   });
-                  assert.equal(scroll._stickyHeaderHeight, 0);
+                  assert.equal(scroll._stickyHeadersHeight.top, 0);
                });
                it('Should decrease headers height if stackable header is unfixed', function() {
-                  scroll._stickyHeaderIds = ['sticky1'];
-                  scroll._stickyHeaderHeight = 10;
+                  scroll._stickyHeadersIds.top = ['sticky1'];
+                  scroll._stickyHeadersHeight.top = 10;
                   scroll._fixedHandler(event, {
                      id: 'sticky1',
-                     shouldBeFixed: false,
+                     fixedPosition: '',
+                     prevPosition: 'top',
                      mode: 'replaceable',
                      offsetHeight: 10
                   });
-                  assert.equal(scroll._stickyHeaderHeight, 10);
+                  assert.equal(scroll._stickyHeadersHeight.top, 10);
                });
             });
          });

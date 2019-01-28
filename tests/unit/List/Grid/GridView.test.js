@@ -29,14 +29,14 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
       });
       it('Footer', function() {
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
-            GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', paddingLeft: 'S' }),
-            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, paddingLeft: S})".');
+            GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'onhover', itemPadding: { left: 'S' } }),
+            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: onhover, itemPadding: left: S})".');
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
-            GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', paddingLeft: 'S' }),
-            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: visible, paddingLeft: S})".');
-         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_S',
-            GridView._private.calcFooterPaddingClass({ paddingLeft: 'S' }),
-            'Incorrect result "calcFooterPaddingClass({paddingLeft: S})".');
+            GridView._private.calcFooterPaddingClass({ multiSelectVisibility: 'visible', itemPadding: { left: 'S' } }),
+            'Incorrect result "calcFooterPaddingClass({multiSelectVisibility: visible, itemPadding: left: S})".');
+         assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_s',
+            GridView._private.calcFooterPaddingClass({ itemPadding: { left: 'S' } }),
+            'Incorrect result "calcFooterPaddingClass({itemPadding: left: S})".');
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_default',
             GridView._private.calcFooterPaddingClass({ }),
             'Incorrect result "calcFooterPaddingClass({ })".');
