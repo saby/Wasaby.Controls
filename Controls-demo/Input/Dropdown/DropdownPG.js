@@ -5,7 +5,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
 
       'json!Controls-demo/PropertyGrid/pgtext',
 
-      'WS.Data/Source/Memory',
+      'Types/source',
       'wml!Controls-demo/Input/Dropdown/contentTemplateDropdownWithIconLeft',
       'wml!Controls-demo/Input/Dropdown/headTemplateDropdown',
       'wml!Controls-demo/Input/Dropdown/footerTemplateDropdown',
@@ -15,7 +15,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, Memory) {
+   function(Control, template, config, sourceLib) {
       'use strict';
       var DropdownPG = Control.extend({
          _template: template,
@@ -28,7 +28,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
          _sourceTasks: null,
 
          _beforeMount: function() {
-            this._sourceTasks = new Memory({
+            this._sourceTasks = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {id: 1, title: 'Task in development', text: 'TASK', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown', comment: 'develop'},
@@ -42,7 +42,7 @@ define('Controls-demo/Input/Dropdown/DropdownPG',
                   {id: 9, title: 'Assignment for logisticians', text: 'ASSIGNMENT FOR LOGISTICIANS', parent: 4, '@parent': false, comment: 'develop'}
                ]
             });
-            this._sourceIcons = new Memory({
+            this._sourceIcons = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {id: 1, title: 'In the work', text: 'IN THE WORK', icon: 'icon-small icon-Trade icon-primary', parent: null, '@parent': false, myTemplate: 'wml!Controls-demo/Input/Dropdown/itemTemplateDropdown'},

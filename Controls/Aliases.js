@@ -8,6 +8,7 @@ define('Controls/Aliases',
        * @css @color_shadow_default shadow color used by default
        * @css @color_shadow_secondary secondary shadow color
        * @css @color_shadow_danger color of shadows using with elements meaning "danger"
+       * @css @color_overlay_default overlay color used by default
        * @css @color_warning color of functional elements meaning "warning"
        * @css @color_success color of functional elements meaning "success"
        * @css @color_danger color of functional elements meaning "danger"
@@ -59,10 +60,15 @@ define('Controls/Aliases',
        * @css @spacing_default_xxs spacing between elements that represents double extra small spacing size
        * @css @spacing_default_xs spacing between elements that represents extra small spacing size
        * @css @spacing_default_s spacing between elements that represents small spacing size
-       * @css @spacing_default_m spacing between elements that represents meduim spacing size
+       * @css @spacing_default_m spacing between elements that represents medium spacing size
        * @css @spacing_default_l spacing between elements that represents large spacing size
        * @css @spacing_default_xl spacing between elements that represents extra large spacing size
        * @css @spacing_default_xxl spacing between elements that represents double extra large spacing size
+       * @css @height_xs height of element that represents extra small size
+       * @css @height_s height of element that represents small size
+       * @css @height_m height of element that represents medium size
+       * @css @height_l height of element that represents large size
+       * @css @height_xl height of element that represents extra large size
        * @css @size_icon_s size that represents small sized icons
        * @css @size_icon_m size that represents medium sized icons
        * @css @size_icon_l size that represents large sized icons

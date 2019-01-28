@@ -12,7 +12,7 @@ define(
       describe('Controls/Popup/Opener/Confirmation', () => {
          beforeEach(() => {
             popupOpener = new PopupOpener();
-            popupOpener._beforeMount();
+            popupOpener._beforeMount({});
             popupOpener._children.LoadingIndicator = {
                toggleIndicator: () => {}
             };

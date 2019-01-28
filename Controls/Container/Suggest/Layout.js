@@ -313,6 +313,10 @@
             item = item || event;
             _private.close(this);
             this._notify('choose', [item]);
+
+            // after select from the suggest, focus on input will lost
+            // if the focus should be returned, the control (such Input/Suggest) should do it
+            this._inputActive = false;
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
@@ -354,6 +358,7 @@
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
                self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
             });
+            _private.setFilter(self, self._options.filter);
             _private.close(this);
          },
 

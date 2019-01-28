@@ -2,7 +2,7 @@ define('Controls-demo/Input/Search/SearchPG',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'json!Controls-demo/PropertyGrid/pgtext',
 
       'css!Controls-demo/Input/resources/VdomInputs',
@@ -10,7 +10,7 @@ define('Controls-demo/Input/Search/SearchPG',
       'css!Controls-demo/Input/Search/Search'
    ],
 
-   function(Control, template, MemorySource, config) {
+   function(Control, template, source, config) {
       'use strict';
 
       var InputSearchPg = Control.extend({

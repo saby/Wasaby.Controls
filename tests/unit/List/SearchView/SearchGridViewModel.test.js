@@ -1,11 +1,11 @@
-define(['Controls/List/SearchView/SearchGridViewModel', 'WS.Data/Collection/RecordSet', 'WS.Data/Entity/Model'], function(SearchGridViewModel, RecordSet, Model) {
+define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Types/entity'], function(SearchGridViewModel, collection, entity) {
    
    describe('Controls.List.SearchView.SearchGridViewModel', function() {
    
       describe('_private', function() {
       
          it('isNeedToHighlight', function() {
-            var item = new Model({
+            var item = new entity.Model({
                rawData: {
                   id: 0,
                   title: 'test'
@@ -22,7 +22,7 @@ define(['Controls/List/SearchView/SearchGridViewModel', 'WS.Data/Collection/Reco
       describe('instance tests', function() {
       
          it('getCurrent', function () {
-            var items = new RecordSet({
+            var items = new collection.RecordSet({
                rawData: [{id: 1, title: 'test'}],
                idProperty: 'id'
             });

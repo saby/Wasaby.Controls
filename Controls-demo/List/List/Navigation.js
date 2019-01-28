@@ -4,13 +4,13 @@
 define('Controls-demo/List/List/Navigation', [
    'Core/Control',
    'wml!Controls-demo/List/List/resources/Navigation/Navigation',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/List/List/resources/Navigation/Data',
    'css!Controls-demo/List/List/resources/List',
    'css!Controls-demo/List/List/resources/Navigation/Navigation'
 ], function (BaseControl,
              template,
-             MemorySource,
+             source,
              data
 ) {
    'use strict';
@@ -24,11 +24,11 @@ define('Controls-demo/List/List/Navigation', [
 
          constructor: function() {
             ModuleClass.superclass.constructor.apply(this, arguments);
-            this._viewSource = new MemorySource({
+            this._viewSource = new source.Memory({
                idProperty: 'id',
                data: data.srcData
             });
-            this._navigationViewTypeSource = new MemorySource({
+            this._navigationViewTypeSource = new source.Memory({
                idProperty: 'id',
                data: [
                   {

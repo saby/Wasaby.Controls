@@ -3,6 +3,7 @@ define('Controls/Container/Scroll',
       'Core/Control',
       'Core/Deferred',
       'Core/detection',
+      'Core/core-clone',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
       'Controls/StickyHeader/Context',
@@ -15,7 +16,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
+   function(Control, Deferred, detection, cClone, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
 
       'use strict';
 
@@ -154,15 +155,15 @@ define('Controls/Container/Scroll',
              * @param {Controls/StickyHeader/Types/InformationFixationEvent.typedef} data Data about the header that changed the fixation state.
              */
             updateFixationState: function(self, data) {
-               if (data.shouldBeFixed) {
-                  self._stickyHeaderIds.push(data.id);
+               if (!!data.fixedPosition) {
+                  self._stickyHeadersIds[data.fixedPosition].push(data.id);
                   if (data.mode === 'stackable') {
-                     self._stickyHeaderHeight += data.offsetHeight;
+                     self._stickyHeadersHeight[data.fixedPosition] += data.offsetHeight;
                   }
-               } else if (self._stickyHeaderIds.indexOf(data.id) > -1) {
-                  self._stickyHeaderIds.splice(self._stickyHeaderIds.indexOf(data.id), 1);
+               } else if (!!data.prevPosition && self._stickyHeadersIds[data.prevPosition].indexOf(data.id) !== -1) {
+                  self._stickyHeadersIds[data.prevPosition].splice(self._stickyHeadersIds[data.prevPosition].indexOf(data.id), 1);
                   if (data.mode === 'stackable') {
-                     self._stickyHeaderHeight -= data.offsetHeight;
+                     self._stickyHeadersHeight[data.prevPosition] -= data.offsetHeight;
                   }
                }
             }
@@ -211,11 +212,11 @@ define('Controls/Container/Scroll',
             _pagingState: null,
 
             /**
-             * @type {String|null}
+             * @type {Object|null}
              * @private
              */
-            _stickyHeaderIds: null,
-            _stickyHeaderHeight: 0,
+            _stickyHeadersIds: null,
+            _stickyHeadersHeight: null,
 
             /**
              * @type {Controls/StickyHeader/Context|null}
@@ -228,10 +229,17 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
-               this._stickyHeaderIds = [];
+               this._stickyHeadersIds = {
+                  top: [],
+                  bottom: []
+               };
+               this._stickyHeadersHeight = {
+                  top: 0,
+                  bottom: 0
+               };
                this._displayState = {};
                this._stickyHeaderContext = new StickyHeaderContext({
-                  shadowVisible: options.shadowVisible
+                  shadowPosition: options.shadowVisible ? 'bottom' : ''
                });
 
                if (context.ScrollData && context.ScrollData.pagingVisible) {
@@ -320,8 +328,8 @@ define('Controls/Container/Scroll',
                }
             },
 
-            _topShadowVisible: function() {
-               return this._displayState.shadowPosition.indexOf('top') !== -1 && this._stickyHeaderIds.length === 0;
+            _shadowVisible: function(position) {
+               return this._displayState.shadowPosition.indexOf(position) !== -1 && this._stickyHeadersIds[position].length === 0;
             },
 
             /**
@@ -339,7 +347,7 @@ define('Controls/Container/Scroll',
                   return parseInt(found, 10) + marginRight;
                });
 
-               this._stickyHeaderContext.position = -marginTop;
+               this._stickyHeaderContext.top = -marginTop;
                this._stickyHeaderContext.updateConsumers();
             },
 
@@ -443,8 +451,10 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
-               this._children.stickyHeaderShadow.start([this._stickyHeaderIds[this._stickyHeaderIds.length - 1]]);
-               this._children.stickyHeaderHeight.start(this._stickyHeaderHeight);
+               this._children.stickyHeaderShadow.start([this._stickyHeadersIds.top[this._stickyHeadersIds.top.length - 1], this._stickyHeadersIds.bottom[this._stickyHeadersIds.bottom.length - 1]]);
+
+               //Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
+               this._children.stickyHeaderHeight.start(cClone(this._stickyHeadersHeight));
 
                event.stopPropagation();
             },
@@ -456,10 +466,14 @@ define('Controls/Container/Scroll',
              * @private
              */
             _updateStickyHeaderContext: function(shadowVisible) {
-               shadowVisible = (shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll && this._displayState.shadowPosition.indexOf('top') > -1;
+               var shadowPosition = '';
 
-               if (this._stickyHeaderContext.shadowVisible !== shadowVisible) {
-                  this._stickyHeaderContext.shadowVisible = shadowVisible;
+               if ((shadowVisible || this._options.shadowVisible) && this._displayState.hasScroll) {
+                  shadowPosition = this._displayState.shadowPosition;
+               }
+
+               if (this._stickyHeaderContext.shadowPosition !== shadowPosition) {
+                  this._stickyHeaderContext.shadowPosition = shadowPosition;
                   this._stickyHeaderContext.updateConsumers();
                }
             },

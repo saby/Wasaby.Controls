@@ -4,7 +4,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
       'wml!Controls-demo/Input/ComboBox/ComboBoxPG',
       'json!Controls-demo/PropertyGrid/pgtext',
 
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/Combobox/historySourceCombobox',
       'wml!Controls-demo/Input/ComboBox/itemTemplateCustom',
       'wml!Controls-demo/Input/ComboBox/itemMyTemplateCustom',
@@ -13,7 +13,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
       'css!Controls-demo/Input/ComboBox/ComboBoxPG'
    ],
 
-   function(Control, template, config, Memory, historySourceCombobox) {
+   function(Control, template, config, sourceLib, historySourceCombobox) {
       'use strict';
       var ComboBoxPG = Control.extend({
          _template: template,
@@ -24,7 +24,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
          _sourceRegions: null,
 
          _beforeMount: function() {
-            this._sourceRegions = new Memory({
+            this._sourceRegions = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   {
@@ -49,7 +49,7 @@ define('Controls-demo/Input/ComboBox/ComboBoxPG',
                   }
                ]
             });
-            this._sourceDisease = new Memory({
+            this._sourceDisease = new sourceLib.Memory({
                idProperty: 'id',
                data: [
                   { id: '1', text: '01-disease,', title: '01-disease', myTemplate: 'wml!Controls-demo/Input/ComboBox/itemMyTemplateCustom', comment: 'The first 3 days are paid by the employer, the remaining days are paid for by the FSS' },
