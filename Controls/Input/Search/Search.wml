@@ -5,6 +5,9 @@
         viewModel="{{_baseViewModel}}"
         placeholder="{{_options.placeholder}}"
         inputType="Search"
+        selectOnClick="{{_options.selectOnClick}}"
+        textAlign="{{_options.textAlign}}"
+        on:focusout="_focusOutHandler()"
         style="{{_options.style}}"
         on:valueChanged="_valueChangedHandler()"
         on:keyUp="_keyUpHandler()">

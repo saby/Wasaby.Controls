@@ -1,12 +1,11 @@
 define('Controls/Application/_Wait',
    [
       'Core/Control',
-      'Core/Deferred',
       'View/Request',
       'wml!Controls/Application/_Wait'
    ],
 
-   function(Base, Deferred, Request, template) {
+   function(Base, Request, template) {
       'use strict';
 
       var asyncTemplate = function() {

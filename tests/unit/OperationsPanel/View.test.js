@@ -59,6 +59,9 @@ define([
 
       beforeEach(function() {
          instance = new View();
+         instance._container = {
+            offsetParent: 100
+         };
          instance.saveOptions(cfg);
          oldFillItemsType = WidthUtils.fillItemsType;
       });
@@ -327,6 +330,29 @@ define([
             assert.equal(item, eventArgs[0]);
          };
          instance._toolbarItemClick({}, item);
+      });
+
+      it('panel is not visible', function(done) {
+         var forceUpdateCalled = false;
+         instance._container = {
+            offsetParent: null
+         };
+         instance._children = {
+            toolbarBlock: {
+               clientWidth: 100
+            }
+         };
+         WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
+         instance._beforeMount(cfg).addCallback(function() {
+            instance._afterMount();
+            instance._forceUpdate = function() {
+               forceUpdateCalled = true;
+            };
+            instance._children.toolbarBlock.clientWidth = 0;
+            instance._afterUpdate(cfg);
+            assert.isFalse(forceUpdateCalled);
+            done();
+         });
       });
    });
 });

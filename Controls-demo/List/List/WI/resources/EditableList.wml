@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Demo-example: editable list.">
+<Controls.Application.ApplicationWrapper caption="Editable list." demoname="Controls-demo/List/List/EditableListPG.wml">
     <ws:content>
         <Controls-demo.List.List.EditableListPG/>
     </ws:content>

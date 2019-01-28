@@ -1,0 +1,23 @@
+{
+  "Controls/TreeGrid": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "expandedItems": {
+            "type": "Array",
+            "readOnly": "true"
+          },
+          "collapsedItems": {
+            "type": "Array",
+            "readOnly": "true"
+          },
+          "parentProperty": {
+            "type": "String",
+            "readOnly": "true"
+          }
+        }
+      }
+    }
+  }
+}

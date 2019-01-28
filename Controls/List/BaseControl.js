@@ -414,17 +414,24 @@ define('Controls/List/BaseControl', [
       showIndicator: function(self, direction) {
          self._loadingState = direction || 'all';
          self._loadingIndicatorState = self._loadingState;
-         setTimeout(function() {
-            if (self._loadingState) {
-               self._showLoadingIndicatorImage = true;
-               self._forceUpdate();
-            }
-         }, 2000);
+         if (!self._loadingIndicatorTimer) {
+            self._loadingIndicatorTimer = setTimeout(function() {
+               self._loadingIndicatorTimer = null;
+               if (self._loadingState) {
+                  self._showLoadingIndicatorImage = true;
+                  self._forceUpdate();
+               }
+            }, 2000);
+         }
       },
 
       hideIndicator: function(self) {
          self._loadingState = null;
          self._showLoadingIndicatorImage = false;
+         if (self._loadingIndicatorTimer) {
+            clearTimeout(self._loadingIndicatorTimer);
+            self._loadingIndicatorTimer = null;
+         }
          if (self._loadingIndicatorState !== null) {
             self._loadingIndicatorState = self._loadingState;
             self._forceUpdate();
@@ -641,6 +648,7 @@ define('Controls/List/BaseControl', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IBaseControl
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/BaseControl/Styles
     * @control
     * @public
     * @author Авраменко А.С.
@@ -662,6 +670,7 @@ define('Controls/List/BaseControl', [
       _loader: null,
       _loadingState: null,
       _loadingIndicatorState: null,
+      _loadingIndicatorTimer: null,
 
       _pagingCfg: null,
       _pagingVisible: false,
@@ -703,6 +712,7 @@ define('Controls/List/BaseControl', [
                down: false
             };
          }
+         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
          return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             var
@@ -795,12 +805,7 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
          }
 
-         if (newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback) {
-            this._listViewModel.setItemActionVisibilityCallback(newOptions.itemActionVisibilityCallback);
-         }
-
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-
 
          if (recreateSource) {
             if (this._sourceController) {
@@ -815,6 +820,19 @@ define('Controls/List/BaseControl', [
 
          if (newOptions.multiSelectVisibility !== this._options.multiSelectVisibility) {
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
+         }
+         this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
+
+         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+         }
+
+         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+         }
+
+         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
          }
 
          if (sortingChanged) {
@@ -871,8 +889,13 @@ define('Controls/List/BaseControl', [
                this._virtualScroll.updateItemsSizes();
             }
          }
+         if (this._delayedSelect && this._children.selectionController) {
+            this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
+            this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
+            this._delayedSelect = null;
+         }
 
-
+   
          //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
          //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
          if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
@@ -916,10 +939,16 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (direction === 'right' && itemData.multiSelectVisibility && !itemData.isSwiped) {
-            var status = itemData.multiSelectStatus;
-            this._children.selectionController.onCheckBoxClick(itemData.key, status);
-            this._notify('checkboxClick', [itemData.key, status]);
+         if (direction === 'right' && !itemData.isSwiped) {
+            /**
+             * After the right swipe the item should get selected.
+             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
+             */
+            this._needSelectionController = true;
+            this._delayedSelect = {
+               key: itemData.key,
+               status: itemData.multiSelectStatus
+            };
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
@@ -1076,7 +1105,7 @@ define('Controls/List/BaseControl', [
          if (!this._listViewModel.getDragEntity()) {
             dragEnterResult = this._notify('dragEnter', [dragObject.entity]);
 
-            if (cInstance.instanceOfModule(dragEnterResult, 'WS.Data/Entity/Record')) {
+            if (cInstance.instanceOfModule(dragEnterResult, 'Types/entity:Record')) {
                draggingItemProjection = this._listViewModel._prepareDisplayItemForAdd(dragEnterResult);
                this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(draggingItemProjection));
                this._listViewModel.setDragEntity(dragObject.entity);

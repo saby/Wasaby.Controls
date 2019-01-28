@@ -36,7 +36,8 @@ define('Controls/StickyHeader/Group',
                [{
                   id: self._index,
                   offsetHeight: fixedHeaderData.offsetHeight,
-                  shouldBeFixed: fixedHeaderData.shouldBeFixed,
+                  fixedPosition: fixedHeaderData.fixedPosition,
+                  prevPosition: fixedHeaderData.prevPosition,
                   mode: fixedHeaderData.mode
                }],
                { bubbling: true }
@@ -52,45 +53,59 @@ define('Controls/StickyHeader/Group',
 
          _fixed: null,
 
-         _stickyHeaderIds: null,
+         _stickyHeadersIds: null,
          _shadowVisible: false,
 
          _beforeMount: function(options, context, receivedState) {
             this._isStickySupport = stickyUtils.isStickySupport();
             this._index = stickyUtils.getNextId();
-            this._stickyHeaderIds = [];
+            this._stickyHeadersIds = {
+               top: [],
+               bottom: []
+            };
+         },
+
+         _afterMount: function() {
+            this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
+            this._notify('register', ['updateStickyHeight', this, this._updateStickyHeight], {bubbling: true});
+         },
+
+         _beforeUnmount: function() {
+            this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
+            this._notify('unregister', ['updateStickyHeight', this], {bubbling: true});
          },
 
          _fixedHandler: function(event, fixedHeaderData) {
             event.stopImmediatePropagation();
-            if (fixedHeaderData.shouldBeFixed) {
-               this._stickyHeaderIds.push(fixedHeaderData.id);
+            if (!!fixedHeaderData.fixedPosition) {
+               this._stickyHeadersIds[fixedHeaderData.fixedPosition].push(fixedHeaderData.id);
                if (this._shadowVisible === true) {
-                  this._children.stickyHeaderShadow.start(this._stickyHeaderIds);
+                  this._children.stickyHeaderShadow.start(this._stickyHeadersIds[fixedHeaderData.fixedPosition]);
                }
-            } else if (this._stickyHeaderIds.indexOf(fixedHeaderData.id) > -1) {
-               this._stickyHeaderIds.splice(this._stickyHeaderIds.indexOf(fixedHeaderData.id), 1);
+            } else if (!!fixedHeaderData.prevPosition && this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id) > -1) {
+               this._stickyHeadersIds[fixedHeaderData.prevPosition].splice(this._stickyHeadersIds[fixedHeaderData.prevPosition].indexOf(fixedHeaderData.id), 1);
             }
 
-            if (fixedHeaderData.shouldBeFixed && !this._fixed) {
+            if (!!fixedHeaderData.fixedPosition && !this._fixed) {
                this._fixed = true;
                _private._notifyFixed(this, fixedHeaderData);
-            } else if (!fixedHeaderData.shouldBeFixed && this._fixed) {
+            } else if (!fixedHeaderData.fixedPosition && this._fixed) {
                this._fixed = false;
                _private._notifyFixed(this, fixedHeaderData);
             }
          },
 
-         _updateStickyShadow: function(e, ids) {
+         _updateStickyShadow: function(ids) {
             if (ids.indexOf(this._index) !== -1) {
                this._shadowVisible = true;
-               this._children.stickyHeaderShadow.start(this._stickyHeaderIds);
+
+               this._children.stickyHeaderShadow.start(this._stickyHeadersIds.top.concat(this._stickyHeadersIds.bottom));
             }
          },
 
-         _updateStickyHeight: function(e, height) {
+         _updateStickyHeight: function(height) {
             if (!this._fixed) {
-               this._children.updateStickyHeight.start(height);
+               this._children.stickyHeaderHeight.start(height);
             }
          }
       });

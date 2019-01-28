@@ -19,14 +19,14 @@ define('Controls/Input/Phone',
        * @class Controls/Input/Phone
        * @extends Core/Control
        * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputField
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @category Input
-       * @demo Controls-demo/Input/Phone/Phone
+       * @demo Controls-demo/Input/Phone/PhonePG
        *
        * @author Колесова П.С.
        */

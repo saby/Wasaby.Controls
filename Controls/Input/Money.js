@@ -14,13 +14,14 @@ define('Controls/Input/Money',
        * Input for entering currency.
        *
        * @class Controls/Input/Money
-       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputField
        * @mixes Controls/Input/interface/IValidation
        * @mixes Controls/Input/interface/IInputTag
-       * @control
+       *
        * @public
+       * @demo Controls-demo/Input/Money/Money
+       *
        * @author Журавлев М.С.
-       * @category Input
        */
       var _private = {
          PRECISION: 2,

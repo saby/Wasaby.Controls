@@ -31,6 +31,9 @@
             "title": "filter",
             "type": "Array"
           },
+          "itemPadding": {
+            "type": "Object"
+          },
           "emptyTemplate": {
             "type": "function",
             "title": "emptyTemplate"

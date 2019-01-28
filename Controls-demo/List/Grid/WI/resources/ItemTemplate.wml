@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Demo-example: ItemTemplate.">
+    <ws:content>
+        <Controls-demo.List.Grid.ItemTemplatePG/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>

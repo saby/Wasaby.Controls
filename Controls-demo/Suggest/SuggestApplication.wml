@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Suggest">
+<Controls.Application.ApplicationWrapper caption="Suggest" demoname="Controls-demo/Suggest/Suggest.wml">
    <ws:content>
       <Controls-demo.Suggest.Suggest/>
    </ws:content>

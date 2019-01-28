@@ -166,7 +166,7 @@ define('tests/Filter/Button/History/testHistorySource',
                itemsProperty: '',
                idProperty: 'ObjectId'
             });
-            return {};
+            return Deferred.success(data);
          },
 
          query: function() {

@@ -4,18 +4,23 @@
 
 .controls-MasterDetail_master {
    position: relative;
-   background-color: @background-color_MasterList;
+   background-color: @background-color_List-masterList;
    flex-shrink: 0;
    width: 27%;
 
    &:after {
       content: '';
       z-index: 0;
-      width: @border-width_MasterList-right;
-      background-color: @border-color_MasterList;
+      width: @border-width_List-masterList-right;
+      background-color: @border-color_List-masterList;
       height: 100%;
       position: absolute;
       right: 0;
       top: 0;
    }
+}
+
+// todo: https://online.sbis.ru/opendoc.html?guid=801002f0-6535-440f-a5ef-f81f21b3c3a3
+.ws-is-mobile-safari .controls-MasterDetail_master > .controls-Scroll__content {
+   width: 101%;
 }
