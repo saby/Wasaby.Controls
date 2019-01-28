@@ -191,7 +191,6 @@ def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
 def only_fail = false
-def control_type = params.control_type
 def vdom_controls = params.run_vdom
 def sbis3_controls = params.run_sbis3
 
@@ -942,13 +941,14 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        /*
         if ( smoke_result ) {
             dir("./controls/tests") {
                 def int_title = ''
                 def reg_title = ''
                 def description = ''
                 if (inte ) {
-                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/${control_type}/build_description.txt", skip)
+                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                      if ( int_data ) {
                          int_title = int_data[0]
                          int_description= int_data[1]
@@ -959,7 +959,7 @@ node('controls') {
                     }
                 }
                 if (regr ) {
-                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/${control_type}/build_description.txt", skip)
+                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
                         reg_description = reg_data[1]
@@ -973,14 +973,14 @@ node('controls') {
                 build_title(int_title, reg_title)
                 currentBuild.description = "${description}"
             }
-        }
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
     if ( (regr || all_regr) && run_tests_reg ){
         dir("./controls") {
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/${control_type}/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/**/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
         }
