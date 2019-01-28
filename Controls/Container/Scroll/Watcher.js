@@ -211,8 +211,7 @@ define('Controls/Container/Scroll/Watcher',
                   } else {
                      if (scrollParam === 'pageDown') {
                         container.scrollTop += clientHeight;
-                     }
-                     else {
+                     } else {
                         if (scrollParam === 'exact' && extraParams) {
                            container.scrollTop = extraParams;
                         }

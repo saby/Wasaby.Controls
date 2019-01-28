@@ -214,6 +214,7 @@ define('Controls/List/BaseControl', [
          if (direction == 'up') {
             self._notify('doScroll', ['exact', 1], {bubbling: true});
          }
+
          /**/
 
          if (self._sourceController) {
