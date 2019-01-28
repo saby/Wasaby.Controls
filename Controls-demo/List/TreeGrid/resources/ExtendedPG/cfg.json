@@ -1,0 +1,26 @@
+{
+  "Controls/TreeGrid": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "nodeFooterTemplate": {
+            "type": "String"
+          },
+          "expanderVisibility": {
+            "type": "enum",
+            "default": "visible",
+            "enum": {
+              "visible": "visible",
+              "hasChildren": "hasChildren"
+            }
+          },
+          "hasChildrenProperty": {
+            "type": "String",
+            "readOnly": "true"
+          }
+        }
+      }
+    }
+  }
+}

@@ -25,10 +25,6 @@ define('Controls-demo/List/Grid/Ladder', [
          _viewSource: null,
          _viewColumns: null,
          _selectedKeys: null,
-         _stickyColumn: {
-            index: 0,
-            property: 'photo'
-         },
          _ladderProperties: [
             'photo',
             'date'
@@ -45,7 +41,8 @@ define('Controls-demo/List/Grid/Ladder', [
             this._viewColumns = [
                {
                   template: 'wml!Controls-demo/List/Grid/resources/Ladder/TasksPhoto',
-                  width: '98px'
+                  width: '98px',
+                  stickyProperty: 'photo'
                },
                {
                   template: 'wml!Controls-demo/List/Grid/resources/Ladder/TasksDescr',

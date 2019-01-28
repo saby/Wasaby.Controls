@@ -26,6 +26,7 @@ define('Controls/TreeGrid', [
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
+    * @mixes Controls/interface/ITreeGridItemTemplates
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles
@@ -41,6 +42,7 @@ define('Controls/TreeGrid', [
     * @public
     * @author Авраменко А.С.
     * @category List
+    * @demo Controls-demo/List/TreeGrid/BasePG
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{

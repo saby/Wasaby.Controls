@@ -104,6 +104,7 @@ define('Controls-demo/List/List/ItemActionsPG',
                source: this._sourceGadgets,
                itemActions: data.firstItemActionsArray,
                itemActionsPosition: this._dataObject.itemActionsPosition.value,
+               itemActionVisibilityCallback: null,
                contextMenuEnabled: false
             };
 

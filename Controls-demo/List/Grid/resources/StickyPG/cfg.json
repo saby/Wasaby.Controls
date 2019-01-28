@@ -1,0 +1,19 @@
+{
+  "Controls/Grid": {
+    "properties": {
+      "ws-config": {
+        "title": "Базовая конфигурация",
+        "options": {
+          "ladderProperties": {
+            "title": "ladderProperties",
+            "type": "Array"
+          },
+          "stickyColumn": {
+            "title": "stickyColumn",
+            "type": "Object"
+          }
+        }
+      }
+    }
+  }
+}

@@ -140,7 +140,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             this._options.listModel !== newOptions.listModel ||
             this._options.itemActions !== newOptions.itemActions ||
             this._options.itemActionVisibilityCallback !== newOptions.itemActionVisibilityCallback ||
-            this._options.toolbarVisibility !== newOptions.toolbarVisibility
+            this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
+            this._options.itemActionsPosition !== newOptions.itemActionsPosition
          ) {
             _private.updateModel.apply(null, args);
          }

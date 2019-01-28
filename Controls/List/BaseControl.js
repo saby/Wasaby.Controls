@@ -805,12 +805,7 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
          }
 
-         if (newOptions.itemActionVisibilityCallback !== this._options.itemActionVisibilityCallback) {
-            this._listViewModel.setItemActionVisibilityCallback(newOptions.itemActionVisibilityCallback);
-         }
-
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
-
 
          if (recreateSource) {
             if (this._sourceController) {
@@ -827,6 +822,18 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
          this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
+
+         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+         }
+
+         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+         }
+
+         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
+            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
+         }
 
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);

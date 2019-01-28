@@ -1,0 +1,38 @@
+<div style="padding-left: 12px;">
+    <div>
+        <Controls.Label caption="left" attr:class="demo-TextBox"/>
+        <Controls.Input.ComboBox
+                keyProperty="id"
+                displayProperty="title"
+                bind:selectedKey="_left"
+                source="{{_source}}"
+                on:selectedKeyChanged="_onValueChanged()"/>
+    </div>
+    <div>
+        <Controls.Label caption="right" attr:class="demo-TextBox"/>
+        <Controls.Input.ComboBox
+                keyProperty="id"
+                displayProperty="title"
+                bind:selectedKey="_right"
+                source="{{_source}}"
+                on:selectedKeyChanged="_onValueChanged()"/>
+    </div>
+    <div>
+        <Controls.Label caption="top" attr:class="demo-TextBox"/>
+        <Controls.Input.ComboBox
+                keyProperty="id"
+                displayProperty="title"
+                bind:selectedKey="_top"
+                source="{{_source}}"
+                on:selectedKeyChanged="_onValueChanged()"/>
+    </div>
+    <div>
+        <Controls.Label caption="bottom" attr:class="demo-TextBox"/>
+        <Controls.Input.ComboBox
+                keyProperty="id"
+                displayProperty="title"
+                bind:selectedKey="_bottom"
+                source="{{_source}}"
+                on:selectedKeyChanged="_onValueChanged()"/>
+    </div>
+</div>

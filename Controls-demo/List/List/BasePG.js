@@ -43,6 +43,15 @@ define('Controls-demo/List/List/BasePG',
             this._errorSource = new sourceLib.SbisService({});
 
             this._dataObject = {
+               itemPadding: {
+                  editorType: 'ItemPadding',
+                  value: {
+                     left: 'l',
+                     right: 'xl',
+                     top: 'l',
+                     bottom: 'l'
+                  }
+               },
                source: {
                   items: [
                      {id: '1', title: 'Gadgets', items: this._sourceGadgets},
@@ -105,7 +114,8 @@ define('Controls-demo/List/List/BasePG',
                keyProperty: 'id',
                filter: undefined,
                emptyTemplate: undefined,
-               footerTemplate: undefined
+               footerTemplate: undefined,
+               itemPadding: this._dataObject.itemPadding.value
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
