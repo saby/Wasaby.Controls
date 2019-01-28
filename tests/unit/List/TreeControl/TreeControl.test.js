@@ -67,20 +67,16 @@ define([
          var isSourceControllerNode2Destroyed = false;
          
          //viewmodel moch
-         treeControl._children = {
-            baseControl: {
-               getViewModel: function() {
+         treeControl._children.baseControl.getViewModel = function() {
+            return {
+               getExpandedItems: function() {
                   return {
-                     getExpandedItems: function() {
-                        return {
-                           '1': true
-                        };
-                     }
+                     '1': true
                   };
                }
-            }
+            };
          };
-         
+   
          treeControl._nodesSourceControllers = {
             1: {
                destroy: function() {
