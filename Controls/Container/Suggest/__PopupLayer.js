@@ -5,10 +5,11 @@ define('Controls/Container/Suggest/__PopupLayer',
    [
       'Core/Control',
       'wml!Controls/Container/Suggest/__PopupLayer',
+      'Controls/Utils/getZIndex',
       'css!Controls/Container/Suggest/PopupLayer'
    ],
 
-   function(Control, template) {
+   function(Control, template, getZIndex) {
 
       'use strict';
 
@@ -21,6 +22,7 @@ define('Controls/Container/Suggest/__PopupLayer',
                template: 'Controls/Container/Suggest/__PopupContent',
                opener: self,
                revertPositionStyle: true, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+               zIndex: getZIndex(self), // _vdomOnOldPage для слоя совместимости, уйдёт с удалением опции.
                templateOptions: {
                   target: options.target,
                   filter: options.filter,
