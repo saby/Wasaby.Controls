@@ -1031,7 +1031,7 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( (regr || all_regr) && run_tests_reg ){
+    if ( (regr || all_regr) && (run_tests_reg_sbis3 || run_tests_reg_vdom)){
         if (sbis3_controls) {
             dir("./controls/tests/reg/SBIS3.CONTROLS"){
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
