@@ -153,8 +153,8 @@ def getParams(user) {
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
             booleanParam(defaultValue: true, description: "Тип контролов SBIS3.CONTROLS", name: 'run_sbis3'),
             booleanParam(defaultValue: true, description: "Tип контролов VDOM", name: 'run_vdom'),
-            //booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
-            //booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -216,13 +216,19 @@ node('controls') {
         deleteDir()
         def skip = params.skip
         def changed_files
-        def skip_tests_int = ""
-        def skip_tests_reg = ""
-        def tests_for_run_int = ""
-        def tests_for_run_reg = ""
+        def skip_tests_int_sbs3 = ""
+        def skip_tests_int_vdom = ""
+        def skip_tests_reg_sbis3 = ""
+        def skip_tests_reg_vdom = ""
+        def tests_for_run_int_sbis3 = ""
+        def tests_for_run_int_vdom = ""
+        def tests_for_run_reg_sbis3 = ""
+        def tests_for_run_reg_vdom = ""
         def smoke_result = true
-        def run_tests_int = true
-        def run_tests_reg = true
+        def run_tests_int_sbis3 = true
+        def run_tests_int_vdom = true
+        def run_tests_reg_sbis3 = true
+        def run_tests_reg_vdom = true
 
         try {
         echo "Назначаем переменные"
@@ -265,8 +271,8 @@ node('controls') {
         }
 
         if ("${env.BUILD_NUMBER}" == "1"){
-            all_inte = true
-            all_regr = true
+            inte = true
+            regr = true
             unit = true
         }
         if ( inte && all_inte ) {
@@ -791,27 +797,57 @@ node('controls') {
                     if ( !only_fail && changed_files ) {
                         dir("./controls/tests") {
                         if (inte && !boss) {
-                             if ( download_coverage_json(version, 'int') ) {
+                            if (sbis3_controls) {
+                                if ( download_coverage_json(version, "int/SBIS3.CONTROLS") ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
-                                    tests_for_run_int = "--files_to_start ${tests_files_int}"
+                                    tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
                                 } else {
-                                    run_tests_int = false
+                                    run_tests_int_sbis3 = false
                                 }
+                            }
+                            }
+                            if (vdom_controls) {
+                                if ( download_coverage_json(version, "int/VDOM") ) {
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                if (tests_files_int) {
+                                    echo "${tests_files_int}"
+                                    tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int_vdom = false
+                                }
+                            }
 
-                             }
+
+                            }
+
                         }
                         if (regr && !boss) {
-                            if ( download_coverage_json(version, 'reg') ) {
+                            if (sbis3_controls) {
+                            if ( download_coverage_json(version, 'reg/SBIS3.CONTROLS') ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
-                                     tests_for_run_reg = "--files_to_start ${tests_files_reg}"
+                                     tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
                                  } else {
-                                    run_tests_reg = false
+                                    run_tests_reg_sbis3 = false
                                  }
-                             }
+                               }
+                            }
+                            if (vdom_controls) {
+                                if ( download_coverage_json(version, 'reg/VDOM') ) {
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 if (tests_files_reg) {
+                                 echo "${tests_files_reg}"
+                                     tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_vdom = false
+                                 }
+                               }
+
+                            }
+
                         }
                         if (boss) {
                             tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
@@ -821,35 +857,41 @@ node('controls') {
                         }
                         }
                     }
-                    //if ( skip ) {
-                    //     skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
-                    //     skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
-                    //}
+                    if ( skip ) {
+                        if (sbis3_controls) {
+                         skip_tests_int_sbis3 = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls'"
+                         skip_tests_reg_sbis3 = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls'"
+                         }
+                         if (vdom_controls) {
+                         skip_tests_int_vdom = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} VDOM controls'"
+                         skip_tests_reg_vdom = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} VDOM controls'"
+                         }
+                    }
 
                 }
             }
             parallel (
                 int_test: {
                     stage("Инт.тесты"){
-                        if ( (inte || all_inte) && smoke_result && run_tests_int){
+                        if ( (inte || all_inte) && smoke_result ){
                             echo "Запускаем интеграционные тесты"
-                            if (sbis3_controls) {
+                            if (sbis3_controls && run_tests_int_sbis3) {
                             dir("./controls/tests/int/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
-									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int_sbis3} ${run_test_fail} ${skip_tests_int_sbis3} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
 									deactivate
 									"""
 								}
                             }
                             }
-                            if (vdom_controls) {
+                            if (vdom_controls && run_tests_int_vdom) {
                                  dir("./controls/tests/int/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
-									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int_vdom} ${run_test_fail} ${skip_tests_int_vdom} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
 									deactivate
 									"""
 								}
@@ -863,25 +905,25 @@ node('controls') {
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( (all_regr || regr) && smoke_result && run_tests_reg){
+                        if ( (all_regr || regr) && smoke_result ){
                             echo "Запускаем тесты верстки"
-                            if (sbis3_controls) {
+                            if (sbis3_controls && run_tests_reg_sbis3) {
                             dir("./controls/tests/reg/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 										source /home/sbis/venv_for_test/bin/activate
-										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg_sbis3} ${run_test_fail} ${skip_tests_reg_sbis3} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
 										deactivate
 									"""
 								}
                             }
                             }
-                            if (vdom_controls) {
+                            if (vdom_controls && run_tests_reg_vdom) {
                                 dir("./controls/tests/reg/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 										source /home/sbis/venv_for_test/bin/activate
-										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg_vdom} ${run_test_fail} ${skip_tests_reg_vdom} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
 										deactivate
 									"""
 								}
