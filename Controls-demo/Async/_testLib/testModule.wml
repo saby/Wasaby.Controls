@@ -1,1 +1,1 @@
-<div>{{_options.isOK}}</div>
+<input value="{{_options.isOK}}" type="text"/>
