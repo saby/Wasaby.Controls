@@ -71,9 +71,9 @@ def return_test_for_run(tests_files) {
     return [run_reg, run_int]
 }
 
-def download_coverage_json(version, type) {
+def download_coverage_json(version, type_tests, type_controls) {
     echo "Выкачиваем файл с зависимостями"
-    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/${type}/coverage/result.json"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${type_controls}_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/${type_tests}/${type_controls}/coverage/result.json"
     script = """
         if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
         echo "result.json exitsts"; mv -f tmp_result.json result.json
@@ -798,7 +798,7 @@ node('controls') {
                         dir("./controls/tests") {
                         if (inte && !boss) {
                             if (sbis3_controls) {
-                                if ( download_coverage_json(version, "int/SBIS3.CONTROLS") ) {
+                                if ( download_coverage_json(version, "int", "SBIS3.CONTROLS") ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
@@ -809,7 +809,7 @@ node('controls') {
                             }
                             }
                             if (vdom_controls) {
-                                if ( download_coverage_json(version, "int/VDOM") ) {
+                                if ( download_coverage_json(version, "int", "VDOM") ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
@@ -825,7 +825,7 @@ node('controls') {
                         }
                         if (regr && !boss) {
                             if (sbis3_controls) {
-                            if ( download_coverage_json(version, 'reg/SBIS3.CONTROLS') ) {
+                            if ( download_coverage_json(version, "reg", "SBIS3.CONTROLS") ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
@@ -836,7 +836,7 @@ node('controls') {
                                }
                             }
                             if (vdom_controls) {
-                                if ( download_coverage_json(version, 'reg/VDOM') ) {
+                                if ( download_coverage_json(version, "reg", "VDOM") ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
