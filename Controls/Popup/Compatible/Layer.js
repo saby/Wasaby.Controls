@@ -95,8 +95,7 @@ define('Controls/Popup/Compatible/Layer', [
       // cachedMethods
       window.cachedMethods = [];
 
-      // product
-      window.product = 'продукт никому не нужен?';
+      // product???
 
       // активность???
    }
@@ -121,9 +120,6 @@ define('Controls/Popup/Compatible/Layer', [
 
    function userInfo() {
       var
-         userSource = new source.SbisService({
-            endpoint: 'Пользователь'
-         }),
          profileSource = new source.SbisService({
             endpoint: 'СервисПрофилей'
          }),
