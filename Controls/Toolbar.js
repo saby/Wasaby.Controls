@@ -125,7 +125,7 @@ define('Controls/Toolbar', [
     */
 
    IoC.resolve('ILogger').error(
-      'Controls/Toolbar' +
+      'Controls/Toolbar',
       'This control is deprecated. Use \'Controls/toolbar:View\' instead'
    );
 
