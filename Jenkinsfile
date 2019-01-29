@@ -216,7 +216,7 @@ node('controls') {
         deleteDir()
         def skip = params.skip
         def changed_files
-        def skip_tests_int_sbs3 = ""
+        def skip_tests_int_sbis3 = ""
         def skip_tests_int_vdom = ""
         def skip_tests_reg_sbis3 = ""
         def skip_tests_reg_vdom = ""
