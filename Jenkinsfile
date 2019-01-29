@@ -282,7 +282,7 @@ node('controls') {
             unit = false
         }
 
-        if (!vdom_controls && !sbis3_controls) {
+        if (!vdom_controls && !sbis3_controls && !unit) {
             exception('Не указан тип контролов для проверки', 'TESTS NOT BUILD')
 
         }
