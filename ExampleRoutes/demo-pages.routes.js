@@ -164,6 +164,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: Explorer
+      '/demo-ws4-explorer': function(req, res) {
+         requirejs('Controls-demo/Explorer/ExplorerWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Explorer/ExplorerWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: Редактирование по месту в полях ввода
       '/demo-ws4-editable-area': function(req, res) {
          requirejs('Controls-demo/EditableArea/EditableAreaWithApplication');
