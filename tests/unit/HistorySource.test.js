@@ -318,6 +318,9 @@ define(
                   assert.equal(error, true);
                });
             });
+            it('getOptions', function() {
+               assert.deepEqual(hSource.getOptions(), {debug: false});
+            });
          });
       });
    });

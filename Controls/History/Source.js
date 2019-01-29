@@ -397,6 +397,10 @@ define('Controls/History/Source', [
 
       getItems: function() {
          return _private.getItemsWithHistory(this, this._history, this._oldItems);
+      },
+      
+      getOptions: function() {
+         return this.originSource.getOptions();
       }
    });
 
