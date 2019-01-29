@@ -88,11 +88,30 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          onResizeContainer: function(self, container, withObserver) {
+            var scrollCompensation = 0;
+            if (self._needCompensation) {
+               var prevHeight = self._sizeCache.scrollHeight;
+               var curHeight = container.scrollHeight;
+
+               if (self._scrollTopCache < (curHeight - prevHeight)) {
+                  scrollCompensation = curHeight - prevHeight;
+               };
+            }
             _private.calcSizeCache(self, container);
             container.scrollTop = self._scrollTopCache;
             _private.sendCanScroll(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight);
             if (!withObserver) {
-               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+               if (scrollCompensation) {
+                  container.scrollTop += scrollCompensation;
+                  //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
+                  //если была компенсация скролла, то следующую проверку необходимости надо звать по таймауту, чтоб подскролл точно успел пройти
+                  window.setTimeout(function(){
+                     _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                  }, 60)
+               }
+               else {
+                  _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+               }
             }
 
          },
@@ -213,9 +232,10 @@ define('Controls/Container/Scroll/Watcher',
                         container.scrollTop += clientHeight;
                      } else {
                         if (scrollParam === 'scrollCompensation') {
-                           if (container.scrollTop == 0) {
+                           if (container.scrollTop === 0) {
                               container.scrollTop = 1;
                            }
+                           self._needCompensation = true;
                         }
                      }
                   }
@@ -239,6 +259,7 @@ define('Controls/Container/Scroll/Watcher',
          _scrollTopTimer: null,
          _scrollPositionCache: null,
          _canScrollCache: null,
+         _needCompensation: false,
 
          constructor: function() {
             Scroll.superclass.constructor.apply(this, arguments);
@@ -260,12 +281,8 @@ define('Controls/Container/Scroll/Watcher',
             _private.onScrollContainer(this, _private.getDOMContainer(this._container), !!this._observer);
          },
 
-         //TODO force - костыль для Controls/Container/Suggest/Layout/Dialog
-         _resizeHandler: function(e, extraOpts, force) {
+         _resizeHandler: function(e) {
             var withObserver = !!this._observer;
-            if (force) {
-               withObserver = false;
-            }
             _private.onResizeContainer(this, _private.getDOMContainer(this._container), withObserver);
          },
 
@@ -275,7 +292,7 @@ define('Controls/Container/Scroll/Watcher',
 
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !detection.isIE12 && !detection.firefox) {
+               if (global && global.IntersectionObserver && triggers && !detection.isIE && !detection.isIE12 && !detection.firefox) {
                   if (!this._observer) {
                      _private.initIntersectionObserver(this, triggers);
                   }

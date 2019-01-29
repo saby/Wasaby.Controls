@@ -997,12 +997,9 @@ define('Controls/List/BaseControl', [
          if (this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.restoreMarkedKey(this);
-            _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
             }
-         } else {
-            _private.checkLoadToDirectionCapability(this);
          }
       },
 
