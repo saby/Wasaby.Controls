@@ -11,6 +11,7 @@ define('Controls/Container/MasterDetail', [
     * @mixes Controls/Container/MasterList/Styles
     * @control
     * @author Волоцкой В.Д.
+    * @public
     * @demo Controls-demo/MasterDetail/Demo
     */
 
