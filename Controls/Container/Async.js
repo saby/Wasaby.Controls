@@ -11,13 +11,13 @@ define('Controls/Container/Async',
    ],
 
    function(Base,
-      Deferred,
-      Request,
-      template,
-      Utils,
-      library,
-      entity,
-      IoC) {
+            Deferred,
+            Request,
+            template,
+            Utils,
+            library,
+            entity,
+            IoC) {
       'use strict';
 
 
@@ -66,9 +66,9 @@ define('Controls/Container/Async',
          },
 
          _beforeUpdate: function(options) {
-            if(options.templateName !== this._options.templateName) {
+            if (options.templateName !== this._options.templateName) {
                this._loadContentAsync(options.templateName, options.templateOptions);
-            } else if(options.templateOptions !== this._options.templateOptions) {
+            } else if (options.templateOptions !== this._options.templateOptions) {
                this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, options);
             }
          },
