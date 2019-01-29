@@ -1,11 +1,11 @@
 import Control = require('Core/Control');
 import SourceController = require('Controls/Controllers/SourceController');
-import template = require('wml!Controls/_toolbar/Toolbar');
+import template = require('wml!Controls/_toolbar/View');
 import toolbarItemTemplate = require('wml!Controls/_toolbar/ToolbarItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from './buttons';
-import 'css!theme?Controls/_toolbar/Toolbar';
+import 'css!theme?Controls/_toolbar/View';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -296,4 +296,4 @@ var Toolbar = Control.extend({
 
 Toolbar._private = _private;
 
-export = Toolbar;
+export default Toolbar;
