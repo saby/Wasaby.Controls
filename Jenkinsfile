@@ -877,7 +877,7 @@ node('controls') {
                             echo "Запускаем интеграционные тесты"
                             parallel (
                             int_sbis3: {
-                            if (sbis3_controls && run_tests_int_sbis3) {
+                            if (run_tests_int_sbis3) {
                             dir("./controls/tests/int/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
@@ -890,7 +890,8 @@ node('controls') {
                             }
                             },
                             int_vdom: {
-                            if (vdom_controls && run_tests_int_vdom) {
+
+                            if (run_tests_int_vdom) {
                                  dir("./controls/tests/int/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
@@ -914,7 +915,7 @@ node('controls') {
                             echo "Запускаем тесты верстки"
                             parallel(
                             reg_sbis3: {
-                            if (sbis3_controls && run_tests_reg_sbis3) {
+                            if (run_tests_reg_sbis3) {
                             dir("./controls/tests/reg/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
@@ -927,7 +928,7 @@ node('controls') {
                             }
                             },
                             reg_vdom: {
-                            if (vdom_controls && run_tests_reg_vdom) {
+                            if (run_tests_reg_vdom) {
                                 dir("./controls/tests/reg/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
@@ -1046,7 +1047,7 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
     }
     gitlabStatusUpdate()
-    if (!run_tests_int && !run_tests_reg) {
+    if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_sbis3 && !unit) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
