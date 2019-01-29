@@ -123,22 +123,24 @@ define('Controls/List/TreeControl', [
          return expandedItems instanceof Array && expandedItems[0] === null;
       },
       beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
-         var parentProperty = cfg.parentProperty;
-         var baseControl = self._children.baseControl;
-         var expandedItemsKeys;
-         
-         if (baseControl) {
-            expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
-         } else {
-            expandedItemsKeys = cfg.expandedItems || [];
-         }
-         
-         if (expandedItemsKeys.length && !_private.isExpandAll(expandedItemsKeys)) {
-            filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [];
-            filter[parentProperty].push(self._root);
-            filter[parentProperty] = filter[parentProperty].concat(expandedItemsKeys);
-         } else {
-            filter[parentProperty] = self._root;
+         if (self._deepReload) {
+            var parentProperty = cfg.parentProperty;
+            var baseControl = self._children.baseControl;
+            var expandedItemsKeys;
+   
+            if (baseControl) {
+               expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
+            } else {
+               expandedItemsKeys = cfg.expandedItems || [];
+            }
+   
+            if (expandedItemsKeys.length && !_private.isExpandAll(expandedItemsKeys)) {
+               filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [];
+               filter[parentProperty].push(self._root);
+               filter[parentProperty] = filter[parentProperty].concat(expandedItemsKeys);
+            } else {
+               filter[parentProperty] = self._root;
+            }
          }
       },
 
@@ -293,7 +295,16 @@ define('Controls/List/TreeControl', [
          _private.loadMore(this, dispItem);
       },
       reload: function() {
-         return this._children.baseControl.reload();
+         var self = this;
+         
+         //deep reload is needed only if reload was called from public API.
+         //otherwise, option changing will work incorrect.
+         //option changing may be caused by search or filtering
+         self._deepReload = true;
+         return this._children.baseControl.reload().addCallback(function(res) {
+            self._deepReload = false;
+            return res;
+         });
       },
       
       reloadItem: function(key, readMeta, direction) {
