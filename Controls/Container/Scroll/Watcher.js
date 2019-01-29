@@ -215,7 +215,7 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         doScroll: function(self, scrollParam, extraParams, container) {
+         doScroll: function(self, scrollParam, container) {
             if (scrollParam === 'top') {
                container.scrollTop = 0;
             } else {
@@ -301,8 +301,8 @@ define('Controls/Container/Scroll/Watcher',
             }
          },
 
-         _doScrollHandler: function(e, scrollParam, extraParams) {
-            _private.doScroll(this, scrollParam, extraParams, _private.getDOMContainer(this._container));
+         _doScrollHandler: function(e, scrollParam) {
+            _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
          },
 
          doScroll: function(scrollParam, extraParams) {
