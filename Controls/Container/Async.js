@@ -70,7 +70,7 @@ define('Controls/Container/Async',
             if (options.templateName !== this._options.templateName) {
                this._loadContentAsync(options.templateName, options.templateOptions);
             } else if (options.templateOptions !== this._options.templateOptions) {
-               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, options);
+               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, options.templateOptions);
             }
          },
 
