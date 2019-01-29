@@ -869,7 +869,7 @@ node('controls') {
                     }
 
                 }
-            }
+
             parallel (
                 int_test: {
                     stage("Инт.тесты"){
@@ -946,6 +946,7 @@ node('controls') {
                     }
                 }
             )
+            }
             if ( !smoke_result ) {
                 exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
             }
