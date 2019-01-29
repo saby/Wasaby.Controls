@@ -86,10 +86,25 @@ define([
             done();
          });
       });
-      it('Update content', function() {
+      it('Update content first', function() {
          async._updateOptionsForComponent('myTemplate', { opt: '123' });
          assert.equal(async.optionsForComponent.opt, '123');
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
+      });
+      it('_beforeUpdate new template', function(done) {
+         async._updateOptionsForComponent('myTemplate', { opt: '123' });
+         async._beforeUpdate({ templateName: 'myTemplateNew', templateOptions: { opt:'234' } });
+         setTimeout(function() {
+            assert.deepEqual(async.loadedAsync, ['myTemplateNew']);
+            assert.equal(async.optionsForComponent.opt, '234');
+            done();
+         }, 10);
+      });
+      it('_beforeUpdate template not changed', function() {
+         async._updateOptionsForComponent('myTemplate', { opt: '123' });
+         async._beforeUpdate({ templateName: 'myTemplate', templateOptions: { opt:'234' } });
+         assert.deepEqual(async.loadedAsync, []);
+         assert.equal(async.optionsForComponent.opt, '234');
       });
       it('Before mount', function(done) {
          var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: { opt: '123' }});
