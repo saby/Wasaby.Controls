@@ -140,7 +140,7 @@ define('Controls/List/TreeControl', [
    
             if (baseControl) {
                expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
-               _private.nodesSourceControllersIterator(nodeSourceControllers, function (node) {
+               _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
                   if (expandedItemsKeys.indexOf(node) === -1) {
                      _private.clearNodeSourceController(nodeSourceControllers, node);
                   }
