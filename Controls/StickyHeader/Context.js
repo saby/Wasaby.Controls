@@ -10,17 +10,24 @@ define('Controls/StickyHeader/Context',
           * @public
           * @type {Number}
           */
-         position: 0,
+         top: 0,
+
+         /**
+          * The position of the fixed header content relative to the bottom of the container.
+          * @public
+          * @type {Number}
+          */
+         bottom: 0,
 
          /**
           * Determines whether shadow should be shown.
           * @public
-          * @type {Boolean}
+          * @type {String}
           */
-         shadowVisible: false,
+         shadowPosition: '',
 
          constructor: function(config) {
-            this.shadowVisible = config.shadowVisible;
+            this.shadowPosition = config.shadowPosition || '';
          }
       });
    }

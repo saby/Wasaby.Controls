@@ -13,6 +13,7 @@ define('Controls/Input/interface/IInputMaskValue', [], function() {
     * @cfg {String} Text in the field without delimiters.
     * @default '' (empty string)
     * @remark If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
+    * The value passed must be raw without delimiters. If you need to get a value with delimiters, then you can do this by the {@link Controls/Input/interface/IInputMaskValue#valueChanged} event.
     * @example
     * In this example you bind _inputValue in control's state to the value of input field. At any time of control's lifecycle, _inputValue will contain the current value of the input field.
     * <pre>
@@ -56,7 +57,7 @@ define('Controls/Input/interface/IInputMaskValue', [], function() {
     *
     *       _valueChangedHandler(value, displayValue) {
     *          this._fieldValue = value;
-    *          this._anotherFieldValue = displayValue;
+    *          this._fieldValueWithDelimiters = displayValue;
     *       },
     *
     *       _anotherFieldValue: ''

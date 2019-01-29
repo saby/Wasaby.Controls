@@ -174,14 +174,14 @@ define('Controls/Application/DepsCollector/DepsCollector', [
    }
 
    function mergePackages(result, addedPackages) {
-      for (var package in addedPackages) {
-         if (addedPackages.hasOwnProperty(package)) {
-            if (result[package] === undefined) {
-               result[package] = {};
+      for (var addedPackage in addedPackages) {
+         if (addedPackages.hasOwnProperty(addedPackage)) {
+            if (result[addedPackage] === undefined) {
+               result[addedPackage] = {};
             }
-            for (var key in addedPackages[package]) {
-               if (addedPackages[package].hasOwnProperty(key)) {
-                  result[package][key] = addedPackages[package][key];
+            for (var key in addedPackages[addedPackage]) {
+               if (addedPackages[addedPackage].hasOwnProperty(key)) {
+                  result[addedPackage][key] = addedPackages[addedPackage][key];
                }
             }
          }

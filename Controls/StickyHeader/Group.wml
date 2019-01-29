@@ -1,14 +1,10 @@
-<div>
-   <ws:if data="{{ _isStickySupport }}">
-      <Controls.Event.Listener event="updateStickyShadow" on:updateStickyShadow="_updateStickyShadow()" attr:style="display: none"/>
-      <Controls.Event.Listener event="updateStickyHeight" on:updateStickyHeight="_updateStickyHeight()" attr:style="display: none"/>
-      <Controls.Event.Registrator name="stickyHeaderShadow" register="updateStickyShadow">
-         <Controls.Event.Registrator name="stickyHeaderHeight" register="updateStickyHeight">
-            <ws:partial template="{{_options.content}}" on:fixed="_fixedHandler()"/>
-         </Controls.Event.Registrator>
+<ws:if data="{{ _isStickySupport }}">
+   <Controls.Event.Registrator name="stickyHeaderShadow" register="updateStickyShadow">
+      <Controls.Event.Registrator name="stickyHeaderHeight" register="updateStickyHeight">
+         <ws:partial template="{{_options.content}}" on:fixed="_fixedHandler()"/>
       </Controls.Event.Registrator>
-   </ws:if>
-   <ws:else>
-      <ws:partial template="{{_options.content}}"/>
-   </ws:else>
-</div>
+   </Controls.Event.Registrator>
+</ws:if>
+<ws:else>
+   <ws:partial template="{{_options.content}}"/>
+</ws:else>

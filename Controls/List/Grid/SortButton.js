@@ -11,6 +11,7 @@ define('Controls/List/Grid/SortButton', [
     *
     * @class Controls/List/Grid/SortButton
     * @extends Core/Control
+    * @mixes Controls/List/Grid/SortButton/Styles
     */
    
    /**

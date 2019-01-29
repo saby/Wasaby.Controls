@@ -10,11 +10,12 @@ define('Controls/Filter/Fast',
       'Core/Deferred',
       'Types/util',
       'Core/helpers/Object/isEqual',
+      'Core/core-merge',
       'css!theme?Controls/Filter/Fast/Fast',
       'css!theme?Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, chain, collection, cInstance, pDeferred, Deferred, Utils, isEqual) {
+   function(Control, template, SourceController, chain, collection, cInstance, pDeferred, Deferred, Utils, isEqual, Merge) {
       'use strict';
 
       /**
@@ -40,13 +41,24 @@ define('Controls/Filter/Fast',
       var _private = {
 
          prepareItems: function(self, items) {
-            if (!cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+            if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
                self._items = new collection.List({
                   items: Utils.object.clone(items)
                });
             } else {
                self._items = Utils.object.clone(items);
             }
+         },
+
+         getItemPopupConfig: function(properties) {
+            var itemConfig = {};
+            itemConfig.keyProperty = properties.keyProperty;
+            itemConfig.displayProperty = properties.displayProperty;
+            itemConfig.itemTemplate = properties.itemTemplate;
+            itemConfig.itemTemplateProperty = properties.itemTemplateProperty;
+            itemConfig.headerTemplate = properties.headerTemplate;
+            itemConfig.footerTemplate = properties.footerTemplate;
+            return itemConfig;
          },
 
          loadItemsFromSource: function(instance, source, keyProperty, filter, navigation) {
@@ -63,9 +75,7 @@ define('Controls/Filter/Fast',
          loadItems: function(self, item, index) {
             var properties = getPropValue(item, 'properties');
 
-            self._configs[index] = {};
-            self._configs[index].keyProperty = properties.keyProperty;
-            self._configs[index].displayProperty = properties.displayProperty;
+            self._configs[index] = _private.getItemPopupConfig(properties);
 
             if (properties.items) {
                _private.prepareItems(self._configs[index], properties.items);
@@ -112,10 +122,11 @@ define('Controls/Filter/Fast',
          },
 
          onResult: function(result) {
-            var data = result.data;
-            _private.selectItem.apply(this, data);
-            _private.notifyChanges(this, this._items);
-            this._children.DropdownOpener.close();
+            if (result.action === 'itemClick') {
+               _private.selectItem.apply(this, result.data);
+               _private.notifyChanges(this, this._items);
+               this._children.DropdownOpener.close();
+            }
          },
 
          setTextValue: function(item, textValue) {
@@ -179,19 +190,12 @@ define('Controls/Filter/Fast',
             if (this._options.readOnly) {
                return;
             }
+            var templateOptions = {
+               items: this._configs[index]._items,
+               selectedKeys: getPropValue(this._items.at(index), 'value')
+            };
             var config = {
-               templateOptions: {
-                  items: this._configs[index]._items,
-                  keyProperty: this._configs[index].keyProperty,
-                  displayProperty: this._configs[index].displayProperty,
-                  parentProperty: getPropValue(item, 'parentProperty'),
-                  nodeProperty: getPropValue(item, 'nodeProperty'),
-                  itemTemplateProperty: getPropValue(item, 'itemTemplateProperty'),
-                  itemTemplate: getPropValue(item, 'itemTemplate'),
-                  headTemplate: getPropValue(item, 'headTemplate'),
-                  footerTemplate: getPropValue(item, 'footerTemplate'),
-                  selectedKeys: getPropValue(this._items.at(index), 'value')
-               },
+               templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
 
                //FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]

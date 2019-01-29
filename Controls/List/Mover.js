@@ -160,18 +160,18 @@ define('Controls/List/Mover', [
       },
 
       getModelByItem: function(self, item) {
-         return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item : self._items.getRecordById(item);
+         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item : self._items.getRecordById(item);
       },
 
       getIdByItem: function(self, item) {
-         return cInstance.instanceOfModule(item, 'WS.Data/Entity/Model') ? item.get(self._keyProperty) : item;
+         return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
       }
    };
 
    /**
     * Сontrol to move the list items in recordSet and dataSource.
     * Сontrol must be in one Controls.Container.Data with a list.
-    * <a href="/materials/demo/demo-ws4-operations-panel">Demo examples.</a>.
+    * <a href="/materials/demo/demo-ws4-operations-panel?v=19.100">Demo examples</a>.
     * @class Controls/List/Mover
     * @extends Core/Control
     * @mixes Controls/interface/IMovable

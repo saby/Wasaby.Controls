@@ -1,0 +1,14 @@
+{
+   "Controls/Grid": {
+      "properties": {
+         "ws-config": {
+            "title": "Базовая конфигурация",
+            "options": {
+               "editingConfig": {
+                  "type": "Object"
+               }
+            }
+         }
+      }
+   }
+}

@@ -20,7 +20,7 @@ define('Controls/Input/Date/Picker', [
     * @class Controls/Input/Date/Picker
     * @extends Core/Control
     * @mixes Controls/Input/interface/IInputBase
-    * @mixes Controls/Input/interface/IInputText
+    * @mixes Controls/Input/interface/IInputField
     * @mixes Controls/Input/interface/IInputDateTime
     * @mixes Controls/Input/interface/IInputTag
     * @mixes Controls/Input/interface/IDateMask

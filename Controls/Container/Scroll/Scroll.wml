@@ -15,7 +15,7 @@
                            {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
                     on:controlResize="_resizeHandler()"
                     on:scroll="_scrollHandler()">
-                  <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="controls-Scroll__userContent" on:fixed="_fixedHandler()" on:selectedKeysChanged="_tmplNotify('selectedKeysChanged')"/>
+                  <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="controls-Scroll__userContent" on:fixed="_fixedHandler()" on:selectedKeysChanged="_tmplNotify('selectedKeysChanged')" on:excludedKeysChanged="_tmplNotify('excludedKeysChanged')"/>
                </span>
             </Controls.Event.Registrator>
          </Controls.Event.Registrator>
@@ -43,10 +43,8 @@
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>
       <ws:if data="{{_options.shadowVisible && _displayState.hasScroll}}">
-         <div class="controls-Scroll__shadow controls-Scroll__shadow_top
-                     {{ !_topShadowVisible() ? ' ws-invisible'}}"></div>
-         <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom
-                     {{_displayState.shadowPosition.indexOf('bottom') === -1 ? ' ws-invisible'}}"></div>
+         <div class="controls-Scroll__shadow controls-Scroll__shadow_top {{!_shadowVisible('top') ? ' ws-invisible'}}"></div>
+         <div class="controls-Scroll__shadow controls-Scroll__shadow_bottom {{!_shadowVisible('bottom') ? ' ws-invisible'}}"></div>
       </ws:if>
 
       <ws:if data="{{_pagingState.visible}}">

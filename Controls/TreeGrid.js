@@ -26,10 +26,23 @@ define('Controls/TreeGrid', [
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
+    * @mixes Controls/interface/ITreeGridItemTemplates
+    *
+    * @mixes Controls/List/BaseControlStyles
+    * @mixes Controls/List/ListStyles
+    * @mixes Controls/List/Grid/GridStyles
+    * @mixes Controls/List/TreeGrid/Styles
+    *
+    * @mixes Controls/List/Mover/MoveDialog/Styles
+    * @mixes Controls/List/PagingStyles
+    * @mixes Controls/List/DigitButtonsStyles
+    * @mixes Controls/List/Grid/SortButtonStyles
+    *
     * @control
     * @public
     * @author Авраменко А.С.
     * @category List
+    * @demo Controls-demo/List/TreeGrid/BasePG
     */
 
    var Tree = Grid.extend(/** @lends Controls/TreeGrid */{

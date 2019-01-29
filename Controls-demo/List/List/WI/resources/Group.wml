@@ -1,4 +1,4 @@
-<Controls.Application.ApplicationWrapper caption="Demo-example: group.">
+<Controls.Application.ApplicationWrapper caption="List Group" demoname="Controls-demo/List/List/GroupPG.wml">
     <ws:content>
         <Controls-demo.List.List.GroupPG/>
     </ws:content>

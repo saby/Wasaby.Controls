@@ -1,0 +1,13 @@
+<div class="controls-FilterPanel__Lookup">
+   <Controls.Selector.Lookup.Link
+           caption="{{_options.caption}}"
+           on:click="showSelector()"/>
+   <div class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
+      <Controls.Selector.Lookup
+              name="lookup"
+              class="controls-FilterPanel__LookupSelector"
+              bind:selectedKeys="_options.selectedKeys"
+              on:selectedKeysChanged="_showLookup()"
+              scope="{{_options}}"/>
+   </div>
+</div>

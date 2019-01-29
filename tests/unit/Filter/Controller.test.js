@@ -26,6 +26,35 @@ define(['Controls/Filter/Controller'], function(Filter) {
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
       });
 
+      it('_beforeMount::receivedState', function() {
+         var filterLayout = new Filter();
+         var items = [{
+            id: 'testKey',
+            value: 'testValue',
+            textValue: 'testText',
+            resetValue: ''
+         }, {
+            id: 'testKey2',
+            value: 'testValue',
+            textValue: 'testText2',
+            resetValue: ''
+         }];
+         var receivedItems = [{
+            id: 'testKey',
+            value: 'historyValue',
+            textValue: 'historyText'
+         }, {
+            id: 'testKey2',
+            value: 'testValue',
+            textValue: 'testText2'
+         }];
+         var fastItems = [];
+         filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems }, {}, receivedItems);
+         assert.deepEqual(filterLayout._filterButtonItems[0].textValue, 'historyText');
+         assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
+         assert.deepEqual(filterLayout._filter, {testKey: 'historyValue', testKey2: 'testValue'});
+      });
+
       it('_beforeUpdate new items', function () {
          var filterLayout = new Filter();
          filterLayout.saveOptions({filterButtonSource: []});
@@ -474,6 +503,17 @@ define(['Controls/Filter/Controller'], function(Filter) {
       it('_private.getHistoryItems', function(done) {
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items.length, 15);
+            done();
+         });
+      });
+
+      it('_private.updateHistory', function(done) {
+         var fastFilterItems = [];
+
+         var filterButtonItems = [];
+         Filter._private.updateHistory({}, filterButtonItems, fastFilterItems, 'TEST_HISTORY_ID');
+         Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
+            assert.deepEqual(items, {});
             done();
          });
       });

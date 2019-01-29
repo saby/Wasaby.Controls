@@ -2,7 +2,7 @@ define('Controls/StickyHeader/_StickyHeader',
    [
       'Core/Control',
       'Core/detection',
-      'WS.Data/Type/descriptor',
+      'Types/entity',
       'Controls/StickyHeader/Context',
       'Controls/StickyHeader/Utils',
       'Controls/Utils/IntersectionObserver',
@@ -11,7 +11,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
       'css!theme?Controls/StickyHeader/_StickyHeader/StickyHeader'
    ],
-   function(Control, detection, types, Context, stickyUtils, IntersectionObserver, Model, template) {
+   function(Control, detection, entity, Context, stickyUtils, IntersectionObserver, Model, template) {
 
       'use strict';
 
@@ -56,7 +56,7 @@ define('Controls/StickyHeader/_StickyHeader',
          _isMobilePlatform: detection.isMobilePlatform,
 
          _shadowVisible: true,
-         _stickyHeadersHeight: 0,
+         _stickyHeadersHeight: null,
 
          _index: null,
 
@@ -64,6 +64,10 @@ define('Controls/StickyHeader/_StickyHeader',
             StickyHeader.superclass.constructor.call(this);
             this._observeHandler = this._observeHandler.bind(this);
             this._index = stickyUtils.getNextId();
+            this._stickyHeadersHeight = {
+               top: 0,
+               bottom: 0
+            };
          },
 
          _afterMount: function() {
@@ -72,7 +76,8 @@ define('Controls/StickyHeader/_StickyHeader',
             this._observer = new IntersectionObserver(this._observeHandler);
             this._model = new Model({
                topTarget: children.observationTargetTop,
-               bottomTarget: children.observationTargetBottom
+               bottomTarget: children.observationTargetBottom,
+               position: this._options.position
             });
 
             this._observer.observe(children.observationTargetTop);
@@ -83,6 +88,8 @@ define('Controls/StickyHeader/_StickyHeader',
             this._model.destroy();
             this._observer.disconnect();
 
+            //Let the listeners know that the element is no longer fixed before the unmount.
+            this._fixationStateChangeHandler('', this._model.fixedPosition);
             this._observeHandler = undefined;
          },
 
@@ -92,12 +99,13 @@ define('Controls/StickyHeader/_StickyHeader',
           * @private
           */
          _observeHandler: function(entries) {
-            var shouldBeFixed = this._model.shouldBeFixed;
+            var fixedPosition = this._model.fixedPosition;
 
             this._model.update(entries);
 
-            if (this._model.shouldBeFixed !== shouldBeFixed) {
-               this._fixationStateChangeHandler();
+            if (this._model.fixedPosition !== fixedPosition) {
+               this._fixationStateChangeHandler(this._model.fixedPosition, fixedPosition);
+               this._forceUpdate();
             }
          },
 
@@ -105,57 +113,74 @@ define('Controls/StickyHeader/_StickyHeader',
           * To inform descendants about the fixing status. To update the state of the instance.
           * @private
           */
-         _fixationStateChangeHandler: function() {
+         _fixationStateChangeHandler: function(newPosition, prevPosition) {
             var information = {
                id: this._index,
-               shouldBeFixed: this._model.shouldBeFixed,
+               fixedPosition: newPosition,
                offsetHeight: this._container.offsetHeight,
+               prevPosition: prevPosition,
                mode: this._options.mode
             };
 
-            this._shadowVisible = this._model.shouldBeFixed;
-
-            this._forceUpdate();
+            this._shadowVisible = !!newPosition;
             this._notify('fixed', [information], {bubbling: true});
          },
 
          _getStyle: function() {
-            var top = 0;
+            var
+               top,
+               bottom,
+               offset,
+               position,
+               style = '';
 
-            if (this._context.stickyHeader) {
-               top = this._context.stickyHeader.position + this._stickyHeadersHeight;
-            }
 
-            /**
-             * On android and ios there is a gap between child elements.
-             * When the header is fixed, there is a space between the container, relative to which it is fixed,
-             * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
-             * https://jsfiddle.net/tz52xr3k/3/
-             *
-             * As a solution, move the header up and increase its size by an offset, using padding.
-             * In this way, the content of the header does not change visually, and the free space disappears.
-             * The offset must be at least as large as the free space. Take the nearest integer equal to one.
-             */
-            var offset = this._isMobilePlatform ? 1 : 0;
 
-            var style = 'top: ' + (top - offset) + 'px;';
+            if (this._model && !!this._model.fixedPosition) {
+               /**
+               * On android and ios there is a gap between child elements.
+               * When the header is fixed, there is a space between the container, relative to which it is fixed,
+               * and the header, through which you can see the scrolled content. Its size does not exceed one pixel.
+               * https://jsfiddle.net/tz52xr3k/3/
+               *
+               * As a solution, move the header up and increase its size by an offset, using padding.
+               * In this way, the content of the header does not change visually, and the free space disappears.
+               * The offset must be at least as large as the free space. Take the nearest integer equal to one.
+               */
+               offset = this._isMobilePlatform ? 1 : 0;
+               position = this._stickyHeadersHeight[this._model.fixedPosition];
 
-            if (offset) {
-               style += ' padding-top: ' + offset + 'px;';
-            }
+               if (this._context.stickyHeader) {
+                  position += this._context.stickyHeader[this._model.fixedPosition];
+               }
 
-            if (this._model && this._model.shouldBeFixed) {
-               style += ' z-index: ' + this._options.fixedZIndex + ';';
+               style = this._model.fixedPosition + ': ' + (position - offset) + 'px;';
+
+               if (offset) {
+                  style += 'padding-' + this._model.fixedPosition + ': ' + offset + 'px;';
+               }
+
+               style += 'z-index: ' + this._options.fixedZIndex + ';';
+            } else {
+               top = this._stickyHeadersHeight.top;
+               bottom = this._stickyHeadersHeight.bottom;
+
+               if (this._context.stickyHeader) {
+                  top += this._context.stickyHeader.top;
+                  bottom += this._context.stickyHeader.bottom;
+               }
+               style += 'top: ' + top  + 'px;';
+               style += 'bottom: ' + bottom + 'px;';
             }
 
             return style;
          },
 
-         _getTopObserverStyle: function() {
+         _getObserverStyle: function(position) {
             // The top observer has a height of 1 pixel. In order to track when it is completely hidden
             // beyond the limits of the scrollable container, taking into account round-off errors,
-            // it should be located with an offset of -2 pixels from the upper border of the container.
-            return 'top: -' + (this._stickyHeadersHeight + 2) + 'px;';
+            // it should be located with an offset of -3 pixels from the upper border of the container.
+            return position + ': -' + (this._stickyHeadersHeight[position] + 3) + 'px;';
          },
 
          _updateStickyShadow: function(e, ids) {
@@ -163,14 +188,17 @@ define('Controls/StickyHeader/_StickyHeader',
          },
 
          _updateStickyHeight: function(e, height) {
-            if (!this._model.shouldBeFixed) {
+            if (!this._model.fixedPosition) {
                this._stickyHeadersHeight = height;
             }
          },
 
-         _isShadowVisible: function() {
-            return (!this._context.stickyHeader || this._context.stickyHeader.shadowVisible) &&
-               this._model && this._model.shouldBeFixed && this._options.shadowVisibility === 'visible' &&
+         _isShadowVisible: function(shadowPosition) {
+            //The shadow from above is shown if the element is fixed from below, from below if the element is fixed from above.
+            var fixedPosition = shadowPosition === 'top' ? 'bottom' : 'top';
+
+            return (!this._context.stickyHeader || this._context.stickyHeader.shadowPosition.indexOf(fixedPosition) !== -1) &&
+               this._model && this._model.fixedPosition === fixedPosition && this._options.shadowVisibility === 'visible' &&
                (this._options.mode === 'stackable' || this._shadowVisible);
          }
       });
@@ -189,19 +217,25 @@ define('Controls/StickyHeader/_StickyHeader',
             //TODO: https://online.sbis.ru/opendoc.html?guid=a5acb7b5-dce5-44e6-aa7a-246a48612516
             fixedZIndex: 2,
             shadowVisibility: 'visible',
-            mode: 'replaceable'
+            mode: 'replaceable',
+            position: 'top'
          };
       };
 
       StickyHeader.getOptionTypes = function() {
          return {
-            shadowVisibility: types(String).oneOf([
+            shadowVisibility: entity.descriptor(String).oneOf([
                'visible',
                'hidden'
             ]),
-            mode: types(String).oneOf([
+            mode: entity.descriptor(String).oneOf([
                'replaceable',
                'stackable'
+            ]),
+            position: entity.descriptor(String).oneOf([
+               'top',
+               'bottom',
+               'topbottom'
             ])
          };
       };

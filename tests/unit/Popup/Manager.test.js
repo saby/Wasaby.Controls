@@ -69,6 +69,24 @@ define(
             assert.equal(element.popupOptions.testOption, 'created');
          });
 
+         it('getMaxZIndexPopupIdForActivate', function() {
+            let Manager = getManager();
+            let id1 = Manager.show({}, new BaseController());
+            let id2 = Manager.show({autofocus: false}, new BaseController());
+            let id3 = Manager.show({}, new BaseController());
+
+            let maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
+            assert.equal(maxPopupId, id3);
+            Manager.remove(id3);
+
+            maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
+            assert.equal(maxPopupId, id1);
+            Manager.remove(id1);
+
+            maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
+            assert.equal(maxPopupId, null);
+         });
+
          it('find popup', () => {
             let Manager = getManager();
             id = Manager.show({
@@ -120,12 +138,12 @@ define(
                }
             });
 
-            Manager._private.fireEventHandler(id, 'onClose');
+            Manager._private.fireEventHandler.call(Manager, id, 'onClose');
 
             assert.isTrue(eventCloseFired, 'event is not fired.');
             assert.isTrue(eventOnCloseFired, 'event is not fired.');
 
-            Manager._private.fireEventHandler(id, 'onResult', '1', '2');
+            Manager._private.fireEventHandler.call(Manager, id, 'onResult', '1', '2');
          });
 
          it('remove popup', function() {
@@ -135,6 +153,27 @@ define(
             }, new BaseController());
             Manager.remove(id);
             assert.equal(Manager._popupItems.getCount(), 0);
+         });
+
+         it('remove popup and check event', function() {
+            let Manager = getManager();
+            let eventCloseFired = false;
+            let eventOnCloseFired = false;
+            id = Manager.show({
+               eventHandlers: {
+                  onClose: function () {
+                     eventCloseFired = true;
+                  }
+               },
+               _events: {
+                  onClose: () => {
+                     eventOnCloseFired = true;
+                  }
+               }
+            }, new BaseController());
+            Manager.remove(id);
+            assert.equal(eventCloseFired, true);
+            assert.equal(eventOnCloseFired, true);
          });
 
          it('add modal popup', function() {
@@ -287,13 +326,13 @@ define(
             };
             let Manager = getManager();
             var isCreateNotified;
-            Manager._private._notify = function(event, args, params) {
+            Manager._notify = function(event, args, params) {
                isCreateNotified = event === 'managerPopupCreated';
                assert.isTrue(popupOptions === args[0].popupOptions);
                assert.isTrue(params.hasOwnProperty('bubbling'));
             };
             let id0 = Manager.show(popupOptions, new BaseController());
-            Manager._private.popupCreated(id0);
+            Manager._private.popupCreated.call(Manager, id0);
             assert.isTrue(isCreateNotified);
             assert.isTrue(isPopupOpenedEventTriggered);
          });

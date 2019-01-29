@@ -17,7 +17,7 @@ define('Controls/Input/Password',
        *
        * @class Controls/Input/Password
        * @extends Core/Control
-       * @mixes Controls/Input/interface/IInputText
+       * @mixes Controls/Input/interface/IInputField
        * @mixes Controls/Input/interface/IInputPlaceholder
        * @mixes Controls/Input/interface/IInputTag
        * @mixes Controls/Input/Password/PasswordStyles
@@ -26,7 +26,7 @@ define('Controls/Input/Password',
        * @public
        * @category Input
        * @demo Controls-demo/Input/Password/Password
-       * @demo Controls-demo/Input/Password/Password
+       * @demo Controls-demo/Input/Password/PasswordPG
        *
        * @author Журавлев М.С.
        */

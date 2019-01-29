@@ -25,10 +25,22 @@ define('Controls/Grid', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IGridControl
+    * @mixes Controls/interface/IGridItemTemplate
+    *
+    * @mixes Controls/List/BaseControlStyles
+    * @mixes Controls/List/ListStyles
+    * @mixes Controls/List/Grid/GridStyles
+    *
+    * @mixes Controls/List/Mover/MoveDialog/Styles
+    * @mixes Controls/List/PagingStyles
+    * @mixes Controls/List/DigitButtonsStyles
+    * @mixes Controls/List/Grid/SortButtonStyles
+    *
     * @control
     * @public
     * @author Авраменко А.С.
     * @category List
+    * @demo Controls-demo/List/Grid/BasePG
     */
 
    var
