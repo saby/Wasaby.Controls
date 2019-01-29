@@ -23,9 +23,9 @@ define('Controls/Popup/Opener/Sticky',
           * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
           * @property {function|String} template Template inside popup.
           * @property {function|String} templateOptions Template options inside popup.
-          * @property {Number} corner Sets the popup build point relative target.
-          * @property {Number} horizontalAlign Sets the horizontal alignment of the popup.
-          * @property {Number} verticalAlign Sets the vertical alignment of the popup.
+          * @property {Object} corner Sets the popup build point relative target.
+          * @property {Object} horizontalAlign Sets the horizontal alignment of the popup.
+          * @property {Object} verticalAlign Sets the vertical alignment of the popup.
           * @property {Number} target The maximum width of the panel in a maximized state.
           * @property {Number} minWidth The target relative to which the popup is positioned.
           * @property {Number} maxWidth The minimum width of popup.

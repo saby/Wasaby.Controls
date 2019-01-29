@@ -68,22 +68,29 @@ define('Controls/Popup/InfoBox',
        */
 
       /**
-       * @name Controls/Popup/InfoBox#position
-       * @cfg {String} Point positioning of the target relative to infobox.
+       * @name Controls/Popup/InfoBox#originPoint
+       * @cfg {originPoint} Point positioning of the target relative to infobox.
        * Popup displayed on the top of the target and aligned by left border.
-       * @variant tl Popup displayed on the top of the target and aligned by left border.
-       * @variant tc Popup displayed on the top of the target and aligned by center.
-       * @variant tr Popup displayed on the top of the target and aligned by right border.
-       * @variant bl Popup displayed on the bottom of the target and aligned by left border.
-       * @variant bc Popup displayed on the bottom of the target and aligned by center.
-       * @variant br Popup displayed on the bottom of the target and aligned by right border.
-       * @variant rt Popup displayed on the right of the target and aligned by top border.
-       * @variant rc Popup displayed on the right of the target and aligned by center.
-       * @variant rb Popup displayed on the right of the target and aligned by bottom border.
-       * @variant lt Popup displayed on the left of the target and aligned by top border.
-       * @variant lc Popup displayed on the left of the target and aligned by center.
-       * @variant lb Popup displayed on the left of the target and aligned by bottom border
-       * @default tl
+       */
+
+      /**
+       * @typedef {Object} originPoint
+       * @property {vertical} vertical Algorithm with which the data source works.
+       * @property {horizontal} horizontal
+       */
+
+      /**
+       * @typedef {Enum} vertical
+       * @variant top
+       * @variant middle
+       * @variant bottom
+       */
+
+      /**
+       * @typedef {Enum} horizontal
+       * @variant left
+       * @variant center
+       * @variant right
        */
 
       /**
@@ -107,7 +114,7 @@ define('Controls/Popup/InfoBox',
        * @variant click Opening by click on the content. Closing by click not on the content or template.
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
-       * @variant hover|touch Opening by hover or touch on the content. Closing by hover not on the content or template.
+       * @variant hoverAndTouch Opening by hover or touch on the content. Closing by hover not on the content or template.
        * @default hover
        */
 
@@ -121,9 +128,9 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#style
        * @cfg {String} Infobox display style.
        * @variant default
-       * @variant lite
-       * @variant help
-       * @variant error
+       * @variant secondary
+       * @variant primary
+       * @variant danger
        */
 
 
