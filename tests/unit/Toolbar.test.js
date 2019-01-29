@@ -211,7 +211,7 @@ define(
                currentTarget: 'target'
             },
             config = {
-               className: 'controls-Toolbar__popup__icon popupClassName',
+               className: 'controls-Toolbar__popup popupClassName',
                corner: {
                   horizontal: 'left',
                   vertical: 'top'
@@ -246,7 +246,7 @@ define(
                _menuItems: 'menuItems'
             },
             config = {
-               className: 'controls-Toolbar__popup__list popupClassName',
+               className: 'controls-Toolbar__popup_list popupClassName',
                target: 'popupTarget',
                templateOptions: {
                   items: 'menuItems'
