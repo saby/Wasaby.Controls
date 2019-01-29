@@ -17,6 +17,7 @@
       on:focusout="_focusOutHandler()"
       on:mousedown="_mouseDownHandler()"
       on:touchstart="_touchStartHandler()"
+      on:DOMAutoComplete="_domAutoCompleteHandler()"
    />
    <ws:if data="{{!value}}">
       <div class="controls-InputBase__placeholder">
