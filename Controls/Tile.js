@@ -21,6 +21,7 @@ define('Controls/Tile', [
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
+    * @mixes Controls/List/interface/IDraggable
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles

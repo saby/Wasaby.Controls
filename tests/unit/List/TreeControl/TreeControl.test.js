@@ -23,6 +23,7 @@ define([
       var
          treeControl,
          baseControl,
+         treeBeforeUpdate,
          cfgBaseControl,
          cfgTreeControl = cMerge(cfg, {
             viewModelConstructor: TreeGridViewModel
@@ -41,6 +42,11 @@ define([
       treeControl._children = {
          baseControl: baseControl
       };
+      treeBeforeUpdate = treeControl._beforeUpdate;
+      treeControl._beforeUpdate = function() {
+         treeBeforeUpdate.apply(treeControl, arguments);
+         baseControl._beforeUpdate(treeControl._options);
+      };
       return treeControl;
    }
    
@@ -56,27 +62,45 @@ define([
    
    describe('Controls.List.TreeControl', function() {
       it('TreeControl.reload', function(done) {
-         var
-            treeControl = correctCreateTreeControl({
+         var treeControl = correctCreateTreeControl({
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
                   idProperty: 'id'
                })
-            }),
-            isSourceControllerDestroyed = false;
+            });
+         var isSourceControllerNode1Destroyed = false;
+         var isSourceControllerNode2Destroyed = false;
+         
+         //viewmodel moch
+         treeControl._children.baseControl.getViewModel = function() {
+            return {
+               getExpandedItems: function() {
+                  return {
+                     '1': true
+                  };
+               }
+            };
+         };
+   
          treeControl._nodesSourceControllers = {
             1: {
                destroy: function() {
-                  isSourceControllerDestroyed = true;
+                  isSourceControllerNode1Destroyed = true;
+               }
+            },
+            2: {
+               destroy: function() {
+                  isSourceControllerNode2Destroyed = true;
                }
             }
          };
          setTimeout(function() {
             treeControl.reload();
             setTimeout(function() {
-               assert.isTrue(!!Object.keys(treeControl._nodesSourceControllers).length, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
-               assert.isFalse(isSourceControllerDestroyed, 'Invalid value "isSourceControllerDestroyed" after call "treeControl.reload()".');
+               assert.equal(Object.keys(treeControl._nodesSourceControllers).length, 1, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
+               assert.isFalse(isSourceControllerNode1Destroyed, 'Invalid value "isSourceControllerNode1Destroyed" after call "treeControl.reload()".');
+               assert.isTrue(isSourceControllerNode2Destroyed, 'Invalid value "isSourceControllerNode2Destroyed" after call "treeControl.reload()".');
                done();
             }, 10);
          }, 10);
@@ -149,12 +173,18 @@ define([
          var
             reloadCalled = false,
             setRootCalled = false,
+            filterOnOptionChange = null,
             treeControl = correctCreateTreeControl({
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
                   idProperty: 'id'
                }),
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
                parentProperty: 'parent'
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
@@ -171,16 +201,25 @@ define([
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
          setTimeout(function() {
-            treeControl._beforeUpdate({ root: 'testRoot' });
-            assert.deepEqual(treeGridViewModel.getExpandedItems(), {'testRoot': true});
-            
-            treeControl._afterUpdate({ root: null });
-            assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-            setTimeout(function() {
-               assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
-               assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
-               done();
-            }, 10);
+   
+            treeControl._children.baseControl._options.beforeReloadCallback = function(filter) {
+               treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
+               filterOnOptionChange = filter;
+            };
+            treeControl._children.baseControl.reload().addCallback(function(res) {
+               treeControl._beforeUpdate({root: 'testRoot'});
+               assert.deepEqual(treeGridViewModel.getExpandedItems(), {'testRoot': true});
+               assert.deepEqual(filterOnOptionChange, {});
+      
+               treeControl._afterUpdate({root: null});
+               assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
+               setTimeout(function () {
+                  assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
+                  assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                  done();
+               }, 10);
+               return res;
+            });
          }, 10);
       });
       it('TreeControl._private.prepareHasMoreStorage', function() {
