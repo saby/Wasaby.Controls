@@ -18,6 +18,8 @@
             {{_options.dependencies | unescape}}], function(AppData, AppStart, Core, tclosure, makeInstanceCompatible, Control) {
             var templCtr = new Control({});
             makeInstanceCompatible(templCtr);
+            // создали фейковый контрол, сразу удалим его, чтобы он не находился при восстановлении фокуса в WindowManager
+            templCtr.destroy();
             window.startContextData = {AppData: new AppData({})};
             var templateFn = {{_options.builder | unescape}};
             templateFn.stable = true;
