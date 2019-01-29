@@ -1,0 +1,5 @@
+<Controls.Application.ApplicationWrapper caption="Buttons" demoname="Controls-demo/Toolbar/ToolbarVdom.wml">
+    <ws:content>
+        <Controls-demo.Toolbar.ToolbarVdom/>
+    </ws:content>
+</Controls.Application.ApplicationWrapper>
