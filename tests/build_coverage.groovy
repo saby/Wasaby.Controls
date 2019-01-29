@@ -275,7 +275,7 @@ def building(workspace, version, scheduler=null) {
             """
         }
         stage("Тесты"){
-            writeFile file: "./controls/tests/int/${type_controls}/config.ini", text:
+            writeFile file: "${workspace}/controls/tests/int/${type_controls}/config.ini", text:
             """# UTF-8
             [general]
             browser = chrome
@@ -291,7 +291,7 @@ def building(workspace, version, scheduler=null) {
             WAIT_ELEMENT_LOAD = 20
             HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/${type_controls}"""
 
-            writeFile file: "./controls/tests/reg/${type_controls}/config.ini", text:
+            writeFile file: "${workspace}/controls/tests/reg/${type_controls}/config.ini", text:
             """# UTF-8
             [general]
             browser = chrome
