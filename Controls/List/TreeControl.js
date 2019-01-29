@@ -27,13 +27,22 @@ define('Controls/List/TreeControl', [
       DEFAULT_COLUMNS_VALUE = [];
 
    var _private = {
-      clearSourceControllers: function(self) {
-         for (var prop in self._nodesSourceControllers) {
-            if (self._nodesSourceControllers.hasOwnProperty(prop)) {
-               self._nodesSourceControllers[prop].destroy();
-               delete self._nodesSourceControllers[prop];
+      nodesSourceControllersIterator: function(nodesSourceControllers, callback) {
+         for (var prop in nodesSourceControllers) {
+            if (nodesSourceControllers.hasOwnProperty(prop)) {
+               callback(prop, nodesSourceControllers[prop]);
             }
          }
+      },
+      clearNodeSourceController: function(sourceControllers, node) {
+         sourceControllers[node].destroy();
+         delete sourceControllers[node];
+         return sourceControllers;
+      },
+      clearSourceControllers: function(self) {
+         _private.nodesSourceControllersIterator(self._nodesSourceControllers, function(node) {
+            _private.clearNodeSourceController(self._nodesSourceControllers, node);
+         });
       },
       createSourceController: function(source, navigation) {
          return new SourceController({
@@ -126,10 +135,16 @@ define('Controls/List/TreeControl', [
          if (self._deepReload) {
             var parentProperty = cfg.parentProperty;
             var baseControl = self._children.baseControl;
+            var nodeSourceControllers = self._nodesSourceControllers;
             var expandedItemsKeys;
    
             if (baseControl) {
                expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
+               _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
+                  if (expandedItemsKeys.indexOf(node) === -1) {
+                     _private.clearNodeSourceController(nodeSourceControllers, node);
+                  }
+               });
             } else {
                expandedItemsKeys = cfg.expandedItems || [];
             }
