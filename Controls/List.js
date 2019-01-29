@@ -32,6 +32,7 @@ define('Controls/List', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IList
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/interface/IDraggable
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles
