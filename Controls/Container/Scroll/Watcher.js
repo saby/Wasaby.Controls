@@ -53,7 +53,6 @@ define('Controls/Container/Scroll/Watcher',
             //Проверка на триггеры начала/конца блока
             if (scrollTop <= 0) {
                eventNames.push('listTop');
-
             }
             if (scrollTop + clientHeight >= scrollHeight) {
                eventNames.push('listBottom');
@@ -95,7 +94,7 @@ define('Controls/Container/Scroll/Watcher',
 
                if (self._scrollTopCache < (curHeight - prevHeight)) {
                   scrollCompensation = curHeight - prevHeight;
-               };
+               }
             }
             _private.calcSizeCache(self, container);
             container.scrollTop = self._scrollTopCache;
@@ -103,13 +102,13 @@ define('Controls/Container/Scroll/Watcher',
             if (!withObserver) {
                if (scrollCompensation) {
                   container.scrollTop += scrollCompensation;
+
                   //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
                   //если была компенсация скролла, то следующую проверку необходимости надо звать по таймауту, чтоб подскролл точно успел пройти
-                  window.setTimeout(function(){
+                  window.setTimeout(function() {
                      _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
-                  }, 60)
-               }
-               else {
+                  }, 60);
+               } else {
                   _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
                }
             }
