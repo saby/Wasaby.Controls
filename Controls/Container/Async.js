@@ -11,13 +11,13 @@ define('Controls/Container/Async',
    ],
 
    function(Base,
-            Deferred,
-            Request,
-            template,
-            Utils,
-            library,
-            entity,
-            IoC) {
+      Deferred,
+      Request,
+      template,
+      Utils,
+      library,
+      entity,
+      IoC) {
       'use strict';
 
 
@@ -56,6 +56,7 @@ define('Controls/Container/Async',
                promiseResult = this._loadContentAsync(options.templateName, options.templateOptions);
             } else {
                promiseResult = this._loadServerSide(options.templateName, options.templateOptions);
+
                // We don't need to return resolved template on server
                // We just need to wait till it loaded
                promiseResult = promiseResult.then(function() {
