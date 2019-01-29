@@ -26,6 +26,7 @@ define('Controls/Grid', [
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IGridControl
     * @mixes Controls/interface/IGridItemTemplate
+    * @mixes Controls/List/interface/IDraggable
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles

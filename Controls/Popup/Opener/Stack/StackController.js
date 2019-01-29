@@ -220,6 +220,7 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          _update: function() {
             var maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            var maxWidth = 0;
             var cache = {};
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
@@ -227,6 +228,10 @@ define('Controls/Popup/Opener/Stack/StackController',
                   var currentWidth = item.containerWidth || item.position.width;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
+                  if (currentWidth > maxWidth) {
+                     maxWidth = currentWidth;
+                     cache = {};
+                  }
                   if (!cache[currentWidth]) {
                      cache[currentWidth] = 1;
                      _private.addShadowClass(item);
