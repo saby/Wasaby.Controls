@@ -21,12 +21,11 @@ class Coverage:
 
     def get_fullpath_test_name(self, src):
         """Получаем пути расположения файлов"""
-        os.chdir(os.path.join(src, '..'))
-        for root_test in ('SBIS3.CONTROLS', 'VDOM'):
-            for root, _, filename in os.walk(os.path.join(root_test)):
-                for f in filename:
-                    if f.startswith('test_') and f.endswith('.py'):
-                        self.fullpath.append(os.path.join(root, f))
+        test_path, _ = os.path.split(src)
+        for root, _, filename in os.walk(test_path):
+            for f in filename:
+                if f.startswith('test_') and f.endswith('.py'):
+                    self.fullpath.append(os.path.join(root, f).replace(test_path + os.path.sep, ''))
 
     @staticmethod
     def search_other_file(cover_file):
