@@ -25,7 +25,7 @@ class Coverage:
         for root, _, filename in os.walk(test_path):
             for f in filename:
                 if f.startswith('test_') and f.endswith('.py'):
-                    self.fullpath.append(os.path.join(root, f))
+                    self.fullpath.append(os.path.join(root, f).replace(test_path + os.path.sep, ''))
 
     @staticmethod
     def search_other_file(cover_file):
