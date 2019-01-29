@@ -103,7 +103,8 @@ define('Controls-demo/BreadCrumbs/PathPG', [
                   rawData: item,
                   idProperty: 'id'
                });
-            })
+            }),
+            showChevron: true
          };
          this._metaData = config[this._content].properties['ws-config'].options;
       }

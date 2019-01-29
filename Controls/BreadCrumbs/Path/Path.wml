@@ -6,9 +6,11 @@
                                        caption="{{_backButtonCaption}}"
                                        style="secondary"
                                        on:click="_onBackButtonClick()"/>
-                <div class="controls-BreadCrumbsPath__backButtonArrow icon-View {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
-                     title="{[Подробнее]}"
-                     on:click="_onArrowClick()"></div>
+                <ws:if data="{{ _options.showChevron }}">
+                    <div class="controls-BreadCrumbsPath__backButtonArrow icon-View {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
+                         title="{[Подробнее]}"
+                         on:click="_onArrowClick()"></div>
+                </ws:if>
             </div>
         </ws:if>
         <ws:if data="{{_visibleItems || _options.rootVisible}}">
