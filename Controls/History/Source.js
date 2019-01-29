@@ -380,11 +380,16 @@ define('Controls/History/Source', [
             pd.push(self.historySource.query());
             pd.push(self.originSource.query(query));
 
-            return pd.done().getResult().addCallback(function(data) {
+            return pd.done().getResult().addBoth(function(data) {
                self._oldItems = data[1].getAll();
-               _private.initHistory(self, data[0], self._oldItems);
-               newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
-               self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+               
+               if (data[0]) {
+                  _private.initHistory(self, data[0], self._oldItems);
+                  newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
+                  self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+               } else {
+                  newItems = self._oldItems;
+               }
                return new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
                   idProperty: newItems.getIdProperty(),

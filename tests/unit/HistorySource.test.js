@@ -200,22 +200,38 @@ define(
             });
          });
          describe('checkHistory', function() {
-            it('query', function() {
+            it('query', function(done) {
                let query = new sourceLib.Query().where();
                let historyDef = hSource.query(query);
+               let originHSource = hSource.historySource;
+               var errorSource = {
+                  query: function() {
+                     return Deferred.fail();
+                  }
+               };
 
                historyDef.addCallback(function(data) {
                   let records = data.getAll();
-                  assert.equal(records.at(0).get('pinned'), null);
-               });
-
-               query = new sourceLib.Query().where({
-                  $_history: true
-               });
-               historyDef = hSource.query(query);
-               historyDef.addCallback(function(data) {
-                  let records = data.getAll();
-                  assert.equal(records.at(0).get('pinned'), true);
+                  assert.isFalse(records.at(0).has('pinned'));
+   
+                  query = new sourceLib.Query().where({
+                     $_history: true
+                  });
+                  historyDef = hSource.query(query);
+                  historyDef.addCallback(function(data) {
+                     let records = data.getAll();
+                     assert.isTrue(records.at(0).get('pinned'));
+   
+                     hSource.historySource = errorSource;
+                     historyDef = hSource.query(query);
+   
+                     historyDef.addCallback(function(data) {
+                        let records = data.getAll();
+                        assert.isFalse(records.at(0).has('pinned'));
+                        hSource.historySource = originHSource;
+                        done();
+                     });
+                  });
                });
             });
             it('getItemsWithHistory', function() {
