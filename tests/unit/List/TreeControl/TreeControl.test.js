@@ -79,6 +79,9 @@ define([
                   return {
                      '1': true
                   };
+               },
+               isExpandAll: function() {
+                  return false;
                }
             };
          };
