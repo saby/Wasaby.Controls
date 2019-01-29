@@ -23,6 +23,7 @@ define([
       var
          treeControl,
          baseControl,
+         treeBeforeUpdate,
          cfgBaseControl,
          cfgTreeControl = cMerge(cfg, {
             viewModelConstructor: TreeGridViewModel
@@ -40,6 +41,11 @@ define([
       baseControl._beforeMount(cfgBaseControl);
       treeControl._children = {
          baseControl: baseControl
+      };
+      treeBeforeUpdate = treeControl._beforeUpdate;
+      treeControl._beforeUpdate = function() {
+         treeBeforeUpdate.apply(treeControl, arguments);
+         baseControl._beforeUpdate(treeControl._options);
       };
       return treeControl;
    }
@@ -149,12 +155,18 @@ define([
          var
             reloadCalled = false,
             setRootCalled = false,
+            filterOnOptionChange = null,
             treeControl = correctCreateTreeControl({
                columns: [],
                source: new sourceLib.Memory({
                   data: [],
                   idProperty: 'id'
                }),
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
                parentProperty: 'parent'
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
@@ -171,16 +183,25 @@ define([
          };
          treeGridViewModel.setExpandedItems(['testRoot']);
          setTimeout(function() {
-            treeControl._beforeUpdate({ root: 'testRoot' });
-            assert.deepEqual(treeGridViewModel.getExpandedItems(), {'testRoot': true});
-            
-            treeControl._afterUpdate({ root: null });
-            assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-            setTimeout(function() {
-               assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
-               assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
-               done();
-            }, 10);
+   
+            treeControl._children.baseControl._options.beforeReloadCallback = function(filter) {
+               treeControl._beforeReloadCallback(filter, null, null, treeControl._options);
+               filterOnOptionChange = filter;
+            };
+            treeControl._children.baseControl.reload().addCallback(function(res) {
+               treeControl._beforeUpdate({root: 'testRoot'});
+               assert.deepEqual(treeGridViewModel.getExpandedItems(), {'testRoot': true});
+               assert.deepEqual(filterOnOptionChange, {});
+      
+               treeControl._afterUpdate({root: null});
+               assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
+               setTimeout(function () {
+                  assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
+                  assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                  done();
+               }, 10);
+               return res;
+            });
          }, 10);
       });
       it('TreeControl._private.prepareHasMoreStorage', function() {

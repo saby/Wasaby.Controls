@@ -2,7 +2,7 @@
 import java.time.*
 import java.lang.Math
 
-def version = "19.100"
+def version = "19.110"
 
 @NonCPS
 def get_run_commit() {
@@ -979,11 +979,18 @@ node('controls') {
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
     if ( (regr || all_regr) && run_tests_reg ){
-        dir("./controls") {
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/**/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+        if (sbis3_controls) {
+            dir("./controls/tests/reg/SBIS3.CONTROLS"){
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
+            }
+        }
+        if (vdom_controls) {
+            dir("./controls/tests/reg/VDOM"){
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
+            }
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-        }
+    }
     gitlabStatusUpdate()
     if (!run_tests_int && !run_tests_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
