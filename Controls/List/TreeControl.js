@@ -137,9 +137,13 @@ define('Controls/List/TreeControl', [
             var baseControl = self._children.baseControl;
             var nodeSourceControllers = self._nodesSourceControllers;
             var expandedItemsKeys;
+            var isExpandAll;
+            var viewModel;
    
             if (baseControl) {
-               expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
+               viewModel = baseControl.getViewModel();
+               expandedItemsKeys = Object.keys(viewModel.getExpandedItems());
+               isExpandAll = viewModel.isExpandAll();
                _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
                   if (expandedItemsKeys.indexOf(node) === -1) {
                      _private.clearNodeSourceController(nodeSourceControllers, node);
@@ -147,9 +151,10 @@ define('Controls/List/TreeControl', [
                });
             } else {
                expandedItemsKeys = cfg.expandedItems || [];
+               isExpandAll = _private.isExpandAll(expandedItemsKeys);
             }
    
-            if (expandedItemsKeys.length && !_private.isExpandAll(expandedItemsKeys)) {
+            if (expandedItemsKeys.length && !isExpandAll) {
                filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [];
                filter[parentProperty].push(self._root);
                filter[parentProperty] = filter[parentProperty].concat(expandedItemsKeys);
