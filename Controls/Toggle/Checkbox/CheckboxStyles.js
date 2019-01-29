@@ -32,5 +32,7 @@ define('Controls/Toggle/Checkbox/CheckboxStyles',
     *
     * @css @left_CheckBox__iconSuccessful Left coordinate of selected checkbox icon.
     * @css @size_CheckBox__iconTristate Size of tristate checkbox icon.
+    *
+    * @css @padding-horizontal_CheckBox-caption Horizontal padding of checkbox caption.
     */
 );
