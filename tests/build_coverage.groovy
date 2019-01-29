@@ -307,7 +307,7 @@ def building(workspace, version, scheduler=null) {
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1"""
 
-        dir("${workspace}/controls/tests/int/SBIS3.CONTROLS"){
+        dir("${workspace}/controls/tests/int/${type_controls}"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
