@@ -1,5 +1,5 @@
 <div>
-   <Controls.Container.Async templateName="{{ templateName1 }}" class="ControlsDemo-AsyncDemo__container input">
+   <Controls.Container.Async templateName="{{ templateName1 }}" class="ControlsDemo-AsyncDemo__container">
       <div>
          <ws:partial template="{{ content.resolvedTemplate }}" isOK="{{isOK}}"></ws:partial>
       </div>
