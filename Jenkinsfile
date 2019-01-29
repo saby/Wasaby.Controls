@@ -875,6 +875,8 @@ node('controls') {
                     stage("Инт.тесты"){
                         if ( (inte || all_inte) && smoke_result ){
                             echo "Запускаем интеграционные тесты"
+                            parallel (
+                            int_sbis3: {
                             if (sbis3_controls && run_tests_int_sbis3) {
                             dir("./controls/tests/int/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
@@ -886,6 +888,8 @@ node('controls') {
 								}
                             }
                             }
+                            },
+                            int_vdom: {
                             if (vdom_controls && run_tests_int_vdom) {
                                  dir("./controls/tests/int/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
@@ -897,9 +901,10 @@ node('controls') {
 								}
                             }
 
-
+                            }
 
                             }
+                            )
                         }
                     }
                 },
@@ -907,6 +912,8 @@ node('controls') {
                     stage("Рег.тесты"){
                         if ( (all_regr || regr) && smoke_result ){
                             echo "Запускаем тесты верстки"
+                            parallel(
+                            reg_sbis3: {
                             if (sbis3_controls && run_tests_reg_sbis3) {
                             dir("./controls/tests/reg/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
@@ -918,6 +925,8 @@ node('controls') {
 								}
                             }
                             }
+                            },
+                            reg_vdom: {
                             if (vdom_controls && run_tests_reg_vdom) {
                                 dir("./controls/tests/reg/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
@@ -930,6 +939,8 @@ node('controls') {
                             }
 
                             }
+                            }
+                        )
 
                         }
                     }
@@ -952,7 +963,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( (all_regr|| regr || inte || all_inte) && (run_tests_int || run_tests_reg) ){
+    if ( (all_regr|| regr || inte || all_inte) && (run_tests_int_sbis3 || run_tests_int_vdom  || run_tests_reg_sbis3 || run_tests_reg_vdom) ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
