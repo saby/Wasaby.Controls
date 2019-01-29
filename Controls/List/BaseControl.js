@@ -208,6 +208,15 @@ define('Controls/List/BaseControl', [
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
+         //при добавлении пачки в начало (подгрузка по скроллу вверх нужно чтоб был минимальный проскролл, чтоб пачка ушла за границы видимой части как и должна а не отобразилась сверху)
+         if (direction == 'up') {
+            self._notify('doScroll', ['scrollCompensation'], {bubbling: true});
+         }
+
+         /**/
+
          if (self._sourceController) {
             return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                if (userCallback && userCallback instanceof Function) {
@@ -881,21 +890,13 @@ define('Controls/List/BaseControl', [
       },
 
       _afterUpdate: function(oldOptions) {
-         if (this._hasUndrawChanges) {
-            this._hasUndrawChanges = false;
-            _private.restoreMarkedKey(this);
-            _private.checkLoadToDirectionCapability(this);
-            if (this._virtualScroll) {
-               this._virtualScroll.updateItemsSizes();
-            }
-         }
          if (this._delayedSelect && this._children.selectionController) {
             this._children.selectionController.onCheckBoxClick(this._delayedSelect.key, this._delayedSelect.status);
             this._notify('checkboxClick', [this._delayedSelect.key, this._delayedSelect.status]);
             this._delayedSelect = null;
          }
 
-   
+
          //FIXME fixing bug https://online.sbis.ru/opendoc.html?guid=d29c77bb-3a1e-428f-8285-2465e83659b9
          //FIXME need to delete after https://online.sbis.ru/opendoc.html?guid=4db71b29-1a87-4751-a026-4396c889edd2
          if (oldOptions.hasOwnProperty('loading') && oldOptions.loading !== this._options.loading) {
@@ -992,7 +993,14 @@ define('Controls/List/BaseControl', [
       },
 
       _viewResize: function() {
-         _private.checkLoadToDirectionCapability(this);
+         /*TODO переношу сюда костыль сделанный по https://online.sbis.ru/opendoc.html?guid=ce307671-679e-4373-bc0e-c11149621c2a*/
+         if (this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+            _private.restoreMarkedKey(this);
+            if (this._virtualScroll) {
+               this._virtualScroll.updateItemsSizes();
+            }
+         }
       },
 
       beginEdit: function(options) {

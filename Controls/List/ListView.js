@@ -97,11 +97,11 @@ define('Controls/List/ListView', [
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._queue = [];
-            this._onListChangeFnc = function() {
+            this._onListChangeFnc = function(e, extraOpts) {
                if (self._lockForUpdate) {
-                  self._queue.push(_private.onListChange.bind(null, self));
+                  self._queue.push(_private.onListChange.bind(null, self, extraOpts));
                } else {
-                  _private.onListChange(self);
+                  _private.onListChange(self, extraOpts);
                }
             };
          },
