@@ -28,39 +28,39 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       };
 
       var _private = {
-            prepareOriginPoint: function(config) {
-               var newCfg = cClone(config);
+         prepareOriginPoint: function(config) {
+            var newCfg = cClone(config);
 
-               if (config.alignment || config.offset){
-                  newCfg.horizontalAlign = {
-                     side: config.alignment.horizontal,
-                    offset: (config.offset && config.offset.horizontal) || 0
-                  };
-                  newCfg.verticalAlign = {
-                     side: config.alignment.vertical,
-                     offset: (config.offset && config.offset.vertical) || 0
-                  };
-               }
-               if(config.originPoint){
-                  newCfg.corner = {
-                     vertical: config.originPoint.vertical,
-                     horizontal: config.originPoint.horizontal
-                  }
-               }
-               return newCfg;
-            },
+            if (config.alignment || config.offset) {
+               newCfg.horizontalAlign = {
+                  side: config.alignment.horizontal,
+                  offset: (config.offset && config.offset.horizontal) || 0
+               };
+               newCfg.verticalAlign = {
+                  side: config.alignment.vertical,
+                  offset: (config.offset && config.offset.vertical) || 0
+               };
+            }
+            if (config.originPoint) {
+               newCfg.corner = {
+                  vertical: config.originPoint.vertical,
+                  horizontal: config.originPoint.horizontal
+               };
+            }
+            return newCfg;
+         },
          prepareActionOnScroll: function(config) {
             var newCfg = cClone(config);
             if (config.actionOnScroll === 'close') {
                newCfg.closeOnTargetScroll = true;
             } else if (config.actionOnScroll === 'track') {
-               newCfg.targetTracking = true
+               newCfg.targetTracking = true;
             }
             return newCfg;
          },
          prepareConfig: function(cfg, sizes) {
-              cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
-              cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
+            cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
+            cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
             var popupCfg = {
                corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
                align: {
