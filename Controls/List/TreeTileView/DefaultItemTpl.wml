@@ -12,6 +12,9 @@
                              key="{{itemData.key}}" />
       </ws:partial>
       <span class="controls-TreeTileView__nodeIcon icon-large icon-Folder icon-disabled"></span>
+      <ws:if data="{{!!itemData.dragTargetNode}}">
+         <div class="controls-TreeTileView__dragTargetNode"></div>
+      </ws:if>
       <div class="controls-TreeTileView__title" title="{{itemData.item.title}}">{{itemData.item[itemData.displayProperty]}}</div>
       <ws:partial if="{{itemData.isSwiped && itemData.drawActions}}"
                   template="{{swipeTemplate}}"
