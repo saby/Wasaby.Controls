@@ -6,11 +6,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/core-merge',
       'Core/core-clone',
       'Core/detection',
+      'Core/IoC',
       'Controls/Popup/TargetCoords',
       'wml!Controls/Popup/Opener/Sticky/StickyContent',
       'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, IoC, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -59,6 +60,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             return newCfg;
          },
          prepareConfig: function(cfg, sizes) {
+            if(cfg.popupOptions.corner) {
+               IoC.resolve('ILogger').warn('StickyController', 'Используется устаревшая опция corner, используйте опцию originPoint');
+            }
+            if(cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign ) {
+               IoC.resolve('ILogger').warn('StickyController', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и side');
+            }
             cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
             cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
             var popupCfg = {
