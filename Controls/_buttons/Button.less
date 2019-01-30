@@ -8,8 +8,8 @@
 
 .controls-Button_style-primary_viewMode-button {
    color: @color_Button__text_primary;
-   border-color: @border-color_Button_primary;
-   background: @background_Button_primary;
+   border-color: @border-color_ButtonV_primary;
+   background: @background_ButtonV_primary;
 }
 
 .controls-Button_style-warning_viewMode-button {
@@ -21,8 +21,8 @@
 }
 
 .controls-Button_style-primary_viewMode-button:active {
-   border-color: @border-color_Button_primary_hovered;
-   background: @background_Button_primary_active;
+   border-color: @border-color_ButtonV_primary_hovered;
+   background: @background_ButtonV_primary_active;
 }
 
 .controls-Button_style-primary_viewMode-button_readOnly {
@@ -45,7 +45,7 @@
 }
 
 .controls-Button_viewMode-button_readOnly{
-   min-width: @min-width_Button;
+   min-width: @min-width_ButtonV;
    cursor: default;
    color: @color_Button_readOnly;
    border-color: @border-color_Button_readOnly;
@@ -88,8 +88,8 @@
    }
 
    .controls-Button_style-primary_viewMode-button:hover {
-      border-color: @border-color_Button_primary_hovered;
-      background: @background_Button_primary_hovered;
+      border-color: @border-color_ButtonV_primary_hovered;
+      background: @background_ButtonV_primary_hovered;
    }
 
    .controls-Button_style-secondary_viewMode-button:hover {
@@ -103,8 +103,8 @@
    }
 
    .controls-Button_style-primary_viewMode-button:active {
-      border-color: @border-color_Button_primary_hovered;
-      background: @background_Button_primary_active;
+      border-color: @border-color_ButtonV_primary_hovered;
+      background: @background_ButtonV_primary_active;
    }
 
    .controls-Button_style-danger_viewMode-toolButton:hover {
@@ -412,9 +412,9 @@
 
 .controls-Button_viewMode-button {
    cursor: pointer;
-   min-width: @min-width_Button;
-   box-shadow: @box-shadow_Button;
-   text-shadow: @text-shadow_Button;
+   min-width: @min-width_ButtonV;
+   box-shadow: @box-shadow_ButtonV;
+   text-shadow: @text-shadow_ButtonV;
 }
 
 .controls-Button_viewMode-button:active {
@@ -422,7 +422,7 @@
 }
 
 .controls-Button_viewMode-button_readOnly {
-   min-width: @min-width_Button;
+   min-width: @min-width_ButtonV;
    cursor: default;
    color: @color_Button_readOnly;
    border-color: @border-color_Button_readOnly;
@@ -480,7 +480,7 @@
    .justify-content(center);
 }
 .controls-Button__text_gap {
-   margin-left: @spacing_Button-between-icon-text;
+   margin-left: @spacing_Button-between-icon-and-text;
 }
 .ws-is-no-touch {
    .controls-Label_underline-hovered:hover {

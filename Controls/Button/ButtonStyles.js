@@ -20,21 +20,21 @@ define('Controls/Button/ButtonStyles',
     * @css @padding_Button__wrapper_size_l Padding from content to border of button with options viewMode 'button' and size 'l'.
     *
     * @css @thickness_Button__border Border thickness of button with option viewMode 'button'.
-    * @css @min-width_Button Minimal width of button with option viewMode 'button'.
-    * @css @box-shadow_Button Box shadow of button with option viewMode 'button'.
+    * @css @min-width_ButtonV Minimal width of button with option viewMode 'button'.
+    * @css @box-shadow_ButtonV Box shadow of button with option viewMode 'button'.
     * @css @box-shadow_Button_active Box shadow of button in active state with option viewMode 'button'.
-    * @css @spacing_Button-between-icon-text Spacing between icon and caption in button with seted option icon.
+    * @css @spacing_Button-between-icon-and-text Spacing between icon and caption in button with seted option icon.
     *
     * @css @color_Button_readOnly Color of button with options viewMode 'button' and readOnly 'true'.
     * @css @border-color_Button_readOnly Border color of button with options viewMode 'button' and readOnly 'true'.
     *
     * @css @color_Button__text_primary Text color of button with options style 'primary' and viewMode 'button'.
-    * @css @border-color_Button_primary Border color of button with options style 'primary' and viewMode 'button'.
-    * @css @border-color_Button_primary_hovered Border color of button in hovered state with options style 'primary' and viewMode 'button'.
+    * @css @border-color_ButtonV_primary Border color of button with options style 'primary' and viewMode 'button'.
+    * @css @border-color_ButtonV_primary_hovered Border color of button in hovered state with options style 'primary' and viewMode 'button'.
     *
-    * @css @background_Button_primary Background color of button with style options 'primary' and  viewMode 'button'.
-    * @css @background_Button_primary_hovered Background color of button in hovered state with options style 'primary' and viewMode 'button'.
-    * @css @background_Button_primary_active Background color of button in hovered state with options style 'primary' and viewMode 'button'.
+    * @css @background_ButtonV_primary Background color of button with style options 'primary' and  viewMode 'button'.
+    * @css @background_ButtonV_primary_hovered Background color of button in hovered state with options style 'primary' and viewMode 'button'.
+    * @css @background_ButtonV_primary_active Background color of button in hovered state with options style 'primary' and viewMode 'button'.
     * @css @background_Button-primary_readOnly Background color of button with options style 'primary', readOnly 'true' and viewMode 'button'.
     *
     * @css @color_Button__text_secondary Text color of button with options style 'secondary' and viewMode 'button'.
@@ -95,7 +95,7 @@ define('Controls/Button/ButtonStyles',
     * @css @color_Link_default Color of button with options style 'default' and viewMode 'link'.
     * @css @color_Link_default_hovered Color of button in hovered state with options style 'default' and viewMode 'link'.
     *
-    * @css @text-shadow_Button Text shadow of button with viewMode 'button'.
+    * @css @text-shadow_ButtonV Text shadow of button with viewMode 'button'.
     * @css @text-shadow_Button_readOnly Text shadow of button with viewMode 'button' and readOnly 'true'.
     *
     * @css @text-shadow_ToolButton Text shadow of button with viewMode 'toolButton'.
