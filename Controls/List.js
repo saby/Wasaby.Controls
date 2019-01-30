@@ -32,6 +32,15 @@ define('Controls/List', [
     * @mixes Controls/interface/IHighlighter
     * @mixes Controls/List/interface/IList
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/interface/IDraggable
+    *
+    * @mixes Controls/List/BaseControlStyles
+    * @mixes Controls/List/ListStyles
+    *
+    * @mixes Controls/List/Mover/MoveDialog/Styles
+    * @mixes Controls/List/PagingStyles
+    * @mixes Controls/List/DigitButtonsStyles
+    *
     * @control
     * @author Авраменко А.С.
     * @public
@@ -56,9 +65,9 @@ define('Controls/List', [
       reload: function() {
          return this._children.listControl.reload();
       },
-      
-      reloadItem: function(key, readMeta) {
-         return this._children.listControl.reloadItem(key, readMeta);
+
+      reloadItem: function(key, readMeta, direction) {
+         return this._children.listControl.reloadItem(key, readMeta, direction);
       },
 
       beginEdit: function(options) {

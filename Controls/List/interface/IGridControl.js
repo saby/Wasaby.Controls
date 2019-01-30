@@ -1,5 +1,4 @@
-define('Controls/List/interface/IGridControl', [
-], function() {
+define('Controls/List/interface/IGridControl', [], function() {
 
    /**
     * Interface for Grid (table view).
@@ -10,89 +9,97 @@ define('Controls/List/interface/IGridControl', [
     */
 
    /**
-    * @name Controls/List/interface/IGridControl#stickyColumnsCount
-    * @cfg {Number} Number of columns that will be fixed when scrolling horizontally.
-    */
-
-   /**
     * @name Controls/List/interface/IGridControl#ladderProperties
     * @cfg {Array.<String>} Array of fields that should be sticky.
+    * <a href="/materials/demo-ws4-grid-sticky">Example</a>
+    * @example
+    * Set ladderProperties and render item template through the ladderWrapper:
+    * <pre>
+    *    <div class="demoGrid">
+    *       <Controls.Grid
+    *          ...
+    *          ladderProperties="{{ ['date'] }}">
+    *          <ws:columns>
+    *             <ws:Array>
+    *                <ws:Object width="1fr">
+    *                   <ws:template>
+    *                      <ws:partial template="wml!Controls/List/Grid/Column">
+    *                         <ws:contentTemplate>
+    *                            <ws:partial template="{{ladderWrapper}}" ladderProperty="date">
+    *                               <div class="demoGrid__date">
+    *                                  {{itemData.item['date']}}
+    *                               </div>
+    *                            </ws:partial>
+    *                         <ws:contentTemplate>
+    *                      </ws:partial>
+    *                   </ws:template>
+    *                </ws:Object>
+    *             </ws:Array>
+    *          </ws:columns>
+    *       </Controls.Grid>
+    *    </div>
+    * </pre>
     */
 
    /**
-    * @typedef {Object} StickyColumn
-    * @property {Number} [index] Index of the column for which sticking is calculated.
-    * @property {String} [property] Name of the field for which sticking is calculated.
+    * @typedef {String} GridCellAlign
+    * @variant left Align content to left side.
+    * @variant center Align content to center.
+    * @variant right Align content to right side.
     */
 
    /**
-    * @name Controls/List/interface/IGridControl#stickyColumn
-    * @cfg {StickyColumn} Configuration for column's sticking.
+    * @typedef {String} GridCellVAlign
+    * @variant top Align content to top side.
+    * @variant center Align content to center.
+    * @variant bottom Align content to bottom side.
     */
 
    /**
-    * @name Controls/List/interface/IGridControl#rowSpacing
-    * @cfg {String} Spacing between grid rows.
-    * @variant S Small spacing.
-    * @variant M Medium spacing.
-    * @variant L Large spacing.
-    * @variant XL Extra large spacing.
-    */
-
-   /**
-    * @name Controls/List/interface/IGridControl#leftPadding
-    * @cfg {String} Padding to the left border of the grid.
-    * @variant S Small padding.
-    * @variant M Medium padding.
-    * @variant L Large padding.
-    * @variant XL Extra large padding.
-    */
-
-   /**
-    * @name Controls/List/interface/IGridControl#rightPadding
-    * @cfg {String} Padding to the right border of the grid.
-    * @variant S Small padding.
-    * @variant M Medium padding.
-    * @variant L Large padding.
-    * @variant XL Extra large padding.
-    */
-
-   /**
-    * @typedef {Object} HeaderCell Describer the header cell.
-    * @property {String} [title] Text.
-    * @property {String} [align] Horizontal text align (left|center|right).
-    * @property {String} [valign] Vertical text align (top|center|bottom).
-    * @property {Number} [colspan] Number of grouped cells in a row including the current one (>=2).
-    * @property {Number} [rowspan] Number of grouped cells in a column including the current one (>=2).
+    * @typedef {Object} HeaderCell Describer grid's header cell.
+    * @property {String} [caption] Header cell caption text.
+    * @property {GridCellAlign} [align] Horizontal cell content align.
+    * @property {GridCellVAlign} [valign] Vertical cell content align.
     * @property {String} [template] Template for the header cell.
+    * @property {String} [sortingProperty] Property by which doing sorting.
     */
 
    /**
     * @name Controls/List/interface/IGridControl#header
-    * @cfg {Array.<Array.<HeaderCell>>} Describes list header.
+    * @cfg {Array.<Array.<HeaderCell>>} Describes grid's header.
+    * <a href="/materials/demo-ws4-grid-base">Example</a>
     */
 
    /**
     * @typedef {Object} Column
-    * @property {Number} [position] Position of a column in a table. If not set, position in the array is used instead.
+    * @property {String} [width] Column width. Supported the value specified in pixels (for example, 4px) or percent (for example, 50%) and the value “auto”.
     * @property {String} [displayProperty] Name of the field that will shown in the column by default.
-    * @property {String} [template] Cell template.
-    * @property {String} [resultTemplate] Cell template in results row.
-    * @property {String} [align] Horizontal text align (left|center|right).
-    * @property {String} [valign] Vertical text align (top|center|bottom).
-    * @property {String|Number} [width] Column width (pixels/percent/auto).
+    * @property {String} [template] Template for cell rendering.
+    * @property {String} [resultTemplate] Template for cell rendering in results row..
+    * @property {GridCellAlign} [align] Horizontal cell content align.
+    * @property {GridCellVAlign} [valign] Vertical cell content align.
+    * @property {String} [stickyProperty] The name of the field used to sticking the column data.
     */
 
    /**
     * @name Controls/List/interface/IGridControl#columns
-    * @cfg {Array.<Column>} Describes Grid's columns.
+    * @cfg {Array.<Column>} Describes grid's columns.
+    * <a href="/materials/demo-ws4-grid-base">Example</a>
     * @remark Before rendering, make sure that {@link Types/display:Collection Collection} contains required data, when the {@link Controls/List/interface/IGridControl#columns columns} option changes. Call asynchronous 'reload' method before changing {@link Controls/List/interface/IGridControl#columns columns} option, if necessary.
     */
 
    /**
     * @name Controls/List/interface/IGridControl#stickyHeader
     * @cfg {Boolean} Fix the table header.
+    * <a href="/materials/demo-ws4-grid-sticky">Example</a>
     * @default true
+    */
+
+   /**
+    * @name Controls/List/interface/IGridControl#rowSeparatorVisibility
+    * @cfg {Boolean} Allows to visible or hide row separator.
+    * <a href="/materials/demo-ws4-grid-base">Example</a>
+    * @default false
     */
 
 });

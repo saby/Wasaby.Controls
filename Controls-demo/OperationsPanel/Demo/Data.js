@@ -316,7 +316,7 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
          panelItems: [{
             id: 'print',
             '@parent': false,
-            icon: 'icon-Print',
+            icon: 'icon-Print icon-medium',
             title: 'Распечатать',
             parent: null
          }, {
@@ -357,7 +357,7 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
          },
          moveOperation: {
             id: 'move',
-            icon: 'icon-Move',
+            icon: 'icon-Move icon-medium',
             '@parent': false,
             title: 'Перенести',
             parent: null

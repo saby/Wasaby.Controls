@@ -95,8 +95,7 @@ define('Controls/Popup/Compatible/Layer', [
       // cachedMethods
       window.cachedMethods = [];
 
-      // product
-      window.product = 'продукт никому не нужен?';
+      // product???
 
       // активность???
    }
@@ -121,24 +120,21 @@ define('Controls/Popup/Compatible/Layer', [
 
    function userInfo() {
       var
-         userSource = new source.SbisService({
-            endpoint: 'Пользователь'
-         }),
          profileSource = new source.SbisService({
             endpoint: 'СервисПрофилей'
          }),
          data = {};
 
       // Получение данных из контекста
+      if (window && window.userInfo) {
+         data = window.userInfo;
+         return expandUserInfo(data);
+      }
 
-      var opt = document.querySelector('html').controlNodes;
-      if (!opt) {
-         if (window.userInfo) {
-            data = window.userInfo;
-         }
-      } else {
-         moduleStubs.require(['EngineUser/Info']).addCallbacks(function(modules) {
+      if (document && document.querySelector('html').controlNodes) {
+         return moduleStubs.require(['EngineUser/Info']).addCallbacks(function(modules) {
             data = modules[0].Info.getAll();
+            return expandUserInfo(data);
          }, function(err) {
             IoC.resolve('ILogger').error('Layer', 'Can\'t load EngineUser/Info', err);
          });

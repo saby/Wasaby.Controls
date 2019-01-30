@@ -3,10 +3,10 @@
         "Controls/List": {
           "properties": {
             "ws-config": {
-        "options": {
-          "itemActions": {
-            "type": "Array"
-          },
+              "options": {
+                "itemActions": {
+                  "type": "Array"
+                },
           "itemActionsPosition": {
             "type": "enum",
             "default": "inside",

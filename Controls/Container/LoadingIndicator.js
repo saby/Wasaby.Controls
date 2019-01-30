@@ -93,6 +93,27 @@ define('Controls/Container/LoadingIndicator', [
     * @cfg {Number} timeout before indicator will be visible
     * @default 2000
     */
+   /**
+    * @css size_LoadingIndicator-l Size of Loading Indicator when option size is set to default.
+    * @css size_LoadingIndicator-s Size of Loading Indicator when option size is set to small.
+    *
+    * @css @spacing_LoadingIndicator-between-content-border-l Spacing between content and border when option size is set to default.
+    * @css @spacing_LoadingIndicator-between-content-border-s Spacing between content and border when option size is set to small.
+    *
+    * @css @border-radius_LoadingIndicator Border radius when option size is set to default.
+    *
+    * @css @font-size_LoadingIndicator Font-size of message.
+    * @css @line-height_LoadingIndicator Line-height of message.
+    * @css @color_LoadingIndicator-text Color of message.
+    *
+    *@css @color_LoadingIndicator-overlay-default Color of overlay when option overlay is set to default.
+    *@css @color_LoadingIndicator-overlay-dark Color of overlay when option overlay is set to dark.
+    *
+    *@css @background-url_LoadingIndicator-l Background-url when option size is set to default.
+    *@css @background-url_LoadingIndicator-s Background-url when options size is set to small.
+    *@css @background-color_LoadingIndicator Background color of Loading Indicator.
+    *
+    */
 
    var module = Control.extend(/** @lends Controls/Container/LoadingIndicator.prototype */{
       _template: tmpl,
@@ -150,10 +171,7 @@ define('Controls/Container/LoadingIndicator', [
                this.mods = [cfg.mods];
             }
          }
-
-         if (cfg.delay !== undefined) {
-            this.delay = cfg.delay;
-         }
+         this.delay = cfg.delay !== undefined ? cfg.delay : this._delay;
       },
 
       toggleIndicator: function(isLoading) {
@@ -315,6 +333,10 @@ define('Controls/Container/LoadingIndicator', [
          return this._stack.getIndexByValue('id', id);
       },
 
+      _getDelay: function(config) {
+         return typeof config.delay === 'number' ? config.delay : this.delay;
+      },
+
       _toggleIndicator: function(visible, config, force) {
          clearTimeout(this.delayTimeout);
          if (visible) {
@@ -322,7 +344,7 @@ define('Controls/Container/LoadingIndicator', [
                this.isLoading = true;
                this._updateProperties(config);
             } else {
-               var delay = typeof config.delay === 'number' ? config.delay : this._delay;
+               var delay = this._getDelay(config);
                this.delayTimeout = setTimeout(function() {
                   this.isLoading = true;
                   this._updateProperties(config);

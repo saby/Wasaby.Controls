@@ -4,16 +4,15 @@ define(
       'Core/Deferred'
    ],
 
-   function (PopupOpener, Deferred) {
+   (PopupOpener, Deferred) => {
       'use strict';
 
       var popupOpener;
 
-      describe('Controls/Popup/Opener/Confirmation', function () {
-
-         beforeEach(function(){
+      describe('Controls/Popup/Opener/Confirmation', () => {
+         beforeEach(() => {
             popupOpener = new PopupOpener();
-            popupOpener._beforeMount();
+            popupOpener._beforeMount({});
             popupOpener._children.LoadingIndicator = {
                toggleIndicator: () => {}
             };
@@ -22,15 +21,14 @@ define(
             };
          });
 
-         it('initialize', function() {
+         it('initialize', () => {
             assert.equal(popupOpener._resultDef, null);
          });
 
-         it('open', function() {
-            var def = popupOpener.open({});
+         it('open', () => {
+            let def = popupOpener.open({});
             assert.equal(def instanceof Deferred, true);
          });
-
       });
    }
 );

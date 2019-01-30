@@ -119,6 +119,7 @@ define('Controls/Explorer', [
 
    /**
     * Hierarchical list that can expand and go inside the folders. Can load data from data source.
+    * <a href="/materials/demo/demo-ws4-explorer?v=19.100">Demo examples</a>.
     *
     * @class Controls/Explorer
     * @extends Core/Control
@@ -134,6 +135,7 @@ define('Controls/Explorer', [
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
     * @mixes Controls/List/interface/IExplorer
+    * @mixes Controls/List/interface/IDraggable
     * @control
     * @public
     * @category List

@@ -43,8 +43,12 @@ define('Controls/Popup/Opener/BaseOpener',
       var Base = Control.extend({
          _template: Template,
 
-         _beforeMount: function() {
+         _beforeMount: function(options) {
             this._popupIds = [];
+
+            if (options.popupOptions) {
+               IoC.resolve('ILogger').warn(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
+            }
          },
 
          _afterMount: function() {
@@ -156,8 +160,6 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _getConfig: function(popupOptions) {
             var baseConfig = coreClone(this._options.popupOptions || {});
-            var config = coreClone(popupOptions || {});
-            CoreMerge(baseConfig, config);
 
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
@@ -172,6 +174,8 @@ define('Controls/Popup/Opener/BaseOpener',
                'okCaption',
                'autofocus',
                'isModal',
+               'modal',
+               'closeOnOutsideClick',
                'className',
                'template',
                'templateOptions',
@@ -194,6 +198,8 @@ define('Controls/Popup/Opener/BaseOpener',
                   baseConfig[option] = this._options[option];
                }
             }
+
+            CoreMerge(baseConfig, coreClone(popupOptions || {}));
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
             baseConfig.opener = baseConfig.opener || Vdom.DefaultOpenerFinder.find(this) || this;
@@ -218,8 +224,10 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _notifyEvent: function(eventName, args) {
             // Trim the prefix "on" in the event name
-            var event = 'popup' + eventName.substr(2);
+            var event = eventName.substr(2);
             this._notify(event, args);
+            IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
+            this._notify('popup' + event, args);
          },
 
          _toggleIndicator: function(visible) {

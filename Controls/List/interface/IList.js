@@ -194,4 +194,36 @@ define('Controls/List/interface/IList', [
     * <a href="/materials/demo-ws4-list-base">Example</a>.
     * @param {Number} key Key of the selected item.
     */
+
+   /**
+    * @typedef {Object} VerticalItemPaddingEnum
+    * @variant M Medium padding.
+    * @variant L Large padding.
+    * @default M
+    */
+
+   /**
+    * @typedef {Object} HorizontalItemPaddingEnum
+    * @variant null without padding.
+    * @variant XS Extra small padding.
+    * @variant S Small padding.
+    * @variant M Medium padding.
+    * @variant L Large padding.
+    * @variant XL Extra large padding.
+    * @variant XXL Extra extra large padding.
+    * @default M
+    */
+
+   /**
+    * @typedef {Object} ItemPadding
+    * @property {VerticalItemPaddingEnum} [top] Padding from item content to top item border.
+    * @property {VerticalItemPaddingEnum} [bottom] Padding from item content to bottom item border.
+    * @property {HorizontalItemPaddingEnum} [left] Padding from item content to left item border.
+    * @property {HorizontalItemPaddingEnum} [right] Padding from item content to right item border.
+    */
+
+   /**
+    * @cfg {ItemPadding} Configuration inner paddings in the item.
+    * @name Controls/List/interface/IList#itemPadding
+    */
 });

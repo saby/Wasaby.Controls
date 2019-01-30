@@ -64,16 +64,12 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             return {
                verticalAlign: {
                   side: topOrBottomSide ? SIDES[side] : INVERTED_SIDES[alignSide],
-                  offset: topOrBottomSide
-                     ? (side === 't' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET)
-                     : this.getOffset(target.offsetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH)
+                  offset: _private.getVerticalOffset(target, topOrBottomSide, side, alignSide)
                },
 
                horizontalAlign: {
                   side: topOrBottomSide ? INVERTED_SIDES[alignSide] : SIDES[side],
-                  offset: topOrBottomSide
-                     ? this.getOffset(target.offsetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH)
-                     : (side === 'l' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET)
+                  offset: _private.getHorizontalOffset(target, topOrBottomSide, side, alignSide)
                },
 
                corner: {
@@ -81,6 +77,25 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
                   horizontal: topOrBottomSide ? SIDES[alignSide] : SIDES[side]
                }
             };
+         },
+
+         getVerticalOffset: function(target, topOrBottomSide, side, alignSide) {
+            if (topOrBottomSide) {
+               return side === 't' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET;
+            }
+
+            // svg hasn't offsetHeight property
+            var targetHeight = target.offsetHeight || target.clientHeight;
+            return _private.getOffset(targetHeight, alignSide, constants.ARROW_V_OFFSET, constants.ARROW_WIDTH);
+         },
+
+         getHorizontalOffset: function(target, topOrBottomSide, side, alignSide) {
+            if (topOrBottomSide) {
+               // svg hasn't offsetWidth property
+               var targetWidth = target.offsetWidth || target.clientWidth;
+               return _private.getOffset(targetWidth, alignSide, constants.ARROW_H_OFFSET, constants.ARROW_WIDTH);
+            }
+            return side === 'l' ? -constants.TARGET_OFFSET : constants.TARGET_OFFSET;
          }
       };
 

@@ -14,6 +14,27 @@ define('Controls/List/ListViewModel',
          updateIndexes: function(self, startIndex, stopIndex) {
             self._startIndex = startIndex;
             self._stopIndex = stopIndex;
+         },
+         getItemPadding: function(cfg) {
+            if (cfg.itemPadding) {
+               return cfg.itemPadding;
+            }
+            return {
+               left: cfg.leftSpacing || cfg.leftPadding,
+               right: cfg.rightSpacing || cfg.rightPadding,
+               top: cfg.rowSpacing,
+               bottom: cfg.rowSpacing
+            };
+         },
+         getSpacingClassList: function(cfg) {
+            var
+               classList = '',
+               itemPadding = _private.getItemPadding(cfg);
+            if (cfg.multiSelectVisibility === 'hidden') {
+               classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase();
+            }
+            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+            return classList;
          }
       };
 
@@ -45,7 +66,39 @@ define('Controls/List/ListViewModel',
             // TODO надо ли?
             _private.updateIndexes(self, 0, self.getCount());
          },
-
+         setItemPadding: function(itemPadding) {
+            this._options.itemPadding = itemPadding;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+         setLeftPadding: function(leftPadding) {
+            this._options.leftPadding = leftPadding;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+         setRightPadding: function(rightPadding) {
+            this._options.rightPadding = rightPadding;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+         setLeftSpacing: function(leftSpacing) {
+            this._options.leftSpacing = leftSpacing;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+         setRightSpacing: function(rightSpacing) {
+            this._options.rightSpacing = rightSpacing;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+         setRowSpacing: function(rowSpacing) {
+            this._options.rowSpacing = rowSpacing;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+         getItemPadding: function() {
+            return _private.getItemPadding(this._options);
+         },
          getItemDataByItem: function() {
             var
                itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
@@ -59,6 +112,9 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             itemsModelCurrent.markerVisibility = this._options.markerVisibility;
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
+            itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
+            itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
+            itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
             if (itemsModelCurrent.itemActions) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
@@ -119,7 +175,7 @@ define('Controls/List/ListViewModel',
                itemsCount = this._display.getCount();
             while (nextItemId < itemsCount) {
                nextItem = this._display.at(nextItemId).getContents();
-               if (cInstance.instanceOfModule(nextItem, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(nextItem, 'Types/entity:Model')) {
                   return this._display.at(nextItemId).getContents().getId();
                }
                nextItemId++;
@@ -138,7 +194,7 @@ define('Controls/List/ListViewModel',
                itemsCount = this._display.getCount();
             while (nextItemId < itemsCount) {
                nextItem = this._display.at(nextItemId).getContents();
-               if (cInstance.instanceOfModule(nextItem, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(nextItem, 'Types/entity:Model')) {
                   return this._display.at(nextItemId).getContents().getId();
                }
                nextItemId++;
@@ -151,7 +207,7 @@ define('Controls/List/ListViewModel',
                prevItem;
             while (prevItemId >= 0) {
                prevItem = this._display.at(prevItemId).getContents();
-               if (cInstance.instanceOfModule(prevItem, 'WS.Data/Entity/Model')) {
+               if (cInstance.instanceOfModule(prevItem, 'Types/entity:Model')) {
                   return this._display.at(prevItemId).getContents().getId();
                }
                prevItemId--;
@@ -290,11 +346,7 @@ define('Controls/List/ListViewModel',
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
             }
          },
-         setItemActionVisibilityCallback: function(callback) {
-            this._options.itemActionVisibilityCallback = callback;
-            this._nextVersion();
-            this._notify('onListChange');
-         },
+
          _prepareDisplayItemForAdd: function(item) {
             return ItemsUtil.getDefaultDisplayItem(this._display, item);
          },
@@ -317,6 +369,8 @@ define('Controls/List/ListViewModel',
 
          setItemTemplateProperty: function(itemTemplateProperty) {
             this._options.itemTemplateProperty = itemTemplateProperty;
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          setMultiSelectVisibility: function(multiSelectVisibility) {
@@ -351,6 +405,8 @@ define('Controls/List/ListViewModel',
              } */
          }
       });
+
+      ListViewModel._private = _private;
 
       return ListViewModel;
    });

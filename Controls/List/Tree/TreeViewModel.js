@@ -56,6 +56,17 @@ define('Controls/List/Tree/TreeViewModel', [
             return true;
          },
 
+         getExpanderVisibility: function(cfg) {
+
+            // Если передана новая опция, смотрим на нее, иначе приводим значения старой опции к новому,
+            // поддерживая дефолтное значение "visible"
+            // Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=4e0354e9-0519-4714-a67c-a1af433820aa
+            if (cfg.expanderVisibility) {
+               return cfg.expanderVisibility;
+            }
+            return cfg.expanderDisplayMode === 'adaptive' ? 'hasChildren' : 'visible';
+         },
+
          displayFilterTree: function(item, index, itemDisplay) {
             return _private.isVisibleItem.call(this, itemDisplay);
          },
@@ -98,7 +109,7 @@ define('Controls/List/Tree/TreeViewModel', [
             if (action === collection.IObservable.ACTION_REMOVE) {
                _private.checkRemovedNodes(self, removedItems);
             }
-            if (self._options.expanderDisplayMode === 'adaptive') {
+            if (_private.getExpanderVisibility(self._options) === 'hasChildren') {
                _private.determinePresenceChildItem(self);
             }
          },
@@ -128,11 +139,11 @@ define('Controls/List/Tree/TreeViewModel', [
                itemType = itemData.item.get(itemData.nodeProperty);
 
             // Show expander icon if it is not equal 'none' or render leafs
-            return (itemData.expanderDisplayMode !== 'adaptive' || itemData.thereIsChildItem && itemData.hasChildItem) &&
+            return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem) &&
                itemType !== null && expanderIcon !== 'none';
          },
          shouldDrawExpanderPadding: function(itemData, expanderIcon, expanderSize) {
-            return (itemData.expanderDisplayMode !== 'adaptive' || itemData.thereIsChildItem) &&
+            return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem) &&
                !expanderSize && expanderIcon !== 'none';
          },
          prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
@@ -213,7 +224,7 @@ define('Controls/List/Tree/TreeViewModel', [
                nodeProperty: cfg.nodeProperty || 'Раздел@'
             });
             TreeViewModel.superclass.constructor.apply(this, arguments);
-            if (this._options.expanderDisplayMode === 'adaptive') {
+            if (_private.getExpanderVisibility(this._options) === 'hasChildren') {
                _private.determinePresenceChildItem(this);
             }
          },
@@ -243,6 +254,10 @@ define('Controls/List/Tree/TreeViewModel', [
                itemId = dispItem.getContents().getId();
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
+         },
+         
+         isExpandAll: function() {
+            return _private.isExpandAll(this.getExpandedItems());
          },
 
          toggleExpanded: function(dispItem, expanded) {
@@ -292,9 +307,27 @@ define('Controls/List/Tree/TreeViewModel', [
             _private.onBeginCollectionChange(this, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          },
 
+         setNodeFooterTemplate: function(nodeFooterTemplate) {
+            this._options.nodeFooterTemplate = nodeFooterTemplate;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         setExpanderDisplayMode: function(expanderDisplayMode) {
+            this._options.expanderDisplayMode = expanderDisplayMode;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         setExpanderVisibility: function(expanderVisibility) {
+            this._options.expanderVisibility = expanderVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
          setItems: function() {
             TreeViewModel.superclass.setItems.apply(this, arguments);
-            if (this._options.expanderDisplayMode === 'adaptive') {
+            if (_private.getExpanderVisibility(this._options) === 'hasChildren') {
                _private.determinePresenceChildItem(this);
             }
          },
@@ -305,7 +338,7 @@ define('Controls/List/Tree/TreeViewModel', [
             current.isExpanded = current.item.get && this.isExpanded(dispItem);
             current.parentProperty = this._options.parentProperty;
             current.nodeProperty = this._options.nodeProperty;
-            current.expanderDisplayMode = this._options.expanderDisplayMode;
+            current.expanderVisibility = _private.getExpanderVisibility(this._options);
             current.thereIsChildItem = this._thereIsChildItem;
             current.hasChildItem = !current.isGroup && _private.hasChildItem(this, current.key);
             current.shouldDrawExpander = _private.shouldDrawExpander;

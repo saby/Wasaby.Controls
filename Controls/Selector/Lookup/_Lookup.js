@@ -65,7 +65,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
 
          if (itemsCount) {
-            lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
+            lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
             itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
@@ -159,7 +159,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             itemsSizes = [],
             measurer = document.createElement('div'),
             maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
-            visibleItems = _private.getLastSelectedItems(self, maxVisibleItems);
+            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
@@ -206,8 +206,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
       },
 
-      getLastSelectedItems: function(self, itemsCount) {
-         return chain.factory(self._options.items).last(itemsCount).value();
+      getLastSelectedItems: function(items, itemsCount) {
+         return chain.factory(items).last(itemsCount).value();
       },
 
       isShowCounter: function(itemsCount, maxVisibleItems) {
@@ -327,7 +327,10 @@ define('Controls/Selector/Lookup/_Lookup', [
 
          /* move focus to input after select, because focus will be lost after closing popup,
           * only in multi-select mode, in single-select mode input is not displayed after selecting a item */
-         this._options.multiSelect && this.activate();
+         if (this._options.multiSelect) {
+            // toDo костыль от Андрея Шипина по фокусам до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
+            this._children.inputRender._children.divinput.focus();
+         }
       },
 
       _crossClick: function(event, item) {

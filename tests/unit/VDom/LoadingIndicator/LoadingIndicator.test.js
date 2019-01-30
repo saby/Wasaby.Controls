@@ -7,6 +7,19 @@ define([
       let Loading = new LoadingIndicator();
       Loading._beforeMount({});
 
+      it('LoadingIndicator - delay', () => {
+         let LoadingDelay = new LoadingIndicator();
+         LoadingDelay._beforeMount({
+            delay: 1
+         });
+         assert.equal(LoadingDelay._getDelay({}), 1);
+         assert.equal(LoadingDelay._getDelay({delay: 5}), 5);
+         LoadingDelay._beforeMount({});
+         assert.equal(LoadingDelay._getDelay({}), 2000);
+         assert.equal(LoadingDelay._getDelay({delay: 3}), 3);
+         LoadingDelay.destroy();
+      });
+
       it('LoadingIndicator - add', () => {
          Loading._toggleIndicator = () => {
          };
@@ -97,7 +110,6 @@ define([
          Loading.hide();
          assert.equal(Loading._stack.getCount(), 0);
       });
-
       after(() => {
          Loading.destroy();
       });

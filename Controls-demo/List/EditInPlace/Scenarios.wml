@@ -29,7 +29,7 @@
       header="{{ _gridHeader2 }}"
       columns="{{ _gridColumns2 }}"
       dataLoadCallback="{{_dataLoadCallback}}"
-      showRowSeparator="{{ true }}"
+      rowSeparatorVisibility="{{ true }}"
       keyProperty="id"
       resultsPosition="top">
       <ws:editingConfig>
@@ -37,7 +37,6 @@
       </ws:editingConfig>
    </Controls.Grid>
    <div class="ControlsDemo-EipScenarios__tableFooter">
-      <Controls.List.AddButton caption="{[Наименование]}" />
       <span class="controls-addition-color controls-small-text-size">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 4 - редактирование на странице (в реестре), режим "по ховеру</div>
@@ -49,7 +48,7 @@
       dataLoadCallback="{{_dataLoadCallback}}"
       parentProperty="Раздел"
       nodeProperty="Раздел@"
-      showRowSeparator="{{ true }}"
+      rowSeparatorVisibility="{{ true }}"
       keyProperty="id">
       <ws:editingConfig>
          <ws:Object editOnClick="{{true}}"/>
@@ -61,7 +60,7 @@
       source="{{ _viewSource5 }}"
       columns="{{ _gridColumns5 }}"
       dataLoadCallback="{{_dataLoadCallback}}"
-      showRowSeparator="{{ true }}"
+      rowSeparatorVisibility="{{ true }}"
       keyProperty="id"
       resultsPosition="top">
       <ws:editingConfig>

@@ -1,11 +1,12 @@
 define('Controls/List/Grid/GridViewModel', [
+   'Core/IoC',
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
    'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
    'Core/detection'
-], function(BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection) {
+], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection) {
    'use strict';
 
    var
@@ -24,7 +25,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.multiSelectVisibility) {
-               preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.leftPadding || 'default');
+               preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
             }
 
             // Стиль колонки
@@ -32,11 +33,10 @@ define('Controls/List/Grid/GridViewModel', [
 
             // Отступ для последней колонки
             if (params.columnIndex === params.columns.length - 1) {
-               preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.rightPadding || 'default');
+               preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase();
             }
-
-            // Межстрочный интервал
-            preparedClasses += ' controls-Grid__row-cell_rowSpacing_' + (params.rowSpacing || 'default');
+            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
+            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
 
             // Вертикальное выравнивание хедера
             if (params.columns[params.columnIndex].valign) {
@@ -45,10 +45,10 @@ define('Controls/List/Grid/GridViewModel', [
             return preparedClasses;
          },
 
-         prepareRowSeparatorClasses: function(showRowSeparator, rowIndex, rowCount) {
+         prepareRowSeparatorClasses: function(rowSeparatorVisibility, rowIndex, rowCount) {
             var
                result = '';
-            if (showRowSeparator) {
+            if (rowSeparatorVisibility) {
                if (rowIndex === 0) {
                   result += ' controls-Grid__row-cell_firstRow';
                   result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
@@ -65,11 +65,11 @@ define('Controls/List/Grid/GridViewModel', [
             return result;
          },
 
-         getItemColumnCellClasses: function(current, columnIndex) {
+         getItemColumnCellClasses: function(current) {
             var
                cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
 
-            cellClasses += _private.prepareRowSeparatorClasses(current.showRowSeparator, current.index, current.dispItem.getOwner().getCount());
+            cellClasses += _private.prepareRowSeparatorClasses(current.rowSeparatorVisibility, current.index, current.dispItem.getOwner().getCount());
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0) {
@@ -80,13 +80,9 @@ define('Controls/List/Grid/GridViewModel', [
                   style: current.style,
                   columnIndex: current.columnIndex,
                   multiSelectVisibility: current.multiSelectVisibility !== 'hidden',
-                  leftPadding: current.leftPadding,
-                  rightPadding: current.rightPadding,
-                  rowSpacing: current.rowSpacing
+                  itemPadding: current.itemPadding
                });
             }
-
-            cellClasses += ' controls-Grid__row-cell_rowSpacing_default';
 
             if (current.isSelected) {
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
@@ -100,11 +96,32 @@ define('Controls/List/Grid/GridViewModel', [
 
             return cellClasses;
          },
+         getStickyColumn: function(cfg) {
+            var
+               result;
+            if (cfg.stickyColumn) {
+               result = {
+                  index: cfg.stickyColumn.index,
+                  property: cfg.stickyColumn.property
+               };
+            } else if (cfg.columns) {
+               for (var idx = 0; idx < cfg.columns.length; idx++) {
+                  if (cfg.columns[idx].stickyProperty) {
+                     result = {
+                        index: idx,
+                        property: cfg.columns[idx].stickyProperty
+                     };
+                     break;
+                  }
+               }
+            }
+            return result;
+         },
          prepareLadder: function(self) {
             var
                fIdx, idx, item, prevItem,
                ladderProperties = self._options.ladderProperties,
-               stickyColumn = self._options.stickyColumn,
+               stickyColumn = _private.getStickyColumn(self._options),
                supportLadder = !!(ladderProperties && ladderProperties.length),
                supportSticky = !!stickyColumn,
                ladder = {}, ladderState = {}, stickyLadder = {},
@@ -320,9 +337,7 @@ define('Controls/List/Grid/GridViewModel', [
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
-                  leftPadding: this._options.leftPadding,
-                  rightPadding: this._options.rightPadding,
-                  rowSpacing: this._options.rowSpacing
+                  itemPadding: this._model.getItemPadding()
                });
             }
             if (headerColumn.column.align) {
@@ -390,9 +405,7 @@ define('Controls/List/Grid/GridViewModel', [
                   columns: this._resultsColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
-                  leftPadding: this._options.leftPadding,
-                  rightPadding: this._options.rightPadding,
-                  rowSpacing: this._options.rowSpacing
+                  itemPadding: this._model.getItemPadding()
                });
             }
 
@@ -460,6 +473,21 @@ define('Controls/List/Grid/GridViewModel', [
             this._notify('onListChange');
          },
 
+         setLeftSpacing: function(leftSpacing) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setLeftSpacing(leftSpacing);
+         },
+
+         setRightSpacing: function(rightSpacing) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setRightSpacing(rightSpacing);
+         },
+
+         setRowSpacing: function(rowSpacing) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setRowSpacing(rowSpacing);
+         },
+
          getColumns: function() {
             return this._columns;
          },
@@ -519,8 +547,16 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getSorting();
          },
 
+         setItemPadding: function(itemPadding) {
+            this._model.setItemPadding(itemPadding);
+         },
+
          getSwipeItem: function() {
             return this._model.getSwipeItem();
+         },
+
+         setCollapsedGroups: function(collapsedGroups) {
+            this._model.setCollapsedGroups(collapsedGroups);
          },
 
          reset: function() {
@@ -538,12 +574,13 @@ define('Controls/List/Grid/GridViewModel', [
          getItemDataByItem: function(dispItem) {
             var
                self = this,
-               stickyColumn = this._options.stickyColumn,
+               stickyColumn = _private.getStickyColumn(this._options),
                current = this._model.getItemDataByItem(dispItem),
                isStickedColumn;
-            current.leftPadding = this._options.leftPadding;
-            current.rightPadding = this._options.rightPadding;
+
+            //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
+
             current.isNotFullGridSupport = cDetection.isNotFullGridSupport;
             current.style = this._options.style;
 
@@ -560,12 +597,12 @@ define('Controls/List/Grid/GridViewModel', [
 
             if (this._options.groupMethod || this._options.groupingKeyCallback) {
                if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
-                  current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + (current.rightPadding || 'default');
+                  current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
                   return current;
                }
             }
 
-            current.showRowSeparator = this._options.showRowSeparator;
+            current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
 
             current.columnIndex = 0;
 
@@ -602,7 +639,7 @@ define('Controls/List/Grid/GridViewModel', [
                   currentColumn.ladderWrapper = LadderWrapper;
                }
                if (stickyColumn) {
-                  isStickedColumn = stickyColumn.index === (current.multiSelectVisibility ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
+                  isStickedColumn = stickyColumn.index === (current.multiSelectVisibility !== 'hidden' ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
                   if (cDetection.isNotFullGridSupport) {
                      currentColumn.hiddenForLadder = isStickedColumn && !self._ladder.stickyLadder[current.index].ladderLength;
                   } else {
@@ -636,12 +673,30 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.isLast();
          },
 
+         setStickyColumn: function(stickyColumn) {
+            this._options.stickyColumn = stickyColumn;
+            this._ladder = _private.prepareLadder(this);
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         setLadderProperties: function(ladderProperties) {
+            this._options.ladderProperties = ladderProperties;
+            this._ladder = _private.prepareLadder(this);
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
          updateIndexes: function(startIndex, stopIndex) {
             this._model.updateIndexes(startIndex, stopIndex);
          },
 
          setItems: function(items) {
             this._model.setItems(items);
+         },
+
+         setItemTemplateProperty: function(itemTemplateProperty) {
+            this._model.setItemTemplateProperty(itemTemplateProperty);
          },
 
          getItems: function() {
@@ -703,6 +758,18 @@ define('Controls/List/Grid/GridViewModel', [
 
          setSwipeItem: function(itemData) {
             this._model.setSwipeItem(itemData);
+         },
+
+         setShowRowSeparator: function(showRowSeparator) {
+            this._options.showRowSeparator = showRowSeparator;
+            this._nextVersion();
+            this._notify('onListChange');
+         },
+
+         setRowSeparatorVisibility: function(rowSeparatorVisibility) {
+            this._options.rowSeparatorVisibility = rowSeparatorVisibility;
+            this._nextVersion();
+            this._notify('onListChange');
          },
 
          updateSelection: function(selectedKeys) {

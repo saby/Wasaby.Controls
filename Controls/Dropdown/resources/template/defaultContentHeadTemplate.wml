@@ -1,4 +1,0 @@
-<div class="controls-DropdownList-header">
-   <div if="{{icon}}" class="{{icon}}"></div>
-   <div if="{{caption}}" class="controls-DropdownList-header-caption {{icon ? 'controls-DropdownList__header-icon' : ''}}">{{caption}}</div>
-</div>

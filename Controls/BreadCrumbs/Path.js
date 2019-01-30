@@ -8,7 +8,7 @@ define('Controls/BreadCrumbs/Path', [
    'Controls/Utils/applyHighlighter',
    'wml!Controls/BreadCrumbs/Path/Path',
    'wml!Controls/Heading/Back/Back',
-   'WS.Data/Entity/Model',
+   'Types/entity',
    'Controls/Heading/Back',
    'css!theme?Controls/BreadCrumbs/Path/Path'
 ], function(
@@ -21,7 +21,7 @@ define('Controls/BreadCrumbs/Path', [
    applyHighlighter,
    template,
    backButtonTemplate,
-   Model
+   entity
 ) {
    'use strict';
 
@@ -70,12 +70,12 @@ define('Controls/BreadCrumbs/Path', [
             self._breadCrumbsClass = '';
          }
       },
-      
+
       getRootModel: function(root, keyProperty) {
          var rawData = {};
-         
+
          rawData[keyProperty] = root;
-         return new Model({
+         return new entity.Model({
             idProperty: keyProperty,
             rawData: rawData
          });
@@ -137,13 +137,13 @@ define('Controls/BreadCrumbs/Path', [
 
       _onBackButtonClick: function() {
          var item;
-         
+
          if (this._options.items.length > 1) {
             item = this._options.items[this._options.items.length - 2];
          } else {
             item = this._getRootModel(this._options.root, this._options.keyProperty);
          }
-   
+
          this._notify('itemClick', [item]);
       },
 

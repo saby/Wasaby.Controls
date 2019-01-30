@@ -8,8 +8,10 @@ define('Controls/Container/MasterDetail', [
     * Control that allows to implement the Master-Detail interface
     * @class Controls/Container/MasterDetail
     * @extends Core/Control
+    * @mixes Controls/Container/MasterList/Styles
     * @control
     * @author Волоцкой В.Д.
+    * @public
     * @demo Controls-demo/MasterDetail/Demo
     */
 

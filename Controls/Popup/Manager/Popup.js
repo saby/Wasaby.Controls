@@ -84,7 +84,8 @@ define('Controls/Popup/Manager/Popup',
             this._notify('popupDragEnd', [this._options.id], { bubbling: true });
          },
 
-         _animated: function() {
+         _animated: function(ev) {
+            this._children.resizeDetect.start(ev);
             this._notify('popupAnimated', [this._options.id], { bubbling: true });
          },
 
@@ -114,12 +115,6 @@ define('Controls/Popup/Manager/Popup',
 
             // After updating popup position we will updating the position of the popups open with it.
             runDelayed(this._callOpenersUpdate.bind(this));
-         },
-
-         _delayedUpdate: function() {
-            // Many processors can affect the size and layout of a page.
-            // Wait for them to work out and recalculate the size of popups.
-            runDelayed(this._update.bind(this));
          },
 
          /**

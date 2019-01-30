@@ -21,12 +21,33 @@ class Coverage:
 
     def get_fullpath_test_name(self, src):
         """Получаем пути расположения файлов"""
-        os.chdir(os.path.join(src, '..'))
-        for root_test in ('SBIS3.CONTROLS', 'VDOM'):
-            for root, _, filename in os.walk(os.path.join(root_test)):
-                for f in filename:
-                    if f.startswith('test_') and f.endswith('.py'):
-                        self.fullpath.append(os.path.join(root, f))
+        test_path, _ = os.path.split(src)
+        for root, _, filename in os.walk(test_path):
+            for f in filename:
+                if f.startswith('test_') and f.endswith('.py'):
+                    self.fullpath.append(os.path.join(root, f).replace(test_path + os.path.sep, ''))
+
+    @staticmethod
+    def search_other_file(cover_file):
+        """Ищем файлы, которые могут быть связаны"""
+
+        other_files = [cover_file]
+        component_path = os.path.splitext(cover_file)[0]
+        # если есть папка с названием компонента
+        if os.path.exists(component_path):
+            for other in os.listdir(component_path):
+                other_component_file = os.path.join(component_path, other)
+                if os.path.isfile(other_component_file):
+                    other_files.append(other_component_file)
+
+        # Демки
+        if 'Controls-demo' in cover_file:
+            demo_path = os.path.split(cover_file)[0]
+            if not demo_path.endswith('Controls-demo'):
+                for demo_root,_, demo_file in os.walk(demo_path):
+                    for f in demo_file:
+                        other_files.append(os.path.join(demo_root, f))
+        return other_files
 
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
@@ -52,14 +73,7 @@ class Coverage:
                     d = json.load(f, encoding='utf-8')
                     # получаем зависимости
                     for k in d:
-                        component_path = os.path.splitext(k)[0]
-                        # если есть папка с названием компонента
-                        if os.path.exists(component_path):
-                            for other in os.listdir(component_path):
-                                other_component_file = os.path.join(component_path, other)
-                                if os.path.isfile(other_component_file):
-                                    coverage_result.append(other_component_file)
-                        coverage_result.append(k)
+                        coverage_result.extend(self.search_other_file(k))
             # обрезаем пути, переменная берется из сборки
             for i, filename in enumerate(coverage_result):
                 coverage_result[i] = filename.replace(os.sep.join([env, 'controls']), '')

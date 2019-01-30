@@ -1,7 +1,7 @@
 define('Controls-demo/List/List/GroupPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls/Constants',
       'Controls-demo/List/List/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
@@ -9,7 +9,7 @@ define('Controls-demo/List/List/GroupPG',
       'wml!Controls-demo/List/List/resources/GroupPG/groupTemplate'
    ],
 
-   function(Control, MemorySource, ControlsConstants, data, template, config) {
+   function(Control, sourceLib, ControlsConstants, data, template, config) {
       'use strict';
       var Component = Control.extend({
          _template: template,
@@ -40,7 +40,7 @@ define('Controls-demo/List/List/GroupPG',
                name: 'GroupListPG',
                markedKey: '3',
                allowEmptySelection: false,
-               source: new MemorySource({
+               source: new sourceLib.Memory({
                   idProperty: 'id',
                   data: data.groupGadgets
                }),

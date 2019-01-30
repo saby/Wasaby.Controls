@@ -26,7 +26,7 @@
             <Controls.Event.Registrator name="touchmoveDetect" register="touchmove" attr:fixCompatible="1">
                <Controls.Event.Registrator name="touchendDetect" register="touchend" attr:fixCompatible="1">
                   <Controls.Event.Registrator name="mousedownDetect" register="mousedown" attr:fixCompatible="1">
-                     <Controls.Popup.Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="_popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
+                     <Controls.Popup.Manager on:managerPopupCreated="_popupCreatedHandler()" on:managerPopupDestroyed="_popupDestroyedHandler()" on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()" stackRootWidth="{{_options.width}}">
                         <Controls.Application.TouchDetector name="touchDetector">
                            <Controls.DragNDrop.Container name="dragNDropContainer">
                               <body
@@ -59,12 +59,11 @@
                                     <ws:partial
                                        template="{{ _options.content }}"
                                        scope="{{ templateConfig }}"
-                                       attr:class="zIndex-context"
                                        on:showIndicator="LoadingIndicator._showHandler()"
                                        on:hideIndicator="LoadingIndicator._hideHandler()"/>
                                  </Controls.Application._Wait>
                                  <Controls.Container.LoadingIndicator name="LoadingIndicator" mainIndicator="{{true}}">
-                                    <div attr:class="zIndex-content"></div>
+                                    <div></div>
                                  </Controls.Container.LoadingIndicator>
                               </ws:if>
                               <ws:else>

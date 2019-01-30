@@ -145,10 +145,13 @@
             "type": "enum",
             "title": "Displaying icon style.",
             "enum": {
-              "default": "Icon has default display style in this type of button.",
-              "attention": "Icon has attention display style.",
-              "error": "Icon has error display style.",
-              "done": "Icon has done icon style."
+              "secondary": "Icon display as icon with border.",
+              "primary": "Icon display as main link style.",
+              "success": "Icon display as first nonaccent link style.",
+              "warning": "Icon display as second nonaccent link style.",
+              "danger": "Icon display as third nonaccent link style.",
+              "info": "Icon display as first accent link style.",
+              "default": "Icon display as default tyext."
             }
           }
         }
@@ -987,10 +990,6 @@
             "type": "String",
             "title": "Field value."
           },
-          "tooltip": {
-            "type": "String",
-            "title": "Field tooltip."
-          },
           "tagStyle": {
             "type": "enum",
             "title": "Tag style (colored indicator).",
@@ -1187,6 +1186,10 @@
             "type": "Boolean",
             "default": true,
             "title": "If true, text is selected when input is clicked."
+          },
+          "useGrouping": {
+            "default": true,
+            "type": "Boolean"
           },
           "textAlign": {
             "type": "enum",
@@ -1896,23 +1899,19 @@
       "ws-config": {
         "title": "Базовая конфигурация",
         "options": {
-          "placeholder": {
-            "type": "String|function",
-            "title": "Field placeholder."
-          },
-          "tooltip": {
+          "value": {
             "type": "String",
-            "title": "Text of the tooltip shown when the control is hovered over."
+            "default": "'' (empty string)",
+            "title": "Text in the field."
+          },
+          "placeholder": {
+            "type": "function|String",
+            "title": "Field placeholder."
           },
           "selectOnClick": {
             "type": "Boolean",
             "default": false,
             "title": "Determines whether text is selected when input is clicked."
-          },
-          "value": {
-            "type": "String",
-            "default": "'' (empty string)",
-            "title": "Text in the field."
           },
           "readOnly": {
             "type": "Boolean",

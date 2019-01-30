@@ -27,13 +27,22 @@ define('Controls/List/TreeControl', [
       DEFAULT_COLUMNS_VALUE = [];
 
    var _private = {
-      clearSourceControllers: function(self) {
-         for (var prop in self._nodesSourceControllers) {
-            if (self._nodesSourceControllers.hasOwnProperty(prop)) {
-               self._nodesSourceControllers[prop].destroy();
-               delete self._nodesSourceControllers[prop];
+      nodesSourceControllersIterator: function(nodesSourceControllers, callback) {
+         for (var prop in nodesSourceControllers) {
+            if (nodesSourceControllers.hasOwnProperty(prop)) {
+               callback(prop, nodesSourceControllers[prop]);
             }
          }
+      },
+      clearNodeSourceController: function(sourceControllers, node) {
+         sourceControllers[node].destroy();
+         delete sourceControllers[node];
+         return sourceControllers;
+      },
+      clearSourceControllers: function(self) {
+         _private.nodesSourceControllersIterator(self._nodesSourceControllers, function(node) {
+            _private.clearNodeSourceController(self._nodesSourceControllers, node);
+         });
       },
       createSourceController: function(source, navigation) {
          return new SourceController({
@@ -123,22 +132,35 @@ define('Controls/List/TreeControl', [
          return expandedItems instanceof Array && expandedItems[0] === null;
       },
       beforeReloadCallback: function(self, filter, sorting, navigation, cfg) {
-         var parentProperty = cfg.parentProperty;
-         var baseControl = self._children.baseControl;
-         var expandedItemsKeys;
-         
-         if (baseControl) {
-            expandedItemsKeys = Object.keys(baseControl.getViewModel().getExpandedItems());
-         } else {
-            expandedItemsKeys = cfg.expandedItems || [];
-         }
-         
-         if (expandedItemsKeys.length && !_private.isExpandAll(expandedItemsKeys)) {
-            filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [];
-            filter[parentProperty].push(self._root);
-            filter[parentProperty] = filter[parentProperty].concat(expandedItemsKeys);
-         } else {
-            filter[parentProperty] = self._root;
+         if (self._deepReload) {
+            var parentProperty = cfg.parentProperty;
+            var baseControl = self._children.baseControl;
+            var nodeSourceControllers = self._nodesSourceControllers;
+            var expandedItemsKeys;
+            var isExpandAll;
+            var viewModel;
+   
+            if (baseControl) {
+               viewModel = baseControl.getViewModel();
+               expandedItemsKeys = Object.keys(viewModel.getExpandedItems());
+               isExpandAll = viewModel.isExpandAll();
+               _private.nodesSourceControllersIterator(nodeSourceControllers, function(node) {
+                  if (expandedItemsKeys.indexOf(node) === -1) {
+                     _private.clearNodeSourceController(nodeSourceControllers, node);
+                  }
+               });
+            } else {
+               expandedItemsKeys = cfg.expandedItems || [];
+               isExpandAll = _private.isExpandAll(expandedItemsKeys);
+            }
+   
+            if (expandedItemsKeys.length && !isExpandAll) {
+               filter[parentProperty] = filter[parentProperty] instanceof Array ? filter[parentProperty] : [];
+               filter[parentProperty].push(self._root);
+               filter[parentProperty] = filter[parentProperty].concat(expandedItemsKeys);
+            } else {
+               filter[parentProperty] = self._root;
+            }
          }
       },
 
@@ -212,6 +234,7 @@ define('Controls/List/TreeControl', [
     *
     * @class Controls/List/TreeControl
     * @mixes Controls/interface/IEditableList
+    * @mixes Controls/List/TreeGridView/Styles
     * @extends Controls/List/ListControl
     * @control
     * @public
@@ -256,6 +279,15 @@ define('Controls/List/TreeControl', [
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
          }
+         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
+            this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
+         }
+         if (newOptions.expanderDisplayMode !== this._options.expanderDisplayMode) {
+            this._children.baseControl.getViewModel().setExpanderDisplayMode(newOptions.expanderDisplayMode);
+         }
+         if (newOptions.expanderVisibility !== this._options.expanderVisibility) {
+            this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
+         }
       },
       _afterUpdate: function(oldOptions) {
          TreeControl.superclass._afterUpdate.apply(this, arguments);
@@ -283,7 +315,16 @@ define('Controls/List/TreeControl', [
          _private.loadMore(this, dispItem);
       },
       reload: function() {
-         return this._children.baseControl.reload();
+         var self = this;
+         
+         //deep reload is needed only if reload was called from public API.
+         //otherwise, option changing will work incorrect.
+         //option changing may be caused by search or filtering
+         self._deepReload = true;
+         return this._children.baseControl.reload().addCallback(function(res) {
+            self._deepReload = false;
+            return res;
+         });
       },
       
       reloadItem: function(key, readMeta, direction) {

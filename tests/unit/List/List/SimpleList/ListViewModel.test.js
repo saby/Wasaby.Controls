@@ -268,6 +268,22 @@ define([
                assert.equal(current.dragTargetPosition, 'after');
                assert.equal(current.draggingItemData, dragItemData);
             });
+            it('getSpacingClassList', function() {
+               assert.equal(ListViewModel._private.getSpacingClassList({
+                  itemPadding: {
+                     left: 'm',
+                     right: 'XS'
+                  },
+                  multiSelectVisibility: 'hidden'
+               }), ' controls-ListView__item-leftPadding_m controls-ListView__item-rightPadding_xs');
+               assert.equal(ListViewModel._private.getSpacingClassList({
+                  itemPadding: {
+                     left: 'XS',
+                     right: 'm'
+                  },
+                  multiSelectVisibility: 'visible'
+               }), ' controls-ListView__item-rightPadding_m');
+            });
          });
 
          describe('calculateDragTargetPosition', function() {

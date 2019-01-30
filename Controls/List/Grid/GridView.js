@@ -1,5 +1,6 @@
 define('Controls/List/Grid/GridView', [
    'Core/Deferred',
+   'Core/IoC',
    'Controls/List/ListView',
    'wml!Controls/List/Grid/GridViewTemplateChooser',
    'wml!Controls/List/Grid/Item',
@@ -14,7 +15,7 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/ColGroup',
    'css!theme?Controls/List/Grid/Grid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
+], function(cDeferred, IoC, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
    GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
@@ -44,6 +45,15 @@ define('Controls/List/Grid/GridView', [
 
    var
       _private = {
+         checkDeprecated: function(cfg) {
+            // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            if (cfg.showRowSeparator !== undefined) {
+               IoC.resolve('ILogger').warn('IGridControl', 'Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".');
+            }
+            if (cfg.stickyColumn !== undefined) {
+               IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
+            }
+         },
          prepareGridTemplateColumns: function(columns, multiselect) {
             var
                result = '';
@@ -77,11 +87,17 @@ define('Controls/List/Grid/GridView', [
          },
          calcFooterPaddingClass: function(params) {
             var
+               paddingLeft,
                result = 'controls-GridView__footer controls-GridView__footer__paddingLeft_';
             if (params.multiSelectVisibility === 'onhover' || params.multiSelectVisibility === 'visible') {
                result += 'withCheckboxes';
             } else {
-               result += params.paddingLeft || 'default';
+               if (params.itemPadding) {
+                  paddingLeft = params.itemPadding.left;
+               } else {
+                  paddingLeft = params.leftSpacing || params.leftPadding;
+               }
+               result += (paddingLeft || 'default').toLowerCase();
             }
             return result;
          }
@@ -99,6 +115,7 @@ define('Controls/List/Grid/GridView', [
             var
                requireDeferred = new cDeferred(),
                modules = [];
+            _private.checkDeprecated(cfg);
             this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
             if (cDetection.isNotFullGridSupport) {
                modules.push('css!theme?Controls/List/Grid/OldGrid');
@@ -112,6 +129,8 @@ define('Controls/List/Grid/GridView', [
          },
 
          _beforeUpdate: function(newCfg) {
+            GridView.superclass._beforeUpdate.apply(this, arguments);
+
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                this._listModel.setColumns(newCfg.columns);
@@ -124,6 +143,18 @@ define('Controls/List/Grid/GridView', [
                if (!cDetection.isNotFullGridSupport) {
                   _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                }
+            }
+            if (this._options.stickyColumn !== newCfg.stickyColumn) {
+               this._listModel.setStickyColumn(newCfg.stickyColumn);
+            }
+            if (this._options.ladderProperties !== newCfg.ladderProperties) {
+               this._listModel.setLadderProperties(newCfg.ladderProperties);
+            }
+            if (this._options.rowSeparatorVisibility !== newCfg.rowSeparatorVisibility) {
+               this._listModel.setRowSeparatorVisibility(newCfg.rowSeparatorVisibility);
+            }
+            if (this._options.showRowSeparator !== newCfg.showRowSeparator) {
+               this._listModel.setShowRowSeparator(newCfg.showRowSeparator);
             }
          },
 

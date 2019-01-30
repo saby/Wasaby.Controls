@@ -6,11 +6,25 @@ define('Controls/Utils/ToSourceModel', [
    'Core/core-instance',
    'Core/core-clone',
    'Types/chain',
-   'Types/util'
-], function(Di, cInstance, coreClone, chain, Utils) {
+   'Types/util',
+   'Types/source'
+], function(Di, cInstance, coreClone, chain, Utils, sourceLib) {
 
    function getModel(model, config) {
       return typeof model === 'string' ? Di.create(model, config) : new model(config);
+   }
+   
+   function getSourceModel(source) {
+      var model;
+      
+      //до выполнения задачи https://online.sbis.ru/opendoc.html?guid=4190d360-e9de-49ed-a1a4-7420686134d0
+      if (source instanceof sourceLib.PrefetchProxy) {
+         model = source._$target.getModel();
+      } else {
+         model = source.getModel();
+      }
+      
+      return model;
    }
 
    /**
@@ -25,7 +39,7 @@ define('Controls/Utils/ToSourceModel', [
 
       if (items) {
          if (dataSource && (cInstance.instanceOfMixin(dataSource, 'WS.Data/Source/ISource') || cInstance.instanceOfMixin(dataSource, 'Types/_source/ICrud'))) {
-            dataSourceModel = dataSource.getModel();
+            dataSourceModel = getSourceModel(dataSource);
 
             /* Создадим инстанс модели, который указан в dataSource,
              чтобы по нему проверять модели которые выбраны в поле связи */
@@ -35,7 +49,7 @@ define('Controls/Utils/ToSourceModel', [
              Удалить, как Леха Мальцев будет позволять описывать более гибко поля записи, и указывать в качестве типа прикладную модель.
              Задача:
              https://inside.tensor.ru/opendoc.html?guid=045b9c9e-f31f-455d-80ce-af18dccb54cf&description= */
-            if (cInstance.instanceOfMixin(items, 'WS.Data/Entity/ManyToManyMixin')) {
+            if (cInstance.instanceOfMixin(items, 'Types/_entity/ManyToManyMixin')) {
                items._getMediator().belongsTo(items, function(master) {
                   if (parent) {
                      Utils.logger.error('ToSourceModel: у переданного рекордсета несколько родителей.');
@@ -43,7 +57,7 @@ define('Controls/Utils/ToSourceModel', [
                   parent = master;
                });
 
-               if (parent && cInstance.instanceOfModule(parent, 'WS.Data/Entity/Model')) {
+               if (parent && cInstance.instanceOfModule(parent, 'Types/entity:Model')) {
                   if (saveParentRecordChanges) {
                      changedFields = coreClone(parent._changedFields);
                   } else {
@@ -59,7 +73,7 @@ define('Controls/Utils/ToSourceModel', [
                 чтобы не было конфликтов при мерже полей этих записей */
                if (dataSourceModelInstance._moduleName !==  rec._moduleName) {
                   (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
-                  if (cInstance.instanceOfMixin(items, 'WS.Data/Collection/IList')) {
+                  if (cInstance.instanceOfModule(items, 'Types/collection:List')) {
                      items.replace(newRec, index);
                   } else {
                      items[index] = newRec;
@@ -76,7 +90,7 @@ define('Controls/Utils/ToSourceModel', [
             отличный от поля с ключём, установленного в поле связи. Это связно с тем, что "связь" устанавливается по опеределённому полю,
             и не обязательному по первичному ключу у записей в списке. */
          chain.factory(items).each(function(rec) {
-            if (cInstance.instanceOfModule(rec, 'WS.Data/Entity/Model') &&  rec.getIdProperty() !== idProperty && rec.get(idProperty) !== undefined) {
+            if (cInstance.instanceOfModule(rec, 'Types/entity:Model') &&  rec.getIdProperty() !== idProperty && rec.get(idProperty) !== undefined) {
                rec.setIdProperty(idProperty);
             }
          });

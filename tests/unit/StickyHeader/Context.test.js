@@ -11,30 +11,32 @@ define(
          describe('constructor', function() {
             it('Create a component with a invisible shadow', function() {
                result = new StickyHeader({
-                  shadowVisible: false
-               }).shadowVisible;
+                  shadowPosition: ''
+               }).shadowPosition;
 
-               assert.equal(result, false);
+               assert.equal(result, '');
             });
 
             it('Create a component with a visible shadow', function() {
                result = new StickyHeader({
-                  shadowVisible: true
-               }).shadowVisible;
+                  shadowPosition: 'top'
+               }).shadowPosition;
 
-               assert.equal(result, true);
+               assert.equal(result, 'top');
             });
          });
 
          it('The value of the properties upon creation', function() {
             result = {
-               position: StickyHeader.prototype.position,
-               shadowVisible: StickyHeader.prototype.shadowVisible
+               top: StickyHeader.prototype.top,
+               bottom: StickyHeader.prototype.bottom,
+               shadowPosition: StickyHeader.prototype.shadowPosition
             };
 
             assert.deepEqual(result, {
-               position: 0,
-               shadowVisible: false
+               top: 0,
+               bottom: 0,
+               shadowPosition: ''
             });
          });
       });

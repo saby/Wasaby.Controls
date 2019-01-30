@@ -13,6 +13,7 @@ define(
                {
                   testName: 'Invalid 12.0 => 12a.0',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '12',
@@ -29,6 +30,7 @@ define(
                {
                   testName: 'Invalid 12 => 12a',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '12',
@@ -45,6 +47,7 @@ define(
                {
                   testName: 'Invalid 12.3 => 12.3a',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '12.3',
@@ -61,6 +64,7 @@ define(
                {
                   testName: 'Invalid 123.0 => -123.0',
                   controlConfig: {
+                     useGrouping: true,
                      onlyPositive: true
                   },
                   splitValue: {
@@ -78,6 +82,7 @@ define(
                {
                   testName: 'Invalid 123 => -123',
                   controlConfig: {
+                     useGrouping: true,
                      onlyPositive: true
                   },
                   splitValue: {
@@ -95,6 +100,7 @@ define(
                {
                   testName: 'Max length integers part 12 345.0 => 12 345.6',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -112,6 +118,7 @@ define(
                {
                   testName: 'Max length integers part 12 345 => 12 345.6',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -129,6 +136,7 @@ define(
                {
                   testName: 'Max length decimal part 0.12345 => 0.12345',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 5
                   },
                   splitValue: {
@@ -146,6 +154,7 @@ define(
                {
                   testName: 'Max length decimal part 0.12345 => 0.18345',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 5
                   },
                   splitValue: {
@@ -163,6 +172,7 @@ define(
                {
                   testName: 'Forbid inserting dot if precision is 0',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 0
                   },
                   splitValue: {
@@ -180,6 +190,7 @@ define(
                {
                   testName: 'No dot when input starts if precision is 0 (empty field)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 0
                   },
                   splitValue: {
@@ -197,6 +208,7 @@ define(
                {
                   testName: 'No dot when input starts if precision is 0 (field with value)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 0
                   },
                   splitValue: {
@@ -214,6 +226,7 @@ define(
                {
                   testName: 'Inserting a dot at the beginning of a line results in \'0.0\'',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -230,6 +243,7 @@ define(
                {
                   testName: 'Inserting 5 at the beginning of a line results in \'5.0\'',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -246,6 +260,7 @@ define(
                {
                   testName: 'Delete space operation removes symbol before space and moves cursor left',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123',
@@ -262,6 +277,7 @@ define(
                {
                   testName: 'Symbols ",", "б", "ю", "Б", "Ю" are replaced by dot',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123',
@@ -278,6 +294,7 @@ define(
                {
                   testName: 'Transfer of a position on a dot.',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '0',
@@ -294,6 +311,7 @@ define(
                {
                   testName: 'Second dot is not allowed',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123.456',
@@ -310,6 +328,7 @@ define(
                {
                   testName: 'Remove space using \'delete\' button',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123',
@@ -326,6 +345,7 @@ define(
                {
                   testName: 'Insert minus after 0',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '0',
@@ -342,6 +362,7 @@ define(
                {
                   testName: 'Insert minus after first zero in 0.0',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '0',
@@ -358,6 +379,7 @@ define(
                {
                   testName: 'Insert number after first "0" in line',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '0',
@@ -374,6 +396,7 @@ define(
                {
                   testName: 'Insert number after first "0" in line (with .0)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '0',
@@ -391,6 +414,7 @@ define(
                {
                   testName: 'Insert number after first "-0" in line',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '-0',
@@ -408,6 +432,7 @@ define(
                {
                   testName: 'Insert number after first "-0" in line (with .0)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '-0',
@@ -425,6 +450,7 @@ define(
                {
                   testName: 'Insert number in field with maxed integers (first in line)',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -443,6 +469,7 @@ define(
                {
                   testName: 'Insert number in field with maxed integers (before space)',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 4
                   },
                   splitValue: {
@@ -461,6 +488,7 @@ define(
                {
                   testName: 'Insert number in field with maxed integers (first in line, with .0)',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -478,7 +506,9 @@ define(
 
                {
                   testName: 'Insert number in field from buffer',
-                  controlConfig: {},
+                  controlConfig: {
+                     useGrouping: true
+                  },
                   splitValue: {
                      before: '1 2',
                      insert: '567',
@@ -495,6 +525,7 @@ define(
                {
                   testName: 'Insert number in field with maxed integers (before space, with .0)',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 4
                   },
                   splitValue: {
@@ -513,6 +544,7 @@ define(
                {
                   testName: 'Delete dot forward followed by single zero',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123',
@@ -530,6 +562,7 @@ define(
                {
                   testName: 'Delete dot forward followed by some number',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123',
@@ -547,6 +580,7 @@ define(
                {
                   testName: 'Delete whole decimal part',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123',
@@ -564,6 +598,7 @@ define(
                {
                   testName: 'Delete last symbol',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -581,6 +616,7 @@ define(
                {
                   testName: 'Delete last symbol (with .0)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -598,6 +634,7 @@ define(
                {
                   testName: 'Delete last symbol (negative number, precision != 0)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '-',
@@ -615,6 +652,7 @@ define(
                {
                   testName: 'Delete last symbol (negative number, precision == 0)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 0
                   },
                   splitValue: {
@@ -633,6 +671,7 @@ define(
                {
                   testName: 'Delete decimal when showEmptyDecimals is enabled',
                   controlConfig: {
+                     useGrouping: true,
                      showEmptyDecimals: true
                   },
                   splitValue: {
@@ -651,6 +690,7 @@ define(
                {
                   testName: '123.0 delete 0',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123.',
@@ -668,6 +708,7 @@ define(
                {
                   testName: '1.0 delete 1',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -685,6 +726,7 @@ define(
                {
                   testName: '0.0 delete first 0 (backspace)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -702,6 +744,7 @@ define(
                {
                   testName: '0.0 delete first 0 (delete)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -719,6 +762,7 @@ define(
                {
                   testName: '0',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -736,6 +780,7 @@ define(
                {
                   testName: '-0.0 delete first 0 (delete)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '-',
@@ -753,6 +798,7 @@ define(
                {
                   testName: '0.0 delete first 0 (delete with selection)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -770,6 +816,7 @@ define(
                {
                   testName: '-0.0 delete first 0 (delete with selection)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '-',
@@ -787,6 +834,7 @@ define(
                {
                   testName: 'Delete whole value',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -804,6 +852,7 @@ define(
                {
                   testName: 'Forbid inserting second zero at line start',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -821,6 +870,7 @@ define(
                {
                   testName: 'Inserting minus in empty field (precision != 0)',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -838,6 +888,7 @@ define(
                {
                   testName: 'Insert minus in empty field (precision == 0)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 0
                   },
                   splitValue: {
@@ -856,6 +907,7 @@ define(
                {
                   testName: 'Insert first symbol in decimal part: 123.0 => 123.4',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '123.',
@@ -873,6 +925,7 @@ define(
                {
                   testName: 'Max integers length while precision = 0',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5,
                      precision: 0
                   },
@@ -892,6 +945,7 @@ define(
                {
                   testName: 'Insert minus at string start when it contains some value',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '',
@@ -909,6 +963,7 @@ define(
                {
                   testName: 'Insert minus in decimals start, when max decimals length is reached',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 2
                   },
                   splitValue: {
@@ -927,6 +982,7 @@ define(
                {
                   testName: 'Insert float to integers',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '1 2',
@@ -944,6 +1000,7 @@ define(
                {
                   testName: 'Insert float to decimals',
                   controlConfig: {
+                     useGrouping: true
                   },
                   splitValue: {
                      before: '1 234.',
@@ -961,6 +1018,7 @@ define(
                {
                   testName: 'Insert float to decimals with precision (start)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 2
                   },
                   splitValue: {
@@ -979,6 +1037,7 @@ define(
                {
                   testName: 'Insert float to decimals with precision (end)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 2
                   },
                   splitValue: {
@@ -997,6 +1056,7 @@ define(
                {
                   testName: 'Insert long integer number in field with integersLength option',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -1013,8 +1073,9 @@ define(
                },
 
                {
-                  testName: 'Insert long integer number (with delimiters) in field with integersLength option',
+                  testName: 'Insert long integer number (with useGrouping) in field with integersLength option',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -1033,6 +1094,7 @@ define(
                {
                   testName: 'Insert long float number in field with integersLength option',
                   controlConfig: {
+                     useGrouping: true,
                      integersLength: 5
                   },
                   splitValue: {
@@ -1051,6 +1113,7 @@ define(
                {
                   testName: 'Insert number with long decimals part in field with precision option',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 2
                   },
                   splitValue: {
@@ -1069,6 +1132,7 @@ define(
                {
                   testName: 'Insert value in decimals part with precision (decimals part is full)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 2
                   },
                   splitValue: {
@@ -1087,6 +1151,7 @@ define(
                {
                   testName: 'Insert value in decimals part with precision (decimals part is not full)',
                   controlConfig: {
+                     useGrouping: true,
                      precision: 2
                   },
                   splitValue: {
@@ -1113,13 +1178,17 @@ define(
          });
 
          it('getDisplayValue: only integers', function() {
-            var numberViewModel = new NumberViewModel({}, 123456);
+            var numberViewModel = new NumberViewModel({
+               useGrouping: true
+            }, 123456);
 
             assert.equal(numberViewModel.displayValue, '123 456');
          });
 
          it('getDisplayValue: integers and decimals', function() {
-            var numberViewModel = new NumberViewModel({}, 123456.78);
+            var numberViewModel = new NumberViewModel({
+               useGrouping: true
+            }, 123456.78);
 
             assert.equal(numberViewModel.displayValue, '123 456.78');
          });
@@ -1136,7 +1205,9 @@ define(
 
             getValueTests.forEach(function(test, i) {
                it('Test ' + i, function() {
-                  var numberViewModel = new NumberViewModel({}, test[0]);
+                  var numberViewModel = new NumberViewModel({
+                     useGrouping: true
+                  }, test[0]);
 
                   assert.isTrue(numberViewModel.displayValue === test[1]);
                });
