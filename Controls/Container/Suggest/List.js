@@ -57,6 +57,11 @@ define('Controls/Container/Suggest/List',
          getTabKeyFromContext: function(context) {
             var tabKey = context && context.suggestOptionsField && context.suggestOptionsField.options.tabsSelectedKey;
             return tabKey !== undefined ? tabKey : null;
+         },
+
+         dispatchEvent: function(container, nativeEvent, customEvent) {
+            customEvent.keyCode = nativeEvent.keyCode;
+            container.dispatchEvent(customEvent);
          }
       };
       
@@ -81,6 +86,14 @@ define('Controls/Container/Suggest/List',
    
          _tabsSelectedKeyChanged: function(event, key) {
             this._notify('tabsSelectedKeyChanged', [key]);
+         },
+
+         _inputKeydown: function(event, domEvent) {
+            //TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
+            var list = this._children.list;
+            var listContainer = list._container;
+            var customEvent = new Event('keydown');
+            _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent)
          }
       });
    
