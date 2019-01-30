@@ -166,9 +166,9 @@ module.exports = function(Component) {
 
       // Демо-пример: DragNDrop в списках
       '/demo-ws4-drag-and-drop': function(req, res) {
-         requirejs('Controls-demo/OperationsPanel/PanelWithApplication');
+         requirejs('Controls-demo/DragNDrop/DemoWithApplication');
          res.render('wml!Controls/Application/Route', {
-            application: 'Controls-demo/OperationsPanel/PanelWithApplication',
+            application: 'Controls-demo/DragNDrop/DemoWithApplication',
             initDependencies: false
          }, []);
       },
