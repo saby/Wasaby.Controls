@@ -39,6 +39,20 @@ define([
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
+   
+         it('reloadItem', function() {
+            var list = new List({});
+            list._children = {
+               listControl: {
+                  reloadItem: function(key, readMeta, direction) {
+                     assert.equal(key, 'test');
+                     assert.deepEqual(readMeta, {test: 'test'});
+                     assert.equal(direction, 'depth');
+                  }
+               }
+            };
+            list.reloadItem('test', {test: 'test'}, 'depth');
+         });
 
          it('beginAdd', function() {
             var opt = {
