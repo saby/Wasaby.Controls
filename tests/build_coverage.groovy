@@ -1,9 +1,8 @@
 #!/usr/bin/env groovy
-{workspace, scheduler=null -> building(workspace, scheduler=null)}
+{workspace, version, scheduler=null -> building(workspace, version, scheduler=null)}
 
-def building(workspace, scheduler=null) {
+def building(workspace, version, scheduler=null) {
     echo "Задаем параметры сборки"
-    def version = env.JOB_BASE_NAME.split('_')[2]
     echo "Читаем настройки из файла version_application.txt"
     def props = readProperties file: "/home/sbis/mount_test-osr-source_d/Платформа/${version}/version_application.txt"
     echo "Генерируем параметры"
@@ -38,6 +37,12 @@ def building(workspace, scheduler=null) {
         def branch_navigation = props["navigation"]
         def branch_themes = props["themes"]
         def branch_viewsettings = props["viewsettings"]
+        def type_controls
+        if ("${JOB_BASE_NAME}".contains('SBIS3.')) {
+            type_controls = 'SBIS3.CONTROLS'
+        } else {
+            type_controls = 'VDOM'
+        }
 
         echo "Выкачиваем хранилища"
         stage("Checkout"){
@@ -59,7 +64,8 @@ def building(workspace, scheduler=null) {
                                         credentialsId: 'ae2eb912-9d99-4c34-ace5-e13487a9a20b',
                                         url: 'git@git.sbis.ru:autotests/atf.git']]
                                 ])
-                                sh "cp -rf ./atf/ ../reg/atf/"
+                                sh "cp -rf ./atf/ ./${type_controls}/atf/"
+                                sh "cp -rf ./atf/ ../reg/${type_controls}/atf/"
                             }
                         },
                         checkout_engine: {
@@ -269,7 +275,7 @@ def building(workspace, scheduler=null) {
             """
         }
         stage("Тесты"){
-            writeFile file: "./controls/tests/int/config.ini", text:
+            writeFile file: "${workspace}/controls/tests/int/${type_controls}/config.ini", text:
             """# UTF-8
             [general]
             browser = chrome
@@ -283,9 +289,9 @@ def building(workspace, scheduler=null) {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int"""
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/${type_controls}"""
 
-            writeFile file: "./controls/tests/reg/config.ini", text:
+            writeFile file: "${workspace}/controls/tests/reg/${type_controls}/config.ini", text:
             """# UTF-8
             [general]
             browser = chrome
@@ -297,12 +303,11 @@ def building(workspace, scheduler=null) {
             TAGS_TO_START = online
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg
+            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg/${type_controls}
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1"""
 
-
-        dir("${workspace}/controls/tests/int"){
+        dir("${workspace}/controls/tests/int/${type_controls}"){
             sh"""
                 source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
@@ -321,7 +326,7 @@ def building(workspace, scheduler=null) {
             echo "Запускаем интеграционные тесты"
             parallel(
             int: {
-                dir("${workspace}/controls/tests/int"){
+                dir("${workspace}/controls/tests/int/${type_controls}"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
                     python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
@@ -330,7 +335,7 @@ def building(workspace, scheduler=null) {
                 }
             },
             layout: {
-                dir("${workspace}/controls/tests/reg"){
+                dir("${workspace}/controls/tests/reg/${type_controls}"){
                 sh """
                 source /home/sbis/venv_for_test/bin/activate
                 python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
@@ -346,12 +351,12 @@ def building(workspace, scheduler=null) {
             parallel(
                 int: {
                     sh """
-                    python3 coverage_handler.py -s ${workspace}/controls/tests/int/coverage
+                    python3 coverage_handler.py -s ${workspace}/controls/tests/int/${type_controls}/coverage
                     """
                 },
                 reg: {
                     sh """
-                    python3 coverage_handler.py -s ${workspace}/controls/tests/reg/coverage
+                    python3 coverage_handler.py -s ${workspace}/controls/tests/reg/${type_controls}/coverage
                     """
                 }
             )
