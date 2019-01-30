@@ -1,3 +1,9 @@
+import BaseControl = require('Core/Control');
+import coreMerge = require('Core/core-merge');
+import formatDate = require('Core/helpers/Date/format');
+import getCurrentPeriod = require('Core/helpers/Date/getCurrentPeriod');
+import IPeriodSimpleDialog = require('Core/helpers/Date/getCurrentPeriod');
+
 define('Controls/Date/PeriodLiteDialog', [
    'Core/Control',
    'Core/core-merge',
