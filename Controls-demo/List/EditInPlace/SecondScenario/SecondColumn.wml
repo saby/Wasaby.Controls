@@ -15,8 +15,8 @@
                <ws:itemTemplate>
                   <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate">
                      <ws:contentTemplate>
-                        <ws:partial attr:class="ControlsDemo-EipScenarios__categoryNumber" template="wml!Controls/Selector/SelectedCollection/_ContentTemplate" style="bold" size="default" displayProperty="categoryNumber" />
-                        <ws:partial template="wml!Controls/Selector/SelectedCollection/_ContentTemplate" style="default" size="default" displayProperty="category" />
+                        <span class="ControlsDemo-EipScenarios__categoryNumber">{{itemTemplate.item.categoryNumber}}</span>
+                        <span>{{itemTemplate.item.category}}</span>
                      </ws:contentTemplate>
                   </ws:partial>
                </ws:itemTemplate>

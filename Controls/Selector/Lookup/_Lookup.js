@@ -65,7 +65,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
 
          if (itemsCount) {
-            lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
+            lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
             itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
@@ -159,7 +159,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             itemsSizes = [],
             measurer = document.createElement('div'),
             maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
-            visibleItems = _private.getLastSelectedItems(self, maxVisibleItems);
+            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
@@ -206,8 +206,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
       },
 
-      getLastSelectedItems: function(self, itemsCount) {
-         return chain.factory(self._options.items).last(itemsCount).value();
+      getLastSelectedItems: function(items, itemsCount) {
+         return chain.factory(items).last(itemsCount).value();
       },
 
       isShowCounter: function(itemsCount, maxVisibleItems) {
