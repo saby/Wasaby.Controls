@@ -27,6 +27,8 @@ define('Controls/List/Grid/GridStyles', [],
     * @css @color_Grid-selection-marker color of marker
     * @css @width_Grid-cell-checkbox width of checkboxes
     * @css @box-shadow_Grid-masterList-item_selected shadow of selected item in master list
+    * @css @spacing_Grid-footer-between-content-borderTop spacing between footer content and top footer border
+    * @css @spacing_Grid-footer-between-content-borderBottom spacing between footer content and bottom footer border
     * @css @spacing_Grid-header-between-content-borderTop spacing between header content and top grid border
     * @css @spacing_Grid-header-between-content-borderBottom spacing between footer content and bottom grid border
     * @css @spacing_Grid-row-between-content-borderTop_s S spacing between row content and top row border
