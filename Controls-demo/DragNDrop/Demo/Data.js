@@ -61,7 +61,7 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          image: null
       }, {
          id: 1,
-         title: 'План июнь',
+         title: 'План март',
          time: null,
          state: null,
          received: null,
@@ -108,6 +108,36 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: null,
          type: null,
          text: 'Актуализировать стандарт Флаг/Группа флагов см. предыдущую версию',
+         image: Images.staff.baturina
+      }, {
+         id: 6,
+         title: 'Догадкин Владимир',
+         time: '21.02',
+         state: 'Выполнение',
+         received: '17 июн 11:46',
+         parent: 3,
+         type: null,
+         text: 'Неправильно работает перемещение записей',
+         image: Images.staff.dogadkin
+      }, {
+         id: 7,
+         title: 'Батурина Наталия',
+         time: '10.03',
+         state: 'Выполнение',
+         received: '10 янв 16:41',
+         parent: 1,
+         type: null,
+         text: 'Реализовать стандарт перемещения записей',
+         image: Images.staff.baturina
+      }, {
+         id: 8,
+         title: 'Батурина Наталия',
+         time: '10.03',
+         state: 'Выполнение',
+         received: '10 янв 16:42',
+         parent: 1,
+         type: null,
+         text: 'Реализовать стандарт плитка',
          image: Images.staff.baturina
       }],
 

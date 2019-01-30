@@ -164,6 +164,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: DragNDrop в списках
+      '/demo-ws4-operations-panel': function(req, res) {
+         requirejs('Controls-demo/OperationsPanel/PanelWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/OperationsPanel/PanelWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: Explorer
       '/demo-ws4-explorer': function(req, res) {
          requirejs('Controls-demo/Explorer/ExplorerWithApplication');

@@ -59,7 +59,8 @@ define('Controls-demo/DragNDrop/Demo', [
          }, {
             title: 'Получено'
          }];
-         this._expandedItems = [2, 3];
+         this._expandedItems = [1, 2, 3];
+         this._selectedKeys = [];
       },
 
       _itemsReadyFirst: function(items) {
