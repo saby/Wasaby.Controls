@@ -1,7 +1,7 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import ILinkView from './interfaces/ILinkView';
-import IRangeSelectable from './interfaces/IRangeSelectable';
+import IInputSelectable from './interfaces/IInputSelectable';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import componentTmpl = require('wml!Controls/_dateRange/Selector/Selector');
@@ -13,7 +13,7 @@ import 'css!theme?Controls/_dateRange/Selector/Selector';
  * @class Controls/_dateRange/Selector
  * @extends Core/Control
  * @mixes Controls/_dateRange/interfaces/ILinkView
- * @mixes Controls/_dateRange/interfaces/IRangeLink
+ * @mixes Controls/_dateRange/interfaces/ISelector
  * @control
  * @public
  * @category Input
@@ -78,11 +78,11 @@ var Component = BaseControl.extend({
 Component.EMPTY_CAPTIONS = ILinkView.EMPTY_CAPTIONS;
 
 Component.getDefaultOptions = function () {
-    return coreMerge(coreMerge({}, IRangeSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
+    return coreMerge(coreMerge({}, IInputSelectable.getDefaultOptions()), ILinkView.getDefaultOptions());
 };
 
 Component.getOptionTypes = function () {
-    return coreMerge(coreMerge({}, IRangeSelectable.getOptionTypes()), ILinkView.getOptionTypes());
+    return coreMerge(coreMerge({}, IInputSelectable.getOptionTypes()), ILinkView.getOptionTypes());
 };
 
 export default Component;

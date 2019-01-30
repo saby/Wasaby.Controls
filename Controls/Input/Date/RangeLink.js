@@ -13,7 +13,7 @@ define('Controls/Input/Date/RangeLink', [
     * @class Controls/Input/Date/RangeLink
     * @extends Core/Control
     * @mixes Controls/_dateRange/interfaces/ILinkView
-    * @mixes Controls/_dateRange/interfaces/IRangeLink
+    * @mixes Controls/_dateRange/interfaces/ISelector
     * @control
     * @public
     * @category Input

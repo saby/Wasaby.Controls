@@ -1,11 +1,11 @@
 /**
  * Interface for date range inputs..
- * @interface Controls/_dateRange/interfaces/IInputDateRange
+ * @interface Controls/_dateRange/interfaces/IInput
  * @author Миронов А.Ю.
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IInputDateRange#startValue
+ * @name Controls/_dateRange/interfaces/IInput#startValue
  * @cfg {Date} Beginning of period
  * @example
  * In this example you bind _startValue in control's state to the value of input field.
@@ -27,7 +27,7 @@
  */
 
 /**
- * @name Controls/_dateRange/interfaces/IInputDateRange#endValue
+ * @name Controls/_dateRange/interfaces/IInput#endValue
  * @cfg {Date} End of period
  * @example
  * In this example you bind _endValue in control's state to the value of input field.
@@ -49,7 +49,7 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateRange#startValueChanged Occurs when field start value was changed.
+ * @event Controls/_dateRange/interfaces/IInput#startValueChanged Occurs when field start value was changed.
  * @param {Date} value New field value.
  * @param {String} displayValue Text value of the field.
  * @remark
@@ -77,7 +77,7 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateRange#endValueChanged Occurs when field end value was changed.
+ * @event Controls/_dateRange/interfaces/IInput#endValueChanged Occurs when field end value was changed.
  * @param {Date} value New field value.
  * @param {String} displayValue Text value of the field.
  * @remark
@@ -105,7 +105,7 @@
  */
 
 /**
- * @event Controls/_dateRange/interfaces/IInputDateRange#inputCompleted Occurs when input was completed (field lost focus or user pressed ‘enter’).
+ * @event Controls/_dateRange/interfaces/IInput#inputCompleted Occurs when input was completed (field lost focus or user pressed ‘enter’).
  * @param {Date} startValue Start field value.
  * @param {Date} endValue End field value.
  * @param {String} displayedStartValue Text value of the start field.

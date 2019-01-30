@@ -1,5 +1,5 @@
    /**
-       * @event Controls/_dateRange/interfaces/IRangeLink#startValueChanged Occurs when field start value was changed.
+       * @event Controls/_dateRange/interfaces/ISelector#startValueChanged Occurs when field start value was changed.
        * @param {Date} The number that will be projected to the text in the field.
        * @param {String} Value of the field.
        * @remark This event should be used to react to changes user makes in the startValue field.
@@ -8,7 +8,7 @@
    */
 
    /**
-       * @event Controls/_dateRange/interfaces/IRangeLink#endValueChanged Occurs when field end value was changed.
+       * @event Controls/_dateRange/interfaces/ISelector#endValueChanged Occurs when field end value was changed.
        * @param {Date} The number that will be projected to the text in the field.
        * @param {String} Value of the field.
        * @remark This event should be used to react to changes user makes in the endValue field.
@@ -17,7 +17,7 @@
    */
 
    /**
-       * @event Controls/_dateRange/interfaces/IRangeLink#rangeChanged Occurs when start value and end value of field was changed.
+       * @event Controls/_dateRange/interfaces/ISelector#rangeChanged Occurs when start value and end value of field was changed.
        * @param {Date} The number that will be projected to the text in the field.
        * @param {String} Value of the field.
        * @remark This event should be used to react to changes user makes in the startValue and endValue fields.

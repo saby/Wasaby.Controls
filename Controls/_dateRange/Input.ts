@@ -13,8 +13,7 @@ import 'css!theme?Controls/_dateRange/Input/Input';
  * @class Controls/_dateRange/Input
  * @extends Core/Control
  * @mixes Controls/Input/interface/IInputBase
- * @mixes Controls/_dateRange/interfaces/IRange
- * @mixes Controls/_dateRange/interfaces/IInputDateRange
+ * @mixes Controls/_dateRange/interfaces/IInput
  * @mixes Controls/_dateRange/interfaces/IInputDateTag
  * @mixes Controls/Input/interface/IDateMask
  * @mixes Controls/Input/interface/IValidation
