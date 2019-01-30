@@ -23,7 +23,6 @@ define('Controls/Input/Date/Range', [
     * @class Controls/Input/Date/Range
     * @extends Core/Control
     * @mixes Controls/Input/interface/IInputBase
-    * @mixes Controls/Date/interface/IRange
     * @mixes Controls/Input/interface/IInputDateRange
     * @mixes Controls/Input/interface/IInputDateTag
     * @mixes Controls/Input/interface/IDateMask

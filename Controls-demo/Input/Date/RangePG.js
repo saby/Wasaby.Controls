@@ -25,6 +25,13 @@ define('Controls-demo/Input/Date/RangePG',
                endValue: {
                   readOnly: true
                },
+               mask: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
                style: {
                   emptyText: 'none',
                   placeholder: 'select',
@@ -54,7 +61,10 @@ define('Controls-demo/Input/Date/RangePG',
             };
             this._componentOptions = {
                name: 'DateRange',
-               readOnly: false
+               readOnly: false,
+               mask: 'DD.MM.YY',
+               startTagStyle: undefined,
+               endTagStyle: undefined
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
