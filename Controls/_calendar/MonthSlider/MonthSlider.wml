@@ -12,12 +12,12 @@
       </div>
    </div>
 
-   <Controls.Calendar.MonthSlider.Slider
+   <Controls._calendar.MonthSlider.Slider
       data="{{_month}}"
       animation="{{_animation}}"
       attr:class="controls-MonthSlider__slider"
    >
-      <Controls.Date.Month
+      <Controls._calendar.Month
          attr:class="controls-MonthSlider__month"
          month="{{content.data}}"
          mode="{{_options.mode}}"
@@ -35,5 +35,5 @@
 
          showWeekdays="{{false}}"
       />
-   </Controls.Calendar.MonthSlider.Slider>
+   </Controls._calendar.MonthSlider.Slider>
 </div>

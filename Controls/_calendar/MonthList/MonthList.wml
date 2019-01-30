@@ -1,7 +1,7 @@
 <Controls.Container.Scroll
    attr:class="MonthList-ScrollContainer"
    scrollbarVisible="{{false}}">
-   <Controls.Date.MonthList.List
+   <Controls._calendar.MonthList.List
       source="{{_viewSource}}"
       sourceExt="{{_options.calendarSource}}"
       name="months"
@@ -45,5 +45,5 @@
             </ws:contentTemplate>
          </ws:partial>
       </ws:itemTemplate>
-   </Controls.Date.MonthList.List>
+   </Controls._calendar.MonthList.List>
 </Controls.Container.Scroll>
