@@ -55,20 +55,30 @@ def build_description(job, path, skip_test) {
 def return_test_for_run(tests_files) {
     tests_files = tests_files.replace('\n', '')
     echo "Будут запущены ${tests_files}"
-    def run_reg = ""
-    def run_int = ""
+    def run_reg_sbis3 = ""
+    def run_reg_vdom = ""
+    def run_int_sbis3 = ""
+    def run_int_vdom = ""
     echo "Делим общий список на int и reg тесты"
     type_tests = tests_files.split(';')
-    temp_var = type_tests[0].split('reg:')
+    temp_var = type_tests[0].split('reg_sbis3:')
     if ( temp_var.length == 2) {
-        run_reg = "--files_to_start ${temp_var[1]}"
+        run_reg_sbis3 = "--files_to_start ${temp_var[1]}"
     }
-    temp_var = type_tests[1].split('int:')
+    temp_var = type_tests[0].split('reg_vdom:')
+    if ( temp_var.length == 2) {
+        run_reg_vdom = "--files_to_start ${temp_var[1]}"
+    }
+    temp_var = type_tests[1].split('int_sbis3:')
     if ( temp_var.length == 2 ) {
-        run_int = "--files_to_start ${temp_var[1]}"
+        run_int_sbis3 = "--files_to_start ${temp_var[1]}"
+    }
+    temp_var = type_tests[1].split('int_vdom:')
+    if ( temp_var.length == 2 ) {
+        run_int_vdom = "--files_to_start ${temp_var[1]}"
     }
 
-    return [run_reg, run_int]
+    return [run_int_sbis3, run_int_vdom, run_reg_sbis3, run_reg_vdom]
 }
 
 def download_coverage_json(version, type_tests, type_controls) {
@@ -867,7 +877,7 @@ node('controls') {
                         if (boss) {
                             tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
                             if ( tests_files ) {
-                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files)
+                            (tests_for_run_int_sbis3, tests_for_run_int_vdom, tests_for_run_reg_sbis3, tests_for_run_reg_vdom) = return_test_for_run(tests_files)
                             }
                         }
                         }
