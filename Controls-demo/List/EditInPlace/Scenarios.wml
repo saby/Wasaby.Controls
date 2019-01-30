@@ -37,7 +37,6 @@
       </ws:editingConfig>
    </Controls.Grid>
    <div class="ControlsDemo-EipScenarios__tableFooter">
-      <Controls.List.AddButton caption="{[Наименование]}" />
       <span class="controls-addition-color controls-small-text-size">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 4 - редактирование на странице (в реестре), режим "по ховеру</div>

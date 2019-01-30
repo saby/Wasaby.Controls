@@ -57,10 +57,10 @@ define('Controls/List/interface/IGridControl', [], function() {
 
    /**
     * @typedef {Object} HeaderCell Describer grid's header cell.
-    * @property {String} [title] Header cell caption text.
+    * @property {String} [caption] Header cell caption text.
     * @property {GridCellAlign} [align] Horizontal cell content align.
     * @property {GridCellVAlign} [valign] Vertical cell content align.
-    * @property {String} [Function] Template for the header cell.
+    * @property {String} [template] Template for the header cell.
     * @property {String} [sortingProperty] Property by which doing sorting.
     */
 

@@ -1,0 +1,8 @@
+<Controls.Grid
+        source = "{{_viewSource}}"
+        keyProperty="id"
+        columns="{{_columns}}">
+    <ws:itemTemplate>
+        <ws:partial template="wml!Controls/List/Grid/Item" highlightOnHover="{{false}}" />
+    </ws:itemTemplate>
+</Controls.Grid>

@@ -6,41 +6,8 @@
    content: "\200b";
 }
 
-.controls-Button__close__icon_toolButton_l {
-   font-size: @font-size_CloseButton_toolButton_l;
-}
-
-//Icon has odd height, button has even height and chrome center align break down. Height is even for chrome.
-.ws-is-chrome {
-   .controls-Button__close__icon_toolButton_l {
-      height: @height_CloseButton_icon_l;
-   }
-}
-
-.controls-Button__close__icon_toolButton_l, .controls-Button__close__icon_toolButton_m {
-   font-family: @font-family_CloseButton_toolButton;
-   color: @color_CloseButton-icon_toolButton;
-}
-
-.controls-Button__close__icon_toolButton_m {
-   font-size: @font-size_CloseButton_toolButton_m;
-}
-
-.controls-Button__close__icon_link_l, .controls-Button__close__icon_link_m {
-   font-size: @font-size_CloseButton_link;
-}
-
-.controls-Button__close__icon:before {
-   content: @content_CloseButton_icon;
-   text-shadow: @text-shadow_CloseButton;
-}
-
-.controls-Button__close__icon_toolButton_l:active, .controls-Button__close__icon_toolButton_m:active {
-   color: @color_CloseButton-icon_toolButton_active;
-}
-
-.controls-Button__close__icon_link_l:active, .controls-Button__close__icon_link_m:active {
-   color: @color_CloseButton-icon_link_active;
+.controls-Button__close__icon_toolButton, .controls-Button__close__icon_toolButton {
+   fill: @color_CloseButton-icon;
 }
 
 .controls-Button__close__wrapper {
@@ -79,19 +46,29 @@
    font-family: @font-family_CloseButton_link;
    width: @width_CloseButton_link;
    height: @height_CloseButton_link;
-   color: @color_CloseButton-icon_link;
+   fill: @color_CloseButton-icon_link;
+}
+
+.controls-Button__close__icon_link:active {
+   fill: @color_CloseButton-light-icon_hover;
+}
+
+.controls-Button__close_toolButton:active, .controls-Button__close_toolButton:active {
+   border-color: @default-border-color-second;
+   .controls-Button__close__icon_default:active, .controls-Button__close__icon_primary {
+      fill: @color_CloseButton-icon_hover;
+   }
 }
 
 .ws-is-no-touch{
-   .controls-Button__close__icon_toolButton_l:hover, .controls-Button__close__icon_toolButton_m:hover {
-      color: @color_CloseButton-icon_toolButton_hover;
-   }
-
-   .controls-Button__close__icon_link_l:hover, .controls-Button__close__icon_link_m:hover {
-      color: @color_CloseButton-icon_link_hover;
+   .controls-Button__close__icon_link:hover, .controls-Button__close__icon_link:hover {
+      fill: @color_CloseButton-icon_link_hover;
    }
 
    .controls-Button__close_toolButton_l:hover, .controls-Button__close_toolButton_m:hover {
       border-color: @border-color_CloseButton_toolButton_hover;
+      .controls-Button__close__icon_toolButton, .controls-Button__close__icon_toolButton {
+         fill: @color_CloseButton-icon_toolButton_hover;
+      }
    }
 }
