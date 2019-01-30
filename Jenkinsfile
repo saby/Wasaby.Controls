@@ -221,7 +221,7 @@ def sbis3_controls = params.run_sbis3
 
 
 node('master') {
-    if ( "${env.BUILD_NUMBER}" != "1" && !( all_regr|| regr || unit|| inte || all_inte || only_fail)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( all_regr|| regr || unit|| inte || all_inte || only_fail || boss)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -311,6 +311,8 @@ node('controls') {
         }
         if ( boss ) {
             unit = false
+            inte = true
+            regr = true
         }
 
         if (!vdom_controls && !sbis3_controls && !unit) {
