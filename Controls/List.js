@@ -66,8 +66,8 @@ define('Controls/List', [
          return this._children.listControl.reload();
       },
 
-      reloadItem: function(key, readMeta) {
-         return this._children.listControl.reloadItem(key, readMeta);
+      reloadItem: function(key, readMeta, direction) {
+         return this._children.listControl.reloadItem(key, readMeta, direction);
       },
 
       beginEdit: function(options) {

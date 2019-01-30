@@ -255,6 +255,10 @@ define('Controls/List/Tree/TreeViewModel', [
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
          },
+         
+         isExpandAll: function() {
+            return _private.isExpandAll(this.getExpandedItems());
+         },
 
          toggleExpanded: function(dispItem, expanded) {
             var
