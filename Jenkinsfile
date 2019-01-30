@@ -879,16 +879,19 @@ node('controls') {
                         if (boss) {
                             tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
                             if ( tests_files ) {
-                            (tests_for_run_int_sbis3, tests_for_run_int_vdom, tests_for_run_reg_sbis3, tests_for_run_reg_vdom) = return_test_for_run(tests_files)
-                            if (!tests_for_run_int_sbis3) {
-                                run_tests_int_sbis3 = false
-                            } else if (!tests_for_run_int_vdom) {
-                                run_tests_int_vdom = false
-                            } else if (!tests_for_run_reg_sbis3) {
-                                run_tests_reg_sbis3 = false
-                            } else if (!tests_for_run_reg_vdom) {
-                                run_tests_reg_vdom = false
-                            }
+                                (tests_for_run_int_sbis3, tests_for_run_int_vdom, tests_for_run_reg_sbis3, tests_for_run_reg_vdom) = return_test_for_run(tests_files)
+                                if (!tests_for_run_int_sbis3) {
+                                    run_tests_int_sbis3 = false
+                                }
+                                if (!tests_for_run_int_vdom) {
+                                    run_tests_int_vdom = false
+                                }
+                                if (!tests_for_run_reg_sbis3) {
+                                    run_tests_reg_sbis3 = false
+                                }
+                                if (!tests_for_run_reg_vdom) {
+                                    run_tests_reg_vdom = false
+                                }
                             }
                         }
                         }
