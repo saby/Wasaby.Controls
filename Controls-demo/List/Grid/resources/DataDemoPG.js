@@ -165,6 +165,38 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
                 align: 'right'
              }
           ],
+          fullHeaderForBase: [
+             {
+                title: ''
+             },
+             {
+                title: 'Rating',
+                align: 'right'
+             },
+             {
+                title: 'Box Office',
+                align: 'right',
+                sortingProperty: 'boxOffice'
+             }
+          ],
+          fullColumnsForBase: [
+             {
+                displayProperty: 'name',
+                width: '1fr'
+             },
+             {
+                displayProperty: 'rating',
+                width: 'auto',
+                align: 'right',
+                template: 'wml!Controls-demo/List/Grid/resources/DemoRating'
+             },
+             {
+                displayProperty: 'boxOffice',
+                width: 'auto',
+                align: 'right',
+                template: 'wml!Controls-demo/List/Grid/resources/DemoMoney'
+             }
+          ],
           catalog: [
              {
                 id: 1,
