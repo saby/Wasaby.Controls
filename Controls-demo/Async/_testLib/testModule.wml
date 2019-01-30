@@ -1,0 +1,1 @@
+<input value="{{_options.isOK}}" type="text"/>
