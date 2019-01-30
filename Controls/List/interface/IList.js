@@ -223,7 +223,7 @@ define('Controls/List/interface/IList', [
     */
 
    /**
-    * @cfg {ItemPadding} Padding from item content to left item border.
+    * @cfg {ItemPadding} Configuration inner paddings in the item.
     * @name Controls/List/interface/IList#itemPadding
     */
 });

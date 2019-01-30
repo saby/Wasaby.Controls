@@ -76,17 +76,17 @@ define('Controls-demo/List/Grid/BasePG', [
                ]
             },
             columns: {
-               value: 'full columns',
+               value: 'Variant 1',
                items: [
-                  {id:1, title: 'full columns', items: data.fullColumns },
-                  {id:2, title: 'partial columns', items: data.partialColumns}
+                  {id:1, title: 'Variant 1', items: data.fullColumnsForBase },
+                  {id:2, title: 'Variant 2', items: data.partialColumns}
                ]
             },
             header: {
                value: 'with header',
                items: [
                   {id: 1, title: 'none', items: null},
-                  {id: 2, title: 'with header', items: data.fullHeader }
+                  {id: 2, title: 'with header', items: data.fullHeaderForBase }
                ]
             },
             sorting: {
@@ -123,7 +123,7 @@ define('Controls-demo/List/Grid/BasePG', [
             source: this._sourceCatalog,
             markedKey: '4',
             itemTemplate: 'wml!Controls-demo/List/Grid/resources/DemoItem',
-            columns: data.fullColumns,
+            columns: data.fullColumnsForBase,
             displayProperty: 'title',
             rowSeparatorVisibility: true,
             markerVisibility: 'visible',
@@ -132,15 +132,15 @@ define('Controls-demo/List/Grid/BasePG', [
             emptyTemplate: undefined,
             itemPadding: this._dataObject.itemPadding,
             filter: {},
-            header: data.fullHeader
+            header: data.fullHeaderForBase
          };
          this._metaData = config[this._content].properties['ws-config'].options;
       },
 
       _optionsChanged: function() {
          if (!!this._componentOptions.header) {
-            if (Obj.isEqual(this._componentOptions.columns, data.fullColumns)) {
-               this._componentOptions.header = data.fullHeader;
+            if (Obj.isEqual(this._componentOptions.columns, data.fullColumnsForBase)) {
+               this._componentOptions.header = data.fullHeaderForBase;
             } else {
                this._componentOptions.header = data.partialHeader;
             }
