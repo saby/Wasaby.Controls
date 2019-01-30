@@ -54,7 +54,24 @@ define('Controls/Popup/InfoBox',
        * @css @box-shadow_Infobox Size of shadow.
        */
 
-
+      /**
+       * @name Controls/Popup/InfoBox#position
+       * @cfg {String} Point positioning of the target relative to infobox.
+       * Popup displayed on the top of the target and aligned by left border.
+       * @variant tl Popup displayed on the top of the target and aligned by left border.
+       * @variant tc Popup displayed on the top of the target and aligned by center.
+       * @variant tr Popup displayed on the top of the target and aligned by right border.
+       * @variant bl Popup displayed on the bottom of the target and aligned by left border.
+       * @variant bc Popup displayed on the bottom of the target and aligned by center.
+       * @variant br Popup displayed on the bottom of the target and aligned by right border.
+       * @variant rt Popup displayed on the right of the target and aligned by top border.
+       * @variant rc Popup displayed on the right of the target and aligned by center.
+       * @variant rb Popup displayed on the right of the target and aligned by bottom border.
+       * @variant lt Popup displayed on the left of the target and aligned by top border.
+       * @variant lc Popup displayed on the left of the target and aligned by center.
+       * @variant lb Popup displayed on the left of the target and aligned by bottom border
+       * @default tl
+       */
       /**
        * @name Controls/Popup/InfoBox#hideDelay
        * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
@@ -65,32 +82,6 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#showDelay
        * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
        * @default 300
-       */
-
-      /**
-       * @name Controls/Popup/InfoBox#originPoint
-       * @cfg {originPoint} Point positioning of the target relative to infobox.
-       * Popup displayed on the top of the target and aligned by left border.
-       */
-
-      /**
-       * @typedef {Object} originPoint
-       * @property {vertical} vertical Algorithm with which the data source works.
-       * @property {horizontal} horizontal
-       */
-
-      /**
-       * @typedef {Enum} vertical
-       * @variant top
-       * @variant middle
-       * @variant bottom
-       */
-
-      /**
-       * @typedef {Enum} horizontal
-       * @variant left
-       * @variant center
-       * @variant right
        */
 
       /**
@@ -128,8 +119,6 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#style
        * @cfg {String} Infobox display style.
        * @variant default
-       * @variant secondary
-       * @variant primary
        * @variant danger
        */
 

@@ -181,10 +181,19 @@ define('Controls/Popup/Opener/BaseOpener',
                'width',
                'resizable',
                'top',
+               'autoHide',
                'left',
                'maxHeight',
                'minHeight',
-               'draggable'
+               'draggable',
+               'horizontalAlign',
+               'verticalAlign',
+               'offset',
+               'alignment',
+               'corner',
+               'originPoint',
+               'locationStrategy',
+               'actionOnScroll',
             ];
 
             // merge _options to popupOptions
