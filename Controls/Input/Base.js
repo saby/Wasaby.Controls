@@ -742,6 +742,23 @@ define('Controls/Input/Base',
             }
          },
 
+         _domAutoCompleteHandler: function() {
+            /**
+             * When the user selects a value from the auto-complete, the other fields associated with it are
+             * automatically filled in. The logic of the control operation is based on displaying the value
+             * according to its options. Therefore, the field value is updated during the synchronization cycle.
+             *
+             * In firefox, after the field is automatically filled in, you should immediately set the value
+             * in the field without waiting for a synchronization cycle. Otherwise, the values will not be substituted
+             * into other fields.
+             *
+             * About what happened auto-complete learn through the event DOMAutoComplete,
+             * which is supported only in firefox. https://developer.mozilla.org/en-US/docs/Web/Events/DOMAutoComplete
+             */
+
+            this._calculateValueForTemplate();
+         },
+
          _notifyValueChanged: function() {
             _private.notifyValueChanged(this);
          },
