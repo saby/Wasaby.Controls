@@ -18,7 +18,7 @@
          </ws:if>
          <ws:else>
             <div>Не указан шаблон. Может быть перейти на
-               <Router.Reference href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+               <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
                   <ws:content><a href="{{ content.href }}">разводящую</a></ws:content>
                </Router.Reference> ?
             </div>
