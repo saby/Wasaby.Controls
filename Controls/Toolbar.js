@@ -1,7 +1,6 @@
 define('Controls/Toolbar', [
-   'Controls/toolbar',
-   'Core/IoC'
-], function(toolbarLib, IoC) {
+   'Controls/toolbar'
+], function(toolbarLib) {
    'use strict';
 
    /**
@@ -123,11 +122,6 @@ define('Controls/Toolbar', [
     *      </ws:itemTemplate>
     * </pre>
     */
-
-   IoC.resolve('ILogger').error(
-      'Controls/Toolbar',
-      'This control is deprecated. Use \'Controls/toolbar:View\' instead'
-   );
 
    return toolbarLib.View;
 });
