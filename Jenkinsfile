@@ -103,7 +103,7 @@ def build_title(t_int_sbis3, t_int_vdom, t_reg_sbis3, t_reg_vdom) {
 
     } else if (t_int_sbis3 && t_reg_sbis3 && t_int_sbis3==t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
-    } else if (t_int_vdom && t_reg_vdom && t_int_vdom==t_reg_vdom, !t_int_sbis3 && !t_reg_sbis3) {
+    } else if (t_int_vdom && t_reg_vdom && t_int_vdom==t_reg_vdom && !t_int_sbis3 && !t_reg_sbis3) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
 
     } else if (t_int_sbis3.contains('FAIL')) {
