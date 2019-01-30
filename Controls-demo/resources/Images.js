@@ -23,7 +23,10 @@ define('Controls-demo/resources/Images', [
       },
       tile: {
          tile1: cConstants.resourceRoot + 'Controls-demo/resources/images/tile1.jpg',
-         tile2: cConstants.resourceRoot + 'Controls-demo/resources/images/tile2.jpg'
+         tile2: cConstants.resourceRoot + 'Controls-demo/resources/images/tile2.jpg',
+         tile3: cConstants.resourceRoot + 'Controls-demo/resources/images/tile3.jpg',
+         tile4: cConstants.resourceRoot + 'Controls-demo/resources/images/tile4.jpg',
+         tile5: cConstants.resourceRoot + 'Controls-demo/resources/images/tile5.jpg'
       }
    };
 });

@@ -151,17 +151,45 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
       }, {
          id: 1,
          parent: null,
+         type: true,
+         title: 'Картинки',
+         image: null,
+         size: null
+      }, {
+         id: 2,
+         parent: null,
          type: null,
          title: 'Подготовка к Аттестации.docx',
          image: Images.tile.tile1,
          size: '35 КБ'
       }, {
-         id: 2,
+         id: 3,
          parent: null,
          type: null,
          title: 'Стандарт на 2017 год.docx',
          image: Images.tile.tile2,
          size: '47 КБ'
+      }, {
+         id: 4,
+         parent: null,
+         type: null,
+         title: 'Цветок.png',
+         image: Images.tile.tile3,
+         size: '11 МБ'
+      }, {
+         id: 5,
+         parent: null,
+         type: null,
+         title: 'Каньон.png',
+         image: Images.tile.tile4,
+         size: '8 МБ'
+      }, {
+         id: 6,
+         parent: 1,
+         type: null,
+         title: 'Юелый цветок.png',
+         image: Images.tile.tile5,
+         size: '14 МБ'
       }]
    };
 });
