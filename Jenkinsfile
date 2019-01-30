@@ -65,15 +65,15 @@ def return_test_for_run(tests_files) {
     if ( temp_var.length == 2) {
         run_reg_sbis3 = "--files_to_start ${temp_var[1]}"
     }
-    temp_var = type_tests[0].split('reg_vdom:')
+    temp_var = type_tests[1].split('reg_vdom:')
     if ( temp_var.length == 2) {
         run_reg_vdom = "--files_to_start ${temp_var[1]}"
     }
-    temp_var = type_tests[1].split('int_sbis3:')
+    temp_var = type_tests[2].split('int_sbis3:')
     if ( temp_var.length == 2 ) {
         run_int_sbis3 = "--files_to_start ${temp_var[1]}"
     }
-    temp_var = type_tests[1].split('int_vdom:')
+    temp_var = type_tests[3].split('int_vdom:')
     if ( temp_var.length == 2 ) {
         run_int_vdom = "--files_to_start ${temp_var[1]}"
     }
