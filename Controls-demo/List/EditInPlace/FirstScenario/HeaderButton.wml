@@ -4,5 +4,7 @@
                      readOnly="{{true}}"
                      attr:class="ControlsDemo-EipScenarios__headerCaption"
                      size="m"/>
-   <Controls.Button icon="icon-small icon-Add" style="iconButtonBordered" />
+   <Controls.Button icon="icon-small icon-Add"
+                    style="iconButtonBordered"
+                    readOnly="{{true}}" />
 </div>
