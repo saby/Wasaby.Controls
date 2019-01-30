@@ -93,7 +93,7 @@ define('Controls/Container/Suggest/List',
             var list = this._children.list;
             var listContainer = list._container;
             var customEvent = new Event('keydown');
-            _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent)
+            _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
          }
       });
    
