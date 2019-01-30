@@ -83,6 +83,15 @@
    color: @color_Switch-text__disabled_unselected;
 }
 
+.controls-DoubleSwitch__text_enabled_selected {
+   color: @color_DoubleSwitch-text_enabled_selected;
+   cursor: pointer;
+}
+
+.controls-DoubleSwitch__text_disabled_selected {
+   color: @color_DoubleSwitch-text_disabled_selected;
+}
+
 .ws-is-no-touch {
    .controls-DoubleSwitch__text_enabled_unselected:hover {
       text-decoration: underline;
@@ -92,7 +101,7 @@
    // Two hover class because first hover class set in js.
    .controls-DoubleSwitcher__toggle_hover, .controls-DoubleSwitch__toggle:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @color_ToggleCircle_outerCircle__enabled_hovered;
+         stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
 }
@@ -100,6 +109,6 @@
 //touch on switcher
 .controls-DoubleSwitch__toggle:active {
    .controls-SwitchCircle__borderCircle_enabled {
-      fill: @color_ToggleCircle_outerCircle__enabled_hovered;
+      stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }

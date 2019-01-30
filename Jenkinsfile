@@ -151,7 +151,8 @@ def getParams(user) {
                 description: '',
                 name: 'theme'),
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
-            choice(choices: "SBIS3.CONTROLS\nVDOM", description: 'Тип тип контролов', name: 'control_type'),
+            booleanParam(defaultValue: true, description: "Тип контролов SBIS3.CONTROLS", name: 'run_sbis3'),
+            booleanParam(defaultValue: true, description: "Tип контролов VDOM", name: 'run_vdom'),
             //booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
             //booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
@@ -190,7 +191,8 @@ def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
 def only_fail = false
-def control_type = params.control_type
+def vdom_controls = params.run_vdom
+def sbis3_controls = params.run_sbis3
 
 
 node('master') {
@@ -263,8 +265,8 @@ node('controls') {
         }
 
         if ("${env.BUILD_NUMBER}" == "1"){
-            inte = true
-            regr = true
+            all_inte = true
+            all_regr = true
             unit = true
         }
         if ( inte && all_inte ) {
@@ -278,6 +280,11 @@ node('controls') {
         }
         if ( boss ) {
             unit = false
+        }
+
+        if (!vdom_controls && !sbis3_controls) {
+            exception('Не указан тип контролов для проверки', 'TESTS NOT BUILD')
+
         }
         dir(workspace){
             echo "УДАЛЯЕМ ВСЕ КРОМЕ ./controls"
@@ -321,7 +328,7 @@ node('controls') {
                         git fetch --all
                         git checkout ${env.BRANCH_NAME}
                         git pull
-                        echo git merge origin/rc-${version}
+                        git merge origin/rc-${version}
                         """
                         def status_filter = ""
                         if ( boss ) {
@@ -767,7 +774,7 @@ node('controls') {
                         [regression]
                         IMAGE_DIR = ${img_dir}
                         RUN_REGRESSION=True"""
-                dir("./controls/tests/int/${control_type}"){
+                dir("./controls/tests/int/SBIS3.CONTROLS"){
                     sh"""
                         source /home/sbis/venv_for_test/bin/activate
                         ${python_ver} start_tests.py --files_to_start smoke_test.py --SERVER_ADDRESS ${server_address} --RESTART_AFTER_BUILD_MODE --BROWSER chrome --FAIL_TEST_REPEAT_TIMES 0
@@ -814,19 +821,20 @@ node('controls') {
                         }
                         }
                     }
-                    if ( skip ) {
-                         skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
-                         skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
-                    }
+                    //if ( skip ) {
+                    //     skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
+                    //     skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
+                    //}
 
                 }
             }
             parallel (
                 int_test: {
-                    stage("Инт.тесты ${control_type}"){
+                    stage("Инт.тесты"){
                         if ( (inte || all_inte) && smoke_result && run_tests_int){
                             echo "Запускаем интеграционные тесты"
-                            dir("./controls/tests/int/${control_type}"){
+                            if (sbis3_controls) {
+                            dir("./controls/tests/int/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
@@ -835,14 +843,30 @@ node('controls') {
 									"""
 								}
                             }
+                            }
+                            if (vdom_controls) {
+                                 dir("./controls/tests/int/VDOM"){
+								timeout(time: 10, unit: 'MINUTES', activity: true) {
+									sh """
+									source /home/sbis/venv_for_test/bin/activate
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									deactivate
+									"""
+								}
+                            }
+
+
+
+                            }
                         }
                     }
                 },
                 reg_test: {
-                    stage("Рег.тесты ${control_type}"){
+                    stage("Рег.тесты"){
                         if ( (all_regr || regr) && smoke_result && run_tests_reg){
                             echo "Запускаем тесты верстки"
-                            dir("./controls/tests/reg/${control_type}"){
+                            if (sbis3_controls) {
+                            dir("./controls/tests/reg/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 										source /home/sbis/venv_for_test/bin/activate
@@ -851,6 +875,20 @@ node('controls') {
 									"""
 								}
                             }
+                            }
+                            if (vdom_controls) {
+                                dir("./controls/tests/reg/VDOM"){
+								timeout(time: 10, unit: 'MINUTES', activity: true) {
+									sh """
+										source /home/sbis/venv_for_test/bin/activate
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										deactivate
+									"""
+								}
+                            }
+
+                            }
+
                         }
                     }
                 }
@@ -903,13 +941,14 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
+        /*
         if ( smoke_result ) {
             dir("./controls/tests") {
                 def int_title = ''
                 def reg_title = ''
                 def description = ''
-                if (inte || all_inte) {
-                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/${control_type}/build_description.txt", skip)
+                if (inte ) {
+                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
                      if ( int_data ) {
                          int_title = int_data[0]
                          int_description= int_data[1]
@@ -919,8 +958,8 @@ node('controls') {
                          }
                     }
                 }
-                if (regr || all_regr) {
-                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/${control_type}/build_description.txt", skip)
+                if (regr ) {
+                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
                     if ( reg_data ) {
                         reg_title = reg_data[0]
                         reg_description = reg_data[1]
@@ -934,17 +973,24 @@ node('controls') {
                 build_title(int_title, reg_title)
                 currentBuild.description = "${description}"
             }
-        }
+        } */
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
     if ( (regr || all_regr) && run_tests_reg ){
-        dir("./controls") {
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/reg/${control_type}/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+        if (sbis3_controls) {
+            dir("./controls/tests/reg/SBIS3.CONTROLS"){
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
+            }
+        }
+        if (vdom_controls) {
+            dir("./controls/tests/reg/VDOM"){
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
+            }
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-        }
+    }
     gitlabStatusUpdate()
     if (!run_tests_int && !run_tests_reg) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
