@@ -87,19 +87,34 @@ def download_coverage_json(version, type_tests, type_controls) {
 }
 
 
-def build_title(t_int, t_reg) {
-    if (!t_int && !t_reg) {
+def build_title(t_int_sbis3, t_int_vdom, t_reg_sbis3, t_reg_vdom) {
+    if (!t_int_sbis3 && !t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
         currentBuild.displayName = "#${env.BUILD_NUMBER}"
-    } else if (t_int && !t_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (!t_int && t_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
-    } else if (t_int && t_reg && t_int==t_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL')) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL')) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+
+    } else if (t_int_sbis3 && !t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
+    } else if (!t_int_sbis3 && t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_vdom}"
+
+    }else if (!t_int_sbis3 && !t_reg_sbis3 && t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
+    } else if (!t_int_sbis3 && !t_reg_sbis3 && !t_int_vdom && t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_vdom}"
+
+    } else if (t_int_sbis3 && t_reg_sbis3 && t_int_sbis3==t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
+    } else if (t_int_vdom && t_reg_vdom && t_int_vdom==t_reg_vdom, !t_int_sbis3 && !t_reg_sbis3) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
+
+    } else if (t_int_sbis3.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
+    } else if (t_int_vdom.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
+
+    } else if (t_reg_sbis3.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_sbis3}"
+    } else if (t_reg_vdom.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_vdom}"
     }
 }
 
@@ -996,39 +1011,69 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        /*
         if ( smoke_result ) {
             dir("./controls/tests") {
-                def int_title = ''
-                def reg_title = ''
+                def int_title_sbis3 = ''
+                def int_title_vdom = ''
+                def reg_title_sbis3 = ''
+                def reg_title_vdom = ''
                 def description = ''
+
                 if (inte ) {
-                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                     if ( int_data ) {
-                         int_title = int_data[0]
-                         int_description= int_data[1]
-                         print("in int ${int_description}")
-                         if ( int_description ) {
-                            description += "[INT] ${int_description}"
+                    def int_description_sbis3
+                    if (sbis3_controls) {
+                        int_data_sbis3 = build_description("(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./int/SBIS3.CONTROLS/build_description.txt", skip)
+                        if ( int_data_sbis3 ) {
+                         int_title_sbis3 = int_data_sbis3[0]
+                         int_description_sbis3= int_data_sbis3[1]
+                         print("in int ${int_description_sbis3}")
+                         if ( int_description_sbis3 ) {
+                            description += "[INT_SBIS3] ${int_description_sbis}"
+                         }
+                    }
+                    }
+                    if (vdom_controls) {
+                     int_data_vdom = build_description("(int-${params.browser_type}) ${version} VDOM controls", "./int/VDOM/build_description.txt", skip)
+                     if ( int_data_vdom ) {
+                         int_title_vdom = int_data_vdom[0]
+                         int_description_vdom= int_data_vdom[1]
+                         print("in int ${int_description_vdom}")
+                         if ( int_description_vdom ) {
+                            description += "<br>[INT_VDOM] ${int_description_vdom}"
                          }
                     }
                 }
+                }
                 if (regr ) {
-                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                    if ( reg_data ) {
-                        reg_title = reg_data[0]
-                        reg_description = reg_data[1]
-                        print("in reg ${reg_description}")
-                        if ( description != reg_description ) {
-                            description += "<br>[REG] ${reg_description}"
+                    if (sbis3_controls) {
+                    reg_data_sbis3 = build_description("(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./reg/SBIS3.CONTROLS/build_description.txt", skip)
+                    if ( reg_data_sbis3 ) {
+                        reg_title_sbis3 = reg_data_sbis3[0]
+                        reg_description_sbis = reg_data_sbis3[1]
+                        print("in reg ${reg_description_sbis3}")
+                        if ( description != reg_description_sbis3 ) {
+                            description += "<br>[REG_SBIS3] ${reg_description_sbis3}"
                         }
                     }
                 }
+                }
+                if (vdom_controls) {
+                    reg_data_vdom = build_description("(reg-${params.browser_type}) ${version} VDOM controls", "./reg/VDOM/build_description.txt", skip)
+                    if ( reg_data_vdom ) {
+                        reg_title_vdom = reg_data_vdom[0]
+                        reg_description_vdom = reg_data_vdom[1]
+                        print("in reg ${reg_description_vdom}")
+                        if ( description != reg_description_vdom ) {
+                            description += "<br>[REG_VDOM] ${reg_description_vdom}"
+                        }
+                    }
 
-                build_title(int_title, reg_title)
+                }
+
+                build_title(int_title_sbis3, int_title_vdom, reg_title_sbis3, reg_title_vdom)
                 currentBuild.description = "${description}"
             }
-        } */
+        }
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
