@@ -24,11 +24,18 @@ define('Controls/interface/ITreeGridItemTemplate', [
     * @example
     * Using custom template for item rendering:
     * <pre>
-    *    <Controls.Grid>
+    *    <Controls.TreeGrid>
     *       <itemTemplate>
-    *          <ws:partial template="wml!Controls/List/Grid/Item" levelIndentSize="null" expanderSize="l" expanderIcon="node" />
+    *          <ws:partial template="wml!Controls/List/TreeGridView/Item" levelIndentSize="null" expanderSize="l" expanderIcon="node" />
     *       </itemTemplate>
-    *    </Controls.List>
+    *    </Controls.TreeGrid>
     * </pre>
     */
+
+   /**
+    * @name Controls/interface/ITreeGridItemTemplate#itemTemplateProperty
+    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
+    * <a href="/materials/demo-ws4-tree-grid-item-template">Example</a>.
+    */
+
 });

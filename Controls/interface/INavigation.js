@@ -100,8 +100,7 @@ define('Controls/interface/INavigation', [
     *       view: 'page',
     *       sourceConfig: {
     *          pageSize: 2,
-    *          page: 0,
-    *          mode: 'totalCount'
+    *          page: 0
     *       }
     *    };
     * </pre>
