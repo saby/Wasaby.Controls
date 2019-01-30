@@ -3,7 +3,7 @@ define('Controls-demo/List/Grid/StickyPG',
       'Core/Control',
       'tmpl!Controls-demo/List/Grid/resources/StickyPG/DemoPG',
       'json!Controls-demo/List/Grid/resources/StickyPG/cfg',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/List/Grid/resources/DataDemoPG',
 
       'Controls/Container/Scroll',
@@ -15,7 +15,7 @@ define('Controls-demo/List/Grid/StickyPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, template, config, MemorySource, data) {
+   function(Control, template, config, source, data) {
       'use strict';
       var DialogPG = Control.extend({
          _template: template,
@@ -58,7 +58,7 @@ define('Controls-demo/List/Grid/StickyPG',
                name: 'StickyGridPG',
                columns: data.stickyDataColumns,
                multiSelectVisibility: 'hidden',
-               source: new MemorySource({
+               source: new source.Memory({
                   idProperty: 'id',
                   data: data.stickyData
                }),
