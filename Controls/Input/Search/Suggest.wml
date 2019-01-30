@@ -2,6 +2,7 @@
         attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
         on:choose="_choose()"
         on:deactivated="_deactivated()"
+        on:close="_close()"
         on:suggestStateChanged="_suggestStateChanged()"
         bind:suggestState="_suggestState"
         suggestTemplate="{{_options.suggestTemplate}}"

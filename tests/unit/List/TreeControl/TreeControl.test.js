@@ -79,6 +79,9 @@ define([
                   return {
                      '1': true
                   };
+               },
+               isExpandAll: function() {
+                  return false;
                }
             };
          };
@@ -600,6 +603,46 @@ define([
          }));
          
          assert.deepEqual(TreeControl._private.getReloadableNodes(treeGridViewModel, 0, 'id', 'Раздел@'), [1]);
+      });
+   
+      it('_private.beforeReloadCallback', function() {
+         var cfg = {
+            columns: [],
+            keyProperty: 'id',
+            parentProperty: 'Раздел',
+            nodeProperty: 'Раздел@',
+            expandedItems: [null]
+         };
+         var treeGridViewModel = new TreeGridViewModel(cfg);
+         var self = {
+            _deepReload: true,
+            _children: {},
+            _root: 'root'
+         };
+         var selfWithBaseControl = {
+            _deepReload: true,
+            _root: 'root',
+            _children: {
+               baseControl: {
+                  getViewModel: function() {
+                     return treeGridViewModel;
+                  }
+               }
+            }
+         };
+         treeGridViewModel.setItems(new collection.RecordSet({
+            rawData: getHierarchyData(),
+            idProperty: 'id'
+         }));
+         treeGridViewModel.setExpandedItems([null]);
+   
+         var filter = {};
+         TreeControl._private.beforeReloadCallback(self, filter, null, null, cfg);
+         assert.equal(filter['Раздел'], self._root);
+         
+         filter = {};
+         TreeControl._private.beforeReloadCallback(selfWithBaseControl, filter, null, null, cfg);
+         assert.equal(filter['Раздел'], self._root);
       });
    
       it('_private.applyReloadedNodes', function() {

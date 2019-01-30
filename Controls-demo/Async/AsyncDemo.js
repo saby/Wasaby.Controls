@@ -1,28 +1,34 @@
 define('Controls-demo/Async/AsyncDemo', [
    'Core/Control',
    'Core/Deferred',
+   'Core/cookie',
    'wml!Controls-demo/Async/AsyncDemo'
-], function(Control, Deferred, template) {
+], function(Control, Deferred, cookie, template) {
 
    var AsyncDemo = Control.extend({
       _template: template,
+      templateName1: 'Controls-demo/Async/testLib:testModule',
+      templateName2: 'Controls-demo/Async/testModuleNoLib',
+      isOK: 'false',
       _beforeMount: function(options, context, receivedState) {
-         var self = this;
-         if(receivedState) {
-            self.data = receivedState;
-            self.is_OK = window.$is_OK$ ? 'true' : 'false';
-            return;
-         } else {
-            var def = new Deferred();
-            setTimeout(function() {
-               self.data = ['Controls/Input/Text'];
-               self.is_OK = 'true';
-               def.callback(self.data);
-            }, 300);
-            return def;
+         if(typeof window !== 'undefined') {
+            if(cookie.get('s3debug') !== 'true') {
+               var libModule = false, noLibModule = false;
+               var scripts = document.querySelectorAll('script');
+               for(var i = 0; i < scripts.length; i++) {
+                  if(~scripts[i].src.indexOf('testLib')) {
+                     libModule = true;
+                  }
+                  if(~scripts[i].src.indexOf('testModuleNoLib')) {
+                     noLibModule = true;
+                  }
+               }
+               if(libModule && noLibModule) {
+                  this.isOK = 'true';
+               }
+            }
          }
       }
-
    });
 
    return AsyncDemo;

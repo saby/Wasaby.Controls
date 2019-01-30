@@ -26,7 +26,14 @@ define('Controls/interface/IGridItemTemplate', [
     *       <itemTemplate>
     *          <ws:partial template="wml!Controls/List/Grid/Item" highlightOnHover="{{false}}"/>
     *       </itemTemplate>
-    *    </Controls.List>
+    *    </Controls.Grid>
     * </pre>
     */
+
+   /**
+    * @name Controls/interface/IGridItemTemplate#itemTemplateProperty
+    * @cfg {String} Name of the item property that contains template for item render. If not set, itemTemplate is used instead.
+    * <a href="/materials/demo-ws4-grid-item-template">Example</a>.
+    */
+
 });

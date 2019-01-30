@@ -1,0 +1,5 @@
+<Controls.List
+        source="{{_viewSource}}"
+        keyProperty="id"
+        filter="{{_filter}}">
+</Controls.List>
