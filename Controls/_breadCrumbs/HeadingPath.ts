@@ -149,7 +149,8 @@ var BreadCrumbsPath = Control.extend({
 BreadCrumbsPath.getDefaultOptions = function () {
     return {
         displayProperty: 'title',
-        root: null
+        root: null,
+        showChevron: true,
     };
 };
 
