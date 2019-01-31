@@ -1,11 +1,11 @@
 import Control = require('Core/Control');
 import SourceController = require('Controls/Controllers/SourceController');
-import template = require('wml!Controls/_toolbar/View');
-import toolbarItemTemplate = require('wml!Controls/_toolbar/ToolbarItemTemplate');
+import template = require('wml!Controls/_toolbars/View');
+import toolbarItemTemplate = require('wml!Controls/_toolbars/ToolbarItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
-import 'css!theme?Controls/_toolbar/View';
+import 'css!theme?Controls/_toolbars/View';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -202,7 +202,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!Controls/_toolbar/ToolbarPopup'], function () {
+        require(['css!Controls/_toolbars/ToolbarPopup'], function () {
             self._children.menuOpener.open(config, self);
         });
     }
