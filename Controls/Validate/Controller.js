@@ -244,9 +244,9 @@ define('Controls/Validate/Controller',
          _hoverInfoboxHandler: function() {
             clearTimeout(this._closeId);
          },
-         _valueChangedHandler: function(event,value){
+         _valueChangedHandler: function(event, value) {
             this._notify('valueChanged', [value]);
-         }
+         },
 
          /**
           * Получить результат валидации
