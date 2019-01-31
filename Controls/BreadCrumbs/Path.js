@@ -21,6 +21,13 @@ define('Controls/BreadCrumbs/Path', [
     */
 
    /**
+    * @name Controls/BreadCrumbs/Path#showChevron
+    * @cfg {Boolean} Determines whether chevron near "back" button should be shown.
+    * @default
+    * true
+    */
+
+   /**
     * @event Controls/BreadCrumbs/Path#arrowActivated Happens after clicking the button "View Model".
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */

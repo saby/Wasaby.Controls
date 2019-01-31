@@ -31,4 +31,11 @@ define('Controls/List/interface/IExplorer', [
     * @event Controls/List/interface/IExplorer#itemOpened Occurs after the folder was opened.
     */
 
+   /**
+    * @name Controls/List/interface/IExplorer#showChevron
+    * @cfg {Boolean} Determines whether chevron near "back" button should be shown.
+    * @default
+    * true
+    */
+
 });
