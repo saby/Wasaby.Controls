@@ -52,14 +52,14 @@ define('Controls/FormController', [
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
          var createDef = cfg.dataSource.create(cfg.initValues);
          instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-         createDef.addCallback(function(record) {
+         createDef.addCallbacks(function(record) {
             instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
                _private.createRecordBeforeMountNotify(instance);
             }
-         });
+         }, instance._crudErrback.bind(instance));
          createDef.addErrback(function(e) {
             instance._createdInMounting = { isError: true, result: e };
             return e;
@@ -289,7 +289,7 @@ define('Controls/FormController', [
       create: function(initValues) {
          initValues = initValues || this._options.initValues;
          var res = this._children.crud.create(initValues);
-         res.addCallback(this._createHandler.bind(this));
+         res.addCallbacks(this._createHandler.bind(this), this._crudErrback.bind(this));
          return res;
       },
       _createHandler: function(record) {
@@ -433,6 +433,13 @@ define('Controls/FormController', [
          return this._children.validation.submit();
       },
 
+      _crudErrback: function(error) {
+         this._children.errorContainer.process({
+            error: error,
+            mode: Mode.include
+         });
+         return error;
+      },
       _crudHandler: function(event) {
          var eventName = event.type;
          var args = Array.prototype.slice.call(arguments, 1);

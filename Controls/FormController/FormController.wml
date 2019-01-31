@@ -13,9 +13,14 @@
          dataSource="{{ _options.dataSource }}">
       <div>
          <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-         <ws:partial
+         <Controls.error:Container
+            name="errorContainer"
+            controller="{{ _options.errorController }}"
+         >
+            <ws:partial
                template="{{ _options.content }}"
                record="{{ _record }}"/>
+         </Controls.error:Container>
       </div>
    </Controls.Container.Crud>
 </Controls.Validate.FormController>
