@@ -1,5 +1,5 @@
 define('Controls/BreadCrumbs/Path', [
-   'Controls/breadCrumbs',
+   'Controls/crumbs',
    'Core/IoC'
 ], function(breadCrumbsLib,
    IoC) {
@@ -25,7 +25,7 @@ define('Controls/BreadCrumbs/Path', [
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
 
-   IoC.resolve('ILogger').error('Controls/BreadCrumbs/Path', 'Контрол переехал. Используйте Controls/breadCrumbs:HeadingPath');
+   IoC.resolve('ILogger').error('Controls/BreadCrumbs/Path', 'Контрол переехал. Используйте Controls/crumbs:HeadingPath');
 
    return breadCrumbsLib.HeadingPath;
 });

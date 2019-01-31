@@ -1,11 +1,11 @@
 import Control = require('Core/Control');
 import SourceController = require('Controls/Controllers/SourceController');
-import template = require('wml!Controls/_toolbar/View');
-import toolbarItemTemplate = require('wml!Controls/_toolbar/ToolbarItemTemplate');
+import template = require('wml!Controls/_toolbars/View');
+import toolbarItemTemplate = require('wml!Controls/_toolbars/ToolbarItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
-import 'css!theme?Controls/_toolbar/View';
+import 'css!theme?Controls/_toolbars/View';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -95,7 +95,7 @@ import 'css!theme?Controls/_toolbar/View';
  * @name Controls/Toolbar#itemTemplate
  * @cfg {Function} Template for item render.
  * @remark
- * To determine the template, you should call the base template 'Controls/toolbar:ToolbarItemTemplate'.
+ * To determine the template, you should call the base template 'Controls/toolbars:ToolbarItemTemplate'.
  * The template is placed in the component using the ws:partial tag with the template attribute.
  * You can change the display of records by setting button options values:
  * <ul>
@@ -114,7 +114,7 @@ import 'css!theme?Controls/_toolbar/View';
  *    >
  *       <ws:itemTemplate>
  *          <ws:partial
- *             template="Controls/toolbar:ToolbarItemTemplate"
+ *             template="Controls/toolbars:ToolbarItemTemplate"
  *             buttonStyle="{{myStyle}}"
  *             buttonReadOnly="{{readOnlyButton}}"
  *             buttonTransparent="{{myButtonTransparent}}"
@@ -202,7 +202,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!Controls/_toolbar/ToolbarPopup'], function () {
+        require(['css!Controls/_toolbars/ToolbarPopup'], function () {
             self._children.menuOpener.open(config, self);
         });
     }

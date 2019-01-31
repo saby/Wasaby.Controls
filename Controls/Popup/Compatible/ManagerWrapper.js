@@ -29,6 +29,13 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             this._toggleWindowHandlers(true);
          },
 
+         _beforePopupDestroyedHandler: function() {
+            // Контрол ловим событие и вызывает обработчик в GlobalPopup.
+            // На текущий момент у PopupGlobal нет возможности самому ловить событие.
+            var PopupGlobal = this._children.PopupGlobal;
+            PopupGlobal._popupBeforeDestroyedHandler.apply(PopupGlobal, arguments);
+         },
+
          _toggleWindowHandlers: function(subscribe) {
             var actionName = subscribe ? 'addEventListener' : 'removeEventListener';
             window[actionName]('scroll', this._scrollPage);

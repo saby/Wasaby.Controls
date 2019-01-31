@@ -1,0 +1,5 @@
+<ws:partial template="wml!Controls/List/Grid/Column" itemData="{{itemData}}">
+   <ws:contentTemplate>
+      <span class="demo-DragNDrop__explorerItem_received">{{itemData.item.received}}</span>
+   </ws:contentTemplate>
+</ws:partial>
