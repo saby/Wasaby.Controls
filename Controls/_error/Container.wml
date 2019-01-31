@@ -1,7 +1,7 @@
 <div class="ErrorContainer">
     <Controls.Popup.Opener.Dialog name="dialog" />
     <ws:partial
-        template="{{ _options.controller? _options.controller: __controller }}"
+        template="{{ _options.controller }}"
         name="controller"
         on:showError="__showError()"
     />

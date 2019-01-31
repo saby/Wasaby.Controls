@@ -112,7 +112,7 @@ export default class Controller extends CoreControl {
             return handler !== _handler;
         })
     }
-    process<T extends Error = Error>(config: HandlerConfig<T> | T) {
+    process<T extends Error = Error>(config: HandlerConfig<T> | T): displayOption {
         let _config = prepareConfig<T>(config);
         if (!isNeedHandle(_config.error)) {
             return;
@@ -125,7 +125,7 @@ export default class Controller extends CoreControl {
             template,
             options
         };
-        return this._notify('showError', [displayOption], { bubbling: true });
+        return displayOption;
 
     }
     private __findTemplate<T extends Error = Error>(config: HandlerConfig<T>): HandlerResult {

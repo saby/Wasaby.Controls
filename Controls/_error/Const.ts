@@ -22,11 +22,12 @@ export type DisplayOptions = {
 };
 
 /// region type difinition - delete
-type CoreControlType = {
+type CoreControlType<TChildren = object> = {
     subscribe(event: string, handler);
     _notify(eventName: string, args?: Array<any>, options?: { bubbling: boolean });
+    _children: TChildren;
 }
-export type CoreControlConstructor = {
-    new(...args): CoreControlType;
+export type CoreControlConstructor<TChildren = object> = {
+    new(...args): CoreControlType<TChildren>;
 }
 /// endregion type difinition - delete

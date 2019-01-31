@@ -9,7 +9,10 @@ import { Handler, HandlerConfig } from 'Controls/_error/Handler';
 import { Mode, DisplayOptions, CoreControlConstructor } from 'Controls/_error/Const';
 import 'css!Controls/_error/Container';
 
-let CoreControl: CoreControlConstructor = Control;
+type Children = {
+    controller: Controller
+}
+let CoreControl: CoreControlConstructor<Children> = Control;
 
 type Config = {
     handlers: Array<Handler>;
@@ -35,16 +38,10 @@ type Config = {
  */
 export default class Container extends CoreControl {
     protected _template = tmpl;
-    private __error: DisplayOptions = null;
-    private __controller: Controller = Controller;
-    constructor(config: Partial<Config> = {}) {
-        super(config);
-        console.clear();  // TODO Это не должно попасть в МР
-        console.log(this);  // TODO Это не должно попасть в МР
-        window.temp1 = this;  // TODO Это не должно попасть в МР
-    }
+    private __error: DisplayOptions;
     process<T extends Error = Error>(config: HandlerConfig<T> | T) {
-        return this.getController().process(config);
+        let displayOptions = this.getController().process(config);
+        return this.__showError(displayOptions);
     }
     hide() {
         if (this.__error) {
@@ -61,7 +58,12 @@ export default class Container extends CoreControl {
     getController(): Controller {
         return this._children.controller;
     }
-    private __showError(event, config: DisplayOptions) {
+    protected _beforeMount(options) {
+        if (!options.controller) {
+            options.controller = Controller;
+        }
+    }
+    private __showError(config: DisplayOptions) {
         // диалоговое с ошибкой
         if (config.mode == Mode.dialog) {
             return this.__showModal(config);
