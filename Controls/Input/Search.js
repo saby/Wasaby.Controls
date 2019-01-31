@@ -30,6 +30,8 @@ define('Controls/Input/Search',
        *
        * @mixes Controls/Input/Search/Styles
        *
+       * @ignoreOptions style
+       *
        * @control
        * @public
        * @demo Controls-demo/Input/Search/SearchPG
@@ -44,11 +46,6 @@ define('Controls/Input/Search',
        */
 
       var _private = {
-         STYLE_MAP: {
-            'default': 'search',
-            'header': 'secondarySearch'
-         },
-
          isVisibleResetButton: function() {
             return !!this._options.value;
          },
@@ -62,7 +59,7 @@ define('Controls/Input/Search',
          _roundBorder: true,
 
          get _style() {
-            return _private.STYLE_MAP[this._options.style];
+            return 'search';
          },
 
          _getViewModelOptions: function(options) {
@@ -140,10 +137,6 @@ define('Controls/Input/Search',
           * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
           * optionTypes.maxLength = descriptor(Number|null);
           */
-         optionTypes.style = entity.descriptor(String).oneOf([
-            'default',
-            'header'
-         ]);
          optionTypes.trim = entity.descriptor(Boolean);
          optionTypes.constraint = entity.descriptor(String);
 
@@ -155,7 +148,6 @@ define('Controls/Input/Search',
 
          defaultOptions.value = '';
          defaultOptions.trim = false;
-         defaultOptions.style = 'default';
          defaultOptions.placeholder = rk('Найти') + '...';
 
          return defaultOptions;

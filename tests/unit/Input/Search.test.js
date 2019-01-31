@@ -12,17 +12,6 @@ define(
 
 
          describe('search', function() {
-            it('value changed', function() {
-               let search = new Search();
-               search._notify = (e, args) => {
-                  if (e === 'valueChanged') {
-                     valueSearch = args[0];
-                  }
-               };
-               search._valueChangedHandler('valueChanged', 'text');
-               assert.equal(valueSearch, 'text');
-            });
-
             it('Click on search', function() {
                let search = new Search();
                let searched = false;
@@ -49,6 +38,10 @@ define(
                let search = new Search();
                let resetClicked = false;
                let activated = false;
+
+               search._beforeMount({
+                  value: ''
+               });
 
                search._notify = (e, args) => {
                   if ( e == 'resetClick') {

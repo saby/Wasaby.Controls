@@ -66,16 +66,7 @@ define('Controls/Input/Render',
                'left',
                'right'
             ]).required(),
-            style: entity.descriptor(String).oneOf([
-               'info',
-               'danger',
-               'invalid',
-               'primary',
-               'success',
-               'warning',
-               'search',
-               'secondarySearch'
-            ]).required(),
+            style: entity.descriptor(String).required(),
             tagStyle: entity.descriptor(String).oneOf([
                'info',
                'danger',
