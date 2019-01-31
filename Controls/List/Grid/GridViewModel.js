@@ -770,6 +770,11 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setSwipeItem(itemData);
          },
 
+         setRightSwipedItem: function(itemData) {
+            this._model.setRightSwipedItem(itemData);
+            this._nextVersion();
+         },
+
          setShowRowSeparator: function(showRowSeparator) {
             this._options.showRowSeparator = showRowSeparator;
             this._nextVersion();

@@ -948,10 +948,17 @@ define('Controls/List/BaseControl', [
                key: itemData.key,
                status: itemData.multiSelectStatus
             };
+            this.getViewModel().setRightSwipedItem(itemData);
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
+         }
+      },
+
+      _onAnimationEnd: function(e) {
+         if (e.nativeEvent.animationName === 'rightSwipe') {
+            this.getViewModel().setRightSwipedItem(null);
          }
       },
 
