@@ -5,11 +5,12 @@ define('Controls-demo/DragNDrop/Demo', [
    'Core/core-clone',
    'Controls-demo/DragNDrop/Demo/Data',
    'Controls/DragNDrop/Entity/Items',
+   'Core/core-instance',
    'css!Controls-demo/DragNDrop/Demo/Demo',
    'wml!Controls-demo/DragNDrop/Demo/columnTemplate',
    'wml!Controls-demo/DragNDrop/Demo/timeColumnTemplate',
    'wml!Controls-demo/DragNDrop/Demo/receivedColumnTemplate'
-], function(BaseControl, template, source, cClone, DemoData, Entity) {
+], function(BaseControl, template, source, cClone, DemoData, Entity, cInstance) {
    'use strict';
 
    var ModuleClass = BaseControl.extend({
@@ -80,14 +81,14 @@ define('Controls-demo/DragNDrop/Demo', [
       },
 
       _dragEndSecond: function(event, entity, target, position) {
-         if (target.get('id') !== 0) {
-            this._children.listMoverSecond.moveItems(entity.getItems(), target, position);
-         } else {
+         if (cInstance.instanceOfModule(target, 'Types/entity:Model') && target.get('shared')) {
             this._children.popupOpener.open({
                message: 'Папка закрыта для изменений',
                style: 'danger',
                type: 'ok'
             });
+         } else {
+            this._children.listMoverSecond.moveItems(entity.getItems(), target, position);
          }
       },
 
