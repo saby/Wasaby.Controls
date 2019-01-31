@@ -103,8 +103,8 @@ class Coverage:
                         if file in source:
                             test_result.append(test_name)
 
-        # иногда необходимо вернуть все тесты
-        if '/reg/' in result_json and not test_result:
+        # иногда необходимо вернуть все тесты верстки
+        if 'reg' in result_json and not test_result:
             for file in change_files:
                 if '/themes/' in file or file.endswith('.less'):
                     test_result.extend(data.keys())

@@ -85,9 +85,9 @@ def download_coverage_json(version, type_tests, type_controls) {
     echo "Выкачиваем файл с зависимостями"
     url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${type_controls}_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/${type_tests}/${type_controls}/coverage/result.json"
     script = """
-        if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
-        echo "result.json exitsts"; mv -f tmp_result.json result.json
-        else rm -f result.json
+        if [ `curl -s -w "%{http_code}" --compress -o tmp_result_${type_tests}.json "${url}"` = "200" ]; then
+        echo "result_${type_tests}.json exitsts"; mv -f tmp_result_${type_tests}.json result_${type_tests}.json
+        else rm -f result_${type_tests}.json
         fi
         """
     sh returnStdout: true, script: script
