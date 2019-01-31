@@ -34,18 +34,18 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
             if (config.alignment || config.offset) {
                newCfg.horizontalAlign = {
-                  side: config.alignment.horizontal,
+                  side: (config.alignment && config.alignment.horizontal) || 'right',
                   offset: (config.offset && config.offset.horizontal) || 0
                };
                newCfg.verticalAlign = {
-                  side: config.alignment.vertical,
+                  side: (config.alignment && config.alignment.vertical) || 'bottom',
                   offset: (config.offset && config.offset.vertical) || 0
                };
             }
             if (config.originPoint) {
                newCfg.corner = {
-                  vertical: config.originPoint.vertical,
-                  horizontal: config.originPoint.horizontal
+                  vertical: ( config.originPoint && config.originPoint.vertical) || 'top',
+                  horizontal: (config.originPoint && config.originPoint.horizontal) || 'left'
                };
             }
             return newCfg;
@@ -60,12 +60,6 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             return newCfg;
          },
          prepareConfig: function(cfg, sizes) {
-            if(cfg.popupOptions.corner) {
-               IoC.resolve('ILogger').warn('StickyController', 'Используется устаревшая опция corner, используйте опцию originPoint');
-            }
-            if(cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign ) {
-               IoC.resolve('ILogger').warn('StickyController', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и side');
-            }
             cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
             cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
             var popupCfg = {
@@ -82,13 +76,20 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
                locationStrategy: cfg.popupOptions.locationStrategy
             };
-
+            if(cfg.popupOptions.corner) {
+               IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию originPoint');
+            }
+            if(cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking ) {
+               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
+            }
+            if(cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign ) {
+               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и side');
+            }
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
             cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
 
             cfg.positionConfig = popupCfg;
-
             _private.updateClasses(cfg, popupCfg);
          },
 
