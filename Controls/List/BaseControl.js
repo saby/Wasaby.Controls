@@ -1022,7 +1022,7 @@ define('Controls/List/BaseControl', [
       _onAfterBeginEdit: function(e, item, isAdd) {
          this._notify('afterBeginEdit', [item, isAdd]);
          if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item, true);
+            this._children.itemActions.updateItemActions(item);
          }
       },
 

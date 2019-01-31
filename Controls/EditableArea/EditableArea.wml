@@ -25,13 +25,11 @@
                icon="icon-small icon-Yes"
                style="secondary"
             />
-            <Controls.Button
+            <Controls.Button.Close
                on:click="cancelEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
-               icon="icon-small icon-Close"
                viewMode="toolButton"
-               style="secondary"
-               size="s"
+               size="m"
             />
          </div>
       </ws:if>
