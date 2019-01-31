@@ -1,0 +1,4 @@
+<Controls.List
+        source="{{_viewSource}}"
+        keyProperty="id">
+</Controls.List>

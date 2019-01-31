@@ -1,0 +1,7 @@
+<Controls.TreeGrid
+        source="{{_viewSource}}"
+        keyProperty="id"
+        columns="{{_columns}}"
+        nodeProperty="type"
+        parentProperty="parent">
+</Controls.TreeGrid>
