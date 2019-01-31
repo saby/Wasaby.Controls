@@ -182,6 +182,15 @@ module.exports = function(Component) {
          }, []);
       },
 
+      // Демо-пример: Плитка
+      '/demo-ws4-tile': function(req, res) {
+         requirejs('Controls-demo/Explorer/DemoWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/Explorer/DemoWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: Редактирование по месту в полях ввода
       '/demo-ws4-editable-area': function(req, res) {
          requirejs('Controls-demo/EditableArea/EditableAreaWithApplication');
