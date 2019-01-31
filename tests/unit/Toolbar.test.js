@@ -208,7 +208,7 @@ define(
                _items: 'items'
             },
             testEvent = {
-               currentTarget: 'target'
+               target: 'target'
             },
             config = {
                className: 'controls-Toolbar__popup popupClassName',
