@@ -44,7 +44,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             }
             if (config.originPoint) {
                newCfg.corner = {
-                  vertical: ( config.originPoint && config.originPoint.vertical) || 'top',
+                  vertical: (config.originPoint && config.originPoint.vertical) || 'top',
                   horizontal: (config.originPoint && config.originPoint.horizontal) || 'left'
                };
             }
@@ -76,13 +76,13 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
                locationStrategy: cfg.popupOptions.locationStrategy
             };
-            if(cfg.popupOptions.corner) {
+            if (cfg.popupOptions.corner) {
                IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию originPoint');
             }
-            if(cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking ) {
+            if (cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking) {
                IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
             }
-            if(cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign ) {
+            if (cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign) {
                IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и side');
             }
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
