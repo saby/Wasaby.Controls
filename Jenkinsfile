@@ -1052,7 +1052,7 @@ node('controls') {
                          int_description_sbis3= int_data_sbis3[1]
                          print("in int ${int_description_sbis3}")
                          if ( int_description_sbis3 ) {
-                            description += "[INT_SBIS3] ${int_description_sbis}"
+                            description += "[INT_SBIS3] ${int_description_sbis3}"
                          }
                     }
                     }
