@@ -1,5 +1,5 @@
 define('Controls/BreadCrumbs', [
-   'Controls/breadCrumbs',
+   'Controls/crumbs',
    'Core/IoC'
 ], function(breadCrumbsLib,
    IoC) {
@@ -18,6 +18,6 @@ define('Controls/BreadCrumbs', [
     * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
     */
 
-   IoC.resolve('ILogger').error('Controls/BreadCrumbs', 'Контрол переехал. Используйте Controls/breadCrumbs:Path');
+   IoC.resolve('ILogger').error('Controls/BreadCrumbs', 'Контрол переехал. Используйте Controls/crumbs:Path');
    return breadCrumbsLib.Path;
 });
