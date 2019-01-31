@@ -49,7 +49,20 @@ define(
             assert.isTrue(List._private.isTabChanged({tabsSelectedKey: 1}, 2));
             assert.isFalse(List._private.isTabChanged({tabsSelectedKey: 1}, 1));
          });
-   
+
+         it('dispatchEvent', function() {
+            var eventDispatched = false;
+            var container = {
+               dispatchEvent: function(event) {
+                  assert.equal(event.keyCode, 'testKeyCode');
+                  eventDispatched = true;
+               }
+            }
+
+            List._private.dispatchEvent(container, {keyCode: 'testKeyCode'}, {});
+            assert.isTrue(eventDispatched);
+         })
+
          it('getTabKeyFromContext', function() {
             var emptyContext = {};
             var contextWithValue = {

@@ -28,20 +28,20 @@ define('Controls-demo/Toolbar/ToolbarPG',
                   {
                      id: '1',
                      showType: 2,
-                     icon: 'icon-Time',
+                     icon: 'icon-Time icon-medium',
                      '@parent': false,
                      parent: null
                   },
                   {
                      id: '3',
-                     icon: 'icon-Print',
+                     icon: 'icon-Print icon-medium',
                      title: 'Распечатать',
                      '@parent': false,
                      parent: null
                   },
                   {
                      id: '4',
-                     buttonIcon: 'icon-24 icon-Linked',
+                     buttonIcon: 'icon-medium icon-Linked',
                      buttonStyle: 'secondary',
                      buttonViewMode: 'toolButton',
                      buttonIconStyle: 'secondary',
@@ -53,7 +53,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                   {
                      id: '5',
                      buttonViewMode: 'icon',
-                     icon: 'icon-Link',
+                     icon: 'icon-Link icon-medium',
                      title: 'Скопировать в буфер',
                      '@parent': false,
                      parent: null
@@ -89,12 +89,12 @@ define('Controls-demo/Toolbar/ToolbarPG',
                   {
                      id: '1',
                      showType: 2,
-                     icon: 'icon-Time'
+                     icon: 'icon-Time icon-medium'
                   },
                   {
                      id: '2',
                      showType: 2,
-                     icon: 'icon-Linked',
+                     icon: 'icon-Linked icon-medium',
                      title: 'Связанные документы',
                      myTemplate: itemTmpl
                   },
@@ -133,7 +133,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                      {
                         id: '2',
                         title: 'Default template',
-                        template: 'Controls/toolbar:ToolbarItemTemplate'
+                        template: 'Controls/toolbars:ToolbarItemTemplate'
                      }
                   ]
                },

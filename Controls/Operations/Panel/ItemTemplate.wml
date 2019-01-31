@@ -1,4 +1,4 @@
-<ws:partial attr:class="controls-operationsPanelV__item" template="Controls/toolbar:ToolbarItemTemplate">
+<ws:partial attr:class="controls-operationsPanelV__item" template="Controls/toolbars:ToolbarItemTemplate">
     <ws:contentTemplate>
         <ws:if data="{{!!item.icon}}">
             <i class="controls-Toolbar__item_icon {{item.icon}} controls-Toolbar__item_icon_{{item.iconStyle || 'secondary'}}"/>

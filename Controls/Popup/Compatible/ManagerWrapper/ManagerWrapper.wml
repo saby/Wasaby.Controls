@@ -14,7 +14,7 @@
                                                 on:cancelPreviewer="PopupGlobal._cancelPreviewerHandler()"
                                                 on:isPreviewerOpened="PopupGlobal._isPreviewerOpenedHandler()"
                                                 on:closePreviewer="PopupGlobal._closePreviewerHandler()"
-                                                on:managerPopupBeforeDestroyed="PopupGlobal._popupBeforeDestroyedHandler()">
+                                                on:managerPopupBeforeDestroyed="_beforePopupDestroyedHandler()">
                            <Controls.Application.TouchDetector name="touchDetector">
                               <Controls.DragNDrop.Container name="dragNDropContainer">
                                  <div>
