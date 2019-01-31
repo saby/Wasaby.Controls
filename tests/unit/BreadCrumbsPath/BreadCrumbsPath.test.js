@@ -1,6 +1,6 @@
 define([
-   'Controls/_breadCrumbs/HeadingPath',
-   'Controls/_breadCrumbs/Utils',
+   'Controls/_crumbs/HeadingPath',
+   'Controls/_crumbs/Utils',
    'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred',
