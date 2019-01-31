@@ -1,6 +1,6 @@
 define([
    'Core/core-merge',
-   'Controls/Date/Month/Model',
+   'Controls/_calendar/Month/Model',
    'SBIS3.CONTROLS/Utils/DateUtil',
    'tests/Calendar/Utils'
 ], function(
@@ -10,6 +10,8 @@ define([
    calendarTestUtils
 ) {
    'use strict';
+
+   MonthModel = MonthModel.default;
 
    let config = {
       month: new Date(2017, 0, 1)

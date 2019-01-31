@@ -1,0 +1,9 @@
+<Controls.List
+        source="{{_viewSource}}"
+        keyProperty="id">
+    <ws:emptyTemplate>
+        <ws:partial template="wml!Controls/List/emptyTemplate" topSpacing="xxl" bottomSpacing="m">
+            <ws:contentTemplate>No data available!</ws:contentTemplate>
+        </ws:partial>
+    </ws:emptyTemplate>
+</Controls.List>

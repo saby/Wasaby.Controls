@@ -1085,7 +1085,7 @@ node('controls') {
                     reg_data_sbis3 = build_description("(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./reg/SBIS3.CONTROLS/build_description.txt", skip)
                     if ( reg_data_sbis3 ) {
                         reg_title_sbis3 = reg_data_sbis3[0]
-                        reg_description_sbis = reg_data_sbis3[1]
+                        reg_description_sbis3 = reg_data_sbis3[1]
                         print("in reg ${reg_description_sbis3}")
                         if ( description != reg_description_sbis3 ) {
                             description += "<br>[REG_SBIS3] ${reg_description_sbis3}"
