@@ -50,7 +50,8 @@ define('Controls/Input/Render',
             content: entity.descriptor(Function).required(),
             afterFieldWrapper: entity.descriptor(Function),
             beforeFieldWrapper: entity.descriptor(Function),
-            multiline: entity.descriptor(Boolean),
+            multiline: entity.descriptor(Boolean).required(),
+            roundBorder: entity.descriptor(Boolean).required(),
             size: entity.descriptor(String).oneOf([
                's',
                'm',
@@ -71,7 +72,9 @@ define('Controls/Input/Render',
                'invalid',
                'primary',
                'success',
-               'warning'
+               'warning',
+               'search',
+               'secondarySearch'
             ]).required(),
             tagStyle: entity.descriptor(String).oneOf([
                'info',

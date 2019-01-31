@@ -38,6 +38,11 @@
    .for(@variants, { &_@{_item} {
       height: ~"@{height_Render_size_@{_item}}";
    } });
+
+   .for(@variants, { &_@{_item}_roundBorder {
+      @height: "height_Render_size_@{_item}";
+      border-radius: @@height / 2;
+   } });
 }
 
 .controls-Render_fontStyle {
@@ -59,28 +64,29 @@
    border-style: solid;
    border-width: @border-width_Render;
 
-   @variants: info, danger, invalid, primary, success, warning;
-   .for(@variants, { &_@{_item} {
+   @mainVariants: info, danger, invalid, primary, success, warning;
+   @allVariants: info, danger, invalid, primary, success, warning, search, secondarySearch;
+   .for(@allVariants, { &_@{_item} {
       border-color: ~"@{border-color_Render_style_@{_item}}";
       background: ~"@{background_Render_style_@{_item}}";
    } });
 
-   .for(@variants, { &_@{_item}:hover {
+   .for(@allVariants, { &_@{_item}:hover {
       border-color: ~"@{border-color_Render_style_@{_item}_hover}";
       background: ~"@{background_Render_style_@{_item}_hover}";
    } });
 
-   .for(@variants, { &_@{_item}_active {
+   .for(@allVariants, { &_@{_item}_active {
       border-color: ~"@{border-color_Render_style_@{_item}_active}";
       background: ~"@{background_Render_style_@{_item}_active}";
    } });
 
-   .for(@variants, { &_@{_item}_readOnly {
+   .for(@allVariants, { &_@{_item}_readOnly {
       border-color: ~"@{border-color_Render_style_@{_item}_readOnly}";
       background: ~"@{background_Render_style_@{_item}_readOnly}";
    } });
 
-   .for(@variants, { &_@{_item}_readOnly_multiline {
+   .for(@mainVariants, { &_@{_item}_readOnly_multiline {
       border-color: ~"@{border-color_Render_style_@{_item}_readOnly_multiline}";
       background: ~"@{background_Render_style_@{_item}_readOnly_multiline}";
    } });

@@ -1,13 +1,16 @@
 define('Controls/Input/Search',
    [
-      'Core/Control',
-      'wml!Controls/Input/Search/Search',
-      'Controls/Input/OldText/OldViewModel',
+      'Types/entity',
       'Core/constants',
+      'Controls/Input/Base',
+      'Controls/Input/Text/ViewModel',
+
+      'wml!Controls/Input/Search/Buttons',
+
       'css!theme?Controls/Input/Search/Search'
    ],
 
-   function(Control, template, BaseViewModel, constants) {
+   function(entity, constants, Base, ViewModel, buttonsTemplate) {
       'use strict';
 
       /**
@@ -40,88 +43,122 @@ define('Controls/Input/Search',
        * @event Controls/Input/resetClick#resetClick Occurs when reset button is clicked.
        */
 
-      var Search = Control.extend({
-         _template: template,
-         _isFocused: false,
+      var _private = {
+         STYLE_MAP: {
+            'default': 'search',
+            'header': 'secondarySearch'
+         },
 
-         _beforeMount: function(options) {
-            this._baseViewModel = new BaseViewModel({
-               value: options.value,
+         isVisibleResetButton: function() {
+            return !!this._options.value;
+         },
+
+         calculateStateButton: function() {
+            return this._options.readOnly ? '_readOnly' : '';
+         }
+      };
+
+      var Search = Base.extend({
+         _roundBorder: true,
+
+         get _style() {
+            return _private.STYLE_MAP[this._options.style];
+         },
+
+         _getViewModelOptions: function(options) {
+            return {
                maxLength: options.maxLength,
                constraint: options.constraint
-            });
+            };
          },
 
-         _beforeUpdate: function(newOptions) {
-            this._baseViewModel.updateOptions({
-               value: newOptions.value,
-               maxLength: newOptions.maxLength,
-               constraint: newOptions.constraint
-            });
+         _getViewModelConstructor: function() {
+            return ViewModel;
          },
 
-         _focusOutHandler: function() {
-            //TODO до перехода на новую схему инпутов, Максим делает в январе-феврале 
+         _initProperties: function() {
+            Search.superclass._initProperties.apply(this, arguments);
+
+            this._field.scope.controlName = 'Search';
+
+            this._afterFieldWrapper.template = buttonsTemplate;
+            this._afterFieldWrapper.scope.isVisibleReset = _private.isVisibleResetButton.bind(this);
+            this._afterFieldWrapper.scope.calculateState = _private.calculateStateButton.bind(this);
+         },
+
+         _changeHandler: function() {
             if (this._options.trim) {
-               var trimmedValue = this._options.value.trim();
+               var trimmedValue = this._viewModel.displayValue.trim();
 
-               if (trimmedValue !== this._options.value) {
-                  this._baseViewModel.updateOptions({
-                     value: trimmedValue,
-                     maxLength: this._options.maxLength,
-                     constraint: this._options.constraint
-                  });
-                  this._notifyOnValueChanged(trimmedValue);
+               if (trimmedValue !== this._viewModel.displayValue) {
+                  this._viewModel.displayValue = trimmedValue;
+                  this._notifyValueChanged();
                }
             }
-         },
 
-         _notifyOnValueChanged: function(value) {
-            this._notify('valueChanged', [value]);
-         },
-
-         _valueChangedHandler: function(event, value) {
-            this._notifyOnValueChanged(value);
+            Search.superclass._changeHandler.apply(this, arguments);
          },
 
          _resetClick: function() {
-            if (!this._options.readOnly) {
-               // move focus from clear button to input
-               this.activate();
-               this._notify('resetClick');
-               this._notifyOnValueChanged('');
+            if (this._options.readOnly) {
+               return;
             }
+
+            this._notify('resetClick');
+
+            this._viewModel.displayValue = '';
+            this._notifyValueChanged();
+
+            // move focus from clear button to input
+            this.activate();
          },
 
          _searchClick: function() {
-            if (!this._options.readOnly) {
-               // move focus from search button to input
-               this.activate();
-               this._notify('searchClick');
+            if (this._options.readOnly) {
+               return;
             }
+
+            this._notify('searchClick');
+
+            // move focus from search button to input
+            this.activate();
          },
 
          _keyUpHandler: function(event) {
             if (event.nativeEvent.which === constants.key.enter) {
                this._searchClick();
             }
-         }
 
+            Search.superclass._keyUpHandler.apply(this, arguments);
+         }
       });
 
       Search.getOptionTypes = function getOptionsTypes() {
-         return {
+         var optionTypes = Base.getOptionTypes();
 
-            /* placeholder: types(String) вернуть проверку типов, когда будет поддержка проверки на 2 типа https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421 */
-         };
+         /**
+          * https://online.sbis.ru/opendoc.html?guid=00ca0ce3-d18f-4ceb-b98a-20a5dae21421
+          * optionTypes.maxLength = descriptor(Number|null);
+          */
+         optionTypes.style = entity.descriptor(String).oneOf([
+            'default',
+            'header'
+         ]);
+         optionTypes.trim = entity.descriptor(Boolean);
+         optionTypes.constraint = entity.descriptor(String);
+
+         return optionTypes;
       };
 
       Search.getDefaultOptions = function getDefaultOptions() {
-         return {
-            placeholder: rk('Найти') + '...',
-            style: 'default',
-            selectOnClick: false
-         };
+         var defaultOptions = Base.getDefaultOptions();
+
+         defaultOptions.value = '';
+         defaultOptions.trim = false;
+         defaultOptions.style = 'default';
+         defaultOptions.placeholder = rk('Найти') + '...';
+
+         return defaultOptions;
       };
 
       return Search;

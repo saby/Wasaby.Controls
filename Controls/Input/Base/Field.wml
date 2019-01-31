@@ -1,4 +1,4 @@
-<div class="controls-InputBase__field controls-InputBase__field_margin">
+<div class="controls-InputBase__field controls-{{controlName}}__field_margin">
    <input
       autocorrect="off"
       type="{{type}}"
