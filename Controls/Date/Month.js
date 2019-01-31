@@ -1,15 +1,9 @@
 define('Controls/Date/Month', [
-   'Core/Control',
-   'Core/core-merge',
-   'wml!Controls/Date/Month/Month',
-   'Controls/Date/interface/IMonth',
-   'Controls/Date/Month/Model'
+   'Controls/calendar',
+   'Core/IoC'
 ], function(
-   BaseControl,
-   coreMerge,
-   monthTmpl,
-   IMonth,
-   MonthViewModel
+   calendarLib,
+   IoC
 ) {
 
    'use strict';
@@ -20,7 +14,7 @@ define('Controls/Date/Month', [
     * 
     * @class Controls/Date/Month
     * @extends Core/Control
-    * @mixes Controls/Date/interface/IMonth
+    * @mixes Controls/_calendar/interfaces/IMonth
     * @mixes Controls/Date/interface/IRangeSelectable
     * @mixes Controls/Date/interface/IDateRangeSelectable
     * @control
@@ -30,41 +24,10 @@ define('Controls/Date/Month', [
     *
     */
 
-   var Component = BaseControl.extend({
-      _template: monthTmpl,
-      _monthViewModel: MonthViewModel,
+   IoC.resolve('ILogger').error(
+      'Controls/Date/Month' +
+      'This control is deprecated. Use \'Controls/calendar:Month\' instead'
+   );
 
-      // constructor: function() {
-      //    this._dayFormatter = this._dayFormatter.bind(this);
-      //    Component.superclass.constructor.apply(this, arguments);
-      // },
-
-      // _beforeMount: function(options) {
-      //    this._view = options.view || 'Controls/Date/MonthView';
-      // },
-
-      _onRangeChangedHandler: function(event, startValue, endValue) {
-         this._notify('startValueChanged', [startValue]);
-         this._notify('endValueChanged', [endValue]);
-      }
-
-      // _startValueChangedHandler: function(event, value) {
-      //    this._notify('startValueChanged', [value]);
-      // },
-      //
-      // _endValueChangedHandler: function(event, value) {
-      //    this._notify('endValueChanged', [value]);
-      // }
-
-   });
-
-   Component.getDefaultOptions = function() {
-      return coreMerge({}, IMonth.getDefaultOptions());
-   };
-
-   Component.getOptionTypes = function() {
-      return coreMerge({}, IMonth.getOptionTypes());
-   };
-
-   return Component;
+   return calendarLib.Month;
 });

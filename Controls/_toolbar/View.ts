@@ -1,12 +1,11 @@
 import Control = require('Core/Control');
 import SourceController = require('Controls/Controllers/SourceController');
-import template = require('wml!Controls/Toolbar/Toolbar');
-import toolbarItemTemplate = require('wml!Controls/Toolbar/ToolbarItemTemplate');
-import toolbarItemTemplate = require('wml!Controls/Toolbar/ToolbarItemTemplate');
+import template = require('wml!Controls/_toolbar/View');
+import toolbarItemTemplate = require('wml!Controls/_toolbar/ToolbarItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
-import {iconsUtil as validateIconStyle} from './buttons';
-import 'css!theme?Controls/Toolbar/Toolbar';
+import {iconsUtil as validateIconStyle} from 'Controls/buttons';
+import 'css!theme?Controls/_toolbar/View';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -96,7 +95,7 @@ import 'css!theme?Controls/Toolbar/Toolbar';
  * @name Controls/Toolbar#itemTemplate
  * @cfg {Function} Template for item render.
  * @remark
- * To determine the template, you should call the base template 'wml!Controls/Toolbar/ToolbarItemTemplate'.
+ * To determine the template, you should call the base template 'Controls/toolbar:ToolbarItemTemplate'.
  * The template is placed in the component using the ws:partial tag with the template attribute.
  * You can change the display of records by setting button options values:
  * <ul>
@@ -115,7 +114,7 @@ import 'css!theme?Controls/Toolbar/Toolbar';
  *    >
  *       <ws:itemTemplate>
  *          <ws:partial
- *             template="wml!Controls/Toolbar/ToolbarItemTemplate"
+ *             template="Controls/toolbar:ToolbarItemTemplate"
  *             buttonStyle="{{myStyle}}"
  *             buttonReadOnly="{{readOnlyButton}}"
  *             buttonTransparent="{{myButtonTransparent}}"
@@ -203,7 +202,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!Controls/Toolbar/ToolbarPopup'], function () {
+        require(['css!Controls/_toolbar/ToolbarPopup'], function () {
             self._children.menuOpener.open(config, self);
         });
     }
@@ -297,4 +296,4 @@ var Toolbar = Control.extend({
 
 Toolbar._private = _private;
 
-export = Toolbar;
+export default Toolbar;
