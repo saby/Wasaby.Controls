@@ -101,6 +101,13 @@ class Coverage:
                     for file in change_files:
                         if file in source:
                             test_result.append(test_name)
+
+        # иногда необходимо вернуть все тесты
+        if '/reg/' in result_json and not test_result:
+            for file in change_files:
+                if '/themes/' in file or file.endswith('.less'):
+                    test_result.extend(data.keys())
+
         return test_result
 
     def get_test_for_regression_test(self, change_files):
