@@ -40,6 +40,12 @@ class Coverage:
                 if os.path.isfile(other_component_file):
                     other_files.append(other_component_file)
 
+        # заберем все файлы не js в текущей папке
+        current_dir = os.path.split(cover_file)[0]
+        for current_file in os.listdir(current_dir):
+            if not current_file.endswith('.js'):
+                other_files.append(os.path.join(current_dir, current_file))
+
         # Демки
         if 'Controls-demo' in cover_file:
             demo_path = os.path.split(cover_file)[0]

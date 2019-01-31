@@ -1116,7 +1116,7 @@ node('controls') {
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
     }
     gitlabStatusUpdate()
-    if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_sbis3 && !unit) {
+    if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_sbis3 ) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
