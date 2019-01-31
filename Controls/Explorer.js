@@ -177,6 +177,9 @@ define('Controls/Explorer', [
          this._dragOnBreadCrumbs = false;
       },
       _documentDragStart: function(event, dragObject) {
+         //TODO: Sometimes at the end of dnd, the parameter is not reset. Will be fixed by: https://online.sbis.ru/opendoc.html?guid=85cea965-2aa6-4f1b-b2a3-1f0d65477687
+         this._hoveredBreadCrumb = undefined;
+
          if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
@@ -184,7 +187,7 @@ define('Controls/Explorer', [
          }
       },
       _hoveredCrumbChanged: function(event, item) {
-         this._hoveredBreadCrumb = item.getId();
+         this._hoveredBreadCrumb = item ? item.getId() : undefined;
       },
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
