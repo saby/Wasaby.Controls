@@ -43,7 +43,7 @@ class Coverage:
         # заберем все файлы не js в текущей папке
         current_dir = os.path.split(cover_file)[0]
         for current_file in os.listdir(current_dir):
-            if not current_file.endswith('.js'):
+            if os.path.isfile(current_file) and not current_file.endswith('.js'):
                 other_files.append(os.path.join(current_dir, current_file))
 
         # Демки
