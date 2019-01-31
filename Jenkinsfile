@@ -55,25 +55,35 @@ def build_description(job, path, skip_test) {
 def return_test_for_run(tests_files) {
     tests_files = tests_files.replace('\n', '')
     echo "Будут запущены ${tests_files}"
-    def run_reg = ""
-    def run_int = ""
+    def run_reg_sbis3 = ""
+    def run_reg_vdom = ""
+    def run_int_sbis3 = ""
+    def run_int_vdom = ""
     echo "Делим общий список на int и reg тесты"
     type_tests = tests_files.split(';')
-    temp_var = type_tests[0].split('reg:')
+    temp_var = type_tests[0].split('reg_sbis3:')
     if ( temp_var.length == 2) {
-        run_reg = "--files_to_start ${temp_var[1]}"
+        run_reg_sbis3 = "--files_to_start ${temp_var[1]}"
     }
-    temp_var = type_tests[1].split('int:')
+    temp_var = type_tests[1].split('reg_vdom:')
+    if ( temp_var.length == 2) {
+        run_reg_vdom = "--files_to_start ${temp_var[1]}"
+    }
+    temp_var = type_tests[2].split('int_sbis3:')
     if ( temp_var.length == 2 ) {
-        run_int = "--files_to_start ${temp_var[1]}"
+        run_int_sbis3 = "--files_to_start ${temp_var[1]}"
+    }
+    temp_var = type_tests[3].split('int_vdom:')
+    if ( temp_var.length == 2 ) {
+        run_int_vdom = "--files_to_start ${temp_var[1]}"
     }
 
-    return [run_reg, run_int]
+    return [run_int_sbis3, run_int_vdom, run_reg_sbis3, run_reg_vdom]
 }
 
-def download_coverage_json(version, type) {
+def download_coverage_json(version, type_tests, type_controls) {
     echo "Выкачиваем файл с зависимостями"
-    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/${type}/coverage/result.json"
+    url = "${env.JENKINS_URL}view/${version}/job/coverage_${version}/job/coverage_${type_controls}_controls_${version}/lastSuccessfulBuild/artifact/controls/tests/${type_tests}/${type_controls}/coverage/result.json"
     script = """
         if [ `curl -s -w "%{http_code}" --compress -o tmp_result.json "${url}"` = "200" ]; then
         echo "result.json exitsts"; mv -f tmp_result.json result.json
@@ -87,19 +97,34 @@ def download_coverage_json(version, type) {
 }
 
 
-def build_title(t_int, t_reg) {
-    if (!t_int && !t_reg) {
+def build_title(t_int_sbis3, t_int_vdom, t_reg_sbis3, t_reg_vdom) {
+    if (!t_int_sbis3 && !t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
         currentBuild.displayName = "#${env.BUILD_NUMBER}"
-    } else if (t_int && !t_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (!t_int && t_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
-    } else if (t_int && t_reg && t_int==t_reg) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    } else if (t_int.contains('FAIL')) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int}"
-    }else if (t_reg.contains('FAIL')) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg}"
+
+    } else if (t_int_sbis3 && !t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
+    } else if (!t_int_sbis3 && t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_vdom}"
+
+    }else if (!t_int_sbis3 && !t_reg_sbis3 && t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
+    } else if (!t_int_sbis3 && !t_reg_sbis3 && !t_int_vdom && t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_vdom}"
+
+    } else if (t_int_sbis3 && t_reg_sbis3 && t_int_sbis3==t_reg_sbis3 && !t_int_vdom && !t_reg_vdom) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
+    } else if (t_int_vdom && t_reg_vdom && t_int_vdom==t_reg_vdom && !t_int_sbis3 && !t_reg_sbis3) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
+
+    } else if (t_int_sbis3.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_sbis3}"
+    } else if (t_int_vdom.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_int_vdom}"
+
+    } else if (t_reg_sbis3.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_sbis3}"
+    } else if (t_reg_vdom.contains('FAIL')) {
+        currentBuild.displayName = "#${env.BUILD_NUMBER} ${t_reg_vdom}"
     }
 }
 
@@ -153,8 +178,8 @@ def getParams(user) {
             choice(choices: "chrome\nff\nie\nedge", description: 'Тип браузера', name: 'browser_type'),
             booleanParam(defaultValue: true, description: "Тип контролов SBIS3.CONTROLS", name: 'run_sbis3'),
             booleanParam(defaultValue: true, description: "Tип контролов VDOM", name: 'run_vdom'),
-            //booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
-            //booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
+            booleanParam(defaultValue: false, description: "Запуск интеграционных тестов по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_int'),
+            booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
             booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
@@ -196,7 +221,7 @@ def sbis3_controls = params.run_sbis3
 
 
 node('master') {
-    if ( "${env.BUILD_NUMBER}" != "1" && !( all_regr|| regr || unit|| inte || all_inte || only_fail)) {
+    if ( "${env.BUILD_NUMBER}" != "1" && !( all_regr|| regr || unit|| inte || all_inte || only_fail || boss)) {
         send_status_in_gitlab("failed")
         exception('Ветка запустилась по пушу, либо запуск с некоректными параметрами', 'TESTS NOT BUILD')
     }else {
@@ -216,13 +241,19 @@ node('controls') {
         deleteDir()
         def skip = params.skip
         def changed_files
-        def skip_tests_int = ""
-        def skip_tests_reg = ""
-        def tests_for_run_int = ""
-        def tests_for_run_reg = ""
+        def skip_tests_int_sbis3 = ""
+        def skip_tests_int_vdom = ""
+        def skip_tests_reg_sbis3 = ""
+        def skip_tests_reg_vdom = ""
+        def tests_for_run_int_sbis3 = ""
+        def tests_for_run_int_vdom = ""
+        def tests_for_run_reg_sbis3 = ""
+        def tests_for_run_reg_vdom = ""
         def smoke_result = true
-        def run_tests_int = true
-        def run_tests_reg = true
+        def run_tests_int_sbis3 = false
+        def run_tests_int_vdom = false
+        def run_tests_reg_sbis3 = false
+        def run_tests_reg_vdom = false
 
         try {
         echo "Назначаем переменные"
@@ -265,8 +296,8 @@ node('controls') {
         }
 
         if ("${env.BUILD_NUMBER}" == "1"){
-            all_inte = true
-            all_regr = true
+            inte = true
+            regr = true
             unit = true
         }
         if ( inte && all_inte ) {
@@ -280,9 +311,23 @@ node('controls') {
         }
         if ( boss ) {
             unit = false
+            inte = true
+            regr = true
+        }
+        if (vdom_controls && (inte || all_inte)) {
+            run_tests_int_vdom = true
+        }
+        if (sbis3_controls && (inte || all_inte)) {
+            run_tests_int_sbis3 = true
+        }
+        if (vdom_controls && (regr || all_regr)) {
+            run_tests_reg_vdom = true
+        }
+        if (sbis3_controls && (regr || all_regr)) {
+            run_tests_reg_sbis3 = true
         }
 
-        if (!vdom_controls && !sbis3_controls) {
+        if (!vdom_controls && !sbis3_controls && !unit) {
             exception('Не указан тип контролов для проверки', 'TESTS NOT BUILD')
 
         }
@@ -791,108 +836,169 @@ node('controls') {
                     if ( !only_fail && changed_files ) {
                         dir("./controls/tests") {
                         if (inte && !boss) {
-                             if ( download_coverage_json(version, 'int') ) {
+                            if (sbis3_controls) {
+                                if ( download_coverage_json(version, "int", "SBIS3.CONTROLS") ) {
                                 tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
-                                    tests_for_run_int = "--files_to_start ${tests_files_int}"
+                                    tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
                                 } else {
-                                    run_tests_int = false
+                                    run_tests_int_sbis3 = false
                                 }
+                            }
+                            }
+                            if (vdom_controls) {
+                                if ( download_coverage_json(version, "int", "VDOM") ) {
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                if (tests_files_int) {
+                                    echo "${tests_files_int}"
+                                    tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int_vdom = false
+                                }
+                            }
 
-                             }
+
+                            }
+
                         }
                         if (regr && !boss) {
-                            if ( download_coverage_json(version, 'reg') ) {
+                            if (sbis3_controls) {
+                            if ( download_coverage_json(version, "reg", "SBIS3.CONTROLS") ) {
                                  tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
-                                     tests_for_run_reg = "--files_to_start ${tests_files_reg}"
+                                     tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
                                  } else {
-                                    run_tests_reg = false
+                                    run_tests_reg_sbis3 = false
                                  }
-                             }
+                               }
+                            }
+                            if (vdom_controls) {
+                                if ( download_coverage_json(version, "reg", "VDOM") ) {
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 if (tests_files_reg) {
+                                 echo "${tests_files_reg}"
+                                     tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_vdom = false
+                                 }
+                               }
+
+                            }
+
                         }
                         if (boss) {
                             tests_files = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -d"
                             if ( tests_files ) {
-                            (tests_for_run_reg, tests_for_run_int) = return_test_for_run(tests_files)
+                                (tests_for_run_int_sbis3, tests_for_run_int_vdom, tests_for_run_reg_sbis3, tests_for_run_reg_vdom) = return_test_for_run(tests_files)
+                                if (!tests_for_run_int_sbis3) {
+                                    run_tests_int_sbis3 = false
+                                }
+                                if (!tests_for_run_int_vdom) {
+                                    run_tests_int_vdom = false
+                                }
+                                if (!tests_for_run_reg_sbis3) {
+                                    run_tests_reg_sbis3 = false
+                                }
+                                if (!tests_for_run_reg_vdom) {
+                                    run_tests_reg_vdom = false
+                                }
                             }
                         }
                         }
                     }
-                    //if ( skip ) {
-                    //     skip_tests_int = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} controls'"
-                    //     skip_tests_reg = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} controls'"
-                    //}
+                    if ( skip ) {
+                        if (sbis3_controls) {
+                         skip_tests_int_sbis3 = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls'"
+                         skip_tests_reg_sbis3 = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls'"
+                         }
+                         if (vdom_controls) {
+                         skip_tests_int_vdom = "--SKIP_TESTS_FROM_JOB '(int-${params.browser_type}) ${version} VDOM controls'"
+                         skip_tests_reg_vdom = "--SKIP_TESTS_FROM_JOB '(reg-${params.browser_type}) ${version} VDOM controls'"
+                         }
+                    }
 
                 }
-            }
+
             parallel (
                 int_test: {
                     stage("Инт.тесты"){
-                        if ( (inte || all_inte) && smoke_result && run_tests_int){
+                        if ( (inte || all_inte) && smoke_result ){
                             echo "Запускаем интеграционные тесты"
-                            if (sbis3_controls) {
+                            parallel (
+                            int_sbis3: {
+                            if (run_tests_int_sbis3) {
                             dir("./controls/tests/int/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
-									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int_sbis3} ${run_test_fail} ${skip_tests_int_sbis3} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
 									deactivate
 									"""
 								}
                             }
                             }
-                            if (vdom_controls) {
+                            },
+                            int_vdom: {
+
+                            if (run_tests_int_vdom) {
                                  dir("./controls/tests/int/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 									source /home/sbis/venv_for_test/bin/activate
-									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int} ${run_test_fail} ${skip_tests_int} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
+									python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_int_vdom} ${run_test_fail} ${skip_tests_int_vdom} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True
 									deactivate
 									"""
 								}
                             }
 
-
+                            }
 
                             }
+                            )
                         }
                     }
                 },
                 reg_test: {
                     stage("Рег.тесты"){
-                        if ( (all_regr || regr) && smoke_result && run_tests_reg){
+                        if ( (all_regr || regr) && smoke_result ){
                             echo "Запускаем тесты верстки"
-                            if (sbis3_controls) {
+                            parallel(
+                            reg_sbis3: {
+                            if (run_tests_reg_sbis3) {
                             dir("./controls/tests/reg/SBIS3.CONTROLS"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 										source /home/sbis/venv_for_test/bin/activate
-										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg_sbis3} ${run_test_fail} ${skip_tests_reg_sbis3} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
 										deactivate
 									"""
 								}
                             }
                             }
-                            if (vdom_controls) {
+                            },
+                            reg_vdom: {
+                            if (run_tests_reg_vdom) {
                                 dir("./controls/tests/reg/VDOM"){
 								timeout(time: 10, unit: 'MINUTES', activity: true) {
 									sh """
 										source /home/sbis/venv_for_test/bin/activate
-										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg} ${run_test_fail} ${skip_tests_reg} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
+										python start_tests.py --RESTART_AFTER_BUILD_MODE ${tests_for_run_reg_vdom} ${run_test_fail} ${skip_tests_reg_vdom} --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --JENKINS_CONTROL_ADDRESS jenkins-control.tensor.ru --RECURSIVE_SEARCH True --DISABLE_GPU True
 										deactivate
 									"""
 								}
                             }
 
                             }
+                            }
+                        )
 
                         }
                     }
                 }
             )
+            }
             if ( !smoke_result ) {
                 exception('Стенд неработоспособен (не прошел smoke test).', 'SMOKE TEST FAIL')
             }
@@ -910,7 +1016,7 @@ node('controls') {
             sudo chmod -R 0777 /home/sbis/Controls
         """
     }
-    if ( (all_regr|| regr || inte || all_inte) && (run_tests_int || run_tests_reg) ){
+    if ( (all_regr|| regr || inte || all_inte) && (run_tests_int_sbis3 || run_tests_int_vdom  || run_tests_reg_sbis3 || run_tests_reg_vdom) ){
         dir(workspace){
             def exists_jinnee_logs = fileExists './jinnee/logs'
             if ( exists_jinnee_logs ){
@@ -941,51 +1047,88 @@ node('controls') {
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/result.db', caseSensitive: false
         junit keepLongStdio: true, testResults: "**/test-reports/*.xml"
-        /*
         if ( smoke_result ) {
             dir("./controls/tests") {
-                def int_title = ''
-                def reg_title = ''
+                def int_title_sbis3 = ''
+                def int_title_vdom = ''
+                def reg_title_sbis3 = ''
+                def reg_title_vdom = ''
                 def description = ''
-                if (inte ) {
-                     int_data = build_description("(int-${params.browser_type}) ${version} controls", "./int/build_description.txt", skip)
-                     if ( int_data ) {
-                         int_title = int_data[0]
-                         int_description= int_data[1]
-                         print("in int ${int_description}")
-                         if ( int_description ) {
-                            description += "[INT] ${int_description}"
+
+                if (inte) {
+                    def int_description_sbis3
+                    if (sbis3_controls && run_tests_int_sbis3) {
+                        int_data_sbis3 = build_description("(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./int/SBIS3.CONTROLS/build_description.txt", skip)
+                        if ( int_data_sbis3 ) {
+                         int_title_sbis3 = int_data_sbis3[0]
+                         int_description_sbis3= int_data_sbis3[1]
+                         print("in int ${int_description_sbis3}")
+                         if ( int_description_sbis3 ) {
+                            description += "[INT_SBIS3] ${int_description_sbis}"
+                         }
+                    }
+                    }
+                    if (vdom_controls && run_tests_int_vdom) {
+                     int_data_vdom = build_description("(int-${params.browser_type}) ${version} VDOM controls", "./int/VDOM/build_description.txt", skip)
+                     if ( int_data_vdom ) {
+                         int_title_vdom = int_data_vdom[0]
+                         int_description_vdom= int_data_vdom[1]
+                         print("in int ${int_description_vdom}")
+                         if ( int_description_vdom ) {
+                            description += "<br>[INT_VDOM] ${int_description_vdom}"
                          }
                     }
                 }
+                }
                 if (regr ) {
-                    reg_data = build_description("(reg-${params.browser_type}) ${version} controls", "./reg/build_description.txt", skip)
-                    if ( reg_data ) {
-                        reg_title = reg_data[0]
-                        reg_description = reg_data[1]
-                        print("in reg ${reg_description}")
-                        if ( description != reg_description ) {
-                            description += "<br>[REG] ${reg_description}"
+                    if (sbis3_controls && run_tests_reg_sbis3) {
+                    reg_data_sbis3 = build_description("(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./reg/SBIS3.CONTROLS/build_description.txt", skip)
+                    if ( reg_data_sbis3 ) {
+                        reg_title_sbis3 = reg_data_sbis3[0]
+                        reg_description_sbis3 = reg_data_sbis3[1]
+                        print("in reg ${reg_description_sbis3}")
+                        if ( description != reg_description_sbis3 ) {
+                            description += "<br>[REG_SBIS3] ${reg_description_sbis3}"
                         }
                     }
                 }
+                }
+                if (vdom_controls && run_tests_reg_vdom) {
+                    reg_data_vdom = build_description("(reg-${params.browser_type}) ${version} VDOM controls", "./reg/VDOM/build_description.txt", skip)
+                    if ( reg_data_vdom ) {
+                        reg_title_vdom = reg_data_vdom[0]
+                        reg_description_vdom = reg_data_vdom[1]
+                        print("in reg ${reg_description_vdom}")
+                        if ( description != reg_description_vdom ) {
+                            description += "<br>[REG_VDOM] ${reg_description_vdom}"
+                        }
+                    }
 
-                build_title(int_title, reg_title)
+                }
+
+                build_title(int_title_sbis3, int_title_vdom, reg_title_sbis3, reg_title_vdom)
                 currentBuild.description = "${description}"
             }
-        } */
+        }
     }
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( (regr || all_regr) && run_tests_reg ){
-        dir("./controls") {
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './tests/**/capture_report/', reportFiles: 'report.html', reportName: 'Regression Report', reportTitles: ''])
+    if ( (regr || all_regr) && (run_tests_reg_sbis3 || run_tests_reg_vdom)){
+        if (sbis3_controls) {
+            dir("./controls/tests/reg/SBIS3.CONTROLS"){
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
+            }
+        }
+        if (vdom_controls) {
+            dir("./controls/tests/reg/VDOM"){
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
+            }
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
-        }
+    }
     gitlabStatusUpdate()
-    if (!run_tests_int && !run_tests_reg) {
+    if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_sbis3 && !unit) {
         currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }

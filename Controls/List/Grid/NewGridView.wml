@@ -19,7 +19,7 @@
                   swipeTemplate="{{_options.swipeTemplate}}"/>
    </div>
    <ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
-      <div class="controls-Grid__emptyTemplate" style="{{'grid-column: 1 / ' + (_options.columns.length + 1) + ';'}}">
+      <div class="controls-Grid__emptyTemplate" style="grid-column: 1 / {{_options.columns.length + (_options.multiSelectVisibility !== 'hidden' ? 2 : 1)}};">
          <ws:partial template="{{_options.emptyTemplate}}"/>
       </div>
    </ws:if>

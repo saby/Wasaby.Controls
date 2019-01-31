@@ -22,5 +22,7 @@ define('Controls/Toggle/SwitchCircleStyles',
     *
     * @css @width_ToggleCircle Toggle circle width.
     * @css @height_ToggleCircle Toggle circle height.
+    *
+    * @css @thickness_ToggleCircle-borderCircle-border Switch circle border thickness.
     */
 );

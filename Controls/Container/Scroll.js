@@ -177,12 +177,6 @@ define('Controls/Container/Scroll',
             //EVENTSPROXY
             _tmplNotify: tmplNotify,
 
-            // Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
-            // Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
-            // прокидываем руками
-            // EVENTSPROXY
-            _tmplNotify: tmplNotify,
-
             /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
@@ -363,13 +357,9 @@ define('Controls/Container/Scroll',
                this._children.scrollDetect.start(ev);
             },
 
-            _scrollbarTaken: function(notify) {
+            _scrollbarTaken: function() {
                if (this._showScrollbarOnHover && this._displayState.hasScroll) {
-                  this._hasHover = true;
-
-                  if (notify) {
-                     this._notify('scrollbarTaken', [], {bubbling: true});
-                  }
+                  this._notify('scrollbarTaken', [], {bubbling: true});
                }
             },
 
@@ -408,6 +398,9 @@ define('Controls/Container/Scroll',
             },
 
             _mouseenterHandler: function() {
+               if (this._showScrollbarOnHover) {
+                  this._hasHover = true;
+               }
                this._scrollbarTaken(true);
             },
 
@@ -426,10 +419,13 @@ define('Controls/Container/Scroll',
             _scrollbarReleasedHandler: function(event) {
                if (!this._showScrollbarOnHover) {
                   this._showScrollbarOnHover = true;
+                  this._hasHover = true;
                   event.preventDefault();
-
-                  this._scrollbarTaken(false);
                }
+            },
+
+            _scrollbarVisibility: function() {
+               return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && (this._hasHover || this._dragging) && this._displayState.hasScroll);
             },
 
             /**

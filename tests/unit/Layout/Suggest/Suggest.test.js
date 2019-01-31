@@ -104,23 +104,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
       it('Suggest::_close', function() {
          var suggestComponent = new Suggest();
-         var value = 'test';
+         suggestComponent._loading = true;
+         suggestComponent._showContent = true;
          
-         suggestComponent._notify = function(event, val) {
-            if (event === 'valueChanged') {
-               value = val[0];
-            }
-         };
-   
-         suggestComponent._options.suggestStyle = 'overInput';
-         suggestComponent._searchValue = '';
          suggestComponent._close();
-         assert.equal(value, 'test');
-   
-         suggestComponent._searchValue = 'test';
-         suggestComponent._close();
-         assert.equal(value, '');
-         assert.equal(suggestComponent._searchValue, '');
+         assert.equal(suggestComponent._loading, null);
+         assert.equal(suggestComponent._showContent, false);
       });
    
       it('Suggest::_private.open', function (done) {
