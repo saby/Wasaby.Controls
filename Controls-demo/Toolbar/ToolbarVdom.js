@@ -129,19 +129,34 @@ define('Controls-demo/Toolbar/ToolbarVdom', [
                {
                   id: '1',
                   showType: 2,
-                  icon: 'icon-Time  icon-medium'
+                  buttonIcon: 'icon-Time  icon-medium',
+                  buttonStyle: 'secondary',
+                  buttonViewMode: 'toolButton',
+                  buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
+                  title: 'Время',
+                  '@parent': true,
+                  parent: null
                },
                {
                   id: '2',
                   showType: 2,
-                  icon: 'icon-Linked icon-medium',
-                  title: 'Связанные документы',
-                  myTemplate: 'wml!Controls-demo/Toolbar/resources/itemTemplate'
+                  buttonIcon: 'icon-Linked icon-medium',
+                  buttonStyle: 'secondary',
+                  buttonViewMode: 'toolButton',
+                  buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
+                  title: 'Связанные документы'
                },
                {
                   id: '3',
                   showType: 2,
-                  title: 'Скопировать в буфер'
+                  buttonIcon: 'icon-Author icon-medium',
+                  buttonStyle: 'secondary',
+                  buttonViewMode: 'toolButton',
+                  buttonIconStyle: 'secondary',
+                  buttonTransparent: false,
+                  title: 'Автор'
                }
             ];
          },
