@@ -139,7 +139,10 @@
 }
 
 /*
- *  Когда на поле висит аттрибут readonly, не работает аттрибут required.
+ *  В продолжении хака выше.
+ *  Для отображения placeholder'a в IE сделана реализация через require на input'e,
+ *  но когда на input'e висит readOnly, require перестаёт работать и хак выше отваливается.
+ *  Сам блок с placeholder'ом скрывется по условиям в контролах, поэтому показ placeholder'a при readOnly ничего не поломает.
  */
 .controls-InputRender__content_ie[readonly=""] + .controls-InputRender__placeholder {
    display: inline-flex;
