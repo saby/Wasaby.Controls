@@ -1,5 +1,5 @@
 define([
-   'Controls/_breadCrumbs/Utils',
+   'Controls/_crumbs/Utils',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred'
 ], function(

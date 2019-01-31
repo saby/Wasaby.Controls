@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import BreadCrumbsUtil from './Utils';
 import FontLoadUtil = require('Controls/Utils/FontLoadUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import template = require('wml!Controls/_breadCrumbs/Path/Path');
+import template = require('wml!Controls/_crumbs/Path/Path');
 
 /**
  * Breadcrumbs.
@@ -10,7 +10,7 @@ import template = require('wml!Controls/_breadCrumbs/Path/Path');
  * @class Controls/BreadCrumbs
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
- * @mixes Controls/_breadCrumbs/BreadCrumbsStyles
+ * @mixes Controls/_crumbs/BreadCrumbsStyles
  * @control
  * @public
  * @author Зайцев А.С.

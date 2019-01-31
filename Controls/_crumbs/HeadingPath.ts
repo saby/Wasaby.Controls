@@ -5,11 +5,11 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import FontLoadUtil = require('Controls/Utils/FontLoadUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import template = require('wml!Controls/_breadCrumbs/HeadingPath/HeadingPath');
+import template = require('wml!Controls/_crumbs/HeadingPath/HeadingPath');
 import backButtonTemplate = require('wml!Controls/Heading/Back/Back');
 import {Model} from 'Types/entity';
 import 'Controls/Heading/Back';
-import 'css!theme?Controls/_breadCrumbs/HeadingPath/HeadingPath';
+import 'css!theme?Controls/_crumbs/HeadingPath/HeadingPath';
 
 var _private = {
     calculateClasses: function (self, maxCrumbsWidth, backButtonWidth, availableWidth) {
@@ -71,10 +71,10 @@ var _private = {
 /**
  * Breadcrumbs with back button.
  *
- * @class Controls/_breadCrumbs/HeadingPath
+ * @class Controls/_crumbs/HeadingPath
  * @extends Core/Control
  * @mixes Controls/interface/IBreadCrumbs
- * @mixes Controls/_breadCrumbs/PathStyles
+ * @mixes Controls/_crumbs/PathStyles
  * @mixes Controls/interface/IHighlighter
  * @control
  * @public
@@ -84,7 +84,7 @@ var _private = {
  */
 
 /**
- * @event Controls/_breadCrumbs/PathStyles#arrowActivated Happens after clicking the button "View Model".
+ * @event Controls/_crumbs/PathStyles#arrowActivated Happens after clicking the button "View Model".
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  */
 
