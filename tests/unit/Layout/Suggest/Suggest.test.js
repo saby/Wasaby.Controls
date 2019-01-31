@@ -492,7 +492,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          var suggestComponent = new Suggest();
          var eventTriggered = false;
          suggestComponent._children = {
-            inputKeyDown: {
+            inputKeydown: {
                start: function() {
                   eventTriggered = true;
                }
