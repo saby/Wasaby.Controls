@@ -1,5 +1,5 @@
 define('Controls/Toolbar', [
-   'Controls/toolbar'
+   'Controls/toolbars'
 ], function(toolbarLib) {
    'use strict';
 
