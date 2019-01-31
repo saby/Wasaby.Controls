@@ -80,7 +80,15 @@ define('Controls-demo/DragNDrop/Demo', [
       },
 
       _dragEndSecond: function(event, entity, target, position) {
-         this._children.listMoverSecond.moveItems(entity.getItems(), target, position);
+         if (target.get('id') !== 0) {
+            this._children.listMoverSecond.moveItems(entity.getItems(), target, position);
+         } else {
+            this._children.popupOpener.open({
+               message: 'Папка закрыта для изменений',
+               style: 'danger',
+               type: 'ok'
+            });
+         }
       },
 
       _dragEndThird: function(event, entity, target, position) {
@@ -105,7 +113,7 @@ define('Controls-demo/DragNDrop/Demo', [
             items: items,
             mainText: firstItem.get('title'),
             image: firstItem.get('image'),
-            logo: 'icon-FolderClosed icon-primary',
+            logo: 'icon-FolderClosed',
             additionalText: firstItem.get('text')
          });
       },
@@ -116,7 +124,7 @@ define('Controls-demo/DragNDrop/Demo', [
          return new Entity({
             items: items,
             mainText: firstItem.get('title'),
-            logo: firstItem.get('type') ? 'icon-FolderClosed icon-primary' : 'icon-DocumentW icon-primary',
+            logo: firstItem.get('type') ? 'icon-FolderClosed' : 'icon-DocumentW icon-primary',
             additionalText: firstItem.get('size')
          });
       }

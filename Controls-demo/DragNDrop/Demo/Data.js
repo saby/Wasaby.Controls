@@ -51,14 +51,15 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
 
       tasks: [{
          id: 0,
-         title: 'План май',
+         title: 'Авраменко А.С.',
          time: null,
          state: null,
          received: null,
          parent: null,
          type: true,
          text: '',
-         image: null
+         image: null,
+         shared: true
       }, {
          id: 1,
          title: 'План март',
@@ -68,7 +69,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: null,
          type: true,
          text: '',
-         image: null
+         image: null,
+         shared: false
       }, {
          id: 2,
          title: 'Срочно',
@@ -78,7 +80,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: null,
          type: true,
          text: '',
-         image: null
+         image: null,
+         shared: false
       }, {
          id: 3,
          title: 'Перемещение записей',
@@ -88,7 +91,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: 2,
          type: true,
          text: '',
-         image: null
+         image: null,
+         shared: false
       }, {
          id: 4,
          title: 'Крайнов Дмитрий',
@@ -98,7 +102,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: 3,
          type: null,
          text: 'Оформить макет на Перемещение записей учесть все поручения',
-         image: Images.staff.krainov
+         image: Images.staff.krainov,
+         shared: false
       }, {
          id: 5,
          title: 'Батурина Наталия',
@@ -108,7 +113,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: null,
          type: null,
          text: 'Актуализировать стандарт Флаг/Группа флагов см. предыдущую версию',
-         image: Images.staff.baturina
+         image: Images.staff.baturina,
+         shared: false
       }, {
          id: 6,
          title: 'Догадкин Владимир',
@@ -118,7 +124,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: 3,
          type: null,
          text: 'Неправильно работает перемещение записей',
-         image: Images.staff.dogadkin
+         image: Images.staff.dogadkin,
+         shared: false
       }, {
          id: 7,
          title: 'Батурина Наталия',
@@ -128,7 +135,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: 1,
          type: null,
          text: 'Реализовать стандарт перемещения записей',
-         image: Images.staff.baturina
+         image: Images.staff.baturina,
+         shared: false
       }, {
          id: 8,
          title: 'Батурина Наталия',
@@ -138,7 +146,8 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          parent: 1,
          type: null,
          text: 'Реализовать стандарт плитка',
-         image: Images.staff.baturina
+         image: Images.staff.baturina,
+         shared: false
       }],
 
       tile: [{
