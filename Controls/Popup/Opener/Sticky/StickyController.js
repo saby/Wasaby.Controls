@@ -25,28 +25,43 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             vertical: 'top',
             horizontal: 'left'
          },
-
       };
 
       var _private = {
          prepareOriginPoint: function(config) {
             var newCfg = cClone(config);
 
-            if (config.alignment || config.offset) {
-               newCfg.horizontalAlign = {
-                  side: (config.alignment && config.alignment.horizontal) || 'right',
-                  offset: (config.offset && config.offset.horizontal) || 0
-               };
-               newCfg.verticalAlign = {
-                  side: (config.alignment && config.alignment.vertical) || 'bottom',
-                  offset: (config.offset && config.offset.vertical) || 0
-               };
+            if (config.alignment) {
+               if ('horizontal' in config.alignment) {
+                  newCfg.horizontalAlign = {
+                     side: config.alignment.horizontal
+                  };
+               }
+               if ('vertical' in config.alignment) {
+                  newCfg.verticalAlign = {
+                     side: config.alignment.vertical
+                  };
+               }
+            }
+            if (config.offset) {
+               if ('horizontal' in config.offset) {
+                  newCfg.horizontalAlign = {
+                     offset: config.offset.horizontal
+                  };
+               }
+               if ('vertical' in config.offset) {
+                  newCfg.verticalAlign = {
+                     offset: config.offset.vertical
+                  };
+               }
             }
             if (config.originPoint) {
-               newCfg.corner = {
-                  vertical: (config.originPoint && config.originPoint.vertical) || 'top',
-                  horizontal: (config.originPoint && config.originPoint.horizontal) || 'left'
-               };
+               if ('vertical' in config.originPoint || 'horisontal' in config.originPoint) {
+                  newCfg.corner = {
+                     vertical: config.originPoint.vertical,
+                     horizontal: config.originPoint.horizontal
+                  };
+               }
             }
             return newCfg;
          },
