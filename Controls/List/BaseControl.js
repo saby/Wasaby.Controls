@@ -1056,7 +1056,8 @@ define('Controls/List/BaseControl', [
             items,
             dragItemIndex,
             dragStartResult;
-         if (this._options.itemsDragNDrop) {
+
+         if (this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
             items = cClone(this._options.selectedKeys) || [];
             dragItemIndex = items.indexOf(itemData.key);
             if (dragItemIndex !== -1) {
