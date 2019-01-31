@@ -1704,6 +1704,28 @@ define([
          });
       });
 
+      it('_onAnimationEnd', function() {
+         var setRightSwipedItemCalled = false;
+         var ctrl = new BaseControl();
+         ctrl._listViewModel = {
+            setRightSwipedItem: function() {
+               setRightSwipedItemCalled = true;
+            }
+         };
+         ctrl._onAnimationEnd({
+            nativeEvent: {
+               animationName: 'test'
+            }
+         });
+         assert.isFalse(setRightSwipedItemCalled);
+         ctrl._onAnimationEnd({
+            nativeEvent: {
+               animationName: 'rightSwipe'
+            }
+         });
+         assert.isTrue(setRightSwipedItemCalled);
+      });
+
       describe('ItemActions', function() {
          var
             actions = [
