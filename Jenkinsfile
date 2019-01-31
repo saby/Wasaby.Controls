@@ -250,10 +250,10 @@ node('controls') {
         def tests_for_run_reg_sbis3 = ""
         def tests_for_run_reg_vdom = ""
         def smoke_result = true
-        def run_tests_int_sbis3 = false
-        def run_tests_int_vdom = false
-        def run_tests_reg_sbis3 = false
-        def run_tests_reg_vdom = false
+        def run_tests_int_sbis3 = true
+        def run_tests_int_vdom = true
+        def run_tests_reg_sbis3 = true
+        def run_tests_reg_vdom = true
 
         try {
         echo "Назначаем переменные"
