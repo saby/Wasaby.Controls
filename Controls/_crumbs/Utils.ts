@@ -1,8 +1,8 @@
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
-import itemsTemplate = require('wml!Controls/_breadCrumbs/View/resources/itemsTemplate');
-import itemTemplate = require('wml!Controls/_breadCrumbs/View/resources/itemTemplate');
+import itemsTemplate = require('wml!Controls/_crumbs/View/resources/itemsTemplate');
+import itemTemplate = require('wml!Controls/_crumbs/View/resources/itemTemplate');
 
 var
     ARROW_WIDTH = 0,
