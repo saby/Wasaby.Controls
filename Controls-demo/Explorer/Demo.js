@@ -109,68 +109,75 @@ define('Controls-demo/Explorer/Demo', [
                idProperty: 'id',
                parentProperty: 'parent',
                data: [{
-                  id: 13,
+                  id: 1,
                   'parent': null,
                   'type': null,
                   title: 'Сравнение условий конкурентов по ЭДО.xlsx',
                   image: explorerImages[4],
                   isDocument: true,
-                  width: 100
+                  width: 200
                }, {
-                  id: 112,
+                  id: 2,
                   'parent': null,
                   'type': null,
                   title: 'Сравнение систем по учету рабочего времени.xlsx',
                   image: explorerImages[5],
                   isDocument: true,
-                  width: 120
+                  width: 200
                }, {
-                  id: 21,
+                  id: 3,
+                  'parent': null,
+                  'type': null,
+                  title: 'Конфеты копия',
+                  image: explorerImages[3],
+                  width: 300
+               }, {
+                  id: 4,
                   'parent': null,
                   'type': null,
                   title: 'PandaDoc.docx',
                   image: explorerImages[6],
                   isDocument: true,
-                  width: 170
+                  width: 200
                }, {
-                  id: 22,
+                  id: 5,
                   'parent': null,
                   'type': null,
                   title: 'SignEasy.docx',
                   image: explorerImages[7],
                   isDocument: true,
-                  width: 120
+                  width: 200
                }, {
-                  id: 4,
+                  id: 6,
                   'parent': null,
                   'type': null,
                   title: 'Договор на поставку печатной продукции',
                   image: explorerImages[0],
                   isDocument: true,
-                  width: 190
+                  width: 200
                }, {
-                  id: 5,
+                  id: 7,
                   'parent': null,
                   'type': null,
                   title: 'Договор аренды помещения',
                   image: explorerImages[1],
                   isDocument: true,
-                  width: 90
+                  width: 200
                }, {
-                  id: 6,
+                  id: 8,
                   'parent': null,
                   'type': null,
                   title: 'Конфеты',
                   image: explorerImages[3],
-                  width: 140
-
+                  width: 300
                }, {
-                  id: 7,
+                  id: 9,
                   'parent': null,
                   'type': null,
                   title: 'Скриншот от 25.12.16, 11-37-16',
                   image: explorerImages[2],
-                  isDocument: true
+                  isDocument: true,
+                  width: 200
                }]
             });
             this._itemActions = [

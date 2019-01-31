@@ -136,6 +136,7 @@ define('Controls/Explorer', [
     * @mixes Controls/List/interface/ITreeControl
     * @mixes Controls/List/interface/IExplorer
     * @mixes Controls/List/interface/IDraggable
+    * @mixes Controls/List/interface/ITile
     * @control
     * @public
     * @category List
