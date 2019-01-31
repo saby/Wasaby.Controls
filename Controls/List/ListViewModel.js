@@ -123,8 +123,12 @@ define('Controls/List/ListViewModel',
                   drawedActions = itemsModelCurrent.itemActions.showedFirst;
                }
             }
-            itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
-            if (itemsModelCurrent.drawActions) {
+            if (this._editingItemData) {
+               itemsModelCurrent.drawActions = itemsModelCurrent.key === this._editingItemData.key;
+            } else {
+               itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
+            }
+            if (itemsModelCurrent.drawActions && drawedActions) {
                itemsModelCurrent.hasShowedItemActionWithIcon = false;
                for (var i = 0; i < drawedActions.length; i++) {
                   if (drawedActions[i].icon) {
