@@ -46,4 +46,25 @@ define('Controls/List/interface/ITile', [
     *                   nodeProperty="Раздел@"/>
     * </pre>
     */
+
+   /**
+    * @name Controls/List/interface/ITile#imageProperty
+    * @cfg {String} Name of the item property that contains the link to the image.
+    * @default image
+    * @remark The increased item is positioned in the center relative to the initial position.
+    * If the increased item does not fit in the specified container, the increase does not occur.
+    * @example
+    * The following example shows how to set the field with the image 'img'.
+    * <pre>
+    *    <Controls.Tile source="{{_viewSource}}"
+    *                   keyProperty="id"
+    *                   parentProperty="Раздел"
+    *                   nodeProperty="Раздел@">
+    *       <ws:itemTemplate>
+    *          <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+    *                      imageProperty="img" >
+    *       </ws:itemTemplate>
+    *    </Controls.Tile>
+    * </pre>
+    */
 });
