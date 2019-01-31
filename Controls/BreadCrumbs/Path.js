@@ -98,8 +98,8 @@ define('Controls/BreadCrumbs/Path', [
     */
 
    /**
-    * @name Controls/BreadCrumbs/Path#showChevron
-    * @cfg {Boolean} Determines whether chevron near "back" button should be shown.
+    * @name Controls/BreadCrumbs/Path#showArrow
+    * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
     * @default
     * true
     */
@@ -171,7 +171,7 @@ define('Controls/BreadCrumbs/Path', [
       return {
          displayProperty: 'title',
          root: null,
-         showChevron: true
+         showArrow: true
       };
    };
 

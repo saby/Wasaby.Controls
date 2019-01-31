@@ -32,8 +32,8 @@ define('Controls/List/interface/IExplorer', [
     */
 
    /**
-    * @name Controls/List/interface/IExplorer#showChevron
-    * @cfg {Boolean} Determines whether chevron near "back" button should be shown.
+    * @name Controls/List/interface/IExplorer#showArrow
+    * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
     * @default
     * true
     */
