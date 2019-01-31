@@ -10,14 +10,13 @@ define([
    'Core/core-instance'
 ], function(ScrollWatcher, source, cInstance){
    describe('Controls.Container.Scroll.Watcher', function () {
-      var registrarMock, containerMock, evType = [];
+      var registrarMock, evType = [];
       beforeEach(function() {
          registrarMock = {
             start: function(eType) {
                evType.push(eType);
             }
          };
-         containerMock = {};
 
       });
 
@@ -79,7 +78,7 @@ define([
 
       it('calcSizeCache', function () {
          var ins = new ScrollWatcher();
-         containerMock = {
+         var containerMock = {
             clientHeight: 300,
             scrollHeight: 3000
          };
@@ -91,7 +90,7 @@ define([
       it('onResizeContainer', function () {
          var ins = new ScrollWatcher();
          ins._registrar = registrarMock;
-         containerMock = {
+         var containerMock = {
             scrollTop: 0,
             clientHeight: 300,
             scrollHeight: 400
@@ -112,7 +111,7 @@ define([
       it('onScrollContainer', function () {
          var ins = new ScrollWatcher();
          ins._registrar = registrarMock;
-         containerMock = {
+         var containerMock = {
             scrollTop: 111,
             clientHeight: 300,
             scrollHeight: 400
@@ -143,7 +142,7 @@ define([
             }
          };
          ins._registrar = registrarMockDebounce;
-         containerMock = {
+         var containerMock = {
             scrollTop: 2,
             clientHeight: 300,
             scrollHeight: 400
@@ -180,7 +179,7 @@ define([
             }
          };
          ins._registrar = registrarMockDebounce;
-         containerMock = {
+         var containerMock = {
             scrollTop: 2,
             clientHeight: 300,
             scrollHeight: 400
@@ -213,7 +212,7 @@ define([
       it('doScroll', function () {
          var ins = new ScrollWatcher(), clientHeight, scrollHeight;
          ins._registrar = registrarMock;
-         containerMock = {
+         var containerMock = {
             scrollTop: 20,
             clientHeight: 300,
             scrollHeight: 3000

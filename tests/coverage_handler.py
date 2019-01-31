@@ -21,12 +21,11 @@ class Coverage:
 
     def get_fullpath_test_name(self, src):
         """Получаем пути расположения файлов"""
-        os.chdir(os.path.join(src, '..'))
-        for root_test in ('SBIS3.CONTROLS', 'VDOM'):
-            for root, _, filename in os.walk(os.path.join(root_test)):
-                for f in filename:
-                    if f.startswith('test_') and f.endswith('.py'):
-                        self.fullpath.append(os.path.join(root, f))
+        test_path, _ = os.path.split(src)
+        for root, _, filename in os.walk(test_path):
+            for f in filename:
+                if f.startswith('test_') and f.endswith('.py'):
+                    self.fullpath.append(os.path.join(root, f).replace(test_path + os.path.sep, ''))
 
     @staticmethod
     def search_other_file(cover_file):
@@ -40,6 +39,13 @@ class Coverage:
                 other_component_file = os.path.join(component_path, other)
                 if os.path.isfile(other_component_file):
                     other_files.append(other_component_file)
+
+        # заберем все файлы не js в текущей папке
+        current_dir = os.path.split(cover_file)[0]
+        for current_file in os.listdir(current_dir):
+            current_file_path = os.path.join(current_dir, current_file)
+            if os.path.isfile(current_file_path) and not current_file_path.endswith('.js'):
+                other_files.append(current_file_path)
 
         # Демки
         if 'Controls-demo' in cover_file:
@@ -96,24 +102,39 @@ class Coverage:
                     for file in change_files:
                         if file in source:
                             test_result.append(test_name)
+
+        # иногда необходимо вернуть все тесты верстки
+        if 'reg' in result_json and not test_result:
+            for file in change_files:
+                if '/themes/' in file or file.endswith('.less'):
+                    test_result.extend(data.keys())
+
         return test_result
 
     def get_test_for_regression_test(self, change_files):
         """Получить список тестов для запуска, в которых делались изменения"""
 
-        int_tests = []
-        reg_tests = []
+        int_tests_sbis3 = []
+        int_tests_vdom = []
+        reg_tests_sbis3 = []
+        reg_tests_vdom = []
         def validate(path_test):
             test_name = os.path.basename(path_test)
             if test_name.startswith('test') and test_name.endswith('.py'):
                 if path_test.startswith('tests/int/'):
-                    int_tests.append(path_test.replace('tests/int/', ''))
+                    if 'SBIS3.CONTROLS' in path_test:
+                        int_tests_sbis3.append(path_test.replace('tests/int/SBIS3.CONTROLS/', ''))
+                    elif 'VDOM' in path_test:
+                        int_tests_vdom.append(path_test.replace('tests/int/VDOM/', ''))
                 elif path_test.startswith('tests/reg/'):
-                    reg_tests.append(path_test.replace('tests/reg/', ''))
+                    if 'SBIS3.CONTROLS' in path_test:
+                        reg_tests_sbis3.append(path_test.replace('tests/reg/SBIS3.CONTROLS/', ''))
+                    elif 'VDOM' in path_test:
+                        reg_tests_vdom.append(path_test.replace('tests/reg/VDOM/', ''))
 
         for file in change_files:
             validate(file)
-        return int_tests, reg_tests
+        return int_tests_sbis3, int_tests_vdom, reg_tests_sbis3, reg_tests_vdom
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
@@ -136,7 +157,9 @@ if __name__ == '__main__':
             if test_result:
                 print(' '.join(set(test_result)))
         else:
-            int_test, reg_test = coverage.get_test_for_regression_test(args.changelist)
-            if int_test or reg_test:
-                print('reg:{reg};int:{int}'.format(reg=' '.join(set(reg_test)), int=' '.join(set(int_test))))
+            int_test_sbis3, int_test_vdom, reg_test_sbis3, reg_test_vdom = coverage.get_test_for_regression_test(args.changelist)
+            if int_test_sbis3 or int_test_vdom or reg_test_sbis3 or reg_test_vdom:
+                print('reg_sbis3:{reg_sbis3};reg_vdom:{reg_vdom};int_sbis3:{int_sbis3};int_vdom:{int_vdom}'.format(
+                    reg_sbis3=' '.join(set(reg_test_sbis3)), reg_vdom=' '.join(set(reg_test_vdom)),
+                    int_sbis3=' '.join(set(int_test_sbis3)), int_vdom=' '.join(set(int_test_vdom))))
 

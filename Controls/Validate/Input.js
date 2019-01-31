@@ -1,21 +1,16 @@
 define('Controls/Validate/Input',
    [
       'Controls/Validate/Controller',
-      'wml!Controls/Validate/Input',
-      'Core/helpers/isNewEnvironment'
+      'wml!Controls/Validate/Input'
    ],
    function(
       Controller,
-      template,
-      isNewEnvironment
+      template
    ) {
       'use strict';
 
       return Controller.extend({
          _template: template,
-         _beforeMount: function() {
-            this._isNewEnvironment = isNewEnvironment();
-         },
          _deactivatedHandler: function() {
             this._shouldValidate = true;
             this._forceUpdate();

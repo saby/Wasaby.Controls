@@ -375,6 +375,12 @@
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
+         },
+
+         _keydown: function(event) {
+            if (this._children.inputKeydown) {
+               this._children.inputKeydown.start(event);
+            }
          }
 
          // </editor-fold>
