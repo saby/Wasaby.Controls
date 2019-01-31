@@ -133,7 +133,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                      {
                         id: '2',
                         title: 'Default template',
-                        template: 'wml!Controls/Toolbar/ToolbarItemTemplate'
+                        template: 'Controls/toolbar:ToolbarItemTemplate'
                      }
                   ]
                },
