@@ -34,7 +34,7 @@
          <ws:partial template="content"/>
       </ws:else>
 
-      <ws:if data="{{!_useNativeScrollbar && _options.scrollbarVisible && (_hasHover || _dragging)}}">
+      <ws:if data="{{_scrollbarVisibility()}}">
          <Controls.Container.Scroll.Scrollbar
             position="{{_scrollTop}}"
             contentHeight="{{_displayState.contentHeight}}"
