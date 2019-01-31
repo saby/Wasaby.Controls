@@ -95,7 +95,7 @@ import 'css!theme?Controls/_toolbars/View';
  * @name Controls/Toolbar#itemTemplate
  * @cfg {Function} Template for item render.
  * @remark
- * To determine the template, you should call the base template 'Controls/toolbar:ToolbarItemTemplate'.
+ * To determine the template, you should call the base template 'Controls/toolbars:ToolbarItemTemplate'.
  * The template is placed in the component using the ws:partial tag with the template attribute.
  * You can change the display of records by setting button options values:
  * <ul>
@@ -114,7 +114,7 @@ import 'css!theme?Controls/_toolbars/View';
  *    >
  *       <ws:itemTemplate>
  *          <ws:partial
- *             template="Controls/toolbar:ToolbarItemTemplate"
+ *             template="Controls/toolbars:ToolbarItemTemplate"
  *             buttonStyle="{{myStyle}}"
  *             buttonReadOnly="{{readOnlyButton}}"
  *             buttonTransparent="{{myButtonTransparent}}"
