@@ -197,9 +197,9 @@ define('Controls/List/interface/IList', [
 
    /**
     * @typedef {Object} VerticalItemPaddingEnum
-    * @variant M Medium padding.
-    * @variant L Large padding.
-    * @default M
+    * @variant null Without padding.
+    * @variant S Small padding.
+    * @default S
     */
 
    /**
