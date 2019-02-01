@@ -2,11 +2,12 @@ define('Controls-demo/Input/Money/Money',
    [
       'Core/Control',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/Input/Money/Money'
+      'json!Controls-demo/Input/Money/Money',
+
+      'css!Controls-demo/Input/Money/Money'
    ],
 
    function(Control, template, config) {
-
       'use strict';
 
       var Money = Control.extend({
@@ -39,6 +40,13 @@ define('Controls-demo/Input/Money/Money',
                   displayProperty: 'title',
                   selectedKey: 0
                },
+               textAlign: {
+                  emptyText: 'none',
+                  placeholder: 'select',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
+               },
                tagStyle: {
                   emptyText: 'none',
                   placeholder: 'select',
@@ -54,12 +62,12 @@ define('Controls-demo/Input/Money/Money',
                style: undefined,
                tagStyle: undefined,
                readOnly: undefined,
-               fontStyle: undefined
+               fontStyle: undefined,
+               textAlign: undefined
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
       });
 
       return Money;
-   }
-);
+   });
