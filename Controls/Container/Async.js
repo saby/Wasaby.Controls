@@ -104,7 +104,7 @@ define('Controls/Container/Async',
             promise.then(function(res) {
                self._setErrorState(false);
                self._updateOptionsForComponent(res, options);
-               if(!noUpdate) {
+               if (!noUpdate) {
                   self._forceUpdate();
                }
             }, function(err) {
