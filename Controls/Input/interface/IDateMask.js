@@ -15,15 +15,13 @@ define('Controls/Input/interface/IDateMask', [
     *
     * @variant 'DD.MM.YYYY'
     * @variant 'DD.MM.YY'
-    * @variant 'YYYY-MM-DD'
-    * @variant 'YY-MM-DD'
     * @remark
     * Allowed mask chars:
     * <ol>
     *    <li>D - day.</li>
     *    <li>M - month.</li>
     *    <li>Y - year.</li>
-    *    <li>".", "-" - delimiters.</li>
+    *    <li>"." - delimiters.</li>
     * </ol>
     * If some part of the date is missing, it will be saved from the previously established value of the value option.
     * If the previous value of the control was null, then the following date are used 01.01.1900 00: 00.000
