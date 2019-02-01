@@ -23,8 +23,8 @@ define('Controls/Popup/Opener/Sticky',
           * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
           * @property {function|String} template Template inside popup.
           * @property {function|String} templateOptions Template options inside popup.
-          * @property {Object} originPoint Sets the popup build point relative target.
-          * @property {Object} alignment Sets the alignment of the popup.
+          * @property {Object} targetPoint Sets the popup build point relative target.
+          * @property {Object} direction Sets the alignment of the popup.
           * @property {Object} offset Sets the offset between target and popup.
           * @property {Number} target The maximum width of the panel in a maximized state.
           * @property {Number} minWidth The target relative to which the popup is positioned.
@@ -214,12 +214,12 @@ define('Controls/Popup/Opener/Sticky',
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#originPoint
- * @cfg {alignment} Point positioning of the target relative to sticky.
+ * @name Controls/Popup/Opener/Sticky#targetPoint
+ * @cfg {direction} Point positioning of the target relative to sticky.
  */
 
 /**
- * @typedef {Object} alignment
+ * @typedef {Object} direction
  * @property {vertical} vertical
  * @property {horizontal} horizontal
  */
@@ -238,18 +238,20 @@ define('Controls/Popup/Opener/Sticky',
 
 
 /**
- * @name Controls/Popup/Opener/Sticky#alignment
- * @cfg {alignment} Sets the alignment of the popup.
+ * @name Controls/Popup/Opener/Sticky#direction
+ * @cfg {direction} Sets the alignment of the popup.
  */
 
 /**
  * @name Controls/Popup/Opener/Sticky#offset
- * @cfg {Object} Sets the vertical alignment of the popup.
- */
+ * @cfg {offset} Sets the offset of the targetPoint.
+ *
+ * /
 
-/**
- * @name Controls/Popup/Opener/Sticky#target
- * @cfg {Object} The target relative to which the popup is positioned.
+ /**
+ * @typedef {Object} offset
+ * @property {Number} vertical
+ * @property {Number} horizontal
  */
 
 /**

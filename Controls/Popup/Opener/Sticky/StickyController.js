@@ -31,15 +31,15 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          prepareOriginPoint: function(config) {
             var newCfg = cClone(config);
 
-            if (config.alignment) {
-               if ('horizontal' in config.alignment) {
+            if (config.direction) {
+               if ('horizontal' in config.direction) {
                   newCfg.horizontalAlign = {
-                     side: config.alignment.horizontal
+                     side: config.direction.horizontal
                   };
                }
-               if ('vertical' in config.alignment) {
+               if ('vertical' in config.direction) {
                   newCfg.verticalAlign = {
-                     side: config.alignment.vertical
+                     side: config.direction.vertical
                   };
                }
             }
@@ -55,11 +55,11 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                   };
                }
             }
-            if (config.originPoint) {
-               if ('vertical' in config.originPoint || 'horisontal' in config.originPoint) {
+            if (config.targetPoint) {
+               if ('vertical' in config.targetPoint || 'horisontal' in config.targetPoint) {
                   newCfg.corner = {
-                     vertical: config.originPoint.vertical,
-                     horizontal: config.originPoint.horizontal
+                     vertical: config.targetPoint.vertical,
+                     horizontal: config.targetPoint.horizontal
                   };
                }
             }
@@ -92,13 +92,13 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                locationStrategy: cfg.popupOptions.locationStrategy
             };
             if (cfg.popupOptions.corner) {
-               IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию originPoint');
+               IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
             }
             if (cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking) {
                IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
             }
             if (cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign) {
-               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и side');
+               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
             }
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
