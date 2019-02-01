@@ -117,6 +117,12 @@
           swipeViewMode="{{_options.swipeViewMode}}"
           itemActions="{{_options.itemActions}}"
           name="swipeControl"/>
+
+        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && !_loadingState}}">
+            <div class="controls-BaseControl__emptyTemplate">
+                <ws:partial template="{{_options.emptyTemplate}}"/>
+            </div>
+        </ws:if>
     </ws:if>
 
     <ws:if data="{{_needScrollCalculation}}">
