@@ -9,6 +9,11 @@ define('Controls/Button/ButtonStyles',
     * @mixin Controls/Button/ButtonStyles
     * @public
     *
+    * @css @height_Button_size_s Height of button with options viewMode 'button' and size 's'.
+    * @css @font-size_Button_size_s Font size of button with options viewMode 'button' and size 's'.
+    * @css @border-radius_Button_size_s Border radius of button with options viewMode 'button' and size 's'.
+    * @css @padding_Button-wrapper_size_s Padding from content to border of button with options viewMode 'button' and size 's'.
+    *
     * @css @height_Button_size_m Height of button with options viewMode 'button' and size 'm'.
     * @css @font-size_Button_size_m Font size of button with options viewMode 'button' and size 'm''.
     * @css @border-radius_Button_size_m Border radius of button with options viewMode 'button' and size 'm'.
