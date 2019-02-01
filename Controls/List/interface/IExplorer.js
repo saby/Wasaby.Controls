@@ -32,7 +32,7 @@ define('Controls/List/interface/IExplorer', [
     */
 
    /**
-    * @name Controls/List/interface/IExplorer#showArrow
+    * @name Controls/List/interface/IExplorer#showActionButton
     * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
     * @default
     * true

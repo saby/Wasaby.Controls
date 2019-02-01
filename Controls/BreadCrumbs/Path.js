@@ -98,7 +98,7 @@ define('Controls/BreadCrumbs/Path', [
     */
 
    /**
-    * @name Controls/BreadCrumbs/Path#showArrow
+    * @name Controls/BreadCrumbs/Path#showActionButton
     * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
     * @default
     * true
@@ -171,7 +171,7 @@ define('Controls/BreadCrumbs/Path', [
       return {
          displayProperty: 'title',
          root: null,
-         showArrow: true
+         showActionButton: true
       };
    };
 
