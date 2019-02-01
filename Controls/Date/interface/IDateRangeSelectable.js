@@ -6,7 +6,8 @@ define('Controls/Date/interface/IDateRangeSelectable', [
    'use strict';
 
    /**
-    * mixin Controls/Calendar/interface/IDateRangeSelectable
+    * @interface Controls/Date/interface/IDateRangeSelectable
+    * @public
     */
    var selectionTypes = coreMerge({'quantum': 'quantum'}, IRangeSelectable.SELECTION_TYPES);
 
@@ -15,13 +16,13 @@ define('Controls/Date/interface/IDateRangeSelectable', [
          var options =  IRangeSelectable.getDefaultOptions();
 
          /**
-          * @name Controls/Calendar/interface/IDateRangeSelectable#quantum
+          * @name Controls/Date/interface/IDateRangeSelectable#quantum
           * @cfg {Object} Кванты. Если заданы кванты, то нельзя выделить вроизвольный период, можно только выделить заданные периоды.
           */
          options.quantum = [];
 
          /**
-          * @name Controls/Calendar/interface/IDateRangeSelectable#selectionType
+          * @name Controls/Date/interface/IDateRangeSelectable#selectionType
           * @cfg {String} Определяет режим выделения диапазано
           * @variant 'range' режим выделения произвольного диапазона
           * @variant 'single' режим выделения одного элемента

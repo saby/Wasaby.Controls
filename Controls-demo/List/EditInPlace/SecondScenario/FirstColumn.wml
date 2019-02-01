@@ -9,6 +9,7 @@
                                    bind:selectedKeys="itemData.item.selectedKeys"
                                    keyProperty="id"
                                    displayProperty="title"
+                                   multiSelect="{{true}}"
                                    selectOnClick="{{ false }}">
                <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>

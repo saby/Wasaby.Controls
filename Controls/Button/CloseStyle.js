@@ -9,9 +9,6 @@ define('Controls/Button/CloseStyles',
     * @mixin Controls/Button/CloseStyles
     * @public
     *
-    * @css @font-size_CloseButton_toolButton_l Font size of close button with options viewMode 'toolButton' and size 'l'.
-    * @css @font-size_CloseButton_toolButton_m Font size of close button with options viewMode 'toolButton' and size 'm'.
-    *
     * @css @width_CloseButton_toolButton_l Width of close button with options viewMode 'toolButton' and size 'l'.
     * @css @height_CloseButton_toolButton_l Height of close button with options viewMode 'toolButton' and size 'l'.
     * @css @width_CloseButton_toolButton_m Width of close button with options viewMode 'toolButton' and size 'm'.
@@ -54,5 +51,10 @@ define('Controls/Button/CloseStyles',
     *
     * @css @content_CloseButton_icon Content of close button icon with option viewMode 'link'.
     * @css @text-shadow_CloseButton Text shadow of close button with option viewMode 'link'.
+    *
+    * @css @width_CloseButton-icon_toolButton Close button icon width with option viewMode 'toolButton'
+    * @css @height_CloseButton-icon_toolButton Close button icon height with option viewMode 'toolButton'
+    * @css @width_CloseButton-icon_link Close button icon width with option viewMode 'link'
+    * @css height_CloseButton-icon_link Close button icon height with option viewMode 'link'
     */
 );

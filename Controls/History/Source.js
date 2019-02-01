@@ -402,7 +402,25 @@ define('Controls/History/Source', [
 
       getItems: function() {
          return _private.getItemsWithHistory(this, this._history, this._oldItems);
+      },
+   
+      // <editor-fold desc="Types/_source/OptionsMixin">
+      
+      // Support options mixin
+      // proxy getOptions, setOptions, addOptions methods to original source
+      getOptions: function() {
+         return this.originSource.getOptions();
+      },
+   
+      setOptions: function(options) {
+         return this.originSource.setOptions(options);
+      },
+   
+      addOptions: function(options) {
+         return this.originSource.addOptions(options);
       }
+   
+      // </editor-fold>
    });
 
    Source._private = _private;

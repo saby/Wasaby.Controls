@@ -487,6 +487,20 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._select(item);
          assert.isTrue(item._isUpdateHistory);
       });
+
+      it('Suggest::_keyDown', function() {
+         var suggestComponent = new Suggest();
+         var eventTriggered = false;
+         suggestComponent._children = {
+            inputKeydown: {
+               start: function() {
+                  eventTriggered = true;
+               }
+            }
+         }
+         suggestComponent._keydown();
+         assert.isTrue(eventTriggered);
+      });
       
    });
 });
