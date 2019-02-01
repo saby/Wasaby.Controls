@@ -1,15 +1,12 @@
 /// <amd-module name="Controls/_error/Controller" />
-// @ts-ignore
-import * as Control from 'Core/Control';
-// @ts-ignore
-import { Handler, HandlerConfig, HandlerResult } from 'Controls/_error/Handler';
-import { Mode, CoreControlConstructor, DisplayOptions } from 'Controls/_error/Const';
+import Control from 'Controls/_error/types/Control';
+import { Handler, HandlerConfig, HandlerResult } from 'Controls/_error/types/Handler';
+import DisplayOptions from 'Controls/_error/types/DisplayOptions';
+import Mode from 'Controls/_error/Mode';
 // @ts-ignore
 import { Abort } from 'Transport/Errors';
 // @ts-ignore
-import * as DefaultTemplate from 'wml!Controls/_error/Template';
-
-let CoreControl: CoreControlConstructor = Control;
+import * as DefaultTemplate from 'wml!Controls/_error/template/Default';
 
 type Config = {
     handlers?: Array<Handler>
@@ -25,6 +22,7 @@ let isNeedHandle = (error: Error): boolean => {
         error.canceled
     )
 };
+
 let getDefaultTemplate = <T extends Error = Error>(config: HandlerConfig<T>): HandlerResult => {
     return {
         mode: Mode.dialog,
@@ -32,6 +30,7 @@ let getDefaultTemplate = <T extends Error = Error>(config: HandlerConfig<T>): Ha
         options: config
     }
 };
+
 let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): HandlerConfig<T> => {
     if (config instanceof Error) {
         return {
@@ -44,10 +43,12 @@ let prepareConfig = <T extends Error = Error>(config: HandlerConfig<T> | T): Han
         ...config
     }
 };
+
 let getApplicationHandlers = (): Array<Handler> => {
     // TODO get from Application.Config
     return []
 };
+
 let findTemplate = <T extends Error = Error>(
     handlers: Array<Handler>,
     config: HandlerConfig<T>
@@ -66,8 +67,11 @@ let findTemplate = <T extends Error = Error>(
 /// endregion helpers
 
 /**
- * Компонент отвечающий за обработку ошибок
- * @class Controls/_error/Controller
+ * Error handling component
+ * @class
+ * @name Controls/_error/Controller
+ * @public
+ * @author Zalyaev A.V.
  * @example
  * Template:
  * <pre>
@@ -91,43 +95,74 @@ let findTemplate = <T extends Error = Error>(
  *     errorController.addHandler(handler);
  *
  *     this.load().catch((error) => {
- *         errorController.process(error)
+ *         let errorDisplayOptions = errorController.process(error);
+ *         this.__showError(errorDisplayOptions);
  *     })
  * </pre>
  */
-export default class Controller extends CoreControl {
+export default class Controller extends Control {
     protected __errorHandlers: Array<Handler>;
     constructor(config: Config) {
         super(config);
         this.__errorHandlers = config.handlers || [];
     }
+
+    /**
+     * @method
+     * @name Controls/_error/Controller#addHandler
+     * @public
+     * @param {Controls/_error/types/Handler} handler
+     * @void
+     */
     addHandler(handler: Handler): void {
         if (this.__errorHandlers.indexOf(handler) >= 0) {
             return;
         }
         this.__errorHandlers.push(handler);
     }
+
+    /**
+     * @method
+     * @name Controls/_error/Controller#removeHandler
+     * @public
+     * @param {Controls/_error/types/Handler} handler
+     * @void
+     */
     removeHandler(handler: Handler): void {
         this.__errorHandlers = this.__errorHandlers.filter((_handler) => {
             return handler !== _handler;
         })
     }
-    process<T extends Error = Error>(config: HandlerConfig<T> | T): displayOption {
+
+    /**
+     * @method
+     * @name Controls/_error/Controller#process
+     * @public
+     * @param {Error | Controls/_error/types/HandlerConfig} config
+     * @return {void | Controls/_error/types/DisplayOptions}
+     */
+    process<T extends Error = Error>(config: HandlerConfig<T> | T): DisplayOptions {
         let _config = prepareConfig<T>(config);
         if (!isNeedHandle(_config.error)) {
             return;
         }
         let { template, options, mode } = this.__findTemplate(_config);
 
-        let displayOption: DisplayOptions = {
+        return {
             mode: mode || _config.mode,
             error: _config.error,
             template,
             options
         };
-        return displayOption;
-
     }
+
+    /**
+     * @method
+     * @name Controls/_error/Controller#__findTemplate
+     * @private
+     * @param {Controls/_error/types/HandlerConfig} config
+     * @return {Controls/_error/types/HandlerResult}
+     */
     private __findTemplate<T extends Error = Error>(config: HandlerConfig<T>): HandlerResult {
         return findTemplate<T>(this.__errorHandlers, config) || // find in own handlers
             findTemplate<T>(getApplicationHandlers(), config) || // find in Application  handlers

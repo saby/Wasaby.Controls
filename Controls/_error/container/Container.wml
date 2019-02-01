@@ -3,7 +3,6 @@
     <ws:partial
         template="{{ _options.controller }}"
         name="controller"
-        on:showError="__showError()"
     />
     <ws:if data="{{ __error }}">
         <div class="ErrorContainer__{{ __error.mode }}">
