@@ -6,7 +6,7 @@
                                        caption="{{_backButtonCaption}}"
                                        style="secondary"
                                        on:click="_onBackButtonClick()"/>
-                <ws:if data="{{ _options.showArrow }}">
+                <ws:if data="{{ _options.showActionButton }}">
                     <div class="controls-BreadCrumbsPath__backButtonArrow icon-View {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
                          title="{[Подробнее]}"
                          on:click="_onArrowClick()"></div>

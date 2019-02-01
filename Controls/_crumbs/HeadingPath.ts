@@ -89,7 +89,7 @@ var _private = {
  */
 
 /**
- * @name Controls/_crumbs/HeadingPath#showArrow
+ * @name Controls/_crumbs/HeadingPath#showActionButton
  * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
  * @default
  * true
@@ -157,7 +157,7 @@ BreadCrumbsPath.getDefaultOptions = function () {
     return {
         displayProperty: 'title',
         root: null,
-        showChevron: true,
+        showActionButton: true,
     };
 };
 
