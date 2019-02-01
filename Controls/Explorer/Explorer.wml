@@ -9,7 +9,7 @@
                                     root="{{_options.root}}"
                                     rootVisible="{{_dragOnBreadCrumbs}}"
                                     highlighter="{{[_breadCrumbsDragHighlighter]}}"
-                                    arrowVisibility="{{ _options.showActionButton }}"
+                                    showActionButton="{{ _options.showActionButton }}"
                                     on:hoveredItemChanged="_hoveredCrumbChanged()"
                                     on:arrowActivated="_notifyHandler('arrowActivated')"
                                     on:itemClick="_onBreadCrumbsClick()" />
