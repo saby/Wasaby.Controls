@@ -1,8 +1,8 @@
 /// <amd-module name="Controls/_error/Container" />
 // @ts-ignore
 import * as Control from 'Core/Control';
-import * as tmpl from 'wml!Controls/_error/Container';
 // @ts-ignore
+import * as tmpl from 'wml!Controls/_error/Container';
 import Dialog from 'Controls/_error/Dialog';
 import Controller from 'Controls/_error/Controller';
 import { Handler, HandlerConfig } from 'Controls/_error/Handler';
