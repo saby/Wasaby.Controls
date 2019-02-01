@@ -720,7 +720,8 @@ node('controls') {
             """
             }
         }
-
+		def domain_name = ".unix.tensor.ru"
+		
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -735,7 +736,7 @@ node('controls') {
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
-                    SITE = http://${env.NODE_NAME}:30010
+                    SITE = http://${env.NODE_NAME}${domain_name}:30010
                     SERVER = test-autotest-db1:5434
                     BASE_VERSION = css_${env.NODE_NAME}${ver}1
                     DO_NOT_RESTART = True
@@ -752,7 +753,7 @@ node('controls') {
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
-                    SITE = http://${env.NODE_NAME}:30010
+                    SITE = http://${env.NODE_NAME}${domain_name}:30010
                     SERVER = test-autotest-db1:5434
                     BASE_VERSION = css_${env.NODE_NAME}${ver}1
                     DO_NOT_RESTART = True
@@ -771,7 +772,7 @@ node('controls') {
                         """# UTF-8
                         [general]
                         browser = ${params.browser_type}
-                        SITE = http://${env.NODE_NAME}:30010
+                        SITE = http://${env.NODE_NAME}${domain_name}:30010
                         DO_NOT_RESTART = True
                         SOFT_RESTART = False
                         NO_RESOURCES = True
@@ -792,7 +793,7 @@ node('controls') {
                         """# UTF-8
                         [general]
                         browser = ${params.browser_type}
-                        SITE = http://${env.NODE_NAME}:30010
+                        SITE = http://${env.NODE_NAME}${domain_name}:30010
                         DO_NOT_RESTART = True
                         SOFT_RESTART = False
                         NO_RESOURCES = True
