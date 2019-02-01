@@ -108,6 +108,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
+            itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             itemsModelCurrent.markerVisibility = this._options.markerVisibility;
@@ -122,8 +123,12 @@ define('Controls/List/ListViewModel',
                   drawedActions = itemsModelCurrent.itemActions.showedFirst;
                }
             }
-            itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
-            if (itemsModelCurrent.drawActions) {
+            if (this._editingItemData) {
+               itemsModelCurrent.drawActions = itemsModelCurrent.key === this._editingItemData.key;
+            } else {
+               itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
+            }
+            if (itemsModelCurrent.drawActions && drawedActions) {
                itemsModelCurrent.hasShowedItemActionWithIcon = false;
                for (var i = 0; i < drawedActions.length; i++) {
                   if (drawedActions[i].icon) {
@@ -295,6 +300,11 @@ define('Controls/List/ListViewModel',
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
+            this._nextVersion();
+         },
+
+         setRightSwipedItem: function(itemData) {
+            this._rightSwipedItem = itemData;
             this._nextVersion();
          },
 

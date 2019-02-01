@@ -1,6 +1,6 @@
 define('Controls-demo/List/DocWI/BaseList', [
    'Core/Control',
-   'wml!Controls-demo/List/List/DocWI/resources/BaseList',
+   'wml!Controls-demo/List/DocWI/resources/BaseList',
    'Types/source'
 ], function (Control, template, sourceLib) {
    'use strict';

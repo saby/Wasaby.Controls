@@ -6,6 +6,7 @@
                 menuIsShown="{{_options.menuIsShown}}"
                 toolbarVisibility="{{_options.toolbarVisibility}}"
                 style="{{_options.style}}"
+                size="{{_options.editingConfig ? 's' : 'm'}}"
                 template="wml!Controls/List/ItemActions/resources/ItemActionsTemplate"
                 itemActionsPosition="{{_options.itemActionsPosition}}"
                 scope="{{itemActionsTemplate}}"/>

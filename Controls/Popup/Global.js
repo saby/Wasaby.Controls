@@ -19,6 +19,14 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
 
       return Control.extend({
          _template: template,
+         _afterMount: function() {
+            // В старом окружении регистрируем GlobalPopup, чтобы к нему был доступ.
+            // На вдоме ничего не зарегистрируется, т.к. слой совместимости там не подгрузится
+            var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+            if (requirejs.defined(ManagerWrapperControllerModule)) {
+               requirejs(ManagerWrapperControllerModule).registerGlobalPopup(this);
+            }
+         },
          _openInfoBoxHandler: function(event, config) {
             var self = this;
             this._activeInfobox = event.target;
@@ -27,10 +35,10 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
             });
          },
 
-         _closeInfoBoxHandler: function(event) {
+         _closeInfoBoxHandler: function(event, delay) {
             if (this._activeInfobox === event.target) {
                this._activeInfobox = null;
-               this._children.infoBoxOpener.close();
+               this._children.infoBoxOpener.close(delay);
             }
          },
 

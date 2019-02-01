@@ -4,7 +4,7 @@
       attr:title="{{!!action.title ? action.title}}"
       on:click="_onItemActionsClick(action, itemData)">
     <ws:if data="{{!!action.icon}}">
-        <i attr:class="{{action.icon}}"/>
+        <i attr:class="{{action.icon}} controls-itemActionsV__action_icon_size_{{size}}"/>
     </ws:if>
     <ws:if data="{{!action.icon && action.title}}">
         <span class="controls-itemActionsV__action_title

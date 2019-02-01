@@ -5,6 +5,7 @@ define('Controls/Input/interface/IInputDateRange', [
    /**
     * Interface for date range inputs..
     * @interface Controls/Input/interface/IInputDateRange
+    * @public
     * @author Миронов А.Ю.
     */
 
