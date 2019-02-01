@@ -284,6 +284,12 @@
 }
 .flex-direction(@direction: row){
   flex-direction: @direction;
+  & when (@direction = row) or (@direction = row-reverse) {
+    min-width: 0;
+  }
+  & when (@direction = column) or (@direction = column-reverse){
+    min-height: 0;
+  }
 }
 .flex-wrap(@wrap) {
   flex-wrap: @wrap;
