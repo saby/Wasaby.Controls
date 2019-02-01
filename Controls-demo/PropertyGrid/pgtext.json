@@ -669,6 +669,14 @@
             "type": "DateTime",
             "title": "Field value."
           },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "DD.MM.YY": "DD.MM.YY",
+              "DD.MM.YYYY": "DD.MM.YYYY"
+            }
+          },
           "style": {
             "type": "enum",
             "title": "Display style of the field.",
