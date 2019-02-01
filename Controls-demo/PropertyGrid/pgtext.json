@@ -269,7 +269,7 @@
             "type": "String",
             "default": ""
           },
-          "showArrow": {
+          "showActionButton": {
             "title": "Determines whether the arrow near \"back\" button should be shown.",
             "type": "Boolean",
             "default": true
