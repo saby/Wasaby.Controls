@@ -51,6 +51,14 @@
    border-color: @border-color_Button_readOnly;
 }
 
+.controls-Button_viewMode-button_size-s {
+   height: @height_Button_size_s;
+   font-size: @font-size_Button_size_s;
+   border-style: solid;
+   border-width: @thickness_Button__border;
+   .border-radius(@border-radius_Button_size_s);
+}
+
 .controls-Button_viewMode-button_size-m {
    height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
@@ -65,6 +73,11 @@
    height: @height_Button_size_l;
    border-width: @thickness_Button__border;
    .border-radius(@border-radius_Button_size_l);
+}
+
+.controls-Button__wrapper_viewMode-button_size-s {
+   padding: @padding_Button-wrapper_size_s;
+   .justify-content(center);
 }
 
 .controls-Button__wrapper_viewMode-button_size-m {
@@ -437,6 +450,12 @@
    background: @background_Button-primary_readOnly;
 }
 
+.controls-Button__wrapper_viewMode-button_size-s {
+   height: @height_Button_size_s;
+   font-size: @font-size_Button_size_s;
+   .border-radius(@border-radius_Button_size_s);
+}
+
 .controls-Button__wrapper_viewMode-button_size-m {
    height: @height_Button_size_m;
    font-size: @font-size_Button_size_m;
@@ -470,15 +489,6 @@
    }
 }
 
-.controls-Button__wrapper_type-button_size-m {
-   padding: @padding_Button-wrapper_size_m;
-   .justify-content(center);
-}
-
-.controls-Button__wrapper_type-button_size-l {
-   padding: @padding_Button__wrapper_size_l;
-   .justify-content(center);
-}
 .controls-Button__text_gap {
    margin-left: @spacing_Button-between-icon-text;
 }
