@@ -3,4 +3,5 @@
             validationErrors="{{isValid()}}"
             on:mouseenter="_hoverHandler()"
             on:focusIn="_focusInHandler()"
+            on:valueChanged="_valueChangedHandler()"
             on:mouseleave="_mouseLeaveHandler()"/>
