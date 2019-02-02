@@ -334,6 +334,8 @@ define('Controls/Input/Base',
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputPlaceholder
        *
+       * @mixes Controls/Input/Render/Styles
+       *
        * @private
        * @demo Controls-demo/Input/Base/Base
        *

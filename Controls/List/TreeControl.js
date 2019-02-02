@@ -161,6 +161,15 @@ define('Controls/List/TreeControl', [
             } else {
                filter[parentProperty] = self._root;
             }
+         } else {
+            _private.clearSourceControllers(self);
+         }
+      },
+   
+      afterReloadCallback: function(self) {
+         // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
+         if (self._children.baseControl && !self._deepReload) {
+            self._children.baseControl.getViewModel().resetExpandedItems();
          }
       },
 
@@ -248,6 +257,7 @@ define('Controls/List/TreeControl', [
       _updatedRoot: false,
       _nodesSourceControllers: null,
       _beforeReloadCallback: null,
+      _afterReloadCallback: null,
       constructor: function(cfg) {
          this._nodesSourceControllers = {};
          this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
@@ -255,6 +265,7 @@ define('Controls/List/TreeControl', [
             this._root = cfg.root;
          }
          this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
+         this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
          return TreeControl.superclass.constructor.apply(this, arguments);
       },
       _afterMount: function() {

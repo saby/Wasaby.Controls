@@ -16,6 +16,8 @@
    z-index: 1;
    top: 0;
    background-color: @background-color_Grid-header;
+   display: inline-flex;
+   flex-direction: column;
    padding-top: @spacing_Grid-header-between-content-borderTop;
    padding-bottom: @spacing_Grid-header-between-content-borderBottom;
 }
@@ -31,15 +33,15 @@
 }
 
 .controls-Grid__header-cell_valign_bottom {
-   align-self: end;
+  justify-content: flex-end;
 }
 
 .controls-Grid__header-cell_valign_top {
-   align-self: start;
+   justify-content: flex-start;
 }
 
 .controls-Grid__header-cell_valign_middle {
-   align-self: center;
+  justify-content: center;
 }
 
 .controls-Grid__results {
