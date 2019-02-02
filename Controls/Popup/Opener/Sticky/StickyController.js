@@ -31,7 +31,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          prepareOriginPoint: function(config) {
             var newCfg = cClone(config);
 
-            if (config.direction) {
+            if (config.direction && typeof (config.direction) === 'object') {
                if ('horizontal' in config.direction) {
                   newCfg.horizontalAlign = {
                      side: config.direction.horizontal
