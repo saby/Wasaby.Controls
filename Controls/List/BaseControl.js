@@ -1135,18 +1135,13 @@ define('Controls/List/BaseControl', [
       _itemMouseEnter: function(event, itemData) {
          var
             dragPosition,
-            dragItemData,
             dragEntity = this._listViewModel.getDragEntity();
 
          if (dragEntity) {
-            dragItemData = this._listViewModel.getDragItemData();
+            dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
 
-            if (!dragItemData || dragItemData.key !== itemData.key) {
-               dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
-
-               if (this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                  this._listViewModel.setDragTargetPosition(dragPosition);
-               }
+            if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+               this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
       },

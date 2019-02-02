@@ -630,6 +630,39 @@ define([
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
             });
+
+            it('move to draggableItem', function() {
+               var
+                  prevDragTargetPosition,
+                  item = tvm.getItemDataByItem(tvm.getItemById('567', 'id'));
+
+               //start move item 567
+               tvm.setDragEntity(dragEntity);
+               tvm.setDragItemData(item);
+
+               //move item 567 on item 567
+               dragTargetPosition = tvm.calculateDragTargetPosition(item);
+               assert.isNull(dragTargetPosition);
+
+               //move item 567 after folder 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               prevDragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
+               tvm.setDragTargetPosition(prevDragTargetPosition);
+               assert.equal(prevDragTargetPosition.index, itemData.index);
+               assert.equal(prevDragTargetPosition.position, 'after');
+
+               //move item 567 on folder 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               tvm.setDragTargetPosition(dragTargetPosition);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'on');
+
+               //move item 567 on item 567
+               dragTargetPosition = tvm.calculateDragTargetPosition(item);
+               assert.equal(prevDragTargetPosition.index, dragTargetPosition.index);
+               assert.equal(prevDragTargetPosition.position, dragTargetPosition.position);
+            });
          });
       });
    });
