@@ -38,6 +38,7 @@ define('Controls/Popup/Manager/Popup',
          // Register the openers that initializing inside current popup
          // After updating the position of the current popup, calls the repositioning of popup from child openers
          _openersUpdateCallback: [],
+
          _beforeMount: function() {
             this.forceUpdateOrigin = this._forceUpdate;
             this._forceUpdate = function() {};
@@ -45,6 +46,7 @@ define('Controls/Popup/Manager/Popup',
 
          _afterMount: function() {
             this._forceUpdate = this.forceUpdateOrigin;
+
             /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
              * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
 
