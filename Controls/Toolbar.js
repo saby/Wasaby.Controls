@@ -178,10 +178,17 @@ define('Controls/Toolbar', [
       },
 
       generateItemPopupConfig: function(item, event, self) {
+         var itemConfig = '';
+         if (item.get('icon') !== undefined && item.get('tittle') === undefined) {
+            itemConfig += 'icon';
+         }
+         if (item.get('buttonViewMode') === 'toolButton') {
+            itemConfig += 'toolButton';
+         }
          return {
             corner: { vertical: 'top', horizontal: 'left' },
             horizontalAlign: { side: 'right' },
-            className: 'controls-Toolbar__popup ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                items: self._items,
                rootKey: item.get(self._options.keyProperty),
@@ -192,13 +199,13 @@ define('Controls/Toolbar', [
                   iconStyle: item.get('iconStyle')
                }
             },
-            target: event.target
+            target: event.currentTarget
          };
       },
 
       generateMenuConfig: function(self) {
          return {
-            className: 'controls-Toolbar__popup_list ' + (self._options.popupClassName || ''),
+            className: 'controls-Toolbar__popup__list ' + (self._options.popupClassName || ''),
             templateOptions: {
                items: self._menuItems
             },
