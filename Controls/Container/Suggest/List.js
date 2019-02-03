@@ -91,7 +91,8 @@ define('Controls/Container/Suggest/List',
          _inputKeydown: function(event, domEvent) {
             //TODO will refactor on the project https://online.sbis.ru/opendoc.html?guid=a2e1122b-ce07-4a61-9c04-dc9b6402af5d
             var list = this._children.list;
-            var listContainer = list._container;
+            //remove list._container[0] after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+            var listContainer = list._container[0] || list._container;
             var customEvent = new Event('keydown');
             _private.dispatchEvent(listContainer, domEvent.nativeEvent, customEvent);
          }
