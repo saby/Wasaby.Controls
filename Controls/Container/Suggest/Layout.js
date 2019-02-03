@@ -312,6 +312,7 @@
          _select: function(event, item) {
             item = item || event;
             _private.close(this);
+
             // after select from the suggest, focus on input will lost
             // if the focus should be returned, the control (such Input/Suggest) should do it
             this._inputActive = false;
