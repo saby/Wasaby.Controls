@@ -286,10 +286,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             assert.isTrue(suggestState);
    
             suggestComponent._close();
+            suggestComponent._filter = {};
             suggestComponent._inputClicked();
 
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
+               assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
    
                suggestComponent._close();
                self._options.readOnly = true;
