@@ -452,8 +452,8 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                      { id: 5, title: 'i5', date: '05 янв', photo: '3.png' },
                      { id: 6, title: 'i6', date: '07 янв', photo: '3.png' },
                      { id: 7, title: 'i7', date: '09 янв', photo: '3.png' },
-                     { id: 8, title: 'i8', date: '10 янв', photo: '4.png' },
-                     { id: 9, title: 'i9', date: '10 янв', photo: '5.png' }
+                     { id: 8, title: 'i8', date: new Date(), photo: '4.png' },
+                     { id: 9, title: 'i9', date: new Date(), photo: '5.png' }
                   ]
                }),
                keyProperty: 'id',
