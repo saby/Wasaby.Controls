@@ -189,10 +189,6 @@
       .setStyle(color, @color_item-other-month-day);
    }
 
-   .controls-MonthViewVDOM__today {
-      .setStyle(color, @color_item-today);
-   }
-
    .controls-MonthViewVDOM__item-today-background {
       .setStyle(top, @background-spacing_item-today);
       .setStyle(bottom, @background-spacing_item-today);
@@ -218,11 +214,14 @@
    @background_item-hover: @background_MonthView-item-hover,
    @color_item: @color_MonthView-item,
    @color_item-weekend: @color_MonthView-item-weekend,
-   @color_item-today: @color_MonthView-item-today,
    @background-spacing_item-today :@background-spacing_MonthView-item-today,
    @border-radius_item-today: @border-radius_MonthView-item-today,
    @background-color_item-today: @background-color_MonthView-item-today
 );
+
+.controls-MonthViewVDOM__today {
+   color: @color_MonthView-item-today;
+}
 
 // TODO: Тема для аккордеона. Временное решение, переделать когда будет понятно, как мы будем делать разные темы в рамках одной страницы.
 .controls-MonthView__accordionTheme {
@@ -236,7 +235,6 @@
       @background_item-selected: #354758,
       @color_item: #E9EBEC,
       @color_item-weekend: #FE9C9C,
-      @color_item-today: #E9EBEC,
       @color_item-other-month-day: #666,
       @background-spacing_item-today: 0px,
       @border-radius_item-today: 3px,

@@ -71,7 +71,7 @@
       },
 
       _inputCompletedHandler: function(event, value, textValue) {
-         this._model.autocomplete(textValue);
+         this._model.autocomplete(textValue, this._options.autocompleteType);
          this._notify('inputCompleted', [this._model.value, textValue]);
       },
 
@@ -91,7 +91,9 @@
    });
 
    Component.getDefaultOptions = function() {
-      return coreMerge({}, IDateTimeMask.getDefaultOptions());
+      return coreMerge({
+         autocompleteType: 'default'
+      }, IDateTimeMask.getDefaultOptions());
    };
 
    Component.getOptionTypes = function() {

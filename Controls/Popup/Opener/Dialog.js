@@ -118,6 +118,18 @@ define('Controls/Popup/Opener/Dialog',
     * @cfg {Number} The maximum height of popup.
     */
    /**
+    * @name Controls/Popup/Opener/Dialog#minHeight
+    * @cfg {Number} The minimum height of popup.
+    */
+   /**
+    * @name Controls/Popup/Opener/Dialog#maxWidth
+    * @cfg {Number} The maximum width of popup.
+    */
+   /**
+    * @name Controls/Popup/Opener/Dialog#minWidth
+    * @cfg {Number} The minimum width of popup.
+    */
+   /**
     * @name Controls/Popup/Opener/Dialog#top
     * @cfg {Number} Distance from the window to the top of the screen.
     */
@@ -180,6 +192,9 @@ define('Controls/Popup/Opener/Dialog',
     * @property {Number} width Width of popup.
     * @property {Number} height Height of popup.
     * @property {Number} maxHeight The maximum height of popup.
+    * @property {Number} minHeight The minimum height of popup.
+    * @property {Number} maxWidth The maximum width of popup.
+    * @property {Number} minWigth The minimum width of popup.
     * @property {Number} top Distance from the window to the top of the screen.
     * @property {Number} left Distance from the window to the left border of the screen.
     */
