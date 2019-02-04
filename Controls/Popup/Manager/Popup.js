@@ -40,6 +40,7 @@ define('Controls/Popup/Manager/Popup',
          _openersUpdateCallback: [],
 
          _beforeMount: function() {
+            // todo: уберется в 19.300 по https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe
             this.forceUpdateOrigin = this._forceUpdate;
             this._forceUpdate = function() {};
          },
