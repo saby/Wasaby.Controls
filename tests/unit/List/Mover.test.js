@@ -114,6 +114,43 @@ define([
          mover.moveItemUp(item);
       });
 
+      it('sortingOrder', function(done) {
+         var item = items.getRecordById(3);
+
+         //Ascending sort.
+         mover._options.sortingOrder = 'asc';
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'before');
+            return Deferred.success();
+         };
+         mover.moveItemUp(item);
+
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'after');
+            return Deferred.success();
+         };
+         mover.moveItemDown(item);
+
+         //Descending sort.
+         mover._options.sortingOrder = 'desc';
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'after');
+            return Deferred.success();
+         };
+         mover.moveItemUp(item);
+
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'before');
+            done();
+            return Deferred.success();
+         };
+         mover.moveItemDown(item);
+      });
+
       it('moveItemUp by item', function(done) {
          var item = items.at(2);
 

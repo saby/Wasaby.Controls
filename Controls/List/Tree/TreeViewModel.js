@@ -82,8 +82,11 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          hasChildItem: function(self, key) {
+            var
+               item;
             if (self._options.hasChildrenProperty) {
-               return !!self._items.getRecordById(key).get(self._options.hasChildrenProperty);
+               item = self._items.getRecordById(key);
+               return item ? !!item.get(self._options.hasChildrenProperty) : false;
             }
             return !!self._hierarchyRelation.getChildren(key, self._items).length;
          },

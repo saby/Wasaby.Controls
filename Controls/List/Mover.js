@@ -11,6 +11,7 @@ define('Controls/List/Mover', [
       CUSTOM: 'Custom',
       MOVE_IN_ITEMS: 'MoveInItems'
    };
+   var DEFAULT_SORTING_ORDER = 'asc';
    var MOVE_POSITION = {
       on: 'on',
       before: 'before',
@@ -82,6 +83,11 @@ define('Controls/List/Mover', [
                return _private.getIdByItem(self, item);
             }),
             targetId = _private.getIdByItem(self, target);
+
+         //If reverse sorting is set, then when we call the move on the source, we invert the position.
+         if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
+            position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
+         }
 
          return self._source.move(idArray, targetId, {
             position: position,
@@ -241,6 +247,12 @@ define('Controls/List/Mover', [
          });
       }
    });
+
+   Mover.getDefaultOptions = function() {
+      return {
+         sortingOrder: DEFAULT_SORTING_ORDER
+      };
+   };
 
    Mover.contextTypes = function() {
       return {
