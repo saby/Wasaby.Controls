@@ -110,7 +110,8 @@ define('Controls/Input/DateTime/StringValueConverter', [
 
       autocomplete: function(self, valueModel, autocompleteType, required) {
          var now = new Date(),
-            maskType = _private.getMaskType(self._mask);
+            maskType = _private.getMaskType(self._mask),
+            item, itemValue;
 
          var getDate = function(autocompliteDefaultDate) {
             autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
@@ -124,9 +125,25 @@ define('Controls/Input/DateTime/StringValueConverter', [
          };
 
          var setValue = function(obj, value) {
-            obj.value = value;
-            obj.valid = true;
+            if (!obj.valid) {
+               obj.value = value;
+               obj.valid = true;
+            }
          };
+
+         for (item in valueModel) {
+            if (valueModel.hasOwnProperty(item)) {
+               if (!valueModel[item].valid) {
+                  itemValue = parseInt(valueModel[item].str, 10);
+                  if (!isNaN(itemValue)) {
+                     setValue(valueModel[item], itemValue);
+                     if (item === 'month') {
+                        valueModel[item].value -= 1;
+                     }
+                  }
+               }
+            }
+         }
 
          // Автокомплитим только если пользователь частично заполнил поле, либо не заполнил, но поле обязательно
          // для заполнения. Не автокомплитим поля в периодах
@@ -144,53 +161,39 @@ define('Controls/Input/DateTime/StringValueConverter', [
                   if (valueModel.month.valid) {
                      if (valueModel.month.value === now.getMonth()) {
                         // Заполнен текущий год и месяц
-                        if (!valueModel.date.valid) {
-                           setValue(valueModel.date, getDate());
-                        }
+                        setValue(valueModel.date, getDate());
                      } else {
-                        if (!valueModel.date.valid) {
-                           setValue(valueModel.date, getDate(1));
-                        }
+                        setValue(valueModel.date, getDate(1));
                      }
                   } else {
                      // Current year is filled
-                     if (!valueModel.month.valid) {
-                        setValue(valueModel.month, now.getMonth());
-                     }
-                     if (!valueModel.date.valid) {
-                        setValue(valueModel.date, getDate());
-                     }
+                     setValue(valueModel.month, now.getMonth());
+                     setValue(valueModel.date, getDate());
                   }
                } else {
                   // A year is different from the current one
-                  if (!valueModel.month.valid) {
-                     if (autocompleteType === 'end') {
-                        setValue(valueModel.month, 11);
-                     } else {
-                        setValue(valueModel.month, 0);
-                     }
+                  if (autocompleteType === 'end') {
+                     setValue(valueModel.month, 11);
+                  } else {
+                     setValue(valueModel.month, 0);
                   }
-                  if (!valueModel.date.valid) {
-                     if (autocompleteType === 'end') {
-                        setValue(valueModel.date, 31);
-                     } else {
-                        setValue(valueModel.date, 1);
-                     }
+                  if (autocompleteType === 'end') {
+                     setValue(valueModel.date, 31);
+                  } else {
+                     setValue(valueModel.date, 1);
                   }
                }
             } else if (valueModel.date.valid) {
-               if (!valueModel.month.valid) {
-                  setValue(valueModel.month, now.getMonth());
-               }
-               if (!valueModel.year.valid) {
-                  setValue(valueModel.year, now.getFullYear());
-               }
+               setValue(valueModel.month, now.getMonth());
+               setValue(valueModel.year, now.getFullYear());
             }
          } else if (maskType === 'time') {
             if (valueModel.hours.valid) {
-               if (!valueModel.minutes.valid) {
-                  setValue(valueModel.minutes, 0);
-               }
+               setValue(valueModel.minutes, 0);
+               setValue(valueModel.seconds, 0);
+            }
+            if (valueModel.minutes.valid) {
+               setValue(valueModel.seconds, 0);
             }
          }
       },
@@ -226,12 +229,12 @@ define('Controls/Input/DateTime/StringValueConverter', [
        * @private
        */
       createDate: function(year, month, date, hours, minutes, seconds, autoCorrect) {
-         var dateObj, endDateOfMonth;
+         var endDateOfMonth;
 
          if (autoCorrect) {
             endDateOfMonth = dateUtils.getEndOfMonth(new Date(year, month, 1)).getDate();
             if (date > endDateOfMonth) {
-               dateObj = endDateOfMonth;
+               date = endDateOfMonth;
             }
          }
 
@@ -296,10 +299,6 @@ define('Controls/Input/DateTime/StringValueConverter', [
             return new Date('Invalid');
          }
          if (autoCompleteType && !_private.isValueModelFilled(valueModel) && !(_private.isEmpty(str))) {
-            if (valueModel.hours.valid && !valueModel.minutes.valid) {
-               valueModel.minutes.value = parseInt(valueModel.minutes.str, 10) || 0;
-               valueModel.minutes.valid = true;
-            }
             _private.autocomplete(this, valueModel, autoCompleteType, required);
          }
 
