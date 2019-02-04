@@ -1,9 +1,9 @@
 define('Controls/Input/Date/RangeLink', [
-   'Controls/dateRange',
-   'Core/IoC'
+   'Controls/dateRange'/*,
+   'Core/IoC'*/
 ], function(
-   dateRangeLib,
-   IoC
+   dateRangeLib/*,
+   IoC*/
 ) {
    'use strict';
 
@@ -22,10 +22,10 @@ define('Controls/Input/Date/RangeLink', [
     *
     */
 
-   IoC.resolve('ILogger').error(
+   /*IoC.resolve('ILogger').error(
       'Controls/Input/Date/Range' +
       'This control is deprecated. Use \'Controls/dateRange:Selector\' instead'
-   );
+   );*/
 
    return dateRangeLib.Selector;
 });

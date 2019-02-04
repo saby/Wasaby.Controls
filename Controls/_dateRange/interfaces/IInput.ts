@@ -1,6 +1,7 @@
 /**
  * Interface for date range inputs..
  * @interface Controls/_dateRange/interfaces/IInput
+ * @public
  * @author Миронов А.Ю.
  */
 

@@ -1,9 +1,9 @@
 define('Controls/Input/Date/RangeLinkLite', [
-   'Controls/dateRange',
-   'Core/IoC'
+   'Controls/dateRange'/*,
+   'Core/IoC'*/
 ], function(
-   dateRangeLib,
-   IoC
+   dateRangeLib/*,
+   IoC*/
 ) {
    'use strict';
 
@@ -22,10 +22,10 @@ define('Controls/Input/Date/RangeLinkLite', [
     *
     */
 
-   IoC.resolve('ILogger').error(
+   /*IoC.resolve('ILogger').error(
       'Controls/Input/Date/Range' +
       'This control is deprecated. Use \'Controls/dateRange:LiteSelector\' instead'
-   );
+   );*/
 
    return dateRangeLib.LiteSelector;
 });
