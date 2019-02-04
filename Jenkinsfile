@@ -732,7 +732,8 @@ node('controls') {
             """
             }
         }
-
+		def domain_name = ".unix.tensor.ru"
+		
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -747,9 +748,9 @@ node('controls') {
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
-                    SITE = http://${NODE_NAME}:30010
+                    SITE = http://${env.NODE_NAME}${domain_name}:30010
                     SERVER = test-autotest-db1:5434
-                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    BASE_VERSION = css_${env.NODE_NAME}${ver}1
                     DO_NOT_RESTART = True
                     SOFT_RESTART = ${soft_restart}
                     NO_RESOURCES = True
@@ -758,15 +759,15 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
+                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
 
                 writeFile file: "./controls/tests/int/VDOM/config.ini", text:
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
-                    SITE = http://${NODE_NAME}:30010
+                    SITE = http://${env.NODE_NAME}${domain_name}:30010
                     SERVER = test-autotest-db1:5434
-                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    BASE_VERSION = css_${env.NODE_NAME}${ver}1
                     DO_NOT_RESTART = True
                     SOFT_RESTART = ${soft_restart}
                     NO_RESOURCES = True
@@ -775,7 +776,7 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
+                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
 
 
                 writeFile file: "./controls/tests/reg/SBIS3.CONTROLS/config.ini",
@@ -783,7 +784,7 @@ node('controls') {
                         """# UTF-8
                         [general]
                         browser = ${params.browser_type}
-                        SITE = http://${NODE_NAME}:30010
+                        SITE = http://${env.NODE_NAME}${domain_name}:30010
                         DO_NOT_RESTART = True
                         SOFT_RESTART = False
                         NO_RESOURCES = True
@@ -791,9 +792,9 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS
+                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS
                         SERVER = test-autotest-db1:5434
-                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        BASE_VERSION = css_${env.NODE_NAME}${ver}1
                         #BRANCH=True
                         [regression]
                         IMAGE_DIR = ${img_dir}
@@ -804,7 +805,7 @@ node('controls') {
                         """# UTF-8
                         [general]
                         browser = ${params.browser_type}
-                        SITE = http://${NODE_NAME}:30010
+                        SITE = http://${env.NODE_NAME}${domain_name}:30010
                         DO_NOT_RESTART = True
                         SOFT_RESTART = False
                         NO_RESOURCES = True
@@ -812,9 +813,9 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM
+                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM
                         SERVER = test-autotest-db1:5434
-                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        BASE_VERSION = css_${env.NODE_NAME}${ver}1
                         #BRANCH=True
                         [regression]
                         IMAGE_DIR = ${img_dir}
