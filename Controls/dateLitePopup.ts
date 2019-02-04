@@ -282,4 +282,4 @@ Component.getOptionTypes = function () {
     return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());
 };
 
-export default Component;
+export = Component;

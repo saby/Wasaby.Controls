@@ -339,4 +339,4 @@ Component.getOptionTypes = function () {
     }, IRangeSelectable.getOptionTypes());
 };
 
-export default Component;
+export = Component;
