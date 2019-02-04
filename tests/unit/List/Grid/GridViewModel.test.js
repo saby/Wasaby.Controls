@@ -198,6 +198,33 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             assert.equal(expectedResultWithoutRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses(false, 1, 3));
             assert.equal(expectedResultWithoutRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses(false, 2, 3));
          });
+         it('getItemColumnCellClasses for old browsers', function() {
+            var
+               gridViewModel = new GridViewModel(cfg),
+               current = gridViewModel.getCurrent(),
+               expected = {
+                  withMarker: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
+                     ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_selected' +
+                     ' controls-Grid__row-cell_selected-default controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default',
+                  withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
+                     ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_selected' +
+                     ' controls-Grid__row-cell_selected-default controls-Grid__row-cell_selected__first-default'
+               };
+            current.isNotFullGridSupport = true;
+
+            assert.equal(expected.withMarker,
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+            current.markerVisibility = 'hidden';
+            current.resetColumnIndex();
+
+            assert.equal(expected.withoutMarker,
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+
+
+         });
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new GridViewModel(cfg),
