@@ -468,6 +468,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             suggestComponent = new Suggest();
 
          suggestComponent._inputActive = true;
+         suggestComponent._notify = function(eventName) {
+            if (eventName === 'choose') {
+               assert.isFalse(suggestComponent._inputActive);
+            }
+         }
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
          assert.isFalse(suggestComponent._inputActive);
