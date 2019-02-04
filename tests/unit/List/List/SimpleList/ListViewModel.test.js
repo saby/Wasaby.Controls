@@ -175,6 +175,28 @@ define([
          assert.equal(lv.getMarkedKey(), 1);
       });
 
+      it('setRightSwipedItem', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1]
+            },
+            itemData = {
+               test: 'test'
+            },
+            nextVersionCalled = false;
+
+         var lv = new ListViewModel(cfg);
+         lv._nextVersion = function() {
+            nextVersionCalled = true;
+         };
+         lv.setRightSwipedItem(itemData);
+         assert.equal(lv._rightSwipedItem, itemData);
+         assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
@@ -315,6 +337,11 @@ define([
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
+
+               // on dragItemData
+               itemData = lvm.getItemDataByItem(lvm.at(1));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.isNull(dragTargetPosition);
             });
 
             it('with setDragTargetPosition', function() {

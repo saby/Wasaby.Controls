@@ -38,6 +38,18 @@ define(
                   value: new Date()
                }), true);
             });
+   
+            it('Array validation', function() {
+               assert.equal(IsRequired({
+                  value: []
+               }), 'Поле обязательно для заполнения');
+               assert.equal(IsRequired({
+                  value: [null]
+               }), 'Поле обязательно для заполнения');
+               assert.equal(IsRequired({
+                  value: ['test']
+               }), true);
+            });
 
          });
       });

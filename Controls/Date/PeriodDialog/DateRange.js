@@ -3,7 +3,7 @@ define('Controls/Date/PeriodDialog/DateRange', [
    'Core/helpers/Date/format',
    'Controls/_datePopup/Mixin/EventProxy',
    'Controls/Date/model/DateRange',
-   'Controls/Date/Month/Model',
+   'Controls/calendar',
    'Controls/Date/Utils/DateRangeQuantum',
    'Controls/Calendar/Utils',
    'Controls/Utils/Date',
@@ -15,7 +15,7 @@ define('Controls/Date/PeriodDialog/DateRange', [
    formatDate,
    EventProxy,
    DateRangeModel,
-   modelViewModel,
+   calendarLib,
    quantumUtils,
    DateControlsUtils,
    dateUtils,
@@ -49,7 +49,7 @@ define('Controls/Date/PeriodDialog/DateRange', [
    var Component = BaseControl.extend([EventProxy], {
       _template: componentTmpl,
 
-      _monthViewModel: modelViewModel,
+      _monthViewModel: calendarLib.MonthModel,
 
       _weekdaysCaptions: DateControlsUtils.getWeekdaysCaptions(),
       _formatDate: formatDate,

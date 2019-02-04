@@ -4,11 +4,5 @@
     scope="{{_options}}"
     viewName="{{_viewName}}"
     viewModelConstructor="{{_viewModelConstructor}}"
-    on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
-    on:dragStart="_notifyHandler('dragStart')"
-    on:dragEnd="_notifyHandler('dragEnd')"
-    on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-    on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
-    on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-    on:afterEndEdit="_notifyHandler('afterEndEdit')">
+    on:markedKeyChanged="_notifyHandler('markedKeyChanged')">
 </ws:partial>

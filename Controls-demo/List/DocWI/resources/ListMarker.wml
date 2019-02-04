@@ -1,0 +1,6 @@
+<Controls.List
+        source="{{_viewSource}}"
+        keyProperty="id"
+        markerVisibility="onactivated"
+        markedKey="{{2}}">
+</Controls.List>

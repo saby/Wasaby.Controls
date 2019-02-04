@@ -5,9 +5,9 @@
       </div>
 
       <div>
-         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
+         <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/IndexOld' }}">
             <a href="{{content.href}}">RootRouter</a>
-         </Router.Link>
+         </Router.Reference>
       </div>
       <h1>List <small style="color: #CCC; font-size: 16px">PG</small></h1>
       <div>
@@ -62,14 +62,14 @@
          <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FBase'}}">List/Base</a>
       </div>
       <div>
-         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
+         <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/ScrollPaging' }}">
             <a href="{{content.href}}">List/ScrollPaging</a>
-         </Router.Link>
+         </Router.Reference>
       </div>
       <div>
-         <Router.Link href="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
+         <Router.Reference state="/Controls-demo/app/:app" app="{{ 'Controls-demo/List/VirtualScroll' }}">
             <a href="{{content.href}}">List/VirtualScroll</a>
-         </Router.Link>
+         </Router.Reference>
       </div>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FList%252FMultiselect">
@@ -168,6 +168,8 @@
       <h1>Input</h1>
       <div>
          <a href="/Controls-demo/app/Controls-demo%252FInput%252FVDomInputs%252FVDomInputs">Input</a>
+         <br />
+         <a href="/Controls-demo/app/Controls-demo%252FInput%252FMoney%252FMoney">Money</a>
          <br />
          <a href="/Controls-demo/app/Controls-demo%252FInput%252FText%252FText">InputText</a>
          <br />

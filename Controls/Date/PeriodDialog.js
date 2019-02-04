@@ -9,10 +9,12 @@ define('Controls/Date/PeriodDialog', [
     * @class Controls/Date/PeriodDialog
     * @extends Core/Control
     * @mixes Controls/Date/interface/IPeriodDialog
+    * @mixes Controls/Date/interface/IDateRangeSelectable
+    * @mixes Controls/Date/interface/IMonthListCustomDays
     * @control
     * @public
     * @author Миронов А.Ю.
-    * @demo Controls-demo/Date/PeriodLiteDialog
+    * @demo Controls-demo/Date/PeriodDialog
     *
     * @css @background-color_PeriodDialog Background color of dialog.
     * @css @width_PeriodDialog Dialog width.

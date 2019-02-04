@@ -18,6 +18,7 @@
             {{_options.dependencies | unescape}}], function(AppData, AppStart, Core, tclosure, makeInstanceCompatible, Control) {
             var templCtr = new Control({});
             makeInstanceCompatible(templCtr);
+            templCtr.destroy();
             window.startContextData = {AppData: new AppData({})};
             var templateFn = {{_options.builder | unescape}};
             templateFn.stable = true;

@@ -391,7 +391,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
-                  'getChildren', 'getActiveItem', 'destroy'],
+                  'getChildren', 'getActiveItem', 'setRightSwipedItem', 'destroy'],
                callStackMethods = [];
 
             gridViewModel._model = {};
@@ -487,6 +487,61 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
          assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
+
+         // check ladder and grouping
+         var
+            groupingLadderViewModel = new GridViewModel({
+               items: new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', group: 'g1', date: '01 янв' },
+                     { id: 1, title: 'i1', group: 'g1', date: '03 янв' },
+                     { id: 2, title: 'i2', group: 'g1', date: '03 янв' },
+                     { id: 3, title: 'i3', group: 'g2', date: '03 янв' },
+                     { id: 4, title: 'i4', group: 'g2', date: '03 янв' }
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  displayProperty: 'title'
+               }],
+               ladderProperties: ['date'],
+               groupingKeyCallback: function(item) {
+                  return item.get('group');
+               }
+            });
+         assert.deepEqual(groupingLadderViewModel._ladder.ladder, {
+            '0': {
+               'date': {}
+            },
+            '1': {
+               'date': {
+                  'ladderLength': 1
+               }
+            },
+            '2': {
+               'date': {
+                  'ladderLength': 2
+               }
+            },
+            '3': {
+               'date': {}
+            },
+            '4': {
+               'date': {
+                  'ladderLength': 1
+               }
+            },
+            '5': {
+               'date': {
+                  'ladderLength': 2
+               }
+            },
+            '6': {
+               'date': {}
+            }
+         }, 'Incorrect value prepared ladder with grouping.');
       });
       describe('other methods of the class', function() {
          var
@@ -583,7 +638,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
             assert.deepEqual({
                column: gridHeader[0],
-               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l',
+               cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingRight controls-Grid__cell_default',
                index: 1
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value second call "getCurrentHeaderColumn()".');
 
@@ -593,7 +648,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             assert.deepEqual({
                column: gridHeader[1],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_spacingRight controls-Grid__cell_default ' +
-                  'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l controls-Grid__header-cell_halign_right',
+                  'controls-Grid__header-cell_halign_right',
                index: 2,
                sortingDirection: 'DESC'
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value third call "getCurrentHeaderColumn()".');
@@ -604,7 +659,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             assert.deepEqual({
                column: gridHeader[2],
                cellClasses: 'controls-Grid__header-cell controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l ' +
-                  'controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l controls-Grid__header-cell_halign_right',
+                  'controls-Grid__header-cell_halign_right',
                index: 3
             }, gridViewModel.getCurrentHeaderColumn(), 'Incorrect value fourth call "getCurrentHeaderColumn()".');
 

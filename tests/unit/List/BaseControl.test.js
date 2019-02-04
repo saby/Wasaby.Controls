@@ -1433,202 +1433,6 @@ define([
             assert.isFalse(result.isSuccessful());
          });
 
-         it('_onAfterBeginEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, options) {
-               assert.equal('afterBeginEdit', e);
-               assert.equal(options[0], opt);
-               assert.isNotOk(options[1]);
-            };
-            ctrl._onAfterBeginEdit({}, opt);
-         });
-
-         it('_onAfterBeginEdit, isAdd = true', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, options) {
-               assert.equal('afterBeginEdit', e);
-               assert.equal(options[0], opt);
-               assert.isTrue(options[1]);
-            };
-            ctrl._onAfterBeginEdit({}, opt, true);
-         });
-
-         it('_onAfterEndEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, args) {
-               assert.equal('afterEndEdit', e);
-               assert.equal(args[0], opt);
-               assert.isNotOk(args[1]);
-            };
-            ctrl._onAfterEndEdit({}, opt);
-         });
-
-         it('_onAfterEndEdit, isAdd: true', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, args) {
-               assert.equal('afterEndEdit', e);
-               assert.equal(args[0], opt);
-               assert.isTrue(args[1]);
-            };
-            ctrl._onAfterEndEdit({}, opt, true);
-         });
-
          it('readOnly, beginEdit', function() {
             var opt = {
                test: 'test'
@@ -1702,6 +1506,53 @@ define([
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
+      });
+
+      it('_onAnimationEnd', function() {
+         var setRightSwipedItemCalled = false;
+         var ctrl = new BaseControl();
+         ctrl._listViewModel = {
+            setRightSwipedItem: function() {
+               setRightSwipedItemCalled = true;
+            }
+         };
+         ctrl._onAnimationEnd({
+            nativeEvent: {
+               animationName: 'test'
+            }
+         });
+         assert.isFalse(setRightSwipedItemCalled);
+         ctrl._onAnimationEnd({
+            nativeEvent: {
+               animationName: 'rightSwipe'
+            }
+         });
+         assert.isTrue(setRightSwipedItemCalled);
+      });
+
+      it('_documentDragEnd', function() {
+         var
+            dragEnded,
+            ctrl = new BaseControl();
+
+         //dragend without deferred
+         dragEnded = false;
+         ctrl._documentDragEndHandler = function() {
+            dragEnded = true;
+         };
+         ctrl._documentDragEnd();
+         assert.isTrue(dragEnded);
+
+         //dragend with deferred
+         dragEnded = false;
+         ctrl._dragEndResult = new cDeferred();
+         ctrl._documentDragEnd();
+         assert.isFalse(dragEnded);
+         assert.isTrue(!!ctrl._loadingState);
+         ctrl._dragEndResult.callback();
+         assert.isTrue(dragEnded);
+         assert.isFalse(!!ctrl._loadingState);
+
       });
 
       describe('ItemActions', function() {

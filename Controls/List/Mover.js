@@ -11,6 +11,7 @@ define('Controls/List/Mover', [
       CUSTOM: 'Custom',
       MOVE_IN_ITEMS: 'MoveInItems'
    };
+   var DEFAULT_SORTING_ORDER = 'asc';
    var MOVE_POSITION = {
       on: 'on',
       before: 'before',
@@ -83,6 +84,11 @@ define('Controls/List/Mover', [
             }),
             targetId = _private.getIdByItem(self, target);
 
+         //If reverse sorting is set, then when we call the move on the source, we invert the position.
+         if (position !== MOVE_POSITION.on && self._options.sortingOrder !== DEFAULT_SORTING_ORDER) {
+            position = position === MOVE_POSITION.after ? MOVE_POSITION.before : MOVE_POSITION.after;
+         }
+
          return self._source.move(idArray, targetId, {
             position: position,
             parentProperty: self._options.parentProperty
@@ -94,9 +100,7 @@ define('Controls/List/Mover', [
             itemIndex = self._items.getIndex(_private.getModelByItem(self, item)),
             target = self._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
 
-         if (target) {
-            self.moveItems([item], target, position);
-         }
+         return target ? self.moveItems([item], target, position) : Deferred.success();
       },
 
       updateDataOptions: function(self, dataOptions) {
@@ -197,21 +201,23 @@ define('Controls/List/Mover', [
       },
 
       moveItemUp: function(item) {
-         _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
+         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.before);
       },
 
       moveItemDown: function(item) {
-         _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
+         return _private.moveItemToSiblingPosition(this, item, MOVE_POSITION.after);
       },
 
       moveItems: function(items, target, position) {
-         var self = this;
+         var
+            result,
+            self = this;
 
          items = items.filter(function(item) {
             return _private.checkItem(self, item, target, position);
          });
          if (target !== undefined && items.length > 0) {
-            _private.beforeItemsMove(this, items, target, position).addCallback(function(beforeItemsMoveResult) {
+            result = _private.beforeItemsMove(this, items, target, position).addCallback(function(beforeItemsMoveResult) {
                if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
                   _private.moveInItems(self, items, target, position);
                } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
@@ -222,8 +228,13 @@ define('Controls/List/Mover', [
                }
             }).addBoth(function(result) {
                _private.afterItemsMove(self, items, target, position, result);
+               return result;
             });
+         } else {
+            result = Deferred.success();
          }
+
+         return result;
       },
 
       moveItemsWithDialog: function(items) {
@@ -236,6 +247,12 @@ define('Controls/List/Mover', [
          });
       }
    });
+
+   Mover.getDefaultOptions = function() {
+      return {
+         sortingOrder: DEFAULT_SORTING_ORDER
+      };
+   };
 
    Mover.contextTypes = function() {
       return {
