@@ -175,8 +175,8 @@ define('Controls/List/Grid/GridViewModel', [
                      ladder[idx][ladderProperties[fIdx]] = {};
                      processLadder({
                         itemIndex: idx,
-                        value: item.get(ladderProperties[fIdx]),
-                        prevValue: prevItem ? prevItem.get(ladderProperties[fIdx]) : undefined,
+                        value: item.get ? item.get(ladderProperties[fIdx]) : undefined,
+                        prevValue: prevItem && prevItem.get ? prevItem.get(ladderProperties[fIdx]) : undefined,
                         state: ladderState[ladderProperties[fIdx]],
                         ladder: ladder[idx][ladderProperties[fIdx]]
                      });
