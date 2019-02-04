@@ -1019,20 +1019,6 @@ define('Controls/List/BaseControl', [
 
       _notifyHandler: tmplNotify,
 
-      _onAfterBeginEdit: function(e, item, isAdd) {
-         this._notify('afterBeginEdit', [item, isAdd]);
-         if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item);
-         }
-      },
-
-      _onAfterEndEdit: function(e, item, isAdd) {
-         this._notify('afterEndEdit', [item, isAdd]);
-         if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item);
-         }
-      },
-
       _closeSwipe: function(event, item) {
          this._children.itemActions.updateItemActions(item);
       },
