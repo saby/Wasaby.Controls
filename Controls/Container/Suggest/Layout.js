@@ -43,6 +43,26 @@
                }
             });
          },
+         
+         inputActivated: function(self) {
+            var filter;
+            
+            if (self._options.autoDropDown && !self._options.readOnly) {
+               if (self._options.historyId) {
+                  _private.getRecentKeys(self).addCallback(function(keys) {
+                     if (keys) {
+                        filter = clone(self._options.filter || {});
+                        filter['historyKeys'] = keys;
+                        _private.setFilter(self, filter);
+                     }
+                     _private.open(self);
+                  });
+               } else {
+                  _private.open(self);
+               }
+            }
+         },
+         
          searchErrback: function(self, error) {
             self._loading = false;
             if (!error || !error.canceled) {
@@ -262,24 +282,8 @@
             _private.updateSuggestState(this);
          },
          _inputActivated: function() {
-            var self = this;
-            var filter;
-
             this._inputActive = true;
-            if (this._options.autoDropDown && !this._options.readOnly) {
-               if (this._options.historyId) {
-                  _private.getRecentKeys(this).addCallback(function(keys) {
-                     if (keys) {
-                        filter = clone(self._options.filter || {});
-                        filter['historyKeys'] = keys;
-                        _private.setFilter(self, filter);
-                     }
-                     _private.open(self);
-                  });
-               } else {
-                  _private.open(this);
-               }
-            }
+            _private.inputActivated(this);
          },
    
          _inputDeactivated: function() {
@@ -287,8 +291,8 @@
          },
          
          _inputClicked: function() {
-            if (this._options.autoDropDown && !this._options.suggestState &&  !this._options.readOnly) {
-               _private.open(this);
+            if (!this._options.suggestState) {
+               _private.inputActivated(this);
             }
          },
          _tabsSelectedKeyChanged: function(event, key) {
