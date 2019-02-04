@@ -23,6 +23,7 @@ var BreadCrumbs = Control.extend({
     _oldWidth: 0,
 
     _afterMount: function () {
+        this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
         if (this._options.items && this._options.items.length > 0) {
             this._oldWidth = this._container.clientWidth;
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
@@ -42,8 +43,12 @@ var BreadCrumbs = Control.extend({
     _notifyHandler: tmplNotify,
 
     _onResize: function () {
-        //Пустой обработчик чисто ради того, чтобы при ресайзе запускалась перерисовка
-    }
+       this._forceUpdate();
+    },
+
+   _beforeUnmount: function() {
+      this._notify('unregister', ['controlResize', this], { bubbling: true });
+   }
 });
 
 BreadCrumbs.getDefaultOptions = function () {

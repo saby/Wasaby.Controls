@@ -2,6 +2,10 @@
    height: @height_BreadCrumbs-items;
 }
 
+.controls-BreadCrumbsPath__twoRows {
+   margin-left: @spacing_Path-between-home-and-leftEdge;
+}
+
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
    align-items: baseline;
@@ -12,6 +16,7 @@
    white-space: nowrap;
    position: relative;
    padding-right: @spacing_Path-between-home-and-backButton;
+   max-width: 100%;
 }
 
 .controls-BreadCrumbsPath__home {
@@ -24,6 +29,16 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
+   padding-right: @spacing_Path-between-home-and-backButton;
+   max-width: 100%;
+}
+
+.controls-BreadCrumbsPath__backButton__wrapper_inHeader {
+   /*
+   Header cells have flex-direction: column and align-items: normal so button gets expanded to match cell's width.
+   To prevent this, we have to explicitly align button to the start of the cell.
+    */
+   align-self: flex-start;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
@@ -34,10 +49,19 @@
    right: 0;
    display: none;
    color: @color_Path-backButtonArrow;
+   cursor: pointer;
+}
+
+.controls-Path__backButtonArrow_readonly {
+   color: @color_Path-backButtonArrow_readonly;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
    margin-right: -@font-size_Path-backButtonArrow;
+}
+
+.controls-BreadCrumbsPath__counter {
+   margin-left: @spacing_Path-between-back-and-counter;
 }
 
 .controls-BreadCrumbsPath__breadCrumbs {
@@ -56,10 +80,14 @@
    margin-left: @spacing_Path-between-home-and-backButton;
 }
 
-.controls-BreadCrumbsPath__backButton_short {
+.controls-BreadCrumbsPath__backButton_short,
+.controls-BreadCrumbsPath__breadCrumbs_short {
    flex-shrink: 1;
-   min-width: @min-width_BackButton_short;
    overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__backButton_short {
+   min-width: @min-width_BackButton_short;
 }
 
 .controls-BreadCrumbsPath__backButton_half,

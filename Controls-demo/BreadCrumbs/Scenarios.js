@@ -270,7 +270,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             result: 26277
          }, {
             displayProperty: 'completed',
-            width: '70px',
+            width: '75px',
             align: 'right',
             resultTemplate: thirdResultTemplate,
             result: 578386

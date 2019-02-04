@@ -1,6 +1,7 @@
 .controls-BreadCrumbsView {
    white-space: nowrap;
    height: @height_BreadCrumbs-items;
+   flex-grow: 1;
 }
 
 .controls-BreadCrumbsView__wrapper {
@@ -92,14 +93,10 @@
 }
 
 .controls-BreadCrumbsView__indentation {
-   display: inline-flex;
+   .icon(@font-size_BreadCrumbs-hierarchyIcon);
+   color: @color_BreadCrumbs-hierarchyIcon;
+   align-self: flex-start;
    flex-shrink: 0;
-   height: @height_BreadCrumbs-corner;
-   width: @width_BreadCrumbs-corner;
-   &:last-of-type {
-      background: @background_BreadCrumbs-corner no-repeat;
-      align-self: flex-start;
-   }
 }
 
 .ws-is-no-touch {

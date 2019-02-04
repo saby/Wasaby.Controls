@@ -1,6 +1,6 @@
 define([
    'Controls/Explorer/_PathController',
-   'Controls/BreadCrumbs/Path/_Back',
+   'Controls/_crumbs/HeadingPath/Back',
    'Types/entity'
 ], function(
    PathController,
@@ -67,7 +67,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-               template: PathBack,
+               template: PathBack.default,
                templateOptions: {
                   backButtonStyle: undefined,
                   backButtonCaption: 'second',
@@ -112,7 +112,7 @@ define([
                displayProperty: 'title'
             });
             assert.deepEqual(instance._header, [{
-               template: PathBack,
+               template: PathBack.default,
                templateOptions: {
                   backButtonStyle: undefined,
                   backButtonCaption: 'second',

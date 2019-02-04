@@ -13,13 +13,9 @@
                                  on:hoveredItemChanged="_hoveredCrumbChanged()"
                                  on:arrowActivated="_notifyHandler('arrowActivated')"
                                  on:itemClick="_onBreadCrumbsClick()">
-         <!--TODO: undefined в header передаётся из-за того, что PathController модицифирует header для того, чтобы отрисовать кнопку назад в заголовке.
-         Если не передавать undefined, то значение прикладников всегда будет перебивать значение из PathController.
-         Написал ошибку, чтобы то, как опции перебиваются, зависело от того, в каком порядке они переданы:
-         https://online.sbis.ru/opendoc.html?guid=87a926b1-704c-4284-be75-f1f954687011-->
          <Controls.List.TreeControl root="{{_root}}"
                                     scope="{{_options}}"
-                                    header="{{undefined}}"
+                                    header="{{content.header}}"
                                     name="treeControl"
                                     viewName="{{_viewName}}"
                                     swipeViewMode="{{_swipeViewMode}}"

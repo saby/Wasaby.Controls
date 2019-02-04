@@ -1,12 +1,12 @@
 define([
-   'Controls/BreadCrumbs/Path/_Back'
+   'Controls/_crumbs/HeadingPath/Back'
 ], function(
    PathBack
 ) {
-   describe('Controls.BreadCrumbs.Path._Back', function() {
+   describe('Controls/_crumbs/HeadingPath/Back', function() {
       it('_onBackButtonClick', function() {
          var
-            instance = new PathBack(),
+            instance = new PathBack.default(),
             notifyCalled = false;
          instance._notify = function(eventName, eventArgs, eventOpts) {
             assert.equal('backButtonClick', eventName);
@@ -21,7 +21,7 @@ define([
       });
       it('_onArrowClick', function() {
          var
-            instance = new PathBack(),
+            instance = new PathBack.default(),
             notifyCalled = false;
          instance._notify = function(eventName, eventArgs, eventOpts) {
             assert.equal('arrowClick', eventName);

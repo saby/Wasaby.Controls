@@ -1,13 +1,13 @@
 <div>
    <ws:if data="{{_options.items || _options.rootVisible}}">
-      <Controls.BreadCrumbs.Path scope="{{_options}}"
-                                 name="Path"
-                                 header="{{_header}}"
-                                 attr:class="{{_shouldDrawPath() ? '' : 'ws-hidden'}}"
-                                 on:backButtonClick="_notifyHandler('backButtonClick')"
-                                 on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
-                                 on:arrowActivated="_notifyHandler('arrowActivated')"
-                                 on:itemClick="_notifyHandler('itemClick')" />
+      <Controls.crumbs:HeadingPath scope="{{_options}}"
+                                   name="Path"
+                                   header="{{_header}}"
+                                   attr:class="{{_shouldDrawPath() ? '' : 'ws-hidden'}}"
+                                   on:backButtonClick="_notifyHandler('backButtonClick')"
+                                   on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
+                                   on:arrowActivated="_notifyHandler('arrowActivated')"
+                                   on:itemClick="_notifyHandler('itemClick')" />
    </ws:if>
    <ws:partial template="{{ _options.content }}"
                scope="{{ _options }}"

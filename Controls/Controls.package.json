@@ -312,9 +312,7 @@
     "Controls/Explorer",
     "Controls/Explorer/*",
     "Controls/BreadCrumbs/Path",
-    "Controls/BreadCrumbs/Path/*",
-    "Controls/Explorer/_PathController",
-    "Controls/Explorer/_PathController/*"
+    "Controls/BreadCrumbs/Path/*"
   ],
   "output": "controls-explorer.package.js"
 }, {

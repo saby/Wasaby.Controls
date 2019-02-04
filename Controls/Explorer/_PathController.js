@@ -2,13 +2,13 @@ define('Controls/Explorer/_PathController', [
    'Core/Control',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Explorer/_PathController/_PathController',
-   'Controls/BreadCrumbs/Path/_Back',
+   'Controls/crumbs',
    'Controls/List/resources/utils/ItemsUtil'
 ], function(
    Control,
    tmplNotify,
    template,
-   PathBack,
+   crumbs,
    ItemsUtil
 ) {
    'use strict';
@@ -19,8 +19,9 @@ define('Controls/Explorer/_PathController', [
          if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {
-               template: PathBack,
+               template: crumbs.HeadingPathBack,
                templateOptions: {
+                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: options.backButtonStyle,
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
