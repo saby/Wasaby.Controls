@@ -487,6 +487,61 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
          assert.deepEqual(ladderViewModel._ladder.ladder, newResultLadder, 'Incorrect value prepared ladder after setItems.');
          assert.deepEqual(ladderViewModel._ladder.stickyLadder, newResultStickyLadder, 'Incorrect value prepared stickyLadder after setItems.');
+
+         // check ladder and grouping
+         var
+            groupingLadderViewModel = new GridViewModel({
+               items: new collection.RecordSet({
+                  idProperty: 'id',
+                  rawData: [
+                     { id: 0, title: 'i0', group: 'g1', date: '01 янв' },
+                     { id: 1, title: 'i1', group: 'g1', date: '03 янв' },
+                     { id: 2, title: 'i2', group: 'g1', date: '03 янв' },
+                     { id: 3, title: 'i3', group: 'g2', date: '03 янв' },
+                     { id: 4, title: 'i4', group: 'g2', date: '03 янв' }
+                  ]
+               }),
+               keyProperty: 'id',
+               columns: [{
+                  width: '1fr',
+                  displayProperty: 'title'
+               }],
+               ladderProperties: ['date'],
+               groupingKeyCallback: function(item) {
+                  return item.get('group');
+               }
+            });
+         assert.deepEqual(groupingLadderViewModel._ladder.ladder, {
+            '0': {
+               'date': {}
+            },
+            '1': {
+               'date': {
+                  'ladderLength': 1
+               }
+            },
+            '2': {
+               'date': {
+                  'ladderLength': 2
+               }
+            },
+            '3': {
+               'date': {}
+            },
+            '4': {
+               'date': {
+                  'ladderLength': 1
+               }
+            },
+            '5': {
+               'date': {
+                  'ladderLength': 2
+               }
+            },
+            '6': {
+               'date': {}
+            }
+         }, 'Incorrect value prepared ladder with grouping.');
       });
       describe('other methods of the class', function() {
          var
