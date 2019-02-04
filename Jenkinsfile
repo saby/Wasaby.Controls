@@ -315,6 +315,19 @@ node('controls') {
             regr = true
         }
 
+        if (vdom_controls && (inte || all_inte)) {
+            run_tests_int_vdom = true
+        }
+        if (sbis3_controls && (inte || all_inte)) {
+            run_tests_int_sbis3 = true
+        }
+        if (vdom_controls && (regr || all_regr)) {
+            run_tests_reg_vdom = true
+        }
+        if (sbis3_controls && (regr || all_regr)) {
+            run_tests_reg_sbis3 = true
+        }
+
         if (!vdom_controls && !sbis3_controls && !unit) {
             exception('Не указан тип контролов для проверки', 'TESTS NOT BUILD')
 
