@@ -1726,6 +1726,31 @@ define([
          assert.isTrue(setRightSwipedItemCalled);
       });
 
+      it('_documentDragEnd', function() {
+         var
+            dragEnded,
+            ctrl = new BaseControl();
+
+         //dragend without deferred
+         dragEnded = false;
+         ctrl._documentDragEndHandler = function() {
+            dragEnded = true;
+         };
+         ctrl._documentDragEnd();
+         assert.isTrue(dragEnded);
+
+         //dragend with deferred
+         dragEnded = false;
+         ctrl._dragEndResult = new cDeferred();
+         ctrl._documentDragEnd();
+         assert.isFalse(dragEnded);
+         assert.isTrue(!!ctrl._loadingState);
+         ctrl._dragEndResult.callback();
+         assert.isTrue(dragEnded);
+         assert.isFalse(!!ctrl._loadingState);
+
+      });
+
       describe('ItemActions', function() {
          var
             actions = [
