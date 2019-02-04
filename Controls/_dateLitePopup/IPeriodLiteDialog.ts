@@ -1,11 +1,5 @@
-define('Controls/Date/interface/IPeriodLiteDialog', [
-   'Types/entity',
-   'Controls/Calendar/Utils'
-], function(
-   entity,
-   dateControlsUtils
-) {
-   'use strict';
+import {descriptor} from 'Types/entity';
+import dateControlsUtils = require('Controls/Calendar/Utils');
 
    /**
     * mixin Controls/Date/interface/IPeriodLiteDialog
@@ -18,7 +12,7 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
       ALL_TIME: rk('Весь период')
    };
 
-   return {
+   export default {
       getDefaultOptions: function() {
          return {
 
@@ -169,4 +163,3 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
          };
       }
    };
-});

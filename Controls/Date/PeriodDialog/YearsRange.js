@@ -4,7 +4,7 @@ define('Controls/Date/PeriodDialog/YearsRange', [
    'Controls/Date/Utils/RangeSelection',
    'Controls/Utils/Date',
    'wml!Controls/Date/PeriodDialog/YearsRange',
-   'css!theme?Controls/Date/Utils/RangeSelection'
+   'css!theme?Controls/_datePopup/RangeSelection'
 ], function(
    BaseControl,
    DateRangeModel,

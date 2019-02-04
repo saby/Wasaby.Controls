@@ -1,16 +1,16 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
-import IRangeSelectable from 'Controls/_datePopup/IRangeSelectable';
-import EventProxyMixin = require('Controls/Date/Mixin/EventProxy');
+import IRangeSelectable from '_datePopup/IRangeSelectable';
+import EventProxyMixin from 'Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
-import MonthsRange = require('Controls/Date/PeriodDialog/MonthsRange');
-import periodDialogUtils = require('Controls/Date/PeriodDialog/Utils');
+import MonthsRange from '_datePopup/MonthsRange';
+import periodDialogUtils from '_datePopup/Utils';
 import dateUtils = require('Controls/Utils/Date');
-import componentTmpl = require('wml!Controls/Date/PeriodDialog/PeriodDialog');
-import headerTmpl = require('wml!Controls/Date/PeriodDialog/header');
-import 'css!theme?Controls/Date/PeriodDialog/PeriodDialog';
-import 'css!theme?Controls/Date/Utils/RangeSelection';
+import componentTmpl = require('wml!Controls/_datePopup/DatePopup');
+import headerTmpl = require('wml!Controls/_datePopup/header');
+import 'css!theme?Controls/_datePopup/DatePopup';
+import 'css!theme?Controls/_datePopup/RangeSelection';
 
 /**
  * A dialog that allows you to choose dates and periods of arbitrary duration.

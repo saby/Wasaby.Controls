@@ -1,7 +1,7 @@
 define('Controls/Date/PeriodDialog/DateRange', [
    'Core/Control',
    'Core/helpers/Date/format',
-   'Controls/Date/Mixin/EventProxy',
+   'Controls/_datePopup/Mixin/EventProxy',
    'Controls/Date/model/DateRange',
    'Controls/Date/Month/Model',
    'Controls/Date/Utils/DateRangeQuantum',
@@ -9,7 +9,7 @@ define('Controls/Date/PeriodDialog/DateRange', [
    'Controls/Utils/Date',
    'wml!Controls/Date/PeriodDialog/DateRange',
    'wml!Controls/Date/PeriodDialog/DateRangeItem',
-   'css!theme?Controls/Date/Utils/RangeSelection'
+   'css!theme?Controls/_datePopup/RangeSelection'
 ], function(
    BaseControl,
    formatDate,
