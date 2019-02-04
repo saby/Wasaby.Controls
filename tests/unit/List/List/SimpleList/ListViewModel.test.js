@@ -337,6 +337,11 @@ define([
                dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'after');
+
+               // on dragItemData
+               itemData = lvm.getItemDataByItem(lvm.at(1));
+               dragTargetPosition = lvm.calculateDragTargetPosition(itemData);
+               assert.isNull(dragTargetPosition);
             });
 
             it('with setDragTargetPosition', function() {
