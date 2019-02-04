@@ -104,23 +104,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
       it('Suggest::_close', function() {
          var suggestComponent = new Suggest();
-         var value = 'test';
+         suggestComponent._loading = true;
+         suggestComponent._showContent = true;
          
-         suggestComponent._notify = function(event, val) {
-            if (event === 'valueChanged') {
-               value = val[0];
-            }
-         };
-   
-         suggestComponent._options.suggestStyle = 'overInput';
-         suggestComponent._searchValue = '';
          suggestComponent._close();
-         assert.equal(value, 'test');
-   
-         suggestComponent._searchValue = 'test';
-         suggestComponent._close();
-         assert.equal(value, '');
-         assert.equal(suggestComponent._searchValue, '');
+         assert.equal(suggestComponent._loading, null);
+         assert.equal(suggestComponent._showContent, false);
       });
    
       it('Suggest::_private.open', function (done) {
@@ -479,6 +468,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             suggestComponent = new Suggest();
 
          suggestComponent._inputActive = true;
+         suggestComponent._notify = function(eventName) {
+            if (eventName === 'choose') {
+               assert.isFalse(suggestComponent._inputActive);
+            }
+         }
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
          assert.isFalse(suggestComponent._inputActive);
@@ -486,6 +480,20 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._options.historyId = 'testFieldHistoryId';
          suggestComponent._select(item);
          assert.isTrue(item._isUpdateHistory);
+      });
+
+      it('Suggest::_keyDown', function() {
+         var suggestComponent = new Suggest();
+         var eventTriggered = false;
+         suggestComponent._children = {
+            inputKeydown: {
+               start: function() {
+                  eventTriggered = true;
+               }
+            }
+         }
+         suggestComponent._keydown();
+         assert.isTrue(eventTriggered);
       });
       
    });

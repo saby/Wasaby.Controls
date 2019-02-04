@@ -1,0 +1,104 @@
+.demo-DragNDrop {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.demo-DragNDrop__list, .demo-DragNDrop__explorer, .demo-DragNDrop__tile {
+   width: 832px;
+   height: 500px;
+}
+
+.demo-DragNDrop__list .controls-ListViewV__itemsContainer{
+   display: flex;
+   flex-wrap: wrap;
+}
+
+.demo-DragNDrop__list_item {
+   width: 410px;
+   height: 96px;
+   background: #FFFFFF;
+   border: 1px solid #CCCCCC;
+   margin: 2px;
+}
+
+.demo-DragNDrop__list_itemContent {
+   display: flex;
+}
+
+.demo-DragNDrop__list_item_icon {
+   width: 84px;
+   height: 84px;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   flex-shrink: 0;
+}
+
+.demo-DragNDrop__list_item_text {
+   flex-shrink: 1;
+   width: 100%;
+   margin-left: 6px;
+   overflow: hidden;
+}
+
+.demo-DragNDrop__list_item_mainText {
+   font-size: 20px;
+   font-weight: bold;
+   color: #313E78;
+}
+
+.demo-DragNDrop__list_item_additionalText {
+   font-size: 14px;
+   color: #000000;
+}
+
+.demo-DragNDrop__list_item_usersCount {
+   position: absolute;
+   bottom: 6px;
+   right: 16px;
+   color: #ccc;
+}
+
+.demo-DragNDrop__list_itemActionsPosition {
+   top: 6px;
+   right: 6px;
+}
+
+.demo-DragNDrop__explorerItem {
+   display: flex;
+}
+
+.demo-DragNDrop__explorerItem_shared {
+   margin-left: 4px;
+}
+
+.demo-DragNDrop__explorerItem_photo {
+   width: 40px;
+   height: 40px;
+   margin: 4px 8px 4px 0;
+   border-radius: 6px;
+}
+
+.demo-DragNDrop__explorerItem_author {
+   font-size: 15px;
+   color: #313E78;
+   font-weight: 700;
+}
+
+.demo-DragNDrop__explorerItem__taskText {
+   color: #8991A9;
+}
+
+.demo-DragNDrop__explorerItem_time {
+   color: #999999;
+}
+
+.demo-DragNDrop__explorerItem_received {
+   font-size: 12px;
+   color: #999999;
+}
+
+.demo-DragNDrop__tile .controls-TileView__image {
+   width: 100%;
+}

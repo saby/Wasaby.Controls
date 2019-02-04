@@ -32,7 +32,7 @@ define('Controls/Validate/Controller',
                self._isOpened = true;
                var cfg = {
                   target: self._container,
-                  style: 'error',
+                  style: 'danger',
                   template: errorMessage,
                   templateOptions: { content: self._validationResult },
                   eventHandlers: {
@@ -45,9 +45,25 @@ define('Controls/Validate/Controller',
                   self._notify('openInfoBox', [cfg], { bubbling: true });
                } else {
                   // To place zIndex in the old environment
-                  cfg.zIndex = getZIndex(self._children.infoBoxOpener);
-                  self._children.infoBoxOpener.open(cfg);
+                  // Аналог self._notify('openInfoBox', [cfg], { bubbling: true });, только обработчик
+                  // Вызывается напрямую, так как события через compoundControl не летят
+                  cfg.zIndex = getZIndex(self);
+                  var GlobalPopup = _private.getGlobalPopup();
+                  if (GlobalPopup) {
+                     var event = {
+                        target: self._container
+                     };
+                     GlobalPopup._openInfoBoxHandler(event, cfg);
+                  }
                }
+            }
+         },
+         getGlobalPopup: function() {
+            // Получаем обработчик глобальных событий по открытию окон, который на вдом
+            // Лежит в application
+            var ManagerWrapperControllerModule = 'Controls/Popup/Compatible/ManagerWrapper/Controller';
+            if (requirejs.defined(ManagerWrapperControllerModule)) {
+               return requirejs(ManagerWrapperControllerModule).getGlobalPopup();
             }
          },
 
@@ -55,15 +71,27 @@ define('Controls/Validate/Controller',
           * Скрывает InfoBox с подсказкой
           */
          closeInfoBox: function(self) {
-            var data = self;
             self._closeId = setTimeout(function() {
-               if (self._isNewEnvironment) {
-                  data._notify('closeInfoBox', [data], { bubbling: true });
-               } else {
-                  self._children.infoBoxOpener.close();
-               }
-               data._isOpened = false;
+               _private.forceCloseInfoBox(self);
+               self._isOpened = false;
             }, 300);
+         },
+
+         forceCloseInfoBox: function(self) {
+            var delay = 0;
+            if (self._isNewEnvironment) {
+               self._notify('closeInfoBox', [delay], { bubbling: true });
+            } else {
+               // Аналог self._notify('closeInfoBox', [delay], { bubbling: true });, только обработчик
+               // Вызывается напрямую, так как события через compoundControl не летят
+               var GlobalPopup = _private.getGlobalPopup();
+               if (GlobalPopup) {
+                  var event = {
+                     target: self._container
+                  };
+                  GlobalPopup._closeInfoBoxHandler(event, delay);
+               }
+            }
          }
 
       };
@@ -72,13 +100,20 @@ define('Controls/Validate/Controller',
          _isOpened: false,
          _beforeMount: function() {
             this._isNewEnvironment = isNewEnvironment();
+            if (!this._isNewEnvironment) {
+               // Если окружение старое, создаем ManagerWrapper, в котором рисуются dom окна в старом окружении
+               // В том числе инфобоксы.
+               requirejs(['Controls/Popup/Opener/BaseOpener'], function(BaseOpener) {
+                  BaseOpener.getManager();
+               });
+            }
          },
          _afterMount: function() {
             this._notify('validateCreated', [this], { bubbling: true });
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
-            this._notify('closeInfoBox', [this], { bubbling: true });
+            _private.forceCloseInfoBox(this);
          },
          _validationResult: undefined,
 
@@ -209,11 +244,15 @@ define('Controls/Validate/Controller',
          _hoverInfoboxHandler: function() {
             clearTimeout(this._closeId);
          },
+         _valueChangedHandler: function(event, value) {
+            this._notify('valueChanged', [value]);
+         },
 
          /**
           * Получить результат валидации
           * @returns {undefined|*}
           */
+
          isValid: function() {
             return this._validationResult;
          },

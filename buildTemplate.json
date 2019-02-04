@@ -42,7 +42,8 @@
     },
     {
       "name": "View",
-      "path": "%cd%/node_modules/sbis3-ws/View"
+      "path": "%cd%/node_modules/sbis3-ws/View",
+      "required": true
     },
     {
       "name": "WS.Data",

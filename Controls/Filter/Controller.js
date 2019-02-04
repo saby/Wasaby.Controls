@@ -243,7 +243,7 @@ define('Controls/Filter/Controller',
             });
          },
 
-         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems) {
+         calculateFilterByItems: function(filter, filterButtonItems, fastFilterItems) {
             var filterClone = clone(filter || {});
             var itemsFilter = _private.getFilterByItems(filterButtonItems, fastFilterItems);
             var emptyFilterKeys = _private.getEmptyFilterKeys(filterButtonItems, fastFilterItems);
@@ -254,19 +254,21 @@ define('Controls/Filter/Controller',
 
             merge(filterClone, itemsFilter);
 
+            return filterClone;
+         },
+         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems) {
+            var filterClone = _private.calculateFilterByItems(filter, filterButtonItems, fastFilterItems);
             _private.setFilter(self, filterClone);
          },
 
          getHistoryData: function(filterButtonItems, fastFilterItems) {
-
             /* An empty filter should not appear in the history, but should be applied when loading data from the history.
                To understand this, save an empty object in history. */
 
             if (_private.isFilterChanged(filterButtonItems, fastFilterItems)) {
                return _private.prepareHistoryItems(filterButtonItems, fastFilterItems);
-            } else {
-               return {};
             }
+            return {};
          },
 
          setFilter: function(self, filter) {
@@ -284,6 +286,26 @@ define('Controls/Filter/Controller',
             return clone(items);
          },
       };
+
+      function getCalculatedFilter(cfg) {
+         var def = new Deferred();
+         var tmpStorage = {};
+         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource).addCallback(function(items) {
+            var calculatedFilter;
+            try {
+               calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
+            } catch (err) {
+               def.errback(err);
+               throw err;
+            }
+            def.callback(calculatedFilter);
+            return items;
+         }).addErrback(function(err) {
+            def.errback(err);
+            return err;
+         });
+         return def;
+      }
 
       /**
        * The filter controller allows you to filter data in a {@link Controls/List} using {@link Filter/Button} or {@link Filter/Fast}.
@@ -438,5 +460,6 @@ define('Controls/Filter/Controller',
       });
 
       Container._private = _private;
+      Container.getCalculatedFilter = getCalculatedFilter;
       return Container;
    });

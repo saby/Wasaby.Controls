@@ -10,6 +10,7 @@ define('Controls/List/Grid/GridStyles', [],
     *
     * @css @color_Grid-header color of header text
     * @css @font-size_Grid-header font-size of header text
+    * @css @font-size_Grid-header_xl XL font-size of header text
     * @css @font-size_Grid-cell_s S font-size of grid text content
     * @css @font-size_Grid-cell_m M font-size of grid text content
     * @css @font-size_Grid-cell_l L font-size of grid text content

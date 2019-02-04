@@ -1,16 +1,8 @@
 define('Controls/BreadCrumbs', [
-   'Core/Control',
-   'Controls/BreadCrumbs/Utils',
-   'Controls/Utils/FontLoadUtil',
-   'Controls/Utils/tmplNotify',
-   'wml!Controls/BreadCrumbs/BreadCrumbs'
-], function(
-   Control,
-   BreadCrumbsUtil,
-   FontLoadUtil,
-   tmplNotify,
-   template
-) {
+   'Controls/crumbs',
+   'Core/IoC'
+], function(breadCrumbsLib,
+   IoC) {
    'use strict';
 
    /**
@@ -26,45 +18,6 @@ define('Controls/BreadCrumbs', [
     * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
     */
 
-   var BreadCrumbs = Control.extend({
-      _template: template,
-      _visibleItems: [],
-      _oldWidth: 0,
-
-      _afterMount: function() {
-         this._notify('register', ['controlResize', this, this._onResize], {bubbling: true});
-         if (this._options.items && this._options.items.length > 0) {
-            this._oldWidth = this._container.clientWidth;
-            FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function() {
-               BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, this._options.items, this._oldWidth);
-               this._forceUpdate();
-            }.bind(this));
-         }
-      },
-
-      _beforeUpdate: function(newOptions) {
-         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, this._container.clientWidth)) {
-            this._oldWidth = this._container.clientWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(this, newOptions.items, this._container.clientWidth);
-         }
-      },
-
-      _notifyHandler: tmplNotify,
-
-      _onResize: function() {
-         this._forceUpdate();
-      },
-
-      _beforeUnmount: function() {
-         this._notify('unregister', ['controlResize', this], { bubbling: true });
-      }
-   });
-
-   BreadCrumbs.getDefaultOptions = function() {
-      return {
-         displayProperty: 'title'
-      };
-   };
-
-   return BreadCrumbs;
+   IoC.resolve('ILogger').error('Controls/BreadCrumbs', 'Контрол переехал. Используйте Controls/crumbs:Path');
+   return breadCrumbsLib.Path;
 });

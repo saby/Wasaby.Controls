@@ -365,6 +365,14 @@ define([
             treeViewModel._curIndex = 4;
             assert.isTrue(treeViewModel.getCurrent().hasChildren);
          });
+   
+         it('isExpandAll', function() {
+            treeViewModel.setExpandedItems(['123', '234', '3']);
+            assert.isFalse(treeViewModel.isExpandAll());
+   
+            treeViewModel.setExpandedItems([null]);
+            assert.isTrue(treeViewModel.isExpandAll());
+         });
 
          it('setExpandedItems', function() {
             treeViewModel.setExpandedItems([]);

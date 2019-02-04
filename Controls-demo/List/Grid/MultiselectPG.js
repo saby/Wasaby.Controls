@@ -1,7 +1,7 @@
 define('Controls-demo/List/Grid/MultiselectPG',
     [
         'Core/Control',
-        'WS.Data/Source/Memory',
+        'Types/source',
         'Controls-demo/List/Grid/resources/DataDemoPG',
         'tmpl!Controls-demo/PropertyGrid/DemoPG',
         'json!Controls-demo/List/Grid/resources/MultiselectPG/cfg',
@@ -12,7 +12,7 @@ define('Controls-demo/List/Grid/MultiselectPG',
         'css!Controls-demo/Wrapper/Wrapper'
     ],
 
-    function(Control, MemorySource, data, template, config) {
+    function(Control, Memory, data, template, config) {
         'use strict';
         var Component = Control.extend({
             _template: template,
@@ -29,7 +29,7 @@ define('Controls-demo/List/Grid/MultiselectPG',
                   markedKey: '4',
                   columns: data.partialColumns,
                   header: data.partialHeader,
-                  source: new MemorySource({
+                  source: new source.Memory({
                      idProperty: 'id',
                      data: data.catalog
                   }),

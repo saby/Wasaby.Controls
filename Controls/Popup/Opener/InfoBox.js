@@ -114,6 +114,10 @@ define('Controls/Popup/Opener/InfoBox',
             }
          },
 
+         _beforeUnmount: function() {
+            this.close(0);
+         },
+
          open: function(cfg) {
             // Only one popup can be opened
             if (this.isOpened()) {

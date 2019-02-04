@@ -69,6 +69,12 @@
   "output": "controls-controllers.package.js"
 }, {
   "include": [
+    "Controls/Decorator/Markup",
+    "Controls/Decorator/Markup/*"
+  ],
+  "output": "controls-decorator-markup.package.js"
+}, {
+  "include": [
     "Controls/Dropdown/*"
   ],
   "output": "controls-dropdown.package.js"

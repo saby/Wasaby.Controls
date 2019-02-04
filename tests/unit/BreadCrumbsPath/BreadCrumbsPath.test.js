@@ -1,6 +1,6 @@
 define([
-   'Controls/BreadCrumbs/Path',
-   'Controls/BreadCrumbs/Utils',
+   'Controls/_crumbs/HeadingPath',
+   'Controls/_crumbs/Utils',
    'Controls/Utils/getWidth',
    'Controls/Utils/FontLoadUtil',
    'Core/Deferred',
@@ -14,6 +14,9 @@ define([
    entity
 ) {
    describe('Controls.BreadCrumbs.Path', function() {
+      Path = Path.default;
+      BreadCrumbsUtil = BreadCrumbsUtil.default;
+
       var path, data, getWidth, getMaxCrumbsWidth, calculateBreadCrumbsToDraw;
 
       function mockBreadCrumbsUtil(backButtonWidth, maxCrumbsWidth) {
