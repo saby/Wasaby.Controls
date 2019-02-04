@@ -2,6 +2,11 @@
    width: 100%;
    flex-grow: 1;
    position: relative;
+
+   /**
+    * https://github.com/philipwalton/flexbugs#6-the-default-flex-value-has-changed
+    */
+   flex-shrink: 1;
 }
 
 .controls-InputBase__placeholder {
@@ -23,6 +28,7 @@
    height: 100%;
    caret-color: #000;
    text-overflow: ellipsis;
+
    /**
     * Reset browser styles.
     */
@@ -33,15 +39,19 @@
    text-align: inherit;
    background: transparent;
    .box-shadow(none);
+
    &::-webkit-contacts-auto-fill-button {
       display: none;
    }
+
    &::-ms-clear {
       display: none;
    }
+
    &::-ms-reveal {
       display: none;
    }
+
    /**
     * In firefox, the field is not compressed unless you set a minimum width.
     * https://jsfiddle.net/hr9mvn2o/
@@ -68,10 +78,10 @@
    }
 }
 
-   /*
-    * In Edge, spacing between border and text is more than in others browsers
-    * https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/13433382/
-    */
+/*
+ * In Edge, spacing between border and text is more than in others browsers
+ * https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/13433382/
+ */
 .controls-InputBase__nativeField_edge {
    margin-left: -1px;
 }
