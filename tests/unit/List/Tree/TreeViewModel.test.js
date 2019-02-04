@@ -149,6 +149,13 @@ define([
             assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel.getExpandedItems(), treeViewModel._options).length === 2,
                'Invalid filters count prepared by "getDisplayFilter" with "itemsFilterMethod".');
          });
+         it('hasChildItem', function() {
+            var
+               model = new TreeViewModel(cfg);
+            assert.isTrue(TreeViewModel._private.hasChildItem(model, 123), 'Invalid detect child item for item with key "123".');
+            assert.isFalse(TreeViewModel._private.hasChildItem(model, 1), 'Invalid detect child item for item with key "1".');
+            assert.isFalse(TreeViewModel._private.hasChildItem(model, 1989), 'Invalid detect child item for unknown item.');
+         });
          it('shouldDrawExpander', function() {
             var
                testsShouldDrawExpander = [{
