@@ -302,6 +302,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._listModel.destroy();
                this._listModel = null;
             }
+            this._resultHandler = null;
+            this._subDropdownClose = null;
+            this._mousemoveHandler = null;
+            this._openSubDropdown = null;
+            this._headConfig = null;
          }
       });
 
