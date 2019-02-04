@@ -250,10 +250,10 @@ node('controls') {
         def tests_for_run_reg_sbis3 = ""
         def tests_for_run_reg_vdom = ""
         def smoke_result = true
-        def run_tests_int_sbis3 = true
-        def run_tests_int_vdom = true
-        def run_tests_reg_sbis3 = true
-        def run_tests_reg_vdom = true
+        def run_tests_int_sbis3 = false
+        def run_tests_int_vdom = false
+        def run_tests_reg_sbis3 = false
+        def run_tests_reg_vdom = false
 
         try {
         echo "Назначаем переменные"
@@ -314,6 +314,19 @@ node('controls') {
             inte = true
             regr = true
         }
+        if (vdom_controls && (inte || all_inte)) {
+            run_tests_int_vdom = true
+        }
+        if (sbis3_controls && (inte || all_inte)) {
+            run_tests_int_sbis3 = true
+        }
+        if (vdom_controls && (regr || all_regr)) {
+            run_tests_reg_vdom = true
+        }
+        if (sbis3_controls && (regr || all_regr)) {
+            run_tests_reg_sbis3 = true
+        }
+
         if (vdom_controls && (inte || all_inte)) {
             run_tests_int_vdom = true
         }
