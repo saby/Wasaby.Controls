@@ -176,6 +176,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                   item.popupOptions.stackClassName += ' controls-Stack__open';
                   _private.updatePopupOptions(item);
                   this._update();
+
                   /**
                    * Perfoming animation. Changing rAF for rIC
                    */
