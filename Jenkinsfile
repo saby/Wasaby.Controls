@@ -1051,7 +1051,7 @@ node('controls') {
 
                 if (inte) {
                     def int_description_sbis3
-                    if (sbis3_controls && run_tests_int_sbis3) {
+                    if (run_tests_int_sbis3) {
                         int_data_sbis3 = build_description("(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./int/SBIS3.CONTROLS/build_description.txt", skip)
                         if ( int_data_sbis3 ) {
                          int_title_sbis3 = int_data_sbis3[0]
@@ -1062,7 +1062,7 @@ node('controls') {
                          }
                     }
                     }
-                    if (vdom_controls && run_tests_int_vdom) {
+                    if (run_tests_int_vdom) {
                      int_data_vdom = build_description("(int-${params.browser_type}) ${version} VDOM controls", "./int/VDOM/build_description.txt", skip)
                      if ( int_data_vdom ) {
                          int_title_vdom = int_data_vdom[0]
@@ -1075,7 +1075,7 @@ node('controls') {
                 }
                 }
                 if (regr ) {
-                    if (sbis3_controls && run_tests_reg_sbis3) {
+                    if (run_tests_reg_sbis3) {
                     reg_data_sbis3 = build_description("(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./reg/SBIS3.CONTROLS/build_description.txt", skip)
                     if ( reg_data_sbis3 ) {
                         reg_title_sbis3 = reg_data_sbis3[0]
@@ -1087,7 +1087,7 @@ node('controls') {
                     }
                 }
                 }
-                if (vdom_controls && run_tests_reg_vdom) {
+                if (run_tests_reg_vdom) {
                     reg_data_vdom = build_description("(reg-${params.browser_type}) ${version} VDOM controls", "./reg/VDOM/build_description.txt", skip)
                     if ( reg_data_vdom ) {
                         reg_title_vdom = reg_data_vdom[0]
