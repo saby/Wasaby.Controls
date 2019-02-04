@@ -211,7 +211,7 @@ define('Controls/Input/Mask',
             _focusinHandler: function() {
                var
                   input = this._children.input,
-                  value = this._options.value,
+                  value = this._viewModel.getDisplayValue(),
                   replacer = this._options.replacer;
 
                /**

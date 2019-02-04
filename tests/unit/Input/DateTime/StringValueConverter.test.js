@@ -82,6 +82,9 @@ define([
             { mask: 'DD.MM.YY', stringValue: '11.__.00', value: new Date(2000, 0, 11) },
             // Autofill 01.01
             { mask: 'DD.MM.YY', stringValue: '__.__.00', value: new Date(2000, 0, 1) },
+            { mask: 'DD.MM.YY', stringValue: '__.__.00', value: new Date(2000, 0, 1), autocomplete: 'start' },
+            { mask: 'DD.MM.YY', stringValue: '__.__.00', value: new Date(2000, 11, 31), autocomplete: 'end' },
+
             // The year is different from the current year and month
             // Autofill 1
             { mask: 'DD.MM.YY', stringValue: '__.01.00', value: new Date(2000, 0, 1) },
@@ -93,13 +96,19 @@ define([
             { mask: 'DD.MM.YY', stringValue: '__.01.__', value: new Date('Invalid') },
             { mask: 'DD.MM', stringValue: '__.__', value: null },
             { mask: 'HH.mm', stringValue: '10.__', value: new Date(1900, 0, 1, 10) },
+            { mask: 'HH.mm.ss', stringValue: '10.__.__', value: new Date(1900, 0, 1, 10) },
+            { mask: 'HH.mm.ss', stringValue: '10.05.__', value: new Date(1900, 0, 1, 10, 5) },
+            { mask: 'HH.mm.ss', stringValue: '6_.5_.1_', value: new Date(1900, 0, 1, 6, 5, 1) },
             { mask: 'HH.mm', stringValue: '__.10', value: new Date('Invalid') },
+
+            // the date is more than maybe
+            { mask: 'DD.MM.YY', stringValue: '55.12.00', value: new Date(2000, 11, 31) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
                let converter = new StringValueConverter(),
                   rDate;
                converter.update(cMerge({ mask: test.mask }, options, { preferSource: true }));
-               rDate = converter.getValueByString(test.stringValue, null, true);
+               rDate = converter.getValueByString(test.stringValue, null, test.autocomplete || true);
                assert(dateUtils.isDatesEqual(rDate, test.value), `${rDate} is not equal ${test.value}`);
             });
          });
