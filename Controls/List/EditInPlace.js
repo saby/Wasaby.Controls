@@ -429,10 +429,9 @@ define('Controls/List/EditInPlace', [
          }
          this._editingItemData.isEditing = true;
          this._editingItemData.item = this._editingItem;
-         this._editingItemData.drawActions = this._isAdd && actions && actions.showed && actions.showed.length;
-         this._editingItemData.itemActions = this._isAdd ? actions : {};
          if (this._isAdd) {
             this._editingItemData.index = _private.getEditingItemIndex(this, item, listModel);
+            this._editingItemData.drawActions = this._options.editingConfig && this._options.editingConfig.toolbarVisibility;
          }
          listModel._setEditingItemData(this._editingItemData);
       },

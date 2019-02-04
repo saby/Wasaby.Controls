@@ -88,9 +88,9 @@
           name="editInPlace"
           editingConfig="{{_options.editingConfig}}"
           on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-          on:afterBeginEdit="_onAfterBeginEdit()"
+          on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
           on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-          on:afterEndEdit="_onAfterEndEdit()"
+          on:afterEndEdit="_notifyHandler('afterEndEdit')"
           listModel="{{_listViewModel}}"
           source="{{_sourceController}}"/>
        <Controls.List.ItemActions.ItemActionsControl
