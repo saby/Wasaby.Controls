@@ -264,6 +264,11 @@ define('Controls/List/ListViewModel',
                position,
                prevIndex = -1;
 
+            //If you hover on a record that is being dragged, then the position should not change.
+            if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
+               return null;
+            }
+
             if (this._dragTargetPosition) {
                prevIndex = this._dragTargetPosition.index;
             } else if (this._draggingItemData) {
