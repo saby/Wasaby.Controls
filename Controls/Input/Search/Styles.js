@@ -23,6 +23,7 @@ define('Controls/Input/Search/Styles', [],
     * @css @color_Search_iconSearch_active Color of search button icon when active.
     * @css @color_Search_iconSearch_readOnly Color of search button icon when Search controls is readOnly.
     * @css @color_Search_iconReset Color of reset button icon.
+    * @css @color_Search-caret_empty Color of the caret, when input is empty.
     *
     * @css @iconReset-iconSearch_spacing Empty space between reset button icon and search button icon.
     */

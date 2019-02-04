@@ -6,11 +6,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Core/core-merge',
       'Core/core-clone',
       'Core/detection',
+      'Core/IoC',
       'Controls/Popup/TargetCoords',
       'wml!Controls/Popup/Opener/Sticky/StickyContent',
       'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, IoC, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -23,11 +24,59 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          corner: {
             vertical: 'top',
             horizontal: 'left'
-         }
+         },
       };
 
       var _private = {
+         prepareOriginPoint: function(config) {
+            var newCfg = cClone(config);
+
+            if (config.direction && typeof (config.direction) === 'object') {
+               if ('horizontal' in config.direction) {
+                  newCfg.horizontalAlign = {
+                     side: config.direction.horizontal
+                  };
+               }
+               if ('vertical' in config.direction) {
+                  newCfg.verticalAlign = {
+                     side: config.direction.vertical
+                  };
+               }
+            }
+            if (config.offset) {
+               if ('horizontal' in config.offset) {
+                  newCfg.horizontalAlign = {
+                     offset: config.offset.horizontal
+                  };
+               }
+               if ('vertical' in config.offset) {
+                  newCfg.verticalAlign = {
+                     offset: config.offset.vertical
+                  };
+               }
+            }
+            if (config.targetPoint) {
+               if ('vertical' in config.targetPoint || 'horisontal' in config.targetPoint) {
+                  newCfg.corner = {
+                     vertical: config.targetPoint.vertical,
+                     horizontal: config.targetPoint.horizontal
+                  };
+               }
+            }
+            return newCfg;
+         },
+         prepareActionOnScroll: function(config) {
+            var newCfg = cClone(config);
+            if (config.actionOnScroll === 'close') {
+               newCfg.closeOnTargetScroll = true;
+            } else if (config.actionOnScroll === 'track') {
+               newCfg.targetTracking = true;
+            }
+            return newCfg;
+         },
          prepareConfig: function(cfg, sizes) {
+            cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
+            cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
             var popupCfg = {
                corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
                align: {
@@ -42,13 +91,20 @@ define('Controls/Popup/Opener/Sticky/StickyController',
                revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
                locationStrategy: cfg.popupOptions.locationStrategy
             };
-
+            if (cfg.popupOptions.corner) {
+               IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
+            }
+            if (cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking) {
+               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
+            }
+            if (cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign) {
+               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+            }
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
             cfg.popupOptions.stickyPosition = this.prepareStickyPosition(popupCfg);
 
             cfg.positionConfig = popupCfg;
-
             _private.updateClasses(cfg, popupCfg);
          },
 

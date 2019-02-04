@@ -8,7 +8,7 @@ define('Controls/Date/interface/IPeriodLiteDialog', [
    'use strict';
 
    /**
-    * mixin Controls/Date/interface/IPeriodLiteDialog
+    * @interface Controls/Date/interface/IPeriodLiteDialog
     * @public
     */
    var EMPTY_CAPTIONS = {

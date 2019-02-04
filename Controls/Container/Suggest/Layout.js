@@ -306,11 +306,11 @@
          _select: function(event, item) {
             item = item || event;
             _private.close(this);
-            this._notify('choose', [item]);
 
             // after select from the suggest, focus on input will lost
             // if the focus should be returned, the control (such Input/Suggest) should do it
             this._inputActive = false;
+            this._notify('choose', [item]);
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
@@ -369,6 +369,12 @@
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
+         },
+
+         _keydown: function(event) {
+            if (this._children.inputKeydown) {
+               this._children.inputKeydown.start(event);
+            }
          }
 
          // </editor-fold>

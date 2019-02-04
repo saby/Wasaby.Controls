@@ -9,6 +9,7 @@
       autoComplete="{{_options.autoComplete}}"
       style="{{_options.style}}"
       validationErrors="{{_options.validationErrors}}"
+      autocompleteType="start"
       on:keyup="_keyUpHandler()"
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('startTagClick')"
@@ -25,6 +26,7 @@
       autoComplete="{{_options.autoComplete}}"
       style="{{_options.style}}"
       validationErrors="{{_options.validationErrors}}"
+      autocompleteType="end"
       on:inputCompleted="_proxyEvent('inputCompleted')"
       on:tagClick="_proxyEvent('endTagClick')"
       on:tagHover="_proxyEvent('endTagHover')">

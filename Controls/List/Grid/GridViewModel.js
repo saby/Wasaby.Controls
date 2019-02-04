@@ -35,8 +35,10 @@ define('Controls/List/Grid/GridViewModel', [
             if (params.columnIndex === params.columns.length - 1) {
                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase();
             }
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
+            if (!params.isHeader) {
+               preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
+               preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
+            }
 
             // Вертикальное выравнивание хедера
             if (params.columns[params.columnIndex].valign) {
@@ -337,7 +339,8 @@ define('Controls/List/Grid/GridViewModel', [
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
-                  itemPadding: this._model.getItemPadding()
+                  itemPadding: this._model.getItemPadding(),
+                  isHeader: true
                });
             }
             if (headerColumn.column.align) {
@@ -481,6 +484,16 @@ define('Controls/List/Grid/GridViewModel', [
          setRightSpacing: function(rightSpacing) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setRightSpacing(rightSpacing);
+         },
+
+         setLeftPadding: function(leftPadding) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setLeftPadding(leftPadding);
+         },
+
+         setRightPadding: function(rightPadding) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setRightPadding(rightPadding);
          },
 
          setRowSpacing: function(rowSpacing) {
@@ -758,6 +771,11 @@ define('Controls/List/Grid/GridViewModel', [
 
          setSwipeItem: function(itemData) {
             this._model.setSwipeItem(itemData);
+         },
+
+         setRightSwipedItem: function(itemData) {
+            this._model.setRightSwipedItem(itemData);
+            this._nextVersion();
          },
 
          setShowRowSeparator: function(showRowSeparator) {

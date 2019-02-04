@@ -40,6 +40,13 @@ class Coverage:
                 if os.path.isfile(other_component_file):
                     other_files.append(other_component_file)
 
+        # заберем все файлы не js в текущей папке
+        current_dir = os.path.split(cover_file)[0]
+        for current_file in os.listdir(current_dir):
+            current_file_path = os.path.join(current_dir, current_file)
+            if os.path.isfile(current_file_path) and not current_file_path.endswith('.js'):
+                other_files.append(current_file_path)
+
         # Демки
         if 'Controls-demo' in cover_file:
             demo_path = os.path.split(cover_file)[0]
@@ -95,6 +102,13 @@ class Coverage:
                     for file in change_files:
                         if file in source:
                             test_result.append(test_name)
+
+        # иногда необходимо вернуть все тесты верстки
+        if 'reg' in result_json and not test_result:
+            for file in change_files:
+                if '/themes/' in file or file.endswith('.less'):
+                    test_result.extend(data.keys())
+
         return test_result
 
     def get_test_for_regression_test(self, change_files):

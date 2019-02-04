@@ -1,6 +1,6 @@
 define([
    'Core/core-merge',
-   'Controls/Date/MonthList/ListControl',
+   'Controls/_calendar/MonthList/ListControl',
    'Types/collection'
 ], function(
    coreMerge,
@@ -8,6 +8,8 @@ define([
    collection
 ) {
    'use strict';
+
+   ListControl = ListControl.default;
 
    describe('Controls/Date/MonthList/ListControl', function() {
       describe('getQuery', function() {

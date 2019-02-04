@@ -1,8 +1,7 @@
 define('Controls-demo/List/Grid/BasePG', [
    'Core/Control',
    'Types/object',
-   'WS.Data/Source/Memory',
-   'WS.Data/Source/SbisService',
+   'Types/source',
    'Controls-demo/List/Grid/resources/DataDemoPG',
    'wml!Controls-demo/List/Grid/resources/BasePG/GridPG',
    'json!Controls-demo/List/Grid/resources/BasePG/cfg',
@@ -11,7 +10,7 @@ define('Controls-demo/List/Grid/BasePG', [
    'wml!Controls-demo/List/Grid/resources/DemoMoney',
    'wml!Controls-demo/List/Grid/resources/DemoRating',
    'wml!Controls-demo/List/Grid/resources/DemoItem']
-, function(Control, Obj, MemorySource, SbisService, data, template, config, emptyTpl) {
+, function(Control, Obj, source, data, template, config, emptyTpl) {
    'use strict';
    var Component = Control.extend({
       _template: template,
@@ -22,15 +21,15 @@ define('Controls-demo/List/Grid/BasePG', [
 
       _beforeMount: function() {
 
-         this._sourceCatalog = new MemorySource({
+         this._sourceCatalog = new source.Memory({
             idProperty: 'id',
             data: data.catalog
          });
-         this._emptySource = new MemorySource({
+         this._emptySource = new source.Memory({
             idProperty: 'id',
             data: []
          });
-         this._errorSource = new SbisService({});
+         this._errorSource = new source.SbisService({});
 
          this._dataObject = {
             itemPadding: {
