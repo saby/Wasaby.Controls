@@ -130,6 +130,7 @@ define('Controls/interface/IMovable', [
     * Move one item up.
     * @function Controls/interface/IMovable#moveItemUp
     * @param {String|Number} item The item to be moved.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @example
     * The following example shows how to move item up using the item actions.
     * <pre>
@@ -160,6 +161,7 @@ define('Controls/interface/IMovable', [
     * Move one item down.
     * @function Controls/interface/IMovable#moveItemDown
     * @param {String|Number} item The item to be moved.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @example
     * The following example shows how to move item down using the item actions.
     * <pre>
@@ -192,6 +194,7 @@ define('Controls/interface/IMovable', [
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @remark
     * Depending on the 'position' argument, elements can be moved before, after or on the specified target item.
     * @example

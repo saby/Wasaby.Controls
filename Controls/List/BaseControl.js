@@ -1098,7 +1098,7 @@ define('Controls/List/BaseControl', [
          var targetPosition = this._listViewModel.getDragTargetPosition();
 
          if (targetPosition) {
-            this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
          }
       },
       _onViewKeyDown: function(event) {
@@ -1127,6 +1127,21 @@ define('Controls/List/BaseControl', [
       },
 
       _documentDragEnd: function() {
+         var self = this;
+
+         //Reset the state of the dragndrop after the movement on the source happens.
+         if (this._dragEndResult instanceof Deferred) {
+            _private.showIndicator(self);
+            this._dragEndResult.addBoth(function() {
+               self._documentDragEndHandler();
+               _private.hideIndicator(self);
+            });
+         } else {
+            this._documentDragEndHandler();
+         }
+      },
+
+      _documentDragEndHandler: function() {
          this._listViewModel.setDragTargetPosition(null);
          this._listViewModel.setDragItemData(null);
          this._listViewModel.setDragEntity(null);
