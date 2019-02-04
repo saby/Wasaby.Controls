@@ -58,6 +58,14 @@
               "secondary": "secondary"
             }
           },
+          "textAlign": {
+            "type": "enum",
+            "title": "Horizontal alignment of the text in field.",
+            "enum": {
+              "left": "left",
+              "right": "right"
+            }
+          },
           "readOnly": {
             "type": "Boolean",
             "title": "Indicates whether control will react to user actions."
