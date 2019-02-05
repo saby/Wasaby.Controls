@@ -100,13 +100,15 @@
 }
 
 .ws-is-no-touch {
-   .controls-BreadCrumbsView__title:hover {
-      color: @color_BreadCrumbs-title_hovered;
-      text-decoration: underline;
-   }
+   .controls-BreadCrumbsView__crumb:hover {
+      .controls-BreadCrumbsView__title {
+         color: @color_BreadCrumbs-title_hovered;
+         text-decoration: underline;
+      }
 
-   .controls-BreadCrumbsView__arrow:hover {
-      color: @color_BreadCrumbs-arrow_hovered;
+      .controls-BreadCrumbsView__arrow {
+         color: @color_BreadCrumbs-arrow_hovered;
+      }
    }
 }
 

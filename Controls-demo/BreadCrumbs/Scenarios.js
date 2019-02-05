@@ -4,6 +4,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
    'Types/source',
    'Types/entity',
    'Core/constants',
+   'Controls-demo/Utils/MemorySourceFilter',
    'wml!Controls-demo/BreadCrumbs/Scenarios/First/columnTemplate',
    'wml!Controls-demo/BreadCrumbs/Scenarios/Second/columnTemplate',
    'wml!Controls-demo/BreadCrumbs/Scenarios/Second/headerTemplate',
@@ -20,6 +21,7 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
    source,
    entity,
    cConstants,
+   memorySourceFilter,
    firstColumnTemplate,
    secondColumnTemplate,
    secondHeaderTemplate,
@@ -50,8 +52,8 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
                department: 'Разработка',
                head: 'Новиков Д.В.',
                icon: 'icon-16 icon-Company icon-disabled',
-               countOfEmployees: 1107,
-               counterCaption: 1107
+               countOfEmployees: 4,
+               counterCaption: 4
             }, {
                id: 11,
                'parent': 1,
@@ -67,8 +69,8 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
                department: 'sbis.Communication',
                head: 'Боровиков К.С.',
                icon: 'icon-16 icon-Company icon-disabled',
-               countOfEmployees: 35,
-               counterCaption: 35
+               countOfEmployees: 3,
+               counterCaption: 3
             }, {
                id: 121,
                'parent': 12,
@@ -83,8 +85,8 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
                'parent@': true,
                department: 'sbis.Communication и соц.сеть',
                head: 'Жукова О.В.',
-               countOfEmployees: 19,
-               counterCaption: 19
+               countOfEmployees: 2,
+               counterCaption: 2
             }, {
                id: 1221,
                'parent': 122,
@@ -99,15 +101,15 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
                'parent@': true,
                department: 'Проектирование',
                head: 'Жукова О.В.',
-               countOfEmployees: 9,
-               counterCaption: 9
+               countOfEmployees: 1,
+               counterCaption: 1
             }, {
                id: 12221,
                'parent': 1222,
                'parent@': true,
                department: 'Проектирование мобильного приложения',
-               countOfEmployees: 9,
-               counterCaption: 9
+               countOfEmployees: 1,
+               counterCaption: 1
             }, {
                id: 122211,
                'parent': 12221,
@@ -661,6 +663,82 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
                }
             ]
          });
+         this._viewSource8 = new source.HierarchicalMemory({
+            idProperty: 'id',
+            parentProperty: 'parent',
+            filter: memorySourceFilter(),
+            data: [{
+               id: 1,
+               department: 'Продвижение СБИС',
+               parent: null,
+               '@parent': true
+            }, {
+               id: 2,
+               department: 'Филиальная сеть',
+               parent: 1,
+               '@parent': true
+            }, {
+               id: 3,
+               department: 'Работа с партнёрами',
+               parent: 1,
+               '@parent': true
+            }, {
+               id: 4,
+               name: 'Новикова Елена',
+               photo: cConstants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/NovikovaE.png',
+               position: 'Менеджер по работе с партнёрами',
+               phone: '5136',
+               parent: 3,
+               '@parent': null
+            }, {
+               id: 5,
+               department: '2-й дивизион',
+               parent: 2,
+               '@parent': true
+            }, {
+               id: 6,
+               department: '4-й дивизион',
+               parent: 2,
+               '@parent': true
+            }, {
+               id: 7,
+               department: '7700 Тензор - Москва (Андропова)',
+               parent: 5,
+               '@parent': true
+            }, {
+               id: 8,
+               department: 'Инженеры',
+               parent: 7,
+               '@parent': true
+            }, {
+               id: 9,
+               name: 'Новиков Дмитрий',
+               photo: cConstants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/Novikov2.png',
+               position: 'Инженер-программист (ЭО)',
+               phone: '4357',
+               parent: 8,
+               '@parent': null
+            }, {
+               id: 10,
+               department: '7002 Тензор - Томск',
+               parent: 6,
+               '@parent': true
+            }, {
+               id: 11,
+               department: 'Менеджеры',
+               parent: 10,
+               '@parent': true
+            }, {
+               id: 12,
+               name: 'Новикова Яна',
+               photo: cConstants.resourceRoot + 'Controls-demo/BreadCrumbs/Scenarios/images/NovikovaY.png',
+               position: 'Менеджер по продажам',
+               phone: '7435',
+               parent: 11,
+               '@parent': null
+            }]
+         });
+         this._filter8 = {};
       }
    });
 

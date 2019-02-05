@@ -40,29 +40,31 @@
    <div>
       <Controls.Label caption='На выезжающей панели' />
    </div>
-   <Controls.Popup.Templates.Stack.StackTemplate
-               attr:class="demo-FourthExample"
-               headingCaption="Продажи"
-               headingStyle="primary"
-               showMaximizedButton="{{true}}">
-      <ws:headerContentTemplate>
-         <div>
+   <div>
+      <Controls.Popup.Templates.Stack.StackTemplate
+         attr:class="demo-FourthExample"
+         headingCaption="Продажи"
+         headingStyle="primary"
+         showMaximizedButton="{{true}}">
+         <ws:headerContentTemplate>
+            <div>
 
-         </div>
-      </ws:headerContentTemplate>
-      <ws:bodyContentTemplate>
-         <Controls.Explorer
-            keyProperty="id"
-            parentProperty="parent"
-            nodeProperty="parent@"
-            displayProperty="title"
-            columns="{{_columns3}}"
-            header="{{_header3}}"
-            source="{{_viewSource3}}">
-            <ws:results position="top" />
-         </Controls.Explorer>
-      </ws:bodyContentTemplate>
-   </Controls.Popup.Templates.Stack.StackTemplate>
+            </div>
+         </ws:headerContentTemplate>
+         <ws:bodyContentTemplate>
+            <Controls.Explorer
+               keyProperty="id"
+               parentProperty="parent"
+               nodeProperty="parent@"
+               displayProperty="title"
+               columns="{{_columns3}}"
+               header="{{_header3}}"
+               source="{{_viewSource3}}">
+               <ws:results position="top" />
+            </Controls.Explorer>
+         </ws:bodyContentTemplate>
+      </Controls.Popup.Templates.Stack.StackTemplate>
+   </div>
    <Controls.Heading caption="Реестр с многострочными заголовками"
                      size="xl"/>
    <Controls.Explorer
@@ -82,27 +84,48 @@
                               keyProperty="id" />
    <Controls.Heading caption="Хлебные крошки в шапке выезжающей панели"
                      size="xl"/>
-   <Controls.Popup.Templates.Stack.StackTemplate
-      attr:class="demo-FourthExample"
-      showMaximizedButton="{{true}}">
-      <ws:headerContentTemplate>
-         <div class="demo-SeventhExample__headerWrapper">
-            <div class="demo-SeventhExample__firstRow">
-               <span class="demo-SeventhExample__header">Комиссионный товар НДС 18%</span>
-               <Controls.Toolbar
-                  attr:class="demo-SeventhExample__toolbar"
+   <div>
+      <Controls.Popup.Templates.Stack.StackTemplate
+         attr:class="demo-FourthExample"
+         showMaximizedButton="{{true}}">
+         <ws:headerContentTemplate>
+            <div class="demo-SeventhExample__headerWrapper">
+               <div class="demo-SeventhExample__firstRow">
+                  <span class="demo-SeventhExample__header">Комиссионный товар НДС 18%</span>
+                  <Controls.Toolbar
+                     attr:class="demo-SeventhExample__toolbar"
+                     parentProperty="parent"
+                     nodeProperty="@parent"
+                     keyProperty="id"
+                     source="{{_toolbarSource7}}"
+                  />
+               </div>
+               <Controls.BreadCrumbs items="{{_breadCrumbs6}}"
+                                     keyProperty="id" />
+            </div>
+         </ws:headerContentTemplate>
+         <ws:bodyContentTemplate>
+            <div></div>
+         </ws:bodyContentTemplate>
+      </Controls.Popup.Templates.Stack.StackTemplate>
+   </div>
+   <Controls.Heading caption="Хлебные крошки в результатах поиска"
+                     size="xl"/>
+   <Controls.Container.Data source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
+      <Controls.Search.Controller searchParam="name" minSearchLength="{{3}}">
+         <div class="ws-fragment">
+            <Controls.Search.Input.Container>
+               <Controls.Input.Search/>
+            </Controls.Search.Input.Container>
+            <Controls.List.Container>
+               <Controls.Explorer
+                  displayProperty="department"
                   parentProperty="parent"
                   nodeProperty="@parent"
-                  keyProperty="id"
-                  source="{{_toolbarSource7}}"
-               />
-            </div>
-            <Controls.BreadCrumbs items="{{_breadCrumbs6}}"
-                                  keyProperty="id" />
+                  columns="{{_columns}}">
+               </Controls.Explorer>
+            </Controls.List.Container>
          </div>
-      </ws:headerContentTemplate>
-      <ws:bodyContentTemplate>
-         <div></div>
-      </ws:bodyContentTemplate>
-   </Controls.Popup.Templates.Stack.StackTemplate>
+      </Controls.Search.Controller>
+   </Controls.Container.Data>
 </div>

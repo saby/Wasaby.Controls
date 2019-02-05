@@ -4,5 +4,5 @@
             <div class="controls-BreadCrumbsView__indentation{{i === itemData.item.indentation - 1 ? ' icon-Way' : ''}}"></div>
         </ws:for>
     </ws:if>
-    <span class="controls-BreadCrumbsView__menuTitle">{{itemData.getPropValue(itemData.item, 'title')}}</span>
+    <span class="controls-BreadCrumbsView__menuTitle">{{itemData.getPropValue(itemData.item, itemData.displayProperty)}}</span>
 </div>

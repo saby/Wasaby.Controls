@@ -70,7 +70,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                groupTemplate: cfg.groupTemplate,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
-               displayProperty: 'title'
+               displayProperty: cfg.displayProperty || 'title'
             });
             this._hierarchy = new entity.relation.Hierarchy({
                idProperty: cfg.keyProperty,

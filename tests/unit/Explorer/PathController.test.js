@@ -69,6 +69,7 @@ define([
             assert.deepEqual(instance._header, [{
                template: PathBack.default,
                templateOptions: {
+                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonStyle: undefined,
                   backButtonCaption: 'second',
                   counterCaption: 2
@@ -115,6 +116,7 @@ define([
                template: PathBack.default,
                templateOptions: {
                   backButtonStyle: undefined,
+                  backButtonClass: 'controls-BreadCrumbsPath__backButton__wrapper_inHeader',
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
