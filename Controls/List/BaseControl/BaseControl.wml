@@ -1,4 +1,4 @@
-<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()" on:sortingChanged="_sortingChanged()">
+<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
@@ -27,6 +27,7 @@
          template="{{ _options.content }}"
          scope="{{_options}}"
          listModel="{{_listViewModel}}"
+         on:animationend="_onAnimationEnd()"
          on:markedKeyChanged="_notifyHandler('markedKeyChanged')"
          on:itemClick="_onItemClick()"
          on:groupClick="_onGroupClick()"
@@ -38,7 +39,6 @@
          on:itemSwipe="_listSwipe()">
          <ws:viewTemplate>
             <ws:partial template="{{_options.viewName}}"
-                        on:keyDown="_onViewKeyDown()"
                         on:activated="_onActivated()"
                         on:deactivated="_onDeactivated()"/>
          </ws:viewTemplate>
@@ -88,9 +88,9 @@
           name="editInPlace"
           editingConfig="{{_options.editingConfig}}"
           on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-          on:afterBeginEdit="_onAfterBeginEdit()"
+          on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
           on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-          on:afterEndEdit="_onAfterEndEdit()"
+          on:afterEndEdit="_notifyHandler('afterEndEdit')"
           listModel="{{_listViewModel}}"
           source="{{_sourceController}}"/>
        <Controls.List.ItemActions.ItemActionsControl
@@ -117,6 +117,12 @@
           swipeViewMode="{{_options.swipeViewMode}}"
           itemActions="{{_options.itemActions}}"
           name="swipeControl"/>
+
+        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && !_loadingState}}">
+            <div class="controls-BaseControl__emptyTemplate">
+                <ws:partial template="{{_options.emptyTemplate}}"/>
+            </div>
+        </ws:if>
     </ws:if>
 
     <ws:if data="{{_needScrollCalculation}}">

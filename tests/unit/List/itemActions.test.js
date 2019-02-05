@@ -127,35 +127,6 @@ define([
          assert.equal(listViewModel._actions[0].showed.length, 4 + 1); // 3-showType.TOOLBAR 1-showType.MENU_TOOLBAR 1 -само menu
       });
 
-      it('updateItemActions editingItem toolbarVisibility', function() {
-         var callBackCount = 0;
-         var cfg = {
-            listModel: listViewModel,
-            itemActions: actions,
-            toolbarVisibility: true,
-            itemActionsPosition: 'outside'
-         };
-         var ctrl = new ItemActionsControl(cfg);
-         ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
-         ctrl._saveContextObject({isTouch: {isTouch: false}});
-         ctrl.saveOptions(cfg);
-
-         ctrl._notify = function(eventName) {
-            if (eventName === 'commitActionClick' || eventName === 'cancelActionClick') {
-               callBackCount++;
-            }
-         };
-
-         listViewModel.reset();
-         ctrl.updateItemActions(listViewModel.getCurrent().item, true);
-         assert.equal(listViewModel._actions[0].showed.length, actions.length + 2); // 2 - edititplace
-
-         assert.equal(callBackCount, 0);
-         listViewModel._actions[0].showed[actions.length].handler(); //applyEdit
-         listViewModel._actions[0].showed[actions.length + 1].handler();//cancelEdit
-         assert.equal(callBackCount, 2);
-      });
-
       it('itemActionVisibilityCallback', function() {
          var cfg = {
             listModel: listViewModel,
@@ -235,7 +206,7 @@ define([
          ctrl.saveOptions(cfg);
 
          listViewModel.reset();
-         ctrl.updateItemActions(listViewModel.getCurrent().item, true);
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
          assert.deepEqual([{
             id: 0,
             title: 'first',
@@ -273,7 +244,7 @@ define([
          ctrl.saveOptions(cfg);
 
          listViewModel.reset();
-         ctrl.updateItemActions(listViewModel.getCurrent().item, true);
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
          assert.deepEqual([{
             id: 1,
             title: 'second',

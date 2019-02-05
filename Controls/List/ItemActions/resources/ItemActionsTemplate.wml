@@ -10,6 +10,23 @@
         <ws:partial
                 template="wml!Controls/List/ItemActions/resources/ItemActionsFor"
                 itemData="{{itemData}}"
+                size="{{size}}"
                 showedActions="{{itemData.itemActions.showed}}"/>
+        <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
+            <Controls.Button
+               on:click="_applyEdit()"
+               attr:class="controls-itemActionsV__action_padding"
+               viewMode="toolButton"
+               size="s"
+               iconStyle="success"
+               icon="icon-small icon-Yes"
+               style="secondary"
+            />
+            <Controls.Button.Close
+               on:click="_cancelEdit()"
+               viewMode="toolButton"
+               size="m"
+            />
+        </ws:if>
     </div>
 </div>
