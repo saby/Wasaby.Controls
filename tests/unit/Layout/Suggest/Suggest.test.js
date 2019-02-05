@@ -162,7 +162,9 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
          self._options.emptyTemplate = {};
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         self._searchValue = 'test';
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult))
       });
    
       it('Suggest::_private.prepareFilter', function() {
