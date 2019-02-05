@@ -5,8 +5,9 @@ define('Controls/List/Grid/GridViewModel', [
    'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
-   'Core/detection'
-], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection) {
+   'Core/detection',
+   'Core/helpers/Object/isEqual'
+], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual) {
    'use strict';
 
    var
@@ -140,7 +141,9 @@ define('Controls/List/Grid/GridViewModel', [
                   value = params.value,
                   prevValue = params.prevValue,
                   state = params.state;
-               if (value === prevValue) {
+
+               // isEqual works with any types
+               if (isEqual(value, prevValue)) {
                   state.ladderLength++;
                } else {
                   params.ladder.ladderLength = state.ladderLength;
