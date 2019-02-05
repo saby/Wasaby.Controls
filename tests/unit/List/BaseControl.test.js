@@ -12,7 +12,9 @@ define([
    'Core/Deferred',
    'Core/core-instance',
    'Core/constants',
-   'Controls/List/ListView'
+   'Controls/List/ListView',
+   'Types/entity',
+   'Types/collection'
 ], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
