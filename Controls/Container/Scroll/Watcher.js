@@ -238,6 +238,11 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          _beforeMount: function() {
+            
+            //чтобы не было лишних синхронизаций при обработке событий
+            //удалим по проекту
+            //https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe
+            
             this._forceUpdate = function() {};
             this._registrar = new Registrar({register: 'listScroll'});
          },
