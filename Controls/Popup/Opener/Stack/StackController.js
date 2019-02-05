@@ -7,11 +7,11 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Core/Deferred',
       'Core/constants',
       'Core/core-clone',
-      'Vdom/_private/Synchronizer/resources/runDelayedRebuild',
+      'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone, runDelayedRebuild) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone, Vdom) {
       'use strict';
       var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
       var STACK_CLASS = 'controls-Stack';
@@ -180,7 +180,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                   /**
                    * Perfoming animation. Changing rAF for rIC
                    */
-                  runDelayedRebuild.animationWaiter(true);
+                  Vdom.animationWaiter(true);
                   require('Controls/Popup/Manager/ManagerController').getContainer()._forceUpdate();
                }.bind(this), 100);
             }
@@ -210,7 +210,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                /**
                 * Perfoming animation. Changing rAF for rIC
                 */
-               runDelayedRebuild.animationWaiter(false);
+               Vdom.animationWaiter(true);
             } else {
                _private.elementDestroyed(this, item);
                return (new Deferred()).callback();
