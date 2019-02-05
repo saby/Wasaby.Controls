@@ -76,7 +76,7 @@
             return self._active && value.length >= self._options.minSearchLength;
          },
          shouldShowSuggest: function(self, searchResult) {
-            return (searchResult && searchResult.data.getCount()) || self._options.emptyTemplate;
+            return (searchResult && searchResult.data.getCount()) || self._searchValue && self._options.emptyTemplate;
          },
          precessResultData: function(self, resultData) {
             self._searchResult = resultData;

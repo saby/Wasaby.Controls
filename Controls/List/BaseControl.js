@@ -385,9 +385,19 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollHide: function(self) {
-         self._loadOffset = 0;
-         self._pagingVisible = false;
-         self._forceUpdate();
+         var needUpdate = false;
+         if (self._loadOffset !== 0) {
+            self._loadOffset = 0;
+            needUpdate = true;
+         }
+         if (self._pagingVisible) {
+            self._pagingVisible = false;
+            needUpdate = true;
+         }
+
+         if (needUpdate) {
+            self._forceUpdate();
+         }
       },
 
       createScrollPagingController: function(self) {
@@ -681,7 +691,7 @@ define('Controls/List/BaseControl', [
 
       _needScrollCalculation: false,
       _loadTriggerVisibility: null,
-      _loadOffset: 100,
+      _loadOffset: 0,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
