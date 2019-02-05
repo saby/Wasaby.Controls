@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import {descriptor} from 'Types/entity';
 import IRangeSelectable from '_datePopup/IRangeSelectable';
-import EventProxyMixin from 'Mixin/EventProxy';
+import EventProxyMixin from './Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import MonthsRange from '_datePopup/MonthsRange';
 import periodDialogUtils from '_datePopup/Utils';

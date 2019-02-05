@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import EventProxyMixin from 'Mixin/EventProxy';
+import EventProxyMixin from './Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import MonthsRangeItem from 'MonthsRangeItem';

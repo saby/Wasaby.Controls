@@ -2,7 +2,7 @@ import BaseControl = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import formatDate = require('Core/helpers/Date/format');
 import isEmpty = require('Core/helpers/Date/format');
-import EventProxyMixin from 'Mixin/EventProxy'
+import EventProxyMixin from './Mixin/EventProxy'
 import {MonthModel as modelViewModel} from 'calendar';
 import rangeSelectionUtils = require('Controls/Date/Utils/RangeSelection');
 import dateUtils = require('Controls/Utils/Date');

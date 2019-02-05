@@ -1,6 +1,6 @@
 import BaseControl = require('Core/Control');
 import formatDate = require('Core/helpers/Date/format');
-import EventProxy from 'Mixin/EventProxy';
+import EventProxy from './Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import {MonthModel} from 'Controls/calendar';
 import quantumUtils = require('Controls/Date/Utils/DateRangeQuantum');
