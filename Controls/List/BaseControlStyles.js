@@ -14,7 +14,7 @@ define('Controls/List/BaseControlStyles', [],
     * @css @width_BaseControl-loadingIndicator-img width of loading indicator image
     * @css @height_BaseControl-loadingIndicator-img width of loading indicator image
     * @css @background-image_BaseControl-loadingIndicator background image of loading indicator
-    *
+    * @css @min-height_BaseControl-footer-content min height of footer content
     */
 );
 
