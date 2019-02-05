@@ -72,7 +72,7 @@
       "progress": "^2.0.1",
       "requirejs": "2.1.18",
       "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.110",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#19.110/bugfix/vaa/correctlocal_wso",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.110",
       "Router": "git+https://github.com/saby/Router.git#rc-19.110",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
