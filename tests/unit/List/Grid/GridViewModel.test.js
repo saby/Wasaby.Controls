@@ -407,7 +407,11 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          });
       });
       describe('ladder and sticky column', function() {
-         var
+
+         // for ladder by date check, ladder field can be any JS type
+         var date1 = new Date(),
+            date2 = '01 янв',
+            date3 = '03 янв',
             initialColumns = [{
                width: '1fr',
                displayProperty: 'title'
@@ -417,15 +421,15 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                stickyProperty: 'photo'
             }],
             resultLadder = {
-               0: { date: { ladderLength: 1 } },
-               1: { date: { ladderLength: 3 } },
+               0: { date: { ladderLength: 3 } },
+               1: { date: { } },
                2: { date: { } },
-               3: { date: { } },
-               4: { date: { ladderLength: 2 } },
+               3: { date: { ladderLength: 1 } },
+               4: { date: { ladderLength: 6 } },
                5: { date: { } },
-               6: { date: { ladderLength: 1 } },
-               7: { date: { ladderLength: 1 } },
-               8: { date: { ladderLength: 2 } },
+               6: { date: { } },
+               7: { date: { } },
+               8: { date: { } },
                9: { date: { } }
             },
             resultStickyLadder = {
@@ -444,16 +448,16 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                items: new collection.RecordSet({
                   idProperty: 'id',
                   rawData: [
-                     { id: 0, title: 'i0', date: '01 янв', photo: '1.png' },
-                     { id: 1, title: 'i1', date: '03 янв', photo: '1.png' },
-                     { id: 2, title: 'i2', date: '03 янв', photo: '1.png' },
-                     { id: 3, title: 'i3', date: '03 янв', photo: '2.png' },
-                     { id: 4, title: 'i4', date: '05 янв', photo: '3.png' },
-                     { id: 5, title: 'i5', date: '05 янв', photo: '3.png' },
-                     { id: 6, title: 'i6', date: '07 янв', photo: '3.png' },
-                     { id: 7, title: 'i7', date: '09 янв', photo: '3.png' },
-                     { id: 8, title: 'i8', date: new Date(), photo: '4.png' },
-                     { id: 9, title: 'i9', date: new Date(), photo: '5.png' }
+                     { id: 0, title: 'i0', date: date2, photo: '1.png' },
+                     { id: 1, title: 'i1', date: date2, photo: '1.png' },
+                     { id: 2, title: 'i2', date: date2, photo: '1.png' },
+                     { id: 3, title: 'i3', date: date3, photo: '2.png' },
+                     { id: 4, title: 'i4', date: date1, photo: '3.png' },
+                     { id: 5, title: 'i5', date: date1, photo: '3.png' },
+                     { id: 6, title: 'i6', date: date1, photo: '3.png' },
+                     { id: 7, title: 'i7', date: date1, photo: '3.png' },
+                     { id: 8, title: 'i8', date: date1, photo: '4.png' },
+                     { id: 9, title: 'i9', date: date1, photo: '5.png' }
                   ]
                }),
                keyProperty: 'id',
