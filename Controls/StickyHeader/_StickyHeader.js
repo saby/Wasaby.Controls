@@ -22,6 +22,7 @@ define('Controls/StickyHeader/_StickyHeader',
        * @private
        * @extends Core/Control
        * @class Controls/StickyHeader
+       * @css @background-color_StickyHeader Background color of StickyHeader.
        */
 
       /**
