@@ -26,7 +26,7 @@ define('Controls/List/Mover', [
          self._notify('afterItemsMove', [items, target, position, result]);
 
          //Remove the selection from all items after moving.
-         //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173<eltn
+         //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
          self._notify('selectedTypeChanged', ['unselectAll'], {
             bubbling: true
          });
