@@ -238,7 +238,7 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          _beforeMount: function() {
-            this._forceUpdate = function(){};
+            this._forceUpdate = function() {};
             this._registrar = new Registrar({register: 'listScroll'});
          },
 
