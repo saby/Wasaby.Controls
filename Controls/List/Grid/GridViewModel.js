@@ -139,6 +139,8 @@ define('Controls/List/Grid/GridViewModel', [
                   value = params.value,
                   prevValue = params.prevValue,
                   state = params.state;
+
+               // isEqual works with any types
                if (isEqual(value, prevValue)) {
                   state.ladderLength++;
                } else {
