@@ -38,6 +38,11 @@
    .for(@variants, { &_@{_item} {
       height: ~"@{height_Render_size_@{_item}}";
    } });
+
+   .for(@variants, { &_@{_item}_roundBorder {
+      @height: "height_Render_size_@{_item}";
+      border-radius: @@height / 2;
+   } });
 }
 
 .controls-Render_fontStyle {
@@ -65,7 +70,7 @@
       background: ~"@{background_Render_style_@{_item}}";
    } });
 
-   .for(@variants, { &_@{_item}:hover {
+   .for(@variants, { .ws-is-no-touch &_@{_item}:hover {
       border-color: ~"@{border-color_Render_style_@{_item}_hover}";
       background: ~"@{background_Render_style_@{_item}_hover}";
    } });
