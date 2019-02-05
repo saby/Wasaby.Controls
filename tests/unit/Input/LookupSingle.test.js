@@ -218,5 +218,14 @@ define([
          lookup._options.multiSelect = true;
          assert.isTrue(lookup._determineAutoDropDown());
       });
+
+      it('_onClickShowSelector', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._onClickShowSelector();
+
+         assert.isFalse(lookup._suggestState);
+      });
    });
 });
