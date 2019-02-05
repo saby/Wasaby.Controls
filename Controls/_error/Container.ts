@@ -1,13 +1,13 @@
 /// <amd-module name="Controls/_error/Container" />
 import Control from 'Controls/_error/types/Control';
 // @ts-ignore
-import * as tmpl from 'wml!Controls/_error/Container';
+import * as tmpl from 'wml!Controls/_error/container/Container';
 import Dialog from 'Controls/_error/template/Dialog';
 import Controller from 'Controls/_error/Controller';
 import { HandlerConfig } from 'Controls/_error/types/Handler';
 import DisplayOptions from 'Controls/_error/types/DisplayOptions';
 import Mode from 'Controls/_error/Mode';
-import 'css!Controls/_error/Container';
+import 'css!Controls/_error/container/Container';
 
 type Children = {
     controller: Controller

@@ -1,4 +1,4 @@
-/// <amd-module name="Controls/_error/Dialog" />
+/// <amd-module name="Controls/_error/template/Dialog" />
 import Control from 'Controls/_error/types/Control';
 // @ts-ignore
 import * as tmpl from 'wml!Controls/_error/template/Dialog';
