@@ -329,6 +329,8 @@ define('Controls/History/Source', [
    };
 
    var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
+      //for compatibility with Types lib, will removed after rewriting module on typescript
+      '[Types/_source/ICrud]': true,
       _history: null,
       _oldItems: null,
       _parentProperty: null,
