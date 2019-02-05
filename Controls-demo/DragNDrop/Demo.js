@@ -81,7 +81,7 @@ define('Controls-demo/DragNDrop/Demo', [
       },
 
       _dragEndSecond: function(event, entity, target, position) {
-         if (cInstance.instanceOfModule(target, 'Types/entity:Model') && target.get('shared')) {
+         if (cInstance.instanceOfModule(target, 'Types/entity:Model') && target.get('shared') && position === 'on') {
             this._children.popupOpener.open({
                message: 'Папка закрыта для изменений',
                style: 'danger',

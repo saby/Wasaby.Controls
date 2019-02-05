@@ -250,10 +250,10 @@ node('controls') {
         def tests_for_run_reg_sbis3 = ""
         def tests_for_run_reg_vdom = ""
         def smoke_result = true
-        def run_tests_int_sbis3 = true
-        def run_tests_int_vdom = true
-        def run_tests_reg_sbis3 = true
-        def run_tests_reg_vdom = true
+        def run_tests_int_sbis3 = false
+        def run_tests_int_vdom = false
+        def run_tests_reg_sbis3 = false
+        def run_tests_reg_vdom = false
 
         try {
         echo "Назначаем переменные"
@@ -313,6 +313,19 @@ node('controls') {
             unit = false
             inte = true
             regr = true
+        }
+
+        if (vdom_controls && (inte || all_inte)) {
+            run_tests_int_vdom = true
+        }
+        if (sbis3_controls && (inte || all_inte)) {
+            run_tests_int_sbis3 = true
+        }
+        if (vdom_controls && (regr || all_regr)) {
+            run_tests_reg_vdom = true
+        }
+        if (sbis3_controls && (regr || all_regr)) {
+            run_tests_reg_sbis3 = true
         }
 
         if (!vdom_controls && !sbis3_controls && !unit) {
@@ -720,7 +733,8 @@ node('controls') {
             """
             }
         }
-
+		def domain_name = ".unix.tensor.ru"
+		
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -735,9 +749,9 @@ node('controls') {
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
-                    SITE = http://${NODE_NAME}:30010
+                    SITE = http://${env.NODE_NAME}${domain_name}:30010
                     SERVER = test-autotest-db1:5434
-                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    BASE_VERSION = css_${env.NODE_NAME}${ver}1
                     DO_NOT_RESTART = True
                     SOFT_RESTART = ${soft_restart}
                     NO_RESOURCES = True
@@ -746,15 +760,15 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
+                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
 
                 writeFile file: "./controls/tests/int/VDOM/config.ini", text:
                     """# UTF-8
                     [general]
                     browser = ${params.browser_type}
-                    SITE = http://${NODE_NAME}:30010
+                    SITE = http://${env.NODE_NAME}${domain_name}:30010
                     SERVER = test-autotest-db1:5434
-                    BASE_VERSION = css_${NODE_NAME}${ver}1
+                    BASE_VERSION = css_${env.NODE_NAME}${ver}1
                     DO_NOT_RESTART = True
                     SOFT_RESTART = ${soft_restart}
                     NO_RESOURCES = True
@@ -763,7 +777,7 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
+                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
 
 
                 writeFile file: "./controls/tests/reg/SBIS3.CONTROLS/config.ini",
@@ -771,7 +785,7 @@ node('controls') {
                         """# UTF-8
                         [general]
                         browser = ${params.browser_type}
-                        SITE = http://${NODE_NAME}:30010
+                        SITE = http://${env.NODE_NAME}${domain_name}:30010
                         DO_NOT_RESTART = True
                         SOFT_RESTART = False
                         NO_RESOURCES = True
@@ -779,9 +793,9 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS
+                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS
                         SERVER = test-autotest-db1:5434
-                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        BASE_VERSION = css_${env.NODE_NAME}${ver}1
                         #BRANCH=True
                         [regression]
                         IMAGE_DIR = ${img_dir}
@@ -792,7 +806,7 @@ node('controls') {
                         """# UTF-8
                         [general]
                         browser = ${params.browser_type}
-                        SITE = http://${NODE_NAME}:30010
+                        SITE = http://${env.NODE_NAME}${domain_name}:30010
                         DO_NOT_RESTART = True
                         SOFT_RESTART = False
                         NO_RESOURCES = True
@@ -800,9 +814,9 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM
+                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM
                         SERVER = test-autotest-db1:5434
-                        BASE_VERSION = css_${NODE_NAME}${ver}1
+                        BASE_VERSION = css_${env.NODE_NAME}${ver}1
                         #BRANCH=True
                         [regression]
                         IMAGE_DIR = ${img_dir}
@@ -1037,7 +1051,7 @@ node('controls') {
 
                 if (inte) {
                     def int_description_sbis3
-                    if (sbis3_controls && run_tests_int_sbis3) {
+                    if (run_tests_int_sbis3) {
                         int_data_sbis3 = build_description("(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./int/SBIS3.CONTROLS/build_description.txt", skip)
                         if ( int_data_sbis3 ) {
                          int_title_sbis3 = int_data_sbis3[0]
@@ -1048,7 +1062,7 @@ node('controls') {
                          }
                     }
                     }
-                    if (vdom_controls && run_tests_int_vdom) {
+                    if (run_tests_int_vdom) {
                      int_data_vdom = build_description("(int-${params.browser_type}) ${version} VDOM controls", "./int/VDOM/build_description.txt", skip)
                      if ( int_data_vdom ) {
                          int_title_vdom = int_data_vdom[0]
@@ -1061,7 +1075,7 @@ node('controls') {
                 }
                 }
                 if (regr ) {
-                    if (sbis3_controls && run_tests_reg_sbis3) {
+                    if (run_tests_reg_sbis3) {
                     reg_data_sbis3 = build_description("(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./reg/SBIS3.CONTROLS/build_description.txt", skip)
                     if ( reg_data_sbis3 ) {
                         reg_title_sbis3 = reg_data_sbis3[0]
@@ -1073,7 +1087,7 @@ node('controls') {
                     }
                 }
                 }
-                if (vdom_controls && run_tests_reg_vdom) {
+                if (run_tests_reg_vdom) {
                     reg_data_vdom = build_description("(reg-${params.browser_type}) ${version} VDOM controls", "./reg/VDOM/build_description.txt", skip)
                     if ( reg_data_vdom ) {
                         reg_title_vdom = reg_data_vdom[0]

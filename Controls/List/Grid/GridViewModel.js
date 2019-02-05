@@ -35,8 +35,10 @@ define('Controls/List/Grid/GridViewModel', [
             if (params.columnIndex === params.columns.length - 1) {
                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase();
             }
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
+            if (!params.isHeader) {
+               preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
+               preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
+            }
 
             // Вертикальное выравнивание хедера
             if (params.columns[params.columnIndex].valign) {
@@ -175,8 +177,8 @@ define('Controls/List/Grid/GridViewModel', [
                      ladder[idx][ladderProperties[fIdx]] = {};
                      processLadder({
                         itemIndex: idx,
-                        value: item.get(ladderProperties[fIdx]),
-                        prevValue: prevItem ? prevItem.get(ladderProperties[fIdx]) : undefined,
+                        value: item.get ? item.get(ladderProperties[fIdx]) : undefined,
+                        prevValue: prevItem && prevItem.get ? prevItem.get(ladderProperties[fIdx]) : undefined,
                         state: ladderState[ladderProperties[fIdx]],
                         ladder: ladder[idx][ladderProperties[fIdx]]
                      });
@@ -337,7 +339,8 @@ define('Controls/List/Grid/GridViewModel', [
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
-                  itemPadding: this._model.getItemPadding()
+                  itemPadding: this._model.getItemPadding(),
+                  isHeader: true
                });
             }
             if (headerColumn.column.align) {
