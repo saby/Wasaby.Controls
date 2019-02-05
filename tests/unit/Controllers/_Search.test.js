@@ -6,7 +6,9 @@ define(
    [
       'Controls/Controllers/_Search',
       'Types/source',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Types/entity',
+      'Types/collection'
    ],
    function (Search, sourceLib, Deferred) {
       

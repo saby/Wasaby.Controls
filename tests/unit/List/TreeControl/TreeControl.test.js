@@ -177,6 +177,7 @@ define([
             reloadCalled = false,
             setRootCalled = false,
             filterOnOptionChange = null,
+            isSourceControllerDestroyed = false,
             treeControl = correctCreateTreeControl({
                columns: [],
                source: new sourceLib.Memory({
@@ -192,6 +193,15 @@ define([
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
             reloadOriginal = treeControl.reload;
+   
+         treeControl._nodesSourceControllers = {
+            1: {
+               destroy: function() {
+                  isSourceControllerDestroyed = true;
+               }
+            }
+         };
+         
          treeGridViewModel.setRoot = function() {
             setRootCalled = true;
          };
@@ -211,14 +221,14 @@ define([
             };
             treeControl._children.baseControl.reload().addCallback(function(res) {
                treeControl._beforeUpdate({root: 'testRoot'});
-               assert.deepEqual(treeGridViewModel.getExpandedItems(), {'testRoot': true});
+               assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
                assert.deepEqual(filterOnOptionChange, {});
       
                treeControl._afterUpdate({root: null});
-               assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-               setTimeout(function () {
+               setTimeout(function() {
                   assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
                   assert.isTrue(setRootCalled, 'Invalid call "setRoot" after call "_beforeUpdate" and apply new "root".');
+                  assert.isTrue(isSourceControllerDestroyed);
                   done();
                }, 10);
                return res;

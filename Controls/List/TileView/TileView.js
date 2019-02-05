@@ -136,7 +136,7 @@ define('Controls/List/TileView/TileView', [
       },
 
       _onItemMouseMove: function(event, itemData) {
-         if (!this._listModel.getHoveredItem() && !_private.isTouch(this)) {
+         if (!this._listModel.getHoveredItem() && !_private.isTouch(this) && !this._listModel.getDragEntity()) {
             _private.clearMouseMoveTimeout(this);
 
             this._calculateHoveredItemPosition(event, itemData);

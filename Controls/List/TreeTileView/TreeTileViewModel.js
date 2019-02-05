@@ -78,6 +78,11 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
          TreeTileViewModel.superclass.setActiveItem.apply(this, arguments);
       },
 
+      setDragEntity: function(entity) {
+         this._tileModel.setDragEntity(entity);
+         TreeTileViewModel.superclass.setDragEntity.apply(this, arguments);
+      },
+
       setRoot: function() {
          this._tileModel.setHoveredItem(null);
          TreeTileViewModel.superclass.setRoot.apply(this, arguments);

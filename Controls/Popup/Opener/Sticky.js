@@ -23,14 +23,16 @@ define('Controls/Popup/Opener/Sticky',
           * @property {Boolean} closeOnOutsideClick Determines whether possibility of closing the popup when clicking past.
           * @property {function|String} template Template inside popup.
           * @property {function|String} templateOptions Template options inside popup.
-          * @property {Number} corner Sets the popup build point relative target.
-          * @property {Number} horizontalAlign Sets the horizontal alignment of the popup.
-          * @property {Number} verticalAlign Sets the vertical alignment of the popup.
+          * @property {Object} targetPoint Sets the popup build point relative target.
+          * @property {Object} direction Sets the alignment of the popup.
+          * @property {Object} offset Sets the offset between target and popup.
           * @property {Number} target The maximum width of the panel in a maximized state.
           * @property {Number} minWidth The target relative to which the popup is positioned.
           * @property {Number} maxWidth The minimum width of popup.
           * @property {Number} minHeight The maximum height of popup.
           * @property {Number} maxHeight The maximum height of popup.
+          * @property {Number} height The height of popup.
+          * @property {Number} width The width of popup.
           * @property {String} locationStrategy A method of adjusting the popup panel to the free space next to the target.
           */
 
@@ -95,15 +97,6 @@ define('Controls/Popup/Opener/Sticky',
       return Sticky;
    });
 
-/**
- * @name Controls/Popup/Opener/Sticky#targetTracking
- * @cfg {Boolean} targetTracking Determines whether popup position update when scrolling the area with the opener.
-*/
-
-/**
- * @name Controls/Popup/Opener/Sticky#closeOnTargetScroll
- * @cfg {Boolean} closeOnTargetScroll Determines whether closing of the popup when scrolling area with the opener.
- */
 
 /**
  * @name Controls/Popup/Opener/Sticky#close
@@ -204,28 +197,64 @@ define('Controls/Popup/Opener/Sticky',
  * @name Controls/Popup/Opener/Sticky#maxHeight
  * @cfg {Number} The maximum height of popup.
  */
-
 /**
- * @name Controls/Popup/Opener/Sticky#corner
- * @cfg {Object} Sets the popup build point relative target.
+ * @name Controls/Popup/Opener/Sticky#height
+ * @cfg {Number} The height of popup.
+ */
+/**
+ * @name Controls/Popup/Opener/Sticky#width
+ * @cfg {Number} The width of popup.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#horizontalAlign
- * @cfg {Object} Sets the horizontal alignment of the popup.
+ * @name Controls/Popup/Opener/Sticky#actionOnScroll
+ * @cfg {String} Determines the popup action on scroll.
+ * @variant close
+ * @variant track
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#verticalAlign
- * @cfg {Object} Sets the vertical alignment of the popup.
+ * @name Controls/Popup/Opener/Sticky#targetPoint
+ * @cfg {direction} Point positioning of the target relative to sticky.
  */
 
 /**
- * @name Controls/Popup/Opener/Sticky#target
- * @cfg {Object} The target relative to which the popup is positioned.
+ * @typedef {Object} direction
+ * @property {vertical} vertical
+ * @property {horizontal} horizontal
+ */
+
+/**
+ * @typedef {Enum} vertical
+ * @variant top
+ * @variant bottom
+ */
+
+/**
+ * @typedef {Enum} horizontal
+ * @variant left
+ * @variant right
+ */
+
+
+/**
+ * @name Controls/Popup/Opener/Sticky#direction
+ * @cfg {direction} Sets the alignment of the popup.
+ */
+
+/**
+ * @name Controls/Popup/Opener/Sticky#offset
+ * @cfg {offset} Sets the offset of the targetPoint.
+ *
+ * /
+
+ /**
+ * @typedef {Object} offset
+ * @property {Number} vertical
+ * @property {Number} horizontal
  */
 
 /**
  * @name Controls/Popup/Opener/Sticky#locationStrategy
- * @cfg {Object} A method of adjusting the popup panel to the free space next to the target.
+ * @cfg {Enum} A method of adjusting the popup panel to the free space next to the target.
  */

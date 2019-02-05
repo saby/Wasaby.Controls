@@ -1,7 +1,7 @@
 define('Controls/List/Grid/SortButton', [
    'Core/Control',
    'wml!Controls/List/Grid/SortButton',
-   'css!Controls/List/Grid/SortButton'
+   'css!theme?Controls/List/Grid/SortButton'
 ], function(Control, template) {
    
    'use strict';

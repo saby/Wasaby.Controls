@@ -15,8 +15,10 @@
    <ws:content>
       <ws:partial
               template="wml!Controls/Input/resources/input"
+              attr:class="controls-Search__input"
               value="{{_options.value}}"
-              readOnly="{{_options.readOnly}}"/>
+              readOnly="{{_options.readOnly}}"
+      />
    </ws:content>
 
    <ws:afterFieldWrapper>

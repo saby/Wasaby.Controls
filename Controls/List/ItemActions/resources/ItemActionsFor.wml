@@ -2,5 +2,6 @@
     <ws:partial
             template="wml!Controls/List/ItemActions/resources/ItemAction"
             itemData="{{itemData}}"
+            size="{{size}}"
             action="{{action}}"/>
 </ws:for>

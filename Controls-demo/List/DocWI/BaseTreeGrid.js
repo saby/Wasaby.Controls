@@ -1,6 +1,6 @@
 define('Controls-demo/List/DocWI/BaseTreeGrid', [
    'Core/Control',
-   'wml!Controls-demo/List/List/DocWI/resources/BaseTreeGrid',
+   'wml!Controls-demo/List/DocWI/resources/BaseTreeGrid',
    'Types/source'
 ], function (Control, template, sourceLib) {
    'use strict';
