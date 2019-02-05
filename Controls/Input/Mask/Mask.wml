@@ -2,6 +2,7 @@
    autocomplete="{{_options.autocomplete}}"
    viewModel="{{_viewModel}}"
    style="{{_options.style}}"
+   size="{{ _options.size }}"
    tagStyle="{{_options.tagStyle}}"
    placeholder="{{_options.placeholder}}"
    selectOnClick="{{_options.selectOnClick}}"
