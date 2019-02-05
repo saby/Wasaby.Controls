@@ -1,8 +1,9 @@
 define('Controls/Selector/Button/_SelectorButton', [
    'Core/Control',
    'wml!Controls/Selector/Button/_SelectorButton',
+   'wml!Controls/Selector/SelectedCollection/ItemTemplate',
    'css!theme?Controls/Selector/Button/SelectorButton'
-], function(Control, template) {
+], function(Control, template, itemTemplate) {
    'use strict';
 
    var SelectorButton = Control.extend({
@@ -32,7 +33,8 @@ define('Controls/Selector/Button/_SelectorButton', [
    SelectorButton.getDefaultOptions = function() {
       return {
          style: 'info',
-         maxVisibleItems: 7
+         maxVisibleItems: 7,
+         itemTemplate: itemTemplate
       };
    };
 
