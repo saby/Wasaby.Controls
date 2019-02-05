@@ -308,8 +308,8 @@ define('Controls/FormController', [
          readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
          res.addCallbacks(
-             this._readHandler.bind(this),
-             this._crudErrback.bind(this)
+            this._readHandler.bind(this),
+            this._crudErrback.bind(this)
          );
          return res;
       },
