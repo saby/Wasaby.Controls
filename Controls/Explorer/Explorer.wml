@@ -6,6 +6,7 @@
                                  parentProperty="{{ _options.parentProperty }}"
                                  displayProperty="{{_options.displayProperty}}"
                                  backButtonStyle="{{ _options.backButtonStyle }}"
+                                 showActionButton="{{ _options.showActionButton }}"
                                  items="{{_breadCrumbsItems}}"
                                  root="{{_options.root}}"
                                  rootVisible="{{_dragOnBreadCrumbs}}"

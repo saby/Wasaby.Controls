@@ -6,6 +6,7 @@
                                                counterCaption="{{ _getCounterCaption(_options.items) }}"
                                                showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
                                                backButtonStyle="{{ _options.backButtonStyle }}"
+                                               showActionButton="{{_options.showActionButton}}"
                                                on:backButtonClick="_onBackButtonClick()"
                                                on:arrowClick="_onArrowClick()"/>
         </ws:if>
