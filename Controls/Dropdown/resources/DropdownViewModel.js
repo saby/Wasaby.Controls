@@ -142,7 +142,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                itemsModelCurrent.hasSeparator = _private.needToDrawSeparator(itemsModelCurrent.item, this._itemsModel.getNext().item);
             }
             itemsModelCurrent.iconStyle = getStyle(itemsModelCurrent.item.get('iconStyle'), 'DropdownList');
-            itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
+            itemsModelCurrent.itemTemplateProperty = itemsModelCurrent.itemTemplateProperty || this._options.itemTemplateProperty;
             itemsModelCurrent.template = itemsModelCurrent.item.get(itemsModelCurrent.itemTemplateProperty);
             return itemsModelCurrent;
          },
