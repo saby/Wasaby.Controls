@@ -114,6 +114,43 @@ define([
          mover.moveItemUp(item);
       });
 
+      it('sortingOrder', function(done) {
+         var item = items.getRecordById(3);
+
+         //Ascending sort.
+         mover._options.sortingOrder = 'asc';
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'before');
+            return Deferred.success();
+         };
+         mover.moveItemUp(item);
+
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'after');
+            return Deferred.success();
+         };
+         mover.moveItemDown(item);
+
+         //Descending sort.
+         mover._options.sortingOrder = 'desc';
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'after');
+            return Deferred.success();
+         };
+         mover.moveItemUp(item);
+
+         mover._source.move = function(items, target, options) {
+            assert.equal(target, 2);
+            assert.equal(options.position, 'before');
+            done();
+            return Deferred.success();
+         };
+         mover.moveItemDown(item);
+      });
+
       it('moveItemUp by item', function(done) {
          var item = items.at(2);
 
@@ -303,6 +340,38 @@ define([
             assert.equal(dataSet.getAll().at(0).getId(), item.getId());
             done();
          });
+      });
+
+      it('move returns deferred', function() {
+         var result;
+
+         //dont move moveItemUp
+         result = mover.moveItemUp(1);
+         assert.isTrue(result instanceof Deferred);
+
+         //move moveItemUp
+         result = mover.moveItemUp(2);
+         assert.isTrue(result instanceof Deferred);
+
+         //dont move moveItemDown
+         result = mover.moveItemDown(5);
+         assert.isTrue(result instanceof Deferred);
+
+         //move moveItemDown
+         result = mover.moveItemDown(4);
+         assert.isTrue(result instanceof Deferred);
+
+         //move without target moveItems
+         result = mover.moveItems([1, 2]);
+         assert.isTrue(result instanceof Deferred);
+
+         //move without items moveItems
+         result = mover.moveItems([], 3, 'after');
+         assert.isTrue(result instanceof Deferred);
+
+         //move moveItems
+         result = mover.moveItems([1, 2], 3, 'after');
+         assert.isTrue(result instanceof Deferred);
       });
 
    });

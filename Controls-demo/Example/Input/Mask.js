@@ -14,7 +14,7 @@ define('Controls-demo/Example/Input/Mask',
       return Control.extend({
          _template: template,
 
-         _mobilePhone: '+7 '
+         _mobilePhone: ''
       });
    }
 );

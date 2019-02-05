@@ -21,6 +21,13 @@ define('Controls/BreadCrumbs/Path', [
     */
 
    /**
+    * @name Controls/BreadCrumbs/Path#showActionButton
+    * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
+    * @default
+    * true
+    */
+
+   /**
     * @event Controls/BreadCrumbs/Path#arrowActivated Happens after clicking the button "View Model".
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */

@@ -1019,20 +1019,6 @@ define('Controls/List/BaseControl', [
 
       _notifyHandler: tmplNotify,
 
-      _onAfterBeginEdit: function(e, item, isAdd) {
-         this._notify('afterBeginEdit', [item, isAdd]);
-         if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item);
-         }
-      },
-
-      _onAfterEndEdit: function(e, item, isAdd) {
-         this._notify('afterEndEdit', [item, isAdd]);
-         if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item);
-         }
-      },
-
       _closeSwipe: function(event, item) {
          this._children.itemActions.updateItemActions(item);
       },
@@ -1098,7 +1084,7 @@ define('Controls/List/BaseControl', [
          var targetPosition = this._listViewModel.getDragTargetPosition();
 
          if (targetPosition) {
-            this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
          }
       },
       _onViewKeyDown: function(event) {
@@ -1127,6 +1113,21 @@ define('Controls/List/BaseControl', [
       },
 
       _documentDragEnd: function() {
+         var self = this;
+
+         //Reset the state of the dragndrop after the movement on the source happens.
+         if (this._dragEndResult instanceof Deferred) {
+            _private.showIndicator(self);
+            this._dragEndResult.addBoth(function() {
+               self._documentDragEndHandler();
+               _private.hideIndicator(self);
+            });
+         } else {
+            this._documentDragEndHandler();
+         }
+      },
+
+      _documentDragEndHandler: function() {
          this._listViewModel.setDragTargetPosition(null);
          this._listViewModel.setDragItemData(null);
          this._listViewModel.setDragEntity(null);
@@ -1135,18 +1136,13 @@ define('Controls/List/BaseControl', [
       _itemMouseEnter: function(event, itemData) {
          var
             dragPosition,
-            dragItemData,
             dragEntity = this._listViewModel.getDragEntity();
 
          if (dragEntity) {
-            dragItemData = this._listViewModel.getDragItemData();
+            dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
 
-            if (!dragItemData || dragItemData.key !== itemData.key) {
-               dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
-
-               if (this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                  this._listViewModel.setDragTargetPosition(dragPosition);
-               }
+            if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+               this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
       },

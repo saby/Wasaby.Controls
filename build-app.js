@@ -87,6 +87,9 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfigStringified, function
 
       fs.writeFileSync(path.join(root, 'application', 'resources', 'module-dependencies.json'),
          JSON.stringify(allJson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//i, ''));
+
+      fs.writeFileSync(path.join(root, 'application', 'router.js'),
+         'define(\'router\', [], function(){ return {}; })');
    });
 
 });

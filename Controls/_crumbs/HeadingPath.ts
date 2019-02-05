@@ -84,8 +84,15 @@ var _private = {
  */
 
 /**
- * @event Controls/_crumbs/PathStyles#arrowActivated Happens after clicking the button "View Model".
+ * @event Controls/_crumbs/HeadingPath#arrowActivated Happens after clicking the button "View Model".
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+ */
+
+/**
+ * @name Controls/_crumbs/HeadingPath#showActionButton
+ * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
+ * @default
+ * true
  */
 
 var BreadCrumbsPath = Control.extend({
@@ -149,7 +156,8 @@ var BreadCrumbsPath = Control.extend({
 BreadCrumbsPath.getDefaultOptions = function () {
     return {
         displayProperty: 'title',
-        root: null
+        root: null,
+        showActionButton: true,
     };
 };
 
