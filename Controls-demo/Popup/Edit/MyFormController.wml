@@ -2,8 +2,8 @@
    <ws:topArea>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
          <Controls.Button icon="icon-medium icon-Erase icon-error" on:click="_delete()" style="linkMain"
-                          attr:style="margin-right: 15px;" class="demo-MyFormController__delete"/>
-         <Controls.Button caption="Сохранить" on:click="_update()" class="demo-MyFormController__save"/>
+                          attr:style="margin-right: 15px;" attr:class="demo-MyFormController__delete"/>
+         <Controls.Button caption="Сохранить" on:click="_update()" attr:class="demo-MyFormController__save"/>
       </div>
    </ws:topArea>
    <ws:contentArea>
