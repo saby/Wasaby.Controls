@@ -8,7 +8,7 @@
  * @property page
  * @property include
  */
-const enum Mode {
+enum Mode {
     dialog = 'dialog',
     page = 'page',
     include = 'include'

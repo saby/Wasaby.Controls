@@ -3,8 +3,9 @@ define('Controls/FormController', [
    'Core/core-instance',
    'wml!Controls/FormController/FormController',
    'Core/Deferred',
-   'Core/IoC'
-], function(Control, cInstance, tmpl, Deferred, IoC) {
+   'Core/IoC',
+   'Controls/error'
+], function(Control, cInstance, tmpl, Deferred, IoC, ControlsError) {
    'use strict';
 
    var _private = {
@@ -306,7 +307,10 @@ define('Controls/FormController', [
       read: function(key, readMetaData) {
          readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
-         res.addCallback(this._readHandler.bind(this));
+         res.addCallbacks(
+             this._readHandler.bind(this),
+             this._crudErrback.bind(this)
+         );
          return res;
       },
       _readHandler: function(record) {
@@ -436,7 +440,7 @@ define('Controls/FormController', [
       _crudErrback: function(error) {
          this._children.errorContainer.process({
             error: error,
-            mode: Mode.include
+            mode: ControlsError.Mode.include
          });
          return error;
       },
