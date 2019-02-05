@@ -306,7 +306,7 @@ function(cMerge,
          this._setSizes(cfg, templateClass);
       },
       _getConfigFromTemplate: function(cfg) {
-         //берем опции из getDefaultOptions шаблона
+         // берем опции из getDefaultOptions шаблона
          var templateClass = typeof cfg === 'string' ? require(cfg) : cfg;
          return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
       },
@@ -444,6 +444,7 @@ function(cMerge,
       _prepareTarget: function(cfg) {
          cfg.dialogOptions.target = $(cfg.target);
       },
+
       // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
          var dimensions = templateClass ? this._getDimensions(templateClass) : {};
