@@ -156,16 +156,16 @@ define('Controls/Filter/Fast',
          _configs: null,
          _items: null,
 
-         _beforeMount: function(options, context, recivedState) {
+         _beforeMount: function(options, context, receivedState) {
             this._configs = {};
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
                resultDef;
             
-            if (recivedState) {
-               this._configs = recivedState.configs;
-               this._items = recivedState.items;
+            if (receivedState) {
+               this._configs = receivedState.configs;
+               this._items = receivedState.items;
             } else if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
