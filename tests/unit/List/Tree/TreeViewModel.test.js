@@ -670,6 +670,26 @@ define([
                assert.equal(prevDragTargetPosition.index, dragTargetPosition.index);
                assert.equal(prevDragTargetPosition.position, dragTargetPosition.position);
             });
+
+            it('move to draggableFolder', function() {
+               var item = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+
+               //start move folder 123
+               tvm.setDragEntity(dragEntity);
+               tvm.setDragItemData(item);
+
+               //move folder 123 before folder 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               tvm.setDragTargetPosition(dragTargetPosition);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+
+               //move folder 123 on folder 123
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               assert.isNull(dragTargetPosition);
+            });
          });
       });
    });
