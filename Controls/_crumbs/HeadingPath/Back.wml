@@ -8,9 +8,11 @@
                                 caption="{{ _options.counterCaption }}"
                                 style="disabled"/>
    </ws:if>
-   <div class="controls-BreadCrumbsPath__backButtonArrow icon-View
+   <ws:if data="{{ _options.showActionButton }}">
+      <div class="controls-BreadCrumbsPath__backButtonArrow icon-View
                {{_options.showArrowOutsideOfBackButton ? ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton' : ''}}
                {{_options.readOnly ? ' controls-Path__backButtonArrow_readonly'}}"
-        title="{[Подробнее]}"
-        on:click="_onArrowClick()"></div>
+           title="{[Подробнее]}"
+           on:click="_onArrowClick()"></div>
+   </ws:if>
 </div>
