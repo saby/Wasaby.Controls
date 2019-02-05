@@ -368,6 +368,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _onClickShowSelector: function() {
+         this._suggestState = false;
          this._notify('showSelector');
       },
 
