@@ -40,7 +40,9 @@ define('Controls/Popup/Manager/Popup',
          _openersUpdateCallback: [],
 
          _beforeMount: function() {
-            // todo: уберется в 19.300 по https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe
+            // Popup лишний раз провоцирет обновление, реагируя на события внутри него.
+            // Для того, чтобы заблокировать это обновление, переопределим _forceUpdate в момент между _beforeMount и _afterMount
+            // todo: убрать по https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe
             this.forceUpdateOrigin = this._forceUpdate;
             this._forceUpdate = function() {};
          },
