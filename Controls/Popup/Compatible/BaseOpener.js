@@ -305,8 +305,13 @@ function(cMerge,
 
          this._setSizes(cfg, templateClass);
       },
-
+      _getConfigFromTemplate: function(cfg) {
+         //берем опции из getDefaultOptions шаблона
+         var templateClass = typeof cfg === 'string' ? require(cfg) : cfg;
+         return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
+      },
       _prepareConfigFromNewToOld: function(cfg, template) {
+         var optFromTmpl = cfg.template ? this._getConfigFromTemplate(cfg.template) : {};
          var newCfg = cMerge(cfg, {
             templateOptions: cfg.templateOptions || {},
             componentOptions: cfg.templateOptions || {},
@@ -407,12 +412,15 @@ function(cMerge,
             newCfg.dialogOptions.autoCloseOnHide = true;
          }
 
-         if (cfg.minWidth) {
-            newCfg.dialogOptions.minWidth = cfg.minWidth;
+         if (cfg.minWidth || optFromTmpl.minWidth) {
+            newCfg.dialogOptions.minWidth = cfg.minWidth || optFromTmpl.minWidth;
          }
 
-         if (cfg.maxWidth) {
-            newCfg.dialogOptions.maxWidth = cfg.maxWidth;
+         if (cfg.maxWidth || optFromTmpl.maxWidth) {
+            newCfg.dialogOptions.maxWidth = cfg.maxWidth || optFromTmpl.maxWidth;
+         }
+         if (cfg.minimizedWidth || optFromTmpl.minimizedWidth) {
+            newCfg.dialogOptions.minimizedWidth = cfg.minimizedWidth || optFromTmpl.minimizedWidth;
          }
 
          if (newCfg.target) {
@@ -436,7 +444,6 @@ function(cMerge,
       _prepareTarget: function(cfg) {
          cfg.dialogOptions.target = $(cfg.target);
       },
-
       // Берем размеры либо с опций, либо с дименшенов
       _setSizes: function(cfg, templateClass) {
          var dimensions = templateClass ? this._getDimensions(templateClass) : {};
