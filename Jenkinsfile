@@ -1111,12 +1111,20 @@ node('controls') {
     if ( (regr || all_regr) && (run_tests_reg_sbis3 || run_tests_reg_vdom)){
         if (sbis3_controls) {
             dir("./controls/tests/reg/SBIS3.CONTROLS"){
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
+                sh """mkdir -p reporter"""
+                sh """mv capture_report/report.html reporter/report.html"""
+                sh """mv capture_report/report.js reporter/report.js"""
+                sh """mv capture_report/report.css reporter/report.css"""
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './reporter/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
             }
         }
         if (vdom_controls) {
             dir("./controls/tests/reg/VDOM"){
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
+                sh """mkdir -p reporter"""
+                sh """mv capture_report/report.html reporter/report.html"""
+                sh """mv capture_report/report.js reporter/report.js"""
+                sh """mv capture_report/report.css reporter/report.css"""
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './reporter/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
             }
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
