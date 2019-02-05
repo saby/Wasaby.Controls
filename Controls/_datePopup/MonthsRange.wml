@@ -3,7 +3,7 @@
    on:itemClick="_onItemClick()"
 >
    <ws:itemTemplate>
-      <Controls.Date.PeriodDialog.MonthsRangeItem
+      <Controls._datePopup.MonthsRangeItem
          monthClickable="_options.monthClickable"
          quantum="{{_options.quantum}}"
          selectionType="{{_options.selectionType}}"

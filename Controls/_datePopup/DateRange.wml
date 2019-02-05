@@ -20,7 +20,7 @@
    >
       <ws:itemTemplate>
          <ws:partial
-            template="wml!Controls/Date/PeriodDialog/DateRangeItem"
+            template="wml!Controls/_datePopup/DateRangeItem"
             _options="{{_options}}"
             _formatDate="{{_formatDate}}"
             _monthSelectionEnabled="{{_monthSelectionEnabled}}"
