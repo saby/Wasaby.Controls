@@ -10,10 +10,11 @@ define('Controls/Input/Mask',
       'Types/entity',
       'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Mask/Mask',
+      'wml!Controls/Input/Mask/Field',
 
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Base, cDetection, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl) {
+   function(IoC, tmplNotify, Base, cDetection, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl, FieldTemplate) {
 
       'use strict';
 
@@ -136,6 +137,7 @@ define('Controls/Input/Mask',
                }
                return value.length;
             },
+
             validateReplacer: function(replacer, mask) {
                var validation;
 
@@ -160,6 +162,11 @@ define('Controls/Input/Mask',
 
             _maskWrapperCss: null,
 
+            _initProperties: function() {
+               Mask.superclass._initProperties.apply(this, arguments);
+               this._field.template = FieldTemplate;
+            },
+
             _getViewModelOptions: function(options) {
                return {
                   value: options.value,
@@ -168,12 +175,9 @@ define('Controls/Input/Mask',
                   formatMaskChars: options.formatMaskChars
                };
             },
+
             _getViewModelConstructor: function() {
                return ViewModel;
-            },
-
-            _initProperties: function(options) {
-               Mask.superclass._initProperties.apply(this, arguments);
             },
 
             _beforeUpdate: function(options) {
@@ -186,13 +190,22 @@ define('Controls/Input/Mask',
                this._notifyValueChanged();
             },
 
-            _focusInHandler: function() {
-               Mask.superclass._focusInHandler.apply(this, arguments);
-               this._notifyValueChanged();
-            },
-
             _isAutoWidth: function() {
                return Boolean(this._options.replacer) ? 'absolute' : 'relative';
+            },
+
+            _getField: function() {
+               Mask.superclass._getField.apply(this);
+               return this._children[this._fieldName];
+            },
+
+            _focusInHandler: function() {
+               Mask.superclass._focusInHandler.apply(this, arguments);
+               var field = this._getField();
+               var position = _private.findLastUserEnteredCharPosition(this._viewModel.displayValue, this._viewModel._replacer);
+               runDelayed(function() {
+                  field.setSelectionRange(position, position);
+               });
             }
          });
 

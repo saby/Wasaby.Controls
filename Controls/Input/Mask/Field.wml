@@ -1,0 +1,28 @@
+<div class="controls-InputBase__field controls-{{controlName}}__field_margin">
+   <input
+      autocorrect="off"
+      type="{{type}}"
+      name="{{fieldName}}"
+      value="{{calculateValueForTemplate()}}"
+      placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
+      autocomplete="{{options.autoComplete ? 'on' : 'new-password'}}"
+      class="controls-InputBase__nativeField
+            {{value ? '' : 'controls-' + controlName + '__nativeField_caretEmpty'}}
+            {{isEdge ? 'controls-InputBase__nativeField_edge'}}
+            {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
+      on:keyup="_keyUpHandler()"
+      on:click="_clickHandler()"
+      on:input="_inputHandler()"
+      on:select="_selectHandler()"
+      on:focusin="_focusInHandler()"
+      on:focusout="_focusOutHandler()"
+      on:mousedown="_mouseDownHandler()"
+      on:touchstart="_touchStartHandler()"
+      on:DOMAutoComplete="_domAutoCompleteHandler()"
+   />
+   <ws:if data="{{!value}}">
+      <div class="controls-InputBase__placeholder">
+         <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
+      </div>
+   </ws:if>
+</div>
