@@ -7,6 +7,7 @@ define('Controls-demo/List/Grid/GroupPG',
         'json!Controls-demo/List/Grid/resources/GroupPG/cfg',
         'wml!Controls/List/Grid/GroupTemplate',
         'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate',
+        'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander',
         'wml!Controls-demo/List/Grid/resources/DemoMoney',
         'wml!Controls-demo/List/Grid/resources/DemoRating',
         'wml!Controls-demo/List/Grid/resources/DemoItem'
@@ -32,7 +33,8 @@ define('Controls-demo/List/Grid/GroupPG',
                         value: 'default',
                         items: [
                             {id: 1, title: 'default', template: 'wml!Controls/List/Grid/GroupTemplate'},
-                            {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate'}
+                            {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate'},
+                            {id: 3, title: 'without expander', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander'},
                         ]
                     }
                 };
