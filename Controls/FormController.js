@@ -105,6 +105,7 @@ define('Controls/FormController', [
 
       constructor: function(options) {
          FormController.superclass.constructor.apply(this, arguments);
+         options = options || {};
          this.__errorController = options.errorController || new ErrorController({});
       },
       _beforeMount: function(cfg) {
