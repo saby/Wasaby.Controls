@@ -206,7 +206,7 @@ define(
                let originHSource = hSource.historySource;
                var errorSource = {
                   query: function() {
-                     return Deferred.fail();
+                     return Deferred.fail(new Error('testError'));
                   }
                };
 
