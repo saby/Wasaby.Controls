@@ -98,7 +98,7 @@ define('Controls/Button/Close', [
    var CloseButton = Control.extend({
       _template: template,
       _viewMode: null,
-      _transparent: true,
+      _transparent: false,
 
       _beforeMount: function(options) {
          _private.compatibleViewMode(options, this);
