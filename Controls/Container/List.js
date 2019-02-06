@@ -156,7 +156,7 @@ define('Controls/Container/List',
          },
          
          isFilterChanged: function(self, context) {
-            var oldValue = self._filter || this.getFilterFromContext(self, self._context),
+            var oldValue = this.getFilterFromContext(self, self._context),
                newValue = this.getFilterFromContext(self, context),
                changed = false;
             
