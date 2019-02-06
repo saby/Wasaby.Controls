@@ -447,9 +447,9 @@ define('Controls/FormController', [
          var errorTemplate = this.__errorController.process({
             error: error,
             mode: ErrorMode.include
-         })
+         });
          if (!errorTemplate) {
-            return
+            return;
          }
          return this._showError(errorTemplate);
       },
@@ -460,6 +460,7 @@ define('Controls/FormController', [
             this._forceUpdate();
             return;
          }
+
          // диалоговое с ошибкой
          this._children.dialogOpener.open({
             template: config.template,
@@ -476,7 +477,7 @@ define('Controls/FormController', [
             this._children.dialogOpener &&
             this._children.dialogOpener.isOpened()
          ) {
-            this._children.dialogOpener.close()
+            this._children.dialogOpener.close();
          }
       },
       _crudHandler: function(event) {
