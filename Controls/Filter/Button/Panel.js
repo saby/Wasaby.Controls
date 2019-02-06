@@ -194,8 +194,8 @@ define('Controls/Filter/Button/Panel', [
             if (_private.isPassedValidation(result)) {
 
                /*
-               Так как панель могут сверстать как хотят (панель будет не в корне, а чуть глубже), а событие sendResult
-               попап отлавливает с корневой ноды, то нужно, чтоб всплытие было установлено в true.
+               Due to the fact that a bar can be created as you like (the bar will be not in the root, but a bit deeper)
+               and the popup captures the sendResult operation from the root node, bubbling must be set in true.
                */
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
