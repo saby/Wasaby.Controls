@@ -91,7 +91,7 @@ def download_coverage_json(version, type_tests, type_controls) {
         fi
         """
     sh returnStdout: true, script: script
-    def exist_json = fileExists 'result.json'
+    def exist_json = fileExists 'result_${type_tests}.json'
     return exist_json
 
 }
