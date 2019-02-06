@@ -112,11 +112,10 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
           partialColumns: [
              {
                 displayProperty: 'name',
-                width: '1fr'
+                width: '200px'
              },
              {
                 displayProperty: 'rating',
-                width: 'auto',
                 align: 'right',
                 template: 'wml!Controls-demo/List/Grid/resources/DemoRating'
              },
@@ -128,11 +127,11 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
           ],
           partialHeader: [
              {
-                title: ''
+                title: 'So long header for film name that we need to set width'
              },
              {
                 title: 'Rating',
-                align: 'right'
+                width: '170px'
              },
              {
                 title: 'Year',
@@ -186,13 +185,14 @@ define('Controls-demo/List/Grid/resources/DataDemoPG', ['Controls-demo/resources
              },
              {
                 displayProperty: 'rating',
-                width: 'auto',
+                width: '200px',
                 align: 'right',
+                resultTemplate: 'wml!Controls-demo/List/Grid/resources/DemoResultAvgRating',
                 template: 'wml!Controls-demo/List/Grid/resources/DemoRating'
              },
              {
                 displayProperty: 'boxOffice',
-                width: 'auto',
+                width: '100px',
                 align: 'right',
                 template: 'wml!Controls-demo/List/Grid/resources/DemoMoney'
              }

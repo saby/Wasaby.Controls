@@ -170,7 +170,7 @@ define('Controls/Container/Scroll',
          },
          Scroll = Control.extend({
             _template: template,
-            
+
             //Т.к. в VDOM'e сейчас нет возможности сделать компонент прозрачным для событий
             //Или же просто проксирующий события выше по иерархии, то необходимые событие с контента просто пока
             //прокидываем руками
@@ -289,21 +289,37 @@ define('Controls/Container/Scroll',
                 * Для определения heightFix и styleHideScrollbar может требоваться DOM, поэтому проверим
                 * смогли ли мы в beforeMount их определить.
                 */
+               var needUpdate = false, calculatedOptionValue;
+
                if (typeof this._displayState.heightFix === 'undefined') {
                   this._displayState.heightFix = ScrollHeightFixUtil.calcHeightFix(this._children.content);
+                  needUpdate = true;
                }
 
                /**
                 * The following states cannot be defined in _beforeMount because the DOM is needed.
                 */
-               this._displayState.hasScroll = _private.calcHasScroll(this);
-               this._displayState.contentHeight = _private.getContentHeight(this);
-               this._displayState.shadowPosition = _private.getShadowPosition(this);
-               this._updateStickyHeaderContext();
 
+               calculatedOptionValue = _private.calcHasScroll(this);
+               if (calculatedOptionValue) {
+                  this._displayState.hasScroll = calculatedOptionValue;
+                  needUpdate = true;
+               }
+
+               this._displayState.contentHeight = _private.getContentHeight(this);
+
+               calculatedOptionValue = _private.getShadowPosition(this);
+               if (calculatedOptionValue) {
+                  this._displayState.shadowPosition = calculatedOptionValue;
+                  needUpdate = true;
+               }
+
+               this._updateStickyHeaderContext();
                this._adjustContentMarginsForBlockRender();
 
-               this._forceUpdate();
+               if (needUpdate) {
+                  this._forceUpdate();
+               }
             },
 
             _beforeUpdate: function(options, context) {
