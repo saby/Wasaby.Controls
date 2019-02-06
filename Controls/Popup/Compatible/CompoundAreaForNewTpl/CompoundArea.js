@@ -207,7 +207,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
             this._$onBringToFront = this.onBringToFront;
             this.onBringToFront = function() {
-               opts._$to.activate();
+               if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
+                  opts._$to.activate();
+               }
             };
          },
          _onDeactivatedHandler: function() {
