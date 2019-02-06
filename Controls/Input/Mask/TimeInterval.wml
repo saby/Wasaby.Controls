@@ -1,8 +1,8 @@
-<div class="controls-Input-Mask">
+<div class="controls-Input-TimeInterval">
     <div class="">
         <ws:partial
-             name="Mask"
-             class="controls-Input-Mask__wrapper"
+             name="TimeInterval"
+             class="controls-Input-TimeInterval__wrapper"
              template="{{_baseTemplate}}"
              _options="{{_options}}"
              _tooltip="{{_tooltip}}"
@@ -17,5 +17,6 @@
              _beforeFieldWrapper="{{_beforeFieldWrapper}}"
              _afterFieldWrapper="{{_afterFieldWrapper}}"
          />
+         <div class="controls-Input-TimeInterval__stretcher controls-InputBase__field_margin">{{_viewModel.displayValue}}</div>
     </div>
 </div>

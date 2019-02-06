@@ -2,19 +2,18 @@ define('Controls/Input/Mask',
    [
       'Core/IoC',
       'Controls/Utils/tmplNotify',
-      'Core/Control',
+      'Controls/Input/Base',
       'Core/detection',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
       'Types/entity',
+      'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Mask/Mask',
 
-      'Controls/Input/resources/InputRender/InputRender',
-      'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Control, cDetection, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
+   function(IoC, tmplNotify, Base, cDetection, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl) {
 
       'use strict';
 
@@ -169,38 +168,24 @@ define('Controls/Input/Mask',
                return _private.validateReplacer(replacer, mask) ? replacer : '';
             }
          },
-         Mask = Control.extend({
+         Mask = Base.extend({
             _template: MaskTpl,
-
+            _baseTemplate: baseTemplate,
             _viewModel: null,
             _notifyHandler: tmplNotify,
 
             _maskWrapperCss: null,
 
-            _beforeMount: function(options) {
-               this._maskWrapperCss = '';
-               if (cDetection.isIE) {
-                  this._maskWrapperCss += ' controls-Mask__inputWrapper_ie';
-                  if (cDetection.IEVersion > 11) {
-                     this._maskWrapperCss += ' controls-Mask__inputWrapper_edge';
-                  }
-               }
-               this._viewModel = new ViewModel({
+            _getViewModelOptions: function(options) {
+               return {
                   value: options.value,
                   mask: options.mask,
                   replacer: _private.calcReplacer(options.replacer, options.mask),
                   formatMaskChars: options.formatMaskChars
-               });
-            },
-
-            //Временное решение для фиксации https://online.sbis.ru/opendoc.html?guid=6853df25-ba30-47d7-8255-5929ecefb237.
-            //Иначе - нужно переделывать логику InputRender, в чем нет смысла, т.к. по задаче https://online.sbis.ru/opendoc.html?guid=ce71491f-3a24-49fb-a628-ed3b1149b8ab
-            //маска будет переведена на Input.Base уже в феврале'18
-            _afterMount: function() {
-               this._children.inputRender._selection = {
-                  selectionStart: 0,
-                  selectionEnd: 0
                };
+            },
+            _getViewModelConstructor: function() {
+               return ViewModel;
             },
 
             _beforeUpdate: function(newOptions) {
@@ -235,13 +220,13 @@ define('Controls/Input/Mask',
                   }
                });
             },
-
-            _valueChangedHandler: function(event, value) {
-               this._notify('valueChanged', [value, this._viewModel.getDisplayValue()]);
+            _changeHandler: function() {
+               Mask.superclass._changeHandler.apply(this, arguments);
+               this._notifyValueChanged();
             },
-
-            _inputCompletedHandler: function(event, value) {
-               this._notify('inputCompleted', [value, this._viewModel.getDisplayValue()]);
+            _focusInHandler: function() {
+               Mask.superclass._focusInHandler.apply(this, arguments);
+               this._notifyValueChanged();
             },
 
             _isAutoWidth: function() {

@@ -3,7 +3,7 @@ define('Controls/Input/Mask/ViewModel',
       'Controls/Input/Mask/FormatBuilder',
       'Controls/Input/Mask/Formatter',
       'Controls/Input/Mask/InputProcessor',
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/Base/ViewModel'
    ],
    function(FormatBuilder, Formatter, InputProcessor, BaseViewModel) {
 
