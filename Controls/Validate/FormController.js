@@ -29,13 +29,15 @@ define('Controls/Validate/FormController',
          },
          submit: function() {
             var parallelDeferred = new ParallelDeferred();
+
             // The infobox should be displayed on the first not valid field.
             this._validates.reverse();
             this._validates.forEach(function(validate) {
                var def = validate.validate();
                parallelDeferred.push(def);
             });
-            //TODO: willl be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
+
+            // TODO: willl be fixed by https://online.sbis.ru/opendoc.html?guid=3432359e-565f-4147-becb-53e86cca45b5
             this._validates.reverse();
             var resultDef = parallelDeferred.done().getResult().addCallback(function(results) {
                var
