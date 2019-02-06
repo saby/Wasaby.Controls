@@ -96,6 +96,11 @@ define('Controls/Filter/Fast',
             return pDef.done().getResult().addCallback(function() {
                self._setText();
                self._forceUpdate();
+               
+               return {
+                  configs: self._configs,
+                  items: self._items
+               };
             });
          },
 
@@ -151,13 +156,17 @@ define('Controls/Filter/Fast',
          _configs: null,
          _items: null,
 
-         _beforeMount: function(options) {
+         _beforeMount: function(options, context, receivedState) {
             this._configs = {};
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
                resultDef;
-            if (options.items) {
+            
+            if (receivedState) {
+               this._configs = receivedState.configs;
+               this._items = receivedState.items;
+            } else if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {
