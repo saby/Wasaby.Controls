@@ -37,7 +37,7 @@ define([
             instance._beforeMount({
                header: header
             });
-            assert.equal(instance._header, header);
+            assert.isNotOk(instance._header);
          });
          it('with header, first item has template', function() {
             var
@@ -50,7 +50,7 @@ define([
             instance._beforeMount({
                header: header
             });
-            assert.equal(instance._header, header);
+            assert.isNotOk(instance._header);
          });
          it('with header, first item doesn\'t have neither title nor template', function() {
             var

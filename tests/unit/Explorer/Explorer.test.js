@@ -155,12 +155,10 @@ define([
          assert.equal(instance._viewMode, 'tree');
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.tree);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.tree);
-         assert.equal(instance._leftPadding, undefined);
          instance._beforeUpdate(newCfg);
          assert.equal(instance._viewMode, 'search');
          assert.equal(instance._viewName, Explorer._constants.VIEW_NAMES.search);
          assert.equal(instance._viewModelConstructor, Explorer._constants.VIEW_MODEL_CONSTRUCTORS.search);
-         assert.equal(instance._leftPadding, 'search');
       });
 
       it('_onBreadCrumbsClick', function() {
