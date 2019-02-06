@@ -173,29 +173,14 @@ define('Controls/Input/Mask',
                return ViewModel;
             },
 
-            _beforeUpdate: function(options) {
-               this._options.mask = options.mask;
-               Mask.superclass._beforeUpdate.apply(this, arguments);
-            },
-
-            _changeHandler: function() {
-               Mask.superclass._changeHandler.apply(this, arguments);
-               this._notifyValueChanged();
-            },
-
             _isAutoWidth: function() {
                return Boolean(this._options.replacer) ? 'absolute' : 'relative';
             },
 
-            _getField: function() {
-               Mask.superclass._getField.apply(this);
-               return this._children[this._fieldName];
-            },
-
             _focusInHandler: function() {
                Mask.superclass._focusInHandler.apply(this, arguments);
-               var field = this._getField();
-               var position = _private.findLastUserEnteredCharPosition(this._viewModel.displayValue, this._viewModel._replacer);
+               var field = Mask.superclass._getField.apply(this, arguments);
+               var position = _private.findLastUserEnteredCharPosition(this._viewModel.displayValue, this._options.replacer);
                runDelayed(function() {
                   field.setSelectionRange(position, position);
                });
@@ -212,7 +197,6 @@ define('Controls/Input/Mask',
             'd': '[0-9]',
             'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
          };
-         defaultOptions.selectOnClick = false;
          defaultOptions.autoWidth = false;
 
          return defaultOptions;

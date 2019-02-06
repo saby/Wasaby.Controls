@@ -38,41 +38,26 @@ define('Controls/Input/Mask/ViewModel',
       };
 
       var ViewModel = BaseViewModel.extend({
-         constructor: function(options) {
-            this._options = {
-               value: options.value
-            };
-            this._mask = options.mask;
-            this._replacer = options.replacer;
-            this._format = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
-            _private.updateFormatMaskChars(this, options.formatMaskChars);
-            return ViewModel.superclass.constructor.apply(this, arguments);
-         },
-
          _convertToValue: function(displayValue) {
             var value = Formatter.getClearData(this._format, displayValue).value;
             return value;
          },
-         _convertToDisplayValue: function() {
-            var fDate = Formatter.getFormatterData(this._format, { value: this._options.value, position: 0 });
-            this._replacer = this.options.replacer;
-            this._mask = this.options.mask;
-            this._format = FormatBuilder.getFormat(this._mask, this.options.formatMaskChars, this._replacer);
+         _convertToDisplayValue: function(value) {
+            this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
+            var fDate = Formatter.getFormatterData(this._format, { value: value, position: 0 });
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
             if (fDate && fDate.value) {
                return fDate.value;
             }
-            if (this._options.replacer) {
-               return this._options.mask.replace(this.formatMaskCharsRegExp, this._options.replacer);
+            if (this.options.replacer) {
+               return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
             }
             return '';
          },
          handleInput: function(splitValue, inputType) {
-            this._replacer = this.options.replacer;
-            this._mask = this.options.mask;
-            this._newFormat = FormatBuilder.getFormat(this._mask, this.options.formatMaskChars, this._replacer);
+            this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
             _private.updateFormatMaskChars(this, this.options.formatMaskChars);
-            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._newFormat);
+            var result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format);
             return ViewModel.superclass.handleInput.call(this, _private.prepareSplitValue(result));
          }
       });
