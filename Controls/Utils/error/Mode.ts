@@ -1,8 +1,8 @@
-/// <amd-module name="Controls/_error/Mode" />
+/// <amd-module name="Controls/Utils/error/Mode" />
 /**
  * Enum for display error-template mode
  * @enum {string}
- * @name Controls/_error/Mode
+ * @name Controls/Utils/error/Mode
  * @readonly
  * @property dialog
  * @property page
@@ -14,4 +14,4 @@ enum Mode {
     include = 'include'
 }
 
-export default Mode;
+export = Mode;

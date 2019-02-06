@@ -4,8 +4,9 @@ define('Controls/FormController', [
    'wml!Controls/FormController/FormController',
    'Core/Deferred',
    'Core/IoC',
-   'Controls/error'
-], function(Control, cInstance, tmpl, Deferred, IoC, ControlsError) {
+   'Controls/Utils/error/Mode',
+   'Controls/Utils/ErrorController'
+], function(Control, cInstance, tmpl, Deferred, IoC, ErrorMode, ErrorController) {
    'use strict';
 
    var _private = {
@@ -102,6 +103,10 @@ define('Controls/FormController', [
       _record: null,
       _isNewRecord: false,
 
+      constructor: function(options) {
+         FormController.superclass.constructor.apply(this, arguments);
+         this.__errorController = options.errorController || new ErrorController({});
+      },
       _beforeMount: function(cfg) {
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
@@ -322,6 +327,7 @@ define('Controls/FormController', [
             this._isNewRecord = false;
             this._forceUpdate();
          }.bind(this));
+         this._hideError();
          return record;
       },
 
@@ -438,11 +444,40 @@ define('Controls/FormController', [
       },
 
       _crudErrback: function(error) {
-         this._children.errorContainer.process({
+         var errorTemplate = this.__errorController.process({
             error: error,
-            mode: ControlsError.Mode.include
+            mode: ErrorMode.include
+         })
+         if (!errorTemplate) {
+            return
+         }
+         return this._showError(errorTemplate);
+      },
+      _showError: function(config) {
+         if (config.mode != ErrorMode.dialog) {
+            // отрисовка внутри компонента
+            this.__error = config;
+            this._forceUpdate();
+            return;
+         }
+         // диалоговое с ошибкой
+         this._children.dialogOpener.open({
+            template: config.template,
+            templateOptions: config.options
          });
-         return error;
+      },
+      _hideError: function() {
+         if (this.__error) {
+            this.__error = null;
+            this._forceUpdate();
+         }
+         if (
+            this._children &&
+            this._children.dialogOpener &&
+            this._children.dialogOpener.isOpened()
+         ) {
+            this._children.dialogOpener.close()
+         }
       },
       _crudHandler: function(event) {
          var eventName = event.type;

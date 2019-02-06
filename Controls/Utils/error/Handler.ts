@@ -1,25 +1,29 @@
-/// <amd-module name="Controls/_error/types/Handler" />
-import Mode from 'Controls/_error/Mode';
-import Template from 'Controls/_error/types/Template';
+/// <amd-module name="Controls/Utils/error/Handler" />
+import Mode = require('Controls/Utils/error/Mode');
+import {
+    HandlerResult as ParkingHandlerResult
+} from 'Controls/Utils/parking/Handler';
 
 /**
  * Возвращаемый обработчиком ошибки результат
  * @typedef {Object}
- * @name Controls/_error/types/HandlerResult
+ * @name Controls/Utils/error/HandlerResult
  * @property {Function | String} template Шаблон отображения ошибки
  * @property {Object} [options] параметры построяния шаблона ошибки
  * @property {Controls/_error/Mode} [mode]
  */
-export type HandlerResult<TOptions = object> = {
-    template: Template;
+export type HandlerResult<TOptions = object> = ParkingHandlerResult<TOptions> & {
     mode?: Mode;
-    options?: Partial<TOptions>;
 }
+
+export type DisplayOptions<TOptions = object> = Required<HandlerResult<TOptions>> & {
+    error: Error;
+};
 
 /**
  * Передаваемые в обработчик параметры
  * @typedef {Object}
- * @name Controls/_error/types/HandlerConfig
+ * @name Controls/Utils/error/HandlerConfig
  * @property {Controls/_error/Mode} mode Способ отображения ошибки (на всё окно / диалог / внутри компонента)
  * @property {Error} Обрабатываемая ошибка
  */
@@ -31,9 +35,9 @@ export type HandlerConfig<T extends Error = Error> = {
 /**
  * Обработчик ошибки
  * @typedef {Function}
- * @name Controls/_error/types/Handler
+ * @name Controls/Utils/error/Handler
  * @param {HandlerConfig} объект с параметрами
- * @return {void | Controls/_error/types/HandlerResult}
+ * @return {void | Controls/Utils/error/HandlerResult}
  */
 export type Handler<
     TError extends Error = Error,
