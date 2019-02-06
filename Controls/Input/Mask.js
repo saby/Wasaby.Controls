@@ -1,20 +1,19 @@
 define('Controls/Input/Mask',
    [
-      
+      'Core/IoC',
       'Controls/Utils/tmplNotify',
-      'Core/Control',
-      'Env/Env',
+      'Controls/Input/Base',
+      'Core/detection',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
       'Types/entity',
+      'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Mask/Mask',
 
-      'Controls/Input/resources/InputRender/InputRender',
-      'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(tmplNotify, Control, Env, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
+   function(IoC, tmplNotify, Base, cDetection, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl) {
 
       'use strict';
 
@@ -137,28 +136,12 @@ define('Controls/Input/Mask',
                }
                return value.length;
             },
-
-            /**
-             * If there's no symbol at selected position,
-             * set caret to the position following the last user-entered character.
-             * @param input
-             * @param selectedPosition
-             * @param value
-             * @param replacer
-             */
-            setCaretPosition: function(input, selectedPosition, value, replacer) {
-               var position = _private.findLastUserEnteredCharPosition(value, replacer);
-
-               if (position < selectedPosition) {
-                  input.setSelectionRange(position, position);
-               }
-            },
             validateReplacer: function(replacer, mask) {
                var validation;
 
                if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
-                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
                } else {
                   validation = true;
                }
@@ -169,105 +152,71 @@ define('Controls/Input/Mask',
                return _private.validateReplacer(replacer, mask) ? replacer : '';
             }
          },
-         Mask = Control.extend({
+         Mask = Base.extend({
             _template: MaskTpl,
-
+            _baseTemplate: baseTemplate,
             _viewModel: null,
             _notifyHandler: tmplNotify,
 
             _maskWrapperCss: null,
 
-            _beforeMount: function(options) {
-               this._maskWrapperCss = '';
-               if (Env.detection.isIE) {
-                  this._maskWrapperCss += ' controls-Mask__inputWrapper_ie';
-                  if (Env.detection.IEVersion > 11) {
-                     this._maskWrapperCss += ' controls-Mask__inputWrapper_edge';
-                  }
-               }
-               this._viewModel = new ViewModel({
+            _getViewModelOptions: function(options) {
+               return {
                   value: options.value,
                   mask: options.mask,
                   replacer: _private.calcReplacer(options.replacer, options.mask),
                   formatMaskChars: options.formatMaskChars
-               });
-            },
-
-            //Временное решение для фиксации https://online.sbis.ru/opendoc.html?guid=6853df25-ba30-47d7-8255-5929ecefb237.
-            //Иначе - нужно переделывать логику InputRender, в чем нет смысла, т.к. по задаче https://online.sbis.ru/opendoc.html?guid=ce71491f-3a24-49fb-a628-ed3b1149b8ab
-            //маска будет переведена на Input.Base уже в феврале'18
-            _afterMount: function() {
-               this._children.inputRender._selection = {
-                  selectionStart: 0,
-                  selectionEnd: 0
                };
             },
-
-            _beforeUpdate: function(newOptions) {
-               if (!(
-                  newOptions.value === this._options.value &&
-                  newOptions.mask === this._options.mask &&
-                  newOptions.replacer === this._options.replacer &&
-                  isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
-               ) {
-                  this._viewModel.updateOptions({
-                     value: newOptions.value,
-                     mask: newOptions.mask,
-                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
-                     formatMaskChars: newOptions.formatMaskChars
-                  });
-               }
+            _getViewModelConstructor: function() {
+               return ViewModel;
             },
 
-            _focusinHandler: function() {
-               var
-                  input = this._children.input,
-                  value = this._viewModel.getDisplayValue(),
-                  replacer = this._options.replacer,
-                  self = this;
-
-               /**
-                * At the moment of focus, the selectionEnd property is not set.
-                */
-               runDelayed(function() {
-                  if (!self._options.readOnly) {
-                     _private.setCaretPosition(input, input.selectionEnd, value, replacer);
-                  }
-               });
+            _initProperties: function(options) {
+               Mask.superclass._initProperties.apply(this, arguments);
             },
 
-            _valueChangedHandler: function(event, value) {
-               this._notify('valueChanged', [value, this._viewModel.getDisplayValue()]);
+            _beforeUpdate: function(options) {
+               this._options.mask = options.mask;
+               Mask.superclass._beforeUpdate.apply(this, arguments);
             },
 
-            _inputCompletedHandler: function(event, value) {
-               this._notify('inputCompleted', [value, this._viewModel.getDisplayValue()]);
+            _changeHandler: function() {
+               Mask.superclass._changeHandler.apply(this, arguments);
+               this._notifyValueChanged();
+            },
+
+            _focusInHandler: function() {
+               Mask.superclass._focusInHandler.apply(this, arguments);
+               this._notifyValueChanged();
             },
 
             _isAutoWidth: function() {
-               return Boolean(this._options.replacer);
+               return Boolean(this._options.replacer) ? 'absolute' : 'relative';
             }
          });
 
       Mask.getDefaultOptions = function() {
-         return {
-            value: '',
-            replacer: '',
-            formatMaskChars: {
-               'L': '[А-ЯA-ZЁ]',
-               'l': '[а-яa-zё]',
-               'd': '[0-9]',
-               'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-            },
-            selectOnClick: false,
-            autoWidth: false
+         var defaultOptions = Base.getDefaultOptions();
+         defaultOptions.value = '';
+         defaultOptions.replacer = '';
+         defaultOptions.formatMaskChars = {
+            'L': '[А-ЯA-ZЁ]',
+            'l': '[а-яa-zё]',
+            'd': '[0-9]',
+            'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
          };
+         defaultOptions.selectOnClick = false;
+         defaultOptions.autoWidth = false;
+
+         return defaultOptions;
       };
 
       Mask.getOptionTypes = function getOptionTypes() {
-         return {
-            mask: entity.descriptor(String).required()
-         };
+         var optionTypes = Base.getOptionTypes();
+
+         optionTypes.mask = entity.descriptor(String).required();
+         return optionTypes;
       };
 
       Mask._private = _private;

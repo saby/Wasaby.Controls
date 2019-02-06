@@ -1,23 +1,18 @@
-.controls-Mask__stretcher {
+.controls-Input-Mask {
+   position: relative;
+}
+
+.controls-Input-Mask__stretcher {
    height: 0;
    white-space: pre;
    visibility: hidden;
-   padding-right: 1px;
+   padding: 0 2px 0 2px;
 }
 
-.controls-Mask__inputWrapper {
+.controls-Input-Mask__wrapper__absolute {
    position: absolute;
    top: 0;
-   display: flex;
-   align-items: center;
-   height: 100%;
 }
-
-// To prevent 2 pixel scrolling in input in ie and edge.
-.controls-Mask__inputWrapper_ie {
-   width: calc(100% + 3px);
-}
-// Inputs has 1 pixel indent in edge.
-.controls-Mask__inputWrapper_edge {
-   margin-left: -1px;
+.controls-Input-Mask__wrapper__relative {
+   position: relative;
 }
