@@ -82,6 +82,7 @@ define('Controls/Popup/Opener/Notification',
          open: function(popupOptions) {
             popupOptions = popupOptions || {};
             popupOptions.autofocus = false;
+
             // Notification windows must be above all popup windows
             // will be fixed by https://online.sbis.ru/opendoc.html?guid=e6a136fc-be49-46f3-84d5-be135fae4761
             popupOptions.zIndex = 100;
