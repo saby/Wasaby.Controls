@@ -51,7 +51,9 @@
                </div>
             </ws:if>
             <ws:if data="{{_options.footerTemplate}}">
-               <ws:partial template="{{_options.footerTemplate}}"/>
+                <div class="controls-BaseControl__footer-content">
+                    <ws:partial template="{{_options.footerTemplate}}"/>
+                </div>
             </ws:if>
             <ws:if data="{{_shouldDrawFooter}}">
                <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
