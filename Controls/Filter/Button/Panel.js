@@ -192,6 +192,11 @@ define('Controls/Filter/Button/Panel', [
          var self = this;
          _private.validate(this).addCallback(function(result) {
             if (_private.isPassedValidation(result)) {
+
+               /*
+               Так как панель могут сверстать как хотят (панель будет не в корне, а чуть глубже), а событие sendResult
+               попап отлавливает с корневой ноды, то нужно, чтоб оно до неё гарантированно всплыло.
+               */
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
                   items: _private.prepareItems(items || self._items)
