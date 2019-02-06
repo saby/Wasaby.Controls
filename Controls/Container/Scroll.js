@@ -176,7 +176,7 @@ define('Controls/Container/Scroll',
             //прокидываем руками
             //EVENTSPROXY
             _tmplNotify: tmplNotify,
-            
+
             /**
              * Смещение контента сверху относительно контейнера.
              * @type {number}
