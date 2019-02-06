@@ -341,8 +341,10 @@ define('Controls/Container/Scroll',
                   return parseInt(found, 10) + marginRight;
                });
 
-               this._stickyHeaderContext.top = -marginTop;
-               this._stickyHeaderContext.updateConsumers();
+               if (this._stickyHeaderContext.top !== -marginTop) {
+                  this._stickyHeaderContext.top = -marginTop;
+                  this._stickyHeaderContext.updateConsumers();
+               }
             },
 
             _resizeHandler: function() {
