@@ -329,6 +329,9 @@ define('Controls/History/Source', [
    };
 
    var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
+      
+      //for compatibility with Types lib, will removed after rewriting module on typescript
+      '[Types/_source/ICrud]': true,
       _history: null,
       _oldItems: null,
       _parentProperty: null,
@@ -380,11 +383,16 @@ define('Controls/History/Source', [
             pd.push(self.historySource.query());
             pd.push(self.originSource.query(query));
 
-            return pd.done().getResult().addCallback(function(data) {
+            return pd.done().getResult().addBoth(function(data) {
                self._oldItems = data[1].getAll();
-               _private.initHistory(self, data[0], self._oldItems);
-               newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
-               self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+               
+               if (data[0]) {
+                  _private.initHistory(self, data[0], self._oldItems);
+                  newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
+                  self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
+               } else {
+                  newItems = self._oldItems;
+               }
                return new sourceLib.DataSet({
                   rawData: newItems.getRawData(),
                   idProperty: newItems.getIdProperty(),
@@ -397,7 +405,25 @@ define('Controls/History/Source', [
 
       getItems: function() {
          return _private.getItemsWithHistory(this, this._history, this._oldItems);
+      },
+   
+      // <editor-fold desc="Types/_source/OptionsMixin">
+      
+      // Support options mixin
+      // proxy getOptions, setOptions, addOptions methods to original source
+      getOptions: function() {
+         return this.originSource.getOptions();
+      },
+   
+      setOptions: function(options) {
+         return this.originSource.setOptions(options);
+      },
+   
+      addOptions: function(options) {
+         return this.originSource.addOptions(options);
       }
+   
+      // </editor-fold>
    });
 
    Source._private = _private;

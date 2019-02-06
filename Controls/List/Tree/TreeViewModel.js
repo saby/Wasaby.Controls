@@ -82,8 +82,11 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          hasChildItem: function(self, key) {
+            var
+               item;
             if (self._options.hasChildrenProperty) {
-               return !!self._items.getRecordById(key).get(self._options.hasChildrenProperty);
+               item = self._items.getRecordById(key);
+               return item ? !!item.get(self._options.hasChildrenProperty) : false;
             }
             return !!self._hierarchyRelation.getChildren(key, self._items).length;
          },
@@ -255,6 +258,10 @@ define('Controls/List/Tree/TreeViewModel', [
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
          },
+         
+         isExpandAll: function() {
+            return _private.isExpandAll(this.getExpandedItems());
+         },
 
          toggleExpanded: function(dispItem, expanded) {
             var
@@ -408,7 +415,11 @@ define('Controls/List/Tree/TreeViewModel', [
          calculateDragTargetPosition: function(targetData, position) {
             var result;
 
-            if (targetData && targetData.dispItem.isNode()) {
+            //If you hover over the dragged item, and the current position is on the folder,
+            //then you need to return the position that was before the folder.
+            if (this._prevDragTargetPosition && this._draggingItemData.index === targetData.index) {
+               result = this._prevDragTargetPosition;
+            } else if (targetData.dispItem.isNode()) {
                if (position === 'after' || position === 'before') {
                   result = this._calculateDragTargetPosition(targetData, position);
                } else {

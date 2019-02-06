@@ -7,7 +7,8 @@ define('Controls/Tile', [
    'use strict';
 
    /**
-    * Plain list with custom item template. Can load data from data source.
+    * List in which items are displayed as tiles. Can load data from data source.
+    * <a href="/materials/demo/demo-ws4-tile?v=19.100">Demo examples</a>.
     *
     * @class Controls/Tile
     * @extends Controls/List
@@ -21,6 +22,8 @@ define('Controls/Tile', [
     * @mixes Controls/List/interface/IList
     * @mixes Controls/List/interface/IHierarchy
     * @mixes Controls/List/interface/ITreeControl
+    * @mixes Controls/List/interface/IDraggable
+    * @mixes Controls/List/interface/ITile
     *
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles

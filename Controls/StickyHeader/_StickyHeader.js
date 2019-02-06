@@ -22,6 +22,7 @@ define('Controls/StickyHeader/_StickyHeader',
        * @private
        * @extends Core/Control
        * @class Controls/StickyHeader
+       * @css @background-color_StickyHeader Background color of StickyHeader.
        */
 
       /**
@@ -162,15 +163,20 @@ define('Controls/StickyHeader/_StickyHeader',
 
                style += 'z-index: ' + this._options.fixedZIndex + ';';
             } else {
-               top = this._stickyHeadersHeight.top;
-               bottom = this._stickyHeadersHeight.bottom;
-
-               if (this._context.stickyHeader) {
-                  top += this._context.stickyHeader.top;
-                  bottom += this._context.stickyHeader.bottom;
+               if (this._options.position.indexOf('top') !== -1) {
+                  top = this._stickyHeadersHeight.top;
+                  if (this._context.stickyHeader) {
+                     top += this._context.stickyHeader.top;
+                  }
+                  style += 'top: ' + top  + 'px;';
                }
-               style += 'top: ' + top  + 'px;';
-               style += 'bottom: ' + bottom + 'px;';
+               if (this._options.position.indexOf('bottom') !== -1) {
+                  bottom = this._stickyHeadersHeight.bottom;
+                  if (this._context.stickyHeader) {
+                     bottom += this._context.stickyHeader.bottom;
+                  }
+                  style += 'bottom: ' + bottom + 'px;';
+               }
             }
 
             return style;

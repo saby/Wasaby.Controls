@@ -70,6 +70,11 @@ define('Controls/List/TileView/TileViewModel', [
             this.setHoveredItem(null);
          }
          TileViewModel.superclass.setActiveItem.apply(this, arguments);
+      },
+
+      setDragEntity: function() {
+         this.setHoveredItem(null);
+         TileViewModel.superclass.setDragEntity.apply(this, arguments);
       }
    });
 

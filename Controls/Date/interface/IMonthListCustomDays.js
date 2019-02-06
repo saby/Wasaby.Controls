@@ -6,7 +6,8 @@ define('Controls/Date/interface/IMonthListCustomDays', [
    /**
     * An interface for controls based on Controls/Date/MonthList and allowing you to draw your data
     * on the cells of the month.
-    * mixin Controls/Date/interface/IMonthListCustomDays
+    * @interface Controls/Date/interface/IMonthListCustomDays
+    * @public
     */
 
    /**

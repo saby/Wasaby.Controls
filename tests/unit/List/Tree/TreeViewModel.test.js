@@ -149,6 +149,13 @@ define([
             assert.isTrue(TreeViewModel._private.getDisplayFilter(treeViewModel.getExpandedItems(), treeViewModel._options).length === 2,
                'Invalid filters count prepared by "getDisplayFilter" with "itemsFilterMethod".');
          });
+         it('hasChildItem', function() {
+            var
+               model = new TreeViewModel(cfg);
+            assert.isTrue(TreeViewModel._private.hasChildItem(model, 123), 'Invalid detect child item for item with key "123".');
+            assert.isFalse(TreeViewModel._private.hasChildItem(model, 1), 'Invalid detect child item for item with key "1".');
+            assert.isFalse(TreeViewModel._private.hasChildItem(model, 1989), 'Invalid detect child item for unknown item.');
+         });
          it('shouldDrawExpander', function() {
             var
                testsShouldDrawExpander = [{
@@ -364,6 +371,14 @@ define([
             };
             treeViewModel._curIndex = 4;
             assert.isTrue(treeViewModel.getCurrent().hasChildren);
+         });
+   
+         it('isExpandAll', function() {
+            treeViewModel.setExpandedItems(['123', '234', '3']);
+            assert.isFalse(treeViewModel.isExpandAll());
+   
+            treeViewModel.setExpandedItems([null]);
+            assert.isTrue(treeViewModel.isExpandAll());
          });
 
          it('setExpandedItems', function() {
@@ -621,6 +636,39 @@ define([
                dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
                assert.equal(dragTargetPosition.index, itemData.index);
                assert.equal(dragTargetPosition.position, 'before');
+            });
+
+            it('move to draggableItem', function() {
+               var
+                  prevDragTargetPosition,
+                  item = tvm.getItemDataByItem(tvm.getItemById('567', 'id'));
+
+               //start move item 567
+               tvm.setDragEntity(dragEntity);
+               tvm.setDragItemData(item);
+
+               //move item 567 on item 567
+               dragTargetPosition = tvm.calculateDragTargetPosition(item);
+               assert.isNull(dragTargetPosition);
+
+               //move item 567 after folder 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               prevDragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'after');
+               tvm.setDragTargetPosition(prevDragTargetPosition);
+               assert.equal(prevDragTargetPosition.index, itemData.index);
+               assert.equal(prevDragTargetPosition.position, 'after');
+
+               //move item 567 on folder 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               tvm.setDragTargetPosition(dragTargetPosition);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'on');
+
+               //move item 567 on item 567
+               dragTargetPosition = tvm.calculateDragTargetPosition(item);
+               assert.equal(prevDragTargetPosition.index, dragTargetPosition.index);
+               assert.equal(prevDragTargetPosition.position, dragTargetPosition.position);
             });
          });
       });

@@ -250,9 +250,10 @@ define('Controls/History/FilterSource', [
       }
    };
 
-   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
+   var Source = CoreExtend.extend([entity.OptionsToPropertyMixin], {
       _history: null,
       _serialize: false,
+      '[Types/_source/ICrud]': true,
 
       constructor: function Memory(cfg) {
          this.originSource = cfg.originSource;

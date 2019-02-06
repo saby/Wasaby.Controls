@@ -42,9 +42,51 @@ define(
             };
          });
 
+         describe('_scrollbarTaken', function() {
+            it('Should generate scrollbarTaken event if scrollbar displayed', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: true };
+               sandbox.stub(scroll, '_notify');
+               scroll._scrollbarTaken();
+               sinon.assert.calledWith(scroll._notify, 'scrollbarTaken');
+               sandbox.restore();
+            });
+            it('Should not generate scrollbarTaken event if scrollbar not displayed', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: false };
+               sandbox.stub(scroll, '_notify');
+               scroll._scrollbarTaken();
+               sinon.assert.notCalled(scroll._notify);
+               sandbox.restore();
+            });
+         });
+
+         describe('_mouseenterHandler', function() {
+            it('Should show scrollbar and generate scrollbarTaken event on mouseenter', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: true };
+               scroll._options.scrollbarVisible = true;
+               sandbox.stub(scroll, '_notify');
+               scroll._mouseenterHandler();
+               sinon.assert.calledWith(scroll._notify, 'scrollbarTaken');
+               assert.isTrue(scroll._scrollbarVisibility());
+               sandbox.restore();
+            });
+            it('Should hide scrollbar and generate scrollbarReleased event on mouseleave', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: false };
+               sandbox.stub(scroll, '_notify');
+               scroll._mouseenterHandler();
+               scroll._mouseleaveHandler();
+               sinon.assert.calledWith(scroll._notify, 'scrollbarReleased');
+               assert.isFalse(scroll._scrollbarVisibility());
+               sandbox.restore();
+            });
+         });
+
          describe('Template', function() {
             it('Hiding the native scroll', function() {
-               result = scroll._template({});
+               result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
                                        '<span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
@@ -53,9 +95,8 @@ define(
                                        '<div></div>' +
                                     '</div>');
 
-               result = scroll._template({
-                  _contentStyles: 'margin-right: -15px;'
-               });
+               scroll._contentStyles = 'margin-right: -15px;';
+               result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
                                        '<span style="margin-right: -15px;" class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +

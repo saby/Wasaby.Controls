@@ -12,6 +12,7 @@
                              attr:class="demo-Grid__control test_grid_1"
                              displayProperty="title"
                              markedKey="{{448390}}"
+                             stickyHeader="{{false}}"
                              rowSeparatorVisibility="{{true}}"
                              multiSelectVisibility="visible"
                              header="{{gridHeader}}"
