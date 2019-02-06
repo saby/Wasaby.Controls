@@ -131,5 +131,11 @@ define([
             done();
          });
       });
+      it('Load content async no force update', function(done) {
+         async._loadContentAsync(async._options.templateName, { opt: '123' }, true).then(function() {
+            assert.isUndefined(async.fuCnt);
+            done();
+         });
+      });
    });
 });
