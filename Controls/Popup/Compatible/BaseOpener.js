@@ -306,7 +306,7 @@ function(cMerge,
          this._setSizes(cfg, templateClass);
       },
       _getConfigFromTemplate: function(cfg) {
-         // берем опции из getDefaultOptions шаблона
+         // get options from template.getDefaultOptions
          var templateClass = typeof cfg === 'string' ? require(cfg) : cfg;
          return templateClass.getDefaultOptions ? templateClass.getDefaultOptions() : {};
       },
