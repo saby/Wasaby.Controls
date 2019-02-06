@@ -5,8 +5,9 @@ define('Controls/List/Grid/GridViewModel', [
    'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
-   'Core/detection'
-], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection) {
+   'Core/detection',
+   'Core/helpers/Object/isEqual'
+], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual) {
    'use strict';
 
    var
@@ -88,8 +89,16 @@ define('Controls/List/Grid/GridViewModel', [
 
             if (current.isSelected) {
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
+
                if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_selected__first' + ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
+
+                  /* В старых браузерах маркер навешивается стилями данного класса, т.к. вёрстка там другая.
+                  *  Не навешиваем класс, если не нужно показывать маркер
+                  */
+                  if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
+                     cellClasses += ' controls-Grid__row-cell_selected__first';
+                  }
+                  cellClasses += ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
                   cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
@@ -140,7 +149,9 @@ define('Controls/List/Grid/GridViewModel', [
                   value = params.value,
                   prevValue = params.prevValue,
                   state = params.state;
-               if (value === prevValue) {
+
+               // isEqual works with any types
+               if (isEqual(value, prevValue)) {
                   state.ladderLength++;
                } else {
                   params.ladder.ladderLength = state.ladderLength;

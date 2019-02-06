@@ -38,7 +38,8 @@ define('Controls/List/ListStyles', [],
     * @css @background-color_ListView-item_hover background color of hover item in ListView
     * @css @background-color_ListView-item_editing background color of editing item in ListView
     * @css @opacity_ListView-item_dragging opacity of dragging item in ListView
-    * @css @height_ListView-groupSeparator height of group separator
+    * @css @spacing_ListView-groupSeparator-between-content-borderTop spacing between group seporator content and group seporator top border
+    * @css @spacing_ListView-groupSeparator-between-content-borderBottom spacing between group seporator content and group seporator bottom border
     * @css @spacing_ListView-between-groupSeparator-groupBorder spacing between text of group separator and horizontal borders of group separator
     * @css @border-width_ListView-groupSeparator border-width of group separator
     * @css @border-color_ListView-groupSeparator border-color of group separator
