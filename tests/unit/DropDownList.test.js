@@ -62,7 +62,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
 
       describe('DropdownList::_beforeUpdate', function(done) {
 
-         it('_itemMouseEnter', function() {
+         it('_itemMouseEnter', function(done) {
             var dropDownConfig, dropDownList;
             var opened = false;
    
@@ -91,7 +91,13 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
                dropDownList._hasHierarchy = false;
                dropDownList._subDropdownOpened = false;
                dropDownList._itemMouseEnter({}, items.at(4), true);
-               assert.isTrue(false);
+               assert.isTrue(opened);
+   
+   
+               dropDownList._hasHierarchy = true;
+               dropDownList._subDropdownOpened = true;
+               dropDownList._itemMouseEnter({}, items.at(4), false);
+               assert.isFalse(opened);
                done();
             }, 120);
          });
