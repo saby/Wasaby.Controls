@@ -98,10 +98,16 @@ define('Controls/Container/List',
             if (self._options.searchErrback) {
                self._options.searchErrback(error);
             }
-            self._source = new sourceLib.Memory({
-               model: source.getModel(),
-               idProperty: source.getIdProperty()
-            });
+            
+            //if query returned an error, the list should be empty
+            //but if error was called by query abort (error property 'canceled'),
+            //the list should not change
+            if (!error || !error.canceled) {
+               self._source = new sourceLib.Memory({
+                  model: source.getModel(),
+                  idProperty: source.getIdProperty()
+               });
+            }
          },
          
          searchCallback: function(self, result, filter) {

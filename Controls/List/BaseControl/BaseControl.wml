@@ -118,7 +118,7 @@
           itemActions="{{_options.itemActions}}"
           name="swipeControl"/>
 
-        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && !_loadingState}}">
+        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
             <div class="controls-BaseControl__emptyTemplate">
                 <ws:partial template="{{_options.emptyTemplate}}"/>
             </div>
