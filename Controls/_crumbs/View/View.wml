@@ -12,7 +12,6 @@
 
     <Controls.Dropdown.Opener
             name="menuOpener"
-            displayProperty="{{_options.displayProperty}}"
             keyProperty="id">
         <ws:popupOptions className="controls-BreadCrumbsController__menu">
             <ws:corner vertical="top"

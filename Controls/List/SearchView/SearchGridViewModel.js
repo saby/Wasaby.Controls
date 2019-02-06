@@ -28,6 +28,10 @@ define('Controls/List/SearchView/SearchGridViewModel', [
                currentColumn.column.needSearchHighlight = _private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
                currentColumn.searchValue = current.searchValue;
             }
+
+            if (currentColumn.columnIndex === 0 && current.item.getId) {
+               currentColumn.cellClasses += ' controls-Grid__cell_spacingFirstCol_search';
+            }
             
             return currentColumn;
          };

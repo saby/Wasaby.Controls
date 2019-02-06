@@ -15,7 +15,7 @@ define('Controls/Explorer/_PathController', [
 
    var _private = {
       getHeader: function(self, options) {
-         var newHeader = options.header;
+         var newHeader;
          if (options.items && options.header && !options.header[0].title && !options.header[0].template) {
             newHeader = options.header.slice();
             newHeader[0] = {

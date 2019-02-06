@@ -10,6 +10,7 @@ define('Controls/Explorer', [
    'Core/core-instance',
    'Core/constants',
    'Controls/Utils/keysHandler',
+   'css!theme?Controls/Explorer/Explorer',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
@@ -89,7 +90,6 @@ define('Controls/Explorer', [
             self._swipeViewMode = viewMode === 'search' ? 'table' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
-            self._leftPadding = viewMode === 'search' ? 'search' : undefined;
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -150,7 +150,6 @@ define('Controls/Explorer', [
       _viewName: null,
       _viewMode: null,
       _viewModelConstructor: null,
-      _leftPadding: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
 

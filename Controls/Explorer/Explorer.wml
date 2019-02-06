@@ -21,7 +21,6 @@
                                     viewName="{{_viewName}}"
                                     swipeViewMode="{{_swipeViewMode}}"
                                     viewModelConstructor="{{_viewModelConstructor}}"
-                                    leftPadding="{{_leftPadding}}"
                                     itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"
                                     on:itemClick="_onItemClick()"
                                     on:checkboxClick="_notifyHandler('checkboxClick')"

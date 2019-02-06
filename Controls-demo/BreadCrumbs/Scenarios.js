@@ -469,10 +469,10 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             title: 'Сотруднику должны',
             align: 'right'
          }, {
-            title: 'Срок в днях',
+            title: 'Срок',
             align: 'right'
          }, {
-            title: 'Дата возникновения',
+            title: 'Дата',
             align: 'right'
          }];
          this._columns4 = [{
@@ -739,6 +739,75 @@ define('Controls-demo/BreadCrumbs/Scenarios', [
             }]
          });
          this._filter8 = {};
+         this._header5 = [{
+            title: 'Название'
+         }, {
+            title: 'Цена',
+            align: 'right',
+            template: secondHeaderTemplate
+         }, {
+            title: 'Остаток',
+            align: 'right',
+            template: secondHeaderTemplate
+         }, {
+            title: 'Свободно',
+            align: 'right',
+            template: secondHeaderTemplate
+         }, {
+            title: 'Себестоимость',
+            align: 'right',
+            template: secondHeaderTemplate
+         }, {
+            title: 'Сумма остатка',
+            align: 'right',
+            template: secondHeaderTemplate
+         }];
+         this._breadCrumbs7 = [
+            new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 1,
+                  title: 'Папка 1'
+               }
+            }), new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 2,
+                  title: 'Папка с длинным названием 2'
+               }
+            }), new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 3,
+                  title: 'Папка с длинным названием 3'
+               }
+            }), new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 4,
+                  title: 'Папка с длинным названием 4'
+               }
+            }), new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 5,
+                  title: 'Папка с длинным названием 5'
+               }
+            })];
+         this._breadCrumbs8 = [
+            new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 1,
+                  title: 'Папка с длинным названием 1'
+               }
+            }), new entity.Model({
+               idProperty: 'id',
+               rawData: {
+                  id: 2,
+                  title: 'Папка с длинным названием 2'
+               }
+            })];
       }
    });
 
