@@ -844,6 +844,8 @@ node('controls') {
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
+                                } else {
+                                run_tests_int_sbis3 = false
                                 }
                             }
                             }
@@ -853,6 +855,8 @@ node('controls') {
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int_vdom = false
                                 }
                             }
 
@@ -867,6 +871,8 @@ node('controls') {
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_sbis3 = false
                                  }
                                }
                             }
@@ -876,6 +882,8 @@ node('controls') {
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_vdom = false
                                  }
                                }
 
@@ -1131,7 +1139,7 @@ node('controls') {
     }
     gitlabStatusUpdate()
     if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_vdom ) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT TEST BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }
