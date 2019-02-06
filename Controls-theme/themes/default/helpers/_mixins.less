@@ -284,6 +284,15 @@
 }
 .flex-direction(@direction: row){
   flex-direction: @direction;
+
+  //Additional styles to make it possible to reduce the size of flex elements.
+  //Read more: https://stackoverflow.com/questions/36247140/why-dont-flex-items-shrink-past-content-size
+  & when (@direction = row) or (@direction = row-reverse) {
+    min-width: 0;
+  }
+  & when (@direction = column) or (@direction = column-reverse){
+    min-height: 0;
+  }
 }
 .flex-wrap(@wrap) {
   flex-wrap: @wrap;
