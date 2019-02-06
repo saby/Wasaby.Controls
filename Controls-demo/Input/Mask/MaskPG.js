@@ -70,7 +70,7 @@ define('Controls-demo/Input/Mask/MaskPG',
                tagStyle: 'primary',
                value: '',
                readOnly: false,
-               replacer: '',
+               replacer: ' ',
                tooltip: 'myTooltip',
                formatMaskChars: {
                   'L': '[А-ЯA-ZЁ]',

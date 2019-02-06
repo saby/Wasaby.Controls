@@ -1,9 +1,9 @@
 <div class="controls-Input-Mask">
-    <div class="">
+    <div class="controls-Input-Mask__wrapper">
         <ws:partial
              name="Mask"
-             class="controls-Input-Mask__wrapper"
              template="{{_baseTemplate}}"
+             _style="{{_style}}"
              _options="{{_options}}"
              _tooltip="{{_tooltip}}"
              _viewModel="{{_viewModel}}"
@@ -17,5 +17,6 @@
              _beforeFieldWrapper="{{_beforeFieldWrapper}}"
              _afterFieldWrapper="{{_afterFieldWrapper}}"
          />
+        <div class="controls-Input-Mask__stretcher controls-InputBase__field_margin">{{_viewModel.displayValue}}</div>
     </div>
 </div>

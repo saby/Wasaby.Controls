@@ -192,20 +192,9 @@ define('Controls/Input/Mask',
                Mask.superclass._initProperties.apply(this, arguments);
             },
 
-            _beforeUpdate: function(newOptions) {
-               if (!(
-                  newOptions.value === this._options.value &&
-                  newOptions.mask === this._options.mask &&
-                  newOptions.replacer === this._options.replacer &&
-                  isEqual(newOptions.formatMaskChars, this._options.formatMaskChars))
-               ) {
-                  this._viewModel.updateOptions({
-                     value: newOptions.value,
-                     mask: newOptions.mask,
-                     replacer: _private.calcReplacer(newOptions.replacer, newOptions.mask),
-                     formatMaskChars: newOptions.formatMaskChars
-                  });
-               }
+            _beforeUpdate: function(options) {
+               this._options.mask = options.mask;
+               Mask.superclass._beforeUpdate.apply(this, arguments);
             },
 
             _changeHandler: function() {
@@ -224,24 +213,26 @@ define('Controls/Input/Mask',
          });
 
       Mask.getDefaultOptions = function() {
-         return {
-            value: '',
-            replacer: '',
-            formatMaskChars: {
-               'L': '[А-ЯA-ZЁ]',
-               'l': '[а-яa-zё]',
-               'd': '[0-9]',
-               'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
-            },
-            selectOnClick: false,
-            autoWidth: false
+         var defaultOptions = Base.getDefaultOptions();
+         defaultOptions.value = '';
+         defaultOptions.replacer = '';
+         defaultOptions.formatMaskChars = {
+            'L': '[А-ЯA-ZЁ]',
+            'l': '[а-яa-zё]',
+            'd': '[0-9]',
+            'x': '[А-ЯA-Zа-яa-z0-9ёЁ]'
          };
+         defaultOptions.selectOnClick = false;
+         defaultOptions.autoWidth = false;
+
+         return defaultOptions;
       };
 
       Mask.getOptionTypes = function getOptionTypes() {
-         return {
-            mask: entity.descriptor(String).required()
-         };
+         var optionTypes = Base.getOptionTypes();
+
+         optionTypes.mask = entity.descriptor(String).required();
+         return optionTypes;
       };
 
       Mask._private = _private;

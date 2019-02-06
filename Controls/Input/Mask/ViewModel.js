@@ -21,11 +21,9 @@ define('Controls/Input/Mask/ViewModel',
             }
             self._formatMaskChars = formatMaskChars;
             self.formatMaskCharsRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('') + ']', 'g');
-         }
-      };
+         },
 
-      var ViewModel = BaseViewModel.extend({
-         constructor: function(options) {
+         prepareData: function(options) {
             this._options = {
                value: options.value
             };
@@ -33,39 +31,40 @@ define('Controls/Input/Mask/ViewModel',
             this._mask = options.mask;
             this._replacer = options.replacer;
             this._format = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
-            ViewModel.superclass.constructor.call(this);
+            return this;
          },
 
-         /**
-          * Обновить опции.
-          * @param newOptions Новые опции(replacer, mask).
-          */
-         updateOptions: function(newOptions) {
-            this._options.value = newOptions.value;
-            _private.updateFormatMaskChars(this, newOptions.formatMaskChars);
-            this._mask = newOptions.mask;
-            this._replacer = newOptions.replacer;
-            this._format = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
-            this._nextVersion();
-         },
+         prepareSplitValue: function(result) {
+            var position = result.position;
+            var before = result.value.substring(0, position);
+            var after = result.value.substring(position, result.value.length);
+
+            return {
+               before: before,
+               after: after,
+               insert: '',
+               delete: ''
+            };
+         }
+      };
+
+      var ViewModel = BaseViewModel.extend({
          _convertToValue: function(displayValue) {
-            // var fData;
-            //
-            // fData = Formatter.getFormatterData(this._format, { value: displayValue, position: 0 });
-            //
-            // if (fData && fData.value) {
-            //    return fData.value;
-            // }
-            // if (this._replacer) {
-            //    return this._mask.replace(this.formatMaskCharsRegExp, this._replacer);
-            // }
-            // return '';
-            return displayValue;
+            var format = _private.prepareData(this._options)._format;
+            var value = Formatter.getClearData(format, displayValue).value;
+            return value;
          },
          _convertToDisplayValue: function(value) {
-            //var displayValue = value === null ? '' : value.toString();
-
-            return value;
+            var displayValue = value === null ? '' : value.toString();
+            var format = _private.prepareData(this._options)._format;
+            var fDate = Formatter.getFormatterData(format, { value: this._options.value, position: 0 });
+            if (fDate && fDate.value) {
+               return fDate.value;
+            }
+            if (this._options.replacer) {
+               return this._options.mask.replace(_private.prepareData(this._options).formatMaskCharsRegExp, this._options.replacer);
+            }
+            return '';
          },
 
          /**
@@ -75,16 +74,9 @@ define('Controls/Input/Mask/ViewModel',
           * @returns {{value: (String), position: (Integer)}}
           */
          handleInput: function(splitValue, inputType) {
-            //var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._format);
-            console.log(result);
-            //var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
-            // this._options.value = Formatter.getClearData(this._format, result.value).value;
-            // this._nextVersion();
-            //return ViewModel.superclass.handleInput.call(result);
-            var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
-
-            this._displayValue = this._value;
-            return result;
+            var preparedDate = _private.prepareData(this.options);
+            var result = InputProcessor.input(splitValue, inputType, preparedDate._replacer, preparedDate._format, preparedDate._format);
+            return ViewModel.superclass.handleInput.call(this, _private.prepareSplitValue(result));
          }
 
       });
