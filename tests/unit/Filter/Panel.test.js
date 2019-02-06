@@ -86,7 +86,7 @@ define(
                } else if (e == 'sendResult') {
                   filter = args[0].filter;
                }
-               assert.isTrue(eCfg.bubbling, 'bubbling must be true');
+               assert.isTrue(eCfg.bubbling);
             };
             isNotifyClose = false;
             panel._beforeMount(config);

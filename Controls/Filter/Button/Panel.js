@@ -195,7 +195,7 @@ define('Controls/Filter/Button/Panel', [
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
                   items: _private.prepareItems(items || self._items)
-               }]);
+               }], {bubbling: true});
                self._notify('close', [], {bubbling: true});
             }
          });
