@@ -112,7 +112,9 @@ define(
 
          it('beforeUpdate new items property not changed', function(done) {
             var fastFilter = getFastFilter(configWithItems);
-            fastFilter._beforeMount(configWithItems).addCallback(function() {
+            fastFilter._beforeMount(configWithItems).addCallback(function(result) {
+               assert.isTrue(!!result.configs);
+               assert.equal(Object.keys(result.configs).length, Object.keys(fastFilter._configs).length);
                var newConfigItems = Clone(configWithItems);
                newConfigItems.items[0].value = 'США';
                fastFilter._beforeUpdate(newConfigItems);
@@ -161,7 +163,9 @@ define(
          });
 
          it('load config from items', function(done) {
-            FastData._private.reload(fastDataItems).addCallback(function() {
+            FastData._private.reload(fastDataItems).addCallback(function(result) {
+               assert.isTrue(!!result.configs);
+               assert.equal(Object.keys(result.configs).length, Object.keys(fastData._configs).length);
                FastData._private.loadItems(fastData, fastData._items.at(0), 0).addCallback(function() {
                   assert.deepEqual(fastData._configs[0]._items.getRawData(), items[0]);
                   done();

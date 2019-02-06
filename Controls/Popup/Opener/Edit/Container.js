@@ -19,7 +19,14 @@ define('Controls/Popup/Opener/Edit/Container',
          _template: template,
 
          _beforeMount: function(options, context) {
-            this._items = context.dataOptions.items;
+            if (context.dataOptions.items) {
+               this._items = context.dataOptions.items;
+            }
+         },
+         _beforeUpdate: function(options, context) {
+            if (context.dataOptions.items) {
+               this._items = context.dataOptions.items;
+            }
          }
       });
 

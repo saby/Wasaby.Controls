@@ -173,7 +173,9 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
          self._options.emptyTemplate = {};
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         self._searchValue = 'test';
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult))
       });
    
       it('Suggest::_private.prepareFilter', function() {
@@ -286,10 +288,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             assert.isTrue(suggestState);
    
             suggestComponent._close();
+            suggestComponent._filter = {};
             suggestComponent._inputClicked();
 
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
+               assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
    
                suggestComponent._close();
                self._options.readOnly = true;
@@ -479,6 +483,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             suggestComponent = new Suggest();
 
          suggestComponent._inputActive = true;
+         suggestComponent._notify = function(eventName) {
+            if (eventName === 'choose') {
+               assert.isFalse(suggestComponent._inputActive);
+            }
+         }
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
          assert.isFalse(suggestComponent._inputActive);

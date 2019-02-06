@@ -45,6 +45,31 @@ define('Controls/interface/IMovable', [
     */
 
    /**
+    * @name Controls/interface/IMovable#sortingOrder
+    * @cfg {String} Determines which sort is set on the dataSource.
+    * @variant asc Ascending sort.
+    * @variant desc Descending sort.
+    * @default asc
+    * @remark This option is necessary to specify the order in which the data is located in the source,
+    * so that when changing the sequence numbers, the items are moved to the correct position.
+    * @example
+    * The following example shows how to set a descending sort.
+    * <pre>
+    *    <Controls.List.Mover sortingOrder="desc">
+    *       <ws:moveDialogTemplate>
+    *          <Controls.List.Mover.MoveDialog
+    *                root="rootId"
+    *                searchParam="folderTitle"
+    *                parentProperty="parent"
+    *                nodeProperty="parent@">
+    *             <ws:filter moveDialog="{{true}}"/>
+    *          </Controls.List.Mover.MoveDialog>
+    *       </ws:moveDialogTemplate>
+    *    </Controls.List.Mover>
+    * </pre>
+    */
+
+   /**
     * @event Controls/interface/IMovable#beforeItemsMove Occurs before the items are moved.
     * @param {Core/EventObject} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
@@ -105,6 +130,7 @@ define('Controls/interface/IMovable', [
     * Move one item up.
     * @function Controls/interface/IMovable#moveItemUp
     * @param {String|Number} item The item to be moved.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @example
     * The following example shows how to move item up using the item actions.
     * <pre>
@@ -135,6 +161,7 @@ define('Controls/interface/IMovable', [
     * Move one item down.
     * @function Controls/interface/IMovable#moveItemDown
     * @param {String|Number} item The item to be moved.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @example
     * The following example shows how to move item down using the item actions.
     * <pre>
@@ -167,6 +194,7 @@ define('Controls/interface/IMovable', [
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @remark
     * Depending on the 'position' argument, elements can be moved before, after or on the specified target item.
     * @example
