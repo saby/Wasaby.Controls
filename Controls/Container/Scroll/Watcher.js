@@ -305,8 +305,8 @@ define('Controls/Container/Scroll/Watcher',
             _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
          },
 
-         doScroll: function(scrollParam, extraParams) {
-            _private.doScroll(this, scrollParam, extraParams, _private.getDOMContainer(this._container));
+         doScroll: function(scrollParam) {
+            _private.doScroll(this, scrollParam, _private.getDOMContainer(this._container));
          },
 
          _unRegisterIt: function(event, registerType, component) {
