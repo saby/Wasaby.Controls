@@ -9,8 +9,9 @@ define('Controls-demo/List/Grid/BasePG', [
    'wml!Controls-demo/List/Grid/resources/BasePG/footerTemplate',
    'wml!Controls-demo/List/Grid/resources/DemoMoney',
    'wml!Controls-demo/List/Grid/resources/DemoRating',
-   'wml!Controls-demo/List/Grid/resources/DemoItem']
-, function(Control, Obj, source, data, template, config, emptyTpl) {
+   'wml!Controls-demo/List/Grid/resources/DemoItem',
+   'wml!Controls-demo/List/Grid/resources/DemoResultAvgRating'
+   ], function(Control, Obj, source, data, template, config, emptyTpl) {
    'use strict';
    var Component = Control.extend({
       _template: template,
@@ -129,6 +130,7 @@ define('Controls-demo/List/Grid/BasePG', [
             keyProperty: 'id',
             footerTemplate: undefined,
             emptyTemplate: undefined,
+            resultsPosition: 'top',
             itemPadding: this._dataObject.itemPadding,
             filter: {},
             header: data.fullHeaderForBase
