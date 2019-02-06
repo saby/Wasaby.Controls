@@ -68,6 +68,7 @@ var Component = Control.extend([], {
                 selectionType: this._options.selectionType,
                 quantum: this._options.quantum,
                 headerType: 'input',
+                closeButtonEnabled: true,
                 rangeselect: true,
                 handlers: {
                     onChoose: this._onResultWS3.bind(this)
