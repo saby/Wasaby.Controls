@@ -132,8 +132,6 @@ define([
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._afterUpdate({});
-
-               ctrl._viewResize();
                assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
                done();
