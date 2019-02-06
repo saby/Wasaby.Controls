@@ -188,6 +188,10 @@ define('Controls/Input/Mask',
                return ViewModel;
             },
 
+            _initProperties: function(options) {
+               Mask.superclass._initProperties.apply(this, arguments);
+            },
+
             _beforeUpdate: function(newOptions) {
                if (!(
                   newOptions.value === this._options.value &&
@@ -204,26 +208,11 @@ define('Controls/Input/Mask',
                }
             },
 
-            _focusinHandler: function() {
-               var
-                  input = this._children.input,
-                  value = this._viewModel.getDisplayValue(),
-                  replacer = this._options.replacer,
-                  self = this;
-
-               /**
-                * At the moment of focus, the selectionEnd property is not set.
-                */
-               runDelayed(function() {
-                  if (!self._options.readOnly) {
-                     _private.setCaretPosition(input, input.selectionEnd, value, replacer);
-                  }
-               });
-            },
             _changeHandler: function() {
                Mask.superclass._changeHandler.apply(this, arguments);
                this._notifyValueChanged();
             },
+
             _focusInHandler: function() {
                Mask.superclass._focusInHandler.apply(this, arguments);
                this._notifyValueChanged();

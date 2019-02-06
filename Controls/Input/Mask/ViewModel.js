@@ -12,7 +12,7 @@ define('Controls/Input/Mask/ViewModel',
       /**
        * @class Controls/Input/Text/ViewModel
        * @private
-       * @author Журавлев М.С.
+       * @author Водолазских А.А.
        */
       var _private = {
          updateFormatMaskChars: function(self, formatMaskChars) {
@@ -33,6 +33,7 @@ define('Controls/Input/Mask/ViewModel',
             this._mask = options.mask;
             this._replacer = options.replacer;
             this._format = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
+            ViewModel.superclass.constructor.call(this);
          },
 
          /**
@@ -47,6 +48,25 @@ define('Controls/Input/Mask/ViewModel',
             this._format = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
             this._nextVersion();
          },
+         _convertToValue: function(displayValue) {
+            // var fData;
+            //
+            // fData = Formatter.getFormatterData(this._format, { value: displayValue, position: 0 });
+            //
+            // if (fData && fData.value) {
+            //    return fData.value;
+            // }
+            // if (this._replacer) {
+            //    return this._mask.replace(this.formatMaskCharsRegExp, this._replacer);
+            // }
+            // return '';
+            return displayValue;
+         },
+         _convertToDisplayValue: function(value) {
+            //var displayValue = value === null ? '' : value.toString();
+
+            return value;
+         },
 
          /**
           * Подготовить данные.
@@ -55,27 +75,18 @@ define('Controls/Input/Mask/ViewModel',
           * @returns {{value: (String), position: (Integer)}}
           */
          handleInput: function(splitValue, inputType) {
-            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._format);
+            //var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._format);
+            console.log(result);
+            //var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
+            // this._options.value = Formatter.getClearData(this._format, result.value).value;
+            // this._nextVersion();
+            //return ViewModel.superclass.handleInput.call(result);
+            var result = ViewModel.superclass.handleInput.call(this, splitValue, inputType);
 
-            this._options.value = Formatter.getClearData(this._format, result.value).value;
-            this._nextVersion();
-
+            this._displayValue = this._value;
             return result;
-         },
-
-         getDisplayValue: function() {
-            var fData;
-
-            fData = Formatter.getFormatterData(this._format, { value: this.getValue(), position: 0 });
-
-            if (fData && fData.value) {
-               return fData.value;
-            }
-            if (this._replacer) {
-               return this._mask.replace(this.formatMaskCharsRegExp, this._replacer);
-            }
-            return '';
          }
+
       });
 
       return ViewModel;
