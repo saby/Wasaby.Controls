@@ -10,7 +10,7 @@ import {
  * @name Controls/Utils/error/HandlerResult
  * @property {Function | String} template Шаблон отображения ошибки
  * @property {Object} [options] параметры построяния шаблона ошибки
- * @property {Controls/_error/Mode} [mode]
+ * @property {Controls/Utils/error/Mode} [mode]
  */
 export type HandlerResult<TOptions = object> = ParkingHandlerResult<TOptions> & {
     mode?: Mode;
@@ -24,7 +24,7 @@ export type DisplayOptions<TOptions = object> = Required<HandlerResult<TOptions>
  * Передаваемые в обработчик параметры
  * @typedef {Object}
  * @name Controls/Utils/error/HandlerConfig
- * @property {Controls/_error/Mode} mode Способ отображения ошибки (на всё окно / диалог / внутри компонента)
+ * @property {Controls/Utils/error/Mode} mode Способ отображения ошибки (на всё окно / диалог / внутри компонента)
  * @property {Error} Обрабатываемая ошибка
  */
 export type HandlerConfig<T extends Error = Error> = {

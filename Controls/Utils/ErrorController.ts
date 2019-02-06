@@ -84,7 +84,7 @@ class ErrorController {
      * @method
      * @name Controls/Utils/ErrorController#addHandler
      * @public
-     * @param {Controls/_error/types/Handler} handler
+     * @param {Controls/Utils/error/Handler} handler
      * @void
      */
     addHandler(handler: Handler): void {
@@ -95,7 +95,7 @@ class ErrorController {
      * @method
      * @name Controls/Utils/ErrorController#removeHandler
      * @public
-     * @param {Controls/_error/types/Handler} handler
+     * @param {Controls/Utils/error/Handler} handler
      * @void
      */
     removeHandler(handler: Handler): void {
@@ -106,8 +106,8 @@ class ErrorController {
      * @method
      * @name Controls/Utils/ErrorController#process
      * @public
-     * @param {Error | Controls/_error/types/HandlerConfig} config
-     * @return {void | Controls/_error/types/DisplayOptions}
+     * @param {Error | Controls/Utils/error/HandlerConfig} config
+     * @return {void | Controls/Utils/error/DisplayOptions}
      */
     process<T extends Error = Error>(config: HandlerConfig<T> | T): DisplayOptions {
         let _config = prepareConfig<T>(config);
