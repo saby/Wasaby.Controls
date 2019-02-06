@@ -119,7 +119,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          return {
             headingStyle: 'secondary',
             closeButtonVisibility: true,
-            closeButtonViewMode: 'default'
+            closeButtonViewMode: 'toolButton'
          };
       };
 

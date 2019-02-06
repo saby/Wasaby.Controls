@@ -89,7 +89,7 @@ define('Controls/Button/Close', [
             }
             if (options.style === 'default') {
                IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
-               self._transparent = false;
+               self._transparent = true;
             }
          }
       }
