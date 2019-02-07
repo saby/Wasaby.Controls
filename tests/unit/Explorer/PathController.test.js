@@ -127,36 +127,39 @@ define([
          });
       });
       it('_onBackButtonClick', function() {
-         var
-            instance = new PathController(),
-            event = {},
-            onBackButtonClickCalled = false;
-         instance._children = {
-            Path: {
-               _onBackButtonClick: function(e) {
-                  assert.equal(event, e);
-                  onBackButtonClickCalled = true;
-               }
+         var instance = new PathController();
+         instance.saveOptions({
+            items: items,
+            keyProperty: 'id',
+            parentProperty: 'parent',
+            root: null
+         });
+         instance._notify = function(e, args) {
+            if (e === 'itemClick') {
+               assert.equal(instance._options.items[instance._options.items.length - 2].get('parent'), args[0].get('parent'));
             }
          };
-         instance._onBackButtonClick(event);
-         assert.isTrue(onBackButtonClickCalled);
+         instance._onBackButtonClick({
+            stopPropagation: function() {
+
+            }
+         });
       });
       it('_onArrowClick', function() {
          var
             instance = new PathController(),
-            event = {},
-            onArrowClickCalled = false;
-         instance._children = {
-            Path: {
-               _onArrowClick: function(e) {
-                  assert.equal(event, e);
-                  onArrowClickCalled = true;
-               }
+            onarrowActivatedFired = false;
+         instance._notify = function(e, args) {
+            if (e === 'arrowActivated') {
+               onarrowActivatedFired = true;
             }
          };
-         instance._onArrowClick(event);
-         assert.isTrue(onArrowClickCalled);
+         instance._onArrowClick({
+            stopPropagation: function() {
+
+            }
+         });
+         assert.isTrue(onarrowActivatedFired);
       });
    });
 });

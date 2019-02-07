@@ -8,6 +8,7 @@ import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_crumbs/HeadingPath/HeadingPath');
 import backButtonTemplate = require('wml!Controls/_crumbs/HeadingPath/Back');
 import {Model} from 'Types/entity';
+import Common from './HeadingPath/Common';
 import 'Controls/Heading/Back';
 import 'css!theme?Controls/_crumbs/HeadingPath/HeadingPath';
 
@@ -59,16 +60,6 @@ var _private = {
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
         }
-    },
-
-    getRootModel: function (root, keyProperty) {
-        var rawData = {};
-
-        rawData[keyProperty] = root;
-        return new Model({
-            idProperty: keyProperty,
-            rawData: rawData
-        });
     }
 };
 
@@ -137,19 +128,10 @@ var BreadCrumbsPath = Control.extend({
 
     _notifyHandler: tmplNotify,
     _applyHighlighter: applyHighlighter,
-    _getRootModel: _private.getRootModel,
+    _getRootModel: Common.getRootModel,
 
-    _onBackButtonClick: function (e) {
-        var item;
-
-        if (this._options.items.length > 1) {
-            item = this._options.items[this._options.items.length - 2];
-        } else {
-            item = this._getRootModel(this._options.root, this._options.keyProperty);
-        }
-
-        this._notify('itemClick', [item]);
-        e.stopPropagation();
+    _onBackButtonClick: function (e: Event) {
+        Common.onBackButtonClick.call(this, e);
     },
 
     _onResize: function () {
@@ -160,9 +142,8 @@ var BreadCrumbsPath = Control.extend({
         this._notify('itemClick', [this._getRootModel(this._options.root, this._options.keyProperty)]);
     },
 
-    _onArrowClick: function (e) {
-        this._notify('arrowActivated');
-        e.stopPropagation();
+    _onArrowClick: function (e: Event) {
+        Common.onArrowClick.call(this, e);
     },
 
    _getCounterCaption: function(items) {
