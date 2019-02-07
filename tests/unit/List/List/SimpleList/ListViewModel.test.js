@@ -215,6 +215,25 @@ define([
             });
          });
 
+         it('getItemDataByItem', function() {
+            var item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+
+            assert.isUndefined(item.draggingItemData);
+            assert.isUndefined(item.dragTargetPosition);
+            assert.isUndefined(item.isDragging);
+
+            lvm.setDragEntity(dragEntity);
+            item = lvm.getItemDataByItem(lvm.getItemById('2', 'id'));
+            assert.isTrue(item.isDragging);
+            assert.isTrue(item.isVisible);
+            item = lvm.getItemDataByItem(lvm.getItemById('3', 'id'));
+            assert.isUndefined(item.isDragging);
+            assert.isFalse(item.isVisible);
+            item = lvm.getItemDataByItem(lvm.getItemById('1', 'id'));
+            assert.isUndefined(item.isDragging);
+            assert.isUndefined(item.isVisible);
+         });
+
          it('setDragTargetPosition', function() {
             assert.equal(lvm.getDragTargetPosition(), null);
             lvm.setDragTargetPosition(target);
@@ -235,7 +254,6 @@ define([
             assert.equal(lvm.getDragItemData(), null);
             lvm.setDragItemData(dragItemData);
             assert.equal(lvm.getDragItemData(), dragItemData);
-            assert.isTrue(dragItemData.isDragging);
             lvm.setDragItemData(null);
             assert.equal(lvm.getDragItemData(), null);
          });

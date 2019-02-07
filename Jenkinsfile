@@ -91,7 +91,7 @@ def download_coverage_json(version, type_tests, type_controls) {
         fi
         """
     sh returnStdout: true, script: script
-    def exist_json = fileExists 'result.json'
+    def exist_json = fileExists "result_${type_tests}.json"
     return exist_json
 
 }
@@ -614,15 +614,19 @@ node('controls') {
 
         if ( unit ){
             dir("./controls"){
-                sh """
-                npm cache clean --force
-                npm set registry https://registry.npmjs.org/
-                """
+                stage("build unit stand"){
+                    sh """
+                    npm cache clean --force
+                    npm set registry https://registry.npmjs.org/
+                    npm i
+                    npm run build
+                    """
+                }
                 stage ("Unit тесты node"){
                     sh returnStatus: true, script: """
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
-                    sh ./bin/test-isolated
+                    npm run test:node
                     """
                     junit keepLongStdio: true, testResults: "**/artifacts/test-isolated-report.xml"
                     unit_result = currentBuild.result == null
@@ -640,7 +644,7 @@ node('controls') {
                     export WEBDRIVER_remote_host=10.76.159.209
                     export WEBDRIVER_remote_port=4444
                     export test_report=artifacts/test-browser-report.xml
-                    sh ./bin/test-browser
+                    npm run test:browser
                     """
                     junit keepLongStdio: true, testResults: "**/artifacts/test-browser-report.xml"
                     unit_result = currentBuild.result == null
@@ -734,7 +738,7 @@ node('controls') {
             }
         }
 		def domain_name = ".unix.tensor.ru"
-		
+
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -840,19 +844,23 @@ node('controls') {
                         if (inte && !boss) {
                             if (sbis3_controls) {
                                 if ( download_coverage_json(version, "int", "SBIS3.CONTROLS") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
+                                } else {
+                                run_tests_int_sbis3 = false
                                 }
                             }
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "int", "VDOM") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int_vdom = false
                                 }
                             }
 
@@ -863,19 +871,23 @@ node('controls') {
                         if (regr && !boss) {
                             if (sbis3_controls) {
                             if ( download_coverage_json(version, "reg", "SBIS3.CONTROLS") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_sbis3 = false
                                  }
                                }
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "reg", "VDOM") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_vdom = false
                                  }
                                }
 
@@ -1131,7 +1143,7 @@ node('controls') {
     }
     gitlabStatusUpdate()
     if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_vdom ) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT FIND TESTS BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }

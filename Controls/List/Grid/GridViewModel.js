@@ -6,8 +6,9 @@ define('Controls/List/Grid/GridViewModel', [
    'Controls/Constants',
    'Core/core-clone',
    'Core/detection',
-   'Core/helpers/Object/isEqual'
-], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual) {
+   'Core/helpers/Object/isEqual',
+   'Controls/StickyHeader/Utils'
+], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual, stickyUtil) {
    'use strict';
 
    var
@@ -340,6 +341,9 @@ define('Controls/List/Grid/GridViewModel', [
                   column: this._headerColumns[this._curHeaderColumnIndex],
                   index: columnIndex
                };
+            if (!stickyUtil.isStickySupport()) {
+               cellClasses = cellClasses + ' controls-Grid__header-cell_static';
+            }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
@@ -652,7 +656,8 @@ define('Controls/List/Grid/GridViewModel', [
                      index: current.index,
                      key: current.key,
                      getPropValue: current.getPropValue,
-                     isEditing: current.isEditing
+                     isEditing: current.isEditing,
+                     isActive: current.isActive
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);

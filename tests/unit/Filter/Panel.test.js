@@ -80,12 +80,13 @@ define(
          it('apply', function() {
             var panel = getFilterPanel(config),
                isNotifyClose, filter;
-            panel._notify = (e, args) => {
+            panel._notify = (e, args, eCfg) => {
                if (e == 'close') {
                   isNotifyClose = true;
                } else if (e == 'sendResult') {
                   filter = args[0].filter;
                }
+               assert.isTrue(eCfg.bubbling);
             };
             isNotifyClose = false;
             panel._beforeMount(config);

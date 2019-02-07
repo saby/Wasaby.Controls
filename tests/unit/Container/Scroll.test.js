@@ -1,9 +1,10 @@
 define(
    [
+      'Core/constants',
       'Controls/Container/Scroll',
       'wml!tests/Container/resources/Content'
    ],
-   function(Scroll, Content) {
+   function(Constants, Scroll, Content) {
 
       'use strict';
 
@@ -81,6 +82,24 @@ define(
                sinon.assert.calledWith(scroll._notify, 'scrollbarReleased');
                assert.isFalse(scroll._scrollbarVisibility());
                sandbox.restore();
+            });
+         });
+
+         describe('_adjustContentMarginsForBlockRender', function() {
+            if (!Constants.isBrowserPlatform) {
+               return;
+            }
+
+            it('should not update the context if the height has not changed', function() {
+               sinon.stub(window, 'getComputedStyle').returns({ marginTop: 0, marginRight: 0 });
+               scroll._styleHideScrollbar = '';
+               scroll._stickyHeaderContext = {
+                  top: 0,
+                  updateConsumers: sinon.fake()
+               };
+               scroll._adjustContentMarginsForBlockRender();
+               sinon.assert.notCalled(scroll._stickyHeaderContext.updateConsumers);
+               sinon.restore();
             });
          });
 
