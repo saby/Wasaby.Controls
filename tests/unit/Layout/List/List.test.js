@@ -132,6 +132,10 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             errbackCalledWithPrefetch = true;
          };
          listLayoutWithPrefetch._options.source = listSource;
+   
+         List._private.searchErrback(listLayout, {canceled: true});
+         assert.isTrue(!!listLayout._source._$data);
+         
          List._private.searchErrback(listLayout, {});
          
          assert.deepEqual(null, listLayout._source._$data);
