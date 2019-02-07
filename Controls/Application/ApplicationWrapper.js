@@ -1,7 +1,8 @@
 define('Controls/Application/ApplicationWrapper', [
    'Core/Control',
    'Core/constants',
-   'wml!Controls/Application/ApplicationWrapper'
+   'wml!Controls/Application/ApplicationWrapper',
+   'css!Controls/Application/ApplicationWrapper'
 ], function(Control, constants, template) {
    'use strict';
 
