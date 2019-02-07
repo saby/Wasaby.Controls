@@ -839,7 +839,7 @@ node('controls') {
                         if (inte && !boss) {
                             if (sbis3_controls) {
                                 if ( download_coverage_json(version, "int", "SBIS3.CONTROLS") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
@@ -850,7 +850,7 @@ node('controls') {
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "int", "VDOM") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
@@ -866,7 +866,7 @@ node('controls') {
                         if (regr && !boss) {
                             if (sbis3_controls) {
                             if ( download_coverage_json(version, "reg", "SBIS3.CONTROLS") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
@@ -877,7 +877,7 @@ node('controls') {
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "reg", "VDOM") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
@@ -1138,7 +1138,7 @@ node('controls') {
     }
     gitlabStatusUpdate()
     if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_vdom ) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT TEST BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT FIND TESTS BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }
