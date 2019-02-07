@@ -618,7 +618,6 @@ define([
             setTimeout(function() {
                //TODO remove after https://online.sbis.ru/opendoc.html?guid=006711c6-917b-4028-8484-369361546446
                try {
-                  var x = a.b;
                   assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
                   BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
                   BaseControl._private.checkLoadToDirectionCapability(ctrl);
