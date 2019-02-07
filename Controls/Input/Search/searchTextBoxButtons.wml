@@ -1,6 +1,0 @@
-<div>
-    <ws:if data="{{ !_options.text }}">
-        <span on:click="_onResetClick()" class="controls-SearchForm__reset icon-size icon-Close" title="Очистить результаты поиска"></span>
-    </ws:if>
-    <span on:click="_onSearchClick()" class="controls-SearchForm__search icon-size icon-primary icon-Search2"></span>
-</div>

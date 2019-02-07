@@ -613,15 +613,19 @@ node('controls') {
 
         if ( unit ){
             dir("./controls"){
-                sh """
-                npm cache clean --force
-                npm set registry https://registry.npmjs.org/
-                """
+                stage("build unit stand"){
+                    sh """
+                    npm cache clean --force
+                    npm set registry https://registry.npmjs.org/
+                    npm i
+                    npm run build
+                    """
+                }
                 stage ("Unit тесты node"){
                     sh returnStatus: true, script: """
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
-                    sh ./bin/test-isolated
+                    npm run test:node
                     """
                     junit keepLongStdio: true, testResults: "**/artifacts/test-isolated-report.xml"
                     unit_result = currentBuild.result == null
@@ -639,7 +643,7 @@ node('controls') {
                     export WEBDRIVER_remote_host=10.76.159.209
                     export WEBDRIVER_remote_port=4444
                     export test_report=artifacts/test-browser-report.xml
-                    sh ./bin/test-browser
+                    npm run test:browser
                     """
                     junit keepLongStdio: true, testResults: "**/artifacts/test-browser-report.xml"
                     unit_result = currentBuild.result == null
@@ -733,7 +737,7 @@ node('controls') {
             }
         }
 		def domain_name = ".unix.tensor.ru"
-		
+
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){

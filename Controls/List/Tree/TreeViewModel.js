@@ -417,8 +417,8 @@ define('Controls/List/Tree/TreeViewModel', [
 
             //If you hover over the dragged item, and the current position is on the folder,
             //then you need to return the position that was before the folder.
-            if (this._prevDragTargetPosition && this._draggingItemData.index === targetData.index) {
-               result = this._prevDragTargetPosition;
+            if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
+               result = this._prevDragTargetPosition || null;
             } else if (targetData.dispItem.isNode()) {
                if (position === 'after' || position === 'before') {
                   result = this._calculateDragTargetPosition(targetData, position);
