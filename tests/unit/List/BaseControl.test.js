@@ -138,7 +138,7 @@ define([
             }, 100);
          }, 1);
       });
-   
+
       it('_private::getSortingOnChange', function() {
          var getEmptySorting = function() {
             return [];
@@ -152,7 +152,7 @@ define([
          var getMultiSorting = function() {
             return [{test: 'DESC'}, {test2: 'DESC'}];
          };
-      
+
          assert.deepEqual(BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
          assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
          assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
@@ -658,7 +658,7 @@ define([
 
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
-   
+
          BaseControl._private.showIndicator(ctrl);
          assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
@@ -785,15 +785,15 @@ define([
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
 
             BaseControl._private.handleListScroll(ctrl, 200, 'middle');
-            
+
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);
                done();
             }, 100);
-            
+
          }, 100);
       });
-      
+
       it('scrollHide/scrollShow base control state', function() {
          var cfg = {
             navigation: {
@@ -811,10 +811,10 @@ define([
          };
          var baseControl = new BaseControl(cfg);
          baseControl.saveOptions(cfg);
-   
+
          BaseControl._private.onScrollHide(baseControl);
          assert.equal(baseControl._loadOffset, 0);
-   
+
          BaseControl._private.onScrollShow(baseControl);
          assert.equal(baseControl._loadOffset, 100);
       });
@@ -2019,6 +2019,7 @@ define([
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
@@ -2066,6 +2067,7 @@ define([
                itemData.multiSelectStatus = false;
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
@@ -2117,7 +2119,7 @@ define([
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
-
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;

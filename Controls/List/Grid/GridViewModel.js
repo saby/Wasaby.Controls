@@ -89,8 +89,16 @@ define('Controls/List/Grid/GridViewModel', [
 
             if (current.isSelected) {
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
+
                if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_selected__first' + ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
+
+                  /* В старых браузерах маркер навешивается стилями данного класса, т.к. вёрстка там другая.
+                  *  Не навешиваем класс, если не нужно показывать маркер
+                  */
+                  if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
+                     cellClasses += ' controls-Grid__row-cell_selected__first';
+                  }
+                  cellClasses += ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
                   cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
@@ -644,7 +652,8 @@ define('Controls/List/Grid/GridViewModel', [
                      index: current.index,
                      key: current.key,
                      getPropValue: current.getPropValue,
-                     isEditing: current.isEditing
+                     isEditing: current.isEditing,
+                     isActive: current.isActive
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
