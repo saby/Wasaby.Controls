@@ -8,11 +8,20 @@ define('Controls/Input/Money/ViewModel',
       'use strict';
 
       var _private = {
-         prepareData: function(result) {
+         prepareData: function(result, precision) {
+            var value = result.value;
+            var lengthDecimalPath = value.length - value.indexOf('.') - 1;
+            var countOfMissingZeros = value.length && precision - lengthDecimalPath;
+
+            if (countOfMissingZeros) {
+               value = value + '0'.repeat(countOfMissingZeros);
+            }
+
             var position = result.position;
+
             return {
-               before: result.value.substring(0, position),
-               after: result.value.substring(position, result.value.length),
+               before: value.substring(0, position),
+               after: value.substring(position, value.length),
                insert: '',
                delete: ''
             };
@@ -46,7 +55,9 @@ define('Controls/Input/Money/ViewModel',
                   break;
             }
 
-            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
+            var data = _private.prepareData(result, this._options.precision);
+
+            return ViewModel.superclass.handleInput.call(this, data, inputType);
          }
       });
 
