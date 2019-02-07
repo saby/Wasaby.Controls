@@ -45,14 +45,14 @@
             </ws:if>
          </ws:if>
          <ws:else>
-            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                <span class="controls-addition-color">{{ itemData.item[itemData.column.displayProperty] }}</span>
             </div>
-            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                <span class="controls-addition-color">{{ itemData.item.subdivision }}</span>
             </div>
             <ws:if data="{{ itemData.item.subdivision2 }}">
-               <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+               <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                   <span class="controls-addition-color">{{ itemData.item.subdivision2 }}</span>
                </div>
             </ws:if>

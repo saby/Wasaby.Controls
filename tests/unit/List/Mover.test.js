@@ -342,7 +342,37 @@ define([
          });
       });
 
+      it('move returns deferred', function() {
+         var result;
 
+         //dont move moveItemUp
+         result = mover.moveItemUp(1);
+         assert.isTrue(result instanceof Deferred);
+
+         //move moveItemUp
+         result = mover.moveItemUp(2);
+         assert.isTrue(result instanceof Deferred);
+
+         //dont move moveItemDown
+         result = mover.moveItemDown(5);
+         assert.isTrue(result instanceof Deferred);
+
+         //move moveItemDown
+         result = mover.moveItemDown(4);
+         assert.isTrue(result instanceof Deferred);
+
+         //move without target moveItems
+         result = mover.moveItems([1, 2]);
+         assert.isTrue(result instanceof Deferred);
+
+         //move without items moveItems
+         result = mover.moveItems([], 3, 'after');
+         assert.isTrue(result instanceof Deferred);
+
+         //move moveItems
+         result = mover.moveItems([1, 2], 3, 'after');
+         assert.isTrue(result instanceof Deferred);
+      });
 
    });
 });
