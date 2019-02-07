@@ -1139,7 +1139,7 @@ node('controls') {
     }
     gitlabStatusUpdate()
     if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_vdom ) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT TEST BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT FIND TESTS BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }
