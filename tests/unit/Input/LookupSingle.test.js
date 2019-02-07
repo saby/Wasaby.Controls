@@ -154,7 +154,6 @@ define([
          assert.deepEqual(newValue, [1]);
       });
 
-      /* toDo до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
       it('_choose', function() {
          var
             isActivate = false,
@@ -172,7 +171,6 @@ define([
          lookup._choose();
          assert.isTrue(isActivate);
       });
-      */
 
       it('_deactivated', function() {
          var lookup = new Lookup();
@@ -217,6 +215,15 @@ define([
 
          lookup._options.multiSelect = true;
          assert.isTrue(lookup._determineAutoDropDown());
+      });
+
+      it('_onClickShowSelector', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._onClickShowSelector();
+
+         assert.isFalse(lookup._suggestState);
       });
    });
 });

@@ -208,6 +208,17 @@ define('Controls/List/BaseControl', [
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
+         //при добавлении пачки в начало (подгрузка по скроллу вверх нужно чтоб был минимальный проскролл, чтоб пачка ушла за границы видимой части как и должна а не отобразилась сверху)
+         //Опция нужна, т.к. есть проблемы с queue при отрисовке изменений ViewModel, поэтому данный функционал включаем только по месту (в календаре)
+         //разобраться с queue по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63
+         if (self._options.fix1176592913 && direction === 'up') {
+            self._notify('doScroll', ['scrollCompensation'], {bubbling: true});
+         }
+
+         /**/
+
          if (self._sourceController) {
             return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                if (userCallback && userCallback instanceof Function) {
@@ -385,9 +396,19 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollHide: function(self) {
-         self._loadOffset = 0;
-         self._pagingVisible = false;
-         self._forceUpdate();
+         var needUpdate = false;
+         if (self._loadOffset !== 0) {
+            self._loadOffset = 0;
+            needUpdate = true;
+         }
+         if (self._pagingVisible) {
+            self._pagingVisible = false;
+            needUpdate = true;
+         }
+
+         if (needUpdate) {
+            self._forceUpdate();
+         }
       },
 
       createScrollPagingController: function(self) {
@@ -681,7 +702,7 @@ define('Controls/List/BaseControl', [
 
       _needScrollCalculation: false,
       _loadTriggerVisibility: null,
-      _loadOffset: 100,
+      _loadOffset: 0,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
@@ -773,6 +794,9 @@ define('Controls/List/BaseControl', [
          }
          if (this._virtualScroll) {
             this._virtualScroll.setItemsContainer(this._children.listView.getItemsContainer());
+         }
+         if (this._options.fix1176592913 && this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
          }
       },
 
@@ -880,7 +904,8 @@ define('Controls/List/BaseControl', [
       },
 
       _afterUpdate: function(oldOptions) {
-         if (this._hasUndrawChanges) {
+         /*Оставляю старое поведение без опции для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
+         if (!this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.restoreMarkedKey(this);
             _private.checkLoadToDirectionCapability(this);
@@ -953,6 +978,7 @@ define('Controls/List/BaseControl', [
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
+            this._listViewModel.setActiveItem(itemData);
          }
       },
 
@@ -998,7 +1024,15 @@ define('Controls/List/BaseControl', [
       },
 
       _viewResize: function() {
-         _private.checkLoadToDirectionCapability(this);
+         /*TODO переношу сюда костыль сделанный по https://online.sbis.ru/opendoc.html?guid=ce307671-679e-4373-bc0e-c11149621c2a*/
+         /*только под опцией для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
+         if (this._options.fix1176592913 && this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+            _private.restoreMarkedKey(this);
+            if (this._virtualScroll) {
+               this._virtualScroll.updateItemsSizes();
+            }
+         }
       },
 
       beginEdit: function(options) {
@@ -1018,20 +1052,6 @@ define('Controls/List/BaseControl', [
       },
 
       _notifyHandler: tmplNotify,
-
-      _onAfterBeginEdit: function(e, item, isAdd) {
-         this._notify('afterBeginEdit', [item, isAdd]);
-         if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item);
-         }
-      },
-
-      _onAfterEndEdit: function(e, item, isAdd) {
-         this._notify('afterEndEdit', [item, isAdd]);
-         if (this._options.itemActions) {
-            this._children.itemActions.updateItemActions(item);
-         }
-      },
 
       _closeSwipe: function(event, item) {
          this._children.itemActions.updateItemActions(item);
@@ -1085,7 +1105,7 @@ define('Controls/List/BaseControl', [
 
       _dragStart: function(event, dragObject) {
          this._listViewModel.setDragEntity(dragObject.entity);
-         this._listViewModel.setDragItemData(this._itemDragData);
+         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
       },
 
       _dragEnd: function(event, dragObject) {
@@ -1098,7 +1118,7 @@ define('Controls/List/BaseControl', [
          var targetPosition = this._listViewModel.getDragTargetPosition();
 
          if (targetPosition) {
-            this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
+            this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
          }
       },
       _onViewKeyDown: function(event) {
@@ -1127,6 +1147,21 @@ define('Controls/List/BaseControl', [
       },
 
       _documentDragEnd: function() {
+         var self = this;
+
+         //Reset the state of the dragndrop after the movement on the source happens.
+         if (this._dragEndResult instanceof Deferred) {
+            _private.showIndicator(self);
+            this._dragEndResult.addBoth(function() {
+               self._documentDragEndHandler();
+               _private.hideIndicator(self);
+            });
+         } else {
+            this._documentDragEndHandler();
+         }
+      },
+
+      _documentDragEndHandler: function() {
          this._listViewModel.setDragTargetPosition(null);
          this._listViewModel.setDragItemData(null);
          this._listViewModel.setDragEntity(null);
@@ -1135,18 +1170,13 @@ define('Controls/List/BaseControl', [
       _itemMouseEnter: function(event, itemData) {
          var
             dragPosition,
-            dragItemData,
             dragEntity = this._listViewModel.getDragEntity();
 
          if (dragEntity) {
-            dragItemData = this._listViewModel.getDragItemData();
+            dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
 
-            if (!dragItemData || dragItemData.key !== itemData.key) {
-               dragPosition = this._listViewModel.calculateDragTargetPosition(itemData);
-
-               if (this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
-                  this._listViewModel.setDragTargetPosition(dragPosition);
-               }
+            if (dragPosition && this._notify('changeDragTarget', [this._listViewModel.getDragEntity(), dragPosition.item, dragPosition.position]) !== false) {
+               this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
       },

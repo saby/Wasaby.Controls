@@ -20,7 +20,7 @@ define('Controls/Validate/Validators/IsRequired', ['Core/core-instance'], functi
             if (cInstance.instanceOfModule(args.value, 'Types/collection:List')) {
                isEmpty = !Boolean(args.value.getCount());
             } else if (args.value instanceof Array) {
-               isEmpty = !Boolean(args.value.length);
+               isEmpty = !Boolean(args.value.length) || (args.value.length === 1 && args.value[0] === null);
             } else if (args.value instanceof Date) {
                isEmpty = false;
             } else if (args.value instanceof Object) {

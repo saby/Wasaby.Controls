@@ -51,7 +51,9 @@
                </div>
             </ws:if>
             <ws:if data="{{_options.footerTemplate}}">
-               <ws:partial template="{{_options.footerTemplate}}"/>
+                <div class="controls-BaseControl__footer-content">
+                    <ws:partial template="{{_options.footerTemplate}}"/>
+                </div>
             </ws:if>
             <ws:if data="{{_shouldDrawFooter}}">
                <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
@@ -88,9 +90,9 @@
           name="editInPlace"
           editingConfig="{{_options.editingConfig}}"
           on:beforeBeginEdit="_notifyHandler('beforeBeginEdit')"
-          on:afterBeginEdit="_onAfterBeginEdit()"
+          on:afterBeginEdit="_notifyHandler('afterBeginEdit')"
           on:beforeEndEdit="_notifyHandler('beforeEndEdit')"
-          on:afterEndEdit="_onAfterEndEdit()"
+          on:afterEndEdit="_notifyHandler('afterEndEdit')"
           listModel="{{_listViewModel}}"
           source="{{_sourceController}}"/>
        <Controls.List.ItemActions.ItemActionsControl
@@ -117,6 +119,12 @@
           swipeViewMode="{{_options.swipeViewMode}}"
           itemActions="{{_options.itemActions}}"
           name="swipeControl"/>
+
+        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
+            <div class="controls-BaseControl__emptyTemplate">
+                <ws:partial template="{{_options.emptyTemplate}}"/>
+            </div>
+        </ws:if>
     </ws:if>
 
     <ws:if data="{{_needScrollCalculation}}">

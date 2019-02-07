@@ -26,8 +26,3 @@
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
 </table>
-<ws:if data="{{_options.emptyTemplate && _listModel && !_listModel.getCount()}}">
-   <div class="controls-Grid__emptyTemplate">
-      <ws:partial template="{{_options.emptyTemplate}}"/>
-   </div>
-</ws:if>

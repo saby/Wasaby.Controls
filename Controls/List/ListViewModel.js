@@ -102,6 +102,7 @@ define('Controls/List/ListViewModel',
          getItemDataByItem: function() {
             var
                itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
+               dragItems,
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions = this._actions[this.getCurrentIndex()];
@@ -116,7 +117,9 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
             itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
             itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
-            if (itemsModelCurrent.itemActions) {
+
+            //When you drag'n'drop of items do not need to show itemActions.
+            if (itemsModelCurrent.itemActions && !this._dragEntity) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
                } else {
@@ -141,12 +144,14 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._draggingItemData) {
-               if (this._draggingItemData.key === itemsModelCurrent.key) {
+
+            if (this._dragEntity) {
+               dragItems = this._dragEntity.getItems();
+               if (dragItems[0] === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
-               if (this._dragEntity.getItems().indexOf(itemsModelCurrent.key) !== -1) {
-                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
+               if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+                  itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
                }
                if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                   itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
@@ -248,9 +253,6 @@ define('Controls/List/ListViewModel',
 
          setDragItemData: function(itemData) {
             this._draggingItemData = itemData;
-            if (this._draggingItemData) {
-               this._draggingItemData.isDragging = true;
-            }
             this._nextVersion();
             this._notify('onListChange');
          },
@@ -263,6 +265,11 @@ define('Controls/List/ListViewModel',
             var
                position,
                prevIndex = -1;
+
+            //If you hover on a record that is being dragged, then the position should not change.
+            if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
+               return null;
+            }
 
             if (this._dragTargetPosition) {
                prevIndex = this._dragTargetPosition.index;

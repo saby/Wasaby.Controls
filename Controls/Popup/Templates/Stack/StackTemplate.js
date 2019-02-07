@@ -90,6 +90,9 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
             if (options.bottomArea) {
                IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
             }
+            if (options.closeButtonStyle) {
+               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
+            }
             this._updateMaximizeButtonTitle(options.maximized);
          },
 
