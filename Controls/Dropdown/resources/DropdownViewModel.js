@@ -163,6 +163,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
+            this._nextVersion();
          },
          hasHierarchy: function() {
             if (!this._options.parentProperty || !this._options.nodeProperty) {
