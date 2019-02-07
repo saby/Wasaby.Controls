@@ -550,7 +550,7 @@ node('controls') {
                         if ("${params.ws_revision}" == "sdk" ){
                             ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
                         } else {
-                            sh "python3 ${workspace}/constructor/replace_package_json.py ${workspace}/controls/ sbis3-ws ${BRANCH_NAME}"
+                            sh "python3 ${workspace}/constructor/replace_package_json.py ${workspace}/controls/ sbis3-ws ${params.ws_revision}"
                         }
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
