@@ -549,7 +549,7 @@ node('controls') {
                         def ws_revision = params.ws_revision
                         if ("${params.ws_revision}" == "sdk" ){
                             ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
-                        else {
+                        } else {
                             sh "python3 ${workspace}/constructor/replace_package_json.py ${workspace}/controls/ sbis3-ws ${BRANCH_NAME}"
                         }
                         dir(workspace) {
