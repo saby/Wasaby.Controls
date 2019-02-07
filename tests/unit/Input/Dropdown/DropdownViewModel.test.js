@@ -95,7 +95,7 @@ define(
          let viewModel2 = new DropdownViewModel(config2);
    
          function setViewModelItems(viewModel, items) {
-            viewModel._options.items = items;
+            viewModel.setItems({items: items});
          }
 
          it('check hier items collection', () => {
@@ -103,8 +103,10 @@ define(
          });
 
          it('check empty hierarchy', () => {
+            var version = viewModel.getVersion();
             viewModel._options.nodeProperty = null;
             viewModel.setFilter(viewModel.getDisplayFilter());
+            assert.isTrue(viewModel.getVersion() > version);
             assert.equal(viewModel._itemsModel._display.getCount(), 8);
          });
 
@@ -248,19 +250,24 @@ define(
    
          it('hasAdditional', () => {
             var viewModel = new DropdownViewModel(config);
+            var version = viewModel.getVersion();
             viewModel._options.additionalProperty = 'additional';
             setViewModelItems(viewModel, rs);
+            assert.isTrue(viewModel.getVersion() > version);
             assert.isTrue(!!viewModel.hasAdditional());
             setViewModelItems(viewModel, rs2);
+            assert.isTrue(viewModel.getVersion() > version);
             assert.isFalse(!!viewModel.hasAdditional());
-   
-            viewModel._options.rootKey = 'test';
+            
+            viewModel.setRootKey('test');
+            assert.isTrue(viewModel.getVersion() > version);
             setViewModelItems(viewModel, rs);
             assert.isFalse(!!viewModel.hasAdditional());
             setViewModelItems(viewModel, rs2);
             assert.isFalse(!!viewModel.hasAdditional());
    
-            viewModel._options.rootKey = null;
+            viewModel.setRootKey(null);
+            assert.isTrue(viewModel.getVersion() > version);
             viewModel._options.additionalProperty = '';
             setViewModelItems(viewModel, rs);
             assert.isFalse(!!viewModel.hasAdditional(rs));

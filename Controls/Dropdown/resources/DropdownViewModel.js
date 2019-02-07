@@ -82,6 +82,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
 
          setFilter: function(filter) {
             this._itemsModel.setFilter(filter);
+            this._nextVersion();
          },
 
          getDisplayFilter: function() {
@@ -92,12 +93,15 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
 
          setItems: function(options) {
+            this._options.items = options.items;
             this._itemsModel.setItems(options.items);
+            this._nextVersion();
          },
 
          setRootKey: function(key) {
             this._options.rootKey = key;
             this.setFilter(this.getDisplayFilter());
+            this._nextVersion();
          },
 
          destroy: function() {
