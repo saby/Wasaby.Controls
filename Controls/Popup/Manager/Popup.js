@@ -122,10 +122,12 @@ define('Controls/Popup/Manager/Popup',
           */
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
-            //After updating popup will be taking autofocus
-            if(this._options.autofocus) {
+
+            // After updating popup will be taking autofocus
+            if (this._options.autofocus) {
                this.activate();
             }
+
             // After updating popup position we will updating the position of the popups open with it.
             runDelayed(this._callOpenersUpdate.bind(this));
          },
