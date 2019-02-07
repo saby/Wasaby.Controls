@@ -87,9 +87,9 @@ define('Controls/Button/Close', [
             if (options.style !== undefined) {
                IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
             }
-            if (options.style === 'default') {
+            if (options.style !== 'default') {
                IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
-               self._transparent = true;
+               self._transparent = false;
             }
          }
       }
@@ -98,7 +98,7 @@ define('Controls/Button/Close', [
    var CloseButton = Control.extend({
       _template: template,
       _viewMode: null,
-      _transparent: false,
+      _transparent: true,
 
       _beforeMount: function(options) {
          _private.compatibleViewMode(options, this);
