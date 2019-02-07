@@ -364,6 +364,14 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          assert.isFalse(List._private.isFilterChanged(listLayout, context));
    
          listLayout._filter = getEmptyContext().filterLayoutField.filter;
+         assert.isFalse(List._private.isFilterChanged(listLayout, context));
+   
+         listLayout._saveContextObject(getEmptyContext());
+         listLayout._filter = getEmptyContext().filterLayoutField.filter;
+         assert.isTrue(List._private.isFilterChanged(listLayout, context));
+   
+         listLayout._saveContextObject(getEmptyContext());
+         listLayout._filter = getFilledContext().filterLayoutField.filter;
          assert.isTrue(List._private.isFilterChanged(listLayout, context));
       });
    
