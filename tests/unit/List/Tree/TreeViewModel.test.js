@@ -114,6 +114,31 @@ define([
       describe('"_private" block', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
+         
+         it('removeNodeFromExpanded', function() {
+            var removed = false;
+            var self = {
+               _expandedItems: {'test': true}
+            };
+            self._notify = function(event) {
+               if (event === 'onNodeRemoved') {
+                  removed = true;
+               }
+            };
+            TreeViewModel._private.removeNodeFromExpanded(self, 'test');
+            
+            assert.equal(Object.keys(self._expandedItems).length, 0);
+            assert.isTrue(removed);
+         });
+   
+         it('resetExpandedItems', function() {
+            treeViewModel.setExpandedItems(['123', '234', '1']);
+            assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 3);
+            
+            treeViewModel.resetExpandedItems();
+            assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 0);
+         });
+         
          it('isVisibleItem', function() {
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
