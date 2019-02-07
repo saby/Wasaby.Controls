@@ -3,7 +3,8 @@
             controls-Render_textAlign_{{_options.textAlign}}
             controls-Render_style_{{_options.style}}{{_getState()}}
             controls-Render_fontStyle_{{_options.fontStyle}}_size_{{_options.size}}
-            {{_options.multiline ? 'controls-Render_multiline' : 'controls-Render_size_' + _options.size}}">
+            {{_options.multiline ? 'controls-Render_multiline' : 'controls-Render_size_' + _options.size}}
+            {{_options.roundBorder ? 'controls-Render_size_' + _options.size + '_roundBorder'}}">
    <div class="controls-Render__wrapper">
       <ws:if data="{{!_options.multiline}}">
          <span class="controls-Render__baseline">&#65279;</span>
