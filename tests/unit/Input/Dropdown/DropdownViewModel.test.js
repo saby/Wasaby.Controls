@@ -253,12 +253,14 @@ define(
             var version = viewModel.getVersion();
             viewModel._options.additionalProperty = 'additional';
             setViewModelItems(viewModel, rs);
-            assert.isTrue(viewModel.getVersion() > version);
+            assert.isTrue(viewModel.getVersion() === version);
             assert.isTrue(!!viewModel.hasAdditional());
+            version = viewModel.getVersion();
             setViewModelItems(viewModel, rs2);
             assert.isTrue(viewModel.getVersion() > version);
             assert.isFalse(!!viewModel.hasAdditional());
-            
+   
+            version = viewModel.getVersion();
             viewModel.setRootKey('test');
             assert.isTrue(viewModel.getVersion() > version);
             setViewModelItems(viewModel, rs);
