@@ -1120,8 +1120,8 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( (regr || all_regr) && (run_tests_reg_sbis3 || run_tests_reg_vdom)){
-        if (sbis3_controls) {
+    if ( (regr || all_regr) ){
+        if (run_tests_reg_sbis3) {
             dir("./controls/tests/reg/SBIS3.CONTROLS"){
                 sh """mkdir -p reporter"""
                 sh """mv capture_report/report.html reporter/report.html"""
@@ -1130,7 +1130,7 @@ node('controls') {
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './reporter/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
             }
         }
-        if (vdom_controls) {
+        if (run_tests_reg_vdom) {
             dir("./controls/tests/reg/VDOM"){
                 sh """mkdir -p reporter"""
                 sh """mv capture_report/report.html reporter/report.html"""
