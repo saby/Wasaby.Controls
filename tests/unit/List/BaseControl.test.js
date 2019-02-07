@@ -616,16 +616,28 @@ define([
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
-               assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+               //TODO remove after https://online.sbis.ru/opendoc.html?guid=006711c6-917b-4028-8484-369361546446
+               try {
+                  var x = a.b;
+                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+                  BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
+                  BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
-               BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-               BaseControl._private.checkLoadToDirectionCapability(ctrl);
+                  setTimeout(function() {
+                     try {
+                        assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     }
+                     catch(e) {
+                        done(e);
+                     }
 
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     done();
+                  }, 100);
+               }
+               catch (e) {
+                  done(e);
+               }
 
-                  done();
-               }, 100);
             }, 100);
          }, 100);
       });
