@@ -65,7 +65,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             multiLineState = newOptions.multiLine && itemsCount;
 
          if (itemsCount) {
-            // if counter not fixed
+            // in mode read only and single line, counter does not affect the collection
             if (!newOptions.readOnly || newOptions.multiLine) {
                counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
             }
@@ -362,7 +362,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return !this._options.items.getCount();
       },
       
-      _openInfoBox: function() {
+      _openInfoBox: function(event, config) {
+         config.maxWidth = this._container.offsetWidth;
          this._suggestState = false;
          this._infoboxOpened = true;
       },
