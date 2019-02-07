@@ -54,6 +54,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       calculatingSizes: function(self, newOptions) {
          var
+            counterWidth,
             isShowCounter = false,
             allItemsInOneRow = false,
             maxVisibleItems = newOptions.maxVisibleItems,
@@ -61,10 +62,14 @@ define('Controls/Selector/Lookup/_Lookup', [
             inputWidth, lastRowCollectionWidth,
             itemsSizesLastRow, availableWidth, lastSelectedItems,
             itemsCount = newOptions.items.getCount(),
-            multiLineState = newOptions.multiLine && itemsCount,
-            counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+            multiLineState = newOptions.multiLine && itemsCount;
 
          if (itemsCount) {
+            // if counter not fixed
+            if (!newOptions.readOnly || newOptions.multiLine) {
+               counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+            }
+
             lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
             itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);

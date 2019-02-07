@@ -59,7 +59,12 @@ define('Controls/Selector/SelectedCollection',
             return templateOptions;
          },
 
-         getCounterWidth: function(itemsCount) {
+         getCounterWidth: function(itemsCount, readOnly, itemsLayout) {
+            // if counter fixed
+            if (readOnly && itemsLayout === 'oneRow') {
+               return 0;
+            }
+
             return selectedCollectionUtils.getCounterWidth(itemsCount);
          }
       };
@@ -82,7 +87,7 @@ define('Controls/Selector/SelectedCollection',
             this._items = _private.getItemsInArray(newOptions.items);
             this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
             this._templateOptions = _private.getTemplateOptions(this, newOptions);
-            this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length);
+            this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length, newOptions.readOnly, newOptions.itemsLayout);
          },
 
          _afterUpdate: function() {
@@ -92,7 +97,7 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _afterMount: function() {
-            this._counterWidth = this._counterWidth || _private.getCounterWidth(this._items.length);
+            this._counterWidth = this._counterWidth || _private.getCounterWidth(this._items.length, this._options.readOnly, this._options.itemsLayout);
             this._templateOptions = _private.getTemplateOptions(this, this._options);
             this._forceUpdate();
          },
