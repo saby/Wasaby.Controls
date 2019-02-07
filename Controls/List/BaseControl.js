@@ -1105,7 +1105,7 @@ define('Controls/List/BaseControl', [
 
       _dragStart: function(event, dragObject) {
          this._listViewModel.setDragEntity(dragObject.entity);
-         this._listViewModel.setDragItemData(this._itemDragData);
+         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
       },
 
       _dragEnd: function(event, dragObject) {
