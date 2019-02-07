@@ -139,6 +139,24 @@ define([
          assert.equal(explorer._items, items);
       });
 
+      it('_beforeUpdate.setRoot', function() {
+         var
+            cfg = {
+               root: 'rootNode',
+               viewMode: 'tree'
+            },
+            newCfg = {
+               root: 'someNewRoot',
+               viewMode: 'tree'
+            },
+            instance = new Explorer(cfg);
+         instance.saveOptions(cfg);
+         instance._beforeMount(cfg);
+         assert.equal(instance._root, 'rootNode');
+         instance._beforeUpdate(newCfg);
+         assert.equal(instance._root, 'someNewRoot');
+      });
+
       it('setViewMode', function() {
          var
             cfg = {
@@ -206,6 +224,85 @@ define([
          assert.deepEqual(events[0].eventArgs, [1, 2]);
          assert.equal(events[1].eventName, 'beforeBeginEdit');
          assert.deepEqual(events[1].eventArgs, []);
+      });
+
+      describe('_notify(rootChanged)', function() {
+         var
+            isNotified = false,
+            _notify = function(eName, value) {
+               isNotified = (eName === 'rootChanged');
+            };
+
+         it('backByPath', function() {
+            isNotified = false,
+
+            Explorer._private.setRoot = function(){};
+            Explorer._private.backByPath({
+               _breadCrumbsItems: ['1'],
+               _notify,
+               _options: {
+                  root: 1
+               },
+               _root: -1
+            });
+
+            assert.isTrue(isNotified);
+            isNotified = false;
+
+         });
+
+         it('_beforeUpdate', function() {
+            isNotified = false;
+
+            var
+               explorer = new Explorer({});
+            explorer.saveOptions({});
+            Explorer._private.setRoot = function(){};
+            explorer._notify = _notify;
+            explorer._beforeUpdate({
+               root: 1,
+               viewMode: null
+            });
+
+            assert.isFalse(isNotified);
+            isNotified = false;
+
+         });
+
+         it('_onItemClick', function() {
+            isNotified = false;
+
+            var
+               explorer = new Explorer({});
+            explorer.saveOptions({});
+            Explorer._private.setRoot = function(){};
+            explorer._notify = _notify;
+
+            explorer._onItemClick({}, {
+               get: function() {
+                  return true;
+               },
+               getId: function() {}
+            });
+
+            assert.isTrue(isNotified);
+         });
+
+         it('_onBreadCrumbsClick', function() {
+            isNotified = false;
+
+            var
+               explorer = new Explorer({});
+            explorer.saveOptions({});
+            Explorer._private.setRoot = function(){};
+            explorer._notify = _notify;
+
+            explorer._onBreadCrumbsClick({}, {
+               getId: function() {}
+            });
+
+            assert.isTrue(isNotified);
+         });
       });
 
       describe('EditInPlace', function() {
