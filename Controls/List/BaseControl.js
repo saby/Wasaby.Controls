@@ -795,6 +795,9 @@ define('Controls/List/BaseControl', [
          if (this._virtualScroll) {
             this._virtualScroll.setItemsContainer(this._children.listView.getItemsContainer());
          }
+         if (this._options.fix1176592913 && this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+         }
       },
 
       _beforeUpdate: function(newOptions) {
@@ -975,6 +978,7 @@ define('Controls/List/BaseControl', [
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
+            this._listViewModel.setActiveItem(itemData);
          }
       },
 
