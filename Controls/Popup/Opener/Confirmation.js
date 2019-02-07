@@ -65,7 +65,7 @@ define('Controls/Popup/Opener/Confirmation',
       var _private = {
          compatibleOptions: function(self, popupOptions) {
             // For the old page, set the zIndex manually
-            popupOptions.zIndex = popupOptions.zIndex || getZIndex(self);
+            popupOptions.zIndex = popupOptions.zIndex || popupOptions.templateOptions.zIndex || getZIndex(self);
          }
       };
 
