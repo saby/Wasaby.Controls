@@ -16,6 +16,13 @@
    float: left;
    margin-top: @spacing_ListView-item-between-checkbox-borderTop;
 }
+.controls-ListView__checkbox.controls-ListView__checkbox-onhover {
+  display: none;
+}
+
+.ws-is-no-touch .controls-ListView__itemV:hover .controls-ListView__checkbox-onhover {
+  display: inline-block;
+}
 
 .controls-ListView__footer__paddingLeft_withCheckboxes {
    padding-left: @spacing_ListView-between-content-checkbox + @width_CheckBox__clickArea;
