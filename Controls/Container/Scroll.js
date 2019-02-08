@@ -205,6 +205,8 @@ define('Controls/Container/Scroll',
 
             _pagingState: null,
 
+            _registeredHeadersIds: null,
+
             /**
              * @type {Object|null}
              * @private
@@ -223,6 +225,7 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
+               this._registeredHeadersIds = [];
                this._stickyHeadersIds = {
                   top: [],
                   bottom: []
@@ -465,12 +468,27 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
+
+               // If the header is single, then it makes no sense to send notifications.
+               // Thus, we prevent unnecessary force updates on receiving messages.
+               if (this._registeredHeadersIds.length < 2) {
+                  return;
+               }
                this._children.stickyHeaderShadow.start([this._stickyHeadersIds.top[this._stickyHeadersIds.top.length - 1], this._stickyHeadersIds.bottom[this._stickyHeadersIds.bottom.length - 1]]);
 
                //Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
                this._children.stickyHeaderHeight.start(cClone(this._stickyHeadersHeight));
 
                event.stopPropagation();
+            },
+
+            _stickyRegisterHandler: function(event, stickyId, register) {
+               var index = this._registeredHeadersIds.indexOf(stickyId);
+               if (register && index === -1) {
+                  this._registeredHeadersIds.push(stickyId);
+               } else if (!register && index !== -1) {
+                  this._registeredHeadersIds.splice(index, 1);
+               }
             },
 
             /**
