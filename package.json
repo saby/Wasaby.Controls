@@ -1,6 +1,6 @@
 {
    "name": "sbis3-controls",
-   "version": "19.120.0",
+   "version": "19.110.0",
    "repository": {
       "type": "git",
       "url": "git@git.sbis.ru:root/sbis3-controls"
@@ -71,16 +71,16 @@
       "postcss": "^6.0.23",
       "progress": "^2.0.1",
       "requirejs": "2.1.18",
-      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.120",
-      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.120",
-      "Router": "git+https://github.com/saby/Router.git#rc-19.120",
+      "sbis3-builder": "git+https://github.com/saby/Builder.git#rc-19.110",
+      "sbis3-ws": "git+https://git.sbis.ru/sbis/ws.git#rc-19.110",
+      "Router": "git+https://github.com/saby/Router.git#rc-19.110",
       "serve-static": "1.11.x",
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
-      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.120",
-      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.120",
-      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.120",
-      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.120",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.120"
+      "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.110",
+      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.110",
+      "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.110",
+      "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.110",
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.110"
    }
 }
