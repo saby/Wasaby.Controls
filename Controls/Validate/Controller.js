@@ -113,7 +113,17 @@ define('Controls/Validate/Controller',
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
-            _private.forceCloseInfoBox(this);
+
+            // Infobox must be closed when controller is removed.
+            // Will be fixed by https://online.sbis.ru/opendoc.html?guid=3629c103-a23a-40f2-8647-2ae50d6e0ea4
+            if (this._isNewEnvironment) {
+               this._notify('closeInfoBox', [0], { bubbling: true });
+            } else {
+               var GlobalPopup = _private.getGlobalPopup();
+               if (GlobalPopup) {
+                  GlobalPopup._forceCloseInfoBoxHandler();
+               }
+            }
          },
          _validationResult: undefined,
 
@@ -247,7 +257,6 @@ define('Controls/Validate/Controller',
          _valueChangedHandler: function(event, value) {
             this._notify('valueChanged', [value]);
             this._cleanValid();
-
          },
          _cleanValid: function() {
             if (this._validationResult) {
