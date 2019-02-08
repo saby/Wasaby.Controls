@@ -128,7 +128,6 @@ define([
             multiLine: true
          });
          assert.notEqual(lookup._multiLineState, undefined);
-         assert.notEqual(lookup._counterWidth, undefined);
          assert.equal(lookup._maxVisibleItems, undefined);
 
          lookup._beforeUpdate({
