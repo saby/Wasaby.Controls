@@ -61,11 +61,13 @@ define('Controls/Input/Search',
          },
 
          _focusOutHandler: function() {
-            //TODO до перехода на новую схему инпутов, Максим делает в январе-феврале 
-            if (this._options.trim) {
-               var trimmedValue = this._options.value.trim();
+            var value = this._options.value || '';
 
-               if (trimmedValue !== this._options.value) {
+            // TODO до перехода на новую схему инпутов, Максим делает в январе-феврале
+            if (this._options.trim) {
+               var trimmedValue = value.trim();
+
+               if (trimmedValue !== value) {
                   this._baseViewModel.updateOptions({
                      value: trimmedValue,
                      maxLength: this._options.maxLength,
