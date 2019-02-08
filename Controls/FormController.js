@@ -222,6 +222,9 @@ define('Controls/FormController', [
          // if record actually is not changed after onPropertyChange, we must resolve pending
          if (this._propertyChangeNotified && !this._record.isChanged()) {
             this._propertyChangedDef.callback(true);
+
+            // сбрасываем флаг об изменении, потому что отстрелили callback и теперь надо будет заново создавать deferred
+            this._propertyChangeNotified = false;
          }
       },
       _showConfirmDialog: function(def, forceFinishValue) {
