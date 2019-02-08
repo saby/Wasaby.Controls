@@ -111,6 +111,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _template: template,
 
       _beforeMount: function(newOptions, context) {
+         if (typeof window === "undefined") {
+            this.serverSide = true;
+            return;
+         }
          if (newOptions.listModel) {
             _private.updateModel(this, newOptions, context.isTouch ? context.isTouch.isTouch : false);
          }
