@@ -60,9 +60,9 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
 
    describe('Controls/Dropdown/resources/template/DropdownList', function() {
 
-      describe('DropdownList::_beforeUpdate', function(done) {
+      describe('DropdownList::_beforeUpdate', function() {
 
-         it('_itemMouseEnter', function(done) {
+         it('_itemMouseEnter', function() {
             var dropDownConfig, dropDownList;
             var opened = false;
    
@@ -81,25 +81,27 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
             assert.isTrue(dropDownList._subDropdownOpened)
             assert.isFalse(opened);
             
-            setTimeout(function() {
-               assert.isTrue(opened);
-   
-               dropDownList._hasHierarchy = false;
-               dropDownList._itemMouseEnter({}, items.at(4), true);
-               assert.isTrue(opened);
-   
-               dropDownList._hasHierarchy = false;
-               dropDownList._subDropdownOpened = false;
-               dropDownList._itemMouseEnter({}, items.at(4), true);
-               assert.isTrue(opened);
-   
-   
-               dropDownList._hasHierarchy = true;
-               dropDownList._subDropdownOpened = true;
-               dropDownList._itemMouseEnter({}, items.at(4), false);
-               assert.isFalse(opened);
-               done();
-            }, 120);
+            return new Promise(function(resolve) {
+               setTimeout(function() {
+                  assert.isTrue(opened);
+      
+                  dropDownList._hasHierarchy = false;
+                  dropDownList._itemMouseEnter({}, items.at(4), true);
+                  assert.isTrue(opened);
+      
+                  dropDownList._hasHierarchy = false;
+                  dropDownList._subDropdownOpened = false;
+                  dropDownList._itemMouseEnter({}, items.at(4), true);
+                  assert.isTrue(opened);
+      
+      
+                  dropDownList._hasHierarchy = true;
+                  dropDownList._subDropdownOpened = true;
+                  dropDownList._itemMouseEnter({}, items.at(4), false);
+                  assert.isFalse(opened);
+                  resolve();
+               }, 120);
+            });
          });
          
          it('check hierarchy', function() {
