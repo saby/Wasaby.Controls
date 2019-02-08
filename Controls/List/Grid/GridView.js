@@ -14,6 +14,7 @@ define('Controls/List/Grid/GridView', [
    'wml!Controls/List/Grid/Results',
    'wml!Controls/List/Grid/ColGroup',
    'css!theme?Controls/List/Grid/Grid',
+   'css!theme?Controls/List/Grid/OldGrid',
    'Controls/List/BaseControl/Scroll/Emitter'
 ], function(cDeferred, IoC, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
    GroupTemplate, OldGridView, NewGridView) {
@@ -115,20 +116,10 @@ define('Controls/List/Grid/GridView', [
          _prepareGridTemplateColumns: _private.prepareGridTemplateColumns,
 
          _beforeMount: function(cfg) {
-            var
-               requireDeferred = new cDeferred(),
-               modules = [];
             _private.checkDeprecated(cfg);
             this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
-            if (cDetection.isNotFullGridSupport) {
-               modules.push('css!theme?Controls/List/Grid/OldGrid');
-            }
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
-            require(modules, function() {
-               requireDeferred.callback();
-            });
-            return requireDeferred;
          },
 
          _beforeUpdate: function(newCfg) {
