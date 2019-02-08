@@ -109,6 +109,57 @@ define([
             assert.strictEqual(component._getObserverStyle('bottom'), 'bottom: -6px;');
          });
       });
+
+      describe('_fixationStateChangeHandler', function() {
+         it('should notify fixed event', function() {
+            const component = createComponent(StickyHeader, {});
+            component._container = {
+               offsetParent: 0,
+               offsetHeight: 10
+            }
+            sinon.stub(component, '_notify');
+            component._fixationStateChangeHandler('', 'top')
+            sinon.assert.calledWith(
+               component._notify,
+               'fixed',
+               [{
+                  fixedPosition: '',
+                  id: component._index,
+                  mode: "replaceable",
+                  offsetHeight: 10,
+                  prevPosition: "top"
+               }], {
+                  bubbling: true
+               }
+            );
+            sinon.restore();
+         });
+         it('should use previous offsetHeight if container is hidden', function() {
+            const component = createComponent(StickyHeader, {});
+            component._offsetHeight = 10;
+            component._container = {
+               offsetParent: null,
+               offsetHeight: 0
+            }
+            sinon.stub(component, '_notify');
+            component._fixationStateChangeHandler('', 'top')
+            sinon.assert.calledWith(
+               component._notify,
+               'fixed',
+               [{
+                  fixedPosition: '',
+                  id: component._index,
+                  mode: "replaceable",
+                  offsetHeight: 10,
+                  prevPosition: "top"
+               }], {
+                  bubbling: true
+               }
+            );
+
+            sinon.restore();
+         });
+      });
    });
 
 });
