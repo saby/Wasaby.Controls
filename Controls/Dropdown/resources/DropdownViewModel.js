@@ -62,6 +62,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          _expanded: false,
 
          constructor: function(cfg) {
+            var self = this;
             this._options = cfg;
             DropdownViewModel.superclass.constructor.apply(this, arguments);
             this._itemsModel = new ItemsViewModel({
@@ -71,6 +72,9 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                items: cfg.items,
                keyProperty: cfg.keyProperty,
                displayProperty: 'title'
+            });
+            this._itemsModel.subscribe('onListChange', function() {
+               self._nextVersion();
             });
             this._hierarchy = new entity.relation.Hierarchy({
                idProperty: cfg.keyProperty,
@@ -92,6 +96,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
          },
 
          setItems: function(options) {
+            this._options.items = options.items;
             this._itemsModel.setItems(options.items);
          },
 
