@@ -4,6 +4,21 @@
    box-sizing: border-box;
 }
 
+/**
+ * https://github.com/philipwalton/flexbugs#flexbug-6
+ */
+.controls-Render__field {
+   flex-shrink: 1;
+}
+
+/**
+ * In ie11, container sizes are ignored if it can be compressed. Specify explicitly not to compress the container.
+ */
+.controls-Render__beforeField,
+.controls-Render__afterField {
+   flex-shrink: 0;
+}
+
 .controls-Render_multiline {
    height: auto;
 }
