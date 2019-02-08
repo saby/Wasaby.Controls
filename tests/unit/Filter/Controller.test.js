@@ -1,4 +1,4 @@
-define(['Controls/Filter/Controller'], function(Filter) {
+define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferred) {
    
    describe('Controls.Filter.Controller', function () {
 
@@ -503,7 +503,19 @@ define(['Controls/Filter/Controller'], function(Filter) {
       it('_private.getHistoryItems', function(done) {
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items.length, 15);
-            done();
+            
+            var self = {
+               _sourceController: {
+                  load: function() {
+                     return Deferred.fail();
+                  }
+               }
+            };
+   
+            Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
+               assert.equal(hItems.length, 0);
+               done();
+            });
          });
       });
 
