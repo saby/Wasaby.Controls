@@ -180,6 +180,12 @@ define('Controls/List/Mover', [
 
       getIdByItem: function(self, item) {
          return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
+      },
+
+      getItemsBySelection: function(selection) {
+         //Support moving with mass selection.
+         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+         return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
       }
    };
 
@@ -220,15 +226,9 @@ define('Controls/List/Mover', [
       },
 
       moveItems: function(items, target, position) {
-         var
-            self = this,
-            itemsDeferred;
+         var self = this;
 
-         //Support moving with mass selection.
-         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-         itemsDeferred = items instanceof Array ? Deferred.success(items) : getItemsBySelection(items, this._source, this._items, this._filter);
-
-         return itemsDeferred.addCallback(function(items) {
+         return _private.getItemsBySelection.call(this, items).addCallback(function(items) {
             items = items.filter(function(item) {
                return _private.checkItem(self, item, target, position);
             });
@@ -253,15 +253,9 @@ define('Controls/List/Mover', [
       },
 
       moveItemsWithDialog: function(items) {
-         var
-            self = this,
-            itemsDeferred;
+         var self = this;
 
-         //Support moving with mass selection.
-         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-         itemsDeferred = items instanceof Array ? Deferred.success(items) : getItemsBySelection(items, this._source, this._items, this._filter);
-
-         itemsDeferred.addCallback(function(items) {
+         _private.getItemsBySelection.call(this, items).addCallback(function(items) {
             self._children.dialogOpener.open({
                templateOptions: {
                   movedItems: items,
