@@ -11,7 +11,7 @@
    pageName="{{ pageName }}"
    compat="{{ compat }}"
    head="{{ _options.head }}"
-   title="{{ title }}"
+   title="{{ _options.title }}"
    staticDomains="{{ staticDomains }}"
    buildnumber="{{ buildnumber }}"
    viewport="{{ _options.viewport }}"
