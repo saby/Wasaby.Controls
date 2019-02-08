@@ -3,6 +3,7 @@
                style="{{_isValidResult() ? 'invalid': 'info'}}"
                validationErrors="{{isValid()}}"
                on:mouseenter="_hoverHandler()"
+               on:valueChanged="_valueChangedHandler()"
                on:focusIn="_focusInHandler()"
                on:mouseleave="_mouseLeaveHandler()"/>
 </ws:if>
@@ -13,6 +14,7 @@
                   validationErrors="{{isValid()}}"
                   on:mouseenter="_hoverHandler()"
                   on:focusIn="_focusInHandler()"
+                  on:valueChanged="_valueChangedHandler()"
                   on:mouseleave="_mouseLeaveHandler()"/>
       <Controls.Popup.Opener.InfoBox name="infoBoxOpener" _vdomOnOldPage="{{true}}" />
    </div>
