@@ -518,6 +518,35 @@ define(['Controls/Filter/Controller'], function(Filter) {
          });
       });
 
+      it('applyItemsToFilter', function() {
+         var
+            self = {},
+            filter = {
+               testId: 'testValue'
+            },
+            filter1 = {
+               testId: [123]
+            },
+            filterButtonItems = [{
+               id: 'testId',
+               value: 'testValue1',
+               textValue: 'test1',
+               resetValue: ''
+            }], filterButtonItems1 = [{
+               id: 'testId',
+               value: [],
+               textValue: undefined,
+               resetValue: []
+            }];
+
+         Filter._private.applyItemsToFilter(self, filter, filterButtonItems, []);
+         assert.equal(self._filter.testId, filterButtonItems[0].value);
+
+         self = {};
+
+         Filter._private.applyItemsToFilter(self, filter1, filterButtonItems1, []);
+         assert.equal(self._filter.testId, filterButtonItems1[0].value);
+      });
    });
 
 });
