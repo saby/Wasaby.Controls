@@ -252,7 +252,9 @@ define('Controls/Filter/Controller',
                delete filterClone[key];
             });
 
-            merge(filterClone, itemsFilter);
+            // FIXME when using merge witout {rec: false} we will get wrong data:
+            // {arr: [123]} <-- {arr: []} results {arr: [123]} instead {arr: []}
+            merge(filterClone, itemsFilter, {rec: false});
 
             _private.setFilter(self, filterClone);
          },
