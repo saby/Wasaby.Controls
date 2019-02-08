@@ -2,9 +2,10 @@ define(
    [
       'Core/constants',
       'Controls/Container/Scroll',
+      'Controls/StickyHeader/Utils',
       'wml!tests/Container/resources/Content'
    ],
-   function(Constants, Scroll, Content) {
+   function(Constants, Scroll, stickyUtils, Content) {
 
       'use strict';
 
@@ -27,6 +28,7 @@ define(
 
                return markup;
             };
+            scroll._registeredHeadersIds = [];
             scroll._stickyHeadersIds = {
                top: [],
                bottom: []
@@ -131,7 +133,7 @@ define(
                stopPropagation: function() {}
             };
 
-            describe('updateFixationState', function() {
+            describe('_fixedHandler', function() {
                it('Header with id equal to "sticky" stops being fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky',
@@ -239,6 +241,28 @@ define(
                      offsetHeight: 10
                   });
                   assert.equal(scroll._stickyHeadersHeight.top, 10);
+               });
+               it('Should not notify new state if one header registered', function() {
+                  scroll._registeredHeadersIds = ['sticky1'];
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     fixedPosition: 'top',
+                     mode: 'stackable',
+                     offsetHeight: 10
+                  });
+                  sinon.assert.notCalled(scroll._children.stickyHeaderShadow.start);
+                  sinon.assert.notCalled(scroll._children.stickyHeaderHeight.start);
+               });
+               it('Should notify new state if few header registered', function() {
+                  scroll._registeredHeadersIds = ['sticky1', 'sticky2'];
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     fixedPosition: 'top',
+                     mode: 'stackable',
+                     offsetHeight: 10
+                  });
+                  sinon.assert.called(scroll._children.stickyHeaderShadow.start);
+                  sinon.assert.called(scroll._children.stickyHeaderHeight.start);
                });
             });
          });
