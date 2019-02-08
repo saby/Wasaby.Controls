@@ -5,10 +5,11 @@ define(
       'Core/core-instance',
       'Controls/Input/Base',
       'tests/resources/ProxyCall',
+      'tests/Input/Base/InputUtility',
       'tests/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
-   function(EventBus, constants, instance, Base, ProxyCall, TemplateUtil, Vdom) {
+   function(EventBus, constants, instance, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
@@ -588,6 +589,68 @@ define(
                }));
 
                assert.equal(calls.length, 0);
+            });
+         });
+         describe('Calling the inputCompleted event.', function() {
+            it('Use <input>. Pressing the key enter.', function() {
+               InputUtility.init(ctrl);
+               ctrl._getField().tagName = 'INPUT';
+
+               ctrl._focusInHandler();
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.equal(calls.length, 0);
+            });
+            it('Use <input>. Pressing the key enter and enter "test".', function() {
+               InputUtility.init(ctrl);
+               ctrl._getField().tagName = 'INPUT';
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test');
+               InputUtility.triggerInput(ctrl);
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', ['test', 'test']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputCompleted', ['test', 'test']]
+                  }
+               ]);
+            });
+            it('Use <textarea>. Pressing the key enter.', function() {
+               InputUtility.init(ctrl);
+               ctrl._getField().tagName = 'TEXTAREA';
+
+               ctrl._focusInHandler();
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.equal(calls.length, 0);
+            });
+            it('Use <textarea>. Pressing the key enter and enter "test".', function() {
+               InputUtility.init(ctrl);
+               ctrl._getField().tagName = 'TEXTAREA';
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test');
+               InputUtility.triggerInput(ctrl);
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test', 'test']]
+               }]);
             });
          });
          describe('The value in the field is changed via auto-complete.', function() {
