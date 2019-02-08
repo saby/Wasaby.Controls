@@ -220,10 +220,13 @@ define([
                filterOnOptionChange = filter;
             };
             treeControl._children.baseControl.reload().addCallback(function(res) {
+               var newFilter = {
+                  parent: null
+               };
                treeControl._beforeUpdate({root: 'testRoot'});
                assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-               assert.deepEqual(filterOnOptionChange, {});
-      
+               assert.deepEqual(filterOnOptionChange, newFilter);
+
                treeControl._afterUpdate({root: null});
                setTimeout(function() {
                   assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');
