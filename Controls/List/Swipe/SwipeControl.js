@@ -87,7 +87,7 @@ define('Controls/List/Swipe/SwipeControl', [
 
       _beforeUpdate: function(newOptions, context) {
          var self = this;
-         if (this._swipeConfig && !context.isTouch.isTouch) {
+         if (this._swipeConfig && context.isTouch && !context.isTouch.isTouch) {
             _private.closeSwipe(this);
          }
          if (

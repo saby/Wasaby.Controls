@@ -53,7 +53,7 @@ define('Controls/Container/Async',
          _beforeMount: function(options) {
             var promiseResult;
             if (typeof window !== 'undefined') {
-               promiseResult = this._loadContentAsync(options.templateName, options.templateOptions);
+               promiseResult = this._loadContentAsync(options.templateName, options.templateOptions, true);
             } else {
                promiseResult = this._loadServerSide(options.templateName, options.templateOptions);
 
@@ -98,13 +98,15 @@ define('Controls/Container/Async',
             return promise;
          },
 
-         _loadContentAsync: function(name, options) {
+         _loadContentAsync: function(name, options, noUpdate) {
             var self = this;
             var promise = this._loadFileAsync(name);
             promise.then(function(res) {
                self._setErrorState(false);
                self._updateOptionsForComponent(res, options);
-               self._forceUpdate();
+               if (!noUpdate) {
+                  self._forceUpdate();
+               }
             }, function(err) {
                self._setErrorState(true, err);
             });

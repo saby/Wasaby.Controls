@@ -395,10 +395,16 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          /**
-          * @type {Boolean}
+          * @type {Boolean} Determines whether the control is multiline.
           * @protected
           */
          _multiline: false,
+
+         /**
+          * @type {Boolean} Determines whether the control has a rounded border.
+          * @protected
+          */
+         _roundBorder: false,
 
          /**
           * @type {Number} The number of skipped save the current field selection to the model.
@@ -459,6 +465,14 @@ define('Controls/Input/Base',
           * @private
           */
          _isEdge: null,
+
+         /**
+          * @type {Controls/Input/Render#style}
+          * @protected
+          */
+         get _style() {
+            return this._options.style;
+         },
 
          /**
           *
@@ -549,6 +563,7 @@ define('Controls/Input/Base',
             this._field = {
                template: fieldTemplate,
                scope: {
+                  controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this)
                }
             };

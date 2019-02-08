@@ -128,7 +128,6 @@ define([
             multiLine: true
          });
          assert.notEqual(lookup._multiLineState, undefined);
-         assert.notEqual(lookup._counterWidth, undefined);
          assert.equal(lookup._maxVisibleItems, undefined);
 
          lookup._beforeUpdate({
@@ -215,6 +214,15 @@ define([
 
          lookup._options.multiSelect = true;
          assert.isTrue(lookup._determineAutoDropDown());
+      });
+
+      it('_onClickShowSelector', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._onClickShowSelector();
+
+         assert.isFalse(lookup._suggestState);
       });
    });
 });
