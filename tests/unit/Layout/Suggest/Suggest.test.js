@@ -416,17 +416,21 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             footerTemplate: 'anyTp',
             suggestState: true,
             value: '',
-            searchParam: 'testSearchParam'
+            searchParam: 'testSearchParam',
+            minSearchLength: 3
          };
          var suggestComponent = new Suggest(options);
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
          suggestComponent._dependenciesDeferred = true;
-         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl'});
+         suggestComponent._active = true;
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: 'te'});
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
          assert.equal(suggestComponent._dependenciesDeferred, null);
+         assert.equal(suggestComponent._searchValue, '');
+         assert.equal(suggestComponent._filter, null);
    
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
@@ -443,6 +447,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._searchValue = 'te';
          
          compObj._options.autoDropDown = true;
+         compObj._options.suggestState = true;
+         Suggest._private.updateSuggestState(suggestComponent);
+         assert.equal(suggestComponent._filter, null);
+   
+         compObj._options.suggestState = false;
          Suggest._private.updateSuggestState(suggestComponent);
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'te'});
    
