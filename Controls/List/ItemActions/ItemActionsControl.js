@@ -111,7 +111,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _template: template,
 
       _beforeMount: function(newOptions, context) {
-         if (typeof window === "undefined") {
+         if (typeof window === 'undefined') {
             this.serverSide = true;
             return;
          }
