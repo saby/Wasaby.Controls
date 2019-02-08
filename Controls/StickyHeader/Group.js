@@ -89,7 +89,8 @@ define('Controls/StickyHeader/Group',
             if (!!fixedHeaderData.fixedPosition && !this._fixed) {
                this._fixed = true;
                _private._notifyFixed(this, fixedHeaderData);
-            } else if (!fixedHeaderData.fixedPosition && this._fixed) {
+            } else if (!fixedHeaderData.fixedPosition && this._fixed &&
+                        this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
                this._fixed = false;
                _private._notifyFixed(this, fixedHeaderData);
             }
