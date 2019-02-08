@@ -302,9 +302,11 @@ define('Controls/List/TreeControl', [
          if (this._updatedRoot) {
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
-            this._children.baseControl.getViewModel().setExpandedItems([]);
-            this._children.baseControl.getViewModel().setRoot(this._root);
-            this.reload();
+            var self = this;
+            this.reload().addCallback(function() {
+               self._children.baseControl.getViewModel().setExpandedItems([]);
+               self._children.baseControl.getViewModel().setRoot(self._root);
+            });
          }
       },
       toggleExpanded: function(key) {
