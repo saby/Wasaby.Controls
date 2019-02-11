@@ -238,7 +238,7 @@
                _private.setCloseState(this);
             }
       
-            if (needSearchOnValueChanged) {
+            if (needSearchOnValueChanged || !newOptions.value) {
                this._searchValue = newOptions.value;
             }
    
