@@ -304,7 +304,17 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                   suggestComponent._inputClicked();
                   suggestComponent._dependenciesDeferred.addCallback(function() {
                      assert.isFalse(suggestState);
-                     done();
+   
+                     suggestComponent._options.historyId = '';
+                     suggestComponent._filter = {};
+                     suggestComponent._options.readOnly = false;
+                     suggestComponent._inputActivated();
+   
+                     suggestComponent._dependenciesDeferred.addCallback(function() {
+                        assert.isTrue(suggestState);
+                        assert.deepEqual(suggestComponent._filter, {searchParam: ''});
+                        done();
+                     });
                   });
                });
             });
