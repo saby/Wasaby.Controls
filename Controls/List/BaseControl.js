@@ -963,6 +963,7 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
+
          /**
           * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
           * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
