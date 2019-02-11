@@ -222,6 +222,7 @@
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
             this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
+            this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
@@ -305,7 +306,7 @@
                _private.inputActivated(this);
             }
          },
-         _tabsSelectedKeyChanged: function(event, key) {
+         _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,

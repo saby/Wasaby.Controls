@@ -2,7 +2,6 @@
     <ws:template name="suggestTpl">
         <ws:partial template="{{'Controls/Container/Suggest/Layout/_SuggestListWrapper'}}"
                     on:itemClick="_select()"
-                    on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
                     templateName="{{_options.suggestTemplate.templateName}}"
                     templateOptions="{{_options.suggestTemplate.templateOptions}}"
                     searchEndCallback="{{_searchEnd}}"
@@ -16,6 +15,7 @@
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
                     searchDelay="{{_searchDelay}}"
+                    tabsSelectedKeyChangedCallback="{{_tabsSelectedKeyChanged}}"
                     name="suggestListWrapper"
         />
     </ws:template>
