@@ -304,6 +304,12 @@ function(cMerge,
          }
 
          this._setSizes(cfg, templateClass);
+
+         cfg.componentOptions._popupOptions = {
+            minWidth: cfg.minWidth,
+            maxWidth: cfg.maxWidth,
+            minimizedWidth: cfg.minimizedWidth
+         };
       },
       _getConfigFromTemplate: function(cfg) {
          // get options from template.getDefaultOptions

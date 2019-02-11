@@ -5,21 +5,25 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    [
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
+      'Controls/Popup/Opener/Stack/StackStrategy',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'Vdom/Vdom',
       'Core/Control',
       'Core/IoC',
+      'Core/core-clone',
       'Core/Deferred',
       'css!theme?Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
    ],
    function(CompoundControl,
       template,
+      StackStrategy,
       ComponentWrapper,
       ManagerWrapperController,
       Vdom,
       control,
       IoC,
+      clone,
       Deferred) {
       /**
        * Слой совместимости для открытия новых шаблонов в старых попапах
@@ -37,6 +41,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._onResizeHandler = this._onResizeHandler.bind(this);
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
+            this._onMaximizedHandler = this._onMaximizedHandler.bind(this);
             this._onActivatedHandler = this._onActivatedHandler.bind(this);
             this._onDeactivatedHandler = this._onDeactivatedHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
@@ -170,6 +175,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             innerOptions._onResizeHandler = this._onResizeHandler;
             innerOptions._onRegisterHandler = this._onRegisterHandler;
             innerOptions._onActivatedHandler = this._onActivatedHandler;
+            innerOptions._onMaximizedHandler = this._onMaximizedHandler;
             innerOptions._onDeactivatedHandler = this._onDeactivatedHandler;
          },
          _onResizeHandler: function() {
@@ -212,6 +218,32 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                }
             };
          },
+         _onMaximizedHandler: function(event, maximized) {
+            if (!this._panel._updateAreaWidth) {
+               return;
+            }
+
+            var coords = { top: 0, right: 0 };
+            var item = {
+               popupOptions: {
+                  maximized: maximized,
+                  minWidth: this._options._popupOptions.minWidth,
+                  maxWidth: this._options._popupOptions.maxWidth,
+                  minimizedWidth: this._options._popupOptions.minimizedWidth,
+                  containerWidth: this._container.width()
+               }
+            };
+            var width = StackStrategy.getPosition(coords, item).width;
+
+            this._panel._updateAreaWidth(width);
+            this._panel.getContainer()[0].style.maxWidth = '';
+            this._panel.getContainer()[0].style.minWidth = '';
+
+            var newOptions = clone(this._options.templateOptions);
+            newOptions.maximized = maximized;
+
+            this._updateVDOMTemplate(newOptions);
+         },
          _onDeactivatedHandler: function() {
             // активность уходит - восстановим onBringToFront
             this.onBringToFront = this._$onBringToFront;
@@ -252,10 +284,14 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
 
                // Скроем окно перед установкой новых данных. покажем его после того, как новые данные отрисуются и окно перепозиционируется
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
-               this._vDomTemplate._options.templateOptions = this._options.templateOptions;
-               this._vDomTemplate._forceUpdate();
+               this._updateVDOMTemplate(this._options.templateOptions);
             }
          },
+
+         _updateVDOMTemplate: function(templateOptions) {
+            this._vDomTemplate._options.templateOptions = templateOptions;
+            this._vDomTemplate._forceUpdate();
+         }
       });
 
       moduleClass.dimensions = {
