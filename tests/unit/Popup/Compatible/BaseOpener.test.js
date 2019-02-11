@@ -331,6 +331,11 @@ define(
             testconfig._type = 'stack';
             newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
             assert.equal(newTestConfig.dialogOptions.direction, 'left');
+            testconfig.horizontalAlign = {
+               side: 'center'
+            };
+            newTestConfig = BaseOpener._prepareConfigFromNewToOld(testconfig);
+            assert.equal(newTestConfig.dialogOptions.direction, '');
          });
 
          it('_getDimensions', function() {
