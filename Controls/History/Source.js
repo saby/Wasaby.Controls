@@ -328,7 +328,7 @@ define('Controls/History/Source', [
       }
    };
 
-   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
+   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
       
       //for compatibility with Types lib, will removed after rewriting module on typescript
       '[Types/_source/ICrud]': true,
