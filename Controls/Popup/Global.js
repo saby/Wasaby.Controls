@@ -36,7 +36,8 @@ define('Controls/Popup/Global', ['Core/Control', 'wml!Controls/Popup/Global/Glob
          },
 
          _closeInfoBoxHandler: function(event, delay) {
-            if (this._activeInfobox === event.target) {
+            //jquery
+            if (this._activeInfobox[0] === event.target[0]) {
                this._activeInfobox = null;
                this._children.infoBoxOpener.close(delay);
             }
