@@ -75,7 +75,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeAnimationClasses: function(className) {
-            return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting|controls-Stack__will-change/ig, '').trim();
+            return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
          },
 
          addShadowClass: function(item) {
@@ -161,30 +161,12 @@ define('Controls/Popup/Opener/Stack/StackController',
             _private.setStackContent(item);
             this._stack.add(item);
             if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName += ' controls-Stack__waiting';
+               item.popupOptions.stackClassName += ' controls-Stack__open';
+               Vdom.animationWaiter(true);
                _private.updatePopupOptions(item);
                item.popupState = BaseController.POPUP_STATE_CREATING;
             }
             this._update();
-         },
-
-         _elementAfterUpdated: function(item) {
-            // TODO временное решение. Добиться окончательного по задаче https://online.sbis.ru/opendoc.html?guid=58fda458-40ff-4b9b-bf56-c078f6f432c6
-            if (item.popupState === BaseController.POPUP_STATE_CREATING && !item.isOpening && HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.isOpening = true;
-               setTimeout(function() {
-                  item.popupOptions.stackClassName += ' controls-Stack__open';
-                  _private.updatePopupOptions(item);
-                  this._update();
-
-                  /**
-                   * Perfoming animation. Changing rAF for rIC
-                   */
-                  Vdom.animationWaiter(true);
-                  require('Controls/Popup/Manager/ManagerController').getContainer()._forceUpdate();
-               }.bind(this), 100);
-            }
-            return StackController.superclass._elementAfterUpdated.apply(this, arguments);
          },
 
          elementUpdated: function(item, container) {
@@ -206,7 +188,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.stackClassName += ' controls-Stack__close';
                _private.updatePopupOptions(item);
                this._fixTemplateAnimation(item);
-               
+
                /**
                 * Perfoming animation. Changing rAF for rIC
                 */
@@ -219,6 +201,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementAnimated: function(item) {
+            Vdom.animationWaiter(false);
             item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
             _private.updatePopupOptions(item);
             if (item.popupState === BaseController.POPUP_STATE_DESTROYING) {
@@ -270,7 +253,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                _private.setMaximizedState(item, maximizedState);
             }
             if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName = 'controls-Stack__will-change';
+               item.popupOptions.stackClassName = 'controls-Stack__waiting';
             }
 
             // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
