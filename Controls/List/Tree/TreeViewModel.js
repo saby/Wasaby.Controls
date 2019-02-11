@@ -121,11 +121,16 @@ define('Controls/List/Tree/TreeViewModel', [
             if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
                // If it is necessary to delete only the nodes deleted from the items, add this condition:
                // if (!self._items.getRecordById(nodeId)) {
-               delete self._expandedItems[nodeId];
-               self._notify('onNodeRemoved', nodeId);
+               _private.removeNodeFromExpanded(self, nodeId);
             }
          },
-
+   
+         removeNodeFromExpanded: function(self, nodeId) {
+            delete self._expandedItems[nodeId];
+            self._notify('onNodeRemoved', nodeId);
+         },
+   
+   
          checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
                for (var idx = 0; idx < removedItems.length; idx++) {
@@ -195,7 +200,7 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                for (var itemId in self._expandedItems) {
                   if (self._expandedItems.hasOwnProperty(itemId)) {
-                     _private.removeNodeFromExpandedIfNeed(self, itemId);
+                     _private.removeNodeFromExpanded(self, itemId);
                   }
                }
             }

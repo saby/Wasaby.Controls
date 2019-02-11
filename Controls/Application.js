@@ -140,7 +140,6 @@ define('Controls/Application',
           * @param routesConfig
           */
          initState: function(self, cfg) {
-            self.title = cfg.title;
             self.templateConfig = cfg.templateConfig;
             self.compat = cfg.compat || false;
          },
@@ -312,7 +311,6 @@ define('Controls/Application',
                buildnumber: self.buildnumber,
                lite: self.lite,
                csses: ThemesController.getInstance().getCss(),
-               title: self.title,
                appRoot: self.appRoot,
                staticDomains: self.staticDomains,
                wsRoot: self.wsRoot,
@@ -323,6 +321,13 @@ define('Controls/Application',
                product: self.product
             });
             return def;
+         },
+
+         _afterUpdate: function() {
+            var elements = document.getElementsByClassName('head-title-tag');
+            if (elements.length === 1) {
+               elements[0].textContent = this._options.title;
+            }
          },
 
          _keyPressHandler: function(event) {

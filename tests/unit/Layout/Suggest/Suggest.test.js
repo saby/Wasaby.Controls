@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Controls/History/Service'], function(Suggest, collection, entity){
+define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Core/constants', 'Controls/History/Service'], function(Suggest, collection, entity, constants) {
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -476,7 +476,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             if (eventName === 'choose') {
                assert.isFalse(suggestComponent._inputActive);
             }
-         }
+         };
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
          assert.isFalse(suggestComponent._inputActive);
@@ -488,6 +488,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
 
       it('Suggest::_keyDown', function() {
          var suggestComponent = new Suggest();
+         var eventPreventDefault = false;
          var eventTriggered = false;
          suggestComponent._children = {
             inputKeydown: {
@@ -495,8 +496,37 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                   eventTriggered = true;
                }
             }
+         };
+         
+         function getEvent(keyCode) {
+            return {
+               nativeEvent: {
+                  keyCode: keyCode
+               },
+               preventDefault: function() {
+                  eventPreventDefault = true;
+               }
+            };
          }
-         suggestComponent._keydown();
+         suggestComponent._keydown(getEvent(constants.key.down));
+         assert.isFalse(eventPreventDefault);
+   
+         suggestComponent._options.suggestState = true;
+   
+         suggestComponent._keydown(getEvent(constants.key.down));
+         assert.isTrue(eventPreventDefault);
+         eventPreventDefault = false;
+         
+         suggestComponent._keydown(getEvent(constants.key.up));
+         assert.isTrue(eventPreventDefault);
+         eventPreventDefault = false;
+         
+         suggestComponent._keydown(getEvent(constants.key.enter));
+         assert.isTrue(eventPreventDefault);
+         eventPreventDefault = false;
+         
+         suggestComponent._keydown(getEvent('test'));
+         assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
       });
       

@@ -114,7 +114,6 @@ define([
 
          var
             stopImmediateCalled = false,
-            preventDefaultCalled = false,
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -143,9 +142,6 @@ define([
                stopImmediatePropagation: function() {
                   stopImmediateCalled = true;
                },
-               preventDefault: function() {
-                  preventDefaultCalled = true;
-               },
                nativeEvent: {
                   keyCode: cConstants.key.right
                }
@@ -157,9 +153,6 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
                      keyCode: cConstants.key.left
                   }
@@ -167,7 +160,6 @@ define([
                assert.deepEqual({}, treeGridViewModel._model._expandedItems);
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
                done();
             }, 1);
          }, 1);
@@ -220,10 +212,13 @@ define([
                filterOnOptionChange = filter;
             };
             treeControl._children.baseControl.reload().addCallback(function(res) {
+               var newFilter = {
+                  parent: null
+               };
                treeControl._beforeUpdate({root: 'testRoot'});
                assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
-               assert.deepEqual(filterOnOptionChange, {});
-      
+               assert.deepEqual(filterOnOptionChange, newFilter);
+
                treeControl._afterUpdate({root: null});
                setTimeout(function() {
                   assert.isTrue(reloadCalled, 'Invalid call "reload" after call "_beforeUpdate" and apply new "root".');

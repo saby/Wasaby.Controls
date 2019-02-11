@@ -261,7 +261,7 @@ define('Controls/Popup/Manager',
 
          isIgnoreActivationArea: function(focusedContainer) {
             while (focusedContainer) {
-               if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
+               if (focusedContainer.classList && focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
                   return true;
                }
                focusedContainer = focusedContainer.parentElement;
