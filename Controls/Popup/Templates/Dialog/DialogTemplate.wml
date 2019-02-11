@@ -15,7 +15,7 @@
             </div>
         </div>
         <ws:if data="{{_closeButtonVisibility}}">
-            <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  viewMode="{{_options.closeButtonStyle || _options.closeButtonViewMode}}"/>
+            <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle || _options.closeButtonViewMode}}"/>
         </ws:if>
         <div class="controls-DialogTemplate__content-area">
             <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
