@@ -106,6 +106,8 @@ define('Controls/Container/Async',
          _loadContentAsync: function(name, options, noUpdate) {
             var self = this;
             var promise = this._loadFileAsync(name);
+            // Need this flag to prevent setting new options for content
+            // that wasn't loaded yet
             self.canUpdate = false;
             promise.then(function(res) {
                self.canUpdate = true;
