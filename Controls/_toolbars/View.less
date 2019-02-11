@@ -4,10 +4,16 @@
 .controls-Toolbar {
   display: inline-block;
 }
+.controls-Toolbar_item_toolButton {
+  margin-right: @spacing_Toolbar-between-items_toolButton;
+}
+
+.controls-Toolbar_item_default {
+  margin-right: @spacing_Toolbar-between-items_default;
+}
 .controls-Toolbar_item {
   .inline-flexbox();
   cursor: pointer;
-  margin-right: @spacing_Toolbar-between-items;
   .align-items(center);
 
   &:last-child {
