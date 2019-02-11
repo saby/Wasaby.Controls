@@ -52,8 +52,10 @@ define([
       });
 
       it('isShowCounter', function() {
-         assert.isTrue(Lookup._private.isShowCounter(10, 5));
-         assert.isFalse(Lookup._private.isShowCounter(10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(true, 10, 5));
+         assert.isFalse(Lookup._private.isShowCounter(true, 10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(false, 2));
+         assert.isFalse(Lookup._private.isShowCounter(false, 1));
       });
 
       it('getLastRowCollectionWidth', function() {
