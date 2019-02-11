@@ -58,7 +58,7 @@
                      _private.open(self);
                   });
                } else {
-                  _private.open(self);
+                  _private.updateSuggestState(self);
                }
             }
          },
