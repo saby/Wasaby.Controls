@@ -94,7 +94,7 @@ define('Controls/StickyHeader/_StickyHeader',
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
             this._observeHandler = undefined;
-            self._notify('stickyRegister', [this._index, false], { bubbling: true });
+            this._notify('stickyRegister', [this._index, false], { bubbling: true });
          },
 
          /**
