@@ -137,5 +137,20 @@ define([
             done();
          });
       });
+      it('No update while loading', function(done) {
+         async._loadFileAsync = function() {
+            return new Promise(function(resolve, reject) {
+               setTimeout(function() {
+                  resolve('module');
+               }, 10);
+            });
+         };
+         assert.isTrue(async._shouldUpdate());
+         async._loadContentAsync(async._options.templateName).then(function() {
+            assert.isTrue(async._shouldUpdate());
+            done();
+         });
+         assert.isFalse(async._shouldUpdate());
+      });
    });
 });

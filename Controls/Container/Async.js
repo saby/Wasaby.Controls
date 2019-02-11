@@ -50,6 +50,7 @@ define('Controls/Container/Async',
       var Async = Base.extend({
          _template: template,
          optionsForComponent: {},
+         canUpdate: true,
          _beforeMount: function(options) {
             var promiseResult;
             if (typeof window !== 'undefined') {
@@ -98,16 +99,23 @@ define('Controls/Container/Async',
             return promise;
          },
 
+         _shouldUpdate: function() {
+            return this.canUpdate;
+         },
+
          _loadContentAsync: function(name, options, noUpdate) {
             var self = this;
             var promise = this._loadFileAsync(name);
+            self.canUpdate = false;
             promise.then(function(res) {
+               self.canUpdate = true;
                self._setErrorState(false);
                self._updateOptionsForComponent(res, options);
                if (!noUpdate) {
                   self._forceUpdate();
                }
             }, function(err) {
+               self.canUpdate = true;
                self._setErrorState(true, err);
             });
             return promise;
