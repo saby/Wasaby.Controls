@@ -184,8 +184,12 @@ define('Controls/Popup/Manager',
                // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
                // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
                setTimeout(function() {
-                  _private.activeElement[id].focus();
-                  delete _private.activeElement[id];
+                  //new popup can be activated and take focus during the timeout
+                  //will be fixed by https://online.sbis.ru/opendoc.html?guid=95166dc7-7eae-4728-99e2-e65251dd3ee3
+                  if (_private.activeElement[id]) {
+                     _private.activeElement[id].focus();
+                     delete _private.activeElement[id];
+                  }
                }, 0);
             }
             return false;
