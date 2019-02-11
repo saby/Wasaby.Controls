@@ -111,6 +111,7 @@ define('Controls/Popup/Manager',
             var item = ManagerController.find(id);
             if (item) {
                item.waitDeactivated = false;
+               item.isActive = true;
             }
             _private.activeElement = {};
          },
@@ -118,6 +119,7 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var item = ManagerController.find(id);
             if (item) {
+               item.isActive = false;
                if (item.popupOptions.closeByExternalClick) {
                   if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
                      _private.finishPendings(id, function() {
@@ -331,6 +333,7 @@ define('Controls/Popup/Manager',
                isModal: options.isModal,
                controller: controller,
                popupOptions: options,
+               isActive: false,
                sizes: {},
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
@@ -381,7 +384,11 @@ define('Controls/Popup/Manager',
                _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
                   _private.fireEventHandler.call(self, id, 'onClose');
                   self._popupItems.remove(element);
-                  _private.activatePopup(self._popupItems);
+
+                  // If the popup is not active, don't set the focus
+                  if (element.isActive) {
+                     _private.activatePopup(self._popupItems);
+                  }
 
                   _private.updateOverlay.call(self);
                   _private.redrawItems(self._popupItems);
