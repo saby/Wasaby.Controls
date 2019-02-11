@@ -976,7 +976,7 @@ define('Controls/List/BaseControl', [
          if (direction === 'right' && !itemData.isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
             /**
              * After the right swipe the item should get selected.
-             * But, because selectionController is a component, we can't create it and call it's method in the same ev handler.
+             * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
              */
             this._needSelectionController = true;
             this._delayedSelect = {
