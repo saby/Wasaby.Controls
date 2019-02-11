@@ -182,7 +182,6 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
-            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
@@ -211,7 +210,7 @@ echo "Генерируем параметры"
 
 def regr = params.run_reg
 def all_regr = params.run_all_reg
-def unit = params.run_unit
+def unit
 def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
