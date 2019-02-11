@@ -38,7 +38,7 @@ define('Controls/Controllers/QueryParamsController/Page',
             addParams.limit = this._options.pageSize;
 
             if (this._options.hasMore === false) {
-               addParams.meta = {hasMore: false}
+               addParams.meta = { hasMore: false };
             }
 
             return addParams;
