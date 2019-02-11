@@ -9,11 +9,15 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
+      'Core/constants',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+      
+      /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
+      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, constants.key.enter];
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       var _private = {
          hasMore: function(searchResult) {
@@ -376,6 +380,9 @@
          },
 
          _keydown: function(event) {
+            if (this._options.suggestState && IGNORE_HOT_KEYS.indexOf(event.nativeEvent.keyCode) !== -1) {
+               event.preventDefault();
+            }
             if (this._children.inputKeydown) {
                this._children.inputKeydown.start(event);
             }

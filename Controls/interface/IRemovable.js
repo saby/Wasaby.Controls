@@ -10,6 +10,12 @@ define('Controls/interface/IRemovable', [], function() {
     */
 
    /**
+    * @typedef {Object} Selection
+    * @property {Array.<Number|String>} selected Array of selected keys.
+    * @property {Array.<Number|String>} excluded Array of excluded keys.
+    */
+
+   /**
     * @event Controls/interface/IRemovable#beforeItemsRemove Occurs before items are removed.
     * @param {Core/EventObject} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} idArray Array of items to be removed.
@@ -70,7 +76,7 @@ define('Controls/interface/IRemovable', [], function() {
    /**
     * Removes items from the data source by identifiers of the items in the collection.
     * @function Controls/interface/IRemovable#removeItems
-    * @param {Array.<String>|Array.<Number>} items Array with the identifiers of the items in the collection.
+    * @param {Array.<String>|Array.<Number>|Selection} items Array of items to be removed.
     * @example
     * The following example shows how to remove items from list after click on the button.
     * <pre>

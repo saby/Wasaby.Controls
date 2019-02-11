@@ -66,6 +66,13 @@
                  </Controls.Container.Async>
              </ws:if>
          </ws:multiSelectTpl>
+          <ws:emptyTemplate>
+              <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
+                  <div class="controls-BaseControl__emptyTemplate">
+                      <ws:partial template="{{_options.emptyTemplate}}"/>
+                  </div>
+              </ws:if>
+          </ws:emptyTemplate>
       </ws:partial>
    </ws:template>
 
@@ -119,12 +126,6 @@
           swipeViewMode="{{_options.swipeViewMode}}"
           itemActions="{{_options.itemActions}}"
           name="swipeControl"/>
-
-        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
-            <div class="controls-BaseControl__emptyTemplate">
-                <ws:partial template="{{_options.emptyTemplate}}"/>
-            </div>
-        </ws:if>
     </ws:if>
 
     <ws:if data="{{_needScrollCalculation}}">

@@ -1,11 +1,12 @@
 define('Controls/Popup/Manager/Container',
    [
       'Core/Control',
+      'Types/collection',
       'wml!Controls/Popup/Manager/Container',
       'Controls/Popup/Manager/ManagerController',
       'css!theme?Controls/Popup/Manager/Container'
    ],
-   function(Control, template, ManagerController) {
+   function(Control, collection, template, ManagerController) {
       'use strict';
 
       // step zindex between popups. It should be enough to place all the additional popups (menu, infobox, suggest) on the main popups (stack, window)
@@ -26,6 +27,10 @@ define('Controls/Popup/Manager/Container',
          _template: template,
          _overlayId: null,
          _zIndexStep: POPUP_ZINDEX_STEP,
+         _popupItems: null,
+         _beforeMount: function() {
+            this._popupItems = new collection.List();
+         },
          _afterMount: function() {
             ManagerController.setContainer(this);
          },

@@ -26,3 +26,6 @@
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
 </table>
+<ws:if data="{{_options.emptyTemplate}}">
+   <ws:partial template="{{_options.emptyTemplate}}"/>
+</ws:if>

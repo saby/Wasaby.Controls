@@ -22,6 +22,7 @@ define('Controls-demo/OperationsPanel/Demo', [
       _panelSource: undefined,
       _nodeProperty: 'Раздел@',
       _parentProperty: 'Раздел',
+      _keyProperty: 'id',
       _viewSource: null,
       _moveDialogColumns: null,
       _gridColumns: null,
@@ -121,17 +122,23 @@ define('Controls-demo/OperationsPanel/Demo', [
          });
       },
 
-      _selectionChangeHandler: function(event, selectedKeys) {
-         this._panelSource = this._getPanelSource(selectedKeys);
+      _selectionChangeHandler: function() {
+         this._panelSource = this._getPanelSource();
          this._forceUpdate();
       },
 
       _moveItems: function() {
-         this._children.dialogMover.moveItemsWithDialog(this._selectedKeys);
+         this._children.dialogMover.moveItemsWithDialog({
+            selected: this._selectedKeys,
+            excluded: this._excludedKeys
+         });
       },
 
       _removeItems: function() {
-         this._children.remover.removeItems(this._selectedKeys);
+         this._children.remover.removeItems({
+            selected: this._selectedKeys,
+            excluded: this._excludedKeys
+         });
       },
 
       _afterItemsMove: function(event, items, target, position) {
@@ -143,11 +150,13 @@ define('Controls-demo/OperationsPanel/Demo', [
 
       _beforeItemsRemove: function(event, items) {
          var
+            item,
             self = this,
             removeFolders;
 
          items.forEach(function(key) {
-            if (self._items.getRecordById(key).get(self._nodeProperty) === true) {
+            item = self._items.getRecordById(key);
+            if (item && item.get(self._nodeProperty) === true) {
                removeFolders = true;
             }
          });
@@ -158,14 +167,33 @@ define('Controls-demo/OperationsPanel/Demo', [
          }) : true;
       },
 
+      _afterItemsRemove: function(event, items, result) {
+         var
+            hasErrors = result instanceof Error,
+            title = 'The result of the delete operation.';
+
+         this._children.operationsResultOpener.open({
+            templateOptions: {
+               operationsCount: items.length,
+               operationsSuccess: items.length - (hasErrors ? 1 : 0),
+               errors: hasErrors ? [result.message] : [],
+               title: title
+            }
+         });
+
+         if (hasErrors) {
+            this._children.list.reload();
+         }
+      },
+
       _itemsReadyCallback: function(items) {
          this._items = items;
       },
 
-      _getPanelSource: function(keys) {
+      _getPanelSource: function() {
          var items = Data.panelItems.slice();
 
-         if (keys[0] !== null && !!keys.length) {
+         if (this._selectedKeys && this._selectedKeys.length) {
             items.unshift(Data.removeOperation);
             items.unshift(Data.moveOperation);
          }
