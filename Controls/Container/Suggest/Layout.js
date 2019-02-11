@@ -58,7 +58,7 @@
                      _private.open(self);
                   });
                } else {
-                  _private.open(self);
+                  _private.updateSuggestState(self);
                }
             }
          },
@@ -238,7 +238,7 @@
                _private.setCloseState(this);
             }
       
-            if (needSearchOnValueChanged || !newOptions.value) {
+            if (needSearchOnValueChanged || !newOptions.value && typeof newOptions.value === 'string') {
                this._searchValue = newOptions.value;
             }
    
