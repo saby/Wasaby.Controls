@@ -223,6 +223,7 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
       _template: template,
       editingConfig: null,
       _enabled: true,
+      _showAddButton: true,
 
       _beforeMount: function() {
          this._itemActions = [{
@@ -497,6 +498,10 @@ define('Controls-demo/List/EditInPlace/Scenarios', [
                })
             };
          }
+      },
+
+      _toggleAddButton: function(e, state) {
+         this._showAddButton = state;
       }
    });
 

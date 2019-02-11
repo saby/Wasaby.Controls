@@ -11,7 +11,8 @@ define('Controls/Date/interface/IMonth', [
 
    /**
     * Интерфейс контролов отображающих месяц
-    * mixin Controls/Calendar/interface/IMonth
+    * @interface Controls/Date/interface/IMonth
+    * @public
     */
 
    return {
@@ -19,7 +20,7 @@ define('Controls/Date/interface/IMonth', [
          return {
 
             /**
-             * @name Controls/Calendar/interface/IMonth#month
+             * @name Controls/Date/interface/IMonth#month
              * @cfg {Date|String} Месяц с которого откроется календарь
              * @remark
              * Строка должна быть формата ISO 8601.
@@ -32,13 +33,13 @@ define('Controls/Date/interface/IMonth', [
             month: dateUtil.getStartOfMonth(new Date()),
 
             /**
-             * @name Controls/Calendar/interface/IMonth#showCaption
+             * @name Controls/Date/interface/IMonth#showCaption
              * @cfg {String} Тип заголовка "text"|null
              */
             showCaption: false,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#captionFormat
+             * @name Controls/Date/interface/IMonth#captionFormat
              * @cfg {String} Формат заголовка
              * @remark
              * Строка должна быть в формате поддерживаемым Core/helpers/Date/format.
@@ -46,19 +47,19 @@ define('Controls/Date/interface/IMonth', [
             captionFormat: dateFormat.FULL_MONTH,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#showWeekdays
+             * @name Controls/Date/interface/IMonth#showWeekdays
              *  @cfg {Boolean} Если true, то дни недели отображаются
              */
             showWeekdays: true,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#dayFormatter
+             * @name Controls/Date/interface/IMonth#dayFormatter
              * @cfg {Function} Возможность поменять конфигурацию для дня. В функцию приходит объект даты. Опция необходима для производственных каледнадрей.
              */
             dayFormatter: undefined,
 
             /**
-             * @name Controls/Calendar/interface/IMonth#mode
+             * @name Controls/Date/interface/IMonth#mode
              * @cfg {String} Month view mode
              * @variant current Only the current month is displayed
              * @variant extended 6 weeks are displayed. The first week of the current month is complete,

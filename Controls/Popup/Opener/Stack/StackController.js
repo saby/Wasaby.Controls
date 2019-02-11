@@ -7,10 +7,11 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Core/Deferred',
       'Core/constants',
       'Core/core-clone',
+      'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone, Vdom) {
       'use strict';
       var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
       var STACK_CLASS = 'controls-Stack';
@@ -175,6 +176,11 @@ define('Controls/Popup/Opener/Stack/StackController',
                   item.popupOptions.stackClassName += ' controls-Stack__open';
                   _private.updatePopupOptions(item);
                   this._update();
+
+                  /**
+                   * Perfoming animation. Changing rAF for rIC
+                   */
+                  Vdom.animationWaiter(true);
                   require('Controls/Popup/Manager/ManagerController').getContainer()._forceUpdate();
                }.bind(this), 100);
             }
@@ -200,6 +206,11 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.stackClassName += ' controls-Stack__close';
                _private.updatePopupOptions(item);
                this._fixTemplateAnimation(item);
+               
+               /**
+                * Perfoming animation. Changing rAF for rIC
+                */
+               Vdom.animationWaiter(true);
             } else {
                _private.elementDestroyed(this, item);
                return (new Deferred()).callback();
@@ -220,6 +231,7 @@ define('Controls/Popup/Opener/Stack/StackController',
 
          _update: function() {
             var maxPanelWidth = StackStrategy.getMaxPanelWidth();
+            var maxWidth = 0;
             var cache = {};
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
@@ -227,6 +239,10 @@ define('Controls/Popup/Opener/Stack/StackController',
                   var currentWidth = item.containerWidth || item.position.width;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
+                  if (currentWidth > maxWidth) {
+                     maxWidth = currentWidth;
+                     cache = {};
+                  }
                   if (!cache[currentWidth]) {
                      cache[currentWidth] = 1;
                      _private.addShadowClass(item);

@@ -151,15 +151,6 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
-
-               // ВРЕМЕННОЕ РЕШЕНИЕ, заведена ошибка https://online.sbis.ru/opendoc.html?guid=7b969897-2c73-4564-b8d4-78554d8391c1
-
-               runDelayed(function() {
-                  var rp = new RegExp('[' + replacer + '.:-]', 'g');
-                  if (document.activeElement === input && !this._destroyed && replacer && !value.replace(rp, '')) {
-                     input.setSelectionRange(0, 0);
-                  }
-               }.bind(this));
             },
             validateReplacer: function(replacer, mask) {
                var validation;
@@ -192,6 +183,16 @@ define('Controls/Input/Mask',
                });
             },
 
+            //Временное решение для фиксации https://online.sbis.ru/opendoc.html?guid=6853df25-ba30-47d7-8255-5929ecefb237.
+            //Иначе - нужно переделывать логику InputRender, в чем нет смысла, т.к. по задаче https://online.sbis.ru/opendoc.html?guid=ce71491f-3a24-49fb-a628-ed3b1149b8ab
+            //маска будет переведена на Input.Base уже в феврале'18
+            _afterMount: function() {
+               this._children.inputRender._selection = {
+                  selectionStart: 0,
+                  selectionEnd: 0
+               };
+            },
+
             _beforeUpdate: function(newOptions) {
                if (!(
                   newOptions.value === this._options.value &&
@@ -211,7 +212,7 @@ define('Controls/Input/Mask',
             _focusinHandler: function() {
                var
                   input = this._children.input,
-                  value = this._options.value,
+                  value = this._viewModel.getDisplayValue(),
                   replacer = this._options.replacer;
 
                /**

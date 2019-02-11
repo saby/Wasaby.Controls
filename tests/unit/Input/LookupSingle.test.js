@@ -35,7 +35,6 @@ define([
 
       it('getLastSelectedItems', function() {
          var
-            lookup = new Lookup(),
             item = new entity.Model({
                rawData: {id: 1},
                idProperty: 'id'
@@ -43,14 +42,13 @@ define([
             item2 = new entity.Model({
                rawData: {id: 2},
                idProperty: 'id'
+            }),
+            items = new collection.List({
+               items: [item, item2]
             });
 
-         lookup._options.items = new collection.List({
-            items: [item, item2]
-         });
-
-         assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 1), [item2]);
-         assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 10), [item, item2]);
+         assert.deepEqual(Lookup._private.getLastSelectedItems(items, 1), [item2]);
+         assert.deepEqual(Lookup._private.getLastSelectedItems(items, 10), [item, item2]);
       });
 
       it('isShowCounter', function() {
@@ -130,7 +128,6 @@ define([
             multiLine: true
          });
          assert.notEqual(lookup._multiLineState, undefined);
-         assert.notEqual(lookup._counterWidth, undefined);
          assert.equal(lookup._maxVisibleItems, undefined);
 
          lookup._beforeUpdate({
@@ -156,7 +153,6 @@ define([
          assert.deepEqual(newValue, [1]);
       });
 
-      /* toDo до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
       it('_choose', function() {
          var
             isActivate = false,
@@ -174,7 +170,6 @@ define([
          lookup._choose();
          assert.isTrue(isActivate);
       });
-      */
 
       it('_deactivated', function() {
          var lookup = new Lookup();
@@ -219,6 +214,15 @@ define([
 
          lookup._options.multiSelect = true;
          assert.isTrue(lookup._determineAutoDropDown());
+      });
+
+      it('_onClickShowSelector', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._onClickShowSelector();
+
+         assert.isFalse(lookup._suggestState);
       });
    });
 });

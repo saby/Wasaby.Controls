@@ -7,10 +7,11 @@
                                       bind:value="itemData.item[itemData.column.displayProperty]"
                                       selectOnClick="{{ false }}"
                                       precision="{{ 2 }}"
+                                      textAlign="right"
                                       showEmptyDecimals="{{ true }}" />
             </ws:if>
             <ws:else>
-               <div class="controls-EditingTemplateText controls-EditingTemplateText_enabled controls-EditingTemplateText_size_default">
+               <div class="controls-EditingTemplateText controls-EditingTemplateText_enabled controls-EditingTemplateText_size_default{{itemData.isActive ? ' controls-EditingTemplateText_active'}}">
                   <Controls.Decorator.Money attr:class="ControlsDemo-EipScenarios__money" number="{{itemData.item[itemData.column.displayProperty]}}"/>
                </div>
             </ws:else>
@@ -36,6 +37,7 @@
                   <Controls.Input.Number bind:value="itemData.item[itemData.column.displayProperty]"
                                          selectOnClick="{{ false }}"
                                          precision="{{ 2 }}"
+                                         textAlign="right"
                                          showEmptyDecimals="{{ true }}" />
                </ws:else>
             </ws:editorTemplate>

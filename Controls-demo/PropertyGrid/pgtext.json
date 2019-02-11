@@ -268,6 +268,11 @@
             "title": "Name of the field that contains information about parent node.",
             "type": "String",
             "default": ""
+          },
+          "showActionButton": {
+            "title": "Determines whether the arrow near \"back\" button should be shown.",
+            "type": "Boolean",
+            "default": true
           }
         }
       }
@@ -668,6 +673,14 @@
           "endValue": {
             "type": "DateTime",
             "title": "Field value."
+          },
+          "mask": {
+            "type": "enum",
+            "title": "Mask of input field.",
+            "enum": {
+              "DD.MM.YY": "DD.MM.YY",
+              "DD.MM.YYYY": "DD.MM.YYYY"
+            }
           },
           "style": {
             "type": "enum",

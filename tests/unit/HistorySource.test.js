@@ -6,9 +6,10 @@ define(
       'Types/entity',
       'Core/Deferred',
       'Types/source',
-      'Controls/History/Constants'
+      'Controls/History/Constants',
+      'Types/util',
    ],
-   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants) => {
+   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants, util) => {
       describe('History Source', () => {
          let items = [
             {
@@ -199,23 +200,47 @@ define(
                assert.equal(!!hS._historyId, false);
             });
          });
+   
+         describe('serialize tests', function() {
+            it('clone', function() {
+               var sourceClone = util.object.clone(hSource);
+               assert.isTrue(sourceClone instanceof historySource);
+            });
+         });
+         
          describe('checkHistory', function() {
-            it('query', function() {
+            it('query', function(done) {
                let query = new sourceLib.Query().where();
                let historyDef = hSource.query(query);
+               let originHSource = hSource.historySource;
+               var errorSource = {
+                  query: function() {
+                     return Deferred.fail(new Error('testError'));
+                  }
+               };
 
                historyDef.addCallback(function(data) {
                   let records = data.getAll();
-                  assert.equal(records.at(0).get('pinned'), null);
-               });
-
-               query = new sourceLib.Query().where({
-                  $_history: true
-               });
-               historyDef = hSource.query(query);
-               historyDef.addCallback(function(data) {
-                  let records = data.getAll();
-                  assert.equal(records.at(0).get('pinned'), true);
+                  assert.isFalse(records.at(0).has('pinned'));
+   
+                  query = new sourceLib.Query().where({
+                     $_history: true
+                  });
+                  historyDef = hSource.query(query);
+                  historyDef.addCallback(function(data) {
+                     let records = data.getAll();
+                     assert.isTrue(records.at(0).get('pinned'));
+   
+                     hSource.historySource = errorSource;
+                     historyDef = hSource.query(query);
+   
+                     historyDef.addCallback(function(data) {
+                        let records = data.getAll();
+                        assert.isFalse(records.at(0).has('pinned'));
+                        hSource.historySource = originHSource;
+                        done();
+                     });
+                  });
                });
             });
             it('getItemsWithHistory', function() {
@@ -317,6 +342,9 @@ define(
                   // throw error
                   assert.equal(error, true);
                });
+            });
+            it('getOptions', function() {
+               assert.deepEqual(hSource.getOptions(), {debug: false});
             });
          });
       });

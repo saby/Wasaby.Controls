@@ -4,7 +4,6 @@
     "Controls/Application/*"
   ],
   "exclude": [
-    "wml!Controls/Application/CompatibleScripts",
     "Controls/Application/HeadDataContext",
     "Controls/Application/AppData"
   ],
@@ -67,6 +66,12 @@
     "Controls/Controllers/*"
   ],
   "output": "controls-controllers.package.js"
+}, {
+  "include": [
+    "Controls/Decorator/Markup",
+    "Controls/Decorator/Markup/*"
+  ],
+  "output": "controls-decorator-markup.package.js"
 }, {
   "include": [
     "Controls/Dropdown/*"

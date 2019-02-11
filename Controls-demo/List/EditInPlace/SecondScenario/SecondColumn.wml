@@ -15,8 +15,8 @@
                <ws:itemTemplate>
                   <ws:partial template="wml!Controls/Selector/SelectedCollection/ItemTemplate">
                      <ws:contentTemplate>
-                        <ws:partial attr:class="ControlsDemo-EipScenarios__categoryNumber" template="wml!Controls/Selector/SelectedCollection/_ContentTemplate" style="bold" size="default" displayProperty="categoryNumber" />
-                        <ws:partial template="wml!Controls/Selector/SelectedCollection/_ContentTemplate" style="default" size="default" displayProperty="category" />
+                        <span class="ControlsDemo-EipScenarios__categoryNumber">{{itemTemplate.item.categoryNumber}}</span>
+                        <span>{{itemTemplate.item.category}}</span>
                      </ws:contentTemplate>
                   </ws:partial>
                </ws:itemTemplate>
@@ -45,14 +45,14 @@
             </ws:if>
          </ws:if>
          <ws:else>
-            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                <span class="controls-addition-color">{{ itemData.item[itemData.column.displayProperty] }}</span>
             </div>
-            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                <span class="controls-addition-color">{{ itemData.item.subdivision }}</span>
             </div>
             <ws:if data="{{ itemData.item.subdivision2 }}">
-               <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+               <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                   <span class="controls-addition-color">{{ itemData.item.subdivision2 }}</span>
                </div>
             </ws:if>

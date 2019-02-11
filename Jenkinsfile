@@ -2,7 +2,7 @@
 import java.time.*
 import java.lang.Math
 
-def version = "19.100"
+def version = "19.110"
 
 @NonCPS
 def get_run_commit() {
@@ -91,7 +91,7 @@ def download_coverage_json(version, type_tests, type_controls) {
         fi
         """
     sh returnStdout: true, script: script
-    def exist_json = fileExists 'result.json'
+    def exist_json = fileExists "result_${type_tests}.json"
     return exist_json
 
 }
@@ -182,7 +182,6 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
-            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
@@ -211,7 +210,7 @@ echo "Генерируем параметры"
 
 def regr = params.run_reg
 def all_regr = params.run_all_reg
-def unit = params.run_unit
+def unit
 def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
@@ -846,19 +845,23 @@ node('controls') {
                         if (inte && !boss) {
                             if (sbis3_controls) {
                                 if ( download_coverage_json(version, "int", "SBIS3.CONTROLS") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
+                                } else {
+                                run_tests_int_sbis3 = false
                                 }
                             }
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "int", "VDOM") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int_vdom = false
                                 }
                             }
 
@@ -869,19 +872,23 @@ node('controls') {
                         if (regr && !boss) {
                             if (sbis3_controls) {
                             if ( download_coverage_json(version, "reg", "SBIS3.CONTROLS") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_sbis3 = false
                                  }
                                }
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "reg", "VDOM") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_vdom = false
                                  }
                                }
 
@@ -1114,8 +1121,8 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( (regr || all_regr) && (run_tests_reg_sbis3 || run_tests_reg_vdom)){
-        if (sbis3_controls) {
+    if ( (regr || all_regr) ){
+        if (run_tests_reg_sbis3) {
             dir("./controls/tests/reg/SBIS3.CONTROLS"){
                 sh """mkdir -p reporter"""
                 sh """mv capture_report/report.html reporter/report.html"""
@@ -1124,7 +1131,7 @@ node('controls') {
                 publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './reporter/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
             }
         }
-        if (vdom_controls) {
+        if (run_tests_reg_vdom) {
             dir("./controls/tests/reg/VDOM"){
                 sh """mkdir -p reporter"""
                 sh """mv capture_report/report.html reporter/report.html"""
@@ -1137,7 +1144,7 @@ node('controls') {
     }
     gitlabStatusUpdate()
     if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_vdom ) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT FIND TESTS BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }

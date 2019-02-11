@@ -24,8 +24,13 @@
 }
 
 .controls-Render__wrapper {
+   width: 100%;
    height: 100%;
-   display: flex;
+
+   /**
+    * Use inline-flex, that would be in ie not to break the baseline in due to overflow inside the container.
+    */
+   display: inline-flex;
    align-items: baseline;
 }
 

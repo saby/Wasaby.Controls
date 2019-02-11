@@ -20,7 +20,7 @@
         caption="{{_options.caption || _text}}"
         dataLoadCallback="{{_setText}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        class="controls-Dropdown">
+        attr:class="controls-Dropdown {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid'}}">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
                icon="{{_icon}}"
                text="{{_text}}"

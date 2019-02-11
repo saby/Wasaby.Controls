@@ -114,6 +114,10 @@ define('Controls/Popup/Opener/InfoBox',
             }
          },
 
+         _beforeUnmount: function() {
+            this.close(0);
+         },
+
          open: function(cfg) {
             // Only one popup can be opened
             if (this.isOpened()) {
@@ -155,6 +159,7 @@ define('Controls/Popup/Opener/InfoBox',
                target: cfg.target,
                position: cfg.position,
                autofocus: false,
+               maxWidth: cfg.maxWidth,
                zIndex: cfg.zIndex || getZIndex(this),
                eventHandlers: cfg.eventHandlers,
                opener: cfg.opener,

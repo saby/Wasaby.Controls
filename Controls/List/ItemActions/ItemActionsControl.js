@@ -42,7 +42,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
-      updateItemActions: function(self, item, options, isEditingItem, isTouch) {
+      updateItemActions: function(self, item, options, isTouch) {
          var
             all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
 
@@ -54,23 +54,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
          if (isTouch) {
             showed.sort(_private.sortActions);
-         }
-
-         if (isEditingItem && options.toolbarVisibility) {
-            showed.push({
-               icon: 'icon-Yes icon-done ' + ACTION_ICON_CLASS,
-               style: 'bordered',
-               handler: function(item) {
-                  this._applyEdit(item);
-               }.bind(self)
-            });
-            showed.push({
-               icon: 'icon-Close icon-primary ' + ACTION_ICON_CLASS,
-               style: 'bordered',
-               handler: function(item) {
-                  this._cancelEdit(item);
-               }.bind(self)
-            });
          }
 
          if (_private.needActionsMenu(all, options.itemActionsPosition)) {
@@ -93,7 +76,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                   itemData = options.listModel.getCurrent(),
                   item = itemData.item;
                if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                  _private.updateItemActions(self, item, options, itemData.isEditing, isTouch);
+                  _private.updateItemActions(self, item, options, isTouch);
                }
             }
          }
@@ -128,6 +111,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _template: template,
 
       _beforeMount: function(newOptions, context) {
+         if (typeof window === 'undefined') {
+            this.serverSide = true;
+            return;
+         }
          if (newOptions.listModel) {
             _private.updateModel(this, newOptions, context.isTouch ? context.isTouch.isTouch : false);
          }
@@ -159,8 +146,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          this._notify('cancelActionClick', [item]);
       },
 
-      updateItemActions: function(item, isEditingItem) {
-         _private.updateItemActions(this, item, this._options, isEditingItem, this._context.isTouch ? this._context.isTouch.isTouch : false);
+      updateItemActions: function(item) {
+         _private.updateItemActions(this, item, this._options, this._context.isTouch ? this._context.isTouch.isTouch : false);
       }
    });
 

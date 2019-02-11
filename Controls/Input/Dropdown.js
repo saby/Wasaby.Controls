@@ -31,7 +31,7 @@ define('Controls/Input/Dropdown',
        * @mixes Controls/interface/ITextValue
        * @control
        * @public
-       * @author Красильников А.С.
+       * @author Золотова Элина
        * @category Input
        * @demo Controls-demo/Input/Dropdown/DropdownPG
        */

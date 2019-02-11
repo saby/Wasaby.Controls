@@ -1,4 +1,4 @@
-<div class="controls-Toolbar_item"
+<div class="controls-Toolbar_item controls-Toolbar_item_{{item['buttonViewMode'] === 'toolButton' || buttonViewMode === 'toolButton' ? 'toolButton' : 'default'}}"
      title="{{item['tooltip']}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
@@ -18,7 +18,7 @@
                              icon="{{item['buttonIcon'] || item['icon']}}"
                              style="{{buttonStyle || item['buttonStyle']}}"
                              viewMode="{{buttonViewMode || item['buttonViewMode']}}"
-                             size="l"/>
+                             size="m"/>
         </ws:else>
         <ws:if data="{{(item['title'] || item[displayProperty]) && !item['buttonViewMode']}}">
             <span class="controls-Toolbar__item_title {{item['icon'] || item[iconProperty] ? 'controls-Toolbar__item_has-title-and-icon'}}">{{item['title'] || item[displayProperty]}}</span>

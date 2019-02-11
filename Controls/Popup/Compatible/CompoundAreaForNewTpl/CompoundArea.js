@@ -6,6 +6,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Lib/Control/CompoundControl/CompoundControl',
       'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper',
+      'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'Vdom/Vdom',
       'Core/Control',
       'Core/IoC',
@@ -15,6 +16,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
    function(CompoundControl,
       template,
       ComponentWrapper,
+      ManagerWrapperController,
       Vdom,
       control,
       IoC,
@@ -111,6 +113,17 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             if (!this._isVDomTemplateMounted) {
                this._closeAfterMount = true;
                event.setResult(false);
+            } else {
+               this.popupBeforeDestroyed();
+            }
+         },
+
+         popupBeforeDestroyed: function() {
+            // Эмулируем событие вдомного попапа managerPopupBeforeDestroyed для floatArea
+            var ManagerWrapper = ManagerWrapperController.getManagerWrapper();
+            if (ManagerWrapper) {
+               var container = this._container[0] ? this._container[0] : this._container;
+               ManagerWrapper._beforePopupDestroyedHandler(null, {}, [], container);
             }
          },
 
@@ -127,6 +140,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                self._isVDomTemplateMounted = true;
                if (self._closeAfterMount) {
                   self.sendCommand('close');
+                  self.popupBeforeDestroyed();
                } else if (self._options.catchFocus) {
                   self._vDomTemplate.activate && self._vDomTemplate.activate();
                }
@@ -193,7 +207,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
             this._$onBringToFront = this.onBringToFront;
             this.onBringToFront = function() {
-               opts._$to.activate();
+               if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
+                  opts._$to.activate();
+               }
             };
          },
          _onDeactivatedHandler: function() {

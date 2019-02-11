@@ -77,25 +77,41 @@ define('Controls/Filter/Controller',
          },
 
          getHistoryItems: function(self, id) {
+            var source = historyUtils.getHistorySource(id),
+               result, recent, lastFilter;
+   
             if (!id) {
-               return Deferred.success([]);
+               result =  Deferred.success([]);
             }
-            var recent, lastFilter,
-               source = historyUtils.getHistorySource(id);
 
             if (!self._sourceController) {
                self._sourceController = new SourceController({
                   source: source
                });
             }
-
-            return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = source.getRecent();
-               if (recent.getCount()) {
-                  lastFilter = recent.at(0);
-                  return source.getDataObject(lastFilter.get('ObjectData'));
-               }
-            });
+            
+            if (id) {
+               result = new Deferred();
+   
+               self._sourceController.load({ $_history: true })
+                  .addCallback(function(res) {
+                     recent = source.getRecent();
+                     if (recent.getCount()) {
+                        lastFilter = recent.at(0);
+                        result.callback(source.getDataObject(lastFilter.get('ObjectData')));
+                     } else {
+                        result.callback([]);
+                     }
+                     return res;
+                  })
+                  .addErrback(function(error) {
+                     error.processed = true;
+                     result.callback([]);
+                     return error;
+                  });
+            }
+   
+            return result;
          },
 
          updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
@@ -243,7 +259,7 @@ define('Controls/Filter/Controller',
             });
          },
 
-         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems) {
+         calculateFilterByItems: function(filter, filterButtonItems, fastFilterItems) {
             var filterClone = clone(filter || {});
             var itemsFilter = _private.getFilterByItems(filterButtonItems, fastFilterItems);
             var emptyFilterKeys = _private.getEmptyFilterKeys(filterButtonItems, fastFilterItems);
@@ -252,21 +268,25 @@ define('Controls/Filter/Controller',
                delete filterClone[key];
             });
 
-            merge(filterClone, itemsFilter);
+            // FIXME when using merge witout {rec: false} we will get wrong data:
+            // {arr: [123]} <-- {arr: []} results {arr: [123]} instead {arr: []}
+            merge(filterClone, itemsFilter, {rec: false});
 
+            return filterClone;
+         },
+         applyItemsToFilter: function(self, filter, filterButtonItems, fastFilterItems) {
+            var filterClone = _private.calculateFilterByItems(filter, filterButtonItems, fastFilterItems);
             _private.setFilter(self, filterClone);
          },
 
          getHistoryData: function(filterButtonItems, fastFilterItems) {
-
             /* An empty filter should not appear in the history, but should be applied when loading data from the history.
                To understand this, save an empty object in history. */
 
             if (_private.isFilterChanged(filterButtonItems, fastFilterItems)) {
                return _private.prepareHistoryItems(filterButtonItems, fastFilterItems);
-            } else {
-               return {};
             }
+            return {};
          },
 
          setFilter: function(self, filter) {
@@ -284,6 +304,26 @@ define('Controls/Filter/Controller',
             return clone(items);
          },
       };
+
+      function getCalculatedFilter(cfg) {
+         var def = new Deferred();
+         var tmpStorage = {};
+         _private.resolveItems(tmpStorage, cfg.historyId, cfg.filterButtonSource, cfg.fastFilterSource).addCallback(function(items) {
+            var calculatedFilter;
+            try {
+               calculatedFilter = _private.calculateFilterByItems(cfg.filter, tmpStorage._filterButtonItems, tmpStorage._fastFilterItems);
+            } catch (err) {
+               def.errback(err);
+               throw err;
+            }
+            def.callback(calculatedFilter);
+            return items;
+         }).addErrback(function(err) {
+            def.errback(err);
+            return err;
+         });
+         return def;
+      }
 
       /**
        * The filter controller allows you to filter data in a {@link Controls/List} using {@link Filter/Button} or {@link Filter/Fast}.
@@ -438,5 +478,6 @@ define('Controls/Filter/Controller',
       });
 
       Container._private = _private;
+      Container.getCalculatedFilter = getCalculatedFilter;
       return Container;
    });

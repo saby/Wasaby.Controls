@@ -22,16 +22,24 @@ define('Controls/Input/Phone/ViewModel',
             '+': '[+]'
          };
 
+      var _private = {
+         valueValidate: function(options) {
+            if (!options.value) {
+               options.value = '';
+            }
+         }
+      };
+
       var ViewModel = BaseViewModel.extend({
          constructor: function(options) {
+            _private.valueValidate(options);
             ViewModel.superclass.constructor.call(this, options);
-
             this._format = FormatBuilder.getFormat(MaskBuilder.getMask(options.value), formatMaskChars, replacer);
          },
 
          updateOptions: function(newOptions) {
+            _private.valueValidate(newOptions);
             ViewModel.superclass.updateOptions.call(this, newOptions);
-
             this._format = FormatBuilder.getFormat(MaskBuilder.getMask(newOptions.value), formatMaskChars, replacer);
          },
 
@@ -63,6 +71,8 @@ define('Controls/Input/Phone/ViewModel',
             return value.length === maskOfKeys.length;
          }
       });
+
+      ViewModel._private = _private;
 
       return ViewModel;
    }

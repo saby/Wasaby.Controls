@@ -334,6 +334,8 @@ define('Controls/Input/Base',
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputPlaceholder
        *
+       * @mixes Controls/Input/Render/Styles
+       *
        * @private
        * @demo Controls-demo/Input/Base/Base
        *
@@ -667,8 +669,17 @@ define('Controls/Input/Base',
              * The field is displayed according to the control options.
              * When user enters data,the display changes and does not match the options.
              * Therefore, return the field to the state before entering.
+             * Otherwise, the text will blink when the user performs a fast input.
+             * Fast input is pressing multiple keys at the same time or pressing a single key.
+             *
+             * On Android such actions cause bugs. For example:
+             * 1. https://online.sbis.ru/opendoc.html?guid=ce9d1d56-8f33-4e26-8284-157773fc08fd
+             * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
+             * Fast input on Android is not carried out, so do not do these actions on it.
              */
-            _private.updateField(this, value, selection);
+            if (!detection.isMobileAndroid) {
+               _private.updateField(this, value, selection);
+            }
          },
 
          /**

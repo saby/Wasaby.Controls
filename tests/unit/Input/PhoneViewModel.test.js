@@ -29,6 +29,12 @@ define(
             });
             assert.equal(model.isFilled(), true);
          });
+         it('valueValidate', function() {
+            var options = { value: null };
+            model = new ViewModel(options);
+            ViewModel._private.valueValidate(options);
+            assert.equal(options.value, '');
+         });
       });
    }
 );

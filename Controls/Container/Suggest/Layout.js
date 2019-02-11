@@ -9,11 +9,15 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
+      'Core/constants',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+      
+      /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
+      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, constants.key.enter];
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       var _private = {
          hasMore: function(searchResult) {
@@ -43,6 +47,26 @@
                }
             });
          },
+         
+         inputActivated: function(self) {
+            var filter;
+            
+            if (self._options.autoDropDown && !self._options.readOnly) {
+               if (self._options.historyId) {
+                  _private.getRecentKeys(self).addCallback(function(keys) {
+                     if (keys) {
+                        filter = clone(self._options.filter || {});
+                        filter['historyKeys'] = keys;
+                        _private.setFilter(self, filter);
+                     }
+                     _private.open(self);
+                  });
+               } else {
+                  _private.updateSuggestState(self);
+               }
+            }
+         },
+         
          searchErrback: function(self, error) {
             self._loading = false;
             if (!error || !error.canceled) {
@@ -56,7 +80,14 @@
             return self._active && value.length >= self._options.minSearchLength;
          },
          shouldShowSuggest: function(self, searchResult) {
-            return (searchResult && searchResult.data.getCount()) || self._options.emptyTemplate;
+            var hasItems = searchResult && searchResult.data.getCount();
+            
+            /* do not suggest if:
+             * 1) loaded list is empty and empty template option is doesn't set
+             * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
+            return hasItems ||
+                   hasItems && self._options.historyId && !self._searchValue ||
+                   !self._options.historyId && self._options.emptyTemplate;
          },
          precessResultData: function(self, resultData) {
             self._searchResult = resultData;
@@ -268,24 +299,8 @@
             _private.updateSuggestState(this);
          },
          _inputActivated: function() {
-            var self = this;
-            var filter;
-
             this._inputActive = true;
-            if (this._options.autoDropDown && !this._options.readOnly) {
-               if (this._options.historyId) {
-                  _private.getRecentKeys(this).addCallback(function(keys) {
-                     if (keys) {
-                        filter = clone(self._options.filter || {});
-                        filter['historyKeys'] = keys;
-                        _private.setFilter(self, filter);
-                     }
-                     _private.open(self);
-                  });
-               } else {
-                  _private.open(this);
-               }
-            }
+            _private.inputActivated(this);
          },
    
          _inputDeactivated: function() {
@@ -293,8 +308,8 @@
          },
          
          _inputClicked: function() {
-            if (this._options.autoDropDown && !this._options.suggestState &&  !this._options.readOnly) {
-               _private.open(this);
+            if (!this._options.suggestState) {
+               _private.inputActivated(this);
             }
          },
          _tabsSelectedKeyChanged: function(event, key) {
@@ -312,11 +327,11 @@
          _select: function(event, item) {
             item = item || event;
             _private.close(this);
-            this._notify('choose', [item]);
 
             // after select from the suggest, focus on input will lost
             // if the focus should be returned, the control (such Input/Suggest) should do it
             this._inputActive = false;
+            this._notify('choose', [item]);
             if (this._options.historyId) {
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
@@ -375,6 +390,15 @@
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
+         },
+
+         _keydown: function(event) {
+            if (this._options.suggestState && IGNORE_HOT_KEYS.indexOf(event.nativeEvent.keyCode) !== -1) {
+               event.preventDefault();
+            }
+            if (this._children.inputKeydown) {
+               this._children.inputKeydown.start(event);
+            }
          }
 
          // </editor-fold>

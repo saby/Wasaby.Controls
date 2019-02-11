@@ -6,6 +6,8 @@
       source="{{ _viewSource }}"
       header="{{ _gridHeader }}"
       on:beforeBeginEdit="_onItemAdd()"
+      on:afterBeginEdit="_toggleAddButton(false)"
+      on:afterEndEdit="_toggleAddButton(true)"
       columns="{{ _gridColumns }}"
       leftPadding="S"
       rightPadding="S"
@@ -14,13 +16,13 @@
       dataLoadCallback="{{_dataLoadCallback}}"
       keyProperty="id">
       <ws:editingConfig>
-         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
       <ws:itemsGroup method="{{_groupingKeyCallback}}" template="wml!Controls-demo/List/Grid/DemoGroupTemplate"/>
    </Controls.Grid>
    <div class="ControlsDemo-EipScenarios__tableFooter">
-      <Controls.List.AddButton caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
-      <span class="controls-addition-color controls-small-text-size">Всего 5</span>
+      <Controls.List.AddButton if="{{_showAddButton}}" caption="{[Наименование]}" on:click="firstExample.beginAdd()" />
+      <span class="controls-addition-color controls-small-text-size ControlsDemo-EipScenarios__total">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 2 - редактирование в карточке, режим "по ховеру"</div>
    <Controls.Grid
@@ -33,12 +35,11 @@
       keyProperty="id"
       resultsPosition="top">
       <ws:editingConfig>
-         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
    </Controls.Grid>
    <div class="ControlsDemo-EipScenarios__tableFooter">
-      <Controls.List.AddButton caption="{[Наименование]}" />
-      <span class="controls-addition-color controls-small-text-size">Всего 5</span>
+      <span class="controls-addition-color controls-small-text-size ControlsDemo-EipScenarios__total">Всего 5</span>
    </div>
    <div class="ControlsDemo-EipScenarios__title">Пример 4 - редактирование на странице (в реестре), режим "по ховеру</div>
    <Controls.TreeGrid
@@ -65,7 +66,7 @@
       keyProperty="id"
       resultsPosition="top">
       <ws:editingConfig>
-         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}"/>
+         <ws:Object editOnClick="{{true}}" toolbarVisibility="{{true}}" autoAdd="{{true}}"/>
       </ws:editingConfig>
    </Controls.Grid>
 </div>

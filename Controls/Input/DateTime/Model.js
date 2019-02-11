@@ -119,10 +119,10 @@ define('Controls/Input/DateTime/Model', [
        * Autocomplete not full text value.
        * @param textValue
        */
-      autocomplete: function(textValue) {
+      autocomplete: function(textValue, autocompleteType) {
          this._nextVersion();
          this._textValue = textValue;
-         this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, true);
+         this.value = this._stringValueConverter.getValueByString(textValue, this._lastValue, autocompleteType);
       },
       setCurrentDate: function() {
          this.value = this._stringValueConverter.getCurrentDate(this._lastValue, this._mask);

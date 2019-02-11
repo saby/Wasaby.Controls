@@ -39,7 +39,17 @@ define('Controls/Popup/Manager/Popup',
          // After updating the position of the current popup, calls the repositioning of popup from child openers
          _openersUpdateCallback: [],
 
+         _beforeMount: function() {
+            // Popup лишний раз провоцирет обновление, реагируя на события внутри него.
+            // Для того, чтобы заблокировать это обновление, переопределим _forceUpdate в момент между _beforeMount и _afterMount
+            // todo: убрать по https://online.sbis.ru/opendoc.html?guid=11776bc8-39b7-4c55-b5b5-5cc2ea8d9fbe
+            this.forceUpdateOrigin = this._forceUpdate;
+            this._forceUpdate = function() {};
+         },
+
          _afterMount: function() {
+            this._forceUpdate = this.forceUpdateOrigin;
+
             /* TODO: COMPATIBLE. You can't just count on afterMount position and zooming on creation
              * inside can be compoundArea and we have to wait for it, and there is an asynchronous phase. Look at the flag waitForPopupCreated */
 
@@ -112,6 +122,11 @@ define('Controls/Popup/Manager/Popup',
           */
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
+
+            // After updating popup will be taking autofocus
+            if (this._options.autofocus) {
+               this.activate();
+            }
 
             // After updating popup position we will updating the position of the popups open with it.
             runDelayed(this._callOpenersUpdate.bind(this));

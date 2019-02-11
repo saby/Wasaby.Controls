@@ -54,6 +54,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       calculatingSizes: function(self, newOptions) {
          var
+            counterWidth,
             isShowCounter = false,
             allItemsInOneRow = false,
             maxVisibleItems = newOptions.maxVisibleItems,
@@ -61,11 +62,15 @@ define('Controls/Selector/Lookup/_Lookup', [
             inputWidth, lastRowCollectionWidth,
             itemsSizesLastRow, availableWidth, lastSelectedItems,
             itemsCount = newOptions.items.getCount(),
-            multiLineState = newOptions.multiLine && itemsCount,
-            counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+            multiLineState = newOptions.multiLine && itemsCount;
 
          if (itemsCount) {
-            lastSelectedItems = _private.getLastSelectedItems(self, MAX_VISIBLE_ITEMS);
+            // in mode read only and single line, counter does not affect the collection
+            if (!newOptions.readOnly || newOptions.multiLine) {
+               counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+            }
+
+            lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
             itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
             allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
             afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
@@ -159,7 +164,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             itemsSizes = [],
             measurer = document.createElement('div'),
             maxVisibleItems = newOptions.multiLine ? newOptions.maxVisibleItems : items.length,
-            visibleItems = _private.getLastSelectedItems(self, maxVisibleItems);
+            visibleItems = _private.getLastSelectedItems(newOptions.items, maxVisibleItems);
 
          measurer.innerHTML = itemsTemplate({
             _options: _private.getCollectionOptions({
@@ -206,8 +211,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
       },
 
-      getLastSelectedItems: function(self, itemsCount) {
-         return chain.factory(self._options.items).last(itemsCount).value();
+      getLastSelectedItems: function(items, itemsCount) {
+         return chain.factory(items).last(itemsCount).value();
       },
 
       isShowCounter: function(itemsCount, maxVisibleItems) {
@@ -328,8 +333,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          /* move focus to input after select, because focus will be lost after closing popup,
           * only in multi-select mode, in single-select mode input is not displayed after selecting a item */
          if (this._options.multiSelect) {
-            // toDo костыль от Андрея Шипина по фокусам до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
-            this._children.inputRender._children.divinput.focus();
+            this.activate();
          }
       },
 
@@ -358,7 +362,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return !this._options.items.getCount();
       },
       
-      _openInfoBox: function() {
+      _openInfoBox: function(event, config) {
+         config.maxWidth = this._container.offsetWidth;
          this._suggestState = false;
          this._infoboxOpened = true;
       },
@@ -368,6 +373,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _onClickShowSelector: function() {
+         this._suggestState = false;
          this._notify('showSelector');
       },
 

@@ -17,6 +17,12 @@ define('Controls/interface/IMovable', [
     */
 
    /**
+    * @typedef {Object} Selection
+    * @property {Array.<Number|String>} selected Array of selected keys.
+    * @property {Array.<Number|String>} excluded Array of excluded keys.
+    */
+
+   /**
     * @typedef {String} BeforeItemsMoveResult
     * @variant Custom Your own logic of moving items.
     * @variant MoveInItems Move in the list without calling move on source.
@@ -42,6 +48,31 @@ define('Controls/interface/IMovable', [
     * </pre>
     * @see moveItemsWithDialog
     * @see Controls/List/Mover/MoveDialog
+    */
+
+   /**
+    * @name Controls/interface/IMovable#sortingOrder
+    * @cfg {String} Determines which sort is set on the dataSource.
+    * @variant asc Ascending sort.
+    * @variant desc Descending sort.
+    * @default asc
+    * @remark This option is necessary to specify the order in which the data is located in the source,
+    * so that when changing the sequence numbers, the items are moved to the correct position.
+    * @example
+    * The following example shows how to set a descending sort.
+    * <pre>
+    *    <Controls.List.Mover sortingOrder="desc">
+    *       <ws:moveDialogTemplate>
+    *          <Controls.List.Mover.MoveDialog
+    *                root="rootId"
+    *                searchParam="folderTitle"
+    *                parentProperty="parent"
+    *                nodeProperty="parent@">
+    *             <ws:filter moveDialog="{{true}}"/>
+    *          </Controls.List.Mover.MoveDialog>
+    *       </ws:moveDialogTemplate>
+    *    </Controls.List.Mover>
+    * </pre>
     */
 
    /**
@@ -105,6 +136,7 @@ define('Controls/interface/IMovable', [
     * Move one item up.
     * @function Controls/interface/IMovable#moveItemUp
     * @param {String|Number} item The item to be moved.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @example
     * The following example shows how to move item up using the item actions.
     * <pre>
@@ -135,6 +167,7 @@ define('Controls/interface/IMovable', [
     * Move one item down.
     * @function Controls/interface/IMovable#moveItemDown
     * @param {String|Number} item The item to be moved.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @example
     * The following example shows how to move item down using the item actions.
     * <pre>
@@ -164,9 +197,10 @@ define('Controls/interface/IMovable', [
    /**
     * Moves the transferred items relative to the specified target item.
     * @function Controls/interface/IMovable#moveItems
-    * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
+    * @param {Array.<String>|Array.<Number>|Selection} movedItems Items to be moved.
     * @param {String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
+    * @returns {Core/Deferred} Deferred with the result of the move.
     * @remark
     * Depending on the 'position' argument, elements can be moved before, after or on the specified target item.
     * @example
@@ -193,7 +227,7 @@ define('Controls/interface/IMovable', [
    /**
     * Move the transferred items with the pre-selection of the parent node using the dialog.
     * @function Controls/interface/IMovable#moveItemsWithDialog
-    * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
+    * @param {Array.<String>|Array.<Number>|Selection} movedItems Items to be moved.
     * @remark
     * The component specified in the {@link moveDialogTemplate moveDialogTemplate} option will be used as a template for the move dialog.
     * @example

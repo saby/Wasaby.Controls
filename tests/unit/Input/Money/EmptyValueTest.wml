@@ -1,4 +1,4 @@
-<div>
+<div class="controls-InputBase__field_readOnly controls-InputBase__field_margin">
    <span></span>
    <span class="controls-Money__fractionPart_readOnly"></span>
 </div>

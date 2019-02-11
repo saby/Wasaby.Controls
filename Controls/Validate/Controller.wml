@@ -1,22 +1,7 @@
-<ws:if data="{{_isNewEnvironment}}">
-   <ws:partial template="{{ _options.content }}"
-               style="{{_isValidResult() ? 'invalid': 'info'}}"
-               validationErrors="{{isValid()}}"
-               on:mouseenter="_hoverHandler()"
-               on:valueChanged="_valueChangedHandler()"
-               on:focusIn="_focusInHandler()"
-               on:mouseleave="_mouseLeaveHandler()"/>
-</ws:if>
-<ws:else>
-   <div>
-      <ws:partial template="{{ _options.content }}"
-                  style="{{_isValidResult() ? 'invalid': 'info'}}"
-                  validationErrors="{{isValid()}}"
-                  on:mouseenter="_hoverHandler()"
-                  on:focusIn="_focusInHandler()"
-                  on:valueChanged="_valueChangedHandler()"
-                  on:mouseleave="_mouseLeaveHandler()"/>
-      <Controls.Popup.Opener.InfoBox name="infoBoxOpener" _vdomOnOldPage="{{true}}" />
-   </div>
-</ws:else>
-
+<ws:partial template="{{ _options.content }}"
+            style="{{_isValidResult() ? 'invalid': 'info'}}"
+            validationErrors="{{isValid()}}"
+            on:mouseenter="_hoverHandler()"
+            on:focusIn="_focusInHandler()"
+            on:valueChanged="_valueChangedHandler()"
+            on:mouseleave="_mouseLeaveHandler()"/>

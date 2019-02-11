@@ -22,6 +22,9 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          isExpanded: function(dispItem) {
             return this._model.isExpanded(dispItem);
          },
+         isExpandAll: function() {
+            return this._model.isExpandAll();
+         },
          setExpandedItems: function(expandedItems) {
             this._model.setExpandedItems(expandedItems);
          },
@@ -43,6 +46,21 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          },
          resetExpandedItems: function() {
             this._model.resetExpandedItems();
+         },
+         getCurrentHeaderColumn: function() {
+            var
+               currentHeaderColumn = TreeGridViewModel.superclass.getCurrentHeaderColumn.apply(this, arguments),
+               headerClasses = '';
+
+            if (
+               this._options.multiSelectVisibility === 'hidden' && currentHeaderColumn.index === 0 ||
+               this._options.multiSelectVisibility !== 'hidden' && currentHeaderColumn.index === 1
+            ) {
+               headerClasses += ' controls-TreeGrid__header-row-expanderPadding';
+            }
+
+            currentHeaderColumn.cellClasses += headerClasses;
+            return currentHeaderColumn;
          },
          getCurrent: function() {
             var

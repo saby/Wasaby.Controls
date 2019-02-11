@@ -138,7 +138,7 @@ define([
             }, 100);
          }, 1);
       });
-   
+
       it('_private::getSortingOnChange', function() {
          var getEmptySorting = function() {
             return [];
@@ -152,7 +152,7 @@ define([
          var getMultiSorting = function() {
             return [{test: 'DESC'}, {test2: 'DESC'}];
          };
-      
+
          assert.deepEqual(BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
          assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
          assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
@@ -616,16 +616,27 @@ define([
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
-               assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+               //TODO remove after https://online.sbis.ru/opendoc.html?guid=006711c6-917b-4028-8484-369361546446
+               try {
+                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+                  BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
+                  BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
-               BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-               BaseControl._private.checkLoadToDirectionCapability(ctrl);
+                  setTimeout(function() {
+                     try {
+                        assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     }
+                     catch(e) {
+                        done(e);
+                     }
 
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     done();
+                  }, 100);
+               }
+               catch (e) {
+                  done(e);
+               }
 
-                  done();
-               }, 100);
             }, 100);
          }, 100);
       });
@@ -658,7 +669,7 @@ define([
 
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
-   
+
          BaseControl._private.showIndicator(ctrl);
          assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
@@ -785,15 +796,15 @@ define([
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
 
             BaseControl._private.handleListScroll(ctrl, 200, 'middle');
-            
+
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);
                done();
             }, 100);
-            
+
          }, 100);
       });
-      
+
       it('scrollHide/scrollShow base control state', function() {
          var cfg = {
             navigation: {
@@ -811,10 +822,10 @@ define([
          };
          var baseControl = new BaseControl(cfg);
          baseControl.saveOptions(cfg);
-   
+
          BaseControl._private.onScrollHide(baseControl);
          assert.equal(baseControl._loadOffset, 0);
-   
+
          BaseControl._private.onScrollShow(baseControl);
          assert.equal(baseControl._loadOffset, 100);
       });
@@ -1013,7 +1024,6 @@ define([
 
          var
             stopImmediateCalled = false,
-            preventDefaultCalled = false,
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -1054,9 +1064,6 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
                      keyCode: cConstants.key.down
                   }
@@ -1066,9 +1073,6 @@ define([
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
-                  },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
                   },
                   nativeEvent: {
                      keyCode: cConstants.key.space
@@ -1080,9 +1084,6 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
                      keyCode: cConstants.key.up
                   }
@@ -1090,7 +1091,6 @@ define([
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
@@ -1435,202 +1435,6 @@ define([
             assert.isFalse(result.isSuccessful());
          });
 
-         it('_onAfterBeginEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, options) {
-               assert.equal('afterBeginEdit', e);
-               assert.equal(options[0], opt);
-               assert.isNotOk(options[1]);
-            };
-            ctrl._onAfterBeginEdit({}, opt);
-         });
-
-         it('_onAfterBeginEdit, isAdd = true', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, options) {
-               assert.equal('afterBeginEdit', e);
-               assert.equal(options[0], opt);
-               assert.isTrue(options[1]);
-            };
-            ctrl._onAfterBeginEdit({}, opt, true);
-         });
-
-         it('_onAfterEndEdit', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, args) {
-               assert.equal('afterEndEdit', e);
-               assert.equal(args[0], opt);
-               assert.isNotOk(args[1]);
-            };
-            ctrl._onAfterEndEdit({}, opt);
-         });
-
-         it('_onAfterEndEdit, isAdd: true', function() {
-            var opt = {
-               test: 'test'
-            };
-            var cfg = {
-               viewName: 'Controls/List/ListView',
-               source: source,
-               viewConfig: {
-                  keyProperty: 'id'
-               },
-               viewModelConfig: {
-                  items: rs,
-                  keyProperty: 'id',
-                  selectedKeys: [1, 3]
-               },
-               viewModelConstructor: ListViewModel,
-               navigation: {
-                  source: 'page',
-                  sourceConfig: {
-                     pageSize: 6,
-                     page: 0,
-                     mode: 'totalCount'
-                  },
-                  view: 'infinity',
-                  viewConfig: {
-                     pagingMode: 'direct'
-                  }
-               }
-            };
-            var ctrl = new BaseControl(cfg);
-            ctrl._listViewModel = new ListViewModel({ // аналог beforemount
-               items: rs,
-               keyProperty: 'id',
-               selectedKeys: [1, 3]
-            });
-            ctrl._children = {
-               itemActions: {
-                  updateItemActions: function() {
-                  }
-               }
-            };
-            ctrl._notify = function(e, args) {
-               assert.equal('afterEndEdit', e);
-               assert.equal(args[0], opt);
-               assert.isTrue(args[1]);
-            };
-            ctrl._onAfterEndEdit({}, opt, true);
-         });
-
          it('readOnly, beginEdit', function() {
             var opt = {
                test: 'test'
@@ -1704,6 +1508,53 @@ define([
             assert.isTrue(cInstance.instanceOfModule(result, 'Core/Deferred'));
             assert.isFalse(result.isSuccessful());
          });
+      });
+
+      it('_onAnimationEnd', function() {
+         var setRightSwipedItemCalled = false;
+         var ctrl = new BaseControl();
+         ctrl._listViewModel = {
+            setRightSwipedItem: function() {
+               setRightSwipedItemCalled = true;
+            }
+         };
+         ctrl._onAnimationEnd({
+            nativeEvent: {
+               animationName: 'test'
+            }
+         });
+         assert.isFalse(setRightSwipedItemCalled);
+         ctrl._onAnimationEnd({
+            nativeEvent: {
+               animationName: 'rightSwipe'
+            }
+         });
+         assert.isTrue(setRightSwipedItemCalled);
+      });
+
+      it('_documentDragEnd', function() {
+         var
+            dragEnded,
+            ctrl = new BaseControl();
+
+         //dragend without deferred
+         dragEnded = false;
+         ctrl._documentDragEndHandler = function() {
+            dragEnded = true;
+         };
+         ctrl._documentDragEnd();
+         assert.isTrue(dragEnded);
+
+         //dragend with deferred
+         dragEnded = false;
+         ctrl._dragEndResult = new cDeferred();
+         ctrl._documentDragEnd();
+         assert.isFalse(dragEnded);
+         assert.isTrue(!!ctrl._loadingState);
+         ctrl._dragEndResult.callback();
+         assert.isTrue(dragEnded);
+         assert.isFalse(!!ctrl._loadingState);
+
       });
 
       describe('ItemActions', function() {
@@ -2168,6 +2019,7 @@ define([
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
@@ -2215,6 +2067,7 @@ define([
                itemData.multiSelectStatus = false;
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
@@ -2266,7 +2119,7 @@ define([
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
-
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
