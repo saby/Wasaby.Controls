@@ -69,7 +69,7 @@ define('Controls/Filter/Controller',
                minItems.push({
                   id: getPropValue(item, 'id'),
                   value: getPropValue(item, 'value'),
-                  textValue: getPropValue(item, 'textValue'),
+                  textValue: getPropValue(item, 'visibility') !== false ? getPropValue(item, 'textValue') : undefined,
                   visibility: getPropValue(item, 'visibility')
                });
             });
