@@ -1031,6 +1031,7 @@ define('Controls/List/BaseControl', [
          }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
+         e.blockUpdate = true;
       },
 
       _viewResize: function() {
@@ -1107,6 +1108,7 @@ define('Controls/List/BaseControl', [
                this._itemDragData = itemData;
             }
          }
+         event.blockUpdate = true;
       },
 
       _onLoadMoreClick: function() {
@@ -1189,6 +1191,7 @@ define('Controls/List/BaseControl', [
                this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
+         event.blockUpdate = true;
       },
 
       _sortingChanged: function(event, propName, sortingType) {
