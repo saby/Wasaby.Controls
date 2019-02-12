@@ -11,13 +11,13 @@ define('Controls/Container/Async',
    ],
 
    function(Base,
-            Deferred,
-            Request,
-            template,
-            Utils,
-            library,
-            entity,
-            IoC) {
+      Deferred,
+      Request,
+      template,
+      Utils,
+      library,
+      entity,
+      IoC) {
       'use strict';
 
 
