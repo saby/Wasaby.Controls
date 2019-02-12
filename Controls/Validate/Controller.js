@@ -228,15 +228,6 @@ define('Controls/Validate/Controller',
                _private.closeInfoBox(this);
             }
          },
-         _valueChangedHandler: function(event, value) {
-            this._notify('valueChanged', [value]);
-            this._cleanValid();
-         },
-         _cleanValid: function() {
-            if (this._validationResult) {
-               this.setValidationResult(null);
-            }
-         },
          _hoverHandler: function() {
             clearTimeout(this._closeId);
             if (!this._isOpened) {
