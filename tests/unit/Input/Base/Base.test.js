@@ -592,9 +592,12 @@ define(
             });
          });
          describe('Calling the inputCompleted event.', function() {
-            it('Use <input>. Pressing the key enter.', function() {
+            var block = function() {
+               return false
+            };
+
+            it('Pressing the key enter.', function() {
                InputUtility.init(ctrl);
-               ctrl._getField().tagName = 'INPUT';
 
                ctrl._focusInHandler();
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
@@ -603,9 +606,8 @@ define(
 
                assert.equal(calls.length, 0);
             });
-            it('Use <input>. Pressing the key enter and enter "test".', function() {
+            it('Pressing the key enter and enter "test".', function() {
                InputUtility.init(ctrl);
-               ctrl._getField().tagName = 'INPUT';
 
                ctrl._focusInHandler();
                InputUtility.insert(ctrl, 'test');
@@ -625,9 +627,9 @@ define(
                   }
                ]);
             });
-            it('Use <textarea>. Pressing the key enter.', function() {
+            it('Block the change event. Pressing the key enter.', function() {
                InputUtility.init(ctrl);
-               ctrl._getField().tagName = 'TEXTAREA';
+               ctrl._isTriggeredChangeEventByEnterKey = block;
 
                ctrl._focusInHandler();
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
@@ -636,9 +638,9 @@ define(
 
                assert.equal(calls.length, 0);
             });
-            it('Use <textarea>. Pressing the key enter and enter "test".', function() {
+            it('Block the change event. Pressing the key enter and enter "test".', function() {
                InputUtility.init(ctrl);
-               ctrl._getField().tagName = 'TEXTAREA';
+               ctrl._isTriggeredChangeEventByEnterKey = block;
 
                ctrl._focusInHandler();
                InputUtility.insert(ctrl, 'test');

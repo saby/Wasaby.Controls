@@ -244,6 +244,10 @@ define('Controls/Input/Area',
 
          _calculateHeightContainer: function(count, hasIndents) {
             return _private.calculateHeightContainer(this._sizes, count, hasIndents);
+         },
+
+         _isTriggeredChangeEventByEnterKey: function() {
+            return false;
          }
       });
 
