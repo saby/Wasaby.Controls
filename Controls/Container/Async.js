@@ -11,13 +11,13 @@ define('Controls/Container/Async',
    ],
 
    function(Base,
-      Deferred,
-      Request,
-      template,
-      Utils,
-      library,
-      entity,
-      IoC) {
+            Deferred,
+            Request,
+            template,
+            Utils,
+            library,
+            entity,
+            IoC) {
       'use strict';
 
 
@@ -68,7 +68,7 @@ define('Controls/Container/Async',
          },
 
          _beforeUpdate: function(options) {
-            if(!this.canUpdate) {
+            if (!this.canUpdate) {
                return;
             }
             if (options.templateName !== this._options.templateName) {
