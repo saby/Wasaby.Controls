@@ -228,6 +228,28 @@ define('Controls/FormController', [
             // сбрасываем флаг об изменении, потому что отстрелили callback и теперь надо будет заново создавать deferred
             this._propertyChangeNotified = false;
          }
+
+         // предполагалось что record оповещает в propertyChange и любых изменениях флага isChanged().
+         // оказалось, что мы узнаем только об изменениях полей. а если позовут acceptChanges рекорду,
+         // рекорд перестает быть измененным, но внутри у него есть измененные поля, так что propertyChange не стреляет.
+         // это приводит к тому, что deferred не завешается, и пендинг остается висеть.
+         // в PendingRegistrator мы ничего не знаем про рекорды и не можем там организовать проверку на их изменнность.
+         // сейчас есть только способ запросить onPendingFail который попробует сохранить рекорды и завершить пендинги.
+         // чтобы завершить пендинги на acceptChanges, переопределим метод и завершим пендинг вручную.
+         var acceptChanges = this._record.acceptChanges;
+         this._record.acceptChanges = function() {
+            if (!self._propertyChangedDef.isReady()) {
+               self._propertyChangedDef.callback(true);
+            }
+            return acceptChanges.apply(this, arguments);
+         };
+         var rejectChanges = this._record.rejectChanges;
+         this._record.rejectChanges = function() {
+            if (!self._propertyChangedDef.isReady()) {
+               self._propertyChangedDef.callback(true);
+            }
+            return rejectChanges.apply(this, arguments);
+         };
       },
       _showConfirmDialog: function(def, forceFinishValue) {
          function updating(answer) {
