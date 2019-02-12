@@ -113,7 +113,7 @@ define('Controls/Validate/Controller',
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
-            if(this._isOpened) {
+            if (this._isOpened) {
                _private.forceCloseInfoBox(this);
             }
          },
