@@ -26,6 +26,7 @@ define('Controls/Utils/ToSourceModel', [
       
       return model;
    }
+   
    //FIXME Will be deleted in 19.200
    function getModelModuleName(model) {
       var modName = model._moduleName;
