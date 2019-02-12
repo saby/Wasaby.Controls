@@ -119,9 +119,7 @@ define([
          var lookup = new Lookup();
 
          lookup._beforeMount({multiLine: true});
-         lookup._beforeUpdate({
-            items: new collection.List()
-         });
+         lookup._beforeUpdate({});
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 
