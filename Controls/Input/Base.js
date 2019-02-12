@@ -834,7 +834,7 @@ define('Controls/Input/Base',
             var valueDisplayElement = this._getField() || this._getReadOnlyField();
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
-            return hasFieldHorizontalScroll ? this._viewModel.displayValue : '';
+            return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
 
          _calculateValueForTemplate: function() {
@@ -868,6 +868,7 @@ define('Controls/Input/Base',
       Base.getDefaultOptions = function() {
          return {
             size: 'm',
+            tooltip: '',
             style: 'info',
             placeholder: '',
             textAlign: 'left',
@@ -885,6 +886,7 @@ define('Controls/Input/Base',
              * placeholder: descriptor(String|Function),
              * value: descriptor(String|null),
              */
+            tooltip: entity.descriptor(String),
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
             size: entity.descriptor(String).oneOf([
