@@ -105,8 +105,10 @@ define('Controls/Input/Date/Range', [
 
       _focusChanger: function() {
          var datetimeStart = this._children.startValueField._container.querySelector('input');
+         var datetimeEnd = this._children.endValueField._container.querySelector('input');
          if (datetimeStart.selectionStart === this._options.mask.length) {
             this._children.endValueField.activate();
+            datetimeEnd.setSelectionRange(0, 0);
          }
       }
    });
