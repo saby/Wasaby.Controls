@@ -2,9 +2,10 @@ define(
    [
       'Controls/Filter/Fast',
       'Types/source',
-      'Core/core-clone'
+      'Core/core-clone',
+      'Controls/History/Source'
    ],
-   function(FastData, sourceLib, Clone) {
+   function(FastData, sourceLib, Clone, HistorySource) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -282,6 +283,13 @@ define(
             };
             var result = FastData._private.getItemPopupConfig(properties);
             assert.deepEqual(properties, result);
+         });
+         
+         it('_private.prepareItems', function() {
+            var self = {};
+            var items = [{properties: {source: new HistorySource({})}}];
+            FastData._private.prepareItems(self, items);
+            assert.isTrue(self._items.at(0).properties.source instanceof HistorySource);
          });
 
          function setTrue(assert) {
