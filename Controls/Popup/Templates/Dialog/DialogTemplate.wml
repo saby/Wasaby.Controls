@@ -14,7 +14,6 @@
                                 scope="{{_options.topAreaOptions}}"
                                 attr:class="controls-DialogTemplate__headerContentTemplate">
                     </ws:partial>
-
                 </ws:if>
                 <ws:if data="{{_closeButtonVisibility}}">
                     <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle || _options.closeButtonViewMode}}"/>
@@ -22,12 +21,18 @@
             </div>
             </div>
         </ws:if>
+        <ws:else>
+            <div class="controls-DialogTemplate__close-button_without_head">
+            <ws:if data="{{_closeButtonVisibility}}">
+            <Controls.Button.Close name="closeButton" attr:class="controls-DialogTemplate__close_button" on:click="close()"  style="{{_options.closeButtonStyle || _options.closeButtonViewMode}}"/>
+        </ws:if>
+            </div>
+        </ws:else>
         <div class="controls-DialogTemplate__content-area">
             <ws:partial template="{{_options.contentArea || _options.bodyContentTemplate}}" scope="{{_options.contentAreaOptions}}"></ws:partial>
         </div>
        <ws:if data="{{ _options.footerContentTemplate }}">
                        <ws:partial template="{{ _options.footerContentTemplate}}" attr:class="controls-DialogTemplate__bottomArea"></ws:partial>
                </ws:if>
-
     </div>
 </Controls.DragNDrop.Controller>
