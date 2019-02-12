@@ -7,10 +7,7 @@
             <ws:if data="{{_options.alignment === 'right'}}">
                <div class="controls-FilterButton__arrow controls-FilterButton__arrow_state_{{_getFilterState()}} icon-DayForward"></div>
             </ws:if>
-            <div class="controls-FilterButton__text controls-FilterButton__text_state_{{_getFilterState()}}"
-                 title="{{_text}}">
-               {{_text}}
-            </div>
+            <div class="controls-FilterButton__text controls-FilterButton__text_state_{{_getFilterState()}}" title="{{_text}}">{{_text}}</div>
          </div>
          <ws:if data="{{!_options.readOnly}}">
             <div class="controls-FilterButton__clear icon-Close" on:click="_clearClick()"></div>
