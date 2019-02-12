@@ -68,6 +68,9 @@ define('Controls/Container/Async',
          },
 
          _beforeUpdate: function(options) {
+            if (!this.canUpdate) {
+               return;
+            }
             if (options.templateName !== this._options.templateName) {
                this._loadContentAsync(options.templateName, options.templateOptions);
             } else if (options.templateOptions !== this._options.templateOptions) {
@@ -97,10 +100,6 @@ define('Controls/Container/Async',
                self._setErrorState(true, err);
             });
             return promise;
-         },
-
-         _shouldUpdate: function() {
-            return this.canUpdate;
          },
 
          _loadContentAsync: function(name, options, noUpdate) {
