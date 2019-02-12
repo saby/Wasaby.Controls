@@ -1,7 +1,7 @@
 define('Controls/Controllers/PrimaryAction',
    [
       'Core/Control',
-      'Core/constant',
+      'Core/constants',
       'wml!Controls/Controllers/PrimaryAction/PrimaryAction'
    ],
 
