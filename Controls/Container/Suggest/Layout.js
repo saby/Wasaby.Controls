@@ -62,7 +62,7 @@
                      _private.open(self);
                   });
                } else {
-                  _private.open(self);
+                  _private.updateSuggestState(self);
                }
             }
          },
@@ -80,7 +80,14 @@
             return self._active && value.length >= self._options.minSearchLength;
          },
          shouldShowSuggest: function(self, searchResult) {
-            return (searchResult && searchResult.data.getCount()) || self._searchValue && self._options.emptyTemplate;
+            var hasItems = searchResult && searchResult.data.getCount();
+            
+            /* do not suggest if:
+             * 1) loaded list is empty and empty template option is doesn't set
+             * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
+            return hasItems ||
+                   hasItems && self._options.historyId && !self._searchValue ||
+                   !self._options.historyId && self._options.emptyTemplate;
          },
          precessResultData: function(self, resultData) {
             self._searchResult = resultData;
