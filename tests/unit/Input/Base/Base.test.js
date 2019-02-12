@@ -186,6 +186,7 @@ define(
                   ctrl._beforeMount({
                      value: 'test value'
                   });
+                  ctrl._options.tooltip = 'test tooltip';
                });
                it('The value fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
@@ -194,7 +195,7 @@ define(
 
                   ctrl._mouseEnterHandler();
 
-                  assert.equal(ctrl._tooltip, '');
+                  assert.equal(ctrl._tooltip, 'test tooltip');
                });
                it('The value no fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
