@@ -4,6 +4,7 @@
             <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
                 <Controls.Heading.Back attr:class="controls-BreadCrumbsPath__backButton"
                                        caption="{{_backButtonCaption}}"
+                                       tooltip="{{_backButtonCaption}}"
                                        style="secondary"
                                        on:click="_onBackButtonClick()"/>
                 <ws:if data="{{ _options.showActionButton }}">
