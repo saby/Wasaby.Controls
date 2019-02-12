@@ -9,5 +9,6 @@
          on:sendresult="_onResultHandler()"
          on:register="_onRegisterHandler()"
          on:unregister="_onRegisterHandler()"
+         on:maximized="_onMaximizedHandler()"
    ></ws:partial>
 </Controls.DragNDrop.Container>
