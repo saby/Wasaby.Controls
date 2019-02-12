@@ -26,6 +26,16 @@ define('Controls/Utils/ToSourceModel', [
       
       return model;
    }
+   //FIXME Will be deleted in 19.200
+   function getModelModuleName(model) {
+      var modName = model._moduleName;
+      
+      if (model._moduleName === 'WS.Data/Entity/Model') {
+         modName = 'Types/entity:Model';
+      }
+      
+      return modName;
+   }
 
    /**
     * Приводит записи к модели источника данных
@@ -71,7 +81,7 @@ define('Controls/Utils/ToSourceModel', [
 
                /* Создадим модель указанную в сорсе, и перенесём адаптер и формат из добавляемой записи,
                 чтобы не было конфликтов при мерже полей этих записей */
-               if (dataSourceModelInstance._moduleName !==  rec._moduleName) {
+               if (getModelModuleName(dataSourceModelInstance) !== getModelModuleName(rec)) {
                   (newRec = getModel(dataSourceModel, { adapter: rec.getAdapter(), format: rec.getFormat() })).merge(rec);
                   if (cInstance.instanceOfModule(items, 'Types/collection:List')) {
                      items.replace(newRec, index);
