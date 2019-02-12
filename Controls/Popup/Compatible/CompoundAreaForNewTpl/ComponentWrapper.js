@@ -11,6 +11,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper', [
          this._onResultHandler = cfg.templateOptions._onResultHandler;
          this._onRegisterHandler = cfg.templateOptions._onRegisterHandler;
          this._onActivatedHandler = cfg.templateOptions._onActivatedHandler;
+         this._onMaximizedHandler = cfg.templateOptions._onMaximizedHandler;
          this._onDeactivatedHandler = cfg.templateOptions._onDeactivatedHandler;
       },
       _beforeMount: function(cfg) {
