@@ -339,14 +339,13 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         _setMarkerAfterUpdateItems() {
+         _setMarkerAfterUpdateItems: function() {
             if (this._options.markerVisibility !== 'hidden') {
                if (this._markedKey !== undefined) {
                   this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
                }
                if (!this._markedItem && this._items.getCount()) {
-                  this.setMarkedKey(this._items.at(0)
-                     .getId());
+                  this.setMarkedKey(this._items.at(0).getId());
                }
             }
          },

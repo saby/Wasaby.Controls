@@ -111,48 +111,65 @@ define([
             }, 10);
          }, 10);
       });
-      it('TreeControl._afterUpdate', function(done) {
-         var treeControl = correctCreateTreeControl({
-            columns: [],
-            root: 1,
-            source: new sourceLib.Memory({
-               data: [],
-               idProperty: 'id'
-            })
-         });
+
+
+      it('TreeControl._afterUpdate', function() {
+         var
+            treeControl = correctCreateTreeControl({
+               columns: [],
+               root: 1,
+               source: new sourceLib.Memory({
+                  data: [],
+                  idProperty: 'id'
+               })
+            }),
+            treeViewModel = treeControl._children.baseControl.getViewModel(),
+            isNeedForceUpdate = false;
+
+         // Mock TreeViewModel and TreeControl
          treeControl._updatedRoot = true;
          treeControl._private = {
-            clearSourceControllers: function() {
+            clearSourceControllers: () => {}
+         };
+         treeViewModel._model._display = {
+            setFilter: () => {},
+            destroy: () => {},
+            setRoot: (root) => {
+               treeViewModel._model._root = root;
             }
          };
 
+         // Need to know that list notifies when he has been changed after setting new root by treeControl._afterUpdate
+         treeViewModel._model._notify = (e) => {
+            if (e === 'onListChange') {
+               isNeedForceUpdate = true;
+            }
+         }
 
+         // Chack that values before test are right
+         treeViewModel.setExpandedItems([1, 3]);
+         assert.deepEqual({
+            '1': true,
+            '3': true
+         }, treeViewModel.getExpandedItems());
+         assert.equal(1, treeControl._options.root);
 
-
-         setTimeout(function() {
-            var tvm = treeControl._children.baseControl.getViewModel();
-            tvm._model._display = {
-               setFilter: function() {},
-               setRoot: function(root) {
-                  tvm._model._root = root;
-               }
-            };
-            tvm.setExpandedItems([1,3]);
-
-
-
-            assert.deepEqual({ '1': true, '3': true}, tvm.getExpandedItems());
-            assert.equal(1, treeControl._options.root);
-
-            treeControl._root = 12;
-            treeControl._afterUpdate();
-
+         // Test
+         return new Promise((resolve) => {
             setTimeout(function() {
-               assert.deepEqual({}, tvm.getExpandedItems());
-               assert.equal(12, tvm._model._root);
-               done();
-            }, 20);
-         }, 20);
+               treeControl._root = 12;
+               treeControl._afterUpdate();
+               setTimeout(function() {
+                  assert.deepEqual({}, treeViewModel.getExpandedItems());
+                  assert.equal(undefined, treeViewModel._model._root);
+                  assert.equal(12, treeControl._root);
+                  assert.isTrue(isNeedForceUpdate);
+                  treeControl._beforeUpdate({root: treeControl._root});
+                  resolve();
+               }, 20);
+            }, 10);
+         });
+
 
       });
       it('List navigation by keys', function(done) {
