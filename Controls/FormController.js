@@ -236,12 +236,16 @@ define('Controls/FormController', [
          // чтобы завершить пендинги на acceptChanges, переопределим метод и завершим пендинг вручную.
          var acceptChanges = this._record.acceptChanges;
          this._record.acceptChanges = function() {
-            self._propertyChangedDef.callback(true);
+            if (!self._propertyChangedDef.isReady()) {
+               self._propertyChangedDef.callback(true);
+            }
             return acceptChanges.apply(this, arguments);
          };
          var rejectChanges = this._record.rejectChanges;
          this._record.rejectChanges = function() {
-            self._propertyChangedDef.callback(true);
+            if (!self._propertyChangedDef.isReady()) {
+               self._propertyChangedDef.callback(true);
+            }
             return rejectChanges.apply(this, arguments);
          };
       },
