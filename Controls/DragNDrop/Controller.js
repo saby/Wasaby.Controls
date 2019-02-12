@@ -536,18 +536,20 @@ define('Controls/DragNDrop/Controller',
             }
          },
 
-         _mouseEnter: function() {
+         _mouseEnter: function(event) {
             if (this._documentDragging) {
                this._insideDragging = true;
                this._notify('dragEnter', [this._getDragObject()]);
             }
+            event.blockUpdate = true;
          },
 
-         _mouseLeave: function() {
+         _mouseLeave: function(event) {
             if (this._documentDragging) {
                this._insideDragging = false;
                this._notify('dragLeave', [this._getDragObject()]);
             }
+            event.blockUpdate = true;
          },
 
          _documentDragStart: function(dragObject) {
