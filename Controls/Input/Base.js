@@ -589,7 +589,7 @@ define('Controls/Input/Base',
                this._viewModel.selection = this._getFieldSelection();
             }
 
-            if (keyCode === constants.key.enter) {
+            if (keyCode === constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
                _private.callChangeHandler(this);
             }
          },
@@ -855,6 +855,10 @@ define('Controls/Input/Base',
 
          _recalculateLocationVisibleArea: function(field, displayValue, selection) {
             _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
+         },
+
+         _isTriggeredChangeEventByEnterKey: function() {
+            return true;
          },
 
          paste: function(text) {
