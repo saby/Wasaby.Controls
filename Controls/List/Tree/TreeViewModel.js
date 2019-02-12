@@ -124,13 +124,13 @@ define('Controls/List/Tree/TreeViewModel', [
                _private.removeNodeFromExpanded(self, nodeId);
             }
          },
-   
+
          removeNodeFromExpanded: function(self, nodeId) {
             delete self._expandedItems[nodeId];
             self._notify('onNodeRemoved', nodeId);
          },
-   
-   
+
+
          checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
                for (var idx = 0; idx < removedItems.length; idx++) {
@@ -263,7 +263,7 @@ define('Controls/List/Tree/TreeViewModel', [
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
          },
-         
+
          isExpandAll: function() {
             return _private.isExpandAll(this.getExpandedItems());
          },
@@ -511,12 +511,7 @@ define('Controls/List/Tree/TreeViewModel', [
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
-            if (this._markedKey !== undefined) {
-               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
-            }
-            if (!this._markedItem && this._items.getCount()) {
-               this.setMarkedKey(this._items.at(0).getId());
-            }
+            this._setMarkerAfterUpdateItems();
             this._nextVersion();
             this._notify('onListChange');
          },
