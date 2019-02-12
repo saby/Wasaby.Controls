@@ -107,7 +107,7 @@ define('Controls/Application/HeadData', [
                }
             }
 
-            if(!self.isDebug) {
+            if (!self.isDebug) {
                files.js = files.js.concat(self._getDictionaries());
             }
 
@@ -162,8 +162,8 @@ define('Controls/Application/HeadData', [
       _getDictionaries: function() {
          var dictList = this._getDictList();
          var dicts = {};
-         for(var lang in dictList) {
-            for(var key in dictList[lang]) {
+         for (var lang in dictList) {
+            for (var key in dictList[lang]) {
                dicts[key] = true;
             }
          }
