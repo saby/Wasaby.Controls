@@ -10,6 +10,7 @@
          on:popupDragEnd="_popupDragEnd()"
          on:maximized="_maximized()"
          on:keyup="_keyUp()"
+         on:keydown="_keyDown()"
          on:transitionend="_animated()"
          on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
          on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
