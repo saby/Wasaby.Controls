@@ -3,6 +3,7 @@ define('Controls/Input/Mask',
       'Core/IoC',
       'Controls/Utils/tmplNotify',
       'Core/Control',
+      'Core/detection',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
@@ -13,7 +14,7 @@ define('Controls/Input/Mask',
       'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
+   function(IoC, tmplNotify, Control, cDetection, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
 
       'use strict';
 
@@ -174,7 +175,16 @@ define('Controls/Input/Mask',
             _viewModel: null,
             _notifyHandler: tmplNotify,
 
+            _maskWrapperCss: null,
+
             _beforeMount: function(options) {
+               this._maskWrapperCss = '';
+               if (cDetection.isIE) {
+                  this._maskWrapperCss += ' controls-Mask__inputWrapper_ie';
+                  if (cDetection.IEVersion > 11) {
+                     this._maskWrapperCss += ' controls-Mask__inputWrapper_edge';
+                  }
+               }
                this._viewModel = new ViewModel({
                   value: options.value,
                   mask: options.mask,
