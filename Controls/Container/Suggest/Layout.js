@@ -121,7 +121,7 @@
             return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
          },
          updateSuggestState: function(self) {
-            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
+            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown && !self._options.suggestState) {
                _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
@@ -244,16 +244,17 @@
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
+            var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
             
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
       
-            if (valueChanged) {
+            if (needSearchOnValueChanged || !newOptions.value && typeof newOptions.value === 'string') {
                this._searchValue = newOptions.value;
             }
    
-            if (valueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+            if (needSearchOnValueChanged || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
       
@@ -262,7 +263,7 @@
                this._dependenciesDeferred = null;
             }
       
-            if (this._options.footerTemplate !== newOptions.footerTemplate) {
+            if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
                this._dependenciesDeferred = null;
             }
             
