@@ -291,7 +291,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -340,7 +340,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -504,7 +504,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 1,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -549,7 +549,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -602,7 +602,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -708,7 +708,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -758,7 +758,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             },
          };
@@ -816,7 +816,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -857,7 +857,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -914,7 +914,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -982,7 +982,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -1132,7 +1132,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -1224,7 +1224,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1267,7 +1267,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1307,7 +1307,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1346,7 +1346,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1380,7 +1380,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1419,7 +1419,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1456,7 +1456,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1493,7 +1493,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {

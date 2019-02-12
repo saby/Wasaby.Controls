@@ -26,9 +26,9 @@ define('Controls/Controllers/QueryParamsController/Page',
 
          prepareQueryParams: function(direction) {
             var addParams = {}, neededPage;
-            if (direction == 'down') {
+            if (direction === 'down') {
                neededPage = this._nextPage;
-            } else if (direction == 'up') {
+            } else if (direction === 'up') {
                neededPage = this._prevPage;
             } else {
                neededPage = this._page;
@@ -37,12 +37,18 @@ define('Controls/Controllers/QueryParamsController/Page',
             addParams.offset = neededPage * this._options.pageSize;
             addParams.limit = this._options.pageSize;
 
+            if (this._options.hasMore === false) {
+               addParams.meta = { hasMore: false };
+            }
+
             return addParams;
          },
 
          calculateState: function(list, direction) {
             var meta = list.getMetaData();
-            if (this._options.mode === 'totalCount') {
+
+            //TODO https://online.sbis.ru/opendoc.html?guid=45d6e26f-5a2f-4275-bc4f-667e176a5d85
+            if (this._options.mode === 'totalCount' || this._options.hasMore === false) {
                // meta.more can be undefined is is not error
                if (meta.more && (typeof meta.more !== 'number')) {
                   throw new Error('"more" Parameter has incorrect type. Must be numeric');
@@ -55,11 +61,12 @@ define('Controls/Controllers/QueryParamsController/Page',
             }
             this._more = meta.more;
 
-            if (direction == 'down') {
+            if (direction === 'down') {
                this._nextPage++;
-            } else if (direction == 'up') {
+            } else if (direction === 'up') {
                this._prevPage--;
             } else {
+
                //Если направление не указано, значит это расчет параметров после начальной загрузки списка или после перезагрузки
                this._nextPage = this._page + 1;
                this._prevPage = this._page - 1;
@@ -75,15 +82,18 @@ define('Controls/Controllers/QueryParamsController/Page',
          },
 
          hasMoreData: function(direction) {
-            if (direction == 'down') {
-               if (this._options.mode == 'totalCount') {
+            if (direction === 'down') {
+
+               //TODO https://online.sbis.ru/opendoc.html?guid=45d6e26f-5a2f-4275-bc4f-667e176a5d85
+               if (this._options.mode === 'totalCount' || this._options.hasMore === false) {
+
                   //в таком случае в more приходит общее число записей в списке
                   //значит умножим номер след. страницы на число записей на одной странице и сравним с общим
                   return typeof this._more === 'boolean' ? this._more : this.getLoadedDataCount() < this.getAllDataCount();
                } else {
                   return this._more;
                }
-            } else if (direction == 'up') {
+            } else if (direction === 'up') {
                return this._prevPage >= 0;
             } else {
                throw new Error('Parameter direction is not defined in hasMoreData call');
