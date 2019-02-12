@@ -93,7 +93,7 @@ define(
 
          it('before mount navigation', (done) => {
             let navigationConfig = Clone(config);
-            navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}};
+            navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
             let dropdownController = getDropdownController(navigationConfig);
             dropdownController._beforeMount(navigationConfig).addCallback(function(items) {
                assert.deepEqual(items.getCount(), 2);
@@ -349,7 +349,7 @@ define(
             };
             dropdownController._open();
          });
-   
+
          it('mousedown', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             let opened = false;
@@ -377,7 +377,7 @@ define(
             dropdownController._mousedown();
             assert.isFalse(opened);
          });
-         
+
          it('getFilter', () => {
             var filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
             assert.deepEqual(filter, {$_history: true, id: 'test'});
