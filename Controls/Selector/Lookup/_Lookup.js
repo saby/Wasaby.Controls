@@ -55,18 +55,18 @@ define('Controls/Selector/Lookup/_Lookup', [
       calculatingSizes: function(self, newOptions) {
          var
             counterWidth,
-            isShowCounter = false,
             allItemsInOneRow = false,
             maxVisibleItems = newOptions.maxVisibleItems,
             afterFieldWrapperWidth = 0,
             inputWidth, lastRowCollectionWidth,
             itemsSizesLastRow, availableWidth, lastSelectedItems,
             itemsCount = newOptions.items.getCount(),
-            multiLineState = newOptions.multiLine && itemsCount;
+            multiLineState = newOptions.multiLine && itemsCount,
+            isShowCounter = _private.isShowCounter(multiLineState, itemsCount, maxVisibleItems);
 
          if (itemsCount) {
             // in mode read only and single line, counter does not affect the collection
-            if (!newOptions.readOnly || newOptions.multiLine) {
+            if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
                counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
             }
 
@@ -78,7 +78,6 @@ define('Controls/Selector/Lookup/_Lookup', [
 
             //For multi line define - inputWidth, for single line - maxVisibleItems
             if (newOptions.multiLine) {
-               isShowCounter = _private.isShowCounter(itemsCount, maxVisibleItems);
                lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
                inputWidth = _private.getInputWidth(DOMUtil.width(self._fieldWrapper), lastRowCollectionWidth, availableWidth);
                multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
@@ -215,8 +214,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return chain.factory(items).last(itemsCount).value();
       },
 
-      isShowCounter: function(itemsCount, maxVisibleItems) {
-         return itemsCount > maxVisibleItems;
+      isShowCounter: function(multiLine, itemsCount, maxVisibleItems) {
+         return multiLine && itemsCount > maxVisibleItems || !multiLine && itemsCount > 1;
       },
 
       getLastRowCollectionWidth: function(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth) {
