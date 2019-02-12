@@ -78,14 +78,19 @@ define('Controls/Container/Suggest/List',
             
             /* Need notify after getting tab from query */
             if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
-               this._tabsSelectedKeyChanged(null, tabKey);
+               this._notify('tabsSelectedKeyChanged', [tabKey]);
             }
             
             _private.checkContext(this, context);
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
-            this._notify('tabsSelectedKeyChanged', [key]);
+            /* It is necessary to separate the processing of the tab change by suggest layout and
+               a user of a control.
+               To do this, using the callback-option that only suggest layout can pass.
+               Event should fired only once and after list was loading,
+               because in this event user can change template of a List control. */
+            this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
          },
 
          _inputKeydown: function(event, domEvent) {
