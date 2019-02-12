@@ -147,8 +147,8 @@ define([
                assert.equal(events.join(', '), 'dragLeave');
                assert.isFalse(controller._insideDragging);
             });
-            it('dragEnter', function(createSyntheticEvent()) {
-               controller._mouseEnter();
+            it('dragEnter', function() {
+               controller._mouseEnter(createSyntheticEvent());
                assert.equal(events.join(', '), 'dragEnter');
                assert.isTrue(controller._insideDragging);
             });
