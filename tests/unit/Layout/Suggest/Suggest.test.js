@@ -419,11 +419,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._tabsSelectedKey = 'checkChanged';
    
          /* tabSelectedKey not changed, filter must be not changed too */
-         suggestComponent._tabsSelectedKeyChanged(null, 'checkChanged');
+         suggestComponent._tabsSelectedKeyChanged('checkChanged');
          assert.equal(suggestComponent._filter.currentTab, null);
    
          /* tabSelectedKey changed, filter must be changed */
-         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._filter.currentTab, 'test');
          assert.isTrue(suggestActivated);
       });
@@ -432,7 +432,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          var suggestComponent = new Suggest();
          suggestComponent.activate = function() {};
          
-         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._searchDelay, 0);
       });
    
