@@ -286,7 +286,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          var
             currentOptions = this._options,
             isNeedCalculatingSizes = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
-            listOfDependentOptions = ['multiSelect', 'multiLine', 'source', 'displayProperty', 'maxVisibleItems'];
+            listOfDependentOptions = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems'];
 
          _private.updateModel(this, newOptions.value);
 
