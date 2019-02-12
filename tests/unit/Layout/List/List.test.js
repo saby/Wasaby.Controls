@@ -1,15 +1,15 @@
 define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Deferred', 'Core/core-clone'], function(List, sourceLib, collection, Deferred, clone) {
-   
+
    if (typeof mocha !== 'undefined') {
       //Из-за того, что загрузка через Core/moduleStubs добавляет в global Lib/Control/LoadingIndicator/LoadingIndicator,
       //чтобы потом брать его из кэша
       mocha.setup({globals: ['Controls/Controllers/_Search']});
    }
-   
-   
+
+
    describe('Controls.Container.List', function () {
       var listLayout, listLayoutWithPrefetch, listOptions, getListOptionsWithPrefetch, listSource, listSourceData, listSearchParam, listPrefetchSource, listOptionsWithPrefetch;
-      
+
       var getFilledContext = function() {
          return {
             filterLayoutField: {
@@ -22,7 +22,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             }
          };
       };
-      
+
       var getEmptyContext = function() {
          return {
             filterLayoutField: {
@@ -35,7 +35,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             }
          };
       };
-   
+
       before(function() {
          listSourceData = [{ id: 1, title: 'Sasha' },
             { id: 2, title: 'Dmitry' },
@@ -67,7 +67,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                sourceConfig: {
                   pageSize: 10,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -84,7 +84,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                   sourceConfig: {
                      pageSize: 10,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   }
                }
             };
@@ -92,19 +92,19 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          listOptionsWithPrefetch = getListOptionsWithPrefetch();
          listLayout = new List(listOptions);
          listLayout.saveOptions(listOptions);
-   
+
          listLayoutWithPrefetch = new List(listOptionsWithPrefetch);
          listLayoutWithPrefetch.saveOptions(listOptionsWithPrefetch);
       });
-      
+
       it('.updateFilter', function() {
          List._private.updateFilter(listLayout, {testKey: 'testFilter'});
          assert.deepEqual(listLayout._filter, {testKey: 'testFilter'});
-   
+
          List._private.updateFilter(listLayout, {testKey: 'testFilter2'});
          assert.deepEqual(listLayout._filter, {testKey: 'testFilter2'});
       });
-      
+
       it('.updateSource', function() {
          var recordSet = new collection.RecordSet({
             rawData:[
@@ -113,15 +113,15 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                ]
          });
          List._private.updateSource(listLayout, recordSet);
-         
+
          assert.deepEqual(recordSet.getRawData(), listLayout._source._$data);
       });
-   
+
       it('.abortCallback', function() {
          List._private.abortCallback(listLayout, {});
          assert.deepEqual(listSourceData, listLayout._source._$data);
       });
-   
+
       it('.searchErrback', function() {
          var errbackCalled = false;
          var errbackCalledWithPrefetch = false;
@@ -132,29 +132,29 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             errbackCalledWithPrefetch = true;
          };
          listLayoutWithPrefetch._options.source = listSource;
-   
+
          List._private.searchErrback(listLayout, {canceled: true});
          assert.isTrue(!!listLayout._source._$data);
-         
+
          List._private.searchErrback(listLayout, {});
-         
+
          assert.deepEqual(null, listLayout._source._$data);
          assert.isTrue(errbackCalled);
-   
+
          List._private.searchErrback(listLayoutWithPrefetch, {});
-   
+
          assert.deepEqual(null, listLayoutWithPrefetch._source._$data);
          assert.isTrue(errbackCalledWithPrefetch);
       });
-   
+
       it('_beforeMount', function() {
          var listLayout = new List(getListOptionsWithPrefetch());
          listLayout._searchMode = true;
          listLayout._beforeMount(getListOptionsWithPrefetch());
-         
+
          assert.equal(listLayout._source.getModel(), getListOptionsWithPrefetch().source._$target.getModel());
       });
-   
+
       it('.searchCallback', function() {
          var recordSet = new collection.RecordSet({
             rawData:[
@@ -169,7 +169,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          //assert.deepEqual(listLayout._filter, {testField: 'testValue'});
          assert.deepEqual(listLayout._filter, {});
       });
-      
+
       it('.searchValueChanged', function(done) {
          var opts = clone(listOptions);
          var searchStarted = false;
@@ -181,7 +181,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          List._private.searchValueChanged(listLayout, 'Sasha');
          assert.equal(listLayout._searchValue, 'Sasha');
          assert.isFalse(searchStarted);
-         
+
          setTimeout(function() {
             //FIXME вернуть как будет cached source
             //assert.deepEqual(listLayout._filter, {title: 'Sasha'});
@@ -200,21 +200,21 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             }, 100);
          }, 100);
       });
-   
+
       it('.getSearchController', function() {
          listLayout._searchController = undefined;
-   
-   
+
+
          assert.isFalse(!!listLayout._searchController);
-         
+
          var searchController = List._private.getSearchController(listLayout);
-   
+
          assert.isTrue(!!listLayout._searchController);
          assert.equal(searchController._moduleName, 'Controls/Controllers/_SearchController');
          assert.equal(searchController._options.searchParam, listSearchParam);
          assert.equal(searchController._options.source, listSource);
       });
-   
+
       it('._beforeUnmount', function(done) {
          /* To reset source */
          var listLayout = new List(listOptions);
@@ -222,9 +222,9 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
          var aborted = false;
          listLayout._beforeMount(listOptions);
          listLayout._saveContextObject(getEmptyContext());
-         
+
          List._private.abortCallback(listLayout, {});
-         
+
          listLayout._beforeUpdate(listOptions, context);
 
          setTimeout(function() {
@@ -249,7 +249,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             }, 50);
          }, 50);
       });
-   
+
       it('._beforeUpdate', function(done) {
          /* Изолированный тест beforeUpdate */
          var context = {
@@ -265,18 +265,18 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             filterLayoutField: {filter: {}},
             searchLayoutField: {searchValue: ''}
          });
-   
+
          /* emulate _beforeMount */
          listLayout.saveOptions(listOptions);
          List._private.resolveOptions(listLayout, listOptions);
          listLayout._source = listOptions.source;
-         
+
          listLayout._beforeUpdate(listOptions, context);
-         
+
          /* Nothing changes */
          assert.deepEqual(listLayout._filter, {});
          assert.deepEqual(listLayout._source._$data, listSourceData);
-   
+
          /* SearchValue changed */
          context.searchLayoutField.searchValue = 'Sasha';
          listLayout._beforeUpdate(listOptions, context);
@@ -288,7 +288,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                { id: 1, title: 'Sasha' },
                { id: 5, title: 'Sasha' }
             ]);
-   
+
             /* To reset source and context*/
             listLayout._saveContextObject({
                filterLayoutField: {filter: {title: 'Sasha'}},
@@ -298,7 +298,7 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             /* check reset */
             assert.deepEqual(listLayout._filter, {});
             assert.deepEqual(listLayout._source._$data, listSourceData);
-   
+
             /* change source */
             var newSource = new sourceLib.Memory({
                data: listSourceData,
@@ -308,8 +308,8 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             newOpts.source = newSource;
             listLayout._beforeUpdate(newOpts, context);
             assert.equal(listLayout._searchController._options.source, newSource);
-            
-            
+
+
             /* Change context filter */
             listLayout._saveContextObject({
                filterLayoutField: {filter: {title: ''}},
@@ -319,14 +319,14 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
             listLayout._beforeUpdate(newOpts, context);
             setTimeout(function() {
                assert.deepEqual(listLayout._filter, {title: 'Sasha'});
-   
+
                var newNavigation = {
                   source: 'page',
                   view: 'page',
                   sourceConfig: {
                      pageSize: 2,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   }
                };
                newOpts = clone(newOpts);
@@ -335,87 +335,87 @@ define(['Controls/Container/List', 'Types/source', 'Types/collection', 'Core/Def
                   data: listSourceData,
                   idProperty: 'id'
                });
-   
+
                listLayout._searchMode = true;
                context.filterLayoutField.filter = {test: 'testFilter'};
                listLayout._beforeUpdate(newOpts, context);
-   
+
                assert.deepEqual(listLayout._searchController._options.navigation, newNavigation);
                assert.deepEqual(listLayout._searchController._options.filter, {test: 'testFilter'});
                assert.isTrue(listLayout._source !== newOpts.source);
-   
+
                listLayout._filter = {scTest: 'scTest'};
                listLayout._beforeUpdate(newOpts, context);
                assert.deepEqual(listLayout._searchController.getFilter(), {test: 'testFilter'});
-   
+
                done();
             }, 50);
          }, 50);
-         
+
       });
-   
+
       it('Container/List::_private.isFilterChanged', function() {
          var listLayout = new List(listOptions);
          var context = getFilledContext();
-   
+
          listLayout._saveContextObject(getEmptyContext());
          assert.isTrue(List._private.isFilterChanged(listLayout, context));
-   
+
          listLayout._saveContextObject(getFilledContext());
          assert.isFalse(List._private.isFilterChanged(listLayout, context));
-   
+
          listLayout._filter = getFilledContext().filterLayoutField.filter;
          assert.isFalse(List._private.isFilterChanged(listLayout, context));
-   
+
          listLayout._filter = getEmptyContext().filterLayoutField.filter;
          assert.isFalse(List._private.isFilterChanged(listLayout, context));
-   
+
          listLayout._saveContextObject(getEmptyContext());
          listLayout._filter = getEmptyContext().filterLayoutField.filter;
          assert.isTrue(List._private.isFilterChanged(listLayout, context));
-   
+
          listLayout._saveContextObject(getEmptyContext());
          listLayout._filter = getFilledContext().filterLayoutField.filter;
          assert.isTrue(List._private.isFilterChanged(listLayout, context));
       });
-   
+
       it('Container/List::_private.isSearchValueChanged', function() {
          var listLayout = new List(listOptions);
          listLayout._beforeMount(listOptions);
          var context = getFilledContext();
-   
+
          listLayout._saveContextObject(getEmptyContext());
          assert.isTrue(List._private.isSearchValueChanged(listLayout, context));
-   
+
          listLayout._saveContextObject(getFilledContext());
          assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
-         
+
          listLayout._searchValue = getFilledContext().searchLayoutField.searchValue;
          assert.isFalse(List._private.isSearchValueChanged(listLayout, context));
-         
+
          listLayout._searchValue = getEmptyContext().searchLayoutField.searchValue;
          assert.isTrue(List._private.isSearchValueChanged(listLayout, getEmptyContext()));
-         
+
       });
-   
+
       it('Container/List::_private.getSearchValueFromContext', function () {
          var listLayout = new List(listOptions);
          var context = getFilledContext();
          var emptyContext = getEmptyContext();
-         
+
          assert.equal('Sasha', List._private.getSearchValueFromContext(listLayout, context));
          assert.equal('', List._private.getSearchValueFromContext(listLayout, emptyContext));
       });
-   
+
       it('Container/List::_private.getFilterFromContext', function () {
          var listLayout = new List(listOptions);
          var context = getFilledContext();
          var emptyContext = getEmptyContext();
-   
+
          assert.deepEqual({title: 'Sasha'}, List._private.getFilterFromContext(listLayout, context));
          assert.deepEqual({title: ''}, List._private.getFilterFromContext(listLayout, emptyContext));
       });
-      
+
    });
-   
+
 });

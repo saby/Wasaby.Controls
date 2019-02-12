@@ -74,7 +74,7 @@ define(
                      data: items[0],
                      idProperty: 'key'
                   }),
-                  navigation: {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}}
+                  navigation: {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}}
                }
             }
          ];

@@ -34,17 +34,13 @@ define('Controls/interface/INavigation', [
     *    <li><b>both</b> -  loading data in both directions relative to the positional record.
     * </ul>
     * @property {Number} limit Limit of records requested for a single load.
-    * @property {String} mode Loading mode.
-    * The following values are supported:
-    * <ul>
-    *    <li><b>totalCount</b> -  In response to a request to the source, instead of receiving a flag for the presence of records (boolean value), the total count of records is expected.</li>
-    * </ul>
     */
 
    /**
     * @typedef {Object} PageSourceConfig Source configuration for page-based navigation.
     * @property {Number} page Loading page number.
     * @property {Number} pageSize Loading page size.
+    * @property {Boolean} hasMore If hasMore field has false value, similar parameter is added to request. In response instead of receiving a flag for the presence of records (boolean value), the total count of records is expected (number value).
     */
 
    /**

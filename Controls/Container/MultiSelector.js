@@ -23,6 +23,7 @@ define('Controls/Container/MultiSelector', [
 
    var MultiSelector = Control.extend(/** @lends Controls/Container/MultiSelector.prototype */{
       _template: template,
+      _selectedKeysCount: 0,
 
       _selectedTypeChangedHandler: function(event, typeName) {
          this._children.registrator.start(typeName);

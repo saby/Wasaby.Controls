@@ -9,11 +9,15 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
+      'Core/constants',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
       'use strict';
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+      
+      /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
+      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, constants.key.enter];
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       var _private = {
          hasMore: function(searchResult) {
@@ -58,7 +62,7 @@
                      _private.open(self);
                   });
                } else {
-                  _private.open(self);
+                  _private.updateSuggestState(self);
                }
             }
          },
@@ -76,7 +80,14 @@
             return self._active && value.length >= self._options.minSearchLength;
          },
          shouldShowSuggest: function(self, searchResult) {
-            return (searchResult && searchResult.data.getCount()) || self._searchValue && self._options.emptyTemplate;
+            var hasItems = searchResult && searchResult.data.getCount();
+            
+            /* do not suggest if:
+             * 1) loaded list is empty and empty template option is doesn't set
+             * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
+            return hasItems ||
+                   hasItems && self._options.historyId && !self._searchValue ||
+                   !self._options.historyId && self._options.emptyTemplate;
          },
          precessResultData: function(self, resultData) {
             self._searchResult = resultData;
@@ -218,6 +229,7 @@
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
             this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
+            this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
@@ -301,7 +313,7 @@
                _private.inputActivated(this);
             }
          },
-         _tabsSelectedKeyChanged: function(event, key) {
+         _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
@@ -362,7 +374,6 @@
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
                self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
             });
-            _private.setFilter(self, self._options.filter);
             _private.close(this);
          },
 
@@ -382,6 +393,9 @@
          },
 
          _keydown: function(event) {
+            if (this._options.suggestState && IGNORE_HOT_KEYS.indexOf(event.nativeEvent.keyCode) !== -1) {
+               event.preventDefault();
+            }
             if (this._children.inputKeydown) {
                this._children.inputKeydown.start(event);
             }

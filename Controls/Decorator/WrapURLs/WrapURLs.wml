@@ -6,7 +6,5 @@
       <ws:else data="{{path.type === 'email'}}">
          <a href="mailto:{{path.address}}">{{path.address}}</a>
       </ws:else>
-      <ws:else>{{path.value}}</ws:else>
-      {{path.end}}
-   </ws:for>
+      <ws:else>{{path.value}}</ws:else>{{path.end}}</ws:for>
 </div>

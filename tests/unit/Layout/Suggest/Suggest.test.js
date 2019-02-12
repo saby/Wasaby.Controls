@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Controls/History/Service'], function(Suggest, collection, entity){
+define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Core/constants', 'Controls/History/Service'], function(Suggest, collection, entity, constants) {
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -168,14 +168,30 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             data: new collection.List()
          };
          
+         //case 1. emptyTemplate - is null/undefined, searchValue - is empty string/null
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
          assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult));
    
+         //case 2. emptyTemplate is set, searchValue - is empty string/null
          self._options.emptyTemplate = {};
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
-         self._searchValue = 'test';
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         
+         //case 3. emptyTemplate is set, searchValue - is set
+         self._searchValue = 'test';
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result))
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+   
+         //case 4. emptyTemplate is set, search - is empty string, historyId is set
+         self._searchValue = '';
+         self._options.historyId = '123'
+         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result))
+         
+         //case 5. emptyTemplate is null/undefined, search - is empty string, historyId is set
+         self._options.emptyTemplate = null;
+         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result))
       });
    
       it('Suggest::_private.prepareFilter', function() {
@@ -304,7 +320,17 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                   suggestComponent._inputClicked();
                   suggestComponent._dependenciesDeferred.addCallback(function() {
                      assert.isFalse(suggestState);
-                     done();
+   
+                     suggestComponent._options.historyId = '';
+                     suggestComponent._filter = {};
+                     suggestComponent._options.readOnly = false;
+                     suggestComponent._inputActivated();
+   
+                     suggestComponent._dependenciesDeferred.addCallback(function() {
+                        assert.isTrue(suggestState);
+                        assert.deepEqual(suggestComponent._filter, {searchParam: ''});
+                        done();
+                     });
                   });
                });
             });
@@ -393,11 +419,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._tabsSelectedKey = 'checkChanged';
    
          /* tabSelectedKey not changed, filter must be not changed too */
-         suggestComponent._tabsSelectedKeyChanged(null, 'checkChanged');
+         suggestComponent._tabsSelectedKeyChanged('checkChanged');
          assert.equal(suggestComponent._filter.currentTab, null);
    
          /* tabSelectedKey changed, filter must be changed */
-         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._filter.currentTab, 'test');
          assert.isTrue(suggestActivated);
       });
@@ -406,7 +432,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          var suggestComponent = new Suggest();
          suggestComponent.activate = function() {};
          
-         suggestComponent._tabsSelectedKeyChanged(null, 'test');
+         suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._searchDelay, 0);
       });
    
@@ -487,7 +513,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             if (eventName === 'choose') {
                assert.isFalse(suggestComponent._inputActive);
             }
-         }
+         };
          suggestComponent._select(item);
          assert.isFalse(item._isUpdateHistory);
          assert.isFalse(suggestComponent._inputActive);
@@ -499,6 +525,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
 
       it('Suggest::_keyDown', function() {
          var suggestComponent = new Suggest();
+         var eventPreventDefault = false;
          var eventTriggered = false;
          suggestComponent._children = {
             inputKeydown: {
@@ -506,8 +533,37 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                   eventTriggered = true;
                }
             }
+         };
+         
+         function getEvent(keyCode) {
+            return {
+               nativeEvent: {
+                  keyCode: keyCode
+               },
+               preventDefault: function() {
+                  eventPreventDefault = true;
+               }
+            };
          }
-         suggestComponent._keydown();
+         suggestComponent._keydown(getEvent(constants.key.down));
+         assert.isFalse(eventPreventDefault);
+   
+         suggestComponent._options.suggestState = true;
+   
+         suggestComponent._keydown(getEvent(constants.key.down));
+         assert.isTrue(eventPreventDefault);
+         eventPreventDefault = false;
+         
+         suggestComponent._keydown(getEvent(constants.key.up));
+         assert.isTrue(eventPreventDefault);
+         eventPreventDefault = false;
+         
+         suggestComponent._keydown(getEvent(constants.key.enter));
+         assert.isTrue(eventPreventDefault);
+         eventPreventDefault = false;
+         
+         suggestComponent._keydown(getEvent('test'));
+         assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
       });
       

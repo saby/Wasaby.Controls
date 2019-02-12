@@ -304,6 +304,12 @@ function(cMerge,
          }
 
          this._setSizes(cfg, templateClass);
+
+         cfg.componentOptions._popupOptions = {
+            minWidth: cfg.minWidth,
+            maxWidth: cfg.maxWidth,
+            minimizedWidth: cfg.minimizedWidth
+         };
       },
       _getConfigFromTemplate: function(cfg) {
          // get options from template.getDefaultOptions
@@ -363,6 +369,9 @@ function(cMerge,
             // Пытаемся совместить старое и новое api
             if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
                newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+               if (newCfg.dialogOptions.direction === 'center') {
+                  newCfg.dialogOptions.direction = '';
+               }
             } else {
                // Для стека всегда значение left, иначе ломается анимация
                if (cfg._type === 'stack') {

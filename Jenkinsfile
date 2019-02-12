@@ -182,7 +182,6 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
-            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
@@ -211,7 +210,7 @@ echo "Генерируем параметры"
 
 def regr = params.run_reg
 def all_regr = params.run_all_reg
-def unit = params.run_unit
+def unit
 def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
@@ -549,6 +548,8 @@ node('controls') {
                         def ws_revision = params.ws_revision
                         if ("${params.ws_revision}" == "sdk" ){
                             ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                        } else {
+                            sh "python3 ${workspace}/constructor/replace_package_json.py ${workspace}/controls/ sbis3-ws ${params.ws_revision}"
                         }
                         dir(workspace) {
                             checkout([$class: 'GitSCM',

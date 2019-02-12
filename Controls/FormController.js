@@ -134,15 +134,17 @@ define('Controls/FormController', [
       _beforeUpdate: function(newOptions) {
          if (newOptions.record && this._options.record !== newOptions.record) {
             this._setRecord(newOptions.record);
+
+            // todo: https://online.sbis.ru/opendoc.html?guid=2095997b-49b3-4859-9e24-890cdc685a24
+            if (newOptions.isNewRecord !== undefined) {
+               this._isNewRecord = newOptions.isNewRecord;
+            }
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
             this.read(newOptions.key, newOptions.readMetaData);
          }
          if (newOptions.key === undefined && !newOptions.record) {
             this.create(newOptions.initValues);
-         }
-         if (newOptions.isNewRecord !== undefined) {
-            this._isNewRecord = newOptions.isNewRecord;
          }
       },
       _afterUpdate: function() {
