@@ -281,7 +281,11 @@ function(cMerge,
             cfg.autofocus = cfg.catchFocus;
          }
 
-         cfg.isCompoundTemplate = true;
+         if (require.defined(cfg.template)) {
+            cfg.isCompoundTemplate = isVDOMTemplate(require(cfg.template));
+         } else {
+            cfg.isCompoundTemplate = true;
+         }
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
