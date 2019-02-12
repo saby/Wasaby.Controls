@@ -1,23 +1,23 @@
 @color_ListView-empty:                                            @color_text_additional;
 
-@spacing_ListView-empty-between-content-borderTop_xs:             0;
+@spacing_ListView-empty-between-content-borderTop_xs:             @content_0;
 
 @spacing_ListView-empty-between-content-borderTop_s:              @spacing_default_s;
 @spacing_ListView-empty-between-content-borderTop_m:              @spacing_default_l;
 @spacing_ListView-empty-between-content-borderTop_l:              @spacing_default_xl;
 @spacing_ListView-empty-between-content-borderTop_xl:             @spacing_default_xxl;
-@spacing_ListView-empty-between-content-borderTop_xxl:            44px;
+@spacing_ListView-empty-between-content-borderTop_xxl:            @spacing_extra_4xl;
 
-@spacing_ListView-empty-between-content-borderBottom_xs:          0;
+@spacing_ListView-empty-between-content-borderBottom_xs:          @content_0;
 @spacing_ListView-empty-between-content-borderBottom_s:           @spacing_default_s;
 @spacing_ListView-empty-between-content-borderBottom_m:           @spacing_default_l;
 @spacing_ListView-empty-between-content-borderBottom_l:           @spacing_default_xl;
 @spacing_ListView-empty-between-content-borderBottom_xl:          @spacing_default_xxl;
-@spacing_ListView-empty-between-content-borderBottom_xxl:         44px;
+@spacing_ListView-empty-between-content-borderBottom_xxl:         @spacing_extra_4xl;
 
 // list item spacing
-@spacing_ListView-item-between-content-borderRight_xs:            0;
-@spacing_ListView-item-between-content-borderLeft_xs:             0;
+@spacing_ListView-item-between-content-borderRight_xs:            @content_0;
+@spacing_ListView-item-between-content-borderLeft_xs:             @content_0;
 
 @spacing_ListView-item-between-content-borderRight_s:             @spacing_default_s;
 @spacing_ListView-item-between-content-borderLeft_s:              @spacing_default_s;
@@ -37,8 +37,8 @@
 @width_ListView-marker:                                           @width-marker_m;
 @color_ListView-marker:                                           @color-marker;
 
-@spacing_ListView-item-between-checkbox-borderTop:                3px;
-@spacing_ListView-between-content-checkbox:                       0px;
+@spacing_ListView-item-between-checkbox-borderTop:                @spacing_extra_xs;
+@spacing_ListView-between-content-checkbox:                       @content_0;
 
 @spacing_ListView-item-between-content-borderTop:                 @spacing_default_s;
 @spacing_ListView-item-between-content-borderBottom:              @spacing_default_s;
@@ -47,7 +47,7 @@
 @background-color_ListView-item_hover:                            @color18;
 @background-color_ListView-item_editing:                          @background_color_editing;
 
-@opacity_ListView-item_dragging:                                  0.6;
+@opacity_ListView-item_dragging:                                  @opacity_ListView-item_dragging_val;
 
 @spacing_ListView-groupSeparator-between-content-borderTop:       @height_control_default/2 - @thickness-group-separator;
 @spacing_ListView-groupSeparator-between-content-borderBottom:    @height_control_default/2;
@@ -68,9 +68,9 @@
 @border-color_List-masterList:                                    @color4;
 @background-color_List-masterList:                                @background-color_additional;
 @border-width_List-masterList-right:                              @spacing_default_xs;
-@border-width_List-masterList-item_selected:                      @thickness_border_default 0;
-@border-color_List-masterList-item_selected:                      @color301 transparent @color302 transparent;
+@border-width_List-masterList-item_selected:                      @thickness_border_default @content_0;
+@border-color_List-masterList-item_selected:                      @color301 @transparent @color302 @transparent;
 @background-color_List-masterList-item_selected:                  @background-color_default;
 @background-color_List-masterList-item_marked:                    @background-color_default;
 @background-color_List-masterList-item_hover:                     @background-color_default;
-@box-shadow_List-masterList-item_selected:                        4px 0 8px rgba(0,0,0,.15);
+@box-shadow_List-masterList-item_selected:                        @shadow_masterList_selected;
