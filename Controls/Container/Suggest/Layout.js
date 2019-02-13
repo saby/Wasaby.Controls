@@ -121,7 +121,7 @@
             return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
          },
          updateSuggestState: function(self) {
-            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
+            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown && !self._options.suggestState) {
                _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
@@ -229,6 +229,7 @@
             this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
             this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
+            this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
@@ -243,16 +244,17 @@
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
+            var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
             
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
       
-            if (valueChanged) {
+            if (needSearchOnValueChanged || !newOptions.value && typeof newOptions.value === 'string') {
                this._searchValue = newOptions.value;
             }
    
-            if (valueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+            if (needSearchOnValueChanged || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
       
@@ -261,7 +263,7 @@
                this._dependenciesDeferred = null;
             }
       
-            if (this._options.footerTemplate !== newOptions.footerTemplate) {
+            if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
                this._dependenciesDeferred = null;
             }
             
@@ -306,7 +308,7 @@
                _private.inputActivated(this);
             }
          },
-         _tabsSelectedKeyChanged: function(event, key) {
+         _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
@@ -367,7 +369,6 @@
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
                self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
             });
-            _private.setFilter(self, self._options.filter);
             _private.close(this);
          },
 

@@ -12,6 +12,7 @@ define('Controls/Input/Base',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
       'Core/helpers/Function/runDelayed',
+      'Core/helpers/String/unEscapeASCII',
       'Controls/Utils/hasHorizontalScroll',
 
       'wml!Controls/Input/Base/Base',
@@ -22,8 +23,8 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, entity, tmplNotify, isEqual,
-      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, hasHorizontalScroll,
-      template, fieldTemplate, readOnlyFieldTemplate
+      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, unEscapeASCII,
+      hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
 
@@ -579,6 +580,14 @@ define('Controls/Input/Base',
                template: null,
                scope: {}
             };
+
+            /**
+             * TODO: Remove after execution:
+             * https://online.sbis.ru/opendoc.html?guid=6c755b9b-bbb8-4a7d-9b50-406ef7f087c3
+             */
+            var emptySymbol = unEscapeASCII('&#65279;');
+            this._field.scope.emptySymbol = emptySymbol;
+            this._readOnlyField.scope.emptySymbol = emptySymbol;
          },
 
          /**
@@ -604,7 +613,7 @@ define('Controls/Input/Base',
                this._viewModel.selection = this._getFieldSelection();
             }
 
-            if (keyCode === constants.key.enter) {
+            if (keyCode === constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
                _private.callChangeHandler(this);
             }
          },
@@ -849,7 +858,7 @@ define('Controls/Input/Base',
             var valueDisplayElement = this._getField() || this._getReadOnlyField();
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
-            return hasFieldHorizontalScroll ? this._viewModel.displayValue : '';
+            return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
 
          _calculateValueForTemplate: function() {
@@ -872,6 +881,10 @@ define('Controls/Input/Base',
             _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
+         _isTriggeredChangeEventByEnterKey: function() {
+            return true;
+         },
+
          paste: function(text) {
             var model = this._viewModel;
             var splitValue = _private.calculateSplitValueToPaste(text, model.displayValue, model.selection);
@@ -883,6 +896,7 @@ define('Controls/Input/Base',
       Base.getDefaultOptions = function() {
          return {
             size: 'm',
+            tooltip: '',
             style: 'info',
             placeholder: '',
             textAlign: 'left',
@@ -900,6 +914,7 @@ define('Controls/Input/Base',
              * placeholder: descriptor(String|Function),
              * value: descriptor(String|null),
              */
+            tooltip: entity.descriptor(String),
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
             size: entity.descriptor(String).oneOf([
