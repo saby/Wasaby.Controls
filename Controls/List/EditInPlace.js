@@ -261,6 +261,11 @@ define('Controls/List/EditInPlace', [
          EditInPlace.superclass.constructor.apply(this, arguments);
          this._resetValidation = function() {
             /**
+             * We should manually trigger update of the list, otherwise only inputs with validators are gonna get updated.
+             */
+            this._forceUpdate();
+
+            /**
              * Validation doesn't reset if the value was changed without user input, so we have to reset it here.
              * Ideally, validation should take value through options and reset automagically.
              * TODO: https://online.sbis.ru/opendoc.html?guid=951f6762-8e37-4182-a7fc-3104a35ce27a
