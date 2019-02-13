@@ -256,6 +256,16 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isFalse(self._loading);
       });
       
+      it('Suggest::_private.setSearchValue', function() {
+         var self = {};
+         
+         Suggest._private.setSearchValue(self, 'test');
+         assert.equal(self._searchValue, 'test');
+   
+         Suggest._private.setSearchValue(self, '');
+         assert.equal(self._searchValue, '');
+      });
+      
       it('Suggest::_searchErrback', function() {
          var suggest = new Suggest();
          suggest._loading = true;
@@ -276,7 +286,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          });
       });
    
-      it('Suggest::_inputActivated/inputClicked with autoDropDown', function(done) {
+      it('Suggest::_inputActivated/inputClicked with autoDropDown', function() {
          var self = getComponentObject();
          var suggestComponent = new Suggest();
          var suggestState = false;
@@ -294,42 +304,47 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                suggestState = val[0];
             }
          };
-         suggestComponent._inputActivated();
-
-         suggestComponent._dependenciesDeferred.addCallback(function() {
-            assert.isTrue(suggestState);
-            assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
-            
-            suggestComponent._changeValueHandler(null, '');
-            assert.isTrue(suggestState);
+         
+         
+         return new Promise(function(resolve) {
+            suggestComponent._inputActivated();
    
-            suggestComponent._close();
-            suggestComponent._filter = {};
-            suggestComponent._inputClicked();
-
             suggestComponent._dependenciesDeferred.addCallback(function() {
                assert.isTrue(suggestState);
                assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
-   
+      
+               suggestComponent._changeValueHandler(null, '');
+               assert.isTrue(suggestState);
+               assert.equal(suggestComponent._searchValue, '');
+      
                suggestComponent._close();
-               self._options.readOnly = true;
-               suggestComponent._inputActivated();
+               suggestComponent._filter = {};
+               suggestComponent._inputClicked();
+      
                suggestComponent._dependenciesDeferred.addCallback(function() {
-                  assert.isFalse(suggestState);
-   
-                  suggestComponent._inputClicked();
+                  assert.isTrue(suggestState);
+                  assert.deepEqual(suggestComponent._filter['historyKeys'], IDENTIFICATORS);
+         
+                  suggestComponent._close();
+                  self._options.readOnly = true;
+                  suggestComponent._inputActivated();
                   suggestComponent._dependenciesDeferred.addCallback(function() {
                      assert.isFalse(suggestState);
-   
-                     suggestComponent._options.historyId = '';
-                     suggestComponent._filter = {};
-                     suggestComponent._options.readOnly = false;
-                     suggestComponent._inputActivated();
-   
+            
+                     suggestComponent._inputClicked();
                      suggestComponent._dependenciesDeferred.addCallback(function() {
-                        assert.isTrue(suggestState);
-                        assert.deepEqual(suggestComponent._filter, {searchParam: ''});
-                        done();
+                        assert.isFalse(suggestState);
+               
+                        suggestComponent._options.historyId = '';
+                        suggestComponent._filter = {};
+                        suggestComponent._options.readOnly = false;
+                        suggestComponent._inputActivated();
+               
+                        suggestComponent._dependenciesDeferred.addCallback(function() {
+                           assert.isTrue(suggestState);
+                           assert.deepEqual(suggestComponent._filter, {searchParam: ''});
+                           resolve();
+                        });
                      });
                   });
                });
@@ -342,7 +357,9 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          var suggestComponent = new Suggest();
       
          self._options.searchParam = 'searchParam';
+         self._options.keyProperty = 'Identificator';
          self._options.minSearchLength = 3;
+         
          suggestComponent.saveOptions(self._options);
          suggestComponent._active = true;
    
@@ -358,6 +375,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._options.trim = true;
          suggestComponent._changeValueHandler(null, '  ');
          assert.equal(suggestComponent._searchValue, '');
+   
+         self._options.historyId = 'testFieldHistoryId';
+         suggestComponent._changeValueHandler(null, 'te');
+         assert.equal(suggestComponent._searchValue, '');
+         assert.deepEqual(suggestComponent._filter.historyKeys, IDENTIFICATORS);
+         
       });
    
       it('Suggest::_private.loadDependencies', function(done) {
