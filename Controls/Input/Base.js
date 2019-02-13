@@ -579,8 +579,14 @@ define('Controls/Input/Base',
           * Event handler mouse enter.
           * @private
           */
-         _mouseEnterHandler: function() {
+         _mouseEnterHandler: function(event) {
             this._tooltip = this._getTooltip();
+
+            /**
+             * TODO: https://online.sbis.ru/open_dialog.html?guid=011f1615-81e1-e01b-11cb-881d311ae617&message=010c1611-8160-e015-213d-5a11b13ef818
+             * Remove after execution https://online.sbis.ru/opendoc.html?guid=809254e8-e179-443b-b8b7-f4a37e05f7d8
+             */
+            this._notify('mouseenter', [event]);
          },
 
          /**
