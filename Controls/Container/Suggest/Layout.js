@@ -14,12 +14,19 @@
    ],
    function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
       'use strict';
+      
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
       
+      /* if suggest is opened and marked key from suggestions list was changed,
+         we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
+      var ENTER_KEY = constants.key.enter;
+      
       /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, constants.key.enter];
+      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, ENTER_KEY];
+      
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
+      
       var _private = {
          hasMore: function(searchResult) {
             return searchResult && searchResult.hasMore;
@@ -236,6 +243,7 @@
          _historyLoad: null,
          _showContent: false,
          _inputActive: false,
+         _markedKeyChanged: false,
 
          /**
           * three state flag
@@ -250,7 +258,6 @@
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
             this._searchErrback = this._searchErrback.bind(this);
-            this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
             this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
             this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
@@ -264,7 +271,6 @@
             this._searchStart = null;
             this._searchEnd = null;
             this._searchErrback = null;
-            this._select = null;
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
@@ -357,6 +363,7 @@
          },
          _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
+            this._markedKeyChanged = false;
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
             // otherwise interface will blink
@@ -367,6 +374,9 @@
             // move focus from tabs to input, after change tab
             this.activate();
          },
+   
+         // <editor-fold desc="List handlers">
+         
          _select: function(event, item) {
             item = item || event;
             _private.close(this);
@@ -383,6 +393,13 @@
                });
             }
          },
+   
+         _markedKeyChangedHandler: function() {
+            this._markedKeyChanged = true;
+         },
+   
+         // </editor-fold>
+         
          _searchStart: function() {
             this._loading = true;
             this._children.indicator.show();
@@ -436,11 +453,15 @@
          },
 
          _keydown: function(event) {
-            if (this._options.suggestState && IGNORE_HOT_KEYS.indexOf(event.nativeEvent.keyCode) !== -1) {
+            var eventKeyCode = event.nativeEvent.keyCode;
+            var needProcessKey = eventKeyCode === ENTER_KEY ? !this._markedKeyChanged : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            
+            if (this._options.suggestState && needProcessKey) {
                event.preventDefault();
-            }
-            if (this._children.inputKeydown) {
-               this._children.inputKeydown.start(event);
+               
+               if (this._children.inputKeydown) {
+                  this._children.inputKeydown.start(event);
+               }
             }
          }
 
