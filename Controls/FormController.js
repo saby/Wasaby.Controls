@@ -223,7 +223,9 @@ define('Controls/FormController', [
 
          // if record actually is not changed after onPropertyChange, we must resolve pending
          if (this._propertyChangeNotified && !this._record.isChanged()) {
-            this._propertyChangedDef.callback(true);
+            if (!self._propertyChangedDef.isReady()) {
+               this._propertyChangedDef.callback(true);
+            }
 
             // сбрасываем флаг об изменении, потому что отстрелили callback и теперь надо будет заново создавать deferred
             this._propertyChangeNotified = false;
@@ -238,14 +240,14 @@ define('Controls/FormController', [
          // чтобы завершить пендинги на acceptChanges, переопределим метод и завершим пендинг вручную.
          var acceptChanges = this._record.acceptChanges;
          this._record.acceptChanges = function() {
-            if (!self._propertyChangedDef.isReady()) {
+            if (self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
                self._propertyChangedDef.callback(true);
             }
             return acceptChanges.apply(this, arguments);
          };
          var rejectChanges = this._record.rejectChanges;
          this._record.rejectChanges = function() {
-            if (!self._propertyChangedDef.isReady()) {
+            if (self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
                self._propertyChangedDef.callback(true);
             }
             return rejectChanges.apply(this, arguments);
