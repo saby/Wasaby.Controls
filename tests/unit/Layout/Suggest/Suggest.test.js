@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Core/constants', 'Controls/History/Service'], function(Suggest, collection, entity, constants) {
+define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Core/constants', 'Controls/History/Service', 'Core/Deferred'], function(Suggest, collection, entity, constants, Service, Deferred) {
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -43,11 +43,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
       };
 
       Suggest._private.getRecentKeys = function() {
-         return {
-            addCallback: function(func) {
-               func(IDENTIFICATORS);
-            }
-         }
+         return Deferred.success(IDENTIFICATORS);
       };
 
       Suggest._private.getHistoryService = function() {
@@ -64,7 +60,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
 
 
       
-      it('Suggest::_private.hasMore', function () {
+      it('Suggest::_private.hasMore', function() {
          assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
          assert.isFalse(Suggest._private.hasMore(hasMoreFalse));
       });
