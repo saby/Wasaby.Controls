@@ -58,7 +58,8 @@ define('Controls/BreadCrumbs/View', [
                target: e.target,
                templateOptions: {
                   items: rs,
-                  itemTemplate: menuItemTemplate
+                  itemTemplate: menuItemTemplate,
+                  displayProperty: this._options.displayProperty
                }
             });
             e.stopPropagation();

@@ -130,11 +130,12 @@ define('Controls/BreadCrumbs/Utils', [
                      self._visibleItems.push(_private.getItemData(j, items, j === shrinkedItemIndex));
                   }
 
+                  var dotsItem = {};
+                  dotsItem[self._options.displayProperty] = '...';
+
                   self._visibleItems.push({
                      getPropValue: ItemsUtil.getPropertyValue,
-                     item: {
-                        title: '...'
-                     },
+                     item: dotsItem,
                      isDots: true,
                      hasArrow: true
                   });

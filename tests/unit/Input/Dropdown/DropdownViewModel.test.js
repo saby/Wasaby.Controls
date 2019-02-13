@@ -98,6 +98,21 @@ define(
             viewModel.setItems({items: items});
          }
 
+         it('should pass correct displayProperty to ItemsViewModel', () => {
+            const config = {
+               items: rs,
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               nodeProperty: '@parent',
+               selectedKeys: '3',
+               displayProperty: 'test',
+               rootKey: null
+            };
+            const viewModel = new DropdownViewModel(config);
+
+            assert.equal(viewModel._itemsModel._options.displayProperty, 'test');
+         });
+
          it('check hier items collection', () => {
             assert.equal(viewModel._itemsModel._display.getCount(), 3);
          });

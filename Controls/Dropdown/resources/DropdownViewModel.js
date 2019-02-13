@@ -71,7 +71,7 @@ define('Controls/Dropdown/resources/DropdownViewModel',
                groupTemplate: cfg.groupTemplate,
                items: cfg.items,
                keyProperty: cfg.keyProperty,
-               displayProperty: 'title'
+               displayProperty: cfg.displayProperty || 'title'
             });
             this._itemsModel.subscribe('onListChange', function() {
                self._nextVersion();
