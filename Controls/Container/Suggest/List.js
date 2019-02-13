@@ -6,10 +6,11 @@ define('Controls/Container/Suggest/List',
       'Core/Control',
       'wml!Controls/Container/Suggest/List/List',
       'Core/core-clone',
-      'Controls/Container/Suggest/Layout/_SuggestOptionsField'
+      'Controls/Container/Suggest/Layout/_SuggestOptionsField',
+      'Controls/Utils/tmplNotify'
    ],
    
-   function(Control, template, clone, _SuggestOptionsField) {
+   function(Control, template, clone, _SuggestOptionsField, tmplNotify) {
       
       /**
        * Container for list inside Suggest.
@@ -68,6 +69,7 @@ define('Controls/Container/Suggest/List',
       var List = Control.extend({
          
          _template: template,
+         _notifyHandler: tmplNotify,
          
          _beforeMount: function(options, context) {
             _private.checkContext(this, context);
