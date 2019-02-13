@@ -105,6 +105,16 @@ define(
             });
          });
 
+         describe('_stickyRegisterHandler', function() {
+            it('should update blockUpdate event field', function() {
+               let event = {
+                  blockUpdate: false
+               };
+               scroll._stickyRegisterHandler(event);
+               assert.isTrue(event.blockUpdate);
+            });
+         });
+
          describe('Template', function() {
             it('Hiding the native scroll', function() {
                result = scroll._template(scroll);
