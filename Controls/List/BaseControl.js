@@ -724,7 +724,8 @@ define('Controls/List/BaseControl', [
             if (newOptions.virtualScrolling === true) {
                this._virtualScroll = new VirtualScroll({
                   virtualPageSize: newOptions.virtualPageSize,
-                  virtualSegmentSize: newOptions.virtualSegmentSize
+                  virtualSegmentSize: newOptions.virtualSegmentSize,
+                  updateItemsHeightsMode: newOptions.updateItemsHeightsMode
                });
             }
             this._loadTriggerVisibility = {
@@ -850,20 +851,16 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
          }
 
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);
          }
 
          if (filterChanged || recreateSource || sortingChanged) {
             _private.reload(this, newOptions);
+         }
+
+         if (this._virtualScroll && (this._listViewModel.getCount() != this._virtualScroll.getItemsCount())) {
+            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          }
 
       },
