@@ -193,10 +193,10 @@ define('Controls/FormController', [
          return this._record && this._isNewRecord && this._getRecordId();
       },
       _onPropertyChange: function() {
+         var self = this;
          if (!this._propertyChangeNotified && this._record.isChanged()) {
             var def = new Deferred();
             this._propertyChangedDef = def;
-            var self = this;
 
             self._propertyChangeNotified = true;
             self._notify('registerPending', [def, {
