@@ -281,7 +281,13 @@ function(cMerge,
             cfg.autofocus = cfg.catchFocus;
          }
 
+         /**
+          * Let's protect ourselves from the case when the template was not loaded. In theory, this should not be.
+          */
          if (requirejs.defined(cfg.template)) {
+            /**
+             * Determine the 'compound' or 'VDOM' template build.
+             */
             cfg.isCompoundTemplate = !isVDOMTemplate(requirejs(cfg.template));
          } else {
             cfg.isCompoundTemplate = true;
