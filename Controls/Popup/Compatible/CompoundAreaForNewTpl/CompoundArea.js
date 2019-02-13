@@ -188,12 +188,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
          _callCloseHandler: function() {
             this._options.onCloseHandler && this._options.onCloseHandler(this._result);
+            this._options.onCloseHandlerEvent && this._options.onCloseHandlerEvent('onClose', [this._result]);
          },
          _onResultHandler: function() {
             this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
-            if (this._options.onResultHandler) {
-               this._options.onResultHandler.apply(this, this._result);
-            }
+
+            this._options.onResultHandler && this._options.onResultHandler.apply(this, this._result);
+            this._options.onResultHandlerEvent && this._options.onResultHandlerEvent('onResult', [this._result]);
          },
          _onRegisterHandler: function(event, eventName, emitter, handler) {
             if (['mousemove', 'touchmove', 'mouseup', 'touchend'].indexOf(eventName) !== -1) {
