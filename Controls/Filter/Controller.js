@@ -174,7 +174,7 @@ define('Controls/Filter/Controller',
             var filter = {};
 
             function processItems(elem) {
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue'))) {
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
                   filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
                }
             }
