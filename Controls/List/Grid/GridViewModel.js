@@ -587,6 +587,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setItemPadding(itemPadding);
          },
 
+         setIndexes: function(startIndex, stropIndex) {
+            this._model.setIndexes(startIndex, stropIndex);
+         },
+
          getSwipeItem: function() {
             return this._model.getSwipeItem();
          },
