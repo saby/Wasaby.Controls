@@ -30,9 +30,14 @@ define('Controls/List/Controllers/VirtualScroll',
                stopIndex = self._stopItemIndex,
                items = self._itemsContainer.children;
 
-            if (!(self._itemsHeights[startIndex] && self._itemsHeights[stopIndex - 1])) {
+            // Согласовать опцию https://online.sbis.ru/opendoc.html?guid=3fe3d645-8d10-4bbb-bedb-c074fbed4058
+            if (self._updateItemsHeightsMode === 'onChangeCollection') {
                for (var i = 0; i < items.length; i++) {
                   self._itemsHeights[startIndex + i] = uDimension(items[i]).height;
+               }
+            } else if (updateItemsHeightsMode === 'allways') {
+               for (var i = 0; i < items.length; i++) {
+                  self._itemsHeights[i] = uDimension(items[i]).height;
                }
             }
          },
@@ -66,7 +71,7 @@ define('Controls/List/Controllers/VirtualScroll',
             for (var i = self._startItemIndex; i < self._stopItemIndex; i++) {
                itemsHeight += self._itemsHeights[i];
             }
-            return (scrollTop < self._topPlaceholderSize || scrollTop > (itemsHeight + self._topPlaceholderSize));
+            return (scrollTop <= self._topPlaceholderSize || scrollTop >= (itemsHeight + self._topPlaceholderSize));
          }
       };
 
@@ -83,6 +88,7 @@ define('Controls/List/Controllers/VirtualScroll',
 
          constructor: function(cfg) {
             VirtualScroll.superclass.constructor.apply(this, arguments);
+            this._updateItemsHeightsMode = cfg.updateItemsHeightsMode || 'onChangeCollection';
             this._itemsHeights = [];
             this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
             this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
@@ -105,6 +111,10 @@ define('Controls/List/Controllers/VirtualScroll',
             _private.updateItemsSizes(this);
          },
 
+         setItemsHeights: function(itemsHeights) {
+            this._itemsHeights = itemsHeights;
+         },
+
          updateItemsSizes: function() {
             _private.updateItemsSizes(this);
          },
@@ -112,16 +122,12 @@ define('Controls/List/Controllers/VirtualScroll',
          updateItemsIndexes: function(direction) {
             if (direction === 'down') {
                this._startItemIndex = this._startItemIndex + this._virtualSegmentSize;
-               if (this._itemsCount) {
-                  this._startItemIndex = Math.min(this._startItemIndex, this._itemsCount - this._virtualPageSize);
-               }
+               this._startItemIndex = Math.max(0, Math.min(this._startItemIndex, this._itemsCount - this._virtualPageSize));
             } else {
                this._startItemIndex = Math.max(this._startItemIndex - this._virtualSegmentSize, 0);
             }
 
-            this._stopItemIndex = this._startItemIndex + this._virtualPageSize;
-            this._topPlaceholderSize = _private.getItemsHeight(this, 0, this._startItemIndex);
-            this._bottomPlaceholderSize = _private.getItemsHeight(this, this._stopItemIndex, this._itemsHeights.length);
+            this._stopItemIndex = Math.min(this._itemsCount, this._startItemIndex + this._virtualPageSize);
          },
 
          getItemsIndexes: function() {
@@ -133,14 +139,19 @@ define('Controls/List/Controllers/VirtualScroll',
 
          getPlaceholdersSizes: function() {
             return {
-               top: this._topPlaceholderSize,
-               bottom: this._bottomPlaceholderSize
+               top: _private.getItemsHeight(this, 0, this._startItemIndex),
+               bottom: _private.getItemsHeight(this, this._stopItemIndex, this._itemsHeights.length)
             };
          },
 
          setItemsCount: function(itemsCount) {
             this._itemsCount = itemsCount;
          },
+
+         getItemsCount: function() {
+            return this._itemsCount;
+         },
+
 
          /* Если в результате изменения scrollTop получилось так, что в видимой области листа стала видна распорка, то
             необходимо пересчитать индексы видимых элементов и распорки */
