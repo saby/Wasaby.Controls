@@ -173,6 +173,7 @@ define('Controls/Application',
          },
 
          _scrollPage: function(ev) {
+            ev.blockUpdate = true;
             this._children.scrollDetect.start(ev);
          },
 
