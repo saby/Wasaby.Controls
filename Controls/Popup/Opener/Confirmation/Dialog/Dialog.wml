@@ -6,7 +6,7 @@
    <ws:bodyContentTemplate>
       <ws:partial
               template="{{_contentTemplate}}"
-              message="{{_options.message}}"
+              message="{{_getMessage()}}"
               messageTemplate="{{_messageTemplate}}"
               details="{{_options.details}}"
               detailsTemplate="{{_detailsTemplate}}">
