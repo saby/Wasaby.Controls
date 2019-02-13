@@ -107,9 +107,9 @@ define('Controls/Application/HeadData', [
                }
             }
 
-            if (!self.isDebug) {
-               files.js = files.js.concat(self._getDictionaries());
-            }
+            // if (!self.isDebug) {
+            //    files.js = files.js.concat(self._getDictionaries());
+            // }
 
             self._version++;
             self.defRender.callback({
