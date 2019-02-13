@@ -149,7 +149,17 @@ define('Controls/List/BaseControl', [
          return resDeferred;
       },
       scrollToItem: function(self, key) {
-         scrollToElement(self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)], true);
+         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
+         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
+         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
+         // https://git.sbis.ru/sbis/controls/merge_requests/65854
+         // corrupting integration tests
+         // fixed by error: https://online.sbis.ru/opendoc.html?guid=d348adda-5fee-4d1b-8cb7-9501026f4f3c
+         var
+            container = self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)];
+         if (container) {
+            scrollToElement(container, true);
+         }
       },
       setMarkedKey: function(self, key) {
          if (key !== undefined) {
