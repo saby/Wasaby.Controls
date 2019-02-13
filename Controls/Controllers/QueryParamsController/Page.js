@@ -47,8 +47,7 @@ define('Controls/Controllers/QueryParamsController/Page',
          calculateState: function(list, direction) {
             var meta = list.getMetaData();
 
-            //TODO https://online.sbis.ru/opendoc.html?guid=45d6e26f-5a2f-4275-bc4f-667e176a5d85
-            if (this._options.mode === 'totalCount' || this._options.hasMore === false) {
+            if (this._options.hasMore === false) {
                // meta.more can be undefined is is not error
                if (meta.more && (typeof meta.more !== 'number')) {
                   throw new Error('"more" Parameter has incorrect type. Must be numeric');
@@ -84,8 +83,7 @@ define('Controls/Controllers/QueryParamsController/Page',
          hasMoreData: function(direction) {
             if (direction === 'down') {
 
-               //TODO https://online.sbis.ru/opendoc.html?guid=45d6e26f-5a2f-4275-bc4f-667e176a5d85
-               if (this._options.mode === 'totalCount' || this._options.hasMore === false) {
+               if (this._options.hasMore === false) {
 
                   //в таком случае в more приходит общее число записей в списке
                   //значит умножим номер след. страницы на число записей на одной странице и сравним с общим

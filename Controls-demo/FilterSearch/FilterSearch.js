@@ -35,7 +35,7 @@ define('Controls-demo/FilterSearch/FilterSearch', [
             sourceConfig: {
                pageSize: 20,
                page: 0,
-               mode: 'totalCount'
+               hasMore: false
             }
          };
          this._filter = {};

@@ -51,7 +51,7 @@
                   source="{{_kindsOfBox()}}"
                   minSearchLength="1">
               <ws:navigation source="page" view="page">
-                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
               </ws:navigation>
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
@@ -67,7 +67,7 @@
                   source="{{_mainSource()}}"
                   minSearchLength="1">
               <ws:navigation source="page" view="page">
-                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
               </ws:navigation>
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
@@ -83,7 +83,7 @@
                   source="{{_props()}}"
                   minSearchLength="1">
               <ws:navigation source="page" view="page">
-                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
               </ws:navigation>
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />
@@ -99,7 +99,7 @@
                   source="{{_props()}}"
                   minSearchLength="1">
               <ws:navigation source="page" view="page">
-                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                  <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
               </ws:navigation>
               <ws:suggestTemplate templateName="Controls-demo/Input/Suggest/resources/SuggestTemplate">
                   <ws:templateOptions demoClass="demo-SuggestInputList" />

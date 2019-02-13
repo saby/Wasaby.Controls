@@ -13,7 +13,7 @@
                     virtualPageSize="{{100}}"
                     virtualSegmentSize="{{20}}">
                 <ws:navigation source="page" view="infinity">
-                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                 </ws:navigation>
             </Controls.List>
         </ws:content>
