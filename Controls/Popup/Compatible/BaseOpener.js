@@ -281,8 +281,8 @@ function(cMerge,
             cfg.autofocus = cfg.catchFocus;
          }
 
-         if (require.defined(cfg.template)) {
-            cfg.isCompoundTemplate = isVDOMTemplate(require(cfg.template));
+         if (requirejs.defined(cfg.template)) {
+            cfg.isCompoundTemplate = !isVDOMTemplate(requirejs(cfg.template));
          } else {
             cfg.isCompoundTemplate = true;
          }
