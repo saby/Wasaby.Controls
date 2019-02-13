@@ -157,6 +157,11 @@ define('Controls/List/Swipe/SwipeControl', [
          if (this._animationState === 'close') {
             _private.notifyAndResetSwipe(this);
          }
+      },
+
+      _beforeUnmount: function() {
+         this._measurer = null;
+         this._swipeConfig = null;
       }
    });
 
