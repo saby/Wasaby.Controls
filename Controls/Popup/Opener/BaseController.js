@@ -169,6 +169,10 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         popupResize: function(element, container) {
+            this.elementUpdated(element, container);
+         },
+
          elementAnimated: function() {
 
          },
