@@ -480,6 +480,30 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
             resetValue: ''
          }];
          assert.isTrue(Filter._private.isFilterChanged(filterButtonItems, fastFilterItems));
+         fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }];
+
+         filterButtonItems = [{
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId4',
+            value: '',
+            resetValue: ''
+         }];
+         assert.isFalse(Filter._private.isFilterChanged(filterButtonItems, fastFilterItems));
       });
 
       it('_private.getHistoryData', function() {

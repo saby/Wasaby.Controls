@@ -174,7 +174,8 @@ define('Controls/Filter/Controller',
             var filter = {};
 
             function processItems(elem) {
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue'))) {
+               // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
                   filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
                }
             }
