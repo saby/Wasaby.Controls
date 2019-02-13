@@ -67,7 +67,7 @@ define('Controls/Application/HeadData', [
 
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive, true);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             if (self.defRender.isReady()) {
