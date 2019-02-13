@@ -3,6 +3,8 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    'Types/entity',
    'Core/constants',
    'Controls/Popup/Compatible/EscProcessing',
+   'Controls/Decorator/Markup/Converter',
+   'Core/IoC',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/content',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/footer',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/message',
@@ -13,6 +15,8 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    entity,
    constants,
    EscProcessing,
+   MarkupConverter,
+   IoC,
    contentTemplate,
    footerTemplate,
    messageTemplate,
@@ -126,6 +130,14 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
       _keyPressed: function(e) {
          this._escProcessing.keyUpHandler(_private.keyPressed, this, [e]);
+      },
+      _getMessage: function() {
+         var message = this._options.message || '';
+         if (message.indexOf('<a') > -1 && message.indexOf('</a>') > -1) {
+            IoC.resolve('ILogger').error('Confirmation', 'В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.');
+            return MarkupConverter.htmlToJson('<span>' + message + '</span>');
+         }
+         return message;
       }
    });
 
