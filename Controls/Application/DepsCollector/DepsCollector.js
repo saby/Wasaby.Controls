@@ -251,7 +251,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute, this.themesActive); // Find all bundles, and removes dependencies that are included in bundles
 
          // Collect dictionaries
-         if(this.localizationEnabled) {
+         if (this.localizationEnabled) {
             var collectedDictList = {};
             var module;
             var moduleLang;
@@ -260,11 +260,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             for (var key in packages.js) {
                module = key.split('/')[0];
                moduleLang = module + '/lang/' + lang + '/' + lang + '.json';
-               if(availableDictList[moduleLang]) {
+               if (availableDictList[moduleLang]) {
                   collectedDictList[moduleLang] = true;
                }
             }
-            for(var key in collectedDictList) {
+            for (var key in collectedDictList) {
                if (collectedDictList.hasOwnProperty(key)) {
                   files.js.push(key);
                }
