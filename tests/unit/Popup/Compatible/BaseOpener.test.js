@@ -10,10 +10,11 @@ define(
       'Examples/DropdownList/MyDropdownList/MyDropdownList',
       'Core/core-instance',
       'Core/Deferred',
-      'Core/Context'
+      'Core/Context',
+      'Core/Control'
    ],
 
-   function(BaseOpener, DropdownExample, cInstance, Deferred, Context) {
+   function(BaseOpener, DropdownExample, cInstance, Deferred, Context, Control) {
       'use strict';
 
       var config = {
@@ -148,6 +149,12 @@ define(
             config.catchFocus = true;
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.autofocus, true);
+
+            config.template = 'Examples/DropdownList/MyDropdownList/MyDropdownList';
+            assert.equal(config.isCompoundTemplate, true);
+            config.template = 'Core/Control';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.isCompoundTemplate, false);
          });
 
          it('prepareNotificationConfig', function() {
