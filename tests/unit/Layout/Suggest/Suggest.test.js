@@ -423,9 +423,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.equal(suggestComponent._filter.currentTab, null);
    
          /* tabSelectedKey changed, filter must be changed */
+         suggestComponent._markedKeyChanged = true;
          suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._filter.currentTab, 'test');
          assert.isTrue(suggestActivated);
+         assert.isFalse(suggestComponent._markedKeyChanged);
       });
    
       it('Suggest::searchDelay on tabChange', function() {
@@ -531,6 +533,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._select(item);
          assert.isTrue(item._isUpdateHistory);
       });
+   
+      it('Suggest::_markedKeyChanged', function() {
+         var suggestComponent = new Suggest();
+         suggestComponent._markedKeyChangedHandler();
+         assert.isTrue(suggestComponent._markedKeyChanged);
+      });
 
       it('Suggest::_keyDown', function() {
          var suggestComponent = new Suggest();
@@ -570,6 +578,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._keydown(getEvent(constants.key.enter));
          assert.isTrue(eventPreventDefault);
          eventPreventDefault = false;
+   
+         suggestComponent._markedKeyChanged = true;
+         suggestComponent._keydown(getEvent(constants.key.enter));
+         assert.isFalse(eventPreventDefault);
          
          suggestComponent._keydown(getEvent('test'));
          assert.isFalse(eventPreventDefault);
