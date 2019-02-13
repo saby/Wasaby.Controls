@@ -87,7 +87,7 @@
             if (self._options.autoDropDown && !self._options.readOnly) {
                if (self._options.historyId && !self._searchValue) {
                   _private.openWithHistory(self);
-               } else {
+               } else if (!self._options.suggestState) {
                   _private.updateSuggestState(self);
                }
             }
@@ -373,6 +373,10 @@
 
             // move focus from tabs to input, after change tab
             this.activate();
+            
+            /* because activate() does not call _forceUpdate and _tabsSelectedKeyChanged is callback function,
+               we should call _forceUpdate, otherwise child controls (like suggestionsList) does not get new filter */
+            this._forceUpdate();
          },
    
          // <editor-fold desc="List handlers">
