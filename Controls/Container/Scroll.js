@@ -484,6 +484,7 @@ define('Controls/Container/Scroll',
 
             _stickyRegisterHandler: function(event, stickyId, register) {
                var index = this._registeredHeadersIds.indexOf(stickyId);
+               event.blockUpdate = true;
                if (register && index === -1) {
                   this._registeredHeadersIds.push(stickyId);
                } else if (!register && index !== -1) {

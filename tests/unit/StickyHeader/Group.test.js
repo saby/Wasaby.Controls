@@ -212,6 +212,20 @@ define([
             sinon.assert.notCalled(component._children.stickyHeaderHeight.start);
          });
       });
+
+      describe('_stickyRegisterHandler', function() {
+         it('should update blockUpdate event field', function() {
+            const
+               component = createComponent(StickyHeader, options);
+            let event = {
+               blockUpdate: false,
+               stopImmediatePropagation: sinon.fake()
+            };
+            component._stickyRegisterHandler(event);
+            assert.isTrue(event.blockUpdate);
+            sinon.assert.calledOnce(event.stopImmediatePropagation);
+         });
+      });
    });
 
 });

@@ -42,10 +42,7 @@ define('Controls/List/Grid/GridViewModel', [
                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
 
-            // Вертикальное выравнивание хедера
-            if (params.columns[params.columnIndex].valign) {
-               preparedClasses += ' controls-Grid__header-cell_valign_' + params.columns[params.columnIndex].valign;
-            }
+
             return preparedClasses;
          },
 
@@ -364,6 +361,9 @@ define('Controls/List/Grid/GridViewModel', [
             }
             if (headerColumn.column.align) {
                cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
+            }
+            if (headerColumn.column.valign) {
+               cellClasses += ' controls-Grid__header-cell_valign_' + headerColumn.column.valign;
             }
             headerColumn.cellClasses = cellClasses;
 
