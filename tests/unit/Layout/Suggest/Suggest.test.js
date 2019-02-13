@@ -328,7 +328,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                         suggestComponent._dependenciesDeferred.addCallback(function() {
                            assert.isTrue(suggestState);
                            assert.deepEqual(suggestComponent._filter, {searchParam: ''});
-                           resolve();
+   
+                           suggestComponent._options.suggestState = true;
+                           suggestComponent._filter = {};
+                           suggestComponent._inputActivated();
+   
+                           suggestComponent._dependenciesDeferred.addCallback(function() {
+                              assert.deepEqual(suggestComponent._filter, {});
+                              resolve();
+                           });
                         });
                      });
                   });
@@ -419,8 +427,12 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
       it('Suggest::_tabsSelectedKeyChanged', function() {
          var suggestComponent = new Suggest();
          var suggestActivated = false;
+         var updated = false;
          suggestComponent.activate = function() {
             suggestActivated = true;
+         };
+         suggestComponent._forceUpdate = function() {
+            updated = true;
          };
          suggestComponent._filter = {};
          suggestComponent._filter.currentTab = null;
@@ -429,6 +441,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          /* tabSelectedKey not changed, filter must be not changed too */
          suggestComponent._tabsSelectedKeyChanged('checkChanged');
          assert.equal(suggestComponent._filter.currentTab, null);
+         assert.isTrue(updated);
    
          /* tabSelectedKey changed, filter must be changed */
          suggestComponent._markedKeyChanged = true;
