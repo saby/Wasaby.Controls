@@ -237,15 +237,22 @@ define('Controls/List/BaseControl', [
 
                _private.hideIndicator(self);
 
+               //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
+               //до реализации функционала и проблемы из новости делаем решение по месту:
+               //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
+               //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
+               //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
+               var cnt1 = self._listViewModel.getCount();
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
                } else if (direction === 'up') {
                   self._listViewModel.prependItems(addedItems);
                }
+               var cnt2 = self._listViewModel.getCount();
 
                // If received list is empty, make another request.
                // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-               if (!addedItems.getCount()) {
+               if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
                   _private.checkLoadToDirectionCapability(self);
                }
 
