@@ -534,7 +534,7 @@ function(cMerge,
       },
 
       _getDimensions: function(templateClass) {
-         return templateClass.dimensions || templateClass.prototype.dimensions || {};
+         return templateClass.dimensions || (templateClass.prototype && templateClass.prototype.dimensions) || {};
       },
 
       _getTemplateOptions: function(templateClass) {
