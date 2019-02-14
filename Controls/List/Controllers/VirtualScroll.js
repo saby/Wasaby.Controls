@@ -40,6 +40,7 @@ define('Controls/List/Controllers/VirtualScroll',
                   self._itemsHeights[i] = uDimension(items[i]).height;
                }
             }
+
          },
          updateItemsIndexesOnScrolling: function(self, scrollTop) {
             var
@@ -111,8 +112,8 @@ define('Controls/List/Controllers/VirtualScroll',
             _private.updateItemsSizes(this);
          },
 
-         setItemsHeights: function(itemsHeights) {
-            this._itemsHeights = itemsHeights;
+         getItemsHeights: function() {
+            return this._itemsHeights;
          },
 
          updateItemsSizes: function() {
@@ -128,6 +129,8 @@ define('Controls/List/Controllers/VirtualScroll',
             }
 
             this._stopItemIndex = Math.min(this._itemsCount, this._startItemIndex + this._virtualPageSize);
+            this._topPlaceholderSize = _private.getItemsHeight(this, 0, this._startItemIndex);
+            this._bottomPlaceholderSize = _private.getItemsHeight(this, this._stopItemIndex, this._itemsHeights.length);
          },
 
          getItemsIndexes: function() {
@@ -139,8 +142,8 @@ define('Controls/List/Controllers/VirtualScroll',
 
          getPlaceholdersSizes: function() {
             return {
-               top: _private.getItemsHeight(this, 0, this._startItemIndex),
-               bottom: _private.getItemsHeight(this, this._stopItemIndex, this._itemsHeights.length)
+               top: this._topPlaceholderSize,
+               bottom: this._bottomPlaceholderSize
             };
          },
 
