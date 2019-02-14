@@ -223,13 +223,16 @@ define('Controls/Input/Mask',
                var
                   input = this._children.input,
                   value = this._viewModel.getDisplayValue(),
-                  replacer = this._options.replacer;
+                  replacer = this._options.replacer,
+                  self = this;
 
                /**
                 * At the moment of focus, the selectionEnd property is not set.
                 */
                runDelayed(function() {
-                  _private.setCaretPosition(input, input.selectionEnd, value, replacer);
+                  if(!self._options.readOnly) {
+                     _private.setCaretPosition(input, input.selectionEnd, value, replacer);
+                  }
                });
             },
 
