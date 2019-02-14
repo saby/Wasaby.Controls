@@ -274,17 +274,18 @@
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
+            var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
             
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
       
-            if (needSearchOnValueChanged || !newOptions.value && typeof newOptions.value === 'string') {
+            if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
    
-            if (needSearchOnValueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+            if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
       

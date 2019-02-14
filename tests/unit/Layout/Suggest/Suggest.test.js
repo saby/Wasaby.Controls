@@ -484,6 +484,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
+   
+         suggestComponent._options.value = 'test';
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: ''});
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: ''});
+         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_updateSuggestState', function() {
