@@ -433,6 +433,18 @@ define(
 
                assert.deepEqual(calls.length, 0);
             });
+            it('Focus the field by tab.', function() {
+               ctrl._beforeUpdate({
+                  value: 'test'
+               });
+
+               ctrl._focusInHandler();
+
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
          });
          describe('Focus out event', function() {
             var savedNotify = EventBus.globalChannel().notify;
