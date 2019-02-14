@@ -1,4 +1,5 @@
 #!groovy
+// тест ветки atf
 import java.time.*
 import java.lang.Math
 
@@ -764,7 +765,7 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS"""
+                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/SBIS3.CONTROLS/artifacts"""
 
                 writeFile file: "./controls/tests/int/VDOM/config.ini", text:
                     """# UTF-8
@@ -781,7 +782,7 @@ node('controls') {
                     ELEMENT_OUTPUT_LOG = locator
                     WAIT_ELEMENT_LOAD = 20
                     SHOW_CHECK_LOG = True
-                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM"""
+                    HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/int/VDOM/artifacts"""
 
 
                 writeFile file: "./controls/tests/reg/SBIS3.CONTROLS/config.ini",
@@ -797,7 +798,7 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS
+                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/SBIS3.CONTROLS/artifacts
                         SERVER = test-autotest-db1:5434
                         BASE_VERSION = css_${env.NODE_NAME}${ver}1
                         #BRANCH=True
@@ -818,7 +819,7 @@ node('controls') {
                         TAGS_TO_START = ${params.theme}
                         ELEMENT_OUTPUT_LOG = locator
                         WAIT_ELEMENT_LOAD = 20
-                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM
+                        HTTP_PATH = http://${env.NODE_NAME}:2100/controls_${version}/${BRANCH_NAME}/controls/tests/reg/VDOM/artifacts
                         SERVER = test-autotest-db1:5434
                         BASE_VERSION = css_${env.NODE_NAME}${ver}1
                         #BRANCH=True
@@ -1122,7 +1123,7 @@ node('controls') {
     }
     if ( (regr || all_regr) ){
         if (run_tests_reg_sbis3) {
-            dir("./controls/tests/reg/SBIS3.CONTROLS"){
+            dir("./controls/tests/reg/SBIS3.CONTROLS/artifacts"){
                 sh """mkdir -p reporter"""
                 sh """mv capture_report/report.html reporter/report.html"""
                 sh """mv capture_report/report.js reporter/report.js"""
@@ -1131,7 +1132,7 @@ node('controls') {
             }
         }
         if (run_tests_reg_vdom) {
-            dir("./controls/tests/reg/VDOM"){
+            dir("./controls/tests/reg/VDOM/artifacts"){
                 sh """mkdir -p reporter"""
                 sh """mv capture_report/report.html reporter/report.html"""
                 sh """mv capture_report/report.js reporter/report.js"""
