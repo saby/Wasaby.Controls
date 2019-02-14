@@ -307,8 +307,11 @@ define(
             var isDestroyNotified;
             Manager._notify = function(event, args, params) {
                isDestroyNotified = event === 'managerPopupDestroyed';
-               assert.isTrue(popupOptions === args[0].popupOptions);
-               assert.isTrue(params.hasOwnProperty('bubbling'));
+               if (event === 'managerPopupDestroyed') {
+                  assert.equal(popupOptions, args[1].getCount(), 0);
+               }
+               assert.equal(popupOptions, args[0].popupOptions);
+               assert.equal(params.hasOwnProperty('bubbling'), true);
             };
             id = Manager.show(popupOptions, new BaseController());
             Manager.remove(id);

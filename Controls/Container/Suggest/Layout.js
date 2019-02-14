@@ -14,11 +14,19 @@
    ],
    function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
       'use strict';
+      
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+      var HISTORY_KEYS_FIELD = 'historyKeys';
+      
+      /* if suggest is opened and marked key from suggestions list was changed,
+         we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
+      var ENTER_KEY = constants.key.enter;
       
       /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, constants.key.enter];
+      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, ENTER_KEY];
+      
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
+      
       var _private = {
          hasMore: function(searchResult) {
             return searchResult && searchResult.hasMore;
@@ -48,20 +56,38 @@
             });
          },
          
-         inputActivated: function(self) {
+         openWithHistory: function(self) {
+            var historyKeys = self._filter && self._filter[HISTORY_KEYS_FIELD];
             var filter;
             
-            if (self._options.autoDropDown && !self._options.readOnly) {
-               if (self._options.historyId) {
-                  _private.getRecentKeys(self).addCallback(function(keys) {
-                     if (keys) {
-                        filter = clone(self._options.filter || {});
-                        filter['historyKeys'] = keys;
-                        _private.setFilter(self, filter);
-                     }
+            if (!historyKeys) {
+               return _private.getRecentKeys(self).addCallback(function(keys) {
+                  if (keys && keys.length) {
+                     filter = clone(self._options.filter || {});
+                     filter[HISTORY_KEYS_FIELD] = keys;
+                     _private.setSearchValue(self, '');
+                     _private.setFilter(self, filter);
                      _private.open(self);
-                  });
-               } else {
+                  }
+                  return keys;
+               });
+            } else {
+               if (!self._options.suggestState) {
+                  _private.open(self);
+               }
+               return Deferred.success(historyKeys);
+            }
+         },
+         
+         setSearchValue: function(self, value) {
+            self._searchValue = value;
+         },
+         
+         inputActivated: function(self) {
+            if (self._options.autoDropDown && !self._options.readOnly) {
+               if (self._options.historyId && !self._searchValue) {
+                  _private.openWithHistory(self);
+               } else if (!self._options.suggestState) {
                   _private.updateSuggestState(self);
                }
             }
@@ -121,7 +147,7 @@
             return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
          },
          updateSuggestState: function(self) {
-            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
+            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown && !self._options.suggestState) {
                _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
@@ -163,7 +189,11 @@
             return self._historyServiceLoad;
          },
          getRecentKeys: function(self) {
-            var deferredWithKeys = new Deferred();
+            if (self._historyLoad) {
+               return self._historyLoad;
+            }
+   
+            self._historyLoad = new Deferred();
 
             //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
             _private.getHistoryService(self).addCallback(function(historyService) {
@@ -173,14 +203,14 @@
                   dataSet.getRow().get('recent').each(function(item) {
                      keys.push(item.get('ObjectId'));
                   });
-
-                  deferredWithKeys.callback(keys);
+   
+                  self._historyLoad.callback(keys);
                });
 
                return historyService;
             });
 
-            return deferredWithKeys;
+            return self._historyLoad;
          }
       };
 
@@ -210,8 +240,10 @@
          _searchDelay: null,
          _dependenciesDeferred: null,
          _historyService: null,
+         _historyLoad: null,
          _showContent: false,
          _inputActive: false,
+         _markedKeyChanged: false,
 
          /**
           * three state flag
@@ -226,7 +258,6 @@
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
             this._searchErrback = this._searchErrback.bind(this);
-            this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
             this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
             this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
@@ -240,20 +271,20 @@
             this._searchStart = null;
             this._searchEnd = null;
             this._searchErrback = null;
-            this._select = null;
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
+            var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
             
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
       
-            if (valueChanged) {
+            if (needSearchOnValueChanged || !newOptions.value && typeof newOptions.value === 'string') {
                this._searchValue = newOptions.value;
             }
    
-            if (valueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+            if (needSearchOnValueChanged || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
       
@@ -262,7 +293,7 @@
                this._dependenciesDeferred = null;
             }
       
-            if (this._options.footerTemplate !== newOptions.footerTemplate) {
+            if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
                this._dependenciesDeferred = null;
             }
             
@@ -284,14 +315,31 @@
             _private.close(this);
          },
          _changeValueHandler: function(event, value) {
+            var historyId = this._options.historyId;
+            var self = this;
+            var shouldSearch;
+            
             if (this._options.trim) {
                value = value.trim();
             }
-            this._searchValue = _private.shouldSearch(this, value) ? value : '';
+   
+            shouldSearch = _private.shouldSearch(this, value);
 
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
-            _private.updateSuggestState(this);
+            
+            if (!shouldSearch && historyId) {
+               _private.openWithHistory(this).addCallback(function(res) {
+                  if (!res.length && self._options.suggestState) {
+                     _private.close(self);
+                  }
+      
+                  return res;
+               });
+            } else {
+               _private.setSearchValue(self, shouldSearch ? value : '');
+               _private.updateSuggestState(this);
+            }
          },
          _inputActivated: function() {
             this._inputActive = true;
@@ -309,6 +357,7 @@
          },
          _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
+            this._markedKeyChanged = false;
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
             // otherwise interface will blink
@@ -318,7 +367,14 @@
 
             // move focus from tabs to input, after change tab
             this.activate();
+            
+            /* because activate() does not call _forceUpdate and _tabsSelectedKeyChanged is callback function,
+               we should call _forceUpdate, otherwise child controls (like suggestionsList) does not get new filter */
+            this._forceUpdate();
          },
+   
+         // <editor-fold desc="List handlers">
+         
          _select: function(event, item) {
             item = item || event;
             _private.close(this);
@@ -328,12 +384,20 @@
             this._inputActive = false;
             this._notify('choose', [item]);
             if (this._options.historyId) {
+               this._historyLoad = null;
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
                   return historyService;
                });
             }
          },
+   
+         _markedKeyChangedHandler: function() {
+            this._markedKeyChanged = true;
+         },
+   
+         // </editor-fold>
+         
          _searchStart: function() {
             this._loading = true;
             this._children.indicator.show();
@@ -387,11 +451,15 @@
          },
 
          _keydown: function(event) {
-            if (this._options.suggestState && IGNORE_HOT_KEYS.indexOf(event.nativeEvent.keyCode) !== -1) {
+            var eventKeyCode = event.nativeEvent.keyCode;
+            var needProcessKey = eventKeyCode === ENTER_KEY ? !this._markedKeyChanged : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            
+            if (this._options.suggestState && needProcessKey) {
                event.preventDefault();
-            }
-            if (this._children.inputKeydown) {
-               this._children.inputKeydown.start(event);
+               
+               if (this._children.inputKeydown) {
+                  this._children.inputKeydown.start(event);
+               }
             }
          }
 

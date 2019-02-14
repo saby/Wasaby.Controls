@@ -10,10 +10,11 @@ define(
       'Examples/DropdownList/MyDropdownList/MyDropdownList',
       'Core/core-instance',
       'Core/Deferred',
-      'Core/Context'
+      'Core/Context',
+      'Core/Control'
    ],
 
-   function(BaseOpener, DropdownExample, cInstance, Deferred, Context) {
+   function(BaseOpener, DropdownExample, cInstance, Deferred, Context, Control) {
       'use strict';
 
       var config = {
@@ -148,6 +149,12 @@ define(
             config.catchFocus = true;
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.autofocus, true);
+
+            config.template = 'Examples/DropdownList/MyDropdownList/MyDropdownList';
+            assert.equal(config.isCompoundTemplate, true);
+            config.template = 'Core/Control';
+            BaseOpener._preparePopupCfgFromOldToNew(config);
+            assert.equal(config.isCompoundTemplate, false);
          });
 
          it('prepareNotificationConfig', function() {
@@ -248,6 +255,8 @@ define(
             newConfig.template = 'Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea';
             newConfig.onResultHandler = 'onResultHandler';
             newConfig.onCloseHandler = 'onCloseHandler';
+            newConfig.onResultHandlerEvent = 'onResultHandlerEvent';
+            newConfig.onCloseHandlerEvent = 'onCloseHandlerEvent';
             BaseOpener._prepareConfigForNewTemplate(newConfig, DropdownExample);
             assert.isFalse(newConfig.border);
             assert.equal(newConfig.componentOptions.catchFocus, true);
@@ -257,6 +266,8 @@ define(
             assert.equal(newConfig.animation, 'off');
             assert.equal(newConfig.componentOptions.onResultHandler, newConfig.onResultHandler);
             assert.equal(newConfig.componentOptions.onCloseHandler, newConfig.onCloseHandler);
+            assert.equal(newConfig.componentOptions.onResultHandlerEvent, newConfig.onResultHandlerEvent);
+            assert.equal(newConfig.componentOptions.onCloseHandlerEvent, newConfig.onCloseHandlerEvent);
          });
 
          it('_prepareConfigFromNewToOld', function() {

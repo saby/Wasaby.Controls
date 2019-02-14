@@ -13,12 +13,14 @@
    position: relative;
    padding-right: @spacing_Path-between-home-and-backButton;
    min-width: 0;
+   width: 100%;
 }
 
 .controls-BreadCrumbsPath__home {
    .icon(@font-size_Path-home);
    cursor: pointer;
    color: @color_Path-home;
+   flex-shrink: 0;
 }
 
 .controls-BreadCrumbsPath__backButton__wrapper {
@@ -43,6 +45,7 @@
 }
 
 .controls-BreadCrumbsPath__breadCrumbs {
+   overflow: hidden;
    flex-grow: 1;
    padding-left: @spacing_Path-between-home-and-crumbs;
 }
@@ -59,7 +62,10 @@
 }
 
 .controls-BreadCrumbsPath__backButton_short {
-   flex-shrink: 1;
+   /**
+   Breadcrumbs should shrink only if the back button can't shrink any further, so the back button has to have drastically larger flex-shrink.
+    */
+   flex-shrink: 9999;
    min-width: @min-width_BackButton_short;
    overflow: hidden;
 }

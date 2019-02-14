@@ -86,7 +86,7 @@ define('Controls/Button/Close', [
             self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
             if (options.style !== undefined) {
                IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
-               if (options.style !== 'default') {
+               if (options.style === 'primary') {
                   IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
                   self._transparent = false;
                }

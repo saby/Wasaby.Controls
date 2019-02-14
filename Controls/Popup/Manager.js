@@ -35,8 +35,17 @@ define('Controls/Popup/Manager',
 
             self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
+               _private.fireEventHandler.call(self, id, 'onClose');
+               self._popupItems.remove(element);
+
+               // If the popup is not active, don't set the focus
+               if (element.isActive) {
+                  _private.activatePopup(self._popupItems);
+               }
+
+               _private.updateOverlay.call(self);
+               _private.redrawItems(self._popupItems);
                self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
-               return element;
             });
          },
 
@@ -382,22 +391,9 @@ define('Controls/Popup/Manager',
           * @param id popup id
           */
          remove: function(id) {
-            var self = this;
             var element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
-                  _private.fireEventHandler.call(self, id, 'onClose');
-                  self._popupItems.remove(element);
-
-                  // If the popup is not active, don't set the focus
-                  if (element.isActive) {
-                     _private.activatePopup(self._popupItems);
-                  }
-
-                  _private.updateOverlay.call(self);
-                  _private.redrawItems(self._popupItems);
-                  return element;
-               });
+               _private.removeElement.call(this, element, _private.getItemContainer(id), id);
             }
          },
 

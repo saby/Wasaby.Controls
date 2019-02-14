@@ -7,6 +7,7 @@ define('Controls/Utils/tmplNotify', [], function() {
     */
    return function(event, eventName) {
       var args = Array.prototype.slice.call(arguments, 2);
+      event.blockUpdate = true;
 
       return this._notify(eventName, args);
    };

@@ -61,6 +61,7 @@ define('Controls/Explorer', [
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
+            self._forceUpdate();
          },
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();

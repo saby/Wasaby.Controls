@@ -149,7 +149,17 @@ define('Controls/List/BaseControl', [
          return resDeferred;
       },
       scrollToItem: function(self, key) {
-         scrollToElement(self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)], true);
+         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
+         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
+         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
+         // https://git.sbis.ru/sbis/controls/merge_requests/65854
+         // corrupting integration tests
+         // fixed by error: https://online.sbis.ru/opendoc.html?guid=d348adda-5fee-4d1b-8cb7-9501026f4f3c
+         var
+            container = self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)];
+         if (container) {
+            scrollToElement(container, true);
+         }
       },
       setMarkedKey: function(self, key) {
          if (key !== undefined) {
@@ -724,7 +734,8 @@ define('Controls/List/BaseControl', [
             if (newOptions.virtualScrolling === true) {
                this._virtualScroll = new VirtualScroll({
                   virtualPageSize: newOptions.virtualPageSize,
-                  virtualSegmentSize: newOptions.virtualSegmentSize
+                  virtualSegmentSize: newOptions.virtualSegmentSize,
+                  updateItemsHeightsMode: newOptions.updateItemsHeightsMode
                });
             }
             this._loadTriggerVisibility = {
@@ -850,20 +861,16 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
          }
 
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);
          }
 
          if (filterChanged || recreateSource || sortingChanged) {
             _private.reload(this, newOptions);
+         }
+
+         if (this._virtualScroll && (this._listViewModel.getCount() != this._virtualScroll.getItemsCount())) {
+            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          }
 
       },
@@ -1031,6 +1038,7 @@ define('Controls/List/BaseControl', [
          }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
+         e.blockUpdate = true;
       },
 
       _viewResize: function() {
@@ -1107,6 +1115,7 @@ define('Controls/List/BaseControl', [
                this._itemDragData = itemData;
             }
          }
+         event.blockUpdate = true;
       },
 
       _onLoadMoreClick: function() {
@@ -1189,6 +1198,7 @@ define('Controls/List/BaseControl', [
                this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
+         event.blockUpdate = true;
       },
 
       _sortingChanged: function(event, propName, sortingType) {

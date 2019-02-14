@@ -281,7 +281,17 @@ function(cMerge,
             cfg.autofocus = cfg.catchFocus;
          }
 
-         cfg.isCompoundTemplate = true;
+         /**
+          * Let's protect ourselves from the case when the template was not loaded. In theory, this should not be.
+          */
+         if (requirejs.defined(cfg.template)) {
+            /**
+             * Determine the 'compound' or 'VDOM' template build.
+             */
+            cfg.isCompoundTemplate = !isVDOMTemplate(requirejs(cfg.template));
+         } else {
+            cfg.isCompoundTemplate = true;
+         }
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
@@ -301,6 +311,14 @@ function(cMerge,
 
          if (cfg.onCloseHandler) {
             cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
+         }
+
+         if (cfg.onCloseHandlerEvent) {
+            cfg.componentOptions.onCloseHandlerEvent = cfg.onCloseHandlerEvent;
+         }
+
+         if (cfg.onResultHandlerEvent) {
+            cfg.componentOptions.onResultHandlerEvent = cfg.onResultHandlerEvent;
          }
 
          this._setSizes(cfg, templateClass);
@@ -445,6 +463,14 @@ function(cMerge,
 
          if (newCfg.eventHandlers && newCfg.eventHandlers.onClose) {
             newCfg.dialogOptions.onCloseHandler = newCfg.eventHandlers.onClose;
+         }
+
+         if (newCfg._events && newCfg._events.onClose) {
+            newCfg.dialogOptions.onCloseHandlerEvent = newCfg._events.onClose;
+         }
+
+         if (newCfg._events && newCfg._events.onResult) {
+            newCfg.dialogOptions.onResultHandlerEvent = newCfg._events.onResult;
          }
 
          return newCfg;

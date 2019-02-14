@@ -6,10 +6,11 @@ define('Controls/Container/Suggest/List',
       'Core/Control',
       'wml!Controls/Container/Suggest/List/List',
       'Core/core-clone',
-      'Controls/Container/Suggest/Layout/_SuggestOptionsField'
+      'Controls/Container/Suggest/Layout/_SuggestOptionsField',
+      'Controls/Utils/tmplNotify'
    ],
    
-   function(Control, template, clone, _SuggestOptionsField) {
+   function(Control, template, clone, _SuggestOptionsField, tmplNotify) {
       
       /**
        * Container for list inside Suggest.
@@ -68,6 +69,7 @@ define('Controls/Container/Suggest/List',
       var List = Control.extend({
          
          _template: template,
+         _notifyHandler: tmplNotify,
          
          _beforeMount: function(options, context) {
             _private.checkContext(this, context);
@@ -91,6 +93,11 @@ define('Controls/Container/Suggest/List',
                Event should fired only once and after list was loading,
                because in this event user can change template of a List control. */
             this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
+            
+            //FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
+            if (this._options.task1176635657) {
+               this._notify('tabsSelectedKeyChanged', [key]);
+            }
          },
 
          _inputKeydown: function(event, domEvent) {

@@ -47,21 +47,6 @@ define('Controls/List/TreeGridView/TreeGridViewModel', [
          resetExpandedItems: function() {
             this._model.resetExpandedItems();
          },
-         getCurrentHeaderColumn: function() {
-            var
-               currentHeaderColumn = TreeGridViewModel.superclass.getCurrentHeaderColumn.apply(this, arguments),
-               headerClasses = '';
-
-            if (
-               this._options.multiSelectVisibility === 'hidden' && currentHeaderColumn.index === 0 ||
-               this._options.multiSelectVisibility !== 'hidden' && currentHeaderColumn.index === 1
-            ) {
-               headerClasses += ' controls-TreeGrid__header-row-expanderPadding';
-            }
-
-            currentHeaderColumn.cellClasses += headerClasses;
-            return currentHeaderColumn;
-         },
          getCurrent: function() {
             var
                current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
