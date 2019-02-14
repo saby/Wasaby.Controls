@@ -1,4 +1,5 @@
 <ws:partial template="{{_options.content}}"
+            scope="{{_options}}"
             on:controlResize="_resizeHandler()"
             on:scroll="_scrollHandler()"
             on:doScroll="_doScrollHandler()"
