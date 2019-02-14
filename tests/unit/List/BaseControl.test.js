@@ -1968,6 +1968,63 @@ define([
             assert.equal(instance._menuIsShown, null);
          });
 
+         describe('_listSwipe animation', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false
+               },
+               instance;
+            function initTest(multiSelectVisibility) {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     multiSelectVisibility: multiSelectVisibility,
+                     selectedKeysCount: 1
+                  };
+               instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+            }
+
+            it('multiSelectVisibility: visible, should start animation', function() {
+               initTest('visible');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: onhover, should start animation', function() {
+               initTest('onhover');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: hidden, should not start animation', function() {
+               initTest('hidden');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isNotOk(instance.getViewModel()._rightSwipedItem);
+            });
+         });
+
          it('_listSwipe  multiSelectStatus = true', function(done) {
             var callBackCount = 0;
             var

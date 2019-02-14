@@ -990,7 +990,11 @@ define('Controls/List/BaseControl', [
                key: itemData.key,
                status: itemData.multiSelectStatus
             };
-            this.getViewModel().setRightSwipedItem(itemData);
+
+            //Animation should be played only if checkboxes are visible.
+            if (this._options.multiSelectVisibility !== 'hidden') {
+               this.getViewModel().setRightSwipedItem(itemData);
+            }
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
