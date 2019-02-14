@@ -116,7 +116,7 @@ define('Controls/Dropdown/Controller',
                   this._open();
                   break;
                case 'itemClick':
-                  _private.selectItem.call(this, result.data);
+                  var res = _private.selectItem.call(this, result.data);
 
                   if (_private.isHistorySource(this._options.source)) {
                      this._options.source.update(result.data[0], _private.getMetaHistory());
@@ -129,7 +129,7 @@ define('Controls/Dropdown/Controller',
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
-                  if (!result.data[0].get(this._options.nodeProperty)) {
+                  if (res || !result.data[0].get(this._options.nodeProperty)) {
                      this._children.DropdownOpener.close();
                   }
                   break;
@@ -141,7 +141,7 @@ define('Controls/Dropdown/Controller',
 
          selectItem: function(item) {
             this._selectedItems = item;
-            this._notify('selectedItemsChanged', [this._selectedItems]);
+            return this._notify('selectedItemsChanged', [this._selectedItems]);
          }
       };
 
