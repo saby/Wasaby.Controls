@@ -541,6 +541,20 @@ define('Controls/Container/Scroll',
              */
             scrollToBottom: function() {
                _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+            },
+
+            selectedKeysChanged: function(event) {
+               if(event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('selectedKeysChanged', args);
+               }
+            },
+
+            excludedKeysChanged: function() {
+               if(event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('excludedKeysChanged', args);
+               }
             }
          });
 
