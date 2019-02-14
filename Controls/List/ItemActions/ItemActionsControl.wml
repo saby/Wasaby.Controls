@@ -2,6 +2,7 @@
         template="{{_options.content}}"
         scope="{{_options}}">
     <ws:itemActionsTemplate>
+        {{ '' }}
         <ws:partial
                 menuIsShown="{{_options.menuIsShown}}"
                 toolbarVisibility="{{_options.toolbarVisibility}}"
