@@ -116,7 +116,9 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         var lookup = new Lookup();
+         var
+            items = new collection.List(),
+            lookup = new Lookup();
 
          lookup._beforeMount({multiLine: true});
          lookup._beforeUpdate({});
@@ -137,6 +139,19 @@ define([
          assert.notEqual(lookup._maxVisibleItems, undefined);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
+
+         lookup._counterWidth = 30;
+         lookup._options.items = items;
+         lookup._beforeUpdate({
+            items: items
+         });
+         assert.equal(lookup._counterWidth, 30);
+
+         lookup._beforeUpdate({
+            items: items,
+            readOnly: true
+         });
+         assert.equal(lookup._counterWidth, undefined);
       });
 
       it('_changeValueHandler', function() {
