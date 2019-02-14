@@ -58,6 +58,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
          _beforeUnmount: function() {
             this._notify('unregisterOpenerUpdateCallback', [this._openerUpdateCallback], { bubbling: true });
+            this._toggleIndicator(false);
             if (this._options.closePopupBeforeUnmount) {
                if (this._useVDOM()) {
                   this._popupIds.forEach(function(popupId) {
