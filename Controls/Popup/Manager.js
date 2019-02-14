@@ -161,8 +161,7 @@ define('Controls/Popup/Manager',
          popupControlResize: function(id) {
             var element = ManagerController.find(id);
             if (element) {
-               element.controller.popupResize(element, _private.getItemContainer(id));
-               return true;
+               return element.controller.popupResize(element, _private.getItemContainer(id));
             }
             return false;
          },

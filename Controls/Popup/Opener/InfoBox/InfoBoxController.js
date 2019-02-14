@@ -127,7 +127,7 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
          },
 
          popupResize: function(element, container) {
-            InfoBoxController.superclass.elementUpdated.call(this, element, container);
+            return InfoBoxController.superclass.elementUpdated.call(this, element, container);
          },
 
          elementDestroyed: function(item) {

@@ -170,7 +170,7 @@ define('Controls/Popup/Opener/BaseController',
          },
 
          popupResize: function(element, container) {
-            this.elementUpdated(element, container);
+            return this._elementUpdated(element, container);
          },
 
          elementAnimated: function() {
