@@ -2,7 +2,7 @@
     <ws:template name="suggestTpl">
         <ws:partial template="{{'Controls/Container/Suggest/Layout/_SuggestListWrapper'}}"
                     on:itemClick="_select()"
-                    on:tabsSelectedKeyChanged="_tabsSelectedKeyChanged()"
+                    on:markedKeyChanged="_markedKeyChangedHandler()"
                     templateName="{{_options.suggestTemplate.templateName}}"
                     templateOptions="{{_options.suggestTemplate.templateOptions}}"
                     searchEndCallback="{{_searchEnd}}"
@@ -16,6 +16,7 @@
                     searchParam="{{_options.searchParam}}"
                     tabsSelectedKey="{{_tabsSelectedKey}}"
                     searchDelay="{{_searchDelay}}"
+                    tabsSelectedKeyChangedCallback="{{_tabsSelectedKeyChanged}}"
                     name="suggestListWrapper"
         />
     </ws:template>
@@ -55,14 +56,13 @@
         </ws:partial>
     </ws:if>
 
-    <Controls.Popup.Opener.Stack name="stackOpener">
+    <Controls.Popup.Opener.Stack name="stackOpener" on:result="_select()">
         <ws:popupOptions template="Controls/Container/Suggest/Layout/Dialog">
             <ws:templateOptions searchValue="{{_searchValue}}" filter="{{_filter}}">
                 <ws:template>
                     <ws:partial template="suggestTpl"/>
                 </ws:template>
             </ws:templateOptions>
-            <ws:eventHandlers onResult="{{_select}}"/>
         </ws:popupOptions>
     </Controls.Popup.Opener.Stack>
 

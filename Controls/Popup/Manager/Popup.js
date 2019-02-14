@@ -2,12 +2,21 @@ define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
       'wml!Controls/Popup/Manager/Popup',
+      'Controls/Popup/Compatible/EscProcessing',
       'Core/helpers/Function/runDelayed',
       'Core/constants',
       'wml!Controls/Popup/Manager/PopupContent'
    ],
-   function(Control, template, runDelayed, CoreConstants) {
+   function(Control, template, EscProcessing, runDelayed, CoreConstants) {
       'use strict';
+
+      var _private = {
+         keyUp: function(event) {
+            if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
+               this._close();
+            }
+         }
+      };
 
       var Popup = Control.extend({
 
@@ -38,6 +47,12 @@ define('Controls/Popup/Manager/Popup',
          // Register the openers that initializing inside current popup
          // After updating the position of the current popup, calls the repositioning of popup from child openers
          _openersUpdateCallback: [],
+
+         constructor: function() {
+            Popup.superclass.constructor.apply(this, arguments);
+
+            this._escProcessing = new EscProcessing();
+         },
 
          _beforeMount: function() {
             // Popup лишний раз провоцирет обновление, реагируя на события внутри него.
@@ -123,11 +138,6 @@ define('Controls/Popup/Manager/Popup',
          _update: function() {
             this._notify('popupUpdated', [this._options.id], { bubbling: true });
 
-            // After updating popup will be taking autofocus
-            if (this._options.autofocus) {
-               this.activate();
-            }
-
             // After updating popup position we will updating the position of the popups open with it.
             runDelayed(this._callOpenersUpdate.bind(this));
          },
@@ -147,9 +157,11 @@ define('Controls/Popup/Manager/Popup',
           * @param event
           */
          _keyUp: function(event) {
-            if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               this._close();
-            }
+            this._escProcessing.keyUpHandler(_private.keyUp, this, [event]);
+         },
+
+         _keyDown: function(e) {
+            this._escProcessing.keyDownHandler(e);
          }
       });
 

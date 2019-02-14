@@ -65,6 +65,10 @@ define('Controls/Selector/SelectedCollection',
             }
 
             return selectedCollectionUtils.getCounterWidth(itemsCount);
+         },
+
+         isShowCounter: function(itemsLength, maxVisibleItems) {
+            return itemsLength > maxVisibleItems;
          }
       };
 
@@ -79,6 +83,7 @@ define('Controls/Selector/SelectedCollection',
             this._onResult = _private.onResult.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
+            this._templateOptions = _private.getTemplateOptions(this, options);
             this._counterWidth = options._counterWidth || 0;
          },
 
@@ -86,13 +91,20 @@ define('Controls/Selector/SelectedCollection',
             this._items = _private.getItemsInArray(newOptions.items);
             this._visibleItems = _private.getVisibleItems(this._items, newOptions.maxVisibleItems);
             this._templateOptions = _private.getTemplateOptions(this, newOptions);
-            this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length, newOptions.readOnly, newOptions.itemsLayout);
+
+            if (_private.isShowCounter(this._items.length, newOptions.maxVisibleItems)) {
+               this._counterWidth = newOptions._counterWidth || _private.getCounterWidth(this._items.length, newOptions.readOnly, newOptions.itemsLayout);
+            }
          },
 
          _afterMount: function() {
-            this._counterWidth = this._counterWidth || _private.getCounterWidth(this._items.length, this._options.readOnly, this._options.itemsLayout);
-            this._templateOptions = _private.getTemplateOptions(this, this._options);
-            this._forceUpdate();
+            if (_private.isShowCounter(this._items.length, this._options.maxVisibleItems) && !this._counterWidth) {
+               this._counterWidth = this._counterWidth || _private.getCounterWidth(this._items.length, this._options.readOnly, this._options.itemsLayout);
+
+               if (this._counterWidth) {
+                  this._forceUpdate();
+               }
+            }
          },
 
          _onResult: function(event, item) {

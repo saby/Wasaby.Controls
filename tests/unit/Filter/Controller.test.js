@@ -339,6 +339,12 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
             value: 'testValue2',
             textValue: 'textTextValue',
             resetValue: ''
+         }, {
+            id: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            resetValue: '',
+            visibility: true
          }];
          var minItems = Filter._private.minimizeFilterItems(items);
          assert.deepEqual(minItems, [{
@@ -349,13 +355,18 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          }, {
             id: 'testId2',
             value: 'testValue',
-            textValue: '',
+            textValue: undefined,
             visibility: false
          }, {
             id: 'testId3',
             value: 'testValue2',
             textValue: 'textTextValue',
             visibility: undefined
+         }, {
+            id: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            visibility: true
          }]);
       });
 
@@ -469,6 +480,30 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
             resetValue: ''
          }];
          assert.isTrue(Filter._private.isFilterChanged(filterButtonItems, fastFilterItems));
+         fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }];
+
+         filterButtonItems = [{
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId4',
+            value: '',
+            resetValue: ''
+         }];
+         assert.isFalse(Filter._private.isFilterChanged(filterButtonItems, fastFilterItems));
       });
 
       it('_private.getHistoryData', function() {

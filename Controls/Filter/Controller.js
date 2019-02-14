@@ -69,7 +69,7 @@ define('Controls/Filter/Controller',
                minItems.push({
                   id: getPropValue(item, 'id'),
                   value: getPropValue(item, 'value'),
-                  textValue: getPropValue(item, 'textValue'),
+                  textValue: getPropValue(item, 'visibility') !== false ? getPropValue(item, 'textValue') : undefined,
                   visibility: getPropValue(item, 'visibility')
                });
             });
@@ -174,7 +174,8 @@ define('Controls/Filter/Controller',
             var filter = {};
 
             function processItems(elem) {
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue'))) {
+               // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
                   filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
                }
             }

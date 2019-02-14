@@ -2,6 +2,9 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    'Core/Control',
    'Types/entity',
    'Core/constants',
+   'Controls/Popup/Compatible/EscProcessing',
+   'Controls/Decorator/Markup/Converter',
+   'Core/IoC',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/content',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/footer',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/message',
@@ -11,6 +14,9 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 ], function(Control,
    entity,
    constants,
+   EscProcessing,
+   MarkupConverter,
+   IoC,
    contentTemplate,
    footerTemplate,
    messageTemplate,
@@ -87,6 +93,17 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
        * @param {Result} Результат
        */
 
+   var _private = {
+      keyPressed: function(e) {
+         if (e.nativeEvent.keyCode === constants.key.esc) {
+            // for 'ok' and 'yesnocancel' type value equal undefined
+            var result = this._options.type === 'yesno' ? false : undefined;
+            this._sendResult(null, result);
+            e.stopPropagation();
+         }
+      }
+   };
+
    var Submit = Control.extend({
       _template: template,
       _messageMaxLength: 100,
@@ -96,18 +113,31 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
       _contentTemplate: contentTemplate,
       _footerTemplate: footerTemplate,
 
+      constructor: function() {
+         Submit.superclass.constructor.apply(this, arguments);
+
+         this._escProcessing = new EscProcessing();
+      },
+
       _sendResult: function(e, res) {
          this._options.closeHandler(res);
          this._notify('close');
       },
 
+      _keyDown: function(e) {
+         this._escProcessing.keyDownHandler(e);
+      },
+
       _keyPressed: function(e) {
-         if (e.nativeEvent.keyCode === constants.key.esc) {
-            // for 'ok' and 'yesnocancel' type value equal undefined
-            var result = this._options.type === 'yesno' ? false : undefined;
-            this._sendResult(null, result);
-            e.stopPropagation();
+         this._escProcessing.keyUpHandler(_private.keyPressed, this, [e]);
+      },
+      _getMessage: function() {
+         var message = this._options.message || '';
+         if (message.indexOf('<a') > -1 && message.indexOf('</a>') > -1) {
+            IoC.resolve('ILogger').error('Confirmation', 'В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.');
+            return MarkupConverter.htmlToJson('<span>' + message + '</span>');
          }
+         return message;
       }
    });
 

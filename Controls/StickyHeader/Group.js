@@ -113,6 +113,7 @@ define('Controls/StickyHeader/Group',
          },
 
          _stickyRegisterHandler: function(event) {
+            event.blockUpdate = true;
             event.stopImmediatePropagation();
          }
       });

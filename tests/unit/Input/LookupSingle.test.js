@@ -52,8 +52,10 @@ define([
       });
 
       it('isShowCounter', function() {
-         assert.isTrue(Lookup._private.isShowCounter(10, 5));
-         assert.isFalse(Lookup._private.isShowCounter(10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(true, 10, 5));
+         assert.isFalse(Lookup._private.isShowCounter(true, 10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(false, 2));
+         assert.isFalse(Lookup._private.isShowCounter(false, 1));
       });
 
       it('getLastRowCollectionWidth', function() {
@@ -117,9 +119,7 @@ define([
          var lookup = new Lookup();
 
          lookup._beforeMount({multiLine: true});
-         lookup._beforeUpdate({
-            items: new collection.List()
-         });
+         lookup._beforeUpdate({});
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 

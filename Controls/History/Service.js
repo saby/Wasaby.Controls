@@ -126,7 +126,7 @@ define('Controls/History/Service', [
       }
    };
 
-   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin], {
+   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
       _historyDataSource: null,
       _historyId: null,
       _historyIds: null,
