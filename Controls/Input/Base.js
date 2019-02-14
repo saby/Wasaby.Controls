@@ -745,8 +745,6 @@ define('Controls/Input/Base',
          _focusInHandler: function() {
             if (this._focusByMouseDown) {
                this._firstClick = true;
-            } else {
-               this._viewModel.select();
             }
 
             this._focusByMouseDown = false;
