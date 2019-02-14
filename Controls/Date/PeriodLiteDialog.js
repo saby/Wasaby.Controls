@@ -171,7 +171,9 @@ define('Controls/Date/PeriodLiteDialog', [
       },
 
       _onYearMouseEnter: function() {
-         this._yearHovered = true;
+         if (this._options.chooseYears) {
+            this._yearHovered = true;
+         }
       },
 
       _onYearMouseLeave: function() {
@@ -232,7 +234,9 @@ define('Controls/Date/PeriodLiteDialog', [
       },
 
       _onYearClick: function(event, year) {
-         this._notify('sendResult', [new Date(year, 0, 1), new Date(year, 11, 31)], { bubbling: true });
+         if (this._options.chooseYears) {
+            this._notify('sendResult', [new Date(year, 0, 1), new Date(year, 11, 31)], {bubbling: true});
+         }
       },
 
       _onHalfYearClick: function(event, halfYear) {
