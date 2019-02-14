@@ -1,7 +1,7 @@
 //specific filterPanel width
-@width_FilterPanel-size_m:                                    @max-width_sm;
-@width_FilterPanel-size_l:                                    @max-width_2sl;
-@width_FilterPanel-size_xl:                                   @max-width_l;
+@width_FilterPanel-size_m:                                    @width_FilterPanel-size_m_val;
+@width_FilterPanel-size_l:                                    @width_FilterPanel-size_l_val;
+@width_FilterPanel-size_xl:                                   @width_FilterPanel-size_xl_val;
 
 //Header of filterPanel
 @spacing_FilterPanel-between-resetButton-applyButton:         @spacing_default_xl;
@@ -46,5 +46,5 @@
 @max-height_FilterPanel-expandable-block:                     @height_control_default*5; //max height depends on default control height. By control standard must be visible only 5 rows.
 
 //Popup shift
-@shift-top_FilterButton-popup:                                -@spacing_extra_l;
+@shift-top_FilterButton-popup:                                @shift-top_FilterButton-popup_val;
 @shift-left_FilterButton-popup:                               @spacing_default_m;
