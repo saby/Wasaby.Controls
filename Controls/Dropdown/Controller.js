@@ -4,12 +4,11 @@ define('Controls/Dropdown/Controller',
       'wml!Controls/Dropdown/Controller',
       'Controls/Controllers/SourceController',
       'Types/chain',
-      'Core/core-merge',
-      'Controls/History/Source',
+      'Controls/History/dropdownHistoryUtils',
       'Controls/Dropdown/Util'
    ],
 
-   function(Control, template, SourceController, chain, Merge, historySource, dropdownUtils) {
+   function(Control, template, SourceController, chain, historyUtils, dropdownUtils) {
       'use strict';
 
       /**
@@ -61,26 +60,8 @@ define('Controls/Dropdown/Controller',
          defaultSelectedKeys = [];
 
       var _private = {
-         getMetaHistory: function() {
-            return {
-               $_history: true
-            };
-         },
-
-         isHistorySource: function(source) {
-            return source instanceof historySource;
-         },
-
-         getFilter: function(filter, source) {
-            // TODO: Избавиться от проверки, когда будет готово решение задачи https://online.sbis.ru/opendoc.html?guid=e6a1ab89-4b83-41b1-aa5e-87a92e6ff5e7
-            if (_private.isHistorySource(source)) {
-               return Merge(_private.getMetaHistory(), filter || {});
-            }
-            return filter;
-         },
-
          loadItems: function(self, options) {
-            self._filter = _private.getFilter(options.filter, options.source);
+            self._filter = historyUtils.getSourceFilter(options.filter, options.source);
             self._sourceController = new SourceController({
                source: options.source,
                navigation: options.navigation
@@ -118,8 +99,8 @@ define('Controls/Dropdown/Controller',
                case 'itemClick':
                   var res = _private.selectItem.call(this, result.data);
 
-                  if (_private.isHistorySource(this._options.source)) {
-                     this._options.source.update(result.data[0], _private.getMetaHistory());
+                  if (historyUtils.isHistorySource(this._options.source)) {
+                     this._options.source.update(result.data[0], historyUtils.getMetaHistory());
                   }
 
                   // FIXME тут необходимо перевести на кэширующий источник,
