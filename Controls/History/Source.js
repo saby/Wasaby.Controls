@@ -77,9 +77,9 @@ define('Controls/History/Source', [
                frequent: frequent,
                recent: recent
             };
-            if (self.historySource._pinned instanceof Array) {
-               self.historySource._pinned.forEach(function(pinId) {
-                  pinned.add(_private.getRawHistoryItem(self, pinId, self.historySource.getHistoryId()));
+            if (self._pinned instanceof Array) {
+               self._pinned.forEach(function(pinId) {
+                  self._history.pinned.add(_private.getRawHistoryItem(self, pinId, self.historySource.getHistoryId()));
                });
             }
          } else {
@@ -351,6 +351,7 @@ define('Controls/History/Source', [
          this._parentProperty = cfg.parentProperty;
          this._nodeProperty = cfg.nodeProperty;
          this._displayProperty = cfg.displayProperty;
+         this._pinned = cfg.pinned;
       },
 
       create: function(meta) {

@@ -71,6 +71,7 @@ define('Controls/Filter/Fast',
                idProperty: keyProperty
             });
 
+            // As the data source can be history source, then you need to merge the filter
             return sourceController.load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
                instance._items = items;
                if (dataLoadCallback) {

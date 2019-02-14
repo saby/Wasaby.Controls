@@ -333,10 +333,10 @@ define(
                   data: items
                });
                memorySource.query().addCallback(function(res) {
-                  let self = {historySource: ['1', '2']};
+                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
                   let sourceItems = res.getAll();
                   historySource._private.initHistory(self, newData, sourceItems);
-                  assert.equal(self._history.pinned.getCount(), 1);
+                  assert.equal(self._history.pinned.getCount(), 3);
                   self._history.pinned.forEach(function(pinnedItem){
                      assert.isFalse(pinnedItem.getId()=='9');
                   });
