@@ -133,6 +133,13 @@ define([
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
+         it('trim', function() {
+            var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
+            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            assert.deepEqual(Converter.htmlToJson(html), json);
+            assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
+         });
+
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
