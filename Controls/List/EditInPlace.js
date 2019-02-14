@@ -56,9 +56,11 @@ define('Controls/List/EditInPlace', [
             if (eventResult === EditConstants.CANCEL) {
                result = Deferred.success({ cancelled: true });
             } else if (eventResult && eventResult.addBoth) {
-               self._notify('showIndicator', [], { bubbling: true });
+               var cfg = {};
+
+               self._notify('showIndicator', [cfg], { bubbling: true });
                eventResult.addBoth(function(defResult) {
-                  self._notify('hideIndicator', [], { bubbling: true });
+                  self._notify('hideIndicator', [cfg.id], { bubbling: true });
                   return defResult;
                });
                result = eventResult;
