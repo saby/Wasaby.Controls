@@ -126,6 +126,10 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             ManagerController.remove(this._openedPopupId);
          },
 
+         popupResize: function(element, container) {
+            return InfoBoxController.superclass.elementUpdated.call(this, element, container);
+         },
+
          elementDestroyed: function(item) {
             if (item.id === this._openedPopupId) {
                this._openedPopupId = null;

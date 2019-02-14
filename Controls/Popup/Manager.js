@@ -167,6 +167,14 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupControlResize: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               return element.controller.popupResize(element, _private.getItemContainer(id));
+            }
+            return false;
+         },
+
          popupDragEnd: function(id, offset) {
             var element = ManagerController.find(id);
             if (element) {
