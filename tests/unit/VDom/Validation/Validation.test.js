@@ -1,7 +1,9 @@
 define([
    'Controls/Validate/FormController',
-   'Core/Deferred'
-], function(ValidateFC, Deferred) {
+   'Controls/Validate/Controller',
+   'Core/Deferred',
+   'tests/resources/ProxyCall',
+], function(ValidateFC, Controller, Deferred, ProxyCall) {
    'use strict';
 
    function getValidator(validateResult) {
@@ -28,6 +30,22 @@ define([
       return validator;
    }
 
+   describe('Validate/Controller', () => {
+      var calls = [];
+      var validCtrl = new Controller();
+      validCtrl._notify = ProxyCall.apply(validCtrl._notify, 'notify', calls, true);
+      it('valueChangedNotify', () => {
+         validCtrl._valueChangedHandler(null, 'test');
+         assert.deepEqual(calls, [{
+            name: 'notify',
+            arguments: ['valueChanged', ['test']]
+         }]);
+      });
+      it('cleanValid', () => {
+         validCtrl._valueChangedHandler();
+         assert.deepEqual(validCtrl._validationResult, undefined);
+      });
+   });
    describe('Validate/FormController', () => {
       it('add/remove validator', () => {
          let FC = new ValidateFC();

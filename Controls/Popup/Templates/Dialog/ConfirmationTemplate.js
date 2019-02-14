@@ -51,6 +51,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           * @cfg {String} Option description.
           * @variant m
           * @variant l
+          * @default m
           */
 
          /**

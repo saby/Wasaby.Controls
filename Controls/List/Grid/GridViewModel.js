@@ -5,8 +5,10 @@ define('Controls/List/Grid/GridViewModel', [
    'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
-   'Core/detection'
-], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection) {
+   'Core/detection',
+   'Core/helpers/Object/isEqual',
+   'Controls/StickyHeader/Utils'
+], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual, stickyUtil) {
    'use strict';
 
    var
@@ -35,13 +37,12 @@ define('Controls/List/Grid/GridViewModel', [
             if (params.columnIndex === params.columns.length - 1) {
                preparedClasses += ' controls-Grid__cell_spacingLastCol_' + (params.itemPadding.right || 'default').toLowerCase();
             }
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
-            preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
-
-            // Вертикальное выравнивание хедера
-            if (params.columns[params.columnIndex].valign) {
-               preparedClasses += ' controls-Grid__header-cell_valign_' + params.columns[params.columnIndex].valign;
+            if (!params.isHeader) {
+               preparedClasses += ' controls-Grid__row-cell_rowSpacingTop_' + (params.itemPadding.top || 'default').toLowerCase();
+               preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
+
+
             return preparedClasses;
          },
 
@@ -86,8 +87,16 @@ define('Controls/List/Grid/GridViewModel', [
 
             if (current.isSelected) {
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
+
                if (current.columnIndex === 0) {
-                  cellClasses += ' controls-Grid__row-cell_selected__first' + ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
+
+                  /* В старых браузерах маркер навешивается стилями данного класса, т.к. вёрстка там другая.
+                  *  Не навешиваем класс, если не нужно показывать маркер
+                  */
+                  if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
+                     cellClasses += ' controls-Grid__row-cell_selected__first';
+                  }
+                  cellClasses += ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
                   cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
@@ -138,7 +147,9 @@ define('Controls/List/Grid/GridViewModel', [
                   value = params.value,
                   prevValue = params.prevValue,
                   state = params.state;
-               if (value === prevValue) {
+
+               // isEqual works with any types
+               if (isEqual(value, prevValue)) {
                   state.ladderLength++;
                } else {
                   params.ladder.ladderLength = state.ladderLength;
@@ -175,8 +186,8 @@ define('Controls/List/Grid/GridViewModel', [
                      ladder[idx][ladderProperties[fIdx]] = {};
                      processLadder({
                         itemIndex: idx,
-                        value: item.get(ladderProperties[fIdx]),
-                        prevValue: prevItem ? prevItem.get(ladderProperties[fIdx]) : undefined,
+                        value: item.get ? item.get(ladderProperties[fIdx]) : undefined,
+                        prevValue: prevItem && prevItem.get ? prevItem.get(ladderProperties[fIdx]) : undefined,
                         state: ladderState[ladderProperties[fIdx]],
                         ladder: ladder[idx][ladderProperties[fIdx]]
                      });
@@ -251,8 +262,8 @@ define('Controls/List/Grid/GridViewModel', [
                self._notify('onGroupsExpandChange', changes);
             });
             this._ladder = _private.prepareLadder(this);
-            this.setColumns(this._options.columns);
-            this.setHeader(this._options.header);
+            this._setColumns(this._options.columns);
+            this._setHeader(this._options.header);
          },
 
          _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
@@ -291,9 +302,13 @@ define('Controls/List/Grid/GridViewModel', [
             return this._header;
          },
 
-         setHeader: function(columns) {
+         _setHeader: function(columns) {
             this._header = columns;
             this._prepareHeaderColumns(this._header, this._options.multiSelectVisibility !== 'hidden');
+         },
+
+         setHeader: function(columns) {
+            this._setHeader(columns);
             this._nextVersion();
             this._notify('onListChange');
          },
@@ -327,6 +342,9 @@ define('Controls/List/Grid/GridViewModel', [
                   column: this._headerColumns[this._curHeaderColumnIndex],
                   index: columnIndex
                };
+            if (!stickyUtil.isStickySupport()) {
+               cellClasses = cellClasses + ' controls-Grid__header-cell_static';
+            }
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (this._options.multiSelectVisibility !== 'hidden' && columnIndex === 0) {
@@ -337,11 +355,15 @@ define('Controls/List/Grid/GridViewModel', [
                   columns: this._headerColumns,
                   columnIndex: columnIndex,
                   multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
-                  itemPadding: this._model.getItemPadding()
+                  itemPadding: this._model.getItemPadding(),
+                  isHeader: true
                });
             }
             if (headerColumn.column.align) {
                cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
+            }
+            if (headerColumn.column.valign) {
+               cellClasses += ' controls-Grid__header-cell_valign_' + headerColumn.column.valign;
             }
             headerColumn.cellClasses = cellClasses;
 
@@ -464,11 +486,15 @@ define('Controls/List/Grid/GridViewModel', [
          // -------------------------- items --------------------------
          // -----------------------------------------------------------
 
-         setColumns: function(columns) {
+         _setColumns: function(columns) {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
+         },
+
+         setColumns: function(columns) {
+            this._setColumns(columns);
             this._nextVersion();
             this._notify('onListChange');
          },
@@ -481,6 +507,16 @@ define('Controls/List/Grid/GridViewModel', [
          setRightSpacing: function(rightSpacing) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setRightSpacing(rightSpacing);
+         },
+
+         setLeftPadding: function(leftPadding) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setLeftPadding(leftPadding);
+         },
+
+         setRightPadding: function(rightPadding) {
+            //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
+            this._model.setRightPadding(rightPadding);
          },
 
          setRowSpacing: function(rowSpacing) {
@@ -549,6 +585,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
+         },
+
+         setIndexes: function(startIndex, stropIndex) {
+            this._model.setIndexes(startIndex, stropIndex);
          },
 
          getSwipeItem: function() {
@@ -628,7 +668,8 @@ define('Controls/List/Grid/GridViewModel', [
                      index: current.index,
                      key: current.key,
                      getPropValue: current.getPropValue,
-                     isEditing: current.isEditing
+                     isEditing: current.isEditing,
+                     isActive: current.isActive
                   };
                currentColumn.columnIndex = current.columnIndex;
                currentColumn.cellClasses = current.getItemColumnCellClasses(current, currentColumn.columnIndex);
@@ -758,6 +799,11 @@ define('Controls/List/Grid/GridViewModel', [
 
          setSwipeItem: function(itemData) {
             this._model.setSwipeItem(itemData);
+         },
+
+         setRightSwipedItem: function(itemData) {
+            this._model.setRightSwipedItem(itemData);
+            this._nextVersion();
          },
 
          setShowRowSeparator: function(showRowSeparator) {

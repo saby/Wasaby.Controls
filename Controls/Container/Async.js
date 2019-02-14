@@ -50,17 +50,32 @@ define('Controls/Container/Async',
       var Async = Base.extend({
          _template: template,
          optionsForComponent: {},
+         canUpdate: true,
          _beforeMount: function(options) {
-            var self = this;
+            var promiseResult;
             if (typeof window !== 'undefined') {
-               return self._loadContentAsync(options.templateName, options.templateOptions);
+               promiseResult = this._loadContentAsync(options.templateName, options.templateOptions, true);
+            } else {
+               promiseResult = this._loadServerSide(options.templateName, options.templateOptions);
+
+               // We don't need to return resolved template on server
+               // We just need to wait till it loaded
+               promiseResult = promiseResult.then(function() {
+                  return null;
+               });
             }
-            this._loadServerSide(options.templateName, options.templateOptions);
-            return true;
+            return promiseResult;
          },
 
          _beforeUpdate: function(options) {
-            this._loadContentAsync(options.templateName, options.templateOptions);
+            if (!this.canUpdate) {
+               return;
+            }
+            if (options.templateName !== this._options.templateName) {
+               this._loadContentAsync(options.templateName, options.templateOptions);
+            } else if (options.templateOptions !== this._options.templateOptions) {
+               this._updateOptionsForComponent(this.optionsForComponent.resolvedTemplate, options.templateOptions);
+            }
          },
 
          _setErrorState: function(errorState, message) {
@@ -74,24 +89,35 @@ define('Controls/Container/Async',
          },
 
          _loadServerSide: function(name, options) {
-            var tpl;
-            try {
-               tpl = this._loadFileSync(name);
-               this._pushDepToHeadData(name);
-               this._updateContent(tpl, options);
-            } catch (e) {
-               IoC.resolve('ILogger').error('Couldn\'t load ' + name, e);
-               this._setErrorState(true, e);
-            }
-         },
-
-         _loadContentAsync: function(name, options) {
             var self = this;
             var promise = this._loadFileAsync(name);
             promise.then(function(res) {
                self._setErrorState(false);
-               self._updateContent(res, options);
+               self._updateOptionsForComponent(res, options);
+               self._pushDepToHeadData(library.parse(name).name);
             }, function(err) {
+               IoC.resolve('ILogger').error('Couldn\'t load ' + name, err);
+               self._setErrorState(true, err);
+            });
+            return promise;
+         },
+
+         _loadContentAsync: function(name, options, noUpdate) {
+            var self = this;
+            var promise = this._loadFileAsync(name);
+
+            // Need this flag to prevent setting new options for content
+            // that wasn't loaded yet
+            self.canUpdate = false;
+            promise.then(function(res) {
+               self.canUpdate = true;
+               self._setErrorState(false);
+               self._updateOptionsForComponent(res, options);
+               if (!noUpdate) {
+                  self._forceUpdate();
+               }
+            }, function(err) {
+               self.canUpdate = true;
                self._setErrorState(true, err);
             });
             return promise;
@@ -105,14 +131,9 @@ define('Controls/Container/Async',
             }
          },
 
-         _updateContent: function(tpl, opts) {
+         _updateOptionsForComponent: function(tpl, opts) {
             this.optionsForComponent = opts || {};
             this.optionsForComponent.resolvedTemplate = tpl;
-            this._forceUpdate();
-         },
-
-         _loadFileSync: function(name) {
-            return Utils.RequireHelper.require(name);
          },
 
          _loadFileAsync: function(name) {

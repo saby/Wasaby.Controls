@@ -14,6 +14,21 @@
     transform: translate(100%, 0);
   }
 }
+
+@keyframes rightSwipe {
+   0% {
+      transform: translateX(0);
+   }
+
+   50% {
+      transform: translateX(16px);
+   }
+
+   100% {
+      transform: translateX(0);
+   }
+}
+
 .controls-itemActionsV_swipe_animationContainer {
   position:absolute;
   right: 0;
@@ -22,7 +37,7 @@
   height: 100%;
   box-sizing: border-box;
   background-color: transparent;
-  z-index: 99;
+  z-index: 2;
 }
 .controls-itemActionsV_swipe {
   align-items:center;
@@ -117,4 +132,8 @@
 .controls-itemActionsV__action_title_lonely {
   height: @font-size_swipe_icon_small;
   line-height: @font-size_swipe_icon_small;
+}
+
+.controls-ListView__item_rightSwipeAnimation {
+   animation: rightSwipe 0.3s;
 }

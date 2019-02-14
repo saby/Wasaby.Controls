@@ -41,6 +41,14 @@ define('Controls/Input/Search/Suggest',
             this._notify('valueChanged', [item.get(this._options.displayProperty) || '']);
          },
          
+         _close: function() {
+            /* need clear text on close button click (by standart http://axure.tensor.ru/standarts/v7/строка_поиска__версия_01_.html).
+               Notify event only if value is not empty, because event listeners expect, that the value is really changed */
+            if (this._options.value) {
+               this._notify('valueChanged', ['']);
+            }
+         },
+         
          _beforeUpdate: function(newOptions) {
             if (this._options.suggestState !== newOptions.suggestState) {
                this._suggestState = newOptions.suggestState;

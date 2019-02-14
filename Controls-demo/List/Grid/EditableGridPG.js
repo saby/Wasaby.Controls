@@ -1,7 +1,7 @@
 define('Controls-demo/List/Grid/EditableGridPG',
    [
       'Core/Control',
-      'WS.Data/Source/Memory',
+      'Types/source',
       'Controls-demo/List/Grid/resources/DataDemoPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/List/Grid/resources/EditableGridPG/cfg',
@@ -13,7 +13,7 @@ define('Controls-demo/List/Grid/EditableGridPG',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, MemorySource, data, template, config) {
+   function(Control, source, data, template, config) {
       'use strict';
        var Component = Control.extend({
            _template: template,
@@ -35,7 +35,7 @@ define('Controls-demo/List/Grid/EditableGridPG',
                    keyProperty: 'id',
                    name: 'EditableGridPG',
                    markedKey: '4',
-                   source: new MemorySource({
+                   source: new source.Memory({
                        idProperty: 'id',
                        data: data.catalog
                    }),

@@ -1,18 +1,19 @@
 define('Controls-demo/List/Grid/GroupPG',
     [
         'Core/Control',
-        'WS.Data/Source/Memory',
+        'Types/source',
         'Controls-demo/List/Grid/resources/DataDemoPG',
         'tmpl!Controls-demo/PropertyGrid/DemoPG',
         'json!Controls-demo/List/Grid/resources/GroupPG/cfg',
         'wml!Controls/List/Grid/GroupTemplate',
         'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate',
+        'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander',
         'wml!Controls-demo/List/Grid/resources/DemoMoney',
         'wml!Controls-demo/List/Grid/resources/DemoRating',
         'wml!Controls-demo/List/Grid/resources/DemoItem'
     ],
 
-    function(Control, MemorySource, data, template, config) {
+    function(Control, source, data, template, config) {
         'use strict';
         var Component = Control.extend({
             _template: template,
@@ -32,7 +33,8 @@ define('Controls-demo/List/Grid/GroupPG',
                         value: 'default',
                         items: [
                             {id: 1, title: 'default', template: 'wml!Controls/List/Grid/GroupTemplate'},
-                            {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate'}
+                            {id: 2, title: 'with right template', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/rightGroupTemplate'},
+                            {id: 3, title: 'without expander', template: 'wml!Controls-demo/List/Grid/resources/GroupPG/withoutGroupExpander'},
                         ]
                     }
                 };
@@ -40,7 +42,7 @@ define('Controls-demo/List/Grid/GroupPG',
                 this._componentOptions = {
                     name: 'GroupGridPG',
                     keyProperty: 'id',
-                    source: new MemorySource({
+                    source: new source.Memory({
                         idProperty: 'id',
                         data: data.catalog
                     }),

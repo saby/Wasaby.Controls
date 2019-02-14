@@ -1,9 +1,11 @@
 define(
    [
+      'Core/constants',
       'Controls/Container/Scroll',
+      'Controls/StickyHeader/Utils',
       'wml!tests/Container/resources/Content'
    ],
-   function(Scroll, Content) {
+   function(Constants, Scroll, stickyUtils, Content) {
 
       'use strict';
 
@@ -26,6 +28,7 @@ define(
 
                return markup;
             };
+            scroll._registeredHeadersIds = [];
             scroll._stickyHeadersIds = {
                top: [],
                bottom: []
@@ -42,9 +45,79 @@ define(
             };
          });
 
+         describe('_scrollbarTaken', function() {
+            it('Should generate scrollbarTaken event if scrollbar displayed', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: true };
+               sandbox.stub(scroll, '_notify');
+               scroll._scrollbarTaken();
+               sinon.assert.calledWith(scroll._notify, 'scrollbarTaken');
+               sandbox.restore();
+            });
+            it('Should not generate scrollbarTaken event if scrollbar not displayed', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: false };
+               sandbox.stub(scroll, '_notify');
+               scroll._scrollbarTaken();
+               sinon.assert.notCalled(scroll._notify);
+               sandbox.restore();
+            });
+         });
+
+         describe('_mouseenterHandler', function() {
+            it('Should show scrollbar and generate scrollbarTaken event on mouseenter', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: true };
+               scroll._options.scrollbarVisible = true;
+               sandbox.stub(scroll, '_notify');
+               scroll._mouseenterHandler();
+               sinon.assert.calledWith(scroll._notify, 'scrollbarTaken');
+               assert.isTrue(scroll._scrollbarVisibility());
+               sandbox.restore();
+            });
+            it('Should hide scrollbar and generate scrollbarReleased event on mouseleave', function() {
+               const sandbox = sinon.sandbox.create();
+               scroll._displayState = { hasScroll: false };
+               sandbox.stub(scroll, '_notify');
+               scroll._mouseenterHandler();
+               scroll._mouseleaveHandler();
+               sinon.assert.calledWith(scroll._notify, 'scrollbarReleased');
+               assert.isFalse(scroll._scrollbarVisibility());
+               sandbox.restore();
+            });
+         });
+
+         describe('_adjustContentMarginsForBlockRender', function() {
+            if (!Constants.isBrowserPlatform) {
+               return;
+            }
+
+            it('should not update the context if the height has not changed', function() {
+               sinon.stub(window, 'getComputedStyle').returns({ marginTop: 0, marginRight: 0 });
+               scroll._styleHideScrollbar = '';
+               scroll._stickyHeaderContext = {
+                  top: 0,
+                  updateConsumers: sinon.fake()
+               };
+               scroll._adjustContentMarginsForBlockRender();
+               sinon.assert.notCalled(scroll._stickyHeaderContext.updateConsumers);
+               sinon.restore();
+            });
+         });
+
+         describe('_stickyRegisterHandler', function() {
+            it('should update blockUpdate event field', function() {
+               let event = {
+                  blockUpdate: false
+               };
+               scroll._stickyRegisterHandler(event);
+               assert.isTrue(event.blockUpdate);
+            });
+         });
+
          describe('Template', function() {
             it('Hiding the native scroll', function() {
-               result = scroll._template({});
+               result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
                                        '<span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden">' +
@@ -53,9 +126,8 @@ define(
                                        '<div></div>' +
                                     '</div>');
 
-               result = scroll._template({
-                  _contentStyles: 'margin-right: -15px;'
-               });
+               scroll._contentStyles = 'margin-right: -15px;';
+               result = scroll._template(scroll);
 
                assert.equal(result, '<div class="controls-Scroll ws-flexbox ws-flex-column">' +
                                        '<span style="margin-right: -15px;" class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_scroll">' +
@@ -71,7 +143,7 @@ define(
                stopPropagation: function() {}
             };
 
-            describe('updateFixationState', function() {
+            describe('_fixedHandler', function() {
                it('Header with id equal to "sticky" stops being fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky',
@@ -179,6 +251,28 @@ define(
                      offsetHeight: 10
                   });
                   assert.equal(scroll._stickyHeadersHeight.top, 10);
+               });
+               it('Should not notify new state if one header registered', function() {
+                  scroll._registeredHeadersIds = ['sticky1'];
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     fixedPosition: 'top',
+                     mode: 'stackable',
+                     offsetHeight: 10
+                  });
+                  sinon.assert.notCalled(scroll._children.stickyHeaderShadow.start);
+                  sinon.assert.notCalled(scroll._children.stickyHeaderHeight.start);
+               });
+               it('Should notify new state if few header registered', function() {
+                  scroll._registeredHeadersIds = ['sticky1', 'sticky2'];
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     fixedPosition: 'top',
+                     mode: 'stackable',
+                     offsetHeight: 10
+                  });
+                  sinon.assert.called(scroll._children.stickyHeaderShadow.start);
+                  sinon.assert.called(scroll._children.stickyHeaderHeight.start);
                });
             });
          });

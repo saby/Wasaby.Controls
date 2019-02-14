@@ -1,0 +1,10 @@
+<Controls.Container.Scroll attr:style="height: 220px">
+    <Controls.List
+            source="{{_viewSource}}"
+            keyProperty="id">
+        <ws:navigation source="page" view="infinity">
+            <ws:sourceConfig pageSize="{{9}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
+            <ws:viewConfig pagingMode="direct"></ws:viewConfig>
+        </ws:navigation>
+    </Controls.List>
+</Controls.Container.Scroll>

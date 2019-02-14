@@ -8,7 +8,7 @@
    </div>
    <div class="controls-VDomSearch__row" test_name="area_2" >
       <Controls.Search.Input.Container on:search="_changeValueSearchHandler()">
-         <Controls.Input.Search bind:value="_value2" style="header" attr:test_name="search_transparent"
+         <Controls.Input.Search bind:value="_value2" attr:test_name="search_transparent"
                                 attr:class="test-input-search"
                         on:valueChanged="_changeValuesHandler()"/>
       </Controls.Search.Input.Container>

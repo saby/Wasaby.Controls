@@ -12,6 +12,7 @@ define('Controls/Input/Base',
       'Controls/Input/Base/InputUtil',
       'Controls/Input/Base/ViewModel',
       'Core/helpers/Function/runDelayed',
+      'Core/helpers/String/unEscapeASCII',
       'Controls/Utils/hasHorizontalScroll',
 
       'wml!Controls/Input/Base/Base',
@@ -22,8 +23,8 @@ define('Controls/Input/Base',
    ],
    function(
       Control, EventBus, detection, constants, entity, tmplNotify, isEqual,
-      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, hasHorizontalScroll,
-      template, fieldTemplate, readOnlyFieldTemplate
+      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, unEscapeASCII,
+      hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
 
@@ -334,6 +335,8 @@ define('Controls/Input/Base',
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputPlaceholder
        *
+       * @mixes Controls/Input/Render/Styles
+       *
        * @private
        * @demo Controls-demo/Input/Base/Base
        *
@@ -393,10 +396,16 @@ define('Controls/Input/Base',
          _fieldName: 'input',
 
          /**
-          * @type {Boolean}
+          * @type {Boolean} Determines whether the control is multiline.
           * @protected
           */
          _multiline: false,
+
+         /**
+          * @type {Boolean} Determines whether the control has a rounded border.
+          * @protected
+          */
+         _roundBorder: false,
 
          /**
           * @type {Number} The number of skipped save the current field selection to the model.
@@ -457,6 +466,14 @@ define('Controls/Input/Base',
           * @private
           */
          _isEdge: null,
+
+         /**
+          * @type {Controls/Input/Render#style}
+          * @protected
+          */
+         get _style() {
+            return this._options.style;
+         },
 
          /**
           *
@@ -547,6 +564,7 @@ define('Controls/Input/Base',
             this._field = {
                template: fieldTemplate,
                scope: {
+                  controlName: 'InputBase',
                   calculateValueForTemplate: this._calculateValueForTemplate.bind(this)
                }
             };
@@ -562,14 +580,28 @@ define('Controls/Input/Base',
                template: null,
                scope: {}
             };
+
+            /**
+             * TODO: Remove after execution:
+             * https://online.sbis.ru/opendoc.html?guid=6c755b9b-bbb8-4a7d-9b50-406ef7f087c3
+             */
+            var emptySymbol = unEscapeASCII('&#65279;');
+            this._field.scope.emptySymbol = emptySymbol;
+            this._readOnlyField.scope.emptySymbol = emptySymbol;
          },
 
          /**
           * Event handler mouse enter.
           * @private
           */
-         _mouseEnterHandler: function() {
+         _mouseEnterHandler: function(event) {
             this._tooltip = this._getTooltip();
+
+            /**
+             * TODO: https://online.sbis.ru/open_dialog.html?guid=011f1615-81e1-e01b-11cb-881d311ae617&message=010c1611-8160-e015-213d-5a11b13ef818
+             * Remove after execution https://online.sbis.ru/opendoc.html?guid=809254e8-e179-443b-b8b7-f4a37e05f7d8
+             */
+            this._notify('mouseenter', [event]);
          },
 
          /**
@@ -587,7 +619,7 @@ define('Controls/Input/Base',
                this._viewModel.selection = this._getFieldSelection();
             }
 
-            if (keyCode === constants.key.enter) {
+            if (keyCode === constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
                _private.callChangeHandler(this);
             }
          },
@@ -667,8 +699,17 @@ define('Controls/Input/Base',
              * The field is displayed according to the control options.
              * When user enters data,the display changes and does not match the options.
              * Therefore, return the field to the state before entering.
+             * Otherwise, the text will blink when the user performs a fast input.
+             * Fast input is pressing multiple keys at the same time or pressing a single key.
+             *
+             * On Android such actions cause bugs. For example:
+             * 1. https://online.sbis.ru/opendoc.html?guid=ce9d1d56-8f33-4e26-8284-157773fc08fd
+             * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
+             * Fast input on Android is not carried out, so do not do these actions on it.
              */
-            _private.updateField(this, value, selection);
+            if (!detection.isMobileAndroid) {
+               _private.updateField(this, value, selection);
+            }
          },
 
          /**
@@ -704,8 +745,6 @@ define('Controls/Input/Base',
          _focusInHandler: function() {
             if (this._focusByMouseDown) {
                this._firstClick = true;
-            } else {
-               this._viewModel.select();
             }
 
             this._focusByMouseDown = false;
@@ -740,6 +779,23 @@ define('Controls/Input/Base',
             if (!_private.isFieldFocused(this)) {
                this._focusByMouseDown = true;
             }
+         },
+
+         _domAutoCompleteHandler: function() {
+            /**
+             * When the user selects a value from the auto-complete, the other fields associated with it are
+             * automatically filled in. The logic of the control operation is based on displaying the value
+             * according to its options. Therefore, the field value is updated during the synchronization cycle.
+             *
+             * In firefox, after the field is automatically filled in, you should immediately set the value
+             * in the field without waiting for a synchronization cycle. Otherwise, the values will not be substituted
+             * into other fields.
+             *
+             * About what happened auto-complete learn through the event DOMAutoComplete,
+             * which is supported only in firefox. https://developer.mozilla.org/en-US/docs/Web/Events/DOMAutoComplete
+             */
+
+            this._calculateValueForTemplate();
          },
 
          _notifyValueChanged: function() {
@@ -806,7 +862,7 @@ define('Controls/Input/Base',
             var valueDisplayElement = this._getField() || this._getReadOnlyField();
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
-            return hasFieldHorizontalScroll ? this._viewModel.displayValue : '';
+            return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
          },
 
          _calculateValueForTemplate: function() {
@@ -829,6 +885,10 @@ define('Controls/Input/Base',
             _private.recalculateLocationVisibleArea(this, field, displayValue, selection);
          },
 
+         _isTriggeredChangeEventByEnterKey: function() {
+            return true;
+         },
+
          paste: function(text) {
             var model = this._viewModel;
             var splitValue = _private.calculateSplitValueToPaste(text, model.displayValue, model.selection);
@@ -840,6 +900,7 @@ define('Controls/Input/Base',
       Base.getDefaultOptions = function() {
          return {
             size: 'm',
+            tooltip: '',
             style: 'info',
             placeholder: '',
             textAlign: 'left',
@@ -857,6 +918,7 @@ define('Controls/Input/Base',
              * placeholder: descriptor(String|Function),
              * value: descriptor(String|null),
              */
+            tooltip: entity.descriptor(String),
             autoComplete: entity.descriptor(Boolean),
             selectOnClick: entity.descriptor(Boolean),
             size: entity.descriptor(String).oneOf([

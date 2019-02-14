@@ -9,13 +9,14 @@
                                    bind:selectedKeys="itemData.item.selectedKeys"
                                    keyProperty="id"
                                    displayProperty="title"
+                                   multiSelect="{{true}}"
                                    selectOnClick="{{ false }}">
                <ws:lookupTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
             </Controls.Selector.Lookup>
          </ws:if>
          <ws:else>
-            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}} controls-EditingTemplateText_size_default">
+            <div class="controls-EditingTemplateText {{itemData.columnIndex !== 5 ? 'controls-EditingTemplateText_enabled'}}{{itemData.columnIndex !== 5 && itemData.isActive ? ' controls-EditingTemplateText_active'}} controls-EditingTemplateText_size_default">
                <span>{{ itemData.item[itemData.column.displayProperty] }}</span>
                <span class="ControlsDemo-EipScenarios__comment">{{ itemData.item.comment }}</span>
             </div>

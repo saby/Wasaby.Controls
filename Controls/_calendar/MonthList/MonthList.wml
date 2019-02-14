@@ -1,0 +1,49 @@
+<Controls.Container.Scroll
+   attr:class="MonthList-ScrollContainer"
+   scrollbarVisible="{{false}}">
+   <Controls._calendar.MonthList.List
+      source="{{_viewSource}}"
+      sourceExt="{{_options.calendarSource}}"
+      name="months"
+      idProperty="id"
+      >
+
+      <ws:navigation source="position" view="infinity">
+         <ws:sourceConfig limit="{{1}}" position="{{_position}}" direction="both" field="id"></ws:sourceConfig>
+      </ws:navigation>
+
+      <ws:itemTemplate>
+         <ws:partial template="wml!Controls/List/ItemTemplate"
+                     itemData="{{itemTemplate.itemData}}"
+         >
+            <ws:contentTemplate>
+               <!--<ws:for data="monthIndex, month in itemTemplate.itemData.item['months']">-->
+                  <!--<Controls.Date.Month-->
+
+                     <!--startValue="{{_options.startValue}}"-->
+                     <!--endValue="{{_options.endValue}}"-->
+
+                     <!--bind:selectionProcessing="_selectionProcessing"-->
+                     <!--bind:selectionBaseValue="_selectionBaseValue"-->
+                     <!--bind:selectionHoveredValue="_selectionHoveredValue"-->
+
+                     <!--on:startValueChanged="startValueChangedHandler()"-->
+                     <!--on:endValueChanged="endValueChangedHandler()"-->
+
+                     <!--className="controls-DateRangeBigChoose-DateRangePicker__item"-->
+                     <!--showWeekdays="{{false}}"-->
+                     <!--month="{{month}}"-->
+                  <!--/>-->
+               <!--</ws:for>-->
+               <ws:partial
+                  template="{{_options.itemTemplate}}"
+                  item="{{itemTemplate.itemData.item}}"
+                  _options="{{_options}}"
+                  _getMonth="{{_getMonth}}"
+               >
+               </ws:partial>
+            </ws:contentTemplate>
+         </ws:partial>
+      </ws:itemTemplate>
+   </Controls._calendar.MonthList.List>
+</Controls.Container.Scroll>

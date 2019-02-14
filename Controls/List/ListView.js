@@ -97,7 +97,7 @@ define('Controls/List/ListView', [
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._queue = [];
-            this._onListChangeFnc = function() {
+            this._onListChangeFnc = function(e) {
                if (self._lockForUpdate) {
                   self._queue.push(_private.onListChange.bind(null, self));
                } else {
@@ -206,21 +206,25 @@ define('Controls/List/ListView', [
 
          _onItemMouseDown: function(event, itemData) {
             this._notify('itemMouseDown', [itemData, event]);
+            event.blockUpdate = true;
          },
 
          _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
             _private.setHoveredItem(this, itemData.item, event);
+            event.blockUpdate = true;
          },
 
          //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
          //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
-         _onItemMouseLeave: function() {
+         _onItemMouseLeave: function(event) {
             _private.setHoveredItem(this, null);
+            event.blockUpdate = true;
          },
 
          _onItemMouseMove: function(event, itemData) {
             this._notify('itemMouseMove', [itemData, event]);
+            event.blockUpdate = true;
          },
 
          _onItemWheel: function() {},

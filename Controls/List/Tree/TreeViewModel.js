@@ -82,8 +82,11 @@ define('Controls/List/Tree/TreeViewModel', [
          },
 
          hasChildItem: function(self, key) {
+            var
+               item;
             if (self._options.hasChildrenProperty) {
-               return !!self._items.getRecordById(key).get(self._options.hasChildrenProperty);
+               item = self._items.getRecordById(key);
+               return item ? !!item.get(self._options.hasChildrenProperty) : false;
             }
             return !!self._hierarchyRelation.getChildren(key, self._items).length;
          },
@@ -118,10 +121,15 @@ define('Controls/List/Tree/TreeViewModel', [
             if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
                // If it is necessary to delete only the nodes deleted from the items, add this condition:
                // if (!self._items.getRecordById(nodeId)) {
-               delete self._expandedItems[nodeId];
-               self._notify('onNodeRemoved', nodeId);
+               _private.removeNodeFromExpanded(self, nodeId);
             }
          },
+
+         removeNodeFromExpanded: function(self, nodeId) {
+            delete self._expandedItems[nodeId];
+            self._notify('onNodeRemoved', nodeId);
+         },
+
 
          checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
@@ -192,7 +200,7 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                for (var itemId in self._expandedItems) {
                   if (self._expandedItems.hasOwnProperty(itemId)) {
-                     _private.removeNodeFromExpandedIfNeed(self, itemId);
+                     _private.removeNodeFromExpanded(self, itemId);
                   }
                }
             }
@@ -254,6 +262,10 @@ define('Controls/List/Tree/TreeViewModel', [
                itemId = dispItem.getContents().getId();
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
+         },
+
+         isExpandAll: function() {
+            return _private.isExpandAll(this.getExpandedItems());
          },
 
          toggleExpanded: function(dispItem, expanded) {
@@ -408,7 +420,11 @@ define('Controls/List/Tree/TreeViewModel', [
          calculateDragTargetPosition: function(targetData, position) {
             var result;
 
-            if (targetData && targetData.dispItem.isNode()) {
+            //If you hover over the dragged item, and the current position is on the folder,
+            //then you need to return the position that was before the folder.
+            if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
+               result = this._prevDragTargetPosition || null;
+            } else if (targetData.dispItem.isNode()) {
                if (position === 'after' || position === 'before') {
                   result = this._calculateDragTargetPosition(targetData, position);
                } else {
@@ -495,6 +511,7 @@ define('Controls/List/Tree/TreeViewModel', [
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
+            this._setMarkerAfterUpdateItems();
             this._nextVersion();
             this._notify('onListChange');
          },

@@ -1,0 +1,16 @@
+<div class="controls-Toolbar">
+    <div class="controls-Toolbar_content">
+        <ws:for data="item in _items">
+            <ws:if data="{{item.showType !== showType.MENU && !item[_parentProperty] && item[_parentProperty] !== 0}}">
+                <ws:partial on:click="_onItemClick(item)"
+                        template="{{item[_options.itemTemplateProperty] || _options.itemTemplate || _defaultItemTemplate}}"
+                        item="{{item}}"
+                        size="{{_options.size}}"/>
+            </ws:if>
+        </ws:for>
+        <div if="{{_needShowMenu}}" class="controls-Toolbar__menu controls-Toolbar__item_icon_secondary"  name="popupTarget" on:click="_showMenu()">
+            <i class="icon-medium icon-ExpandDown"/>
+        </div>
+    </div>
+    <Controls.Dropdown.Opener name="menuOpener" popupOptions="{{_popupOptions}}" />
+</div>

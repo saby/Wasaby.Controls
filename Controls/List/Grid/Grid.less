@@ -3,6 +3,23 @@
    width: 100%;
 }
 
+.controls-GridView__itemV_marker {
+  position: absolute;
+  width: @width_Grid-selection-marker;
+  background-color: @color_Grid-selection-marker;
+  left: 0;
+}
+
+.controls-GridView-without-rowSeparator_item_marker {
+  height: ~'calc(100% + @{height_Grid-row-separator})';
+  top: -@height_Grid-row-separator;
+}
+
+.controls-GridView-with-rowSeparator_item_marker{
+  top: 0px;
+  height: 100%;
+}
+
 .controls-Grid__header {
    display: contents;
    color: @color_Grid-header;
@@ -16,8 +33,8 @@
    z-index: 1;
    top: 0;
    background-color: @background-color_Grid-header;
-   padding-top: @spacing_Grid-header-between-content-borderTop;
-   padding-bottom: @spacing_Grid-header-between-content-borderBottom;
+   display: inline-flex;
+   flex-direction: column;
 }
 
 .controls-Grid__header-cell_spacing_money:after {
@@ -28,18 +45,24 @@
 
 .controls-Grid__header-cell__content {
    display: inline-block;
+   min-height: @min-height_Grid-header;
+}
+
+.controls-Grid__row-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-header-cell-baseline;
 }
 
 .controls-Grid__header-cell_valign_bottom {
-   align-self: end;
+  justify-content: flex-end;
 }
 
 .controls-Grid__header-cell_valign_top {
-   align-self: start;
+   justify-content: flex-start;
 }
 
 .controls-Grid__header-cell_valign_middle {
-   align-self: center;
+  justify-content: center;
 }
 
 .controls-Grid__results {
@@ -47,7 +70,6 @@
 }
 
 .controls-Grid__results-cell {
-   .position-sticky();
    background-color: @background-color_Grid-row-sticky;
    z-index: 1;
    min-width: 0;
@@ -199,6 +221,11 @@
    font-size: @font-size_Grid-cell_s;
 }
 
+.controls-Grid__header-cell_baseline_XL:before {
+   content: '\200b';
+   font-size: @font-size_Grid-header_xl;
+}
+
 .controls-Grid__cell_spacingFirstCol_default, .controls-GridView__footer__paddingLeft_default {
    padding-left: @spacing_Grid-row-between-content-borderLeft_m;
 }
@@ -283,7 +310,7 @@
    left: 0;
 }
 
-.controls-GridView__checkbox-onhover {
+.controls-GridView__checkbox.controls-GridView__checkbox-onhover {
    display: none;
 }
 

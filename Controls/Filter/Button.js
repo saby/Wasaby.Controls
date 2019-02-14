@@ -107,9 +107,9 @@ define('Controls/Filter/Button',
                });
             }
             return self._depsDeferred;
-            
+
          },
-         
+
          resetItems: function(self, items) {
             chain.factory(items).each(function(item) {
                Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
@@ -157,6 +157,7 @@ define('Controls/Filter/Button',
                });
             } else {
                _private.resetItems(this, this._items);
+               this._notify('filterChanged', [{}]);
                this._notify('itemsChanged', [this._items]);
             }
             this._text = '';

@@ -54,19 +54,6 @@ define('Controls/Popup/InfoBox',
        * @css @box-shadow_Infobox Size of shadow.
        */
 
-
-      /**
-       * @name Controls/Popup/InfoBox#hideDelay
-       * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
-       * @default 300
-       */
-
-      /**
-       * @name Controls/Popup/InfoBox#showDelay
-       * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
-       * @default 300
-       */
-
       /**
        * @name Controls/Popup/InfoBox#position
        * @cfg {String} Point positioning of the target relative to infobox.
@@ -84,6 +71,17 @@ define('Controls/Popup/InfoBox',
        * @variant lc Popup displayed on the left of the target and aligned by center.
        * @variant lb Popup displayed on the left of the target and aligned by bottom border
        * @default tl
+       */
+      /**
+       * @name Controls/Popup/InfoBox#hideDelay
+       * @cfg {Number} Delay before closing after mouse leaves. (measured in milliseconds)
+       * @default 300
+       */
+
+      /**
+       * @name Controls/Popup/InfoBox#showDelay
+       * @cfg {Number} Delay before opening after mouse enters.(measured in milliseconds)
+       * @default 300
        */
 
       /**
@@ -107,7 +105,7 @@ define('Controls/Popup/InfoBox',
        * @variant click Opening by click on the content. Closing by click not on the content or template.
        * @variant hover Opening by hover on the content. Closing by hover not on the content or template.
        * Opening is ignored on touch devices.
-       * @variant hover|touch Opening by hover or touch on the content. Closing by hover not on the content or template.
+       * @variant hoverAndTouch Opening by hover or touch on the content. Closing by hover not on the content or template.
        * @default hover
        */
 
@@ -121,9 +119,7 @@ define('Controls/Popup/InfoBox',
        * @name Controls/Popup/InfoBox#style
        * @cfg {String} Infobox display style.
        * @variant default
-       * @variant lite
-       * @variant help
-       * @variant error
+       * @variant danger
        */
 
 
@@ -175,6 +171,7 @@ define('Controls/Popup/InfoBox',
             if (this._opened) {
                this._notify('closeInfoBox', [], { bubbling: true });
             }
+            clearTimeout(this._openId);
          },
 
          _open: function() {

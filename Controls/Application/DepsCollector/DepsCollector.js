@@ -1,8 +1,9 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
    'Core/IoC',
-   'Core/core-extend'
-], function(Logger, IoC, coreExtend) {
+   'Core/core-extend',
+   'Core/i18n'
+], function(Logger, IoC, coreExtend, i18n) {
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
@@ -234,11 +235,12 @@ define('Controls/Application/DepsCollector/DepsCollector', [
        * @param modInfo - contains info about path to module files
        * @param bundlesRoute - contains info about custom packets with modules
        */
-      constructor: function(modDeps, modInfo, bundlesRoute, themesActive) {
+      constructor: function(modDeps, modInfo, bundlesRoute, themesActive, needLocalisation) {
          this.modDeps = modDeps;
          this.modInfo = modInfo;
          this.bundlesRoute = bundlesRoute;
          this.themesActive = themesActive;
+         this.localizationEnabled = needLocalisation;
       },
       collectDependencies: function(deps) {
          var files = {
@@ -247,6 +249,28 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute, this.themesActive); // Find all bundles, and removes dependencies that are included in bundles
+
+         // Collect dictionaries
+         if (this.localizationEnabled) {
+            var collectedDictList = {};
+            var module;
+            var moduleLang;
+            var lang = this.getLang();
+            var availableDictList = this.getAvailableDictList(lang);
+            for (var key in packages.js) {
+               module = key.split('/')[0];
+               moduleLang = module + '/lang/' + lang + '/' + lang + '.json';
+               if (availableDictList[moduleLang]) {
+                  collectedDictList[moduleLang] = true;
+               }
+            }
+            for (var key in collectedDictList) {
+               if (collectedDictList.hasOwnProperty(key)) {
+                  files.js.push(key);
+               }
+            }
+         }
+
          for (var key in packages.js) {
             if (packages.js.hasOwnProperty(key)) {
                files.js.push(key);
@@ -279,6 +303,12 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             }
          }
          return files;
+      },
+      getLang: function() {
+         return i18n.getLang();
+      },
+      getAvailableDictList: function(lang) {
+         return i18n._dictNames[lang] || {};
       }
    });
 

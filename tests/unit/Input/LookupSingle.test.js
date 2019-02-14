@@ -35,7 +35,6 @@ define([
 
       it('getLastSelectedItems', function() {
          var
-            lookup = new Lookup(),
             item = new entity.Model({
                rawData: {id: 1},
                idProperty: 'id'
@@ -43,19 +42,20 @@ define([
             item2 = new entity.Model({
                rawData: {id: 2},
                idProperty: 'id'
+            }),
+            items = new collection.List({
+               items: [item, item2]
             });
 
-         lookup._options.items = new collection.List({
-            items: [item, item2]
-         });
-
-         assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 1), [item2]);
-         assert.deepEqual(Lookup._private.getLastSelectedItems(lookup, 10), [item, item2]);
+         assert.deepEqual(Lookup._private.getLastSelectedItems(items, 1), [item2]);
+         assert.deepEqual(Lookup._private.getLastSelectedItems(items, 10), [item, item2]);
       });
 
       it('isShowCounter', function() {
-         assert.isTrue(Lookup._private.isShowCounter(10, 5));
-         assert.isFalse(Lookup._private.isShowCounter(10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(true, 10, 5));
+         assert.isFalse(Lookup._private.isShowCounter(true, 10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(false, 2));
+         assert.isFalse(Lookup._private.isShowCounter(false, 1));
       });
 
       it('getLastRowCollectionWidth', function() {
@@ -116,12 +116,12 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         var lookup = new Lookup();
+         var
+            items = new collection.List(),
+            lookup = new Lookup();
 
          lookup._beforeMount({multiLine: true});
-         lookup._beforeUpdate({
-            items: new collection.List()
-         });
+         lookup._beforeUpdate({});
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 
@@ -130,7 +130,6 @@ define([
             multiLine: true
          });
          assert.notEqual(lookup._multiLineState, undefined);
-         assert.notEqual(lookup._counterWidth, undefined);
          assert.equal(lookup._maxVisibleItems, undefined);
 
          lookup._beforeUpdate({
@@ -140,6 +139,19 @@ define([
          assert.notEqual(lookup._maxVisibleItems, undefined);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
+
+         lookup._counterWidth = 30;
+         lookup._options.items = items;
+         lookup._beforeUpdate({
+            items: items
+         });
+         assert.equal(lookup._counterWidth, 30);
+
+         lookup._beforeUpdate({
+            items: items,
+            readOnly: true
+         });
+         assert.equal(lookup._counterWidth, undefined);
       });
 
       it('_changeValueHandler', function() {
@@ -156,7 +168,6 @@ define([
          assert.deepEqual(newValue, [1]);
       });
 
-      /* toDo до решения ошибки https://online.sbis.ru/opendoc.html?guid=141c3d3e-16a1-4583-9d36-805e09fb2dd4
       it('_choose', function() {
          var
             isActivate = false,
@@ -174,7 +185,6 @@ define([
          lookup._choose();
          assert.isTrue(isActivate);
       });
-      */
 
       it('_deactivated', function() {
          var lookup = new Lookup();
@@ -219,6 +229,15 @@ define([
 
          lookup._options.multiSelect = true;
          assert.isTrue(lookup._determineAutoDropDown());
+      });
+
+      it('_onClickShowSelector', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._onClickShowSelector();
+
+         assert.isFalse(lookup._suggestState);
       });
    });
 });

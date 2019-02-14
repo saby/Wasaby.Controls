@@ -926,7 +926,42 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._unregisterPendingOperation(operation);
             }
 
+            // В _afterMount CompoundArea регистрируется у родителя, нужно
+            // эту связь разорвать
+            if (this.__parentFromCfg) {
+               this._clearInformationOnParentFromCfg();
+            }
+
             CompoundArea.superclass.destroy.apply(this, arguments);
+         },
+
+         _clearInformationOnParentFromCfg: function() {
+            var
+               parent = this.__parentFromCfg,
+               id = this._id,
+               name = this._options.name,
+               tabindex = this._options.tabindex;
+
+            if (parent._childsMapId) {
+               var mapId = parent._childsMapId[id];
+               if (typeof mapId !== 'undefined') {
+                  if (parent._childControls) {
+                     delete parent._childControls[mapId];
+                  }
+                  if (parent._childContainers) {
+                     delete parent._childContainers[mapId];
+                  }
+                  delete parent._childsMapId[id];
+               }
+            }
+
+            if (parent._childsMapName) {
+               delete parent._childsMapName[name || id];
+            }
+
+            if (parent._childsTabindex) {
+               delete parent._childsTabindex[tabindex];
+            }
          },
 
          _unregisterEventListener: function() {

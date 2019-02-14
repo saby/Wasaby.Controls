@@ -74,19 +74,30 @@ fs.writeFile(path.join(root, 'builderCfg.json'), gultConfigStringified, function
          }
       });
 
-      fs.writeFileSync(path.join(root, 'application', 'contents.js'),
-         'contents = ' + JSON.stringify(contents, '', 3)+';' );
-      fs.linkSync(path.join(root, 'application', 'contents.js'), path.join(root, 'application', 'contents.min.js'));
-      fs.writeFileSync(path.join(root, 'application', 'bundles.js'),
-         'bundles = ' + JSON.stringify(bundles, '', 3)+';' );
-
-
       if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
          fs.mkdirSync(path.join(root, 'application', 'resources'));
       }
 
+      fs.writeFileSync(path.join(root, 'application', 'contents.js'),
+         'contents = ' + JSON.stringify(contents, '', 3)+';' );
+      fs.writeFileSync(path.join(root, 'application', 'contents.json'),
+         JSON.stringify(contents, '', 3) );
+      try {
+         fs.linkSync(path.join(root, 'application', 'contents.js'), path.join(root, 'application', 'contents.min.js'));
+         fs.linkSync(path.join(root, 'application', 'contents.json'), path.join(root, 'application', 'resources', 'contents.min.json'));
+         fs.linkSync(path.join(root, 'application', 'contents.json'), path.join(root, 'application', 'resources', 'contents.json'));
+      }
+      catch (e) {
+         console.log('Couldn\'n create symlink to content.js: ' + e);
+      }
+      fs.writeFileSync(path.join(root, 'application', 'bundles.js'),
+         'bundles = ' + JSON.stringify(bundles, '', 3)+';' );
+
       fs.writeFileSync(path.join(root, 'application', 'resources', 'module-dependencies.json'),
          JSON.stringify(allJson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//i, ''));
+
+      fs.writeFileSync(path.join(root, 'application', 'router.js'),
+         'define(\'router\', [], function(){ return {}; })');
    });
 
 });

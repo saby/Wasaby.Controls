@@ -1,8 +1,7 @@
 define('Controls-demo/List/Grid/BasePG', [
    'Core/Control',
    'Types/object',
-   'WS.Data/Source/Memory',
-   'WS.Data/Source/SbisService',
+   'Types/source',
    'Controls-demo/List/Grid/resources/DataDemoPG',
    'wml!Controls-demo/List/Grid/resources/BasePG/GridPG',
    'json!Controls-demo/List/Grid/resources/BasePG/cfg',
@@ -10,8 +9,9 @@ define('Controls-demo/List/Grid/BasePG', [
    'wml!Controls-demo/List/Grid/resources/BasePG/footerTemplate',
    'wml!Controls-demo/List/Grid/resources/DemoMoney',
    'wml!Controls-demo/List/Grid/resources/DemoRating',
-   'wml!Controls-demo/List/Grid/resources/DemoItem']
-, function(Control, Obj, MemorySource, SbisService, data, template, config, emptyTpl) {
+   'wml!Controls-demo/List/Grid/resources/DemoItem',
+   'wml!Controls-demo/List/Grid/resources/DemoResultAvgRating'
+   ], function(Control, Obj, source, data, template, config, emptyTpl) {
    'use strict';
    var Component = Control.extend({
       _template: template,
@@ -22,15 +22,15 @@ define('Controls-demo/List/Grid/BasePG', [
 
       _beforeMount: function() {
 
-         this._sourceCatalog = new MemorySource({
+         this._sourceCatalog = new source.Memory({
             idProperty: 'id',
             data: data.catalog
          });
-         this._emptySource = new MemorySource({
+         this._emptySource = new source.Memory({
             idProperty: 'id',
             data: []
          });
-         this._errorSource = new SbisService({});
+         this._errorSource = new source.SbisService({});
 
          this._dataObject = {
             itemPadding: {
@@ -76,17 +76,17 @@ define('Controls-demo/List/Grid/BasePG', [
                ]
             },
             columns: {
-               value: 'full columns',
+               value: 'Variant 1',
                items: [
-                  {id:1, title: 'full columns', items: data.fullColumns },
-                  {id:2, title: 'partial columns', items: data.partialColumns}
+                  {id:1, title: 'Variant 1', items: data.fullColumnsForBase },
+                  {id:2, title: 'Variant 2', items: data.partialColumns}
                ]
             },
             header: {
                value: 'with header',
                items: [
                   {id: 1, title: 'none', items: null},
-                  {id: 2, title: 'with header', items: data.fullHeader }
+                  {id: 2, title: 'with header', items: data.fullHeaderForBase }
                ]
             },
             sorting: {
@@ -123,24 +123,25 @@ define('Controls-demo/List/Grid/BasePG', [
             source: this._sourceCatalog,
             markedKey: '4',
             itemTemplate: 'wml!Controls-demo/List/Grid/resources/DemoItem',
-            columns: data.fullColumns,
+            columns: data.fullColumnsForBase,
             displayProperty: 'title',
             rowSeparatorVisibility: true,
             markerVisibility: 'visible',
             keyProperty: 'id',
             footerTemplate: undefined,
             emptyTemplate: undefined,
+            resultsPosition: 'top',
             itemPadding: this._dataObject.itemPadding,
             filter: {},
-            header: data.fullHeader
+            header: data.fullHeaderForBase
          };
          this._metaData = config[this._content].properties['ws-config'].options;
       },
 
       _optionsChanged: function() {
          if (!!this._componentOptions.header) {
-            if (Obj.isEqual(this._componentOptions.columns, data.fullColumns)) {
-               this._componentOptions.header = data.fullHeader;
+            if (Obj.isEqual(this._componentOptions.columns, data.fullColumnsForBase)) {
+               this._componentOptions.header = data.fullHeaderForBase;
             } else {
                this._componentOptions.header = data.partialHeader;
             }

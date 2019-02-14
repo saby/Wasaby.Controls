@@ -14,6 +14,7 @@
    border-radius: @size_Switch__border-radius;
    border-style: solid;
    box-sizing: border-box;
+   user-select: none;
 }
 
 .controls-Switch_enabled {
@@ -68,7 +69,7 @@
 
 .controls-Switch:active {
    .controls-SwitchCircle__borderCircle_enabled {
-      fill: @color_ToggleCircle_outerCircle__enabled_hovered;
+      stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
    }
 }
 
@@ -84,9 +85,12 @@
    .controls-Switch__text_enabled_unselected:hover {
       text-decoration: underline;
    }
+   .controls-Switch__text_enabled_selected:hover {
+      text-decoration: @text-decoration_Switch-text_enabled_hovered;
+   }
    .controls-Switch:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @color_ToggleCircle_outerCircle__enabled_hovered;
+         stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
 }

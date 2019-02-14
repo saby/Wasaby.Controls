@@ -1,6 +1,6 @@
 define('Controls-demo/List/Grid/ItemActionsPG', [
    'Core/Control',
-   'WS.Data/Source/Memory',
+   'Types/source',
    'Controls-demo/List/Grid/resources/DataDemoPG',
    'tmpl!Controls-demo/PropertyGrid/DemoPG',
    'json!Controls-demo/List/Grid/resources/ItemActionsPG/cfg',
@@ -9,7 +9,7 @@ define('Controls-demo/List/Grid/ItemActionsPG', [
    'wml!Controls-demo/List/Grid/resources/DemoItem',
    'css!Controls-demo/Filter/Button/PanelVDom',
    'css!Controls-demo/Input/resources/VdomInputs',
-   'css!Controls-demo/Wrapper/Wrapper'], function(Control, MemorySource, data, template, config) {
+   'css!Controls-demo/Wrapper/Wrapper'], function(Control, source, data, template, config) {
    'use strict';
    var Component = Control.extend({
       _template: template,
@@ -85,7 +85,7 @@ define('Controls-demo/List/Grid/ItemActionsPG', [
          };
          this._componentOptions = {
             name: 'ItemActionsGridPG',
-            source: new MemorySource({
+            source: new source.Memory({
                idProperty: 'id',
                data: data.catalog
             }),

@@ -10,18 +10,23 @@
    fill: @color_ToggleCircle_innerCircle__unselected;
 }
 
+.controls-SwitchCircle__borderCircle {
+   stroke-width: @thickness_ToggleCircle-borderCircle-border;
+   fill: transparent;
+}
+
 .controls-SwitchCircle__borderCircle_enabled {
-   fill: @color_ToggleCircle_outerCircle__enabled;
+   stroke: @color_ToggleCircle_outerCircle__enabled;
 }
 
 .controls-SwitchCircle__borderCircle_disabled {
-   fill: @color_ToggleCircle_outerCircle__disabled;
+   stroke: @color_ToggleCircle_outerCircle__disabled;
 }
 
 .ws-is-no-touch {
    .controls-SwitchCircle__svg:hover {
       .controls-SwitchCircle__borderCircle_enabled {
-         fill: @color_ToggleCircle_outerCircle__enabled_hovered;
+         stroke: @color_ToggleCircle_outerCircle__enabled_hovered;
       }
    }
 }

@@ -1,6 +1,7 @@
 .controls-CompoundArea {
    background: #FFFFFF;
    width: 100%;
+   height: 100%;
 
    //TODO Поддержка стилей старой шапки
    .controls-StackTemplate .controls-StackTemplate__content-area .ws-window-titlebar-custom, &.ws-float-area .ws-window-titlebar {
@@ -88,8 +89,8 @@
    height: 100%;
 }
 
-.controls-CompoundArea-close_button .controls-DialogTemplate__close_button {
-   top: @top_dialogTemplate_compatible_close-button;
+.controls-CompoundArea-close_button .controls-DialogTemplate__close_button{
+   margin-top: @top_dialogTemplate_compatible_close-button;
 }
 
 .controls-Stack__waiting, .controls-Stack__open, .controls-Stack__close {

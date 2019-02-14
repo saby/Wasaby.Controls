@@ -179,5 +179,5 @@ define('Controls/Popup/Opener/Stack',
 
 /**
  * @name Controls/Popup/Opener/Stack#width
- * @cfg {Number} The minimum width of popup.
+ * @cfg {Number} Width of popup.
  */

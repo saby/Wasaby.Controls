@@ -135,6 +135,9 @@ define([
             formController: {
                submit: function() {
                   return Deferred.success();
+               },
+               setValidationResult: function() {
+                  return;
                }
             }
          };
@@ -1283,5 +1286,26 @@ define([
             assert.isTrue(eip._sequentialEditing);
          });
       });
+
+      it('property change of an editing item should reset validation', function() {
+         var setValidationResultCalled = false;
+         eip.saveOptions({
+            listModel: listModel
+         });
+
+         eip.beginEdit({
+            item: listModel.at(0).getContents()
+         });
+         eip._children = {
+            formController: {
+               setValidationResult: function() {
+                  setValidationResultCalled = true;
+               }
+            }
+         };
+         eip._editingItem.set('title', 'test');
+         assert.isTrue(setValidationResultCalled);
+      });
+
    });
 });

@@ -4,7 +4,7 @@ define('Controls/Date/PeriodDialog/MonthsRangeItem', [
    'Core/helpers/Date/format',
    'Core/helpers/Object/isEmpty',
    'Controls/Date/Mixin/EventProxy',
-   'Controls/Date/Month/Model',
+   'Controls/calendar',
    'Controls/Date/Utils/RangeSelection',
    'Controls/Utils/Date',
    'wml!Controls/Date/PeriodDialog/MonthsRangeItem'
@@ -14,7 +14,7 @@ define('Controls/Date/PeriodDialog/MonthsRangeItem', [
    formatDate,
    isEmpty,
    EventProxyMixin,
-   modelViewModel,
+   calendarLib,
    rangeSelectionUtils,
    dateUtils,
    componentTmpl
@@ -44,7 +44,7 @@ define('Controls/Date/PeriodDialog/MonthsRangeItem', [
 
    var Component = BaseControl.extend([EventProxyMixin], {
       _template: componentTmpl,
-      _monthViewModel: modelViewModel,
+      _monthViewModel: calendarLib.MonthModel,
 
       _SELECTION_VEIW_TYPES: SELECTION_VEIW_TYPES,
 
