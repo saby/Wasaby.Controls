@@ -40,7 +40,7 @@ define('Controls/Button/Menu',
       /**
        * @event Controls/Button/Menu#menuItemActivate Occurs when an item is selected from the list.
        * @remark If the menu has items with hierarchy and item with hierarchy was selected, you can return processing result from event handler,
-       * if result will equals true, dropdown will close.
+       * if result will equals false, dropdown will not close. By default dropdown will close, when item with hierarchy was selected.
        */
 
       var Menu = Control.extend({
