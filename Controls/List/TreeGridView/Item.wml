@@ -29,7 +29,7 @@
    <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 0}}">
       <ws:partial template="{{multiSelectTpl}}"
                   attr:class="controls-GridView__checkbox
-                  {{(itemData.multiSelectVisibility === 'onhover' && !itemData.multiSelectStatus)? 'controls-GridView__checkbox-onhover'}}">
+                  {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined)? 'controls-GridView__checkbox-onhover'}}">
          <ws:templateOptions triState="{{itemData.item[itemData.nodeProperty] !== null}}"
                              multiSelectStatus="{{itemData.multiSelectStatus}}"
                              key="{{itemData.key}}" />
