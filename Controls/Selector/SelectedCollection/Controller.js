@@ -63,6 +63,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
          var
             selectedKeys = self._selectedKeys.slice(),
             key = item.get(self._options.keyProperty),
+
+            //That would not change on the link, and it was possible to track changes in child controls
             selectedItems = _private.getItems(self).clone();
 
          if (selectedKeys.indexOf(key) === -1) {

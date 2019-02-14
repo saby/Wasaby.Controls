@@ -109,8 +109,9 @@ define([
          SelectedCollection._private.addItem(self, item2);
          assert.deepEqual(self._selectedKeys, [1, 2]);
          assert.isTrue(keysChanged);
-         assert.equal(self._items.at(0), item);
-         assert.equal(self._items.at(1), item2);
+         assert.notEqual(self._items.at(0), item);
+         assert.deepEqual(self._items.at(0), item);
+         assert.deepEqual(self._items.at(1), item2);
          assert.equal(textValue, 'Roman, Aleksey');
       });
 
@@ -145,7 +146,7 @@ define([
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
 
-         SelectedCollection._private.removeItem(self, item);
+         SelectedCollection._private.removeItem(self, item.clone());
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
       });
