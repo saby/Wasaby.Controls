@@ -318,6 +318,31 @@ define(
                   done();
                })
             });
+            it('initHistory', function(done){
+               let newData = new sourceLib.DataSet({
+                  rawData: {
+                     frequent: createRecordSet(frequentData),
+                     pinned: createRecordSet(pinnedData),
+                     recent: createRecordSet(recentData)
+                  },
+                  itemsProperty: '',
+                  idProperty: 'ObjectId'
+               });
+               let memorySource = new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: items
+               });
+               memorySource.query().addCallback(function(res) {
+                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let sourceItems = res.getAll();
+                  historySource._private.initHistory(self, newData, sourceItems);
+                  assert.equal(self._history.pinned.getCount(), 3);
+                  self._history.pinned.forEach(function(pinnedItem){
+                     assert.isFalse(pinnedItem.getId()=='9');
+                  });
+                  done();
+               });
+            });
          });
          describe('check source original methods', function() {
             it('create', function() {
