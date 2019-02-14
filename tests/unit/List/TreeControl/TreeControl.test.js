@@ -61,6 +61,62 @@ define([
    }
 
    describe('Controls.List.TreeControl', function() {
+      it('TreeControl creating with expandedItems', function() {
+         return new Promise(function(resolve, reject) {
+            correctCreateTreeControl({
+               columns: [],
+               source: new sourceLib.Memory({
+                  data: [{
+                     id: 111,
+                     parent: null
+                  },
+                  {
+                     id: 111111,
+                     parent: 111
+                  },
+                  {
+                     id: 777,
+                     parent: null
+                  },
+                  {
+                     id: 777777,
+                     parent: 777
+                  }],
+                  idProperty: 'id',
+                  filter: function(item, filter) {
+                     for (var i = 0; i < filter.parent.length; i++) {
+                        if (item.get('parent') === filter.parent[i]) {
+                           return true;
+                        }
+                     }
+                     return false;
+                  }
+               }),
+               expandedItems: [777],
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               dataLoadCallback: function(items) {
+                  try {
+                     assert.deepEqual(items.getRawData(), [{
+                        id: 111,
+                        parent: null
+                     },
+                     {
+                        id: 777,
+                        parent: null
+                     },
+                     {
+                        id: 777777,
+                        parent: 777
+                     }], 'Invalid items value after reload with expandedItems');
+                     resolve();
+                  } catch(e) {
+                     reject(e);
+                  }
+               }
+            });
+         });
+      });
       it('TreeControl.reload', function(done) {
          var treeControl = correctCreateTreeControl({
                columns: [],
