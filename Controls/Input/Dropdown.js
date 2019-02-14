@@ -109,7 +109,7 @@ define('Controls/Input/Dropdown',
          },
 
          _selectedItemsChangedHandler: function(event, items) {
-            this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
+            return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
          _setText: function(items) {
