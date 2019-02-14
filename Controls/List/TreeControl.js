@@ -297,13 +297,13 @@ define('Controls/List/TreeControl', [
             this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
          }
       },
-      _afterUpdate: function(oldOptions) {
+      _afterUpdate: function() {
          TreeControl.superclass._afterUpdate.apply(this, arguments);
          if (this._updatedRoot) {
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
-            this.reload().addCallback(function() {
+            this._children.baseControl.reload().addCallback(function() {
                self._children.baseControl.getViewModel().setExpandedItems([]);
                self._children.baseControl.getViewModel().setRoot(self._root);
             });

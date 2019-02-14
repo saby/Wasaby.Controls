@@ -114,22 +114,32 @@ define([
 
 
       it('TreeControl._afterUpdate', function() {
-         var
-            treeControl = correctCreateTreeControl({
-               columns: [],
-               root: 1,
-               source: new sourceLib.Memory({
-                  data: [],
-                  idProperty: 'id'
-               })
-            }),
-            treeViewModel = treeControl._children.baseControl.getViewModel(),
-            isNeedForceUpdate = false;
-
+         var treeControl = correctCreateTreeControl({
+            columns: [],
+            root: 1,
+            parentProperty: 'testParentProperty',
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         var treeViewModel = treeControl._children.baseControl.getViewModel();
+         var isNeedForceUpdate = false;
+         var sourceControllersCleared = false;
+         var clearSourceControllersOriginal = TreeControl._private.clearSourceControllers;
+         var beforeReloadCallbackOriginal = TreeControl._private.beforeReloadCallback;
+         var reloadFilter;
+         var beforeReloadCallback = function() {
+            var filter = arguments[0];
+            beforeReloadCallbackOriginal(treeControl, filter, null, null, treeControl._options);
+            reloadFilter = filter;
+         };
+   
          // Mock TreeViewModel and TreeControl
          treeControl._updatedRoot = true;
-         treeControl._private = {
-            clearSourceControllers: () => {}
+         treeControl._children.baseControl._options.beforeReloadCallback = beforeReloadCallback;
+         TreeControl._private.clearSourceControllers = () => {
+            sourceControllersCleared = true;
          };
          treeViewModel._model._display = {
             setFilter: () => {},
@@ -144,7 +154,7 @@ define([
             if (e === 'onListChange') {
                isNeedForceUpdate = true;
             }
-         }
+         };
 
          // Chack that values before test are right
          treeViewModel.setExpandedItems([1, 3]);
@@ -164,7 +174,10 @@ define([
                   assert.equal(undefined, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
+                  assert.isTrue(sourceControllersCleared);
+                  assert.deepEqual(reloadFilter, {testParentProperty: 12});
                   treeControl._beforeUpdate({root: treeControl._root});
+                  TreeControl._private.clearSourceControllers = clearSourceControllersOriginal;
                   resolve();
                }, 20);
             }, 10);
@@ -248,7 +261,7 @@ define([
                parentProperty: 'parent'
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
-            reloadOriginal = treeControl.reload;
+            reloadOriginal = treeControl._children.baseControl.reload;
 
          treeControl._nodesSourceControllers = {
             1: {
@@ -261,7 +274,7 @@ define([
          treeGridViewModel.setRoot = function() {
             setRootCalled = true;
          };
-         treeControl.reload = function() {
+         treeControl._children.baseControl.reload = function() {
             reloadCalled = true;
             return reloadOriginal.apply(this, arguments);
          };
