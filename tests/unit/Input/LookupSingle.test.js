@@ -135,6 +135,12 @@ define([
          assert.notEqual(lookup._maxVisibleItems, undefined);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
+
+         lookup._counterWidth = 30;
+         lookup._beforeUpdate({
+            readOnly: true
+         });
+         assert.equal(lookup._counterWidth, undefined);
       });
 
       it('_changeValueHandler', function() {
