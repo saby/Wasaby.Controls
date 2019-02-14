@@ -181,10 +181,8 @@ define('Controls/Popup/InfoBox',
                this._notify('openInfoBox', [config], { bubbling: true });
             } else {
                // To place zIndex in the old environment
-               if (this._children.infoBoxOpener) {
-                  config.zIndex = getZIndex(this._children.infoBoxOpener);
-                  this._children.infoBoxOpener.open(config);
-               }
+               config.zIndex = getZIndex(this._children.infoBoxOpener);
+               this._children.infoBoxOpener.open(config);
             }
 
             clearTimeout(this._openId);
