@@ -252,6 +252,7 @@ define('Controls/List/TreeControl', [
       _template: TreeControlTpl,
       _root: null,
       _updatedRoot: false,
+      _deepReload: false,
       _nodesSourceControllers: null,
       _beforeReloadCallback: null,
       _afterReloadCallback: null,
@@ -260,6 +261,9 @@ define('Controls/List/TreeControl', [
          this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
          if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
+         }
+         if (cfg.expandedItems && Object.keys(cfg.expandedItems).length > 0) {
+            this._deepReload = true;
          }
          this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
          this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
