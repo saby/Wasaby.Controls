@@ -3,7 +3,7 @@
            scope="{{_options}}">
       <ws:itemActionsTemplate>
          <invisible-node />
-      </ws:itemActionsTemplate/
+      </ws:itemActionsTemplate>
    </ws:partial>
 </ws:if>
 <ws:else>
