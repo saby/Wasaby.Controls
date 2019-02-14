@@ -230,7 +230,7 @@ define('Controls/Input/Mask',
                 * At the moment of focus, the selectionEnd property is not set.
                 */
                runDelayed(function() {
-                  if(!self._options.readOnly) {
+                  if (!self._options.readOnly) {
                      _private.setCaretPosition(input, input.selectionEnd, value, replacer);
                   }
                });
