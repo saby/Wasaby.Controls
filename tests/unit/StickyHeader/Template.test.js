@@ -81,7 +81,7 @@ define(
                inst._isMobilePlatform = true;
                inst._model.fixedPosition = 'top';
 
-               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top: 1px;z-index: 2;">' +
+               assert.equal(template(inst),  '<div class="controls-StickyHeader controls-StickyHeader_position" style="top: -1px;padding-top: 1px;margin-top: -1px;z-index: 2;">' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div data-component="Controls/Event/Listener"></div>' +
                                                 '<div class="controls-StickyHeader__observationTargetTop" style="top: -3px;"></div>' +
