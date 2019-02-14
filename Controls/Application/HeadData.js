@@ -67,7 +67,7 @@ define('Controls/Application/HeadData', [
 
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive, true);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             if (self.defRender.isReady()) {
@@ -107,9 +107,9 @@ define('Controls/Application/HeadData', [
                }
             }
 
-            if (!self.isDebug) {
-               files.js = files.js.concat(self._getDictionaries());
-            }
+            // if (!self.isDebug) {
+            //    files.js = files.js.concat(self._getDictionaries());
+            // }
 
             self._version++;
             self.defRender.callback({
