@@ -28,6 +28,18 @@ define('Controls/Utils/getItemsBySelection', [
          result.set('excluded', prepareArray(selection.excluded));
 
          return result;
+      },
+      getSourceAdapter = function getSourceModel(dataSource) {
+         var adapter;
+
+         //до выполнения задачи https://online.sbis.ru/opendoc.html?guid=4190d360-e9de-49ed-a1a4-7420686134d0
+         if (dataSource instanceof source.PrefetchProxy) {
+            adapter = dataSource._$target.getAdapter();
+         } else {
+            adapter = dataSource.getAdapter();
+         }
+
+         return adapter;
       };
 
    return function(selection, dataSource, items, filter) {
@@ -51,7 +63,7 @@ define('Controls/Utils/getItemsBySelection', [
          query = new source.Query();
 
          filter = filter ? cClone(filter) : {};
-         filter.selection = selectionToRecord(selection, dataSource.getAdapter());
+         filter.selection = selectionToRecord(selection, getSourceAdapter(dataSource));
 
          result = dataSource.query(query.where(filter)).addCallback(function(list) {
             return chain.factory(list.getAll()).toArray().map(function(item) {
