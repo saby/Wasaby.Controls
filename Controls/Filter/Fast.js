@@ -12,11 +12,12 @@ define('Controls/Filter/Fast',
       'Types/util',
       'Core/helpers/Object/isEqual',
       'Core/core-merge',
+      'Controls/History/dropdownHistoryUtils',
       'css!theme?Controls/Filter/Fast/Fast',
       'css!theme?Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, chain, collection, cInstance, clone, pDeferred, Deferred, Utils, isEqual, Merge) {
+   function(Control, template, SourceController, chain, collection, cInstance, clone, pDeferred, Deferred, Utils, isEqual, Merge, historyUtils) {
       'use strict';
 
       /**
@@ -43,7 +44,7 @@ define('Controls/Filter/Fast',
 
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
-               //TODO need to support serialization of History/Source, will be done on the task https://online.sbis.ru/opendoc.html?guid=60a7e58e-44ff-4d82-857f-356e7c9007c9
+               // TODO need to support serialization of History/Source, will be done on the task https://online.sbis.ru/opendoc.html?guid=60a7e58e-44ff-4d82-857f-356e7c9007c9
                self._items = new collection.List({
                   items: clone(items)
                });
@@ -63,14 +64,18 @@ define('Controls/Filter/Fast',
             return itemConfig;
          },
 
-         loadItemsFromSource: function(instance, source, keyProperty, filter, navigation) {
+         loadItemsFromSource: function(instance, source, keyProperty, filter, navigation, dataLoadCallback) {
             var sourceController = new SourceController({
                source: source,
                navigation: navigation,
                idProperty: keyProperty
             });
-            return sourceController.load(filter).addCallback(function(items) {
+
+            return sourceController.load(historyUtils.getSourceFilter(filter, source)).addCallback(function(items) {
                instance._items = items;
+               if (dataLoadCallback) {
+                  dataLoadCallback(items);
+               }
             });
          },
 
@@ -83,7 +88,7 @@ define('Controls/Filter/Fast',
                _private.prepareItems(self._configs[index], properties.items);
                return Deferred.success(self._configs[index]._items);
             } if (properties.source) {
-               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter, properties.navigation);
+               return _private.loadItemsFromSource(self._configs[index], properties.source, properties.keyProperty, properties.filter, properties.navigation, properties.dataLoadCallback);
             }
          },
 
@@ -98,7 +103,7 @@ define('Controls/Filter/Fast',
             return pDef.done().getResult().addCallback(function() {
                self._setText();
                self._forceUpdate();
-               
+
                return {
                   configs: self._configs,
                   items: self._items
@@ -164,7 +169,7 @@ define('Controls/Filter/Fast',
 
             var self = this,
                resultDef;
-            
+
             if (receivedState) {
                this._configs = receivedState.configs;
                this._items = receivedState.items;
@@ -208,7 +213,7 @@ define('Controls/Filter/Fast',
             var config = {
                templateOptions: Merge(_private.getItemPopupConfig(this._configs[index]), templateOptions),
 
-               //FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
+               // FIXME: this._container - jQuery element in old controls envirmoment https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
                target: (this._container[0] || this._container).children[index]
             };
 

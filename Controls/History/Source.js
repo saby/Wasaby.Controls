@@ -77,6 +77,11 @@ define('Controls/History/Source', [
                frequent: frequent,
                recent: recent
             };
+            if (self.historySource._pinned instanceof Array) {
+               self.historySource._pinned.forEach(function(pinId) {
+                  pinned.add(_private.getRawHistoryItem(self, pinId, self.historySource.getHistoryId()));
+               });
+            }
          } else {
             self._history = data;
          }

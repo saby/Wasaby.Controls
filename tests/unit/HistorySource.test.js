@@ -318,6 +318,31 @@ define(
                   done();
                })
             });
+            it('initHistory', function(done){
+               let newData = new sourceLib.DataSet({
+                  rawData: {
+                     frequent: createRecordSet(frequentData),
+                     pinned: createRecordSet(pinnedData),
+                     recent: createRecordSet(recentData)
+                  },
+                  itemsProperty: '',
+                  idProperty: 'ObjectId'
+               });
+               let memorySource = new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: items
+               });
+               memorySource.query().addCallback(function(res) {
+                  let self = {historySource: ['1', '2']};
+                  let sourceItems = res.getAll();
+                  historySource._private.initHistory(self, newData, sourceItems);
+                  assert.equal(self._history.pinned.getCount(), 1);
+                  self._history.pinned.forEach(function(pinnedItem){
+                     assert.isFalse(pinnedItem.getId()=='9');
+                  });
+                  done();
+               });
+            });
          });
          describe('check source original methods', function() {
             it('create', function() {
