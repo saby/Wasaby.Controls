@@ -132,12 +132,15 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
          this._escProcessing.keyUpHandler(_private.keyPressed, this, [e]);
       },
       _getMessage: function() {
-         var message = this._options.message || '';
-         if (message.indexOf('<a') > -1 && message.indexOf('</a>') > -1) {
+         if (this._hasMarkup()) {
             IoC.resolve('ILogger').error('Confirmation', 'В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.');
-            return MarkupConverter.htmlToJson('<span>' + message + '</span>');
+            return MarkupConverter.htmlToJson('<span>' + this._options.message + '</span>');
          }
-         return message;
+         return this._options.message;
+      },
+      _hasMarkup: function() {
+         var message = this._options.message;
+         return typeof message === 'string' && message.indexOf('<a') > -1 && message.indexOf('</a>') > -1;
       }
    });
 
