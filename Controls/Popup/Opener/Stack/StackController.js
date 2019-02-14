@@ -162,7 +162,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.add(item);
             if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
                item.popupOptions.stackClassName += ' controls-Stack__open';
-               Vdom.animationWaiter(true);
                _private.updatePopupOptions(item);
                item.popupState = BaseController.POPUP_STATE_CREATING;
             }
@@ -201,10 +200,10 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementAnimated: function(item) {
-            Vdom.animationWaiter(false);
             item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
             _private.updatePopupOptions(item);
             if (item.popupState === BaseController.POPUP_STATE_DESTROYING) {
+               Vdom.animationWaiter(false);
                _private.elementDestroyed(this, item);
             } else {
                item.popupState = BaseController.POPUP_STATE_CREATED;
