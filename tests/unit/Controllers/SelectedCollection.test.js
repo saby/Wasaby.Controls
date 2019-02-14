@@ -109,9 +109,8 @@ define([
          SelectedCollection._private.addItem(self, item2);
          assert.deepEqual(self._selectedKeys, [1, 2]);
          assert.isTrue(keysChanged);
-         assert.notEqual(self._items.at(0), item);
-         assert.deepEqual(self._items.at(0), item);
-         assert.deepEqual(self._items.at(1), item2);
+         assert.equal(self._items.at(0), item);
+         assert.equal(self._items.at(1), item2);
          assert.equal(textValue, 'Roman, Aleksey');
       });
 

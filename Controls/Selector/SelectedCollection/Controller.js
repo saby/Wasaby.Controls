@@ -65,7 +65,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
             key = item.get(self._options.keyProperty),
 
             //That would not change on the link, and it was possible to track changes in child controls
-            selectedItems = _private.getItems(self).clone();
+            selectedItems = _private.getItems(self).clone(true);
 
          if (selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
@@ -89,7 +89,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
             keyProperty = self._options.keyProperty,
             key = item.get(keyProperty),
             indexKey = selectedKeys.indexOf(key),
-            selectedItems = _private.getItems(self).clone(),
+            selectedItems = _private.getItems(self).clone(true),
             indexItem = selectedItems.getIndexByValue(keyProperty, key);
 
          if (indexKey !== -1) {
