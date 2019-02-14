@@ -28,6 +28,11 @@
    display: inline-flex;
    align-items: baseline;
    max-width: 100%;
+   /**
+   Breadcrumbs should shrink only if the back button can't shrink any further, so the back button has to have drastically larger flex-shrink.
+    */
+   flex-shrink: 9999;
+   overflow: hidden;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
