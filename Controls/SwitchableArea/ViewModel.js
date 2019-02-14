@@ -11,7 +11,7 @@ function(
    var _private = {
       updateLoadStatus: function(selectedKey, self) {
          self._items.find(function(item) {
-            return selectedKey === item.id;
+            return selectedKey === item.id || selectedKey === item.key;
          }).loaded = true;
       }
    };
