@@ -295,14 +295,18 @@ define([
             templateOptions,
             isShowSelector = false,
             selectedCollection = new SelectedCollection(),
+            items = new collection.List(),
+            selectedItems,
             opener;
 
          selectedCollection._options.selectorTemplate = {};
+         selectedCollection._items = items;
          selectedCollection._children.selectorOpener = {
             open: function(config) {
                isShowSelector = true;
                templateOptions = config.templateOptions;
                opener = config.opener;
+               selectedItems = config.selectedItem;
             }
          };
 
@@ -311,6 +315,7 @@ define([
          });
 
          assert.isTrue(isShowSelector);
+         assert.isTrue(items !== selectedItems);
          assert.equal(templateOptions.selectedTab, 'Employees');
          assert.equal(opener, selectedCollection);
       });
