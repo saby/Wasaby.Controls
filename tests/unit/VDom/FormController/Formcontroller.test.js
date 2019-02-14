@@ -102,7 +102,6 @@ define([
          assert.equal(setRecordCalled, false);
          assert.equal(readCalled, false);
          assert.equal(createCalled, true);
-         assert.equal(FC._isNewRecord, true);
       });
 
       it('delete new record', () => {

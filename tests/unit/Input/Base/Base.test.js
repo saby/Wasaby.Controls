@@ -5,10 +5,11 @@ define(
       'Core/core-instance',
       'Controls/Input/Base',
       'tests/resources/ProxyCall',
+      'tests/Input/Base/InputUtility',
       'tests/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
-   function(EventBus, constants, instance, Base, ProxyCall, TemplateUtil, Vdom) {
+   function(EventBus, constants, instance, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
@@ -186,6 +187,7 @@ define(
                   ctrl._beforeMount({
                      value: 'test value'
                   });
+                  ctrl._options.tooltip = 'test tooltip';
                });
                it('The value fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
@@ -194,7 +196,7 @@ define(
 
                   ctrl._mouseEnterHandler();
 
-                  assert.equal(ctrl._tooltip, '');
+                  assert.equal(ctrl._tooltip, 'test tooltip');
                });
                it('The value no fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
@@ -431,6 +433,18 @@ define(
 
                assert.deepEqual(calls.length, 0);
             });
+            it('Focus the field by tab.', function() {
+               ctrl._beforeUpdate({
+                  value: 'test'
+               });
+
+               ctrl._focusInHandler();
+
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
          });
          describe('Focus out event', function() {
             var savedNotify = EventBus.globalChannel().notify;
@@ -588,6 +602,70 @@ define(
                }));
 
                assert.equal(calls.length, 0);
+            });
+         });
+         describe('Calling the inputCompleted event.', function() {
+            var block = function() {
+               return false
+            };
+
+            it('Pressing the key enter.', function() {
+               InputUtility.init(ctrl);
+
+               ctrl._focusInHandler();
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.equal(calls.length, 0);
+            });
+            it('Pressing the key enter and enter "test".', function() {
+               InputUtility.init(ctrl);
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test');
+               InputUtility.triggerInput(ctrl);
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', ['test', 'test']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputCompleted', ['test', 'test']]
+                  }
+               ]);
+            });
+            it('Block the change event. Pressing the key enter.', function() {
+               InputUtility.init(ctrl);
+               ctrl._isTriggeredChangeEventByEnterKey = block;
+
+               ctrl._focusInHandler();
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.equal(calls.length, 0);
+            });
+            it('Block the change event. Pressing the key enter and enter "test".', function() {
+               InputUtility.init(ctrl);
+               ctrl._isTriggeredChangeEventByEnterKey = block;
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test');
+               InputUtility.triggerInput(ctrl);
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: constants.key.enter
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test', 'test']]
+               }]);
             });
          });
          describe('The value in the field is changed via auto-complete.', function() {

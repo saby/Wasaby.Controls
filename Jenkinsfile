@@ -91,7 +91,7 @@ def download_coverage_json(version, type_tests, type_controls) {
         fi
         """
     sh returnStdout: true, script: script
-    def exist_json = fileExists 'result.json'
+    def exist_json = fileExists "result_${type_tests}.json"
     return exist_json
 
 }
@@ -182,7 +182,6 @@ def getParams(user) {
             booleanParam(defaultValue: false, description: "Запуск тестов верстки по изменениям. Список формируется на основе coverage существующих тестов", name: 'run_reg'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ интеграционных тестов", name: 'run_all_int'),
             booleanParam(defaultValue: false, description: "Запуск ВСЕХ тестов верстки", name: 'run_all_reg'),
-            booleanParam(defaultValue: false, description: "Запуск unit тестов", name: 'run_unit'),
             booleanParam(defaultValue: false, description: "Пропустить тесты, которые падают в RC по функциональным ошибкам на текущий момент", name: 'skip')
             ]
     if ( ["kraynovdo", "ls.baranova", "ma.rozov"].contains(user) ) {
@@ -211,7 +210,7 @@ echo "Генерируем параметры"
 
 def regr = params.run_reg
 def all_regr = params.run_all_reg
-def unit = params.run_unit
+def unit
 def inte = params.run_int
 def all_inte = params.run_all_int
 def boss = params.run_boss
@@ -250,10 +249,10 @@ node('controls') {
         def tests_for_run_reg_sbis3 = ""
         def tests_for_run_reg_vdom = ""
         def smoke_result = true
-        def run_tests_int_sbis3 = true
-        def run_tests_int_vdom = true
-        def run_tests_reg_sbis3 = true
-        def run_tests_reg_vdom = true
+        def run_tests_int_sbis3 = false
+        def run_tests_int_vdom = false
+        def run_tests_reg_sbis3 = false
+        def run_tests_reg_vdom = false
 
         try {
         echo "Назначаем переменные"
@@ -313,6 +312,19 @@ node('controls') {
             unit = false
             inte = true
             regr = true
+        }
+
+        if (vdom_controls && (inte || all_inte)) {
+            run_tests_int_vdom = true
+        }
+        if (sbis3_controls && (inte || all_inte)) {
+            run_tests_int_sbis3 = true
+        }
+        if (vdom_controls && (regr || all_regr)) {
+            run_tests_reg_vdom = true
+        }
+        if (sbis3_controls && (regr || all_regr)) {
+            run_tests_reg_sbis3 = true
         }
 
         if (!vdom_controls && !sbis3_controls && !unit) {
@@ -536,6 +548,8 @@ node('controls') {
                         def ws_revision = params.ws_revision
                         if ("${params.ws_revision}" == "sdk" ){
                             ws_revision = sh returnStdout: true, script: "${python_ver} ${workspace}/constructor/read_meta.py -rev ${SDK}/meta.info ws"
+                        } else {
+                            sh "python3 ${workspace}/constructor/replace_package_json.py ${workspace}/controls/ sbis3-ws ${params.ws_revision}"
                         }
                         dir(workspace) {
                             checkout([$class: 'GitSCM',
@@ -601,15 +615,19 @@ node('controls') {
 
         if ( unit ){
             dir("./controls"){
-                sh """
-                npm cache clean --force
-                npm set registry https://registry.npmjs.org/
-                """
+                stage("build unit stand"){
+                    sh """
+                    npm cache clean --force
+                    npm set registry https://registry.npmjs.org/
+                    npm i
+                    npm run build
+                    """
+                }
                 stage ("Unit тесты node"){
                     sh returnStatus: true, script: """
                     echo "run isolated"
                     export test_report="artifacts/test-isolated-report.xml"
-                    sh ./bin/test-isolated
+                    npm run test:node
                     """
                     junit keepLongStdio: true, testResults: "**/artifacts/test-isolated-report.xml"
                     unit_result = currentBuild.result == null
@@ -627,7 +645,7 @@ node('controls') {
                     export WEBDRIVER_remote_host=10.76.159.209
                     export WEBDRIVER_remote_port=4444
                     export test_report=artifacts/test-browser-report.xml
-                    sh ./bin/test-browser
+                    npm run test:browser
                     """
                     junit keepLongStdio: true, testResults: "**/artifacts/test-browser-report.xml"
                     unit_result = currentBuild.result == null
@@ -721,7 +739,7 @@ node('controls') {
             }
         }
 		def domain_name = ".unix.tensor.ru"
-		
+
         if ( all_regr|| regr || inte || all_inte ) {
                 def soft_restart = "True"
                 if ( params.browser_type in ['ie', 'edge'] ){
@@ -827,19 +845,23 @@ node('controls') {
                         if (inte && !boss) {
                             if (sbis3_controls) {
                                 if ( download_coverage_json(version, "int", "SBIS3.CONTROLS") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_sbis3 = "--files_to_start ${tests_files_int}"
+                                } else {
+                                run_tests_int_sbis3 = false
                                 }
                             }
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "int", "VDOM") ) {
-                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json | tr '\n' ' '"
+                                tests_files_int = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_int.json | tr '\n' ' '"
                                 if (tests_files_int) {
                                     echo "${tests_files_int}"
                                     tests_for_run_int_vdom = "--files_to_start ${tests_files_int}"
+                                } else {
+                                    run_tests_int_vdom = false
                                 }
                             }
 
@@ -850,19 +872,23 @@ node('controls') {
                         if (regr && !boss) {
                             if (sbis3_controls) {
                             if ( download_coverage_json(version, "reg", "SBIS3.CONTROLS") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_sbis3 = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_sbis3 = false
                                  }
                                }
                             }
                             if (vdom_controls) {
                                 if ( download_coverage_json(version, "reg", "VDOM") ) {
-                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result.json| tr '\n' ' '"
+                                 tests_files_reg = sh returnStdout: true, script: "python3 coverage_handler.py -c ${changed_files} -rj result_reg.json| tr '\n' ' '"
                                  if (tests_files_reg) {
                                  echo "${tests_files_reg}"
                                      tests_for_run_reg_vdom = "--files_to_start ${tests_files_reg}"
+                                 } else {
+                                    run_tests_reg_vdom = false
                                  }
                                }
 
@@ -1038,7 +1064,7 @@ node('controls') {
 
                 if (inte) {
                     def int_description_sbis3
-                    if (sbis3_controls && run_tests_int_sbis3) {
+                    if (run_tests_int_sbis3) {
                         int_data_sbis3 = build_description("(int-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./int/SBIS3.CONTROLS/build_description.txt", skip)
                         if ( int_data_sbis3 ) {
                          int_title_sbis3 = int_data_sbis3[0]
@@ -1049,7 +1075,7 @@ node('controls') {
                          }
                     }
                     }
-                    if (vdom_controls && run_tests_int_vdom) {
+                    if (run_tests_int_vdom) {
                      int_data_vdom = build_description("(int-${params.browser_type}) ${version} VDOM controls", "./int/VDOM/build_description.txt", skip)
                      if ( int_data_vdom ) {
                          int_title_vdom = int_data_vdom[0]
@@ -1062,7 +1088,7 @@ node('controls') {
                 }
                 }
                 if (regr ) {
-                    if (sbis3_controls && run_tests_reg_sbis3) {
+                    if (run_tests_reg_sbis3) {
                     reg_data_sbis3 = build_description("(reg-${params.browser_type}) ${version} SBIS3.CONTROLS controls", "./reg/SBIS3.CONTROLS/build_description.txt", skip)
                     if ( reg_data_sbis3 ) {
                         reg_title_sbis3 = reg_data_sbis3[0]
@@ -1074,7 +1100,7 @@ node('controls') {
                     }
                 }
                 }
-                if (vdom_controls && run_tests_reg_vdom) {
+                if (run_tests_reg_vdom) {
                     reg_data_vdom = build_description("(reg-${params.browser_type}) ${version} VDOM controls", "./reg/VDOM/build_description.txt", skip)
                     if ( reg_data_vdom ) {
                         reg_title_vdom = reg_data_vdom[0]
@@ -1095,22 +1121,30 @@ node('controls') {
     if ( unit ){
         junit keepLongStdio: true, testResults: "**/artifacts/*.xml"
     }
-    if ( (regr || all_regr) && (run_tests_reg_sbis3 || run_tests_reg_vdom)){
-        if (sbis3_controls) {
+    if ( (regr || all_regr) ){
+        if (run_tests_reg_sbis3) {
             dir("./controls/tests/reg/SBIS3.CONTROLS"){
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
+                sh """mkdir -p reporter"""
+                sh """mv capture_report/report.html reporter/report.html"""
+                sh """mv capture_report/report.js reporter/report.js"""
+                sh """mv capture_report/report.css reporter/report.css"""
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './reporter/', reportFiles: 'report.html', reportName: 'Regression Report SBIS3.CONTROLS', reportTitles: ''])
             }
         }
-        if (vdom_controls) {
+        if (run_tests_reg_vdom) {
             dir("./controls/tests/reg/VDOM"){
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './capture_report/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
+                sh """mkdir -p reporter"""
+                sh """mv capture_report/report.html reporter/report.html"""
+                sh """mv capture_report/report.js reporter/report.js"""
+                sh """mv capture_report/report.css reporter/report.css"""
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: false, keepAll: false, reportDir: './reporter/', reportFiles: 'report.html', reportName: 'Regression Report VDOM', reportTitles: ''])
             }
         }
         archiveArtifacts allowEmptyArchive: true, artifacts: '**/report.zip', caseSensitive: false
     }
     gitlabStatusUpdate()
     if (!run_tests_int_sbis3 && !run_tests_int_vdom && !run_tests_reg_sbis3 && !run_tests_reg_vdom ) {
-        currentBuild.displayName = "#${env.BUILD_NUMBER} TEST BY COVERAGE"
+        currentBuild.displayName = "#${env.BUILD_NUMBER} NOT FIND TESTS BY COVERAGE"
         currentBuild.description = "Нет тестов для запуска по изменениям в ветке"
     }
         }

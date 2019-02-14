@@ -87,7 +87,7 @@ define('Controls/List/Swipe/SwipeControl', [
 
       _beforeUpdate: function(newOptions, context) {
          var self = this;
-         if (this._swipeConfig && !context.isTouch.isTouch) {
+         if (this._swipeConfig && context.isTouch && !context.isTouch.isTouch) {
             _private.closeSwipe(this);
          }
          if (
@@ -157,6 +157,11 @@ define('Controls/List/Swipe/SwipeControl', [
          if (this._animationState === 'close') {
             _private.notifyAndResetSwipe(this);
          }
+      },
+
+      _beforeUnmount: function() {
+         this._measurer = null;
+         this._swipeConfig = null;
       }
    });
 

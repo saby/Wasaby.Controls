@@ -192,10 +192,15 @@ define('Controls/Filter/Button/Panel', [
          var self = this;
          _private.validate(this).addCallback(function(result) {
             if (_private.isPassedValidation(result)) {
+
+               /*
+               Due to the fact that a bar can be created as you like (the bar will be not in the root, but a bit deeper)
+               and the popup captures the sendResult operation from the root node, bubbling must be set in true.
+               */
                self._notify('sendResult', [{
                   filter: _private.getFilter(self),
                   items: _private.prepareItems(items || self._items)
-               }]);
+               }], {bubbling: true});
                self._notify('close', [], {bubbling: true});
             }
          });

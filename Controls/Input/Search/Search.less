@@ -68,6 +68,9 @@
    color: @color_Search_iconSearch_active;
 }
 
-.controls-Search__input:placeholder-shown {
-   caret-color: @color_Search-caret_empty;
+//WILL BE DELETED IN 19.200 :placeholder-shown correctly work only in Chrome, reworked in 19.200 by https://online.sbis.ru/opendoc.html?guid=1eb2d137-3ccd-4681-a2f5-36c250cf995e
+.ws-is-chrome {
+   .controls-Search__input:placeholder-shown {
+      caret-color: @color_Search-caret_empty;
+   }
 }

@@ -7,7 +7,8 @@
         <div class="controls-EditingTemplateText
                 {{enabled ? 'controls-EditingTemplateText_enabled'}}
                 controls-EditingTemplateText_size_{{size ? size : 'default'}}
-                controls-EditingTemplateText_style_{{style ? style : 'default'}}">
+                controls-EditingTemplateText_style_{{style ? style : 'default'}}
+                {{itemData.isActive ? 'controls-EditingTemplateText_active'}}">
             <div class="controls-EditingTemplateText__inner">{{value}}</div>
         </div>
     </ws:else>

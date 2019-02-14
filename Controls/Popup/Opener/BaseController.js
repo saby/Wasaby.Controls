@@ -169,6 +169,14 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         popupResize: function(element, container) {
+            return this._elementUpdated(element, container);
+         },
+
+         elementAnimated: function() {
+
+         },
+
          getDefaultConfig: function(item) {
             item.position = {
                top: -10000,

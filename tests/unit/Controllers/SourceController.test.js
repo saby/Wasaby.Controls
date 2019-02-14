@@ -58,7 +58,7 @@ define([
                source: 'page',
                sourceConfig: {
                   pageSize: 1,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
 
@@ -81,12 +81,12 @@ define([
                source: 'page',
                sourceConfig: {
                   pageSize: 10,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          });
          var resParams = SourceController._private.modifyQueryParamsWithNavigation({filter: {}}, null, controller._queryParamsController);
-         assert.deepEqual({filter:{}, limit: 10, offset: 0}, resParams, 'Wrong query params in page navigation');
+         assert.deepEqual({filter:{}, limit: 10, offset: 0, meta:{hasMore: false}}, resParams, 'Wrong query params in page navigation');
 
          controller = new SourceController({
             source: source,

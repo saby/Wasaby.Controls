@@ -12,7 +12,9 @@ define([
    'Core/Deferred',
    'Core/core-instance',
    'Core/constants',
-   'Controls/List/ListView'
+   'Controls/List/ListView',
+   'Types/entity',
+   'Types/collection'
 ], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
@@ -136,7 +138,7 @@ define([
             }, 100);
          }, 1);
       });
-   
+
       it('_private::getSortingOnChange', function() {
          var getEmptySorting = function() {
             return [];
@@ -150,7 +152,7 @@ define([
          var getMultiSorting = function() {
             return [{test: 'DESC'}, {test2: 'DESC'}];
          };
-      
+
          assert.deepEqual(BaseControl._private.getSortingOnChange(getEmptySorting(), 'test'), getSortingDESC());
          assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingDESC(), 'test'), getSortingASC());
          assert.deepEqual(BaseControl._private.getSortingOnChange(getSortingASC(), 'test'), getEmptySorting());
@@ -289,7 +291,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -338,7 +340,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -502,7 +504,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 1,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -547,7 +549,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -600,7 +602,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -614,16 +616,27 @@ define([
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
-               assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+               //TODO remove after https://online.sbis.ru/opendoc.html?guid=006711c6-917b-4028-8484-369361546446
+               try {
+                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+                  BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
+                  BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
-               BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-               BaseControl._private.checkLoadToDirectionCapability(ctrl);
+                  setTimeout(function() {
+                     try {
+                        assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     }
+                     catch(e) {
+                        done(e);
+                     }
 
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     done();
+                  }, 100);
+               }
+               catch (e) {
+                  done(e);
+               }
 
-                  done();
-               }, 100);
             }, 100);
          }, 100);
       });
@@ -656,7 +669,7 @@ define([
 
          // искуственно покажем картинку
          ctrl._showLoadingIndicatorImage = true;
-   
+
          BaseControl._private.showIndicator(ctrl);
          assert.isTrue(ctrl._loadingIndicatorTimer === ctrl._loadingIndicatorTimer, 'all', 'Loading timer created one more tile');
 
@@ -695,7 +708,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -745,7 +758,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             },
          };
@@ -783,15 +796,15 @@ define([
             assert.isFalse(ctrl._pagingVisible, 'Wrong state _pagingVisible after scrollHide');
 
             BaseControl._private.handleListScroll(ctrl, 200, 'middle');
-            
+
             setTimeout(function() {
                assert.isFalse(ctrl._pagingVisible);
                done();
             }, 100);
-            
+
          }, 100);
       });
-      
+
       it('scrollHide/scrollShow base control state', function() {
          var cfg = {
             navigation: {
@@ -803,16 +816,16 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
          var baseControl = new BaseControl(cfg);
          baseControl.saveOptions(cfg);
-   
+
          BaseControl._private.onScrollHide(baseControl);
          assert.equal(baseControl._loadOffset, 0);
-   
+
          BaseControl._private.onScrollShow(baseControl);
          assert.equal(baseControl._loadOffset, 100);
       });
@@ -844,7 +857,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -901,7 +914,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -969,7 +982,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -1011,7 +1024,6 @@ define([
 
          var
             stopImmediateCalled = false,
-            preventDefaultCalled = false,
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -1052,9 +1064,6 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
                      keyCode: cConstants.key.down
                   }
@@ -1064,9 +1073,6 @@ define([
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
-                  },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
                   },
                   nativeEvent: {
                      keyCode: cConstants.key.space
@@ -1078,9 +1084,6 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
                      keyCode: cConstants.key.up
                   }
@@ -1088,7 +1091,6 @@ define([
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
@@ -1130,7 +1132,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -1222,7 +1224,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1265,7 +1267,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1305,7 +1307,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1344,7 +1346,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1378,7 +1380,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1417,7 +1419,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1454,7 +1456,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1491,7 +1493,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -2017,6 +2019,7 @@ define([
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 2);
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
@@ -2064,6 +2067,7 @@ define([
                itemData.multiSelectStatus = false;
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;
@@ -2115,7 +2119,7 @@ define([
 
                instance._listSwipe({}, itemData, childEvent);
                assert.equal(callBackCount, 1);
-
+               assert.equal(itemData, instance._listViewModel._activeItem);
                done();
             });
             return done;

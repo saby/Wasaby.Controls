@@ -1,8 +1,9 @@
 define('Controls/List/Remover', [
    'Core/Control',
    'Core/Deferred',
+   'Controls/Utils/getItemsBySelection',
    'Controls/Container/Data/ContextOptions'
-], function(Control, Deferred, dataOptions) {
+], function(Control, Deferred, getItemsBySelection, dataOptions) {
    var _private = {
       removeFromSource: function(self, items) {
          return self._source.destroy(items);
@@ -33,6 +34,8 @@ define('Controls/List/Remover', [
          if (dataOptions) {
             self._items = dataOptions.items;
             self._source = dataOptions.source;
+            self._filter = dataOptions.filter;
+            self._keyProperty = dataOptions.keyProperty;
          }
       }
    };
@@ -60,18 +63,25 @@ define('Controls/List/Remover', [
       },
 
       removeItems: function(items) {
-         var self = this;
-         _private.beforeItemsRemove(this, items).addCallback(function(result) {
-            if (result !== false) {
-               //TODO: показать индикатор
-               _private.removeFromSource(self, items).addCallback(function(result) {
-                  _private.removeFromItems(self, items);
-                  return result;
-               }).addBoth(function(result) {
-                  //TODO: скрыть индикатор
-                  _private.afterItemsRemove(self, items, result);
-               });
-            }
+         var
+            self = this,
+            itemsDeferred;
+
+         //Support removing with mass selection.
+         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+         itemsDeferred = items instanceof Array ? Deferred.success(items) : getItemsBySelection(items, this._source, this._items, this._filter);
+
+         itemsDeferred.addCallback(function(items) {
+            _private.beforeItemsRemove(self, items).addCallback(function(result) {
+               if (result !== false) {
+                  _private.removeFromSource(self, items).addCallback(function(result) {
+                     _private.removeFromItems(self, items);
+                     return result;
+                  }).addBoth(function(result) {
+                     _private.afterItemsRemove(self, items, result);
+                  });
+               }
+            });
          });
       }
    });

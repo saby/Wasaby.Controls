@@ -328,7 +328,10 @@ define('Controls/History/Source', [
       }
    };
 
-   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin], {
+   var Source = CoreExtend.extend([sourceLib.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
+      
+      //for compatibility with Types lib, will removed after rewriting module on typescript
+      '[Types/_source/ICrud]': true,
       _history: null,
       _oldItems: null,
       _parentProperty: null,
@@ -370,7 +373,7 @@ define('Controls/History/Source', [
 
       query: function(query) {
          var self = this;
-         var pd = new ParallelDeferred();
+         var pd = new ParallelDeferred({stopOnFirstError: false});
          var where = query.getWhere();
          var newItems;
 
@@ -383,7 +386,7 @@ define('Controls/History/Source', [
             return pd.done().getResult().addBoth(function(data) {
                self._oldItems = data[1].getAll();
                
-               if (data[0]) {
+               if (data[0] && !(data[0] instanceof Error)) {
                   _private.initHistory(self, data[0], self._oldItems);
                   newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);
                   self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);

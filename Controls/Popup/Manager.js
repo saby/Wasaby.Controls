@@ -35,8 +35,17 @@ define('Controls/Popup/Manager',
 
             self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
+               _private.fireEventHandler.call(self, id, 'onClose');
+               self._popupItems.remove(element);
+
+               // If the popup is not active, don't set the focus
+               if (element.isActive) {
+                  _private.activatePopup(self._popupItems);
+               }
+
+               _private.updateOverlay.call(self);
+               _private.redrawItems(self._popupItems);
                self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
-               return element;
             });
          },
 
@@ -111,6 +120,7 @@ define('Controls/Popup/Manager',
             var item = ManagerController.find(id);
             if (item) {
                item.waitDeactivated = false;
+               item.isActive = true;
             }
             _private.activeElement = {};
          },
@@ -118,6 +128,7 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var item = ManagerController.find(id);
             if (item) {
+               item.isActive = false;
                if (item.popupOptions.closeByExternalClick) {
                   if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
                      _private.finishPendings(id, function() {
@@ -156,6 +167,14 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupControlResize: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               return element.controller.popupResize(element, _private.getItemContainer(id));
+            }
+            return false;
+         },
+
          popupDragEnd: function(id, offset) {
             var element = ManagerController.find(id);
             if (element) {
@@ -182,8 +201,12 @@ define('Controls/Popup/Manager',
                // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
                // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
                setTimeout(function() {
-                  _private.activeElement[id].focus();
-                  delete _private.activeElement[id];
+                  //new popup can be activated and take focus during the timeout
+                  //will be fixed by https://online.sbis.ru/opendoc.html?guid=95166dc7-7eae-4728-99e2-e65251dd3ee3
+                  if (_private.activeElement[id]) {
+                     _private.activeElement[id].focus();
+                     delete _private.activeElement[id];
+                  }
                }, 0);
             }
             return false;
@@ -261,7 +284,7 @@ define('Controls/Popup/Manager',
 
          isIgnoreActivationArea: function(focusedContainer) {
             while (focusedContainer) {
-               if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
+               if (focusedContainer.classList && focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
                   return true;
                }
                focusedContainer = focusedContainer.parentElement;
@@ -331,6 +354,7 @@ define('Controls/Popup/Manager',
                isModal: options.isModal,
                controller: controller,
                popupOptions: options,
+               isActive: false,
                sizes: {},
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
@@ -375,18 +399,9 @@ define('Controls/Popup/Manager',
           * @param id popup id
           */
          remove: function(id) {
-            var self = this;
             var element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
-                  _private.fireEventHandler.call(self, id, 'onClose');
-                  self._popupItems.remove(element);
-                  _private.activatePopup(self._popupItems);
-
-                  _private.updateOverlay.call(self);
-                  _private.redrawItems(self._popupItems);
-                  return element;
-               });
+               _private.removeElement.call(this, element, _private.getItemContainer(id), id);
             }
          },
 

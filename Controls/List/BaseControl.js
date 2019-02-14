@@ -149,7 +149,17 @@ define('Controls/List/BaseControl', [
          return resDeferred;
       },
       scrollToItem: function(self, key) {
-         scrollToElement(self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)], true);
+         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
+         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
+         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
+         // https://git.sbis.ru/sbis/controls/merge_requests/65854
+         // corrupting integration tests
+         // fixed by error: https://online.sbis.ru/opendoc.html?guid=d348adda-5fee-4d1b-8cb7-9501026f4f3c
+         var
+            container = self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)];
+         if (container) {
+            scrollToElement(container, true);
+         }
       },
       setMarkedKey: function(self, key) {
          if (key !== undefined) {
@@ -208,6 +218,17 @@ define('Controls/List/BaseControl', [
 
       loadToDirection: function(self, direction, userCallback, userErrback) {
          _private.showIndicator(self, direction);
+
+         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
+         //при добавлении пачки в начало (подгрузка по скроллу вверх нужно чтоб был минимальный проскролл, чтоб пачка ушла за границы видимой части как и должна а не отобразилась сверху)
+         //Опция нужна, т.к. есть проблемы с queue при отрисовке изменений ViewModel, поэтому данный функционал включаем только по месту (в календаре)
+         //разобраться с queue по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63
+         if (self._options.fix1176592913 && direction === 'up') {
+            self._notify('doScroll', ['scrollCompensation'], {bubbling: true});
+         }
+
+         /**/
+
          if (self._sourceController) {
             return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                if (userCallback && userCallback instanceof Function) {
@@ -385,9 +406,19 @@ define('Controls/List/BaseControl', [
       },
 
       onScrollHide: function(self) {
-         self._loadOffset = 0;
-         self._pagingVisible = false;
-         self._forceUpdate();
+         var needUpdate = false;
+         if (self._loadOffset !== 0) {
+            self._loadOffset = 0;
+            needUpdate = true;
+         }
+         if (self._pagingVisible) {
+            self._pagingVisible = false;
+            needUpdate = true;
+         }
+
+         if (needUpdate) {
+            self._forceUpdate();
+         }
       },
 
       createScrollPagingController: function(self) {
@@ -681,7 +712,7 @@ define('Controls/List/BaseControl', [
 
       _needScrollCalculation: false,
       _loadTriggerVisibility: null,
-      _loadOffset: 100,
+      _loadOffset: 0,
       _topPlaceholderHeight: 0,
       _bottomPlaceholderHeight: 0,
       _menuIsShown: null,
@@ -703,7 +734,8 @@ define('Controls/List/BaseControl', [
             if (newOptions.virtualScrolling === true) {
                this._virtualScroll = new VirtualScroll({
                   virtualPageSize: newOptions.virtualPageSize,
-                  virtualSegmentSize: newOptions.virtualSegmentSize
+                  virtualSegmentSize: newOptions.virtualSegmentSize,
+                  updateItemsHeightsMode: newOptions.updateItemsHeightsMode
                });
             }
             this._loadTriggerVisibility = {
@@ -774,6 +806,9 @@ define('Controls/List/BaseControl', [
          if (this._virtualScroll) {
             this._virtualScroll.setItemsContainer(this._children.listView.getItemsContainer());
          }
+         if (this._options.fix1176592913 && this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+         }
       },
 
       _beforeUpdate: function(newOptions) {
@@ -826,20 +861,16 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
          }
 
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
          if (sortingChanged) {
             this._listViewModel.setSorting(newOptions.sorting);
          }
 
          if (filterChanged || recreateSource || sortingChanged) {
             _private.reload(this, newOptions);
+         }
+
+         if (this._virtualScroll && (this._listViewModel.getCount() != this._virtualScroll.getItemsCount())) {
+            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          }
 
       },
@@ -880,7 +911,8 @@ define('Controls/List/BaseControl', [
       },
 
       _afterUpdate: function(oldOptions) {
-         if (this._hasUndrawChanges) {
+         /*Оставляю старое поведение без опции для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
+         if (!this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
             _private.restoreMarkedKey(this);
             _private.checkLoadToDirectionCapability(this);
@@ -938,7 +970,17 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (direction === 'right' && !itemData.isSwiped) {
+
+         /**
+          * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+          * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+          * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+          * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+          *
+          * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+          * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+          */
+         if (direction === 'right' && !itemData.isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
             /**
              * After the right swipe the item should get selected.
              * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
@@ -953,6 +995,7 @@ define('Controls/List/BaseControl', [
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
+            this._listViewModel.setActiveItem(itemData);
          }
       },
 
@@ -995,10 +1038,19 @@ define('Controls/List/BaseControl', [
          }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
+         e.blockUpdate = true;
       },
 
       _viewResize: function() {
-         _private.checkLoadToDirectionCapability(this);
+         /*TODO переношу сюда костыль сделанный по https://online.sbis.ru/opendoc.html?guid=ce307671-679e-4373-bc0e-c11149621c2a*/
+         /*только под опцией для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
+         if (this._options.fix1176592913 && this._hasUndrawChanges) {
+            this._hasUndrawChanges = false;
+            _private.restoreMarkedKey(this);
+            if (this._virtualScroll) {
+               this._virtualScroll.updateItemsSizes();
+            }
+         }
       },
 
       beginEdit: function(options) {
@@ -1063,6 +1115,7 @@ define('Controls/List/BaseControl', [
                this._itemDragData = itemData;
             }
          }
+         event.blockUpdate = true;
       },
 
       _onLoadMoreClick: function() {
@@ -1071,7 +1124,7 @@ define('Controls/List/BaseControl', [
 
       _dragStart: function(event, dragObject) {
          this._listViewModel.setDragEntity(dragObject.entity);
-         this._listViewModel.setDragItemData(this._itemDragData);
+         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
       },
 
       _dragEnd: function(event, dragObject) {
@@ -1145,6 +1198,7 @@ define('Controls/List/BaseControl', [
                this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
+         event.blockUpdate = true;
       },
 
       _sortingChanged: function(event, propName, sortingType) {

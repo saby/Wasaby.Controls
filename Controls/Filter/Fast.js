@@ -6,6 +6,7 @@ define('Controls/Filter/Fast',
       'Types/chain',
       'Types/collection',
       'Core/core-instance',
+      'Core/core-clone',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'Types/util',
@@ -15,7 +16,7 @@ define('Controls/Filter/Fast',
       'css!theme?Controls/Input/Dropdown/Dropdown'
 
    ],
-   function(Control, template, SourceController, chain, collection, cInstance, pDeferred, Deferred, Utils, isEqual, Merge) {
+   function(Control, template, SourceController, chain, collection, cInstance, clone, pDeferred, Deferred, Utils, isEqual, Merge) {
       'use strict';
 
       /**
@@ -42,8 +43,9 @@ define('Controls/Filter/Fast',
 
          prepareItems: function(self, items) {
             if (!cInstance.instanceOfModule(items, 'Types/collection:List')) {
+               //TODO need to support serialization of History/Source, will be done on the task https://online.sbis.ru/opendoc.html?guid=60a7e58e-44ff-4d82-857f-356e7c9007c9
                self._items = new collection.List({
-                  items: Utils.object.clone(items)
+                  items: clone(items)
                });
             } else {
                self._items = Utils.object.clone(items);
@@ -96,6 +98,11 @@ define('Controls/Filter/Fast',
             return pDef.done().getResult().addCallback(function() {
                self._setText();
                self._forceUpdate();
+               
+               return {
+                  configs: self._configs,
+                  items: self._items
+               };
             });
          },
 
@@ -151,13 +158,17 @@ define('Controls/Filter/Fast',
          _configs: null,
          _items: null,
 
-         _beforeMount: function(options) {
+         _beforeMount: function(options, context, receivedState) {
             this._configs = {};
             this._onResult = _private.onResult.bind(this);
 
             var self = this,
                resultDef;
-            if (options.items) {
+            
+            if (receivedState) {
+               this._configs = receivedState.configs;
+               this._items = receivedState.items;
+            } else if (options.items) {
                _private.prepareItems(this, options.items);
                resultDef = _private.reload(this);
             } else if (options.source) {

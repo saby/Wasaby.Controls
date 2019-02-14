@@ -10,10 +10,11 @@
          on:popupDragEnd="_popupDragEnd()"
          on:maximized="_maximized()"
          on:keyup="_keyUp()"
+         on:keydown="_keyDown()"
          on:transitionend="_animated()"
          on:registerOpenerUpdateCallback="_registerOpenerUpdateCallback()"
          on:unregisterOpenerUpdateCallback="_unregisterOpenerUpdateCallback()"
-         on:controlResize="_update()">
+         on:controlResize="_controlResize()">
       </ws:partial>
    </Controls.Event.Registrator>
    <Controls.Event.Listener event="controlResize" on:controlResize="_update()"/>
