@@ -1,21 +1,68 @@
-<div class="123">
-    <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
-        <ws:content>
-            <Controls.List
-                    source="{{_viewSource}}"
-                    markedKey="{{2}}"
-                    displayProperty="title"
-                    allowEmptySelection="{{false}}"
-                    multiSelect="{{true}}"
-                    name="listVirt"
-                    keyProperty="id"
-                    virtualScrolling="{{true}}"
-                    virtualPageSize="{{100}}"
-                    virtualSegmentSize="{{20}}">
-                <ws:navigation source="page" view="infinity">
-                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
-                </ws:navigation>
-            </Controls.List>
-        </ws:content>
-    </Controls.Container.Scroll>
+<div class="demo-wrapper-virt">
+    <div class="demo-control_block">
+        <h2>Controls/List</h2>
+        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+            <ws:content>
+                <Controls.List
+                        source="{{_viewSource}}"
+                        markedKey="{{2}}"
+                        keyProperty="id"
+                        multiSelectVisibility="visible"
+                        displayProperty="title"
+                        bind:selectedKeys="_listSelectedKeys"
+                        virtualScrolling="{{true}}">
+                    <ws:navigation source="page" view="infinity">
+                        <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+                    </ws:navigation>
+                </Controls.List>
+            </ws:content>
+        </Controls.Container.Scroll>
+    </div>
+    <div class="demo-control_block">
+        <h2>Controls/Grid</h2>
+        <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+            <ws:content>
+                <Controls.Grid
+                        source="{{_viewSource}}"
+                        name="gridVirt"
+                        virtualScrolling="{{true}}"
+                        bind:selectedKeys="_gridSelectedKeys"
+                        multiSelectVisibility="visible"
+                        columns="{{_columns}}"
+                        rowSeparatorVisibility="{{true}}"
+                        keyProperty="id">
+                    <ws:virtualScrollConfig virtualPageSize="{{70}}" virtualSegmentSize="{{30}}"/>
+                    <ws:navigation source="page" view="infinity">
+                        <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+                    </ws:navigation>
+                </Controls.Grid>
+            </ws:content>
+        </Controls.Container.Scroll>
+    </div>
+    <div class="demo-control_block">
+        <h2>Controls/TreeGrid</h2>
+        <Controls.Container.Data source="{{_treeViewSource}}" keyProperty="id">
+            <Controls.Container.MultiSelector>
+                <Controls.Container.Scroll attr:class="cDemo-ScrollContainer">
+                    <Controls.List.Container>
+                        <Controls.List.MultiSelector >
+                            <Controls.TreeGrid
+                                    multiSelectVisibility="visible"
+                                    bind:selectedKeys="_treeSelectedKeys"
+                                    parentProperty="parentId"
+                                    nodeProperty="nodeType"
+                                    virtualScrolling="{{true}}"
+                                    columns="{{_treeColumns}}">
+                                <ws:virtualScrollConfig itemsHeightsState="Changeable"/>
+                                <ws:navigation source="page" view="infinity">
+                                    <ws:sourceConfig pageSize="{{200}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+                                </ws:navigation>
+                            </Controls.TreeGrid>
+                        </Controls.List.MultiSelector>
+                    </Controls.List.Container>
+                </Controls.Container.Scroll>
+            </Controls.Container.MultiSelector>
+        </Controls.Container.Data>
+    </div>
+
 </div>
