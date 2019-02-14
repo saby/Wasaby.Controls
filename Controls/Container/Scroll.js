@@ -544,14 +544,14 @@ define('Controls/Container/Scroll',
             },
 
             selectedKeysChanged: function(event) {
-               if(event.propagating()) {
+               if (event.propagating()) {
                   var args = Array.prototype.slice.call(arguments, 1);
                   this._notify('selectedKeysChanged', args);
                }
             },
 
             excludedKeysChanged: function() {
-               if(event.propagating()) {
+               if (event.propagating()) {
                   var args = Array.prototype.slice.call(arguments, 1);
                   this._notify('excludedKeysChanged', args);
                }
