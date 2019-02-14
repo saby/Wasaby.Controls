@@ -142,6 +142,10 @@ define('Controls/Popup/Manager/Popup',
             runDelayed(this._callOpenersUpdate.bind(this));
          },
 
+         _controlResize: function() {
+            this._notify('popupControlResize', [this._options.id], { bubbling: true });
+         },
+
          /**
           * Proxy popup result
           * @function Controls/Popup/Manager/Popup#_sendResult
