@@ -35,7 +35,7 @@ define('Controls/List/Controllers/VirtualScroll',
                for (var i = 0; i < items.length; i++) {
                   self._itemsHeights[startIndex + i] = uDimension(items[i]).height;
                }
-            } else if (updateItemsHeightsMode === 'allways') {
+            } else if (self._updateItemsHeightsMode === 'always') {
                for (var i = 0; i < items.length; i++) {
                   self._itemsHeights[i] = uDimension(items[i]).height;
                }
