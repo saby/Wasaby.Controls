@@ -321,6 +321,10 @@ function(cMerge,
             cfg.componentOptions.onResultHandlerEvent = cfg.onResultHandlerEvent;
          }
 
+         if (cfg.onOpenHandlerEvent) {
+            cfg.componentOptions.onOpenHandlerEvent = cfg.onOpenHandlerEvent;
+         }
+
          this._setSizes(cfg, templateClass);
 
          cfg.componentOptions._popupOptions = {
@@ -471,6 +475,10 @@ function(cMerge,
 
          if (newCfg._events && newCfg._events.onResult) {
             newCfg.dialogOptions.onResultHandlerEvent = newCfg._events.onResult;
+         }
+
+         if (newCfg._events && newCfg._events.onOpen) {
+            newCfg.dialogOptions.onOpenHandlerEvent = newCfg._events.onOpen;
          }
 
          return newCfg;

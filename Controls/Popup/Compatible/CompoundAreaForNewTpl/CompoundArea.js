@@ -135,6 +135,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
          _afterMountHandler: function() {
             var self = this;
+            this._options.onOpenHandlerEvent && this._options.onOpenHandlerEvent('onOpen');
             self._baseAfterMount = self._vDomTemplate._afterMount;
             self._vDomTemplate._afterMount = function() {
                self._baseAfterMount.apply(this, arguments);
