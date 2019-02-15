@@ -541,6 +541,24 @@ define('Controls/Container/Scroll',
              */
             scrollToBottom: function() {
                _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+            },
+
+            // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
+            // https://online.sbis.ru/opendoc.html?guid=19d6ff31-3912-4d11-976f-40f7e205e90a
+            selectedKeysChanged: function(event) {
+               // Forwarding bubbling events makes no sense.
+               if (!event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('selectedKeysChanged', args);
+               }
+            },
+
+            excludedKeysChanged: function(event) {
+               // Forwarding bubbling events makes no sense.
+               if (!event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('excludedKeysChanged', args);
+               }
             }
          });
 
