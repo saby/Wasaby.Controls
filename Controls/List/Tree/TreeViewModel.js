@@ -511,7 +511,10 @@ define('Controls/List/Tree/TreeViewModel', [
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
-            this.setMarkedKey(this._items.at(0).getId());
+
+            if (this._options.markerVisibility !== 'hidden') {
+               this.setMarkedKey(this._items.at(0).getId());
+            }
             this._nextVersion();
             this._notify('onListChange');
          },
