@@ -33,8 +33,9 @@ define('Controls/Input/Password/ViewModel',
       var ViewModel = BaseViewModel.extend({
          _convertToDisplayValue: function(value) {
             var replaceWithAsterisks = _private.isReplaceWithAsterisks(this._options);
+            var displayValue = ViewModel.superclass._convertToDisplayValue.call(this, value);
 
-            return _private.calcDisplayValue(replaceWithAsterisks, value);
+            return _private.calcDisplayValue(replaceWithAsterisks, displayValue);
          },
 
          handleInput: function(splitValue, inputType) {

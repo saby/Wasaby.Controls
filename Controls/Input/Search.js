@@ -5,9 +5,7 @@ define('Controls/Input/Search',
       'Controls/Input/Base',
       'Controls/Input/Text/ViewModel',
 
-      'wml!Controls/Input/Search/Buttons',
-
-      'css!theme?Controls/Input/Search/Search'
+      'wml!Controls/Input/Search/Buttons'
    ],
 
    function(entity, Env, Base, ViewModel, buttonsTemplate) {
@@ -58,7 +56,7 @@ define('Controls/Input/Search',
       var Search = Base.extend({
          _roundBorder: true,
 
-         get _style() {
+         get _renderStyle() {
             return 'search';
          },
 
@@ -129,6 +127,8 @@ define('Controls/Input/Search',
             Search.superclass._keyUpHandler.apply(this, arguments);
          }
       });
+
+      Search._theme.push('Controls/Input/Search/Search');
 
       Search.getOptionTypes = function getOptionsTypes() {
          var optionTypes = Base.getOptionTypes();
