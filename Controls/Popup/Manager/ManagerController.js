@@ -59,6 +59,10 @@ define('Controls/Popup/Manager/ManagerController', ['Controls/Popup/Opener/BaseC
             return this._callManager('update', arguments);
          },
 
+         updateOptionsAfterInitializing: function() {
+            return this._callManager('updateOptionsAfterInitializing', arguments);
+         },
+
          /**
           * Показать popup
           */

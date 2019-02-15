@@ -57,11 +57,11 @@ define('Controls-demo/Popup/PopupPage',
          openExecutingPopup: function () {
             this._children.executingStack.open({
                opener: this._children.stackButton,
-               templateOptions: {text: randomId('popup-random')}
+               templateOptions: {text: 'first open'}
             });
             this._children.executingStack.open({
                opener: this._children.stackButton,
-               templateOptions: {text: randomId('popup-random')}
+               templateOptions: {text: 'second open'}
             });
          },
 

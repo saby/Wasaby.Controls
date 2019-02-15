@@ -345,6 +345,14 @@ define('Controls/Popup/Manager',
             return item.id;
          },
 
+         updateOptionsAfterInitializing: function(id, options) {
+            var item = this.find(id);
+            if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
+               item.popupOptions = options;
+               item.controller.getDefaultConfig(item);
+            }
+         },
+
          _createItemConfig: function(options, controller) {
             if (!this._hasMaximizePopup && options.maximize) {
                this._hasMaximizePopup = true;
