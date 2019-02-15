@@ -119,15 +119,17 @@ define('Controls/Popup/Opener/BaseOpener',
                      }
                   });
                } else {
+                  ManagerController.updateOptionsAfterInitializing(self._getCurrentPopupId(), cfg);
                   self._toggleIndicator(false);
                }
+               return result;
             });
          },
 
          // Lazy load template
          _requireModules: function(config, controller) {
             if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
-               return (new Deferred()).errback('Protection against multiple invocation of the open method');
+               return this._openerListDeferred;
             }
 
             var deps = [];
@@ -169,7 +171,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // BaseOpener needs to have its own clone method, which does not recursively clone
             // templates.
             // https://online.sbis.ru/opendoc.html?guid=a3311385-0488-4558-8e96-b52984b2651a
-            baseConfig.template = popupOptions.template || this._options.popupOptions.template;
+            baseConfig.template = (popupOptions || {}).template || (this._options.popupOptions || {}).template;
 
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [

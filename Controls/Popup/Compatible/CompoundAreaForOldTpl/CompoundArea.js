@@ -315,12 +315,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
+            this._titleBar = customHeaderContainer;
             if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
                // Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
                // mousedown на ней и проксируем его на dialogTemplate.
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
             }
+         },
+
+         setSize: function(sizes) {
+            if (sizes.width) {
+               this._container.width(sizes.width);
+            }
+            if (sizes.height) {
+               this._container.height(sizes.height);
+            }
+            this._notifyVDOM('controlResize', null, { bubbling: true });
          },
 
          setCaption: function(newTitle) {

@@ -315,14 +315,18 @@ define([
                      right: 'XS'
                   },
                   multiSelectVisibility: 'hidden'
-               }), ' controls-ListView__item-leftPadding_m controls-ListView__item-rightPadding_xs');
+               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_default controls-ListView__item-bottomPadding_default' +
+                  ' controls-ListView__item-rightPadding_xs controls-ListView__item-leftPadding_m');
                assert.equal(ListViewModel._private.getSpacingClassList({
                   itemPadding: {
                      left: 'XS',
-                     right: 'm'
+                     right: 'm',
+                     top: 'null',
+                     bottom: 's'
                   },
                   multiSelectVisibility: 'visible'
-               }), ' controls-ListView__item-rightPadding_m');
+               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
+                  ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
             });
          });
 
