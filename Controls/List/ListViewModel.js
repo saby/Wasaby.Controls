@@ -339,19 +339,21 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
-         /*
-         * After reload items collections, need to research item becouse items' link has been changed.
-         */
+         // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.
          _restoreMarkedItem: function() {
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
          },
 
+
+
          _setMarkerAfterUpdateItems: function() {
-            // Restore marked item if it exists in current items collection
+
+            // При обновлении коллекции объекты пересоздаются, поэтому нужно обновить ссылку на отмеченный элемент.
             this._restoreMarkedItem();
 
+            // Если отмеченный элемент не найден, а маркер показывать нужно, то отмечаем первый элемент
             if (this._options.markerVisibility !== 'onactivated') {
                if (!this._markedItem && this._items.getCount()) {
                   this.setMarkedKey(this._items.at(0).getId());
