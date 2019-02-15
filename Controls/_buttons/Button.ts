@@ -58,6 +58,7 @@ class Button extends Control {
    private _icon: String;
    private _iconStyle: String;
 
+   public _theme: Array<string> = ['Controls/_buttons/Button'];
    private cssStyleGeneration(options) {
       const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
 
