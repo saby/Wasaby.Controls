@@ -30,10 +30,18 @@ define('Controls/List/ListViewModel',
             var
                classList = '',
                itemPadding = _private.getItemPadding(cfg);
-            if (cfg.multiSelectVisibility === 'hidden') {
+
+            classList += ' controls-ListView__itemContent';
+            classList += ' controls-ListView__item-topPadding_' + (itemPadding.top || 'default').toLowerCase();
+            classList += ' controls-ListView__item-bottomPadding_' + (itemPadding.bottom || 'default').toLowerCase();
+            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+
+            if (cfg.multiSelectVisibility !== 'hidden') {
+               classList += ' controls-ListView__itemContent_withCheckboxes';
+            } else {
                classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase();
             }
-            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+
             return classList;
          }
       };
