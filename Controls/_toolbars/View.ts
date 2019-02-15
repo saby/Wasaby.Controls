@@ -225,7 +225,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!Controls/_toolbars/ToolbarPopup'], function () {
+        require(['css!theme?Controls/_toolbars/ToolbarPopup'], function () {
             self._children.menuOpener.open(config, self);
         });
     }
