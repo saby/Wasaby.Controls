@@ -87,16 +87,16 @@ define('Controls/Container/Scroll/Watcher',
             };
          },
          
-         getSizeCache: function(self) {
+         getSizeCache: function(self, container) {
             if (isEmpty(self._sizeCache)) {
-               _private.calcSizeCache(self);
+               _private.calcSizeCache(self, container);
             }
             return self._sizeCache;
          },
 
          onResizeContainer: function(self, container, withObserver) {
             var scrollCompensation = 0;
-            var sizeCache = _private.getSizeCache(self);
+            var sizeCache = _private.getSizeCache(self, container);
             if (self._needCompensation) {
                var prevHeight = sizeCache.scrollHeight;
                var curHeight = container.scrollHeight;
@@ -106,7 +106,7 @@ define('Controls/Container/Scroll/Watcher',
                }
             }
             _private.calcSizeCache(self, container);
-            sizeCache = _private.getSizeCache(self);
+            sizeCache = _private.getSizeCache(self, container);
             container.scrollTop = self._scrollTopCache;
             _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight);
             if (!withObserver) {
@@ -127,11 +127,11 @@ define('Controls/Container/Scroll/Watcher',
 
          onScrollContainer: function(self, container, withObserver) {
             var curPosition;
-            var sizeCache = _private.getSizeCache(self);
+            var sizeCache = _private.getSizeCache(self, container);
             self._scrollTopCache = container.scrollTop;
             if (!sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
-               sizeCache = _private.getSizeCache(self);
+               sizeCache = _private.getSizeCache(self, container);
             }
 
             if (self._scrollTopCache <= 0) {
@@ -212,10 +212,10 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          onRegisterNewComponent: function(self, container, component, withObserver) {
-            var sizeCache = _private.getSizeCache(self);
+            var sizeCache = _private.getSizeCache(self, container);
             if (!sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
-               sizeCache = _private.getSizeCache(self);
+               sizeCache = _private.getSizeCache(self, container);
             }
             if (sizeCache.clientHeight < sizeCache.scrollHeight) {
                self._registrar.startOnceTarget(component, 'canScroll');
@@ -233,7 +233,7 @@ define('Controls/Container/Scroll/Watcher',
             if (scrollParam === 'top') {
                container.scrollTop = 0;
             } else {
-               var sizeCache = _private.getSizeCache(self);
+               var sizeCache = _private.getSizeCache(self, container);
                var clientHeight = sizeCache.clientHeight, scrollHeight;
                if (scrollParam === 'bottom') {
                   scrollHeight = sizeCache.scrollHeight;
