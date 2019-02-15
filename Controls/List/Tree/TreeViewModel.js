@@ -512,6 +512,9 @@ define('Controls/List/Tree/TreeViewModel', [
             this._expandedItems = {};
             this._display.setRoot(root);
 
+            //TODO: выпилить, когда будет выполнена https://online.sbis.ru/opendoc.html?guid=f75e5bfd-6e9f-4710-bad7-b9be704f0dff
+            // В Explorrer при проваливании в папку нужно установить маркер на первый элемент.
+            // Но, т.к. root могут менять не только при проваливании в папку, это не всегда верно
             if (this._options.markerVisibility !== 'hidden') {
                this.setMarkedKey(this._items.at(0).getId());
             }

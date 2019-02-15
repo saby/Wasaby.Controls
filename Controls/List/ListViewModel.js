@@ -339,6 +339,9 @@ define('Controls/List/ListViewModel',
             this._nextVersion();
          },
 
+         /*
+         * After reload items collections, need to research item becouse items' link has been changed.
+         */
          _restoreMarkedItem: function() {
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
@@ -346,10 +349,10 @@ define('Controls/List/ListViewModel',
          },
 
          _setMarkerAfterUpdateItems: function() {
-            if (this._options.markerVisibility === 'onactivated') {
-               this._restoreMarkedItem();
-            } else {
-               this._restoreMarkedItem();
+            // Restore marked item if it exists in current items collection
+            this._restoreMarkedItem();
+
+            if (this._options.markerVisibility !== 'onactivated') {
                if (!this._markedItem && this._items.getCount()) {
                   this.setMarkedKey(this._items.at(0).getId());
                }
