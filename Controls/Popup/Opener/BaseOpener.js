@@ -119,15 +119,17 @@ define('Controls/Popup/Opener/BaseOpener',
                      }
                   });
                } else {
+                  ManagerController.updateOptionsAfterInitializing(self._getCurrentPopupId(), cfg);
                   self._toggleIndicator(false);
                }
+               return result;
             });
          },
 
          // Lazy load template
          _requireModules: function(config, controller) {
             if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
-               return (new Deferred()).errback('Protection against multiple invocation of the open method');
+               return this._openerListDeferred;
             }
 
             var deps = [];
