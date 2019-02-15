@@ -171,7 +171,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // BaseOpener needs to have its own clone method, which does not recursively clone
             // templates.
             // https://online.sbis.ru/opendoc.html?guid=a3311385-0488-4558-8e96-b52984b2651a
-            baseConfig.template = popupOptions.template || this._options.popupOptions.template;
+            baseConfig.template = (popupOptions || {}).template || (this._options.popupOptions || {}).template;
 
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
