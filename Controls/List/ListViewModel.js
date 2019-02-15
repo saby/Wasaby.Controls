@@ -333,7 +333,7 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
-            if (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always') {
+            if (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always' || this._options.markerVisibility === 'onactivated') {
                this._setMarkerAfterUpdateItems();
             }
             this._nextVersion();
