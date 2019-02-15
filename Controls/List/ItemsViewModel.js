@@ -294,8 +294,7 @@ define('Controls/List/ItemsViewModel', [
             }
             this._display = this._prepareDisplay(this._items, this._options);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
-            this._nextVersion();
-            this._notify('onListChange');
+            this.setIndexes(0, this.getCount());
          }
       },
 
