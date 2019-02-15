@@ -512,7 +512,15 @@ define('Controls/List/Tree/TreeViewModel', [
             this._expandedItems = {};
             this._display.setRoot(root);
             if (this._options.markerVisibility !== 'hidden') {
-               this._setMarkerAfterUpdateItems();
+               if (this._options.markerVisibility === 'onactivated' && this._markedKey) {
+                  this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+
+                  if (!this._markedItem && this._items.getCount()) {
+                     this.setMarkedKey(this._items.at(0).getId());
+                  }
+               } else {
+                  this._setMarkerAfterUpdateItems();
+               }
             }
             this._nextVersion();
             this._notify('onListChange');
