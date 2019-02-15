@@ -107,13 +107,7 @@ define([
          };
 
          // Should not set marker
-         model._options.markerVisibility = undefined;
-         model.setItems(items);
-         model._options.markerVisibility = null;
-         model.setItems(items);
          model._options.markerVisibility = 'hidden';
-         model.setItems(items);
-         model._options.markerVisibility = 'wrongOptionVal';
          model.setItems(items);
          assert.equal(markerSetCount, 0);
 
@@ -128,6 +122,7 @@ define([
          assert.equal(markerSetCount, 3);
 
       });
+
       it('Selection', function() {
          var cfg = {
             items: data,
