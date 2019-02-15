@@ -3,10 +3,23 @@
  */
 define('Controls/Decorator/Markup/Converter', [
    'Controls/Decorator/Markup/resources/template',
+   'Controls/Decorator/Markup/resources/linkDecorateConstants',
    'Core/core-merge'
 ], function(template,
+   linkDecorateConstants,
    objectMerge) {
    'use strict';
+
+   function isDecoratedLink(json) {
+      return Array.isArray(json) && json[0] === 'span' &&
+         json[1] && json[1].class === linkDecorateConstants.classes.wrap;
+   }
+
+   function undecorateLink(json) {
+      var linkAttributes = json[2][1];
+      linkAttributes.class = linkAttributes.class.replace(linkDecorateConstants.classes.link, 'asLink');
+      return ['a', linkAttributes, linkAttributes.href];
+   }
 
    function domToJson(dom) {
       if (dom.nodeType === 3) {
@@ -34,7 +47,7 @@ define('Controls/Decorator/Markup/Converter', [
          }
       }
 
-      return json;
+      return isDecoratedLink(json) ? undecorateLink(json) : json;
    }
 
    var linkParseRegExp = /(?:(((?:https?|ftp|file|smb):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|&nbsp;|(<[^>]*>)))/g,

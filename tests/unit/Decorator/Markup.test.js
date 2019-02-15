@@ -7,13 +7,13 @@ define([
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
    'Controls/Decorator/Markup/resolvers/innerText',
-   'Core/constants'
+   'Controls/Decorator/Markup/resources/linkDecorateConstants'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
    innerTextResolver,
-   cConstants) {
+   linkDecorateConstants) {
    'use strict';
 
    describe('Controls.Decorator.Markup.Converter', function() {
@@ -143,6 +143,7 @@ define([
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
+               '<p>' + decoratedLinkHtml + '</p>' +
                '<p>https://ya.ru</p>' +
                '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
@@ -161,6 +162,7 @@ define([
                '<p><a>e@mail.ru.</a>https://ya.ru</p>' +
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
+               ['p', linkNode],
                ['p', linkNode],
                ['p', linkNode],
                ['p', linkNode, nbsp, linkNode, nbsp],
@@ -196,11 +198,11 @@ define([
 
       describe('jsonToHtml', function() {
          beforeEach(function() {
-            decoratedLinkService = cConstants.decoratedLinkService;
-            cConstants.decoratedLinkService = '/test/';
+            decoratedLinkService = linkDecorateConstants.service;
+            linkDecorateConstants.service = '/test/';
          });
          afterEach(function() {
-            cConstants.decoratedLinkService = decoratedLinkService;
+            linkDecorateConstants.service = decoratedLinkService;
          });
          it('empty', function() {
             assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));

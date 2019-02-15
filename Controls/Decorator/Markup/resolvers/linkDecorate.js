@@ -3,9 +3,9 @@
  */
 define('Controls/Decorator/Markup/resolvers/linkDecorate', [
    'Core/base64',
-   'Core/constants'
+   'Controls/Decorator/Markup/resources/linkDecorateConstants'
 ], function(base64,
-   cConstants) {
+   constants) {
    'use strict';
 
    /**
@@ -19,7 +19,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     */
    return function linkDecorate(value, parent) {
       // Can't decorate without decoratedLink service address.
-      if (!cConstants.decoratedLinkService) {
+      if (!constants.service) {
          return value;
       }
 
@@ -35,7 +35,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       }
 
       // Decorate link only with text == href, and href length should be less then 1500;
-      if (!value[1] || !value[1].href || value[1].href.length >= 1500 || value[1].href !== value[2]) {
+      if (!value[1] || !value[1].href || value[1].href.length > constants.hrefMaxLength || value[1].href !== value[2]) {
          return value;
       }
 
@@ -55,20 +55,20 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
             linkAttrs[key] = value[1][key];
          }
       }
-      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + 'LinkDecorator__linkWrap';
+      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + constants.classes.link;
       linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
       linkAttrs.target = '_blank';
 
       var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +
-         cConstants.decoratedLinkService + '?method=LinkDecorator.DecorateAsSvg&params=' +
+         constants.service + '?method=' + constants.method + '&params=' +
          encodeURIComponent(base64.encode('{"SourceLink":"' + linkAttrs.href + '"}')) + '&id=0&srv=1';
 
       return ['span',
-         { 'class': 'LinkDecorator__wrap' },
+         { 'class': constants.classes.wrap },
          ['a',
             linkAttrs,
             ['img',
-               { 'class': 'LinkDecorator__image', alt: linkAttrs.href, src: image }
+               { 'class': constants.classes.image, alt: linkAttrs.href, src: image }
             ]
          ]
       ];
