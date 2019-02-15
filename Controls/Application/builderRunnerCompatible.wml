@@ -13,13 +13,13 @@
          constants.$body = body;
          constants.$window = window;
          appinit();
-         require(['Controls/Application/AppData', 'Core/app-start', 'Controls/Application/Core', 'View/Executor/TClosure',
+         require(['Core/app-start', 'Controls/Application/Core', 'View/Executor/TClosure',
             'Core/helpers/Hcontrol/makeInstanceCompatible', 'Core/Control',
-            {{_options.dependencies | unescape}}], function(AppData, AppStart, Core, tclosure, makeInstanceCompatible, Control) {
+            {{_options.dependencies | unescape}}], function(AppStart, Core, tclosure, makeInstanceCompatible, Control) {
             var templCtr = new Control({});
             makeInstanceCompatible(templCtr);
             templCtr.destroy();
-            window.startContextData = {AppData: new AppData({})};
+            window.startContextData = {};
             var templateFn = {{_options.builder | unescape}};
             templateFn.stable = true;
             var cnt = Core.extend({

@@ -2,11 +2,10 @@
  * Created by dv.zuev on 01.02.2018.
  */
 define('Controls/Application/AppData', [
-   'Core/DataContext'
-], function(DataContext) {
+   'Core/core-extend'
+], function(extend) {
 
-   return DataContext.extend({
-      jsLinks: [],
+   return extend.extend({
       constructor: function(cfg) {
          this.appRoot = cfg.appRoot;
          this.lite = cfg.lite;

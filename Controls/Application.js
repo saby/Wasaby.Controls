@@ -243,6 +243,8 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
+            var appData = Request.getCurrent().getStorage('AppData');
+
             self._scrollData = new ScrollContext({pagingVisible: false});
 
             self.onServer = typeof window === 'undefined';
@@ -255,8 +257,8 @@ define('Controls/Application',
             self.buildnumber = cfg.buildnumber || constants.buildnumber;
 
             // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            self.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : constants.appRoot);
-            self.staticDomains = cfg.staticDomains || context.AppData.staticDomains || constants.staticDomains || '[]';
+            self.appRoot = cfg.appRoot || appData.appRoot || (cfg.builder ? '/' : constants.appRoot);
+            self.staticDomains = cfg.staticDomains || appData.staticDomains || constants.staticDomains || '[]';
             if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
             }
@@ -271,10 +273,10 @@ define('Controls/Application',
             self.lite = cfg.lite || false;
 
             // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
+            self.servicesPath = (appData ? appData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
-            self.application = context.AppData.application;
-            self.product = context.AppData.product;
+            self.application = appData.application;
+            self.product = appData.product;
 
 
             if (typeof window === 'undefined' && cfg.theme !== 'default') {
