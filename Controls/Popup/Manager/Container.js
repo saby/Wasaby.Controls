@@ -75,7 +75,8 @@ define('Controls/Popup/Manager/Container',
          },
 
          _getPopupZIndex: function(item, index) {
-            return item.popupOptions.zIndex || (index + 1) * POPUP_ZINDEX_STEP;
+            var customZIndex = item.controller.getCustomZIndex(this._popupItems);
+            return item.popupOptions.zIndex || customZIndex || (index + 1) * POPUP_ZINDEX_STEP;
          }
       });
 

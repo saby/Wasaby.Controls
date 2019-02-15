@@ -188,6 +188,10 @@ define('Controls/Popup/Opener/BaseController',
             return false;
          },
 
+         getCustomZIndex: function() {
+            return null;
+         },
+
          _getPopupSizes: function(config, container) {
             var containerSizes = _private.getContentSizes(container);
 
