@@ -511,7 +511,9 @@ define('Controls/List/Tree/TreeViewModel', [
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
-            this._setMarkerAfterUpdateItems();
+            if (this._options.markerVisibility !== 'hidden') {
+               this._setMarkerAfterUpdateItems();
+            }
             this._nextVersion();
             this._notify('onListChange');
          },

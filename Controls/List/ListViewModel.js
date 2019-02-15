@@ -333,17 +333,23 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
-            if (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always' || this._options.markerVisibility === 'onactivated') {
+            if (this._options.markerVisibility !== 'hidden') {
                this._setMarkerAfterUpdateItems();
             }
             this._nextVersion();
          },
 
+         _restoreMarkedItem: function() {
+            if (this._markedKey !== undefined) {
+               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+            }
+         },
+
          _setMarkerAfterUpdateItems: function() {
-            if (this._options.markerVisibility !== 'hidden') {
-               if (this._markedKey !== undefined) {
-                  this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
-               }
+            if (this._options.markerVisibility === 'onactivated') {
+               this._restoreMarkedItem();
+            } else {
+               this._restoreMarkedItem();
                if (!this._markedItem && this._items.getCount()) {
                   this.setMarkedKey(this._items.at(0).getId());
                }
