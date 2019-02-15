@@ -595,7 +595,7 @@
               "YY-MM-DD HH:mm:ss": "YY-MM-DD HH:mm:ss",
               "YY-MM-DD HH:mm": "YY-MM-DD HH:mm",
               "YYYY": "YYYY",
-              "MM/YYYY": "MM/YYYY"
+              "MM.YYYY": "MM.YYYY"
             }
           },
           "tooltip": {
