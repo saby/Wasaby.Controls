@@ -190,7 +190,7 @@ define([
             beforeReloadCallbackOriginal(treeControl, filter, null, null, treeControl._options);
             reloadFilter = filter;
          };
-   
+
          // Mock TreeViewModel and TreeControl
          treeControl._updatedRoot = true;
          treeControl._children.baseControl._options.beforeReloadCallback = beforeReloadCallback;
@@ -588,11 +588,11 @@ define([
             }),
             cfg = {
                source: source,
+               markerVisibility: 'visible',
                columns: [],
                keyProperty: 'id',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               markedKey: 11,
                markItemByExpanderClick: true
             },
             e = {
@@ -615,10 +615,13 @@ define([
          };
 
          TreeControl._private.toggleExpanded = function(){};
-         assert.deepEqual(11, treeGridViewModel._model._markedKey);
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
+
+         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         assert.deepEqual(2, treeGridViewModel._model._markedKey);
+
       });
 
       it('markItemByExpanderClick false', function() {
@@ -636,10 +639,10 @@ define([
             cfg = {
                source: source,
                columns: [],
+               markerVisibility: 'visible',
                keyProperty: 'id',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               markedKey: 11,
                markItemByExpanderClick: false
             },
             e = {
@@ -662,10 +665,12 @@ define([
          };
 
          TreeControl._private.toggleExpanded = function(){};
-         assert.deepEqual(11, treeGridViewModel._model._markedKey);
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
-         assert.deepEqual(11, treeGridViewModel._model._markedKey);
+         assert.deepEqual(1, treeGridViewModel._model._markedKey);
+
+         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         assert.deepEqual(1, treeGridViewModel._model._markedKey);
       });
 
       it('reloadItem', function(done) {

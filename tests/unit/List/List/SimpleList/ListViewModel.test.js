@@ -86,6 +86,43 @@ define([
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
       });
 
+      it('set marker after setting items', function() {
+         var
+            items = new collection.RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1' }
+               ],
+               idProperty: 'id'
+            }),
+            model = new ListViewModel({
+               keyProperty: 'id',
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            }),
+            markerSetCount = 0;
+         model._setMarkerAfterUpdateItems = function() {
+            markerSetCount++;
+         };
+
+         // Should not set marker
+         model._options.markerVisibility = 'hidden';
+         model.setItems(items);
+         assert.equal(markerSetCount, 0);
+
+         // Should set set marker
+         model._options.markerVisibility = 'visible';
+         model.setItems(items);
+         model._options.markerVisibility = 'always';
+         model.setItems(items);
+         model._options.markerVisibility = 'onactivated';
+         model.setItems(items);
+
+         assert.equal(markerSetCount, 3);
+
+      });
+
       it('Selection', function() {
          var cfg = {
             items: data,
