@@ -11,6 +11,13 @@ define('Controls/Application/startApplicationScript',
 
       var Page = Base.extend({
          _template: template,
+         _beforeMountLimited: function() {
+            // This component awaits completion of building content of _Wait component
+            // So we don't need timeout of async building in this component
+            // Because we need to build depends list in any case
+            // before returning html to client
+            return this._beforeMount.apply(this, arguments);
+         },
          _beforeMount: function(opts) {
             if (typeof window !== 'undefined') {
                return;
