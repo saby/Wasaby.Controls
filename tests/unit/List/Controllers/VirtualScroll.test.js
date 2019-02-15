@@ -109,6 +109,42 @@ define([
          assert.deepEqual(4000, vsInstance._itemsCount);
       });
 
+      it('updateItemsSizes always', function() {
+         var
+            vsInstance = new VirtualScroll({
+               updateItemsHeightsMode: 'always'
+            }),
+            _items = {
+               children: [
+                  { offsetHeight: 20 },
+                  { offsetHeight: 45 },
+                  { offsetHeight: 10 },
+                  { offsetHeight: 44 },
+                  { offsetHeight: 78 },
+                  { offsetHeight: 45 },
+                  { offsetHeight: 92 }
+               ]
+            },
+            itemsHeights = [20, 45, 10, 44, 78, 45, 92];
+
+         vsInstance.setItemsCount(7);
+         VirtualScroll._private.updateItemsSizes = function(self) {
+            var
+               startIndex = self._startItemIndex,
+               stopIndex = self._stopItemIndex,
+               items = self._itemsContainer.children;
+
+            if (self._updateItemsHeightsMode === 'always') {
+               for (var i = 0; i < items.length; i++) {
+                  self._itemsHeights[i] = items[i].offsetHeight;
+               }
+            }
+         };
+         vsInstance.setItemsContainer(_items);
+
+         assert.deepEqual(itemsHeights, vsInstance._itemsHeights);
+      });
+
       it('updateItemsSizes', function() {
          var
             vsInstance = new VirtualScroll({}),
