@@ -758,7 +758,7 @@ define('Controls/List/BaseControl', [
 
          if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
-               this._virtualScroll = new VirtualScroll.VirtualScroll(_private.prepareVirtualScrollConfig(newOptions));
+               this._virtualScroll = new VirtualScroll(_private.prepareVirtualScrollConfig(newOptions));
             }
             this._loadTriggerVisibility = {
                up: false,
@@ -1047,7 +1047,7 @@ define('Controls/List/BaseControl', [
       },
 
       getVirtualScroll: function() {
-         return this._virtualScroll
+         return this._virtualScroll;
       },
 
       _onGroupClick: function(e, item, baseEvent) {

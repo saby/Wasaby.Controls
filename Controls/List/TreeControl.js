@@ -249,7 +249,7 @@ define('Controls/List/TreeControl', [
             toggledItemIndex = baseControl.getViewModel().getIndexByKey(toggledItemId);
 
          virtualScroll.ItemsCount = baseControl.getViewModel().getCount();
-         virtualScroll.updateItemsIndexesOnExpand(toggledItemIndex, expanded, itemsCount);
+         virtualScroll.updateItemsIndexesOnToggle(toggledItemIndex, expanded, itemsCount);
       }
    };
 

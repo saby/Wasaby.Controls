@@ -31,7 +31,7 @@
                   attr:key="{{listModel.getCurrent().key}}"/>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemOutputLocalTemplate" attr:key="{{listModel.getCurrent().key}}"/>
+      <ws:partial template="itemOutputLocalTemplate"/>
    </ws:else>
 </ws:for>
 <ws:if data="{{listModel.getCount() === 0 && editingItemData && isAdd}}">

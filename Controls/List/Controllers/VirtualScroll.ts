@@ -1,7 +1,9 @@
-///<amd-module name="Controls/List/Controllers/VirtualScroll" />
 import uDimension = require("Controls/Utils/getDimensions");
 import IoC = require("Core/IoC");
 
+/**
+ * TODO: Сделать правильные экспорты, чтобы можно было и в js писать просто new VirtualScroll() и в TS файле использовать типы
+ */
 
 /**
  * Configuration object.
@@ -10,23 +12,16 @@ import IoC = require("Core/IoC");
  * @type {object}
  * @property {number} virtualPageSize - The maximum number of elements that will be in the DOM at the same time.
  * @property {number} virtualSegmentSize - your name.
- * @property {ItemsHeightsState} itemsHeightsState - Specifies whether the height of the element will change after the
- * first rendering or whether it will always be constant.
- * @property {ItemsRenderMode} itemsRenderMode - Specifies how items will be loaded.
+ * @property {ItemsRenderMode} itemsRenderMode - Specifies how items will be rendered.
  */
 type VirtualScrollConfig = {
     virtualPageSize?: number;
     virtualSegmentSize?: number;
-
     // TODO: Согласвать
-    itemsHeightsState?: ItemsHeightsState | string;
     itemsRenderMode?: ItemsRenderMode | string;
-
-    /**
-     * @deprecated
-     */
+    //deprecated
     updateItemsHeightsMode?:string;
-};
+}
 
 
 /**
@@ -44,6 +39,7 @@ type ItemsContainer = {
 /**
  * Indexes of elements that should be mounted into the DOM.
  *
+ * @remark The stop index is higher than the last item to show by one
  * @typedef ItemsIndexes
  * @type {Object}
  * @property {number} start - Index of the first element.
@@ -53,7 +49,6 @@ type ItemsIndexes = {
     start: number;
     stop: number;
 };
-
 
 /**
  * The size of the placeholders that should be displayed instead of the "excessive" items.
@@ -69,19 +64,6 @@ type PlaceholdersSizes = {
 };
 
 
-/**
- * Enum for items heights states.
- * Specifies whether the height of the element will change after the first rendering
- * or whether it will always be constant.
- *
- * @enum
- * @variant Constant - Height of element will be always constant.
- * @variant Changeable - Height of element can change after the first rendering.
- */
-enum ItemsHeightsState {
-    Constant, Changeable
-}
-
 
 /**
  * Enum for items render mode.
@@ -92,7 +74,11 @@ enum ItemsHeightsState {
  * @variant AllAtOnce - All items will be loaded at once. The maximum number of items in collection will not change.
  */
 enum ItemsRenderMode {
-    Partially, AllAtOnce
+    Partially, AllAtOnce,
+
+    //deprecated
+    onChangeCollection, always
+
 }
 
 
@@ -101,15 +87,13 @@ enum ItemsRenderMode {
  * @class Controls/List/Controllers/VirtualScroll
  * @author Rodionov E.A.
  * @public
- * @category List
  * */
-export class VirtualScroll {
+class VirtualScroll {
 
     private readonly _virtualSegmentSize: number = 20;
     private readonly _virtualPageSize: number = 100;
-    private _itemsHeightsState: ItemsHeightsState;
-    private _itemsRenderMode: ItemsRenderMode;
     private readonly _initialStartIndex: number = 0;
+    private _itemsRenderMode: ItemsRenderMode;
 
     private _startIndex: number;
     private _stopIndex: number;
@@ -156,14 +140,12 @@ export class VirtualScroll {
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
         this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
+        this.ItemsRenderMode = cfg.itemsRenderMode || cfg.updateItemsHeightsMode || ItemsRenderMode.Partially;
+
         this._startIndex = this._initialStartIndex;
         this._stopIndex = this._startIndex + this._virtualPageSize;
-        this.ItemsHeightsState = cfg.itemsHeightsState || cfg.updateItemsHeightsMode || ItemsHeightsState.Constant;
-        this.ItemsRenderMode = cfg.itemsRenderMode || ItemsRenderMode.Partially;
     }
 
-
-    //<editor-fold desc="Public API">
 
     public resetItemsIndexes(startIndex = this._initialStartIndex): void {
         this._startIndex = startIndex;
@@ -185,12 +167,13 @@ export class VirtualScroll {
         * то нужно каждый раз обновлять высоты всех элементов, потому вместо заглушки могла появиться запись с
         * другими размерами.
         * */
-        if (this._itemsRenderMode === ItemsRenderMode.AllAtOnce) {
+        if (this._itemsRenderMode === ItemsRenderMode.AllAtOnce || this._itemsRenderMode === ItemsRenderMode.always) {
             startUpdateIndex = 0;
             updateLength = items.length;
             isNeedToUpdate = true;
         } else {
-            // По умолчанию, обновляем висоты, только если появились новые элементы
+            // Обновляем все если был передан параметр.
+            // По умолчанию, обновляем высоты, только если появились новые элементы
             isNeedToUpdate = (typeof itemsHeights[this._startIndex] === "undefined" || typeof itemsHeights[this._stopIndex - 1] === "undefined");
 
             // Если отображаем только реальные записи, то обновляем только их высоты.
@@ -210,11 +193,22 @@ export class VirtualScroll {
         }
 
         if (isNeedToUpdate) {
-            for (let i = 0; i < updateLength; i++) {
-                itemsHeights[startUpdateIndex + i] = uDimension(items[i]).height;
-            }
+            this._updateItemsSizes(startUpdateIndex, updateLength);
             this._updatePlaceholdersSizes();
         }
+    }
+
+    //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
+    public updateItemsIndexes(direction: String): void {
+        if (direction === 'down') {
+            this._startIndex = this._startIndex + this._virtualSegmentSize;
+            this._startIndex = Math.min(this._startIndex, this._itemsCount - this._virtualPageSize);
+        } else {
+            this._startIndex = this._startIndex - this._virtualSegmentSize;
+        }
+        this._startIndex = Math.max(0, this._startIndex);
+        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
+        this._updatePlaceholdersSizes();
     }
 
     public updateItemsIndexesOnToggle(toggledItemIndex, isExpanded, childItemsCount): void {
@@ -231,19 +225,6 @@ export class VirtualScroll {
             }
         }
         this._needToUpdateAllItemsHeight = true;
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
-    }
-
-    //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
-    public updateItemsIndexes(direction: String): void {
-        if (direction === 'down') {
-            this._startIndex = this._startIndex + this._virtualSegmentSize;
-            this._startIndex = Math.min(this._startIndex, this._itemsCount - this._virtualPageSize);
-        } else {
-            this._startIndex = this._startIndex - this._virtualSegmentSize;
-        }
-        this._startIndex = Math.max(0, this._startIndex);
         this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
         this._updatePlaceholdersSizes();
     }
@@ -275,9 +256,7 @@ export class VirtualScroll {
             this._updatePlaceholdersSizes();
         }
     }
-    //</editor-fold>
 
-    //<editor-fold desc="Private methods" defaultstate="collapsed" >
 
     private _isScrollInPlaceholder(scrollTop: number): boolean {
         let itemsHeight = 0,
@@ -304,8 +283,18 @@ export class VirtualScroll {
         this._bottomPlaceholderSize = this._getItemsHeight(this._stopIndex, this._itemsHeights.length);
     }
 
-    //</editor-fold>
+    private _updateItemsSizes(startUpdateIndex, updateLength, isUnitTesting = false): void {
+        if (isUnitTesting) {
+            for (let i = 0; i < updateLength; i++) {
+                this._itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
+            }
+        } else {
+            for (let i = 0; i < updateLength; i++) {
+                this._itemsHeights[startUpdateIndex + i] = uDimension(this._itemsContainer.children[i]).height;
+            }
+        }
 
+    }
     //<editor-fold desc="Don't use it! Deprecated methods and methods for compatible with non TS components" defaultstate="collapsed" >
 
     private _isLogged = {
@@ -358,6 +347,21 @@ export class VirtualScroll {
         return this.ItemsHeights;
     }
 
+    // Old method to get _itemsHeights, now available getter
+    // TODO: remove in 19.200
+    private getItemsHeight(): Array<number> {
+        if (!this._isLogged.getItemsHeights){
+            this._isLogged.getItemsHeights = true;
+            IoC.resolve('ILogger')
+                .warn(
+                    'VirtualScroll',
+                    'Method "getItemsHeight" is deprecated and will be removed in 19.200. ' +
+                    'Use getter for property "VirtualScroll.ItemsHeights".');
+        }
+        return this.ItemsHeights;
+    }
+
+
     // Old method to get _placeholdersSizes, now available getter
     // TODO: remove in 19.200
     private getPlaceholdersSizes(): PlaceholdersSizes {
@@ -384,21 +388,6 @@ export class VirtualScroll {
                     'Use setter for property "VirtualScroll.ItemsCount".');
         }
         this.ItemsCount = itemsCount;
-    }
-
-    private set ItemsHeightsState(value: ItemsHeightsState | string) {
-        let _state = VirtualScroll._convertOptionToEnum<ItemsHeightsState>(<string>value, ItemsHeightsState);
-
-        if (!_state && _state !== 0) {
-            _state = ItemsHeightsState.Constant;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Option "itemsHeightsState" is not a part of enum "ItemsHeightsState". ' +
-                    'ItemsHeightsState has been settled into default value (ItemsHeightsState.Constant)');
-        }
-
-        this._itemsHeightsState = _state;
     }
 
     private set ItemsRenderMode(value: ItemsRenderMode | string) {
@@ -432,3 +421,4 @@ export class VirtualScroll {
 
 }
 
+export = VirtualScroll;
