@@ -10,19 +10,19 @@
 @border-radius_Button_size_m:                          @height_Button_m/2;
 @padding_Button-wrapper_size_m:                        0 @spacing_default_l - @thickness_Button__border;
 
-@height_Button_size_l:                                 36px;
+@height_Button_size_l:                                 @height_control_xl;
 @font-size_Button_size_l:                              @font-size_text_xl;
 @border-radius_Button_size_l:                          @height_Button_size_l/2;
 @padding_Button__wrapper_size_l:                       0 @spacing_default_xxl - @thickness_Button__border;
 
-@text-shadow_Button_button:                            none;
-@text-shadow_Button_readOnly:                          none;
+@text-shadow_Button_button:                            @text-shadow_Button_button_val;
+@text-shadow_Button_readOnly:                          @text-shadow_Button_readOnly_val;
 
 //common
 @thickness_Button__border:                             @thickness_border_default;
-@min-width_Button_common:                              48px;
-@box-shadow_Button_common:                                   none;
-@box-shadow_Button_active:                             none;
+@min-width_Button_common:                              @min-width_Button_common_val;
+@box-shadow_Button_common:                             @box-shadow_Button_common_val;
+@box-shadow_Button_active:                             @box-shadow_Button_active_val;
 @spacing_Button-between-icon-and-text:                 @spacing_default_s;
 
 //readOnly
@@ -57,32 +57,32 @@
 @height-ToolButton_size-s:                             @height_control_default;
 @width-ToolButton_size-s:                              @height-ToolButton_size-s;
 
-@height-ToolButton_size-m:                             28px;
+@height-ToolButton_size-m:                             @height_control_m;
 @width-ToolButton_size-m:                              @height-ToolButton_size-m;
 
-@height-ToolButton_size-l:                            32px;
+@height-ToolButton_size-l:                            @size_icon_l;
 @width-ToolButton_size-l:                             @height-ToolButton_size-l;
 
 //common
-@border-radius-ToolButton:                             2px;
+@border-radius-ToolButton:                             @border-radius_size_s_val;
 @border-width-ToolButton:                              @thickness_border_default;
-@border-style-ToolButton:                              solid;
+@border-style-ToolButton:                              @border-style_solid;
 @border-color-ToolButton:                              @color22;
 @border-color-ToolButton_readOnly:                     @color22;
 
-@box-shadow-ToolButton:                                0px 1px 4px @color21;
-@box-shadow-ToolButton_activated:                      none;
+@box-shadow-ToolButton:                                @box-shadow-ToolButton_val;
+@box-shadow-ToolButton_activated:                      @box-shadow-ToolButton_activated_val;
 
 @color-ToolButton_readOnly:                            @color_text_readonly;
 @color-ToolButton__border_iconStyle-secondary_hovered: @color_border;
 
 @background-color-ToolButton:                          @color23;
-@background-color-ToolButton_transparent:              transparent;
+@background-color-ToolButton_transparent:              @background-color-ToolButton_transparent_val;
 @background-color-ToolButton_hovered:                  @background-color-ToolButton;
 @background-color-IconButton_transparent_hovered:      @background-color-ToolButton_transparent;
 
-@text-shadow_ToolButton:                               none;
-@text-shadow_ToolButton_readOnly:                      none;
+@text-shadow_ToolButton:                               @text-shadow_ToolButton_val;
+@text-shadow_ToolButton_readOnly:                      @text-shadow_ToolButton_readOnly_val;
 
 //Link
 //sizes
@@ -110,13 +110,13 @@
 @color_Link_default_hovered:                           @color_text_default;
 
 //text-decoration
-@text-decoration_Link_default:                   none;
-@text-decoration_Link_secondary:                 none;
-@text-decoration_Link_primary:                   none;
-@text-decoration_Link_danger:                    none;
-@text-decoration_Link_warning:                   none;
-@text-decoration_Link_success:                   none;
-@text-decoration_Link_info:                      none;
+@text-decoration_Link_default:                   @text-decoration_Link_default_val;
+@text-decoration_Link_secondary:                 @text-decoration_Link_secondary_val;
+@text-decoration_Link_primary:                   @text-decoration_Link_primary_val;
+@text-decoration_Link_danger:                    @text-decoration_Link_danger_val;
+@text-decoration_Link_warning:                   @text-decoration_Link_warning_val;
+@text-decoration_Link_success:                   @text-decoration_Link_success_val;
+@text-decoration_Link_info:                      @text-decoration_Link_info_val;
 
 //for support link with magic color, delete when complete https://online.sbis.ru/opendoc.html?guid=b8228090-19fe-454b-992f-bf31d9e96ca5
 @color_Link_magic:                                     @color24;
