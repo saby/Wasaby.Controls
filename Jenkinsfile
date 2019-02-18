@@ -1,6 +1,6 @@
 node ('controls') {
 def version = "19.200"
-def workspace = "/home/sbis/workspace/builder_${version}/${BRANCH_NAME}"
+def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
         deleteDir()
         checkout([$class: 'GitSCM',
