@@ -1,1 +1,1 @@
-<div class="controls-huge-text-size header_demo_class">{{item.get(displayProperty)}}</div>
+<div class="controls-Tabs__content_heading{{selected ? '_state_selected' : ''}}">{{item.get(displayProperty)}}</div>
