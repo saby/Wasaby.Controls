@@ -126,6 +126,7 @@ define('Controls/Operations/Panel', [
       _afterMount: function() {
          _private.checkToolbarWidth(this);
          this._initialized = true;
+         this._notify('operationsPanelOpened');
       },
 
       _beforeUpdate: function(newOptions) {
