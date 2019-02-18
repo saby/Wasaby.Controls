@@ -130,10 +130,9 @@ define(
             fastFilter._beforeMount(configWithItems);
             var newConfigItems = Clone(configWithItems);
             newConfigItems.items[0].value = 'США';
-            newConfigItems.items[0].properties.displayProperty = 'text';
+            newConfigItems.items[0].properties.navigation = {page: 2};
             fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                assert.equal(fastFilter._items.at(0).value, 'США');
-               assert.equal(fastFilter._configs[0].displayProperty, 'text');
                done();
             });
          });
@@ -265,10 +264,10 @@ define(
             var oldItems = Clone(source),
                newItems = Clone(source),
                newItems2 = Clone(source);
-            newItems[0].properties.displayProperty = 'text';
-            var result = FastData._private.isItemsPropertiesChanged(oldItems, newItems);
+            newItems[0].properties.navigation = {page: 2};
+            var result = FastData._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
-            result = FastData._private.isItemsPropertiesChanged(oldItems, newItems2);
+            result = FastData._private.isNeedReload(oldItems, newItems2);
             assert.isFalse(result);
          });
 
