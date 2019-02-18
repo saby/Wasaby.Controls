@@ -6,7 +6,7 @@
 
 //background
 @background-color_InputRender:                @background-color_default;
-@background-color_InputRender_disabled:       transparent;
+@background-color_InputRender_disabled:       @background-color_InputRender_disabled_val;
 @background-color_InputRender_error:          @background-color_danger;
 
 //font
@@ -15,8 +15,8 @@
 @font-size_InputRender_l:                         @font-size_text_3xl;
 @font-size_InputRender_style_header:              @font-size_text_3xl;
 @font-size_InputRender_style_accentHeader:        @font-size_text_3xl;
-@font-weight_InputRender_style_header:            bold;
-@font-weight_InputRender_style_accentHeader:      bold;
+@font-weight_InputRender_style_header:            @font-weight_InputRender_style_header_val;
+@font-weight_InputRender_style_accentHeader:      @font-weight_InputRender_style_accentHeader_val;
 
 //height
 @height_InputRender_default:              @height_control_default;
@@ -24,10 +24,10 @@
 @height_InputRender_l:                    @height_control_default;
 @line-height_InputRender_default:         @line-height_default;
 @line-height_InputRender_m:               @line-height_default;
-@line-height_InputRender_l:               23px;
+@line-height_InputRender_l:               @line-height_InputRender_l_val;
 
-@padding_InputRender:                        0 4px;
-@horizontal-padding_InputRender:             4px;
+@padding_InputRender:                        0 @horizontal-padding_InputRender_val;
+@horizontal-padding_InputRender:             @horizontal-padding_InputRender_val;
 
 
 
@@ -40,8 +40,8 @@
 @border-color_InputRender_error:      @color_border_danger;
 
 //tagStyle
-@height_InputRender-tagStyle:           8px;
-@width_InputRender-tagStyle:            8px;
+@height_InputRender-tagStyle:           @height_InputRender-tagStyle_val;
+@width_InputRender-tagStyle:            @width_InputRender-tagStyle_val;
 @color_InputRender-tagStyle_secondary:  @color_secondary;
 @color_InputRender-tagStyle_success:    @color_success;
 @color_InputRender-tagStyle_primaryV:    @color_primaryV;
