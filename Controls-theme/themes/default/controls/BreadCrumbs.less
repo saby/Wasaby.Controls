@@ -9,19 +9,19 @@
 
 @min-width_BreadCrumbs_withOverflow:                                    @font-size_BreadCrumbs-arrow + @min-width_BreadCrumbs-text;
 
-@max-width_BreadCrumbs-menu:                                            800px;
+@max-width_BreadCrumbs-menu:                                            @max-width_BreadCrumbs-menu_val;
 @height_BreadCrumbs-menuItem:                                           @height_control_l;
-@min-width_BreadCrumbs-text:                                            36px;
+@min-width_BreadCrumbs-text:                                            @min-width_BreadCrumbs-text_val;
 
 //dragNDrop
 @border-width_BreadCrumbs-item_dropTarget:                              @thickness_border_accent;
-@border-radius_BreadCrumbs-item_dropTarget:                             4px;
+@border-radius_BreadCrumbs-item_dropTarget:                             @border-radius_size_m;
 @border-color_BreadCrumbs-item_dropTarget:                              @color_drop-target;
 
 //Явно указываю шрифт на элементе, чтобы понять, что шрифт загрузился. Если нужный шрифт не загрузился, то текст отрисуется Courier New
 @font-family_BreadCrumbs:                                               @font-family_text_default;
 
 //TODO: при переходе на новый стандарт немножко меняются размеры иконки и всё это станет неактуальным
-@height_BreadCrumbs-corner:                                             14px;
-@width_BreadCrumbs-corner:                                              13px;
-@background_BreadCrumbs-corner:                                         url('../img/BreadCrumbs_corner.svg');
+@height_BreadCrumbs-corner:                                             @height_BreadCrumbs-corner_val;
+@width_BreadCrumbs-corner:                                              @width_BreadCrumbs-corner_val;
+@background_BreadCrumbs-corner:                                         @breadCrumbs_corner_icon;
