@@ -14,7 +14,9 @@ define([
             {
                id : 1,
                title : 'Первый',
-               type: 1
+               type: 1,
+               itemTemplateProperty: 'tpl',
+               tpl: 'control/control'
             },
             {
                id : 2,
@@ -99,7 +101,7 @@ define([
          assert.equal('title', cur.displayProperty, 'Incorrect field set on getCurrent()');
          assert.equal(0, cur.index, 'Incorrect field set on getCurrent()');
          assert.deepEqual(data[0], cur.item, 'Incorrect field set on getCurrent()');
-
+         assert.equal(cur.item.itemTemplateProperty, 'tpl', 'Invalid value itemTemplateProperty for current item.');
 
       });
 
