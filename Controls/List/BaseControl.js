@@ -191,7 +191,7 @@ define('Controls/List/BaseControl', [
             self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
          }
       },
-      toggleSelection: function(self) {
+      toggleSelection: function(self, event) {
          var
             model, markedKey;
          if (self._children.selectionController) {
@@ -199,6 +199,7 @@ define('Controls/List/BaseControl', [
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
             _private.moveMarkerToNext(self);
+            event.preventDefault();
          }
       },
       prepareFooter: function(self, navigation, sourceController) {
