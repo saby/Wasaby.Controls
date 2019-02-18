@@ -131,7 +131,7 @@ define(
       
             return new Promise(function(resolve) {
                data._beforeMount(config).addCallback(function() {
-                  data._filterChanged(event, {test1: 'test1'});
+                  data._filterChanged(null, {test1: 'test1'});
                   assert.isTrue(config.source === data._dataOptionsContext.prefetchSource);
                   assert.deepEqual(data._filter, {test1: 'test1'});
                   resolve();
