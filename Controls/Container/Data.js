@@ -171,7 +171,7 @@ define('Controls/Container/Data',
             this._filter = filter;
             _private.updateDataOptions(this, this._dataOptionsContext);
             
-            /* If filter changed, prefetchSource should return data not from chache,
+            /* If filter changed, prefetchSource should return data not from cache,
                will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
             this._dataOptionsContext.prefetchSource = this._options.source;
             this._dataOptionsContext.updateConsumers();
