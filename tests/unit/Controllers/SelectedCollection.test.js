@@ -166,6 +166,14 @@ define([
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
 
+         selectedCollection._beforeMount({
+            selectedKeys: selectedKeys,
+            source: new sourceLib.Memory({
+               data: [ {id: 1} ],
+               idProperty: 'id'
+            })
+         });
+
          assert.deepEqual(selectedCollection._selectedKeys, selectedKeys);
          assert.notEqual(selectedCollection._selectedKeys, selectedKeys);
 
