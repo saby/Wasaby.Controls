@@ -39,9 +39,7 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._selectionChangeHandler = this._selectionChangeHandler.bind(this);
          this._itemsReadyCallback = this._itemsReadyCallback.bind(this);
          this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
-         this._moveDialogFilter = {
-            onlyFolders: true
-         };
+         this._moveDialogFilter = {};
          this._gridColumns = [{
             template: 'wml!Controls-demo/OperationsPanel/Demo/PersonInfo'
          }];
@@ -51,6 +49,20 @@ define('Controls-demo/OperationsPanel/Demo', [
          this._viewSource = new TreeMemory({
             idProperty: 'id',
             data: Data.employees
+         });
+         this._moverSource = new source.HierarchicalMemory({
+            idProperty: 'id',
+            data: Data.employees,
+            parentProperty: 'Раздел',
+            filter: function(item, where) {
+               var filter = Object.keys(where);
+
+               return item.get('Раздел@') && (!filter.length || filter.some(function(field) {
+                  var value = item.get(field),
+                     needed = where[field];
+                  return String(value).indexOf(needed) !== -1;
+               }));
+            }
          });
          this._selectedKeys = [];
          this._excludedKeys = [];
