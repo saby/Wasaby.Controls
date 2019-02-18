@@ -84,7 +84,9 @@ define([
 
       describe('_afterMount', function() {
          it('enough space', function(done) {
-            var forceUpdateCalled = false;
+            var
+               forceUpdateCalled = false,
+               notifyCalled = false;
             instance._children = {
                toolbarBlock: {
                   clientWidth: 360
@@ -96,8 +98,13 @@ define([
             WidthUtils.fillItemsType = mockFillItemsType([80, 90]);
             instance._beforeMount(cfg).addCallback(function() {
                assert.isFalse(instance._initialized);
+               instance._notify = function(eventName, eventArgs, eventOptions) {
+                  assert.equal(eventName, 'operationsPanelOpened');
+                  notifyCalled = true;
+               };
                instance._afterMount();
                assert.isTrue(instance._initialized);
+               assert.isTrue(notifyCalled);
                instance._toolbarSource.query().addCallback(function(result) {
                   assert.equal(result.getAll().getRecordById(0).get('showType'), 2);
                   assert.equal(result.getAll().getRecordById(1).get('showType'), 2);
