@@ -1,4 +1,5 @@
 <Controls.Input.resources.InputRender.InputRender
+   name="inputRender"
    autocomplete="{{_options.autocomplete}}"
    viewModel="{{_viewModel}}"
    style="{{_options.style}}"
@@ -16,7 +17,7 @@
       <ws:if data="{{_isAutoWidth()}}">
          <!--  The input does not know how to adjust its width to the width of the entered text. -->
          <!--  If we need auto width, then set the width of the input by the parent container. -->
-         <div class="controls-Mask__inputWrapper">
+         <div class="controls-Mask__inputWrapper {{_maskWrapperCss}}">
             <ws:partial
                name="input"
                template="wml!Controls/Input/resources/input"

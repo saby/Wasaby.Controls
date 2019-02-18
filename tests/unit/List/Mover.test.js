@@ -374,5 +374,19 @@ define([
          assert.isTrue(result instanceof Deferred);
       });
 
+      it('move by selection', function(done) {
+         mover._notify = function(event, args) {
+            if (event === 'beforeItemsMove') {
+               assert.deepEqual(args[0], [1, 2]);
+               done();
+            }
+         };
+
+         mover.moveItems({
+            selected: [1, 2],
+            excluded: []
+         }, 3, 'after');
+      });
+
    });
 });

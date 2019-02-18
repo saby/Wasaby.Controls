@@ -54,7 +54,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       calculatingSizes: function(self, newOptions) {
          var
-            isShowCounter = false,
+            counterWidth,
             allItemsInOneRow = false,
             maxVisibleItems = newOptions.maxVisibleItems,
             afterFieldWrapperWidth = 0,
@@ -62,23 +62,32 @@ define('Controls/Selector/Lookup/_Lookup', [
             itemsSizesLastRow, availableWidth, lastSelectedItems,
             itemsCount = newOptions.items.getCount(),
             multiLineState = newOptions.multiLine && itemsCount,
-            counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+            isShowCounter = _private.isShowCounter(multiLineState, itemsCount, maxVisibleItems);
 
          if (itemsCount) {
-            lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
-            itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
-            allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
-            afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
-
-            //For multi line define - inputWidth, for single line - maxVisibleItems
-            if (newOptions.multiLine) {
-               isShowCounter = _private.isShowCounter(itemsCount, maxVisibleItems);
-               lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
-               inputWidth = _private.getInputWidth(DOMUtil.width(self._fieldWrapper), lastRowCollectionWidth, availableWidth);
-               multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
+            // if item less than 1, we dont need to calculate sizes, because calculations will be on css styles
+            if (itemsCount > 1 || !newOptions.readOnly) {
+               // in mode read only and single line, counter does not affect the collection
+               if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
+                  counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+               }
+      
+               lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
+               itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
+               allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
+               afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
+               availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+      
+               //For multi line define - inputWidth, for single line - maxVisibleItems
+               if (newOptions.multiLine) {
+                  lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
+                  inputWidth = _private.getInputWidth(DOMUtil.width(self._fieldWrapper), lastRowCollectionWidth, availableWidth);
+                  multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
+               } else {
+                  maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
+               }
             } else {
-               maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
+               maxVisibleItems = 1;
             }
          }
 
@@ -210,8 +219,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return chain.factory(items).last(itemsCount).value();
       },
 
-      isShowCounter: function(itemsCount, maxVisibleItems) {
-         return itemsCount > maxVisibleItems;
+      isShowCounter: function(multiLine, itemsCount, maxVisibleItems) {
+         return multiLine && itemsCount > maxVisibleItems || !multiLine && itemsCount > 1;
       },
 
       getLastRowCollectionWidth: function(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth) {
@@ -282,7 +291,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          var
             currentOptions = this._options,
             isNeedCalculatingSizes = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
-            listOfDependentOptions = ['multiSelect', 'multiLine', 'source', 'displayProperty', 'maxVisibleItems'];
+            listOfDependentOptions = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'];
 
          _private.updateModel(this, newOptions.value);
 
@@ -357,7 +366,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return !this._options.items.getCount();
       },
       
-      _openInfoBox: function() {
+      _openInfoBox: function(event, config) {
+         config.maxWidth = this._container.offsetWidth;
          this._suggestState = false;
          this._infoboxOpened = true;
       },

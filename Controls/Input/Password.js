@@ -16,15 +16,10 @@ define('Controls/Input/Password',
        *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
        *
        * @class Controls/Input/Password
-       * @extends Core/Control
-       * @mixes Controls/Input/interface/IInputField
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/interface/IInputTag
+       * @extends Controls/Input/Base
+       *
        * @mixes Controls/Input/Password/PasswordStyles
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
-       * @control
-       * @public
-       * @category Input
+       *
        * @demo Controls-demo/Input/Password/Password
        * @demo Controls-demo/Input/Password/PasswordPG
        *

@@ -209,7 +209,7 @@ define('Controls-demo/Buttons/Menu/MenuPG',
                },
                navigation: {
                   items: [
-                     { id: '1', title: 'Loads 2 items', items: { view: 'page', source: 'page', sourceConfig: { pageSize: 2, page: 0, mode: 'totalCount' } } },
+                     { id: '1', title: 'Loads 2 items', items: { view: 'page', source: 'page', sourceConfig: { pageSize: 2, page: 0, hasMore: false } } },
                      { id: '2', title: 'Not specified', items: {} }
                   ],
                   value: 'Not specified'

@@ -205,6 +205,8 @@ define('Controls/Container/Scroll',
 
             _pagingState: null,
 
+            _registeredHeadersIds: null,
+
             /**
              * @type {Object|null}
              * @private
@@ -223,6 +225,7 @@ define('Controls/Container/Scroll',
                   self = this,
                   def;
 
+               this._registeredHeadersIds = [];
                this._stickyHeadersIds = {
                   top: [],
                   bottom: []
@@ -465,12 +468,28 @@ define('Controls/Container/Scroll',
              */
             _fixedHandler: function(event, fixedHeaderData) {
                _private.updateFixationState(this, fixedHeaderData);
+
+               // If the header is single, then it makes no sense to send notifications.
+               // Thus, we prevent unnecessary force updates on receiving messages.
+               if (this._registeredHeadersIds.length < 2) {
+                  return;
+               }
                this._children.stickyHeaderShadow.start([this._stickyHeadersIds.top[this._stickyHeadersIds.top.length - 1], this._stickyHeadersIds.bottom[this._stickyHeadersIds.bottom.length - 1]]);
 
                //Clone the object, because in the future we will change it and without cloning, the changes will be propagated by reference.
                this._children.stickyHeaderHeight.start(cClone(this._stickyHeadersHeight));
 
                event.stopPropagation();
+            },
+
+            _stickyRegisterHandler: function(event, stickyId, register) {
+               var index = this._registeredHeadersIds.indexOf(stickyId);
+               event.blockUpdate = true;
+               if (register && index === -1) {
+                  this._registeredHeadersIds.push(stickyId);
+               } else if (!register && index !== -1) {
+                  this._registeredHeadersIds.splice(index, 1);
+               }
             },
 
             /**
@@ -522,6 +541,24 @@ define('Controls/Container/Scroll',
              */
             scrollToBottom: function() {
                _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+            },
+
+            // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
+            // https://online.sbis.ru/opendoc.html?guid=19d6ff31-3912-4d11-976f-40f7e205e90a
+            selectedKeysChanged: function(event) {
+               // Forwarding bubbling events makes no sense.
+               if (!event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('selectedKeysChanged', args);
+               }
+            },
+
+            excludedKeysChanged: function(event) {
+               // Forwarding bubbling events makes no sense.
+               if (!event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('excludedKeysChanged', args);
+               }
             }
          });
 

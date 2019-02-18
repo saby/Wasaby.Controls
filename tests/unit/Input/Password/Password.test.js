@@ -29,6 +29,7 @@ define(
             assert.deepEqual(Password.getDefaultOptions(), {
                size: 'm',
                value: '',
+               tooltip: '',
                style: 'info',
                placeholder: '',
                revealable: true,
@@ -42,6 +43,7 @@ define(
             assert.deepEqual(Object.keys(Password.getOptionTypes()).sort(), [
                'size',
                'style',
+               'tooltip',
                'tagStyle',
                'textAlign',
                'fontStyle',
@@ -82,6 +84,7 @@ define(
                   ctrl._beforeMount({
                      value: 'test value'
                   });
+                  ctrl._options.tooltip = 'test tooltip';
                });
 
                var init = function(inst, passwordVisible, valueFits) {
@@ -113,7 +116,7 @@ define(
 
                   ctrl._mouseEnterHandler();
 
-                  assert.equal(ctrl._tooltip, '');
+                  assert.equal(ctrl._tooltip, 'test tooltip');
                });
                it('The password is visible and the value no fits into the field.', function() {
                   init(ctrl, true, false);

@@ -281,7 +281,17 @@ function(cMerge,
             cfg.autofocus = cfg.catchFocus;
          }
 
-         cfg.isCompoundTemplate = true;
+         /**
+          * Let's protect ourselves from the case when the template was not loaded. In theory, this should not be.
+          */
+         if (requirejs.defined(cfg.template)) {
+            /**
+             * Determine the 'compound' or 'VDOM' template build.
+             */
+            cfg.isCompoundTemplate = !isVDOMTemplate(requirejs(cfg.template));
+         } else {
+            cfg.isCompoundTemplate = true;
+         }
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
@@ -303,7 +313,25 @@ function(cMerge,
             cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }
 
+         if (cfg.onCloseHandlerEvent) {
+            cfg.componentOptions.onCloseHandlerEvent = cfg.onCloseHandlerEvent;
+         }
+
+         if (cfg.onResultHandlerEvent) {
+            cfg.componentOptions.onResultHandlerEvent = cfg.onResultHandlerEvent;
+         }
+
+         if (cfg.onOpenHandlerEvent) {
+            cfg.componentOptions.onOpenHandlerEvent = cfg.onOpenHandlerEvent;
+         }
+
          this._setSizes(cfg, templateClass);
+
+         cfg.componentOptions._popupOptions = {
+            minWidth: cfg.minWidth,
+            maxWidth: cfg.maxWidth,
+            minimizedWidth: cfg.minimizedWidth
+         };
       },
       _getConfigFromTemplate: function(cfg) {
          // get options from template.getDefaultOptions
@@ -363,6 +391,9 @@ function(cMerge,
             // Пытаемся совместить старое и новое api
             if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
                newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+               if (newCfg.dialogOptions.direction === 'center') {
+                  newCfg.dialogOptions.direction = '';
+               }
             } else {
                // Для стека всегда значение left, иначе ломается анимация
                if (cfg._type === 'stack') {
@@ -438,6 +469,18 @@ function(cMerge,
             newCfg.dialogOptions.onCloseHandler = newCfg.eventHandlers.onClose;
          }
 
+         if (newCfg._events && newCfg._events.onClose) {
+            newCfg.dialogOptions.onCloseHandlerEvent = newCfg._events.onClose;
+         }
+
+         if (newCfg._events && newCfg._events.onResult) {
+            newCfg.dialogOptions.onResultHandlerEvent = newCfg._events.onResult;
+         }
+
+         if (newCfg._events && newCfg._events.onOpen) {
+            newCfg.dialogOptions.onOpenHandlerEvent = newCfg._events.onOpen;
+         }
+
          return newCfg;
       },
 
@@ -499,7 +542,7 @@ function(cMerge,
       },
 
       _getDimensions: function(templateClass) {
-         return templateClass.dimensions || templateClass.prototype.dimensions || {};
+         return templateClass.dimensions || (templateClass.prototype && templateClass.prototype.dimensions) || {};
       },
 
       _getTemplateOptions: function(templateClass) {

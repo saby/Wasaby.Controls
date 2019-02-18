@@ -7,7 +7,6 @@ define(
       'use strict';
 
       describe('Controls/Input/Search', function() {
-
          var valueSearch;
 
 
@@ -16,7 +15,7 @@ define(
                let search = new Search();
                let searched = false;
                let activated = false;
-               
+
                search._notify = (e, args) => {
                   searched = true;
                };
@@ -44,9 +43,9 @@ define(
                });
 
                search._notify = (e, args) => {
-                  if ( e == 'resetClick') {
+                  if (e == 'resetClick') {
                      resetClicked = true;
-                  } else if (e == 'valueChanged'){
+                  } else if (e == 'valueChanged') {
                      assert.equal(args[0], '');
                   }
                };
@@ -75,11 +74,42 @@ define(
                };
                search._keyUpHandler({
                   nativeEvent: {
-                     which: 13 //enter key
+                     which: 13 // enter key
                   }
                });
                assert.isTrue(activated);
             });
+
+            it('Focus out', function() {
+               let search = new Search();
+
+               const beforeMount = search._beforeMount;
+
+               search._beforeMount = function() {
+                  beforeMount.apply(this, arguments);
+
+                  search._children[this._fieldName] = {
+                     selectionStart: 0,
+                     selectionEnd: 0,
+                     value: '',
+                     focus: function() {},
+                     setSelectionRange: function(start, end) {
+                        this.selectionStart = start;
+                        this.selectionEnd = end;
+                     }
+                  };
+               };
+
+               search._options = {};
+               search._beforeMount({
+                  value: null
+               });
+               search._options.trim = true;
+               search._options.value = null;
+
+               search._focusOutHandler();
+            });
          });
       });
-   });
+   }
+);

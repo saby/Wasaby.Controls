@@ -198,7 +198,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
          if (selectorTemplate) {
             templateOptions = merge(templateOptions || {}, {
-               selectedItems: _private.getItems(this),
+               selectedItems: _private.getItems(this).clone(),
                multiSelect: multiSelect,
                handlers: {
                   onSelectComplete: function(event, result) {

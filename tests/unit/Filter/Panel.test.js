@@ -107,7 +107,7 @@ define(
             assert.isTrue(isNotifyClose);
          });
 
-         it('apply history filter', function() {
+         it('_applyHistoryFilter', function() {
             var panel = getFilterPanel(config),
                isNotifyClose, filter;
             panel._notify = (e, args) => {
@@ -119,8 +119,22 @@ define(
             };
             panel._beforeMount(config);
             panel._children = { formController: { submit: ()=>{return Deferred.success([])} } };
-            panel._applyHistoryFilter();
-            assert.deepEqual({ text: '123' }, filter);
+            var historyItems = [
+               {
+                  id: 'text',
+                  value: '123',
+                  resetValue: '',
+                  visibility: true
+               },
+               {
+                  id: 'bool',
+                  value: true,
+                  resetValue: false,
+                  visibility: true
+               }
+            ];
+            panel._applyHistoryFilter('applyHistoryFilter', historyItems);
+            assert.deepEqual({ text: '123', bool: true }, filter);
             assert.isTrue(isNotifyClose);
          });
 
@@ -165,7 +179,7 @@ define(
             ];
             var panel2 = getFilterPanel({ items: changedItems });
             panel2._resetFilter();
-            assert.deepEqual({}, FilterPanel._private.getFilter(panel2));
+            assert.deepEqual({}, FilterPanel._private.getFilter(panel2._items));
             assert.deepEqual(panel2._items, resetedItems);
             assert.isFalse(panel2._isChanged);
          });

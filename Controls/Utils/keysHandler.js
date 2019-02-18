@@ -11,7 +11,6 @@ define('Controls/Utils/keysHandler', [], function() {
             if (event.nativeEvent.keyCode === keys[action]) {
                handlerSet[action](scope);
                event.stopImmediatePropagation();
-               event.preventDefault();
                return;
             }
          }

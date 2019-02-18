@@ -50,6 +50,7 @@ define('Controls/Container/Async',
       var Async = Base.extend({
          _template: template,
          optionsForComponent: {},
+         canUpdate: true,
          _beforeMount: function(options) {
             var promiseResult;
             if (typeof window !== 'undefined') {
@@ -67,6 +68,9 @@ define('Controls/Container/Async',
          },
 
          _beforeUpdate: function(options) {
+            if (!this.canUpdate) {
+               return;
+            }
             if (options.templateName !== this._options.templateName) {
                this._loadContentAsync(options.templateName, options.templateOptions);
             } else if (options.templateOptions !== this._options.templateOptions) {
@@ -101,13 +105,19 @@ define('Controls/Container/Async',
          _loadContentAsync: function(name, options, noUpdate) {
             var self = this;
             var promise = this._loadFileAsync(name);
+
+            // Need this flag to prevent setting new options for content
+            // that wasn't loaded yet
+            self.canUpdate = false;
             promise.then(function(res) {
+               self.canUpdate = true;
                self._setErrorState(false);
                self._updateOptionsForComponent(res, options);
                if (!noUpdate) {
                   self._forceUpdate();
                }
             }, function(err) {
+               self.canUpdate = true;
                self._setErrorState(true, err);
             });
             return promise;

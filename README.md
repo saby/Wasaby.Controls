@@ -20,7 +20,7 @@
 
         npm run build
 
-1. Для запуска локального демо-стенда по адресу [localhost:666](http://localhost:666/) выполните:
+1. Для запуска локального демо-стенда по адресу [localhost:777](http://localhost:777/) выполните:
 
         npm start
 
@@ -40,7 +40,7 @@
 
     1. найдите строку:
 
-            var port = process.env.PORT || 666;
+            var port = process.env.PORT || 777;
 
     1. измените порт на 2666:
 
@@ -55,21 +55,3 @@
     1. на 2025:
 
             "port": 2025
-
-## Команды Grunt
-
-- `grunt` или `grunt build` (по умолчанию) - полностью собрать проект;
-- `grunt rebuild` - пересобрать проект, предварительно удалив предыдущую сборку;
-- `grunt clean` - удалить текущую сборку проекта;
-- `grunt build-dependencies` - построить файлы `contents.js` и `contents.json` зависимостей модулей;
-- `grunt js` - провести статический анализ JS-кода (минификация JS-кода в будущем, если потребуется);
-- `grunt css` - скомпилировать все темы LESS в CSS;
-- `grunt css --name=<name>` - скомпилировать файл LESS с именем `<name>` и темы online,presto,carry в CSS , например: `grunt --name=carry`;
-- `grunt css --name=<name>` --withThemes=false - скомпилировать только файл LESS с именем `<name>` в CSS например: `grunt --name=InputRender --withThemes=false`;
-- `grunt cssC` - скомпилировать все LESS файлы в папке components и темы online,presto,carry в CSS;
-- `grunt cssV` - скомпилировать все LESS файлы в папке Controls и темы online,presto,carry в CSS;
-- `grunt cssD` - скомпилировать все LESS файлы в папке Controls-demo и темы online,presto,carry в CSS;
-- `grunt cssE` - скомпилировать все LESS файлы в папке Examples и темы online,presto,carry в CSS;
-- `grunt copy` - скопировать директории `components` и `themes` в директорию `SBIS3.CONTROLS`;
-- `grunt watch` - следить за изменениями в LESS файлах тем и перекомпилировать их;
-- `grunt run` - собрать проект, поднять тестовый локальный веб-сервер на 666-м порту и запустить `watch`.

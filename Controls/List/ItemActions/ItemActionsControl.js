@@ -85,7 +85,15 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       updateModel: function(self, newOptions, isTouch) {
          _private.updateActions(self, newOptions, isTouch);
          newOptions.listModel.subscribe('onListChange', function() {
-            _private.updateActions(self, self._options, self._context.isTouch ? self._context.isTouch.isTouch : false);
+            /**
+             * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
+             * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
+             */
+            var isTouchValue = false;
+            if (self._context && self._context.isTouch) {
+               isTouchValue = self._context.isTouch.isTouch;
+            }
+            _private.updateActions(self, self._options, isTouchValue);
          });
       },
 
@@ -111,13 +119,34 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       _template: template,
 
       _beforeMount: function(newOptions, context) {
+         if (typeof window === 'undefined') {
+            this.serverSide = true;
+            return;
+         }
+
+         /**
+          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
+          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
+          */
+         var isTouch = false;
+         if (context && context.isTouch) {
+            isTouch = context.isTouch.isTouch;
+         }
          if (newOptions.listModel) {
-            _private.updateModel(this, newOptions, context.isTouch ? context.isTouch.isTouch : false);
+            _private.updateModel(this, newOptions, isTouch);
          }
       },
 
       _beforeUpdate: function(newOptions, context) {
-         var args = [this, newOptions, context.isTouch ? context.isTouch.isTouch : false];
+         /**
+          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
+          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
+          */
+         var isTouch = false;
+         if (context && context.isTouch) {
+            isTouch = context.isTouch.isTouch;
+         }
+         var args = [this, newOptions, isTouch];
 
          if (
             this._options.listModel !== newOptions.listModel ||
@@ -143,7 +172,15 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item) {
-         _private.updateItemActions(this, item, this._options, this._context.isTouch ? this._context.isTouch.isTouch : false);
+         /**
+          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
+          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
+          */
+         var isTouch = false;
+         if (this._context && this._context.isTouch) {
+            isTouch = this._context.isTouch.isTouch;
+         }
+         _private.updateItemActions(this, item, this._options, isTouch);
       }
    });
 

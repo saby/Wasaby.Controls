@@ -30,10 +30,18 @@ define('Controls/List/ListViewModel',
             var
                classList = '',
                itemPadding = _private.getItemPadding(cfg);
-            if (cfg.multiSelectVisibility === 'hidden') {
+
+            classList += ' controls-ListView__itemContent';
+            classList += ' controls-ListView__item-topPadding_' + (itemPadding.top || 'default').toLowerCase();
+            classList += ' controls-ListView__item-bottomPadding_' + (itemPadding.bottom || 'default').toLowerCase();
+            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+
+            if (cfg.multiSelectVisibility !== 'hidden') {
+               classList += ' controls-ListView__itemContent_withCheckboxes';
+            } else {
                classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase();
             }
-            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+
             return classList;
          }
       };
@@ -333,13 +341,32 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
+            if (this._options.markerVisibility !== 'hidden') {
+               this._setMarkerAfterUpdateItems();
+            }
+            this._nextVersion();
+         },
+
+         // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.
+         _restoreMarkedItem: function() {
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
-            if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always') && this._items.getCount()) {
-               this.setMarkedKey(this._items.at(0).getId());
+         },
+
+
+
+         _setMarkerAfterUpdateItems: function() {
+
+            // При обновлении коллекции объекты пересоздаются, поэтому нужно обновить ссылку на отмеченный элемент.
+            this._restoreMarkedItem();
+
+            // Если отмеченный элемент не найден, а маркер показывать нужно, то отмечаем первый элемент
+            if (this._options.markerVisibility !== 'onactivated') {
+               if (!this._markedItem && this._items.getCount()) {
+                  this.setMarkedKey(this._items.at(0).getId());
+               }
             }
-            this._nextVersion();
          },
 
          _onBeginCollectionChange: function() {

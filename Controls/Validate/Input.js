@@ -19,11 +19,6 @@ define('Controls/Validate/Input',
             this._notify('valueChanged', [value]);
             this._cleanValid();
          },
-         _cleanValid: function() {
-            if (this._validationResult) {
-               this.setValidationResult(null);
-            }
-         },
          _inputCompletedHandler: function(event, value) {
             this._notify('inputCompleted', [value]);
          },

@@ -4,7 +4,7 @@
       type="{{type}}"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
-      placeholder="{{hidePlaceholderUsingCSS ? '&#65279;'}}"
+      placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
       autocomplete="{{options.autoComplete ? 'on' : 'new-password'}}"
       class="controls-InputBase__nativeField
             {{value ? '' : 'controls-' + controlName + '__nativeField_caretEmpty'}}
