@@ -306,6 +306,82 @@ define(
          });
       });
 
+      describe('selectedKeysChanged', function() {
+         var instance;
+         beforeEach(function() {
+            instance = new Scroll();
+         })
+         it('should forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return false;
+                  }
+               };
+            instance._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs, ['1', '2', '3']);
+               notifyCalled = true;
+            };
+            instance.selectedKeysChanged(event, '1', '2', '3');
+            assert.isTrue(notifyCalled);
+         });
+
+         it('should not forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return true;
+                  }
+               };
+            instance._notify = function() {
+               notifyCalled = true;
+            };
+            instance.selectedKeysChanged(event, '1', '2', '3');
+            assert.isFalse(notifyCalled);
+         });
+      });
+
+      describe('excludedKeysChanged', function() {
+         var instance;
+         beforeEach(function() {
+            instance = new Scroll();
+         })
+         it('should forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return false;
+                  }
+               };
+            instance._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'excludedKeysChanged');
+               assert.deepEqual(eventArgs, ['1', '2', '3']);
+               notifyCalled = true;
+            };
+            instance.excludedKeysChanged(event, '1', '2', '3');
+            assert.isTrue(notifyCalled);
+         });
+
+         it('should not forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return true;
+                  }
+               };
+            instance._notify = function() {
+               notifyCalled = true;
+            };
+            instance.excludedKeysChanged(event, '1', '2', '3');
+            assert.isFalse(notifyCalled);
+         });
+      });
+
       describe('Controls.Container.Shadow', function() {
          var result;
          describe('calcShadowPosition', function() {

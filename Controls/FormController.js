@@ -240,17 +240,22 @@ define('Controls/FormController', [
          // чтобы завершить пендинги на acceptChanges, переопределим метод и завершим пендинг вручную.
          var acceptChanges = this._record.acceptChanges;
          this._record.acceptChanges = function() {
-            if (self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
+            var res = acceptChanges.apply(this, arguments);
+
+            // После acceptChanges рекорд может быть все еще изменен. Происходит в случае, когда вызывают метод и напрямую задают
+            // поля, которые нужно пометить неизмененными
+            if (!this.isChanged() && self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
                self._propertyChangedDef.callback(true);
             }
-            return acceptChanges.apply(this, arguments);
+            return res;
          };
          var rejectChanges = this._record.rejectChanges;
          this._record.rejectChanges = function() {
-            if (self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
+            var res = rejectChanges.apply(this, arguments);
+            if (!this.isChanged() && self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
                self._propertyChangedDef.callback(true);
             }
-            return rejectChanges.apply(this, arguments);
+            return res;
          };
       },
       _showConfirmDialog: function(def, forceFinishValue) {
