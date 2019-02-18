@@ -1024,6 +1024,7 @@ define([
 
          var
             stopImmediateCalled = false,
+            preventDefaultCalled = false,
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -1070,15 +1071,25 @@ define([
                });
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
+               lnBaseControl._children = {
+                  selectionController: {
+                     onCheckBoxClick: function() {
+                     }
+                  }
+               };
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
                   nativeEvent: {
                      keyCode: cConstants.key.space
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
                   }
                });
-               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "space".');
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
+               assert.isTrue(preventDefaultCalled);
 
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
@@ -1088,7 +1099,7 @@ define([
                      keyCode: cConstants.key.up
                   }
                });
-               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after press "up".');
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
 
