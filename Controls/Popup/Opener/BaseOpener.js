@@ -319,7 +319,7 @@ define('Controls/Popup/Opener/BaseOpener',
                   requirejs(['Controls/Utils/getZIndex'], function(getZIndex) {
                      cfg.zIndex = cfg.zIndex || getZIndex(opener);
                      Base._openPopup(popupId, cfg, controller, def);
-                  })
+                  });
                });
             } else if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
                Base._openPopup(popupId, cfg, controller, def);
