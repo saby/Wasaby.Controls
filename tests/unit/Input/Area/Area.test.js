@@ -3,9 +3,12 @@ define(
       'Core/constants',
       'Controls/Input/Area',
       'tests/resources/ProxyCall',
-      'Core/vdom/Synchronizer/resources/SyntheticEvent'
+      'tests/resources/TemplateUtil',
+      'Core/vdom/Synchronizer/resources/SyntheticEvent',
+
+      'wml!tests/Input/Area/LinkInReadMode'
    ],
-   function(constants, Area, ProxyCall, SyntheticEvent) {
+   function(constants, Area, ProxyCall, TemplateUtil, SyntheticEvent, linkInReadMode) {
       'use strict';
       describe('Controls.Input.Area', function() {
          var ctrl, calls;
@@ -13,6 +16,23 @@ define(
          beforeEach(function() {
             calls = [];
             ctrl = new Area();
+         });
+         describe('Template', function() {
+            describe('ReadOnly', function() {
+               var template;
+
+               beforeEach(function() {
+                  ctrl._beforeMount({
+                     value: ''
+                  });
+                  template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
+               });
+               it('Insert in the text field "Hi https://www.google.ru/"', function() {
+                  ctrl._readOnlyField.scope.value = 'Hi https://www.google.ru/';
+
+                  assert.equal(template(ctrl._readOnlyField.scope), linkInReadMode({}));
+               });
+            });
          });
          describe('Move to new line', function() {
             var event;

@@ -1,2 +1,7 @@
 <div name="readOnlyField"
-     class="controls-Area__field_readOnly controls-Area__field_margin controls-Area__fieldWrapper">{{value}}{{emptySymbol}}</div>
+     class="controls-Area__field_readOnly controls-Area__field_margin controls-Area__fieldWrapper">
+   <ws:if data="{{value}}">
+      <Controls.Decorator.WrapURLs if="{{value}}" text="{{value}}{{emptySymbol}}"/>
+   </ws:if>
+   <ws:else>{{emptySymbol}}</ws:else>
+</div>
