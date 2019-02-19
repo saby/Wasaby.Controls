@@ -149,6 +149,59 @@ define([
          assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
 
+      it('itemActionsProperty', function() {
+         var
+            data = [
+               {
+                  id: 1,
+                  title: 'Первый',
+                  type: 1,
+                  test: [
+                     {
+                        id: 0,
+                        title: 'прочитано',
+                        showType: tUtil.showType.TOOLBAR
+                     }
+                  ]
+               },
+               {
+                  id: 2,
+                  title: 'Второй',
+                  type: 2,
+                  test: [
+                     {
+                        id: 0,
+                        title: 'прочитано',
+                        showType: tUtil.showType.TOOLBAR
+                     },
+                     {
+                        id: 1,
+                        icon: 'icon-primary icon-PhoneNull',
+                        title: 'phone',
+                        showType: tUtil.showType.MENU
+                     }
+                  ]
+               }
+            ],
+            rs = new collection.RecordSet({
+               idProperty: 'id',
+               rawData: data
+            }),
+            listViewModel = new ListViewModel({
+               items: rs,
+               keyProperty: 'id'
+            }),
+            cfg = {
+               listModel: listViewModel,
+               itemActions: [],
+               itemActionsProperty: 'test'
+            };
+         var ctrl = new ItemActionsControl(cfg);
+         ctrl._beforeUpdate(cfg, { isTouch: { isTouch: false } });
+         assert.deepEqual(data[0].test, listViewModel._actions[0].all);
+         assert.deepEqual(data[1].test, listViewModel._actions[1].all);
+      });
+
       it('_onItemActionClick', function() {
          var callBackCount = 0;
          var instance = new ItemActionsControl();
