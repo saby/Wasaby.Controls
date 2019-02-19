@@ -216,7 +216,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._$onBringToFront = this.onBringToFront;
             this.onBringToFront = function() {
                if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
-                  opts._$to.activate();
+                  if (opts._$to.setActive) {
+                     opts._$to.setActive(true);
+                  } else {
+                     opts._$to.activate();
+                  }
                }
             };
          },
