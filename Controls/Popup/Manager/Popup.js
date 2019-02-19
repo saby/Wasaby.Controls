@@ -75,11 +75,7 @@ define('Controls/Popup/Manager/Popup',
                }).bind(this);
             } else {
                this._notify('popupCreated', [this._options.id], { bubbling: true });
-
-               // TODO Compatible
-               if (this._options.autofocus && !this._options.isCompoundTemplate) {
-                  this.activate();
-               }
+               this.activatePopup();
             }
          },
 
@@ -88,6 +84,13 @@ define('Controls/Popup/Manager/Popup',
          },
          _beforeUnmount: function() {
             this._notify('popupDestroyed', [this._options.id], { bubbling: true });
+         },
+
+         activatePopup: function() {
+            // TODO Compatible
+            if (this._options.autofocus && !this._options.isCompoundTemplate) {
+               this.activate();
+            }
          },
 
          /**
