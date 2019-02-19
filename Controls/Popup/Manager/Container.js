@@ -58,6 +58,13 @@ define('Controls/Popup/Manager/Container',
             return this._children[id];
          },
 
+         activatePopup: function(id) {
+            var popup = this.getPopupById(id);
+            if (popup) {
+               popup.activatePopup();
+            }
+         },
+
          getPendingById: function(id) {
             return this._children[id + '_registrator'];
          },
