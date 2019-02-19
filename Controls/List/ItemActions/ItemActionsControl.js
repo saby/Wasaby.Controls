@@ -27,24 +27,28 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return (second.showType || 0) - (first.showType || 0);
       },
 
-      fillItemAllActions: function(item, itemActions, itemActionVisibilityCallback) {
+      fillItemAllActions: function(item, options) {
          var actions = [];
-         itemActions.forEach(function(action) {
-            if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
-               if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
-                  action.icon += ' ' + ACTION_ICON_CLASS;
+         if (options.itemActionsProperty) {
+            actions = item.get(options.itemActionsProperty);
+         } else {
+            options.itemActions.forEach(function(action) {
+               if (!options.itemActionVisibilityCallback || options.itemActionVisibilityCallback(action, item)) {
+                  if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
+                     action.icon += ' ' + ACTION_ICON_CLASS;
+                  }
+                  action.style = getStyle(action.style, 'ItemActions');
+                  action.iconStyle = getStyle(action.iconStyle, 'ItemActions');
+                  actions.push(action);
                }
-               action.style = getStyle(action.style, 'ItemActions');
-               action.iconStyle = getStyle(action.iconStyle, 'ItemActions');
-               actions.push(action);
-            }
-         });
+            });
+         }
          return actions;
       },
 
       updateItemActions: function(self, item, options, isTouch) {
          var
-            all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
+            all = _private.fillItemAllActions(item, options),
 
             showed = options.itemActionsPosition === 'outside'
                ? all
