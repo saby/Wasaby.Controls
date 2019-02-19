@@ -2,7 +2,7 @@
    <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:dragEnd="_dragEndBreadCrumbs()" on:documentDragEnd="_documentDragEnd()">
       <ws:if data="{{_breadCrumbsItems || _dragOnBreadCrumbs}}">
          <Controls.BreadCrumbs.Path name="explorerPath"
-                                    attr:class="explorerPath"
+                                    attr:class="controls-Explorer__Path"
                                     keyProperty="{{_options.keyProperty}}"
                                     parentProperty="{{ _options.parentProperty }}"
                                     displayProperty="{{_options.displayProperty}}"
