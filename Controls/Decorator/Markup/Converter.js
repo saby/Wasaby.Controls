@@ -67,7 +67,7 @@ define('Controls/Decorator/Markup/Converter', [
     */
    var htmlToJson = function(html) {
       var div = document.createElement('div');
-      div.innerHTML = wrapUrl(html);
+      div.innerHTML = wrapUrl(html).trim();
       return domToJson(div).slice(1);
    };
 

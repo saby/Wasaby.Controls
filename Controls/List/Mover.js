@@ -4,8 +4,9 @@ define('Controls/List/Mover', [
    'Core/core-instance',
    'Types/source',
    'Controls/Container/Data/ContextOptions',
+   'Controls/Utils/getItemsBySelection',
    'wml!Controls/List/Mover/Mover'
-], function(Control, Deferred, cInstance, sourceLib, dataOptions, template) {
+], function(Control, Deferred, cInstance, sourceLib, dataOptions, getItemsBySelection, template) {
 
    var BEFORE_ITEMS_MOVE_RESULT = {
       CUSTOM: 'Custom',
@@ -24,6 +25,15 @@ define('Controls/List/Mover', [
       },
       afterItemsMove: function(self, items, target, position, result) {
          self._notify('afterItemsMove', [items, target, position, result]);
+
+         //According to the standard, after moving the items, you need to unselect all in the table view.
+         //The table view and Mover are in a common container (Control.Container.MultiSelector) and do not know about each other.
+         //The only way to affect the selection in the table view is to send the selectedTypeChanged event.
+         //You need a schema in which Mover will not work directly with the selection.
+         //Will be fixed by: https://online.sbis.ru/opendoc.html?guid=dd5558b9-b72a-4726-be1e-823e943ca173
+         self._notify('selectedTypeChanged', ['unselectAll'], {
+            bubbling: true
+         });
       },
 
       moveInItems: function(self, items, target, position) {
@@ -108,6 +118,7 @@ define('Controls/List/Mover', [
             self._items = dataOptions.items;
             self._source = self._options.source || dataOptions.source;
             self._keyProperty = self._options.keyProperty || dataOptions.keyProperty;
+            self._filter = dataOptions.filter;
          }
       },
 
@@ -169,6 +180,12 @@ define('Controls/List/Mover', [
 
       getIdByItem: function(self, item) {
          return cInstance.instanceOfModule(item, 'Types/entity:Model') ? item.get(self._keyProperty) : item;
+      },
+
+      getItemsBySelection: function(selection) {
+         //Support moving with mass selection.
+         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+         return selection instanceof Array ? Deferred.success(selection) : getItemsBySelection(selection, this._source, this._items, this._filter);
       }
    };
 
@@ -209,41 +226,43 @@ define('Controls/List/Mover', [
       },
 
       moveItems: function(items, target, position) {
-         var
-            result,
-            self = this;
+         var self = this;
 
-         items = items.filter(function(item) {
-            return _private.checkItem(self, item, target, position);
-         });
-         if (target !== undefined && items.length > 0) {
-            result = _private.beforeItemsMove(this, items, target, position).addCallback(function(beforeItemsMoveResult) {
-               if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
-                  _private.moveInItems(self, items, target, position);
-               } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
-                  return _private.moveInSource(self, items, target, position).addCallback(function(moveResult) {
-                     _private.moveInItems(self, items, target, position);
-                     return moveResult;
-                  });
-               }
-            }).addBoth(function(result) {
-               _private.afterItemsMove(self, items, target, position, result);
-               return result;
+         return _private.getItemsBySelection.call(this, items).addCallback(function(items) {
+            items = items.filter(function(item) {
+               return _private.checkItem(self, item, target, position);
             });
-         } else {
-            result = Deferred.success();
-         }
-
-         return result;
+            if (target !== undefined && items.length > 0) {
+               return _private.beforeItemsMove(self, items, target, position).addCallback(function(beforeItemsMoveResult) {
+                  if (beforeItemsMoveResult === BEFORE_ITEMS_MOVE_RESULT.MOVE_IN_ITEMS) {
+                     _private.moveInItems(self, items, target, position);
+                  } else if (beforeItemsMoveResult !== BEFORE_ITEMS_MOVE_RESULT.CUSTOM) {
+                     return _private.moveInSource(self, items, target, position).addCallback(function(moveResult) {
+                        _private.moveInItems(self, items, target, position);
+                        return moveResult;
+                     });
+                  }
+               }).addBoth(function(result) {
+                  _private.afterItemsMove(self, items, target, position, result);
+                  return result;
+               });
+            } else {
+               return Deferred.success();
+            }
+         });
       },
 
       moveItemsWithDialog: function(items) {
-         this._children.dialogOpener.open({
-            templateOptions: {
-               movedItems: items,
-               source: this._source,
-               keyProperty: this._keyProperty
-            }
+         var self = this;
+
+         _private.getItemsBySelection.call(this, items).addCallback(function(items) {
+            self._children.dialogOpener.open({
+               templateOptions: {
+                  movedItems: items,
+                  source: self._source,
+                  keyProperty: self._keyProperty
+               }
+            });
          });
       }
    });

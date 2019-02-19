@@ -6,9 +6,10 @@ define(
       'Types/entity',
       'Core/Deferred',
       'Types/source',
-      'Controls/History/Constants'
+      'Controls/History/Constants',
+      'Types/util',
    ],
-   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants) => {
+   (historySource, historyService, collection, entity, Deferred, sourceLib, Constants, util) => {
       describe('History Source', () => {
          let items = [
             {
@@ -199,6 +200,14 @@ define(
                assert.equal(!!hS._historyId, false);
             });
          });
+   
+         describe('serialize tests', function() {
+            it('clone', function() {
+               var sourceClone = util.object.clone(hSource);
+               assert.isTrue(sourceClone instanceof historySource);
+            });
+         });
+         
          describe('checkHistory', function() {
             it('query', function(done) {
                let query = new sourceLib.Query().where();
@@ -206,7 +215,7 @@ define(
                let originHSource = hSource.historySource;
                var errorSource = {
                   query: function() {
-                     return Deferred.fail();
+                     return Deferred.fail(new Error('testError'));
                   }
                };
 
@@ -308,6 +317,31 @@ define(
                   });
                   done();
                })
+            });
+            it('initHistory', function(done){
+               let newData = new sourceLib.DataSet({
+                  rawData: {
+                     frequent: createRecordSet(frequentData),
+                     pinned: createRecordSet(pinnedData),
+                     recent: createRecordSet(recentData)
+                  },
+                  itemsProperty: '',
+                  idProperty: 'ObjectId'
+               });
+               let memorySource = new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: items
+               });
+               memorySource.query().addCallback(function(res) {
+                  let self = {_pinned: ['1', '2'], historySource: {getHistoryId: () => {'TEST_ID'}}};
+                  let sourceItems = res.getAll();
+                  historySource._private.initHistory(self, newData, sourceItems);
+                  assert.equal(self._history.pinned.getCount(), 3);
+                  self._history.pinned.forEach(function(pinnedItem){
+                     assert.isFalse(pinnedItem.getId()=='9');
+                  });
+                  done();
+               });
             });
          });
          describe('check source original methods', function() {

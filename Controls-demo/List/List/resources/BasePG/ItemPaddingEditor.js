@@ -19,7 +19,16 @@ define('Controls-demo/List/List/resources/BasePG/ItemPaddingEditor', [
          _bottom: null,
 
          _beforeMount: function(cfg) {
-            this._source = new TSource.Memory({
+
+            this._topBottomSource = new TSource.Memory({
+               data: [
+                  { id: 'null', title: 'null'},
+                  { id: 's', title: 's'}
+               ],
+               idProperty: 'id'
+            });
+
+            this._leftRightSource = new TSource.Memory({
                data: [
                   { id: 'null', title: 'null' },
                   { id: 'xs', title: 'xs' },
@@ -31,6 +40,7 @@ define('Controls-demo/List/List/resources/BasePG/ItemPaddingEditor', [
                ],
                idProperty: 'id'
             });
+
             this._left = cfg.value.left;
             this._right = cfg.value.right;
             this._top = cfg.value.top;

@@ -16,7 +16,7 @@
                                 name="psina"
                                 keyProperty="id">
                             <ws:navigation source="page" view="{{_navigationViewType}}">
-                                <ws:sourceConfig pageSize="{{9}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+                                <ws:sourceConfig pageSize="{{9}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                                 <ws:viewConfig pagingMode="direct"></ws:viewConfig>
                             </ws:navigation>
                         </Controls.List>

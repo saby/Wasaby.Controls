@@ -14,6 +14,7 @@ define('Controls/Toggle/Checkbox', [
     * @extends Core/Control
     * @mixes Controls/interface/ICaption
     * @mixes Controls/interface/ITooltip
+    * @mixes Controls/Button/interface/IIcon
     * @control
     * @public
     * @author Михайловский Д.С.

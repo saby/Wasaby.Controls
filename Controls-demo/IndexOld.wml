@@ -53,9 +53,15 @@
       </div>
 
       <h1>TreeGrid <small style="color: #CCC; font-size: 16px">PG</small></h1>
-      <div>
-         <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FTreeGrid%252FBasePG'}}">TreeGrid/Base</a>
-      </div>
+       <div>
+           <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FTreeGrid%252FBasePG'}}">TreeGrid/Base</a>
+       </div>
+       <div>
+           <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FTreeGrid%252FExtendedPG'}}">TreeGrid/Extended</a>
+       </div>
+       <div>
+           <a href="{{'/Controls-demo/app/Controls-demo%252FList%252FTreeGrid%252FItemTemplatePG'}}">TreeGrid/ItemTemplate</a>
+       </div>
 
       <h1>List</h1>
       <div>

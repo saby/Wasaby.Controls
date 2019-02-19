@@ -25,12 +25,12 @@ define([
             { start: new Date(2017, 0, 1), end: new Date(2018, 11, 31), ret: '2017-2018' },
             // Several simple periods within a year
             { start: new Date(2017, 0, 1), end: new Date(2017, 8, 30), ret: 'I-III квартал\'17' },
-            { start: new Date(2017, 0, 1), end: new Date(2017, 1, 28), ret: 'январь - февраль\'17' },
+            { start: new Date(2017, 0, 1), end: new Date(2017, 1, 28), ret: 'Январь - Февраль\'17' },
             { start: new Date(2017, 0, 1), end: new Date(2017, 0, 15), ret: '01.01.17 - 15.01.17' },
             // Within several years
-            { start: new Date(2017, 0, 1), end: new Date(2018, 5, 30), ret: 'январь\'17 - июнь\'18' },
-            { start: new Date(2017, 0, 1), end: new Date(2018, 2, 31), ret: 'январь\'17 - март\'18' },
-            { start: new Date(2017, 0, 1), end: new Date(2018, 0, 31), ret: 'январь\'17 - январь\'18' },
+            { start: new Date(2017, 0, 1), end: new Date(2018, 5, 30), ret: 'Январь\'17 - Июнь\'18' },
+            { start: new Date(2017, 0, 1), end: new Date(2018, 2, 31), ret: 'Январь\'17 - Март\'18' },
+            { start: new Date(2017, 0, 1), end: new Date(2018, 0, 31), ret: 'Январь\'17 - Январь\'18' },
             { start: new Date(2017, 0, 1), end: new Date(2018, 0, 15), ret: '01.01.17 - 15.01.18' },
             // Empty period
             { start: undefined, end: undefined, ret: '...' },

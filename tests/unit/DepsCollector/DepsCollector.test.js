@@ -95,5 +95,12 @@ define([
          assert.deepEqual(deps.js, ["bdl/tmplpckd.package"]);
          assert.deepEqual(deps.tmpl, []);
       });
+      it('Localization enabled', function() {
+         var depsCollectorWithLocalization = new DepsCollector(modDeps, modInfo, bundlesRoute, true, true);
+         depsCollectorWithLocalization.getLang = function() { return 'ru-RU'; };
+         depsCollectorWithLocalization.getAvailableDictList = function() { return { 'bdl/lang/ru-RU/ru-RU.json' : true }; };
+         var deps = depsCollectorWithLocalization.collectDependencies(["aaa/aaa"]);
+         assert.deepEqual(deps.js, [ "bdl/lang/ru-RU/ru-RU.json", "bdl/aaa.package" ]);
+      });
    });
 });

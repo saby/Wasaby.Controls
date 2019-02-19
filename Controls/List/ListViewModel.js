@@ -30,10 +30,18 @@ define('Controls/List/ListViewModel',
             var
                classList = '',
                itemPadding = _private.getItemPadding(cfg);
-            if (cfg.multiSelectVisibility === 'hidden') {
+
+            classList += ' controls-ListView__itemContent';
+            classList += ' controls-ListView__item-topPadding_' + (itemPadding.top || 'default').toLowerCase();
+            classList += ' controls-ListView__item-bottomPadding_' + (itemPadding.bottom || 'default').toLowerCase();
+            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+
+            if (cfg.multiSelectVisibility !== 'hidden') {
+               classList += ' controls-ListView__itemContent_withCheckboxes';
+            } else {
                classList += ' controls-ListView__item-leftPadding_' + (itemPadding.left || 'default').toLowerCase();
             }
-            classList += ' controls-ListView__item-rightPadding_' + (itemPadding.right || 'default').toLowerCase();
+
             return classList;
          }
       };
@@ -102,6 +110,7 @@ define('Controls/List/ListViewModel',
          getItemDataByItem: function() {
             var
                itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
+               dragItems,
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
             itemsModelCurrent.itemActions = this._actions[this.getCurrentIndex()];
@@ -116,7 +125,9 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSticky = itemsModelCurrent.isSelected && itemsModelCurrent.style === 'master';
             itemsModelCurrent.spacingClassList = _private.getSpacingClassList(this._options);
             itemsModelCurrent.itemPadding = _private.getItemPadding(this._options);
-            if (itemsModelCurrent.itemActions) {
+
+            //When you drag'n'drop of items do not need to show itemActions.
+            if (itemsModelCurrent.itemActions && !this._dragEntity) {
                if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
                   drawedActions = itemsModelCurrent.itemActions.showed;
                } else {
@@ -141,12 +152,14 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent.isEditing = true;
                itemsModelCurrent.item = this._editingItemData.item;
             }
-            if (this._draggingItemData) {
-               if (this._draggingItemData.key === itemsModelCurrent.key) {
+
+            if (this._dragEntity) {
+               dragItems = this._dragEntity.getItems();
+               if (dragItems[0] === itemsModelCurrent.key) {
                   itemsModelCurrent.isDragging = true;
                }
-               if (this._dragEntity.getItems().indexOf(itemsModelCurrent.key) !== -1) {
-                  itemsModelCurrent.isVisible = this._draggingItemData.key === itemsModelCurrent.key ? !this._dragTargetPosition : false;
+               if (dragItems.indexOf(itemsModelCurrent.key) !== -1) {
+                  itemsModelCurrent.isVisible = dragItems[0] === itemsModelCurrent.key ? !this._dragTargetPosition : false;
                }
                if (this._dragTargetPosition && this._dragTargetPosition.index === itemsModelCurrent.index) {
                   itemsModelCurrent.dragTargetPosition = this._dragTargetPosition.position;
@@ -248,9 +261,6 @@ define('Controls/List/ListViewModel',
 
          setDragItemData: function(itemData) {
             this._draggingItemData = itemData;
-            if (this._draggingItemData) {
-               this._draggingItemData.isDragging = true;
-            }
             this._nextVersion();
             this._notify('onListChange');
          },
@@ -331,13 +341,32 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
+            if (this._options.markerVisibility !== 'hidden') {
+               this._setMarkerAfterUpdateItems();
+            }
+            this._nextVersion();
+         },
+
+         // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.
+         _restoreMarkedItem: function() {
             if (this._markedKey !== undefined) {
                this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
             }
-            if (!this._markedItem && (this._options.markerVisibility === 'visible' || this._options.markerVisibility === 'always') && this._items.getCount()) {
-               this.setMarkedKey(this._items.at(0).getId());
+         },
+
+
+
+         _setMarkerAfterUpdateItems: function() {
+
+            // При обновлении коллекции объекты пересоздаются, поэтому нужно обновить ссылку на отмеченный элемент.
+            this._restoreMarkedItem();
+
+            // Если отмеченный элемент не найден, а маркер показывать нужно, то отмечаем первый элемент
+            if (this._options.markerVisibility !== 'onactivated') {
+               if (!this._markedItem && this._items.getCount()) {
+                  this.setMarkedKey(this._items.at(0).getId());
+               }
             }
-            this._nextVersion();
          },
 
          _onBeginCollectionChange: function() {
@@ -359,6 +388,7 @@ define('Controls/List/ListViewModel',
                var itemById = this.getItemById(item.get(this._options.keyProperty));
                var collectionItem = itemById ? itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+               this._nextVersion();
             }
          },
 

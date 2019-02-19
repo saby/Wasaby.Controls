@@ -171,6 +171,7 @@ define('Controls/Popup/InfoBox',
             if (this._opened) {
                this._notify('closeInfoBox', [], { bubbling: true });
             }
+            clearTimeout(this._openId);
          },
 
          _open: function() {

@@ -121,10 +121,15 @@ define('Controls/List/Tree/TreeViewModel', [
             if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
                // If it is necessary to delete only the nodes deleted from the items, add this condition:
                // if (!self._items.getRecordById(nodeId)) {
-               delete self._expandedItems[nodeId];
-               self._notify('onNodeRemoved', nodeId);
+               _private.removeNodeFromExpanded(self, nodeId);
             }
          },
+
+         removeNodeFromExpanded: function(self, nodeId) {
+            delete self._expandedItems[nodeId];
+            self._notify('onNodeRemoved', nodeId);
+         },
+
 
          checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
@@ -195,7 +200,7 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                for (var itemId in self._expandedItems) {
                   if (self._expandedItems.hasOwnProperty(itemId)) {
-                     _private.removeNodeFromExpandedIfNeed(self, itemId);
+                     _private.removeNodeFromExpanded(self, itemId);
                   }
                }
             }
@@ -258,7 +263,7 @@ define('Controls/List/Tree/TreeViewModel', [
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
          },
-         
+
          isExpandAll: function() {
             return _private.isExpandAll(this.getExpandedItems());
          },
@@ -417,8 +422,8 @@ define('Controls/List/Tree/TreeViewModel', [
 
             //If you hover over the dragged item, and the current position is on the folder,
             //then you need to return the position that was before the folder.
-            if (this._prevDragTargetPosition && this._draggingItemData.index === targetData.index) {
-               result = this._prevDragTargetPosition;
+            if (this._draggingItemData && this._draggingItemData.index === targetData.index) {
+               result = this._prevDragTargetPosition || null;
             } else if (targetData.dispItem.isNode()) {
                if (position === 'after' || position === 'before') {
                   result = this._calculateDragTargetPosition(targetData, position);
@@ -506,6 +511,17 @@ define('Controls/List/Tree/TreeViewModel', [
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
+
+            /**
+             * По стандарту в Explorrer'e, если маркер видимый, то при проваливании в папку должна отмечаться первая запись.
+             * Чтобы не ломать тесты, всегда отмечаем первую запись. Однако нужно учитывать случаи, когда корень меняется с
+             * частичным обновлением коллекции. Может получиться, что отмеченный ранее элемент останется в коллекции, но маркер
+             * всёравно переместится на первую запись.
+             * Исправить по задаче https://online.sbis.ru/opendoc.html?guid=f75e5bfd-6e9f-4710-bad7-b9be704f0dff
+             * */
+            if (this._options.markerVisibility !== 'hidden') {
+               this.setMarkedKey(this._items.at(0).getId());
+            }
             this._nextVersion();
             this._notify('onListChange');
          },

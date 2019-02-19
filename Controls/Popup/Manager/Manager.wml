@@ -2,6 +2,7 @@
             on:click="_contentClick()"
             on:popupCreated="_eventHandler('popupCreated')"
             on:popupUpdated="_eventHandler('popupUpdated')"
+            on:popupControlResize="_eventHandler('popupControlResize')"
             on:popupAfterUpdated="_eventHandler('popupAfterUpdated')"
             on:popupDeactivated="_eventHandler('popupDeactivated')"
             on:popupActivated="_eventHandler('popupActivated')"

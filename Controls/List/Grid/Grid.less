@@ -3,6 +3,23 @@
    width: 100%;
 }
 
+.controls-GridView__itemV_marker {
+  position: absolute;
+  width: @width_Grid-selection-marker;
+  background-color: @color_Grid-selection-marker;
+  left: 0;
+}
+
+.controls-GridView-without-rowSeparator_item_marker {
+  height: ~'calc(100% + @{height_Grid-row-separator})';
+  top: -@height_Grid-row-separator;
+}
+
+.controls-GridView-with-rowSeparator_item_marker{
+  top: 0px;
+  height: 100%;
+}
+
 .controls-Grid__header {
    display: contents;
    color: @color_Grid-header;
@@ -31,6 +48,11 @@
    min-height: @min-height_Grid-header;
 }
 
+.controls-Grid__row-header__content_baseline:before {
+   content: '\200b';
+   font-size: @font-size_Grid-header-cell-baseline;
+}
+
 .controls-Grid__header-cell_valign_bottom {
   justify-content: flex-end;
 }
@@ -48,7 +70,6 @@
 }
 
 .controls-Grid__results-cell {
-   .position-sticky();
    background-color: @background-color_Grid-row-sticky;
    z-index: 1;
    min-width: 0;
@@ -289,7 +310,7 @@
    left: 0;
 }
 
-.controls-GridView__checkbox-onhover {
+.controls-GridView__checkbox.controls-GridView__checkbox-onhover {
    display: none;
 }
 

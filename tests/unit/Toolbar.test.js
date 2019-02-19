@@ -6,75 +6,75 @@ define(
       'Types/source'
    ],
    (Toolbar, entity, collection, sourceLib) => {
-      describe('Toolbar', () => {
-         let defaultItems = [
-            {
-               id: '1',
-               title: 'Запись 1',
-               parent: null,
-               '@parent': null
-            },
-            {
-               id: '2',
-               title: 'Запись 2',
-               parent: null,
-               '@parent': true,
-               icon: 'icon-Ezy',
-               iconStyle: 'super'
-            },
-            {
-               id: '3',
-               title: 'Запись 3',
-               icon: 'icon-medium icon-Doge icon-primary',
-               parent: null,
-               '@parent': null,
-               showType: 2
-            },
-            {
-               id: '4',
-               title: 'Запись 4',
-               buttonViewMode: 'link',
-               parent: '2',
-               '@parent': null,
-               showType: 0
-            },
-            {
-               id: '5',
-               title: 'Запись 4',
-               buttonViewMode: 'link'
-            }
-         ];
+   describe('Toolbar', () => {
+   let defaultItems = [
+      {
+         id: '1',
+         title: 'Запись 1',
+         parent: null,
+         '@parent': null
+      },
+      {
+         id: '2',
+         title: 'Запись 2',
+         parent: null,
+         '@parent': true,
+         icon: 'icon-Ezy',
+         iconStyle: 'super'
+      },
+      {
+         id: '3',
+         title: 'Запись 3',
+         icon: 'icon-medium icon-Doge icon-primary',
+         parent: null,
+         '@parent': null,
+         showType: 2
+      },
+      {
+         id: '4',
+         title: 'Запись 4',
+         buttonViewMode: 'link',
+         parent: '2',
+         '@parent': null,
+         showType: 0
+      },
+      {
+         id: '5',
+         title: 'Запись 4',
+         buttonViewMode: 'link'
+      }
+   ];
 
-         let records = new collection.RecordSet({
-            rawData: defaultItems
-         });
-         let config = {
-            items: new sourceLib.Memory({
-               idProperty: 'id',
-               data: defaultItems
-            }),
-            parentProperty: 'parent',
-            nodeProperty: '@parent'
-         };
-         let itemWithMenu = new entity.Model({
-            rawData: defaultItems[1]
-         });
-         let itemWithOutMenu = new entity.Model({
-            rawData: defaultItems[5]
-         });
-         let toolbar = new Toolbar(config);
+   let records = new collection.RecordSet({
+      rawData: defaultItems
+   });
+   let config = {
+      items: new sourceLib.Memory({
+         idProperty: 'id',
+         data: defaultItems
+      }),
+      parentProperty: 'parent',
+      nodeProperty: '@parent'
+   };
+   let itemWithMenu = new entity.Model({
+      rawData: defaultItems[1]
+   });
+   let itemWithOutMenu = new entity.Model({
+      rawData: defaultItems[5]
+   });
+   let toolbar = new Toolbar(config);
 
-         toolbar._notify = (e, data) => {
-            assert.equal(data[0].id, 'myTestItem');
-            assert.equal(e, 'itemClick');
-         };
-         toolbar._children.menuOpener = {
-            close: setTrue.bind(this, assert),
-            open: setTrue.bind(this, assert)
-         };
-         toolbar._children.popupTarget = {
-            _container: 'target'
-         };
+   toolbar._notify = (e, data) => {
+      assert.equal(data[0].id, 'myTestItem');
+      assert.equal(e, 'itemClick');
+   };
+   toolbar._children.menuOpener = {
+      close: setTrue.bind(this, assert),
+      open: setTrue.bind(this, assert)
+   };
+   toolbar._children.popupTarget = {
+      _container: 'target'
+   };
 
          describe('publicMethod', function() {
             it('check received state', () => {
@@ -208,10 +208,10 @@ define(
                      _items: 'items'
                   },
                   testEvent = {
-                     target: 'target'
+                     currentTarget: 'target'
                   },
                   config = {
-                     className: 'controls-Toolbar__popup popupClassName',
+                     className: 'controls-Toolbar__popup__icon popupClassName',
                      corner: {
                         horizontal: 'left',
                         vertical: 'top'
@@ -238,7 +238,8 @@ define(
                   testSelf = {
                      _options: {
                         size: 'size',
-                        popupClassName: 'popupClassName'
+                        popupClassName: 'popupClassName',
+                        itemTemplateProperty: 'itp'
                      },
                      _children: {
                         popupTarget: 'popupTarget'
@@ -246,10 +247,11 @@ define(
                      _menuItems: 'menuItems'
                   },
                   config = {
-                     className: 'controls-Toolbar__popup_list popupClassName',
+                     className: 'controls-Toolbar__popup__list popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
-                        items: 'menuItems'
+                        items: 'menuItems',
+                        itemTemplateProperty: 'itp'
                      }
                   };
                assert.deepEqual(Toolbar._private.generateMenuConfig(testSelf), config);

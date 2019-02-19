@@ -64,6 +64,10 @@ define('Controls/Search/Controller',
    
          searchStartCallback: function(self) {
             self._loading = true;
+            
+            /* need to call _forceUpdate, because searchStartCallback is not event handler,
+               this is callback function that called asynchronously. */
+            self._forceUpdate();
          },
          
          needUpdateSearchController: function(options, newOptions) {

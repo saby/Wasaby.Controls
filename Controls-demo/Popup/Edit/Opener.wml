@@ -2,13 +2,13 @@
    <div>
       <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
 
-         <Controls.Button caption="Добавить запись" on:click="_addRecord()"/>
-         Вставить в позицию <Controls.Input.Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}"/>
+         <Controls.Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
+         Вставить в позицию <Controls.Input.Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
 
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
             <Controls.List.Container>
                <Controls.Grid
-                  attr:class="demo-Grid__control test_grid_2"
+                  attr:class="demo-Grid__control demo-PopupEditOpener__grid"
                   leftPadding="S"
                   rightPadding="M"
                   rowSpacing="M"
@@ -24,9 +24,9 @@
          </Controls.Container.Scroll>
       </div>
 
-      <Controls.Toggle.Checkbox bind:value="_cancelEdit" caption="Отменить синхронизацию" />
+      <Controls.Toggle.Checkbox bind:value="_cancelEdit" caption="Отменить синхронизацию" class="demo-PopupEditOpener__cancelEdit"/>
       <br />
-      <Controls.Toggle.Checkbox bind:value="_openRecordByNewKey" caption="Открыть запись на редактирование с другим ключом" />
+      <Controls.Toggle.Checkbox bind:value="_openRecordByNewKey" caption="Открыть запись на редактирование с другим ключом" class="demo-PopupEditOpener__openRecordByNewKey"/>
 
       <Controls.Popup.Opener.Edit.Container on:beforeItemEndEdit="_beforeSyncRecord()">
          <Controls.Popup.Opener.Edit name="EditOpener">
