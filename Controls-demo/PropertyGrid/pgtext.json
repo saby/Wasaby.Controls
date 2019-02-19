@@ -303,8 +303,12 @@
             "title": "Name of the item property that uniquely identifies collection item."
           },
           "itemTemplateProperty": {
-            "type": "String",
-            "title": "Name of the item property that contains template for item render"
+            "type": "enum",
+            "title": "Name of the item property that contains template for item render",
+            "enum": {
+              "customTemplate": "Custom template",
+              "null": "No template"
+            }
           },
           "name": {
             "title": "Control name",
