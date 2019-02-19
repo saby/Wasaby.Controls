@@ -346,6 +346,7 @@ function(cMerge,
             template: cfg.template,
             _initCompoundArea: cfg._initCompoundArea,
             dialogOptions: {
+               _isCompatibleArea: true,
                isStack: cfg._type === 'stack',
                target: cfg.target,
                modal: cfg.isModal,
@@ -479,6 +480,11 @@ function(cMerge,
 
          if (newCfg._events && newCfg._events.onOpen) {
             newCfg.dialogOptions.onOpenHandlerEvent = newCfg._events.onOpen;
+         }
+
+         if (newCfg.hasOwnProperty('maximized')) {
+            newCfg.dialogOptions.maximized = newCfg.maximized;
+            newCfg.componentOptions.maximized = newCfg.maximized;
          }
 
          return newCfg;
