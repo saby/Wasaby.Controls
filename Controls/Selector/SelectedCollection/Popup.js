@@ -15,12 +15,12 @@ define('Controls/Selector/SelectedCollection/Popup',
 
          _beforeMount: function(options) {
             // support type array for options.items
-            if (options.items.clone) {
-               this._items = options.items.clone();
-            } else {
+            if (options.items instanceof Array) {
                this._items = new collection.List({
                   items: options.items
                });
+            } else {
+               this._items = options.items.clone();
             }
          },
 
