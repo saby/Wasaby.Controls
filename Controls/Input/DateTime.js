@@ -80,9 +80,18 @@
          e.stopImmediatePropagation();
       },
       _onKeyDown: function(event) {
-         if (event.nativeEvent.keyCode === CoreConstants.key.insert) {
+         event.stopImmediatePropagation();
+         var key = event.nativeEvent.keyCode;
+         if (key === CoreConstants.key.insert) {
          // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
+         }
+         if (key === CoreConstants.key.plus || key === CoreConstants.key.minus) {
+         // on +/- buttons press date should be increased or decreased in field by one day
+            var delta = key === CoreConstants.key.plus ? 1 : -1;
+            var localDate = new Date(this._model.value);
+            localDate.setDate(this._model.value.getDate() + delta);
+            this._model.value = localDate;
          }
       },
       _beforeUnmount: function() {
