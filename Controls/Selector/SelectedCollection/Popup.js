@@ -12,11 +12,16 @@ define('Controls/Selector/SelectedCollection/Popup',
       var itemHiddenTemplate = Control.extend({
          _template: template,
 
+         _beforeMount: function(options) {
+            this._items = options.items.clone();
+         },
+
          _itemClick: function(event, item) {
             this._options.clickCallback('itemClick', item);
          },
 
          _crossClick: function(event, item) {
+            this._items.remove(item);
             this._options.clickCallback('crossClick', item);
          }
       });
