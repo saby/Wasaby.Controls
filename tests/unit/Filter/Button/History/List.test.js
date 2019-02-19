@@ -79,8 +79,17 @@ define(
          });
 
          it('on resize', function() {
+            var updated;
+            list._forceUpdate = function() {
+               updated = true;
+            };
             List._private.onResize(list);
             assert.isTrue(list._isMaxHeight);
+            assert.isTrue(updated);
+            
+            updated = false;
+            List._private.onResize(list);
+            assert.isFalse(updated);
          });
 
          it('click separator', function() {

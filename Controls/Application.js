@@ -185,7 +185,6 @@ define('Controls/Application',
             this._children.mousedownDetect.start(ev);
          },
          _mousemovePage: function(ev) {
-            ev.blockUpdate = true;
             this._children.mousemoveDetect.start(ev);
          },
          _mouseupPage: function(ev) {
