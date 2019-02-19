@@ -3,7 +3,7 @@ import coreMerge = require('Core/core-merge');
 import EventProxyMixin from './Mixin/EventProxy';
 import DateRangeModel = require('Controls/Date/model/DateRange');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
-import MonthsRangeItem from 'MonthsRangeItem';
+import MonthsRangeItem from './MonthsRangeItem';
 import componentTmpl = require('wml!Controls/_datePopup/MonthsRange');
 import 'css!theme?Controls/_datePopup/RangeSelection';
 
@@ -69,4 +69,4 @@ Component.getDefaultOptions = function () {
 //    return coreMerge({}, IPeriodSimpleDialog.getOptionTypes());
 // };
 
-export = Component;
+export default Component;

@@ -11,6 +11,8 @@ define([
 ) {
    'use strict';
 
+   MonthsRangeItem = MonthsRangeItem.default;
+
    const start = new Date(2018, 0, 1),
       end = new Date(2018, 0, 2);
 
