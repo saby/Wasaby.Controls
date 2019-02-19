@@ -22,17 +22,13 @@
 .controls-Stack__shadow {
    box-shadow: @size_Stack-shadow @color_Stack-shadow;
 }
-
-.controls-Stack__will-change {
-   will-change: transform;
-}
-
 .controls-Stack__waiting {
-   // To hide the shadow before the animation, set the offset is greater than 100
-   transform: translateX(101%);
+   will-change: transform;
+   transform: translateX(100%);
 }
 
 .controls-Stack__open {
+   will-change: transform;
    transition: transform @animate-duration_Stack linear;
    transform: translateX(0%);
 }

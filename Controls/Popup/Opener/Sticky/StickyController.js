@@ -74,23 +74,10 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             }
             return newCfg;
          },
-         prepareConfig: function(cfg, sizes) {
+         prepareConfig: function(self, cfg, sizes) {
             cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
             cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
-            var popupCfg = {
-               corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
-               align: {
-                  horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
-                  vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
-               },
-               config: {
-                  maxWidth: cfg.popupOptions.maxWidth,
-                  maxHeight: cfg.popupOptions.maxHeight
-               },
-               sizes: sizes,
-               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
-               locationStrategy: cfg.popupOptions.locationStrategy
-            };
+            var popupCfg = self._getPopupConfig(cfg, sizes);
             if (cfg.popupOptions.corner) {
                IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
             }
@@ -269,11 +256,27 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          prepareConfig: function(item, container) {
             _private.removeOrientationClasses(item);
             var sizes = this._getPopupSizes(item, container);
-            _private.prepareConfig(item, sizes);
+            _private.prepareConfig(this, item, sizes);
          },
 
          needRecalcOnKeyboardShow: function() {
             return true;
+         },
+         _getPopupConfig: function(cfg, sizes) {
+            return {
+               corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
+               align: {
+                  horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
+                  vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
+               },
+               config: {
+                  maxWidth: cfg.popupOptions.maxWidth,
+                  maxHeight: cfg.popupOptions.maxHeight
+               },
+               sizes: sizes,
+               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+               locationStrategy: cfg.popupOptions.locationStrategy
+            };
          },
          _private: _private
       });

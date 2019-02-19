@@ -69,6 +69,7 @@ define([
 
       it('addItem', function() {
          var
+            selectedItems,
             textValue = '',
             keysChanged = false,
             self = getBaseSelectedCollection(),
@@ -105,6 +106,7 @@ define([
          assert.isFalse(keysChanged);
          assert.equal(self._items.at(0), item);
 
+         selectedItems = self._items;
          self._options.multiSelect = true;
          SelectedCollection._private.addItem(self, item2);
          assert.deepEqual(self._selectedKeys, [1, 2]);
@@ -112,10 +114,14 @@ define([
          assert.equal(self._items.at(0), item);
          assert.equal(self._items.at(1), item2);
          assert.equal(textValue, 'Roman, Aleksey');
+         assert.notEqual(selectedItems, self._items);
+         assert.equal(self._items.getCount(), 2);
+
       });
 
       it('removeItem', function() {
          var
+            selectedItems,
             keysChanged = false,
             self = getBaseSelectedCollection(),
             item = new entity.Model({
@@ -139,22 +145,28 @@ define([
 
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
+         assert.equal(self._items.getCount(), 1);
 
          keysChanged = false;
          SelectedCollection._private.removeItem(self, fakeItem);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
+         assert.equal(self._items.getCount(), 1);
 
-         SelectedCollection._private.removeItem(self, item);
+
+         selectedItems = self._items;
+         SelectedCollection._private.removeItem(self, item.clone());
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
+         assert.notEqual(selectedItems, self._items);
+         assert.equal(self._items.getCount(), 0);
       });
 
       it('_beforeMount', function() {
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
-         var emptySelectedKeys = [];
-         var beforeMountResult = selectedCollection._beforeMount({
+
+         selectedCollection._beforeMount({
             selectedKeys: selectedKeys,
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
@@ -295,14 +307,18 @@ define([
             templateOptions,
             isShowSelector = false,
             selectedCollection = new SelectedCollection(),
+            items = new collection.List(),
+            selectedItems,
             opener;
 
          selectedCollection._options.selectorTemplate = {};
+         selectedCollection._items = items;
          selectedCollection._children.selectorOpener = {
             open: function(config) {
                isShowSelector = true;
                templateOptions = config.templateOptions;
                opener = config.opener;
+               selectedItems = config.selectedItem;
             }
          };
 
@@ -311,6 +327,7 @@ define([
          });
 
          assert.isTrue(isShowSelector);
+         assert.isTrue(items !== selectedItems);
          assert.equal(templateOptions.selectedTab, 'Employees');
          assert.equal(opener, selectedCollection);
       });

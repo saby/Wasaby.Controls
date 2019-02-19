@@ -24,7 +24,7 @@ define('Controls/Input/Number/ViewModel',
 
          valueWithOneTrailingZerosRegExp: /-?[0-9 ]*(\.[0-9]([1-9]|0(?!0*$))*)?/,
 
-         integerPartRegExp: /^-?[0-9]+$/,
+         integerPartRegExp: /^-?[0-9 ]+$/,
 
          onlyIntegerPart: function(value) {
             return _private.integerPartRegExp.test(value);

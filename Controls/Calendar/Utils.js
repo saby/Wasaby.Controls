@@ -1,5 +1,5 @@
 define('Controls/Calendar/Utils', [
-   'Core/helpers/Date/getFormattedDateRange',
+   'Controls/Date/Utils/getFormattedDateRange',
    'Core/helpers/i18n/locales',
    'Controls/Utils/Date'
 ], function(
@@ -69,10 +69,10 @@ define('Controls/Calendar/Utils', [
          var
             date = new Date(year, month ? month - 1 : 0),
             day = date.getDay();
-            
+
          return day ? day - 1 : 6; // Воскресенье 0-й день
       },
-         
+
       /**
           * Получить количество дней в месяце
           * @param {Number} year год
@@ -82,7 +82,7 @@ define('Controls/Calendar/Utils', [
       getDaysInMonth: function(year, month) {
          return new Date(year, month, 0).getDate();
       },
-         
+
       /**
           * Получить количство всех недель в месяце
           * @param {Number} year
@@ -93,10 +93,10 @@ define('Controls/Calendar/Utils', [
          var
             days = this.getDaysInMonth(year, month),
             offset = this.getFirstDayOffset(year, month);
-            
+
          return Math.ceil((days + offset) / 7);
       },
-         
+
       /**
        * Получить массив недель (строка) с массивом дней (ячейка) для MonthTableBody
        * @param {Date} date месяц

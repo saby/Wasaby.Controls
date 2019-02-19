@@ -72,8 +72,8 @@ define('Controls/Popup/Opener/Previewer',
                   Previewer.superclass.close.call(self);
                }, _private.displayDuration);
             } else {
-               this._popupIds = [];
                Previewer.superclass.close.call(this);
+               this._popupIds = [];
             }
          },
 

@@ -52,8 +52,10 @@ define([
       });
 
       it('isShowCounter', function() {
-         assert.isTrue(Lookup._private.isShowCounter(10, 5));
-         assert.isFalse(Lookup._private.isShowCounter(10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(true, 10, 5));
+         assert.isFalse(Lookup._private.isShowCounter(true, 10, 20));
+         assert.isTrue(Lookup._private.isShowCounter(false, 2));
+         assert.isFalse(Lookup._private.isShowCounter(false, 1));
       });
 
       it('getLastRowCollectionWidth', function() {
@@ -114,12 +116,12 @@ define([
       });
 
       it('_beforeUpdate', function() {
-         var lookup = new Lookup();
+         var
+            items = new collection.List(),
+            lookup = new Lookup();
 
          lookup._beforeMount({multiLine: true});
-         lookup._beforeUpdate({
-            items: new collection.List()
-         });
+         lookup._beforeUpdate({});
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 
@@ -128,7 +130,6 @@ define([
             multiLine: true
          });
          assert.notEqual(lookup._multiLineState, undefined);
-         assert.notEqual(lookup._counterWidth, undefined);
          assert.equal(lookup._maxVisibleItems, undefined);
 
          lookup._beforeUpdate({
@@ -138,6 +139,19 @@ define([
          assert.notEqual(lookup._maxVisibleItems, undefined);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
+
+         lookup._counterWidth = 30;
+         lookup._options.items = items;
+         lookup._beforeUpdate({
+            items: items
+         });
+         assert.equal(lookup._counterWidth, 30);
+
+         lookup._beforeUpdate({
+            items: items,
+            readOnly: true
+         });
+         assert.equal(lookup._counterWidth, undefined);
       });
 
       it('_changeValueHandler', function() {
@@ -215,6 +229,15 @@ define([
 
          lookup._options.multiSelect = true;
          assert.isTrue(lookup._determineAutoDropDown());
+      });
+
+      it('_onClickShowSelector', function() {
+         var lookup = new Lookup();
+
+         lookup._suggestState = true;
+         lookup._onClickShowSelector();
+
+         assert.isFalse(lookup._suggestState);
       });
    });
 });

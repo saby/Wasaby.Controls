@@ -71,6 +71,92 @@ define([
             assert.lengthOf(component._stickyHeadersIds.bottom, 0);
             assert.notInclude(component._stickyHeadersIds.bottom, headerIdBottom);
          });
+
+         it('should generate event on first header fixed', function() {
+            const
+               component = createComponent(StickyHeader, options),
+               headerId = stickyUtils.getNextId();
+
+            sinon.stub(component, '_notify');
+            component._fixedHandler(event,
+                { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.assert.calledWith(
+               component._notify,
+               'fixed',
+               [{
+                  fixedPosition: 'top',
+                  id: component._index,
+                  mode: 'replaceable',
+                  offsetHeight: 10,
+                  prevPosition: ''
+               }], {
+                  bubbling: true
+               }
+            );
+            sinon.restore();
+         });
+
+         it('should not generate event on second header fixed', function() {
+            const
+               component = createComponent(StickyHeader, options);
+
+            component._fixedHandler(event,
+                { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.stub(component, '_notify');
+            component._fixedHandler(event,
+                { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.assert.notCalled(component._notify);
+            sinon.restore();
+         });
+
+         it('should generate event on last header unfixed', function() {
+            const
+               component = createComponent(StickyHeader, options),
+               headerId = stickyUtils.getNextId();
+
+            component._fixedHandler(event,
+                { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.stub(component, '_notify');
+            component._fixedHandler(event,
+                { fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.assert.calledWith(
+               component._notify,
+               'fixed',
+               [{
+                  fixedPosition: '',
+                  id: component._index,
+                  mode: 'replaceable',
+                  offsetHeight: 10,
+                  prevPosition: 'top'
+               }], {
+                  bubbling: true
+               }
+            );
+            sinon.restore();
+         });
+
+         it('should not generate event on not last header unfixed', function() {
+            const
+               component = createComponent(StickyHeader, options),
+               headerId = stickyUtils.getNextId();
+
+            component._fixedHandler(event,
+                { fixedPosition: 'top', prevPosition: '', id: stickyUtils.getNextId(), mode: 'replaceable', offsetHeight: 10 });
+            component._fixedHandler(event,
+                { fixedPosition: 'top', prevPosition: '', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.stub(component, '_notify');
+            component._fixedHandler(event,
+                { fixedPosition: '', prevPosition: 'top', id: headerId, mode: 'replaceable', offsetHeight: 10 });
+
+            sinon.assert.notCalled(component._notify);
+            sinon.restore();
+         });
       });
 
       describe('_updateStickyShadow', function() {
@@ -124,6 +210,20 @@ define([
 
             component._updateStickyHeight(10);
             sinon.assert.notCalled(component._children.stickyHeaderHeight.start);
+         });
+      });
+
+      describe('_stickyRegisterHandler', function() {
+         it('should update blockUpdate event field', function() {
+            const
+               component = createComponent(StickyHeader, options);
+            let event = {
+               blockUpdate: false,
+               stopImmediatePropagation: sinon.fake()
+            };
+            component._stickyRegisterHandler(event);
+            assert.isTrue(event.blockUpdate);
+            sinon.assert.calledOnce(event.stopImmediatePropagation);
          });
       });
    });

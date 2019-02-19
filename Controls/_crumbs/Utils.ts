@@ -121,7 +121,7 @@ export default {
                         self._visibleItems.push(_private.getItemData(j, items, j === shrinkedItemIndex));
                     }
 
-                   var dotsItem = {};
+                   let dotsItem = {};
                    dotsItem[self._options.displayProperty] = '...';
 
                    self._visibleItems.push({

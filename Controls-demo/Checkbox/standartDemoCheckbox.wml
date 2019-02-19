@@ -33,7 +33,7 @@
             </div>
             <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
                 <h3>Icon</h3>
-                <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value4" caption="{{_content2}}" tooltip="Tooltip"/>
+                <Controls.Toggle.Checkbox readOnly="{{false}}" bind:value="_value4" icon="{{_content2}}" tooltip="Tooltip"/>
             </div>
             <div attr:class="demo-Checkbox__TestBlock_inline demo-Checkbox_leftMargin">
                 <h3>Different style text</h3>

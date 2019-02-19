@@ -62,6 +62,7 @@ define('Controls/Explorer', [
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
+            self._forceUpdate();
          },
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
@@ -98,6 +99,7 @@ define('Controls/Explorer', [
                } else {
                   _private.setRoot(self, self._options.root);
                }
+               self._notify('rootChanged', self._root);
             }
          },
          dragItemsFromRoot: function(self, dragItems) {
@@ -164,6 +166,9 @@ define('Controls/Explorer', [
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
          }
+         if (this._options.root !== cfg.root) {
+            _private.setRoot(this, cfg.root);
+         }
       },
       _dragEndBreadCrumbs: function(event, dragObject) {
          if (this._hoveredBreadCrumb !== undefined) {
@@ -192,12 +197,14 @@ define('Controls/Explorer', [
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
+            this._notify('rootChanged', this._root);
          }
          event.stopPropagation();
          this._notify('onItemClick', Array.prototype.slice.call(arguments, 1));
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
+         this._notify('rootChanged', this._root);
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

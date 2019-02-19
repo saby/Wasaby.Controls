@@ -114,6 +114,31 @@ define([
       describe('"_private" block', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
+         
+         it('removeNodeFromExpanded', function() {
+            var removed = false;
+            var self = {
+               _expandedItems: {'test': true}
+            };
+            self._notify = function(event) {
+               if (event === 'onNodeRemoved') {
+                  removed = true;
+               }
+            };
+            TreeViewModel._private.removeNodeFromExpanded(self, 'test');
+            
+            assert.equal(Object.keys(self._expandedItems).length, 0);
+            assert.isTrue(removed);
+         });
+   
+         it('resetExpandedItems', function() {
+            treeViewModel.setExpandedItems(['123', '234', '1']);
+            assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 3);
+            
+            treeViewModel.resetExpandedItems();
+            assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 0);
+         });
+         
          it('isVisibleItem', function() {
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
@@ -669,6 +694,26 @@ define([
                dragTargetPosition = tvm.calculateDragTargetPosition(item);
                assert.equal(prevDragTargetPosition.index, dragTargetPosition.index);
                assert.equal(prevDragTargetPosition.position, dragTargetPosition.position);
+            });
+
+            it('move to draggableFolder', function() {
+               var item = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+
+               //start move folder 123
+               tvm.setDragEntity(dragEntity);
+               tvm.setDragItemData(item);
+
+               //move folder 123 before folder 345
+               itemData = tvm.getItemDataByItem(tvm.getItemById('345', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData, 'before');
+               tvm.setDragTargetPosition(dragTargetPosition);
+               assert.equal(dragTargetPosition.index, itemData.index);
+               assert.equal(dragTargetPosition.position, 'before');
+
+               //move folder 123 on folder 123
+               itemData = tvm.getItemDataByItem(tvm.getItemById('123', 'id'));
+               dragTargetPosition = tvm.calculateDragTargetPosition(itemData);
+               assert.isNull(dragTargetPosition);
             });
          });
       });

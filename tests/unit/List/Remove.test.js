@@ -101,5 +101,19 @@ define([
          remover.removeItems([1, 2]);
          assert.equal(remover._items.getCount(), 1);
       });
+
+      it('remove by selection', function() {
+         remover.removeItems({
+            selected: [1, 2],
+            excluded: []
+         });
+         assert.equal(remover._items.getCount(), 1);
+
+         remover.removeItems({
+            selected: [3],
+            excluded: []
+         });
+         assert.equal(remover._items.getCount(), 0);
+      });
    });
 });

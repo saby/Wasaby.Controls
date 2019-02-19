@@ -44,6 +44,19 @@ define(
             assert.isTrue(eventFired);
             assert.equal(tab, 'test');
          });
+         
+         it('_tabsSelectedKeyChanged', function() {
+            var suggestList = new List();
+            var tab = null;
+            suggestList._suggestListOptions = {
+               tabsSelectedKeyChangedCallback: function(newtab) {
+                  tab = newtab;
+               }
+            };
+            
+            suggestList._tabsSelectedKeyChanged(null, 'test');
+            assert.equal(tab, 'test');
+         });
    
          it('isTabChanged', function() {
             assert.isTrue(List._private.isTabChanged({tabsSelectedKey: 1}, 2));

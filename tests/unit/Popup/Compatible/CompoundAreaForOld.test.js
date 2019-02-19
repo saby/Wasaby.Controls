@@ -107,6 +107,59 @@ define(
                assert.isNotOk(Area._allChildrenPendingOperation);
             });
          });
+
+         describe('unregister from parent', function() {
+            function getFakeParent() {
+               return {
+                  __idForChild: 'id-my-child',
+                  __indexForChild: 0,
+                  _childsMapId: { 'id-my-child': 0 },
+                  _childControls: [],
+                  _childContainers: [],
+                  _childsMapName: [],
+                  _childsTabindex: false
+               };
+            }
+
+            var previousParent, previousId;
+            beforeEach(() => {
+               var
+                  nextParent = getFakeParent(),
+                  nextId = nextParent.__idForChild;
+               nextParent._childControls[nextId] = Area;
+               nextParent._childContainers[nextId] = Area._container;
+
+               previousParent = Area.__parentFromCfg;
+               previousId = Area._id;
+
+               Area.__parentFromCfg = nextParent;
+               Area._id = nextId;
+            });
+
+            afterEach(() => {
+               Area.__parentFromCfg = previousParent;
+               Area._id = previousId;
+            });
+
+            it('correctly removes information about itself', () => {
+               var parent = Area.__parentFromCfg;
+
+               Area._clearInformationOnParentFromCfg();
+
+               assert.notProperty(parent._childsMapId, Area._id);
+               assert.notInclude(parent._childControls, Area);
+               assert.notInclude(parent._childContainers, Area._container);
+               assert.notProperty(parent._childsMapName, Area._options.name);
+            });
+
+            it('does not throw exception if parent does not have required fields', () => {
+               var parent = Area.__parentFromCfg;
+               delete parent._childControls;
+               delete parent._childContainers;
+
+               assert.doesNotThrow(Area._clearInformationOnParentFromCfg.bind(Area));
+            });
+         });
       });
    }
 );

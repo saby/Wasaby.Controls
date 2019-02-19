@@ -1,4 +1,4 @@
-<Controls.DragNDrop.Container>
+<Controls.DragNDrop.Container attr:class="controls-CompoundArea__dragContainer">
    <ws:partial
          template="{{_options.template}}"
          scope="{{_options.templateOptions}}"
@@ -9,5 +9,6 @@
          on:sendresult="_onResultHandler()"
          on:register="_onRegisterHandler()"
          on:unregister="_onRegisterHandler()"
+         on:maximized="_onMaximizedHandler()"
    ></ws:partial>
 </Controls.DragNDrop.Container>

@@ -34,7 +34,8 @@ define(
             },
             {
                id: '6',
-               title: 'Запись 6'
+               title: 'Запись 6',
+               node: true
             },
             {
                id: '7',
@@ -64,7 +65,8 @@ define(
                idProperty: 'id',
                data: items
             }),
-            filter: {}
+            filter: {},
+            nodeProperty: 'node'
          };
 
          let configLazyLoad = {
@@ -93,7 +95,7 @@ define(
 
          it('before mount navigation', (done) => {
             let navigationConfig = Clone(config);
-            navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}};
+            navigationConfig.navigation = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
             let dropdownController = getDropdownController(navigationConfig);
             dropdownController._beforeMount(navigationConfig).addCallback(function(items) {
                assert.deepEqual(items.getCount(), 2);
@@ -271,16 +273,41 @@ define(
 
          it('check item click', () => {
             let dropdownController = getDropdownController(config);
+            let closed = false;
+            let opened = false;
+            let closeByNodeClick = false;
+   
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._items = itemsRecords;
             dropdownController._children.DropdownOpener = {
-               close: setTrue.bind(this, assert),
-               open: setTrue.bind(this, assert)
+               close: function() {
+                  closed = true;
+               },
+               open: function() {
+                  opened = true;
+               }
             };
-            dropdownController._notify = (e) => {
+            
+            dropdownController._notify = (e, eventResult) => {
+               var item = eventResult[0][0];
+               
                assert.equal(e, 'selectedItemsChanged');
+               
+               if (item.get('node')) {
+                  return closeByNodeClick && true;
+               }
             };
+            
             dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+            assert.isTrue(closed);
+   
+            closed = false;
+            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
+            assert.isFalse(closed);
+   
+            closeByNodeClick = true;
+            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
+            assert.isTrue(closed);
          });
          it('open one item', () => {
             let dropdownController = getDropdownController(config);
@@ -349,7 +376,7 @@ define(
             };
             dropdownController._open();
          });
-   
+
          it('mousedown', () => {
             let dropdownController = getDropdownController(configLazyLoad);
             let opened = false;
@@ -376,15 +403,6 @@ define(
 
             dropdownController._mousedown();
             assert.isFalse(opened);
-         });
-         
-         it('getFilter', () => {
-            var filter = Dropdown._private.getFilter({id: 'test'}, new historySource({}));
-            assert.deepEqual(filter, {$_history: true, id: 'test'});
-            filter = Dropdown._private.getFilter({id: 'test2'}, new sourceLib.Memory({}));
-            assert.deepEqual(filter, {id: 'test2'});
-            filter = Dropdown._private.getFilter(undefined, new historySource({}));
-            assert.deepEqual(filter, {$_history: true});
          });
 
          function setTrue(assert) {

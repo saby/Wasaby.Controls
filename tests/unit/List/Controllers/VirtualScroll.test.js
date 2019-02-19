@@ -63,6 +63,7 @@ define([
             }),
             indexes = vsInstance.getItemsIndexes();
 
+         vsInstance.setItemsCount(1000);
          assert.equal(13, vsInstance._startItemIndex);
          assert.equal(213, vsInstance._stopItemIndex);
 
@@ -108,6 +109,42 @@ define([
          assert.deepEqual(4000, vsInstance._itemsCount);
       });
 
+      it('updateItemsSizes always', function() {
+         var
+            vsInstance = new VirtualScroll({
+               updateItemsHeightsMode: 'always'
+            }),
+            _items = {
+               children: [
+                  { offsetHeight: 20 },
+                  { offsetHeight: 45 },
+                  { offsetHeight: 10 },
+                  { offsetHeight: 44 },
+                  { offsetHeight: 78 },
+                  { offsetHeight: 45 },
+                  { offsetHeight: 92 }
+               ]
+            },
+            itemsHeights = [20, 45, 10, 44, 78, 45, 92];
+
+         vsInstance.setItemsCount(7);
+         VirtualScroll._private.updateItemsSizes = function(self) {
+            var
+               startIndex = self._startItemIndex,
+               stopIndex = self._stopItemIndex,
+               items = self._itemsContainer.children;
+
+            if (self._updateItemsHeightsMode === 'always') {
+               for (var i = 0; i < items.length; i++) {
+                  self._itemsHeights[i] = items[i].offsetHeight;
+               }
+            }
+         };
+         vsInstance.setItemsContainer(_items);
+
+         assert.deepEqual(itemsHeights, vsInstance._itemsHeights);
+      });
+
       it('updateItemsSizes', function() {
          var
             vsInstance = new VirtualScroll({}),
@@ -147,6 +184,8 @@ define([
             virtualPageSize: 30,
          });
 
+         vsInstance.setItemsCount(1000);
+
          for (var i = 0; i < 10; i++) {
             vsInstance.updateItemsIndexes('down');
             assert.equal(30, vsInstance._stopItemIndex - vsInstance._startItemIndex);
@@ -158,6 +197,7 @@ define([
             startIndex: 500,
             virtualPageSize: 50,
          });
+         vsInstance.setItemsCount(1000);
 
          for (var i = 0; i < 10; i++) {
             vsInstance.updateItemsIndexes('up');
@@ -171,6 +211,7 @@ define([
             virtualPageSize: 115,
             virtualSegmentSize: 35
          });
+         vsInstance.setItemsCount(1000);
 
          vsInstance.updateItemsIndexes('down');
          assert.equal(155, vsInstance._startItemIndex);
@@ -184,6 +225,7 @@ define([
             virtualPageSize: 115,
             virtualSegmentSize: 35
          });
+         vsInstance.setItemsCount(1000);
 
          vsInstance.updateItemsIndexes('up');
          assert.equal(85, vsInstance._startItemIndex);
@@ -197,6 +239,7 @@ define([
             virtualPageSize: 115,
             virtualSegmentSize: 35
          });
+         vsInstance.setItemsCount(1000);
 
          vsInstance.updateItemsIndexes('up');
          assert.equal(0, vsInstance._startItemIndex);
@@ -233,13 +276,31 @@ define([
             vsInstance = new VirtualScroll({}),
             placeholders;
 
-         vsInstance._bottomPlaceholderSize = 34;
-         vsInstance._topPlaceholderSize = 5478;
+         vsInstance._itemsHeights = [20, 45, 10, 44, 78, 45, 92];
+         vsInstance._startItemIndex = 2;
+         vsInstance._stopItemIndex = 5;
+
          placeholders = vsInstance.getPlaceholdersSizes();
          assert.deepEqual({
-            top: 5478,
-            bottom: 34
+            top: 0,
+            bottom: 0
          }, placeholders);
+
+         assert.deepEqual({
+            top: 65,
+            bottom: 137
+         }, {
+            top: VirtualScroll._private.getItemsHeight(vsInstance, 0, vsInstance._startItemIndex),
+            bottom: VirtualScroll._private.getItemsHeight(vsInstance, vsInstance._stopItemIndex, vsInstance._itemsHeights.length)
+         });
+      });
+
+      it('getItemsHeights', function() {
+         var
+            vsInstance = new VirtualScroll({}),
+            itemsHeights = [20, 45, 10, 44, 78, 45, 92];
+         vsInstance._itemsHeights = itemsHeights;
+         assert.deepEqual(itemsHeights, vsInstance.getItemsHeights());
       });
 
       it('isScrollInPlaceholder', function() {
@@ -262,37 +323,6 @@ define([
          assert.isTrue(VirtualScroll._private.isScrollInPlaceholder(vsInstance, 300));
          assert.isTrue(!VirtualScroll._private.isScrollInPlaceholder(vsInstance, 550));
          assert.isTrue(VirtualScroll._private.isScrollInPlaceholder(vsInstance, 700));
-      });
-
-      it('counting placeholders', function() {
-         var
-            vsInstance = new VirtualScroll({
-               startIndex: 0,
-               virtualPageSize: 5,
-               virtualSegmentSize: 3
-            }),
-            items = {
-               children: [
-                  { offsetHeight: 20 },
-                  { offsetHeight: 45 },
-                  { offsetHeight: 10 },
-                  { offsetHeight: 44 },
-                  { offsetHeight: 78 }
-               ]
-            },
-            placeholders;
-
-         vsInstance.setItemsContainer(items);
-
-         vsInstance.updateItemsIndexes('down');
-         placeholders = vsInstance.getPlaceholdersSizes();
-         assert.equal(75, placeholders.top);
-         assert.equal(0, placeholders.bottom);
-
-         vsInstance.updateItemsIndexes('up');
-         placeholders = vsInstance.getPlaceholdersSizes();
-         assert.equal(0, placeholders.top);
-         assert.equal(0, placeholders.bottom);
       });
 
       it('updateItemsIndexesOnScrolling', function() {

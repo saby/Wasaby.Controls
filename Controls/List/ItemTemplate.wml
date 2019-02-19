@@ -14,7 +14,7 @@
     <ws:if data="{{itemData.multiSelectVisibility !== 'hidden'}}">
         <ws:partial template="{{multiSelectTpl}}"
                     attr:class="controls-ListView__checkbox js-controls-ListView__notEditable
-                                {{(itemData.multiSelectVisibility === 'onhover' && !itemData.multiSelectStatus) ? 'controls-ListView__checkbox-onhover'}}">
+                                {{(itemData.multiSelectVisibility === 'onhover' && itemData.multiSelectStatus === undefined) ? 'controls-ListView__checkbox-onhover'}}">
             <ws:templateOptions multiSelectStatus="{{itemData.multiSelectStatus}}"
                                 key="{{itemData.key}}"/>
         </ws:partial>
@@ -25,12 +25,12 @@
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}} {{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
             <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}} {{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
     <ws:if data="{{itemData.drawActions}}">
         <ws:if data="{{itemData.isSwiped}}">

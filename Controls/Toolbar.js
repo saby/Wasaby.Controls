@@ -64,6 +64,21 @@ define('Controls/Toolbar', [
     */
 
    /**
+    * @name Controls/Toolbar#itemsSpacing
+    * @cfg {Types/source:Base} Type of spacing between items
+    * @default medium
+    * @example
+    * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
+    * <pre>
+    *    <Controls.Toolbar
+    *              keyProperty="key"
+    *              source="{{_source}}"
+    *              itemsSpacing="big"
+    *    />
+    * </pre>
+    */
+
+   /**
     * @event Controls/Toolbar#itemClick Occurs when item was clicked.
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     * @param {Types/entity:Record} item Clicked item.

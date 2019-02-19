@@ -79,9 +79,9 @@ define('Controls/Filter/Button/Panel', [
          return Clone(items);
       },
 
-      getFilter: function(self, items) {
+      getFilter: function(items) {
          var filter = {};
-         chain.factory(items || self._items).each(function(item) {
+         chain.factory(items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
                (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                filter[item.id] = getPropValue(item, 'value');
@@ -183,19 +183,25 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _applyHistoryFilter: function(event, items) {
-         var filter = _private.getFilter(this, items);
+         var filter = _private.getFilter(items);
          filter.$_history = true;
          this._applyFilter(event, items);
       },
 
       _applyFilter: function(event, items) {
-         var self = this;
+         var self = this,
+            curItems = items || this._items;
          _private.validate(this).addCallback(function(result) {
             if (_private.isPassedValidation(result)) {
+
+               /*
+               Due to the fact that a bar can be created as you like (the bar will be not in the root, but a bit deeper)
+               and the popup captures the sendResult operation from the root node, bubbling must be set in true.
+               */
                self._notify('sendResult', [{
-                  filter: _private.getFilter(self),
-                  items: _private.prepareItems(items || self._items)
-               }]);
+                  filter: _private.getFilter(curItems),
+                  items: _private.prepareItems(curItems)
+               }], {bubbling: true});
                self._notify('close', [], {bubbling: true});
             }
          });

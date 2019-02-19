@@ -41,6 +41,10 @@ define([
             arguments: ['valueChanged', ['test']]
          }]);
       });
+      it('cleanValid', () => {
+         validCtrl._valueChangedHandler();
+         assert.deepEqual(validCtrl._validationResult, undefined);
+      });
    });
    describe('Validate/FormController', () => {
       it('add/remove validator', () => {
