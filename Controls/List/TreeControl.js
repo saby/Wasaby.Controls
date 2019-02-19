@@ -3,7 +3,7 @@ define('Controls/List/TreeControl', [
    'wml!Controls/List/TreeControl/TreeControl',
    'Controls/Controllers/SourceController',
    'Core/core-clone',
-   'Core/constants',
+   'Env/Env',
    'Core/Deferred',
    'Controls/Utils/keysHandler'
 ], function(
@@ -11,7 +11,7 @@ define('Controls/List/TreeControl', [
    TreeControlTpl,
    SourceController,
    cClone,
-   cConstants,
+   Env,
    Deferred,
    keysHandler
 ) {
@@ -19,8 +19,8 @@ define('Controls/List/TreeControl', [
 
    var
       HOT_KEYS = {
-         expandMarkedItem: cConstants.key.right,
-         collapseMarkedItem: cConstants.key.left
+         expandMarkedItem: Env.constants.key.right,
+         collapseMarkedItem: Env.constants.key.left
       };
 
    var DRAG_MAX_OFFSET = 15,

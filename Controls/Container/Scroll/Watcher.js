@@ -8,10 +8,10 @@ define('Controls/Container/Scroll/Watcher',
       'Core/Control',
       'wml!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
-      'Core/detection',
+      'Env/Env',
       'Core/helpers/Object/isEmpty'
    ],
-   function(Control, template, Registrar, detection, isEmpty) {
+   function(Control, template, Registrar, Env, isEmpty) {
 
       'use strict';
 
@@ -314,7 +314,7 @@ define('Controls/Container/Scroll/Watcher',
 
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !detection.isIE && !detection.isIE12 && !detection.firefox) {
+               if (global && global.IntersectionObserver && triggers && !Env.detection.isIE && !Env.detection.isIE12 && !Env.detection.firefox) {
                   if (!this._observer) {
                      _private.initIntersectionObserver(this, triggers);
                   }

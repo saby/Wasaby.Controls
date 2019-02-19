@@ -9,10 +9,10 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
-      'Core/constants',
+      'Env/Env',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, Env) {
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
@@ -20,10 +20,10 @@
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
-      var ENTER_KEY = constants.key.enter;
+      var ENTER_KEY = Env.constants.key.enter;
       
       /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, ENTER_KEY];
+      var IGNORE_HOT_KEYS = [Env.constants.key.down, Env.constants.key.up, ENTER_KEY];
       
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       

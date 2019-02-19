@@ -2,7 +2,7 @@ define('Controls/Application/HeadData', [
    'Core/core-extend',
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
-   'Core/cookie',
+   'Env/Env',
    'Core/Themes/ThemesController',
    'View/Request',
    'Core/i18n'
@@ -10,7 +10,7 @@ define('Controls/Application/HeadData', [
 ], function(extend,
    DepsCollector,
    Deferred,
-   cookie,
+   Env,
    ThemesController,
    Request,
    i18n) {
@@ -152,7 +152,7 @@ define('Controls/Application/HeadData', [
       },
 
       isDebug: function() {
-         return cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
+         return Env.cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
       },
 
       _getDictList: function() {

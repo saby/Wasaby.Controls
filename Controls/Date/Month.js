@@ -1,9 +1,9 @@
 define('Controls/Date/Month', [
    'Controls/calendar',
-   'Core/IoC'
+   'Env/Env'
 ], function(
    calendarLib,
-   IoC
+   Env
 ) {
 
    'use strict';
@@ -24,7 +24,7 @@ define('Controls/Date/Month', [
     *
     */
 
-   IoC.resolve('ILogger').error(
+   Env.IoC.resolve('ILogger').error(
       'Controls/Date/Month' +
       'This control is deprecated. Use \'Controls/calendar:Month\' instead'
    );

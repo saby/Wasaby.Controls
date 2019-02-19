@@ -1,9 +1,8 @@
 define('Controls/Input/Base',
    [
       'Core/Control',
-      'Core/EventBus',
-      'Core/detection',
-      'Core/constants',
+      'Env/Event',
+      'Env/Env',
       'Types/entity',
       'Controls/Utils/tmplNotify',
       'Core/helpers/Object/isEqual',
@@ -22,7 +21,7 @@ define('Controls/Input/Base',
       'css!theme?Controls/Input/Base/Base'
    ],
    function(
-      Control, EventBus, detection, constants, entity, tmplNotify, isEqual,
+      Control, EnvEvent, Env, entity, tmplNotify, isEqual,
       getTextWidth, randomName, InputUtil, ViewModel, runDelayed, unEscapeASCII,
       hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate
    ) {
@@ -167,7 +166,7 @@ define('Controls/Input/Base',
                var eventName = hasFocus ? 'MobileInputFocus' : 'MobileInputFocusOut';
 
                self._fromTouch = hasFocus;
-               EventBus.globalChannel().notify(eventName);
+               EnvEvent.Bus.globalChannel().notify(eventName);
             }
          },
 
@@ -488,10 +487,10 @@ define('Controls/Input/Base',
          constructor: function(cfg) {
             Base.superclass.constructor.call(this, cfg);
 
-            this._ieVersion = detection.IEVersion;
-            this._isMobileAndroid = detection.isMobileAndroid;
-            this._isMobileIOS = detection.isMobileIOS;
-            this._isEdge = detection.isIE12;
+            this._ieVersion = Env.detection.IEVersion;
+            this._isMobileAndroid = Env.detection.isMobileAndroid;
+            this._isMobileIOS = Env.detection.isMobileIOS;
+            this._isEdge = Env.detection.isIE12;
 
             /**
              * Hide in chrome because it supports auto-completion of the field when hovering over an item
@@ -512,7 +511,7 @@ define('Controls/Input/Base',
              * the control does not hide the placeholder until the control is revived.
              * As a solution, the value on the server is always true, and the recalculation is performed on the client.
              */
-            this._hidePlaceholderUsingCSS = constants.isBuildOnServer || detection.chrome;
+            this._hidePlaceholderUsingCSS = Env.constants.isBuildOnServer || Env.detection.chrome;
          },
 
          _beforeMount: function(options) {
@@ -616,11 +615,11 @@ define('Controls/Input/Base',
             /**
              * Clicking the arrows and keys home, end moves the cursor.
              */
-            if (keyCode >= constants.key.end && keyCode <= constants.key.down) {
+            if (keyCode >= Env.constants.key.end && keyCode <= Env.constants.key.down) {
                this._viewModel.selection = this._getFieldSelection();
             }
 
-            if (keyCode === constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
+            if (keyCode === Env.constants.key.enter && this._isTriggeredChangeEventByEnterKey()) {
                _private.callChangeHandler(this);
             }
          },
@@ -708,7 +707,7 @@ define('Controls/Input/Base',
              * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
              * Fast input on Android is not carried out, so do not do these actions on it.
              */
-            if (!detection.isMobileAndroid) {
+            if (!Env.detection.isMobileAndroid) {
                _private.updateField(this, value, selection);
             }
          },

@@ -1,6 +1,6 @@
 define('Controls/Input/Date/RangeLinkLite', [
    'Controls/dateRange'/*,
-   'Core/IoC'*/
+   'Env/Env:IoC'*/
 ], function(
    dateRangeLib/*,
    IoC*/

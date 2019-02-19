@@ -1,6 +1,6 @@
 define('Controls/Input/Date/LinkView', [
    'Core/Control',
-   'Core/IoC',
+   'Env/Env',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
    'Controls/Input/Date/interface/ILinkView',
@@ -8,7 +8,7 @@ define('Controls/Input/Date/LinkView', [
    'css!theme?Controls/Input/Date/LinkView/LinkView'
 ], function(
    BaseControl,
-   IoC,
+   Env,
    CalendarControlsUtils,
    DateRangeModel,
    IDateLinkView,
@@ -73,13 +73,13 @@ define('Controls/Input/Date/LinkView', [
          _private._updateEnabled(this, options.readOnly);
 
          if (options.showPrevArrow || options.showNextArrow) {
-            IoC.resolve('ILogger').error('LinkView', rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'));
+            Env.IoC.resolve('ILogger').error('LinkView', rk('You should use prevArrowVisibility and nextArrowVisibility instead of showPrevArrow and showNextArrow'));
          }
 
          // clearButtonVisibility is option of clearButton visibility state
 
          if ((options.prevArrowVisibility && options.clearButtonVisibility) || (options.nextArrowVisibility && options.clearButtonVisibility)) {
-            IoC.resolve('ILogger').error('LinkView', rk('The Controls functional is not intended for showClearButton and showPrevArrow/showNextArrow options using in one time'));
+            Env.IoC.resolve('ILogger').error('LinkView', rk('The Controls functional is not intended for showClearButton and showPrevArrow/showNextArrow options using in one time'));
          }
       },
       _beforeUpdate: function(options) {

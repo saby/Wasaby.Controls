@@ -2,9 +2,9 @@ define('Controls/Heading/Back', [
    'Core/Control',
    'wml!Controls/Heading/Back/Back',
    'Types/entity',
-   'Core/IoC',
+   'Env/Env',
    'css!theme?Controls/Heading/Back/Back'
-], function(Control, template, entity, IoC) {
+], function(Control, template, entity, Env) {
    /**
     * Specialized heading to go to the previous level.
     *
@@ -64,7 +64,7 @@ define('Controls/Heading/Back', [
          if (options.style !== self._options.style) {
             if (options.style === 'default') {
                self._style = 'primary';
-               IoC.resolve('ILogger').warn('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default');
+               Env.IoC.resolve('ILogger').warn('Heading.Back', 'Используются устаревшие стили. Используйте style primary вместо style default');
             } else {
                self._style = options.style;
             }

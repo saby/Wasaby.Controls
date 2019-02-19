@@ -3,9 +3,9 @@ define('Controls/Container/LoadingIndicator', [
    'wml!Controls/Container/LoadingIndicator/LoadingIndicator',
    'Core/helpers/Number/randomId',
    'Types/collection',
-   'Core/IoC',
+   'Env/Env',
    'css!theme?Controls/Container/LoadingIndicator/LoadingIndicator'
-], function(Control, tmpl, randomId, collection, IoC) {
+], function(Control, tmpl, randomId, collection, Env) {
    'use strict';
 
    /**
@@ -175,7 +175,7 @@ define('Controls/Container/LoadingIndicator', [
       },
 
       toggleIndicator: function(isLoading) {
-         IoC.resolve('ILogger').error('LoadingIndicator', 'Используйте события showIndicator/hideIndicator взамен toggleIndicator');
+         Env.IoC.resolve('ILogger').error('LoadingIndicator', 'Используйте события showIndicator/hideIndicator взамен toggleIndicator');
          this._isPreloading = isLoading;
 
          var isLoadingStateChanged = this._isPreloading !== this._prevLoading;

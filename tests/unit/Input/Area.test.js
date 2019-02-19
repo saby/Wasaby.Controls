@@ -1,11 +1,11 @@
 define(
    [
-      'Core/constants',
+      'Env/Env',
       'Controls/Input/Area',
       'tests/resources/ProxyCall',
       'Core/vdom/Synchronizer/resources/SyntheticEvent'
    ],
-   function(constants, Area, ProxyCall, SyntheticEvent) {
+   function(Env, Area, ProxyCall, SyntheticEvent) {
       'use strict';
       describe('Controls.Input.Area', function() {
          var ctrl, calls;
@@ -25,7 +25,7 @@ define(
 
             it('The option newLineKey is equal to enter. Press enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   ctrlKey: false,
                   altKey: false,
                   shiftKey: false,
@@ -39,7 +39,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press ctrl + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: false,
                   ctrlKey: true,
                   shiftKey: false,
@@ -56,7 +56,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press shift + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: false,
                   ctrlKey: false,
                   shiftKey: true,
@@ -73,7 +73,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press alt + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: true,
                   ctrlKey: false,
                   shiftKey: false,
@@ -90,7 +90,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press ctrl + shift + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: false,
                   ctrlKey: true,
                   shiftKey: true,
@@ -107,7 +107,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press ctrl + alt + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: true,
                   ctrlKey: true,
                   shiftKey: false,
@@ -124,7 +124,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press shift + alt + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: true,
                   ctrlKey: false,
                   shiftKey: true,
@@ -141,7 +141,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press ctrl + shift + alt + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: true,
                   ctrlKey: true,
                   shiftKey: true,
@@ -158,7 +158,7 @@ define(
             });
             it('The option newLineKey is equal to enter. Press b.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.b,
+                  keyCode: Env.constants.key.b,
                   altKey: false,
                   ctrlKey: false,
                   shiftKey: false,
@@ -172,7 +172,7 @@ define(
             });
             it('The option newLineKey is equal to ctrlEnter. Press enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: false,
                   ctrlKey: false,
                   shiftKey: false,
@@ -189,7 +189,7 @@ define(
             });
             it('The option newLineKey is equal to ctrlEnter. Press ctrl + enter.', function() {
                event = new SyntheticEvent({
-                  keyCode: constants.key.enter,
+                  keyCode: Env.constants.key.enter,
                   altKey: false,
                   ctrlKey: true,
                   shiftKey: false,

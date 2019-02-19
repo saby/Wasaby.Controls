@@ -1,6 +1,5 @@
 define('Controls/List/BaseControl', [
    'Core/Control',
-   'Core/IoC',
    'Core/core-clone',
    'Core/core-merge',
    'Core/core-instance',
@@ -11,7 +10,7 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'Core/constants',
+   'Env/Env',
    'Controls/Utils/scrollToElement',
    'Types/collection',
    'Controls/Utils/Toolbar',
@@ -22,7 +21,6 @@ define('Controls/List/BaseControl', [
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(
    Control,
-   IoC,
    cClone,
    cMerge,
    cInstance,
@@ -33,7 +31,7 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   cConstants,
+   Env,
    scrollToElement,
    collection,
    tUtil,
@@ -51,10 +49,10 @@ define('Controls/List/BaseControl', [
 
    var
       HOT_KEYS = {
-         moveMarkerToNext: cConstants.key.down,
-         moveMarkerToPrevious: cConstants.key.up,
-         toggleSelection: cConstants.key.space,
-         enterHandler: cConstants.key.enter
+         moveMarkerToNext: Env.constants.key.down,
+         moveMarkerToPrevious: Env.constants.key.up,
+         toggleSelection: Env.constants.key.space,
+         enterHandler: Env.constants.key.enter
       };
 
    var LOAD_TRIGGER_OFFSET = 100;
@@ -62,10 +60,10 @@ define('Controls/List/BaseControl', [
    var _private = {
       checkDeprecated: function(cfg) {
          if (cfg.historyIdCollapsedGroups) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
          }
          if (cfg.groupMethod) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
          }
       },
       reload: function(self, cfg) {
@@ -138,7 +136,7 @@ define('Controls/List/BaseControl', [
             });
          } else {
             resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
          resDeferred.addCallback(function(items) {
             if (cfg.afterReloadCallback) {
@@ -274,7 +272,7 @@ define('Controls/List/BaseControl', [
                return _private.processLoadError(self, error, userErrback);
             });
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+         Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
       },
 
       // Основной метод пересчета состояния Virtual Scroll

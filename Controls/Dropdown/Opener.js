@@ -3,9 +3,9 @@ define('Controls/Dropdown/Opener',
       'Controls/Popup/Opener/Sticky',
       'Core/core-merge',
       'Controls/Utils/getZIndex',
-      'Core/IoC'
+      'Env/Env'
    ],
-   function(Sticky, Merge, getZIndex, IoC) {
+   function(Sticky, Merge, getZIndex, Env) {
       /**
        * Opener for dropdown menu.
        *
@@ -89,7 +89,7 @@ define('Controls/Dropdown/Opener',
             //TODO: Нельзя прокидывать className просто через опции, надо через popupOptions
             popupOptions.className = popupOptions.className || self._options.className || self._options.popupOptions.className;
             if (self._options.className) {
-               IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
+               Env.IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
             }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
             popupOptions.closeByExternalClick = true;

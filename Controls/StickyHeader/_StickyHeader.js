@@ -1,7 +1,7 @@
 define('Controls/StickyHeader/_StickyHeader',
    [
       'Core/Control',
-      'Core/detection',
+      'Env/Env',
       'Types/entity',
       'Controls/StickyHeader/Context',
       'Controls/StickyHeader/Utils',
@@ -11,7 +11,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
       'css!theme?Controls/StickyHeader/_StickyHeader/StickyHeader'
    ],
-   function(Control, detection, entity, Context, stickyUtils, IntersectionObserver, Model, template) {
+   function(Control, Env, entity, Context, stickyUtils, IntersectionObserver, Model, template) {
 
       'use strict';
 
@@ -54,7 +54,7 @@ define('Controls/StickyHeader/_StickyHeader',
           * type {Boolean} Determines whether the component is built on the Android mobile platform.
           * @private
           */
-         _isMobilePlatform: detection.isMobilePlatform,
+         _isMobilePlatform: Env.detection.isMobilePlatform,
 
          _shadowVisible: true,
          _stickyHeadersHeight: null,

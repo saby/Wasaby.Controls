@@ -6,8 +6,8 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
    'Controls/Constants',
-   'Core/IoC'
-], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, IoC) {
+   'Env/Env'
+], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, Env) {
    /**
     *
     * @author Авраменко А.С.
@@ -20,22 +20,22 @@ define('Controls/List/ItemsViewModel', [
 
          if (cfg.leftSpacing && !this.leftSpacing) {
             this.leftSpacing = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.leftPadding && !this.leftPadding) {
             this.leftPadding = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.rightSpacing && !this.rightSpacing) {
             this.rightSpacing = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
          if (cfg.rightPadding && !this.rightPadding) {
             this.rightPadding = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
 

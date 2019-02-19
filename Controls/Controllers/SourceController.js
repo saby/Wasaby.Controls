@@ -2,7 +2,7 @@ define('Controls/Controllers/SourceController',
    [
       'Core/core-simpleExtend',
       'Core/core-instance',
-      'Core/IoC',
+      'Env/Env',
       'Controls/Controllers/QueryParamsController/Page',
       'Controls/Controllers/QueryParamsController/Offset',
       'Controls/Controllers/QueryParamsController/Position',
@@ -11,11 +11,11 @@ define('Controls/Controllers/SourceController',
       'Core/core-clone',
       'require'
    ],
-   function(cExtend, cInstance, IoC, Page, Offset, Position, sourceLib, cDeferred, cClone) {
+   function(cExtend, cInstance, Env, Page, Offset, Position, sourceLib, cDeferred, cClone) {
       var _private = {
          prepareSource: function(sourceOpt) {
             if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
-               IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
+               Env.IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
             return sourceOpt;
          },
@@ -70,7 +70,7 @@ define('Controls/Controllers/SourceController',
                   cntCtr = Position;
                   break;
                default:
-                  IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+                  Env.IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
             }
             if (cntCtr) {
                cntInstance = new cntCtr(cfg);

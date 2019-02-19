@@ -7,11 +7,11 @@ define('Controls/Filter/Button/Panel', [
    'Controls/Filter/Button/History/resources/historyUtils',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
-   'Core/IoC',
+   'Env/Env',
    'css!theme?Controls/Filter/Button/Panel/Panel',
    'Controls/Controllers/PrimaryAction'
 
-], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
+], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, Env) {
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -48,7 +48,7 @@ define('Controls/Filter/Button/Panel', [
             self._items = this.cloneItems(options.items);
          } else if (self._contextOptions) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
-            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
+            Env.IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
          } else {
             throw new Error('Controls/Filter/Button/Panel::items option is required');
          }
@@ -59,7 +59,7 @@ define('Controls/Filter/Button/Panel', [
             self._historyId = options.historyId;
          } else if (context && context.historyId) {
             self._historyId = context.historyId;
-            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
+            Env.IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
          }
       },
 

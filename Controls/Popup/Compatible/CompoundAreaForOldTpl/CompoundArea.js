@@ -4,15 +4,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'wml!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Mixins/LikeWindowMixin',
       'Core/helpers/Array/findIndex',
-      'Core/core-debug',
       'Core/Deferred',
-      'Core/IoC',
       'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Core/helpers/Function/runDelayed',
-      'Core/constants',
+      'Env/Env',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
-      'Core/EventBus',
+      'Env/Event',
       'Controls/Popup/Manager/ManagerController',
       'Types/entity',
       'Core/helpers/Function/callNext',
@@ -25,15 +23,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       template,
       LikeWindowMixin,
       arrayFindIndex,
-      coreDebug,
       cDeferred,
-      IoC,
       makeInstanceCompatible,
       runDelayed,
-      CoreConstants,
+      Env,
       doAutofocus,
       DialogRecord,
-      cEventBus,
+      EnvEvent,
       ManagerController,
       entity,
       callNext,
@@ -51,7 +47,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          return !(result instanceof Error || result === false);
       }
 
-      var logger = IoC.resolve('ILogger');
+      var logger = Env.IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
       var invisibleRe = /ws-invisible/ig;
       var hiddenRe = /ws-hidden/ig;
@@ -164,7 +160,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
             self.once('onAfterLoad', function() {
                self._setCustomHeader();
-               cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
+               EnvEvent.Bus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
             });
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
@@ -519,9 +515,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return opener === this;
          },
          _keyDown: function(event) {
-            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
                this.close();
-               if (CoreConstants.browser.safari) {
+               if (Env.detection.safari) {
                   // Need to prevent default behaviour if popup is opened
                   // because safari escapes fullscreen mode on 'ESC' pressed
                   event.preventDefault();
@@ -530,7 +526,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
          _keyUp: function(event) {
-            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
                event.stopPropagation();
             }
          },
@@ -1072,7 +1068,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                if (childOps.length === 0) {
                   allChildrenPendingOperation = this._allChildrenPendingOperation;
                   this._allChildrenPendingOperation = null;
-                  coreDebug.checkAssertion(!!allChildrenPendingOperation);
+                  Env.coreDebug.checkAssertion(!!allChildrenPendingOperation);
 
                   this._unregisterPendingOperation(allChildrenPendingOperation);
                }
@@ -1147,7 +1143,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var result = !!(dOperation && (dOperation instanceof cDeferred));
             if (result) {
                this._pending.push(dOperation);
-               this._pendingTrace.push(coreDebug.getStackTrace());
+               this._pendingTrace.push(Env.coreDebug.getStackTrace());
                dOperation.addBoth(this._checkPendingOperations.bind(this));
             }
             return result;

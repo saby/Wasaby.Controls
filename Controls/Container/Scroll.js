@@ -2,7 +2,7 @@ define('Controls/Container/Scroll',
    [
       'Core/Control',
       'Core/Deferred',
-      'Core/detection',
+      'Env/Env',
       'Core/core-clone',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
@@ -16,7 +16,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, cClone, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
+   function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
 
       'use strict';
 
@@ -110,7 +110,7 @@ define('Controls/Container/Scroll',
                 * In IE, if the content has a rational height, the height is rounded to the smaller side,
                 * and the scrollable height to the larger side. Reduce the scrollable height to the real.
                 */
-               if (detection.isIE) {
+               if (Env.detection.isIE) {
                   scrollHeight--;
                }
 
@@ -264,7 +264,7 @@ define('Controls/Container/Scroll',
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
 
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
-                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
+                        useNativeScrollbar = Env.detection.isMobileIOS || Env.detection.isMobileAndroid;
 
                      _private.updateDisplayState(self, displayState);
                      self._styleHideScrollbar = styleHideScrollbar;

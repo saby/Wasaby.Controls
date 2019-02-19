@@ -1,6 +1,6 @@
 ﻿define('Controls/Input/DateTime', [
    'Core/Control',
-   'Core/constants',
+   'Env/Env',
    'Core/core-merge',
    'Controls/Calendar/Utils',
    'Controls/Input/DateTime/Model',
@@ -9,7 +9,7 @@
    'wml!Controls/Input/DateTime/DateTime'
 ], function(
    Control,
-   CoreConstants,
+   Env,
    coreMerge,
    CalendarControlsUtils,
    Model,
@@ -80,7 +80,7 @@
          e.stopImmediatePropagation();
       },
       _onKeyDown: function(event) {
-         if (event.nativeEvent.keyCode === CoreConstants.key.insert) {
+         if (event.nativeEvent.keyCode === Env.constants.key.insert) {
          // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
          }

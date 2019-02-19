@@ -1,4 +1,4 @@
-define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Lookup/Lookup', 'Core/IoC'], function(Control, template, IoC) {
+define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Lookup/Lookup', 'Env/Env'], function(Control, template, Env) {
    'use strict';
 
    /**
@@ -30,7 +30,7 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
 
       _beforeMount: function(options) {
          if (options.lookupTemplate) {
-            IoC.resolve('ILogger').warn('Option "Controls/Selector/Lookup:lookupTemplate" renamed and will be deleted in 3.19.100, use "Controls/Selector/Lookup:selectorTemplate"');
+            Env.IoC.resolve('ILogger').warn('Option "Controls/Selector/Lookup:lookupTemplate" renamed and will be deleted in 3.19.100, use "Controls/Selector/Lookup:selectorTemplate"');
          }
       },
 

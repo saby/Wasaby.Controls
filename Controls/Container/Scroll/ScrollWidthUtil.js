@@ -1,8 +1,8 @@
 define('Controls/Container/Scroll/ScrollWidthUtil',
    [
-      'Core/detection'
+      'Env/Env'
    ],
-   function(detection) {
+   function(Env) {
 
       'use strict';
 
@@ -76,14 +76,14 @@ define('Controls/Container/Scroll/ScrollWidthUtil',
             if (typeof _private.styleHideScrollbar === 'string') {
                styleHideScrollbar = _private.styleHideScrollbar;
             } else {
-               scrollbarWidth = _private.calcScrollbarWidth(detection);
+               scrollbarWidth = _private.calcScrollbarWidth(Env.detection);
                styleHideScrollbar = _private.calcStyleHideScrollbar(scrollbarWidth);
             }
 
             /**
              * Do not cache on the server and firefox.
              */
-            if (!(typeof window === 'undefined' || detection.firefox)) {
+            if (!(typeof window === 'undefined' || Env.detection.firefox)) {
                _private.styleHideScrollbar = styleHideScrollbar;
             }
 

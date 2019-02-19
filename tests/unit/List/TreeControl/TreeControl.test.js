@@ -4,7 +4,7 @@ define([
    'Core/Deferred',
    'Core/core-merge',
    'Core/core-instance',
-   'Core/constants',
+   'Env/Env',
    'Controls/List/TreeGridView/TreeGridViewModel',
    'Types/collection',
    'Types/source'
@@ -14,7 +14,7 @@ define([
    Deferred,
    cMerge,
    cInstance,
-   cConstants,
+   Env,
    TreeGridViewModel,
    collection,
    sourceLib
@@ -276,7 +276,7 @@ define([
                   stopImmediateCalled = true;
                },
                nativeEvent: {
-                  keyCode: cConstants.key.right
+                  keyCode: Env.constants.key.right
                }
             });
             setTimeout(function () {
@@ -287,7 +287,7 @@ define([
                      stopImmediateCalled = true;
                   },
                   nativeEvent: {
-                     keyCode: cConstants.key.left
+                     keyCode: Env.constants.key.left
                   }
                });
                assert.deepEqual({}, treeGridViewModel._model._expandedItems);
