@@ -1,4 +1,4 @@
-define('Controls/Date/MonthSlider/Slider', [
+define('Controls/Calendar/MonthSlider/Slider', [
    'Controls/calendar'/*,
    'Core/IoC'*/
 ], function(
