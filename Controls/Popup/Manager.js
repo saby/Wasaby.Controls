@@ -393,6 +393,10 @@ define('Controls/Popup/Manager',
                if (element.controller._elementUpdated(element, _private.getItemContainer(id))) {
                   _private.updateOverlay.call(this);
                   _private.redrawItems(this._popupItems);
+                  // wait, until popup will be update options
+                  runDelayed(function() {
+                     ManagerController.getContainer().activatePopup(id);
+                  });
                } else {
                   element.popupOptions = oldOptions;
                }
