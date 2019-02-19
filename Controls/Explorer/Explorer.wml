@@ -1,14 +1,8 @@
 <div class="controls-Explorer">
    <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:dragEnd="_dragEndBreadCrumbs()" on:documentDragEnd="_documentDragEnd()">
       <Controls.Explorer._PathController
-                                 header="{{ _options.header }}"
-                                 keyProperty="{{_options.keyProperty}}"
-                                 parentProperty="{{ _options.parentProperty }}"
-                                 displayProperty="{{_options.displayProperty}}"
-                                 backButtonStyle="{{ _options.backButtonStyle }}"
-                                 showActionButton="{{ _options.showActionButton }}"
+                                 scope="{{_options}}"
                                  items="{{_breadCrumbsItems}}"
-                                 root="{{_options.root}}"
                                  rootVisible="{{_dragOnBreadCrumbs}}"
                                  highlighter="{{[_breadCrumbsDragHighlighter]}}"
                                  on:hoveredItemChanged="_hoveredCrumbChanged()"
