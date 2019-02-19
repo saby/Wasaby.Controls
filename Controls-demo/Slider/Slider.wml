@@ -1,0 +1,3 @@
+<div>
+    <Controls.Slider maxValue="{{100}}" minValue="{{0}}"/>
+</div>
