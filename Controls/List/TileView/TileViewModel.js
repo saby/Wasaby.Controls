@@ -35,8 +35,7 @@ define('Controls/List/TileView/TileViewModel', [
 
       setTileMode: function(tileMode) {
          this._tileMode = tileMode;
-         this._nextVersion();
-         this._notify('onListChange');
+         this._nextModelVersion();
       },
 
       getTileMode: function() {
@@ -45,8 +44,7 @@ define('Controls/List/TileView/TileViewModel', [
 
       setItemsHeight: function(itemsHeight) {
          this._itemsHeight = itemsHeight;
-         this._nextVersion();
-         this._notify('onListChange');
+         this._nextModelVersion();
       },
 
       getItemsHeight: function() {
@@ -56,8 +54,7 @@ define('Controls/List/TileView/TileViewModel', [
       setHoveredItem: function(hoveredItem) {
          if (this._hoveredItem !== hoveredItem) {
             this._hoveredItem = hoveredItem;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          }
       },
 
