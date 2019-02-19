@@ -238,7 +238,8 @@ define(
                   testSelf = {
                      _options: {
                         size: 'size',
-                        popupClassName: 'popupClassName'
+                        popupClassName: 'popupClassName',
+                        itemTemplateProperty: 'itp'
                      },
                      _children: {
                         popupTarget: 'popupTarget'
@@ -249,7 +250,8 @@ define(
                      className: 'controls-Toolbar__popup__list popupClassName',
                      target: 'popupTarget',
                      templateOptions: {
-                        items: 'menuItems'
+                        items: 'menuItems',
+                        itemTemplateProperty: 'itp'
                      }
                   };
                assert.deepEqual(Toolbar._private.generateMenuConfig(testSelf), config);
