@@ -1,6 +1,6 @@
 define(
    [
-      'Controls/Input/ComboBox/Suggest',
+      'Controls/Selector/Suggest',
       'Core/core-clone',
       'Types/source',
       'Controls/Input/resources/InputRender/BaseViewModel',
