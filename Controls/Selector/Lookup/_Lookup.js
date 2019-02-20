@@ -39,7 +39,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             self._fieldWrapper = self._fieldWrapper[0];
          }
 
-         self._wrapperInputRender = self._fieldWrapper.getElementsByClassName('controls-InputRender__wrapper')[0];
+         self._fieldWrapperWidth = DOMUtil.width(self._fieldWrapper);
       },
 
       notifyValue: function(self, value) {
@@ -76,12 +76,12 @@ define('Controls/Selector/Lookup/_Lookup', [
                itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
                allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
                afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-               availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+               availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, self._fieldWrapperWidth, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
       
                //For multi line define - inputWidth, for single line - maxVisibleItems
                if (newOptions.multiLine) {
                   lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
-                  inputWidth = _private.getInputWidth(DOMUtil.width(self._fieldWrapper), lastRowCollectionWidth, availableWidth);
+                  inputWidth = _private.getInputWidth(self._fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
                   multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
                } else {
                   maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
@@ -126,18 +126,14 @@ define('Controls/Selector/Lookup/_Lookup', [
          return maxVisibleItems;
       },
 
-      getAvailableCollectionWidth: function(fieldWrapper, afterFieldWrapperWidth, readOnly, multiSelect) {
-         return DOMUtil.width(fieldWrapper) - _private.getAdditionalCollectionWidth(fieldWrapper, afterFieldWrapperWidth, readOnly, multiSelect);
-      },
-
-      getAdditionalCollectionWidth: function(fieldWrapper, afterFieldWrapperWidth, readOnly, multiSelect) {
+      getAvailableCollectionWidth: function(fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, readOnly, multiSelect) {
          var additionalWidth = afterFieldWrapperWidth;
 
          if (!readOnly && multiSelect) {
             additionalWidth += _private.getInputMinWidth(fieldWrapper.offsetWidth, afterFieldWrapperWidth);
          }
 
-         return additionalWidth;
+         return fieldWrapperWidth - additionalWidth;
       },
 
       getAfterFieldWrapperWidth: function(itemsCount, multiLine, readOnly) {
@@ -183,7 +179,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
 
          if (newOptions.multiLine) {
-            measurer.style.width = DOMUtil.width(self._fieldWrapper) - SHOW_SELECTOR_WIDTH + 'px';
+            measurer.style.width = self._fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -255,6 +251,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _simpleViewModel: null,
       _availableWidthCollection: null,
       _infoboxOpened: false,
+      _fieldWrapperWidth: 0,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -303,12 +300,12 @@ define('Controls/Selector/Lookup/_Lookup', [
             });
          }
 
-         if (isNeedCalculatingSizes) {
+         if (isNeedCalculatingSizes && this._fieldWrapperWidth > 0) {
             _private.calculatingSizes(this, newOptions);
          }
       },
 
-      _afterUpdate: function() {
+      _afterUpdate: function(oldOptions) {
          if (this._needSetFocusInInput) {
             this._needSetFocusInInput = false;
 
@@ -316,6 +313,11 @@ define('Controls/Selector/Lookup/_Lookup', [
             if (this._active) {
                this.activate();
             }
+         }
+
+         // if the first items were selected
+         if (this._options.items.getCount() && !oldOptions.items.getCount()) {
+            this._trackingChangeContainer();
          }
       },
 
@@ -346,6 +348,16 @@ define('Controls/Selector/Lookup/_Lookup', [
 
          /* move focus to input after remove, because focus will be lost after removing dom element */
          this._needSetFocusInInput = true;
+      },
+
+      _trackingChangeContainer: function() {
+         var newFieldWrapperWidth = DOMUtil.width(this._fieldWrapper);
+
+         if (newFieldWrapperWidth !== this._fieldWrapperWidth) {
+            this._fieldWrapperWidth = newFieldWrapperWidth;
+            _private.calculatingSizes(this, this._options);
+            this._forceUpdate();
+         }
       },
 
       _deactivated: function() {

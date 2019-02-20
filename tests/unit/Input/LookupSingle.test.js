@@ -8,14 +8,16 @@ define([
 ], function(Lookup, entity, collection) {
 
    describe('Controls/Selector/Lookup/_Lookup', function() {
-      it('getAdditionalCollectionWidth', function() {
+      it('getAvailableCollectionWidth', function() {
+
+         var fieldWrapperWidth = 100;
          var afterFieldWrapperWidth = 20;
          var fieldWrapper = {
             offsetWidth: 110
          };
 
-         assert.equal(Lookup._private.getAdditionalCollectionWidth(fieldWrapper, afterFieldWrapperWidth, false, false), afterFieldWrapperWidth);
-         assert.equal(Lookup._private.getAdditionalCollectionWidth(fieldWrapper, 10, false, true), 43);
+         assert.equal(Lookup._private.getAvailableCollectionWidth(fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, false, false), 80);
+         assert.equal(Lookup._private.getAvailableCollectionWidth(fieldWrapper, fieldWrapperWidth,  10, false, true), 57);
       });
 
       it('getInputMinWidth', function() {
@@ -102,17 +104,32 @@ define([
       });
 
       it('_afterUpdate', function() {
+         var isCheckWidthContainer = false;
          var lookup = new Lookup();
          lookup._needSetFocusInInput = true;
          lookup._active = true;
+         lookup._trackingChangeContainer = function() {
+            isCheckWidthContainer = true;
+         };
+         lookup._options.items = {
+            getCount: function() {return 1}
+         };
 
          var activated = false;
          lookup.activate = function() {
             activated = true;
          };
 
-         lookup._afterUpdate();
+         lookup._afterUpdate({items: {
+            getCount: function() {return 1}
+         }});
          assert.isTrue(activated);
+         assert.isFalse(isCheckWidthContainer);
+
+         lookup._afterUpdate({items: {
+            getCount: function() {return 0}
+         }});
+         assert.isTrue(isCheckWidthContainer);
       });
 
       it('_beforeUpdate', function() {
@@ -125,6 +142,13 @@ define([
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 
+         lookup._beforeUpdate({
+            items: new collection.List(),
+            multiLine: true
+         });
+         assert.equal(lookup._multiLineState, undefined);
+
+         lookup._fieldWrapperWidth = 100;
          lookup._beforeUpdate({
             items: new collection.List(),
             multiLine: true
