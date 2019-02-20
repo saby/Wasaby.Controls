@@ -1,7 +1,7 @@
-define('Controls/Input/ComboBox/Suggest',
+define('Controls/Selector/Suggest',
    [
       'Core/Control',
-      'wml!Controls/Input/ComboBox/Suggest',
+      'wml!Controls/Selector/Suggest/Suggest',
       'Controls/Controllers/SourceController',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Types/util',

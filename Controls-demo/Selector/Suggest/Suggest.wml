@@ -1,6 +1,6 @@
 <div class="Controls-demo_Combobox-Suggest">
    <h3>autoDropDown: false</h3>
-   <Controls.Input.ComboBox.Suggest
+   <Controls.Selector.Suggest
            attr:class="ControlsDemo-Suggest__search"
            bind:value="_value"
            selectedKey="{{_selectedKey}}"
@@ -18,10 +18,10 @@
       <ws:minSearchLength>
          <ws:Number>3</ws:Number>
       </ws:minSearchLength>
-   </Controls.Input.ComboBox.Suggest>
+   </Controls.Selector.Suggest>
 
    <h3>autoDropDown: true</h3>
-   <Controls.Input.ComboBox.Suggest
+   <Controls.Selector.Suggest
            attr:class="ControlsDemo-Suggest__search"
            bind:value="_valueAutoDropDown"
            selectedKey="{{_selectedKeyAutoDropDown}}"
@@ -40,5 +40,5 @@
       <ws:minSearchLength>
          <ws:Number>3</ws:Number>
       </ws:minSearchLength>
-   </Controls.Input.ComboBox.Suggest>
+   </Controls.Selector.Suggest>
 </div>

@@ -1,10 +1,10 @@
-define('Controls-demo/Combobox/Suggest/ComboboxSuggest',
+define('Controls-demo/Selector/Suggest/Suggest',
    [
       'Core/Control',
-      'wml!Controls-demo/Combobox/Suggest/ComboboxSuggest',
+      'wml!Controls-demo/Selector/Suggest/Suggest',
       'Types/source',
       'Controls-demo/Utils/MemorySourceFilter',
-      'css!Controls-demo/Combobox/Suggest/ComboboxSuggest'
+      'css!Controls-demo/Selector/Suggest/Suggest'
    ],
    function(Control, template, source, memorySourceFilter) {
 
