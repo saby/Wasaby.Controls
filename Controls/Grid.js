@@ -36,6 +36,8 @@ define('Controls/Grid', [
     * @mixes Controls/List/DigitButtonsStyles
     * @mixes Controls/List/Grid/SortButtonStyles
     *
+    * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
+    *
     * @control
     * @public
     * @author Авраменко А.С.
