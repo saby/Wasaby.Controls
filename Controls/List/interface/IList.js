@@ -128,6 +128,11 @@ define('Controls/List/interface/IList', [
     */
 
    /**
+    * @name Controls/List/interface/IList#itemActionsProperty
+    * @cfg {String} Name of the item's property that contains item actions.
+    */
+
+   /**
     * @name Controls/List/interface/IList#markedKey
     * @cfg {Number} Identifier of the marked collection item.
     * <a href="/materials/demo-ws4-list-base">Example</a>.
