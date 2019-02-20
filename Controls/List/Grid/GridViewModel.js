@@ -580,6 +580,10 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getNextItemKey.apply(this._model, arguments);
          },
 
+         setIndexes: function(startIndex, stopIndex) {
+            this._model.setIndexes(startIndex, stopIndex);
+         },
+
          getPreviousItemKey: function() {
             return this._model.getPreviousItemKey.apply(this._model, arguments);
          },
