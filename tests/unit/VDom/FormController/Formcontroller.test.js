@@ -84,7 +84,9 @@ define([
 
          setRecordCalled = false;
          FC._beforeUpdate({
-            record: 'record',
+            record: {
+               isChanged: () => false
+            },
             key: 'key'
          });
 
