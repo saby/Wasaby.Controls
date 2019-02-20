@@ -202,7 +202,9 @@ define([
             destroy: () => {},
             setRoot: (root) => {
                treeViewModel._model._root = root;
-            }
+            },
+            subscribe: () => {},
+            unsubscribe: () => {}
          };
 
          // Need to know that list notifies when he has been changed after setting new root by treeControl._afterUpdate

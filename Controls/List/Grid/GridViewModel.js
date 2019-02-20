@@ -247,25 +247,34 @@ define('Controls/List/Grid/GridViewModel', [
          _ladder: null,
 
          constructor: function(cfg) {
-            var
-               self = this;
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            this._model.subscribe('onListChange', function() {
-               self._ladder = _private.prepareLadder(self);
-               self._nextVersion();
-               self._notify('onListChange');
-            });
-            this._model.subscribe('onMarkedKeyChanged', function(event, key) {
-               self._notify('onMarkedKeyChanged', key);
-            });
-            this._model.subscribe('onGroupsExpandChange', function(event, changes) {
-               self._notify('onGroupsExpandChange', changes);
-            });
+            this._onListChangeFn = function() {
+               this._ladder = _private.prepareLadder(this);
+               this._nextVersion();
+               this._notify('onListChange');
+            }.bind(this);
+            this._onMarkedKeyChangedFn = function(event, key) {
+               this._notify('onMarkedKeyChanged', key);
+            }.bind(this);
+            this._onGroupsExpandChangeFn = function(event, changes) {
+               this._notify('onGroupsExpandChange', changes);
+            }.bind(this);
+            this._onCollectionChangeFn = function() {
+               this._notify('onCollectionChange');
+            }.bind(this);
+            this._model.subscribe('onListChange', this._onListChangeFn);
+            this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
+            this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
+            this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
             this._setColumns(this._options.columns);
             this._setHeader(this._options.header);
+         },
+
+         _nextModelVersion: function(notUpdatePrefixItemVersion) {
+            this._model.nextModelVersion(notUpdatePrefixItemVersion);
          },
 
          _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
@@ -311,8 +320,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          setHeader: function(columns) {
             this._setHeader(columns);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          _prepareHeaderColumns: function(columns, multiSelectVisibility) {
@@ -497,8 +505,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          setColumns: function(columns) {
             this._setColumns(columns);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setLeftSpacing: function(leftSpacing) {
@@ -719,15 +726,13 @@ define('Controls/List/Grid/GridViewModel', [
          setStickyColumn: function(stickyColumn) {
             this._options.stickyColumn = stickyColumn;
             this._ladder = _private.prepareLadder(this);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setLadderProperties: function(ladderProperties) {
             this._options.ladderProperties = ladderProperties;
             this._ladder = _private.prepareLadder(this);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          updateIndexes: function(startIndex, stopIndex) {
@@ -764,12 +769,10 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemActions: function(item, actions) {
             this._model.setItemActions(item, actions);
-            this._nextVersion();
          },
 
          _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
-            this._nextVersion();
          },
 
          setItemActionVisibilityCallback: function(callback) {
@@ -806,24 +809,20 @@ define('Controls/List/Grid/GridViewModel', [
 
          setRightSwipedItem: function(itemData) {
             this._model.setRightSwipedItem(itemData);
-            this._nextVersion();
          },
 
          setShowRowSeparator: function(showRowSeparator) {
             this._options.showRowSeparator = showRowSeparator;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setRowSeparatorVisibility: function(rowSeparatorVisibility) {
             this._options.rowSeparatorVisibility = rowSeparatorVisibility;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          updateSelection: function(selectedKeys) {
             this._model.updateSelection(selectedKeys);
-            this._nextVersion();
          },
 
          setDragTargetPosition: function(position) {
@@ -863,6 +862,10 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          destroy: function() {
+            this._model.unsubscribe('onListChange', this._onListChangeFn);
+            this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
+            this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
+            this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
          }

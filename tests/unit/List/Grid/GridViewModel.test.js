@@ -435,6 +435,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   callStackMethods.push(item);
                };
             });
+            gridViewModel._model.subscribe = gridViewModel._model.unsubscribe = function() {};
             callMethods.forEach(function(item) {
                gridViewModel[item]();
             });
