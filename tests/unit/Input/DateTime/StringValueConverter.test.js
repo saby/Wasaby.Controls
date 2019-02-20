@@ -102,7 +102,16 @@ define([
             { mask: 'HH.mm', stringValue: '__.10', value: new Date('Invalid') },
 
             // the date is more than maybe
-            { mask: 'DD.MM.YY', stringValue: '55.12.00', value: new Date(2000, 11, 31) }
+            { mask: 'DD.MM.YY', stringValue: '55.12.00', value: new Date(2000, 11, 31) },
+
+            // incorrect time
+            { mask: 'HH:mm:ss', stringValue: '80:80:80', value: new Date(1900, 0, 1, 23, 59, 59) },
+            { mask: 'HH:mm:ss', stringValue: '80:10:10', value: new Date(1900, 0, 1, 23, 10, 10) },
+            { mask: 'HH:mm:ss', stringValue: '10:80:80', value: new Date(1900, 0, 1, 10, 59, 59) },
+            { mask: 'HH:mm:ss', stringValue: '10:10:80', value: new Date(1900, 0, 1, 10, 10, 59) },
+            { mask: 'HH:mm', stringValue: '80:80', value: new Date(1900, 0, 1, 23, 59, 0) },
+            { mask: 'HH:mm', stringValue: '10:80', value: new Date(1900, 0, 1, 10, 59, 0) },
+            { mask: 'HH:mm', stringValue: '80:10', value: new Date(1900, 0, 1, 23, 10, 0) }
          ].forEach(function(test) {
             it(`should return ${test.value} if "${test.stringValue}" is passed`, function() {
                let converter = new StringValueConverter(),
