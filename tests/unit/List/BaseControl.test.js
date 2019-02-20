@@ -1024,6 +1024,7 @@ define([
 
          var
             stopImmediateCalled = false,
+            preventDefaultCalled = false,
 
             lnSource = new sourceLib.Memory({
                idProperty: 'id',
@@ -1070,15 +1071,25 @@ define([
                });
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
+               lnBaseControl._children = {
+                  selectionController: {
+                     onCheckBoxClick: function() {
+                     }
+                  }
+               };
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
                   nativeEvent: {
                      keyCode: cConstants.key.space
+                  },
+                  preventDefault: function() {
+                     preventDefaultCalled = true;
                   }
                });
-               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "space".');
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
+               assert.isTrue(preventDefaultCalled);
 
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
@@ -1088,7 +1099,7 @@ define([
                      keyCode: cConstants.key.up
                   }
                });
-               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after press "up".');
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
 
@@ -1966,6 +1977,169 @@ define([
                   }
                }]});
             assert.equal(instance._menuIsShown, null);
+         });
+
+         describe('_listSwipe animation', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false
+               },
+               instance;
+            function initTest(multiSelectVisibility) {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     multiSelectVisibility: multiSelectVisibility,
+                     selectedKeysCount: 1
+                  };
+               instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+            }
+
+            it('multiSelectVisibility: visible, should start animation', function() {
+               initTest('visible');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: onhover, should start animation', function() {
+               initTest('onhover');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: hidden, should not start animation', function() {
+               initTest('hidden');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isNotOk(instance.getViewModel()._rightSwipedItem);
+            });
+         });
+         describe('itemSwipe event', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false,
+                  item: {}
+               };
+            it('list has item actions, event should not fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     itemActions: []
+                  },
+                  instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName) {
+                  if (eventName === 'itemSwipe') {
+                     throw new Error('itemSwipe event should not fire if the list has itemActions');
+                  }
+               };
+               instance._listSwipe({}, itemData, childEvent);
+            });
+
+            it('list has multiselection, event should not fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     selectedKeysCount: 1
+                  },
+                  instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName) {
+                  if (eventName === 'itemSwipe') {
+                     throw new Error('itemSwipe event should not fire if the list has multiselection');
+                  }
+               };
+               instance._listSwipe({}, itemData, childEvent);
+            });
+
+            it('list doesn\'t handle swipe, event should fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source
+                  },
+                  instance = new BaseControl(cfg),
+                  notifyCalled = false;
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName, eventArgs, eventOptions) {
+                  assert.equal(eventName, 'itemSwipe');
+                  assert.deepEqual(eventArgs, [itemData.item, childEvent]);
+                  notifyCalled = true;
+               };
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isTrue(notifyCalled);
+            });
          });
 
          it('_listSwipe  multiSelectStatus = true', function(done) {

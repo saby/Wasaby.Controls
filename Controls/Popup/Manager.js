@@ -167,6 +167,14 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         popupControlResize: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               return element.controller.popupResize(element, _private.getItemContainer(id));
+            }
+            return false;
+         },
+
          popupDragEnd: function(id, offset) {
             var element = ManagerController.find(id);
             if (element) {
@@ -337,6 +345,14 @@ define('Controls/Popup/Manager',
             return item.id;
          },
 
+         updateOptionsAfterInitializing: function(id, options) {
+            var item = this.find(id);
+            if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
+               item.popupOptions = options;
+               item.controller.getDefaultConfig(item);
+            }
+         },
+
          _createItemConfig: function(options, controller) {
             if (!this._hasMaximizePopup && options.maximize) {
                this._hasMaximizePopup = true;
@@ -377,6 +393,11 @@ define('Controls/Popup/Manager',
                if (element.controller._elementUpdated(element, _private.getItemContainer(id))) {
                   _private.updateOverlay.call(this);
                   _private.redrawItems(this._popupItems);
+
+                  // wait, until popup will be update options
+                  runDelayed(function() {
+                     ManagerController.getContainer().activatePopup(id);
+                  });
                } else {
                   element.popupOptions = oldOptions;
                }

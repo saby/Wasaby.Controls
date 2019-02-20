@@ -17,6 +17,7 @@
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
+      var COUNT_HISTORY_ITEMS = 12;
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -180,7 +181,8 @@
                self._historyServiceLoad = new Deferred();
                require(['Controls/History/Service'], function(HistoryService) {
                   self._historyService = new HistoryService({
-                     historyId: self._options.historyId
+                     historyId: self._options.historyId,
+                     recent: COUNT_HISTORY_ITEMS
                   });
                   self._historyServiceLoad.callback(self._historyService);
                });
@@ -274,17 +276,18 @@
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
+            var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
             
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
             }
       
-            if (needSearchOnValueChanged || !newOptions.value && typeof newOptions.value === 'string') {
+            if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
    
-            if (needSearchOnValueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+            if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
       

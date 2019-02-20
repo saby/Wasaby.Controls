@@ -135,6 +135,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          // Обсудили с Д.Зуевым, другого способа узнать что vdom компонент добавился в dom нет.
          _afterMountHandler: function() {
             var self = this;
+            this._options.onOpenHandlerEvent && this._options.onOpenHandlerEvent('onOpen');
             self._baseAfterMount = self._vDomTemplate._afterMount;
             self._vDomTemplate._afterMount = function() {
                self._baseAfterMount.apply(this, arguments);
@@ -194,7 +195,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._result = Array.prototype.slice.call(arguments, 1); // first arg - event;
 
             this._options.onResultHandler && this._options.onResultHandler.apply(this, this._result);
-            this._options.onResultHandlerEvent && this._options.onResultHandlerEvent('onResult', [this._result]);
+            this._options.onResultHandlerEvent && this._options.onResultHandlerEvent('onResult', this._result);
          },
          _onRegisterHandler: function(event, eventName, emitter, handler) {
             if (['mousemove', 'touchmove', 'mouseup', 'touchend'].indexOf(eventName) !== -1) {
@@ -215,7 +216,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._$onBringToFront = this.onBringToFront;
             this.onBringToFront = function() {
                if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
-                  opts._$to.activate();
+                  if (opts._$to.setActive) {
+                     opts._$to.setActive(true);
+                  } else {
+                     opts._$to.activate();
+                  }
                }
             };
          },

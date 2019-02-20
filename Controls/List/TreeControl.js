@@ -252,6 +252,7 @@ define('Controls/List/TreeControl', [
       _template: TreeControlTpl,
       _root: null,
       _updatedRoot: false,
+      _deepReload: false,
       _nodesSourceControllers: null,
       _beforeReloadCallback: null,
       _afterReloadCallback: null,
@@ -260,6 +261,9 @@ define('Controls/List/TreeControl', [
          this._onNodeRemovedFn = this._onNodeRemoved.bind(this);
          if (typeof cfg.root !== 'undefined') {
             this._root = cfg.root;
+         }
+         if (cfg.expandedItems && Object.keys(cfg.expandedItems).length > 0) {
+            this._deepReload = true;
          }
          this._beforeReloadCallback = _private.beforeReloadCallback.bind(null, this);
          this._afterReloadCallback = _private.afterReloadCallback.bind(null, this);
@@ -297,13 +301,13 @@ define('Controls/List/TreeControl', [
             this._children.baseControl.getViewModel().setExpanderVisibility(newOptions.expanderVisibility);
          }
       },
-      _afterUpdate: function(oldOptions) {
+      _afterUpdate: function() {
          TreeControl.superclass._afterUpdate.apply(this, arguments);
          if (this._updatedRoot) {
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
-            this.reload().addCallback(function() {
+            this._children.baseControl.reload().addCallback(function() {
                self._children.baseControl.getViewModel().setExpandedItems([]);
                self._children.baseControl.getViewModel().setRoot(self._root);
             });

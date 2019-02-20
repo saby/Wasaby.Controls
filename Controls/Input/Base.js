@@ -128,6 +128,16 @@ define('Controls/Input/Base',
             return self._getActiveElement() === self._getField();
          },
 
+         isReAutoCompleteInEdge: function(isEdge, model, valueField) {
+            /**
+             * If you re-auto-complete, the value in the field and in the model will be the same.
+             * But this is not enough, because it will be the case if you select the entire field and
+             * paste the value from the buffer equal to the current value of the field.
+             * Check that there was no selection.
+             */
+            return isEdge && model.displayValue === valueField && model.selection.start === model.selection.end;
+         },
+
          callChangeHandler: function(self) {
             if (self._viewModel.displayValue !== self._displayValueAfterFocusIn) {
                self._changeHandler();
@@ -335,6 +345,7 @@ define('Controls/Input/Base',
        * @mixes Controls/Input/interface/IInputBase
        * @mixes Controls/Input/interface/IInputPlaceholder
        *
+       * @mixes Controls/Input/Base/Styles
        * @mixes Controls/Input/Render/Styles
        *
        * @private
@@ -672,6 +683,20 @@ define('Controls/Input/Base',
             var newValue = field.value;
             var position = field.selectionEnd;
 
+            /**
+             * Auto-completion in the edge browser generates 2 input events in a focused field.
+             * The data during processing of the second event is incorrect from the point of view of user input.
+             * This means that you cannot retrieve such data after user input.
+             * We are able to process only correct data.
+             * Since auto-completion was processed at the first event, then it is possible not to process it again.
+             * Return the field state to the current options.
+             */
+            if (_private.isReAutoCompleteInEdge(this._isEdge, model, newValue)) {
+               _private.updateField(this, value, selection);
+
+               return;
+            }
+
             var inputType = _private.calculateInputType(
                this, value, newValue, position,
                selection, event.nativeEvent.inputType
@@ -707,7 +732,7 @@ define('Controls/Input/Base',
              * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
              * Fast input on Android is not carried out, so do not do these actions on it.
              */
-            if (!detection.isMobileAndroid) {
+            if (!this._isMobileAndroid) {
                _private.updateField(this, value, selection);
             }
          },
@@ -745,8 +770,6 @@ define('Controls/Input/Base',
          _focusInHandler: function() {
             if (this._focusByMouseDown) {
                this._firstClick = true;
-            } else {
-               this._viewModel.select();
             }
 
             this._focusByMouseDown = false;

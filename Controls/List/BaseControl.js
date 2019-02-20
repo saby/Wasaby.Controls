@@ -191,7 +191,7 @@ define('Controls/List/BaseControl', [
             self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
          }
       },
-      toggleSelection: function(self) {
+      toggleSelection: function(self, event) {
          var
             model, markedKey;
          if (self._children.selectionController) {
@@ -199,6 +199,7 @@ define('Controls/List/BaseControl', [
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
             _private.moveMarkerToNext(self);
+            event.preventDefault();
          }
       },
       prepareFooter: function(self, navigation, sourceController) {
@@ -237,15 +238,22 @@ define('Controls/List/BaseControl', [
 
                _private.hideIndicator(self);
 
+               //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
+               //до реализации функционала и проблемы из новости делаем решение по месту:
+               //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
+               //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
+               //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
+               var cnt1 = self._listViewModel.getCount();
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
                } else if (direction === 'up') {
                   self._listViewModel.prependItems(addedItems);
                }
+               var cnt2 = self._listViewModel.getCount();
 
                // If received list is empty, make another request.
                // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-               if (!addedItems.getCount()) {
+               if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
                   _private.checkLoadToDirectionCapability(self);
                }
 
@@ -990,12 +998,19 @@ define('Controls/List/BaseControl', [
                key: itemData.key,
                status: itemData.multiSelectStatus
             };
-            this.getViewModel().setRightSwipedItem(itemData);
+
+            //Animation should be played only if checkboxes are visible.
+            if (this._options.multiSelectVisibility !== 'hidden') {
+               this.getViewModel().setRightSwipedItem(itemData);
+            }
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
+         }
+         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
+            this._notify('itemSwipe', [itemData.item, childEvent]);
          }
       },
 

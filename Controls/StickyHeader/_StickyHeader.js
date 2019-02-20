@@ -165,6 +165,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
                if (offset) {
                   style += 'padding-' + this._model.fixedPosition + ': ' + offset + 'px;';
+                  style += 'margin-' + this._model.fixedPosition + ': -' + offset + 'px;';
                }
 
                style += 'z-index: ' + this._options.fixedZIndex + ';';

@@ -169,6 +169,10 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         popupResize: function(element, container) {
+            return this._elementUpdated(element, container);
+         },
+
          elementAnimated: function() {
 
          },
@@ -182,6 +186,10 @@ define('Controls/Popup/Opener/BaseController',
 
          needRecalcOnKeyboardShow: function() {
             return false;
+         },
+
+         getCustomZIndex: function() {
+            return null;
          },
 
          _getPopupSizes: function(config, container) {

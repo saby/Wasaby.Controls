@@ -61,7 +61,11 @@
                                                root="{{null}}"
                                                columns="{{_moveDialogColumns}}"
                                                filter="{{_moveDialogFilter}}"
+                                               multiSelectVisibility="visible"
                                                parentProperty="Раздел"
+                                               source="{{_moverSource}}"
+                                               searchParam="department"
+                                               displayProperty="department"
                                                hasChildrenProperty="Раздел$"
                                                nodeProperty="Раздел@"/>
                                         </ws:moveDialogTemplate>

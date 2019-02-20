@@ -61,6 +61,62 @@ define([
    }
 
    describe('Controls.List.TreeControl', function() {
+      it('TreeControl creating with expandedItems', function() {
+         return new Promise(function(resolve, reject) {
+            correctCreateTreeControl({
+               columns: [],
+               source: new sourceLib.Memory({
+                  data: [{
+                     id: 111,
+                     parent: null
+                  },
+                  {
+                     id: 111111,
+                     parent: 111
+                  },
+                  {
+                     id: 777,
+                     parent: null
+                  },
+                  {
+                     id: 777777,
+                     parent: 777
+                  }],
+                  idProperty: 'id',
+                  filter: function(item, filter) {
+                     for (var i = 0; i < filter.parent.length; i++) {
+                        if (item.get('parent') === filter.parent[i]) {
+                           return true;
+                        }
+                     }
+                     return false;
+                  }
+               }),
+               expandedItems: [777],
+               keyProperty: 'id',
+               parentProperty: 'parent',
+               dataLoadCallback: function(items) {
+                  try {
+                     assert.deepEqual(items.getRawData(), [{
+                        id: 111,
+                        parent: null
+                     },
+                     {
+                        id: 777,
+                        parent: null
+                     },
+                     {
+                        id: 777777,
+                        parent: 777
+                     }], 'Invalid items value after reload with expandedItems');
+                     resolve();
+                  } catch(e) {
+                     reject(e);
+                  }
+               }
+            });
+         });
+      });
       it('TreeControl.reload', function(done) {
          var treeControl = correctCreateTreeControl({
                columns: [],
@@ -114,22 +170,32 @@ define([
 
 
       it('TreeControl._afterUpdate', function() {
-         var
-            treeControl = correctCreateTreeControl({
-               columns: [],
-               root: 1,
-               source: new sourceLib.Memory({
-                  data: [],
-                  idProperty: 'id'
-               })
-            }),
-            treeViewModel = treeControl._children.baseControl.getViewModel(),
-            isNeedForceUpdate = false;
+         var treeControl = correctCreateTreeControl({
+            columns: [],
+            root: 1,
+            parentProperty: 'testParentProperty',
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         var treeViewModel = treeControl._children.baseControl.getViewModel();
+         var isNeedForceUpdate = false;
+         var sourceControllersCleared = false;
+         var clearSourceControllersOriginal = TreeControl._private.clearSourceControllers;
+         var beforeReloadCallbackOriginal = TreeControl._private.beforeReloadCallback;
+         var reloadFilter;
+         var beforeReloadCallback = function() {
+            var filter = arguments[0];
+            beforeReloadCallbackOriginal(treeControl, filter, null, null, treeControl._options);
+            reloadFilter = filter;
+         };
 
          // Mock TreeViewModel and TreeControl
          treeControl._updatedRoot = true;
-         treeControl._private = {
-            clearSourceControllers: () => {}
+         treeControl._children.baseControl._options.beforeReloadCallback = beforeReloadCallback;
+         TreeControl._private.clearSourceControllers = () => {
+            sourceControllersCleared = true;
          };
          treeViewModel._model._display = {
             setFilter: () => {},
@@ -144,7 +210,7 @@ define([
             if (e === 'onListChange') {
                isNeedForceUpdate = true;
             }
-         }
+         };
 
          // Chack that values before test are right
          treeViewModel.setExpandedItems([1, 3]);
@@ -164,7 +230,10 @@ define([
                   assert.equal(undefined, treeViewModel._model._root);
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
+                  assert.isTrue(sourceControllersCleared);
+                  assert.deepEqual(reloadFilter, {testParentProperty: 12});
                   treeControl._beforeUpdate({root: treeControl._root});
+                  TreeControl._private.clearSourceControllers = clearSourceControllersOriginal;
                   resolve();
                }, 20);
             }, 10);
@@ -248,7 +317,7 @@ define([
                parentProperty: 'parent'
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
-            reloadOriginal = treeControl.reload;
+            reloadOriginal = treeControl._children.baseControl.reload;
 
          treeControl._nodesSourceControllers = {
             1: {
@@ -261,7 +330,7 @@ define([
          treeGridViewModel.setRoot = function() {
             setRootCalled = true;
          };
-         treeControl.reload = function() {
+         treeControl._children.baseControl.reload = function() {
             reloadCalled = true;
             return reloadOriginal.apply(this, arguments);
          };
@@ -519,11 +588,11 @@ define([
             }),
             cfg = {
                source: source,
+               markerVisibility: 'visible',
                columns: [],
                keyProperty: 'id',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               markedKey: 11,
                markItemByExpanderClick: true
             },
             e = {
@@ -546,10 +615,13 @@ define([
          };
 
          TreeControl._private.toggleExpanded = function(){};
-         assert.deepEqual(11, treeGridViewModel._model._markedKey);
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
          assert.deepEqual(1, treeGridViewModel._model._markedKey);
+
+         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         assert.deepEqual(2, treeGridViewModel._model._markedKey);
+
       });
 
       it('markItemByExpanderClick false', function() {
@@ -567,10 +639,10 @@ define([
             cfg = {
                source: source,
                columns: [],
+               markerVisibility: 'visible',
                keyProperty: 'id',
                parentProperty: 'parent',
                nodeProperty: 'type',
-               markedKey: 11,
                markItemByExpanderClick: false
             },
             e = {
@@ -593,10 +665,12 @@ define([
          };
 
          TreeControl._private.toggleExpanded = function(){};
-         assert.deepEqual(11, treeGridViewModel._model._markedKey);
 
          treeControl._onExpanderClick(e, treeGridViewModel.at(0));
-         assert.deepEqual(11, treeGridViewModel._model._markedKey);
+         assert.deepEqual(1, treeGridViewModel._model._markedKey);
+
+         treeControl._onExpanderClick(e, treeGridViewModel.at(1));
+         assert.deepEqual(1, treeGridViewModel._model._markedKey);
       });
 
       it('reloadItem', function(done) {

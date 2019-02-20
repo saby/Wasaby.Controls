@@ -2,7 +2,10 @@
    <div class="controls-Area__fakeField"
         style="{{'min-height: ' + calculateHeightContainer(options.minLines, false) + 'px;'}}">
       <ws:if data="{{value}}">{{value}}{{emptySymbol}}</ws:if>
-      <ws:else><ws:partial template="{{placeholderTemplate}}"/></ws:else>
+      <ws:else data="{{options.placeholder}}">
+         <ws:partial template="{{placeholderTemplate}}"/>
+      </ws:else>
+      <ws:else>{{emptySymbol}}</ws:else>
    </div>
    <textarea
       wrap="hard"

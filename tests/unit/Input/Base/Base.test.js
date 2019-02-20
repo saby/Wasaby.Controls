@@ -433,6 +433,18 @@ define(
 
                assert.deepEqual(calls.length, 0);
             });
+            it('Focus the field by tab.', function() {
+               ctrl._beforeUpdate({
+                  value: 'test'
+               });
+
+               ctrl._focusInHandler();
+
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
          });
          describe('Focus out event', function() {
             var savedNotify = EventBus.globalChannel().notify;
@@ -594,7 +606,7 @@ define(
          });
          describe('Calling the inputCompleted event.', function() {
             var block = function() {
-               return false
+               return false;
             };
 
             it('Pressing the key enter.', function() {
@@ -687,6 +699,21 @@ define(
                ctrl._getField().selectionStart = 24;
                ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
+               }]);
+            });
+            it('In an browser "Edge".', function() {
+               ctrl._isEdge = true;
+               InputUtility.init(ctrl);
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test auto-complete value');
+               InputUtility.triggerInput(ctrl);
+               InputUtility.insert(ctrl, 'test auto-complete value');
+               InputUtility.triggerInput(ctrl);
 
                assert.deepEqual(calls, [{
                   name: 'notify',

@@ -48,8 +48,8 @@ define('Controls-demo/List/List/BasePG',
                   value: {
                      left: 'l',
                      right: 'xl',
-                     top: 'l',
-                     bottom: 'l'
+                     top: 's',
+                     bottom: 's'
                   }
                },
                source: {

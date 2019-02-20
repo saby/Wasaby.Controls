@@ -123,8 +123,14 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
       it('_private.searchStartCallback', function() {
          var self = {};
+         var forceUpdateCalled = false;
+         
+         self._forceUpdate = function() {
+            forceUpdateCalled = true;
+         }
          Search._private.searchStartCallback(self);
          assert.isTrue(self._loading);
+         assert.isTrue(forceUpdateCalled);
       });
 
       it('_private.needUpdateSearchController', function() {

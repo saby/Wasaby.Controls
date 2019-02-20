@@ -6,12 +6,14 @@ define([
    'Controls/Decorator/Markup/resources/template',
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Controls/Decorator/Markup/resolvers/noOuterTag',
    'Controls/Decorator/Markup/resolvers/innerText',
    'Core/constants'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
+   noOuterTagResolver,
    innerTextResolver,
    cConstants) {
    'use strict';
@@ -131,6 +133,13 @@ define([
             var html = '<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
+         });
+
+         it('trim', function() {
+            var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
+            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            assert.deepEqual(Converter.htmlToJson(html), json);
+            assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
          });
 
          it('Wrapping url', function() {
@@ -377,6 +386,11 @@ define([
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
+         });
+         it('with noOuterTag resolver', function() {
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
          });
       });
    });

@@ -16,7 +16,7 @@ define('Controls/Controllers/PrimaryAction',
       return Control.extend({
          _template: template,
 
-         keyPressHandler: function(e) {
+         keyDownHandler: function(e) {
             if (!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.keyCode === cConstants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
                this._notify('triggered');
             }

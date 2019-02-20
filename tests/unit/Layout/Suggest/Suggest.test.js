@@ -46,6 +46,8 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          return Deferred.success(IDENTIFICATORS);
       };
 
+      var getHistorySource = Suggest._private.getHistoryService;
+
       Suggest._private.getHistoryService = function() {
          return {
             addCallback: function(func) {
@@ -58,6 +60,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          }
       };
 
+      it('Suggest::getHistoryService', function(done) {
+         getHistorySource({_options: {historyId: 'TEST_HISTORY_ID_GET_SOURCE'}}).addCallback(function(historyService) {
+            assert.equal(12, historyService._recent);
+            assert.equal('TEST_HISTORY_ID_GET_SOURCE', historyService._historyId);
+            done();
+         });
+      });
 
       
       it('Suggest::_private.hasMore', function() {
@@ -484,6 +493,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');
+   
+         suggestComponent._options.value = 'test';
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: ''});
+         assert.deepEqual(suggestComponent._filter, {testSearchParam: ''});
+         assert.equal(suggestComponent._searchValue, '');
       });
    
       it('Suggest::_updateSuggestState', function() {

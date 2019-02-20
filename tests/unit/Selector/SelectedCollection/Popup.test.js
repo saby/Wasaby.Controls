@@ -1,0 +1,32 @@
+define(['Controls/Selector/SelectedCollection/Popup',
+   'Types/entity',
+   'Types/collection'
+], function(SelectedCollectionPopup, entity, collection) {
+
+   describe('Controls/Selector/SelectedCollection/Popup', function() {
+      it('_crossClick', function() {
+         var
+            item = new entity.Model({
+               rawData: {id: 1},
+               idProperty: 'id'
+            }),
+            item2 = new entity.Model({
+               rawData: {id: 2},
+               idProperty: 'id'
+            }),
+            scPopup = new SelectedCollectionPopup();
+
+         scPopup._options.clickCallback = function(){};
+         scPopup._items = new collection.List({
+            items: [item, item2]
+         });
+
+         scPopup._crossClick(null, item);
+         assert.equal(scPopup._items.at(0), item2);
+         assert.equal(scPopup._items.getCount(), 1);
+
+         scPopup._crossClick(null, item2);
+         assert.equal(scPopup._items.getCount(), 0);
+      });
+   });
+});

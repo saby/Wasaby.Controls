@@ -67,8 +67,8 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          getItemColumnCellClasses: function(current) {
-            var
-               cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
+            var cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
+            var currentStyle = current.style || 'default';
 
             cellClasses += _private.prepareRowSeparatorClasses(current.rowSeparatorVisibility, current.index, current.dispItem.getOwner().getCount());
 
@@ -86,7 +86,7 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             if (current.isSelected) {
-               cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
+               cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + currentStyle;
 
                if (current.columnIndex === 0) {
 
@@ -96,11 +96,13 @@ define('Controls/List/Grid/GridViewModel', [
                   if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
                      cellClasses += ' controls-Grid__row-cell_selected__first';
                   }
-                  cellClasses += ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
+                  cellClasses += ' controls-Grid__row-cell_selected__first-' + currentStyle;
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
-                  cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
+                  cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + currentStyle;
                }
+            } else if (current.columnIndex === current.getLastColumnIndex()) {
+               cellClasses += ' controls-Grid__row-cell__last' + ' controls-Grid__row-cell__last-' + currentStyle;
             }
 
             return cellClasses;
@@ -762,6 +764,7 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemActions: function(item, actions) {
             this._model.setItemActions(item, actions);
+            this._nextVersion();
          },
 
          _setEditingItemData: function(itemData) {
