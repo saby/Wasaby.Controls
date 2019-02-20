@@ -46,6 +46,8 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          return Deferred.success(IDENTIFICATORS);
       };
 
+      var getHistorySource = Suggest._private.getHistoryService;
+
       Suggest._private.getHistoryService = function() {
          return {
             addCallback: function(func) {
@@ -58,6 +60,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          }
       };
 
+      it('Suggest::getHistoryService', function(done) {
+         getHistorySource({_options: {historyId: 'TEST_HISTORY_ID_GET_SOURCE'}}).addCallback(function(historyService) {
+            assert.equal(12, historyService._recent);
+            assert.equal('TEST_HISTORY_ID_GET_SOURCE', historyService._historyId);
+            done();
+         });
+      });
 
       
       it('Suggest::_private.hasMore', function() {
