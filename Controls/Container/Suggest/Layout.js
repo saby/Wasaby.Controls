@@ -17,6 +17,7 @@
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
+      var COUNT_HISTORY_ITEMS = 12;
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -180,7 +181,8 @@
                self._historyServiceLoad = new Deferred();
                require(['Controls/History/Service'], function(HistoryService) {
                   self._historyService = new HistoryService({
-                     historyId: self._options.historyId
+                     historyId: self._options.historyId,
+                     recent: COUNT_HISTORY_ITEMS
                   });
                   self._historyServiceLoad.callback(self._historyService);
                });
