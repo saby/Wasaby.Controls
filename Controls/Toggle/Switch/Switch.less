@@ -28,7 +28,16 @@
 .controls-Switch__line {
    display: inline-block;
    height: @thickness_Switch-track;
-   width: @length_Switch-track - @size_Switch__ToggleCircle;
+   width: @length_Switch-track - @size_Switch__ToggleCircle + @spacing-between-track-and-toggleCircle;
+   position: relative;
+}
+
+.controls-Switch__line_right_toggle {
+   left: @spacing-between-track-and-toggleCircle;
+}
+
+.controls-Switch__line_left_toggle {
+   right: @spacing-between-track-and-toggleCircle;
 }
 
 .controls-Switch__line_enabled {
