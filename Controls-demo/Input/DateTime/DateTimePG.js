@@ -27,7 +27,8 @@ define('Controls-demo/Input/DateTime/DateTimePG',
                name: 'DateTime',
                readOnly: false,
                tooltip: 'myTooltip',
-               validationErrors: ''
+               validationErrors: '',
+               tagStyle: null
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }
