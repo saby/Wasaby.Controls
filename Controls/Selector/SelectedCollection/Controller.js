@@ -188,7 +188,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
          var
             selectedKeys = [],
             keyProperty = this._options.keyProperty,
-            selectedItems = _private.getItems(self).clone(true);
+            selectedItems = _private.getItems(this).clone(true);
 
          if (items && items.each) {
             items.each(function(item) {
