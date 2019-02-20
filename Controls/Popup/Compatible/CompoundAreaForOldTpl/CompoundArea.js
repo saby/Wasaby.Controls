@@ -535,15 +535,25 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
-         _setCompoundAreaOptions: function(newOptions) {
+         _setCompoundAreaOptions: function(newOptions, popupOptions) {
             if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
+            this._popupOptions = popupOptions;
             this._childControlName = newOptions.template;
             this._childConfig = newOptions.templateOptions || {};
          },
 
          reload: function() {
+            if (this._popupOptions) {
+               // set new sizes for popup
+               var popupCfg = this._getManagerConfig();
+               if (popupCfg && this._popupOptions.minWidth && this._popupOptions.maxWidth) {
+                  popupCfg.popupOptions.minWidth = this._popupOptions.minWidth;
+                  popupCfg.popupOptions.maxWidth = this._popupOptions.maxWidth;
+                  ManagerController.update(popupCfg.id, popupCfg.popupOptions);
+               }
+            }
             this.rebuildChildControl();
          },
          setTemplate: function(template, templateOptions) {
