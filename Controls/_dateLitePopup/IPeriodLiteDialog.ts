@@ -154,12 +154,12 @@ import dateControlsUtils = require('Controls/Calendar/Utils');
 
       getOptionTypes: function() {
          return {
-            chooseMonths: entity.descriptor(Boolean),
-            chooseQuarters: entity.descriptor(Boolean),
-            chooseHalfyears: entity.descriptor(Boolean),
-            chooseYears: entity.descriptor(Boolean),
-            emptyCaption: entity.descriptor(String),
-            captionFormatter: entity.descriptor(Function)
+            chooseMonths: descriptor(Boolean),
+            chooseQuarters: descriptor(Boolean),
+            chooseHalfyears: descriptor(Boolean),
+            chooseYears: descriptor(Boolean),
+            emptyCaption: descriptor(String),
+            captionFormatter: descriptor(Function)
          };
       }
    };
