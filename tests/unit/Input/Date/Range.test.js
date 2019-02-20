@@ -1,10 +1,10 @@
 define([
    'Core/core-merge',
-   'Controls/Input/Date/Picker',
+   'Controls/Input/Date/Range',
    'tests/Calendar/Utils'
 ], function(
    cMerge,
-   DatePicker,
+   DateRange,
    calendarTestUtils
 ) {
    'use strict';
@@ -15,11 +15,11 @@ define([
       replacer: ' ',
    };
 
-   describe('Controls/Input/Date/Picker', function() {
+   describe('Controls/Input/Date/Range', function() {
 
       describe('_openDialog', function() {
          it('should open opener', function() {
-            const component = calendarTestUtils.createComponent(DatePicker, options);
+            const component = calendarTestUtils.createComponent(DateRange, options);
             component._children.opener = {
                open: sinon.fake()
             };
@@ -32,24 +32,26 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DatePicker, options),
-               value = new Date(2017, 11, 1);
+               component = calendarTestUtils.createComponent(DateRange, options),
+               startValue = new Date(2017, 11, 1),
+               endValue = new Date(2017, 11, 2);
 
             component._children = {}
             component._children.opener = {
                close: sinon.fake()
             };
-            component._children.input = {
+            component._children.startValueField = {
                activate: sinon.fake()
             };
             sandbox.stub(component, '_notify');
 
-            component._onResult(value);
+            component._onResultWS3(startValue, endValue);
 
-            sinon.assert.calledWith(component._notify, 'valueChanged');
+            sinon.assert.calledWith(component._notify, 'startValueChanged');
+            sinon.assert.calledWith(component._notify, 'endValueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
             sinon.assert.called(component._children.opener.close);
-            sinon.assert.called(component._children.input.activate);
+            sinon.assert.called(component._children.startValueField.activate);
             sandbox.restore();
          });
       });
@@ -58,24 +60,26 @@ define([
          it('should generate events and close opener', function() {
             const
                sandbox = sinon.sandbox.create(),
-               component = calendarTestUtils.createComponent(DatePicker, options),
-               value = new Date(2017, 11, 1);
+               component = calendarTestUtils.createComponent(DateRange, options),
+               startValue = new Date(2017, 11, 1),
+               endValue = new Date(2017, 11, 2);
 
             component._children = {}
             component._children.opener = {
                close: sinon.fake()
             };
-            component._children.input = {
+            component._children.startValueField = {
                activate: sinon.fake()
             };
             sandbox.stub(component, '_notify');
 
-            component._onResultWS3(null, value);
+            component._onResultWS3(null, startValue, endValue);
 
-            sinon.assert.calledWith(component._notify, 'valueChanged');
+            sinon.assert.calledWith(component._notify, 'startValueChanged');
+            sinon.assert.calledWith(component._notify, 'endValueChanged');
             sinon.assert.calledWith(component._notify, 'inputCompleted');
             sinon.assert.called(component._children.opener.close);
-            sinon.assert.called(component._children.input.activate);
+            sinon.assert.called(component._children.startValueField.activate);
             sandbox.restore();
          });
       });

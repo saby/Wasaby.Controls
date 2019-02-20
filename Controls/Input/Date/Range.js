@@ -3,6 +3,7 @@ define('Controls/Input/Date/Range', [
    'Core/core-merge',
    'Controls/Calendar/Utils',
    'Controls/Date/model/DateRange',
+   'Controls/Input/DateTime/StringValueConverter',
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Range/Range',
@@ -12,6 +13,7 @@ define('Controls/Input/Date/Range', [
    coreMerge,
    CalendarControlsUtils,
    DateRangeModel,
+   StringValueConverter,
    IDateTimeMask,
    tmplNotify,
    template
@@ -92,10 +94,22 @@ define('Controls/Input/Date/Range', [
       },
 
       _onResult: function(startValue, endValue) {
+         var
+            stringValueConverter = new StringValueConverter({
+               mask: this._options.mask,
+               replacer: this._options.replacer
+            });
          this._rangeModel.startValue = startValue;
          this._rangeModel.endValue = endValue;
          this._children.opener.close();
          this._forceUpdate();
+         this._children.startValueField.activate();
+         this._notify('inputCompleted', [
+            startValue,
+            endValue,
+            stringValueConverter.getStringByValue(startValue),
+            stringValueConverter.getStringByValue(endValue)
+         ]);
       },
 
       // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60

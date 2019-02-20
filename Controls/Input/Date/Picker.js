@@ -1,6 +1,7 @@
 define('Controls/Input/Date/Picker', [
    'Core/Control',
    'Core/core-merge',
+   'Controls/Input/DateTime/StringValueConverter',
    'Controls/Input/interface/IDateTimeMask',
    'Controls/Utils/tmplNotify',
    'wml!Controls/Input/Date/Picker/Picker',
@@ -8,6 +9,7 @@ define('Controls/Input/Date/Picker', [
 ], function(
    Control,
    coreMerge,
+   StringValueConverter,
    IDateTimeMask,
    tmplNotify,
    template
@@ -78,9 +80,17 @@ define('Controls/Input/Date/Picker', [
       },
 
       _onResult: function(startValue) {
-         this._notify('valueChanged', [startValue]);
+         var
+            stringValueConverter = new StringValueConverter({
+               mask: this._options.mask,
+               replacer: this._options.replacer
+            }),
+            textValue = stringValueConverter.getStringByValue(startValue);
+         this._notify('valueChanged', [startValue, textValue]);
          this._children.opener.close();
          this._forceUpdate();
+         this._children.input.activate();
+         this._notify('inputCompleted', [startValue, textValue]);
       },
    });
 
