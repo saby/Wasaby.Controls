@@ -37,6 +37,8 @@
          suggestStateNotify: function(self, state) {
             if (self._options.suggestState !== state) {
                self._notify('suggestStateChanged', [state]);
+            } else {
+               self._forceUpdate();
             }
          },
          setCloseState: function(self) {
@@ -288,7 +290,11 @@
             if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-      
+
+            if (this._options.suggestState !== newOptions.suggestState) {
+               _private.open(this);
+            }
+
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
                this._dependenciesDeferred = null;

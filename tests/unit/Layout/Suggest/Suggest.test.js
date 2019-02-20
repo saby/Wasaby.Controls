@@ -127,6 +127,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             state = args[0];
          };
+         self._forceUpdate = function () {};
          Suggest._private.open(self);
          self._dependenciesDeferred.addCallback(function() {
             assert.isTrue(state);
@@ -479,6 +480,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             searchParam: 'testSearchParam',
             minSearchLength: 3
          };
+         Suggest._private.loadDependencies = function() {return Deferred.success(true)};
          var suggestComponent = new Suggest(options);
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
