@@ -79,7 +79,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             stateNotifyed = true;
          };
-   
+         self._forceUpdate = function () {};
          Suggest._private.suggestStateNotify(self, true);
          assert.isFalse(stateNotifyed);
    
