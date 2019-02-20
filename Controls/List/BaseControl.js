@@ -1009,6 +1009,9 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
          }
+         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
+            this._notify('itemSwipe', [itemData.item, childEvent]);
+         }
       },
 
       _onAnimationEnd: function(e) {

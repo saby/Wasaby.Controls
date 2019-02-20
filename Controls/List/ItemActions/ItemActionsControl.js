@@ -88,7 +88,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       updateModel: function(self, newOptions, isTouch) {
          _private.updateActions(self, newOptions, isTouch);
-         newOptions.listModel.subscribe('onListChange', function() {
+         newOptions.listModel.subscribe('onCollectionChange', function() {
             /**
              * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
              * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577

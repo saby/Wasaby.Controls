@@ -242,7 +242,10 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                   ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' +
                   ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
-                  ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default' ];
+                  ' controls-Grid__row-cell_selected__last controls-Grid__row-cell_selected__last-default',
+                  'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
+                  ' controls-Grid__cell_spacingLeft controls-Grid__cell_default controls-Grid__cell_spacingLastCol_l controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' +
+                  ' controls-Grid__row-cell__last controls-Grid__row-cell__last-default'];
             assert.equal(expectedResult[0],
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
@@ -256,6 +259,11 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
             current.goToNextColumn();
             assert.equal(expectedResult[3],
+               GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
+               'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
+   
+            current.isSelected = false;
+            assert.equal(expectedResult[4],
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
          });
@@ -427,6 +435,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   callStackMethods.push(item);
                };
             });
+            gridViewModel._model.subscribe = gridViewModel._model.unsubscribe = function() {};
             callMethods.forEach(function(item) {
                gridViewModel[item]();
             });
