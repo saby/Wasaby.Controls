@@ -40,6 +40,21 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
 
          current = cMerge(current, this.getTileItemData());
 
+         var
+            originalGetVersion = current.getVersion;
+
+         current.getVersion = function() {
+            var
+               version = originalGetVersion();
+            if (current.isHovered) {
+               version = 'HOVERED_' + version;
+            }
+            if (current.isAnimated) {
+               version = 'ANIMATED_' + version;
+            }
+            return version;
+         };
+
          return current;
       },
 
