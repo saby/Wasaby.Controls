@@ -16,7 +16,8 @@ define('Controls/Explorer', [
    'Controls/List/TreeControl',
    'Types/entity',
    'Controls/TreeGrid',
-   'Controls/BreadCrumbs/Path'
+   'Controls/BreadCrumbs/Path',
+   'css!Controls/Explorer/Explorer'
 ], function(
    Control,
    template,
@@ -99,7 +100,7 @@ define('Controls/Explorer', [
                } else {
                   _private.setRoot(self, self._options.root);
                }
-               self._notify('rootChanged', self._root);
+               self._notify('rootChanged', [self._root]);
             }
          },
          dragItemsFromRoot: function(self, dragItems) {
@@ -198,12 +199,12 @@ define('Controls/Explorer', [
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
-            this._notify('rootChanged', this._root);
+            this._notify('rootChanged', [this._root]);
          }
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
-         this._notify('rootChanged', this._root);
+         this._notify('rootChanged', [this._root]);
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

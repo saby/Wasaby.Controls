@@ -9,6 +9,8 @@ define('Controls/Input/Area',
       'wml!Controls/Input/Area/ReadOnly',
       'Core/helpers/Function/runDelayed',
 
+      'Controls/Decorator/WrapURLs',
+
       'css!theme?Controls/Input/Area/Area'
    ],
    function(Env, Text, entity, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {

@@ -20,7 +20,7 @@ define('Controls/Heading/Counter', [
     *
     * @demo Controls-demo/Headers/Counter/counterDemo
     *
-    * @mixes Controls/Heading/Counter/CounterStyles
+    * @mixes Controls/Heading/Counter/HeadingCounterStyles
     */
 
    /**
