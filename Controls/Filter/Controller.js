@@ -69,7 +69,7 @@ define('Controls/Filter/Controller',
                minItems.push({
                   id: getPropValue(item, 'id'),
                   value: getPropValue(item, 'value'),
-                  textValue: getPropValue(item, 'textValue'),
+                  textValue: getPropValue(item, 'visibility') !== false ? getPropValue(item, 'textValue') : undefined,
                   visibility: getPropValue(item, 'visibility')
                });
             });
@@ -77,25 +77,41 @@ define('Controls/Filter/Controller',
          },
 
          getHistoryItems: function(self, id) {
+            var source = historyUtils.getHistorySource(id),
+               result, recent, lastFilter;
+   
             if (!id) {
-               return Deferred.success([]);
+               result =  Deferred.success([]);
             }
-            var recent, lastFilter,
-               source = historyUtils.getHistorySource(id);
 
             if (!self._sourceController) {
                self._sourceController = new SourceController({
                   source: source
                });
             }
-
-            return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = source.getRecent();
-               if (recent.getCount()) {
-                  lastFilter = recent.at(0);
-                  return source.getDataObject(lastFilter.get('ObjectData'));
-               }
-            });
+            
+            if (id) {
+               result = new Deferred();
+   
+               self._sourceController.load({ $_history: true })
+                  .addCallback(function(res) {
+                     recent = source.getRecent();
+                     if (recent.getCount()) {
+                        lastFilter = recent.at(0);
+                        result.callback(source.getDataObject(lastFilter.get('ObjectData')));
+                     } else {
+                        result.callback([]);
+                     }
+                     return res;
+                  })
+                  .addErrback(function(error) {
+                     error.processed = true;
+                     result.callback([]);
+                     return error;
+                  });
+            }
+   
+            return result;
          },
 
          updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
@@ -158,7 +174,8 @@ define('Controls/Filter/Controller',
             var filter = {};
 
             function processItems(elem) {
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue'))) {
+               // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
                   filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
                }
             }
@@ -252,7 +269,9 @@ define('Controls/Filter/Controller',
                delete filterClone[key];
             });
 
-            merge(filterClone, itemsFilter);
+            // FIXME when using merge witout {rec: false} we will get wrong data:
+            // {arr: [123]} <-- {arr: []} results {arr: [123]} instead {arr: []}
+            merge(filterClone, itemsFilter, {rec: false});
 
             return filterClone;
          },

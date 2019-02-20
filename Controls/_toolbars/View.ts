@@ -68,6 +68,21 @@ import 'css!theme?Controls/_toolbars/View';
  */
 
 /**
+ * @name Controls/Toolbar#itemsSpacing
+ * @cfg {Types/source:Base} Type of spacing between items
+ * @default medium
+ * @example
+ * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
+ * <pre>
+ *    <Controls.Toolbar
+ *              keyProperty="key"
+ *              source="{{_source}}"
+ *              itemsSpacing="big"
+ *    />
+ * </pre>
+ */
+
+/**
  * @event Controls/Toolbar#itemClick Occurs when item was clicked.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Clicked item.
@@ -174,10 +189,17 @@ var _private = {
     },
 
     generateItemPopupConfig: function (item, event, self) {
+        var itemConfig = '';
+        if (item.get('icon') !== undefined && item.get('tittle') === undefined) {
+            itemConfig += 'icon';
+        }
+        if (item.get('buttonViewMode') === 'toolButton') {
+            itemConfig += 'toolButton';
+        }
         return {
             corner: {vertical: 'top', horizontal: 'left'},
             horizontalAlign: {side: 'right'},
-            className: 'controls-Toolbar__popup ' + (item.get('popupClassName') || ''),
+            className: 'controls-Toolbar__popup__' + (itemConfig || 'link') + ' ' + (item.get('popupClassName') || ''),
             templateOptions: {
                 items: self._items,
                 rootKey: item.get(self._options.keyProperty),
@@ -188,15 +210,16 @@ var _private = {
                     iconStyle: item.get('iconStyle')
                 }
             },
-            target: event.target
+            target: event.currentTarget
         };
     },
 
     generateMenuConfig: function (self) {
         return {
-            className: 'controls-Toolbar__popup_list ' + (self._options.popupClassName || ''),
+            className: 'controls-Toolbar__popup__list ' + (self._options.popupClassName || ''),
             templateOptions: {
-                items: self._menuItems
+                items: self._menuItems,
+                itemTemplateProperty: self._options.itemTemplateProperty
             },
             target: self._children.popupTarget
         };
@@ -293,6 +316,12 @@ var Toolbar = Control.extend({
         this._notify('menuClosed', [], {bubbling: true});
     }
 });
+
+Toolbar.getDefaultOptions = function() {
+    return {
+        itemsSpacing: 'medium'
+    };
+};
 
 Toolbar._private = _private;
 

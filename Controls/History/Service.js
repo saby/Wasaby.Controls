@@ -126,7 +126,7 @@ define('Controls/History/Service', [
       }
    };
 
-   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin], {
+   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
       _historyDataSource: null,
       _historyId: null,
       _historyIds: null,
@@ -142,6 +142,7 @@ define('Controls/History/Service', [
          this._historyIds = cfg.historyIds;
          this._pinned = cfg.pinned;
          this._frequent = cfg.frequent;
+         this._recent = cfg.recent;
          this._dataLoaded = cfg.dataLoaded;
       },
 
@@ -174,7 +175,7 @@ define('Controls/History/Service', [
                      count: this._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0
                   },
                   recent: {
-                     count: Constants.MAX_HISTORY
+                     count: this._recent || Constants.MAX_HISTORY
                   },
                   getObjectData: this._dataLoaded
                }

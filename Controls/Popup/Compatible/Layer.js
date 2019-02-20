@@ -77,11 +77,11 @@ define('Controls/Popup/Compatible/Layer', [
          window && (window.userInfo = userInfo);
       }));
 
-      parallelDef.push(getUserLicense().addCallbacks(function(userLicense) {
-         window.userLicense = userLicense || defaultLicense;
-      }, function(err) {
-         IoC.resolve('ILogger').error('Layer', 'Can\'t load user license', err);
-      }));
+      // parallelDef.push(getUserLicense().addCallbacks(function(userLicense) {
+      //    window.userLicense = userLicense || defaultLicense;
+      // }, function(err) {
+      //    IoC.resolve('ILogger').error('Layer', 'Can\'t load user license', err);
+      // }));
 
       // globalClientConfig
       // параметры пользователськие, клиенстские, глобальные. причем они в session или localStorage могут быть
@@ -161,22 +161,22 @@ define('Controls/Popup/Compatible/Layer', [
       }
    }
 
-   function getUserLicense() {
-      var def = new Deferred();
-
-      new source.SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
-         if (record && record.getRow().get('ПараметрыЛицензии')) {
-            var data = chain.factory(record.getRow().get('ПараметрыЛицензии')).toObject();
-            def.callback(data);
-         } else {
-            def.callback(defaultLicense);
-         }
-      }, function(err) {
-         def.errback(err);
-      });
-
-      return def;
-   }
+   // function getUserLicense() {
+   //    var def = new Deferred();
+   //
+   //    new source.SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
+   //       if (record && record.getRow().get('ПараметрыЛицензии')) {
+   //          var data = chain.factory(record.getRow().get('ПараметрыЛицензии')).toObject();
+   //          def.callback(data);
+   //       } else {
+   //          def.callback(defaultLicense);
+   //       }
+   //    }, function(err) {
+   //       def.errback(err);
+   //    });
+   //
+   //    return def;
+   // }
 
    // function readGlobalClientConfig() {
    //    var def = new Deferred();

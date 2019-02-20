@@ -9,7 +9,7 @@
                     searchParam="title"
                     source="{{_suggestSource}}">
                 <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
                 <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
                     <ws:templateOptions demoClass="demo-SuggestInputList"/>
@@ -29,7 +29,7 @@
                     searchParam="title"
                     source="{{_suggestSource}}">
                 <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
                 <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
                     <ws:templateOptions demoClass="demo-SuggestSearchList"/>
@@ -49,7 +49,7 @@
                     source="{{_suggestSource}}"
                     footerTemplate="{{null}}">
                 <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
                 <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
                     <ws:templateOptions demoClass="demo-SuggestInputList"/>
@@ -70,7 +70,7 @@
                     searchParam="title"
                     source="{{_suggestTabSource}}">
                 <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
                 <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate">
                     <ws:templateOptions demoClass="demo-SuggestInputList"/>
@@ -91,7 +91,7 @@
                     source="{{_suggestTabSource}}"
                     placeholder="Найти человека...">
                 <ws:navigation source="page" view="page">
-                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                    <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                 </ws:navigation>
                 <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTabTemplate">
                     <ws:templateOptions demoClass="demo-SuggestSearchList"/>

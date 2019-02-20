@@ -41,15 +41,19 @@ define(
          });
 
          it('clear click', function() {
-            var items = [];
+            var items = [],
+               filter;
             button._notify = (e, args) => {
                if (e == 'itemsChanged') {
                   items = args[0];
+               } else if (e == 'filterChanged') {
+                  filter = args[0];
                }
             };
             button._beforeMount(filterItems);
             button._clearClick();
             assert.deepEqual(items, filterItemsReseted);
+            assert.deepEqual(filter, {});
             assert.equal(button._text, '');
          });
       });

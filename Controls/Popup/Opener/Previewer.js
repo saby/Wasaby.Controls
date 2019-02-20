@@ -72,8 +72,8 @@ define('Controls/Popup/Opener/Previewer',
                   Previewer.superclass.close.call(self);
                }, _private.displayDuration);
             } else {
-               this._popupIds = [];
                Previewer.superclass.close.call(this);
+               this._popupIds = [];
             }
          },
 
@@ -94,6 +94,12 @@ define('Controls/Popup/Opener/Previewer',
             }
          }
       });
+
+      Previewer.getDefaultOptions = function() {
+         var baseOptions = Base.getDefaultOptions();
+         baseOptions._vdomOnOldPage = true;
+         return baseOptions;
+      };
 
       return Previewer;
    });

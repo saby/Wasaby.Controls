@@ -6,12 +6,14 @@ define([
    'Controls/Decorator/Markup/resources/template',
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Controls/Decorator/Markup/resolvers/noOuterTag',
    'Controls/Decorator/Markup/resolvers/innerText',
    'Core/constants'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
+   noOuterTagResolver,
    innerTextResolver,
    cConstants) {
    'use strict';
@@ -133,6 +135,13 @@ define([
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
+         it('trim', function() {
+            var html = '\n  \n<p>text&amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>  \n\n\n';
+            var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            assert.deepEqual(Converter.htmlToJson(html), json);
+            assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
+         });
+
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
@@ -201,7 +210,9 @@ define([
          });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
-            assert.equal(Converter.jsonToHtml(['some text']), '<div style="white-space: pre-line;">some text</div>');
+            assert.equal(Converter.jsonToHtml(['']), '<div><p></p></div>');
+            assert.equal(Converter.jsonToHtml(['some text']), '<div><p>some text</p></div>');
+            assert.equal(Converter.jsonToHtml(['some\ntext']), '<div><p>some</p><p>\ntext</p></div>');
             assert.equal(Converter.jsonToHtml(['p', 'some text']), '<div><p>some text</p></div>');
          });
          it('escape', function() {
@@ -375,6 +386,11 @@ define([
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
+         });
+         it('with noOuterTag resolver', function() {
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
          });
       });
    });

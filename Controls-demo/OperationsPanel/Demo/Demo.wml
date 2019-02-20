@@ -16,7 +16,7 @@
                         </ws:if>
                         <ws:else>
                             <Layout.Browser source="{{_viewSource}}"
-                                            keyProperty="id"
+                                            keyProperty="{{_keyProperty}}"
                                             nodeProperty="{{_nodeProperty}}"
                                             parentProperty="{{_parentProperty}}"
                                             filterButtonSource="{{_filterButtonSource}}"
@@ -53,14 +53,19 @@
                                     <Controls.List.Remover name="remover"
                                                            nodeProperty="Раздел@"
                                                            parentProperty="Раздел"
-                                                           on:beforeItemsRemove="_beforeItemsRemove()"/>
+                                                           on:beforeItemsRemove="_beforeItemsRemove()"
+                                                           on:afterItemsRemove="_afterItemsRemove()"/>
                                     <Controls.List.Mover name="dialogMover" on:afterItemsMove="_afterItemsMove()">
                                         <ws:moveDialogTemplate>
                                             <Controls.List.Mover.MoveDialog
                                                root="{{null}}"
                                                columns="{{_moveDialogColumns}}"
                                                filter="{{_moveDialogFilter}}"
+                                               multiSelectVisibility="visible"
                                                parentProperty="Раздел"
+                                               source="{{_moverSource}}"
+                                               searchParam="department"
+                                               displayProperty="department"
                                                hasChildrenProperty="Раздел$"
                                                nodeProperty="Раздел@"/>
                                         </ws:moveDialogTemplate>
@@ -85,4 +90,7 @@
         </ws:items>
     </Layout.Browser.Tabs>
     <Controls.Popup.Opener.Confirmation name="popupOpener"/>
+    <Controls.Popup.Opener.Dialog name="operationsResultOpener">
+        <ws:popupOptions isModal="{{true}}" template="Controls/Operations/ReportDialog"/>
+    </Controls.Popup.Opener.Dialog>
 </div>

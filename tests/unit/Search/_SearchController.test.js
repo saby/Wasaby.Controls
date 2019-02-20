@@ -8,9 +8,9 @@ define(
       'Types/source'
    ],
    function(Search, sourceLib) {
-      
+
       'use strict';
-      
+
       var data = [
             {
                name: 'Sasha',
@@ -37,30 +37,30 @@ define(
             sourceConfig: {
                pageSize: 10,
                page: 0,
-               mode: 'totalCount'
+               hasMore: false
             }
          },
          sorting = [{id: 'DESC'}];
-      
+
       describe('Controls/Controllers/_SearchController', function() {
-         
+
          it('setFilter', function() {
             var filter = {test: 'test'};
             var searchController = new Search({});
-            
+
             searchController.setFilter(filter);
             assert.deepEqual(filter, {test: 'test'});
          });
-         
-         
+
+
          it('getFilter', function() {
             var filter = {test: 'test'};
             var searchController = new Search({});
-            
+
             searchController.setFilter(filter);
             assert.deepEqual(searchController.getFilter(), {test: 'test'});
          });
-         
+
          it('search', function(done) {
             var filter = {};
             var aborted = false;
@@ -86,17 +86,17 @@ define(
                   searchStarted = true;
                }
             });
-            
+
             searchController.search('Sasha');
             assert.isFalse(searchStarted);
-   
+
             setTimeout(function() {
                searchController.search('');
                searchController.search('Sasha');
                done();
             }, 60);
          });
-   
+
          it('search with sorting', function(done) {
             var filter = {};
             var searchController = new Search({
@@ -114,23 +114,23 @@ define(
                   done();
                }
             });
-      
+
             searchController.search('Dmitry');
          });
-   
+
          it('search forced', function(done) {
             var searchController = new Search({
                minSearchLength: 3,
                source: source,
                filter: {}
             });
-   
+
             Search._private.getSearch(searchController).addCallback(function(search) {
                var searched = false;
                search.search = function() {
                   searched = true;
                };
-   
+
                searchController.search('1', true);
                assert.isTrue(searched);
                done();

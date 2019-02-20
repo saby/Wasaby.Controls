@@ -20,19 +20,20 @@ define('Controls/Controllers/SourceController',
             return sourceOpt;
          },
 
-         getQueryInstance: function(filter, sorting, offset, limit) {
+         getQueryInstance: function(filter, sorting, offset, limit, meta) {
             var query = new sourceLib.Query();
             query.where(filter)
                .offset(offset)
                .limit(limit)
-               .orderBy(sorting);
+               .orderBy(sorting)
+               .meta(meta);
             return query;
          },
 
-         callQuery: function(dataSource, idProperty, filter, sorting, offset, limit) {
+         callQuery: function(dataSource, idProperty, filter, sorting, offset, limit, meta) {
             var queryDef, queryIns;
 
-            queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
+            queryIns = _private.getQueryInstance(filter, sorting, offset, limit, meta);
 
             queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
                if (idProperty && idProperty !== dataSet.idProperty) {
@@ -97,6 +98,10 @@ define('Controls/Controllers/SourceController',
                }
             }
 
+            if (navigParams.meta) {
+               resultParams.meta = navigParams.meta;
+            }
+
             return resultParams;
          }
       };
@@ -135,7 +140,8 @@ define('Controls/Controllers/SourceController',
                queryParams.filter,
                queryParams.sorting,
                queryParams.offset,
-               queryParams.limit)
+               queryParams.limit,
+               queryParams.meta)
                .addCallback(function(list) {
                   if (self._queryParamsController) {
                      self._queryParamsController.calculateState(list, direction);

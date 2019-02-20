@@ -275,7 +275,7 @@ define(
                horizontalAlign: { side: 'right', offset: 0 },
                verticalAlign: { side: 'bottom', offset: 0 }
             };
-            StickyController._private.prepareConfig(itemConfig, sizes);
+            StickyController._private.prepareConfig(StickyController, itemConfig, sizes);
             assert.deepEqual(itemConfig.popupOptions.stickyPosition, stickyPosition);
          });
 

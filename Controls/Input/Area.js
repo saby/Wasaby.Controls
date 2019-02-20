@@ -9,6 +9,8 @@ define('Controls/Input/Area',
       'wml!Controls/Input/Area/ReadOnly',
       'Core/helpers/Function/runDelayed',
 
+      'Controls/Decorator/WrapURLs',
+
       'css!theme?Controls/Input/Area/Area'
    ],
    function(IoC, constants, Text, entity, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
@@ -244,6 +246,10 @@ define('Controls/Input/Area',
 
          _calculateHeightContainer: function(count, hasIndents) {
             return _private.calculateHeightContainer(this._sizes, count, hasIndents);
+         },
+
+         _isTriggeredChangeEventByEnterKey: function() {
+            return false;
          }
       });
 

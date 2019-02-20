@@ -33,12 +33,13 @@ define('Controls/Filter/Button/History/List', [
       },
 
       onResize: function(self) {
+         var arrowVisibility = self._arrowVisible;
          self._arrowVisible = self._options.items.getCount() > MAX_NUMBER_ITEMS;
 
-         if (!self._arrowVisible) {
+         if (arrowVisibility !== self._arrowVisible) {
             self._isMaxHeight = true;
+            self._forceUpdate();
          }
-         self._forceUpdate();
       }
    };
 

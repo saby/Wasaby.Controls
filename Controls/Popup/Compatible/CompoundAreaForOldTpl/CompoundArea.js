@@ -315,12 +315,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
+            this._titleBar = customHeaderContainer;
             if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
                // Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
                // mousedown на ней и проксируем его на dialogTemplate.
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
             }
+         },
+
+         setSize: function(sizes) {
+            if (sizes.width) {
+               this._container.width(sizes.width);
+            }
+            if (sizes.height) {
+               this._container.height(sizes.height);
+            }
+            this._notifyVDOM('controlResize', null, { bubbling: true });
          },
 
          setCaption: function(newTitle) {
@@ -926,7 +937,42 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._unregisterPendingOperation(operation);
             }
 
+            // В _afterMount CompoundArea регистрируется у родителя, нужно
+            // эту связь разорвать
+            if (this.__parentFromCfg) {
+               this._clearInformationOnParentFromCfg();
+            }
+
             CompoundArea.superclass.destroy.apply(this, arguments);
+         },
+
+         _clearInformationOnParentFromCfg: function() {
+            var
+               parent = this.__parentFromCfg,
+               id = this._id,
+               name = this._options.name,
+               tabindex = this._options.tabindex;
+
+            if (parent._childsMapId) {
+               var mapId = parent._childsMapId[id];
+               if (typeof mapId !== 'undefined') {
+                  if (parent._childControls) {
+                     delete parent._childControls[mapId];
+                  }
+                  if (parent._childContainers) {
+                     delete parent._childContainers[mapId];
+                  }
+                  delete parent._childsMapId[id];
+               }
+            }
+
+            if (parent._childsMapName) {
+               delete parent._childsMapName[name || id];
+            }
+
+            if (parent._childsTabindex) {
+               delete parent._childsTabindex[tabindex];
+            }
          },
 
          _unregisterEventListener: function() {

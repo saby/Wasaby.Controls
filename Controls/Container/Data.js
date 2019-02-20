@@ -94,13 +94,35 @@ define('Controls/Container/Data',
             self._sorting = options.sorting;
             self._keyProperty = options.keyProperty;
          },
+         
          resolvePrefetchSourceResult: function(self, result) {
-            if (_private.isEqualItems(self._items, result.data)) {
-               self._items.assign(result.data);
-            } else {
-               self._items = result.data;
+            if (result) {
+               if (_private.isEqualItems(self._items, result.data)) {
+                  self._items.assign(result.data);
+               } else {
+                  self._items = result.data;
+               }
+               self._prefetchSource = result.source;
             }
-            self._prefetchSource = result.source;
+         },
+   
+         /**
+          * @typedef {Object} prefetchSourceResult
+          * @property data Data that loaded from original source
+          * @property source prefetchSource that contains original source
+          */
+         
+         /**
+          * @param self control instance
+          * @param result {prefetchSourceResult}
+          */
+         createDataContextBySourceResult: function(self, result) {
+            _private.resolvePrefetchSourceResult(self, result);
+            self._dataOptionsContext = _private.getDataContext(self);
+         },
+         
+         getDataContext: function(self) {
+            return new ContextOptions(_private.updateDataOptions(self, {}));
          }
       };
 
@@ -112,16 +134,14 @@ define('Controls/Container/Data',
             var self = this;
             _private.resolveOptions(this, options);
             if (receivedState) {
-               _private.resolvePrefetchSourceResult(this, receivedState);
-               self._dataOptionsContext = new ContextOptions(_private.updateDataOptions(self, {}));
+               _private.createDataContextBySourceResult(this, receivedState);
             } else if (self._source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
-                  if (result) {
-                     _private.resolvePrefetchSourceResult(self, result);
-                  }
-                  self._dataOptionsContext = new ContextOptions(_private.updateDataOptions(self, {}));
+                  _private.createDataContextBySourceResult(self, result);
                   return result;
                });
+            } else {
+               self._dataOptionsContext = _private.getDataContext(self);
             }
          },
 
@@ -132,9 +152,7 @@ define('Controls/Container/Data',
 
             if (this._options.source !== newOptions.source) {
                return _private.createPrefetchSource(this).addCallback(function(result) {
-                  if (result) {
-                     _private.resolvePrefetchSourceResult(self, result);
-                  }
+                  _private.resolvePrefetchSourceResult(self, result);
                   _private.updateDataOptions(self, self._dataOptionsContext);
                   self._dataOptionsContext.updateConsumers();
                   self._forceUpdate();
@@ -152,7 +170,12 @@ define('Controls/Container/Data',
          _filterChanged: function(event, filter) {
             this._filter = filter;
             _private.updateDataOptions(this, this._dataOptionsContext);
+            
+            /* If filter changed, prefetchSource should return data not from cache,
+               will be changed by task https://online.sbis.ru/opendoc.html?guid=861459e2-a229-441d-9d5d-14fdcbc6676a */
+            this._dataOptionsContext.prefetchSource = this._options.source;
             this._dataOptionsContext.updateConsumers();
+            
             this._notify('filterChanged', [filter]);
          },
 

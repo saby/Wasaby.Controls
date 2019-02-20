@@ -88,6 +88,25 @@ define(
                });
             });
          });
+   
+         it('data source options tests', function(done) {
+            var config = {source: null, keyProperty: 'id'},
+               data = getDataWithConfig(config);
+      
+            //creating without source
+            data._beforeMount(config);
+            
+            assert.equal(data._source, null);
+            assert.isTrue(!!data._dataOptionsContext);
+            
+            //new source received in _beforeUpdate
+            data._beforeUpdate({source: source}).addCallback(function() {
+               assert.isTrue(data._source === source);
+               assert.isTrue(data._dataOptionsContext.source === source);
+               assert.isTrue(!!data._dataOptionsContext.prefetchSource);
+               done();
+            });
+         });
 
          it('itemsChanged', function(done) {
             var config = {source: source, keyProperty: 'id'};
@@ -103,6 +122,20 @@ define(
                data._itemsChanged(event, data._items);
                assert.isTrue(propagationStopped);
                done();
+            });
+         });
+   
+         it('filterChanged', function() {
+            var config = {source: source, keyProperty: 'id', filter: {test: 'test'}};
+            var data = getDataWithConfig(config);
+      
+            return new Promise(function(resolve) {
+               data._beforeMount(config).addCallback(function() {
+                  data._filterChanged(null, {test1: 'test1'});
+                  assert.isTrue(config.source === data._dataOptionsContext.prefetchSource);
+                  assert.deepEqual(data._filter, {test1: 'test1'});
+                  resolve();
+               });
             });
          });
 
