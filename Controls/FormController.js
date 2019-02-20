@@ -148,7 +148,22 @@ define('Controls/FormController', [
             }
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            this.read(newOptions.key, newOptions.readMetaData);
+            var self = this;
+            if (newOptions.record && newOptions.record.isChanged()) {
+               this._showConfirmPopup('yesno').addCallback(function(answer) {
+                  if (answer === true) {
+                     self.update().addCallback(function(res) {
+                        self.read(newOptions.key, newOptions.readMetaData);
+                        return res;
+                     });
+                  } else {
+                     self.read(newOptions.key, newOptions.readMetaData);
+                  }
+               });
+            } else {
+               self.read(newOptions.key, newOptions.readMetaData);
+            }
+
          }
          if (newOptions.key === undefined && !newOptions.record) {
             this.create(newOptions.initValues);
@@ -309,11 +324,7 @@ define('Controls/FormController', [
                   return e;
                });
             } else {
-               var confirmDef = self._children.popupOpener.open({
-                  message: rk('Сохранить изменения?'),
-                  details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-                  type: 'yesnocancel'
-               }).addCallback(function(answer) {
+               var confirmDef = self._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите "Отмена".')).addCallback(function(answer) {
                   self._confirmDef = null;
                   updating.call(self, answer);
                   return answer;
@@ -325,6 +336,14 @@ define('Controls/FormController', [
                return confirmDef;
             }
          }
+      },
+
+      _showConfirmPopup: function(type, details) {
+         return this._children.popupOpener.open({
+            message: rk('Сохранить изменения?'),
+            details: details,
+            type: type
+         });
       },
 
       create: function(initValues) {
