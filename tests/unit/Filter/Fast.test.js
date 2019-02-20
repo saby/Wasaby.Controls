@@ -291,6 +291,16 @@ define(
             assert.isTrue(self._items.at(0).properties.source instanceof HistorySource);
          });
 
+         it('_needShowCross', function() {
+            var item = {value: 'test1', resetValue: 'test2'};
+            var fastFilter = getFastFilter(config);
+            assert.isTrue(fastFilter._needShowCross(item));
+            item = {value: 'test1'};
+            assert.isFalse(fastFilter._needShowCross(item));
+            item = {value: ['test1'], resetValue: ['test1']};
+            assert.isFalse(fastFilter._needShowCross(item));
+         });
+
          function setTrue(assert) {
             assert.equal(true, true);
          }
