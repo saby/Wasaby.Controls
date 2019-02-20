@@ -3,7 +3,7 @@ define('Controls-demo/Input/Lookup/Lookup',
       'Core/Control',
       'wml!Controls-demo/Input/Lookup/Lookup',
       'Types/source',
-      'Controls-demo/Utils/MemorySourceFilter',
+      'Controls/Selector/List/Utils/MemorySourceFilter',
       'Controls-demo/Input/Lookup/LookupData',
       'Controls/Selector/Lookup',
       'css!Controls-demo/Input/Lookup/Collection',
@@ -40,7 +40,7 @@ define('Controls-demo/Input/Lookup/Lookup',
             this._source = new source.Memory({
                data: lookupData.names,
                idProperty: 'id',
-               filter: memorySourceFilter()
+               filter: memorySourceFilter
             });
          },
 

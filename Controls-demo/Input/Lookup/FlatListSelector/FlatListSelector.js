@@ -3,10 +3,10 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
    'wml!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
    'Controls-demo/Input/Lookup/LookupData',
    'Types/source',
-   'Controls-demo/Utils/MemorySourceFilter',
+   'Controls/Selector/List/Utils/MemorySourceFilter',
    'css!Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector',
    'Controls/List'
-], function(Control, template, lookupData, source, MemorySourceFilter) {
+], function(Control, template, lookupData, source, memorySourceFilter) {
 
    'use strict';
 
@@ -22,21 +22,7 @@ define('Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector', [
          this._source = newOptions.source || new source.Memory({
             data: lookupData.names,
             filter: function(item, queryFilter) {
-               var selectionFilterFn = function(item, filter) {
-                  var
-                     isSelected = false,
-                     itemId = item.get(keyProperty);
-
-                  filter.selection.get('marked').forEach(function(selectedId) {
-                     if (selectedId == itemId || (selectedId === null && filter.selection.get('excluded').indexOf(itemId) === -1)) {
-                        isSelected = true;
-                     }
-                  });
-
-                  return isSelected;
-               };
-
-               return queryFilter.selection ? selectionFilterFn(item, queryFilter) : MemorySourceFilter()(item, queryFilter);
+               return memorySourceFilter(item, queryFilter, keyProperty);
             },
 
             idProperty: keyProperty
