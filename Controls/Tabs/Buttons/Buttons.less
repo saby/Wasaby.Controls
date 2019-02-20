@@ -8,6 +8,11 @@
       font-size: @font-size_Tabs-item;
    }
 }
+.controls-Tabs__itemClickableArea {
+   min-height: 100%;
+   padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
+   .tabs-baseline();
+}
 .controls-Tabs {
    .inline-flexbox();
    height:@height_Tabs;
@@ -19,7 +24,6 @@
    flex-shrink: 9999999;
    .box-sizing();
    .align-items(baseline);
-   .tabs-baseline();
    position: relative;
    width:100%;
    height:100%;
@@ -43,7 +47,6 @@
    .tabs-baseline();
    height: 100%;
    position: relative;
-   padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
    font-size: @font-size_Tabs-item;
    color: @text-color_Tabs;
    cursor: pointer;

@@ -1,10 +1,11 @@
 <div class="controls-Tabs">
     <ws:for data="index, item in _items">
-        <div on:click="_onItemClick(item.get(_options.keyProperty))"
-             attr:class="{{_prepareItemClass(item, index)}}"
+        <div attr:class="{{_prepareItemClass(item, index)}}"
              attr:style="{{_prepareItemOrder(index)}}"
              attr:title="{{ item[_options.displayProperty] }}">
-             <ws:partial
+            <ws:partial
+                    attr:class="controls-Tabs__itemClickableArea"
+                    on:click="_onItemClick(item.get(_options.keyProperty))"
                     template="{{ _options.itemTemplateProperty ? item.get(_options.itemTemplateProperty) ?  item.get(_options.itemTemplateProperty) : _options.itemTemplate : _options.itemTemplate}}"
                     selected="{{item[_options.keyProperty] === _options.selectedKey ? true : false}}"
                     displayProperty="{{_options.displayProperty}}"
