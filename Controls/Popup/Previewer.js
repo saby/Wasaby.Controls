@@ -4,7 +4,7 @@ define('Controls/Popup/Previewer',
       'wml!Controls/Popup/Previewer/Previewer',
       'Core/helpers/Function/debounce',
       'Controls/Popup/Opener/Previewer',
-      'Core/Deferred'
+      'Core/Deferred',
       'Env/Env'
    ],
    function(Control, template, debounce, PreviewerOpener, Deferred, Env) {
