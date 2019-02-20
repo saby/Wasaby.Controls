@@ -11,11 +11,11 @@ define([
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
-   'Core/constants',
+   'Env/Env',
    'Controls/List/ListView',
    'Types/entity',
    'Types/collection'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -1066,7 +1066,7 @@ define([
                      stopImmediateCalled = true;
                   },
                   nativeEvent: {
-                     keyCode: cConstants.key.down
+                     keyCode: Env.constants.key.down
                   }
                });
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
@@ -1082,7 +1082,7 @@ define([
                      stopImmediateCalled = true;
                   },
                   nativeEvent: {
-                     keyCode: cConstants.key.space
+                     keyCode: Env.constants.key.space
                   },
                   preventDefault: function() {
                      preventDefaultCalled = true;
@@ -1096,7 +1096,7 @@ define([
                      stopImmediateCalled = true;
                   },
                   nativeEvent: {
-                     keyCode: cConstants.key.up
+                     keyCode: Env.constants.key.up
                   }
                });
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');

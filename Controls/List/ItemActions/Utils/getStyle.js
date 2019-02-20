@@ -1,7 +1,7 @@
 define('Controls/List/ItemActions/Utils/getStyle', [
-   'Core/IoC'
+   'Env/Env'
 ], function(
-   IoC
+   Env
 ) {
    'use strict';
 
@@ -18,7 +18,7 @@ define('Controls/List/ItemActions/Utils/getStyle', [
       }
 
       if (deprecatedStyles.hasOwnProperty(style)) {
-         IoC.resolve('ILogger').warn(controlName, 'Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style);
+         Env.IoC.resolve('ILogger').warn(controlName, 'Используются устаревшие стили. Используйте ' + deprecatedStyles[style] + ' вместо ' + style);
          return deprecatedStyles[style];
       }
 

@@ -5,7 +5,7 @@ define('Controls/History/Service', [
    'Controls/History/Constants',
    'Core/Deferred',
    'Core/core-clone',
-   'Core/constants'
+   'Env/Env'
 ], function(
    CoreExtend,
    entity,
@@ -13,7 +13,7 @@ define('Controls/History/Service', [
    Constants,
    Deferred,
    coreClone,
-   coreConstants
+   Env
 ) {
    'use strict';
 
@@ -164,7 +164,7 @@ define('Controls/History/Service', [
          var self = this;
          var getValueDef = new Deferred();
 
-         if (!STORAGES[self._historyId] || coreConstants.isBuildOnServer) {
+         if (!STORAGES[self._historyId] || Env.constants.isBuildOnServer) {
             getValueDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
                params: {
                   historyIds: this._historyId ? [this._historyId] : this._historyIds,

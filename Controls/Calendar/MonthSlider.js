@@ -1,9 +1,9 @@
 define('Controls/Calendar/MonthSlider', [
    'Controls/calendar',
-   'Core/IoC'
+   'Env/Env'
 ], function(
    calendarLib,
-   IoC
+   Env
 ) {
 
    'use strict';
@@ -24,7 +24,7 @@ define('Controls/Calendar/MonthSlider', [
     *
     */
 
-   IoC.resolve('ILogger').error(
+   Env.IoC.resolve('ILogger').error(
       'Controls/Date/MonthSlider' +
       'This control is deprecated. Use \'Controls/calendar:MonthSlider\' instead'
    );

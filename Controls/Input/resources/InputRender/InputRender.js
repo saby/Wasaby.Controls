@@ -5,12 +5,12 @@ define('Controls/Input/resources/InputRender/InputRender',
       'Controls/Utils/tmplNotify',
       'wml!Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/RenderHelper',
-      'Core/detection',
+      'Env/Env',
       'Controls/Utils/hasHorizontalScroll',
-      'Core/EventBus',
+      'Env/Event',
       'css!theme?Controls/Input/resources/InputRender/InputRender'
    ],
-   function(Control, entity, tmplNotify, template, RenderHelper, cDetection, hasHorizontalScrollUtil, EventBus) {
+   function(Control, entity, tmplNotify, template, RenderHelper, Env, hasHorizontalScrollUtil, EnvEvent) {
       'use strict';
 
       /**
@@ -41,7 +41,7 @@ define('Controls/Input/resources/InputRender/InputRender',
             return result;
          },
          isRequired: function() {
-            return cDetection.isIE;
+            return Env.detection.isIE;
          },
 
          getTargetPosition: function(target) {
@@ -149,7 +149,7 @@ define('Controls/Input/resources/InputRender/InputRender',
          _beforeMount: function(options) {
             this._inputState = _private.getInputState(this, options);
             this._required = _private.isRequired();
-            this._isEdge = cDetection.isIE12;
+            this._isEdge = Env.detection.isIE12;
          },
 
          _afterMount: function() {
@@ -246,7 +246,7 @@ define('Controls/Input/resources/InputRender/InputRender',
              * Therefore, we ourselves will focus the field on click.
              * https://caniuse.com/#search=pointer-events
              */
-            if (cDetection.IEVersion < 12) {
+            if (Env.detection.IEVersion < 12) {
                this.activate();
             }
          },
@@ -262,13 +262,13 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusinHandler: function(e) {
             this._inputActive = true;
 
-            if (cDetection.isMobileIOS && this._fromTouch) {
-               EventBus.globalChannel().notify('MobileInputFocus');
+            if (Env.detection.isMobileIOS && this._fromTouch) {
+               EnvEvent.Bus.globalChannel().notify('MobileInputFocus');
             }
 
             if (!this._options.readOnly && this._options.selectOnClick) {
                // In IE, the focus event happens earlier than the selection event, so we should use setTimeout
-               if (cDetection.isIE) {
+               if (Env.detection.isIE) {
                   setTimeout(function() {
                      e.target.select();
                   });
@@ -281,8 +281,8 @@ define('Controls/Input/resources/InputRender/InputRender',
          _focusoutHandler: function(e) {
             this._inputActive = false;
 
-            if (cDetection.isMobileIOS && this._fromTouch) {
-               EventBus.globalChannel().notify('MobileInputFocusOut');
+            if (Env.detection.isMobileIOS && this._fromTouch) {
+               EnvEvent.Bus.globalChannel().notify('MobileInputFocusOut');
                this._fromTouch = false;
             }
 

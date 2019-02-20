@@ -1,7 +1,7 @@
 define('Controls/Input/Search',
    [
       'Types/entity',
-      'Core/constants',
+      'Env/Env',
       'Controls/Input/Base',
       'Controls/Input/Text/ViewModel',
 
@@ -10,7 +10,7 @@ define('Controls/Input/Search',
       'css!theme?Controls/Input/Search/Search'
    ],
 
-   function(entity, constants, Base, ViewModel, buttonsTemplate) {
+   function(entity, Env, Base, ViewModel, buttonsTemplate) {
       'use strict';
 
       /**
@@ -122,7 +122,7 @@ define('Controls/Input/Search',
          },
 
          _keyUpHandler: function(event) {
-            if (event.nativeEvent.which === constants.key.enter) {
+            if (event.nativeEvent.which === Env.constants.key.enter) {
                this._searchClick();
             }
 

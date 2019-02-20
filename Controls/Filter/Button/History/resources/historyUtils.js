@@ -6,10 +6,10 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       'Types/entity',
       'Types/collection',
       'Types/source',
-      'Core/constants',
+      'Env/Env',
       'Types/di'
    ],
-   function(HistorySource, HistoryService, SourceController, entity, collection, sourceLib, Constants, Di) {
+   function(HistorySource, HistoryService, SourceController, entity, collection, sourceLib, Env, Di) {
       'use strict';
 
       var HISTORY_SOURCE = {};
@@ -38,7 +38,7 @@ define('Controls/Filter/Button/History/resources/historyUtils',
       }
 
       function getHistorySource(historyId) {
-         if (Constants.isBuildOnServer) {
+         if (Env.constants.isBuildOnServer) {
             return createHistorySource(historyId);
          } else {
             HISTORY_SOURCE[historyId] = HISTORY_SOURCE[historyId] || createHistorySource(historyId);

@@ -6,12 +6,11 @@ define('Controls/Popup/Manager',
       'Core/helpers/Number/randomId',
       'Core/helpers/Function/runDelayed',
       'Types/collection',
-      'Core/EventBus',
-      'Core/detection',
-      'Core/IoC'
+      'Env/Event',
+      'Env/Env'
    ],
 
-   function(Control, template, ManagerController, randomId, runDelayed, collection, EventBus, cDetection, IoC) {
+   function(Control, template, ManagerController, randomId, runDelayed, collection, EnvEvent, Env) {
       'use strict';
 
       var _private = {
@@ -275,7 +274,7 @@ define('Controls/Popup/Manager',
                   finishDef.addCallbacks(function() {
                      pendingsFinishedCallback && pendingsFinishedCallback(popup);
                   }, function(e) {
-                     IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                     Env.IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
                      pendingsFinishedCallback && pendingsFinishedCallback(popup);
                   });
                }
@@ -324,10 +323,10 @@ define('Controls/Popup/Manager',
             ManagerController.setManager(this);
             this._hasMaximizePopup = false;
             this._popupItems = new collection.List();
-            if (cDetection.isMobileIOS) {
+            if (Env.detection.isMobileIOS) {
                _private.controllerVisibilityChangeHandler = _private.controllerVisibilityChangeHandler.bind(_private, this);
-               EventBus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
-               EventBus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
+               EnvEvent.Bus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
+               EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
             }
          },
 
@@ -449,9 +448,9 @@ define('Controls/Popup/Manager',
             }
          },
          _beforeUnmount: function() {
-            if (cDetection.isMobileIOS) {
-               EventBus.globalChannel().unsubscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
-               EventBus.globalChannel().unsubscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
+            if (Env.detection.isMobileIOS) {
+               EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
+               EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
             }
          }
       });

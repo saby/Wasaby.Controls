@@ -17,7 +17,7 @@ define('Controls/interface/IRemovable', [], function() {
 
    /**
     * @event Controls/interface/IRemovable#beforeItemsRemove Occurs before items are removed.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} idArray Array of items to be removed.
     * @returns {Core/Deferred} If deferred was fullfilled with false then default logic will not be executed.
     * @example
@@ -45,7 +45,7 @@ define('Controls/interface/IRemovable', [], function() {
 
    /**
     * @event Controls/interface/IRemovable#afterItemsRemove Occurs after removing items.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} idArray Array of removed items
     * @param {*} result The result of item removal from the data source.
     * @example

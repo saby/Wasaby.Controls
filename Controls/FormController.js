@@ -3,10 +3,10 @@ define('Controls/FormController', [
    'Core/core-instance',
    'wml!Controls/FormController/FormController',
    'Core/Deferred',
-   'Core/IoC',
+   'Env/Env',
    'Controls/Utils/error/Mode',
    'Controls/Utils/ErrorController'
-], function(Control, cInstance, tmpl, Deferred, IoC, ErrorMode, ErrorController) {
+], function(Control, cInstance, tmpl, Deferred, Env, ErrorMode, ErrorController) {
    'use strict';
 
    var _private = {
@@ -29,7 +29,7 @@ define('Controls/FormController', [
             return record;
          });
          readDef.addErrback(function(e) {
-            IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
+            Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
             instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
             instance._readInMounting = { isError: true, result: e };
             throw e;
@@ -178,7 +178,7 @@ define('Controls/FormController', [
       },
       _getRecordId: function() {
          if (!this._record.getId && !this._options.idProperty) {
-            IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
+            Env.IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
             return;
          }
 
@@ -330,7 +330,7 @@ define('Controls/FormController', [
       create: function(initValues) {
          initValues = initValues || this._options.initValues;
          var res = this._children.crud.create(initValues);
-         res.addCallbacks(this._createHandler.bind(this), this._crudErrback.bind(this));
+         res.addCallback(this._createHandler.bind(this));
          return res;
       },
       _createHandler: function(record) {
