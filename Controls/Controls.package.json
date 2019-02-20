@@ -300,6 +300,14 @@
   "output": "controls-search.package.js"
 }, {
   "include": [
+    "Controls/Search/Misspell",
+    "wml!Controls/Search/Misspell"
+  ],
+
+  "output": "controls-search-misspell.package.js"
+},
+{
+  "include": [
     "Controls/EditableArea",
     "Controls/EditableArea/*"
   ],
@@ -325,5 +333,39 @@
     "Controls/BreadCrumbs/Path/*"
   ],
   "output": "controls-breadcrumbs.package.js"
-}
+}, {
+  "include": [
+    "Controls/SwitchableArea",
+    "Controls/SwitchableArea/*"
+  ],
+  "output": "controls-switchablearea.package.js"
+},
+  {
+    "include": [
+      "Controls/Selector/*"
+    ],
+    "exclude": [
+      "Controls/Selector/List/*",
+      "Controls/Selector/SelectedCollection/Popup",
+      "Controls/Selector/Container",
+      "Controls/Selector/Controller",
+      "Controls/Selector/__ControllerContext"
+    ],
+    "output": "controls-selector.package.js"
+  },
+  {
+    "include": [
+      "Controls/Selector/SelectedCollection/Popup"
+    ],
+    "output": "controls-selector-lookuppopup.package.js"
+  },
+  {
+    "include": [
+      "Controls/Selector/List/*",
+      "Controls/Selector/Container",
+      "Controls/Selector/Controller",
+      "Controls/Selector/__ControllerContext"
+    ],
+    "output": "controls-selector-stack.package.js"
+  }
 ]
