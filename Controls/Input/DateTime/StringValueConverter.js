@@ -265,6 +265,10 @@ define('Controls/Input/DateTime/StringValueConverter', [
       _mask: null,
       _replacer: null,
 
+      constructor: function(options) {
+         this.update(options || {});
+      },
+
       /**
        * Updates converter settings.
        * @param options
