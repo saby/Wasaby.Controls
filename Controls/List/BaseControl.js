@@ -67,23 +67,6 @@ define('Controls/List/BaseControl', [
          if (cfg.groupMethod) {
             IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
          }
-         if (cfg.virtualPageSize) {
-            IoC.resolve('ILogger').warn('IVirtualScroll', 'Option "virtualPageSize" is deprecated and removed in 19.200. Use option "virtualPageSize in virtualScrollConfig".');
-         }
-         if (cfg.virtualSegmentSize) {
-            IoC.resolve('ILogger').warn('IVirtualScroll', 'Option "virtualSegmentSize" is deprecated and removed in 19.200. Use option "virtualSegmentSize in virtualScrollConfig".');
-         }
-      },
-
-      // TODO: Remove in 19.200
-      prepareVirtualScrollConfig: function(cfg) {
-         var vsConfig = {
-            virtualPageSize: cfg.virtualScrollConfig && cfg.virtualScrollConfig.virtualPageSize || cfg.virtualPageSize,
-            virtualSegmentSize: cfg.virtualScrollConfig && cfg.virtualScrollConfig.virtualSegmentSize || cfg.virtualSegmentSize,
-            itemsHeightsState: cfg.virtualScrollConfig && cfg.virtualScrollConfig.itemsHeightsState || cfg.itemsHeightsState
-         };
-
-         return vsConfig;
       },
 
       reload: function(self, cfg) {
@@ -758,7 +741,10 @@ define('Controls/List/BaseControl', [
 
          if (this._needScrollCalculation) {
             if (newOptions.virtualScrolling) {
-               this._virtualScroll = new VirtualScroll(_private.prepareVirtualScrollConfig(newOptions));
+               this._virtualScroll = new VirtualScroll({
+                  virtualPageSize: newOptions.virtualPageSize,
+                  virtualSegmentSize: newOptions.virtualSegmentSize
+               });
             }
             this._loadTriggerVisibility = {
                up: false,

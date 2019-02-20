@@ -12,15 +12,10 @@ import IoC = require("Core/IoC");
  * @type {object}
  * @property {number} virtualPageSize - The maximum number of elements that will be in the DOM at the same time.
  * @property {number} virtualSegmentSize - your name.
- * @property {ItemsRenderMode} itemsRenderMode - Specifies how items will be rendered.
  */
 type VirtualScrollConfig = {
     virtualPageSize?: number;
     virtualSegmentSize?: number;
-    // TODO: Согласвать
-    itemsRenderMode?: ItemsRenderMode | string;
-    //deprecated
-    updateItemsHeightsMode?:string;
 }
 
 
@@ -66,24 +61,6 @@ type PlaceholdersSizes = {
 
 
 /**
- * Enum for items render mode.
- * Specifies how items will be loaded.
- *
- * @enum {number}
- * @variant Partially - Items will be downloaded in parts. The maximum number of items in collection will change as the data is loaded
- * @variant AllAtOnce - All items will be loaded at once. The maximum number of items in collection will not change.
- */
-enum ItemsRenderMode {
-    Partially, AllAtOnce,
-
-    //deprecated
-    onChangeCollection, always
-
-}
-
-
-
-/**
  * @class Controls/List/Controllers/VirtualScroll
  * @author Rodionov E.A.
  * @public
@@ -93,7 +70,6 @@ class VirtualScroll {
     private readonly _virtualSegmentSize: number = 20;
     private readonly _virtualPageSize: number = 100;
     private readonly _initialStartIndex: number = 0;
-    private _itemsRenderMode: ItemsRenderMode;
 
     private _startIndex: number;
     private _stopIndex: number;
@@ -140,7 +116,6 @@ class VirtualScroll {
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
         this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
-        this.ItemsRenderMode = cfg.itemsRenderMode || cfg.updateItemsHeightsMode || ItemsRenderMode.Partially;
 
         this._startIndex = this._initialStartIndex;
         this._stopIndex = this._startIndex + this._virtualPageSize;
@@ -156,46 +131,13 @@ class VirtualScroll {
 
     public updateItemsSizes(): void {
         let
-            startUpdateIndex,
-            updateLength,
+            startUpdateIndex = this._startIndex,
             items = this._itemsContainer.children,
-            itemsHeights = this._itemsHeights,
-            isNeedToUpdate: boolean = false;
+            updateLength = Math.min(this._stopIndex - this._startIndex, items.length);
 
-        /*
-        * Если отображаестя всегда одинаковое кол-во блоков (несколько настоящих записей и заглушки вместо лишних),
-        * то нужно каждый раз обновлять высоты всех элементов, потому вместо заглушки могла появиться запись с
-        * другими размерами.
-        * */
-        if (this._itemsRenderMode === ItemsRenderMode.AllAtOnce || this._itemsRenderMode === ItemsRenderMode.always) {
-            startUpdateIndex = 0;
-            updateLength = items.length;
-            isNeedToUpdate = true;
-        } else {
-            // Обновляем все если был передан параметр.
-            // По умолчанию, обновляем высоты, только если появились новые элементы
-            isNeedToUpdate = (typeof itemsHeights[this._startIndex] === "undefined" || typeof itemsHeights[this._stopIndex - 1] === "undefined");
+        this._updateItemsSizes(startUpdateIndex, updateLength);
+        this._updatePlaceholdersSizes();
 
-            // Если отображаем только реальные записи, то обновляем только их высоты.
-            if (this._itemsRenderMode === ItemsRenderMode.Partially) {
-                startUpdateIndex = this._startIndex;
-                updateLength = Math.min(this._stopIndex - this._startIndex, items.length);
-            }
-
-            /*
-            * Флаг, выставляется после вставки элементов в середину коллекции (раскрытия узла дерева), в массиве уже
-            * есть высоты с такими индексами, но они пока неподсчитаны
-            */
-            if (this._needToUpdateAllItemsHeight){
-                isNeedToUpdate = true;
-                this._needToUpdateAllItemsHeight = false;
-            }
-        }
-
-        if (isNeedToUpdate) {
-            this._updateItemsSizes(startUpdateIndex, updateLength);
-            this._updatePlaceholdersSizes();
-        }
     }
 
     //TODO Add enum BaseControl.Direction(LoadDirection) or List.Direction(LoadDirection)
@@ -284,6 +226,9 @@ class VirtualScroll {
     }
 
     private _updateItemsSizes(startUpdateIndex, updateLength, isUnitTesting = false): void {
+        /*
+        * uDimension работает с window, для того чтобы протестировать функцию есть параметр isUnitTesting
+        */
         if (isUnitTesting) {
             for (let i = 0; i < updateLength; i++) {
                 this._itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
@@ -389,34 +334,6 @@ class VirtualScroll {
         }
         this.ItemsCount = itemsCount;
     }
-
-    private set ItemsRenderMode(value: ItemsRenderMode | string) {
-        let _state = VirtualScroll._convertOptionToEnum<ItemsRenderMode>(<string>value, ItemsRenderMode);
-
-        if (!_state && _state !== 0) {
-            _state = ItemsRenderMode.Partially;
-            IoC.resolve('ILogger')
-                .warn(
-                    'VirtualScroll',
-                    'Option "itemsHeightsState" is not a part of enum "ItemsHeightsState". ' +
-                    'ItemsHeightsState has been settled into default value (ItemsHeightsState.Constant)');
-        }
-
-        this._itemsRenderMode = _state;
-    }
-
-    private static _convertOptionToEnum<T>(option: string, enumType: any): T | null {
-        if (typeof option === "string") {
-            if ((<T>enumType)[option] || enumType[option] === 0) {
-                return <T>enumType[option];
-            } else {
-                return undefined;
-            }
-        } else {
-            return option;
-        }
-    }
-
     //</editor-fold>
 
 }

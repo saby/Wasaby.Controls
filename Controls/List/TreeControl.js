@@ -92,15 +92,15 @@ define('Controls/List/TreeControl', [
                   listViewModel.appendItems(list);
                }
                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-               if (self._children.baseControl._virtualScroll) {
-                  _private.updateItemsIndexesOnExpand(self, nodeKey, list.getCount(), expanded);
+               if (self._children.baseControl.getVirtualScroll()) {
+                  _private.updateItemsIndexesOnToggle(self, nodeKey, list.getCount(), expanded);
                }
             });
          } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-            if (self._children.baseControl._virtualScroll) {
+            if (self._children.baseControl.getVirtualScroll()) {
                self._nodesSourceControllers[nodeKey].load(filter, self._sorting).addCallback(function(list) {
-                  _private.updateItemsIndexesOnExpand(self, nodeKey, list.getCount(), expanded);
+                  _private.updateItemsIndexesOnToggle(self, nodeKey, list.getCount(), expanded);
                });
             }
          }
@@ -242,7 +242,7 @@ define('Controls/List/TreeControl', [
          findChildNodesRecursive(nodeKey);
       },
 
-      updateItemsIndexesOnExpand: function(self, toggledItemId, itemsCount, expanded) {
+      updateItemsIndexesOnToggle: function(self, toggledItemId, itemsCount, expanded) {
          var
             baseControl = self._children.baseControl,
             virtualScroll = baseControl.getVirtualScroll(),

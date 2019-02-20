@@ -25,22 +25,14 @@ define([
          });
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after ctor');
          assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after ctor');
-         assert.equal(1, vsInstance._itemsRenderMode, 'Wrong itemsRenderMode after ctor');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after ctor');
          assert.equal(30, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after ctor');
-
-         var vsInstance = new VirtualScroll({
-            itemsRenderMode: 'always'
-         });
-         assert.equal(3, vsInstance._itemsRenderMode, 'Wrong itemsRenderMode after ctor');
-
       });
 
       it('default options in constructor', function() {
          var vsInstance = new VirtualScroll({});
          assert.equal(0, vsInstance._startIndex, 'Wrong start index after default ctor');
          assert.equal(100, vsInstance._stopIndex, 'Wrong stop index after default ctor');
-         assert.equal(0, vsInstance._itemsRenderMode, 'Wrong itemsRenderMode after default ctor');
          assert.equal(100, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after default ctor');
          assert.equal(20, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after default ctor');
       });
@@ -59,7 +51,6 @@ define([
          assert.equal(80, vsInstance._stopIndex, 'Wrong stop index after reset');
          assert.equal(80, vsInstance._virtualPageSize, 'Wrong virtualPageSize index after reset');
          assert.equal(30, vsInstance._virtualSegmentSize, 'Wrong virtualPageSize index after reset');
-         assert.equal(1, vsInstance._itemsRenderMode, 'Wrong itemsRenderMode after reset');
       });
 
       it('getter ItemsIndexes', function() {
