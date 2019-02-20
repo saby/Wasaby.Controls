@@ -11,12 +11,12 @@ define('Controls/Container/Suggest/__PopupContent',
       
       var _private = {
          getBorderWidth: function(container) {
-            return +getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '') * 2;
+            return +getComputedStyle(container, null).getPropertyValue('border-left-width').replace('px', '')*2;
          },
          getSuggestWidth: function(target, container) {
             return target.offsetWidth - _private.getBorderWidth(container);
          }
-      };
+      }
       
       var __PopupContent = BaseLayer.extend({
          
