@@ -38,6 +38,8 @@
          suggestStateNotify: function(self, state) {
             if (self._options.suggestState !== state) {
                self._notify('suggestStateChanged', [state]);
+            } else {
+               self._forceUpdate();
             }
          },
          setCloseState: function(self) {
@@ -278,19 +280,21 @@
             var valueChanged = this._options.value !== newOptions.value;
             var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
-            
+
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
+            } else if (this._options.suggestState !== newOptions.suggestState) {
+               _private.open(this);
             }
-      
+
             if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
-   
+
             if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-      
+
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
                this._dependenciesDeferred = null;
