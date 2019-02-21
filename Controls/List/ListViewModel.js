@@ -105,6 +105,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
+            itemsModelCurrent.searchValue = this._options.searchValue;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             itemsModelCurrent.markerVisibility = this._options.markerVisibility;
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
@@ -409,6 +410,10 @@ define('Controls/List/ListViewModel',
 
          getSorting: function() {
             return this._options.sorting;
+         },
+         
+         setSearchValue: function(value) {
+            this._options.searchValue = value;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {
