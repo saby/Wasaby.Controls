@@ -21,6 +21,7 @@
    <ws:if data="{{_historyId && _historyItems.getCount()}}">
       <Controls.Filter.Button.History.List
               items="{{_historyItems}}"
+              filterItems="{{_items}}"
               historyId="{{_historyId}}"
               on:historyChanged="_historyItemsChanged()"
               attr:class="controls-HistoryList__{{_options.orientation}}"

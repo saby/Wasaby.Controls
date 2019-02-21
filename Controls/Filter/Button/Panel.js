@@ -72,6 +72,10 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
+      reloadHistoryItems: function(self, historyId) {
+         self._historyItems = historyUtils.getHistorySource(historyId).getItems();
+      },
+
       cloneItems: function(items) {
          if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
@@ -175,7 +179,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _historyItemsChanged: function() {
-         this._loadDeferred = _private.loadHistoryItems(this, this._historyId);
+         _private.reloadHistoryItems(this, this._historyId);
       },
 
       _itemsChangedHandler: function(event, items) {
