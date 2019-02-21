@@ -462,6 +462,10 @@ function(cMerge,
             }
          }
 
+         if (newCfg.hasOwnProperty('maximize')) {
+            newCfg.dialogOptions.maximize = newCfg.maximize;
+         }
+
          if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
             newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
          }

@@ -169,7 +169,7 @@ define('Controls/List/ItemsViewModel', [
          this._nextModelVersion(notUpdatePrefixItemVersion);
       },
 
-      calcItemVersion: function(item) {
+      _calcItemVersion: function(item) {
          var
             version = '' + this._prefixItemVersion;
 
@@ -200,7 +200,7 @@ define('Controls/List/ItemsViewModel', [
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
                _preferVersionAPI: true,
                getVersion: function() {
-                  return self.calcItemVersion(itemData.item);
+                  return self._calcItemVersion(itemData.item, itemData.key);
                }
             };
          if (this._options.groupMethod || this._options.groupingKeyCallback) {
@@ -291,7 +291,7 @@ define('Controls/List/ItemsViewModel', [
       _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._nextModelVersion(true);
-         this._notify('onCollectionChange');
+         this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {

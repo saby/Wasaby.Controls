@@ -97,7 +97,10 @@
          },
          
          searchErrback: function(self, error) {
-            self._loading = false;
+            //aborting of the search may be caused before the search start, because of the delay before searching
+            if (self._loading !== null) {
+               self._loading = false;
+            }
             if (!error || !error.canceled) {
                requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
                   self._emptyTemplate = result;

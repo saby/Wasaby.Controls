@@ -19,12 +19,6 @@ define('Controls/List/SearchView/SearchViewModel', [
                filter.push(cfg.itemsFilterMethod);
             }
             return filter;
-         },
-   
-         getItemDataByItem: function() {
-            var itemsModelCurrent = SearchViewModel.superclass.getItemDataByItem.apply(this, arguments);
-            itemsModelCurrent.searchValue = this._options.searchValue;
-            return itemsModelCurrent;
          }
       });
 

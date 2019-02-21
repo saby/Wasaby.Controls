@@ -225,6 +225,11 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             return sortingDirection;
+         },
+   
+         isNeedToHighlight: function(item, dispProp, searchValue) {
+            var itemValue = item.get(dispProp);
+            return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
          }
       },
 
@@ -262,7 +267,7 @@ define('Controls/List/Grid/GridViewModel', [
                this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
-               this._notify('onCollectionChange');
+               this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
             }.bind(this);
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
@@ -591,6 +596,10 @@ define('Controls/List/Grid/GridViewModel', [
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
          },
+         
+         setSearchValue: function(value) {
+            this._model.setSearchValue(value);
+         },
 
          getSorting: function() {
             return this._model.getSorting();
@@ -598,10 +607,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
-         },
-
-         setIndexes: function(startIndex, stropIndex) {
-            this._model.setIndexes(startIndex, stropIndex);
          },
 
          getSwipeItem: function() {
@@ -691,6 +696,10 @@ define('Controls/List/Grid/GridViewModel', [
                if (self._options.ladderProperties && self._options.ladderProperties.length) {
                   currentColumn.ladder = self._ladder.ladder[current.index];
                   currentColumn.ladderWrapper = LadderWrapper;
+               }
+               if (current.item.get) {
+                  currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
+                  currentColumn.searchValue = current.searchValue;
                }
                if (stickyColumn) {
                   isStickedColumn = stickyColumn.index === (current.multiSelectVisibility !== 'hidden' ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);

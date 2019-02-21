@@ -113,6 +113,7 @@ define('Controls/List/ListViewModel',
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
+            itemsModelCurrent.searchValue = this._options.searchValue;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             itemsModelCurrent.markerVisibility = this._options.markerVisibility;
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
@@ -163,13 +164,22 @@ define('Controls/List/ListViewModel',
             return itemsModelCurrent;
          },
 
+         _calcItemVersion: function(item, key) {
+            var
+               version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
+            if (this._markedKey === key) {
+               version = 'MARKED_' + version;
+            }
+            return version;
+         },
+
          setMarkedKey: function(key) {
             if (key === this._markedKey) {
                return;
             }
             this._markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
-            this._nextModelVersion();
+            this._nextModelVersion(true);
             this._notify('onMarkedKeyChanged', key);
          },
 
@@ -374,7 +384,7 @@ define('Controls/List/ListViewModel',
                var itemById = this.getItemById(item.get(this._options.keyProperty));
                var collectionItem = itemById ? itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
-               this._nextModelVersion();
+               this._nextModelVersion(true);
             }
          },
 
@@ -417,6 +427,10 @@ define('Controls/List/ListViewModel',
 
          getSorting: function() {
             return this._options.sorting;
+         },
+         
+         setSearchValue: function(value) {
+            this._options.searchValue = value;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

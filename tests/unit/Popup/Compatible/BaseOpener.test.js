@@ -286,6 +286,7 @@ define(
             config.maxWidth = 1000;
             config.maximized = true;
             config.title = 'заголовок';
+            config.maximize = true;
 
             config.target = 'testTarget';
             config.className = 'testClass';
@@ -313,6 +314,7 @@ define(
             assert.equal(newConfig.dialogOptions.offset, config.offset);
 
             assert.equal(newConfig.dialogOptions.showOnControlsReady, false);
+            assert.equal(newConfig.dialogOptions.maximize, true);
             assert.equal(newConfig.dialogOptions.autoCloseOnHide, true);
             assert.equal(newConfig.dialogOptions.minWidth, config.minWidth);
             assert.equal(newConfig.dialogOptions.maxWidth, config.maxWidth);

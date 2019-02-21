@@ -7,10 +7,11 @@ define('Controls/Popup/Manager',
       'Core/helpers/Function/runDelayed',
       'Types/collection',
       'Env/Event',
-      'Env/Env'
+      'Env/Env',
+      'Vdom/Vdom'
    ],
 
-   function(Control, template, ManagerController, randomId, runDelayed, collection, EnvEvent, Env) {
+   function(Control, template, ManagerController, randomId, runDelayed, collection, EnvEvent, Env, Vdom) {
       'use strict';
 
       var _private = {
@@ -39,7 +40,7 @@ define('Controls/Popup/Manager',
 
                // If the popup is not active, don't set the focus
                if (element.isActive) {
-                  _private.activatePopup(self._popupItems);
+                  _private.activatePopup(element, self._popupItems);
                }
 
                _private.updateOverlay.call(self);
@@ -48,17 +49,23 @@ define('Controls/Popup/Manager',
             });
          },
 
-         activatePopup: function(items) {
-            var maxId = _private.getMaxZIndexPopupIdForActivate(items);
-            if (maxId) {
-               var popupContainer = ManagerController.getContainer();
-               var child = popupContainer && popupContainer._children[maxId];
+         activatePopup: function(element, items) {
+            // wait, until closing popup will be removed from DOM
+            runDelayed(function activatePopup() {
+               // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
+               if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
+                  element.activeControlAfterDestroy.activate && element.activeControlAfterDestroy.activate();
+               } else {
+                  var maxId = _private.getMaxZIndexPopupIdForActivate(items);
+                  if (maxId) {
+                     var child = ManagerController.getContainer().getPopupById(maxId);
 
-               // wait, until closing popup will be removed from DOM
-               if (child) {
-                  runDelayed(child.activate.bind(child));
+                     if (child) {
+                        child.activate();
+                     }
+                  }
                }
-            }
+            });
          },
 
          getMaxZIndexPopupIdForActivate: function(items) {
@@ -155,6 +162,10 @@ define('Controls/Popup/Manager',
 
          getActiveElement: function() {
             return document && document.activeElement;
+         },
+
+         getActiveControl: function() {
+            return Vdom.DOMEnvironment._goUpByControlTree(_private.getActiveElement())[0];
          },
 
          popupDragStart: function(id, offset) {
@@ -363,6 +374,7 @@ define('Controls/Popup/Manager',
                popupOptions: options,
                isActive: false,
                sizes: {},
+               activeControlAfterDestroy: _private.getActiveControl(),
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };
