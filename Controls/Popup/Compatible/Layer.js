@@ -144,15 +144,19 @@ define('Controls/Popup/Compatible/Layer', [
       function expandUserInfo(data) {
          var deferred;
 
-         data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
-         data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
+         if (data) {
+            data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
+            data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         if (data['КлассПользователя'] === '__сбис__физики') {
-            deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
-               data.hasMoreAccounts = res.getScalar();
-               return data;
-            });
-         } else {
+            if (data['КлассПользователя'] === '__сбис__физики') {
+               deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
+                  data.hasMoreAccounts = res.getScalar();
+                  return data;
+               });
+            }
+         }
+
+         if (!deferred) {
             deferred = Deferred.success(data);
          }
 
