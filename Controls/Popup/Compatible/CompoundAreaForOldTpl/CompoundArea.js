@@ -214,11 +214,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._logicParent.callbackCreated && this._logicParent.callbackCreated();
             this._logicParent.waitForPopupCreated = false;
             var self = this;
-            runDelayed(function() {
-               if (self._container.length && self._options.catchFocus) {
-                  doAutofocus(self._container);
-               }
-            });
+            if (this._waitClose) {
+               this._waitClose = false;
+               this.close();
+            } else {
+               runDelayed(function() {
+                  if (self._container.length && self._options.catchFocus) {
+                     doAutofocus(self._container);
+                  }
+               });
+            }
          },
 
          _afterMount: function(cfg) {
@@ -793,6 +798,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.close();
          },
          close: function(arg) {
+            if (this._logicParent.waitForPopupCreated) {
+               this._waitClose = true;
+               return;
+            }
+
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
             } else if (this._childControl && !this._childControl.isDestroyed()) {
