@@ -463,11 +463,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isTrue(updated);
    
          /* tabSelectedKey changed, filter must be changed */
-         suggestComponent._markedKeyChanged = true;
+         suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._filter.currentTab, 'test');
          assert.isTrue(suggestActivated);
-         assert.isFalse(suggestComponent._markedKeyChanged);
+         assert.isTrue(suggestComponent._suggestMarkedKey === null);
       });
    
       it('Suggest::searchDelay on tabChange', function() {
@@ -580,10 +580,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isTrue(item._isUpdateHistory);
       });
    
-      it('Suggest::_markedKeyChanged', function() {
+      it('Suggest::_markedKeyChangedHandler', function() {
          var suggestComponent = new Suggest();
-         suggestComponent._markedKeyChangedHandler();
-         assert.isTrue(suggestComponent._markedKeyChanged);
+         suggestComponent._markedKeyChangedHandler(null, 'test');
+         assert.equal(suggestComponent._suggestMarkedKey, 'test');
+   
+         suggestComponent._markedKeyChangedHandler(null, 'test2');
+         assert.equal(suggestComponent._suggestMarkedKey, 'test2');
       });
 
       it('Suggest::_keyDown', function() {
@@ -622,13 +625,14 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          eventPreventDefault = false;
          
          suggestComponent._keydown(getEvent(Env.constants.key.enter));
-         assert.isTrue(eventPreventDefault);
+         assert.isFalse(eventPreventDefault);
          eventPreventDefault = false;
    
-         suggestComponent._markedKeyChanged = true;
+         suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._keydown(getEvent(Env.constants.key.enter));
-         assert.isFalse(eventPreventDefault);
-         
+         assert.isTrue(eventPreventDefault);
+   
+         eventPreventDefault = false;
          suggestComponent._keydown(getEvent('test'));
          assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
