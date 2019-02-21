@@ -117,6 +117,81 @@ define([
             });
          });
       });
+
+
+      it('TreeControl._private.toggleExpanded', function() {
+         var treeControl = correctCreateTreeControl({
+            columns: [],
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         var isSourceControllerUsed = false;
+
+         //viewmodel moch
+         treeControl._children.baseControl.getViewModel = function() {
+            return {
+               getExpandedItems: function() {
+                  return {
+                     '1': true
+                  };
+               },
+               toggleExpanded: function(){},
+               isExpandAll: function() {
+                  return false;
+               },
+               resetExpandedItems: function() {
+
+               },
+               isExpanded: function() {
+                  return false;
+               },
+               getChildren: function() {return [1]},
+               getIndexByKey: function() {
+
+               },
+               getCount:function(){
+                  return 2;
+               }
+            };
+         };
+
+         treeControl._children.baseControl.getVirtualScroll = function(){
+            return {
+               ItemsCount: 0,
+               updateItemsIndexesOnToggle: function() {
+               }
+            };
+         };
+
+         treeControl._nodesSourceControllers = {
+            1: {
+               load: function() {
+                  isSourceControllerUsed = true;
+               }
+            }
+         };
+
+         // Test
+         return new Promise(function(resolve) {
+            setTimeout(function() {
+               TreeControl._private.toggleExpanded(treeControl, {
+                  getContents: function() {
+                     return {
+                        getId: function() {
+                           return 1;
+                        }
+                     };
+                  }
+               });
+               assert.isFalse(isSourceControllerUsed);
+               resolve();
+            }, 10);
+         });
+      });
+
+
       it('TreeControl.reload', function(done) {
          var treeControl = correctCreateTreeControl({
                columns: [],
