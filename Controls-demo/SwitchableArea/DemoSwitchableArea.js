@@ -21,7 +21,8 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
             {
                id: '0',
                title: 'content1',
-               itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/content'
+               itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/content',
+               additionalOptions: true
             },
             {
                id: '1',
