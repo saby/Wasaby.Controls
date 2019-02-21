@@ -67,7 +67,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
          controller._searchContext = { updateConsumers: function() {} };
 
-         Search._private.searchCallback(controller, {});
+         Search._private.searchCallback(controller, {}, {});
 
          assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
