@@ -90,7 +90,7 @@ define([
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
             } else if (eventName === 'textValueChanged') {
-               textValue = data;
+               textValue = data[0];
             }
          };
 
@@ -121,12 +121,14 @@ define([
 
       it('removeItem', function() {
          var
+            textValue,
             selectedItems,
             keysChanged = false,
             self = getBaseSelectedCollection(),
             item = new entity.Model({
                rawData: {
-                  id: 1
+                  id: 1,
+                  title: 'Roman'
                }
             }),
             fakeItem = new entity.Model({
@@ -135,9 +137,11 @@ define([
                }
             });
 
-         self._notify = function(eventName) {
+         self._notify = function(eventName, data) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
+            }  else if (eventName === 'textValueChanged') {
+               textValue = data[0];
             }
          };
 
@@ -152,6 +156,7 @@ define([
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
          assert.equal(self._items.getCount(), 1);
+         assert.equal(textValue, 'Roman');
 
 
          selectedItems = self._items;
@@ -160,6 +165,7 @@ define([
          assert.isTrue(keysChanged);
          assert.notEqual(selectedItems, self._items);
          assert.equal(self._items.getCount(), 0);
+         assert.equal(textValue, '');
       });
 
       it('_beforeMount', function() {

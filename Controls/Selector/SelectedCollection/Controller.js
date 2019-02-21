@@ -52,7 +52,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       notifyTextValueChanged: function(self, textValue) {
-         self._notify('textValueChanged', textValue);
+         self._notify('textValueChanged', [textValue]);
       },
 
       prepareItems: function(self) {
