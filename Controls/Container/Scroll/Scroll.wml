@@ -12,7 +12,8 @@
                     class="controls-Scroll__content ws-BlockGroup
                            {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
                            {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                           {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+                           {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}
+                           {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
                     on:controlResize="_resizeHandler()"
                     on:scroll="_scrollHandler()">
                   <ws:partial template="{{_options.content}}"

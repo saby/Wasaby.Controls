@@ -320,6 +320,17 @@ define('Controls/Container/Scroll',
                this._updateStickyHeaderContext();
                this._adjustContentMarginsForBlockRender();
 
+               // Create a scroll container with a "overflow-scrolling: auto" style and then set
+               // "overflow-scrolling: touch" style. Otherwise, after switching on the overflow-scrolling: auto,
+               // the page will scroll entirely. This solution fixes the problem, but in the old controls the container
+               // was created with "overflow-scrolling: touch" style style.
+               // A task has been created to investigate the problem more.
+               // https://online.sbis.ru/opendoc.html?guid=1c9b807c-41ab-4fbf-9f22-bf8b9fcbdc8d
+               if (detection.isMobileIOS) {
+                  this._overflowScrolling = true;
+                  needUpdate = true;
+               }
+
                if (needUpdate) {
                   this._forceUpdate();
                }
