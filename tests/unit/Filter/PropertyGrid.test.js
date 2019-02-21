@@ -77,6 +77,13 @@ define(
             oldItems[1].visibility = true;
             newItems[1].visibility = false;
             assert.equal(PropertyGrid._private.getIndexChangedVisibility(newItems, oldItems), -1);
+            newItems.push({
+               id: 'newItem',
+               value: 'testValue',
+               resetValue: '',
+               visibility: true
+            });
+            assert.equal(PropertyGrid._private.getIndexChangedVisibility(newItems, oldItems), -1);
          });
 
          it('_beforeUpdate', function() {
