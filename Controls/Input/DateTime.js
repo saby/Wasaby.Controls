@@ -61,6 +61,8 @@
 
       _model: null,
 
+      _needInputCompletedEvent: false,
+
       _beforeMount: function(options) {
          this._model = new Model(options);
          CalendarControlsUtils.proxyModelEvents(this, this._model, ['valueChanged']);
@@ -72,6 +74,7 @@
 
       _inputCompletedHandler: function(event, value, textValue) {
          this._model.autocomplete(textValue, this._options.autocompleteType);
+         this._needInputCompletedEvent = false;
          this._notify('inputCompleted', [this._model.value, textValue]);
       },
 
@@ -80,20 +83,30 @@
          e.stopImmediatePropagation();
       },
       _onKeyDown: function(event) {
-         event.stopImmediatePropagation();
          var key = event.nativeEvent.keyCode;
          if (key === CoreConstants.key.insert) {
          // on Insert button press current date should be inserted in field
+            event.stopImmediatePropagation();
             this._model.setCurrentDate();
+            this._needInputCompletedEvent = true;
          }
          if (key === CoreConstants.key.plus || key === CoreConstants.key.minus) {
          // on +/- buttons press date should be increased or decreased in field by one day
+            event.stopImmediatePropagation();
             var delta = key === CoreConstants.key.plus ? 1 : -1;
             var localDate = new Date(this._model.value);
             localDate.setDate(this._model.value.getDate() + delta);
             this._model.value = localDate;
          }
       },
+
+      _onDeactivated: function(event) {
+         if (this._needInputCompletedEvent) {
+            this._needInputCompletedEvent = false;
+            this._notify('inputCompleted', [this._model.value, this._model.textValue]);
+         }
+      },
+
       _beforeUnmount: function() {
          this._model.destroy();
       }
