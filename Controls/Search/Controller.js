@@ -41,6 +41,7 @@ define('Controls/Search/Controller',
             self._loading = false;
             self._previousViewMode = self._viewMode;
             self._viewMode = 'search';
+            
             /* FIXME Решаю по ошибке в 121 https://online.sbis.ru/opendoc.html?guid=1ae9ffe1-8e81-4552-89d1-9ebde80c1979
                self._searchValue = filter[self._options.searchParam] || '';
             */
@@ -148,6 +149,7 @@ define('Controls/Search/Controller',
 
          _search: function(event, value, force) {
             _private.getSearchController(this).search(value, force);
+            
             //FIXME Решаю по ошибке в 121 https://online.sbis.ru/opendoc.html?guid=1ae9ffe1-8e81-4552-89d1-9ebde80c1979
             this._searchValue = value;
          },
