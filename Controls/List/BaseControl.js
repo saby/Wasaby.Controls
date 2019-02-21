@@ -844,6 +844,10 @@ define('Controls/List/BaseControl', [
          if (newOptions.markerVisibility !== this._options.markerVisibility) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
          }
+         
+         if (newOptions.searchValue !== this._options.searchValue) {
+            this._listViewModel.setSearchValue(newOptions.searchValue);
+         }
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
