@@ -2,6 +2,23 @@
   .controls-Grid__row-cell_selected-master:before {
     display: none;
   }
+  .controls-Grid__row-cell_selected__last-master:after {
+    display: none;
+  }
+  .controls-Grid_master {
+    padding-right: 0;
+  }
+  .controls-Grid__row-cell__last-master {
+    border-right: @border-width_List-masterList-right solid @border-color_List-masterList;
+  }
+  .controls-Grid__row-cell_selected__last-master {
+    border-right: @border-width_List-masterList-right solid @background-color_List-masterList-item_selected;
+  }
+  .controls-Grid__row-cell_selected-master {
+    border-width: @border-width_List-masterList-item_selected;
+    border-style: solid;
+    border-color: @border-color_List-masterList-item_selected;
+  }
   .controls-Grid__row-cell_selected__first {
     box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;
   }

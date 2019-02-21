@@ -361,6 +361,12 @@ define([
                   multiSelectVisibility: 'visible'
                }), ' controls-ListView__item-rightPadding_m');
             });
+   
+            it('check search value', function() {
+               lvm.setSearchValue('test');
+               assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               lvm.setSearchValue(null);
+            });
          });
 
          describe('calculateDragTargetPosition', function() {

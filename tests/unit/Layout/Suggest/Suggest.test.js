@@ -46,6 +46,8 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          return Deferred.success(IDENTIFICATORS);
       };
 
+      var getHistorySource = Suggest._private.getHistoryService;
+
       Suggest._private.getHistoryService = function() {
          return {
             addCallback: function(func) {
@@ -58,6 +60,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          }
       };
 
+      it('Suggest::getHistoryService', function(done) {
+         getHistorySource({_options: {historyId: 'TEST_HISTORY_ID_GET_SOURCE'}}).addCallback(function(historyService) {
+            assert.equal(12, historyService._recent);
+            assert.equal('TEST_HISTORY_ID_GET_SOURCE', historyService._historyId);
+            done();
+         });
+      });
 
       
       it('Suggest::_private.hasMore', function() {
@@ -79,7 +88,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             stateNotifyed = true;
          };
-   
+         self._forceUpdate = function () {};
          Suggest._private.suggestStateNotify(self, true);
          assert.isFalse(stateNotifyed);
    
@@ -127,6 +136,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             state = args[0];
          };
+         self._forceUpdate = function () {};
          Suggest._private.open(self);
          self._dependenciesDeferred.addCallback(function() {
             assert.isTrue(state);
@@ -242,13 +252,22 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
       it('Suggest::_private.searchErrback', function(done) {
          var self = getComponentObject();
+         self._forceUpdate = function() {};
+   
+         self._loading = null;
+         Suggest._private.searchErrback(self, {canceled: true});
+         assert.isTrue(self._loading === null);
+   
          self._loading = true;
+         Suggest._private.searchErrback(self, {canceled: false});
+         assert.isFalse(self._loading);
+   
          self._forceUpdate = function() {
             assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
             done();
          };
-         Suggest._private.searchErrback(self, {canceled: false});
-         
+         self._loading = true;
+         Suggest._private.searchErrback(self, {canceled: true});
          assert.isFalse(self._loading);
       });
       
@@ -479,6 +498,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             searchParam: 'testSearchParam',
             minSearchLength: 3
          };
+         Suggest._private.loadDependencies = function() {return Deferred.success(true)};
          var suggestComponent = new Suggest(options);
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;

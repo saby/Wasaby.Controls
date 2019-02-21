@@ -27,24 +27,28 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return (second.showType || 0) - (first.showType || 0);
       },
 
-      fillItemAllActions: function(item, itemActions, itemActionVisibilityCallback) {
+      fillItemAllActions: function(item, options) {
          var actions = [];
-         itemActions.forEach(function(action) {
-            if (!itemActionVisibilityCallback || itemActionVisibilityCallback(action, item)) {
-               if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
-                  action.icon += ' ' + ACTION_ICON_CLASS;
+         if (options.itemActionsProperty) {
+            actions = item.get(options.itemActionsProperty);
+         } else {
+            options.itemActions.forEach(function(action) {
+               if (!options.itemActionVisibilityCallback || options.itemActionVisibilityCallback(action, item)) {
+                  if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
+                     action.icon += ' ' + ACTION_ICON_CLASS;
+                  }
+                  action.style = getStyle(action.style, 'ItemActions');
+                  action.iconStyle = getStyle(action.iconStyle, 'ItemActions');
+                  actions.push(action);
                }
-               action.style = getStyle(action.style, 'ItemActions');
-               action.iconStyle = getStyle(action.iconStyle, 'ItemActions');
-               actions.push(action);
-            }
-         });
+            });
+         }
          return actions;
       },
 
       updateItemActions: function(self, item, options, isTouch) {
          var
-            all = _private.fillItemAllActions(item, options.itemActions, options.itemActionVisibilityCallback),
+            all = _private.fillItemAllActions(item, options),
 
             showed = options.itemActionsPosition === 'outside'
                ? all
@@ -84,17 +88,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       updateModel: function(self, newOptions, isTouch) {
          _private.updateActions(self, newOptions, isTouch);
-         newOptions.listModel.subscribe('onListChange', function() {
-            /**
-             * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
-             * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
-             */
-            var isTouchValue = false;
-            if (self._context && self._context.isTouch) {
-               isTouchValue = self._context.isTouch.isTouch;
-            }
-            _private.updateActions(self, self._options, isTouchValue);
-         });
+         newOptions.listModel.subscribe('onCollectionChange', self._onCollectionChangeFn);
       },
 
       needActionsMenu: function(actions, itemActionsPosition) {
@@ -123,6 +117,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             this.serverSide = true;
             return;
          }
+         this._onCollectionChangeFn = this._onCollectionChange.bind(this);
 
          /**
           * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
@@ -155,6 +150,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
             this._options.itemActionsPosition !== newOptions.itemActionsPosition
          ) {
+            this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             _private.updateModel.apply(null, args);
          }
       },
@@ -181,6 +177,22 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             isTouch = this._context.isTouch.isTouch;
          }
          _private.updateItemActions(this, item, this._options, isTouch);
+      },
+
+      _beforeUnmount: function() {
+         this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+      },
+
+      _onCollectionChange: function() {
+         /**
+          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
+          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
+          */
+         var isTouchValue = false;
+         if (this._context && this._context.isTouch) {
+            isTouchValue = this._context.isTouch.isTouch;
+         }
+         _private.updateActions(this, this._options, isTouchValue);
       }
    });
 

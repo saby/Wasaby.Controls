@@ -284,13 +284,16 @@ define(
 
             config.minWidth = 100;
             config.maxWidth = 1000;
+            config.maximized = true;
             config.title = 'заголовок';
+            config.maximize = true;
 
             config.target = 'testTarget';
             config.className = 'testClass';
             config.closeByExternalClick = false;
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.equal(newConfig.templateOptions, config.templateOptions);
+            assert.equal(newConfig.dialogOptions._isCompatibleArea, true);
             assert.equal(newConfig.componentOptions, config.templateOptions);
             assert.equal(newConfig.template, config.template);
             assert.equal(newConfig._initCompoundArea, config._initCompoundArea);
@@ -311,9 +314,12 @@ define(
             assert.equal(newConfig.dialogOptions.offset, config.offset);
 
             assert.equal(newConfig.dialogOptions.showOnControlsReady, false);
+            assert.equal(newConfig.dialogOptions.maximize, true);
             assert.equal(newConfig.dialogOptions.autoCloseOnHide, true);
             assert.equal(newConfig.dialogOptions.minWidth, config.minWidth);
             assert.equal(newConfig.dialogOptions.maxWidth, config.maxWidth);
+            assert.equal(newConfig.dialogOptions.maximized, true);
+            assert.equal(newConfig.componentOptions.maximized, true);
             let testconfig = {
                horizontalAlign: {
                   side: 'left',

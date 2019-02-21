@@ -17,6 +17,7 @@
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
+      var COUNT_HISTORY_ITEMS = 12;
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -37,6 +38,8 @@
          suggestStateNotify: function(self, state) {
             if (self._options.suggestState !== state) {
                self._notify('suggestStateChanged', [state]);
+            } else {
+               self._forceUpdate();
             }
          },
          setCloseState: function(self) {
@@ -94,7 +97,10 @@
          },
          
          searchErrback: function(self, error) {
-            self._loading = false;
+            //aborting of the search may be caused before the search start, because of the delay before searching
+            if (self._loading !== null) {
+               self._loading = false;
+            }
             if (!error || !error.canceled) {
                requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
                   self._emptyTemplate = result;
@@ -180,7 +186,8 @@
                self._historyServiceLoad = new Deferred();
                require(['Controls/History/Service'], function(HistoryService) {
                   self._historyService = new HistoryService({
-                     historyId: self._options.historyId
+                     historyId: self._options.historyId,
+                     recent: COUNT_HISTORY_ITEMS
                   });
                   self._historyServiceLoad.callback(self._historyService);
                });
@@ -276,19 +283,21 @@
             var valueChanged = this._options.value !== newOptions.value;
             var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
-            
+
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
+            } else if (this._options.suggestState !== newOptions.suggestState) {
+               _private.open(this);
             }
-      
+
             if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
-   
+
             if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-      
+
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
                this._dependenciesDeferred = null;

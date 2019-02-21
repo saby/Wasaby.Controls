@@ -61,12 +61,27 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
          assert.isFalse(resultSended);
       });
       
+      it('_private.getSuggestWidth', function() {
+         var originGetBorderWidth = PopupContent._private.getBorderWidth;
+         PopupContent._private.getBorderWidth = function() {
+            return 2;
+         }
+         
+         var target = {
+            offsetWidth: 50
+         }
+         var container = {};
+   
+         assert.equal(PopupContent._private.getSuggestWidth(target, container), 48);
+         PopupContent._private.getBorderWidth = originGetBorderWidth;
+      })
+      
    });
    
    describe('Controls.Container.Suggest.__PopupContent template tests', function() {
       
       it('showContent:false', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden" style="width:px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
          getMarkup(popupContentTemplate, {_options: {showContent: false, target: {offsetWidth: ''}, content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
@@ -75,7 +90,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
       });
       
       it('showContent:true', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_" style="width:px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
          getMarkup(popupContentTemplate, {_options: {showContent: true, target: {offsetWidth: ''},  content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
@@ -84,7 +99,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
       });
       
       it('target.offsetWidth:300px', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden" style="width:300px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_ controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
          
          getMarkup(popupContentTemplate, {_options: {target: {offsetWidth: 300}, content: '', stickyPosition: {verticalAlign: {side: ''}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);
@@ -93,7 +108,7 @@ define(['Controls/Container/Suggest/__PopupContent', 'wml!Controls/Container/Sug
       });
    
       it('verticalAling', function(done) {
-         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_top controls-Suggest__suggestionsContainer_hidden" style="width:300px;"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
+         var standardMarkup = '<div class="controls-Suggest__suggestionsContainer controls-Suggest__suggestionsContainer_popup_shadow_top controls-Suggest__suggestionsContainer_hidden"><div class="controls-Scroll ws-flexbox ws-flex-column controls-Suggest__scrollContainer" hasMarkup="true" data-component="Controls/Container/Scroll"><span class="controls-Scroll__content ws-BlockGroup controls-Scroll__content_hideNativeScrollbar controls-Scroll__content_hidden"></span><div></div></div></div>';
       
          getMarkup(popupContentTemplate, {_options: {target: {offsetWidth: 300}, content: '', stickyPosition: {verticalAlign: {side: 'top'}}}}).addCallback(function(res) {
             assert.equal(res, standardMarkup);

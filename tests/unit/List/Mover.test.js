@@ -14,28 +14,27 @@ define([
          var
             data = [{
                id: 1,
-               title: 'Первый',
                folder: null,
                'folder@': true
             }, {
                id: 2,
-               title: 'Второй',
                folder: null,
                'folder@': null
             }, {
                id: 3,
-               title: 'Третий',
                folder: null,
                'folder@': null
             }, {
                id: 4,
-               title: 'Третий',
                folder: 1,
                'folder@': true
             }, {
                id: 5,
-               title: 'Третий',
                folder: 1,
+               'folder@': null
+            }, {
+               id: 6,
+               folder: null,
                'folder@': null
             }];
 
@@ -386,6 +385,25 @@ define([
             selected: [1, 2],
             excluded: []
          }, 3, 'after');
+      });
+
+      it('getSiblingItem', function() {
+         var siblingItem;
+
+         siblingItem = Mover._private.getSiblingItem(mover, items.getRecordById(6), 'before');
+         assert.equal(siblingItem.getId(), 3);
+         siblingItem = Mover._private.getSiblingItem(mover, items.getRecordById(6), 'after');
+         assert.isNull(siblingItem);
+
+         siblingItem = Mover._private.getSiblingItem(mover, items.getRecordById(3), 'after');
+         assert.equal(siblingItem.getId(), 6);
+         siblingItem = Mover._private.getSiblingItem(mover, items.getRecordById(3), 'before');
+         assert.equal(siblingItem.getId(), 2);
+
+         siblingItem = Mover._private.getSiblingItem(mover, items.getRecordById(1), 'after');
+         assert.equal(siblingItem.getId(), 2);
+         siblingItem = Mover._private.getSiblingItem(mover, items.getRecordById(1), 'before');
+         assert.isNull(siblingItem);
       });
 
    });

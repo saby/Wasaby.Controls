@@ -398,9 +398,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _rebuildTitleBar: function() {
+            this._removeCustomHeader();
+            this._setCustomHeader();
+         },
+
+         _removeCustomHeader: function() {
             var customTitles = this._container.find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
             customTitles.remove();
-            this._setCustomHeader();
          },
 
          handleCommand: function(commandName, args) {
@@ -535,15 +539,26 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
 
-         _setCompoundAreaOptions: function(newOptions) {
+         _setCompoundAreaOptions: function(newOptions, popupOptions) {
             if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
+            this._popupOptions = popupOptions;
             this._childControlName = newOptions.template;
             this._childConfig = newOptions.templateOptions || {};
          },
 
          reload: function() {
+            if (this._popupOptions) {
+               // set new sizes for popup
+               var popupCfg = this._getManagerConfig();
+               if (popupCfg && this._popupOptions.minWidth && this._popupOptions.maxWidth) {
+                  popupCfg.popupOptions.minWidth = this._popupOptions.minWidth;
+                  popupCfg.popupOptions.maxWidth = this._popupOptions.maxWidth;
+                  ManagerController.update(popupCfg.id, popupCfg.popupOptions);
+               }
+            }
+            this._removeCustomHeader();
             this.rebuildChildControl();
          },
          setTemplate: function(template, templateOptions) {
