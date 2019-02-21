@@ -1,0 +1,10 @@
+<div>
+	<span class="controls-ProcessStateIndicator">		
+	    <ws:for data="i in _realNumSectors">
+	        <span 
+	                class="controls-ProcessStateIndicator__box {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-ProcessStateIndicator__emptySector' }}" 
+	                data-item="{{ _colorState[i] ? _colorState[i] : -1 }}"
+	        ></span>
+	    </ws:for>
+	</span>	
+</div>
