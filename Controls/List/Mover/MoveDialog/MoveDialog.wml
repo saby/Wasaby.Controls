@@ -1,5 +1,12 @@
 <Controls.Popup.Templates.Dialog.DialogTemplate caption="{[В другой раздел]}" attr:class="controls-MoveDialog">
    <ws:contentArea>
+      <ws:if data="{{_options.showRoot}}">
+         <Controls.buttons:Button attr:class="controls-MoveDialog__root"
+                                  viewMode="link"
+                                  caption="{[В корень]}"
+                                  on:click="_onItemActionsClick('move', _options.root)"
+                                  icon="icon-small icon-primary icon-Home3"/>
+      </ws:if>
       <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
          <Controls.TreeGrid
             source="{{_options.source}}"
@@ -15,7 +22,9 @@
             root="{{_options.root}}"
             itemsFilterMethod="{{_itemsFilterMethod}}"
             expanderDisplayMode="adaptive"
-            columns="{{_options.columns}}"/>
+            columns="{{_options.columns}}">
+            <ws:itemPadding left="S"/>
+         </Controls.TreeGrid>
       </Controls.Container.Scroll>
    </ws:contentArea>
 </Controls.Popup.Templates.Dialog.DialogTemplate>
