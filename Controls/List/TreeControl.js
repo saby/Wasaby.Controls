@@ -97,12 +97,10 @@ define('Controls/List/TreeControl', [
                }
             });
          } else {
-            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
             if (self._children.baseControl.getVirtualScroll()) {
-               self._nodesSourceControllers[nodeKey].load(filter, self._sorting).addCallback(function(list) {
-                  _private.updateItemsIndexesOnToggle(self, nodeKey, list.getCount(), expanded);
-               });
+               _private.updateItemsIndexesOnToggle(self, nodeKey, listViewModel.getChildren(nodeKey).length, expanded);
             }
+            _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
          }
       },
       prepareHasMoreStorage: function(sourceControllers) {
