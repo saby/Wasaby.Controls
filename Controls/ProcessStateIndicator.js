@@ -4,7 +4,7 @@ define('Controls/ProcessStateIndicator', [
    'wml!Controls/ProcessStateIndicator/ProcessStateIndicator',
    'css!Controls/ProcessStateIndicator/ProcessStateIndicator',
 ], 
-function(Control, entity, template ) {
+function(Control, entity, template) {
    'use strict'; 
 
    var defaultColors = [
@@ -17,14 +17,14 @@ function(Control, entity, template ) {
 
    var setColors = function setColors(_colors, _numValues) {
       var colors = [];
-      if(_numValues > Math.max(_colors.length,defaultColors.length)) {
+      if (_numValues > Math.max(_colors.length, defaultColors.length)) {
          throw new Error('Number of values is greater than number of colors');
       } 
       for (var i = 0; i < _numValues; i++) {
          colors[i] = _colors[i] ? _colors[i] : defaultColors[i];
       }
       return colors;
-   }
+   };
 
    var calculateColorState = function calculateColorState(_numSectors, _numValues, _state, _colors) {
       var
@@ -39,7 +39,7 @@ function(Control, entity, template ) {
       if (!(state instanceof Array)) {
          state = [ +state ];
       }
-      for(i = 0; i < Math.min(_numValues, state.length); i++) {
+      for (i = 0; i < Math.min(_numValues, state.length); i++) {
          // Больше чем знаем цветов не рисуем
          if (i < _colors.length) {
             // Приводим к числу, отрицательные игнорируем 
@@ -52,11 +52,11 @@ function(Control, entity, template ) {
             }
             if (itemNumSectors > maxSectorsPerValue) {
                longestValueStart = curSector;
-               maxSectorsPerValue = itemNumSectors
+               maxSectorsPerValue = itemNumSectors;
             }
             totalSectorsUsed += itemNumSectors;
             for(j = 0; j < itemNumSectors; j++) {
-               colorValues[curSector++] = i+1;
+               colorValues[curSector++] = i + 1;
             }
          }
       }
@@ -68,7 +68,7 @@ function(Control, entity, template ) {
       }
       
       return colorValues;
-   }
+   };
 
    function checkState(state) {
       var sum;
@@ -102,14 +102,14 @@ function(Control, entity, template ) {
          _beforeUpdate: function(opts) {
             //Подгоняем количество секторов индикатора под размер области (см. спецификацию)
             var indicatorWidth = this._container.clientWidth - 6;
-            this._realNumSectors = Math.min(Math.floor((indicatorWidth - 6 ) / 8),opts.numSectors);
+            this._realNumSectors = Math.min(Math.floor((indicatorWidth - 6) / 8), opts.numSectors);
             
             
          },
 
          _mouseOverIndicatorHandler: function(e) {
             var itemIndex = this._container.getElementsByClassName('controls-ProcessStateIndicator__box').index(e.target);
-            this._notify('onItemOver', + e.target.getAttribute('data-item'), itemIndex)
+            this._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex);
          },
 
          _afterMount: function() {
@@ -121,7 +121,8 @@ function(Control, entity, template ) {
 
             checkState(opts.state);
             var colorState,
-            indicatorBoxes = this._container.getElementsByClassName('controls-ProcessStateIndicator__box');
+               indicatorBoxes = this._container.getElementsByClassName('controls-ProcessStateIndicator__box');
+               
             this._colors = setColors(this._options.colors, this._options.numValues);
             this._colorState = colorState = calculateColorState(this._realNumSectors, this._options.numValues, this._options.state, this._colors);
             for (var i = 0; i < indicatorBoxes.length; i++) {
