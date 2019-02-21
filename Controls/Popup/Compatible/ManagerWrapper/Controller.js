@@ -21,6 +21,16 @@ define('Controls/Popup/Compatible/ManagerWrapper/Controller', [], function() {
          if (this._managerWrapper) {
             this._managerWrapper._scrollHandler();
          }
+      },
+      registerListener: function(event, registerType, component, callback) {
+         if (this._managerWrapper) {
+            this._managerWrapper.registerListener(event, registerType, component, callback);
+         }
+      },
+      unregisterListener: function(event, registerType, component) {
+         if (this._managerWrapper) {
+            this._managerWrapper.unregisterListener(event, registerType, component);
+         }
       }
    };
 });

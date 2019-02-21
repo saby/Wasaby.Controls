@@ -52,6 +52,30 @@ define('Controls/Popup/Compatible/ManagerWrapper',
             this._children[registratorName].start(new Vdom.SyntheticEvent(event));
          },
 
+         registerListener: function(event, registerType, component, callback) {
+            this._listenersSubscribe('_registerIt', event, registerType, component, callback);
+         },
+
+         unregisterListener: function(event, registerType, component, callback) {
+            this._listenersSubscribe('_unRegisterIt', event, registerType, component, callback);
+         },
+
+         _listenersSubscribe: function(method, event, registerType, component, callback) {
+            // Вызываю обработчики всех регистраторов, регистратор сам поймет, нужно ли обрабатывать событие
+            var registrators = [
+               'scrollDetect',
+               'resizeDetect',
+               'mousemoveDetect',
+               'touchmoveDetect',
+               'touchendDetect',
+               'mousedownDetect',
+               'mouseupDetect'
+            ];
+            for (var i = 0; i < registrators.length; i++) {
+               this._children[registrators[i]][method](event, registerType, component, callback);
+            }
+         },
+
          _scrollHandler: function() {
             this.closePopups();
          },
