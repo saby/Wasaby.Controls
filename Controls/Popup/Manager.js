@@ -383,7 +383,7 @@ define('Controls/Popup/Manager',
 
          _contentClick: function(event) {
             this._popupItems.each(function(item) {
-               if (item.waitDeactivated) {
+               if (item && item.waitDeactivated) {
                   if (!_private.isIgnoreActivationArea(event.target)) {
                      _private.popupDeactivated(item.id);
                   }
