@@ -16,6 +16,8 @@ import IoC = require("Core/IoC");
 type VirtualScrollConfig = {
     virtualPageSize?: number;
     virtualSegmentSize?: number;
+    startIndex?: number;
+    updateItemsHeightsMode?: string;
 }
 
 
@@ -79,6 +81,7 @@ class VirtualScroll {
     private _topPlaceholderSize: number = 0;
     private _bottomPlaceholderSize: number = 0;
     private _needToUpdateAllItemsHeight: boolean = false;
+    private _updateItemsHeightsMode: string = 'onChangeCollection';
 
 
     get ItemsIndexes(): ItemsIndexes {
@@ -116,8 +119,9 @@ class VirtualScroll {
     public constructor(cfg: VirtualScrollConfig) {
         this._virtualPageSize = cfg.virtualPageSize || this._virtualPageSize;
         this._virtualSegmentSize = cfg.virtualSegmentSize || this._virtualSegmentSize;
+        this._updateItemsHeightsMode = cfg.updateItemsHeightsMode || this._updateItemsHeightsMode;
 
-        this._startIndex = this._initialStartIndex;
+        this._startIndex = cfg.startIndex || this._initialStartIndex;
         this._stopIndex = this._startIndex + this._virtualPageSize;
     }
 
@@ -229,14 +233,21 @@ class VirtualScroll {
         /*
         * uDimension работает с window, для того чтобы протестировать функцию есть параметр isUnitTesting
         */
-        if (isUnitTesting) {
-            for (let i = 0; i < updateLength; i++) {
-                this._itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
+        if (this._updateItemsHeightsMode == 'onChangeCollection') {
+            if (isUnitTesting) {
+                for (let i = 0; i < updateLength; i++) {
+                    this._itemsHeights[startUpdateIndex + i] = this._itemsContainer.children[i].offsetHeight;
+                }
+            } else {
+                for (let i = 0; i < updateLength; i++) {
+                    this._itemsHeights[startUpdateIndex + i] = uDimension(this._itemsContainer.children[i]).height;
+                }
             }
-        } else {
-            for (let i = 0; i < updateLength; i++) {
-                this._itemsHeights[startUpdateIndex + i] = uDimension(this._itemsContainer.children[i]).height;
-            }
+        } else if (this._updateItemsHeightsMode === 'always') {
+            for (var i = 0; i < this._itemsContainer.children.length; i++) {
+                this._itemsHeights[i] = uDimension(this._itemsContainer.children[i]).height;
+             }
+
         }
 
     }
