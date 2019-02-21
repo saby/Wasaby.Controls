@@ -137,7 +137,7 @@ define([
                }
             });
 
-         self._notify = function(eventName) {
+         self._notify = function(eventName, data) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
             }  else if (eventName === 'textValueChanged') {
