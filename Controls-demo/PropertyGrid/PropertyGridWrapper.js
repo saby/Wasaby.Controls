@@ -49,13 +49,13 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'enum': enumTmpl,
                'Object': objTmpl
             };
-            var testName = opts.content.split('/');
-            testName.splice(0, 1);
-            this._demoName = testName.join('');
             this._exampleControlOptions = opts.componentOpt;
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
+               var testName = opts.content.split('/');
+               testName.splice(0, 1);
+               this._demoName = testName.join('');
                require([opts.content], function() {
                   def.callback();
                });
