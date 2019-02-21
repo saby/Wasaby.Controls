@@ -46,6 +46,16 @@
             self._showContent = false;
             self._loading = null;
          },
+         
+         setSuggestMarkedKey: function(self, key) {
+            var currentMarkedKey = self._suggestMarkedKey;
+            self._suggestMarkedKey = key;
+            
+            if (currentMarkedKey !== self._suggestMarkedKey) {
+               self._notify('suggestMarkedKeyChanged', [key]);
+            }
+         },
+         
          close: function(self) {
             this.setCloseState(self);
             this.suggestStateNotify(self, false);
@@ -250,7 +260,7 @@
          _historyLoad: null,
          _showContent: false,
          _inputActive: false,
-         _markedKeyChanged: false,
+         _suggestMarkedKey: null,
 
          /**
           * three state flag
@@ -373,7 +383,7 @@
          },
          _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
-            this._markedKeyChanged = false;
+            _private.setSuggestMarkedKey(this, null);
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
             // otherwise interface will blink
@@ -408,8 +418,8 @@
             }
          },
    
-         _markedKeyChangedHandler: function() {
-            this._markedKeyChanged = true;
+         _markedKeyChangedHandler: function(event, key) {
+            _private.setSuggestMarkedKey(this, key);
          },
    
          // </editor-fold>
@@ -468,7 +478,7 @@
 
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
-            var needProcessKey = eventKeyCode === ENTER_KEY ? !this._markedKeyChanged : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
             
             if (this._options.suggestState && needProcessKey) {
                event.preventDefault();
