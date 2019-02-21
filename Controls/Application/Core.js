@@ -65,8 +65,8 @@ define('Controls/Application/Core',
 
             AppCore.superclass.constructor.apply(this, arguments);
 
-            this.ctxData = new AppData(cfg);
-            Request.getCurrent().setStorage('AppData', AppData);
+            AppData.initAppData(cfg);
+            this.ctxData = new AppData.getAppData();
 
             // Put Application/Core instance into the current request where
             // other modules can get it from
@@ -91,7 +91,13 @@ define('Controls/Application/Core',
                result = false;
             }
             return result;
+         },
+         _getChildContext: function() {
+            return {
+               AppData: this.ctxData
+            };
          }
+
       });
 
       return AppCore;

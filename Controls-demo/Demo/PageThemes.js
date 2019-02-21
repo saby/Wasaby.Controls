@@ -7,13 +7,12 @@ define('Controls-demo/Demo/PageThemes',
       'Core/Deferred',
       'tmpl!Controls-demo/Demo/PageThemes',
       'Controls/Application/AppData',
-      'View/Request',
       'Controls/Container/Scroll/Context',
       'css!Controls-demo/Demo/Page',
       'Controls/Application',
       'Vdom/Vdom'
    ],
-   function(Control, Deferred, template, AppData, Request, ScrollData) {
+   function(Control, Deferred, template, AppData, ScrollData) {
       'use strict';
 
       var UrlParams = function (){
@@ -60,8 +59,8 @@ define('Controls-demo/Demo/PageThemes',
          constructor: function(cfg) {
             DemoPage.superclass.constructor.apply(this, arguments);
 
-            var appData = new AppData(cfg);
-            Request.getCurrent().setStorage('AppData', appData);
+            AppData.initAppData(cfg);
+            this.ctxData = new AppData.getAppData();
 
             this.scrollData = new ScrollData({
                pagingVisible: false
