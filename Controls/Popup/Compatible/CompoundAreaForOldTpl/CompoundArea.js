@@ -394,9 +394,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _rebuildTitleBar: function() {
+            this._removeCustomHeader();
+            this._setCustomHeader();
+         },
+
+         _removeCustomHeader: function() {
             var customTitles = this._container.find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
             customTitles.remove();
-            this._setCustomHeader();
          },
 
          handleCommand: function(commandName, args) {
@@ -550,6 +554,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   ManagerController.update(popupCfg.id, popupCfg.popupOptions);
                }
             }
+            this._removeCustomHeader();
             this.rebuildChildControl();
          },
          setTemplate: function(template, templateOptions) {
