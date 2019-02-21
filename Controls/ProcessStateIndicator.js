@@ -55,7 +55,7 @@ function(Control, entity, template) {
                maxSectorsPerValue = itemNumSectors;
             }
             totalSectorsUsed += itemNumSectors;
-            for(j = 0; j < itemNumSectors; j++) {
+            for (j = 0; j < itemNumSectors; j++) {
                colorValues[curSector++] = i + 1;
             }
          }
@@ -74,7 +74,7 @@ function(Control, entity, template) {
       var sum;
       
       if (!(state instanceof Array)) {
-         state = [ state ]
+         state = [ state ];
       }
       
       sum = state.map(Number).reduce(function(sum, v) {
@@ -122,7 +122,7 @@ function(Control, entity, template) {
             checkState(opts.state);
             var colorState,
                indicatorBoxes = this._container.getElementsByClassName('controls-ProcessStateIndicator__box');
-               
+
             this._colors = setColors(this._options.colors, this._options.numValues);
             this._colorState = colorState = calculateColorState(this._realNumSectors, this._options.numValues, this._options.state, this._colors);
             for (var i = 0; i < indicatorBoxes.length; i++) {
