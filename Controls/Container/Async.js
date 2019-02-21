@@ -7,7 +7,7 @@ define('Controls/Container/Async',
       'View/Executor/Utils',
       'Core/library',
       'Types/entity',
-      'Core/IoC'
+      'Env/Env'
    ],
 
    function(Base,
@@ -17,7 +17,7 @@ define('Controls/Container/Async',
       Utils,
       library,
       entity,
-      IoC) {
+      Env) {
       'use strict';
 
 
@@ -96,7 +96,7 @@ define('Controls/Container/Async',
                self._updateOptionsForComponent(res, options);
                self._pushDepToHeadData(library.parse(name).name);
             }, function(err) {
-               IoC.resolve('ILogger').error('Couldn\'t load ' + name, err);
+               Env.IoC.resolve('ILogger').error('Couldn\'t load ' + name, err);
                self._setErrorState(true, err);
             });
             return promise;

@@ -1,9 +1,9 @@
 define('Controls/Utils/hasHorizontalScroll',
    [
-      'Core/detection',
+      'Env/Env',
       'Controls/Utils/getTextWidth'
    ],
-   function(detection, getTextWidth) {
+   function(Env, getTextWidth) {
       'use strict';
 
       return function hasHorizontalScroll(target) {
@@ -16,7 +16,7 @@ define('Controls/Utils/hasHorizontalScroll',
           * the value of the scrollWidth property in a standard algorithm.
           * If the width of the text is greater than the width of the input, then there is a scroll.
           */
-         if (target.tagName === 'INPUT' && detection.isIE) {
+         if (target.tagName === 'INPUT' && Env.detection.isIE) {
             return getTextWidth(target.value) > target.clientWidth;
          }
 
@@ -28,7 +28,7 @@ define('Controls/Utils/hasHorizontalScroll',
           * on the right, but scrollWidth is almost the same as the real width (diff within 1). Therefore,
           * we consider this error and if it is greater than 1, then scroll there, if it is less, then no.
           */
-         if (targetStyles.textAlign === 'right' && detection.chrome) {
+         if (targetStyles.textAlign === 'right' && Env.detection.chrome) {
             target.style.direction = 'rtl';
             target.style.textAlign = 'left';
 

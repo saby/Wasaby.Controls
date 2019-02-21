@@ -1,6 +1,6 @@
 define('Controls/Utils/IntersectionObserver',
-   ['Core/detection'],
-   function(detection) {
+   ['Env/Env'],
+   function(Env) {
 
       'use strict';
 
@@ -28,7 +28,7 @@ define('Controls/Utils/IntersectionObserver',
             //documentation https://developer.mozilla.org/ru/docs/Web/API/Intersection_Observer_API and the handler is
             //called when the element goes beyond the viewport(document).
             //Demo example: https://jsfiddle.net/ucjmg8v7/2/
-            if (!detection.isIE12 &&
+            if (!Env.detection.isIE12 &&
                'IntersectionObserver' in window &&
                'IntersectionObserverEntry' in window &&
                'intersectionRatio' in window.IntersectionObserverEntry.prototype) {

@@ -1,11 +1,11 @@
 define('Controls/Input/Number',
    [
-      'Core/IoC',
+      'Env/Env',
       'Controls/Input/Base',
       'Types/entity',
       'Controls/Input/Number/ViewModel'
    ],
-   function(IoC, Base, entity, ViewModel) {
+   function(Env, Base, entity, ViewModel) {
       'use strict';
 
       /**
@@ -94,7 +94,7 @@ define('Controls/Input/Number',
       var _private = {
          validateOptions: function(options) {
             if (options.integersLength <= 0) {
-               IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+               Env.IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
          }
       };

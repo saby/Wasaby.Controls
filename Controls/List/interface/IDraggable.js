@@ -79,7 +79,7 @@ define('Controls/List/interface/IDraggable', [
 
    /**
     * @event Controls/List/interface/IDraggable#dragStart Occurs before the user starts dragging an element in the list.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Array.<String>} items An array of identifiers for items to be moved.
     * @returns {Controls/DragNDrop/Entity/Items)
     * @remark To start a drag'n'drop move from an event, you must return the move entity.
@@ -124,7 +124,7 @@ define('Controls/List/interface/IDraggable', [
 
    /**
     * @event Controls/List/interface/IDraggable#dragEnd Occurs after the user has finished dragging an item in the list.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
     * @param {Types/entity:Record} target Target item to move.
     * @param {MovePosition} position Position to move.
@@ -162,7 +162,7 @@ define('Controls/List/interface/IDraggable', [
 
    /**
     * @event Controls/List/interface/IDraggable#dragEnter Occurs before moving items from another list to the current list.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
     * @returns {DragEnterResult}
     * @remark You can use the event to allow dragging items to the current list from another list.
@@ -207,7 +207,7 @@ define('Controls/List/interface/IDraggable', [
 
    /**
     * @event Controls/List/interface/IDraggable#changeDragTarget Occurs before the change of the position of the drag.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Controls/DragNDrop/Entity/Items} entity Drag'n'drop entity.
     * @param {Types/entity:Record} target Target item to move.
     * @param {MovePosition} position Position to move.

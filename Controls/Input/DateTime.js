@@ -1,6 +1,6 @@
 ﻿define('Controls/Input/DateTime', [
    'Core/Control',
-   'Core/constants',
+   'Env/Env',
    'Core/core-merge',
    'Controls/Calendar/Utils',
    'Controls/Input/DateTime/Model',
@@ -9,7 +9,7 @@
    'wml!Controls/Input/DateTime/DateTime'
 ], function(
    Control,
-   CoreConstants,
+   Env,
    coreMerge,
    CalendarControlsUtils,
    Model,
@@ -82,13 +82,13 @@
       _onKeyDown: function(event) {
          event.stopImmediatePropagation();
          var key = event.nativeEvent.keyCode;
-         if (key === CoreConstants.key.insert) {
+         if (key === Env.constants.key.insert) {
          // on Insert button press current date should be inserted in field
             this._model.setCurrentDate();
          }
-         if (key === CoreConstants.key.plus || key === CoreConstants.key.minus) {
+         if (key === Env.constants.key.plus || key === Env.constants.key.minus) {
          // on +/- buttons press date should be increased or decreased in field by one day
-            var delta = key === CoreConstants.key.plus ? 1 : -1;
+            var delta = key === Env.constants.key.plus ? 1 : -1;
             var localDate = new Date(this._model.value);
             localDate.setDate(this._model.value.getDate() + delta);
             this._model.value = localDate;

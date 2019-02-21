@@ -1,10 +1,10 @@
 define('Controls-demo/PendingRegistrator/Content2', [
    'Core/Control',
    'wml!Controls-demo/PendingRegistrator/Content2',
-   'Core/IoC',
+   'Env/Env',
    'Core/Deferred',
    'css!Controls-demo/PendingRegistrator/Content2'
-], function(Control, tmpl, IoC, Deferred) {
+], function(Control, tmpl, Env, Deferred) {
    'use strict';
 
    var timeout = 3000;
@@ -17,7 +17,7 @@ define('Controls-demo/PendingRegistrator/Content2', [
             this._notify('registerPending', [def], { bubbling: true });
             this._def = def;
          } else {
-            IoC.resolve('ILogger').error('Controls-demo/PendingRegistrator/Content2', 'Pending registered already.');
+            Env.IoC.resolve('ILogger').error('Controls-demo/PendingRegistrator/Content2', 'Pending registered already.');
          }
       },
       _finish: function() {

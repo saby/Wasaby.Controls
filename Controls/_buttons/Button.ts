@@ -1,8 +1,9 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/_buttons/Button');
 import classesUtil from './classesUtil'
-import iconsUtil from './iconsUtil'
-import * as IoC from 'Core/IoC';
+import iconsUtil from './iconsUtil';
+// @ts-ignore
+import { IoC } from 'Env/Env';
 
 
 /**

@@ -6,13 +6,13 @@ define('Controls/Tabs/Buttons', [
    'Controls/Controllers/SourceController',
    'wml!Controls/Tabs/Buttons/Buttons',
    'wml!Controls/Tabs/Buttons/ItemTemplate',
-   'Core/IoC',
+   'Env/Env',
    'css!theme?Controls/Tabs/Buttons/Buttons'
 ], function(Control,
    SourceController,
    TabButtonsTpl,
    ItemTemplate,
-   IoC
+   Env
 ) {
    'use strict';
 
@@ -53,10 +53,10 @@ define('Controls/Tabs/Buttons', [
             modifyToNewStyle = '';
          if (options.style === 'default') {
             modifyToNewStyle = 'primary';
-            IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
+            Env.IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = primary вместо style = default');
          } else if (options.style === 'additional') {
             modifyToNewStyle = 'secondary';
-            IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
+            Env.IoC.resolve('ILogger').warn('Tabs/Buttons', 'Используются устаревшие стили. Используйте style = secondary вместо style = additional');
          } else {
             modifyToNewStyle = options.style;
          }

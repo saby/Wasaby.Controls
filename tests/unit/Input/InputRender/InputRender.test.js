@@ -1,14 +1,14 @@
 define(
    [
-      'Core/constants',
+      'Env/Env',
       'Controls/Utils/hasHorizontalScroll',
       'Controls/Input/resources/InputRender/InputRender',
       'Controls/Input/resources/InputRender/BaseViewModel'
    ],
-   function(Constants, hasHorizontalScroll, Render, BaseViewModel) {
+   function(Env, hasHorizontalScroll, Render, BaseViewModel) {
       'use strict';
 
-      if (!Constants.isBrowserPlatform) {
+      if (!Env.constants.isBrowserPlatform) {
          return;
       }
 

@@ -1,13 +1,13 @@
 define('Controls/Label',
    [
-      'Core/IoC',
+      'Env/Env',
       'Core/Control',
       'Types/entity',
       'wml!Controls/Label/Label',
 
       'css!theme?Controls/Label/Label'
    ],
-   function(IoC, Control, entity, template) {
+   function(Env, Control, entity, template) {
       'use strict';
 
       /**
@@ -46,7 +46,7 @@ define('Controls/Label',
       var _private = {
          warn: function(container, className, optionValue) {
             if (container.classList.contains(className)) {
-               IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + className + ' не поддерживается. Используйте опцию underline со значением ' + optionValue);
+               Env.IoC.resolve('ILogger').warn('Controls/Label', 'Модификатор ' + className + ' не поддерживается. Используйте опцию underline со значением ' + optionValue);
             }
          },
 

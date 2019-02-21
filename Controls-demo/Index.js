@@ -4,14 +4,12 @@
 define('Controls-demo/Index', [
    'Core/Control',
    'Core/LinkResolver/LinkResolver',
-   'Core/cookie',
-   'Core/constants',
+   'Env/Env',
    'wml!Controls-demo/Index',
    'css!Controls-demo/Demo/Page'
 ], function (BaseControl,
              LinkResolver,
-             cookie,
-             constants,
+             Env,
              template
 ) {
    'use strict';
@@ -26,11 +24,11 @@ define('Controls-demo/Index', [
             this._notify('themeChanged', [theme], {bubbling:true});
          },
          _beforeMount: function() {
-            this.linkResolver = new LinkResolver(cookie.get('s3debug') === 'true',
-               constants.buildnumber,
-               constants.wsRoot,
-               constants.appRoot,
-               constants.resourceRoot
+            this.linkResolver = new LinkResolver(Env.cookie.get('s3debug') === 'true',
+               Env.constants.buildnumber,
+               Env.constants.wsRoot,
+               Env.constants.appRoot,
+               Env.constants.resourceRoot
                );
          }
       });

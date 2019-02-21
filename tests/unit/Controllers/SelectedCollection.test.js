@@ -281,6 +281,7 @@ define([
 
       it('_setItems', function() {
          var
+            selectedItems,
             selectedCollection = new SelectedCollection(),
             items = [
                new entity.Model({
@@ -300,6 +301,12 @@ define([
 
          assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
          assert.equal(selectedCollection._items.getCount(), items.length);
+
+         selectedItems = selectedCollection._items;
+         selectedCollection._setItems([]);
+         assert.deepEqual(selectedCollection._selectedKeys, []);
+         assert.equal(selectedCollection._items.getCount(), 0);
+         assert.notEqual(selectedItems, selectedCollection._items);
       });
 
       it('showSelector', function() {

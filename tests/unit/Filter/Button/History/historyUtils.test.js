@@ -2,9 +2,9 @@ define(
    [
       'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/History/FilterSource',
-      'Core/constants'
+      'Env/Env'
    ],
-   function(HistoryUtils, FilterHistorySource, coreConstants) {
+   function(HistoryUtils, FilterHistorySource, Env) {
       describe('Filter.Button.HistoryUtils', function() {
 
          var historyId = 'TEST_HISTORY_ID_UTILS';
@@ -17,12 +17,12 @@ define(
          });
 
          it('getHistorySource isBuildOnServer', function() {
-            var isBuildOnServer = coreConstants.isBuildOnServer;
-            coreConstants.isBuildOnServer = true;
+            var isBuildOnServer = Env.constants.isBuildOnServer;
+            Env.constants.isBuildOnServer = true;
             var hSource = HistoryUtils.getHistorySource(historyId);
             var hSource2 = HistoryUtils.getHistorySource(historyId);
             assert.isTrue(hSource !== hSource2);
-            coreConstants.isBuildOnServer = isBuildOnServer;
+            Env.constants.isBuildOnServer = isBuildOnServer;
          });
       });
    });
