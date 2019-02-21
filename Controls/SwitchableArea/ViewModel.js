@@ -13,16 +13,21 @@ function(
          self._items.find(function(item) {
             return selectedKey === item.id || selectedKey === item.key;
          }).loaded = true;
+      },
+
+      updateItems: function(items, self) {
+         self._items = cClone(items);
       }
    };
 
    var ViewModel = SimpleExtend.extend({
       constructor: function(items, selectedKey) {
          ViewModel.superclass.constructor.apply(this, arguments);
-         this._items = cClone(items);
+         _private.updateItems(items, this);
          _private.updateLoadStatus(selectedKey, this);
       },
-      updateViewModel: function(selectedKey) {
+      updateViewModel: function(items, selectedKey) {
+         _private.updateItems(items, this);
          _private.updateLoadStatus(selectedKey, this);
       }
    });

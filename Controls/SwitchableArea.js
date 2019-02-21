@@ -51,8 +51,9 @@ function(
       },
 
       _beforeUpdate: function(newOptions) {
-         if (this._options.selectedKey !== newOptions.selectedKey) {
-            this._viewModel.updateViewModel(newOptions.selectedKey);
+         if (this._options.selectedKey !== newOptions.selectedKey ||
+            this._options.items !== newOptions.items) {
+            this._viewModel.updateViewModel(newOptions.items, newOptions.selectedKey);
          }
       },
 
