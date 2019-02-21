@@ -1,5 +1,5 @@
 <Controls.DragNDrop.Container attr:class="controls-CompoundArea__dragContainer">
-   <Controls.Container.PendingRegistrator name="PendingRegistrator" attr:key="{{item.id}}">
+   <Controls.Container.PendingRegistrator name="PendingRegistrator">
       <ws:partial
          template="{{_options.template}}"
          scope="{{_options.templateOptions}}"
