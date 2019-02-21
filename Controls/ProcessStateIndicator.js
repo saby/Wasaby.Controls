@@ -15,18 +15,18 @@ function(Control, entity, template ) {
 
    var DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector';
 
-   var setColors = function setColors(_colors,_numValues) {
+   var setColors = function setColors(_colors, _numValues) {
       var colors = [];
-      if(_numValues>Math.max(_colors.length,defaultColors.length)) {
+      if(_numValues > Math.max(_colors.length,defaultColors.length)) {
          throw new Error('Number of values is greater than number of colors');
       } 
-      for (var i = 0; i<_numValues; i++) {
+      for (var i = 0; i < _numValues; i++) {
          colors[i] = _colors[i] ? _colors[i] : defaultColors[i];
       }
       return colors;
    }
 
-   var calculateColorState = function calculateColorState(_numSectors, _numValues,  _state, _colors) {
+   var calculateColorState = function calculateColorState(_numSectors, _numValues, _state, _colors) {
       var
          sectorSize = Math.floor(100 / _numSectors),
          state = _state || [],
@@ -96,13 +96,13 @@ function(Control, entity, template ) {
       {
          _template: template,
          _colorState: [], 
-         _realNumSectors:10,
+         _realNumSectors: 10,
          _colors: [],
             
          _beforeUpdate: function(opts) {
             //Подгоняем количество секторов индикатора под размер области (см. спецификацию)
-            var indicatorWidth = this._container.clientWidth-6;
-            this._realNumSectors = Math.min(Math.floor((indicatorWidth-6)/8),opts.numSectors);
+            var indicatorWidth = this._container.clientWidth - 6;
+            this._realNumSectors = Math.min(Math.floor((indicatorWidth - 6 ) / 8),opts.numSectors);
             
             
          },
@@ -122,33 +122,33 @@ function(Control, entity, template ) {
             checkState(opts.state);
             var colorState,
             indicatorBoxes = this._container.getElementsByClassName('controls-ProcessStateIndicator__box');
-            this._colors = setColors(this._options.colors,this._options.numValues);
+            this._colors = setColors(this._options.colors, this._options.numValues);
             this._colorState = colorState = calculateColorState(this._realNumSectors, this._options.numValues, this._options.state, this._colors);
             for (var i = 0; i < indicatorBoxes.length; i++) {
-               indicatorBoxes[i].className = (colorState[i] && (this._colors[colorState[i]-1]) || DEFAULT_EMPTY_COLOR_CLASS) + ' controls-ProcessStateIndicator__box';
-               indicatorBoxes[i].setAttribute( 'data-item',colorState[i]);
+               indicatorBoxes[i].className = (colorState[i] && (this._colors[colorState[i] - 1]) || DEFAULT_EMPTY_COLOR_CLASS) + ' controls-ProcessStateIndicator__box';
+               indicatorBoxes[i].setAttribute('data-item', colorState[i]);
             }
          },
 
       });
 
-      ProcessStateIndicator.getDefaultOptions = function getDefaultOptions() {
-         return {
-            numSectors:10,
-            numValues: 1,
-            state: [0],
-            colors: [],
-         };
+   ProcessStateIndicator.getDefaultOptions = function getDefaultOptions() {
+      return {
+         numSectors: 10,
+         numValues: 1,
+         state: [0],
+         colors: [],
       };
+   };
 
-      ProcessStateIndicator.getOptionTypes = function getOptionTypes() {
-         return {
-            numSectors: entity.descriptor(Number),
-            numValues: entity.descriptor(Number),
-            state: entity.descriptor(Array),
-            colors: entity.descriptor(Array),
-         };
+   ProcessStateIndicator.getOptionTypes = function getOptionTypes() {
+      return {
+         numSectors: entity.descriptor(Number),
+         numValues: entity.descriptor(Number),
+         state: entity.descriptor(Array),
+         colors: entity.descriptor(Array),
       };
+   };
 
    ProcessStateIndicator.calculateColorState = calculateColorState;   
    ProcessStateIndicator.setColors = setColors;
