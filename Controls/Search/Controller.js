@@ -41,6 +41,7 @@ define('Controls/Search/Controller',
             self._loading = false;
             self._previousViewMode = self._viewMode;
             self._viewMode = 'search';
+            self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
             self._notify('filterChanged', [filter], {bubbling: true});
             self._notify('itemsChanged', [result.data], {bubbling: true});
@@ -145,7 +146,6 @@ define('Controls/Search/Controller',
 
          _search: function(event, value, force) {
             _private.getSearchController(this).search(value, force);
-            this._searchValue = value;
          },
    
          _beforeUnmount: function() {

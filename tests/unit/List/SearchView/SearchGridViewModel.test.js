@@ -2,23 +2,6 @@ define(['Controls/List/SearchView/SearchGridViewModel', 'Types/collection', 'Typ
    
    describe('Controls.List.SearchView.SearchGridViewModel', function() {
    
-      describe('_private', function() {
-      
-         it('isNeedToHighlight', function() {
-            var item = new entity.Model({
-               rawData: {
-                  id: 0,
-                  title: 'test'
-               },
-               idProperty: 'id'
-            });
-            assert.isFalse(!!SearchGridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
-            assert.isFalse(!!SearchGridViewModel._private.isNeedToHighlight(item, 'title', ''));
-            assert.isTrue(!!SearchGridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
-         });
-         
-      });
-   
       describe('instance tests', function() {
       
          it('getCurrent', function () {
