@@ -241,13 +241,22 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
       it('Suggest::_private.searchErrback', function(done) {
          var self = getComponentObject();
+         self._forceUpdate = function() {};
+   
+         self._loading = null;
+         Suggest._private.searchErrback(self, {canceled: true});
+         assert.isTrue(self._loading === null);
+   
          self._loading = true;
+         Suggest._private.searchErrback(self, {canceled: false});
+         assert.isFalse(self._loading);
+   
          self._forceUpdate = function() {
             assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
             done();
          };
-         Suggest._private.searchErrback(self, {canceled: false});
-         
+         self._loading = true;
+         Suggest._private.searchErrback(self, {canceled: true});
          assert.isFalse(self._loading);
       });
       
