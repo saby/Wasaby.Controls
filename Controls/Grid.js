@@ -30,11 +30,14 @@ define('Controls/Grid', [
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles
     * @mixes Controls/List/Grid/GridStyles
+    * @mixes Controls/List/ItemActions/ItemActionsStyles
     *
     * @mixes Controls/List/Mover/MoveDialog/Styles
     * @mixes Controls/List/PagingStyles
     * @mixes Controls/List/DigitButtonsStyles
     * @mixes Controls/List/Grid/SortButtonStyles
+    *
+    * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
     *
     * @control
     * @public

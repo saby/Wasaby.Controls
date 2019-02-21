@@ -1,11 +1,11 @@
 define('Controls/Toggle/Radio',
    [
       'Controls/Toggle/RadioGroup',
-      'Core/IoC'
+      'Env/Env'
    ],
-   function(RadioGroup, IoC) {
+   function(RadioGroup, Env) {
 
-      var logger = IoC.resolve('ILogger');
+      var logger = Env.IoC.resolve('ILogger');
       logger.error('Контрол "Controls/Toggle/Radio" перенесён, используйте "Controls/Toggle/RadioGroup"');
       return RadioGroup;
    }

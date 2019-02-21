@@ -10,7 +10,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       'Controls/Popup/Compatible/ManagerWrapper/Controller',
       'Vdom/Vdom',
       'Core/Control',
-      'Core/IoC',
+      'Env/Env',
       'Core/core-clone',
       'Core/Deferred',
       'css!theme?Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea'
@@ -22,7 +22,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
       ManagerWrapperController,
       Vdom,
       control,
-      IoC,
+      Env,
       clone,
       Deferred) {
       /**
@@ -58,7 +58,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                      this._options.template = this._options.innerComponentOptions._template;
                   }
                   this._options.templateOptions = this._options.innerComponentOptions;
-                  IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
+                  Env.IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
                }
 
                this._modifyInnerOptionsByHandlers();
@@ -216,7 +216,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._$onBringToFront = this.onBringToFront;
             this.onBringToFront = function() {
                if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
-                  opts._$to.activate();
+                  if (opts._$to.setActive) {
+                     opts._$to.setActive(true);
+                  } else {
+                     opts._$to.activate();
+                  }
                }
             };
          },

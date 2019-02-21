@@ -2,10 +2,10 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Stack/StackTemplate',
-      'Core/IoC',
+      'Env/Env',
       'css!theme?Controls/Popup/Templates/Stack/StackTemplate'
    ],
-   function(Control, template, IoC) {
+   function(Control, template, Env) {
       'use strict';
 
       var DialogTemplate = Control.extend({
@@ -72,26 +72,26 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
          _template: template,
          _beforeMount: function(options) {
             if (options.contentArea) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.caption) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
             if (options.captionStyle) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
             if (options.showMaximizeButton) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция showMaximizeButton, используйте maximizeButtonVisibility');
             }
             if (options.topArea) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
 
             if (options.bottomArea) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция bottomArea, используйте footerContentTemplate');
             }
             if (options.closeButtonStyle) {
-               IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
+               Env.IoC.resolve('ILogger').warn('StackTemplate', 'Используется устаревшая опция closeButtonStyle, используйте closeButtonViewMode');
             }
             this._updateMaximizeButtonTitle(options.maximized);
          },

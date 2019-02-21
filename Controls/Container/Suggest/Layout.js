@@ -9,21 +9,22 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
-      'Core/constants',
+      'Env/Env',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, Env) {
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
+      var COUNT_HISTORY_ITEMS = 12;
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
-      var ENTER_KEY = constants.key.enter;
+      var ENTER_KEY = Env.constants.key.enter;
       
       /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, ENTER_KEY];
+      var IGNORE_HOT_KEYS = [Env.constants.key.down, Env.constants.key.up, ENTER_KEY];
       
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       
@@ -37,6 +38,8 @@
          suggestStateNotify: function(self, state) {
             if (self._options.suggestState !== state) {
                self._notify('suggestStateChanged', [state]);
+            } else {
+               self._forceUpdate();
             }
          },
          setCloseState: function(self) {
@@ -180,7 +183,8 @@
                self._historyServiceLoad = new Deferred();
                require(['Controls/History/Service'], function(HistoryService) {
                   self._historyService = new HistoryService({
-                     historyId: self._options.historyId
+                     historyId: self._options.historyId,
+                     recent: COUNT_HISTORY_ITEMS
                   });
                   self._historyServiceLoad.callback(self._historyService);
                });
@@ -276,19 +280,21 @@
             var valueChanged = this._options.value !== newOptions.value;
             var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
-            
+
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
+            } else if (this._options.suggestState !== newOptions.suggestState) {
+               _private.open(this);
             }
-      
+
             if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
-   
+
             if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-      
+
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
                this._dependenciesDeferred = null;

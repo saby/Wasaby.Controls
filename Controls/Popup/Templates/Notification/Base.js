@@ -1,11 +1,11 @@
 define('Controls/Popup/Templates/Notification/Base',
    [
       'Core/Control',
-      'Core/IoC',
+      'Env/Env',
       'wml!Controls/Popup/Templates/Notification/Base',
       'css!theme?Controls/Popup/Templates/Notification/Base'
    ],
-   function(Control, IoC, template) {
+   function(Control, Env, template) {
       var _private = {
          prepareDisplayStyle: function(color) {
             var resColor = color;
@@ -44,20 +44,20 @@ define('Controls/Popup/Templates/Notification/Base',
 
          _beforeMount: function(options) {
             if (options.style === 'error') {
-               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style error, используйте danger');
+               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style error, используйте danger');
             }
             if (options.style === 'done') {
-               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
+               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшее значение опции style done, используйте success');
             }
             this._style = _private.prepareDisplayStyle(options.style);
             if (options.autoClose) {
                this._autoClose();
             }
             if (options.iconClose) {
-               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
+               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшя опция iconClose, используйте closeButtonVisibility');
             }
             if (options.contentTemplate) {
-               IoC.resolve('ILogger').warn('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').warn('Notification', 'Используется устаревшая опция contentTemplate, используйте bodyContentTemplate');
             }
          },
          _beforeUpdate: function(options) {

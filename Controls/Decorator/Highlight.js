@@ -1,6 +1,6 @@
 define('Controls/Decorator/Highlight',
    [
-      'Core/IoC',
+      'Env/Env',
       'Core/Control',
       'Controls/Utils/RegExp',
       'Types/entity',
@@ -8,7 +8,7 @@ define('Controls/Decorator/Highlight',
 
       'css!theme?Controls/Decorator/Highlight/Highlight'
    ],
-   function(IoC, Control, RegExpUtil, entity, template) {
+   function(Env, Control, RegExpUtil, entity, template) {
       'use strict';
 
       /**
@@ -180,7 +180,7 @@ define('Controls/Decorator/Highlight',
             }
 
             if (highlightedWords.length === 0) {
-               IoC.resolve('ILogger').warn('Controls/Decorator/Highlight', 'When searching there is a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
+               Env.IoC.resolve('ILogger').warn('Controls/Decorator/Highlight', 'When searching there is a problem, there are no words in the highlight option. Perhaps the control is not used for its intended purpose or is not required now.');
 
                return [{
                   type: 'text',

@@ -236,6 +236,15 @@ define('Controls/Input/DateTime/StringValueConverter', [
             if (date > endDateOfMonth) {
                date = endDateOfMonth;
             }
+            if (hours > 24) {
+               hours = 23;
+            }
+            if (minutes > 60) {
+               minutes = 59;
+            }
+            if (seconds > 60) {
+               seconds = 59;
+            }
          }
 
          if (!_private.isValidDate(year, month, date, hours, minutes, seconds)) {
@@ -255,6 +264,10 @@ define('Controls/Input/DateTime/StringValueConverter', [
    var ModuleClass = cExtend.extend({
       _mask: null,
       _replacer: null,
+
+      constructor: function(options) {
+         this.update(options || {});
+      },
 
       /**
        * Updates converter settings.

@@ -303,8 +303,12 @@
             "title": "Name of the item property that uniquely identifies collection item."
           },
           "itemTemplateProperty": {
-            "type": "String",
-            "title": "Name of the item property that contains template for item render"
+            "type": "enum",
+            "title": "Name of the item property that contains template for item render",
+            "enum": {
+              "customTemplate": "Custom template",
+              "null": "No template"
+            }
           },
           "name": {
             "title": "Control name",
@@ -720,6 +724,18 @@
               "MM.YYYY": "MM.YYYY"
             }
           },
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
+            }
+          },
           "tooltip": {
             "type": "String",
             "title": "Field tooltip."
@@ -758,6 +774,18 @@
             "enum": {
               "DD.MM.YY": "DD.MM.YY",
               "DD.MM.YYYY": "DD.MM.YYYY"
+            }
+          },
+          "tagStyle": {
+            "type": "enum",
+            "title": "Tag style (colored indicator).",
+            "enum": {
+              "primary": "primary",
+              "secondary": "secondary",
+              "success": "success",
+              "danger": "danger",
+              "info": "info",
+              "warning": "warning"
             }
           },
           "tooltip": {

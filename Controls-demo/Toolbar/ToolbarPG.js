@@ -5,6 +5,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
       'json!Controls-demo/PropertyGrid/pgtext',
       'Types/source',
       'wml!Controls-demo/Toolbar/resources/itemTemplate',
+      'wml!Controls-demo/Toolbar/resources/itemTemplateCustom',
       'wml!Controls-demo/Toolbar/resources/itemTemplateContent',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
@@ -70,7 +71,9 @@ define('Controls-demo/Toolbar/ToolbarPG',
                      showType: 0,
                      title: 'Проекту',
                      '@parent': false,
-                     parent: '4'
+                     parent: '4',
+                     itemTemplateProperty: 'customTemplate',
+                     customTemplate: 'wml!Controls-demo/Toolbar/resources/itemTemplateCustom'
                   },
                   {
                      id: '8',
@@ -171,19 +174,10 @@ define('Controls-demo/Toolbar/ToolbarPG',
                },
                itemTemplateProperty: {
                   readOnly: false,
-                  value: 'default',
-                  items: [
-                     {
-                        id: '1',
-                        title: 'default',
-                        value: null
-                     },
-                     {
-                        id: '2',
-                        title: 'myTemplate',
-                        value: 'myTemplate'
-                     }
-                  ]
+                  value: 'customTemplate',
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  selectedKey: 0
                }
             };
             this._componentOptions = {
@@ -196,7 +190,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                displayProperty: 'title',
                name: 'Toolbar',
                itemTemplate: null,
-               itemTemplateProperty: null
+               itemTemplateProperty: 'customTemplate'
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

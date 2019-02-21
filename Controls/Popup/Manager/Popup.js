@@ -4,15 +4,15 @@ define('Controls/Popup/Manager/Popup',
       'wml!Controls/Popup/Manager/Popup',
       'Controls/Popup/Compatible/EscProcessing',
       'Core/helpers/Function/runDelayed',
-      'Core/constants',
+      'Env/Env',
       'wml!Controls/Popup/Manager/PopupContent'
    ],
-   function(Control, template, EscProcessing, runDelayed, CoreConstants) {
+   function(Control, template, EscProcessing, runDelayed, Env) {
       'use strict';
 
       var _private = {
          keyUp: function(event) {
-            if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (event.nativeEvent.keyCode === Env.constants.key.esc) {
                this._close();
             }
          }
@@ -75,11 +75,7 @@ define('Controls/Popup/Manager/Popup',
                }).bind(this);
             } else {
                this._notify('popupCreated', [this._options.id], { bubbling: true });
-
-               // TODO Compatible
-               if (this._options.autofocus && !this._options.isCompoundTemplate) {
-                  this.activate();
-               }
+               this.activatePopup();
             }
          },
 
@@ -88,6 +84,13 @@ define('Controls/Popup/Manager/Popup',
          },
          _beforeUnmount: function() {
             this._notify('popupDestroyed', [this._options.id], { bubbling: true });
+         },
+
+         activatePopup: function() {
+            // TODO Compatible
+            if (this._options.autofocus && !this._options.isCompoundTemplate) {
+               this.activate();
+            }
          },
 
          /**

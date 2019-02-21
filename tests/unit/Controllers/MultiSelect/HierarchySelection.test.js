@@ -492,5 +492,23 @@ define([
             assert.deepEqual({1: true, 2: true, 3: true, 4: true, 5: true}, selectionInstance.getSelectedKeysForRender());
          });
       });
+
+      it('everything is selected, but item\'s parent is not in a recordset', function() {
+         cfg = {
+            selectedKeys: [null],
+            excludedKeys: [],
+            items: new collection.RecordSet({
+               rawData: [{
+                  'id': 2,
+                  'Раздел': 1,
+                  'Раздел@': true
+               }],
+               idProperty: 'id'
+            }),
+            keyProperty: 'id'
+         };
+         selectionInstance = new HierarchySelection(cfg);
+         assert.deepEqual({ 2: true }, selectionInstance.getSelectedKeysForRender());
+      });
    });
 });

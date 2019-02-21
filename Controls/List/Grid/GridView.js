@@ -1,12 +1,11 @@
 define('Controls/List/Grid/GridView', [
    'Core/Deferred',
-   'Core/IoC',
    'Controls/List/ListView',
    'wml!Controls/List/Grid/GridViewTemplateChooser',
    'wml!Controls/List/Grid/Item',
    'wml!Controls/List/Grid/Column',
    'wml!Controls/List/Grid/HeaderContent',
-   'Core/detection',
+   'Env/Env',
    'wml!Controls/List/Grid/GroupTemplate',
    'wml!Controls/List/Grid/OldGridView',
    'wml!Controls/List/Grid/NewGridView',
@@ -16,7 +15,7 @@ define('Controls/List/Grid/GridView', [
    'css!theme?Controls/List/Grid/Grid',
    'css!theme?Controls/List/Grid/OldGrid',
    'Controls/List/BaseControl/Scroll/Emitter'
-], function(cDeferred, IoC, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, cDetection,
+], function(cDeferred, ListView, GridViewTemplateChooser, DefaultItemTpl, ColumnTpl, HeaderContentTpl, Env,
    GroupTemplate, OldGridView, NewGridView) {
 
    'use strict';
@@ -49,10 +48,10 @@ define('Controls/List/Grid/GridView', [
          checkDeprecated: function(cfg) {
             // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             if (cfg.showRowSeparator !== undefined) {
-               IoC.resolve('ILogger').warn('IGridControl', 'Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".');
+               Env.IoC.resolve('ILogger').warn('IGridControl', 'Option "showRowSeparator" is deprecated and removed in 19.200. Use option "rowSeparatorVisibility".');
             }
             if (cfg.stickyColumn !== undefined) {
-               IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
+               Env.IoC.resolve('ILogger').warn('IGridControl', 'Option "stickyColumn" is deprecated and removed in 19.200. Use "stickyProperty" option in the column configuration when setting up the columns.');
             }
          },
          prepareGridTemplateColumns: function(columns, multiselect) {
@@ -108,7 +107,7 @@ define('Controls/List/Grid/GridView', [
       },
       GridView = ListView.extend({
          _gridTemplate: null,
-         isNotFullGridSupport: cDetection.isNotFullGridSupport,
+         isNotFullGridSupport: Env.detection.isNotFullGridSupport,
          _template: GridViewTemplateChooser,
          _groupTemplate: GroupTemplate,
          _defaultItemTemplate: DefaultItemTpl,
@@ -117,7 +116,7 @@ define('Controls/List/Grid/GridView', [
 
          _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
-            this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
+            this._gridTemplate = Env.detection.isNotFullGridSupport ? OldGridView : NewGridView;
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
          },
@@ -128,13 +127,13 @@ define('Controls/List/Grid/GridView', [
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
                this._listModel.setColumns(newCfg.columns);
-               if (!cDetection.isNotFullGridSupport) {
+               if (!Env.detection.isNotFullGridSupport) {
                   _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                }
             }
             if (!isEqualWithSkip(this._options.header, newCfg.header, { template: true })) {
                this._listModel.setHeader(newCfg.header);
-               if (!cDetection.isNotFullGridSupport) {
+               if (!Env.detection.isNotFullGridSupport) {
                   _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
                }
             }
@@ -158,7 +157,7 @@ define('Controls/List/Grid/GridView', [
 
          _afterMount: function() {
             GridView.superclass._afterMount.apply(this, arguments);
-            if (!cDetection.isNotFullGridSupport) {
+            if (!Env.detection.isNotFullGridSupport) {
                _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
             }
          }

@@ -1,11 +1,11 @@
 define('Controls/Input/Text',
    [
-      'Core/IoC',
+      'Env/Env',
       'Controls/Input/Base',
       'Types/entity',
       'Controls/Input/Text/ViewModel'
    ],
-   function(IoC, Base, entity, ViewModel) {
+   function(Env, Base, entity, ViewModel) {
       'use strict';
 
       /**
@@ -32,7 +32,7 @@ define('Controls/Input/Text',
       var _private = {
          validateConstraint: function(constraint) {
             if (constraint && !/^\[.+?\]$/.test(constraint)) {
-               IoC.resolve('ILogger').error('Controls/Input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/Input/Text/options/constraint/');
+               Env.IoC.resolve('ILogger').error('Controls/Input/Text', 'The constraint options are not set correctly. More on https://wi.sbis.ru/docs/js/Controls/Input/Text/options/constraint/');
                return false;
             }
 

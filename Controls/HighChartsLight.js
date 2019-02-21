@@ -2,15 +2,14 @@ define('Controls/HighChartsLight',
    [
       'Core/Control',
       'wml!Controls/HighChartsLight/HighChartsLight',
-      'Core/constants',
-      'Core/detection',
+      'Env/Env',
       'Core/core-clone',
       'Core/Date',
       'css!theme?Controls/HighChartsLight/HighChartsLight',
       'i18n!Controls/HighChartsLight',
       'browser!/cdn/highcharts/4.2.7/highcharts-more.js'
    ],
-   function(Control, template, constants, detection, cClone) {
+   function(Control, template, Env, cClone) {
       'use strict';
 
       /**
@@ -62,7 +61,7 @@ define('Controls/HighChartsLight',
             _chartInstance: null,
 
             _beforeMount: function() {
-               if (typeof window !== 'undefined' && detection.isIE10) {
+               if (typeof window !== 'undefined' && Env.detection.isIE10) {
                   _private.patchHighchartsJs();
                }
             },
@@ -76,16 +75,16 @@ define('Controls/HighChartsLight',
                Highcharts.setOptions({
                   lang: {
                      numericSymbols: ['', '', '', '', '', ''],
-                     months: constants.Date.longMonths,
-                     shortMonths: constants.Date.months,
-                     weekdays: constants.Date.longDays,
+                     months: Env.constants.Date.longMonths,
+                     shortMonths: Env.constants.Date.months,
+                     weekdays: Env.constants.Date.longDays,
                      thousandsSep: ' ',
                      resetZoom: rk('Сбросить масштабирование'),
                      resetZoomTitle: rk('Сбросить масштабирование')
                   },
                   plotOptions: {
                      series: {
-                        animation: !constants.browser.isIE10
+                        animation: !Env.detection.isIE10
                      }
                   }
                });

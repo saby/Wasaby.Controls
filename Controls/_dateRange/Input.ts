@@ -2,6 +2,7 @@ import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
 import DateRangeModel = require('Controls/Date/model/DateRange');
+import stringValueConverter = require('Controls/Input/DateTime/StringValueConverter');
 import IDateTimeMask from './interfaces/IDateTimeMask';
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import template = require('wml!Controls/_dateRange/Input/Input');
@@ -82,10 +83,21 @@ var Component = Control.extend([], {
     },
 
     _onResult: function (startValue, endValue) {
+        var converter = new stringValueConverter({
+               mask: this._options.mask,
+               replacer: this._options.replacer
+            });
         this._rangeModel.startValue = startValue;
         this._rangeModel.endValue = endValue;
         this._children.opener.close();
         this._forceUpdate();
+        this._children.startValueField.activate();
+        this._notify('inputCompleted', [
+            startValue,
+            endValue,
+            converter.getStringByValue(startValue),
+            converter.getStringByValue(endValue)
+        ]);
     },
 
     // ВНИМАНИЕ!!! Переделать по готовности задачи по доработке InputRender - https://online.sbis.ru/opendoc.html?guid=d4bdb7cc-c324-4b4b-bda5-db6f8a46bc60
