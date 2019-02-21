@@ -1,9 +1,9 @@
 define('Controls/Operations/Panel/Utils', [
-   'wml!Controls/Operations/Panel/ItemTemplate',
+   'Controls/toolbars',
    'Controls/Utils/Toolbar',
    'Controls/Utils/getWidth'
 ], function(
-   itemTemplate,
+   toolbars,
    tUtil,
    getWidthUtil
 ) {
@@ -25,7 +25,7 @@ define('Controls/Operations/Panel/Utils', [
             itemsMark = '';
 
          visibleKeys.forEach(function(key) {
-            itemsMark += itemTemplate({
+            itemsMark += toolbars.ToolbarItemTemplate({
                item: items.getRecordById(key),
                size: 'm'
             });

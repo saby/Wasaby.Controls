@@ -1,7 +1,7 @@
 define('Controls/Operations/Panel', [
    'Core/Control',
    'wml!Controls/Operations/Panel/Panel',
-   'wml!Controls/Operations/Panel/ItemTemplate',
+   'Controls/toolbars',
    'Types/source',
    'Controls/Operations/Panel/Utils',
    'Controls/Button/validateIconStyle',
@@ -9,7 +9,7 @@ define('Controls/Operations/Panel', [
 ], function(
    Control,
    template,
-   ItemTemplate,
+   toolbars,
    sourceLib,
    WidthUtils,
    validateIconStyle
@@ -76,7 +76,6 @@ define('Controls/Operations/Panel', [
     *
     * @css @background-color_OperationsPanel Background color of the panel.
     * @css @height_OperationsPanel Height of the panel.
-    * @css @spacing_OperationsPanel__item-between-icon-caption Spacing between the icon and the caption in items.
     * @css @spacing_OperationsPanel-between-items Spacing between items.
     * @css @margin_OperationsPanel__rightTemplate Margin of rightTemplate.
     */
@@ -163,7 +162,7 @@ define('Controls/Operations/Panel', [
 
    Panel.getDefaultOptions = function() {
       return {
-         itemTemplate: ItemTemplate
+         itemTemplate: toolbars.ToolbarItemTemplate
       };
    };
 
