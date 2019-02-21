@@ -5,14 +5,14 @@ define(['Controls/Filter/Button/Panel/Lookup'
          var panelLookup = new PanelLookup();
 
          panelLookup._beforeMount({
-            selectedKeys: [1, 2, 3]
-         });
-         assert.isTrue(panelLookup._isSelected);
-
-         panelLookup._beforeMount({
             selectedKeys: []
          });
          assert.isFalse(panelLookup._isSelected);
+
+         panelLookup._beforeMount({
+            selectedKeys: [1, 2, 3]
+         });
+         assert.isTrue(panelLookup._isSelected);
       });
 
       it('_afterUpdate', function() {
