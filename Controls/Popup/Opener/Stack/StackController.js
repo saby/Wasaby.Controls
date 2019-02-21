@@ -13,7 +13,7 @@ define('Controls/Popup/Opener/Stack/StackController',
    ],
    function(BaseController, StackStrategy, collection, TargetCoords, Deferred, Env, cClone, Vdom) {
       'use strict';
-      var HAS_ANIMATION = Env.detection.chrome && !Env.detection.isMobilePlatform;
+      var HAS_ANIMATION = false;
       var STACK_CLASS = 'controls-Stack';
       var _private = {
 
@@ -156,18 +156,6 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._fixTemplateAnimation.bind(this);
          },
 
-         elementCreated: function(item, container) {
-            _private.prepareSizes(item, container);
-            _private.setStackContent(item);
-            this._stack.add(item);
-            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName += ' controls-Stack__open';
-               _private.updatePopupOptions(item);
-               item.popupState = BaseController.POPUP_STATE_CREATING;
-            }
-            this._update();
-         },
-
          elementUpdated: function(item, container) {
             _private.prepareUpdateClassses(item);
             _private.setStackContent(item);
@@ -218,7 +206,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.width;
+                  var currentWidth = item.containerWidth || item.position.width || item.position.maxWidth;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
                   if (currentWidth > maxWidth) {
@@ -239,9 +227,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          getDefaultConfig: function(item) {
-            var baseCoord = { top: 0, right: 0 };
             _private.prepareSizes(item);
-            var position = StackStrategy.getPosition(baseCoord, item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
             item.popupOptions.stackClassName = '';
@@ -251,17 +237,8 @@ define('Controls/Popup/Opener/Stack/StackController',
                var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
-            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName = 'controls-Stack__waiting';
-            }
-
-            // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-            item.position = {
-               top: -10000,
-               left: -10000,
-               height: _private.getWindowSize().height,
-               width: position.width || undefined
-            };
+            this._stack.add(item);
+            this._update();
          },
 
          // TODO: For Compatible
