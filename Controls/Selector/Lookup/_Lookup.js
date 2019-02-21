@@ -39,6 +39,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             self._fieldWrapper = self._fieldWrapper[0];
          }
 
+         // we cache width, since used in several places in the calculations and need to compare when resize
          self._fieldWrapperWidth = DOMUtil.width(self._fieldWrapper);
       },
 
@@ -300,12 +301,12 @@ define('Controls/Selector/Lookup/_Lookup', [
             });
          }
 
-         if (isNeedCalculatingSizes && this._fieldWrapperWidth > 0) {
+         if (isNeedCalculatingSizes) {
             _private.calculatingSizes(this, newOptions);
          }
       },
 
-      _afterUpdate: function(oldOptions) {
+      _afterUpdate: function() {
          if (this._needSetFocusInInput) {
             this._needSetFocusInInput = false;
 
@@ -313,11 +314,6 @@ define('Controls/Selector/Lookup/_Lookup', [
             if (this._active) {
                this.activate();
             }
-         }
-
-         // if the first items were selected
-         if (this._options.items.getCount() && !oldOptions.items.getCount()) {
-            this._trackingChangeContainer();
          }
       },
 
@@ -350,9 +346,10 @@ define('Controls/Selector/Lookup/_Lookup', [
          this._needSetFocusInInput = true;
       },
 
-      _trackingChangeContainer: function() {
+      _resize: function() {
          var newFieldWrapperWidth = DOMUtil.width(this._fieldWrapper);
 
+         // check if the width of the control has changed
          if (newFieldWrapperWidth !== this._fieldWrapperWidth) {
             this._fieldWrapperWidth = newFieldWrapperWidth;
             _private.calculatingSizes(this, this._options);

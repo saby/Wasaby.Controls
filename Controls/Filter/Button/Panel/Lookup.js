@@ -34,6 +34,19 @@ define('Controls/Filter/Button/Panel/Lookup', [
    var Lookup = Control.extend({
       _template: template,
       _passed: false,
+      _isSelected: false,
+
+      _beforeMount: function(options) {
+         this._isSelected = !!options.selectedKeys.length;
+      },
+
+      _afterUpdate: function() {
+         // if the first items were selected, call resize for Lookup
+         if (!this._isSelected && this._options.selectedKeys.length) {
+            this._isSelected = true;
+            this._children.controlResize.start();
+         }
+      },
 
       showSelector: function() {
          this._children.lookup.showSelector();

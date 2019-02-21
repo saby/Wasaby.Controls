@@ -104,32 +104,17 @@ define([
       });
 
       it('_afterUpdate', function() {
-         var isCheckWidthContainer = false;
          var lookup = new Lookup();
          lookup._needSetFocusInInput = true;
          lookup._active = true;
-         lookup._trackingChangeContainer = function() {
-            isCheckWidthContainer = true;
-         };
-         lookup._options.items = {
-            getCount: function() {return 1}
-         };
 
          var activated = false;
          lookup.activate = function() {
             activated = true;
          };
 
-         lookup._afterUpdate({items: {
-            getCount: function() {return 1}
-         }});
+         lookup._afterUpdate();
          assert.isTrue(activated);
-         assert.isFalse(isCheckWidthContainer);
-
-         lookup._afterUpdate({items: {
-            getCount: function() {return 0}
-         }});
-         assert.isTrue(isCheckWidthContainer);
       });
 
       it('_beforeUpdate', function() {
@@ -142,13 +127,6 @@ define([
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
 
-         lookup._beforeUpdate({
-            items: new collection.List(),
-            multiLine: true
-         });
-         assert.equal(lookup._multiLineState, undefined);
-
-         lookup._fieldWrapperWidth = 100;
          lookup._beforeUpdate({
             items: new collection.List(),
             multiLine: true
