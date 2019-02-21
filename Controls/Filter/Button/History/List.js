@@ -17,11 +17,11 @@ define('Controls/Filter/Button/History/List', [
    var getPropValue = Utils.object.getPropertyValue.bind(Utils);
 
    var _private = {
-      getStringHistoryFromItems: function(items) {
+      getStringHistoryFromItems: function(items, resetValues) {
          var textArr = [];
          chain.factory(items).each(function(elem) {
             var value = getPropValue(elem, 'value'),
-               resetValue = getPropValue(elem, 'resetValue'),
+               resetValue = resetValues[getPropValue(elem, 'id')],
                textValue = getPropValue(elem, 'textValue'),
                visibility = getPropValue(elem, 'visibility');
 
@@ -30,6 +30,14 @@ define('Controls/Filter/Button/History/List', [
             }
          });
          return textArr.join(', ');
+      },
+
+      getResetValues: function(items) {
+         var result = {};
+         chain.factory(items).each(function(item) {
+            result[getPropValue(item, 'id')] = getPropValue(item, 'resetValue');
+         });
+         return result;
       },
 
       onResize: function(self) {
@@ -51,13 +59,13 @@ define('Controls/Filter/Button/History/List', [
 
       _beforeMount: function(options) {
          if (options.items) {
-            this._itemsText = this._getText(options.items, historyUtils.getHistorySource(options.historyId));
+            this._itemsText = this._getText(options.items, options.filterItems, historyUtils.getHistorySource(options.historyId));
          }
       },
 
       _beforeUpdate: function(newOptions) {
          if (!isEqual(this._options.items, newOptions.items)) {
-            this._itemsText = this._getText(newOptions.items, historyUtils.getHistorySource(newOptions.historyId));
+            this._itemsText = this._getText(newOptions.items, newOptions.filterItems, historyUtils.getHistorySource(newOptions.historyId));
          }
       },
 
@@ -80,13 +88,14 @@ define('Controls/Filter/Button/History/List', [
          _private.onResize(this);
       },
 
-      _getText: function(items, historySource) {
-         var itemsText = {};
+      _getText: function(items, filterItems, historySource) {
+         var itemsText = {},
+            resetValues = _private.getResetValues(filterItems);
          chain.factory(items).each(function(item, index) {
             var text = '';
             var historyItems = historySource.getDataObject(item.get('ObjectData'));
             if (historyItems) {
-               text = _private.getStringHistoryFromItems(historyItems);
+               text = _private.getStringHistoryFromItems(historyItems, resetValues);
             }
             itemsText[index] = text;
          });
