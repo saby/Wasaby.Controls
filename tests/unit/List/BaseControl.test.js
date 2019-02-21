@@ -366,6 +366,59 @@ define([
          }, 100);
       });
 
+      it('Navigation position', function() {
+         return new Promise(function(resolve, reject) {
+            var
+               ctrl,
+               source = new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: data,
+                  filter: function() {
+                     return true;
+                  }
+               }),
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  itemsReadyCallback: function(items) {
+                     setTimeout(function() {
+                        var
+                           newItem = items.at(items.getCount() - 1).clone();
+                        newItem.set('id', 777);
+                        items.add(newItem);
+                        try {
+                           assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
+                           resolve();
+                        } catch (e) {
+                           reject(e);
+                        }
+                     });
+                  },
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     keyProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  navigation: {
+                     source: 'position',
+                     sourceConfig: {
+                        field: 'id',
+                        position: 0,
+                        direction: 'after',
+                        limit: 20
+                     }
+                  }
+               };
+
+            ctrl = new BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+         });
+      });
+
       it('prepareFooter', function() {
          var
             tests = [

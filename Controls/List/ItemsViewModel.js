@@ -292,7 +292,7 @@ define('Controls/List/ItemsViewModel', [
       _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._nextModelVersion(true);
-         this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
+         this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {

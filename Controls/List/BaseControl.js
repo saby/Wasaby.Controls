@@ -537,6 +537,14 @@ define('Controls/List/BaseControl', [
          });
       },
 
+      toggleCollectionChangeTracker: function(self, cfg) {
+         if (cfg.navigation && cfg.navigation.source === 'position') {
+            self._listViewModel.subscribe('onCollectionChange', self._recalculateNavigationStateFn);
+         } else {
+            self._listViewModel.unsubscribe('onCollectionChange', self._recalculateNavigationStateFn);
+         }
+      },
+
       showActionsMenu: function(self, event, itemData, childEvent, showAll) {
          var
             context = event.type === 'itemcontextmenu',
@@ -607,8 +615,15 @@ define('Controls/List/BaseControl', [
          self._forceUpdate();
       },
 
+      recalculateNavigationState: function(event, action) {
+         if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_REMOVE) {
+            this._sourceController.calculateState(this._listViewModel.getItems());
+         }
+      },
+
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
+         self._recalculateNavigationStateFn = _private.recalculateNavigationState.bind(self);
       },
 
       groupsExpandChangeHandler: function(self, changes) {
@@ -763,6 +778,7 @@ define('Controls/List/BaseControl', [
                }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                _private.initListViewModelHandler(self, self._listViewModel);
+               _private.toggleCollectionChangeTracker(self, newOptions);
             }
 
             if (newOptions.source) {
@@ -821,9 +837,13 @@ define('Controls/List/BaseControl', [
 
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
-         var recreateSource = newOptions.source !== this._options.source ||
-             !isEqualObject(newOptions.navigation, this._options.navigation);
+         var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
+         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
          var sortingChanged = newOptions.sorting !== this._options.sorting;
+
+         if (navigationChanged) {
+            _private.toggleCollectionChangeTracker(this, newOptions.navigation);
+         }
 
          if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;

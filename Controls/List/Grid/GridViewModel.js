@@ -226,7 +226,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             return sortingDirection;
          },
-   
+
          isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
@@ -267,7 +267,7 @@ define('Controls/List/Grid/GridViewModel', [
                this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
-               this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
+               this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
@@ -596,7 +596,7 @@ define('Controls/List/Grid/GridViewModel', [
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
          },
-         
+
          setSearchValue: function(value) {
             this._model.setSearchValue(value);
          },
