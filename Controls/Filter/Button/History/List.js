@@ -89,8 +89,10 @@ define('Controls/Filter/Button/History/List', [
       },
 
       _getText: function(items, filterItems, historySource) {
-         var itemsText = {},
-            resetValues = _private.getResetValues(filterItems);
+         var itemsText = {};
+
+         // the resetValue is not stored in history, we take it from the current filter items
+         var resetValues = _private.getResetValues(filterItems);
          chain.factory(items).each(function(item, index) {
             var text = '';
             var historyItems = historySource.getDataObject(item.get('ObjectData'));
