@@ -513,7 +513,7 @@ define('Controls/List/Tree/TreeViewModel', [
              * всёравно переместится на первую запись.
              * Исправить по задаче https://online.sbis.ru/opendoc.html?guid=f75e5bfd-6e9f-4710-bad7-b9be704f0dff
              * */
-            if (this._options.markerVisibility !== 'hidden') {
+            if (this._options.markerVisibility !== 'hidden' && this.getCount()) {
                this.setMarkedKey(this._items.at(0).getId());
             }
             this._nextModelVersion();
