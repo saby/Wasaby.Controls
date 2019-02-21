@@ -189,9 +189,13 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       var StickyController = BaseController.extend({
 
          elementCreated: function(item, container) {
-            _private.setStickyContent(item);
-            item.position.position = undefined;
-            this.prepareConfig(item, container);
+            if (_private.isTargetVisible(item)) {
+               _private.setStickyContent(item);
+               item.position.position = undefined;
+               this.prepareConfig(item, container);
+            } else {
+               ManagerController.remove(item.id);
+            }
          },
 
          elementUpdated: function(item, container) {
