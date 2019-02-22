@@ -1,81 +1,42 @@
 //colors
-@color3:                #E4E4E4;
-@color4:                #EAEAEA;
-@color5:                #BDBDBD;
-@color6:                #313E78;
-@color7:                #587AB0;
-@color8:                #8991A9;
-@color9:                #FFFFFF;
-@color10:               #FEC63F;
-@color11:               #72BE44;
-@color12:               #D94700;
-@color13:               #EF463A;
-@color14:               #FF7033;
-@color15:               #FADADD;
-@color16:               #0055BB;
-@color17:               #FDECD9;
-@color18:               #F0F5FB;
-@color19:               #E1ECF6;
-@color20:               #FDD2C0;
-@color21:               rgba(0, 0, 0, 0.05);
-@color22:               rgba(0, 0, 0, 0.08);
-@color23:               #F8F8F8;
-@color24:               #9122BF;
-@color25:               #F3F3F3;
-@color26:               #e5ecf5;
-@color27:               #F4F4F4;
-@color28:               #729EE6;
-@color29:               #AAB0C1;
-@color50:               #F5F5F5;
-@color100:              #DFDFDF;
-@color101:              #F2F2F2;
-@color102:              #F4F9FD;
-@color103:              #FFF9F3;
-@color201:              #F0F0F0;
-@color301:              #C2D0DE;
-@color302:              #9CB3CA;
-
 @color_shadow_default:              rgba(0,0,0,.25);
 @color_shadow_secondary:            rgba(0,0,0,.4);
 @color_shadow_danger:               rgba(239, 70, 58, 0.4);
 
-@color_warning:                       @color10;
-@color_success:                       @color11;
-@color_link:                          @color16;
-@color_link-hover:                    @color6;
-@color_danger:                        @color13;
-@color_primaryV:                      @color14;
+@color_warning:                       #FEC63F;
+@color_success:                       #72BE44;
+@color_link:                          #0055BB;
+@color_link-hover:                    #313E78;
+@color_danger:                        #EF463A;
+@color_primaryV:                      #FF7033;
 @color_active-element:                @color_primaryV;
 @color_info:                          #CCC;
-@color_active-element_disabled:		  @color6;
-@color_secondary:                     @color7;
-@color_unselected:                    #999
-@color_additional:                    @color8;
+@color_active-element_disabled:		  #313E78;
+@color_secondary:                     #587AB0;
+@color_unselected:                    #999;
+@color_additional:                    #8991A9;
 @color_readOnly:                      #CCC;
 
 @color_text_default:                  #000;
 @color_text_readonly:                 @color_readOnly;
 @color_placeholder:                   #CCC;
-@color_text_additional:               #999
+@color_text_additional:               #999;
 
-@background-color_footer:           @color50;
-@background-color_default:          @color9;
-@background-color_danger:           @color15;
-@background-color_toolbar:          @color26; //используется в пмо и в тулбаре бтра
-@background_color_editing:          @color25;
-@background-color_additional:       @color23;
-@background-color_item_hovered:     @color18;
-@background-color_header:           @color27; // Headers in the period dialogs, dropdown and filter panels
+@background-color_footer:           #F5F5F5;
+@background-color_default:          #FFFFFF;
+@background-color_danger:           #FADADD;
+@background-color_toolbar:          #e5ecf5; //используется в пмо и в тулбаре бтра
+@background_color_editing:          #F3F3F3;
+@background-color_additional:       #F8F8F8;
+@background-color_item_hovered:     #F0F5FB;
+@background-color_header:           #F4F4F4; // Headers in the period dialogs, dropdown and filter panels
 
 @color_border:                      #CCC;
 @color_border_danger:               @color_danger;
-@color_border_disabled:             @color3;
-@color_border_secondary:            @color5;
+@color_border_disabled:             #E4E4E4;
+@color_border_secondary:            #BDBDBD;
 
 @color_overlay_default:             rgba(0, 0, 0, 0.1);
-
-@color_Heading_primary:             @color12;
-@color_Heading_secondary:           @color6;
 
 //sizes
 @thickness_border_default:    1px;
@@ -106,11 +67,6 @@
 @font-size_text_4xl:   20px;
 @font-size_text_5xl:   24px;
 
-@size_Heading_s:            @font-size_text_m;
-@size_Heading_m:            @font-size_text_l;
-@size_Heading_l:            @font-size_text_3xl;
-@size_Heading_xl:           @font-size_text_4xl;
-
 @spacing_default_xxs:      2px;
 @spacing_default_xs:       4px;
 @spacing_default_s:        6px;
@@ -129,16 +85,16 @@
 @font-family_text_default:        'TensorFont', sans-serif;
 
 //period dialog
-@color_border_PeriodDialog:       @color4;
+@color_border_PeriodDialog:       #EAEAEA;
 
 // loadingindicator
 @path_spinner:             url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
 
 // d'n'd
-@color_drop-target:                   @color16;
+@color_drop-target:                   #0055BB;
 
 // stack
-@color_border_lite:                 @color201;
+@color_border_lite:                 @color_border_lite_val;
 
 // tile
 @color_shadow_light:                rgba(0,0,0,.15);
@@ -170,7 +126,7 @@
 // Button
 @border-radius-ToolButton_val:                                    2px;
 @min-width_Button_common_val:                                     48px;
-@box-shadow-ToolButton_val:                                       0 1px 4px @color21;
+@box-shadow-ToolButton_val:                                       0 1px 4px rgba(0, 0, 0, 0.05);
 @text-shadow_Button_readOnly_val:                                 0;
 @text-shadow_Button_button_val:                                   none;
 @box-shadow_Button_common_val:                                    none;
@@ -179,6 +135,12 @@
 @text-shadow_ToolButton_val:                                      none;
 @text-shadow_ToolButton_readOnly_val:                             none;
 @background-color-ToolButton_transparent_val:                     transparent;
+@border-color-ToolButton_val:                                     rgba(0, 0, 0, 0.08);
+@border-color-ToolButton_readOnly_val:                            rgba(0, 0, 0, 0.08);
+@background-color-ToolButton_val:                                 #F8F8F8;
+@background_Button_button_primary_hovered_val:                    #FDECD9;
+@background_Button_secondary_active_val:                          #E1ECF6;
+@background_Button_button_primary_active_val:                     #FDD2C0;
 
 // Image
 @border-radius_Image_m_val:                                       8px;
@@ -191,6 +153,9 @@
 @vertical-offset_Infobox-arrow_val:                               9px;
 @size_Infobox-arrow_val:                                          12px;
 @horizontal-offset_Infobox-arrow_val:                             12px;
+@background-color_Infobox_secondary_val:                          #F4F9FD;
+@background-color_Infobox_primary_val:                            #FFF9F3;
+@background-color_Infobox_secondary_val:                          #F4F9FD;
 
 // InputRender
 @line-height_InputRender_l_val:                                   23px;
@@ -213,6 +178,11 @@
 @spacing_ListView-between-content-checkbox_val:                   0;
 @spacing_ListView-empty-between-content-borderTop_xs_val:         0;
 @box-shadow_List-masterList-item_selected_val:                    4px 0 8px rgba(0, 0, 0, .15);
+@border-color_List-masterList-item_selected_val:                  #C2D0DE transparent #9CB3CA transparent;
+@background-color_ListView-item_active_val:                       #F0F5FB;
+@background-color_ListView-item_hover_val:                        #F0F5FB;
+@border-color_List-masterList_val:                                #EAEAEA;
+@color-group-separator_val:                                       #EAEAEA;
 
 // Menu
 @shift-top_MenuButton-button-popup_val:                           -5px;
@@ -250,6 +220,8 @@
 @font-weight_Render_fontStyle_default_size_m_val:                 normal;
 @font-weight_Render_fontStyle_default_size_l_val:                 normal;
 @border-color_Render_style_info_readOnly_multiline_val:           transparent;
+@border-color_input_val:                                          #EAEAEA;
+@border-color-bottom_Render_val:                                  #AAB0C1;
 
 // SelectedCollection
 @width_SelectedCollection-counter-shadow_val:                     20px;
@@ -260,6 +232,7 @@
 @min-height_StackTemplate-head_val:                               38px;
 @spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
 @spacing_StackTemplate-between-close-button-border-top_val:       5px;
+@color_border_lite_val:                                           #F0F0F0;
 
 // Suggest
 @box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 8px;
@@ -275,6 +248,8 @@
 
 // TabButtons
 @max-width_Tabs_item_val:                                         630px;
+@border-color_Tabs_val:                                           #F0F0F0;
+@background-color_Tabs-separator_val:                             #F0F0F0;
 
 // Toolbar
 @shift-top_Toolbar-toolButton-popup_val:                          -6px;
@@ -292,6 +267,8 @@
 @width-TreeGridView-levelPadding_size_l_val:                      38px;
 @width-TreeGridView-levelPadding_size_xl_val:                     46px;
 @height_TreeTileView-node_val:                                    40px;
+@color_TreeGridView-expander_val:                                 #313E78;
+@border-color_TreeGridView-item_dragging_val:                     #0055BB;
 
 // DialogTemplate
 @spacing_dialogTemplate-between-head-border-right_val:                    48px;
@@ -311,6 +288,10 @@
 @spacing_Grid-row-between-content-borderLeft_xs_val:                      0;
 @spacing_Grid-row-between-content-borderRight_xs_val:                     0;
 @box-shadow_Grid-masterList-item_selected_val:                            4px 0 8px @color_shadow_light;
+@border-color_Grid-firstRow-separator_val:                                #EAEAEA;
+@border-color_Grid-lastRow-separator_val:                                 #EAEAEA;
+@background-color_Grid-row_hover_val:                                     #F0F5FB;
+@border-color_Grid-row-separator_val:                                     #F5F5F5;
 
 // Back
 @spacing_Back_between_icon_caption_standart_val:                          3px;
@@ -323,6 +304,9 @@
 @content_Back_secondary_val:                                              '';
 @content_Back_primary_val:                                                '';
 @font-weight_Back_val:                                                    bold;
+@color-Back__caption_style-primary_val:                                   #D94700;
+@color-Back__caption_style-secondary_val:                                 #313E78;
+@color-Back__caption_style-secondary_hovered_val:                         #0055BB;
 
 // Link
 @text-decoration_Link_default_val:                                        none;
@@ -332,6 +316,7 @@
 @text-decoration_Link_warning_val:                                        none;
 @text-decoration_Link_success_val:                                        none;
 @text-decoration_Link_info_val:                                           none;
+@color_Link_magic_val:                                                    #9122BF;
 
 // Checkbox
 @left_CheckBox__iconSuccessful_val:                                       7px;
@@ -369,12 +354,15 @@
 
 // DigitButton
 @min-width_Paging-digitButton_val:                                        28px;
+@background-color_Paging-digitButton_hover_val:                           #F0F5FB;
+@background-color_Paging-button_hover_val:                                #F0F5FB;
 
 // ConfirmationDialog
 @color_SubmitPopup-details_val:                                           inherit;
 @min-width_SubmitPopup-button-small_val:                                  80px;
 @min-width_SubmitPopup-button_val:                                        86px;
 @font-weight_SubmitPopup-message_val:                                     normal;
+@border-color_SubmitPopup-footer-top_val:                                 #EAEAEA;
 
 // ConfirmationTemplate
 @width_ConfirmationTemplate-m_val:                                        350px;
@@ -384,11 +372,15 @@
 @width_FilterPanel-size_m_val:                                            400px;
 @width_FilterPanel-size_l_val:                                            600px;
 @width_FilterPanel-size_xl_val:                                           800px;
+@background-color_FilterPanel-history_vertical_val:                       #F4F4F4;
 
 // DropdownList
 @max-width_DropdownList_val:                                              700px;
 @box-shadow-size_DropdownList-shadowStyle_centerTop_val:                  0 -6px 12px;
 @box-shadow-size_DropdownList-shadowStyle_centerBottom_val:               0 6px 12px;
+@background_DropdownList-header_val:                                      #F4F4F4;
+@color-marker_dark_val:                                                   #D94700;
+@color-marker_val:                                                        #FF7033;
 
 // InputBase
 @spacing_InputBase_between-topBorder-text_val:                            0;
@@ -414,7 +406,28 @@
 // Search
 @border-color_Search_val:                                                 transparent;
 @border-color_Search_readOnly_val:                                        transparent;
+@border-color_Search_active_val:                                          #DFDFDF;
+@background-color_Search_val:                                             #F2F2F2;
 
 // ToggleButton
 @background_ToggleButton_common_val:                                      transparent;
 @border-color_ToggleButton_common_val:                                    transparent;
+@background_ToggleButton_pushButton_hovered_val:                          #F0F5FB;
+@border-color_ToggleButton_pushButton_hovered_val:                        #F0F5FB;
+@background_ToggleButton_pushButton_toggled_val:                          #F3F3F3;
+
+//Heading
+@color-Separator__icon_style-secondary_hovered_val:     #313E78;
+@color-Separator__icon_style-additional_hovered_val:    #313E78;
+@color_Heading__caption_style-secondary_hovered_val:    #0055BB;
+@color_Heading_primary:                                 #D94700;
+@color_Heading_secondary:                               #313E78;
+@size_Heading_s:                                        @font-size_text_m;
+@size_Heading_m:                                        @font-size_text_l;
+@size_Heading_l:                                        @font-size_text_3xl;
+@size_Heading_xl:                                       @font-size_text_4xl;
+@color_HeaderSeparator__primary_hovered_val:            #729EE6;
+@color_HeaderSeparator__secondary_hovered_val:          #729EE6;
+
+//Popup
+@color_border_Notification_default_val:                 #0055BB;
