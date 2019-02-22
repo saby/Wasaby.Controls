@@ -156,6 +156,15 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._fixTemplateAnimation.bind(this);
          },
 
+         elementCreated: function(item, container) {
+            if (item.popupOptions.isCompoundTemplate) {
+               _private.prepareSizes(item, container);
+               _private.setStackContent(item);
+               this._stack.add(item);
+               this._update();
+            }
+         },
+
          elementUpdated: function(item, container) {
             _private.prepareUpdateClassses(item);
             _private.setStackContent(item);
@@ -237,8 +246,20 @@ define('Controls/Popup/Opener/Stack/StackController',
                var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
-            this._stack.add(item);
-            this._update();
+
+            if (item.popupOptions.isCompoundTemplate) {
+               // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+               var position = _private.getItemPosition(item);
+               item.position = {
+                  top: -10000,
+                  left: -10000,
+                  height: _private.getWindowSize().height,
+                  width: position.width || undefined
+               };
+            } else {
+               this._stack.add(item);
+               this._update();
+            }
          },
 
          // TODO: For Compatible
