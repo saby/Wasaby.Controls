@@ -1,4 +1,4 @@
-define('tests/resources/ProxyCall',
+define('unit/resources/ProxyCall',
    [],
    function() {
       'use strict';

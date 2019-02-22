@@ -1,7 +1,7 @@
 define([
    'Core/core-merge',
    'Controls/Input/Date/Range',
-   'tests/Calendar/Utils'
+   'unit/Calendar/Utils'
 ], function(
    cMerge,
    DateRange,

@@ -2,7 +2,7 @@ define(
    [
       'Env/Env',
       'Controls/Input/Mask',
-      'tests/Calendar/Utils'
+      'unit/Calendar/Utils'
    ],
    function(Env, Mask, testUtils) {
 

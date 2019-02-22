@@ -2,7 +2,7 @@ define([
    'Controls/Validate/FormController',
    'Controls/Validate/Controller',
    'Core/Deferred',
-   'tests/resources/ProxyCall',
+   'unit/resources/ProxyCall',
 ], function(ValidateFC, Controller, Deferred, ProxyCall) {
    'use strict';
 
