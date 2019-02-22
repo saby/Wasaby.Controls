@@ -5,16 +5,19 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
       'Controls/Popup/Opener/InfoBox/resources/themeConstantsGetter',
       'Core/core-merge',
       'Controls/Popup/Manager/ManagerController',
+      'Controls/Popup/TargetCoords',
+      'Controls/Popup/Opener/Sticky/StickyStrategy',
 
       'css!theme?Controls/Popup/Opener/InfoBox/InfoBox',
       'css!theme?Controls/Popup/Opener/Previewer/PreviewerController'
    ],
-   function(Deferred, StickyController, themeConstantsGetter, cMerge, ManagerController) {
+   function(Deferred, StickyController, themeConstantsGetter, cMerge, ManagerController, TargetCoords, StickyStrategy) {
       var constants = themeConstantsGetter('controls-InfoBox__themeConstants', {
          ARROW_WIDTH: 'marginLeft',
          ARROW_H_OFFSET: 'marginRight',
          ARROW_V_OFFSET: 'marginBottom',
-         TARGET_OFFSET: 'marginTop'
+         TARGET_OFFSET: 'marginTop',
+         MAX_WIDTH: 'maxWidth'
       });
 
       var SIDES = {
@@ -118,6 +121,9 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             }
             this._openedPopupId = id;
 
+            // Remove the width obtained in getDefaultOptions
+            cfg.position.maxWidth = undefined;
+
             return InfoBoxController.superclass.elementCreated.apply(this, arguments);
          },
 
@@ -147,6 +153,17 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
                this._destroyDeferred[item.id].callback();
                delete this._destroyDeferred[item.id];
             }
+         },
+
+         getDefaultConfig: function(item) {
+            InfoBoxController.superclass.getDefaultConfig.apply(this, arguments);
+
+            // Calculate the width of the infobox before its positioning.
+            // It is impossible to count both the size and the position at the same time, because the position is related to the size.
+            cMerge(item.popupOptions, _private.prepareConfig(item.popupOptions.position, item.popupOptions.target));
+            var sizes = { width: constants.MAX_WIDTH, height: 1, margins: { left: 0, top: 0 } };
+            var position = StickyStrategy.getPosition(this._getPopupConfig(item, sizes), TargetCoords.get(item.popupOptions.target));
+            item.position.maxWidth = position.width;
          },
 
          prepareConfig: function(cfg, sizes) {

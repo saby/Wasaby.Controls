@@ -148,10 +148,12 @@ define('Controls/Filter/Fast',
             }
          },
 
-         isItemsPropertiesChanged: function(oldItems, newItems) {
+         isNeedReload: function(oldItems, newItems) {
             var isChanged = false;
             chain.factory(newItems).each(function(item, index) {
-               if (!isEqual(item.properties, oldItems[index].properties)) {
+               if (!isEqual(item.properties.source, oldItems[index].properties.source) ||
+                  !isEqual(item.properties.filter, oldItems[index].properties.filter) ||
+                  !isEqual(item.properties.navigation, oldItems[index].properties.navigation)) {
                   isChanged = true;
                }
             });
@@ -190,7 +192,7 @@ define('Controls/Filter/Fast',
                resultDef;
             if (newOptions.items && (newOptions.items !== this._options.items)) {
                _private.prepareItems(this, newOptions.items);
-               if (_private.isItemsPropertiesChanged(this._options.items, newOptions.items)) {
+               if (_private.isNeedReload(this._options.items, newOptions.items)) {
                   resultDef = _private.reload(this);
                } else {
                   this._setText();
@@ -237,6 +239,10 @@ define('Controls/Filter/Fast',
                   }
                });
             });
+         },
+
+         _needShowCross: function(item) {
+            return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined && !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'));
          },
 
          _reset: function(event, item, index) {

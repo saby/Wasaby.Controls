@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'View/Executor/Utils',
       'Core/core-clone',
       'Core/core-merge',
-      'Core/IoC',
+      'Env/Env',
       'Core/Deferred',
       'Core/helpers/isNewEnvironment'
    ],
@@ -19,7 +19,7 @@ define('Controls/Popup/Opener/BaseOpener',
       Utils,
       coreClone,
       CoreMerge,
-      IoC,
+      Env,
       Deferred,
       isNewEnvironment
    ) {
@@ -47,7 +47,7 @@ define('Controls/Popup/Opener/BaseOpener',
             this._popupIds = [];
 
             if (options.popupOptions) {
-               IoC.resolve('ILogger').warn(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
             }
          },
 
@@ -119,15 +119,17 @@ define('Controls/Popup/Opener/BaseOpener',
                      }
                   });
                } else {
+                  ManagerController.updateOptionsAfterInitializing(self._getCurrentPopupId(), cfg);
                   self._toggleIndicator(false);
                }
+               return result;
             });
          },
 
          // Lazy load template
          _requireModules: function(config, controller) {
             if (this._openerListDeferred && !this._openerListDeferred.isReady()) {
-               return (new Deferred()).errback('Protection against multiple invocation of the open method');
+               return this._openerListDeferred;
             }
 
             var deps = [];
@@ -169,7 +171,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // BaseOpener needs to have its own clone method, which does not recursively clone
             // templates.
             // https://online.sbis.ru/opendoc.html?guid=a3311385-0488-4558-8e96-b52984b2651a
-            baseConfig.template = popupOptions.template || this._options.popupOptions.template;
+            baseConfig.template = (popupOptions || {}).template || (this._options.popupOptions || {}).template;
 
             // todo https://online.sbis.ru/opendoc.html?guid=770587ec-2016-4496-bc14-14787eb8e713
             var options = [
@@ -237,7 +239,7 @@ define('Controls/Popup/Opener/BaseOpener',
             };
 
             if (cfg.eventHandlers) {
-               IoC.resolve('ILogger').warn(this._moduleName, 'Use an opener subscription instead of popupOptions.eventHandlers');
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use an opener subscription instead of popupOptions.eventHandlers');
             }
          },
 
@@ -245,7 +247,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // Trim the prefix "on" in the event name
             var event = eventName.substr(2);
             this._notify(event, args);
-            IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
+            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
             this._notify('popup' + event, args);
          },
 
@@ -322,7 +324,10 @@ define('Controls/Popup/Opener/BaseOpener',
          if (Base.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!Base.isNewEnvironment()) {
                Base.getManager().addCallback(function() {
-                  Base._openPopup(popupId, cfg, controller, def);
+                  requirejs(['Controls/Utils/getZIndex'], function(getZIndex) {
+                     cfg.zIndex = cfg.zIndex || getZIndex(opener);
+                     Base._openPopup(popupId, cfg, controller, def);
+                  });
                });
             } else if (Base.isVDOMTemplate(rootTpl) && !(cfg.templateOptions && cfg.templateOptions._initCompoundArea)) {
                Base._openPopup(popupId, cfg, controller, def);

@@ -6,14 +6,16 @@ define([
    'Controls/Decorator/Markup/resources/template',
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Controls/Decorator/Markup/resolvers/noOuterTag',
    'Controls/Decorator/Markup/resolvers/innerText',
-   'Core/constants'
+   'Env/Env'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
+   noOuterTagResolver,
    innerTextResolver,
-   cConstants) {
+   Env) {
    'use strict';
 
    describe('Controls.Decorator.Markup.Converter', function() {
@@ -196,11 +198,11 @@ define([
 
       describe('jsonToHtml', function() {
          beforeEach(function() {
-            decoratedLinkService = cConstants.decoratedLinkService;
-            cConstants.decoratedLinkService = '/test/';
+            decoratedLinkService = Env.constants.decoratedLinkService;
+            Env.constants.decoratedLinkService = '/test/';
          });
          afterEach(function() {
-            cConstants.decoratedLinkService = decoratedLinkService;
+            Env.constants.decoratedLinkService = decoratedLinkService;
          });
          it('empty', function() {
             assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
@@ -384,6 +386,11 @@ define([
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
+         });
+         it('with noOuterTag resolver', function() {
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
          });
       });
    });

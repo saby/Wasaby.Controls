@@ -42,14 +42,36 @@ define('Controls/List/Mover/MoveDialog', [
             title: rk('Выбрать'),
             showType: 2
          }];
+         this._onItemClick = this._onItemClick.bind(this);
          this._itemsFilterMethod = this._itemsFilterMethod.bind(this);
+         this._itemActionVisibilityCallback = this._itemActionVisibilityCallback.bind(this);
       },
 
       _itemsFilterMethod: function(item) {
-         return this._options.movedItems.indexOf(item.get(this._options.keyProperty)) === -1;
+         var result = true;
+
+         if (item.get) {
+            result = this._options.movedItems.indexOf(item.get(this._options.keyProperty)) === -1;
+         }
+
+         return result;
+      },
+
+      _itemActionVisibilityCallback: function(action, item) {
+         return item.get(this._options.hasChildrenProperty);
+      },
+
+      _onItemClick: function(event, item) {
+         if (!item.get(this._options.hasChildrenProperty)) {
+            this._applyMove(item);
+         }
       },
 
       _onItemActionsClick: function(event, action, item) {
+         this._applyMove(item);
+      },
+
+      _applyMove: function(item) {
          this._notify('sendResult', [item, this._options.movedItems], {bubbling: true});
          this._notify('close', [], {bubbling: true});
       }

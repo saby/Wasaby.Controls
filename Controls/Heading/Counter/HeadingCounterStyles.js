@@ -1,4 +1,4 @@
-define('Controls/Heading/Counter/CounterStyles',
+define('Controls/Heading/Counter/HeadingCounterStyles',
    [
    ],
    function() {
@@ -6,7 +6,7 @@ define('Controls/Heading/Counter/CounterStyles',
 
    /**
     *
-    * @mixin Controls/Heading/Counter/CounterStyles
+    * @mixin Controls/Heading/Counter/HeadingCounterStyles
     * @public
     *
     * @css @font-size_Counter_size-s Small text size.

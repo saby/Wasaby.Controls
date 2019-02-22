@@ -1,11 +1,11 @@
 define(
    [
-      'Core/constants',
+      'Env/Env',
       'Controls/Container/Scroll',
       'Controls/StickyHeader/Utils',
       'wml!tests/Container/resources/Content'
    ],
-   function(Constants, Scroll, stickyUtils, Content) {
+   function(Env, Scroll, stickyUtils, Content) {
 
       'use strict';
 
@@ -88,7 +88,7 @@ define(
          });
 
          describe('_adjustContentMarginsForBlockRender', function() {
-            if (!Constants.isBrowserPlatform) {
+            if (!Env.constants.isBrowserPlatform) {
                return;
             }
 
@@ -303,6 +303,82 @@ define(
                assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
             });
 
+         });
+      });
+
+      describe('selectedKeysChanged', function() {
+         var instance;
+         beforeEach(function() {
+            instance = new Scroll();
+         })
+         it('should forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return false;
+                  }
+               };
+            instance._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs, ['1', '2', '3']);
+               notifyCalled = true;
+            };
+            instance.selectedKeysChanged(event, '1', '2', '3');
+            assert.isTrue(notifyCalled);
+         });
+
+         it('should not forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return true;
+                  }
+               };
+            instance._notify = function() {
+               notifyCalled = true;
+            };
+            instance.selectedKeysChanged(event, '1', '2', '3');
+            assert.isFalse(notifyCalled);
+         });
+      });
+
+      describe('excludedKeysChanged', function() {
+         var instance;
+         beforeEach(function() {
+            instance = new Scroll();
+         })
+         it('should forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return false;
+                  }
+               };
+            instance._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'excludedKeysChanged');
+               assert.deepEqual(eventArgs, ['1', '2', '3']);
+               notifyCalled = true;
+            };
+            instance.excludedKeysChanged(event, '1', '2', '3');
+            assert.isTrue(notifyCalled);
+         });
+
+         it('should not forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return true;
+                  }
+               };
+            instance._notify = function() {
+               notifyCalled = true;
+            };
+            instance.excludedKeysChanged(event, '1', '2', '3');
+            assert.isFalse(notifyCalled);
          });
       });
 

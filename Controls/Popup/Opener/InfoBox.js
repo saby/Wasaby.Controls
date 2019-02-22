@@ -1,11 +1,11 @@
 define('Controls/Popup/Opener/InfoBox',
    [
       'Core/core-clone',
-      'Core/IoC',
+      'Env/Env',
       'Controls/Popup/Opener/BaseOpener',
       'Controls/Utils/getZIndex'
    ],
-   function(cClone, IoC, Base, getZIndex) {
+   function(cClone, Env, Base, getZIndex) {
       'use strict';
 
       /**
@@ -110,7 +110,7 @@ define('Controls/Popup/Opener/InfoBox',
          _beforeMount: function(options) {
             InfoBox.superclass._beforeMount.apply(this, arguments);
             if (options.float) {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
          },
 
@@ -138,13 +138,13 @@ define('Controls/Popup/Opener/InfoBox',
                newCfg.floatCloseButton = cfg.float;
             }
             if (cfg.style === 'lite') {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style light, используйте secondary');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style light, используйте secondary');
             }
             if (cfg.style === 'help') {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style help, используйте primary');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style help, используйте primary');
             }
             if (cfg.style === 'error') {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшее значение опции style error, используйте danger');
             }
             newCfg.style = _private.prepareDisplayStyle(cfg.style);
 

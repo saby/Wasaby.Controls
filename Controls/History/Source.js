@@ -169,30 +169,23 @@ define('Controls/History/Source', [
       },
 
       getItemsWithHistory: function(self, history, oldItems) {
-         var items = new collection.RecordSet({
-            adapter: oldItems.getAdapter(),
-            idProperty: oldItems.getIdProperty(),
-            format: oldItems.getFormat().clone()
-         });
+         var items = oldItems.clone();
          var filteredHistory, historyIds;
-
          filteredHistory = this.getFilterHistory(self, self._history);
          historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
 
+         items.clear();
          this.addProperty(this, items, 'pinned', 'boolean', false);
          this.addProperty(this, items, 'recent', 'boolean', false);
          this.addProperty(this, items, 'frequent', 'boolean', false);
          this.addProperty(this, items, 'HistoryId', 'string', self.historySource.getHistoryId() || '');
-
          this.fillItems(self, filteredHistory, 'pinned', oldItems, items);
          this.fillFrequentItems(self, filteredHistory, oldItems, items);
          this.fillItems(self, filteredHistory, 'recent', oldItems, items);
-
          oldItems.forEach(function(item) {
             var id = item.getId();
             var historyItem = historyIds.indexOf(id);
             var newItem;
-
             if (historyItem === -1 || item.get(self._parentProperty)) {
                newItem = new entity.Model({
                   rawData: item.getRawData(),
@@ -205,7 +198,6 @@ define('Controls/History/Source', [
                items.add(newItem);
             }
          });
-
          return items;
       },
 

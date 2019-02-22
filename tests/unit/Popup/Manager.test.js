@@ -100,9 +100,6 @@ define(
          });
 
          it('update popup', function() {
-            // todo: убрать по https://online.sbis.ru/opendoc.html?guid=17de8adc-d754-4e3d-83a0-996a7da49b81
-            if(typeof window === 'undefined')
-               this.skip();
             let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
@@ -116,9 +113,6 @@ define(
          });
 
          it('fireEventHandler', function() {
-            // todo: убрать по https://online.sbis.ru/opendoc.html?guid=17de8adc-d754-4e3d-83a0-996a7da49b81
-            if(typeof window === 'undefined')
-               this.skip();
             let Manager = getManager();
             let eventOnCloseFired = false;
             id = Manager.show({

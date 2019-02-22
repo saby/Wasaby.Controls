@@ -1,9 +1,9 @@
 define('Controls/Input/Mask',
    [
-      'Core/IoC',
+      
       'Controls/Utils/tmplNotify',
       'Core/Control',
-      'Core/detection',
+      'Env/Env',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
@@ -14,7 +14,7 @@ define('Controls/Input/Mask',
       'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Control, cDetection, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
+   function(tmplNotify, Control, Env, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
 
       'use strict';
 
@@ -158,7 +158,7 @@ define('Controls/Input/Mask',
 
                if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
-                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
                } else {
                   validation = true;
                }
@@ -179,9 +179,9 @@ define('Controls/Input/Mask',
 
             _beforeMount: function(options) {
                this._maskWrapperCss = '';
-               if (cDetection.isIE) {
+               if (Env.detection.isIE) {
                   this._maskWrapperCss += ' controls-Mask__inputWrapper_ie';
-                  if (cDetection.IEVersion > 11) {
+                  if (Env.detection.IEVersion > 11) {
                      this._maskWrapperCss += ' controls-Mask__inputWrapper_edge';
                   }
                }
@@ -223,13 +223,16 @@ define('Controls/Input/Mask',
                var
                   input = this._children.input,
                   value = this._viewModel.getDisplayValue(),
-                  replacer = this._options.replacer;
+                  replacer = this._options.replacer,
+                  self = this;
 
                /**
                 * At the moment of focus, the selectionEnd property is not set.
                 */
                runDelayed(function() {
-                  _private.setCaretPosition(input, input.selectionEnd, value, replacer);
+                  if (!self._options.readOnly) {
+                     _private.setCaretPosition(input, input.selectionEnd, value, replacer);
+                  }
                });
             },
 

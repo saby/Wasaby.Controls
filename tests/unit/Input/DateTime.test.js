@@ -1,11 +1,15 @@
 define([
    'Core/core-merge',
    'Controls/Input/DateTime',
-   'tests/Calendar/Utils'
+   'Controls/Input/DateTime/StringValueConverter',
+   'tests/Calendar/Utils',
+   'Core/constants'
 ], function(
    cMerge,
    DateTime,
-   calendarTestUtils
+   StringValueConverter,
+   calendarTestUtils,
+   constants
 ) {
    'use strict';
 
@@ -93,6 +97,81 @@ define([
 
             sinon.assert.calledOnce(component._model.destroy);
 
+            sandbox.restore();
+         });
+      });
+
+      describe('_onKeyDown', function() {
+         it('should set current date on insert key press', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(DateTime, options),
+               event = {
+                  nativeEvent: {
+                     keyCode: constants.key.insert
+                  },
+                  stopImmediatePropagation: sinon.fake()
+               };
+            component._onKeyDown(event);
+            const model = component._model;
+            const converter = new StringValueConverter();
+            assert.deepEqual(model.value, converter.getCurrentDate(model._lastValue, model._mask));
+            sandbox.restore();
+         });
+
+         it('should generate "inputCompleted" event after  insert key pressed and focus out.', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(DateTime, options),
+               event = {
+                  nativeEvent: {
+                     keyCode: constants.key.insert
+                  },
+                  stopImmediatePropagation: sinon.fake()
+               };
+            sandbox.stub(component, '_notify');
+            component._onKeyDown(event);
+            sinon.assert.neverCalledWith(component._notify, 'inputCompleted');
+            component._onDeactivated();
+            sinon.assert.calledWith(component._notify, 'inputCompleted');
+            sandbox.restore();
+         });
+
+         it('should increase current date on one day by plus key press', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(DateTime, options),
+               event = {
+                  nativeEvent: {
+                     keyCode: constants.key.plus
+                  },
+                  stopImmediatePropagation: sinon.fake()
+               };
+            const model = component._model;
+            const converter = new StringValueConverter();
+            const currentDate = converter.getCurrentDate(model._lastValue, model._mask);
+            model.value = currentDate;
+            component._onKeyDown(event);
+            const localDate = new Date(currentDate);
+            localDate.setDate(localDate.getDate() + 1);
+            assert.deepEqual(model.value, localDate);
+            sandbox.restore();
+         });
+
+         it('should decrease current date on one day by minus key press', function() {
+            const sandbox = sinon.sandbox.create(),
+               component = calendarTestUtils.createComponent(DateTime, options),
+               event = {
+                  nativeEvent: {
+                     keyCode: constants.key.minus
+                  },
+                  stopImmediatePropagation: sinon.fake()
+               };
+            const model = component._model;
+            const converter = new StringValueConverter();
+            const currentDate = converter.getCurrentDate(model._lastValue, model._mask);
+            model.value = currentDate;
+            component._onKeyDown(event);
+            const localDate = new Date(currentDate);
+            localDate.setDate(localDate.getDate() - 1);
+            assert.deepEqual(model.value, localDate);
             sandbox.restore();
          });
       });

@@ -1,10 +1,9 @@
 define('Controls/Popup/Opener/Confirmation/Dialog', [
    'Core/Control',
    'Types/entity',
-   'Core/constants',
+   'Env/Env',
    'Controls/Popup/Compatible/EscProcessing',
    'Controls/Decorator/Markup/Converter',
-   'Core/IoC',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/content',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/footer',
    'wml!Controls/Popup/Opener/Confirmation/Dialog/message',
@@ -13,10 +12,9 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
    'css!theme?Controls/Popup/Opener/Confirmation/Dialog/Dialog'
 ], function(Control,
    entity,
-   constants,
+   Env,
    EscProcessing,
    MarkupConverter,
-   IoC,
    contentTemplate,
    footerTemplate,
    messageTemplate,
@@ -89,13 +87,13 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
 
    /**
        * @event Controls/Popup/Opener/Confirmation/Dialog#sendResult Происходит при нажатии на кнопку диалога
-       * @param {Core/EventObject} eventObject Дескриптор события
+       * @param {Env/Event:Object} eventObject Дескриптор события
        * @param {Result} Результат
        */
 
    var _private = {
       keyPressed: function(e) {
-         if (e.nativeEvent.keyCode === constants.key.esc) {
+         if (e.nativeEvent.keyCode === Env.constants.key.esc) {
             // for 'ok' and 'yesnocancel' type value equal undefined
             var result = this._options.type === 'yesno' ? false : undefined;
             this._sendResult(null, result);
@@ -133,7 +131,7 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
       },
       _getMessage: function() {
          if (this._hasMarkup()) {
-            IoC.resolve('ILogger').error('Confirmation', 'В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.');
+            Env.IoC.resolve('ILogger').error('Confirmation', 'В тексте сообщения присутствует ссылка. Вывод html-тегов должен реализовываться через задание шаблона.');
             return MarkupConverter.htmlToJson('<span>' + this._options.message + '</span>');
          }
          return this._options.message;

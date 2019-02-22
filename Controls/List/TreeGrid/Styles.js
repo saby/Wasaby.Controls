@@ -24,6 +24,10 @@ define('Controls/List/TreeGrid/Styles', [],
  * @css @spacing_TreeGridView-row-expander-between-content_borderRight_xl 'xl' spacing betwen expander icon and border right
  * @css @spacing_TreeGridView-row-expander-between-content_borderBottom_xl 'xl' spacing betwen expander icon and border bottom
  * @css @spacing_TreeGridView-row-expander-between-content_borderLeft_xl 'xl' spacing betwen expander icon and border left
+ * @css @width-TreeGridView-expanderPadding_size_s - s size of padding in subnode for expander
+ * @css @width-TreeGridView-expanderPadding_size_m - m size of padding in subnode for expander
+ * @css @width-TreeGridView-expanderPadding_size_l - l size of padding in subnode for expander
+ * @css @width-TreeGridView-expanderPadding_size_xl - xl size of padding in subnode for expander
  * @css @height_TreeGridView-expander height of group expander icon container
  * @css @width_TreeGridView-expander width of group expander icon container
  * @css @border-width_TreeGridView-item_dragging border width of dragging item in TreeGridView

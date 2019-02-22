@@ -3,16 +3,16 @@
  */
 define('Controls/Application/Compatible', [
    'Core/Control',
-   'Core/EventBus',
+   'Env/Event',
    'Core/Deferred',
-   'Core/constants',
+   'Env/Env',
    'Controls/Popup/Compatible/Layer',
    'wml!Controls/Application/Compatible',
    'wml!Controls/Application/CompatibleScripts'
 ], function(Base,
-   EventBus,
+   EnvEvent,
    Deferred,
-   Constants,
+   Env,
    Layer,
    template) {
    'use strict';
@@ -31,7 +31,7 @@ define('Controls/Application/Compatible', [
             return;
          };
          if (typeof window !== 'undefined') {
-            Constants.rights = true;
+            Env.constants.rights = true;
             Layer.load(undefined, true).addCallback(function() {
                rightsInitialized.callback();
             });
@@ -48,7 +48,7 @@ define('Controls/Application/Compatible', [
             };
          }
          require(['Lib/StickyHeader/StickyHeaderMediator/StickyHeaderMediator'], function() {
-            EventBus.globalChannel().notify('bootupReady', {error: ''});
+            EnvEvent.Bus.globalChannel().notify('bootupReady', {error: ''});
          });
       },
       _shouldUpdate: function() {

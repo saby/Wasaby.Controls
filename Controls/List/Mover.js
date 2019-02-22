@@ -5,8 +5,9 @@ define('Controls/List/Mover', [
    'Types/source',
    'Controls/Container/Data/ContextOptions',
    'Controls/Utils/getItemsBySelection',
+   'Controls/List/resources/utils/TreeItemsUtil',
    'wml!Controls/List/Mover/Mover'
-], function(Control, Deferred, cInstance, sourceLib, dataOptions, getItemsBySelection, template) {
+], function(Control, Deferred, cInstance, sourceLib, dataOptions, getItemsBySelection, TreeItemsUtil, template) {
 
    var BEFORE_ITEMS_MOVE_RESULT = {
       CUSTOM: 'Custom',
@@ -106,11 +107,38 @@ define('Controls/List/Mover', [
       },
 
       moveItemToSiblingPosition: function(self, item, position) {
-         var
-            itemIndex = self._items.getIndex(_private.getModelByItem(self, item)),
-            target = self._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
-
+         var target = _private.getSiblingItem(self, item, position);
          return target ? self.moveItems([item], target, position) : Deferred.success();
+      },
+
+      getSiblingItem: function(self, item, position) {
+         var
+            result,
+            display,
+            itemIndex,
+            siblingItem,
+            itemFromProjection;
+
+         //В древовидной структуре, нужно получить следующий(предыдущий) с учетом иерархии.
+         //В рекордсете между двумя соседними папками, могут лежат дочерние записи одной из папок,
+         //а нам необходимо получить соседнюю запись на том же уровне вложенности, что и текущая запись.
+         //Поэтому воспользуемся проекцией, которая предоставляет необходимы функционал.
+         //Для плоского списка можно получить следующий(предыдущий) элемент просто по индексу в рекордсете.
+         if (self._options.parentProperty) {
+            display = TreeItemsUtil.getDefaultDisplayTree(self._items, {
+               keyProperty: self._keyProperty,
+               parentProperty: self._options.parentProperty,
+               nodeProperty: self._options.nodeProperty
+            });
+            itemFromProjection = display.getItemBySourceItem(_private.getModelByItem(self, item));
+            siblingItem = display[position === MOVE_POSITION.before ? 'getPrevious' : 'getNext'](itemFromProjection);
+            result = siblingItem ? siblingItem.getContents() : null;
+         } else {
+            itemIndex = self._items.getIndex(_private.getModelByItem(self, item));
+            result = self._items.at(position === MOVE_POSITION.before ? --itemIndex : ++itemIndex);
+         }
+
+         return result;
       },
 
       updateDataOptions: function(self, dataOptions) {
@@ -278,6 +306,8 @@ define('Controls/List/Mover', [
          dataOptions: dataOptions
       };
    };
+
+   Mover._private = _private;
 
    return Mover;
 });

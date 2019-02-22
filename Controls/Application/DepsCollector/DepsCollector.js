@@ -1,9 +1,9 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
-   'Core/IoC',
+   'Env/Env',
    'Core/core-extend',
    'Core/i18n'
-], function(Logger, IoC, coreExtend, i18n) {
+], function(Logger, Env, coreExtend, i18n) {
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
@@ -69,7 +69,7 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       if (res && res.length) {
          return res[0].slice(1);
       }
-      IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
+      Env.IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
       return '';
    }
 

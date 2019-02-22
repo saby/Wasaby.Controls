@@ -1,7 +1,7 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
  */
-define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus', 'Core/helpers/isNewEnvironment'], function(constants, EventBus, isNewEnvironment) {
+define('Controls/Utils/TouchKeyboardHelper', ['Env/Env', 'Env/Event', 'Core/helpers/isNewEnvironment'], function(Env, EnvEvent, isNewEnvironment) {
    var ipadCoefficient = {
       portrait: 0.3,
       landscape: 0.56
@@ -43,7 +43,7 @@ define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus',
 
       getKeyboardHeight: function() {
          if (this.isKeyboardVisible()) {
-            if (constants.browser.isMobileIOS) {
+            if (Env.detection.isMobileIOS) {
                return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
          }
@@ -71,9 +71,9 @@ define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus',
       }
    };
 
-   if (constants.compatibility.touch) {
-      EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
-      EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
+   if (Env.constants.compatibility.touch) {
+      EnvEvent.Bus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
+      EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
    }
 
    return TouchKeyboardHelper;

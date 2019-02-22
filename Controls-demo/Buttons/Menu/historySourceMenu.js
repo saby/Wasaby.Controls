@@ -16,15 +16,15 @@ define('Controls-demo/Buttons/Menu/historySourceMenu',
       'use strict';
 
       var hierarchyItems = [
-         {id: 1, title: 'Task in development'},
-         {id: 2, title: 'Error in development'},
-         {id: 3, title: 'Commission'},
-         {id: 4, title: 'Assignment'},
+         {id: 1, title: 'Task in development', parent: null},
+         {id: 2, title: 'Error in development', parent: null},
+         {id: 3, title: 'Commission', parent: null},
+         {id: 4, title: 'Assignment', parent: null},
          {id: 5, title: 'Coordination', '@parent': true},
          {id: 6, title: 'Development', '@parent': true},
-         {id: 7, title: 'Assignment for accounting'},
-         {id: 8, title: 'Assignment for delivery'},
-         {id: 9, title: 'Assignment for logisticians'}
+         {id: 7, title: 'Assignment for accounting', parent: null},
+         {id: 8, title: 'Assignment for delivery', parent: null},
+         {id: 9, title: 'Assignment for logisticians', parent: null}
       ];
       
       var coordSub = ['Coordination', 'Negotiate the discount', 'Harmonization of price changes', 'Approval of participation in trading',

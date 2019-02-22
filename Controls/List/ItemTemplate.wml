@@ -25,12 +25,12 @@
    </ws:if>
 
     <ws:if data="{{contentTemplate}}">
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}} {{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">
             <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
         </div>
     </ws:if>
     <ws:else>
-        <div attr:class="controls-ListView__itemContent controls-ListView__itemContent_{{itemData.multiSelectVisibility !== 'hidden' ? 'withCheckboxes' : 'withoutCheckboxes'}} {{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
+        <div attr:class="{{itemData.spacingClassList}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}">{{itemData.getPropValue(itemData.item, displayProperty || 'title')}}</div>
     </ws:else>
     <ws:if data="{{itemData.drawActions}}">
         <ws:if data="{{itemData.isSwiped}}">

@@ -1,10 +1,10 @@
 define('Controls/Button/Classes', [
    'Controls/buttons',
-   'Core/IoC'
-], function(buttonsLib, IoC) {
+   'Env/Env'
+], function(buttonsLib, Env) {
    'use strict';
 
-   IoC.resolve('ILogger').error(
+   Env.IoC.resolve('ILogger').error(
       'Controls/Button/Classes',
       'This control is deprecated'
    );

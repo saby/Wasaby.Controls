@@ -2,7 +2,7 @@ define('Controls/Container/Scroll',
    [
       'Core/Control',
       'Core/Deferred',
-      'Core/detection',
+      'Env/Env',
       'Core/core-clone',
       'Core/helpers/Object/isEqual',
       'Controls/Container/Scroll/Context',
@@ -16,7 +16,7 @@ define('Controls/Container/Scroll',
       'Controls/Container/Scroll/Scrollbar',
       'css!theme?Controls/Container/Scroll/Scroll'
    ],
-   function(Control, Deferred, detection, cClone, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
+   function(Control, Deferred, Env, cClone, isEqual, ScrollData, StickyHeaderContext, ScrollWidthUtil, ScrollHeightFixUtil, template, tmplNotify) {
 
       'use strict';
 
@@ -110,7 +110,7 @@ define('Controls/Container/Scroll',
                 * In IE, if the content has a rational height, the height is rounded to the smaller side,
                 * and the scrollable height to the larger side. Reduce the scrollable height to the real.
                 */
-               if (detection.isIE) {
+               if (Env.detection.isIE) {
                   scrollHeight--;
                }
 
@@ -264,7 +264,7 @@ define('Controls/Container/Scroll',
                         styleHideScrollbar = ScrollWidthUtil.calcStyleHideScrollbar(),
 
                         // На мобильных устройствах используется нативный скролл, на других платформенный.
-                        useNativeScrollbar = detection.isMobileIOS || detection.isMobileAndroid;
+                        useNativeScrollbar = Env.detection.isMobileIOS || Env.detection.isMobileAndroid;
 
                      _private.updateDisplayState(self, displayState);
                      self._styleHideScrollbar = styleHideScrollbar;
@@ -319,6 +319,17 @@ define('Controls/Container/Scroll',
 
                this._updateStickyHeaderContext();
                this._adjustContentMarginsForBlockRender();
+
+               // Create a scroll container with a "overflow-scrolling: auto" style and then set
+               // "overflow-scrolling: touch" style. Otherwise, after switching on the overflow-scrolling: auto,
+               // the page will scroll entirely. This solution fixes the problem, but in the old controls the container
+               // was created with "overflow-scrolling: touch" style style.
+               // A task has been created to investigate the problem more.
+               // https://online.sbis.ru/opendoc.html?guid=1c9b807c-41ab-4fbf-9f22-bf8b9fcbdc8d
+               if (detection.isMobileIOS) {
+                  this._overflowScrolling = true;
+                  needUpdate = true;
+               }
 
                if (needUpdate) {
                   this._forceUpdate();
@@ -541,6 +552,24 @@ define('Controls/Container/Scroll',
              */
             scrollToBottom: function() {
                _private.setScrollTop(this, _private.getScrollHeight(this._children.content));
+            },
+
+            // TODO: система событий неправильно прокидывает аргументы из шаблонов, будет исправлено тут:
+            // https://online.sbis.ru/opendoc.html?guid=19d6ff31-3912-4d11-976f-40f7e205e90a
+            selectedKeysChanged: function(event) {
+               // Forwarding bubbling events makes no sense.
+               if (!event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('selectedKeysChanged', args);
+               }
+            },
+
+            excludedKeysChanged: function(event) {
+               // Forwarding bubbling events makes no sense.
+               if (!event.propagating()) {
+                  var args = Array.prototype.slice.call(arguments, 1);
+                  this._notify('excludedKeysChanged', args);
+               }
             }
          });
 

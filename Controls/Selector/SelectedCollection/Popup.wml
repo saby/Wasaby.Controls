@@ -2,7 +2,7 @@
    <Controls.Heading caption="Выбрано" size="s" readOnly="{{true}}"/>
    <div>
       <Controls.Selector.SelectedCollection
-              items="{{_options.items}}"
+              items="{{_items}}"
               displayProperty="{{_options.displayProperty}}"
               itemTemplate="{{_options.itemTemplate}}"
               readOnly="{{_options.readOnly}}"

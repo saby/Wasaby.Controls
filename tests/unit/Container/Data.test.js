@@ -124,6 +124,20 @@ define(
                done();
             });
          });
+   
+         it('filterChanged', function() {
+            var config = {source: source, keyProperty: 'id', filter: {test: 'test'}};
+            var data = getDataWithConfig(config);
+      
+            return new Promise(function(resolve) {
+               data._beforeMount(config).addCallback(function() {
+                  data._filterChanged(null, {test1: 'test1'});
+                  assert.isTrue(config.source === data._dataOptionsContext.prefetchSource);
+                  assert.deepEqual(data._filter, {test1: 'test1'});
+                  resolve();
+               });
+            });
+         });
 
          it('query returns error', function(done) {
             var source = {

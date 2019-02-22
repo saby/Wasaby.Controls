@@ -3,9 +3,8 @@
  */
 define('Controls/List/ListView', [
    'Core/Control',
-   'Core/IoC',
    'Core/helpers/Function/debounce',
-   'Core/constants',
+   'Env/Env',
    'wml!Controls/List/ListView/ListView',
    'wml!Controls/List/ItemTemplate',
    'wml!Controls/List/GroupTemplate',
@@ -13,9 +12,8 @@ define('Controls/List/ListView', [
    'wml!Controls/List/resources/ItemOutput',
    'css!theme?Controls/List/ListView/ListView'
 ], function(BaseControl,
-   IoC,
    cDebounce,
-   cConstants,
+   Env,
    ListViewTpl,
    defaultItemTemplate,
    GroupTemplate,
@@ -30,31 +28,31 @@ define('Controls/List/ListView', [
       checkDeprecated: function(cfg) {
          // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
          if (cfg.leftSpacing !== undefined) {
-            IoC.resolve('ILogger').warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.leftPadding !== undefined) {
-            IoC.resolve('ILogger').warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.rightSpacing !== undefined) {
-            IoC.resolve('ILogger').warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
          if (cfg.rightPadding !== undefined) {
-            IoC.resolve('ILogger').warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
          if (cfg.rowSpacing !== undefined) {
-            IoC.resolve('ILogger').warn('IList', 'Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "rowSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.top and itemPadding.bottom".');
          }
          if (cfg.contextMenuEnabled !== undefined) {
-            IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "contextMenuEnabled" is deprecated and removed in 19.200. Use option "contextMenuVisibility".');
          }
          if (cfg.markerVisibility === 'always') {
-            IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
+            Env.IoC.resolve('ILogger').warn('IList', 'Value "always" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "visible" instead.');
          }
          if (cfg.markerVisibility === 'demand') {
-            IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
+            Env.IoC.resolve('ILogger').warn('IList', 'Value "demand" for property Controls/List/interface/IList#markerVisibility is deprecated, use value "onactivated" instead.');
          }
          if (cfg.results) {
-            IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');
+            Env.IoC.resolve('ILogger').warn('IList', 'Option "results" is deprecated and removed in 19.200. Use options "resultsPosition" and "resultsTemplate".');
          }
       },
 

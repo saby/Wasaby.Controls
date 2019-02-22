@@ -86,6 +86,43 @@ define([
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
       });
 
+      it('set marker after setting items', function() {
+         var
+            items = new collection.RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1' }
+               ],
+               idProperty: 'id'
+            }),
+            model = new ListViewModel({
+               keyProperty: 'id',
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            }),
+            markerSetCount = 0;
+         model._setMarkerAfterUpdateItems = function() {
+            markerSetCount++;
+         };
+
+         // Should not set marker
+         model._options.markerVisibility = 'hidden';
+         model.setItems(items);
+         assert.equal(markerSetCount, 0);
+
+         // Should set set marker
+         model._options.markerVisibility = 'visible';
+         model.setItems(items);
+         model._options.markerVisibility = 'always';
+         model.setItems(items);
+         model._options.markerVisibility = 'onactivated';
+         model.setItems(items);
+
+         assert.equal(markerSetCount, 3);
+
+      });
+
       it('Selection', function() {
          var cfg = {
             items: data,
@@ -315,14 +352,24 @@ define([
                      right: 'XS'
                   },
                   multiSelectVisibility: 'hidden'
-               }), ' controls-ListView__item-leftPadding_m controls-ListView__item-rightPadding_xs');
+               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_default controls-ListView__item-bottomPadding_default' +
+                  ' controls-ListView__item-rightPadding_xs controls-ListView__item-leftPadding_m');
                assert.equal(ListViewModel._private.getSpacingClassList({
                   itemPadding: {
                      left: 'XS',
-                     right: 'm'
+                     right: 'm',
+                     top: 'null',
+                     bottom: 's'
                   },
                   multiSelectVisibility: 'visible'
-               }), ' controls-ListView__item-rightPadding_m');
+               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
+                  ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
+            });
+   
+            it('check search value', function() {
+               lvm.setSearchValue('test');
+               assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               lvm.setSearchValue(null);
             });
          });
 

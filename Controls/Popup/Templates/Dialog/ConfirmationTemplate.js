@@ -2,10 +2,10 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/ConfirmationTemplate',
-      'Core/IoC',
+      'Env/Env',
       'css!theme?Controls/Popup/Templates/Dialog/ConfirmationTemplate'
    ],
-   function(Control, template, IoC) {
+   function(Control, template, Env) {
       'use strict';
 
       var _private = {
@@ -76,21 +76,21 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
          _size: null,
          _beforeMount: function(options) {
             if (options.style === 'error') {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции style - error, используйте danger');
             }
             options._style = _private.prepareStatusStyle(options.style);
             this._size = _private.prepareSize(options.size);
             if (options.contentArea) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.footerArea) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция footerArea, используйте footerContentTemplate');
             }
             if (options.size === 'big') {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - big, используйте l');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - big, используйте l');
             }
             if (options.size === 'default') {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - default, используйте m');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшее значение опции size - default, используйте m');
             }
          },
          _beforeUpdate: function(options) {

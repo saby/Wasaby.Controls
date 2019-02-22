@@ -68,16 +68,17 @@ define(
 
          it('stack default position', () => {
             StackController._private.getWindowSize = () => ({ width: 1920, height: 950 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
+            StackController._private.getStackParentCoords = () => ({ top: 0, right: 0 }); // Этот метод зовет получение размеров окна, для этих тестов не нужно
             let itemConfig = {
                popupOptions: item.popupOptions
             };
             itemConfig.popupOptions.template = TestMaximizedStack;
             itemConfig.popupOptions.minimizedWidth = undefined;
             StackController.getDefaultConfig(itemConfig);
-            assert.equal(itemConfig.position.top, -10000);
-            assert.equal(itemConfig.position.left, -10000);
+            assert.equal(itemConfig.position.top, 0);
+            assert.equal(itemConfig.position.right, 0);
             assert.equal(itemConfig.position.width, 800);
-            assert.equal(itemConfig.position.height, 950);
+            assert.equal(itemConfig.position.bottom, 0);
             assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Stack/StackContent');
          });
 

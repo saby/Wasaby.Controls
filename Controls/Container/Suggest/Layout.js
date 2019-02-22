@@ -9,21 +9,22 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
-      'Core/constants',
+      'Env/Env',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, Env) {
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
+      var COUNT_HISTORY_ITEMS = 12;
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
-      var ENTER_KEY = constants.key.enter;
+      var ENTER_KEY = Env.constants.key.enter;
       
       /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
-      var IGNORE_HOT_KEYS = [constants.key.down, constants.key.up, ENTER_KEY];
+      var IGNORE_HOT_KEYS = [Env.constants.key.down, Env.constants.key.up, ENTER_KEY];
       
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
       
@@ -37,12 +38,24 @@
          suggestStateNotify: function(self, state) {
             if (self._options.suggestState !== state) {
                self._notify('suggestStateChanged', [state]);
+            } else {
+               self._forceUpdate();
             }
          },
          setCloseState: function(self) {
             self._showContent = false;
             self._loading = null;
          },
+         
+         setSuggestMarkedKey: function(self, key) {
+            var currentMarkedKey = self._suggestMarkedKey;
+            self._suggestMarkedKey = key;
+            
+            if (currentMarkedKey !== self._suggestMarkedKey) {
+               self._notify('suggestMarkedKeyChanged', [key]);
+            }
+         },
+         
          close: function(self) {
             this.setCloseState(self);
             this.suggestStateNotify(self, false);
@@ -94,7 +107,10 @@
          },
          
          searchErrback: function(self, error) {
-            self._loading = false;
+            //aborting of the search may be caused before the search start, because of the delay before searching
+            if (self._loading !== null) {
+               self._loading = false;
+            }
             if (!error || !error.canceled) {
                requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
                   self._emptyTemplate = result;
@@ -180,7 +196,8 @@
                self._historyServiceLoad = new Deferred();
                require(['Controls/History/Service'], function(HistoryService) {
                   self._historyService = new HistoryService({
-                     historyId: self._options.historyId
+                     historyId: self._options.historyId,
+                     recent: COUNT_HISTORY_ITEMS
                   });
                   self._historyServiceLoad.callback(self._historyService);
                });
@@ -243,7 +260,7 @@
          _historyLoad: null,
          _showContent: false,
          _inputActive: false,
-         _markedKeyChanged: false,
+         _suggestMarkedKey: null,
 
          /**
           * three state flag
@@ -276,19 +293,21 @@
             var valueChanged = this._options.value !== newOptions.value;
             var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
-            
+
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
+            } else if (this._options.suggestState !== newOptions.suggestState) {
+               _private.open(this);
             }
-      
+
             if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
-   
+
             if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-      
+
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
                this._dependenciesDeferred = null;
@@ -358,7 +377,7 @@
          },
          _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
-            this._markedKeyChanged = false;
+            _private.setSuggestMarkedKey(this, null);
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
             // otherwise interface will blink
@@ -393,8 +412,8 @@
             }
          },
    
-         _markedKeyChangedHandler: function() {
-            this._markedKeyChanged = true;
+         _markedKeyChangedHandler: function(event, key) {
+            _private.setSuggestMarkedKey(this, key);
          },
    
          // </editor-fold>
@@ -453,7 +472,7 @@
 
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
-            var needProcessKey = eventKeyCode === ENTER_KEY ? !this._markedKeyChanged : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
             
             if (this._options.suggestState && needProcessKey) {
                event.preventDefault();

@@ -17,9 +17,7 @@
 </ws:template>
 <ws:template name="multiSelectTplIf">
    <ws:if data="{{_options.multiSelectVisibility}}">
-      <Controls.Container.Async name="multiSelectContainer" templateName="wml!Controls/List/BaseControl/multiSelect">
-         <ws:partial template="{{'wml!Controls/List/BaseControl/multiSelect'}}" />
-      </Controls.Container.Async>
+      <ws:partial template="wml!Controls/List/BaseControl/multiSelect" scope="{{multiSelectTpl.templateOptions}}" />
    </ws:if>
 </ws:template>
 <ws:template name="emptyTemplateIf">
@@ -29,7 +27,7 @@
       </div>
    </ws:if>
 </ws:template>
-<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
+<div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
@@ -124,6 +122,7 @@
           menuIsShown="{{_menuIsShown}}"
           itemActions="{{_options.itemActions}}"
           itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+          itemActionsProperty="{{_options.itemActionsProperty}}"
           itemActionsPosition="{{_options.itemActionsPosition}}"/>
        <Controls.List.Swipe.SwipeControl
           ws:content="listView"

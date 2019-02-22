@@ -130,7 +130,8 @@ define([
          iv.setItems(rs2);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
-
+         assert.equal(0, iv._startIndex, 'Incorrect startIndex after setItems');
+         assert.equal(3, iv._stopIndex, 'Incorrect stopIndex after setItems');
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new ItemsViewModel(cfg2);
@@ -223,7 +224,27 @@ define([
          iv.setItems(rs2);
          assert.equal(1, result, 'itemsReadycallback wasn\'t call');
       });
-
+   
+      it('setFilter', function () {
+         var rs = new collection.RecordSet({
+            rawData: data,
+            keyProperty : 'id'
+         });
+      
+         var cfg = {
+            items: data,
+            keyProperty: 'id',
+            displayProperty: 'title'
+         };
+         
+         var itemsViewModel = new ItemsViewModel(cfg);
+         var modelVersion = itemsViewModel._prefixItemVersion;
+   
+         itemsViewModel.setFilter(function testFilter(){});
+         assert.isTrue(itemsViewModel._prefixItemVersion > modelVersion, 'setFilter should change model version')
+      });
+   
+   
       it('groupingKeyCallback', function() {
          var
             current,
