@@ -1,9 +1,11 @@
 define('Controls/SwitchableArea/ViewModel', [
    'Core/core-simpleExtend',
+   'Types/chain',
    'Core/core-clone'
 ],
 function(
    SimpleExtend,
+   chain,
    cClone
 ) {
    'use strict';
@@ -16,7 +18,37 @@ function(
       },
 
       updateItems: function(items, self) {
+         var loadedItems = [];
+
+         // TODO FIX IT. Запоминаем все загруженные вкладки
+         if (self._items) {
+            chain.factory(self._items).each(function(item) {
+               if (item.get) {
+                  if (item.get('loaded')) {
+                     loadedItems.push(item.get('id') || item.get('key'));
+                  }
+               } else {
+                  if (item.loaded) {
+                     loadedItems.push(item.id || item.key);
+                  }
+               }
+            });
+         }
+
          self._items = cClone(items);
+
+         // TODO FIX IT. Восстанавливаем все загруженные вкладки
+         chain.factory(self._items).each(function(item) {
+            if (item.get) {
+               if (loadedItems.indexOf(item.get('id') || item.get('key')) > -1) {
+                  item.set('loaded', true);
+               }
+            } else {
+               if (loadedItems.indexOf(item.id || item.key) > -1) {
+                  item.loaded = true;
+               }
+            }
+         });
       }
    };
 
@@ -26,10 +58,12 @@ function(
          _private.updateItems(items, this);
          _private.updateLoadStatus(selectedKey, this);
       },
-      updateViewModel: function(items, selectedKey) {
-         _private.updateItems(items, this);
+      updateSelectedKey: function(selectedKey) {
          _private.updateLoadStatus(selectedKey, this);
-      }
+      },
+      updateItems: function(items) {
+         _private.updateItems(items, this);
+      },
    });
 
    return ViewModel;
