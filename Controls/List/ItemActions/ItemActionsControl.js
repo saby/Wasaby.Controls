@@ -73,7 +73,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          });
       },
 
-      updateActions: function(self, options, isTouch) {
+      updateActions: function(self, options, isTouch, collectionChanged) {
          if (options.itemActions) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                var
@@ -83,6 +83,19 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                   _private.updateItemActions(self, item, options, isTouch);
                }
             }
+
+            /**
+             * Item's version consists of two parts:
+             * 1) Version from item.getVersion()
+             * 2) Version from list model which all items share.
+             *
+             * If we pass true as the first argument to nextModelVersion then the version inside list model will not get incremented,
+             * but the changed items will still get redrawn because their inner version was changed.
+             *
+             * We can use this behavior here to make updates a faster - if we know that the collection has changed then we don't need
+             * to update the version inside list model.
+             */
+            options.listModel.nextModelVersion(collectionChanged);
          }
       },
 
@@ -177,6 +190,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             isTouch = this._context.isTouch.isTouch;
          }
          _private.updateItemActions(this, item, this._options, isTouch);
+         this._options.listModel.nextModelVersion();
       },
 
       _beforeUnmount: function() {
@@ -192,7 +206,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          if (this._context && this._context.isTouch) {
             isTouchValue = this._context.isTouch.isTouch;
          }
-         _private.updateActions(this, this._options, isTouchValue);
+         _private.updateActions(this, this._options, isTouchValue, true);
       }
    });
 
