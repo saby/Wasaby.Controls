@@ -368,6 +368,7 @@ define('Controls/List/ListViewModel',
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
             }
+            this._onCollectionChange();
             this._nextModelVersion();
          },
 
