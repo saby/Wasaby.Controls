@@ -201,7 +201,7 @@ define('Controls/Popup/Compatible/Layer', [
    function finishLoad(loadDeferred, result) {
       var coreControl = require('Core/Control'),
          controlCompatible = require('Lib/Control/Control.compatible');
-      moduleStubs.require(['Core/core-extensions', 'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
+      moduleStubs.require(['Core/core-extensions', 'cdn!JQuery/jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
          // частично поддерживаем старое API. поддержка gedId
          coreControl.prototype._isCorrectContainer = controlCompatible._isCorrectContainer;
          coreControl.prototype.getId = controlCompatible.getId;
