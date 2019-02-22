@@ -20,7 +20,7 @@ function(
       updateItems: function(items, self) {
          var loadedItems = [];
 
-         // TODO FIX IT. Запоминаем все загруженные вкладки
+         // TODO https://online.sbis.ru/opendoc.html?guid=c8cda8fa-9695-4abe-aaf7-8417e139a6be. Запоминаем все загруженные вкладки
          if (self._items) {
             chain.factory(self._items).each(function(item) {
                if (item.get) {
@@ -37,7 +37,7 @@ function(
 
          self._items = cClone(items);
 
-         // TODO FIX IT. Восстанавливаем все загруженные вкладки
+         // TODO https://online.sbis.ru/opendoc.html?guid=c8cda8fa-9695-4abe-aaf7-8417e139a6be. Восстанавливаем все загруженные вкладки
          chain.factory(self._items).each(function(item) {
             if (item.get) {
                if (loadedItems.indexOf(item.get('id') || item.get('key')) > -1) {
