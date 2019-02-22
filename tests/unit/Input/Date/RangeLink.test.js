@@ -2,7 +2,7 @@ define([
    'Core/core-merge',
    'Controls/Input/Date/RangeLink',
    'Controls/Date/model/DateRange',
-   'tests/Calendar/Utils'
+   'unit/Calendar/Utils'
 ], function(
    cMerge,
    RangeLink,

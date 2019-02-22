@@ -2,7 +2,7 @@ define([
    'Core/core-merge',
    'Controls/_calendar/Month/Model',
    'SBIS3.CONTROLS/Utils/DateUtil',
-   'tests/Calendar/Utils'
+   'unit/Calendar/Utils'
 ], function(
    coreMerge,
    MonthModel,
