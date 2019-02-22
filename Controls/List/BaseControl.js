@@ -570,7 +570,7 @@ define('Controls/List/BaseControl', [
                      onResult: self._closeActionsMenu,
                      onClose: self._closeActionsMenu
                   },
-                  closeByExternalClick: true,
+                  closeOnOutsideClick: true,
                   corner: {vertical: 'top', horizontal: 'right'},
                   horizontalAlign: {side: context ? 'right' : 'left'},
                   className: 'controls-Toolbar__popup_list',

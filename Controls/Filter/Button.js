@@ -81,7 +81,7 @@ define('Controls/Filter/Button',
          },
          setPopupOptions: function(self, options) {
             self._popupOptions = {
-               closeByExternalClick: true,
+               closeOnOutsideClick: true,
                eventHandlers: {
                   onResult: self._onFilterChanged
                },

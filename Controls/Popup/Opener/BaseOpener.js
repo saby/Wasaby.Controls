@@ -71,12 +71,6 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
 
-         /**
-          * Opens a popup
-          * @function Controls/Popup/Opener/Base#open
-          * @param popupOptions Popup configuration
-          * @param controller Popup Controller
-          */
          open: function(popupOptions, controller) {
             var self = this;
             var cfg = this._getConfig(popupOptions);
@@ -221,6 +215,11 @@ define('Controls/Popup/Opener/BaseOpener',
             }
 
             CoreMerge(baseConfig, coreClone(popupOptions || {}));
+
+            if (baseConfig.hasOwnProperty('closeByExternalClick')) {
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
+               baseConfig.closeOnOutsideClick = baseConfig.closeByExternalClick;
+            }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
             baseConfig.opener = baseConfig.opener || Vdom.DefaultOpenerFinder.find(this) || this;

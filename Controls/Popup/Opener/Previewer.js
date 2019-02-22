@@ -30,7 +30,7 @@ define('Controls/Popup/Opener/Previewer',
          open: function(self, cfg) {
             var myCfg = cClone(cfg);
 
-            myCfg.closeByExternalClick = true;
+            myCfg.closeOnOutsideClick = true;
             myCfg.className = 'controls-PreviewerController';
             Previewer.superclass.open.call(self, myCfg, 'Controls/Popup/Opener/Previewer/PreviewerController');
          }
