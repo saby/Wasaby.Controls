@@ -114,6 +114,7 @@ define('Controls/Input/Dropdown',
 
          _setText: function(items) {
             if (items.length) {
+               this._item = items[0];
                this._isEmptyItem = this._options.emptyText && (getPropValue(items[0], this._options.keyProperty) === null || items[0] === null);
                if (this._isEmptyItem) {
                   this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
