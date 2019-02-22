@@ -224,6 +224,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                }
             };
          },
+
+         onBringToFront: function() {
+            this._vDomTemplate && this._vDomTemplate.activate();
+         },
          _onMaximizedHandler: function(event, maximized) {
             if (!this._panel._updateAreaWidth) {
                return;
@@ -252,7 +256,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
          _onDeactivatedHandler: function() {
             // активность уходит - восстановим onBringToFront
-            this.onBringToFront = this._$onBringToFront;
+            if (this._$onBringToFront) {
+               this.onBringToFront = this._$onBringToFront;
+            }
          },
 
          _getRootContainer: function() {
