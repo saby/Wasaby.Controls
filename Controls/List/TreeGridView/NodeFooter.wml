@@ -5,7 +5,7 @@
     <div class="controls-TreeGrid__nodeFooterContent"
          style="{{(itemData.multiSelectVisibility !== 'hidden' ? 'grid-column: 2 / ' : 'grid-column: 1 / ') + (itemData.columns.length + 1) + ';'}}">
       <ws:for data="i in itemData.dispItem.getLevel()">
-         <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{itemData.expanderSize ? itemData.expanderSize : 'default'}}"></div>
+         <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{itemData.levelIndentSize ? itemData.levelIndentSize : 'default'}} controls-TreeGrid__row-expanderPadding_size_{{itemData.expanderSize ? itemData.expanderSize : 'default'}}"></div>
       </ws:for>
       <div class="controls-TreeGrid__row-expanderPadding"></div>
       <ws:if data="{{itemData.footerStorage.hasMoreStorage}}">

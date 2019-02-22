@@ -238,7 +238,7 @@ app.get('/:moduleName/*', function(req, res){
       return;
    }
 
-   require('Core/constants').resourceRoot = '/';
+   require('Env/Env').constants.resourceRoot = '/';
 
    var html = tpl({
       lite: true,

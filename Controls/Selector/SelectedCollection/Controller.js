@@ -52,7 +52,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       notifyTextValueChanged: function(self, textValue) {
-         self._notify('textValueChanged', textValue);
+         self._notify('textValueChanged', [textValue]);
       },
 
       prepareItems: function(self) {
@@ -62,17 +62,21 @@ define('Controls/Selector/SelectedCollection/Controller', [
       addItem: function(self, item) {
          var
             selectedKeys = self._selectedKeys.slice(),
-            key = item.get(self._options.keyProperty);
+            key = item.get(self._options.keyProperty),
+
+            //That would not change on the link, and it was possible to track changes in child controls
+            selectedItems = _private.getItems(self).clone(true);
 
          if (selectedKeys.indexOf(key) === -1) {
             if (self._options.multiSelect) {
                selectedKeys.push(key);
-               _private.getItems(self).append([item]);
+               selectedItems.append([item]);
             } else {
                selectedKeys = [key];
-               _private.getItems(self).assign([item]);
+               selectedItems.assign([item]);
             }
 
+            _private.setItems(self, selectedItems);
             _private.prepareItems(self);
             _private.notifyChanges(self, selectedKeys);
             _private.setSelectedKeys(self, selectedKeys);
@@ -82,12 +86,16 @@ define('Controls/Selector/SelectedCollection/Controller', [
       removeItem: function(self, item) {
          var
             selectedKeys = self._selectedKeys.slice(),
-            key = item.get(self._options.keyProperty),
-            indexItem = selectedKeys.indexOf(key);
+            keyProperty = self._options.keyProperty,
+            key = item.get(keyProperty),
+            indexKey = selectedKeys.indexOf(key),
+            selectedItems = _private.getItems(self).clone(true),
+            indexItem = selectedItems.getIndexByValue(keyProperty, key);
 
-         if (indexItem !== -1) {
-            selectedKeys.splice(indexItem, 1);
-            _private.getItems(self).remove(item);
+         if (indexKey !== -1) {
+            selectedKeys.splice(indexKey, 1);
+            selectedItems.removeAt(indexItem);
+            _private.setItems(self, selectedItems);
             _private.notifyChanges(self, selectedKeys);
             _private.setSelectedKeys(self, selectedKeys);
          }
@@ -113,6 +121,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
             self._items = new collection.List();
          }
          return self._items;
+      },
+
+      setItems: function(self, items) {
+         self._items = items;
       }
    };
 
@@ -175,7 +187,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _setItems: function(items) {
          var
             selectedKeys = [],
-            keyProperty = this._options.keyProperty;
+            keyProperty = this._options.keyProperty,
+            selectedItems = _private.getItems(this).clone(true);
 
          if (items && items.each) {
             items.each(function(item) {
@@ -183,7 +196,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
             });
          }
 
-         _private.getItems(this).assign(items);
+         selectedItems.assign(items);
+         _private.setItems(this, selectedItems);
          _private.prepareItems(this);
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);

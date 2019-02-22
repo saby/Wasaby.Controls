@@ -1,5 +1,5 @@
-import * as IoC from 'Core/IoC';
-
+// @ts-ignore
+import { IoC } from 'Env/Env';
 export default {
 
    /**

@@ -241,6 +241,10 @@ define('Controls/Filter/Fast',
             });
          },
 
+         _needShowCross: function(item) {
+            return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined && !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'));
+         },
+
          _reset: function(event, item, index) {
             var newValue = getPropValue(this._items.at(index), 'resetValue');
             setPropValue(this._items.at(index), 'value', newValue);

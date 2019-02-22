@@ -1,9 +1,9 @@
 define('Controls-demo/Async/AsyncDemo', [
    'Core/Control',
    'Core/Deferred',
-   'Core/cookie',
+   'Env/Env',
    'wml!Controls-demo/Async/AsyncDemo'
-], function(Control, Deferred, cookie, template) {
+], function(Control, Deferred, Env, template) {
 
    var AsyncDemo = Control.extend({
       _template: template,
@@ -12,7 +12,7 @@ define('Controls-demo/Async/AsyncDemo', [
       isOK: 'false',
       _beforeMount: function(options, context, receivedState) {
          if(typeof window !== 'undefined') {
-            if(cookie.get('s3debug') !== 'true') {
+            if(Env.cookie.get('s3debug') !== 'true') {
                var libModule = false, noLibModule = false;
                var scripts = document.querySelectorAll('script');
                for(var i = 0; i < scripts.length; i++) {

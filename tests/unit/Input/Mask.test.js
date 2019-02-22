@@ -1,10 +1,10 @@
 define(
    [
-      'Core/IoC',
+      'Env/Env',
       'Controls/Input/Mask',
       'tests/Calendar/Utils'
    ],
-   function(IoC, Mask, testUtils) {
+   function(Env, Mask, testUtils) {
 
       'use strict';
 
@@ -20,10 +20,10 @@ define(
 
          it('validateReplacer', function() {
             var message = '';
-            var error = IoC.resolve('ILogger').error;
+            var error = Env.IoC.resolve('ILogger').error;
             var validateReplacer = Mask._private.validateReplacer;
 
-            IoC.resolve('ILogger').error = function(arg1, arg2) {
+            Env.IoC.resolve('ILogger').error = function(arg1, arg2) {
                message = arg1 + ': ' + arg2;
             };
 
@@ -36,7 +36,7 @@ define(
             assert.equal(validateReplacer(' ', 'd\\*'), false);
             assert.equal(message, 'Mask: Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
 
-            IoC.resolve('ILogger').error = error;
+            Env.IoC.resolve('ILogger').error = error;
          });
 
          it('calcReplacer', function() {

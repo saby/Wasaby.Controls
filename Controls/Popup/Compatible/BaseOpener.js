@@ -346,6 +346,7 @@ function(cMerge,
             template: cfg.template,
             _initCompoundArea: cfg._initCompoundArea,
             dialogOptions: {
+               _isCompatibleArea: true,
                isStack: cfg._type === 'stack',
                target: cfg.target,
                modal: cfg.isModal,
@@ -461,6 +462,10 @@ function(cMerge,
             }
          }
 
+         if (newCfg.hasOwnProperty('maximize')) {
+            newCfg.dialogOptions.maximize = newCfg.maximize;
+         }
+
          if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
             newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
          }
@@ -479,6 +484,11 @@ function(cMerge,
 
          if (newCfg._events && newCfg._events.onOpen) {
             newCfg.dialogOptions.onOpenHandlerEvent = newCfg._events.onOpen;
+         }
+
+         if (newCfg.hasOwnProperty('maximized')) {
+            newCfg.dialogOptions.maximized = newCfg.maximized;
+            newCfg.componentOptions.maximized = newCfg.maximized;
          }
 
          return newCfg;

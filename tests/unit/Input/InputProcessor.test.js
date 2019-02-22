@@ -116,6 +116,38 @@ define(
                      format: oldFormat
                   });
                });
+               it('Test_06', function() {
+                  var newFormat = FormatBuilder.getFormat('dd-dd', {
+                     d: '[0-9]'
+                  }, ' ');
+                  var oldFormat = FormatBuilder.getFormat('dd-dd-dd', {
+                     d: '[0-9]'
+                  }, ' ');
+                  result = InputProcessor.input({
+                     after: '',
+                     before: '111111',
+                     delete: '',
+                     insert: ''
+                  }, 'insert', '', oldFormat, newFormat);
+                  result = InputProcessor.input({
+                     after: replacer + replacer + replacer + replacer + replacer + replacer,
+                     before: '',
+                     delete: '',
+                     insert: ''
+                  }, 'delete', '', oldFormat, newFormat);
+                  result = InputProcessor.input({
+                     after: replacer + replacer + replacer + replacer,
+                     before: '11',
+                     delete: '',
+                     insert: ''
+                  }, 'insert', '', oldFormat, newFormat);
+                  console.log(result);
+                  assert.deepEqual(result, {
+                     value: `11${replacer}${replacer}${replacer}${replacer}`,
+                     position: 2,
+                     format: oldFormat
+                  });
+               });
             });
             describe('delete', function() {
                it('Test_01', function() {

@@ -4,6 +4,7 @@
         on:deactivated="_deactivated()"
         on:close="_close()"
         on:suggestStateChanged="_suggestStateChanged()"
+        on:suggestMarkedKeyChanged="_suggestMarkedKeyChanged()"
         bind:suggestState="_suggestState"
         value="{{_options.value}}"
         suggestTemplate="{{_options.suggestTemplate}}"
