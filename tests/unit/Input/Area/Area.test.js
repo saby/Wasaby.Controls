@@ -2,11 +2,11 @@ define(
    [
       'Env/Env',
       'Controls/Input/Area',
-      'tests/resources/ProxyCall',
-      'tests/resources/TemplateUtil',
+      'unit/resources/ProxyCall',
+      'unit/resources/TemplateUtil',
       'Core/vdom/Synchronizer/resources/SyntheticEvent',
 
-      'wml!tests/Input/Area/LinkInReadMode'
+      'wml!unit/Input/Area/LinkInReadMode'
    ],
    function(Env, Area, ProxyCall, TemplateUtil, SyntheticEvent, linkInReadMode) {
       'use strict';
