@@ -2,7 +2,7 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
    
    describe('Controls.Filter.Controller', function () {
 
-      it('_beforeMount', function(done) {
+      it('_beforeMount', function() {
          var filterLayout = new Filter();
          var items = [{
             id: 'testKey',

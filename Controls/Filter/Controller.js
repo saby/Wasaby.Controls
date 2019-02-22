@@ -441,8 +441,7 @@ define('Controls/Filter/Controller',
                _private.applyItemsToFilter(this, options.filter, this._filterButtonItems, this._fastFilterItems);
             } else {
                var self = this,
-                  itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource),
-                  historyId = options.lazyHistoryLoad ? null : options.historyId;
+                   historyId = options.lazyHistoryLoad ? null : options.historyId;
                
                return _private.resolveItems(this, historyId, options.filterButtonSource, options.fastFilterSource).addCallback(function(items) {
                   _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
