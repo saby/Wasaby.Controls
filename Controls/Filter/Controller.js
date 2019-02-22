@@ -203,10 +203,11 @@ define('Controls/Filter/Controller',
          },
 
          setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
-            function clearTextValue(index) {
+            function prepareFastFilterItem(index) {
                setPropValue(filterButtonItems[index], 'textValue', '');
+               filterButtonItems[index].isFast = true;
             }
-            _private.equalItemsIterator(filterButtonItems, fastFilterItems, clearTextValue);
+            _private.equalItemsIterator(filterButtonItems, fastFilterItems, prepareFastFilterItem);
          },
 
          resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {
