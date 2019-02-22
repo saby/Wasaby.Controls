@@ -284,9 +284,9 @@
       content: '';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @border-width_List-masterList-item_selected;
+      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
       border-style: solid;
-      border-color: @border-color_List-masterList-item_selected;
+      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
       box-shadow: @box-shadow_List-masterList-item_selected;
       width: ~'calc(100% + @{border-width_List-masterList-right})';
       position: absolute;
