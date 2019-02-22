@@ -65,24 +65,29 @@ define('Controls/Selector/Lookup/_Lookup', [
             isShowCounter = _private.isShowCounter(multiLineState, itemsCount, maxVisibleItems);
 
          if (itemsCount) {
-            // in mode read only and single line, counter does not affect the collection
-            if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
-               counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
-            }
-
-            lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
-            itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
-            allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
-            afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-            availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
-
-            //For multi line define - inputWidth, for single line - maxVisibleItems
-            if (newOptions.multiLine) {
-               lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
-               inputWidth = _private.getInputWidth(DOMUtil.width(self._fieldWrapper), lastRowCollectionWidth, availableWidth);
-               multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
+            // if item less than 1, we dont need to calculate sizes, because calculations will be on css styles
+            if (itemsCount > 1 || !newOptions.readOnly) {
+               // in mode read only and single line, counter does not affect the collection
+               if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
+                  counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+               }
+      
+               lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
+               itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
+               allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
+               afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
+               availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+      
+               //For multi line define - inputWidth, for single line - maxVisibleItems
+               if (newOptions.multiLine) {
+                  lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
+                  inputWidth = _private.getInputWidth(DOMUtil.width(self._fieldWrapper), lastRowCollectionWidth, availableWidth);
+                  multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
+               } else {
+                  maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
+               }
             } else {
-               maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
+               maxVisibleItems = 1;
             }
          }
 

@@ -4,9 +4,10 @@ define('Controls/Popup/Previewer',
       'wml!Controls/Popup/Previewer/Previewer',
       'Core/helpers/Function/debounce',
       'Controls/Popup/Opener/Previewer',
-      'Core/IoC'
+      'Core/Deferred',
+      'Env/Env'
    ],
-   function(Control, template, debounce, PreviewerOpener, IoC) {
+   function(Control, template, debounce, PreviewerOpener, Deferred, Env) {
 
       'use strict';
 
@@ -39,6 +40,7 @@ define('Controls/Popup/Previewer',
             return 'click';
          },
          getCfg: function(self, event) {
+            var getZIndex = requirejs('Controls/Utils/getZIndex'); // TODO COMPATIBLE
             return {
                opener: self,
                target: event.currentTarget || event.target,
@@ -47,6 +49,7 @@ define('Controls/Popup/Previewer',
                   vertical: 'bottom',
                   horizontal: 'right'
                },
+               zIndex: getZIndex(self),
                isCompoundTemplate: self._options.isCompoundTemplate,
                eventHandlers: {
                   onResult: self._resultHandler
@@ -63,14 +66,18 @@ define('Controls/Popup/Previewer',
       var Previewer = Control.extend({
          _template: template,
 
-         _isNewEnvironment: PreviewerOpener.isNewEnvironment,
-
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             this._debouncedAction = debounce(this._debouncedAction, 10);
             this._enableClose = true;
             if (options.templateName) {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+            }
+
+            if (!PreviewerOpener.isNewEnvironment) {
+               var def = new Deferred();
+               requirejs(['Controls/Utils/getZIndex'], def.callback.bind(def));
+               return def;
             }
          },
 
@@ -78,30 +85,18 @@ define('Controls/Popup/Previewer',
             var type = _private.getType(event.type);
 
             if (!this._isPopupOpened()) {
-               if (this._isNewEnvironment()) {
-                  this._close(event); // close opened popup to avoid jerking the content for repositioning
-                  this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
-               } else {
-                  this._children.openerPreviewer.open(_private.getCfg(this, event), type);
-               }
+               this._close(event); // close opened popup to avoid jerking the content for repositioning
+               this._notify('openPreviewer', [_private.getCfg(this, event), type], { bubbling: true });
             }
          },
 
          _close: function(event) {
             var type = _private.getType(event.type);
-
-            if (this._isNewEnvironment()) {
-               this._notify('closePreviewer', [type], { bubbling: true });
-            } else {
-               this._children.openerPreviewer.close(type);
-            }
+            this._notify('closePreviewer', [type], { bubbling: true });
          },
 
          _isPopupOpened: function() {
-            if (this._isNewEnvironment()) {
-               return this._notify('isPreviewerOpened', [], {bubbling: true});
-            }
-            return this._children.openerPreviewer.isOpened();
+            return this._notify('isPreviewerOpened', [], { bubbling: true });
          },
 
          // Pointer action on hover with content and popup are executed sequentially.
@@ -111,11 +106,7 @@ define('Controls/Popup/Previewer',
          },
 
          _cancel: function(event, action) {
-            if (this._isNewEnvironment()) {
-               this._notify('cancelPreviewer', [action], { bubbling: true });
-            } else {
-               this._children.openerPreviewer.cancel(action);
-            }
+            this._notify('cancelPreviewer', [action], { bubbling: true });
          },
 
          _contentMousedownHandler: function(event) {

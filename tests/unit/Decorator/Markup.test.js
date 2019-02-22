@@ -6,12 +6,14 @@ define([
    'Controls/Decorator/Markup/resources/template',
    'Controls/Decorator/Markup/resolvers/highlight',
    'Controls/Decorator/Markup/resolvers/linkDecorate',
+   'Controls/Decorator/Markup/resolvers/noOuterTag',
    'Controls/Decorator/Markup/resolvers/innerText',
    'Controls/Decorator/Markup/resources/linkDecorateConstants'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
+   noOuterTagResolver,
    innerTextResolver,
    linkDecorateConstants) {
    'use strict';
@@ -386,6 +388,11 @@ define([
          it('with innerText resolver', function() {
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p'], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.equal(Converter.jsonToHtml(json, innerTextResolver), 'text&amp;amp;\ntexttexttexttexttexttexttext\n\ntext\nhttps://ya.ru\ntext\n');
+         });
+         it('with noOuterTag resolver', function() {
+            var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
+            var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
          });
       });
    });

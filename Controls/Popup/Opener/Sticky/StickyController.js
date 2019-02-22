@@ -5,13 +5,12 @@ define('Controls/Popup/Opener/Sticky/StickyController',
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Core/core-merge',
       'Core/core-clone',
-      'Core/detection',
-      'Core/IoC',
+      'Env/Env',
       'Controls/Popup/TargetCoords',
       'wml!Controls/Popup/Opener/Sticky/StickyContent',
       'css!theme?Controls/Popup/Opener/Sticky/Sticky'
    ],
-   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, cDetection, IoC, TargetCoords) {
+   function(BaseController, ManagerController, StickyStrategy, cMerge, cClone, Env, TargetCoords) {
       var DEFAULT_OPTIONS = {
          horizontalAlign: {
             side: 'right',
@@ -74,31 +73,18 @@ define('Controls/Popup/Opener/Sticky/StickyController',
             }
             return newCfg;
          },
-         prepareConfig: function(cfg, sizes) {
+         prepareConfig: function(self, cfg, sizes) {
             cfg.popupOptions = _private.prepareOriginPoint(cfg.popupOptions);
             cfg.popupOptions = _private.prepareActionOnScroll(cfg.popupOptions);
-            var popupCfg = {
-               corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
-               align: {
-                  horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
-                  vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
-               },
-               config: {
-                  maxWidth: cfg.popupOptions.maxWidth,
-                  maxHeight: cfg.popupOptions.maxHeight
-               },
-               sizes: sizes,
-               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
-               locationStrategy: cfg.popupOptions.locationStrategy
-            };
+            var popupCfg = self._getPopupConfig(cfg, sizes);
             if (cfg.popupOptions.corner) {
-               IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
+               Env.IoC.resolve('ILogger').warn('Sticky', 'Используется устаревшая опция corner, используйте опцию targetPoint');
             }
             if (cfg.popupOptions.closeOnTargetScroll || cfg.popupOptions.targetTracking) {
-               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
+               Env.IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции closeOnTargetScroll, targetTracking, используйте опцию actionOnScroll');
             }
             if (cfg.popupOptions.verticalAlign || cfg.popupOptions.horisontalAlign) {
-               IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
+               Env.IoC.resolve('ILogger').warn('Sticky', 'Используются устаревшие опции verticalAlign и horizontalAlign, используйте опции offset и direction');
             }
             cfg.position = StickyStrategy.getPosition(popupCfg, _private._getTargetCoords(cfg, sizes));
 
@@ -216,7 +202,7 @@ define('Controls/Popup/Opener/Sticky/StickyController',
 
                // In landscape orientation, the height of the screen is low when the keyboard is opened.
                // Open Windows are not placed in the workspace and chrome scrollit body.
-               if (cDetection.isMobileAndroid) {
+               if (Env.detection.isMobileAndroid) {
                   var height = item.position.height || container.clientHeight;
                   if (height > document.body.clientHeight) {
                      item.position.height = document.body.clientHeight;
@@ -269,11 +255,27 @@ define('Controls/Popup/Opener/Sticky/StickyController',
          prepareConfig: function(item, container) {
             _private.removeOrientationClasses(item);
             var sizes = this._getPopupSizes(item, container);
-            _private.prepareConfig(item, sizes);
+            _private.prepareConfig(this, item, sizes);
          },
 
          needRecalcOnKeyboardShow: function() {
             return true;
+         },
+         _getPopupConfig: function(cfg, sizes) {
+            return {
+               corner: cMerge(cClone(DEFAULT_OPTIONS.corner), cfg.popupOptions.corner || {}),
+               align: {
+                  horizontal: cMerge(cClone(DEFAULT_OPTIONS.horizontalAlign), cfg.popupOptions.horizontalAlign || {}),
+                  vertical: cMerge(cClone(DEFAULT_OPTIONS.verticalAlign), cfg.popupOptions.verticalAlign || {})
+               },
+               config: {
+                  maxWidth: cfg.popupOptions.maxWidth,
+                  maxHeight: cfg.popupOptions.maxHeight
+               },
+               sizes: sizes,
+               revertPositionStyle: cfg.popupOptions.revertPositionStyle, // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+               locationStrategy: cfg.popupOptions.locationStrategy
+            };
          },
          _private: _private
       });

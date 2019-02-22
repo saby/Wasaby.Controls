@@ -1,9 +1,9 @@
 define('Controls/Popup/Compatible/EscProcessing',
    [
-      'Core/constants',
+      'Env/Env',
       'Core/core-simpleExtend'
    ],
-   function(constants, simpleExtend) {
+   function(Env, simpleExtend) {
       'use strict';
 
       /**
@@ -27,7 +27,7 @@ define('Controls/Popup/Compatible/EscProcessing',
          _isEscDown: false,
 
          keyDownHandler: function(event) {
-            if (event.nativeEvent.keyCode === constants.key.esc) {
+            if (event.nativeEvent.keyCode === Env.constants.key.esc) {
                this._isEscDown = true;
             }
          },

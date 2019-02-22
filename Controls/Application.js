@@ -4,18 +4,15 @@
 define('Controls/Application',
    [
       'Core/Control',
-      'Core/detection',
       'wml!Controls/Application/Page',
       'Core/Deferred',
       'Core/BodyClasses',
-      'Core/constants',
-      'Core/compatibility',
+      'Env/Env',
       'Controls/Application/AppData',
       'Controls/Container/Scroll/Context',
       'Core/LinkResolver/LinkResolver',
       'View/Request',
       'Core/Themes/ThemesController',
-      'Core/ConsoleLogger',
       'css!theme?Controls/Application/Application'
    ],
 
@@ -116,12 +113,10 @@ define('Controls/Application',
     */
 
    function(Base,
-      detection,
       template,
       Deferred,
       BodyClasses,
-      constants,
-      compatibility,
+      Env,
       AppData,
       ScrollContext,
       LinkResolver,
@@ -150,7 +145,7 @@ define('Controls/Application',
 
             var bodyClasses = BodyClasses().replace('ws-is-touch', '').replace('ws-is-no-touch', '');
 
-            if (detection.isMobileIOS) {
+            if (Env.detection.isMobileIOS) {
                bodyClasses += ' ' + this._scrollingClass;
             }
 
@@ -185,7 +180,6 @@ define('Controls/Application',
             this._children.mousedownDetect.start(ev);
          },
          _mousemovePage: function(ev) {
-            ev.blockUpdate = true;
             this._children.mousemoveDetect.start(ev);
          },
          _mouseupPage: function(ev) {
@@ -203,7 +197,7 @@ define('Controls/Application',
             // поэтому сами детектим touch с помощью compatibility
             return this._children.touchDetector
                ? this._children.touchDetector.getClass()
-               : compatibility.touch
+               : Env.compatibility.touch
                   ? 'ws-is-touch'
                   : 'ws-is-no-touch';
          },
@@ -256,26 +250,26 @@ define('Controls/Application',
                receivedState = {};
             }
 
-            self.buildnumber = cfg.buildnumber || constants.buildnumber;
+            self.buildnumber = cfg.buildnumber || Env.constants.buildnumber;
 
             // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            self.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : constants.appRoot);
-            self.staticDomains = cfg.staticDomains || context.AppData.staticDomains || constants.staticDomains || '[]';
+            self.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : Env.constants.appRoot);
+            self.staticDomains = cfg.staticDomains || context.AppData.staticDomains || Env.constants.staticDomains || '[]';
             if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
             }
 
-            self.wsRoot = cfg.wsRoot || constants.wsRoot;
-            self.resourceRoot = cfg.resourceRoot || constants.resourceRoot;
+            self.wsRoot = cfg.wsRoot || Env.constants.wsRoot;
+            self.resourceRoot = cfg.resourceRoot || Env.constants.resourceRoot;
 
             // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
             // Т.к. это должно храниться в отдельном сторе
             self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
-            self.product = cfg.product || constants.product;
+            self.product = cfg.product || Env.constants.product;
             self.lite = cfg.lite || false;
 
             // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || constants.defaultServiceUrl || '/service/';
+            self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || Env.constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
             self.application = context.AppData.application;
             self.product = context.AppData.product;
@@ -336,7 +330,7 @@ define('Controls/Application',
 
          _keyPressHandler: function(event) {
             if (this._isPopupShow) {
-               if (constants.browser.safari) {
+               if (Env.constants.browser.safari) {
                   // Need to prevent default behaviour if popup is opened
                   // because safari escapes fullscreen mode on 'ESC' pressed
                   // TODO https://online.sbis.ru/opendoc.html?guid=5d3fdab0-6a25-41a1-8018-a68a034e14d9

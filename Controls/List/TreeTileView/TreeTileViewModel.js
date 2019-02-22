@@ -9,13 +9,13 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
 
    var TreeTileViewModel = TreeViewModel.extend({
       constructor: function(cfg) {
-         var self = this;
          TreeTileViewModel.superclass.constructor.apply(this, arguments);
          this._tileModel = new TileViewModel(cfg);
-         this._tileModel.subscribe('onListChange', function() {
-            self._nextVersion();
-            self._notify('onListChange');
-         });
+         this._onListChangeFn = function() {
+            this._nextVersion();
+            this._notify('onListChange');
+         }.bind(this);
+         this._tileModel.subscribe('onListChange', this._onListChangeFn);
       },
 
       getItemDataByItem: function(dispItem) {
@@ -39,6 +39,21 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
          }
 
          current = cMerge(current, this.getTileItemData());
+
+         var
+            originalGetVersion = current.getVersion;
+
+         current.getVersion = function() {
+            var
+               version = originalGetVersion();
+            if (current.isHovered) {
+               version = 'HOVERED_' + version;
+            }
+            if (current.isAnimated) {
+               version = 'ANIMATED_' + version;
+            }
+            return version;
+         };
 
          return current;
       },
@@ -89,6 +104,7 @@ define('Controls/List/TreeTileView/TreeTileViewModel', [
       },
 
       destroy: function() {
+         this._tileModel.unsubscribe('onListChange', this._onListChangeFn);
          this._tileModel.destroy();
          TreeTileViewModel.superclass.destroy.apply(this, arguments);
       }

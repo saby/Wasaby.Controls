@@ -130,7 +130,8 @@ define([
          iv.setItems(rs2);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
-
+         assert.equal(0, iv._startIndex, 'Incorrect startIndex after setItems');
+         assert.equal(3, iv._stopIndex, 'Incorrect stopIndex after setItems');
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new ItemsViewModel(cfg2);

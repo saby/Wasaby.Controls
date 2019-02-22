@@ -5,7 +5,7 @@
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_left"
-                source="{{_source}}"
+                source="{{_leftRightSource}}"
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
     <div>
@@ -14,7 +14,7 @@
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_right"
-                source="{{_source}}"
+                source="{{_leftRightSource}}"
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
     <div>
@@ -23,7 +23,7 @@
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_top"
-                source="{{_source}}"
+                source="{{_topBottomSource}}"
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
     <div>
@@ -32,7 +32,7 @@
                 keyProperty="id"
                 displayProperty="title"
                 bind:selectedKey="_bottom"
-                source="{{_source}}"
+                source="{{_topBottomSource}}"
                 on:selectedKeyChanged="_onValueChanged()"/>
     </div>
 </div>

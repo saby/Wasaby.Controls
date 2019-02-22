@@ -1,28 +1,28 @@
 //style toolButton and primary
-@width_CloseButton_toolButton_l:                                                    36px;
-@height_CloseButton_toolButton_l:                                                   28px;
-@width_CloseButton_toolButton_m:                                                    29px;
+@width_CloseButton_toolButton_l:                                                    @width_CloseButton_toolButton_l_val;
+@height_CloseButton_toolButton_l:                                                   @height_control_m;
+@width_CloseButton_toolButton_m:                                                    @width_CloseButton_toolButton_m_val;
 @height_CloseButton_toolButton_m:                                                   @height_control_default;
 @font-family_CloseButton_toolButton:                                                @font-family_icon_size-l;
 @color_CloseButton-icon_toolButton:                                                 @color_secondary;
 @color_CloseButton-icon_toolButton_hover:                                           @color_link-hover;
 @color_CloseButton-icon_toolButton_active:                                          @color_CloseButton-icon_toolButton_hover;
-@background-color_CloseButton_toolButton_transparent:                               transparent;
+@background-color_CloseButton_toolButton_transparent:                               @background-color_CloseButton_toolButton_transparent_val;
 @background-color_CloseButton_primary_untransparent:                                @background-color_additional;
 @border-color_CloseButton_toolButton:                                               @border-color-ToolButton;
 @border-color_CloseButton_toolButton_hover:                                         @color_border;
 @border-top-width_CloseButton_toolButton:                                           @thickness_border_default;
-@border-right-width_CloseButton_toolButton:                                         0;
+@border-right-width_CloseButton_toolButton:                                         @border-right-width_CloseButton_toolButton_val;
 @border-bottom-width_CloseButton_toolButton:                                        @thickness_border_default;
 @border-left-width_CloseButton_toolButton:                                          @thickness_border_default;
 @border-top-radius_CloseButton_toolButton:                                          @border-radius-ToolButton;
-@border-right-radius_CloseButton_toolButton:                                        0;
-@border-bottom-radius_CloseButton_toolButton:                                       0;
+@border-right-radius_CloseButton_toolButton:                                        @border-right-radius_CloseButton_toolButton_val;
+@border-bottom-radius_CloseButton_toolButton:                                       @border-bottom-radius_CloseButton_toolButton_val;
 @border-left-radius_CloseButton_toolButton:                                         @border-radius-ToolButton;
 @box-shadow_CloseButton_toolButton:                                                 @box-shadow-ToolButton;
-@width_CloseButton-icon_toolButton:                                                 12px;
+@width_CloseButton-icon_toolButton:                                                 @width_CloseButton-icon_toolButton_val;
 @height_CloseButton-icon_toolButton:                                                @width_CloseButton-icon_toolButton;
-@width_CloseButton-icon_link:                                                       12px;
+@width_CloseButton-icon_link:                                                       @width_CloseButton-icon_link_val;
 @height_CloseButton-icon_link:                                                      @width_CloseButton-icon_link;
 //style link
 @font-size_CloseButton_link:                                                        @font-size_text_5xl;
@@ -33,5 +33,5 @@
 @height_CloseButton_link:                                                           @height_control_default;
 @color_CloseButton-icon_link:                                                       @color_info;
 //common
-@content_CloseButton_icon:                                                          "\e66c";
+@content_CloseButton_icon:                                                          @content_CloseButton_icon_val;
 @text-shadow_CloseButton:                                                           @text-shadow_Button;

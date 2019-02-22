@@ -359,7 +359,7 @@ define('Controls-demo/OperationsPanel/Demo/Data', function() {
             id: 'move',
             icon: 'icon-Move icon-medium',
             '@parent': false,
-            title: 'Перенести',
+            title: 'В другой раздел',
             parent: null
          },
          itemActions: [{

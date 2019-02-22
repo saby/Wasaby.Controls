@@ -1,4 +1,4 @@
-<div class="controls-Toolbar_item controls-Toolbar_item_{{item['buttonViewMode'] === 'toolButton' || buttonViewMode === 'toolButton' ? 'toolButton' : 'default'}}"
+<div class="controls-Toolbar_item"
      title="{{item['tooltip']}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial

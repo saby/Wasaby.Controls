@@ -2,13 +2,13 @@ define('Controls/Validate/FormController',
    [
       'Core/Control',
       'wml!Controls/Validate/FormController',
-      'Core/IoC',
+      'Env/Env',
       'Core/ParallelDeferred'
    ],
    function(
       Base,
       template,
-      IoC,
+      Env,
       ParallelDeferred
    ) {
       'use strict';
@@ -52,7 +52,7 @@ define('Controls/Validate/FormController',
                }
                return results;
             }.bind(this)).addErrback(function(e) {
-               IoC.resolve('ILogger').error('Form', 'Submit error', e);
+               Env.IoC.resolve('ILogger').error('Form', 'Submit error', e);
                return e;
             });
             this._notify('registerPending', [resultDef, { showLoadingIndicator: true }], { bubbling: true });

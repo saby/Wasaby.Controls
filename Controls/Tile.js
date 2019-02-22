@@ -28,6 +28,7 @@ define('Controls/Tile', [
     * @mixes Controls/List/BaseControlStyles
     * @mixes Controls/List/ListStyles
     * @mixes Controls/List/Tile/Styles
+    * @mixes Controls/List/ItemActions/ItemActionsStyles
     *
     * @mixes Controls/List/Mover/MoveDialog/Styles
     * @mixes Controls/List/PagingStyles

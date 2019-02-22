@@ -1,5 +1,6 @@
 <div attr:class="controls-Input-DatePicker">
    <Controls.Input.DateTime
+      name="input"
       value="{{_options.value}}"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"

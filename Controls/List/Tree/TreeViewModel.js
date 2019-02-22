@@ -241,8 +241,7 @@ define('Controls/List/Tree/TreeViewModel', [
             this._expandedItems = _private.prepareExpandedItems(expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getExpandedItems: function() {
@@ -289,8 +288,7 @@ define('Controls/List/Tree/TreeViewModel', [
                   }
                }
                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-               this._nextVersion();
-               this._notify('onListChange');
+               this._nextModelVersion();
             }
          },
 
@@ -317,20 +315,17 @@ define('Controls/List/Tree/TreeViewModel', [
 
          setNodeFooterTemplate: function(nodeFooterTemplate) {
             this._options.nodeFooterTemplate = nodeFooterTemplate;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setExpanderDisplayMode: function(expanderDisplayMode) {
             this._options.expanderDisplayMode = expanderDisplayMode;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setExpanderVisibility: function(expanderVisibility) {
             this._options.expanderVisibility = expanderVisibility;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setItems: function() {
@@ -504,16 +499,24 @@ define('Controls/List/Tree/TreeViewModel', [
 
          setHasMoreStorage: function(hasMoreStorage) {
             this._hasMoreStorage = hasMoreStorage;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
-            this._setMarkerAfterUpdateItems();
-            this._nextVersion();
-            this._notify('onListChange');
+
+            /**
+             * По стандарту в Explorrer'e, если маркер видимый, то при проваливании в папку должна отмечаться первая запись.
+             * Чтобы не ломать тесты, всегда отмечаем первую запись. Однако нужно учитывать случаи, когда корень меняется с
+             * частичным обновлением коллекции. Может получиться, что отмеченный ранее элемент останется в коллекции, но маркер
+             * всёравно переместится на первую запись.
+             * Исправить по задаче https://online.sbis.ru/opendoc.html?guid=f75e5bfd-6e9f-4710-bad7-b9be704f0dff
+             * */
+            if (this._options.markerVisibility !== 'hidden' && this.getCount()) {
+               this.setMarkedKey(this._items.at(0).getId());
+            }
+            this._nextModelVersion();
          },
 
          getChildren: function(rootId) {
