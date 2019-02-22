@@ -4,9 +4,9 @@ define(
       'Core/constants',
       'Core/core-instance',
       'Controls/Input/Base',
-      'tests/resources/ProxyCall',
-      'tests/Input/Base/InputUtility',
-      'tests/resources/TemplateUtil',
+      'unit/resources/ProxyCall',
+      'unit/Input/Base/InputUtility',
+      'unit/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
    function(EventBus, constants, instance, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {

@@ -2,7 +2,7 @@ define(
    [
       'Core/IoC',
       'Controls/Input/Mask',
-      'tests/Calendar/Utils'
+      'unit/Calendar/Utils'
    ],
    function(IoC, Mask, testUtils) {
 

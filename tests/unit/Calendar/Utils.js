@@ -1,4 +1,4 @@
-define('tests/Calendar/Utils', [
+define('unit/Calendar/Utils', [
    'Core/core-merge'
 ], function(
    coreMerge

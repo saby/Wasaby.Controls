@@ -31,7 +31,7 @@
    "saby-units": {
       "moduleType": "amd",
       "root": "application",
-      "tests": "tests",
+      "tests": "unit",
       "patchedRequire": true,
       "report": "./application/artifacts/xunit-report.xml",
       "htmlCoverageReport": "./application/artifacts/coverage/index.html",

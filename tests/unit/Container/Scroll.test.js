@@ -3,7 +3,7 @@ define(
       'Core/constants',
       'Controls/Container/Scroll',
       'Controls/StickyHeader/Utils',
-      'wml!tests/Container/resources/Content'
+      'wml!unit/Container/resources/Content'
    ],
    function(Constants, Scroll, stickyUtils, Content) {
 
