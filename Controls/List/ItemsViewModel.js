@@ -245,6 +245,7 @@ define('Controls/List/ItemsViewModel', [
 
       setFilter: function(filter) {
          this._display.setFilter(filter);
+         this.nextModelVersion();
       },
 
       prepareDisplayFilterData: function() {
