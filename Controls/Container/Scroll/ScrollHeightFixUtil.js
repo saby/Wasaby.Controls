@@ -1,8 +1,8 @@
 define('Controls/Container/Scroll/ScrollHeightFixUtil',
    [
-      'Core/detection'
+      'Env/Env'
    ],
-   function(detection) {
+   function(Env) {
 
       'use strict';
 
@@ -50,7 +50,7 @@ define('Controls/Container/Scroll/ScrollHeightFixUtil',
       return {
          _private: _private,
 
-         calcHeightFix: _private.calcHeightFixFn(detection)
+         calcHeightFix: _private.calcHeightFixFn(Env.detection)
       };
    }
 );

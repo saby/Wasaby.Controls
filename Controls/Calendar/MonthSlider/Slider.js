@@ -1,9 +1,7 @@
 define('Controls/Calendar/MonthSlider/Slider', [
-   'Controls/calendar'/*,
-   'Core/IoC'*/
+   'Controls/calendar'
 ], function(
-   calendarLib/*,
-   IoC*/
+   calendarLib
 ) {
 
    'use strict';

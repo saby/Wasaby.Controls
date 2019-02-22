@@ -93,12 +93,6 @@
    box-sizing: border-box;
 }
 
-.controls-Grid__cell_ellipsis {
-   overflow: hidden;
-   text-overflow: ellipsis;
-   white-space: nowrap;
-}
-
 .controls-Grid__header-cell_halign_left {
    text-align: left;
 }
@@ -334,6 +328,7 @@
    display: inline-flex;
    align-items: baseline;
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
+   flex-shrink: 1;
 }
 
 //MasterList styles

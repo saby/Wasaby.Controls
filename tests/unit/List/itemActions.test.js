@@ -145,6 +145,12 @@ define([
             }
          };
          var ctrl = new ItemActionsControl(cfg);
+         ctrl._options.listModel = {
+            unsubscribe: function() {
+
+            }};
+         ctrl._onCollectionChangeFn = function() {
+         };
          ctrl._beforeUpdate(cfg, {isTouch: {isTouch: false}});
          assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
@@ -197,9 +203,39 @@ define([
                itemActionsProperty: 'test'
             };
          var ctrl = new ItemActionsControl(cfg);
+         ctrl._options.listModel = {
+            unsubscribe: function() {
+            }
+         };
+         ctrl._onCollectionChangeFn = function() {
+         };
          ctrl._beforeUpdate(cfg, { isTouch: { isTouch: false } });
          assert.deepEqual(data[0].test, listViewModel._actions[0].all);
          assert.deepEqual(data[1].test, listViewModel._actions[1].all);
+      });
+
+      it('unsubscribe old model', function() {
+         var cfg = {
+            listModel: listViewModel,
+            itemActions: actions
+         };
+         var eHandler = function() {};
+         var ctrl = new ItemActionsControl(cfg);
+         ctrl._onCollectionChangeFn = eHandler;
+         listViewModel.subscribe('onCollectionChange', eHandler);
+         ctrl._options.listModel = listViewModel;
+
+         assert.isTrue(listViewModel.hasEventHandlers('onCollectionChange'));
+
+         ctrl._beforeUpdate({
+            listModel: new ListViewModel({
+               items: rs,
+               keyProperty: 'id'
+            })
+         });
+
+         assert.isFalse(listViewModel.hasEventHandlers('onCollectionChange'));
+
       });
 
       it('_onItemActionClick', function() {

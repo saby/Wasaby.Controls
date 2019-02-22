@@ -6,9 +6,9 @@ define('Controls/Popup/InfoBox',
       'Controls/Popup/Opener/InfoBox',
       'Controls/Context/TouchContextField',
       'Controls/Utils/getZIndex',
-      'Core/IoC'
+      'Env/Env'
    ],
-   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, IoC) {
+   function(Control, template, OpenerTemplate, InfoBoxOpener, TouchContext, getZIndex, Env) {
       'use strict';
 
       /**
@@ -155,10 +155,10 @@ define('Controls/Popup/InfoBox',
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             if (options.float) {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
             if (options.templateName) {
-               IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
+               Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
             }
          },
 

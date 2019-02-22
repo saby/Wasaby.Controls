@@ -1,6 +1,5 @@
 define('Controls/List/BaseControl', [
    'Core/Control',
-   'Core/IoC',
    'Core/core-clone',
    'Core/core-merge',
    'Core/core-instance',
@@ -11,7 +10,7 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'Core/constants',
+   'Env/Env',
    'Controls/Utils/scrollToElement',
    'Types/collection',
    'Controls/Utils/Toolbar',
@@ -22,7 +21,6 @@ define('Controls/List/BaseControl', [
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(
    Control,
-   IoC,
    cClone,
    cMerge,
    cInstance,
@@ -33,7 +31,7 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   cConstants,
+   Env,
    scrollToElement,
    collection,
    tUtil,
@@ -51,10 +49,10 @@ define('Controls/List/BaseControl', [
 
    var
       HOT_KEYS = {
-         moveMarkerToNext: cConstants.key.down,
-         moveMarkerToPrevious: cConstants.key.up,
-         toggleSelection: cConstants.key.space,
-         enterHandler: cConstants.key.enter
+         moveMarkerToNext: Env.constants.key.down,
+         moveMarkerToPrevious: Env.constants.key.up,
+         toggleSelection: Env.constants.key.space,
+         enterHandler: Env.constants.key.enter
       };
 
    var LOAD_TRIGGER_OFFSET = 100;
@@ -62,12 +60,13 @@ define('Controls/List/BaseControl', [
    var _private = {
       checkDeprecated: function(cfg) {
          if (cfg.historyIdCollapsedGroups) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
          }
          if (cfg.groupMethod) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
          }
       },
+
       reload: function(self, cfg) {
          var
             filter = cClone(cfg.filter),
@@ -119,7 +118,7 @@ define('Controls/List/BaseControl', [
                   потеряли актуальность, сбрасываем их. */
                if (self._virtualScroll) {
                   self._virtualScroll.resetItemsIndexes();
-                  self._virtualScroll.setItemsCount(listModel.getCount());
+                  self._virtualScroll.ItemsCount = listModel.getCount();
                   self._virtualScroll.updateItemsIndexes('down');
                   _private.applyVirtualScroll(self);
                }
@@ -138,7 +137,7 @@ define('Controls/List/BaseControl', [
             });
          } else {
             resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
          resDeferred.addCallback(function(items) {
             if (cfg.afterReloadCallback) {
@@ -262,7 +261,7 @@ define('Controls/List/BaseControl', [
                if (self._virtualScroll) {
 
                   // Обновляем общее количество записей
-                  self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                  self._virtualScroll.ItemsCount = self._listViewModel.getCount();
 
                   _private.applyVirtualScroll(self, direction);
                }
@@ -274,14 +273,14 @@ define('Controls/List/BaseControl', [
                return _private.processLoadError(self, error, userErrback);
             });
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+         Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
       },
 
       // Основной метод пересчета состояния Virtual Scroll
       applyVirtualScroll: function(self) {
          var
-            indexes = self._virtualScroll.getItemsIndexes(),
-            placeholdersSizes = self._virtualScroll.getPlaceholdersSizes();
+            indexes = self._virtualScroll.ItemsIndexes,
+            placeholdersSizes = self._virtualScroll.PlaceholdersSizes;
 
          self._listViewModel.setIndexes(indexes.start, indexes.stop);
          self._topPlaceholderHeight = placeholdersSizes.top;
@@ -341,7 +340,7 @@ define('Controls/List/BaseControl', [
 
       // Метод, в котором опеределяется необходимость догрузки данных
       updateVirtualWindow: function(self, direction) {
-         var indexes = self._virtualScroll.getItemsIndexes();
+         var indexes = self._virtualScroll.ItemsIndexes;
 
          // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
          if (self._listViewModel.getCount() <= indexes.stop) {
@@ -739,11 +738,10 @@ define('Controls/List/BaseControl', [
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (this._needScrollCalculation) {
-            if (newOptions.virtualScrolling === true) {
+            if (newOptions.virtualScrolling) {
                this._virtualScroll = new VirtualScroll({
                   virtualPageSize: newOptions.virtualPageSize,
-                  virtualSegmentSize: newOptions.virtualSegmentSize,
-                  updateItemsHeightsMode: newOptions.updateItemsHeightsMode
+                  virtualSegmentSize: newOptions.virtualSegmentSize
                });
             }
             this._loadTriggerVisibility = {
@@ -779,8 +777,8 @@ define('Controls/List/BaseControl', [
                   }
                   if (self._virtualScroll) {
                      // При серверной верстке применяем начальные значения
-                     var indexes = self._virtualScroll.getItemsIndexes();
-                     self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                     var indexes = self._virtualScroll.ItemsIndexes;
+                     self._virtualScroll.ItemsCount = self._listViewModel.getCount();
                      self._listViewModel.setIndexes(indexes.start, indexes.stop);
                   }
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
@@ -812,7 +810,7 @@ define('Controls/List/BaseControl', [
             _private.startScrollEmitter(this);
          }
          if (this._virtualScroll) {
-            this._virtualScroll.setItemsContainer(this._children.listView.getItemsContainer());
+            this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
          }
          if (this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
@@ -846,6 +844,10 @@ define('Controls/List/BaseControl', [
          if (newOptions.markerVisibility !== this._options.markerVisibility) {
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
          }
+         
+         if (newOptions.searchValue !== this._options.searchValue) {
+            this._listViewModel.setSearchValue(newOptions.searchValue);
+         }
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
@@ -875,10 +877,6 @@ define('Controls/List/BaseControl', [
 
          if (filterChanged || recreateSource || sortingChanged) {
             _private.reload(this, newOptions);
-         }
-
-         if (this._virtualScroll && (this._listViewModel.getCount() != this._virtualScroll.getItemsCount())) {
-            this._virtualScroll.setItemsCount(this._listViewModel.getCount());
          }
 
       },
@@ -926,6 +924,8 @@ define('Controls/List/BaseControl', [
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
+               this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
+               this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
             }
          }
          if (this._delayedSelect && this._children.selectionController) {
@@ -1032,6 +1032,10 @@ define('Controls/List/BaseControl', [
 
       reload: function() {
          return _private.reload(this, this._options);
+      },
+
+      getVirtualScroll: function() {
+         return this._virtualScroll;
       },
 
       _onGroupClick: function(e, item, baseEvent) {

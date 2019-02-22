@@ -7,7 +7,7 @@ define('Controls/Popup/Opener/BaseOpener',
       'View/Executor/Utils',
       'Core/core-clone',
       'Core/core-merge',
-      'Core/IoC',
+      'Env/Env',
       'Core/Deferred',
       'Core/helpers/isNewEnvironment'
    ],
@@ -19,7 +19,7 @@ define('Controls/Popup/Opener/BaseOpener',
       Utils,
       coreClone,
       CoreMerge,
-      IoC,
+      Env,
       Deferred,
       isNewEnvironment
    ) {
@@ -47,7 +47,7 @@ define('Controls/Popup/Opener/BaseOpener',
             this._popupIds = [];
 
             if (options.popupOptions) {
-               IoC.resolve('ILogger').warn(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'The "popupOptions" option will be removed. Use the configuration on the control options.');
             }
          },
 
@@ -239,7 +239,7 @@ define('Controls/Popup/Opener/BaseOpener',
             };
 
             if (cfg.eventHandlers) {
-               IoC.resolve('ILogger').warn(this._moduleName, 'Use an opener subscription instead of popupOptions.eventHandlers');
+               Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use an opener subscription instead of popupOptions.eventHandlers');
             }
          },
 
@@ -247,7 +247,7 @@ define('Controls/Popup/Opener/BaseOpener',
             // Trim the prefix "on" in the event name
             var event = eventName.substr(2);
             this._notify(event, args);
-            IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
+            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
             this._notify('popup' + event, args);
          },
 

@@ -1,14 +1,14 @@
 define('Controls/List/Grid/GridViewModel', [
-   'Core/IoC',
+   
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
    'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
-   'Core/detection',
+   'Env/Env',
    'Core/helpers/Object/isEqual',
    'Controls/StickyHeader/Utils'
-], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual, stickyUtil) {
+], function(BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, Env, isEqual, stickyUtil) {
    'use strict';
 
    var
@@ -161,7 +161,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             function processStickyLadder(params) {
                processLadder(params);
-               if (params.ladder.ladderLength && params.ladder.ladderLength > 1 && !cDetection.isNotFullGridSupport) {
+               if (params.ladder.ladderLength && params.ladder.ladderLength > 1 && !Env.detection.isNotFullGridSupport) {
                   params.ladder.headingStyle = 'grid-area: ' +
                      (params.itemIndex + 1) + ' / ' +
                      '1 / ' +
@@ -225,6 +225,11 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             return sortingDirection;
+         },
+   
+         isNeedToHighlight: function(item, dispProp, searchValue) {
+            var itemValue = item.get(dispProp);
+            return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
          }
       },
 
@@ -262,7 +267,7 @@ define('Controls/List/Grid/GridViewModel', [
                this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
-               this._notify('onCollectionChange');
+               this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
             }.bind(this);
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
@@ -292,7 +297,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                result = [];
             for (var i = 0; i < columns.length; i++) {
-               result.push(this._prepareCrossBrowserColumn(columns[i], cDetection.isNotFullGridSupport));
+               result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport));
             }
             return result;
          },
@@ -337,7 +342,7 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          isNotFullGridSupport: function() {
-            return cDetection.isNotFullGridSupport;
+            return Env.detection.isNotFullGridSupport;
          },
 
          isStickyHeader: function() {
@@ -580,12 +585,20 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getNextItemKey.apply(this._model, arguments);
          },
 
+         setIndexes: function(startIndex, stopIndex) {
+            this._model.setIndexes(startIndex, stopIndex);
+         },
+
          getPreviousItemKey: function() {
             return this._model.getPreviousItemKey.apply(this._model, arguments);
          },
 
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
+         },
+         
+         setSearchValue: function(value) {
+            this._model.setSearchValue(value);
          },
 
          getSorting: function() {
@@ -594,10 +607,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
-         },
-
-         setIndexes: function(startIndex, stropIndex) {
-            this._model.setIndexes(startIndex, stropIndex);
          },
 
          getSwipeItem: function() {
@@ -630,7 +639,7 @@ define('Controls/List/Grid/GridViewModel', [
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isNotFullGridSupport = cDetection.isNotFullGridSupport;
+            current.isNotFullGridSupport = Env.detection.isNotFullGridSupport;
             current.style = this._options.style;
 
             if (current.multiSelectVisibility !== 'hidden') {
@@ -639,7 +648,7 @@ define('Controls/List/Grid/GridViewModel', [
                current.columns = this._columns;
             }
 
-            if (stickyColumn && !cDetection.isNotFullGridSupport) {
+            if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                current.stickyColumnIndex = stickyColumn.index;
             }
@@ -688,9 +697,13 @@ define('Controls/List/Grid/GridViewModel', [
                   currentColumn.ladder = self._ladder.ladder[current.index];
                   currentColumn.ladderWrapper = LadderWrapper;
                }
+               if (current.item.get) {
+                  currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
+                  currentColumn.searchValue = current.searchValue;
+               }
                if (stickyColumn) {
                   isStickedColumn = stickyColumn.index === (current.multiSelectVisibility !== 'hidden' ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
-                  if (cDetection.isNotFullGridSupport) {
+                  if (Env.detection.isNotFullGridSupport) {
                      currentColumn.hiddenForLadder = isStickedColumn && !self._ladder.stickyLadder[current.index].ladderLength;
                   } else {
                      currentColumn.hiddenForLadder = isStickedColumn && self._ladder.stickyLadder[current.index].ladderLength !== 1;

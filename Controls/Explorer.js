@@ -8,7 +8,7 @@ define('Controls/Explorer', [
    'Controls/Utils/applyHighlighter',
    'Types/chain',
    'Core/core-instance',
-   'Core/constants',
+   'Env/Env',
    'Controls/Utils/keysHandler',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
@@ -28,14 +28,14 @@ define('Controls/Explorer', [
    applyHighlighter,
    chain,
    cInstance,
-   cConstants,
+   Env,
    keysHandler
 ) {
    'use strict';
 
    var
       HOT_KEYS = {
-         backByPath: cConstants.key.backspace
+         backByPath: Env.constants.key.backspace
       };
 
    var

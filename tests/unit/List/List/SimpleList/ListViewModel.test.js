@@ -365,6 +365,12 @@ define([
                }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
                   ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
             });
+   
+            it('check search value', function() {
+               lvm.setSearchValue('test');
+               assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               lvm.setSearchValue(null);
+            });
          });
 
          describe('calculateDragTargetPosition', function() {

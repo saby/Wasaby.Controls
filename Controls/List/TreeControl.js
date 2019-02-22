@@ -3,7 +3,7 @@ define('Controls/List/TreeControl', [
    'wml!Controls/List/TreeControl/TreeControl',
    'Controls/Controllers/SourceController',
    'Core/core-clone',
-   'Core/constants',
+   'Env/Env',
    'Core/Deferred',
    'Controls/Utils/keysHandler'
 ], function(
@@ -11,7 +11,7 @@ define('Controls/List/TreeControl', [
    TreeControlTpl,
    SourceController,
    cClone,
-   cConstants,
+   Env,
    Deferred,
    keysHandler
 ) {
@@ -19,8 +19,8 @@ define('Controls/List/TreeControl', [
 
    var
       HOT_KEYS = {
-         expandMarkedItem: cConstants.key.right,
-         collapseMarkedItem: cConstants.key.left
+         expandMarkedItem: Env.constants.key.right,
+         collapseMarkedItem: Env.constants.key.left
       };
 
    var DRAG_MAX_OFFSET = 15,
@@ -92,8 +92,14 @@ define('Controls/List/TreeControl', [
                   listViewModel.appendItems(list);
                }
                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
+               if (self._children.baseControl.getVirtualScroll()) {
+                  _private.updateItemsIndexesOnToggle(self, nodeKey, list.getCount(), expanded);
+               }
             });
          } else {
+            if (self._children.baseControl.getVirtualScroll()) {
+               _private.updateItemsIndexesOnToggle(self, nodeKey, listViewModel.getChildren(nodeKey).length, expanded);
+            }
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
          }
       },
@@ -232,6 +238,16 @@ define('Controls/List/TreeControl', [
          };
 
          findChildNodesRecursive(nodeKey);
+      },
+
+      updateItemsIndexesOnToggle: function(self, toggledItemId, itemsCount, expanded) {
+         var
+            baseControl = self._children.baseControl,
+            virtualScroll = baseControl.getVirtualScroll(),
+            toggledItemIndex = baseControl.getViewModel().getIndexByKey(toggledItemId);
+
+         virtualScroll.ItemsCount = baseControl.getViewModel().getCount();
+         virtualScroll.updateItemsIndexesOnToggle(toggledItemIndex, expanded, itemsCount);
       }
    };
 

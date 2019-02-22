@@ -1,4 +1,4 @@
-define('Controls/HighCharts/resources/ParseDataUtil', ['Core/ILogger'], function(ILogger) {
+define('Controls/HighCharts/resources/ParseDataUtil', ['Env/Env'], function(Env) {
    return {
       parseAxisCommon: function(wsAxis) {
          var
@@ -152,7 +152,7 @@ define('Controls/HighCharts/resources/ParseDataUtil', ['Core/ILogger'], function
                   if (wsSeries[i].sourceField_3 && lastDataElement.length == 2) {
                      lastDataElement.splice(2, 0, rec.get(wsSeries[i]).sourceField_3);
                   } else {
-                     ILogger.error('HighCharts', 'You must terminate 3 fields of data for area chart');
+                     Env.ILogger.error('HighCharts', 'You must terminate 3 fields of data for area chart');
                   }
                }
 

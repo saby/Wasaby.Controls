@@ -1,20 +1,20 @@
 define('Controls/Application/TouchDetector', [
    'Core/Control',
    'wml!Controls/Application/TouchDetector/TouchDetector',
-   'Core/compatibility',
+   'Env/Env',
    'Controls/Context/TouchContextField'
 ], function(
    Control,
    template,
-   compatibility,
+   Env,
    TouchContextField
 ) {
    return Control.extend({
       moveInRow: 1,
 
       // При инициализации необходимо корректно проставить значение, далее значение определяется в зависимости от событий
-      state: compatibility.touch,
-      lastState: compatibility.touch,
+      state: Env.compatibility.touch,
+      lastState: Env.compatibility.touch,
       _template: template,
 
       _updateTouchObject: function() {

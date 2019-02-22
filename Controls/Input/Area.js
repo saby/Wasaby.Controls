@@ -1,7 +1,7 @@
 define('Controls/Input/Area',
    [
-      'Core/IoC',
-      'Core/constants',
+      
+      'Env/Env',
       'Controls/Input/Text',
       'Types/entity',
       'wml!Controls/Input/Area/Area',
@@ -13,7 +13,7 @@ define('Controls/Input/Area',
 
       'css!theme?Controls/Input/Area/Area'
    ],
-   function(IoC, constants, Text, entity, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
+   function(Env, Text, entity, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
       'use strict';
 
       /**
@@ -120,7 +120,7 @@ define('Controls/Input/Area',
          },
 
          isPressEnter: function(event) {
-            return event.keyCode === constants.key.enter;
+            return event.keyCode === Env.constants.key.enter;
          },
 
          isPressCtrl: function(event) {
@@ -178,17 +178,17 @@ define('Controls/Input/Area',
 
             if (min > max) {
                validated = false;
-               IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
+               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
             }
 
             if (min < 1) {
                validated = false;
-               IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines options are not set correctly. The minLines less than one.');
+               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines options are not set correctly. The minLines less than one.');
             }
 
             if (max < 1) {
                validated = false;
-               IoC.resolve('ILogger').error('Controls/Input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
+               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
             }
 
             return validated;

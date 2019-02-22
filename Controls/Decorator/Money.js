@@ -1,6 +1,6 @@
 define('Controls/Decorator/Money',
    [
-      'Core/IoC',
+      'Env/Env',
       'Core/Control',
       'Types/entity',
       'Controls/Utils/splitIntoTriads',
@@ -8,7 +8,7 @@ define('Controls/Decorator/Money',
 
       'css!theme?Controls/Decorator/Money/Money'
    ],
-   function(IoC, Control, entity, splitIntoTriads, template) {
+   function(Env, Control, entity, splitIntoTriads, template) {
       'use strict';
 
       /**
@@ -67,7 +67,7 @@ define('Controls/Decorator/Money',
             var exec = this.searchPaths.exec(number.toFixed(2));
 
             if (!exec) {
-               IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option number: ' + number + '.');
+               Env.IoC.resolve('ILogger').error('Controls/Decorator/Money', 'That is not a valid option number: ' + number + '.');
                exec = ['0.00', '0', '.00'];
             }
 
@@ -84,7 +84,7 @@ define('Controls/Decorator/Money',
          isUseGrouping: function(options, useLogging) {
             if ('delimiters' in options) {
                if (useLogging) {
-                  IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
+                  Env.IoC.resolve('ILogger').warn('Controls/Decorator/Money', 'Опция delimiters устарела, используйте useGrouping.');
                }
 
                return options.delimiters;

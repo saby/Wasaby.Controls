@@ -1,7 +1,7 @@
 define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
-      'Core/IoC',
+      'Env/Env',
       'wml!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
@@ -11,7 +11,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
       'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, IoC, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce) {
+   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce) {
    
       //need to open subdropdowns with a delay
       //otherwise, the interface will slow down.
@@ -20,7 +20,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       var _private = {
          checkDeprecated: function(cfg) {
             if (cfg.groupMethod) {
-               IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+               Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
             }
          },
          setPopupOptions: function(self, horizontalAlign) {

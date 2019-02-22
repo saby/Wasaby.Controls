@@ -1,8 +1,8 @@
 define('Controls/Container/Crud', [
    'Core/Control',
    'wml!Controls/Container/Crud/Crud',
-   'Core/IoC'
-], function(Control, tmpl, IoC) {
+   'Env/Env'
+], function(Control, tmpl, Env) {
    'use strict';
 
    var module = Control.extend({
@@ -11,7 +11,7 @@ define('Controls/Container/Crud', [
 
       _afterMount: function(cfg) {
          if (!cfg.dataSource) {
-            IoC.resolve('ILogger').error('Crud', 'Необходимо задать опцию dataSource');
+            Env.IoC.resolve('ILogger').error('Crud', 'Необходимо задать опцию dataSource');
          } else {
             this._dataSource = cfg.dataSource;
          }

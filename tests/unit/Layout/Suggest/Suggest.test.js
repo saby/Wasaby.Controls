@@ -1,4 +1,4 @@
-define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Core/constants', 'Controls/History/Service', 'Core/Deferred'], function(Suggest, collection, entity, constants, Service, Deferred) {
+define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity', 'Env/Env', 'Controls/History/Service', 'Core/Deferred'], function(Suggest, collection, entity, Env, Service, Deferred) {
 
    describe('Controls.Container.Suggest.Layout', function() {
       var IDENTIFICATORS = [1, 2, 3];
@@ -88,7 +88,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             stateNotifyed = true;
          };
-   
+         self._forceUpdate = function () {};
          Suggest._private.suggestStateNotify(self, true);
          assert.isFalse(stateNotifyed);
    
@@ -125,6 +125,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._notify = function(eventName, args) {
             state = args[0];
          };
+         self._forceUpdate = function () {};
          Suggest._private.open(self);
          self._dependenciesDeferred.addCallback(function() {
             assert.isTrue(state);
@@ -240,13 +241,22 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
    
       it('Suggest::_private.searchErrback', function(done) {
          var self = getComponentObject();
+         self._forceUpdate = function() {};
+   
+         self._loading = null;
+         Suggest._private.searchErrback(self, {canceled: true});
+         assert.isTrue(self._loading === null);
+   
          self._loading = true;
+         Suggest._private.searchErrback(self, {canceled: false});
+         assert.isFalse(self._loading);
+   
          self._forceUpdate = function() {
             assert.equal(self._emptyTemplate(), '<div class="controls-Suggest__empty"> Справочник недоступен </div>');
             done();
          };
-         Suggest._private.searchErrback(self, {canceled: false});
-         
+         self._loading = true;
+         Suggest._private.searchErrback(self, {canceled: true});
          assert.isFalse(self._loading);
       });
       
@@ -453,11 +463,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isTrue(updated);
    
          /* tabSelectedKey changed, filter must be changed */
-         suggestComponent._markedKeyChanged = true;
+         suggestComponent._suggestMarkedKey = 'test';
          suggestComponent._tabsSelectedKeyChanged('test');
          assert.equal(suggestComponent._filter.currentTab, 'test');
          assert.isTrue(suggestActivated);
-         assert.isFalse(suggestComponent._markedKeyChanged);
+         assert.isTrue(suggestComponent._suggestMarkedKey === null);
       });
    
       it('Suggest::searchDelay on tabChange', function() {
@@ -477,6 +487,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             searchParam: 'testSearchParam',
             minSearchLength: 3
          };
+         Suggest._private.loadDependencies = function() {return Deferred.success(true)};
          var suggestComponent = new Suggest(options);
          suggestComponent.saveOptions(options);
          suggestComponent._loading = true;
@@ -569,10 +580,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isTrue(item._isUpdateHistory);
       });
    
-      it('Suggest::_markedKeyChanged', function() {
+      it('Suggest::_markedKeyChangedHandler', function() {
          var suggestComponent = new Suggest();
-         suggestComponent._markedKeyChangedHandler();
-         assert.isTrue(suggestComponent._markedKeyChanged);
+         suggestComponent._markedKeyChangedHandler(null, 'test');
+         assert.equal(suggestComponent._suggestMarkedKey, 'test');
+   
+         suggestComponent._markedKeyChangedHandler(null, 'test2');
+         assert.equal(suggestComponent._suggestMarkedKey, 'test2');
       });
 
       it('Suggest::_keyDown', function() {
@@ -597,27 +611,28 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
                }
             };
          }
-         suggestComponent._keydown(getEvent(constants.key.down));
+         suggestComponent._keydown(getEvent(Env.constants.key.down));
          assert.isFalse(eventPreventDefault);
    
          suggestComponent._options.suggestState = true;
    
-         suggestComponent._keydown(getEvent(constants.key.down));
+         suggestComponent._keydown(getEvent(Env.constants.key.down));
          assert.isTrue(eventPreventDefault);
          eventPreventDefault = false;
          
-         suggestComponent._keydown(getEvent(constants.key.up));
+         suggestComponent._keydown(getEvent(Env.constants.key.up));
          assert.isTrue(eventPreventDefault);
          eventPreventDefault = false;
          
-         suggestComponent._keydown(getEvent(constants.key.enter));
-         assert.isTrue(eventPreventDefault);
+         suggestComponent._keydown(getEvent(Env.constants.key.enter));
+         assert.isFalse(eventPreventDefault);
          eventPreventDefault = false;
    
-         suggestComponent._markedKeyChanged = true;
-         suggestComponent._keydown(getEvent(constants.key.enter));
-         assert.isFalse(eventPreventDefault);
-         
+         suggestComponent._suggestMarkedKey = 'test';
+         suggestComponent._keydown(getEvent(Env.constants.key.enter));
+         assert.isTrue(eventPreventDefault);
+   
+         eventPreventDefault = false;
          suggestComponent._keydown(getEvent('test'));
          assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);

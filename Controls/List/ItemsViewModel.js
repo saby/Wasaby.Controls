@@ -6,8 +6,8 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
    'Controls/Constants',
-   'Core/IoC'
-], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, IoC) {
+   'Env/Env'
+], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, Env) {
    /**
     *
     * @author Авраменко А.С.
@@ -20,22 +20,22 @@ define('Controls/List/ItemsViewModel', [
 
          if (cfg.leftSpacing && !this.leftSpacing) {
             this.leftSpacing = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.leftPadding && !this.leftPadding) {
             this.leftPadding = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.rightSpacing && !this.rightSpacing) {
             this.rightSpacing = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
          if (cfg.rightPadding && !this.rightPadding) {
             this.rightPadding = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
 
@@ -169,7 +169,7 @@ define('Controls/List/ItemsViewModel', [
          this._nextModelVersion(notUpdatePrefixItemVersion);
       },
 
-      calcItemVersion: function(item) {
+      _calcItemVersion: function(item) {
          var
             version = '' + this._prefixItemVersion;
 
@@ -200,7 +200,7 @@ define('Controls/List/ItemsViewModel', [
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
                _preferVersionAPI: true,
                getVersion: function() {
-                  return self.calcItemVersion(itemData.item);
+                  return self._calcItemVersion(itemData.item, itemData.key);
                }
             };
          if (this._options.groupMethod || this._options.groupingKeyCallback) {
@@ -291,7 +291,7 @@ define('Controls/List/ItemsViewModel', [
       _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._nextModelVersion(true);
-         this._notify('onCollectionChange');
+         this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {
