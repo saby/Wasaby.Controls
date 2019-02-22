@@ -36,7 +36,7 @@ define([
             items: testItems,
             selectedKey: '2'
          });
-         assert.equal(SwitchArea._viewModel._items[0].loaded, undefined, '_beforeMount. Item load status is uncorrect');
+         assert.equal(SwitchArea._viewModel._items[0].loaded, true, '_beforeMount. Item load status is uncorrect');
          assert.equal(SwitchArea._viewModel._items[1].loaded, true, '_beforeUpdate. Item load status is uncorrect');
          SwitchArea._beforeUpdate({
             items: additionalTestItems,
