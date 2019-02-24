@@ -3,6 +3,7 @@
       <Controls.crumbs:HeadingPath scope="{{_options}}"
                                    name="Path"
                                    header="{{_header}}"
+                                   attr:class="controls-Explorer__Path"
                                    on:backButtonClick="_notifyHandler('backButtonClick')"
                                    on:hoveredItemChanged="_notifyHandler('hoveredItemChanged')"
                                    on:arrowActivated="_notifyHandler('arrowActivated')"
