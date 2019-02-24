@@ -6,7 +6,7 @@ function onArrowClick(this: Control, e: Event) {
    e.stopPropagation();
 }
 
-function getRootModel(this: void, root, keyProperty) {
+function getRootModel(root, keyProperty) {
    let rawData = {};
 
    rawData[keyProperty] = root;

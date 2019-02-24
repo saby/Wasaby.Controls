@@ -227,8 +227,10 @@ define([
       describe('_notify(rootChanged)', function() {
          var
             isNotified = false,
-            _notify = function(eName, value) {
-               isNotified = (eName === 'rootChanged');
+            _notify = function(eName) {
+               if (eName === 'rootChanged') {
+                  isNotified = true;
+               }
             };
 
          it('backByPath', function() {
@@ -276,7 +278,9 @@ define([
             Explorer._private.setRoot = function(){};
             explorer._notify = _notify;
 
-            explorer._onItemClick({}, {
+            explorer._onItemClick({
+               stopPropagation: function() {}
+            }, {
                get: function() {
                   return true;
                },
