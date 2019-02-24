@@ -234,6 +234,24 @@ define([
          assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
       });
 
+      it('setActiveItem should not change version of the model if the item is already active', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1]
+            },
+            lv = new ListViewModel(cfg),
+            itemData,
+            version;
+         itemData = lv.getCurrent();
+         lv.setActiveItem(itemData);
+         version = lv.getVersion();
+         lv.setActiveItem(itemData);
+         assert.equal(version, lv.getVersion());
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
@@ -364,6 +382,12 @@ define([
                   multiSelectVisibility: 'visible'
                }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
                   ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
+            });
+   
+            it('check search value', function() {
+               lvm.setSearchValue('test');
+               assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               lvm.setSearchValue(null);
             });
          });
 

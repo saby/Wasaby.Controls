@@ -38,8 +38,17 @@ define('Controls/Filter/Button/Panel/PropertyGrid', [
       getIndexChangedVisibility: function(newItems, oldItems) {
          var result = -1;
          chain.factory(newItems).each(function(newItem, index) {
-            if (newItem.visibility && newItem.visibility !== oldItems[index].visibility) {
-               result = index;
+            // The items could change the order or quantity, so we find the same element by id
+            var id = Utils.object.getPropertyValue(newItem, 'id'),
+               visibility = Utils.object.getPropertyValue(newItem, 'visibility');
+
+            if (visibility) {
+               chain.factory(oldItems).each(function(oldItem) {
+                  if (id === Utils.object.getPropertyValue(oldItem, 'id') &&
+                     visibility !== Utils.object.getPropertyValue(oldItem, 'visibility')) {
+                     result = index;
+                  }
+               });
             }
          });
          return result;

@@ -2,7 +2,7 @@
     <ws:if data="{{itemData.multiSelectVisibility !== 'hidden' && currentColumn.columnIndex === 1 || itemData.multiSelectVisibility === 'hidden' && currentColumn.columnIndex === 0}}">
       <ws:if data="{{!withoutLevelPadding && itemData.level > 1}}">
          <ws:for data="i in itemData.level - 1">
-            <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{expanderSize ? expanderSize : 'default'}}"></div>
+            <div class="controls-TreeGrid__row-levelPadding controls-TreeGrid__row-levelPadding_size_{{levelIndentSize ? levelIndentSize : 'default'}} controls-TreeGrid__row-expanderPadding_size_{{expanderSize ? expanderSize : 'default'}}"></div>
          </ws:for>
       </ws:if>
       <ws:if data="{{itemData.shouldDrawExpander(itemData, expanderIcon)}}">

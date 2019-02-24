@@ -30,6 +30,7 @@ define('Controls/Input/Search/Suggest',
          
          _template: template,
          _suggestState: false,
+         _markedKeyChanged: false,
          
          _changeValueHandler: function(event, value) {
             this._notify('valueChanged', [value]);
@@ -72,8 +73,16 @@ define('Controls/Input/Search/Suggest',
             this._notify('suggestStateChanged', [false], {bubbling: true});
          },
    
+         _suggestMarkedKeyChanged: function(event, key) {
+            this._markedKeyChanged = key !== null;
+         },
+   
          _searchClick: function() {
-            this._notify('searchClick');
+            /* the search should not fire an event if marked key in suggstions list was changed,
+               because enter should activate marked item */
+            if (!this._markedKeyChanged) {
+               this._notify('searchClick');
+            }
          },
          
          _resetClick: function() {

@@ -1,10 +1,10 @@
 define('Controls/List/TreeTileView/TreeTileView', [
    'Controls/List/TileView/TileView',
-   'Core/constants',
+   'Env/Env',
    'wml!Controls/List/TreeTileView/DefaultItemTpl',
    'wml!Controls/List/TreeTileView/resources/ItemOutputWrapper',
    'css!theme?Controls/List/TreeTileView/TreeTileView'
-], function(TileView, cConstants, defaultItemTpl, itemOutputWrapper) {
+], function(TileView, Env, defaultItemTpl, itemOutputWrapper) {
 
    'use strict';
 
@@ -14,7 +14,7 @@ define('Controls/List/TreeTileView/TreeTileView', [
       _onTileViewKeyDown: function(event) {
          // Pressing the left or right key allows you to expand / collapse an element.
          // In tileView mode, expand/collapse is not allowed.
-         if (event.nativeEvent.keyCode === cConstants.key.right || event.nativeEvent.keyCode === cConstants.key.left) {
+         if (event.nativeEvent.keyCode === Env.constants.key.right || event.nativeEvent.keyCode === Env.constants.key.left) {
             event.stopImmediatePropagation();
             event.preventDefault();
          }

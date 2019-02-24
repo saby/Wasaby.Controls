@@ -3,7 +3,7 @@ define(
       'Controls/Filter/Button/History/List',
       'Core/Serializer',
       'Types/chain',
-      'tests/Filter/Button/History/testHistorySource',
+      'unit/Filter/Button/History/testHistorySource',
       'Controls/Filter/Button/History/resources/historyUtils'
    ],
    function(List, Serializer, chain, HistorySourceDemo, historyUtils) {
@@ -65,6 +65,7 @@ define(
 
          historyUtils.loadHistoryItems('TEST_HISTORY_ID').addCallback(function(items) {
             config.items = items;
+            config.filterItems = items;
          });
 
          list.saveOptions(config);
@@ -72,7 +73,7 @@ define(
          it('get text', function() {
             var textArr = [];
             list._beforeMount(config);
-            textArr = list._getText(list._options.items, historyUtils.getHistorySource(config.historyId));
+            textArr = list._getText(list._options.items, items, historyUtils.getHistorySource(config.historyId));
             assert.equal(textArr[0], 'Past month, Due date, Ivanov K.K., Unread, On department');
             assert.equal(textArr[1], 'Past month, Ivanov K.K.');
 
@@ -120,6 +121,22 @@ define(
                if (item) {
                   savedList._onPinClick('click', item);
                }
+            });
+         });
+
+         it('_private::getResetValues', function() {
+            var filterItems = [
+               {id: 'period', value: [2], resetValue: [1], textValue: 'Today'},
+               {id: 'sender', value: '', resetValue: 'test_sender', textValue: ''},
+               {id: 'author', value: 'Ivanov K.K.', resetValue: true, textValue: 'Ivanov K.K.', visibility: true},
+               {id: 'responsible', value: '', resetValue: '', textValue: 'Petrov T.T.', visibility: false}
+            ];
+            var resetValues = List._private.getResetValues(filterItems);
+            assert.deepEqual(resetValues, {
+               'period': [1],
+               'sender': 'test_sender',
+               'author': true,
+               'responsible': ''
             });
          });
 

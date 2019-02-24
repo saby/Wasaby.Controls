@@ -1,11 +1,11 @@
 define(
    [
-      'Core/constants',
+      'Env/Env',
       'Controls/Container/Scroll',
       'Controls/StickyHeader/Utils',
-      'wml!tests/Container/resources/Content'
+      'wml!unit/Container/resources/Content'
    ],
-   function(Constants, Scroll, stickyUtils, Content) {
+   function(Env, Scroll, stickyUtils, Content) {
 
       'use strict';
 
@@ -88,7 +88,7 @@ define(
          });
 
          describe('_adjustContentMarginsForBlockRender', function() {
-            if (!Constants.isBrowserPlatform) {
+            if (!Env.constants.isBrowserPlatform) {
                return;
             }
 

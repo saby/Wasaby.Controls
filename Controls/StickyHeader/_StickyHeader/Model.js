@@ -1,9 +1,9 @@
 define('Controls/StickyHeader/_StickyHeader/Model',
    [
-      'Core/IoC',
+      'Env/Env',
       'Core/core-simpleExtend'
    ],
-   function(IoC, simpleExtend) {
+   function(Env, simpleExtend) {
 
       'use strict';
 
@@ -89,7 +89,7 @@ define('Controls/StickyHeader/_StickyHeader/Model',
                case this._bottomTarget:
                   return 'bottom';
                default:
-                  IoC.resolve('ILogger').error('Controls/StickyHeader/Model', 'Unexpected target');
+                  Env.IoC.resolve('ILogger').error('Controls/StickyHeader/Model', 'Unexpected target');
                   return 'bottom';
             }
          },

@@ -26,6 +26,9 @@ define([
             _nextVersion: function() {
                this.version++;
             },
+            _nextModelVersion: function() {
+               this.version++;
+            },
             setItemActions: function(item, itemActions) {
                item.itemActions = itemActions;
             }

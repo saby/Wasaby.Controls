@@ -3,8 +3,10 @@ define('Controls/FormController', [
    'Core/core-instance',
    'wml!Controls/FormController/FormController',
    'Core/Deferred',
-   'Core/IoC'
-], function(Control, cInstance, tmpl, Deferred, IoC) {
+   'Env/Env',
+   'Controls/Utils/error/Mode',
+   'Controls/Utils/ErrorController'
+], function(Control, cInstance, tmpl, Deferred, Env, ErrorMode, ErrorController) {
    'use strict';
 
    var _private = {
@@ -27,7 +29,7 @@ define('Controls/FormController', [
             return record;
          });
          readDef.addErrback(function(e) {
-            IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
+            Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
             instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
             instance._readInMounting = { isError: true, result: e };
             throw e;
@@ -52,14 +54,14 @@ define('Controls/FormController', [
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
          var createDef = cfg.dataSource.create(cfg.initValues);
          instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-         createDef.addCallback(function(record) {
+         createDef.addCallbacks(function(record) {
             instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
                _private.createRecordBeforeMountNotify(instance);
             }
-         });
+         }, instance._crudErrback.bind(instance));
          createDef.addErrback(function(e) {
             instance._createdInMounting = { isError: true, result: e };
             return e;
@@ -101,6 +103,11 @@ define('Controls/FormController', [
       _record: null,
       _isNewRecord: false,
 
+      constructor: function(options) {
+         FormController.superclass.constructor.apply(this, arguments);
+         options = options || {};
+         this.__errorController = options.errorController || new ErrorController({});
+      },
       _beforeMount: function(cfg) {
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
@@ -141,7 +148,22 @@ define('Controls/FormController', [
             }
          }
          if (newOptions.key !== undefined && this._options.key !== newOptions.key) {
-            this.read(newOptions.key, newOptions.readMetaData);
+            var self = this;
+            if (newOptions.record && newOptions.record.isChanged()) {
+               this._showConfirmPopup('yesno').addCallback(function(answer) {
+                  if (answer === true) {
+                     self.update().addCallback(function(res) {
+                        self.read(newOptions.key, newOptions.readMetaData);
+                        return res;
+                     });
+                  } else {
+                     self.read(newOptions.key, newOptions.readMetaData);
+                  }
+               });
+            } else {
+               self.read(newOptions.key, newOptions.readMetaData);
+            }
+
          }
          if (newOptions.key === undefined && !newOptions.record) {
             this.create(newOptions.initValues);
@@ -171,7 +193,7 @@ define('Controls/FormController', [
       },
       _getRecordId: function() {
          if (!this._record.getId && !this._options.idProperty) {
-            IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
+            Env.IoC.resolve('ILogger').error('FormController', 'Рекорд не является моделью и не задана опция idProperty, указывающая на ключевое поле рекорда');
             return;
          }
 
@@ -302,11 +324,7 @@ define('Controls/FormController', [
                   return e;
                });
             } else {
-               var confirmDef = self._children.popupOpener.open({
-                  message: rk('Сохранить изменения?'),
-                  details: rk('Чтобы продолжить редактирование, нажмите "Отмена".'),
-                  type: 'yesnocancel'
-               }).addCallback(function(answer) {
+               var confirmDef = self._showConfirmPopup('yesnocancel', rk('Чтобы продолжить редактирование, нажмите "Отмена".')).addCallback(function(answer) {
                   self._confirmDef = null;
                   updating.call(self, answer);
                   return answer;
@@ -318,6 +336,14 @@ define('Controls/FormController', [
                return confirmDef;
             }
          }
+      },
+
+      _showConfirmPopup: function(type, details) {
+         return this._children.popupOpener.open({
+            message: rk('Сохранить изменения?'),
+            details: details,
+            type: type
+         });
       },
 
       create: function(initValues) {
@@ -340,7 +366,10 @@ define('Controls/FormController', [
       read: function(key, readMetaData) {
          readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
-         res.addCallback(this._readHandler.bind(this));
+         res.addCallbacks(
+            this._readHandler.bind(this),
+            this._crudErrback.bind(this)
+         );
          return res;
       },
       _readHandler: function(record) {
@@ -352,6 +381,7 @@ define('Controls/FormController', [
             this._isNewRecord = false;
             this._forceUpdate();
          }.bind(this));
+         this._hideError();
          return record;
       },
 
@@ -467,6 +497,43 @@ define('Controls/FormController', [
          return this._children.validation.submit();
       },
 
+      _crudErrback: function(error) {
+         var errorTemplate = this.__errorController.process({
+            error: error,
+            mode: ErrorMode.include
+         });
+         if (!errorTemplate) {
+            return;
+         }
+         return this._showError(errorTemplate);
+      },
+      _showError: function(config) {
+         if (config.mode != ErrorMode.dialog) {
+            // отрисовка внутри компонента
+            this.__error = config;
+            this._forceUpdate();
+            return;
+         }
+
+         // диалоговое с ошибкой
+         this._children.dialogOpener.open({
+            template: config.template,
+            templateOptions: config.options
+         });
+      },
+      _hideError: function() {
+         if (this.__error) {
+            this.__error = null;
+            this._forceUpdate();
+         }
+         if (
+            this._children &&
+            this._children.dialogOpener &&
+            this._children.dialogOpener.isOpened()
+         ) {
+            this._children.dialogOpener.close();
+         }
+      },
       _crudHandler: function(event) {
          var eventName = event.type;
          var args = Array.prototype.slice.call(arguments, 1);

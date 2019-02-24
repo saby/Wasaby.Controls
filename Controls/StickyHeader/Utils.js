@@ -1,6 +1,6 @@
 define('Controls/StickyHeader/Utils', [
-   'Core/detection'
-], function(detection) {
+   'Env/Env'
+], function(Env) {
 
    'use strict';
 
@@ -13,7 +13,7 @@ define('Controls/StickyHeader/Utils', [
        * https://developer.mozilla.org/ru/docs/Web/CSS/position
        */
       isStickySupport: function() {
-         return !detection.isIE || detection.IEVersion > 15;
+         return !Env.detection.isIE || Env.detection.IEVersion > 15;
       },
 
       getNextId: function() {

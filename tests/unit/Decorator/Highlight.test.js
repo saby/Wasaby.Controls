@@ -1,12 +1,12 @@
 define(
    [
-      'Core/IoC',
-      'tests/resources/ProxyCall',
-      'tests/resources/TemplateUtil',
+      'Env/Env',
+      'unit/resources/ProxyCall',
+      'unit/resources/TemplateUtil',
       'Controls/Decorator/Highlight',
-      'wml!tests/Decorator/Highlight/Template1'
+      'wml!unit/Decorator/Highlight/Template1'
    ],
-   function(IoC, ProxyCall, TemplateUtil, Highlight, template1) {
+   function(Env, ProxyCall, TemplateUtil, Highlight, template1) {
       'use strict';
 
       describe('Controls.Decorator.Highlight', function() {

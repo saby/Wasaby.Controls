@@ -1,8 +1,8 @@
 define(
    [
       'Controls/Input/Render',
-      'tests/resources/TemplateUtil',
-      'wml!tests/Input/Render/Content'
+      'unit/resources/TemplateUtil',
+      'wml!unit/Input/Render/Content'
    ],
    function(Render, TemplateUtil, Content) {
       'use strict';

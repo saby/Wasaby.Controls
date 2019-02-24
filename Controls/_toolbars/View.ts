@@ -218,7 +218,8 @@ var _private = {
         return {
             className: 'controls-Toolbar__popup__list ' + (self._options.popupClassName || ''),
             templateOptions: {
-                items: self._menuItems
+                items: self._menuItems,
+                itemTemplateProperty: self._options.itemTemplateProperty
             },
             target: self._children.popupTarget
         };

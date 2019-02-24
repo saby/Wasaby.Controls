@@ -1,7 +1,7 @@
 define(
    [
       'Controls/Decorator/WrapURLs',
-      'tests/resources/TemplateUtil'
+      'unit/resources/TemplateUtil'
    ],
    function(WrapURLs, TemplateUtil) {
       'use strict';

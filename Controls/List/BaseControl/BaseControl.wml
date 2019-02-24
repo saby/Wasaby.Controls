@@ -122,6 +122,7 @@
           menuIsShown="{{_menuIsShown}}"
           itemActions="{{_options.itemActions}}"
           itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+          itemActionsProperty="{{_options.itemActionsProperty}}"
           itemActionsPosition="{{_options.itemActionsPosition}}"/>
        <Controls.List.Swipe.SwipeControl
           ws:content="listView"

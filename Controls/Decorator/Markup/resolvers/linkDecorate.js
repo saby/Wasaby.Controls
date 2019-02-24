@@ -3,9 +3,9 @@
  */
 define('Controls/Decorator/Markup/resolvers/linkDecorate', [
    'Core/base64',
-   'Core/constants'
+   'Env/Env'
 ], function(base64,
-   cConstants) {
+   Env) {
    'use strict';
 
    /**
@@ -19,7 +19,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     */
    return function linkDecorate(value, parent) {
       // Can't decorate without decoratedLink service address.
-      if (!cConstants.decoratedLinkService) {
+      if (!Env.constants.decoratedLinkService) {
          return value;
       }
 
@@ -60,7 +60,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       linkAttrs.target = '_blank';
 
       var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +
-         cConstants.decoratedLinkService + '?method=LinkDecorator.DecorateAsSvg&params=' +
+         Env.constants.decoratedLinkService + '?method=LinkDecorator.DecorateAsSvg&params=' +
          encodeURIComponent(base64.encode('{"SourceLink":"' + linkAttrs.href + '"}')) + '&id=0&srv=1';
 
       return ['span',
