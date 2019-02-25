@@ -218,8 +218,8 @@ define('Controls/List/ListView', [
          _focusInHandler: function(event) {
             var
                tag = event.target.tagName.toLowerCase(),
-               isContenteditable = !!event.target.attributes.contenteditable && event.target.attributes.contenteditable.value !== "false";
-            if (tag !== 'input' && tag !== 'textarea' && !isContenteditable){
+               isContentEditable = !!event.target.attributes.contenteditable && event.target.attributes.contenteditable.value !== 'false';
+            if (tag !== 'input' && tag !== 'textarea' && !isContentEditable) {
                this._container.focus();
             }
          },
