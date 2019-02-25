@@ -352,8 +352,11 @@ define('Controls/Selector/Lookup/_Lookup', [
          // check if the width of the control has changed
          if (newFieldWrapperWidth !== this._fieldWrapperWidth) {
             this._fieldWrapperWidth = newFieldWrapperWidth;
-            _private.calculatingSizes(this, this._options);
-            this._forceUpdate();
+
+            if (this._options.multiSelect && !this._options.readOnly) {
+               _private.calculatingSizes(this, this._options);
+               this._forceUpdate();
+            }
          }
       },
 
