@@ -1,4 +1,4 @@
-node ('test-autotest107') {
+node ('test-autotest58') {
 def version = "19.200"
 def workspace = "/home/sbis/workspace/controls_${version}/${BRANCH_NAME}"
     ws (workspace){
