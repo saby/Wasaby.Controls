@@ -9,15 +9,22 @@
     padding-right: 0;
   }
   .controls-Grid__row-cell__last-master {
-    border-right: @border-width_List-masterList-right solid @border-color_List-masterList;
+    border-right-width: @border-width_List-masterList-right;
+    border-right-color: @border-color_List-masterList;
   }
   .controls-Grid__row-cell_selected__last-master {
-    border-right: @border-width_List-masterList-right solid @background-color_List-masterList-item_selected;
+    border-right-width: @border-width_List-masterList-right;
+    border-right-color: @background-color_List-masterList-item_selected;
+  }
+  .controls-Grid__cell_master {
+    border-style: solid;
+    border-top-width: @border-width_List-masterList-item-top;
+    border-bottom-width: @border-width_List-masterList-item-bottom;
+    border-left-width: @border-width_List-masterList-item-left;
   }
   .controls-Grid__row-cell_selected-master {
-    border-width: @border-width_List-masterList-item_selected;
-    border-style: solid;
-    border-color: @border-color_List-masterList-item_selected;
+    border-top-color: @border-color_List-masterList-item_selected-top;
+    border-bottom-color: @border-color_List-masterList-item_selected-bottom;
   }
   .controls-Grid__row-cell_selected__first {
     box-shadow: inset @width_Grid-selection-marker 0 0 @color_Grid-selection-marker;

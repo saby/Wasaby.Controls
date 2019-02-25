@@ -183,9 +183,12 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._notifyOnSizeChanged();
          },
          _onCloseHandler: function() {
-            this._callCloseHandler();
-            this.sendCommand('close', this._result);
-            this._result = null;
+            var self = this;
+            this._vDomTemplate.finishPendingOperations().addCallback(function() {
+               self._callCloseHandler();
+               self.sendCommand('close', this._result);
+               self._result = null;
+            });
          },
          _callCloseHandler: function() {
             this._options.onCloseHandler && this._options.onCloseHandler(this._result);
