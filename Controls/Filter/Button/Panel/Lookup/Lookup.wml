@@ -7,8 +7,13 @@
          <Controls.Selector.Lookup
                  name="lookup"
                  class="controls-FilterPanel__LookupSelector"
-                 bind:selectedKeys="_options.selectedKeys"
-                 on:selectedKeysChanged="_showLookup()"
+                 on:selectedKeysChanged="selectedKeysChanged()"
+                 on:inputCompleted="_notifyHandler('inputCompleted')"
+                 on:valueChanged="_notifyHandler('valueChanged')"
+                 on:itemsChanged="_notifyHandler('itemsChanged')"
+                 on:textValueChanged="_notifyHandler('textValueChanged')"
+                 on:itemClick="_notifyHandler('itemClick')"
+                 on:openInfoBox="_notifyHandler('openInfoBox')"
                  scope="{{_options}}"/>
       </Controls.Event.Registrator>
    </div>

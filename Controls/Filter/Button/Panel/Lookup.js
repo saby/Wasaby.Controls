@@ -1,8 +1,9 @@
 define('Controls/Filter/Button/Panel/Lookup', [
    'Core/Control',
    'wml!Controls/Filter/Button/Panel/Lookup/Lookup',
+   'Controls/Utils/tmplNotify',
    'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup'
-], function(Control, template) {
+], function(Control, template, tmplNotify) {
    /**
     * Control link with lookup
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
@@ -33,17 +34,12 @@ define('Controls/Filter/Button/Panel/Lookup', [
 
    var Lookup = Control.extend({
       _template: template,
+      _notifyHandler: tmplNotify,
       _passed: false,
-      _isSelected: false,
 
-      _beforeMount: function(options) {
-         this._isSelected = !!options.selectedKeys.length;
-      },
-
-      _afterUpdate: function() {
+      _afterUpdate: function(oldOptions) {
          // if the first items were selected, call resize for Lookup
-         if (!this._isSelected && this._options.selectedKeys.length) {
-            this._isSelected = true;
+         if (!oldOptions.selectedKeys.length && this._options.selectedKeys.length) {
             this._children.controlResize.start();
          }
       },
@@ -52,8 +48,9 @@ define('Controls/Filter/Button/Panel/Lookup', [
          this._children.lookup.showSelector();
       },
 
-      _showLookup: function() {
+      selectedKeysChanged: function(event, keys) {
          this._passed = true;
+         this._notify('selectedKeysChanged', [keys]);
       }
    });
 

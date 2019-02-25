@@ -1,20 +1,6 @@
 define(['Controls/Filter/Button/Panel/Lookup'
 ], function(PanelLookup) {
    describe('Controls/Filter/Button/Panel/Lookup', function() {
-      it('_beforeMount', function() {
-         var panelLookup = new PanelLookup();
-
-         panelLookup._beforeMount({
-            selectedKeys: []
-         });
-         assert.isFalse(panelLookup._isSelected);
-
-         panelLookup._beforeMount({
-            selectedKeys: [1, 2, 3]
-         });
-         assert.isTrue(panelLookup._isSelected);
-      });
-
       it('_afterUpdate', function() {
          var
             callResize = false,
@@ -27,18 +13,18 @@ define(['Controls/Filter/Button/Panel/Lookup'
             }
          };
 
-         panelLookup._afterUpdate();
-         assert.isFalse(panelLookup._isSelected);
+         panelLookup._afterUpdate({selectedKeys: []});
+         assert.isFalse(callResize);
+
+         panelLookup._afterUpdate({selectedKeys: [2]});
          assert.isFalse(callResize);
 
          panelLookup._options.selectedKeys = [1];
-         panelLookup._afterUpdate();
-         assert.isTrue(panelLookup._isSelected);
-         assert.isTrue(callResize);
-
-         callResize = false;
-         panelLookup._afterUpdate();
+         panelLookup._afterUpdate({selectedKeys: [2]});
          assert.isFalse(callResize);
+
+         panelLookup._afterUpdate({selectedKeys: []});
+         assert.isTrue(callResize);
       });
    });
 });
