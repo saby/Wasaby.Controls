@@ -8,14 +8,14 @@ define([
    'Controls/Decorator/Markup/resolvers/linkDecorate',
    'Controls/Decorator/Markup/resolvers/noOuterTag',
    'Controls/Decorator/Markup/resolvers/innerText',
-   'Env/Env'
+   'Controls/Decorator/Markup/resources/linkDecorateConstants'
 ], function(Converter,
    template,
    highlightResolver,
    linkDecorateResolver,
    noOuterTagResolver,
    innerTextResolver,
-   Env) {
+   linkDecorateConstants) {
    'use strict';
 
    describe('Controls.Decorator.Markup.Converter', function() {
@@ -200,11 +200,11 @@ define([
 
       describe('jsonToHtml', function() {
          beforeEach(function() {
-            decoratedLinkService = Env.constants.decoratedLinkService;
-            Env.constants.decoratedLinkService = '/test/';
+            decoratedLinkService = linkDecorateConstants.service;
+            linkDecorateConstants.service = '/test/';
          });
          afterEach(function() {
-            Env.constants.decoratedLinkService = decoratedLinkService;
+            linkDecorateConstants.service = decoratedLinkService;
          });
          it('empty', function() {
             assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
