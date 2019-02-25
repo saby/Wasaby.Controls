@@ -229,8 +229,10 @@ define('Controls/Filter/Controller',
             _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
          },
 
-         resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
-            return _private.getHistoryItems(self, historyId).addCallback(function(historyItems) {
+         resolveItems: function(self, historyId, filterButtonItems, fastFilterItems, historyItems) {
+            var historyItemsDef = historyItems ? Deferred.success(historyItems) : _private.getHistoryItems(self, historyId);
+            
+            return historyItemsDef.addCallback(function(historyItems) {
                _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
             });
@@ -425,6 +427,12 @@ define('Controls/Filter/Controller',
        * @name Controls/Filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
+   
+      /**
+       * Controls/Filter/Controller#historyItems
+       * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
+       * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.
+       */
 
       var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
 
@@ -440,10 +448,8 @@ define('Controls/Filter/Controller',
                _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, options.filter, this._filterButtonItems, this._fastFilterItems);
             } else {
-               var self = this,
-                  historyId = options.lazyHistoryLoad ? null : options.historyId;
-               
-               return _private.resolveItems(this, historyId, options.filterButtonSource, options.fastFilterSource).addCallback(function(items) {
+               var self = this;
+               return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback(function(items) {
                   _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
                   _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
                   return items;

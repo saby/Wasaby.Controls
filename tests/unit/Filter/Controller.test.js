@@ -26,7 +26,7 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
          
          return new Promise(function(resolve) {
-            filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', lazyHistoryLoad: true}).addCallback(function(items) {
+            filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: []}).addCallback(function(items) {
                assert.deepEqual(items, []);
                resolve();
                return items;
