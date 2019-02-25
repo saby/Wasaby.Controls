@@ -3,21 +3,18 @@
  */
 define('Controls/Decorator/Markup/Converter', [
    'Controls/Decorator/Markup/resources/template',
-   'Controls/Decorator/Markup/resources/linkDecorateConstants',
    'Core/core-merge'
 ], function(template,
-   linkDecorateConstants,
    objectMerge) {
    'use strict';
 
    function isDecoratedLink(json) {
-      return Array.isArray(json) && json[0] === 'span' &&
-         json[1] && json[1].class === linkDecorateConstants.classes.wrap;
+      return Array.isArray(json) && json[0] === 'span' && json[1] && json[1].class === 'LinkDecorator__wrap';
    }
 
    function undecorateLink(json) {
       var linkAttributes = json[2][1];
-      linkAttributes.class = linkAttributes.class.replace(linkDecorateConstants.classes.link, 'asLink');
+      linkAttributes.class = linkAttributes.class.replace('LinkDecorator__linkWrap', 'asLink');
       return ['a', linkAttributes, linkAttributes.href];
    }
 
