@@ -67,8 +67,20 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             done();
          });
       });
-
+   
+      it('_resize', function() {
+         var suggest = new Suggest();
+         var suggestClosed = false;
+         suggest.saveOptions({suggestState: true});
+         suggest._notify = function() {
+            suggestClosed = true;
+         };
+   
+         suggest._resize({}, null);
+         assert.isFalse(suggestClosed);
+      });
       
+   
       it('Suggest::_private.hasMore', function() {
          assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
          assert.isFalse(Suggest._private.hasMore(hasMoreFalse));
