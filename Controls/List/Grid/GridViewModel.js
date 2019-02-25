@@ -89,13 +89,6 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + currentStyle;
 
                if (current.columnIndex === 0) {
-
-                  /* В старых браузерах маркер навешивается стилями данного класса, т.к. вёрстка там другая.
-                  *  Не навешиваем класс, если не нужно показывать маркер
-                  */
-                  if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
-                     cellClasses += ' controls-Grid__row-cell_selected__first';
-                  }
                   cellClasses += ' controls-Grid__row-cell_selected__first-' + currentStyle;
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
@@ -226,7 +219,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             return sortingDirection;
          },
-   
+
          isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
@@ -596,7 +589,7 @@ define('Controls/List/Grid/GridViewModel', [
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
          },
-         
+
          setSearchValue: function(value) {
             this._model.setSearchValue(value);
          },

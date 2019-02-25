@@ -53,7 +53,8 @@
 <ws:if data="{{itemData.isNotFullGridSupport}}">
    <tr attr:class="controls-Grid__row controls-ListView__itemV {{highlightOnHover !== false ? 'controls-Grid__row_highlightOnHover_' + (itemData.style || 'default')}} controls-Grid__row_{{itemData.style || 'default'}}">
       <ws:for data="itemData.resetColumnIndex(); itemData.getLastColumnIndex()>=itemData.columnIndex; itemData.goToNextColumn();">
-         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer"
+         <td attr:class="{{itemData.getCurrentColumn().cellClasses}}{{!!itemData.isActive ? ' controls-GridView__item_active'}}{{!!itemData.isDragging ? ' controls-ListView__item_dragging'}} js-controls-SwipeControl__actionsContainer
+                         {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}"
              attr:style="{{(colspan && itemData.columnIndex===(itemData.multiSelectVisibility !== 'hidden' ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility !== 'hidden' ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
             <ws:partial template="columnContent" currentColumn="{{itemData.getCurrentColumn()}}" attr:class="{{itemData.getCurrentColumn().hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
          </td>
