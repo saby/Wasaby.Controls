@@ -168,14 +168,14 @@ define([
             items: new collection.List(),
             multiLine: true
          });
-         assert.notEqual(lookup._multiLineState, undefined);
-         assert.equal(lookup._maxVisibleItems, undefined);
+         assert.isFalse(lookup._multiLineState);
+         assert.equal(lookup._maxVisibleItems, 0);
 
          lookup._beforeUpdate({
             items: new collection.List(),
             maxVisibleItems: 10
          });
-         assert.notEqual(lookup._maxVisibleItems, undefined);
+         assert.equal(lookup._maxVisibleItems, 0);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
 

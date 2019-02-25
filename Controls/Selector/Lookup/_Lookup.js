@@ -64,7 +64,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          var itemsCount = options.items.getCount();
 
          // not calculating sizes in a single choice or with records no more than 1 in read mode, because calculations will be on css styles
-         return itemsCount && options.multiSelect && (!options.readOnly || itemsCount > 1);
+         return itemsCount > 0 && options.multiSelect && (!options.readOnly || itemsCount > 1);
       },
 
       calculatingSizes: function(self, newOptions) {
