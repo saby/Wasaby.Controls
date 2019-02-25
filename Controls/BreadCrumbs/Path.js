@@ -148,7 +148,7 @@ define('Controls/BreadCrumbs/Path', [
          if (this._options.items.length > 1) {
             item = this._options.items[this._options.items.length - 2];
          } else {
-            item = this._getRootModel(this._options.root, this._options.keyProperty);
+            item = this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);
          }
 
          this._notify('itemClick', [item]);
@@ -159,7 +159,11 @@ define('Controls/BreadCrumbs/Path', [
       },
 
       _onHomeClick: function() {
-         this._notify('itemClick', [this._getRootModel(this._options.root, this._options.keyProperty)]);
+         /**
+          * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:
+          * https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
+          */
+         this._notify('itemClick', [this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty)]);
       },
 
       _onArrowClick: function() {
