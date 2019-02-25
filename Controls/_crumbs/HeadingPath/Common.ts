@@ -22,7 +22,7 @@ function onBackButtonClick(this: Control, e: Event) {
    if (this._options.items.length > 1) {
       item = this._options.items[this._options.items.length - 2];
    } else {
-      item = getRootModel(this._options.root, this._options.keyProperty);
+      item = getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty);
    }
 
    this._notify('itemClick', [item]);
