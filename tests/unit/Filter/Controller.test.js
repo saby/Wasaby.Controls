@@ -397,7 +397,8 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
             id: 'testId2',
             value: '',
             textValue: '',
-            resetValue: ''
+            resetValue: '',
+            isFast: true
          }, {
             id: 'testId3',
             value: 'testValue',
