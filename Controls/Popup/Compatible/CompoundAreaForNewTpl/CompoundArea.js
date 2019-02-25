@@ -210,6 +210,14 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   this._compoundHandlers[eventName] = null;
                }
             }
+
+            // Пробрасываю событие о регистрации listener'ов до регистраторов, которые лежат в managerWrapper и физически
+            // не могут отловить событие
+            if (handler) {
+               ManagerWrapperController.registerListener(event, eventName, emitter, handler);
+            } else {
+               ManagerWrapperController.unregisterListener(event, eventName, emitter);
+            }
          },
          _onActivatedHandler: function(event, opts) {
             // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
