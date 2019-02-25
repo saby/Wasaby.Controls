@@ -5,6 +5,7 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
    'wml!Controls-demo/SwitchableArea/resources/content',
    'wml!Controls-demo/SwitchableArea/resources/content2',
    'wml!Controls-demo/SwitchableArea/resources/contentAsync',
+   'wml!Controls-demo/SwitchableArea/resources/contentDop',
    'css!Controls-demo/SwitchableArea/DemoSwitchableArea'
 ], function(Control,
             template,
@@ -42,6 +43,25 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
       },
       clickHandler: function(event, idButton) {
          this._demoSelectedKey = idButton;
+         if (idButton === '2') {
+            this._items = [
+               {
+                  id: '0',
+                  title: 'dop',
+                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop'
+               },
+               {
+                  id: '1',
+                  title: 'dop2',
+                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop'
+               },
+               {
+                  id: '2',
+                  title: 'dop3',
+                  itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentDop'
+               }
+            ];
+         }
       }
    });
    return demoSwitchableArea;
