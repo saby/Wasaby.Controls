@@ -67,12 +67,13 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
          controller._searchContext = { updateConsumers: function() {} };
 
-         Search._private.searchCallback(controller, {}, {});
+         Search._private.searchCallback(controller, {}, {test: 'testFilterValue'});
 
          assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
          assert.isTrue(controller._viewMode === 'search');
+         assert.equal(controller._searchValue, 'testFilterValue');
 
 
          var rs = new collection.RecordSet({
@@ -103,6 +104,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          controller._viewMode = 'search';
          controller._misspellValue = 'testStr';
          controller._loading = true;
+         controller._searchValue = 'test';
          var filterChanged = false;
 
          controller._notify = function(eventName) {
@@ -119,6 +121,8 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          assert.isFalse(controller._viewMode === 'search');
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
+         assert.equal(controller._searchValue, '');
+         assert.equal(controller._inputSearchValue, '');
       });
 
       it('_private.searchStartCallback', function() {
@@ -127,7 +131,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          
          self._forceUpdate = function() {
             forceUpdateCalled = true;
-         }
+         };
          Search._private.searchStartCallback(self);
          assert.isTrue(self._loading);
          assert.isTrue(forceUpdateCalled);
@@ -159,6 +163,7 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          searchController._search(null, 'test');
 
          assert.equal(value, 'test');
+         assert.equal(searchController._inputSearchValue, 'test');
       });
 
    });
