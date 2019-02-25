@@ -168,17 +168,11 @@ define([
       });
 
       it('_onHomeClick', function() {
-         var root = null;
-
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(root, args[0].get('id'));
+               assert.equal(data[0].parent, args[0].get('id'));
             }
          };
-         path._onHomeClick();
-
-         root = 'itemsRoot';
-         path._options.root = root;
          path._onHomeClick();
       });
 
