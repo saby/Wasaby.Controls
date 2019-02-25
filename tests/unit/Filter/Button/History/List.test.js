@@ -3,7 +3,7 @@ define(
       'Controls/Filter/Button/History/List',
       'Core/Serializer',
       'Types/chain',
-      'tests/Filter/Button/History/testHistorySource',
+      'unit/Filter/Button/History/testHistorySource',
       'Controls/Filter/Button/History/resources/historyUtils'
    ],
    function(List, Serializer, chain, HistorySourceDemo, historyUtils) {
