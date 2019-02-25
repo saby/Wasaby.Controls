@@ -1,9 +1,11 @@
 define('Controls/SwitchableArea/ViewModel', [
    'Core/core-simpleExtend',
+   'Types/chain',
    'Core/core-clone'
 ],
 function(
    SimpleExtend,
+   chain,
    cClone
 ) {
    'use strict';
