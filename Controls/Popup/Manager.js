@@ -59,7 +59,7 @@ define('Controls/Popup/Manager',
                } else if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
                   if (element.activeControlAfterDestroy.activate) {
                      element.activeControlAfterDestroy.activate();
-                  } else if (element.activeControlAfterDestroy.setActive) {
+                  } else if (element.activeControlAfterDestroy.setActive) { // TODO: COMPATIBLE
                      element.activeControlAfterDestroy.setActive(true);
                   }
                } else {
