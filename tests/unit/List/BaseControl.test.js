@@ -1568,6 +1568,30 @@ define([
 
       });
 
+      it('getSelectionForDragNDrop', function() {
+         var selection;
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 4);
+         assert.deepEqual(selection.selected, [4, 1, 2, 3]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 2);
+         assert.deepEqual(selection.selected, [2, 1, 3]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 3);
+         assert.deepEqual(selection.selected, [3, 1, 2]);
+         assert.deepEqual(selection.excluded, [4]);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 5);
+         assert.deepEqual(selection.selected, [5, 1, 2, 3]);
+         assert.deepEqual(selection.excluded, [4]);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
+         assert.deepEqual(selection.selected, [4, 1, 2, 3]);
+         assert.deepEqual(selection.excluded, []);
+      });
+
       describe('ItemActions', function() {
          var
             actions = [
