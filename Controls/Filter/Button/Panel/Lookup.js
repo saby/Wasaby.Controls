@@ -48,7 +48,7 @@ define('Controls/Filter/Button/Panel/Lookup', [
          this._children.lookup.showSelector();
       },
 
-      selectedKeysChanged: function(event, keys) {
+      _selectedKeysChanged: function(event, keys) {
          this._passed = true;
          this._notify('selectedKeysChanged', [keys]);
       }

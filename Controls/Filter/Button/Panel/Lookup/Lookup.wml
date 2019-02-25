@@ -7,7 +7,7 @@
          <Controls.Selector.Lookup
                  name="lookup"
                  class="controls-FilterPanel__LookupSelector"
-                 on:selectedKeysChanged="selectedKeysChanged()"
+                 on:selectedKeysChanged="_selectedKeysChanged()"
                  on:inputCompleted="_notifyHandler('inputCompleted')"
                  on:valueChanged="_notifyHandler('valueChanged')"
                  on:itemsChanged="_notifyHandler('itemsChanged')"
