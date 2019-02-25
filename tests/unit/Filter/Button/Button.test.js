@@ -12,7 +12,7 @@ define(
             {id: 'firstName', value: '', resetValue: '', visibility: true},
             {id: 'Test1', value: [0], resetValue: [0], textValue: '', visibility: false},
             {id: 'unread', value: true, resetValue: false, textValue: 'Unread', visibility: true},
-            {id: 'id', value: [2], resetValue: [2], visibility: false}
+            {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true}
          ];
 
          var filterItemsReseted = [
@@ -20,7 +20,7 @@ define(
             {id: 'firstName', value: '', resetValue: '', visibility: false},
             {id: 'Test1', value: [0], resetValue: [0], textValue: '', visibility: false},
             {id: 'unread', value: false, resetValue: false, textValue: 'Unread', visibility: false},
-            {id: 'id', value: [2], resetValue: [2], visibility: false}
+            {id: 'id', value: [3], resetValue: [2], isFast: true, visibility: true}
          ];
 
          button._beforeMount({items: filterItems});
