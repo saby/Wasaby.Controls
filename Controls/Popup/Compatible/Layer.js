@@ -34,6 +34,12 @@ define('Controls/Popup/Compatible/Layer', [
       defaultLicense: true
    };
 
+   // Не загружаем провайдеры данных в тестах и демках, где нет соответствующих методов
+   function shouldLoadDataProviders() {
+      var sbisModule = typeof window !== 'undefined' && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu;
+      return sbisModule && (sbisModule.dict || sbisModule.buildnumber);
+   }
+
    function loadDataProviders(parallelDef) {
       parallelDef.push(ExtensionsManager.loadExtensions().addErrback(function(err) {
          IoC.resolve('ILogger').error('Layer', 'Can\'t load system extensions', err);
@@ -312,7 +318,7 @@ define('Controls/Popup/Compatible/Layer', [
             Constants.compat = true;
 
             // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
-            if (window && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu) {
+            if (shouldLoadDataProviders()) {
                Constants.systemExtensions = true;
                Constants.userConfigSupport = true;
                loadDataProviders(parallelDef);
