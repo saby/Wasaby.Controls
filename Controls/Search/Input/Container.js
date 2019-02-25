@@ -28,12 +28,12 @@ define('Controls/Search/Input/Container',
          _value: '',
 
          _beforeMount: function(newOptions) {
-            this._value = newOptions.searchValue;
+            this._value = newOptions.inputSearchValue;
          },
 
          _beforeUpdate: function(newOptions) {
-            if (this._options.searchValue !== newOptions.searchValue) {
-               this._value = newOptions.searchValue;
+            if (this._options.inputSearchValue !== newOptions.inputSearchValue) {
+               this._value = newOptions.inputSearchValue;
             }
          },
 
