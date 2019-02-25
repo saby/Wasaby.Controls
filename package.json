@@ -81,6 +81,6 @@
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.200",
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.200",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.200",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.200"
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#19.200/feature/create-jquery-like-cdn"
    }
 }
