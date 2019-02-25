@@ -3,11 +3,18 @@
            caption="{{_options.caption}}"
            on:click="showSelector()"/>
    <div class="{{_passed || _options.selectedKeys.length  ? '' : 'ws-hidden'}}">
-      <Controls.Selector.Lookup
-              name="lookup"
-              class="controls-FilterPanel__LookupSelector"
-              bind:selectedKeys="_options.selectedKeys"
-              on:selectedKeysChanged="_showLookup()"
-              scope="{{_options}}"/>
+      <Controls.Event.Registrator name="controlResize" register="controlResize">
+         <Controls.Selector.Lookup
+                 name="lookup"
+                 class="controls-FilterPanel__LookupSelector"
+                 on:selectedKeysChanged="_selectedKeysChanged()"
+                 on:inputCompleted="_notifyHandler('inputCompleted')"
+                 on:valueChanged="_notifyHandler('valueChanged')"
+                 on:itemsChanged="_notifyHandler('itemsChanged')"
+                 on:textValueChanged="_notifyHandler('textValueChanged')"
+                 on:itemClick="_notifyHandler('itemClick')"
+                 on:openInfoBox="_notifyHandler('openInfoBox')"
+                 scope="{{_options}}"/>
+      </Controls.Event.Registrator>
    </div>
 </div>
