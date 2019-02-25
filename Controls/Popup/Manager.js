@@ -57,7 +57,11 @@ define('Controls/Popup/Manager',
                if (element.activeNodeAfterDestroy && element.activeNodeAfterDestroy.parentElement) {
                   element.activeNodeAfterDestroy.focus(); // TODO: COMPATIBLE
                } else if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
-                  element.activeControlAfterDestroy.activate && element.activeControlAfterDestroy.activate();
+                  if (element.activeControlAfterDestroy.activate) {
+                     element.activeControlAfterDestroy.activate();
+                  } else if (element.activeControlAfterDestroy.setActive) {
+                     element.activeControlAfterDestroy.setActive(true);
+                  }
                } else {
                   var maxId = _private.getMaxZIndexPopupIdForActivate(items);
                   if (maxId) {
