@@ -54,7 +54,10 @@ define('Controls/Popup/Manager',
             // wait, until closing popup will be removed from DOM
             runDelayed(function activatePopup() {
                // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
-               if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
+               if (element.activeNodeAfterDestroy && element.activeNodeAfterDestroy.parentElement) {
+                  element.activeNodeAfterDestroy.focus(); //TODO: COMPATIBLE
+               }
+               else if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
                   element.activeControlAfterDestroy.activate && element.activeControlAfterDestroy.activate();
                } else {
                   var maxId = _private.getMaxZIndexPopupIdForActivate(items);
@@ -376,6 +379,7 @@ define('Controls/Popup/Manager',
                isActive: false,
                sizes: {},
                activeControlAfterDestroy: _private.getActiveControl(),
+               activeNodeAfterDestroy: _private.getActiveElement(), //TODO: COMPATIBLE
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };
