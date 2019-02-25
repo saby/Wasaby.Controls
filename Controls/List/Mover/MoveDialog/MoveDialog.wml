@@ -9,6 +9,13 @@
                <Controls.Search.Input.Container attr:class="controls-MoveDialog__search">
                   <Controls.Input.Search/>
                </Controls.Search.Input.Container>
+               <ws:if data="{{_options.showRoot}}">
+                  <Controls.buttons:Button attr:class="controls-MoveDialog__root"
+                                           viewMode="link"
+                                           caption="{[В корень]}"
+                                           on:click="_onItemActionsClick('move', _options.root)"
+                                           icon="icon-small icon-primary icon-Home3"/>
+               </ws:if>
                <Controls.Container.Scroll attr:class="controls-MoveDialog__scroll">
                   <Controls.List.Container>
                      <Controls.Explorer

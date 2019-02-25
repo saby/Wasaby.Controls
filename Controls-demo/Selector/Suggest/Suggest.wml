@@ -1,0 +1,44 @@
+<div class="Controls-demo_Combobox-Suggest">
+   <h3>autoDropDown: false</h3>
+   <Controls.Selector.Suggest
+           attr:class="ControlsDemo-Suggest__search"
+           bind:value="_value"
+           selectedKey="{{_selectedKey}}"
+           displayProperty="title"
+           placeholder="Выберите..."
+           keyProperty="id"
+           searchParam="title"
+           source="{{_source}}">
+      <ws:navigation source="page" view="page">
+         <ws:sourceConfig pageSize="{{5}}" page="{{0}}" hasMore="{{false}}"/>
+      </ws:navigation>
+      <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+         <ws:templateOptions demoClass="demo-SuggestInputList" />
+      </ws:suggestTemplate>
+      <ws:minSearchLength>
+         <ws:Number>3</ws:Number>
+      </ws:minSearchLength>
+   </Controls.Selector.Suggest>
+
+   <h3>autoDropDown: true</h3>
+   <Controls.Selector.Suggest
+           attr:class="ControlsDemo-Suggest__search"
+           bind:value="_valueAutoDropDown"
+           selectedKey="{{_selectedKeyAutoDropDown}}"
+           displayProperty="title"
+           placeholder="Выберите..."
+           keyProperty="id"
+           autoDropDown="{{true}}"
+           searchParam="title"
+           source="{{_sourceAutoDropDown}}">
+      <ws:navigation source="page" view="page">
+         <ws:sourceConfig pageSize="{{5}}" page="{{0}}" hasMore="{{false}}"/>
+      </ws:navigation>
+      <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate">
+         <ws:templateOptions demoClass="demo-SuggestInputList" />
+      </ws:suggestTemplate>
+      <ws:minSearchLength>
+         <ws:Number>3</ws:Number>
+      </ws:minSearchLength>
+   </Controls.Selector.Suggest>
+</div>

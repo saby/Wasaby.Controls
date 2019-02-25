@@ -1,9 +1,9 @@
 define('Controls/Application/ApplicationWrapper', [
    'Core/Control',
-   'Core/constants',
+   'Env/Env',
    'wml!Controls/Application/ApplicationWrapper',
    'css!Controls/Application/ApplicationWrapper'
-], function(Control, constants, template) {
+], function(Control, Env, template) {
    'use strict';
 
    var _private = {
@@ -25,7 +25,7 @@ define('Controls/Application/ApplicationWrapper', [
       _version: null,
 
       _beforeMount: function() {
-         if (constants.isBrowserPlatform) {
+         if (Env.constants.isBrowserPlatform) {
             this._version = _private.calculateVersion(window.location.search);
          }
       }

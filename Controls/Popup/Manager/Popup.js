@@ -4,15 +4,15 @@ define('Controls/Popup/Manager/Popup',
       'wml!Controls/Popup/Manager/Popup',
       'Controls/Popup/Compatible/EscProcessing',
       'Core/helpers/Function/runDelayed',
-      'Core/constants',
+      'Env/Env',
       'wml!Controls/Popup/Manager/PopupContent'
    ],
-   function(Control, template, EscProcessing, runDelayed, CoreConstants) {
+   function(Control, template, EscProcessing, runDelayed, Env) {
       'use strict';
 
       var _private = {
          keyUp: function(event) {
-            if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (event.nativeEvent.keyCode === Env.constants.key.esc) {
                this._close();
             }
          }

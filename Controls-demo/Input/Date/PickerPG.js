@@ -27,7 +27,8 @@ define('Controls-demo/Input/Date/PickerPG',
                name: 'DatePicker',
                readOnly: false,
                tooltip: 'myTooltip',
-               validationErrors: ''
+               validationErrors: '',
+               tagStyle: undefined
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

@@ -52,7 +52,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       notifyTextValueChanged: function(self, textValue) {
-         self._notify('textValueChanged', textValue);
+         self._notify('textValueChanged', [textValue]);
       },
 
       prepareItems: function(self) {
@@ -187,7 +187,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _setItems: function(items) {
          var
             selectedKeys = [],
-            keyProperty = this._options.keyProperty;
+            keyProperty = this._options.keyProperty,
+            selectedItems = _private.getItems(this).clone(true);
 
          if (items && items.each) {
             items.each(function(item) {
@@ -195,7 +196,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
             });
          }
 
-         _private.getItems(this).assign(items);
+         selectedItems.assign(items);
+         _private.setItems(this, selectedItems);
          _private.prepareItems(this);
          _private.notifyChanges(this, selectedKeys);
          _private.setSelectedKeys(this, selectedKeys);

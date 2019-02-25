@@ -1,8 +1,8 @@
 define('Controls/List/resources/utils/GroupUtil', [
-   'Core/UserConfig',
+   'Env/Config',
    'Core/Deferred',
-   'Core/IoC'
-], function(cUserConfig, cDeferred, IoC) {
+   'Env/Env'
+], function(Config, cDeferred, Env) {
    var
       PREFIX_STORE_KEY_COLLAPSED_GROUP = 'LIST_COLLAPSED_GROUP_',
       GroupUtil = {
@@ -16,7 +16,7 @@ define('Controls/List/resources/utils/GroupUtil', [
          storeCollapsedGroups: function(groups, storeKey) {
             var
                preparedGroups = JSON.stringify(groups);
-            return cUserConfig.setParam(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey, preparedGroups);
+            return Config.UserConfig.setParam(PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey, preparedGroups);
          },
 
          /**
@@ -28,11 +28,11 @@ define('Controls/List/resources/utils/GroupUtil', [
             var
                result = new cDeferred(),
                preparedStoreKey = PREFIX_STORE_KEY_COLLAPSED_GROUP + storeKey;
-            cUserConfig.getParam(preparedStoreKey).addCallback(function(storedGroups) {
+            Config.UserConfig.getParam(preparedStoreKey).addCallback(function(storedGroups) {
                try {
                   result.callback(JSON.parse(storedGroups));
                } catch (e) {
-                  IoC.resolve('ILogger').error('GroupUtil', 'In the store by key "' + preparedStoreKey + '" value in invalid format.');
+                  Env.IoC.resolve('ILogger').error('GroupUtil', 'In the store by key "' + preparedStoreKey + '" value in invalid format.');
                   result.callback();
                }
             });

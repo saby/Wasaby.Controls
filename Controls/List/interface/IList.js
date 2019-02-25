@@ -128,6 +128,11 @@ define('Controls/List/interface/IList', [
     */
 
    /**
+    * @name Controls/List/interface/IList#itemActionsProperty
+    * @cfg {String} Name of the item's property that contains item actions.
+    */
+
+   /**
     * @name Controls/List/interface/IList#markedKey
     * @cfg {Number} Identifier of the marked collection item.
     * <a href="/materials/demo-ws4-list-base">Example</a>.
@@ -179,6 +184,15 @@ define('Controls/List/interface/IList', [
    /**
     * @event Controls/List/interface/IList#itemClick Occurs when list item is clicked.
     * <a href="/materials/demo-ws4-list-base">Example</a>.
+    */
+
+   /**
+    * @event Controls/List/interface/IList#itemSwipe Occurs when list item is swiped.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
+    * @param {Types/entity:Model} item Instance of the swiped item.
+    * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} originalEvent Descriptor of the original event. It is useful if you want to get direction or target.
+    * @remark
+    * This event fires only if the list doesn't do anything on swipe (e.g., if the list supports selection - it will toggle checkbox and that's it). This behavior is in line with the {@link Controls/List/interface/IList#itemClick itemClick}.
     */
 
    /**

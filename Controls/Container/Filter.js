@@ -10,10 +10,10 @@ define('Controls/Container/Filter',
       'Controls/Filter/Button/History/resources/historyUtils',
       'Controls/Controllers/SourceController',
       'Core/helpers/Object/isEmpty',
-      'Core/IoC'
+      'Env/Env'
    ],
    
-   function(Control, template, FilterContextField, Deferred, chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject, IoC) {
+   function(Control, template, FilterContextField, Deferred, chain, Utils, isEqual, historyUtils, SourceController, isEmptyObject, Env) {
       
       'use strict';
       
@@ -128,7 +128,7 @@ define('Controls/Container/Filter',
          _fastFilterItems: null,
          
          constructor: function() {
-            IoC.resolve('ILogger').error('Controls/Container/Filter', 'Component is deprecated and will be deleted in 3.18.600, use Controls/Filter/Controller instead.');
+            Env.IoC.resolve('ILogger').error('Controls/Container/Filter', 'Component is deprecated and will be deleted in 3.18.600, use Controls/Filter/Controller instead.');
             Filter.superclass.constructor.apply(this, arguments);
          },
          

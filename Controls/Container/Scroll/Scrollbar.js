@@ -1,12 +1,12 @@
 define('Controls/Container/Scroll/Scrollbar',
    [
       'Core/Control',
-      'Core/detection',
+      'Env/Env',
       'wml!Controls/Container/Scroll/Scrollbar/Scrollbar',
       'Controls/Event/Listener',
       'css!theme?Controls/Container/Scroll/Scrollbar/Scrollbar'
    ],
-   function(Control, detection, template) {
+   function(Control, Env, template) {
 
       'use strict';
 
@@ -261,7 +261,7 @@ define('Controls/Container/Scroll/Scrollbar',
              * @param {SyntheticEvent} event дескриптор события.
              */
             _wheelHandler: function(event) {
-               this._setPosition(this._position + _private.calcWheelDelta(detection.firefox, event.nativeEvent.deltaY), true);
+               this._setPosition(this._position + _private.calcWheelDelta(Env.detection.firefox, event.nativeEvent.deltaY), true);
 
                event.preventDefault();
             },

@@ -4,11 +4,11 @@ define('Controls-demo/FormController/FormController', [
    'Types/source',
    'Core/Deferred',
    'Types/entity',
-   'Core/IoC',
+   'Env/Env',
    'css!Controls-demo/FormController/FormController',
    'Controls/Validate/Validators/IsRequired',
    'Controls/Validate/Validators/IsEmail'
-], function(Control, tmpl, source, Deferred, entity, IoC) {
+], function(Control, tmpl, source, Deferred, entity, Env) {
    'use strict';
 
    var module = Control.extend({
@@ -41,14 +41,14 @@ define('Controls-demo/FormController/FormController', [
                return result;
             }).addErrback(function(e) {
                resultDef.errback(e);
-               IoC.resolve('ILogger').error('FormController example', '', e);
+               Env.IoC.resolve('ILogger').error('FormController example', '', e);
                return e;
             });
             return finishResult;
          });
          finishDef.addErrback(function(e) {
             resultDef.errback(e);
-            IoC.resolve('ILogger').error('FormController example', '', e);
+            Env.IoC.resolve('ILogger').error('FormController example', '', e);
             return e;
          });
 
@@ -69,7 +69,7 @@ define('Controls-demo/FormController/FormController', [
          });
          finishDef.addErrback(function(e) {
             resultDef.errback(e);
-            IoC.resolve('ILogger').error('FormController example', '', e);
+            Env.IoC.resolve('ILogger').error('FormController example', '', e);
             return e;
          });
 

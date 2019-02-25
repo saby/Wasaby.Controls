@@ -2,7 +2,7 @@ define([
    'Core/core-merge',
    'Controls/_datePopup/DateRange',
    'Controls/Utils/Date',
-   'tests/Calendar/Utils'
+   'unit/Calendar/Utils'
 ], function(
    coreMerge,
    DateRange,

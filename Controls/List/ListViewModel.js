@@ -76,33 +76,27 @@ define('Controls/List/ListViewModel',
          },
          setItemPadding: function(itemPadding) {
             this._options.itemPadding = itemPadding;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
          setLeftPadding: function(leftPadding) {
             this._options.leftPadding = leftPadding;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
          setRightPadding: function(rightPadding) {
             this._options.rightPadding = rightPadding;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
          setLeftSpacing: function(leftSpacing) {
             this._options.leftSpacing = leftSpacing;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
          setRightSpacing: function(rightSpacing) {
             this._options.rightSpacing = rightSpacing;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
          setRowSpacing: function(rowSpacing) {
             this._options.rowSpacing = rowSpacing;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
          getItemPadding: function() {
             return _private.getItemPadding(this._options);
@@ -113,12 +107,13 @@ define('Controls/List/ListViewModel',
                dragItems,
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.itemActions = this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
             itemsModelCurrent.isRightSwiped = this._rightSwipedItem && itemsModelCurrent.dispItem.getContents() === this._rightSwipedItem.item;
             itemsModelCurrent.multiSelectStatus = this._selectedKeys[itemsModelCurrent.key];
+            itemsModelCurrent.searchValue = this._options.searchValue;
             itemsModelCurrent.multiSelectVisibility = this._options.multiSelectVisibility;
             itemsModelCurrent.markerVisibility = this._options.markerVisibility;
             itemsModelCurrent.itemTemplateProperty = this._options.itemTemplateProperty;
@@ -169,21 +164,28 @@ define('Controls/List/ListViewModel',
             return itemsModelCurrent;
          },
 
+         _calcItemVersion: function(item, key) {
+            var
+               version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
+            if (this._markedKey === key) {
+               version = 'MARKED_' + version;
+            }
+            return version;
+         },
+
          setMarkedKey: function(key) {
             if (key === this._markedKey) {
                return;
             }
             this._markedKey = key;
             this._markedItem = this.getItemById(key, this._options.keyProperty);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion(true);
             this._notify('onMarkedKeyChanged', key);
          },
 
          setMarkerVisibility: function(markerVisibility) {
             this._options.markerVisibility = markerVisibility;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getFirstItemKey: function() {
@@ -243,15 +245,16 @@ define('Controls/List/ListViewModel',
          },
 
          setActiveItem: function(itemData) {
-            this._activeItem = itemData;
-            this._nextVersion();
+            if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
+               this._activeItem = itemData;
+               this._nextModelVersion();
+            }
          },
 
          setDragEntity: function(entity) {
             if (this._dragEntity !== entity) {
                this._dragEntity = entity;
-               this._nextVersion();
-               this._notify('onListChange');
+               this._nextModelVersion();
             }
          },
 
@@ -261,8 +264,7 @@ define('Controls/List/ListViewModel',
 
          setDragItemData: function(itemData) {
             this._draggingItemData = itemData;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getDragItemData: function() {
@@ -305,8 +307,7 @@ define('Controls/List/ListViewModel',
 
          setDragTargetPosition: function(position) {
             this._dragTargetPosition = position;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getDragTargetPosition: function() {
@@ -315,19 +316,18 @@ define('Controls/List/ListViewModel',
 
          setSwipeItem: function(itemData) {
             this._swipeItem = itemData;
-            this._nextVersion();
+            this._nextModelVersion();
          },
 
          setRightSwipedItem: function(itemData) {
             this._rightSwipedItem = itemData;
-            this._nextVersion();
+            this._nextModelVersion();
          },
 
          updateIndexes: function(startIndex, stopIndex) {
             if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
                _private.updateIndexes(self, startIndex, stopIndex);
-               this._nextVersion();
-               this._notify('onListChange');
+               this._nextModelVersion();
             }
          },
 
@@ -344,7 +344,7 @@ define('Controls/List/ListViewModel',
             if (this._options.markerVisibility !== 'hidden') {
                this._setMarkerAfterUpdateItems();
             }
-            this._nextVersion();
+            this._nextModelVersion();
          },
 
          // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.
@@ -377,10 +377,9 @@ define('Controls/List/ListViewModel',
             this._editingItemData = itemData;
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
-            } else {
-               this._nextVersion();
             }
-            this._notify('onListChange');
+            this._onCollectionChange();
+            this._nextModelVersion();
          },
 
          setItemActions: function(item, actions) {
@@ -388,7 +387,7 @@ define('Controls/List/ListViewModel',
                var itemById = this.getItemById(item.get(this._options.keyProperty));
                var collectionItem = itemById ? itemById.getContents() : item;
                this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
-               this._nextVersion();
+               this._nextModelVersion(true);
             }
          },
 
@@ -397,15 +396,14 @@ define('Controls/List/ListViewModel',
          },
 
          getItemActions: function(item) {
-            var itemById = this.getItemById(item.getId());
+            var itemById = this.getItemById(ItemsUtil.getPropertyValue(item, this._options.keyProperty));
             var collectionItem = itemById ? itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },
 
          updateSelection: function(selectedKeys) {
             this._selectedKeys = selectedKeys || [];
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getActiveItem: function() {
@@ -414,14 +412,12 @@ define('Controls/List/ListViewModel',
 
          setItemTemplateProperty: function(itemTemplateProperty) {
             this._options.itemTemplateProperty = itemTemplateProperty;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setMultiSelectVisibility: function(multiSelectVisibility) {
             this._options.multiSelectVisibility = multiSelectVisibility;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getMultiSelectVisibility: function() {
@@ -434,6 +430,10 @@ define('Controls/List/ListViewModel',
 
          getSorting: function() {
             return this._options.sorting;
+         },
+         
+         setSearchValue: function(value) {
+            this._options.searchValue = value;
          },
 
          __calcSelectedItem: function(display, selKey, keyProperty) {

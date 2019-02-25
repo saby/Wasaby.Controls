@@ -2,7 +2,7 @@ define('Controls/Validate/Controller',
    [
       'Core/Control',
       'wml!Controls/Validate/Controller',
-      'Core/IoC',
+      'Env/Env',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'Core/helpers/isNewEnvironment',
@@ -13,7 +13,7 @@ define('Controls/Validate/Controller',
    function(
       Base,
       template,
-      IoC,
+      Env,
       ParallelDeferred,
       Deferred,
       isNewEnvironment,
@@ -189,7 +189,7 @@ define('Controls/Validate/Controller',
                this.setValidationResult(validationResult);
                resultDeferred.callback(validationResult);
             }.bind(this)).addErrback(function(e) {
-               IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+               Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
             });
 
             return resultDeferred;

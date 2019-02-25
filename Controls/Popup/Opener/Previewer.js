@@ -95,5 +95,11 @@ define('Controls/Popup/Opener/Previewer',
          }
       });
 
+      Previewer.getDefaultOptions = function() {
+         var baseOptions = Base.getDefaultOptions();
+         baseOptions._vdomOnOldPage = true;
+         return baseOptions;
+      };
+
       return Previewer;
    });
