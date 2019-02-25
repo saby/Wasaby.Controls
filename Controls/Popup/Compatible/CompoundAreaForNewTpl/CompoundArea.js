@@ -210,6 +210,14 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   this._compoundHandlers[eventName] = null;
                }
             }
+
+            // Пробрасываю событие о регистрации listener'ов до регистраторов, которые лежат в managerWrapper и физически
+            // не могут отловить событие
+            if (handler) {
+               ManagerWrapperController.registerListener(event, eventName, emitter, handler);
+            } else {
+               ManagerWrapperController.unregisterListener(event, eventName, emitter);
+            }
          },
          _onActivatedHandler: function(event, opts) {
             // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
@@ -223,6 +231,10 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   }
                }
             };
+         },
+
+         onBringToFront: function() {
+            this._vDomTemplate && this._vDomTemplate.activate();
          },
          _onMaximizedHandler: function(event, maximized) {
             if (!this._panel._updateAreaWidth) {
@@ -252,7 +264,9 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          },
          _onDeactivatedHandler: function() {
             // активность уходит - восстановим onBringToFront
-            this.onBringToFront = this._$onBringToFront;
+            if (this._$onBringToFront) {
+               this.onBringToFront = this._$onBringToFront;
+            }
          },
 
          _getRootContainer: function() {

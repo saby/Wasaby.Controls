@@ -107,7 +107,7 @@ define('Controls/List/ListViewModel',
                dragItems,
                drawedActions;
             itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
-            itemsModelCurrent.itemActions = this._actions[this.getCurrentIndex()];
+            itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
             itemsModelCurrent.isSwiped = this._swipeItem && itemsModelCurrent.dispItem.getContents() === this._swipeItem.item;
@@ -245,8 +245,10 @@ define('Controls/List/ListViewModel',
          },
 
          setActiveItem: function(itemData) {
-            this._activeItem = itemData;
-            this._nextModelVersion();
+            if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
+               this._activeItem = itemData;
+               this._nextModelVersion();
+            }
          },
 
          setDragEntity: function(entity) {
@@ -376,6 +378,7 @@ define('Controls/List/ListViewModel',
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
             }
+            this._onCollectionChange();
             this._nextModelVersion();
          },
 
@@ -393,7 +396,7 @@ define('Controls/List/ListViewModel',
          },
 
          getItemActions: function(item) {
-            var itemById = this.getItemById(item.getId());
+            var itemById = this.getItemById(ItemsUtil.getPropertyValue(item, this._options.keyProperty));
             var collectionItem = itemById ? itemById.getContents() : item;
             return this._actions[this.getIndexBySourceItem(collectionItem)];
          },

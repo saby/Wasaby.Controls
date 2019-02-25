@@ -1,6 +1,7 @@
 <ws:partial template="{{_options.content}}"
             scope="{{_options}}"
             searchValue="{{_searchValue}}"
+            inputSearchValue="{{_inputSearchValue}}"
             misspellValue="{{_misspellValue}}"
             itemOpenHandler="{{_itemOpenHandler}}"
             viewMode="{{_viewMode}}"

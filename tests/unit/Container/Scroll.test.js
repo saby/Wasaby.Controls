@@ -3,7 +3,7 @@ define(
       'Env/Env',
       'Controls/Container/Scroll',
       'Controls/StickyHeader/Utils',
-      'wml!tests/Container/resources/Content'
+      'wml!unit/Container/resources/Content'
    ],
    function(Env, Scroll, stickyUtils, Content) {
 
