@@ -505,12 +505,15 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._showContent = true;
          suggestComponent._dependenciesDeferred = true;
          suggestComponent._active = true;
+         suggestComponent._suggestMarkedKey = 'test'
+
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: 'te'});
          assert.isFalse(suggestComponent._showContent, null);
          assert.equal(suggestComponent._loading, null);
          assert.equal(suggestComponent._dependenciesDeferred, null);
          assert.equal(suggestComponent._searchValue, '');
          assert.equal(suggestComponent._filter, null);
+         assert.equal(suggestComponent._suggestMarkedKey, null);
    
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});

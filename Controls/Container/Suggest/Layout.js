@@ -296,6 +296,7 @@
 
             if (!newOptions.suggestState) {
                _private.setCloseState(this);
+               _private.setSuggestMarkedKey(this, null);
             } else if (this._options.suggestState !== newOptions.suggestState) {
                _private.open(this);
             }
