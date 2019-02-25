@@ -45,7 +45,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
          indexOfNextValue++;
       }
       if (indexOfNextValue < parent.length &&
-         (!Array.isArray(parent[indexOfNextValue]) || parent[indexOfNextValue][0] !== 'br')) {
+            (!Array.isArray(parent[indexOfNextValue]) || parent[indexOfNextValue][0] !== 'br')) {
          return value;
       }
 
