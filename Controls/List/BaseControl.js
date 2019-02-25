@@ -528,21 +528,18 @@ define('Controls/List/BaseControl', [
       },
 
       initListViewModelHandler: function(self, model) {
-         model.subscribe('onListChange', function() {
+         model.subscribe('onListChange', function(event, changesType) {
+            if (self._options.navigation && self._options.navigation.source === 'position') {
+               if (changesType === 'collectionChanged') {
+                  _private.recalculateNavigationState(self);
+               }
+            }
             self._hasUndrawChanges = true;
             self._forceUpdate();
          });
          model.subscribe('onGroupsExpandChange', function(event, changes) {
             _private.groupsExpandChangeHandler(self, changes);
          });
-      },
-
-      toggleCollectionChangeTracker: function(self, cfg) {
-         if (cfg.navigation && cfg.navigation.source === 'position') {
-            self._listViewModel.subscribe('onCollectionChange', self._recalculateNavigationStateFn);
-         } else {
-            self._listViewModel.unsubscribe('onCollectionChange', self._recalculateNavigationStateFn);
-         }
       },
 
       showActionsMenu: function(self, event, itemData, childEvent, showAll) {
@@ -615,15 +612,12 @@ define('Controls/List/BaseControl', [
          self._forceUpdate();
       },
 
-      recalculateNavigationState: function(event, action) {
-         if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_REMOVE) {
-            this._sourceController.calculateState(this._listViewModel.getItems());
-         }
+      recalculateNavigationState: function(self) {
+         self._sourceController.calculateState(self._listViewModel.getItems());
       },
 
       bindHandlers: function(self) {
          self._closeActionsMenu = self._closeActionsMenu.bind(self);
-         self._recalculateNavigationStateFn = _private.recalculateNavigationState.bind(self);
       },
 
       groupsExpandChangeHandler: function(self, changes) {
@@ -778,7 +772,6 @@ define('Controls/List/BaseControl', [
                }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                _private.initListViewModelHandler(self, self._listViewModel);
-               _private.toggleCollectionChangeTracker(self, newOptions);
             }
 
             if (newOptions.source) {
