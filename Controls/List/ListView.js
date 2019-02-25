@@ -215,6 +215,15 @@ define('Controls/List/ListView', [
             event.blockUpdate = true;
          },
 
+         _focusInHandler: function(event) {
+            var
+               tag = event.target.tagName.toLowerCase(),
+               isContenteditable = !!event.target.attributes.contenteditable && event.target.attributes.contenteditable.value !== "false";
+            if (tag !== 'input' && tag !== 'textarea' && !isContenteditable){
+               this._container.focus();
+            }
+         },
+
          //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
          //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
          _onItemMouseLeave: function(event) {
