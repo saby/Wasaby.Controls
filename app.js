@@ -59,7 +59,7 @@ app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/', serveStatic(resourcesPath));
 
-var port = process.env.PORT || 8777;
+var port = process.env.PORT || 777;
 var server = app.listen(port);
 
 console.log('app available on port ' + port);
