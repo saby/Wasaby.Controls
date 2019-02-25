@@ -203,10 +203,13 @@ define('Controls/Filter/Controller',
          },
 
          setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
-            function clearTextValue(index) {
+            function prepareFastFilterItem(index) {
                setPropValue(filterButtonItems[index], 'textValue', '');
+
+               // Fast filters could not be reset from the filter button. We set flag for filters duplicated in the fast filter.
+               filterButtonItems[index].isFast = true;
             }
-            _private.equalItemsIterator(filterButtonItems, fastFilterItems, clearTextValue);
+            _private.equalItemsIterator(filterButtonItems, fastFilterItems, prepareFastFilterItem);
          },
 
          resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {

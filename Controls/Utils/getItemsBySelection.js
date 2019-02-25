@@ -34,7 +34,10 @@ define('Controls/Utils/getItemsBySelection', [
 
          //до выполнения задачи https://online.sbis.ru/opendoc.html?guid=4190d360-e9de-49ed-a1a4-7420686134d0
          if (dataSource instanceof source.PrefetchProxy) {
-            adapter = dataSource._$target.getAdapter();
+
+            //Т.к. у PrefetchProxy, в target может лежать PrefetchProxy, рекурсивно найдем обычный сорс, у которого
+            //есть метод getAdapter. В 210 откажемся от поиска адаптера по сорсу и всегда будем использовать 'adapter.sbis'.
+            adapter = getSourceAdapter(dataSource._$target);
          } else {
             adapter = dataSource.getAdapter();
          }

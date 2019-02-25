@@ -112,9 +112,12 @@ define('Controls/Filter/Button',
 
          resetItems: function(self, items) {
             chain.factory(items).each(function(item) {
-               Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
-               if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
-                  Utils.object.setPropertyValue(item, 'visibility', false);
+               // Fast filters could not be reset from the filter button.
+               if (!Utils.object.getPropertyValue(item, 'isFast')) {
+                  Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
+                  if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
+                     Utils.object.setPropertyValue(item, 'visibility', false);
+                  }
                }
             });
          }

@@ -237,8 +237,10 @@ define('Controls/List/ListViewModel',
          },
 
          setActiveItem: function(itemData) {
-            this._activeItem = itemData;
-            this._nextModelVersion();
+            if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
+               this._activeItem = itemData;
+               this._nextModelVersion();
+            }
          },
 
          setDragEntity: function(entity) {
@@ -368,6 +370,7 @@ define('Controls/List/ListViewModel',
             if (itemData && itemData.item) {
                this.setMarkedKey(itemData.item.get(this._options.keyProperty));
             }
+            this._onCollectionChange();
             this._nextModelVersion();
          },
 

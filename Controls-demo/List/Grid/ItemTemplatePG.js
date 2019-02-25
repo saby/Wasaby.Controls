@@ -67,7 +67,7 @@ define('Controls-demo/List/Grid/ItemTemplatePG',
                }),
                columns: data.fullColumns,
                header: data.fullHeader,
-               markedKey: '4',
+               markedKey: 4,
                displayProperty: 'title',
                itemTemplate: 'wml!Controls/List/Grid/Item',
                itemTemplateProperty: ''

@@ -234,6 +234,24 @@ define([
          assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
       });
 
+      it('setActiveItem should not change version of the model if the item is already active', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1]
+            },
+            lv = new ListViewModel(cfg),
+            itemData,
+            version;
+         itemData = lv.getCurrent();
+         lv.setActiveItem(itemData);
+         version = lv.getVersion();
+         lv.setActiveItem(itemData);
+         assert.equal(version, lv.getVersion());
+      });
+
       describe('DragNDrop methods', function() {
          var dragItemData, dragEntity, target, lvm, current;
 
