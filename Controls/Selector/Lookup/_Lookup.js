@@ -38,9 +38,6 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (window.jQuery && self._fieldWrapper instanceof window.jQuery) {
             self._fieldWrapper = self._fieldWrapper[0];
          }
-
-         // we cache width, since used in several places in the calculations and need to compare when resize
-         self._fieldWrapperWidth = DOMUtil.width(self._fieldWrapper);
       },
 
       notifyValue: function(self, value) {
@@ -53,9 +50,27 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
       },
 
+      getFieldWrapperWidth: function(self, recount) {
+         if (self._fieldWrapperWidth === null || recount) {
+
+            // we cache width, since used in several places in the calculations and need to compare when resize
+            self._fieldWrapperWidth = DOMUtil.width(self._fieldWrapper);
+         }
+
+         return self._fieldWrapperWidth;
+      },
+
+      isNeedCalculatingSizes: function(options) {
+         var itemsCount = options.items.getCount();
+
+         // not calculating sizes in a single choice or with records no more than 1 in read mode, because calculations will be on css styles
+         return itemsCount && options.multiSelect && (!options.readOnly || itemsCount > 1);
+      },
+
       calculatingSizes: function(self, newOptions) {
          var
             counterWidth,
+            fieldWrapperWidth,
             allItemsInOneRow = false,
             maxVisibleItems = newOptions.maxVisibleItems,
             afterFieldWrapperWidth = 0,
@@ -65,31 +80,30 @@ define('Controls/Selector/Lookup/_Lookup', [
             multiLineState = newOptions.multiLine && itemsCount,
             isShowCounter = _private.isShowCounter(multiLineState, itemsCount, maxVisibleItems);
 
-         if (itemsCount) {
-            // if item less than 1, we dont need to calculate sizes, because calculations will be on css styles
-            if (itemsCount > 1 || !newOptions.readOnly) {
-               // in mode read only and single line, counter does not affect the collection
-               if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
-                  counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
-               }
-      
-               lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
-               itemsSizesLastRow = _private.getItemsSizesLastRow(self, lastSelectedItems, newOptions, counterWidth);
-               allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
-               afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
-               availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, self._fieldWrapperWidth, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
-      
-               //For multi line define - inputWidth, for single line - maxVisibleItems
-               if (newOptions.multiLine) {
-                  lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
-                  inputWidth = _private.getInputWidth(self._fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
-                  multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
-               } else {
-                  maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
-               }
-            } else {
-               maxVisibleItems = 1;
+         if (_private.isNeedCalculatingSizes(newOptions)) {
+            // in mode read only and single line, counter does not affect the collection
+            if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
+               counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
             }
+
+            fieldWrapperWidth = _private.getFieldWrapperWidth(self);
+            lastSelectedItems = _private.getLastSelectedItems(newOptions.items, MAX_VISIBLE_ITEMS);
+            itemsSizesLastRow = _private.getItemsSizesLastRow(fieldWrapperWidth, lastSelectedItems, newOptions, counterWidth);
+            allItemsInOneRow = !newOptions.multiLine || itemsSizesLastRow.length === Math.min(lastSelectedItems.length, maxVisibleItems);
+            afterFieldWrapperWidth = _private.getAfterFieldWrapperWidth(itemsCount, !allItemsInOneRow, newOptions.readOnly);
+            availableWidth = _private.getAvailableCollectionWidth(self._fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, newOptions.readOnly, newOptions.multiSelect);
+
+            //For multi line define - inputWidth, for single line - maxVisibleItems
+            if (newOptions.multiLine) {
+               lastRowCollectionWidth = _private.getLastRowCollectionWidth(itemsSizesLastRow, isShowCounter, allItemsInOneRow, counterWidth);
+               inputWidth = _private.getInputWidth(fieldWrapperWidth, lastRowCollectionWidth, availableWidth);
+               multiLineState = _private.getMultiLineState(lastRowCollectionWidth, availableWidth, allItemsInOneRow);
+            } else {
+               maxVisibleItems = _private.getMaxVisibleItems(lastSelectedItems, itemsSizesLastRow, availableWidth, counterWidth);
+            }
+         } else {
+            multiLineState = false;
+            maxVisibleItems = itemsCount;
          }
 
          self._multiLineState = multiLineState;
@@ -158,7 +172,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          return Math.min(minWidthFieldWrapper, 100);
       },
 
-      getItemsSizesLastRow: function(self, items, newOptions, counterWidth) {
+      getItemsSizesLastRow: function(fieldWrapperWidth, items, newOptions, counterWidth) {
          var
             itemsCount,
             collectionItems,
@@ -180,7 +194,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          });
 
          if (newOptions.multiLine) {
-            measurer.style.width = self._fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
+            measurer.style.width = fieldWrapperWidth - SHOW_SELECTOR_WIDTH + 'px';
          }
 
          measurer.classList.add('controls-Lookup-collection__measurer');
@@ -252,7 +266,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _simpleViewModel: null,
       _availableWidthCollection: null,
       _infoboxOpened: false,
-      _fieldWrapperWidth: 0,
+      _fieldWrapperWidth: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -288,20 +302,20 @@ define('Controls/Selector/Lookup/_Lookup', [
       _beforeUpdate: function(newOptions) {
          var
             currentOptions = this._options,
-            isNeedCalculatingSizes = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
+            isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
             listOfDependentOptions = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'];
 
          _private.updateModel(this, newOptions.value);
 
-         if (!isNeedCalculatingSizes) {
+         if (!isNeedUpdate) {
             listOfDependentOptions.forEach(function(optName) {
                if (newOptions[optName] !== currentOptions[optName]) {
-                  isNeedCalculatingSizes = true;
+                  isNeedUpdate = true;
                }
             });
          }
 
-         if (isNeedCalculatingSizes) {
+         if (isNeedUpdate) {
             _private.calculatingSizes(this, newOptions);
          }
       },
@@ -347,16 +361,13 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _resize: function() {
-         var newFieldWrapperWidth = DOMUtil.width(this._fieldWrapper);
+         var
+            oldFieldWrapperWidth = _private.getFieldWrapperWidth(this),
+            newFieldWrapperWidth = _private.getFieldWrapperWidth(this, true);
 
-         // check if the width of the control has changed
-         if (newFieldWrapperWidth !== this._fieldWrapperWidth) {
-            this._fieldWrapperWidth = newFieldWrapperWidth;
-
-            if (this._options.multiSelect && !this._options.readOnly) {
-               _private.calculatingSizes(this, this._options);
-               this._forceUpdate();
-            }
+         if (_private.isNeedCalculatingSizes(this._options) && newFieldWrapperWidth !== oldFieldWrapperWidth) {
+            _private.calculatingSizes(this, this._options);
+            this._forceUpdate();
          }
       },
 
