@@ -19,7 +19,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     */
    return function linkDecorate(value, parent) {
       // Can't decorate without decoratedLink service address.
-      if (!constants.service) {
+      if (!constants.getService()) {
          return value;
       }
 
@@ -35,7 +35,8 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
       }
 
       // Decorate link only with text == href, and href length should be less then 1500;
-      if (!value[1] || !value[1].href || value[1].href.length > constants.hrefMaxLength || value[1].href !== value[2]) {
+      if (!value[1] || !value[1].href || value[1].href.length > constants.getHrefMaxLength() ||
+            value[1].href !== value[2]) {
          return value;
       }
 
@@ -49,26 +50,27 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
          return value;
       }
 
-      var linkAttrs = {};
+      var linkAttrs = {},
+         classes = constants.getClasses();
       for (var key in value[1]) {
          if (value[1].hasOwnProperty(key)) {
             linkAttrs[key] = value[1][key];
          }
       }
-      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + constants.classes.link;
+      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + classes.link;
       linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
       linkAttrs.target = '_blank';
 
       var image = (typeof location === 'object' ? location.protocol + '//' + location.host : '') +
-         constants.service + '?method=' + constants.method + '&params=' +
+         constants.getService() + '?method=' + constants.getMethod() + '&params=' +
          encodeURIComponent(base64.encode('{"SourceLink":"' + linkAttrs.href + '"}')) + '&id=0&srv=1';
 
       return ['span',
-         { 'class': constants.classes.wrap },
+         { 'class': classes.wrap },
          ['a',
             linkAttrs,
             ['img',
-               { 'class': constants.classes.image, alt: linkAttrs.href, src: image }
+               { 'class': classes.image, alt: linkAttrs.href, src: image }
             ]
          ]
       ];

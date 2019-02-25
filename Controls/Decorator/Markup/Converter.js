@@ -12,12 +12,12 @@ define('Controls/Decorator/Markup/Converter', [
 
    function isDecoratedLink(json) {
       return Array.isArray(json) && json[0] === 'span' &&
-         json[1] && json[1].class === linkDecorateConstants.classes.wrap;
+         json[1] && json[1].class === linkDecorateConstants.getClasses().wrap;
    }
 
    function undecorateLink(json) {
       var linkAttributes = json[2][1];
-      linkAttributes.class = linkAttributes.class.replace(linkDecorateConstants.classes.link, 'asLink');
+      linkAttributes.class = linkAttributes.class.replace(linkDecorateConstants.getClasses().link, 'asLink');
       return ['a', linkAttributes, linkAttributes.href];
    }
 

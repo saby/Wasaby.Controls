@@ -7,13 +7,21 @@ define('Controls/Decorator/Markup/resources/linkDecorateConstants', [
    'use strict';
 
    return {
-      classes: {
-         wrap: 'LinkDecorator__wrap',
-         link: 'LinkDecorator__linkWrap',
-         image: 'LinkDecorator__image'
+      getClasses: function() {
+         return {
+            wrap: 'LinkDecorator__wrap',
+            link: 'LinkDecorator__linkWrap',
+            image: 'LinkDecorator__image'
+         };
       },
-      service: Env.constants.decoratedLinkService,
-      method: 'LinkDecorator.DecorateAsSvg',
-      hrefMaxLength: 1499
+      getService: function() {
+         return Env.constants.decoratedLinkService;
+      },
+      getMethod: function() {
+         return 'LinkDecorator.DecorateAsSvg';
+      },
+      getHrefMaxLength: function() {
+         return 1499;
+      }
    };
 });
