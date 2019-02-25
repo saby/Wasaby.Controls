@@ -1,11 +1,9 @@
 define('Controls/SwitchableArea/ViewModel', [
    'Core/core-simpleExtend',
-   'Types/chain',
    'Core/core-clone'
 ],
 function(
    SimpleExtend,
-   chain,
    cClone
 ) {
    'use strict';
@@ -18,37 +16,7 @@ function(
       },
 
       updateItems: function(items, self) {
-         var loadedItems = [];
-
-         // TODO https://online.sbis.ru/opendoc.html?guid=c8cda8fa-9695-4abe-aaf7-8417e139a6be. Запоминаем все загруженные вкладки
-         if (self._items) {
-            chain.factory(self._items).each(function(item) {
-               if (item.get) {
-                  if (item.get('loaded')) {
-                     loadedItems.push(item.get('id') || item.get('key'));
-                  }
-               } else {
-                  if (item.loaded) {
-                     loadedItems.push(item.id || item.key);
-                  }
-               }
-            });
-         }
-
          self._items = cClone(items);
-
-         // TODO https://online.sbis.ru/opendoc.html?guid=c8cda8fa-9695-4abe-aaf7-8417e139a6be. Восстанавливаем все загруженные вкладки
-         chain.factory(self._items).each(function(item) {
-            if (item.get) {
-               if (loadedItems.indexOf(item.get('id') || item.get('key')) > -1) {
-                  item.set('loaded', true);
-               }
-            } else {
-               if (loadedItems.indexOf(item.id || item.key) > -1) {
-                  item.loaded = true;
-               }
-            }
-         });
       }
    };
 
@@ -63,7 +31,7 @@ function(
       },
       updateItems: function(items) {
          _private.updateItems(items, this);
-      },
+      }
    });
 
    return ViewModel;
