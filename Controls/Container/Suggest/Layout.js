@@ -468,7 +468,7 @@
          _resize: function(syntheticEvent, event) {
             /* событие resize могут вызывать компоненты при изменении своего размера,
                но нам интересен только resize у window, поэтому проверяем */
-            if (event.target === window) {
+            if (event && event.target === window) {
                _private.close(this);
             }
          },
