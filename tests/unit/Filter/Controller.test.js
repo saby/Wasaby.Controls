@@ -24,6 +24,14 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
          filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
          assert.deepEqual(filterLayout._filterButtonItems[0].textValue, '');
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
+         
+         return new Promise(function(resolve) {
+            filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: []}).addCallback(function(items) {
+               assert.deepEqual(items, []);
+               resolve();
+               return items;
+            });
+         });
       });
 
       it('_beforeMount::receivedState', function() {
