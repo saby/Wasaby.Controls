@@ -95,40 +95,25 @@ function(Control, entity, template) {
    var ProcessStateIndicator = Control.extend(
       {
          _template: template,
-         _colorState: [], 
-         _realNumSectors: 10,
+         _colorState: [],
          _colors: [],
-            
+
+         _beforeMount: function(opts) {
+         	this.applyNewState(opts);
+         },
+
          _beforeUpdate: function(opts) {
-            //Подгоняем количество секторов индикатора под размер области (см. спецификацию)
-            var indicatorWidth = this._container.clientWidth - 6;
-            this._realNumSectors = Math.min(Math.floor((indicatorWidth - 6) / 8), opts.numSectors);
-            
-            
+            this.applyNewState(opts);
          },
 
-         _mouseOverIndicatorHandler: function(e) {
-            var itemIndex = this._container.getElementsByClassName('controls-ProcessStateIndicator__box').index(e.target);
-            this._notify('onItemOver', +e.target.getAttribute('data-item'), itemIndex);
+         _mouseOverIndicatorHandler: function(e, data) {
+            this._notify('onItemOver', +e.target.getAttribute('data-item'), data);
          },
 
-         _afterMount: function() {
-            this._mouseOverIndicatorHandler = this._mouseOverIndicatorHandler.bind(this);
-            this._container.getElementsByClassName('controls-ProcessStateIndicator__box', 'mouseover', this._mouseOverIndicatorHandler);
-         }, 
-               
-         _afterUpdate(opts) {
-
+         applyNewState: function(opts) {
             checkState(opts.state);
-            var colorState,
-               indicatorBoxes = this._container.getElementsByClassName('controls-ProcessStateIndicator__box');
-
-            this._colors = setColors(this._options.colors, this._options.numValues);
-            this._colorState = colorState = calculateColorState(this._realNumSectors, this._options.numValues, this._options.state, this._colors);
-            for (var i = 0; i < indicatorBoxes.length; i++) {
-               indicatorBoxes[i].className = (colorState[i] && (this._colors[colorState[i] - 1]) || DEFAULT_EMPTY_COLOR_CLASS) + ' controls-ProcessStateIndicator__box';
-               indicatorBoxes[i].setAttribute('data-item', colorState[i]);
-            }
+            this._colors = setColors(opts.colors, opts.numValues);
+            this._colorState  = calculateColorState(opts.numSectors, opts.numValues, opts.state, this._colors);
          },
 
       });

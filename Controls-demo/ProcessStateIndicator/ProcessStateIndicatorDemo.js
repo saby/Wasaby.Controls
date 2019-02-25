@@ -1,7 +1,7 @@
-define('Controls-demo/ProcessStateIndicator/Index', [
+define('Controls-demo/ProcessStateIndicator/ProcessStateIndicatorDemo', [
    'Core/Control',
-   'wml!Controls-demo/ProcessStateIndicator/Index',   
-   'css!Controls-demo/ProcessStateIndicator/Index',
+   'wml!Controls-demo/ProcessStateIndicator/ProcessStateIndicatorDemo',   
+   'css!Controls-demo/ProcessStateIndicator/ProcessStateIndicatorDemo',
 ], function(Control, template) {
    'use strict';
 
