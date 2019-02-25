@@ -12,6 +12,7 @@ define('Controls/List/BaseControl', [
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
    'Core/constants',
+   'Controls/Utils/getItemsBySelection',
    'Controls/Utils/scrollToElement',
    'Types/collection',
    'Controls/Utils/Toolbar',
@@ -34,6 +35,7 @@ define('Controls/List/BaseControl', [
    isEqualObject,
    Deferred,
    cConstants,
+   getItemsBySelection,
    scrollToElement,
    collection,
    tUtil,
@@ -448,6 +450,31 @@ define('Controls/List/BaseControl', [
          });
 
          return def;
+      },
+
+      getSelectionForDragNDrop: function(selectedKeys, excludedKeys, dragKey) {
+         var
+            selected,
+            excluded,
+            dragItemIndex;
+
+         selected = cClone(selectedKeys) || [];
+         dragItemIndex = selected.indexOf(dragKey);
+         if (dragItemIndex !== -1) {
+            selected.splice(dragItemIndex, 1);
+         }
+         selected.unshift(dragKey);
+
+         excluded = cClone(excludedKeys) || [];
+         dragItemIndex = excluded.indexOf(dragKey);
+         if (dragItemIndex !== -1) {
+            excluded.splice(dragItemIndex, 1);
+         }
+
+         return {
+            selected: selected,
+            excluded: excluded
+         };
       },
 
       showIndicator: function(self, direction) {
@@ -1119,22 +1146,22 @@ define('Controls/List/BaseControl', [
 
       _itemMouseDown: function(event, itemData, domEvent) {
          var
-            items,
-            dragItemIndex,
+            selection,
+            self = this,
             dragStartResult;
 
          if (this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
-            items = cClone(this._options.selectedKeys) || [];
-            dragItemIndex = items.indexOf(itemData.key);
-            if (dragItemIndex !== -1) {
-               items.splice(dragItemIndex, 1);
-            }
-            items.unshift(itemData.key);
-            dragStartResult = this._notify('dragStart', [items]);
-            if (dragStartResult) {
-               this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-               this._itemDragData = itemData;
-            }
+
+            //Support moving with mass selection.
+            //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
+               dragStartResult = self._notify('dragStart', [items]);
+               if (dragStartResult) {
+                  self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+                  self._itemDragData = itemData;
+               }
+            });
          }
          event.blockUpdate = true;
       },
