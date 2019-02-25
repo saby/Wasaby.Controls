@@ -7,7 +7,7 @@ define('Controls/HighChartsLight',
       'Core/Date',
       'css!theme?Controls/HighChartsLight/HighChartsLight',
       'i18n!Controls/HighChartsLight',
-      'browser!/cdn/Highcharts/4.2.7/highcharts-more.js'
+      'browser!/cdn/Highcharts/4.2.7-p1/highcharts-more.js'
    ],
    function(Control, template, Env, cClone) {
       'use strict';
