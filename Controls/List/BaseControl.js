@@ -861,10 +861,6 @@ define('Controls/List/BaseControl', [
          var recreateSource = newOptions.source !== this._options.source || navigationChanged;
          var sortingChanged = newOptions.sorting !== this._options.sorting;
 
-         if (navigationChanged) {
-            _private.toggleCollectionChangeTracker(this, newOptions.navigation);
-         }
-
          if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
             this._listViewModel = new newOptions.viewModelConstructor(newOptions);
