@@ -8,6 +8,7 @@ define('Controls/Popup/Previewer',
       'Core/Deferred'
    ],
    function(Control, template, debounce, PreviewerOpener, IoC, Deferred) {
+
       'use strict';
 
       /**
@@ -85,7 +86,7 @@ define('Controls/Popup/Previewer',
 
             if (!this._isPopupOpened()) {
                this._close(event); // close opened popup to avoid jerking the content for repositioning
-               this._notify('openPreviewer', [_private.getCfg(this, event), type], { bubbling: true });
+               this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
             }
          },
 
@@ -95,7 +96,7 @@ define('Controls/Popup/Previewer',
          },
 
          _isPopupOpened: function() {
-            return this._notify('isPreviewerOpened', [], { bubbling: true });
+            return this._notify('isPreviewerOpened', [], {bubbling: true});
          },
 
          // Pointer action on hover with content and popup are executed sequentially.
