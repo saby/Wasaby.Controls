@@ -553,7 +553,12 @@ define('Controls/List/BaseControl', [
       },
 
       initListViewModelHandler: function(self, model) {
-         model.subscribe('onListChange', function() {
+         model.subscribe('onListChange', function(event, changesType) {
+            if (self._options.navigation && self._options.navigation.source === 'position') {
+               if (changesType === 'collectionChanged') {
+                  _private.recalculateNavigationState(self);
+               }
+            }
             self._hasUndrawChanges = true;
             self._forceUpdate();
          });
@@ -630,6 +635,10 @@ define('Controls/List/BaseControl', [
             closeMenu();
          }
          self._forceUpdate();
+      },
+
+      recalculateNavigationState: function(self) {
+         self._sourceController.calculateState(self._listViewModel.getItems());
       },
 
       bindHandlers: function(self) {
@@ -846,8 +855,8 @@ define('Controls/List/BaseControl', [
 
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
-         var recreateSource = newOptions.source !== this._options.source ||
-             !isEqualObject(newOptions.navigation, this._options.navigation);
+         var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
+         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
          var sortingChanged = newOptions.sorting !== this._options.sorting;
 
          if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {

@@ -30,7 +30,7 @@ def building(workspace, version, scheduler=null) {
 		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_theme:${workspace}/controls"
+        def items = "controls:${workspace}/controls2"
 
 		def branch_atf = props["atf_co"]
         def branch_engine = props["engine"]
@@ -200,7 +200,7 @@ def building(workspace, version, scheduler=null) {
 
             dir(workspace){
                 echo "подкидываем istanbul в Controls"
-                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** -x grunt/** --complete-copy --output ./controls-cover ./controls'
+                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** --complete-copy --output ./controls-cover ./controls'
                 sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
             }
             dir (workspace) {
@@ -209,11 +209,11 @@ def building(workspace, version, scheduler=null) {
                 sh 'cp -rf ./controls-orig/tests/ ./controls/tests/'
                 sh 'cp -rf ./controls-orig/viewsettings/ ./controls/viewsettings/'
                 sh 'cp -rf ./controls-orig/sbis3-app-engine/ ./controls/sbis3-app-engine/'
-                sh 'cp -rf ./controls-orig/grunt/ ./controls/grunt/'
             }
 
             echo "Собираем controls"
-            sh "python3 ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
+            sh "mkdir ${workspace}/controls2"
+            sh "python3 ${workspace}/constructor/build_ui_components.py ${workspace}/controls ${env.BUILD_NUMBER} controls --deploy ${workspace}/controls2"
             echo items
         }
         stage("Разворот стенда"){
@@ -224,7 +224,7 @@ def building(workspace, version, scheduler=null) {
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
-            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
+            writeFile file: "${workspace}/controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
                 [Ядро.Http]
                 Порт=10020
 
@@ -241,7 +241,7 @@ def building(workspace, version, scheduler=null) {
                 ExtractRights=Нет
                 ExtractSystemExtensions=Нет
                 ExtractUserInfo=Нет"""
-            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
+            writeFile file: "${workspace}/controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
                 АдресСервиса=${env.NODE_NAME}:10010
                 ПаузаПередЗагрузкойМодулей=0
                 ХранилищеСессий=host=\'dev-sbis3-autotest\' port=\'6380\' dbindex=\'2\'
@@ -269,7 +269,7 @@ def building(workspace, version, scheduler=null) {
             sh """cp -fr ./controls/Examples/ ./controls/tests/stand/Intest/Examples/"""
             sh """
                 sudo chmod -R 0777 ${workspace}
-                python3 "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --use_ps --conf x86_64
+                python3 "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "${workspace}/controls/tests/stand/conf/sbis-rpc-service.ini" "${workspace}/controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --conf x86_64
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """

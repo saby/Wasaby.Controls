@@ -53,8 +53,14 @@ define('Controls/Popup/Manager',
             // wait, until closing popup will be removed from DOM
             runDelayed(function activatePopup() {
                // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
-               if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
-                  element.activeControlAfterDestroy.activate && element.activeControlAfterDestroy.activate();
+               if (element.activeNodeAfterDestroy && element.activeNodeAfterDestroy.parentElement) {
+                  element.activeNodeAfterDestroy.focus(); // TODO: COMPATIBLE
+               } else if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
+                  if (element.activeControlAfterDestroy.activate) {
+                     element.activeControlAfterDestroy.activate();
+                  } else if (element.activeControlAfterDestroy.setActive) { // TODO: COMPATIBLE
+                     element.activeControlAfterDestroy.setActive(true);
+                  }
                } else {
                   var maxId = _private.getMaxZIndexPopupIdForActivate(items);
                   if (maxId) {
@@ -211,8 +217,8 @@ define('Controls/Popup/Manager',
                // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
                // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
                setTimeout(function() {
-                  //new popup can be activated and take focus during the timeout
-                  //will be fixed by https://online.sbis.ru/opendoc.html?guid=95166dc7-7eae-4728-99e2-e65251dd3ee3
+                  // new popup can be activated and take focus during the timeout
+                  // will be fixed by https://online.sbis.ru/opendoc.html?guid=95166dc7-7eae-4728-99e2-e65251dd3ee3
                   if (_private.activeElement[id]) {
                      _private.activeElement[id].focus();
                      delete _private.activeElement[id];
@@ -375,6 +381,7 @@ define('Controls/Popup/Manager',
                isActive: false,
                sizes: {},
                activeControlAfterDestroy: _private.getActiveControl(),
+               activeNodeAfterDestroy: _private.getActiveElement(), // TODO: COMPATIBLE
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };

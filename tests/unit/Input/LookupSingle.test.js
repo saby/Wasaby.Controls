@@ -7,15 +7,25 @@ define([
    'Types/collection'
 ], function(Lookup, entity, collection) {
 
+   function getItems(countItems) {
+      return {
+         getCount: function() {
+            return countItems;
+         }
+      }
+   }
+
    describe('Controls/Selector/Lookup/_Lookup', function() {
-      it('getAdditionalCollectionWidth', function() {
+      it('getAvailableCollectionWidth', function() {
+
+         var fieldWrapperWidth = 100;
          var afterFieldWrapperWidth = 20;
          var fieldWrapper = {
             offsetWidth: 110
          };
 
-         assert.equal(Lookup._private.getAdditionalCollectionWidth(fieldWrapper, afterFieldWrapperWidth, false, false), afterFieldWrapperWidth);
-         assert.equal(Lookup._private.getAdditionalCollectionWidth(fieldWrapper, 10, false, true), 43);
+         assert.equal(Lookup._private.getAvailableCollectionWidth(fieldWrapper, fieldWrapperWidth, afterFieldWrapperWidth, false, false), 80);
+         assert.equal(Lookup._private.getAvailableCollectionWidth(fieldWrapper, fieldWrapperWidth,  10, false, true), 57);
       });
 
       it('getInputMinWidth', function() {
@@ -83,13 +93,42 @@ define([
          assert.isTrue(Lookup._private.isNeedUpdate(5, false, true, 3));
       });
 
+      it('isNeedCalculatingSizes', function() {
+         assert.isFalse(Lookup._private.isNeedCalculatingSizes({
+            items: getItems(0),
+            multiSelect: true,
+            readOnly: false
+         }));
+         assert.isFalse(Lookup._private.isNeedCalculatingSizes({
+            items: getItems(1),
+            multiSelect: false,
+            readOnly: false
+         }));
+         assert.isFalse(Lookup._private.isNeedCalculatingSizes({
+            items: getItems(1),
+            multiSelect: true,
+            readOnly: true
+         }));
+
+         assert.isTrue(Lookup._private.isNeedCalculatingSizes({
+            items: getItems(1),
+            multiSelect: true,
+            readOnly: false
+         }));
+         assert.isTrue(Lookup._private.isNeedCalculatingSizes({
+            items: getItems(2),
+            multiSelect: true,
+            readOnly: true
+         }));
+      });
+
       it('_beforeMount', function() {
          var lookup = new Lookup();
          lookup._beforeMount({multiLine: true, maxVisibleItems: 10});
          assert.isNotNull(lookup._simpleViewModel);
          assert.equal(lookup._maxVisibleItems, 10);
 
-         lookup._beforeMount({items: {getCount: function() {return 5}}});
+         lookup._beforeMount({items: getItems(5)});
          assert.equal(lookup._maxVisibleItems, 5);
       });
 
@@ -129,14 +168,14 @@ define([
             items: new collection.List(),
             multiLine: true
          });
-         assert.notEqual(lookup._multiLineState, undefined);
-         assert.equal(lookup._maxVisibleItems, undefined);
+         assert.isFalse(lookup._multiLineState);
+         assert.equal(lookup._maxVisibleItems, 0);
 
          lookup._beforeUpdate({
             items: new collection.List(),
             maxVisibleItems: 10
          });
-         assert.notEqual(lookup._maxVisibleItems, undefined);
+         assert.equal(lookup._maxVisibleItems, 0);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
 
@@ -213,18 +252,14 @@ define([
       });
 
       it('_determineAutoDropDown', function() {
-         var
-            countItems = 0,
-            lookup = new Lookup();
+         var lookup = new Lookup();
 
          lookup._options.autoDropDown = true;
-         lookup._options.items = {
-            getCount: function() {return countItems}
-         };
+         lookup._options.items = getItems(0);
          lookup._options.multiSelect = false;
          assert.isTrue(lookup._determineAutoDropDown());
 
-         countItems = 1;
+         lookup._options.items = getItems(1);
          assert.isFalse(lookup._determineAutoDropDown());
 
          lookup._options.multiSelect = true;

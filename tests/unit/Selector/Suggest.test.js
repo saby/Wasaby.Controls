@@ -7,7 +7,7 @@ define(
       'Types/collection'
    ],
    (Suggest, Clone, sourceLib, BaseViewModel, collection) => {
-      describe('Input.ComboBox.Suggest', () => {
+      describe('Selector.Suggest', () => {
          let items = [
             {
                id: '1',
@@ -83,6 +83,48 @@ define(
                assert.equal(suggest._simpleViewModel.getDisplayValue(), 'Запись 3');
                done();
             });
+         });
+
+         it('_changeValueHandler', function() {
+            let suggest = getSuggest(config),
+               newValue = '';
+            suggest._notify = function(e, d) {
+               if (e === 'valueChanged') {
+                  newValue = d[0];
+               }
+            };
+            suggest._changeValueHandler('valueChanged', 'New Text');
+            assert.equal(suggest._simpleViewModel.getDisplayValue(), 'New Text');
+            assert.equal(newValue, 'New Text');
+
+         });
+
+         it('_open autoDropDown=false', function() {
+            let suggest = getSuggest(config);
+            suggest.activate = () => {};
+
+            suggest._suggestState = true;
+            suggest._open();
+            assert.isFalse(suggest._suggestState);
+
+            suggest._suggestState = false;
+            suggest._open();
+            assert.isTrue(suggest._suggestState);
+         });
+
+         it('_open autoDropDown=true', function() {
+            let newConfig = Clone(config);
+            newConfig.autoDropDown = true;
+            let suggest = getSuggest(newConfig);
+            suggest.activate = () => {};
+
+            suggest._suggestState = true;
+            suggest._open();
+            assert.isFalse(suggest._suggestState);
+
+            suggest._suggestState = false;
+            suggest._open();
+            assert.isFalse(suggest._suggestState);
          });
       });
    }
