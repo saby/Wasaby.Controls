@@ -77,6 +77,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       return !!~key.indexOf('theme?');
    }
 
+   function removeThemeParam(name) {
+      return name.replace('theme?', '');
+   }
+
+
    function parseModuleName(name) {
       var typeInfo = getType(name);
       if (typeInfo === null) {
@@ -140,7 +145,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       };
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            var bundleName = bundlesRoute[key];
+            var noParamsName = removeThemeParam(key);
+            var bundleName = bundlesRoute[noParamsName];
             if (bundleName) {
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
@@ -154,10 +160,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       }
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
+            var noParamsName = removeThemeParam(key).split('css!')[1];
             if (isThemedCss(key)) {
-               packages.themedCss[key.split('theme?')[1]] = DEPTYPES.SINGLE;
+               packages.themedCss[noParamsName] = DEPTYPES.SINGLE;
             } else {
-               packages.simpleCss[key.split('css!')[1]] = DEPTYPES.SINGLE;
+               packages.simpleCss[noParamsName] = DEPTYPES.SINGLE;
             }
          }
       }
