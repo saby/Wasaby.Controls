@@ -47,6 +47,10 @@ define('Controls/List/ListControl', [
 
       commitEdit: function() {
          return this._options.readOnly ? Deferred.fail() : this._children.baseControl.commitEdit();
+      },
+   
+      reloadItem: function(key, readMeta, direction) {
+         return this._children.baseControl.reloadItem(key, readMeta, direction);
       }
    });
 

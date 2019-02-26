@@ -1,7 +1,7 @@
 define([
    'Controls/_calendar/MonthSlider/Slider',
    'SBIS3.CONTROLS/Utils/DateUtil',
-   'tests/Calendar/Utils'
+   'unit/Calendar/Utils'
 ], function(
    Slider,
    DateUtil,

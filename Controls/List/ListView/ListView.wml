@@ -1,4 +1,4 @@
-<div class="controls-ListViewV controls-ListView_{{_options.style}}">
+<div class="controls-ListViewV controls-ListView_{{_options.style}}" on:focusin="_focusInHandler()">
    <ws:if data="{{_listModel}}">
       <div name="itemsContainer" class="controls-ListViewV__itemsContainer">
          <ws:partial

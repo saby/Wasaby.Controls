@@ -1,8 +1,8 @@
-define('tests/resources/TemplateUtil',
+define('unit/resources/TemplateUtil',
    [
       'Core/helpers/String/unEscapeASCII',
 
-      'wml!tests/resources/SimpleContent'
+      'wml!unit/resources/SimpleContent'
    ],
    function(unEscapeASCII, SimpleContent) {
       'use strict';

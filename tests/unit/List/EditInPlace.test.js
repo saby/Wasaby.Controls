@@ -274,6 +274,26 @@ define([
       });
 
       describe('beginAdd', function() {
+         it('new item should not take itemActions from existing items', async function() {
+            var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source
+            });
+
+            listModel.setItemActions(listModel.at(0).getContents(), [{
+               id: 0,
+               title: 'Удалить'
+            }]);
+
+            await eip.beginAdd();
+            assert.isUndefined(eip._editingItemData.itemActions);
+         });
+
          it('Without handler', function(done) {
             var source = new sourceLib.Memory({
                idProperty: 'id',
