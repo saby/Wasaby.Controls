@@ -106,7 +106,8 @@ class Button extends Control {
          viewMode: 'button',
          size: 'm',
          iconStyle: 'secondary',
-         transparent: true
+         transparent: true,
+         theme: 'default'
       };
    }
 }
