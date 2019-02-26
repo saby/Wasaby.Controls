@@ -1,18 +1,14 @@
-<div class="controls-BreadCrumbsPath">
+<div class="controls-BreadCrumbsPath{{_options.header ? ' controls-BreadCrumbsPath__twoRows' : ''}}">
     <div class="controls-BreadCrumbsPath__wrapper">
-        <ws:if data="{{_backButtonCaption}}">
-            <div class="controls-BreadCrumbsPath__backButton__wrapper {{_backButtonClass}}">
-                <Controls.Heading.Back attr:class="controls-BreadCrumbsPath__backButton"
-                                       caption="{{_backButtonCaption}}"
-                                       tooltip="{{_backButtonCaption}}"
-                                       style="secondary"
-                                       on:click="_onBackButtonClick()"/>
-                <ws:if data="{{ _options.showActionButton }}">
-                    <div class="controls-BreadCrumbsPath__backButtonArrow icon-View {{_breadCrumbsItems ? '' : ' controls-BreadCrumbsPath__backButtonArrow_outsideBackButton'}}"
-                         title="{[Подробнее]}"
-                         on:click="_onArrowClick()"></div>
-                </ws:if>
-            </div>
+        <ws:if data="{{ _backButtonCaption && !_options.header }}">
+            <Controls._crumbs.HeadingPath.Back backButtonCaption="{{_backButtonCaption}}"
+                                               backButtonClass="{{_backButtonClass}}"
+                                               counterCaption="{{ _getCounterCaption(_options.items) }}"
+                                               showArrowOutsideOfBackButton="{{!_breadCrumbsItems && !_options.rootVisible}}"
+                                               backButtonStyle="{{ _options.backButtonStyle }}"
+                                               showActionButton="{{_options.showActionButton}}"
+                                               on:backButtonClick="_onBackButtonClick()"
+                                               on:arrowClick="_onArrowClick()"/>
         </ws:if>
         <ws:if data="{{_visibleItems || _options.rootVisible}}">
             <div class="controls-BreadCrumbsPath__homeContainer {{!_backButtonCaption ? 'controls-BreadCrumbsPath__homeContainer_withoutBackButton'}} {{ _applyHighlighter(_options.highlighter, _options.items ? _options.items[0].get(_options.parentProperty) : _options.root) }}"

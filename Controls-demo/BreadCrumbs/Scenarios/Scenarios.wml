@@ -1,0 +1,170 @@
+<div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Реестр без заголовков"
+                        size="xl"/>
+      <Controls.Explorer
+         keyProperty="id"
+         parentProperty="parent"
+         nodeProperty="parent@"
+         displayProperty="department"
+         columns="{{_columns}}"
+         source="{{_viewSource}}">
+      </Controls.Explorer>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Реестр с однострочными заголовками"
+                        size="xl"/>
+      <div>
+         <Controls.Label caption='Без строки "Итого"' />
+      </div>
+      <Controls.Explorer
+         keyProperty="id"
+         parentProperty="parent"
+         nodeProperty="parent@"
+         displayProperty="title"
+         columns="{{_columns1}}"
+         header="{{_header1}}"
+         showRowSeparator="{{true}}"
+         source="{{_viewSource1}}">
+      </Controls.Explorer>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <div>
+         <Controls.Label caption='Со строкой "Итого"' />
+      </div>
+      <Controls.Explorer
+         keyProperty="id"
+         parentProperty="parent"
+         nodeProperty="parent@"
+         displayProperty="department"
+         columns="{{_columns2}}"
+         header="{{_header2}}"
+         source="{{_viewSource2}}">
+         <ws:results position="top" />
+      </Controls.Explorer>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <div>
+         <Controls.Label caption='На выезжающей панели' />
+      </div>
+      <div>
+         <Controls.Popup.Templates.Stack.StackTemplate
+            attr:class="demo-FourthExample"
+            headingCaption="Продажи"
+            headingStyle="primary"
+            showMaximizedButton="{{true}}">
+            <ws:headerContentTemplate>
+               <div>
+
+               </div>
+            </ws:headerContentTemplate>
+            <ws:bodyContentTemplate>
+               <Controls.Explorer
+                  keyProperty="id"
+                  parentProperty="parent"
+                  nodeProperty="parent@"
+                  displayProperty="title"
+                  columns="{{_columns3}}"
+                  header="{{_header3}}"
+                  source="{{_viewSource3}}">
+                  <ws:results position="top" />
+               </Controls.Explorer>
+            </ws:bodyContentTemplate>
+         </Controls.Popup.Templates.Stack.StackTemplate>
+      </div>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Реестр с многострочными заголовками"
+                        size="xl"/>
+      <Controls.Explorer
+         keyProperty="id"
+         parentProperty="parent"
+         nodeProperty="parent@"
+         displayProperty="department"
+         columns="{{_columns4}}"
+         header="{{_header4}}"
+         source="{{_viewSource4}}">
+         <ws:results position="top" />
+      </Controls.Explorer>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Хлебные крошки вынесены в сервисный блок"
+                        size="xl"/>
+      <Controls.BreadCrumbs.Path items="{{_breadCrumbs6}}"
+                                 backButtonStyle="primary"
+                                 keyProperty="id" />
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Хлебные крошки в шапке выезжающей панели"
+                        size="xl"/>
+      <div>
+         <Controls.Popup.Templates.Stack.StackTemplate
+            attr:class="demo-FourthExample"
+            showMaximizedButton="{{true}}">
+            <ws:headerContentTemplate>
+               <div class="demo-SeventhExample__headerWrapper">
+                  <div class="demo-SeventhExample__firstRow">
+                     <span class="demo-SeventhExample__header">Комиссионный товар НДС 18%</span>
+                     <Controls.Toolbar
+                        attr:class="demo-SeventhExample__toolbar"
+                        parentProperty="parent"
+                        nodeProperty="@parent"
+                        keyProperty="id"
+                        source="{{_toolbarSource7}}"
+                     />
+                  </div>
+                  <Controls.BreadCrumbs items="{{_breadCrumbs6}}"
+                                        readOnly="{{true}}"
+                                        keyProperty="id" />
+               </div>
+            </ws:headerContentTemplate>
+            <ws:bodyContentTemplate>
+               <div></div>
+            </ws:bodyContentTemplate>
+         </Controls.Popup.Templates.Stack.StackTemplate>
+      </div>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Хлебные крошки в результатах поиска"
+                        size="xl"/>
+      <Controls.Container.Data source="{{_viewSource8}}" keyProperty="id" bind:filter="_filter8">
+         <Controls.Search.Controller searchParam="name" minSearchLength="{{3}}">
+            <div class="ws-fragment">
+               <Controls.Search.Input.Container>
+                  <Controls.Input.Search/>
+               </Controls.Search.Input.Container>
+               <Controls.List.Container>
+                  <Controls.Explorer
+                     displayProperty="department"
+                     parentProperty="parent"
+                     nodeProperty="@parent"
+                     columns="{{_columns}}">
+                  </Controls.Explorer>
+               </Controls.List.Container>
+            </div>
+         </Controls.Search.Controller>
+      </Controls.Container.Data>
+   </div>
+   <div class="demo-BreadCrumbs__example">
+      <Controls.Heading caption="Заголовки занимают всю доступную ширину"
+                        size="xl"/>
+      <Controls.Explorer
+         keyProperty="id"
+         parentProperty="parent"
+         nodeProperty="parent@"
+         displayProperty="title"
+         columns="{{_columns1}}"
+         header="{{_header5}}"
+         showRowSeparator="{{true}}"
+         source="{{_viewSource1}}">
+      </Controls.Explorer>
+   </div>
+   <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
+      <Controls.BreadCrumbs items="{{_breadCrumbs7}}"
+                            keyProperty="id" />
+   </div>
+   <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
+      <Controls.BreadCrumbs items="{{_breadCrumbs8}}"
+                            keyProperty="id" />
+   </div>
+</div>
