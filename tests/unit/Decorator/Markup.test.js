@@ -142,10 +142,15 @@ define([
             assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
          });
 
+         it('undecorate link', function() {
+            var html = '<p>' + decoratedLinkHtml + '</p>';
+            var json = [['p', linkNode]];
+            assert.deepEqual(Converter.htmlToJson(html), json);
+         });
+
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
-               '<p>' + decoratedLinkHtml + '</p>' +
                '<p>https://ya.ru</p>' +
                '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
@@ -164,7 +169,6 @@ define([
                '<p><a>e@mail.ru.</a>https://ya.ru</p>' +
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
-               ['p', linkNode],
                ['p', linkNode],
                ['p', linkNode],
                ['p', linkNode, nbsp, linkNode, nbsp],
