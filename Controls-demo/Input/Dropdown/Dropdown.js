@@ -27,6 +27,9 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _duplicateItems: null,
       _footerItems: null,
       _defaultItems: null,
+      _historySource: null,
+      _emptyItems2: null,
+      _longItems: null,
       _selectedKeysSimple: null,
       _selectedKeysSub: null,
       _selectedKeysHierarchy: null,
@@ -41,8 +44,9 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
       _selectedKeys0: null,
       _selectedKeys1: null,
       _selectedKeys2: null,
-      _historySource: null,
       _selectedKeysHistory: null,
+      _selectedKeysEmpty2: null,
+      _selectedKeysLong: null,
 
       _beforeMount: function() {
          this._simpleItems = [
@@ -89,6 +93,12 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          ];
 
          this._emptyItems = [
+            {id: 1, title: 'Yaroslavl'},
+            {id: 2, title: 'Moscow'},
+            {id: 3, title: 'St-Petersburg'}
+         ];
+
+         this._emptyItems2 = [
             {id: 1, title: 'Yaroslavl'},
             {id: 2, title: 'Moscow'},
             {id: 3, title: 'St-Petersburg'}
@@ -149,6 +159,11 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
                title: 'Запись 8'
             }
          ];
+         this._longItems = [
+            { id: 1, title: 'At work, found an employee' },
+            { id: 2, title: 'At work, the client said' },
+            { id: 3, title: 'On the test bench' }
+         ];
          this._historySource = historySource.createMemory();
          this._selectedKeysSimple = [1];
          this._selectedKeysSub = [1];
@@ -165,6 +180,8 @@ define('Controls-demo/Input/Dropdown/Dropdown', [
          this._selectedKeys1 = ['1'];
          this._selectedKeys2 = ['1'];
          this._selectedKeysHistory = [1];
+         this._selectedKeysEmpty2 = [2];
+         this._selectedKeysLong = [2];
       },
       _createMemory: function(items) {
          return new source.Memory({
