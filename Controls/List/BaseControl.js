@@ -18,6 +18,7 @@ define('Controls/List/BaseControl', [
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/tmplNotify',
    'Controls/Utils/keysHandler',
+   'Controls/dataSource',
    'wml!Controls/List/BaseControl/Footer',
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(
@@ -39,7 +40,8 @@ define('Controls/List/BaseControl', [
    tUtil,
    aUtil,
    tmplNotify,
-   keysHandler
+   keysHandler,
+   dataSource
 ) {
    'use strict';
 
@@ -58,6 +60,22 @@ define('Controls/List/BaseControl', [
       };
 
    var LOAD_TRIGGER_OFFSET = 100;
+
+   /**
+    * Object with state from server side rendering
+    * @typedef {Object}
+    * @name ReceivedState
+    * @property {*} [data]
+    * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+    */
+
+   /**
+    * @typedef {Object}
+    * @name CrudResult
+    * @property {*} [data]
+    * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+    * @property {Controls/_dataSource/_error/ViewConfig} [error]
+    */
 
    var _private = {
       checkDeprecated: function(cfg) {
@@ -81,6 +99,7 @@ define('Controls/List/BaseControl', [
          }
          if (self._sourceController) {
             _private.showIndicator(self);
+            _private.hideError(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
@@ -127,25 +146,32 @@ define('Controls/List/BaseControl', [
 
                _private.prepareFooter(self, navigation, self._sourceController);
 
-               resDeferred.callback(list);
+               resDeferred.callback({
+                  data: list
+               });
 
                // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                if (!list.getCount()) {
                   _private.checkLoadToDirectionCapability(self);
                }
             }).addErrback(function(error) {
-               _private.processLoadError(self, error, cfg.dataLoadErrback);
-               resDeferred.callback(null);
+               return _private.crudErrback(self, {
+                  error: error,
+                  dataLoadErrback: cfg.dataLoadErrback
+               }).then(function(result /* result: CrudResult */) {
+                  resDeferred.callback(result);
+                  return result;
+               })
             });
          } else {
             resDeferred.callback();
             Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
-         resDeferred.addCallback(function(items) {
+         resDeferred.addCallback(function(result /* result: CrudResult */) {
             if (cfg.afterReloadCallback) {
                cfg.afterReloadCallback();
             }
-            return items;
+            return result;
          });
          return resDeferred;
       },
@@ -269,10 +295,15 @@ define('Controls/List/BaseControl', [
                }
 
                _private.prepareFooter(self, self._options.navigation, self._sourceController);
-               return addedItems;
+               return {
+                  data: addedItems
+               };
 
             }).addErrback(function(error) {
-               return _private.processLoadError(self, error, userErrback);
+               return _private.crudErrback(self, {
+                  error: error,
+                  dataLoadErrback: userErrback
+               });
             });
          }
          Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
@@ -287,30 +318,6 @@ define('Controls/List/BaseControl', [
          self._listViewModel.setIndexes(indexes.start, indexes.stop);
          self._topPlaceholderHeight = placeholdersSizes.top;
          self._bottomPlaceholderHeight = placeholdersSizes.bottom;
-      },
-
-      processLoadError: function(self, error, dataLoadErrback) {
-         if (!error.canceled) {
-            _private.hideIndicator(self);
-
-            if (dataLoadErrback instanceof Function) {
-               dataLoadErrback(error);
-            }
-
-            // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
-            if (!(error.processed || error._isOfflineMode)) {
-               // Control show messagebox only in clientside
-               if (self._children && self._children.errorMsgOpener) {
-                  self._children.errorMsgOpener.open({
-                     message: error.message,
-                     style: 'error',
-                     type: 'ok'
-                  });
-               }
-               error.processed = true;
-            }
-         }
-         return error;
       },
 
       checkLoadToDirectionCapability: function(self) {
@@ -336,7 +343,13 @@ define('Controls/List/BaseControl', [
       loadToDirectionIfNeed: function(self, direction) {
          //source controller is not created if "source" option is undefined
          if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
-            _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
+            _private.loadToDirection(
+                self, direction,
+                self._options.dataLoadCallback,
+                self._options.dataLoadErrback
+            ).addCallback(function(result /* result: CrudResult */) {
+               return _private.getData(result);
+            });
          }
       },
 
@@ -704,8 +717,92 @@ define('Controls/List/BaseControl', [
          }
 
          return sorting;
-      }
+      },
 
+      /**
+       * @param {Controls/List/BaseControl} self
+       * @param {Object} config
+       * @param {Error} config.error
+       * @param {Controls/_dataSource/_error/Mode} [config.mode]
+       * @param {Function} [config.dataLoadErrback]
+       * @return {Promise.<CrudResult>}
+       * @private
+       */
+      crudErrback: function(self, config) {
+         if (config.dataLoadErrback instanceof Function) {
+            config.dataLoadErrback(config.error);
+         }
+         return _private.processError(self, config.error, config.mode).then(function(errorConfig) {
+            _private.showError(self, errorConfig);
+            return {
+               error: config.error,
+               errorConfig: errorConfig
+            }
+         });
+      },
+
+      /**
+       * @param {Controls/List/BaseControl} self
+       * @param {Error} error
+       * @param {Controls/_dataSource/_error/Mode} [mode]
+       * @return {Promise.<Controls/_dataSource/_error/ViewConfig | void>}
+       * @private
+       */
+      processError: function(self, error, mode) {
+         return self.__errorController.process({
+            error: error,
+            mode: mode || dataSource.error.Mode.include
+         });
+      },
+
+      /**
+       * @param {Controls/List/BaseControl} self
+       * @param {Controls/_dataSource/_error/ViewConfig} config
+       * @private
+       */
+      showError: function(self, config) {
+         if (!config) {
+            return;
+         }
+         if (config.mode != dataSource.error.Mode.dialog) {
+            // отрисовка внутри компонента
+            self.__error = config;
+            self._forceUpdate();
+            return;
+         }
+
+         // диалоговое с ошибкой
+         self._children.dialogOpener.open({
+            template: config.template,
+            templateOptions: config.options
+         });
+      },
+
+      hideError: function(self) {
+         if (self.__error) {
+            self.__error = null;
+            self._forceUpdate();
+         }
+         if (
+             self._children &&
+             self._children.dialogOpener &&
+             self._children.dialogOpener.isOpened()
+         ) {
+            self._children.dialogOpener.close();
+         }
+      },
+
+      /**
+       * не ломаем внешнее поведение и возвращаем только реальный результат
+       * @param {CrudResult} crudResult
+       * @return {Promise}
+       */
+      getData: function(crudResult /* crudResult: CrudResult */) {
+         if (crudResult.data) {
+            return Promise.resolve(crudResult.data);
+         }
+         return Promise.reject(crudResult.error);
+      }
    };
 
    /**
@@ -763,12 +860,26 @@ define('Controls/List/BaseControl', [
       _popupOptions: null,
       _hasUndrawChanges: false,
 
+      constructor: function(options) {
+         BaseControl.superclass.constructor.apply(this, arguments);
+         options = options || {};
+         this.__errorController = options.errorController || new ErrorController({});
+      },
+
+      /**
+       * @param {Object} newOptions
+       * @param {Object} context
+       * @param {ReceivedState} receivedState
+       * @return {Promise}
+       * @protected
+       */
       _beforeMount: function(newOptions, context, receivedState) {
-         var
-            self = this;
+         var self = this;
+         receivedState = receivedState || {};
+         var receivedError = receivedState.errorConfig;
+         var receivedData = receivedState.data;
 
          _private.checkDeprecated(newOptions);
-
          _private.bindHandlers(this);
 
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
@@ -792,8 +903,8 @@ define('Controls/List/BaseControl', [
                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                self._viewModelConstructor = newOptions.viewModelConstructor;
-               if (receivedState) {
-                  viewModelConfig.items = receivedState;
+               if (receivedData) {
+                  viewModelConfig.items = receivedData;
                }
                self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                _private.initListViewModelHandler(self, self._listViewModel);
@@ -805,8 +916,8 @@ define('Controls/List/BaseControl', [
                   navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
                });
 
-               if (receivedState) {
-                  self._sourceController.calculateState(receivedState);
+               if (receivedData) {
+                  self._sourceController.calculateState(receivedData);
                   self._items = self._listViewModel.getItems();
                   if (newOptions.dataLoadCallback instanceof Function) {
                      newOptions.dataLoadCallback(self._items);
@@ -818,9 +929,20 @@ define('Controls/List/BaseControl', [
                      self._listViewModel.setIndexes(indexes.start, indexes.stop);
                   }
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
-               } else {
-                  return _private.reload(self, newOptions);
+                  return;
                }
+               if (receivedError) {
+                  return _private.showError(self, receivedError);
+               }
+               return _private.reload(self, newOptions).addCallback(function(result /* result: CrudResult */) {
+                  /*
+                   * проброс реальной ошибки от reload нуден только для внешнего api
+                   * при серверной вёрстке нормально не сможем сериализовать/десериализовать конкретный тип ошибки,
+                   * поэтому уберём её
+                   */
+                  delete result.error;
+                  return result;
+               });
             }
          });
       },
@@ -1067,7 +1189,9 @@ define('Controls/List/BaseControl', [
       },
 
       reload: function() {
-         return _private.reload(this, this._options);
+         return _private.reload(this, this._options).addCallback(function(result /* result: CrudResult */) {
+            return _private.getData(result);
+         });
       },
 
       getVirtualScroll: function() {
