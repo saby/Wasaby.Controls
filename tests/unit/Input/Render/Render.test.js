@@ -2,9 +2,10 @@ define(
    [
       'Controls/Input/Render',
       'unit/resources/TemplateUtil',
-      'wml!unit/Input/Render/Content'
+      'wml!unit/Input/Render/Content',
+      'Env/Env'
    ],
-   function(Render, TemplateUtil, Content) {
+   function(Render, TemplateUtil, Content, Env) {
       'use strict';
 
       describe('Controls.Input.Render', function() {
@@ -18,6 +19,18 @@ define(
             describe('_getState', function() {
                it('Control in read mode.', function() {
                   ctrl._options.readOnly = true;
+                  assert.equal(ctrl._getState(), '_readOnly');
+               });
+            });
+
+            describe('_getState with Focus ie', function() {
+               var prevIsIe;
+               beforeEach(function() {
+                  prevIsIe = Env.detection.isIE;
+                  Env.detection.isIE = true;
+               });
+               it('Control in read mode.', function() {
+                  ctrl._options.readOnly = true;
 
                   assert.equal(ctrl._getState(), '_readOnly');
                });
@@ -26,6 +39,29 @@ define(
                   ctrl._contentActive = true;
 
                   assert.equal(ctrl._getState(), '_active');
+               });
+               it('Control in inactive mode.', function() {
+                  ctrl._options.readOnly = false;
+                  ctrl._contentActive = false;
+
+                  assert.equal(ctrl._getState(), '');
+               });
+               afterEach(function() {
+                  Env.detection.isIE = prevIsIe;
+               });
+            });
+
+            describe('_getState with Focus not ie', function() {
+               it('Control in read mode.', function() {
+                  ctrl._options.readOnly = true;
+
+                  assert.equal(ctrl._getState(), '_readOnly');
+               });
+               it('Control in active mode.', function() {
+                  ctrl._options.readOnly = false;
+                  ctrl._contentActive = true;
+
+                  assert.equal(ctrl._getState(), '');
                });
                it('Control in inactive mode.', function() {
                   ctrl._options.readOnly = false;
