@@ -224,7 +224,7 @@ def building(workspace, version, scheduler=null) {
             def name_db = "css_${env.NODE_NAME}${ver}1"
             def user_db = "postgres"
             def password_db = "postgres"
-            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
+            writeFile file: "${workspace}/controls/tests/stand/conf/sbis-rpc-service_ps.ini", text: """[Базовая конфигурация]
                 [Ядро.Http]
                 Порт=10020
 
@@ -241,7 +241,7 @@ def building(workspace, version, scheduler=null) {
                 ExtractRights=Нет
                 ExtractSystemExtensions=Нет
                 ExtractUserInfo=Нет"""
-            writeFile file: "./controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
+            writeFile file: "${workspace}/controls/tests/stand/conf/sbis-rpc-service.ini", text: """[Базовая конфигурация]
                 АдресСервиса=${env.NODE_NAME}:10010
                 ПаузаПередЗагрузкойМодулей=0
                 ХранилищеСессий=host=\'dev-sbis3-autotest\' port=\'6380\' dbindex=\'2\'
@@ -269,7 +269,7 @@ def building(workspace, version, scheduler=null) {
             sh """cp -fr ./controls/Examples/ ./controls/tests/stand/Intest/Examples/"""
             sh """
                 sudo chmod -R 0777 ${workspace}
-                python3 "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "./controls/tests/stand/conf/sbis-rpc-service.ini" "./controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --conf x86_64
+                python3 "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "${workspace}/controls/tests/stand/conf/sbis-rpc-service.ini" "${workspace}/controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --conf x86_64
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
             """
