@@ -19,63 +19,23 @@ define(
             describe('_getState', function() {
                it('Control in read mode.', function() {
                   ctrl._options.readOnly = true;
-                  assert.equal(ctrl._getState(), '_readOnly');
-               });
-            });
-
-            describe('_getState with Focus ie', function() {
-               var prevIsIe;
-               beforeEach(function() {
-                  prevIsIe = Env.detection.isIE;
-                  Env.detection.isIE = true;
-               });
-               it('Control in read mode.', function() {
-                  ctrl._options.readOnly = true;
 
                   assert.equal(ctrl._getState(), '_readOnly');
                });
                it('Control in active mode.', function() {
                   ctrl._options.readOnly = false;
                   ctrl._contentActive = true;
-
-                  assert.equal(ctrl._getState(), '_active');
+                  if (Env.detection.isIE) {
+                     assert.equal(ctrl._getState(), '_active');
+                  } else {
+                     assert.equal(ctrl._getState(), '');
+                  }
                });
                it('Control in inactive mode.', function() {
                   ctrl._options.readOnly = false;
                   ctrl._contentActive = false;
 
                   assert.equal(ctrl._getState(), '');
-               });
-               afterEach(function() {
-                  Env.detection.isIE = prevIsIe;
-               });
-            });
-
-            describe('_getState with Focus not ie', function() {
-               var prevIsIe;
-               beforeEach(function() {
-                  prevIsIe = Env.detection.isIE;
-                  Env.detection.isIE = false;
-               });
-               it('Control in read mode.', function() {
-                  ctrl._options.readOnly = true;
-
-                  assert.equal(ctrl._getState(), '_readOnly');
-               });
-               it('Control in active mode.', function() {
-                  ctrl._options.readOnly = false;
-                  ctrl._contentActive = true;
-
-                  assert.equal(ctrl._getState(), '');
-               });
-               it('Control in inactive mode.', function() {
-                  ctrl._options.readOnly = false;
-                  ctrl._contentActive = false;
-
-                  assert.equal(ctrl._getState(), '');
-               });
-               afterEach(function() {
-                  Env.detection.isIE = prevIsIe;
                });
             });
          });
