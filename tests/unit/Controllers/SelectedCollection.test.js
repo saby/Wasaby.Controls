@@ -215,7 +215,6 @@ define([
             idProperty: 'id'
          });
 
-         selectedKeysLink = selectedCollection._selectedKeys = [];
          selectedCollection._options.selectedKeys = selectedKeys;
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
@@ -223,18 +222,6 @@ define([
                textValue = data;
             }
          };
-
-         selectedCollection._beforeMount({
-            selectedKeys: selectedKeys,
-            source: selectedCollection._options.source,
-            keyProperty: selectedCollection._options.keyProperty
-         });
-         assert.equal(selectedKeysLink, selectedCollection._selectedKeys);
-
-         selectedCollection._beforeMount({
-            selectedKeys: []
-         });
-         assert.notEqual(selectedKeysLink, selectedCollection._selectedKeys);
 
 
          result = selectedCollection._beforeMount({
@@ -259,6 +246,20 @@ define([
             selectedKeys: []
          });
          assert.deepEqual(selectedCollection._selectedKeys, []);
+
+         selectedKeysLink = selectedCollection._selectedKeys = [1];
+         selectedCollection._beforeUpdate({
+            selectedKeys: selectedKeys,
+            source: selectedCollection._options.source
+         });
+         assert.equal(selectedKeysLink, selectedCollection._selectedKeys);
+
+         selectedKeysLink = selectedCollection._selectedKeys = [1];
+         selectedCollection._beforeUpdate({
+            selectedKeys: selectedKeys.slice(),
+            source: selectedCollection._options.source
+         });
+         assert.notEqual(selectedKeysLink, selectedCollection._selectedKeys);
 
          selectedCollection._beforeUpdate({
             selectedKeys: [1]
