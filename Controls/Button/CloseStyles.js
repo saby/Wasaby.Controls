@@ -39,6 +39,7 @@ define('Controls/Button/CloseStyles',
     * @css @border-left-radius_CloseButton_toolButton Left border radius of close button with option viewMode 'toolButton'.
     *
     * @css @box-shadow_CloseButton_toolButton Box shadow of close button with option viewMode 'toolButton'.
+    * @css @box-shadow_CloseButton-toolButton_active Box shadow of close button in active state with option viewMode 'toolButton'.
     *
     * @css @font-size_CloseButton_link Font size of close button with option viewMode 'link'.
     *
