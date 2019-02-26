@@ -219,12 +219,13 @@ define('Controls/List/ListView', [
          // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения 
          // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
          _focusInHandler: function(event) {
-            var
-               tag = event.target.tagName.toLowerCase(),
-               isContentEditable = !!event.target.attributes.contenteditable && event.target.attributes.contenteditable.value !== 'false';
-            if (tag !== 'input' && tag !== 'textarea' && !isContentEditable) {
-               this._container.focus();
-            }
+            // todo: add fakeFocusElement in 19.122
+            // var
+            //    tag = event.target.tagName.toLowerCase(),
+            //    isContentEditable = !!event.target.attributes.contenteditable && event.target.attributes.contenteditable.value !== 'false';
+            // if (tag !== 'input' && tag !== 'textarea' && !isContentEditable) {
+            //    this._container.focus();
+            // }
          },
 
          //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
