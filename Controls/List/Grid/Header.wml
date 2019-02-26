@@ -1,7 +1,10 @@
 <ws:template name="cellContent">
    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
       <ws:if data="{{!!headerColumn.column.template}}">
-         <ws:partial attr:class="controls-Grid__row-header__content_baseline" template="{{headerColumn.column.template}}" colData="{{headerColumn}}"/>
+         <ws:partial attr:class="controls-Grid__row-header__content_baseline"
+                     template="{{headerColumn.column.template}}"
+                     scope="{{ headerColumn.column.templateOptions }}"
+                     colData="{{headerColumn}}"/>
       </ws:if>
       <ws:else>
          <ws:partial attr:class="controls-Grid__row-header__content_baseline" template="{{defaultHeaderContent}}" colData="{{headerColumn}}"/>

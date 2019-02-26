@@ -164,7 +164,10 @@ define([
                assert.equal(path._options.items[path._options.items.length - 2].get('parent'), args[0].get('parent'));
             }
          };
-         path._onBackButtonClick();
+         path._onBackButtonClick({
+            stopPropagation: function() {
+            }
+         });
       });
 
       it('_onHomeClick', function() {
@@ -183,7 +186,10 @@ define([
                eventFired = true;
             }
          };
-         path._onArrowClick();
+         path._onArrowClick({
+            stopPropagation: function() {
+            }
+         });
          assert.isTrue(eventFired);
       });
    });

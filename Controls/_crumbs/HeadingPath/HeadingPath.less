@@ -1,3 +1,7 @@
+.controls-BreadCrumbsPath__twoRows {
+   margin-left: @spacing_Path-between-home-and-leftEdge;
+}
+
 .controls-BreadCrumbsPath__wrapper {
    display: flex;
    align-items: baseline;
@@ -6,8 +10,6 @@
 
 .controls-BreadCrumbsPath__backButton {
    white-space: nowrap;
-   position: relative;
-   padding-right: @spacing_Path-between-home-and-backButton;
    min-width: 0;
    width: 100%;
 }
@@ -23,12 +25,21 @@
    position: relative;
    display: inline-flex;
    align-items: baseline;
+   padding-right: @spacing_Path-between-home-and-backButton;
    max-width: 100%;
    /**
    Breadcrumbs should shrink only if the back button can't shrink any further, so the back button has to have drastically larger flex-shrink.
     */
    flex-shrink: 9999;
    overflow: hidden;
+}
+
+.controls-BreadCrumbsPath__backButton__wrapper_inHeader {
+   /*
+   Header cells have flex-direction: column and align-items: normal so button gets expanded to match cell's width.
+   To prevent this, we have to explicitly align button to the start of the cell.
+    */
+   align-self: flex-start;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow {
@@ -39,10 +50,19 @@
    right: 0;
    display: none;
    color: @color_Path-backButtonArrow;
+   cursor: pointer;
+}
+
+.controls-Path__backButtonArrow_readonly {
+   color: @color_Path-backButtonArrow_readonly;
 }
 
 .controls-BreadCrumbsPath__backButtonArrow_outsideBackButton {
-   margin-right: -@font-size_Path-backButtonArrow;
+   margin-right: -@spacing_Path-between-home-and-backButton;
+}
+
+.controls-BreadCrumbsPath__counter {
+   margin-left: @spacing_Path-between-back-and-counter;
 }
 
 .controls-BreadCrumbsPath__breadCrumbs {
@@ -62,13 +82,18 @@
    margin-left: @spacing_Path-between-home-and-backButton;
 }
 
+.controls-BreadCrumbsPath__backButton_short,
+.controls-BreadCrumbsPath__breadCrumbs_short {
+   flex-shrink: 1;
+   overflow: hidden;
+}
+
 .controls-BreadCrumbsPath__backButton_short {
+   min-width: @min-width_BackButton_short;
    /**
    Breadcrumbs should shrink only if the back button can't shrink any further, so the back button has to have drastically larger flex-shrink.
     */
    flex-shrink: 9999;
-   min-width: @min-width_BackButton_short;
-   overflow: hidden;
 }
 
 .controls-BreadCrumbsPath__backButton_half,
@@ -83,7 +108,7 @@
       color: @color_Path-backButtonArrow_hovered;
       display: inline-block;
    }
-   .controls-BreadCrumbsPath__backButton:hover ~ .controls-BreadCrumbsPath__backButtonArrow {
+   .controls-BreadCrumbsPath__backButton__wrapper:hover .controls-BreadCrumbsPath__backButtonArrow {
       display: inline-block;
    }
 
