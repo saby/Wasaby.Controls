@@ -3,7 +3,7 @@
       <div class="controls-FastFilter__wrapper controls-FastFilter__wrapper_state{{_options.readOnly ? 'readOnly' : 'enabled'}}">
          <div class="controls-FastFilter__block" on:click="_open(item, index)">
             <div class="controls-FastFilter__iconArrow icon-DayForward controls-FastFilter__iconArrow_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}"></div>
-            <div class="controls-Dropdown__text  controls-FastFilter__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}" title="{{_configs[index].text}}">{{_configs[index].text}}</div>
+            <div class="controls-FastFilter__text controls-FastFilter__text_state_{{_options.readOnly ? 'readOnly' : 'enabled'}}" title="{{_configs[index].text}}">{{_configs[index].text}}</div>
          </div>
          <ws:if data="{{_needShowCross(item)}}">
             <!-- reset button should not take focus, otherwise IE will notify 'blur' event on control after click, because reset button will hidden, and focus will moved on body -->

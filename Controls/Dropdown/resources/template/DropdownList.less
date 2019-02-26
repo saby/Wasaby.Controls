@@ -38,6 +38,17 @@
    box-sizing: border-box;
 }
 
+.controls-DropdownList__row:before {
+   content: '';
+   position: absolute;
+   display: inline-block;
+   background-color: @background-color_DropdownList-row_separator;
+   height: @height_DropdownList-row-separator;
+   left: @spacing_DropdownList-row-between-leftBorder-row-separator;
+   right: @spacing_DropdownList-row-between-rightBorder-row-separator;
+   bottom: @spacing_DropdownList-row-between-bottomBorder-row-separator;
+}
+
 .controls-DropdownList__row:active {
    background: @background_DropdownList-row_active;
 }
