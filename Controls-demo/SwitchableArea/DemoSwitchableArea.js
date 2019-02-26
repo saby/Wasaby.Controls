@@ -22,7 +22,9 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
                id: '0',
                title: 'content1',
                itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/content',
-               additionalOptions: true
+               templateOptions: {
+                  additionalOptions: true
+               }
             },
             {
                id: '1',
@@ -32,7 +34,10 @@ define('Controls-demo/SwitchableArea/DemoSwitchableArea', [
             {
                id: '2',
                title: 'content3',
-               itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentAsync'
+               itemTemplate: 'wml!Controls-demo/SwitchableArea/resources/contentAsync',
+               templateOptions: {
+                  additionalOptions: true
+               }
             }
          ];
       },

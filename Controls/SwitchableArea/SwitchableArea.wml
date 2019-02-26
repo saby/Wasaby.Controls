@@ -6,7 +6,7 @@
                         attr:class="{{ _options.selectedKey !== item.id && _options.selectedKey !== item.key ? 'ws-hidden' }}"
                         itemTemplate="{{ item.itemTemplate }}"
                         selectedKey="{{ _options.selectedKey }}"
-                        item="{{item}}"/>
+                        templateOptions="{{item.templateOptions}}"/>
         </ws:if>
     </ws:for>
 </div>
