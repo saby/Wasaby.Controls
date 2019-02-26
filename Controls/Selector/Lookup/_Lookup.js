@@ -269,6 +269,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
+      _resizeDebounce: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -337,6 +338,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _beforeUnmount: function() {
          this._simpleViewModel = null;
+         this._resizeDebounce = null;
       },
 
       _changeValueHandler: function(event, value) {
