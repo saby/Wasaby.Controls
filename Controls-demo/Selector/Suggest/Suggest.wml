@@ -2,8 +2,7 @@
    <h3>autoDropDown: false</h3>
    <Controls.Selector.Suggest
            attr:class="ControlsDemo-Suggest__search"
-           bind:value="_value"
-           selectedKey="{{_selectedKey}}"
+           bind:selectedKey="_selectedKey"
            displayProperty="title"
            placeholder="Выберите..."
            keyProperty="id"

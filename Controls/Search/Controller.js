@@ -41,10 +41,7 @@ define('Controls/Search/Controller',
             self._loading = false;
             self._previousViewMode = self._viewMode;
             self._viewMode = 'search';
-            
-            /* FIXME Решаю по ошибке в 121 https://online.sbis.ru/opendoc.html?guid=1ae9ffe1-8e81-4552-89d1-9ebde80c1979
-               self._searchValue = filter[self._options.searchParam] || '';
-            */
+            self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
             self._notify('filterChanged', [filter], {bubbling: true});
             self._notify('itemsChanged', [result.data], {bubbling: true});
@@ -60,6 +57,7 @@ define('Controls/Search/Controller',
                self._viewMode = self._previousViewMode;
                self._previousViewMode = null;
                self._searchValue = '';
+               self._inputSearchValue = '';
                self._misspellValue = '';
                self._forceUpdate();
                self._notify('filterChanged', [filter], {bubbling: true});
@@ -149,9 +147,7 @@ define('Controls/Search/Controller',
 
          _search: function(event, value, force) {
             _private.getSearchController(this).search(value, force);
-            
-            //FIXME Решаю по ошибке в 121 https://online.sbis.ru/opendoc.html?guid=1ae9ffe1-8e81-4552-89d1-9ebde80c1979
-            this._searchValue = value;
+            this._inputSearchValue = value;
          },
    
          _beforeUnmount: function() {

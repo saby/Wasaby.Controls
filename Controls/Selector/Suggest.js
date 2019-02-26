@@ -34,12 +34,21 @@ define('Controls/Selector/Suggest',
                source: options.source
             });
             return self._sourceController.load(filter).addCallback(function(items) {
-               self._value = util.object.getPropertyValue(items.at(0), options.displayProperty);
+               var value = util.object.getPropertyValue(items.at(0), options.displayProperty);
+               _private.createViewModel(self, value);
                return items;
             });
          },
 
+         createViewModel: function(self, value) {
+            self._value = value;
+            self._simpleViewModel = new BaseViewModel({
+               value: value
+            });
+         },
+
          updateValue: function(self, value) {
+            self._value = value;
             self._simpleViewModel.updateOptions({
                value: value
             });
@@ -54,30 +63,26 @@ define('Controls/Selector/Suggest',
 
          _beforeMount: function(options) {
             if (options.selectedKey) {
-               var self = this;
                return _private.loadSelectedItem(this, options).addCallback(function(items) {
-                  self._simpleViewModel = new BaseViewModel({
-                     value: self._value
-                  });
                   return items;
                });
             } else {
-               this._simpleViewModel = new BaseViewModel({
-                  value: options.value
-               });
+               _private.createViewModel(this, options.value || '');
             }
          },
 
          _changeValueHandler: function(event, value) {
-            _private.updateValue(this, value);
-
-            this._notify('valueChanged', [value]);
+            if (value !== this._value) {
+               _private.updateValue(this, value);
+               this._notify('valueChanged', [value]);
+            }
          },
 
          _choose: function(event, item) {
             this.activate();
+            _private.updateValue(this, item.get(this._options.displayProperty) || '');
             this._notify('selectedKey', [item.get(this._options.keyProperty)]);
-            this._notify('valueChanged', [item.get(this._options.displayProperty) || '']);
+            this._notify('valueChanged', [this._value]);
          },
 
          _beforeUpdate: function(newOptions) {

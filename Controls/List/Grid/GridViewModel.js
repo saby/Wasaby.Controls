@@ -89,13 +89,6 @@ define('Controls/List/Grid/GridViewModel', [
                cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + currentStyle;
 
                if (current.columnIndex === 0) {
-
-                  /* В старых браузерах маркер навешивается стилями данного класса, т.к. вёрстка там другая.
-                  *  Не навешиваем класс, если не нужно показывать маркер
-                  */
-                  if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
-                     cellClasses += ' controls-Grid__row-cell_selected__first';
-                  }
                   cellClasses += ' controls-Grid__row-cell_selected__first-' + currentStyle;
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
@@ -226,7 +219,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             return sortingDirection;
          },
-   
+
          isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
@@ -255,10 +248,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            this._onListChangeFn = function() {
+            this._onListChangeFn = function(event, changesType) {
                this._ladder = _private.prepareLadder(this);
                this._nextVersion();
-               this._notify('onListChange');
+               this._notify('onListChange', changesType);
             }.bind(this);
             this._onMarkedKeyChangedFn = function(event, key) {
                this._notify('onMarkedKeyChanged', key);
@@ -267,7 +260,7 @@ define('Controls/List/Grid/GridViewModel', [
                this._notify('onGroupsExpandChange', changes);
             }.bind(this);
             this._onCollectionChangeFn = function() {
-               this._notify('onCollectionChange', Array.prototype.slice.call(arguments, 1));
+               this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             this._model.subscribe('onListChange', this._onListChangeFn);
             this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
@@ -596,7 +589,7 @@ define('Controls/List/Grid/GridViewModel', [
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
          },
-         
+
          setSearchValue: function(value) {
             this._model.setSearchValue(value);
          },

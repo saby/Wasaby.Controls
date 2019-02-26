@@ -18,6 +18,7 @@ define('Controls/HighChartsLight',
        * @extends Core/Control
        * @mixes Controls/interface/IHighCharts
        * @control
+       * @public
        * @author Волоцкой В.Д.
        * @demo Controls-demo/HighChartsLight/HighChartsLight
        */

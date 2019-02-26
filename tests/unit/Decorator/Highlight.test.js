@@ -1,10 +1,10 @@
 define(
    [
       'Env/Env',
-      'tests/resources/ProxyCall',
-      'tests/resources/TemplateUtil',
+      'unit/resources/ProxyCall',
+      'unit/resources/TemplateUtil',
       'Controls/Decorator/Highlight',
-      'wml!tests/Decorator/Highlight/Template1'
+      'wml!unit/Decorator/Highlight/Template1'
    ],
    function(Env, ProxyCall, TemplateUtil, Highlight, template1) {
       'use strict';

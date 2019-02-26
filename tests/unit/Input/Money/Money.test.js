@@ -2,10 +2,10 @@ define(
    [
       'Core/core-instance',
       'Controls/Input/Money',
-      'tests/resources/TemplateUtil',
-      'tests/Input/Base/InputUtility',
-      'wml!tests/Input/Money/ZeroValueTest',
-      'wml!tests/Input/Money/EmptyValueTest'
+      'unit/resources/TemplateUtil',
+      'unit/Input/Base/InputUtility',
+      'wml!unit/Input/Money/ZeroValueTest',
+      'wml!unit/Input/Money/EmptyValueTest'
    ],
    function(instance, Money, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
       'use strict';
