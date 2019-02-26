@@ -205,8 +205,8 @@ define([
             Env.constants.decoratedLinkService = decoratedLinkService;
          });
          it('empty', function() {
-            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<div></div>'));
-            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<div></div>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml([]), '<invisible-node></invisible-node>'));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(), '<invisible-node></invisible-node>'));
          });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
@@ -391,6 +391,7 @@ define([
             var json = [['p', 'text&amp;'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
+            assert.equal(Converter.jsonToHtml([], noOuterTagResolver), '<invisible-node></invisible-node>');
          });
       });
    });
