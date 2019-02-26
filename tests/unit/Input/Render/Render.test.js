@@ -52,6 +52,11 @@ define(
             });
 
             describe('_getState with Focus not ie', function() {
+               var prevIsIe;
+               beforeEach(function() {
+                  prevIsIe = Env.detection.isIE;
+                  Env.detection.isIE = false;
+               });
                it('Control in read mode.', function() {
                   ctrl._options.readOnly = true;
 
@@ -68,6 +73,9 @@ define(
                   ctrl._contentActive = false;
 
                   assert.equal(ctrl._getState(), '');
+               });
+               afterEach(function() {
+                  Env.detection.isIE = prevIsIe;
                });
             });
          });
