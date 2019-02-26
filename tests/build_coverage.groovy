@@ -30,7 +30,7 @@ def building(workspace, version, scheduler=null) {
 		def stream_number=props["snit"]
         def ver = version.replaceAll('.','')
         def SDK = ""
-        def items = "controls:${workspace}/controls, controls_new:${workspace}/controls, controls_theme:${workspace}/controls"
+        def items = "controls:${workspace}/controls2"
 
 		def branch_atf = props["atf_co"]
         def branch_engine = props["engine"]
@@ -212,7 +212,8 @@ def building(workspace, version, scheduler=null) {
             }
 
             echo "Собираем controls"
-            sh "python3 ${workspace}/constructor/build_controls.py ${workspace}/controls ${env.BUILD_NUMBER} --not_web_sdk NOT_WEB_SDK"
+            sh "mkdir ${workspace}/controls2"
+            sh "python3 ${workspace}/constructor/build_ui_components.py ${workspace}/controls ${env.BUILD_NUMBER} controls --deploy ${workspace}/controls2"
             echo items
         }
         stage("Разворот стенда"){
