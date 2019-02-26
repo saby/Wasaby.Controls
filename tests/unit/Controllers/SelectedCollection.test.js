@@ -215,7 +215,8 @@ define([
             idProperty: 'id'
          });
 
-         selectedKeysLink = selectedCollection._selectedKeys = selectedKeys;
+         selectedKeysLink = selectedCollection._selectedKeys = [];
+         selectedCollection._options.selectedKeys = selectedKeys;
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
             if (eventName === 'textValueChanged') {
