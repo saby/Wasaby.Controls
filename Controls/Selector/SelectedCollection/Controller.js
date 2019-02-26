@@ -12,6 +12,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
 ], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel) {
    'use strict';
 
+   var COUNT_HISTORY_ITEMS = 12;
+
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
          var filter = clone(filter || {});
@@ -125,6 +127,21 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
       setItems: function(self, items) {
          self._items = items;
+      },
+
+      getHistoryService: function(self) {
+         if (!self._historyService) {
+            self._historyServiceLoad = new Deferred();
+            require(['Controls/History/Service'], function(HistoryService) {
+               self._historyService = new HistoryService({
+                  historyId: self._options.historyId,
+                  recent: COUNT_HISTORY_ITEMS
+               });
+               self._historyServiceLoad.callback(self._historyService);
+            });
+         }
+
+         return self._historyServiceLoad;
       }
    };
 
@@ -133,6 +150,8 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _notifyHandler: tmplNotify,
       _selectedKeys: null,
       _items: null,
+      _historyService: null,
+      _historyServiceLoad: null,
 
       _beforeMount: function(options, context, receivedState) {
          this._selectCallback = this._selectCallback.bind(this);
@@ -231,7 +250,17 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       _selectCallback: function(result) {
+         var parseItems;
+
          this._setItems(result);
+         parseItems = _private.getItems(this);
+
+         if (parseItems && parseItems.getCount() && this._options.historyId) {
+            _private.getHistoryService(this).addCallback(function(historyService) {
+               historyService.update(parseItems.at(0), {$_history: true});
+               return historyService;
+            });
+         }
       },
 
       _onShowSelectorHandler: function(event, templateOptions) {
