@@ -8,10 +8,10 @@ function(Control, entity, template) {
    'use strict'; 
 
    var defaultColors = [
-      'controls-ProcessStateIndicator__sector1', 
-      'controls-ProcessStateIndicator__sector2', 
-      'controls-ProcessStateIndicator__sector3'
-   ],
+         'controls-ProcessStateIndicator__sector1', 
+         'controls-ProcessStateIndicator__sector2', 
+         'controls-ProcessStateIndicator__sector3'
+      ],
 
       DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector',
 
