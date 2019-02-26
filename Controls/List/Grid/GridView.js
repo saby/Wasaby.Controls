@@ -66,6 +66,14 @@ define('Controls/List/Grid/GridView', [
             });
             return result;
          },
+         detectLayoutFixed: function(self, columns) {
+            for (var i = 0; i < columns.length; i++) {
+               if (columns[i].width === '1fr' || columns[i].width === 'auto') {
+                  self._layoutFixed = true;
+                  break;
+               }
+            }
+         },
          prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
                resultsPadding,
@@ -118,6 +126,9 @@ define('Controls/List/Grid/GridView', [
          _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
+            if (cDetection.isNotFullGridSupport) {
+               _private.detectLayoutFixed(this, cfg.columns);
+            }
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
          },
