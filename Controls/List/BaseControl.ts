@@ -4,7 +4,6 @@ import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
 import BaseControlTpl = require('wml!Controls/List/BaseControl/BaseControl');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
-import require = require('require');
 import VirtualScroll = require('Controls/List/Controllers/VirtualScroll');
 import SourceController = require('Controls/Controllers/SourceController');
 import isEqualObject = require('Core/helpers/Object/isEqual');
