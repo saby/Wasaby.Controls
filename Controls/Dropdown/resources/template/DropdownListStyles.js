@@ -56,5 +56,10 @@ define('Controls/Dropdown/resources/template/DropdownListStyles', [],
     * @css @spacing_DropdownList-group-between-text-separator Spacing between text and group separator.
     * @css @color_DropdownList-group-text Group text color.
     * @css @font-size_DropdownList-group-text Group text font size.
+    * @css @background-color_DropdownList-row_separator Background color for separator between rows.
+    * @css @height_DropdownList-row-separator Height separator between rows.
+    * @css @spacing_DropdownList-row-between-rightBorder-row-separator Spacing between right border and row separator.
+    * @css @spacing_DropdownList-row-between-bottomBorder-row-separator Spacing between bottom border and row separator.
+    * @css @spacing_DropdownList-row-between-leftBorder-row-separator Spacing between left border and row separator.
     */
 );
