@@ -23,4 +23,12 @@
 // todo: https://online.sbis.ru/opendoc.html?guid=801002f0-6535-440f-a5ef-f81f21b3c3a3
 .ws-is-mobile-safari .controls-MasterDetail_master > .controls-Scroll__content {
    width: 101%;
+   //z-index is needed in mobile safari, because scroll have webkit-overflow-scrolling: touch style,
+   //webkit-overflow-scrolling creating stacking context, and all elements inside can not be higher by z-index,
+   //than elements on the same level with the scroll.
+   //Grey line of master (master option of the MasterDetail control) is on the same level with the scroll,
+   //white line, that should overlaps grey line is in list item (list control is inside scroll container).
+   //Because of the webkit-overflow-scrolling, white line can not overlaps grey line,
+   // to solve this problem make z-index: 1 on scroll.
+   z-index: 1;
 }
