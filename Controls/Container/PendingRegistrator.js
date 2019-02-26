@@ -114,7 +114,8 @@ define('Controls/Container/PendingRegistrator', [
 
          // hide indicator if no more pendings with indicator showing
          if (!this._hasPendingsWithIndicator()) {
-            this._children.loadingIndicator.hide();
+            //TODO https://online.sbis.ru/opendoc.html?guid=c27db898-1abf-4883-8015-187f6d18b5b7
+            this._children.loadingIndicator && this._children.loadingIndicator.hide();
          }
 
          // notify if no more pendings

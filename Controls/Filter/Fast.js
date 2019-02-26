@@ -242,6 +242,13 @@ define('Controls/Filter/Fast',
          },
 
          _needShowCross: function(item) {
+            // Для совместимости dropdown на панели фильтров и быстрого фильтра.
+            // Dropdown возвращает массив ключей, а быстрый фильтр только один ключ, добавляем на это проверку
+            // TODO: Удалить после решения https://online.sbis.ru/opendoc.html?guid=883581df-f415-48d7-b407-97b7b02db8b9
+            if (!(getPropValue(item, 'value') instanceof Array) && getPropValue(item, 'resetValue') instanceof Array) {
+               return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined &&
+                  !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')[0]);
+            }
             return !this._options.readOnly && getPropValue(item, 'resetValue') !== undefined && !isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue'));
          },
 

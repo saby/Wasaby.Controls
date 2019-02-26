@@ -1,4 +1,4 @@
-define(['wml!Controls/Container/Suggest/Layout/_SuggestListWrapper', 'wml!tests/Layout/Suggest/resources/template'],
+define(['wml!Controls/Container/Suggest/Layout/_SuggestListWrapper', 'wml!unit/Layout/Suggest/resources/template'],
    function(suggestListWrapperTpl, testTemplate) {
       'use strict';
       

@@ -3,7 +3,7 @@ define([
    'Core/core-merge',
    'Controls/Date/PeriodLiteDialog',
    'Controls/Utils/Date',
-   'tests/Calendar/Utils',
+   'unit/Calendar/Utils',
    'wml!Controls/Date/PeriodLiteDialog/ItemFull',
    'wml!Controls/Date/PeriodLiteDialog/ItemMonths',
    'wml!Controls/Date/PeriodLiteDialog/ItemQuarters'

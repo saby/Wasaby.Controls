@@ -1,4 +1,4 @@
-define('tests/Input/Base/InputUtility',
+define('unit/Input/Base/InputUtility',
    [
       'Vdom/Vdom'
    ],

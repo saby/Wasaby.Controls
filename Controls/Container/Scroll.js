@@ -326,7 +326,7 @@ define('Controls/Container/Scroll',
                // was created with "overflow-scrolling: touch" style style.
                // A task has been created to investigate the problem more.
                // https://online.sbis.ru/opendoc.html?guid=1c9b807c-41ab-4fbf-9f22-bf8b9fcbdc8d
-               if (detection.isMobileIOS) {
+               if (Env.detection.isMobileIOS) {
                   this._overflowScrolling = true;
                   needUpdate = true;
                }

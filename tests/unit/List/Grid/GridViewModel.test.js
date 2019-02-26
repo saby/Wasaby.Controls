@@ -218,7 +218,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                expected = {
                   withMarker: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
                      ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_selected' +
-                     ' controls-Grid__row-cell_selected-default controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default',
+                     ' controls-Grid__row-cell_selected-default controls-Grid__row-cell_selected__first-default',
                   withoutMarker: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
                      ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox controls-Grid__row-cell_selected' +
                      ' controls-Grid__row-cell_selected-default controls-Grid__row-cell_selected__first-default'
@@ -245,7 +245,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                expectedResult = [
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                   ' controls-Grid__row-cell-checkbox controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
-                  ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default',
+                  ' controls-Grid__row-cell_selected__first-default',
                   'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow controls-Grid__row-cell_withRowSeparator_firstRow' +
                   ' controls-Grid__cell_spacingRight controls-Grid__cell_default controls-Grid__row-cell_rowSpacingTop_l controls-Grid__row-cell_rowSpacingBottom_l' +
                   ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default',
@@ -274,7 +274,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             assert.equal(expectedResult[3],
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
-   
+
             current.isSelected = false;
             assert.equal(expectedResult[4],
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
@@ -330,7 +330,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                assert.equal(expectedData.template, checkedColumn.template, 'Incorrect value "template" when checking columns.');
                assert.equal(expectedData.cellClasses, checkedColumn.cellClasses, 'Incorrect value "cellClasses" when checking columns.');
             }
-            
+
             var gridColumn;
 
             // check first column (multiselect checkbox column)
@@ -346,7 +346,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
                   ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox' +
                   ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
-                  ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default'
+                  ' controls-Grid__row-cell_selected__first-default'
             });
 
             // check next column
@@ -423,7 +423,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                cellClasses: 'controls-Grid__row-cell controls-Grid__row-cell-background-hover controls-Grid__row-cell_firstRow' +
                   ' controls-Grid__row-cell_withRowSeparator_firstRow controls-Grid__row-cell-checkbox' +
                   ' controls-Grid__row-cell_selected controls-Grid__row-cell_selected-default' +
-                  ' controls-Grid__row-cell_selected__first controls-Grid__row-cell_selected__first-default'
+                  ' controls-Grid__row-cell_selected__first-default'
             });
          });
       });
