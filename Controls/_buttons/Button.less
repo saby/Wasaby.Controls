@@ -226,7 +226,6 @@
 .controls-BaseButton {
    display: inline-block;
    box-sizing: border-box;
-   .user-select();
    text-decoration: none;
 }
 
@@ -241,6 +240,7 @@
 .controls-Button__wrapper_viewMode-toolButton_size-s, .controls-Button__wrapper_viewMode-toolButton_size-m,
 .controls-Button__wrapper_viewMode-toolButton_size-l {
    justify-content: center;
+   user-select: none;
 }
 
 .controls-Button_viewMode-toolButton_withBackground {
@@ -428,6 +428,7 @@
    min-width: @min-width_Button_common;
    box-shadow: @box-shadow_Button_common;
    text-shadow: @text-shadow_Button_button;
+   user-select: none;
 }
 
 .controls-Button_viewMode-button:active {
@@ -440,6 +441,7 @@
    color: @color_Button_readOnly;
    border-color: @border-color_Button_readOnly;
    text-shadow: @text-shadow_Button_readOnly;
+   user-select: none;
 }
 
 .controls-Button_style-secondary_viewMode-Button_readOnly {
