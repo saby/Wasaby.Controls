@@ -43,7 +43,7 @@ define('Controls/FormController', [
 
             return {
                data: record
-            }
+            };
          });
          readDef.addErrback(function(e) {
             Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
@@ -80,7 +80,7 @@ define('Controls/FormController', [
             }
             return {
                data: record
-            }
+            };
          });
          createDef.addErrback(function(e) {
             instance._createdInMounting = { isError: true, result: e };
@@ -139,6 +139,7 @@ define('Controls/FormController', [
             return this._showError(receivedError);
          }
          var record = receivedData || cfg.record;
+
          // use record
          if (record && _private.checkRecordType(record)) {
             this._setRecord(record);
@@ -542,7 +543,7 @@ define('Controls/FormController', [
             return {
                error: config.error,
                errorConfig: errorConfig
-            }
+            };
          });
       },
 

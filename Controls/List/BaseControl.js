@@ -161,7 +161,7 @@ define('Controls/List/BaseControl', [
                }).then(function(result /* result: CrudResult */) {
                   resDeferred.callback(result);
                   return result;
-               })
+               });
             });
          } else {
             resDeferred.callback();
@@ -344,9 +344,9 @@ define('Controls/List/BaseControl', [
          //source controller is not created if "source" option is undefined
          if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
             _private.loadToDirection(
-                self, direction,
-                self._options.dataLoadCallback,
-                self._options.dataLoadErrback
+               self, direction,
+               self._options.dataLoadCallback,
+               self._options.dataLoadErrback
             ).addCallback(function(result /* result: CrudResult */) {
                return _private.getData(result);
             });
@@ -737,7 +737,7 @@ define('Controls/List/BaseControl', [
             return {
                error: config.error,
                errorConfig: errorConfig
-            }
+            };
          });
       },
 
@@ -784,9 +784,9 @@ define('Controls/List/BaseControl', [
             self._forceUpdate();
          }
          if (
-             self._children &&
-             self._children.dialogOpener &&
-             self._children.dialogOpener.isOpened()
+            self._children &&
+            self._children.dialogOpener &&
+            self._children.dialogOpener.isOpened()
          ) {
             self._children.dialogOpener.close();
          }
