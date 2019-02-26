@@ -13,15 +13,17 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Controls/Utils/tmplNotify',
    'Core/helpers/Object/isEqual',
    'Controls/Selector/SelectedCollection/Utils',
+   'Core/helpers/Function/debounce',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils) {
+], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, debounce) {
    'use strict';
 
    var
       MAX_VISIBLE_ITEMS = 20,
       SHOW_SELECTOR_WIDTH = 0,
-      CLEAR_RECORDS_WIDTH = 0;
+      CLEAR_RECORDS_WIDTH = 0,
+      UPDATE_RATE_WHEN_RESIZE = 50;
 
    var _private = {
       initializeConstants: function() {
@@ -289,6 +291,8 @@ define('Controls/Selector/Lookup/_Lookup', [
 
          _private.initializeConstants();
          _private.initializeContainers(this);
+
+         this._resizeDebounce = debounce(this._resize, UPDATE_RATE_WHEN_RESIZE);
 
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);

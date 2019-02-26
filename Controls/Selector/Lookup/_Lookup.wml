@@ -79,5 +79,5 @@
          </ws:if>
       </ws:afterFieldWrapper>
    </Controls.Input.resources.InputRender.InputRender>
-   <Controls.Event.Listener event="controlResize" on:controlResize="_resize()"/>
+   <Controls.Event.Listener event="controlResize" on:controlResize="_resizeDebounce()"/>
 </Controls.Container.Suggest.Layout>

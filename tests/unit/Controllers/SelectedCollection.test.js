@@ -202,7 +202,8 @@ define([
 
       it('_beforeUpdate', function(done) {
          var selectedCollection = new SelectedCollection();
-         var selectedKeys = [1];
+         var selectedKeysLink;
+         var selectedKeys = [];
          var textValue = '';
          var result;
          var source = new sourceLib.Memory({
@@ -214,12 +215,24 @@ define([
             idProperty: 'id'
          });
 
+         selectedKeysLink = selectedCollection._selectedKeys = selectedKeys;
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
             if (eventName === 'textValueChanged') {
                textValue = data;
             }
          };
+
+         selectedCollection._beforeMount({
+            selectedKeys: selectedKeys
+         });
+         assert.equal(selectedKeysLink, selectedCollection._selectedKeys);
+
+         selectedCollection._beforeMount({
+            selectedKeys: []
+         });
+         assert.notEqual(selectedKeysLink, selectedCollection._selectedKeys);
+
 
          result = selectedCollection._beforeMount({
             selectedKeys: [],
@@ -231,7 +244,7 @@ define([
          assert.equal(result, undefined);
 
          result = selectedCollection._beforeMount({
-            selectedKeys: selectedKeys,
+            selectedKeys: [1],
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
