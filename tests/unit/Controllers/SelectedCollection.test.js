@@ -225,7 +225,9 @@ define([
          };
 
          selectedCollection._beforeMount({
-            selectedKeys: selectedKeys
+            selectedKeys: selectedKeys,
+            source: selectedCollection._options.source,
+            keyProperty: selectedCollection._options.keyProperty
          });
          assert.equal(selectedKeysLink, selectedCollection._selectedKeys);
 
