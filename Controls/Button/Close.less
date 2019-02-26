@@ -7,7 +7,7 @@
 }
 
 .controls-Button__close__icon_toolButton {
-   fill: @color_CloseButton-icon;
+   fill: @color_CloseButton-icon_toolButton;
    width: @width_CloseButton-icon_toolButton;
    height: @height_CloseButton-icon_toolButton;
 }
@@ -25,6 +25,10 @@
 
 .controls-Button__close_toolButton_untransparent {
    background-color: @background-color_CloseButton_primary_untransparent;
+}
+
+.controls-Button__close_toolButton_untransparent:active {
+   background-color: @background-color_CloseButton-primary-untransparent_active;
 }
 
 .controls-Button__close_toolButton_l {
@@ -60,8 +64,9 @@
    fill: @color_CloseButton-light-icon_hover;
 }
 
-.controls-Button__close_toolButton:active, .controls-Button__close_toolButton:active {
+.controls-Button__close_toolButton:active {
    border-color: @default-border-color-second;
+   box-shadow: @box-shadow_CloseButton-toolButton_active;
    .controls-Button__close__icon_default:active, .controls-Button__close__icon_primary {
       fill: @color_CloseButton-icon_hover;
    }
@@ -72,10 +77,13 @@
       fill: @color_CloseButton-icon_link_hover;
    }
 
-   .controls-Button__close_toolButton_l:hover, .controls-Button__close_toolButton_m:hover {
+   .controls-Button__close_toolButton:hover {
       border-color: @border-color_CloseButton_toolButton_hover;
       .controls-Button__close__icon_toolButton, .controls-Button__close__icon_toolButton {
          fill: @color_CloseButton-icon_toolButton_hover;
       }
+   }
+   .controls-Button__close_toolButton_untransparent:hover {
+      background-color: @background-color_CloseButton-primary-untransparent_hovered;
    }
 }
