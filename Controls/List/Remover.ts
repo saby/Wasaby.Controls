@@ -1,96 +1,94 @@
-define('Controls/List/Remover', [
-   'Core/Control',
-   'Core/Deferred',
-   'Controls/Utils/getItemsBySelection',
-   'Controls/Container/Data/ContextOptions'
-], function(Control, Deferred, getItemsBySelection, dataOptions) {
-   var _private = {
-      removeFromSource: function(self, items) {
-         return self._source.destroy(items);
-      },
+import Control = require('Core/Control');
+import Deferred = require('Core/Deferred');
+import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
+import dataOptions = require('Controls/Container/Data/ContextOptions');
 
-      removeFromItems: function(self, items) {
-         var item;
-         self._items.setEventRaising(false, true);
-         for (var i = 0; i < items.length; i++) {
+var _private = {
+    removeFromSource: function (self, items) {
+        return self._source.destroy(items);
+    },
+
+    removeFromItems: function (self, items) {
+        var item;
+        self._items.setEventRaising(false, true);
+        for (var i = 0; i < items.length; i++) {
             item = self._items.getRecordById(items[i]);
             if (item) {
-               self._items.remove(item);
+                self._items.remove(item);
             }
-         }
-         self._items.setEventRaising(true, true);
-      },
+        }
+        self._items.setEventRaising(true, true);
+    },
 
-      beforeItemsRemove: function(self, items) {
-         var beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
-         return beforeItemsRemoveResult instanceof Deferred ? beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
-      },
+    beforeItemsRemove: function (self, items) {
+        var beforeItemsRemoveResult = self._notify('beforeItemsRemove', [items]);
+        return beforeItemsRemoveResult instanceof Deferred ? beforeItemsRemoveResult : Deferred.success(beforeItemsRemoveResult);
+    },
 
-      afterItemsRemove: function(self, items, result) {
-         self._notify('afterItemsRemove', [items, result]);
-      },
+    afterItemsRemove: function (self, items, result) {
+        self._notify('afterItemsRemove', [items, result]);
+    },
 
-      updateDataOptions: function(self, dataOptions) {
-         if (dataOptions) {
+    updateDataOptions: function (self, dataOptions) {
+        if (dataOptions) {
             self._items = dataOptions.items;
             self._source = dataOptions.source;
             self._filter = dataOptions.filter;
             self._keyProperty = dataOptions.keyProperty;
-         }
-      }
-   };
+        }
+    }
+};
 
-   /**
-   * Сontrol to remove the list items in recordSet and dataSource.
-   * Сontrol must be in one Controls.Container.Data with a list.
-   * <a href="/materials/demo/demo-ws4-operations-panel?v=19.100">Demo examples</a>.
-   * @class Controls/List/Remover
-   * @extends Core/Control
-   * @mixes Controls/interface/IRemovable
-   * @control
-   * @public
-   * @author Авраменко А.С.
-   * @category List
-   */
-    
-   var Remover = Control.extend({
-      _beforeMount: function(options, context) {
-         _private.updateDataOptions(this, context.dataOptions);
-      },
+/**
+ * Сontrol to remove the list items in recordSet and dataSource.
+ * Сontrol must be in one Controls.Container.Data with a list.
+ * <a href="/materials/demo/demo-ws4-operations-panel?v=19.100">Demo examples</a>.
+ * @class Controls/List/Remover
+ * @extends Core/Control
+ * @mixes Controls/interface/IRemovable
+ * @control
+ * @public
+ * @author Авраменко А.С.
+ * @category List
+ */
 
-      _beforeUpdate: function(options, context) {
-         _private.updateDataOptions(this, context.dataOptions);
-      },
+var Remover = Control.extend({
+    _beforeMount: function (options, context) {
+        _private.updateDataOptions(this, context.dataOptions);
+    },
 
-      removeItems: function(items) {
-         var
+    _beforeUpdate: function (options, context) {
+        _private.updateDataOptions(this, context.dataOptions);
+    },
+
+    removeItems: function (items) {
+        var
             self = this,
             itemsDeferred;
 
-         //Support removing with mass selection.
-         //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
-         itemsDeferred = items instanceof Array ? Deferred.success(items) : getItemsBySelection(items, this._source, this._items, this._filter);
+        //Support removing with mass selection.
+        //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+        itemsDeferred = items instanceof Array ? Deferred.success(items) : getItemsBySelection(items, this._source, this._items, this._filter);
 
-         itemsDeferred.addCallback(function(items) {
-            _private.beforeItemsRemove(self, items).addCallback(function(result) {
-               if (result !== false) {
-                  _private.removeFromSource(self, items).addCallback(function(result) {
-                     _private.removeFromItems(self, items);
-                     return result;
-                  }).addBoth(function(result) {
-                     _private.afterItemsRemove(self, items, result);
-                  });
-               }
+        itemsDeferred.addCallback(function (items) {
+            _private.beforeItemsRemove(self, items).addCallback(function (result) {
+                if (result !== false) {
+                    _private.removeFromSource(self, items).addCallback(function (result) {
+                        _private.removeFromItems(self, items);
+                        return result;
+                    }).addBoth(function (result) {
+                        _private.afterItemsRemove(self, items, result);
+                    });
+                }
             });
-         });
-      }
-   });
-
-   Remover.contextTypes = function() {
-      return {
-         dataOptions: dataOptions
-      };
-   };
-
-   return Remover;
+        });
+    }
 });
+
+Remover.contextTypes = function () {
+    return {
+        dataOptions: dataOptions
+    };
+};
+
+export = Remover;

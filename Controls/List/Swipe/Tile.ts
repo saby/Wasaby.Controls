@@ -1,77 +1,71 @@
-define('Controls/List/Swipe/Tile', [
-   'Controls/List/Swipe/Constants'
-], function(
-   swipeConstants
-) {
-   'use strict';
+import swipeConstants = require('Controls/List/Swipe/Constants');
 
-   var _private = {
-      initItemsForSwipe: function(itemActions, actionsHeight) {
-         var
+var _private = {
+    initItemsForSwipe: function (itemActions, actionsHeight) {
+        var
             i,
             visibleItems = [],
             sum = 0,
-            actionsWithIcons = itemActions.all.filter(function(item) {
-               return item.icon !== undefined;
+            actionsWithIcons = itemActions.all.filter(function (item) {
+                return item.icon !== undefined;
             });
 
-         for (i = 0; i <= actionsWithIcons.length - 1; i++) {
+        for (i = 0; i <= actionsWithIcons.length - 1; i++) {
             sum += swipeConstants.BIG_ICON_SIZE + swipeConstants.VERTICAL_MARGIN;
             if (actionsHeight >= sum) {
-               visibleItems.push(actionsWithIcons[i]);
+                visibleItems.push(actionsWithIcons[i]);
             } else {
-               break;
+                break;
             }
             sum += swipeConstants.SEPARATOR_WIDTH;
-         }
+        }
 
 
-         if (visibleItems.length < actionsWithIcons.length) {
+        if (visibleItems.length < actionsWithIcons.length) {
             visibleItems.pop();
             visibleItems.push({
-               icon: 'icon-ExpandDown icon-primary ' + swipeConstants.ACTION_ICON_CLASS,
-               isMenu: true
+                icon: 'icon-ExpandDown icon-primary ' + swipeConstants.ACTION_ICON_CLASS,
+                isMenu: true
             });
-         }
+        }
 
-         return {
+        return {
             all: itemActions.all,
             showedFirst: visibleItems
-         };
-      },
+        };
+    },
 
-      needShowSeparator: function(action, itemActions) {
-         var actionIndex = itemActions.all.indexOf(action) + 1;
+    needShowSeparator: function (action, itemActions) {
+        var actionIndex = itemActions.all.indexOf(action) + 1;
 
-         return !action.isMenu && actionIndex !== itemActions.showedFirst.length;
-      }
-   };
+        return !action.isMenu && actionIndex !== itemActions.showedFirst.length;
+    }
+};
 
-   var Tile = {
-      needShowSeparator: function(action, itemActions) {
-         return _private.needShowSeparator(action, itemActions);
-      },
+var Tile = {
+    needShowSeparator: function (action, itemActions) {
+        return _private.needShowSeparator(action, itemActions);
+    },
 
-      needShowIcon: function() {
-         return true;
-      },
+    needShowIcon: function () {
+        return true;
+    },
 
-      needShowTitle: function() {
-         return false;
-      },
+    needShowTitle: function () {
+        return false;
+    },
 
-      initItemsForSwipe: function(itemActions, actionsHeight) {
-         return _private.initItemsForSwipe(itemActions, actionsHeight);
-      },
+    initItemsForSwipe: function (itemActions, actionsHeight) {
+        return _private.initItemsForSwipe(itemActions, actionsHeight);
+    },
 
-      getSwipeConfig: function() {
-         return {
+    getSwipeConfig: function () {
+        return {
             direction: 'column',
             isFull: true,
             swipeIconSize: 'big'
-         };
-      }
-   };
+        };
+    }
+};
 
-   return Tile;
-});
+export = Tile;

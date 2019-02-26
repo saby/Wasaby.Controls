@@ -1,9 +1,6 @@
-define('Controls/List/Mover/MoveDialog', [
-   'Core/Control',
-   'wml!Controls/List/Mover/MoveDialog/MoveDialog',
-   'css!theme?Controls/List/Mover/MoveDialog/MoveDialog'
-], function(Control, template) {
-   'use strict';
+import Control = require('Core/Control');
+import template = require('wml!Controls/List/Mover/MoveDialog/MoveDialog');
+require('css!theme?Controls/List/Mover/MoveDialog/MoveDialog');
 
    /**
     * A standard dialog template for selecting a target item for moving items.
@@ -32,7 +29,7 @@ define('Controls/List/Mover/MoveDialog', [
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
 
-   return Control.extend({
+   export = Control.extend({
       _template: template,
       _itemActions: undefined,
 
@@ -76,4 +73,3 @@ define('Controls/List/Mover/MoveDialog', [
          this._notify('close', [], {bubbling: true});
       }
    });
-});

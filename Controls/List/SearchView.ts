@@ -1,28 +1,23 @@
-define('Controls/List/SearchView', [
-   'Controls/List/Grid/GridView',
-   'wml!Controls/List/SearchView/Item',
-   'Controls/BreadCrumbs',
-   'Controls/Decorator/Highlight',
-   'wml!Controls/List/SearchView/SearchBreadCrumbsContent'
-], function(GridView, DefaultItemTpl) {
+import GridView = require('Controls/List/Grid/GridView');
+import DefaultItemTpl = require('wml!Controls/List/SearchView/Item');
+require('Controls/BreadCrumbs');
+require('Controls/Decorator/Highlight');
+require('wml!Controls/List/SearchView/SearchBreadCrumbsContent');
 
-   'use strict';
-
-   var
-      SearchView = GridView.extend({
-         _defaultItemTemplate: DefaultItemTpl,
-         _onSearchItemClick: function(e) {
+var
+    SearchView = GridView.extend({
+        _defaultItemTemplate: DefaultItemTpl,
+        _onSearchItemClick: function (e) {
             e.stopPropagation();
-         },
-         _onSearchPathClick: function(e, item) {
+        },
+        _onSearchPathClick: function (e, item) {
             this._notify('itemClick', [item, e], {bubbling: true});
-         },
-         getDefaultOptions: function() {
+        },
+        getDefaultOptions: function () {
             return {
-               leftPadding: 'S'
+                leftPadding: 'S'
             };
-         }
-      });
+        }
+    });
 
-   return SearchView;
-});
+export = SearchView;

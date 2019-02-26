@@ -1,14 +1,9 @@
-define('Controls/List/SearchView/SearchGridViewModel', [
-   'Controls/List/TreeGridView/TreeGridViewModel',
-   'Controls/List/SearchView/SearchViewModel'
-], function(TreeGridViewModel, SearchViewModel) {
+import TreeGridViewModel = require('Controls/List/TreeGridView/TreeGridViewModel');
+import SearchViewModel = require('Controls/List/SearchView/SearchViewModel');
 
-   'use strict';
-   
-   var SearchGridViewModel = TreeGridViewModel.extend({
-      _createModel: function(cfg) {
-         return new SearchViewModel(cfg);
-      }
-   });
-   return SearchGridViewModel;
+var SearchGridViewModel = TreeGridViewModel.extend({
+    _createModel: function (cfg) {
+        return new SearchViewModel(cfg);
+    }
 });
+export = SearchGridViewModel;

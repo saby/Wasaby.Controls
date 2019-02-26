@@ -1,7 +1,3 @@
-define('Controls/List/TreeGrid/Styles', [],
-   function() {
-   });
-
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/TreeGrid/Styles
