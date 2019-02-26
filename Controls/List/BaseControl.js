@@ -863,7 +863,7 @@ define('Controls/List/BaseControl', [
       constructor: function(options) {
          BaseControl.superclass.constructor.apply(this, arguments);
          options = options || {};
-         this.__errorController = options.errorController || new ErrorController({});
+         this.__errorController = options.errorController || new dataSource.error.Controller({});
       },
 
       /**
