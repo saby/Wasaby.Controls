@@ -249,7 +249,9 @@ define('Controls/List/Grid/GridViewModel', [
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
             this._onListChangeFn = function(event, changesType) {
-               this._ladder = _private.prepareLadder(this);
+               if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
+                  this._ladder = _private.prepareLadder(this);
+               }
                this._nextVersion();
                this._notify('onListChange', changesType);
             }.bind(this);
