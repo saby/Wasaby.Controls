@@ -777,6 +777,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setItemActions(item, actions);
          },
 
+         nextModelVersion: function() {
+            this._model.nextModelVersion.apply(this._model, arguments);
+         },
+
          _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
          },
