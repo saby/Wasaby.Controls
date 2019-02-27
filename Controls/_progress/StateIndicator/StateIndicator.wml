@@ -1,8 +1,8 @@
 <div>
-	<span class="controls-ProcessStateIndicator">		
+	<span class="controls-StateIndicator theme-{{_options.theme}}">		
 	   <ws:for data="i in _options.numSectors">
 	      <span 
-	         class="controls-ProcessStateIndicator__box {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-ProcessStateIndicator__emptySector' }}" 
+	          class="controls-StateIndicator__box {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-StateIndicator__emptySector' }} theme-{{_options.theme}}" 
 	         data-item="{{ _colorState[i] ? _colorState[i] : -1 }}"
 	         on:mouseover="_mouseOverIndicatorHandler(_colorState[i] ? _colorState[i] : -1)"
 	      ></span>

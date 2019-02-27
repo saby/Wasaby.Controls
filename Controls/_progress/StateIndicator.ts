@@ -1,14 +1,13 @@
 import Control = require('Core/Control');
 import entity = require('Types/entity');
-import template = require('wml!Controls/ProcessStateIndicator/ProcessStateIndicator');
-import require('css!Controls/ProcessStateIndicator/ProcessStateIndicator');   
+import template = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 
 var defaultColors = [
-      'controls-ProcessStateIndicator__sector1', 
-      'controls-ProcessStateIndicator__sector2', 
-      'controls-ProcessStateIndicator__sector3'
+      'controls-StateIndicator__sector1', 
+      'controls-StateIndicator__sector2', 
+      'controls-StateIndicator__sector3'
    ],
-   DEFAULT_EMPTY_COLOR_CLASS = 'controls-ProcessStateIndicator__emptySector',
+   DEFAULT_EMPTY_COLOR_CLASS = 'controls-StateIndicator__emptySector',
    _private = {
 
       setColors: function(_colors, _numValues) {
@@ -84,7 +83,7 @@ var defaultColors = [
       }
    };
    
-var ProcessStateIndicator = Control.extend(
+var StateIndicator = Control.extend(
    {
       _template: template,
       _colorState: [],
@@ -110,8 +109,9 @@ var ProcessStateIndicator = Control.extend(
 
    });
 
-ProcessStateIndicator.getDefaultOptions = function getDefaultOptions() {
+StateIndicator.getDefaultOptions = function getDefaultOptions() {
    return {
+      theme: "default"
       numSectors: 10,
       numValues: 1,
       state: [0],
@@ -119,7 +119,7 @@ ProcessStateIndicator.getDefaultOptions = function getDefaultOptions() {
    };
 };
 
-ProcessStateIndicator.getOptionTypes = function getOptionTypes() {
+StateIndicator.getOptionTypes = function getOptionTypes() {
    return {
       numSectors: entity.descriptor(Number),
       numValues: entity.descriptor(Number),
@@ -128,7 +128,9 @@ ProcessStateIndicator.getOptionTypes = function getOptionTypes() {
    };
 };
 
-ProcessStateIndicator._private = _private;
-exprot default ProcessStateIndicator;
+StateIndicator._theme = ['Controls/_progress/progress'];
+
+StateIndicator._private = _private;
+export default StateIndicator;
 
 

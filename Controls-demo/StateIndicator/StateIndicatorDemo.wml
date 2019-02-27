@@ -3,7 +3,7 @@
     <div class="event-example__wrapper">
         <div class="exampleBlock">
             <h3>Example</h3>
-            <Controls.ProcessStateIndicator  colors="{{_colors}}" state="{{_state}}" numValues="{{_stateNumber}}" numSectors="{{_sectorNumber}}"/>
+            <Controls.progress:StateIndicator  colors="{{_colors}}" state="{{_state}}" numValues="{{_stateNumber}}" numSectors="{{_sectorNumber}}"/>
         </div>
         <div class="eventBlock">
             <div class="reset-header__wrapper">

@@ -1,5 +1,0 @@
-<Controls.Application.ApplicationWrapper caption="ProcessStateIndicator" demoname="Controls-demo/ProcessStateIndicator/StandartProcessStateIndicatorDemo.wml">
-    <ws:content>
-        <Controls-demo.ProcessStateIndicator.StandartProcessStateIndicatorDemo/>
-    </ws:content>
-</Controls.Application.ApplicationWrapper>

@@ -1,0 +1,30 @@
+.controls-StateIndicator.theme-@{themeName} {
+   margin: 0 @state-indicator-sector-side-padding;
+}
+
+.controls-StateIndicator__box.theme-@{themeName} {
+   display: inline-block;
+   width: @state-indicator-sector-width;
+   height: @state-indicator-sector-height;
+   margin-right: @state-indicator-sector-spacing;
+   
+   &:last-child {
+      margin-right: 0;
+   }   
+}
+
+.controls-StateIndicator__emptySector.theme-@{themeName} {
+    background: @state-indicator-empty-sector;    
+}
+
+.controls-StateIndicator__sector1.theme-@{themeName} {
+   background: @state-indicator-sector1;
+}
+
+.controls-StateIndicator__sector2.theme-@{themeName} {
+   background: @state-indicator-sector2;
+}
+
+.controls-StateIndicator__sector3.theme-@{themeName} {
+   background: @state-indicator-sector3;
+}
