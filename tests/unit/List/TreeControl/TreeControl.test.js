@@ -298,7 +298,7 @@ define([
          assert.equal(1, treeControl._options.root);
 
          // Test
-         return new Promise((resolve) => {
+         return new Promise(function(resolve) {
             setTimeout(function() {
                treeControl._root = 12;
                treeControl._afterUpdate();

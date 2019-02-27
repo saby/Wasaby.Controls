@@ -248,10 +248,10 @@ define('Controls/List/Grid/GridViewModel', [
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            this._onListChangeFn = function(event, changesType) {
+            this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                this._ladder = _private.prepareLadder(this);
                this._nextVersion();
-               this._notify('onListChange', changesType);
+               this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
             }.bind(this);
             this._onMarkedKeyChangedFn = function(event, key) {
                this._notify('onMarkedKeyChanged', key);
