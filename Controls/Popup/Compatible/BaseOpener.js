@@ -86,7 +86,7 @@ function(cMerge,
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
             if (!cfg.autoShow) {
-               cfg.closeByExternalClick = false;
+               cfg.closeOnOutsideClick = false;
                cfg.className += ' ws-hidden';
             }
          }
@@ -189,13 +189,13 @@ function(cMerge,
 
          cfg.className = cfg.className || '';
 
-         if (!cfg.hasOwnProperty('closeByExternalClick')) {
-            cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
+         if (!cfg.hasOwnProperty('closeOnOutsideClick')) {
+            cfg.closeOnOutsideClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
          }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
-            cfg.closeByExternalClick = false;
+            cfg.closeOnOutsideClick = false;
          }
 
          if (cfg.horizontalAlign) {
@@ -365,8 +365,8 @@ function(cMerge,
             center: 'center'
          };
 
-         if (cfg.hasOwnProperty('closeByExternalClick')) {
-            cfg.dialogOptions.autoHide = cfg.closeByExternalClick;
+         if (cfg.hasOwnProperty('closeOnOutsideClick')) {
+            cfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
          }
 
          if (cfg.hasOwnProperty('closeChildWindows')) {

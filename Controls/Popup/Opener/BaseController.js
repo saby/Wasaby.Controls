@@ -156,7 +156,7 @@ define('Controls/Popup/Opener/BaseController',
          },
          popupDeactivated: function(item) {
             var ManagerController = _private.getManagerController();
-            if (item.popupOptions.closeByExternalClick && ManagerController) {
+            if (item.popupOptions.closeOnOutsideClick && ManagerController) {
                ManagerController.remove(item.id);
             }
          },
