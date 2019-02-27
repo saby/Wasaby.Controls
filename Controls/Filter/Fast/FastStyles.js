@@ -11,6 +11,7 @@ define('Controls/Filter/Fast/FastStyles', [],
     * @css @color_FastFilter-text_hover Hover text color.
     * @css @color_FastFilter-text_active Active text color.
     * @css @color_FastFilter-text_readOnly readOnly text color.
+    * @css @font-size_FastFilter-text Font size of text.
     *
     * @css @color_FastFilter-arrow Arrow color.
     * @css @color_FastFilter-arrow_hover Hover arrow color.
