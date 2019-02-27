@@ -250,14 +250,15 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       _selectCallback: function(result) {
-         var parseItems;
+         var prepareItems;
 
          this._setItems(result);
-         parseItems = _private.getItems(this);
+         prepareItems = _private.getItems(this);
 
-         if (parseItems && parseItems.getCount() && this._options.historyId) {
+         // give the record in the correct format
+         if (prepareItems && prepareItems.getCount() && this._options.historyId) {
             _private.getHistoryService(this).addCallback(function(historyService) {
-               historyService.update(parseItems.at(0), {$_history: true});
+               historyService.update(prepareItems.at(0), {$_history: true});
                return historyService;
             });
          }

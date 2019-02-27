@@ -45,6 +45,12 @@
          setCloseState: function(self) {
             self._showContent = false;
             self._loading = null;
+
+            // when closing popup we reset the cache with recent keys
+            self._historyLoad = null;
+            if (self._filter) {
+               delete self._filter[HISTORY_KEYS_FIELD];
+            }
          },
          
          setSuggestMarkedKey: function(self, key) {
@@ -209,19 +215,21 @@
             if (self._historyLoad) {
                return self._historyLoad;
             }
-   
+
             self._historyLoad = new Deferred();
 
             //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
             _private.getHistoryService(self).addCallback(function(historyService) {
                historyService.query().addCallback(function(dataSet) {
-                  var keys = [];
+                  if (self._historyLoad) {
+                     var keys = [];
 
-                  dataSet.getRow().get('recent').each(function(item) {
-                     keys.push(item.get('ObjectId'));
-                  });
-   
-                  self._historyLoad.callback(keys);
+                     dataSet.getRow().get('recent').each(function(item) {
+                        keys.push(item.get('ObjectId'));
+                     });
+
+                     self._historyLoad.callback(keys);
+                  }
                });
 
                return historyService;
@@ -294,11 +302,13 @@
             var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
             var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
 
-            if (!newOptions.suggestState) {
-               _private.setCloseState(this);
-               _private.setSuggestMarkedKey(this, null);
-            } else if (this._options.suggestState !== newOptions.suggestState) {
-               _private.open(this);
+            if (newOptions.suggestState !== this._options.suggestState) {
+               if (newOptions.suggestState) {
+                  _private.open(this);
+               } else {
+                  _private.setCloseState(this);
+                  _private.setSuggestMarkedKey(this, null);
+               }
             }
 
             if (needSearchOnValueChanged || valueCleared) {
@@ -411,7 +421,6 @@
             this._inputActive = false;
             this._notify('choose', [item]);
             if (this._options.historyId) {
-               this._historyLoad = null;
                _private.getHistoryService(this).addCallback(function(historyService) {
                   historyService.update(item, {$_history: true});
                   return historyService;
