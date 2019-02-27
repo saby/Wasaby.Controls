@@ -251,10 +251,16 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       },
       collectDependencies: function(deps) {
          var files = {
-            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: []
+            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: [],
+            cssToDefine: []
          };
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);
+         if(allDeps.css) {
+            for(var key in allDeps.css) {
+               files.cssToDefine.push(key);
+            }
+         }
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute, this.themesActive); // Find all bundles, and removes dependencies that are included in bundles
 
          // Collect dictionaries

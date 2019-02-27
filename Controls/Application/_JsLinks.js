@@ -33,8 +33,7 @@ define('Controls/Application/_JsLinks',
                self.js = res.js;
                self.tmpl = res.tmpl;
                self.wml = res.wml;
-               self.themedCss = res.css.themedCss;
-               self.simpleCss = res.css.simpleCss;
+               self.cssToDefine = res.cssToDefine;
                self.receivedStateArr = res.receivedStateArr;
                innerDef.callback(true);
                return res;
@@ -46,13 +45,9 @@ define('Controls/Application/_JsLinks',
          },
          getDefines: function() {
             var result = '';
-            if (this.themedCss && this.simpleCss) {
-               var i;
-               for (i = 0; i < this.simpleCss.length; i++) {
-                  result += 'define("css!' + this.simpleCss[i] + '", "");';
-               }
-               for (i = 0; i < this.themedCss.length; i++) {
-                  result += 'define("css!' + this.getCssNameForDefineWithTheme(this.themedCss[i]) + '", "");';
+            if (this.cssToDefine) {
+               for (var i = 0; i < this.cssToDefine.length; i++) {
+                  result += 'define("' + this.cssToDefine[i] + '", "");';
                }
             }
 
