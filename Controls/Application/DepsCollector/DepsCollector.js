@@ -256,8 +256,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
          };
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);
-         if(allDeps.css) {
-            for(var key in allDeps.css) {
+         if (allDeps.css) {
+            for (var key in allDeps.css) {
                files.cssToDefine.push(key);
             }
          }
