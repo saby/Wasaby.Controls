@@ -4,10 +4,10 @@ define([
    var modDeps = {
       "aaa/aaa": [],
       "css!aaa/bbb": [],
-      "css!themed?aaat/bbbt": [],
+      "css!aaat/bbbt": [],
       "tmpl!aaa/ccc": [],
       "css!aaa/ddd": [],
-      "css!theme?aaat/dddt": [],
+      "css!aaat/dddt": [],
       "ccc/aaa": ["ccc/ccc", "css"],
       "ccc/ccc": ["ddd/aaa"],
       "js/tmplDep": ["tmpl!tmplDep"],
@@ -24,7 +24,7 @@ define([
    var bundlesRoute = {
       "aaa/aaa": "resources/bdl/aaa.package.min.js",
       "css!aaa/bbb": "resources/bdl/aaa.package.min.css",
-      "css!theme?aaat/bbbt": "resources/bdl/aaat.package.min.css",
+      "css!aaat/bbbt": "resources/bdl/aaat.package.min.css",
       "tmpl!aaa/ccc": "resources/bdl/bbb.package.min.js",
       "vvv/aaa": "resources/bdl/ccc.package.min.js",
       "vvv/bbb": "resources/bdl/ccc.package.min.js",
