@@ -280,7 +280,7 @@ define('Controls/List/Grid/GridViewModel', [
                result = cClone(column);
             if (isNotFullGridSupport) {
                if (result.width === '1fr') {
-                  result.width = 'auto';
+                  result.width = '100%';
                }
             }
             return result;
