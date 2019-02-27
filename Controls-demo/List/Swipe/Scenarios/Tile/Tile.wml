@@ -1,0 +1,14 @@
+<Controls.Explorer
+   parentProperty="parent"
+   nodeProperty="type"
+   displayProperty="title"
+   imageProperty="image"
+   viewMode="tile"
+   keyProperty="id"
+   source="{{_source}}"
+   swipeDirection="column"
+   itemActions="{{_itemActions}}">
+   <ws:tileItemTemplate>
+      <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
+   </ws:tileItemTemplate>
+</Controls.Explorer>

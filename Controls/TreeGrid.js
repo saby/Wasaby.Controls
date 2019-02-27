@@ -34,6 +34,7 @@ define('Controls/TreeGrid', [
     * @mixes Controls/List/Grid/GridStyles
     * @mixes Controls/List/TreeGrid/Styles
     * @mixes Controls/List/ItemActions/ItemActionsStyles
+    * @mixes Controls/List/Swipe/SwipeStyles
     *
     * @mixes Controls/List/Mover/MoveDialog/Styles
     * @mixes Controls/List/PagingStyles
