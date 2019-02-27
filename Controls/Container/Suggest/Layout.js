@@ -10,14 +10,14 @@
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
       'Core/constants',
+      'Controls/History/LoadService',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, constants, LoadService) {
       'use strict';
       
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
       var HISTORY_KEYS_FIELD = 'historyKeys';
-      var COUNT_HISTORY_ITEMS = 12;
       
       /* if suggest is opened and marked key from suggestions list was changed,
          we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
@@ -198,14 +198,9 @@
             self._misspellingCaption = value;
          },
          getHistoryService: function(self) {
-            if (!self._historyService) {
-               self._historyServiceLoad = new Deferred();
-               require(['Controls/History/Service'], function(HistoryService) {
-                  self._historyService = new HistoryService({
-                     historyId: self._options.historyId,
-                     recent: COUNT_HISTORY_ITEMS
-                  });
-                  self._historyServiceLoad.callback(self._historyService);
+            if (!self._historyServiceLoad) {
+               self._historyServiceLoad = LoadService({
+                  historyId: self._options.historyId
                });
             }
 
@@ -264,7 +259,6 @@
          _searchResult: null,
          _searchDelay: null,
          _dependenciesDeferred: null,
-         _historyService: null,
          _historyLoad: null,
          _showContent: false,
          _inputActive: false,

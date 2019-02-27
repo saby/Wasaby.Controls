@@ -8,11 +8,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Types/collection',
    'Core/core-merge',
    'Controls/Utils/tmplNotify',
-   'Controls/Utils/ToSourceModel'
-], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel) {
+   'Controls/Utils/ToSourceModel',
+   'Controls/History/LoadService'
+], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel, LoadService) {
    'use strict';
-
-   var COUNT_HISTORY_ITEMS = 12;
 
    var _private = {
       loadItems: function(self, filter, keyProperty, selectedKeys, source, sourceIsChanged) {
@@ -130,14 +129,9 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       getHistoryService: function(self) {
-         if (!self._historyService) {
-            self._historyServiceLoad = new Deferred();
-            require(['Controls/History/Service'], function(HistoryService) {
-               self._historyService = new HistoryService({
-                  historyId: self._options.historyId,
-                  recent: COUNT_HISTORY_ITEMS
-               });
-               self._historyServiceLoad.callback(self._historyService);
+         if (!self._historyServiceLoad) {
+            self._historyServiceLoad = LoadService({
+               historyId: self._options.historyId
             });
          }
 
@@ -150,7 +144,6 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _notifyHandler: tmplNotify,
       _selectedKeys: null,
       _items: null,
-      _historyService: null,
       _historyServiceLoad: null,
 
       _beforeMount: function(options, context, receivedState) {
