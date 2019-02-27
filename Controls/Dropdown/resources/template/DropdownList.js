@@ -7,9 +7,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
       'wml!Controls/Dropdown/resources/template/itemTemplate',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
-      'Core/helpers/Function/debounce',
-
-      'css!theme?Controls/Dropdown/resources/template/DropdownList'
+      'Core/helpers/Function/debounce'
    ],
    function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce) {
    
@@ -23,10 +21,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
             }
          },
-         setPopupOptions: function(self, horizontalAlign) {
+         setPopupOptions: function(self, horizontalAlign, theme) {
             var align = horizontalAlign || 'right';
             self._popupOptions = {
-               className: 'controls-DropdownList__subMenu controls-DropdownList__subMenu_margin',
+               className: 'controls-DropdownList__subMenu controls-DropdownList__subMenu_margin theme_' + theme,
 
                // submenu doesn't catch focus, because parent menu can accept click => submenu will deactivating and closing
                autofocus: false,
@@ -193,7 +191,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (newOptions.stickyPosition.horizontalAlign &&
                (!this._popupOptions || this._popupOptions.horizontalAlign !== newOptions.stickyPosition.horizontalAlign)) {
                this._dropdownClass = _private.getDropdownClass(newOptions.stickyPosition.verticalAlign, newOptions.typeShadow);
-               _private.setPopupOptions(this, newOptions.stickyPosition.horizontalAlign.side);
+               _private.setPopupOptions(this, newOptions.stickyPosition.horizontalAlign.side, newOptions.theme);
             }
          },
 
@@ -318,6 +316,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
             typeShadow: 'default'
          };
       };
+
+      DropdownList._theme = ['Controls/Dropdown/resources/template/DropdownList'];
 
       return DropdownList;
    });
