@@ -5,7 +5,7 @@
         on:suggestStateChanged="_suggestStateChanged()"
         suggestState="{{_suggestState}}"
         value="{{_simpleViewModel.getDisplayValue()}}"
-        suggestTemplate="{{_options.suggestTemplate}}"
+        suggestTemplate="{{_suggestTemplate}}"
         footerTemplate="{{_options.footerTemplate}}"
         emptyTemplate="{{_options.emptyTemplate}}"
         minSearchLength="{{_options.minSearchLength}}"
