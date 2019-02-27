@@ -9,37 +9,49 @@ define('Controls/interface/IOpener', [], function() {
     */
 
    /**
-    * @typedef {Object} eventHandlers
-    * @property {Function} onResult Occurs when the pop-up notify 'sendResult'. More information you can read <a href='/doc/platform/developmentapl/interface-development/ws4/components/openers/#_8/'> here</a>
-    * @property {Function} onClose Occurs when the pop-up is closed.
+    * @name Controls/interface/IOpener#isOpened
+    * @description Popup opened status.
+    * @function
+    */
+
+
+   /**
+    * Opens a popup
+    * @function Controls/Popup/Opener/Base#open
+    * @param popupOptions Popup configuration
+    * @param controller Popup Controller
     */
 
    /**
-    * @typedef {Object} PopupOptions
-    * @property {Boolean} closeByExternalClick Close popup by click on external node.
-    * @property {String|Function} template Popup template.
-    * @property {templateOptions} templateOptions Options for the template component.
-    * @property {eventHandlers} eventHandlers Handlers for pop-up event.
-    * @property {Object} opener The component that opened the popup. Used to establish a logical connection.
+    * @name Controls/interface/IOpener#autofocus
+    * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
     */
 
    /**
-    * @name Controls/interface/IOpener#closePopupBeforeUnmount
-    * @cfg {Boolean} Determines whether to close the popup when the component is destroyed.
-    * Default value: true
-    */
-
-
-   /** @name Controls/interface/IOpener#popupOptions
-    * @cfg {PopupOptions} Sets the popup configuration.
+    * @name Controls/interface/IOpener#modal
+    * @cfg {Boolean} Determines whether the window is modal.
     */
 
    /**
-    * @name Controls/interface/IOpener#displayMode
-    * @cfg {String} Allows display multiple popups
-    * @variant 'single' default. Show only one popup at a time
-    * @variant 'multiple' Allow multiple popups on a screen
+    * @name Controls/interface/IOpener#className
+    * @cfg {String} Class names of popup.
     */
+
+   /**
+    * @name Controls/interface/IOpener#closeOnOutsideClick
+    * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
+    */
+
+   /**
+    * @name Controls/interface/IOpener#template
+    * @cfg {String|Function} Template inside popup.
+    */
+
+   /**
+    * @name Controls/interface/IOpener#templateOptions
+    * @cfg {String|Function} Template options inside popup.
+    */
+
 
    /**
     * @event Controls/interface/IOpener#close Occurs when popup is closed.

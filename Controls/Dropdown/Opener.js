@@ -92,7 +92,7 @@ define('Controls/Dropdown/Opener',
                Env.IoC.resolve('ILogger').error('Dropdown.Opener', 'Опцию className надо передавать через popupOptions');
             }
             popupOptions.template = 'Controls/Dropdown/resources/template/DropdownList';
-            popupOptions.closeByExternalClick = true;
+            popupOptions.closeOnOutsideClick = true;
          }
       };
 
