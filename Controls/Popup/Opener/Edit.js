@@ -133,7 +133,7 @@ define('Controls/Popup/Opener/Edit',
           *
           *        _itemClick(event, record) {
           *           var popupOptions = {
-          *              closeByExternalClick: false,
+          *              closeOnOutsideClick: false,
           *           };
           *
           *           var meta = {

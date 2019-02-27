@@ -68,19 +68,6 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          });
       });
    
-      it('_resize', function() {
-         var suggest = new Suggest();
-         var suggestClosed = false;
-         suggest.saveOptions({suggestState: true});
-         suggest._notify = function() {
-            suggestClosed = true;
-         };
-   
-         suggest._resize({}, null);
-         assert.isFalse(suggestClosed);
-      });
-      
-   
       it('Suggest::_private.hasMore', function() {
          assert.isTrue(Suggest._private.hasMore(hasMoreTrue));
          assert.isFalse(Suggest._private.hasMore(hasMoreFalse));
@@ -182,23 +169,29 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          //case 2. emptyTemplate is set, searchValue - is empty string/null
          self._options.emptyTemplate = {};
          assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
          
          //case 3. emptyTemplate is set, searchValue - is set
          self._searchValue = 'test';
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result))
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult))
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
    
          //case 4. emptyTemplate is set, search - is empty string, historyId is set
          self._searchValue = '';
-         self._options.historyId = '123'
-         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result))
+         self._options.historyId = '123';
+         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
+   
+         //emptyTemplate is set, search - is set, historyId is set
+         self._searchValue = '123';
+         self._options.historyId = '123';
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
          
-         //case 5. emptyTemplate is null/undefined, search - is empty string, historyId is set
+         //case 6. emptyTemplate is null/undefined, search - is empty string, historyId is set
          self._options.emptyTemplate = null;
-         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult))
-         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result))
+         assert.isFalse(!!Suggest._private.shouldShowSuggest(self, emptyResult));
+         assert.isTrue(!!Suggest._private.shouldShowSuggest(self, result));
       });
    
       it('Suggest::_private.prepareFilter', function() {
