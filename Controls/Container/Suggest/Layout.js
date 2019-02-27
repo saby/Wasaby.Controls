@@ -461,18 +461,7 @@
             });
             _private.close(this);
          },
-
-         /* По стандарту все выпадающие списки закрываются при скроле.
-            Мы не можем понять, что вызвало изменение положения элемента, ресайз или скролл,
-            поэтому при ресайзе тоже закрываем. */
-         _resize: function(syntheticEvent, event) {
-            /* событие resize могут вызывать компоненты при изменении своего размера,
-               но нам интересен только resize у window, поэтому проверяем.
-               event'a может не быть, если resize не нативный, котрый может быть вызван через registrator просто при изменении размеров контрола. */
-            if (event && event.target === window) {
-               _private.close(this);
-            }
-         },
+         
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
