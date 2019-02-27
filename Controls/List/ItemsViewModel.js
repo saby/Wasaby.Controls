@@ -6,7 +6,6 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
    'Controls/Constants',
-   'Core/IoC',
    'Types/collection',
    'Env/Env'
 ], function(
@@ -14,7 +13,6 @@ define('Controls/List/ItemsViewModel', [
    ItemsUtil,
    cInstance,
    ControlsConstants,
-   IoC,
    collection,
    Env
 ) {
