@@ -66,21 +66,28 @@ define(
 
          describe('_mouseenterHandler', function() {
             it('Should show scrollbar and generate scrollbarTaken event on mouseenter', function() {
-               const sandbox = sinon.sandbox.create();
+               const sandbox = sinon.sandbox.create(),
+                  event = {
+                     blockUpdate: false
+                  };
                scroll._displayState = { hasScroll: true };
                scroll._options.scrollbarVisible = true;
                sandbox.stub(scroll, '_notify');
-               scroll._mouseenterHandler();
+               scroll._mouseenterHandler(event);
+               assert.isTrue(event.blockUpdate);
                sinon.assert.calledWith(scroll._notify, 'scrollbarTaken');
                assert.isTrue(scroll._scrollbarVisibility());
                sandbox.restore();
             });
             it('Should hide scrollbar and generate scrollbarReleased event on mouseleave', function() {
-               const sandbox = sinon.sandbox.create();
+               const sandbox = sinon.sandbox.create(),
+                  event = {
+                     blockUpdate: false
+                  };;
                scroll._displayState = { hasScroll: false };
                sandbox.stub(scroll, '_notify');
-               scroll._mouseenterHandler();
-               scroll._mouseleaveHandler();
+               scroll._mouseenterHandler(event);
+               scroll._mouseleaveHandler(event);
                sinon.assert.calledWith(scroll._notify, 'scrollbarReleased');
                assert.isFalse(scroll._scrollbarVisibility());
                sandbox.restore();
