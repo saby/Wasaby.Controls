@@ -6,6 +6,12 @@
    overflow: hidden;
    display: flex;
    flex-direction: column;
+
+   &:hover {
+      > .controls-Scroll__scrollbar {
+         visibility: visible;
+      }
+   }
 }
 
 // Use "regular" scrolling, where the content immediately ceases to scroll when you remove your finger from the touchscreen.
@@ -24,6 +30,10 @@
    right: 0;
    bottom: 0;
    z-index: @z-index_Scroll-contentEnvironment;
+}
+
+.controls-Scroll__scrollbar_hidden {
+   visibility: hidden;
 }
 
 .controls-Scroll__content {
@@ -47,7 +57,7 @@
  * В противном случае это вызовет тормоза вместо оптимизации.
  * Подробнее https://developer.mozilla.org/ru/docs/Web/CSS/will-change.
  */
-.controls-Scroll__content_possibleScroll {
+.controls-Scroll__content_possibleScroll:hover {
    will-change: scroll-position;
 }
 
