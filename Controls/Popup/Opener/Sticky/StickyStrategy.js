@@ -1,7 +1,7 @@
 /**
  * Created by as.krasilnikov on 21.03.2018.
  */
-define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyboardHelper'], function(TouchKeyboardHelper) {
+define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyboardHelper', 'Core/core-merge'], function(TouchKeyboardHelper, cMerge) {
    var INVERTING_CONST = {
       top: 'bottom',
       bottom: 'top',
@@ -129,14 +129,6 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             });
          });
 
-         // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
-         if (popupCfg.revertPositionStyle) {
-            // When positioning from the top of the target we consider' bottom ' coordinates
-            if (direction === 'vertical' && popupCfg.align.vertical.side === 'top') {
-               coordinate = this.getWindowSizes().height - Math.max(0, coordinate) - (size || popupCfg.sizes.height);
-            }
-         }
-
          return {
             coordinate: coordinate,
             size: size
@@ -148,11 +140,69 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             width: window.innerWidth,
             height: window.innerHeight - TouchKeyboardHelper.getKeyboardHeight()
          };
+      },
+
+      getPosition: function(popupCfg, targetCoords, direction) {
+         var position = {};
+         var isHorizontal = direction === 'horizontal';
+         if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
+            position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
+               targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'];
+         } else {
+            position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'];
+         }
+         return position;
+      },
+
+      checkOverflow: function(popupCfg, targetCoords, position, direction) {
+         var isHorizontal = direction === 'horizontal';
+         if (position[isHorizontal ? 'right' : 'bottom']) {
+            return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - targetCoords[popupCfg.corner[direction]];
+         }
+         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
+      },
+
+      calculatePosition: function(popupCfg, targetCoords, direction) {
+         var property = direction === 'horizontal' ? 'width' : 'height';
+         var position1 = _private.getPosition(popupCfg, targetCoords, direction);
+         var maxOverflow1 = _private.checkOverflow(popupCfg, targetCoords, position1, direction);
+         if (maxOverflow1 > 0) {
+            _private.invert(popupCfg, direction);
+
+            //https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+            popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
+            var position2 = _private.getPosition(popupCfg, targetCoords, direction);
+            var maxOverflow2 = _private.checkOverflow(popupCfg, targetCoords, position2, direction);
+            if (maxOverflow2 > 0) {
+               if (maxOverflow1 < maxOverflow2) {
+                  position1[property] = popupCfg.sizes[property] - maxOverflow1;
+                  return position1;
+               }
+               position2[property] = popupCfg.sizes[property] - maxOverflow2;
+               return position2;
+            }
+            return position2;
+         }
+         return position1;
+      },
+
+      getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
+         var position = {
+            // position: 'fixed'
+         };
+
+         cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'horizontal'));
+         cMerge(position, _private.calculatePosition(popupCfg, targetCoords, 'vertical'));
+         return position;
       }
    };
 
    return {
       getPosition: function(popupCfg, targetCoords) {
+         if (popupCfg.revertPositionStyle) {
+            //TODO: https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+            return _private.getPositionCoordinatesFixed(popupCfg, targetCoords);
+         }
          var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
          var horizontalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'horizontal');
          var verticalPosition = _private.getPositionCoordinates(popupCfg, targetCoords, targetPoint, 'vertical');
@@ -161,13 +211,6 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             width: horizontalPosition.size || popupCfg.config.maxWidth,
             height: verticalPosition.size || popupCfg.config.maxHeight
          };
-
-         // When positioning from the top of the target we consider' bottom ' coordinates
-         if (popupCfg.revertPositionStyle && popupCfg.align.vertical.side === 'top') {
-            position.bottom = verticalPosition.coordinate;
-         } else {
-            position.top = verticalPosition.coordinate;
-         }
 
          return position;
       },

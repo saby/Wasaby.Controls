@@ -44,6 +44,13 @@ define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus',
       getKeyboardHeight: function() {
          if (this.isKeyboardVisible()) {
             if (constants.browser.isMobileIOS) {
+               // на новых версиях ios(12.1.3/12.1.4), в горизонтальной ориентации иногда(!!!) клавиатура при своем показе
+               // уменьшает высоту экрана(как это и должно быть). в этом случае хэлпер должен вернуть высоту 0, чтобы
+               // окна не вычитали высоту клавиатуры из высоты страницы. P.S. Если открыть клаву в вертикальной ориентации
+               // и не закрывая ее поменять ориантацию, этот хак не поможет, код будет работать по старой логике.м
+               if (!this.isPortrait() && window.screen.availHeight / window.innerHeight > 2) {
+                  return 0;
+               }
                return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
          }
