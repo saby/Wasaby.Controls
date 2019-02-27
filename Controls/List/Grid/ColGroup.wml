@@ -1,0 +1,1 @@
+<ws:partial template="wml!Controls/_list/Grid/ColGroup" scope="{{_options}}" />
