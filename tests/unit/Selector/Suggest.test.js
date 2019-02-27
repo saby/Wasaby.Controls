@@ -29,6 +29,7 @@ define(
             keyProperty: 'id',
             value: 'New text',
             placeholder: 'This is placeholder',
+            suggestTemplate: {},
             source: new sourceLib.Memory({
                idProperty: 'id',
                data: items
@@ -49,6 +50,18 @@ define(
                assert.equal(suggest._value, 'Запись 2');
                done();
             });
+         });
+
+         it('_beforeMount suggestTemplateOptions', function() {
+            let suggest = getSuggest(config);
+            suggest._beforeMount(config);
+            assert.deepEqual(suggest._suggestTemplate, {templateOptions: {displayProperty: 'title'}});
+            let newConfig = Clone(config);
+            newConfig.suggestTemplate = {
+               templateOptions: {displayProperty: 'text', itemTemplate: 'newTemplate'}
+            };
+            suggest._beforeMount(newConfig);
+            assert.deepEqual(suggest._suggestTemplate, {templateOptions: {displayProperty: 'text', itemTemplate: 'newTemplate'}});
          });
 
          it('_beforeMount selectedKey not set', function() {
