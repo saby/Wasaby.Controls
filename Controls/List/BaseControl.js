@@ -772,6 +772,8 @@ define('Controls/List/BaseControl', [
          }
 
          // диалоговое с ошибкой
+         self._children &&
+         self._children.dialogOpener &&
          self._children.dialogOpener.open({
             template: config.template,
             templateOptions: config.options

@@ -126,7 +126,7 @@ define('Controls/FormController', [
       constructor: function(options) {
          FormController.superclass.constructor.apply(this, arguments);
          options = options || {};
-         this.__errorController = options.errorController || new dataSource.error.ErrorController({});
+         this.__errorController = options.errorController || new dataSource.error.Controller({});
       },
       _beforeMount: function(cfg, _, receivedState) {
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
@@ -576,6 +576,8 @@ define('Controls/FormController', [
          }
 
          // диалоговое с ошибкой
+         this._children &&
+         this._children.dialogOpener &&
          this._children.dialogOpener.open({
             template: config.template,
             templateOptions: config.options

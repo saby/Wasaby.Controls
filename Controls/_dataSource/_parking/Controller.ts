@@ -6,14 +6,15 @@ import { constants, IoC } from 'Env/Env';
 import { load } from 'Core/library';
 
 export type Config = {
-    handlers?: Array<Handler>;
+    handlers: Array<Handler>;
     configField: string;
 }
-const DEFAULT: Partial<Config> = {
-    handlers: [],
-    configField: 'parkingHandlers'
-};
-let ApplicationConfig = constants.ApplicationConfig || {};
+let getDefaultConfig = (): Partial<Config> => {
+    return {
+        handlers: [],
+        configField: 'parkingHandlers'
+    };
+}
 
 /// region helpers
 let log = (message) => {
@@ -22,8 +23,12 @@ let log = (message) => {
         message
     );
 };
+let getApplicationConfig = () => {
+    return constants.ApplicationConfig || {};
+};
 let getApplicationHandlers = (handlersField: string): Array<Handler | string> => {
-    let handlers = ApplicationConfig[handlersField];
+    let applicationConfig = getApplicationConfig();
+    let handlers = applicationConfig[handlersField];
     if (!Array.isArray(handlers)) {
         log(`ApplicationConfig:${handlersField} must be Array<Function>`);
         return [];
@@ -44,6 +49,9 @@ let findTemplate = (
     handlers: Array<Handler | string>,
     config: any
 ): Promise<ViewConfig | void> => {
+    if (!handlers.length) {
+        return Promise.resolve();
+    }
     let position: number = 0;
     let fire = () => {
         return getHandler(handlers[position]).then((handler: Handler) => {
@@ -52,7 +60,7 @@ let findTemplate = (
                 return result;
             }
             position++;
-            if (position < handler.length) {
+            if (position < handlers.length) {
                 return fire();
             }
         }, (error: Error) => {
@@ -97,8 +105,8 @@ let findTemplate = (
 export default class ParkingController {
     private __handlers: Array<Handler>;
     private __configField: string;
-    constructor(config: Config) {
-        let cfg = { ...DEFAULT, ...config };
+    constructor(config: Partial<Config> = {}) {
+        let cfg = { ...getDefaultConfig(), ...config };
         this.__handlers = cfg.handlers;
         this.__configField = cfg.configField;
     }
