@@ -118,7 +118,8 @@ define('Controls/Application/HeadData', [
                css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
                receivedStateArr: rcsData.serialized,
-               additionalDeps: Object.keys(rcsData.additionalDeps).concat(Object.keys(self.additionalDeps))
+               additionalDeps: Object.keys(rcsData.additionalDeps).concat(Object.keys(self.additionalDeps)),
+               cssToDefine: files.cssToDefine
             });
          });
       },
