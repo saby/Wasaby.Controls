@@ -568,6 +568,7 @@ define('Controls/List/BaseControl', [
                   if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                      self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
                   }
+                  _private.applyVirtualScroll(self);
                }
             }
             self._hasUndrawChanges = true;

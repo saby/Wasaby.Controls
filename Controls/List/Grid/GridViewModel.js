@@ -871,14 +871,6 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getChildren.apply(this._model, arguments);
          },
 
-         getDisplayCount: function() {
-            return this._model.getDisplayCount();
-         },
-
-         getDeepChildrenCount: function() {
-            return this._model.getDeepChildrenCount.apply(this._model, arguments);
-         },
-
          destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
