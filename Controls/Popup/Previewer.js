@@ -78,7 +78,7 @@ define('Controls/Popup/Previewer',
             var type = _private.getType(event.type);
 
             if (!this._isPopupOpened()) {
-               if (this._isNewEnvironment()) {
+               if (this._isNewEnvironment()) { // TODO: COMPATIBLE
                   this._close(event); // close opened popup to avoid jerking the content for repositioning
                   this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
                } else {
@@ -90,7 +90,7 @@ define('Controls/Popup/Previewer',
          _close: function(event) {
             var type = _private.getType(event.type);
 
-            if (this._isNewEnvironment()) {
+            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
                this._notify('closePreviewer', [type], { bubbling: true });
             } else {
                this._children.openerPreviewer.close(type);
@@ -98,7 +98,7 @@ define('Controls/Popup/Previewer',
          },
 
          _isPopupOpened: function() {
-            if (this._isNewEnvironment()) {
+            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
                return this._notify('isPreviewerOpened', [], {bubbling: true});
             }
             return this._children.openerPreviewer.isOpened();
@@ -111,7 +111,7 @@ define('Controls/Popup/Previewer',
          },
 
          _cancel: function(event, action) {
-            if (this._isNewEnvironment()) {
+            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
                this._notify('cancelPreviewer', [action], { bubbling: true });
             } else {
                this._children.openerPreviewer.cancel(action);
