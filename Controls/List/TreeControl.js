@@ -92,15 +92,9 @@ define('Controls/List/TreeControl', [
                   listViewModel.appendItems(list);
                }
                _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-               if (self._children.baseControl.getVirtualScroll()) {
-                  _private.updateItemsIndexesOnToggle(self, nodeKey, list.getCount(), expanded);
-               }
             });
          } else {
             _private.toggleExpandedOnModel(self, listViewModel, dispItem, expanded);
-            if (self._children.baseControl.getVirtualScroll()) {
-               _private.updateItemsIndexesOnToggle(self, nodeKey, listViewModel.getChildren(nodeKey).length, expanded);
-            }
          }
       },
       prepareHasMoreStorage: function(sourceControllers) {
@@ -238,16 +232,6 @@ define('Controls/List/TreeControl', [
          };
 
          findChildNodesRecursive(nodeKey);
-      },
-
-      updateItemsIndexesOnToggle: function(self, toggledItemId, itemsCount, expanded) {
-         var
-            baseControl = self._children.baseControl,
-            virtualScroll = baseControl.getVirtualScroll(),
-            toggledItemIndex = baseControl.getViewModel().getIndexByKey(toggledItemId);
-
-         virtualScroll.ItemsCount = baseControl.getViewModel().getCount();
-         virtualScroll.updateItemsIndexesOnToggle(toggledItemIndex, expanded, itemsCount);
       }
    };
 
