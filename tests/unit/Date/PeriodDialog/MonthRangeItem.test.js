@@ -1,6 +1,6 @@
 define([
    'Core/core-merge',
-   'Controls/Date/PeriodDialog/MonthsRangeItem',
+   'Controls/_datePopup/MonthsRangeItem',
    'Controls/Utils/Date',
    'unit/Calendar/Utils'
 ], function(
@@ -10,6 +10,8 @@ define([
    calendarTestUtils
 ) {
    'use strict';
+
+   MonthsRangeItem = MonthsRangeItem.default;
 
    const start = new Date(2018, 0, 1),
       end = new Date(2018, 0, 2);

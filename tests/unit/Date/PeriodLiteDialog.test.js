@@ -4,9 +4,9 @@ define([
    'Controls/Date/PeriodLiteDialog',
    'Controls/Utils/Date',
    'unit/Calendar/Utils',
-   'wml!Controls/Date/PeriodLiteDialog/ItemFull',
-   'wml!Controls/Date/PeriodLiteDialog/ItemMonths',
-   'wml!Controls/Date/PeriodLiteDialog/ItemQuarters'
+   'wml!Controls/_dateLitePopup/ItemFull',
+   'wml!Controls/_dateLitePopup/ItemMonths',
+   'wml!Controls/_dateLitePopup/ItemQuarters'
 ], function(
    coreMerge,
    PeriodLiteDialog,

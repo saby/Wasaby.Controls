@@ -17,7 +17,7 @@ var _private = {
         }
         if (window) {
             ARROW_WIDTH = getWidthUtil.getWidth('<span class="controls-BreadCrumbsView__arrow icon-size icon-DayForward"></span>');
-            BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>');
+            BREAD_CRUMB_MIN_WIDTH = getWidthUtil.getWidth('<div class="controls-BreadCrumbsView__title_min"></div>') + ARROW_WIDTH;
             DOTS_WIDTH = getWidthUtil.getWidth(itemTemplate({
                 itemData: {
                     getPropValue: ItemsUtil.getPropertyValue,
@@ -33,7 +33,7 @@ var _private = {
         initialized = true;
     },
 
-    getItemData: function (index, items, withOverflow) {
+    getItemData: function (index, items, withOverflow = false) {
         var
             currentItem = items[index],
             count = items.length;
