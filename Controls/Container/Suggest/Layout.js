@@ -129,7 +129,7 @@
              * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
             return hasItems ||
                    hasItems && self._options.historyId && !self._searchValue ||
-                   !self._options.historyId && self._options.emptyTemplate;
+                  (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
          },
          precessResultData: function(self, resultData) {
             self._searchResult = resultData;
