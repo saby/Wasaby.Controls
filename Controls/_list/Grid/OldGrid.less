@@ -8,6 +8,13 @@
   .controls-Grid_master {
     padding-right: 0;
   }
+  .controls-Grid__cell_master {
+    border-style: solid;
+    border-top-width: @border-width_List-masterList-item-top;
+    border-bottom-width: @border-width_List-masterList-item-bottom;
+    border-left-width: @border-width_List-masterList-item-left;
+    border-right-width: @border-width_List-masterList-item-right;
+  }
   .controls-Grid__row-cell__last-master {
     border-right-width: @border-width_List-masterList-right;
     border-right-color: @border-color_List-masterList;
@@ -15,12 +22,6 @@
   .controls-Grid__row-cell_selected__last-master {
     border-right-width: @border-width_List-masterList-right;
     border-right-color: @background-color_List-masterList-item_selected;
-  }
-  .controls-Grid__cell_master {
-    border-style: solid;
-    border-top-width: @border-width_List-masterList-item-top;
-    border-bottom-width: @border-width_List-masterList-item-bottom;
-    border-left-width: @border-width_List-masterList-item-left;
   }
   .controls-Grid__row-cell_selected-master {
     border-top-color: @border-color_List-masterList-item_selected-top;
@@ -89,6 +90,6 @@
     display: table-column;
   }
   .controls-Grid__row-cell-background-editing > .controls-Grid__row-cell__contentWrapper > .controls-itemActionsV {
-     display: inline-block;
+    display: inline-block;
   }
 }

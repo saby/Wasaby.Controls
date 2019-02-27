@@ -12,16 +12,16 @@ var
 
 var _private = {
 
-    sortActions: function (first, second) {
+    sortActions: function(first, second) {
         return (second.showType || 0) - (first.showType || 0);
     },
 
-    fillItemAllActions: function (item, options) {
+    fillItemAllActions: function(item, options) {
         var actions = [];
         if (options.itemActionsProperty) {
             actions = item.get(options.itemActionsProperty);
         } else {
-            options.itemActions.forEach(function (action) {
+            options.itemActions.forEach(function(action) {
                 if (!options.itemActionVisibilityCallback || options.itemActionVisibilityCallback(action, item)) {
                     if (action.icon && !~action.icon.indexOf(ACTION_ICON_CLASS)) {
                         action.icon += ' ' + ACTION_ICON_CLASS;
@@ -35,13 +35,13 @@ var _private = {
         return actions;
     },
 
-    updateItemActions: function (self, item, options, isTouch) {
+    updateItemActions: function(self, item, options, isTouch) {
         var
             all = _private.fillItemAllActions(item, options),
 
             showed = options.itemActionsPosition === 'outside'
                 ? all
-                : all.filter(function (action) {
+                : all.filter(function(action) {
                     return action.showType === tUtil.showType.TOOLBAR || action.showType === tUtil.showType.MENU_TOOLBAR;
                 });
 
@@ -62,7 +62,7 @@ var _private = {
         });
     },
 
-    updateActions: function (self, options, isTouch) {
+    updateActions: function(self, options, isTouch, collectionChanged) {
         if (options.itemActions) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
@@ -72,19 +72,32 @@ var _private = {
                     _private.updateItemActions(self, item, options, isTouch);
                 }
             }
+
+            /**
+             * Item's version consists of two parts:
+             * 1) Version from item.getVersion()
+             * 2) Version from list model which all items share.
+             *
+             * If we pass true as the first argument to nextModelVersion then the version inside list model will not get incremented,
+             * but the changed items will still get redrawn because their inner version was changed.
+             *
+             * We can use this behavior here to make updates a faster - if we know that the collection has changed then we don't need
+             * to update the version inside list model.
+             */
+            options.listModel.nextModelVersion(collectionChanged);
         }
     },
 
-    updateModel: function (self, newOptions, isTouch) {
+    updateModel: function(self, newOptions, isTouch) {
         _private.updateActions(self, newOptions, isTouch);
         newOptions.listModel.subscribe('onCollectionChange', self._onCollectionChangeFn);
     },
 
-    needActionsMenu: function (actions, itemActionsPosition) {
+    needActionsMenu: function(actions, itemActionsPosition) {
         var
             main = 0,
             additional = 0;
-        actions && actions.forEach(function (action) {
+        actions && actions.forEach(function(action) {
             if (action.showType === tUtil.showType.MENU_TOOLBAR) {
                 main++;
             }
@@ -101,7 +114,7 @@ var ItemActionsControl = Control.extend({
 
     _template: template,
 
-    _beforeMount: function (newOptions, context) {
+    _beforeMount: function(newOptions, context) {
         if (typeof window === 'undefined') {
             this.serverSide = true;
             return;
@@ -121,7 +134,7 @@ var ItemActionsControl = Control.extend({
         }
     },
 
-    _beforeUpdate: function (newOptions, context) {
+    _beforeUpdate: function(newOptions, context) {
         /**
          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
@@ -144,19 +157,19 @@ var ItemActionsControl = Control.extend({
         }
     },
 
-    _onItemActionsClick: function (event, action, itemData) {
+    _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData);
     },
 
-    _applyEdit: function (item) {
+    _applyEdit: function(item) {
         this._notify('commitActionClick', [item]);
     },
 
-    _cancelEdit: function (item) {
+    _cancelEdit: function(item) {
         this._notify('cancelActionClick', [item]);
     },
 
-    updateItemActions: function (item) {
+    updateItemActions: function(item) {
         /**
          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
@@ -166,13 +179,14 @@ var ItemActionsControl = Control.extend({
             isTouch = this._context.isTouch.isTouch;
         }
         _private.updateItemActions(this, item, this._options, isTouch);
+        this._options.listModel.nextModelVersion();
     },
 
-    _beforeUnmount: function () {
+    _beforeUnmount: function() {
         this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
     },
 
-    _onCollectionChange: function () {
+    _onCollectionChange: function() {
         /**
          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
@@ -181,11 +195,11 @@ var ItemActionsControl = Control.extend({
         if (this._context && this._context.isTouch) {
             isTouchValue = this._context.isTouch.isTouch;
         }
-        _private.updateActions(this, this._options, isTouchValue);
+        _private.updateActions(this, this._options, isTouchValue, true);
     }
 });
 
-ItemActionsControl.getDefaultOptions = function () {
+ItemActionsControl.getDefaultOptions = function() {
     return {
         itemActionsPosition: 'inside',
         itemActions: []

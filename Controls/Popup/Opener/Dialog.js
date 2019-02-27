@@ -6,11 +6,13 @@ define('Controls/Popup/Opener/Dialog',
       /**
        * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
        * @class Controls/Popup/Opener/Dialog
+       * @extends Controls/Popup/Opener/BaseOpener
        * @control
-       * @public
        * @author Красильников А.С.
        * @category Popup
        * @demo Controls-demo/Popup/Opener/DialogPG
+       * @public
+       *
        */
 
       var _private = {
@@ -72,36 +74,6 @@ define('Controls/Popup/Opener/Dialog',
 
       return Dialog;
    }
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#autofocus
-    * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#modal
-    * @cfg {Boolean} Determines whether the window is modal.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#closeOnOutsideClick
-    * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#className
-    * @cfg {String} Class names of popup.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#template
-    * @cfg {String|Function} Template inside popup.
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#templateOptions
-    * @cfg {String|Function} Template options inside popup.
-    */
 
    /**
     * @name Controls/Popup/Opener/Dialog#width
@@ -172,12 +144,6 @@ define('Controls/Popup/Opener/Dialog',
     *   });
     * </pre>
     * @see open
-    */
-
-   /**
-    * @name Controls/Popup/Opener/Dialog#isOpened
-    * @function
-    * @description Popup opened status.
     */
 
    /**

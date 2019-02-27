@@ -280,6 +280,29 @@ define([
          assert.equal(defOpts.itemActionsPosition, 'inside');
       });
 
+      it('updateItemActions should update the version of the list exactly once', function() {
+         var
+            cfg = {
+               listModel: listViewModel,
+               itemActions: [{
+                  id: 0,
+                  title: 'first',
+                  showType: tUtil.showType.MENU
+               },
+               {
+                  id: 1,
+                  title: 'second',
+                  showType: tUtil.showType.TOOLBAR
+               }],
+               itemActionsPosition: 'outside'
+            },
+            ctrl = new ItemActionsControl(cfg),
+            oldVersion = listViewModel.getVersion();
+         ctrl.saveOptions(cfg);
+         ctrl.updateItemActions(listViewModel.getCurrent().item);
+         assert.equal(listViewModel.getVersion() - oldVersion, 1);
+      });
+
       it('updateItemActions, isTouch: false', function() {
          var cfg = {
             listModel: listViewModel,

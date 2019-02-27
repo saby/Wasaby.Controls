@@ -36,7 +36,7 @@ var
 var LOAD_TRIGGER_OFFSET = 100;
 
 var _private = {
-    checkDeprecated: function (cfg) {
+    checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
             Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
@@ -45,7 +45,7 @@ var _private = {
         }
     },
 
-    reload: function (self, cfg) {
+    reload: function(self, cfg) {
         var
             filter = cClone(cfg.filter),
             sorting = cClone(cfg.sorting),
@@ -60,7 +60,7 @@ var _private = {
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
-            self._sourceController.load(filter, sorting).addCallback(function (list) {
+            self._sourceController.load(filter, sorting).addCallback(function(list) {
                 var
                     markedKey, isActive,
                     listModel = self._listViewModel;
@@ -109,7 +109,7 @@ var _private = {
                 if (!list.getCount()) {
                     _private.checkLoadToDirectionCapability(self);
                 }
-            }).addErrback(function (error) {
+            }).addErrback(function(error) {
                 _private.processLoadError(self, error, cfg.dataLoadErrback);
                 resDeferred.callback(null);
             });
@@ -117,7 +117,7 @@ var _private = {
             resDeferred.callback();
             Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
         }
-        resDeferred.addCallback(function (items) {
+        resDeferred.addCallback(function(items) {
             if (cfg.afterReloadCallback) {
                 cfg.afterReloadCallback();
             }
@@ -125,7 +125,7 @@ var _private = {
         });
         return resDeferred;
     },
-    scrollToItem: function (self, key) {
+    scrollToItem: function(self, key) {
         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
@@ -138,37 +138,37 @@ var _private = {
             scrollToElement(container, true);
         }
     },
-    setMarkedKey: function (self, key) {
+    setMarkedKey: function(self, key) {
         if (key !== undefined) {
             self.getViewModel().setMarkedKey(key);
             _private.scrollToItem(self, key);
         }
     },
-    restoreMarkedKey: function (self) {
+    restoreMarkedKey: function(self) {
         if (self._restoreMarkedKey !== null) {
             _private.scrollToItem(self, self._restoreMarkedKey);
             self._restoreMarkedKey = null;
         }
     },
-    moveMarkerToNext: function (self) {
+    moveMarkerToNext: function(self) {
         var
             model = self.getViewModel();
         _private.setMarkedKey(self, model.getNextItemKey(model.getMarkedKey()));
     },
-    moveMarkerToPrevious: function (self) {
+    moveMarkerToPrevious: function(self) {
         var
             model = self.getViewModel();
         _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
     },
-    enterHandler: function (self) {
+    enterHandler: function(self) {
         var
             model = self.getViewModel(),
             markedKey = model.getMarkedKey();
         if (markedKey !== null) {
-            self._notify('itemClick', [model.getItemById(markedKey).getContents()], {bubbling: true});
+            self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
         }
     },
-    toggleSelection: function (self, event) {
+    toggleSelection: function(self, event) {
         var
             model, markedKey;
         if (self._children.selectionController) {
@@ -179,7 +179,7 @@ var _private = {
             event.preventDefault();
         }
     },
-    prepareFooter: function (self, navigation, sourceController) {
+    prepareFooter: function(self, navigation, sourceController) {
         var
             loadedDataCount, allDataCount;
         self._shouldDrawFooter = !!(navigation && navigation.view === 'demand' && sourceController.hasMoreData('down'));
@@ -194,7 +194,7 @@ var _private = {
         }
     },
 
-    loadToDirection: function (self, direction, userCallback, userErrback) {
+    loadToDirection: function(self, direction, userCallback, userErrback) {
         _private.showIndicator(self, direction);
 
         //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
@@ -208,7 +208,7 @@ var _private = {
         /**/
 
         if (self._sourceController) {
-            return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function (addedItems) {
+            return self._sourceController.load(self._options.filter, self._options.sorting, direction).addCallback(function(addedItems) {
                 if (userCallback && userCallback instanceof Function) {
                     userCallback(addedItems, direction);
                 }
@@ -247,7 +247,7 @@ var _private = {
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
                 return addedItems;
 
-            }).addErrback(function (error) {
+            }).addErrback(function(error) {
                 return _private.processLoadError(self, error, userErrback);
             });
         }
@@ -255,7 +255,7 @@ var _private = {
     },
 
     // Основной метод пересчета состояния Virtual Scroll
-    applyVirtualScroll: function (self) {
+    applyVirtualScroll: function(self) {
         var
             indexes = self._virtualScroll.ItemsIndexes,
             placeholdersSizes = self._virtualScroll.PlaceholdersSizes;
@@ -265,7 +265,7 @@ var _private = {
         self._bottomPlaceholderHeight = placeholdersSizes.bottom;
     },
 
-    processLoadError: function (self, error, dataLoadErrback) {
+    processLoadError: function(self, error, dataLoadErrback) {
         if (!error.canceled) {
             _private.hideIndicator(self);
 
@@ -289,7 +289,7 @@ var _private = {
         return error;
     },
 
-    checkLoadToDirectionCapability: function (self) {
+    checkLoadToDirectionCapability: function(self) {
         if (self._needScrollCalculation) {
             if (self._loadTriggerVisibility.up) {
                 _private.onScrollLoadEdge(self, 'up');
@@ -300,16 +300,16 @@ var _private = {
         }
     },
 
-    onScrollLoadEdgeStart: function (self, direction) {
+    onScrollLoadEdgeStart: function(self, direction) {
         self._loadTriggerVisibility[direction] = true;
         _private.onScrollLoadEdge(self, direction);
     },
 
-    onScrollLoadEdgeStop: function (self, direction) {
+    onScrollLoadEdgeStop: function(self, direction) {
         self._loadTriggerVisibility[direction] = false;
     },
 
-    loadToDirectionIfNeed: function (self, direction) {
+    loadToDirectionIfNeed: function(self, direction) {
         //source controller is not created if "source" option is undefined
         if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
             _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
@@ -317,7 +317,7 @@ var _private = {
     },
 
     // Метод, в котором опеределяется необходимость догрузки данных
-    updateVirtualWindow: function (self, direction) {
+    updateVirtualWindow: function(self, direction) {
         var indexes = self._virtualScroll.ItemsIndexes;
 
         // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
@@ -334,7 +334,7 @@ var _private = {
     },
 
     // Метод, вызываемый при прокрутке скролла до триггера
-    onScrollLoadEdge: function (self, direction) {
+    onScrollLoadEdge: function(self, direction) {
         if (self._virtualScroll) {
             _private.updateVirtualWindow(self, direction);
         } else if (self._options.navigation && self._options.navigation.view === 'infinity') {
@@ -342,28 +342,28 @@ var _private = {
         }
     },
 
-    onScrollListEdge: function (self, direction) {
+    onScrollListEdge: function(self, direction) {
 
     },
 
-    scrollToEdge: function (self, direction) {
+    scrollToEdge: function(self, direction) {
         if (self._sourceController && self._sourceController.hasMoreData(direction)) {
             self._sourceController.setEdgeState(direction);
-            _private.reload(self, self._options).addCallback(function () {
+            _private.reload(self, self._options).addCallback(function() {
                 if (direction === 'up') {
-                    self._notify('doScroll', ['top'], {bubbling: true});
+                    self._notify('doScroll', ['top'], { bubbling: true });
                 } else {
-                    self._notify('doScroll', ['bottom'], {bubbling: true});
+                    self._notify('doScroll', ['bottom'], { bubbling: true });
                 }
             });
         } else if (direction === 'up') {
-            self._notify('doScroll', ['top'], {bubbling: true});
+            self._notify('doScroll', ['top'], { bubbling: true });
         } else {
-            self._notify('doScroll', ['bottom'], {bubbling: true});
+            self._notify('doScroll', ['bottom'], { bubbling: true });
         }
     },
 
-    startScrollEmitter: function (self) {
+    startScrollEmitter: function(self) {
         var
             children = self._children,
             triggers = {
@@ -376,11 +376,11 @@ var _private = {
         self._children.ScrollEmitter.startRegister(triggers);
     },
 
-    onScrollShow: function (self) {
+    onScrollShow: function(self) {
         self._loadOffset = LOAD_TRIGGER_OFFSET;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self).addCallback(function (scrollPagingCtr) {
+                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                     self._scrollPagingCtr = scrollPagingCtr;
                     self._pagingVisible = true;
                 });
@@ -390,7 +390,7 @@ var _private = {
         }
     },
 
-    onScrollHide: function (self) {
+    onScrollHide: function(self) {
         var needUpdate = false;
         if (self._loadOffset !== 0) {
             self._loadOffset = 0;
@@ -406,27 +406,27 @@ var _private = {
         }
     },
 
-    createScrollPagingController: function (self) {
+    createScrollPagingController: function(self) {
         var def = new Deferred();
-        require(['Controls/List/Controllers/ScrollPaging'], function (ScrollPagingController) {
+        require(['Controls/List/Controllers/ScrollPaging'], function(ScrollPagingController) {
             var scrollPagingCtr;
             scrollPagingCtr = new ScrollPagingController({
                 mode: self._options.navigation.viewConfig.pagingMode,
-                pagingCfgTrigger: function (cfg) {
+                pagingCfgTrigger: function(cfg) {
                     self._pagingCfg = cfg;
                     self._forceUpdate();
                 }
             });
 
             def.callback(scrollPagingCtr);
-        }, function (error) {
+        }, function(error) {
             def.errback(error);
         });
 
         return def;
     },
 
-    getSelectionForDragNDrop: function (selectedKeys, excludedKeys, dragKey) {
+    getSelectionForDragNDrop: function(selectedKeys, excludedKeys, dragKey) {
         var
             selected,
             excluded,
@@ -451,11 +451,11 @@ var _private = {
         };
     },
 
-    showIndicator: function (self, direction) {
+    showIndicator: function(self, direction) {
         self._loadingState = direction || 'all';
         self._loadingIndicatorState = self._loadingState;
         if (!self._loadingIndicatorTimer) {
-            self._loadingIndicatorTimer = setTimeout(function () {
+            self._loadingIndicatorTimer = setTimeout(function() {
                 self._loadingIndicatorTimer = null;
                 if (self._loadingState) {
                     self._showLoadingIndicatorImage = true;
@@ -465,7 +465,7 @@ var _private = {
         }
     },
 
-    hideIndicator: function (self) {
+    hideIndicator: function(self) {
         self._loadingState = null;
         self._showLoadingIndicatorImage = false;
         if (self._loadingIndicatorTimer) {
@@ -481,7 +481,7 @@ var _private = {
     /**
      * Обработать прокрутку списка виртуальным скроллом
      */
-    handleListScroll: function (self, scrollTop, position) {
+    handleListScroll: function(self, scrollTop, position) {
         var hasMoreData;
 
         // При включенном виртуальном скроле необходимо обрабатывать быстрый скролл мышью и перемещение бегунка скрола.
@@ -505,18 +505,18 @@ var _private = {
             }
         } else {
             if (_private.needScrollPaging(self._options.navigation)) {
-                _private.createScrollPagingController(self).addCallback(function (scrollPagingCtr) {
+                _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
                     self._scrollPagingCtr = scrollPagingCtr;
                 });
             }
         }
     },
 
-    needScrollCalculation: function (navigationOpt) {
+    needScrollCalculation: function(navigationOpt) {
         return navigationOpt && navigationOpt.view === 'infinity';
     },
 
-    needScrollPaging: function (navigationOpt) {
+    needScrollPaging: function(navigationOpt) {
         return (navigationOpt &&
             navigationOpt.view === 'infinity' &&
             navigationOpt.viewConfig &&
@@ -524,12 +524,12 @@ var _private = {
         );
     },
 
-    getItemsCount: function (self) {
+    getItemsCount: function(self) {
         return self._listViewModel ? self._listViewModel.getCount() : 0;
     },
 
-    initListViewModelHandler: function (self, model) {
-        model.subscribe('onListChange', function (event, changesType) {
+    initListViewModelHandler: function(self, model) {
+        model.subscribe('onListChange', function(event, changesType) {
             if (self._options.navigation && self._options.navigation.source === 'position') {
                 if (changesType === 'collectionChanged') {
                     _private.recalculateNavigationState(self);
@@ -538,12 +538,12 @@ var _private = {
             self._hasUndrawChanges = true;
             self._forceUpdate();
         });
-        model.subscribe('onGroupsExpandChange', function (event, changes) {
+        model.subscribe('onGroupsExpandChange', function(event, changes) {
             _private.groupsExpandChangeHandler(self, changes);
         });
     },
 
-    showActionsMenu: function (self, event, itemData, childEvent, showAll) {
+    showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         var
             context = event.type === 'itemcontextmenu',
             showActions;
@@ -552,17 +552,17 @@ var _private = {
         }
         showActions = (context || showAll) && itemData.itemActions.all
             ? itemData.itemActions.all
-            : itemData.itemActions && itemData.itemActions.all.filter(function (action) {
+            : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
                 return action.showType !== tUtil.showType.TOOLBAR;
             });
         if (showActions && showActions.length) {
             var
-                rs = new collection.RecordSet({rawData: showActions});
+                rs = new collection.RecordSet({ rawData: showActions });
             childEvent.nativeEvent.preventDefault();
             childEvent.stopImmediatePropagation();
             itemData.contextEvent = context;
             self._listViewModel.setActiveItem(itemData);
-            require(['css!Controls/Toolbar/ToolbarPopup'], function () {
+            require(['css!Controls/Toolbar/ToolbarPopup'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
                     target: !context ? childEvent.target : false,
@@ -578,7 +578,7 @@ var _private = {
                         onResult: self._closeActionsMenu,
                         onClose: self._closeActionsMenu
                     },
-                    closeByExternalClick: true,
+                    closeOnOutsideClick: true,
                     corner: {vertical: 'top', horizontal: 'right'},
                     horizontalAlign: {side: context ? 'right' : 'left'},
                     className: 'controls-Toolbar__popup_list',
@@ -589,7 +589,7 @@ var _private = {
         }
     },
 
-    closeActionsMenu: function (self, args) {
+    closeActionsMenu: function(self, args) {
         var
             actionName = args && args.action,
             event = args && args.event;
@@ -613,30 +613,30 @@ var _private = {
         self._forceUpdate();
     },
 
-    recalculateNavigationState: function (self) {
+    recalculateNavigationState: function(self) {
         self._sourceController.calculateState(self._listViewModel.getItems());
     },
 
-    bindHandlers: function (self) {
+    bindHandlers: function(self) {
         self._closeActionsMenu = self._closeActionsMenu.bind(self);
     },
 
-    groupsExpandChangeHandler: function (self, changes) {
-        self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], {bubbling: true});
+    groupsExpandChangeHandler: function(self, changes) {
+        self._notify(changes.changeType === 'expand' ? 'groupExpanded' : 'groupCollapsed', [changes.group], { bubbling: true });
         self._notify('collapsedGroupsChanged', [changes.collapsedGroups]);
         if (self._options.historyIdCollapsedGroups || self._options.groupHistoryId) {
-            requirejs(['Controls/List/resources/utils/GroupUtil'], function (GroupUtil) {
+            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
                 GroupUtil.storeCollapsedGroups(changes.collapsedGroups, self._options.historyIdCollapsedGroups || self._options.groupHistoryId);
             });
         }
     },
 
-    prepareCollapsedGroups: function (config) {
+    prepareCollapsedGroups: function(config) {
         var
             result = new Deferred();
         if (config.historyIdCollapsedGroups || config.groupHistoryId) {
-            requirejs(['Controls/List/resources/utils/GroupUtil'], function (GroupUtil) {
-                GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function (collapsedGroupsFromStore) {
+            requirejs(['Controls/List/resources/utils/GroupUtil'], function(GroupUtil) {
+                GroupUtil.restoreCollapsedGroups(config.historyIdCollapsedGroups || config.groupHistoryId).addCallback(function(collapsedGroupsFromStore) {
                     result.callback(collapsedGroupsFromStore || config.collapsedGroups);
                 });
             });
@@ -646,7 +646,7 @@ var _private = {
         return result;
     },
 
-    getSortingOnChange: function (currentSorting, propName, sortingType) {
+    getSortingOnChange: function(currentSorting, propName, sortingType) {
         var sorting = currentSorting ? currentSorting.slice() : [];
         var sortElemIndex = -1;
         var sortElem;
@@ -654,7 +654,7 @@ var _private = {
 
         //use same algorithm when sortingType is not 'single', if the number of properties is equal to one
         if (sortingType !== 'single' || sorting.length === 1 && sorting[0][propName]) {
-            sorting.forEach(function (elem, index) {
+            sorting.forEach(function(elem, index) {
                 if (elem.hasOwnProperty(propName)) {
                     sortElem = elem;
                     sortElemIndex = index;
@@ -739,7 +739,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _popupOptions: null,
     _hasUndrawChanges: false,
 
-    _beforeMount: function (newOptions, context, receivedState) {
+    _beforeMount: function(newOptions, context, receivedState) {
         var
             self = this;
 
@@ -763,9 +763,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
         this._needSelectionController = newOptions.multiSelectVisibility !== 'hidden';
 
-        return _private.prepareCollapsedGroups(newOptions).addCallback(function (collapsedGroups) {
+        return _private.prepareCollapsedGroups(newOptions).addCallback(function(collapsedGroups) {
             var
-                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), {collapsedGroups: collapsedGroups}) : cClone(newOptions);
+                viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
                 if (receivedState) {
@@ -801,23 +801,23 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         });
     },
 
-    getViewModel: function () {
+    getViewModel: function() {
         return this._listViewModel;
     },
 
-    getSourceController: function () {
+    getSourceController: function() {
         return this._sourceController;
     },
 
-    _onActivated: function () {
+    _onActivated: function() {
         this._isActive = true;
     },
 
-    _onDeactivated: function () {
+    _onDeactivated: function() {
         this._isActive = false;
     },
 
-    _afterMount: function () {
+    _afterMount: function() {
         if (this._needScrollCalculation) {
             _private.startScrollEmitter(this);
         }
@@ -829,7 +829,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
     },
 
-    _beforeUpdate: function (newOptions) {
+    _beforeUpdate: function(newOptions) {
         var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
         var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
@@ -893,7 +893,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     },
 
-    reloadItem: function (key, readMeta, replaceItem) {
+    reloadItem: function(key, readMeta, replaceItem) {
         var items = this._listViewModel.getItems();
         var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
 
@@ -901,7 +901,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
             throw new Error('BaseControl::reloadItem no item with key ' + key);
         }
 
-        return this._sourceController.read(key, readMeta).addCallback(function (item) {
+        return this._sourceController.read(key, readMeta).addCallback(function(item) {
             if (replaceItem) {
                 items.replace(item, currentItemIndex);
             } else {
@@ -911,7 +911,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         });
     },
 
-    _beforeUnmount: function () {
+    _beforeUnmount: function() {
         if (this._sourceController) {
             this._sourceController.destroy();
         }
@@ -928,7 +928,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         BaseControl.superclass._beforeUnmount.apply(this, arguments);
     },
 
-    _afterUpdate: function (oldOptions) {
+    _afterUpdate: function(oldOptions) {
         /*Оставляю старое поведение без опции для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
         if (!this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
@@ -958,62 +958,36 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
     },
 
-    __onPagingArrowClick: function (e, arrow) {
+    __onPagingArrowClick: function(e, arrow) {
         switch (arrow) {
-            case 'Next':
-                this._notify('doScroll', ['pageDown'], {bubbling: true});
-                break;
-            case 'Prev':
-                this._notify('doScroll', ['pageUp'], {bubbling: true});
-                break;
-            case 'Begin':
-                _private.scrollToEdge(this, 'up');
-                break;
-            case 'End':
-                _private.scrollToEdge(this, 'down');
-                break;
+            case 'Next': this._notify('doScroll', ['pageDown'], { bubbling: true }); break;
+            case 'Prev': this._notify('doScroll', ['pageUp'], { bubbling: true }); break;
+            case 'Begin': _private.scrollToEdge(this, 'up'); break;
+            case 'End': _private.scrollToEdge(this, 'down'); break;
         }
     },
 
-    __onEmitScroll: function (e, type, params) {
+    __onEmitScroll: function(e, type, params) {
         var self = this;
         switch (type) {
-            case 'loadTopStart':
-                _private.onScrollLoadEdgeStart(self, 'up');
-                break;
-            case 'loadTopStop':
-                _private.onScrollLoadEdgeStop(self, 'up');
-                break;
-            case 'loadBottomStart':
-                _private.onScrollLoadEdgeStart(self, 'down');
-                break;
-            case 'loadBottomStop':
-                _private.onScrollLoadEdgeStop(self, 'down');
-                break;
-            case 'listTop':
-                _private.onScrollListEdge(self, 'up');
-                break;
-            case 'listBottom':
-                _private.onScrollListEdge(self, 'down');
-                break;
-            case 'scrollMove':
-                _private.handleListScroll(self, params.scrollTop, params.position);
-                break;
-            case 'canScroll':
-                _private.onScrollShow(self);
-                break;
-            case 'cantScroll':
-                _private.onScrollHide(self);
-                break;
+            case 'loadTopStart': _private.onScrollLoadEdgeStart(self, 'up'); break;
+            case 'loadTopStop': _private.onScrollLoadEdgeStop(self, 'up'); break;
+            case 'loadBottomStart': _private.onScrollLoadEdgeStart(self, 'down'); break;
+            case 'loadBottomStop': _private.onScrollLoadEdgeStop(self, 'down'); break;
+            case 'listTop': _private.onScrollListEdge(self, 'up'); break;
+            case 'listBottom': _private.onScrollListEdge(self, 'down'); break;
+            case 'scrollMove': _private.handleListScroll(self, params.scrollTop, params.position); break;
+            case 'canScroll': _private.onScrollShow(self); break;
+            case 'cantScroll': _private.onScrollHide(self); break;
         }
     },
 
-    _onCheckBoxClick: function (e, key, status) {
+    _onCheckBoxClick: function(e, key, status) {
         this._children.selectionController.onCheckBoxClick(key, status);
         this._notify('checkboxClick', [key, status]);
     },
 
-    _listSwipe: function (event, itemData, childEvent) {
+    _listSwipe: function(event, itemData, childEvent) {
         var direction = childEvent.nativeEvent.direction;
         this._children.itemActionsOpener.close();
 
@@ -1052,37 +1026,37 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
     },
 
-    _onAnimationEnd: function (e) {
+    _onAnimationEnd: function(e) {
         if (e.nativeEvent.animationName === 'rightSwipe') {
             this.getViewModel().setRightSwipedItem(null);
         }
     },
 
-    _showIndicator: function (event, direction) {
+    _showIndicator: function(event, direction) {
         _private.showIndicator(this, direction);
         event.stopPropagation();
     },
 
-    _hideIndicator: function (event) {
+    _hideIndicator: function(event) {
         _private.hideIndicator(this);
         event.stopPropagation();
     },
 
-    reload: function () {
+    reload: function() {
         return _private.reload(this, this._options);
     },
 
-    getVirtualScroll: function () {
+    getVirtualScroll: function() {
         return this._virtualScroll;
     },
 
-    _onGroupClick: function (e, item, baseEvent) {
+    _onGroupClick: function(e, item, baseEvent) {
         if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             this._listViewModel.toggleGroup(item);
         }
     },
 
-    _onItemClick: function (e, item, originalEvent) {
+    _onItemClick: function(e, item, originalEvent) {
         if (originalEvent.target.closest('.js-controls-ListView__checkbox')) {
             /*
              When user clicks on checkbox we shouldn't fire itemClick event because no one actually expects or wants that.
@@ -1098,7 +1072,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         e.blockUpdate = true;
     },
 
-    _viewResize: function () {
+    _viewResize: function() {
         /*TODO переношу сюда костыль сделанный по https://online.sbis.ru/opendoc.html?guid=ce307671-679e-4373-bc0e-c11149621c2a*/
         /*только под опцией для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
         if (this._options.fix1176592913 && this._hasUndrawChanges) {
@@ -1110,50 +1084,50 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
     },
 
-    beginEdit: function (options) {
+    beginEdit: function(options) {
         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.beginEdit(options);
     },
 
-    beginAdd: function (options) {
+    beginAdd: function(options) {
         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.beginAdd(options);
     },
 
-    cancelEdit: function () {
+    cancelEdit: function() {
         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.cancelEdit();
     },
 
-    commitEdit: function () {
+    commitEdit: function() {
         return this._options.readOnly ? Deferred.fail() : this._children.editInPlace.commitEdit();
     },
 
     _notifyHandler: tmplNotify,
 
-    _closeSwipe: function (event, item) {
+    _closeSwipe: function(event, item) {
         this._children.itemActions.updateItemActions(item);
     },
 
-    _commitEditActionHandler: function () {
+    _commitEditActionHandler: function() {
         this._children.editInPlace.commitEdit();
     },
 
-    _cancelEditActionHandler: function () {
+    _cancelEditActionHandler: function() {
         this._children.editInPlace.cancelEdit();
     },
 
-    _showActionsMenu: function (event, itemData, childEvent, showAll) {
+    _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
 
-    _onItemContextMenu: function (event, itemData) {
+    _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
         this._listViewModel.setMarkedKey(itemData.key);
     },
 
-    _closeActionsMenu: function (args) {
+    _closeActionsMenu: function(args) {
         _private.closeActionsMenu(this, args);
     },
 
-    _itemMouseDown: function (event, itemData, domEvent) {
+    _itemMouseDown: function(event, itemData, domEvent) {
         var
             selection,
             self = this,
@@ -1164,7 +1138,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
             //Support moving with mass selection.
             //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
             selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
-            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function (items) {
+            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
                 dragStartResult = self._notify('dragStart', [items]);
                 if (dragStartResult) {
                     self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
@@ -1175,32 +1149,32 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         event.blockUpdate = true;
     },
 
-    _onLoadMoreClick: function () {
+    _onLoadMoreClick: function() {
         _private.loadToDirectionIfNeed(this, 'down');
     },
 
-    _dragStart: function (event, dragObject) {
+    _dragStart: function(event, dragObject) {
         this._listViewModel.setDragEntity(dragObject.entity);
         this._listViewModel.setDragItemData(this._listViewModel.getItemDataByItem(this._itemDragData.dispItem));
     },
 
-    _dragEnd: function (event, dragObject) {
+    _dragEnd: function(event, dragObject) {
         if (this._options.itemsDragNDrop) {
             this._dragEndHandler(dragObject);
         }
     },
 
-    _dragEndHandler: function (dragObject) {
+    _dragEndHandler: function(dragObject) {
         var targetPosition = this._listViewModel.getDragTargetPosition();
 
         if (targetPosition) {
             this._dragEndResult = this._notify('dragEnd', [dragObject.entity, targetPosition.item, targetPosition.position]);
         }
     },
-    _onViewKeyDown: function (event) {
+    _onViewKeyDown: function(event) {
         keysHandler(event, HOT_KEYS, _private, this);
     },
-    _dragEnter: function (event, dragObject) {
+    _dragEnter: function(event, dragObject) {
         var
             dragEnterResult,
             draggingItemProjection;
@@ -1218,17 +1192,17 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
     },
 
-    _dragLeave: function () {
+    _dragLeave: function() {
         this._listViewModel.setDragTargetPosition(null);
     },
 
-    _documentDragEnd: function () {
+    _documentDragEnd: function() {
         var self = this;
 
         //Reset the state of the dragndrop after the movement on the source happens.
         if (this._dragEndResult instanceof Deferred) {
             _private.showIndicator(self);
-            this._dragEndResult.addBoth(function () {
+            this._dragEndResult.addBoth(function() {
                 self._documentDragEndHandler();
                 _private.hideIndicator(self);
             });
@@ -1237,13 +1211,13 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
     },
 
-    _documentDragEndHandler: function () {
+    _documentDragEndHandler: function() {
         this._listViewModel.setDragTargetPosition(null);
         this._listViewModel.setDragItemData(null);
         this._listViewModel.setDragEntity(null);
     },
 
-    _itemMouseEnter: function (event, itemData) {
+    _itemMouseEnter: function(event, itemData) {
         var
             dragPosition,
             dragEntity = this._listViewModel.getDragEntity();
@@ -1258,7 +1232,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         event.blockUpdate = true;
     },
 
-    _sortingChanged: function (event, propName, sortingType) {
+    _sortingChanged: function(event, propName, sortingType) {
         var newSorting = _private.getSortingOnChange(this._options.sorting, propName, sortingType);
         event.stopPropagation();
         this._notify('sortingChanged', [newSorting]);
@@ -1272,7 +1246,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
  }
  }; */
 BaseControl._private = _private;
-BaseControl.getDefaultOptions = function () {
+BaseControl.getDefaultOptions = function() {
     return {
         uniqueKeys: true,
         multiSelectVisibility: 'hidden',

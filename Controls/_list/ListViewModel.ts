@@ -13,11 +13,11 @@ import cInstance = require('Core/core-instance');
  */
 
 var _private = {
-    updateIndexes: function (self, startIndex, stopIndex) {
+    updateIndexes: function(self, startIndex, stopIndex) {
         self._startIndex = startIndex;
         self._stopIndex = stopIndex;
     },
-    getItemPadding: function (cfg) {
+    getItemPadding: function(cfg) {
         if (cfg.itemPadding) {
             return cfg.itemPadding;
         }
@@ -28,7 +28,7 @@ var _private = {
             bottom: cfg.rowSpacing
         };
     },
-    getSpacingClassList: function (cfg) {
+    getSpacingClassList: function(cfg) {
         var
             classList = '',
             itemPadding = _private.getItemPadding(cfg);
@@ -57,7 +57,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _selectedKeys: null,
     _markedKey: null,
 
-    constructor: function (cfg) {
+    constructor: function(cfg) {
         var self = this;
         this._actions = [];
         ListViewModel.superclass.constructor.apply(this, arguments);
@@ -76,34 +76,34 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         // TODO надо ли?
         _private.updateIndexes(self, 0, self.getCount());
     },
-    setItemPadding: function (itemPadding) {
+    setItemPadding: function(itemPadding) {
         this._options.itemPadding = itemPadding;
         this._nextModelVersion();
     },
-    setLeftPadding: function (leftPadding) {
+    setLeftPadding: function(leftPadding) {
         this._options.leftPadding = leftPadding;
         this._nextModelVersion();
     },
-    setRightPadding: function (rightPadding) {
+    setRightPadding: function(rightPadding) {
         this._options.rightPadding = rightPadding;
         this._nextModelVersion();
     },
-    setLeftSpacing: function (leftSpacing) {
+    setLeftSpacing: function(leftSpacing) {
         this._options.leftSpacing = leftSpacing;
         this._nextModelVersion();
     },
-    setRightSpacing: function (rightSpacing) {
+    setRightSpacing: function(rightSpacing) {
         this._options.rightSpacing = rightSpacing;
         this._nextModelVersion();
     },
-    setRowSpacing: function (rowSpacing) {
+    setRowSpacing: function(rowSpacing) {
         this._options.rowSpacing = rowSpacing;
         this._nextModelVersion();
     },
-    getItemPadding: function () {
+    getItemPadding: function() {
         return _private.getItemPadding(this._options);
     },
-    getItemDataByItem: function () {
+    getItemDataByItem: function() {
         var
             itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
             dragItems,
@@ -166,7 +166,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return itemsModelCurrent;
     },
 
-    _calcItemVersion: function (item, key) {
+    _calcItemVersion: function(item, key) {
         var
             version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
         if (this._markedKey === key) {
@@ -175,7 +175,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         return version;
     },
 
-    setMarkedKey: function (key) {
+    setMarkedKey: function(key) {
         if (key === this._markedKey) {
             return;
         }
@@ -185,12 +185,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._notify('onMarkedKeyChanged', key);
     },
 
-    setMarkerVisibility: function (markerVisibility) {
+    setMarkerVisibility: function(markerVisibility) {
         this._options.markerVisibility = markerVisibility;
         this._nextModelVersion();
     },
 
-    getFirstItemKey: function () {
+    getFirstItemKey: function() {
         var
             nextItemId = 0,
             nextItem,
@@ -203,12 +203,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             nextItemId++;
         }
     },
-    getIndexByKey: function (key) {
+    getIndexByKey: function(key) {
         var
             item = this.getItemById(key, this._options.keyProperty);
         return this._display.getIndex(item);
     },
-    getNextItemKey: function (key) {
+    getNextItemKey: function(key) {
         var
             itemIdx = this.getIndexByKey(key),
             nextItemId = itemIdx + 1,
@@ -222,7 +222,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             nextItemId++;
         }
     },
-    getPreviousItemKey: function (key) {
+    getPreviousItemKey: function(key) {
         var
             itemIdx = this.getIndexByKey(key),
             prevItemId = itemIdx - 1,
@@ -235,45 +235,45 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
             prevItemId--;
         }
     },
-    getMarkedKey: function () {
+    getMarkedKey: function() {
         return this._markedKey;
     },
-    getSelectionStatus: function (key) {
+    getSelectionStatus: function(key) {
         return this._selectedKeys[key] !== undefined;
     },
 
-    getSwipeItem: function () {
+    getSwipeItem: function() {
         return this._swipeItem.item;
     },
 
-    setActiveItem: function (itemData) {
+    setActiveItem: function(itemData) {
         if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
             this._activeItem = itemData;
             this._nextModelVersion();
         }
     },
 
-    setDragEntity: function (entity) {
+    setDragEntity: function(entity) {
         if (this._dragEntity !== entity) {
             this._dragEntity = entity;
             this._nextModelVersion();
         }
     },
 
-    getDragEntity: function () {
+    getDragEntity: function() {
         return this._dragEntity;
     },
 
-    setDragItemData: function (itemData) {
+    setDragItemData: function(itemData) {
         this._draggingItemData = itemData;
         this._nextModelVersion();
     },
 
-    getDragItemData: function () {
+    getDragItemData: function() {
         return this._draggingItemData;
     },
 
-    calculateDragTargetPosition: function (targetData) {
+    calculateDragTargetPosition: function(targetData) {
         var
             position,
             prevIndex = -1;
@@ -307,41 +307,41 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         };
     },
 
-    setDragTargetPosition: function (position) {
+    setDragTargetPosition: function(position) {
         this._dragTargetPosition = position;
         this._nextModelVersion();
     },
 
-    getDragTargetPosition: function () {
+    getDragTargetPosition: function() {
         return this._dragTargetPosition;
     },
 
-    setSwipeItem: function (itemData) {
+    setSwipeItem: function(itemData) {
         this._swipeItem = itemData;
         this._nextModelVersion();
     },
 
-    setRightSwipedItem: function (itemData) {
+    setRightSwipedItem: function(itemData) {
         this._rightSwipedItem = itemData;
         this._nextModelVersion();
     },
 
-    updateIndexes: function (startIndex, stopIndex) {
+    updateIndexes: function(startIndex, stopIndex) {
         if ((this._startIndex !== startIndex) || (this._stopIndex !== stopIndex)) {
             _private.updateIndexes(self, startIndex, stopIndex);
             this._nextModelVersion();
         }
     },
 
-    getStartIndex: function () {
+    getStartIndex: function() {
         return this._startIndex;
     },
 
-    getStopIndex: function () {
+    getStopIndex: function() {
         return this._stopIndex;
     },
 
-    setItems: function (items) {
+    setItems: function(items) {
         ListViewModel.superclass.setItems.apply(this, arguments);
         if (this._options.markerVisibility !== 'hidden') {
             this._setMarkerAfterUpdateItems();
@@ -350,14 +350,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.
-    _restoreMarkedItem: function () {
+    _restoreMarkedItem: function() {
         if (this._markedKey !== undefined) {
             this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
         }
     },
 
 
-    _setMarkerAfterUpdateItems: function () {
+
+    _setMarkerAfterUpdateItems: function() {
 
         // При обновлении коллекции объекты пересоздаются, поэтому нужно обновить ссылку на отмеченный элемент.
         this._restoreMarkedItem();
@@ -370,11 +371,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         }
     },
 
-    _onBeginCollectionChange: function () {
+    _onBeginCollectionChange: function() {
         _private.updateIndexes(this, 0, this.getCount());
     },
 
-    _setEditingItemData: function (itemData) {
+    _setEditingItemData: function(itemData) {
         this._editingItemData = itemData;
         if (itemData && itemData.item) {
             this.setMarkedKey(itemData.item.get(this._options.keyProperty));
@@ -383,61 +384,60 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._nextModelVersion();
     },
 
-    setItemActions: function (item, actions) {
+    setItemActions: function(item, actions) {
         if (item.get) {
             var itemById = this.getItemById(item.get(this._options.keyProperty));
             var collectionItem = itemById ? itemById.getContents() : item;
             this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
-            this._nextModelVersion(true);
         }
     },
 
-    _prepareDisplayItemForAdd: function (item) {
+    _prepareDisplayItemForAdd: function(item) {
         return ItemsUtil.getDefaultDisplayItem(this._display, item);
     },
 
-    getItemActions: function (item) {
+    getItemActions: function(item) {
         var itemById = this.getItemById(ItemsUtil.getPropertyValue(item, this._options.keyProperty));
         var collectionItem = itemById ? itemById.getContents() : item;
         return this._actions[this.getIndexBySourceItem(collectionItem)];
     },
 
-    updateSelection: function (selectedKeys) {
+    updateSelection: function(selectedKeys) {
         this._selectedKeys = selectedKeys || [];
         this._nextModelVersion();
     },
 
-    getActiveItem: function () {
+    getActiveItem: function() {
         return this._activeItem;
     },
 
-    setItemTemplateProperty: function (itemTemplateProperty) {
+    setItemTemplateProperty: function(itemTemplateProperty) {
         this._options.itemTemplateProperty = itemTemplateProperty;
         this._nextModelVersion();
     },
 
-    setMultiSelectVisibility: function (multiSelectVisibility) {
+    setMultiSelectVisibility: function(multiSelectVisibility) {
         this._options.multiSelectVisibility = multiSelectVisibility;
         this._nextModelVersion();
     },
 
-    getMultiSelectVisibility: function () {
+    getMultiSelectVisibility: function() {
         return this._options.multiSelectVisibility;
     },
 
-    setSorting: function (sorting) {
+    setSorting: function(sorting) {
         this._options.sorting = sorting;
     },
 
-    getSorting: function () {
+    getSorting: function() {
         return this._options.sorting;
     },
 
-    setSearchValue: function (value) {
+    setSearchValue: function(value) {
         this._options.searchValue = value;
     },
 
-    __calcSelectedItem: function (display, selKey, keyProperty) {
+    __calcSelectedItem: function(display, selKey, keyProperty) {
 
         // TODO надо вычислить индекс
         /* if(!this._markedItem) {

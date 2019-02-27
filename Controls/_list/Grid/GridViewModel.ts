@@ -9,7 +9,7 @@ import stickyUtil = require('Controls/StickyHeader/Utils');
 
 var
     _private = {
-        getPaddingCellClasses: function (params) {
+        getPaddingCellClasses: function(params) {
             var
                 preparedClasses = '';
 
@@ -42,7 +42,7 @@ var
             return preparedClasses;
         },
 
-        prepareRowSeparatorClasses: function (rowSeparatorVisibility, rowIndex, rowCount) {
+        prepareRowSeparatorClasses: function(rowSeparatorVisibility, rowIndex, rowCount) {
             var
                 result = '';
             if (rowSeparatorVisibility) {
@@ -62,7 +62,7 @@ var
             return result;
         },
 
-        getItemColumnCellClasses: function (current) {
+        getItemColumnCellClasses: function(current) {
             var cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
             var currentStyle = current.style || 'default';
 
@@ -96,7 +96,7 @@ var
 
             return cellClasses;
         },
-        getStickyColumn: function (cfg) {
+        getStickyColumn: function(cfg) {
             var
                 result;
             if (cfg.stickyColumn) {
@@ -117,7 +117,7 @@ var
             }
             return result;
         },
-        prepareLadder: function (self) {
+        prepareLadder: function(self) {
             var
                 fIdx, idx, item, prevItem,
                 ladderProperties = self._options.ladderProperties,
@@ -202,11 +202,11 @@ var
             };
         },
 
-        getSortingDirectionByProp: function (sorting, prop) {
+        getSortingDirectionByProp: function(sorting, prop) {
             var sortingDirection;
 
             if (sorting) {
-                sorting.forEach(function (elem) {
+                sorting.forEach(function(elem) {
                     if (elem[prop]) {
                         sortingDirection = elem[prop];
                     }
@@ -216,7 +216,7 @@ var
             return sortingDirection;
         },
 
-        isNeedToHighlight: function (item, dispProp, searchValue) {
+        isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
         }
@@ -240,22 +240,22 @@ var
 
         _ladder: null,
 
-        constructor: function (cfg) {
+        constructor: function(cfg) {
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            this._onListChangeFn = function (event, changesType) {
+            this._onListChangeFn = function(event, changesType) {
                 this._ladder = _private.prepareLadder(this);
                 this._nextVersion();
                 this._notify('onListChange', changesType);
             }.bind(this);
-            this._onMarkedKeyChangedFn = function (event, key) {
+            this._onMarkedKeyChangedFn = function(event, key) {
                 this._notify('onMarkedKeyChanged', key);
             }.bind(this);
-            this._onGroupsExpandChangeFn = function (event, changes) {
+            this._onGroupsExpandChangeFn = function(event, changes) {
                 this._notify('onGroupsExpandChange', changes);
             }.bind(this);
-            this._onCollectionChangeFn = function () {
+            this._onCollectionChangeFn = function() {
                 this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
             }.bind(this);
             this._model.subscribe('onListChange', this._onListChangeFn);
@@ -267,11 +267,11 @@ var
             this._setHeader(this._options.header);
         },
 
-        _nextModelVersion: function (notUpdatePrefixItemVersion) {
+        _nextModelVersion: function(notUpdatePrefixItemVersion) {
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function (column, isNotFullGridSupport) {
+        _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
             var
                 result = cClone(column);
             if (isNotFullGridSupport) {
@@ -282,7 +282,7 @@ var
             return result;
         },
 
-        _prepareColumns: function (columns) {
+        _prepareColumns: function(columns) {
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
@@ -291,11 +291,11 @@ var
             return result;
         },
 
-        _createModel: function (cfg) {
+        _createModel: function(cfg) {
             return new ListViewModel(cfg);
         },
 
-        setColumnTemplate: function (columnTpl) {
+        setColumnTemplate: function(columnTpl) {
             this._columnTemplate = columnTpl;
         },
 
@@ -303,21 +303,21 @@ var
         // ---------------------- headerColumns ----------------------
         // -----------------------------------------------------------
 
-        getHeader: function () {
+        getHeader: function() {
             return this._header;
         },
 
-        _setHeader: function (columns) {
+        _setHeader: function(columns) {
             this._header = columns;
             this._prepareHeaderColumns(this._header, this._options.multiSelectVisibility !== 'hidden');
         },
 
-        setHeader: function (columns) {
+        setHeader: function(columns) {
             this._setHeader(columns);
             this._nextModelVersion();
         },
 
-        _prepareHeaderColumns: function (columns, multiSelectVisibility) {
+        _prepareHeaderColumns: function(columns, multiSelectVisibility) {
             if (multiSelectVisibility) {
                 this._headerColumns = [{}].concat(columns);
             } else {
@@ -326,19 +326,19 @@ var
             this.resetHeaderColumns();
         },
 
-        resetHeaderColumns: function () {
+        resetHeaderColumns: function() {
             this._curHeaderColumnIndex = 0;
         },
 
-        isNotFullGridSupport: function () {
+        isNotFullGridSupport: function() {
             return Env.detection.isNotFullGridSupport;
         },
 
-        isStickyHeader: function () {
+        isStickyHeader: function() {
             return this._options.stickyHeader;
         },
 
-        getCurrentHeaderColumn: function () {
+        getCurrentHeaderColumn: function() {
             var
                 columnIndex = this._curHeaderColumnIndex,
                 cellClasses = 'controls-Grid__header-cell',
@@ -378,11 +378,11 @@ var
             return headerColumn;
         },
 
-        goToNextHeaderColumn: function () {
+        goToNextHeaderColumn: function() {
             this._curHeaderColumnIndex++;
         },
 
-        isEndHeaderColumn: function () {
+        isEndHeaderColumn: function() {
             return this._curHeaderColumnIndex < this._headerColumns.length;
         },
 
@@ -390,21 +390,21 @@ var
         // ---------------------- resultColumns ----------------------
         // -----------------------------------------------------------
 
-        getResultsPosition: function () {
+        getResultsPosition: function() {
             if (this._options.results) {
                 return this._options.results.position;
             }
             return this._options.resultsPosition;
         },
 
-        getResultsTemplate: function () {
+        getResultsTemplate: function() {
             if (this._options.results) {
                 return this._options.results.template;
             }
             return this._options.resultsTemplate;
         },
 
-        _prepareResultsColumns: function (columns, multiSelectVisibility) {
+        _prepareResultsColumns: function(columns, multiSelectVisibility) {
             if (multiSelectVisibility) {
                 this._resultsColumns = [{}].concat(columns);
             } else {
@@ -413,11 +413,11 @@ var
             this.resetResultsColumns();
         },
 
-        resetResultsColumns: function () {
+        resetResultsColumns: function() {
             this._curResultsColumnIndex = 0;
         },
 
-        getCurrentResultsColumn: function () {
+        getCurrentResultsColumn: function() {
             var
                 columnIndex = this._curResultsColumnIndex,
                 cellClasses = 'controls-Grid__results-cell';
@@ -442,11 +442,11 @@ var
             };
         },
 
-        goToNextResultsColumn: function () {
+        goToNextResultsColumn: function() {
             this._curResultsColumnIndex++;
         },
 
-        isEndResultsColumn: function () {
+        isEndResultsColumn: function() {
             return this._curResultsColumnIndex < this._resultsColumns.length;
         },
 
@@ -454,7 +454,7 @@ var
         // ------------------------ colgroup -------------------------
         // -----------------------------------------------------------
 
-        _prepareColgroupColumns: function (columns, multiSelectVisibility) {
+        _prepareColgroupColumns: function(columns, multiSelectVisibility) {
             if (multiSelectVisibility) {
                 this._colgroupColumns = [{}].concat(columns);
             } else {
@@ -463,7 +463,7 @@ var
             this.resetColgroupColumns();
         },
 
-        getCurrentColgroupColumn: function () {
+        getCurrentColgroupColumn: function() {
             var
                 column = this._colgroupColumns[this._curColgroupColumnIndex];
             return {
@@ -474,15 +474,15 @@ var
             };
         },
 
-        resetColgroupColumns: function () {
+        resetColgroupColumns: function() {
             this._curColgroupColumnIndex = 0;
         },
 
-        isEndColgroupColumn: function () {
+        isEndColgroupColumn: function() {
             return this._curColgroupColumnIndex < this._colgroupColumns.length;
         },
 
-        goToNextColgroupColumn: function () {
+        goToNextColgroupColumn: function() {
             this._curColgroupColumnIndex++;
         },
 
@@ -490,52 +490,52 @@ var
         // -------------------------- items --------------------------
         // -----------------------------------------------------------
 
-        _setColumns: function (columns) {
+        _setColumns: function(columns) {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
         },
 
-        setColumns: function (columns) {
+        setColumns: function(columns) {
             this._setColumns(columns);
             this._nextModelVersion();
         },
 
-        setLeftSpacing: function (leftSpacing) {
+        setLeftSpacing: function(leftSpacing) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setLeftSpacing(leftSpacing);
         },
 
-        setRightSpacing: function (rightSpacing) {
+        setRightSpacing: function(rightSpacing) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setRightSpacing(rightSpacing);
         },
 
-        setLeftPadding: function (leftPadding) {
+        setLeftPadding: function(leftPadding) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setLeftPadding(leftPadding);
         },
 
-        setRightPadding: function (rightPadding) {
+        setRightPadding: function(rightPadding) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setRightPadding(rightPadding);
         },
 
-        setRowSpacing: function (rowSpacing) {
+        setRowSpacing: function(rowSpacing) {
             //TODO: Выпилить в 19.200 https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             this._model.setRowSpacing(rowSpacing);
         },
 
-        getColumns: function () {
+        getColumns: function() {
             return this._columns;
         },
 
-        getMultiSelectVisibility: function () {
+        getMultiSelectVisibility: function() {
             return this._model.getMultiSelectVisibility();
         },
 
-        setMultiSelectVisibility: function (multiSelectVisibility) {
+        setMultiSelectVisibility: function(multiSelectVisibility) {
             var
                 hasMultiSelect = multiSelectVisibility !== 'hidden';
             this._model.setMultiSelectVisibility(multiSelectVisibility);
@@ -544,81 +544,81 @@ var
             this._prepareResultsColumns(this._columns, hasMultiSelect);
         },
 
-        getItemById: function (id, keyProperty) {
+        getItemById: function(id, keyProperty) {
             return this._model.getItemById(id, keyProperty);
         },
 
-        setMarkedKey: function (key) {
+        setMarkedKey: function(key) {
             this._model.setMarkedKey(key);
         },
 
-        setMarkerVisibility: function (markerVisibility) {
+        setMarkerVisibility: function(markerVisibility) {
             this._model.setMarkerVisibility(markerVisibility);
         },
 
-        getMarkedKey: function () {
+        getMarkedKey: function() {
             return this._model.getMarkedKey();
         },
-        getFirstItemKey: function () {
+        getFirstItemKey: function() {
             return this._model.getFirstItemKey.apply(this._model, arguments);
         },
-        getIndexByKey: function () {
+        getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
         },
 
-        getSelectionStatus: function () {
+        getSelectionStatus: function() {
             return this._model.getSelectionStatus.apply(this._model, arguments);
         },
 
-        getNextItemKey: function () {
+        getNextItemKey: function() {
             return this._model.getNextItemKey.apply(this._model, arguments);
         },
 
-        setIndexes: function (startIndex, stopIndex) {
+        setIndexes: function(startIndex, stopIndex) {
             this._model.setIndexes(startIndex, stopIndex);
         },
 
-        getPreviousItemKey: function () {
+        getPreviousItemKey: function() {
             return this._model.getPreviousItemKey.apply(this._model, arguments);
         },
 
-        setSorting: function (sorting) {
+        setSorting: function(sorting) {
             this._model.setSorting(sorting);
         },
 
-        setSearchValue: function (value) {
+        setSearchValue: function(value) {
             this._model.setSearchValue(value);
         },
 
-        getSorting: function () {
+        getSorting: function() {
             return this._model.getSorting();
         },
 
-        setItemPadding: function (itemPadding) {
+        setItemPadding: function(itemPadding) {
             this._model.setItemPadding(itemPadding);
         },
 
-        getSwipeItem: function () {
+        getSwipeItem: function() {
             return this._model.getSwipeItem();
         },
 
-        setCollapsedGroups: function (collapsedGroups) {
+        setCollapsedGroups: function(collapsedGroups) {
             this._model.setCollapsedGroups(collapsedGroups);
         },
 
-        reset: function () {
+        reset: function() {
             this._model.reset();
         },
 
-        isEnd: function () {
+        isEnd: function() {
             return this._model.isEnd();
         },
 
-        goToNext: function () {
+        goToNext: function() {
             this._model.goToNext();
         },
 
-        getItemDataByItem: function (dispItem) {
+        getItemDataByItem: function(dispItem) {
             var
                 self = this,
                 stickyColumn = _private.getStickyColumn(this._options),
@@ -655,16 +655,16 @@ var
 
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
 
-            current.resetColumnIndex = function () {
+            current.resetColumnIndex = function() {
                 current.columnIndex = 0;
             };
-            current.goToNextColumn = function () {
+            current.goToNextColumn = function() {
                 current.columnIndex++;
             };
-            current.getLastColumnIndex = function () {
+            current.getLastColumnIndex = function() {
                 return current.columns.length - 1;
             };
-            current.getCurrentColumn = function () {
+            current.getCurrentColumn = function() {
                 var
                     currentColumn = {
                         item: current.item,
@@ -708,162 +708,166 @@ var
             return current;
         },
 
-        getCurrent: function () {
+        getCurrent: function() {
             var dispItem = this._model._display.at(this._model._curIndex);
             return this.getItemDataByItem(dispItem);
         },
 
-        toggleGroup: function (group, state) {
+        toggleGroup: function(group, state) {
             this._model.toggleGroup(group, state);
         },
 
-        getNext: function () {
+        getNext: function() {
             return this._model.getNext();
         },
 
-        isLast: function () {
+        isLast: function() {
             return this._model.isLast();
         },
 
-        setStickyColumn: function (stickyColumn) {
+        setStickyColumn: function(stickyColumn) {
             this._options.stickyColumn = stickyColumn;
             this._ladder = _private.prepareLadder(this);
             this._nextModelVersion();
         },
 
-        setLadderProperties: function (ladderProperties) {
+        setLadderProperties: function(ladderProperties) {
             this._options.ladderProperties = ladderProperties;
             this._ladder = _private.prepareLadder(this);
             this._nextModelVersion();
         },
 
-        updateIndexes: function (startIndex, stopIndex) {
+        updateIndexes: function(startIndex, stopIndex) {
             this._model.updateIndexes(startIndex, stopIndex);
         },
 
-        setItems: function (items) {
+        setItems: function(items) {
             this._model.setItems(items);
         },
 
-        setItemTemplateProperty: function (itemTemplateProperty) {
+        setItemTemplateProperty: function(itemTemplateProperty) {
             this._model.setItemTemplateProperty(itemTemplateProperty);
         },
 
-        getItems: function () {
+        getItems: function() {
             return this._model.getItems();
         },
 
-        setActiveItem: function (itemData) {
+        setActiveItem: function(itemData) {
             this._model.setActiveItem(itemData);
         },
 
-        mergeItems: function (items) {
+        mergeItems: function(items) {
             this._model.mergeItems(items);
         },
 
-        appendItems: function (items) {
+        appendItems: function(items) {
             this._model.appendItems(items);
         },
 
-        prependItems: function (items) {
+        prependItems: function(items) {
             this._model.prependItems(items);
         },
 
-        setItemActions: function (item, actions) {
+        setItemActions: function(item, actions) {
             this._model.setItemActions(item, actions);
         },
 
-        _setEditingItemData: function (itemData) {
+        nextModelVersion: function() {
+            this._model.nextModelVersion.apply(this._model, arguments);
+        },
+
+        _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
         },
 
-        setItemActionVisibilityCallback: function (callback) {
+        setItemActionVisibilityCallback: function(callback) {
             this._model.setItemActionVisibilityCallback(callback);
         },
 
-        _prepareDisplayItemForAdd: function (item) {
+        _prepareDisplayItemForAdd: function(item) {
             return this._model._prepareDisplayItemForAdd(item);
         },
 
-        getCurrentIndex: function () {
+        getCurrentIndex: function() {
             return this._model.getCurrentIndex();
         },
 
-        getItemActions: function (item) {
+        getItemActions: function(item) {
             return this._model.getItemActions(item);
         },
 
-        getIndexBySourceItem: function (item) {
+        getIndexBySourceItem: function(item) {
             return this._model.getIndexBySourceItem(item);
         },
 
-        at: function (index) {
+        at: function(index) {
             return this._model.at(index);
         },
 
-        getCount: function () {
+        getCount: function() {
             return this._model.getCount();
         },
 
-        setSwipeItem: function (itemData) {
+        setSwipeItem: function(itemData) {
             this._model.setSwipeItem(itemData);
         },
 
-        setRightSwipedItem: function (itemData) {
+        setRightSwipedItem: function(itemData) {
             this._model.setRightSwipedItem(itemData);
         },
 
-        setShowRowSeparator: function (showRowSeparator) {
+        setShowRowSeparator: function(showRowSeparator) {
             this._options.showRowSeparator = showRowSeparator;
             this._nextModelVersion();
         },
 
-        setRowSeparatorVisibility: function (rowSeparatorVisibility) {
+        setRowSeparatorVisibility: function(rowSeparatorVisibility) {
             this._options.rowSeparatorVisibility = rowSeparatorVisibility;
             this._nextModelVersion();
         },
 
-        updateSelection: function (selectedKeys) {
+        updateSelection: function(selectedKeys) {
             this._model.updateSelection(selectedKeys);
         },
 
-        setDragTargetPosition: function (position) {
+        setDragTargetPosition: function(position) {
             this._model.setDragTargetPosition(position);
         },
 
-        getDragTargetPosition: function () {
+        getDragTargetPosition: function() {
             return this._model.getDragTargetPosition();
         },
 
-        setDragEntity: function (entity) {
+        setDragEntity: function(entity) {
             this._model.setDragEntity(entity);
         },
 
-        getDragEntity: function () {
+        getDragEntity: function() {
             return this._model.getDragEntity();
         },
 
-        setDragItemData: function (itemData) {
+        setDragItemData: function(itemData) {
             this._model.setDragItemData(itemData);
         },
 
-        getDragItemData: function () {
+        getDragItemData: function() {
             return this._model.getDragItemData();
         },
 
-        calculateDragTargetPosition: function (targetData, position) {
+        calculateDragTargetPosition: function(targetData, position) {
             return this._model.calculateDragTargetPosition(targetData, position);
         },
 
-        getActiveItem: function () {
+        getActiveItem: function() {
             return this._model.getActiveItem();
         },
 
-        getChildren: function () {
+        getChildren: function() {
             return this._model.getChildren.apply(this._model, arguments);
         },
 
-        destroy: function () {
+        destroy: function() {
             this._model.unsubscribe('onListChange', this._onListChangeFn);
             this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
             this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
