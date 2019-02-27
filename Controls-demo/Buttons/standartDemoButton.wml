@@ -8,7 +8,7 @@
                 <Controls.Button readOnly="{{false}}" style="secondary" viewMode="button" caption="small button"/>
             </div>
             <div attr:class="test_element_two_column">
-                <Controls.Button readOnly="{{false}}" style="primary" viewMode="button" caption="small button"/>
+                <Controls.Button theme="online" readOnly="{{false}}" style="primary" viewMode="button" caption="small button"/>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
                 <Controls.Button readOnly="{{false}}" size="l" style="secondary" viewMode="button" caption="big button"/>
             </div>
             <div attr:class="test_element_two_column">
-                <Controls.Button readOnly="{{false}}" size="l" style="primary" viewMode="button" caption="big button"/>
+                <Controls.Button theme="online" readOnly="{{false}}" size="l" style="primary" viewMode="button" caption="big button"/>
             </div>
         </div>
     </div>

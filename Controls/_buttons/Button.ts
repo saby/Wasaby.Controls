@@ -50,7 +50,8 @@ import { IoC } from 'Env/Env';
 class Button extends Control {
    private _template: Function = template;
 
-   private _style: String;
+   // Называть _style нельзя, так как это состояние используется для темизации
+   private _buttonStyle: String;
    private _transparent: Boolean;
    private _viewMode: String;
    private _state: String;
@@ -59,11 +60,11 @@ class Button extends Control {
    private _icon: String;
    private _iconStyle: String;
 
-   public _theme: Array<string> = ['Controls/_buttons/Button'];
+   static _theme: Array<string> = ['Controls/_buttons/Button'];
    private cssStyleGeneration(options) {
       const currentButtonClass = classesUtil.getCurrentButtonClass(options.style);
 
-      this._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+      this._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
       this._transparent = options.transparent;
       this._viewMode = currentButtonClass.viewMode ? currentButtonClass.viewMode : options.viewMode;
       if (this._viewMode === 'transparentQuickButton' || this._viewMode === 'quickButton') {
