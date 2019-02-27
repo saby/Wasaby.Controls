@@ -16,17 +16,17 @@
 }
 
 @keyframes rightSwipe {
-   0% {
-      transform: translateX(0);
-   }
+  0% {
+    transform: translateX(0);
+  }
 
-   50% {
-      transform: translateX(16px);
-   }
+  50% {
+    transform: translateX(16px);
+  }
 
-   100% {
-      transform: translateX(0);
-   }
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .controls-itemActionsV_swipe_animationContainer {
@@ -67,7 +67,7 @@
 //каскад избавление от которого слишком дорогостоящее
 .controls-itemActionsV__action_icon_swipe {
   &.icon-primary {
-  color: @color_swipe_icon;
+    color: @color_swipe_icon;
   }
   &.controls-itemActionsV__action_icon_small {
     .icon-size-without-important(@font-size_swipe_icon_small, @default-icon-medium-font);
@@ -134,6 +134,12 @@
   line-height: @font-size_swipe_icon_small;
 }
 
-.controls-ListView__item_rightSwipeAnimation {
-   animation: rightSwipe 0.3s;
+/**
+TODO: на андроиде дёргается запись в списке если после анимации перестраивается ПМО.
+Нужно или разобраться почему дёргается запись, или откладывать перестраивание ПМО.
+Верну анимацию по задаче:
+https://online.sbis.ru/opendoc.html?guid=a1a72f4f-de87-400c-8cb1-1e32d8b63068
+ */
+body:not(.ws-is-mobile-android) .controls-ListView__item_rightSwipeAnimation {
+  animation: rightSwipe 0.3s;
 }

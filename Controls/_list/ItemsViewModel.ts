@@ -15,7 +15,7 @@ import Env = require('Env/Env');
 
 var _private = {
 
-    checkDeprecated: function (cfg) {
+    checkDeprecated: function(cfg) {
 
         if (cfg.leftSpacing && !this.leftSpacing) {
             this.leftSpacing = true;
@@ -41,26 +41,26 @@ var _private = {
     },
 
     // проверка на то, нужно ли создавать новый инстанс рекордсета или же можно положить данные в старый
-    isEqualItems: function (oldList, newList) {
+    isEqualItems: function(oldList, newList) {
         return oldList && cInstance.instanceOfModule(oldList, 'Types/collection:RecordSet') &&
             (newList.getModel() === oldList.getModel()) &&
             (Object.getPrototypeOf(newList).constructor == Object.getPrototypeOf(newList).constructor) &&
             (Object.getPrototypeOf(newList.getAdapter()).constructor == Object.getPrototypeOf(oldList.getAdapter()).constructor);
     },
-    displayFilterGroups: function (item, index, displayItem) {
+    displayFilterGroups: function(item, index, displayItem) {
         return item === ControlsConstants.view.hiddenGroup || !item.get || !this.collapsedGroups[displayItem.getOwner().getGroup()(item, index, displayItem)];
     },
-    prepareCollapsedGroupsByArray: function (collapsedGroups) {
+    prepareCollapsedGroupsByArray: function(collapsedGroups) {
         var
             result = {};
         if (collapsedGroups) {
-            collapsedGroups.forEach(function (group) {
+            collapsedGroups.forEach(function(group) {
                 result[group] = true;
             });
         }
         return result;
     },
-    prepareCollapsedGroupsByObject: function (collapsedGroups) {
+    prepareCollapsedGroupsByObject: function(collapsedGroups) {
         var
             result = [];
         if (collapsedGroups) {
@@ -72,11 +72,11 @@ var _private = {
         }
         return result;
     },
-    getDisplayFilter: function (data, cfg) {
+    getDisplayFilter: function(data, cfg) {
         var
             filter = [];
         if (cfg.groupMethod || cfg.groupingKeyCallback) {
-            filter.push(_private.displayFilterGroups.bind({collapsedGroups: data.collapsedGroups}));
+            filter.push(_private.displayFilterGroups.bind({ collapsedGroups: data.collapsedGroups }));
         }
         if (cfg.itemsFilterMethod) {
             filter.push(cfg.itemsFilterMethod);
@@ -93,7 +93,7 @@ var ItemsViewModel = BaseViewModel.extend({
     _collapsedGroups: null,
     _prefixItemVersion: null,
 
-    constructor: function (cfg) {
+    constructor: function(cfg) {
         this._prefixItemVersion = 0;
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
@@ -108,18 +108,18 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    _prepareDisplay: function (items, cfg) {
+    _prepareDisplay: function(items, cfg) {
         var
             filter = this.getDisplayFilter(this.prepareDisplayFilterData(), cfg);
         return ItemsUtil.getDefaultDisplayFlat(items, cfg, filter);
     },
 
-    reset: function () {
+    reset: function() {
         this._startIndex = this._options.virtualScrolling && !!this._startIndex ? this._startIndex : 0;
         this._curIndex = this._startIndex;
     },
 
-    isEnd: function () {
+    isEnd: function() {
         var endIndex;
         if (this._options.virtualScrolling) {
             endIndex = (this._options.virtualScrolling && !!this._stopIndex ? this._stopIndex : 0);
@@ -129,7 +129,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._curIndex < endIndex;
     },
 
-    setIndexes: function (startIndex, stopIndex) {
+    setIndexes: function(startIndex, stopIndex) {
         if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
             this._startIndex = startIndex;
             this._stopIndex = stopIndex;
@@ -137,7 +137,7 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    isLast: function () {
+    isLast: function() {
         var lastIndex;
         if (this._options.virtualScrolling) {
             lastIndex = this._stopIndex - 1;
@@ -147,28 +147,28 @@ var ItemsViewModel = BaseViewModel.extend({
         return this._curIndex === lastIndex;
     },
 
-    goToNext: function () {
+    goToNext: function() {
         this._curIndex++;
     },
 
-    getCurrent: function () {
+    getCurrent: function() {
         var dispItem = this._display.at(this._curIndex);
         return this.getItemDataByItem(dispItem);
     },
 
-    _nextModelVersion: function (notUpdatePrefixItemVersion, changesType) {
+    _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         if (!notUpdatePrefixItemVersion) {
             this._prefixItemVersion++;
         }
         this._nextVersion();
-        this._notify('onListChange', changesType);
+        this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
 
-    nextModelVersion: function (notUpdatePrefixItemVersion) {
+    nextModelVersion: function(notUpdatePrefixItemVersion) {
         this._nextModelVersion(notUpdatePrefixItemVersion);
     },
 
-    _calcItemVersion: function (item) {
+    _calcItemVersion: function(item) {
         var
             version = '' + this._prefixItemVersion;
 
@@ -181,7 +181,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return version;
     },
 
-    getItemDataByItem: function (dispItem) {
+    getItemDataByItem: function(dispItem) {
         var
             self = this,
             itemData = {
@@ -198,7 +198,7 @@ var ItemsViewModel = BaseViewModel.extend({
                 rightSpacing: this._options.rightSpacing || this._options.rightPadding,
                 key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
                 _preferVersionAPI: true,
-                getVersion: function () {
+                getVersion: function() {
                     return self._calcItemVersion(itemData.item, itemData.key);
                 }
             };
@@ -213,7 +213,7 @@ var ItemsViewModel = BaseViewModel.extend({
         return itemData;
     },
 
-    setCollapsedGroups: function (collapsedGroups) {
+    setCollapsedGroups: function(collapsedGroups) {
         this._options.collapsedGroups = collapsedGroups;
         this._collapsedGroups = {};
 
@@ -224,7 +224,7 @@ var ItemsViewModel = BaseViewModel.extend({
         this._nextModelVersion();
     },
 
-    toggleGroup: function (group, state) {
+    toggleGroup: function(group, state) {
         if (typeof state === 'undefined') {
             state = typeof this._collapsedGroups[group] !== 'undefined';
         }
@@ -242,27 +242,27 @@ var ItemsViewModel = BaseViewModel.extend({
         });
     },
 
-    setFilter: function (filter) {
+    setFilter: function(filter) {
         this._display.setFilter(filter);
         this.nextModelVersion();
     },
 
-    prepareDisplayFilterData: function () {
+    prepareDisplayFilterData: function() {
         return {
             collapsedGroups: this._collapsedGroups
         };
     },
 
-    getDisplayFilter: function (data, cfg) {
+    getDisplayFilter: function(data, cfg) {
         return _private.getDisplayFilter(data, cfg);
     },
 
-    setGroupMethod: function (groupMethod) {
+    setGroupMethod: function(groupMethod) {
         this._options.groupMethod = groupMethod;
         this._nextModelVersion();
     },
 
-    getNext: function () {
+    getNext: function() {
         var
             itemIndex = this._curIndex + 1,
             dispItem = this._display.at(itemIndex);
@@ -276,31 +276,31 @@ var ItemsViewModel = BaseViewModel.extend({
         };
     },
 
-    getCurrentIndex: function () {
+    getCurrentIndex: function() {
         return this._curIndex;
     },
 
-    getItemById: function (id, keyProperty) {
+    getItemById: function(id, keyProperty) {
         return this._display ? ItemsUtil.getDisplayItemById(this._display, id, keyProperty) : undefined;
     },
 
-    getCount: function () {
+    getCount: function() {
         return this._display ? this._display.getCount() : 0;
     },
 
-    _onCollectionChange: function (event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+    _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
         this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
-        this._nextModelVersion(true, 'collectionChanged');
+        this._nextModelVersion(true, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
         this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
     },
-    _onBeginCollectionChange: function () {
+    _onBeginCollectionChange: function() {
         // method may be implemented
     },
-    _onEndCollectionChange: function () {
+    _onEndCollectionChange: function() {
         // method may be implemented
     },
-    setItems: function (items) {
+    setItems: function(items) {
         if (_private.isEqualItems(this._items, items)) {
             this._items.setMetaData(items.getMetaData());
             this._items.assign(items);
@@ -319,36 +319,36 @@ var ItemsViewModel = BaseViewModel.extend({
         }
     },
 
-    getItems: function () {
+    getItems: function() {
         return this._items;
     },
 
-    appendItems: function (items) {
+    appendItems: function(items) {
         this._items.append(items);
     },
 
-    mergeItems: function (items, options) {
-        options = Object.assign({remove: false}, options || {});
+    mergeItems: function(items, options) {
+        options = Object.assign({ remove: false }, options || {});
         this._items.merge(items, options);
     },
 
-    prependItems: function (items) {
+    prependItems: function(items) {
         this._items.prepend(items);
     },
 
-    getIndexBySourceItem: function (item) {
+    getIndexBySourceItem: function(item) {
         return this._display ? this._display.getIndexBySourceItem(item) : undefined;
     },
 
-    at: function (index) {
+    at: function(index) {
         return this._display ? this._display.at(index) : undefined;
     },
 
-    getDisplay: function () {
+    getDisplay: function() {
         return this._display;
     },
 
-    destroy: function () {
+    destroy: function() {
         ItemsViewModel.superclass.destroy.apply(this, arguments);
         if (this._display) {
             this._display.destroy();

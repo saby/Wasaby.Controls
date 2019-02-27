@@ -529,10 +529,20 @@ var _private = {
     },
 
     initListViewModelHandler: function(self, model) {
-        model.subscribe('onListChange', function(event, changesType) {
-            if (self._options.navigation && self._options.navigation.source === 'position') {
-                if (changesType === 'collectionChanged') {
+        model.subscribe('onListChange', function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+            if (changesType === 'collectionChanged') {
+                if (self._options.navigation && self._options.navigation.source === 'position') {
                     _private.recalculateNavigationState(self);
+                }
+                if (!!action && self.getVirtualScroll()) {
+                    self._virtualScroll.ItemsCount = self.getViewModel().getCount();
+                    if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
+                        self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
+                    }
+                    if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
+                        self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
+                    }
+                    _private.applyVirtualScroll(self);
                 }
             }
             self._hasUndrawChanges = true;
