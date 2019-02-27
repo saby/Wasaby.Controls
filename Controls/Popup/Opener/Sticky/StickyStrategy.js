@@ -169,7 +169,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          if (maxOverflow1 > 0) {
             _private.invert(popupCfg, direction);
 
-            //https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+            // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
             popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
             var position2 = _private.getPosition(popupCfg, targetCoords, direction);
             var maxOverflow2 = _private.checkOverflow(popupCfg, targetCoords, position2, direction);
@@ -188,6 +188,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
 
       getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
          var position = {
+
             // position: 'fixed'
          };
 
@@ -200,7 +201,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
    return {
       getPosition: function(popupCfg, targetCoords) {
          if (popupCfg.revertPositionStyle) {
-            //TODO: https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
+            // TODO: https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
             return _private.getPositionCoordinatesFixed(popupCfg, targetCoords);
          }
          var targetPoint = _private.getTargetPoint(popupCfg, targetCoords);
