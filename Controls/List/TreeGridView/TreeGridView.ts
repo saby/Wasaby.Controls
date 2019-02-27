@@ -1,8 +1,8 @@
 import GridView = require('Controls/List/Grid/GridView');
 import DefaultItemTpl = require('wml!Controls/List/TreeGridView/Item');
 import ItemOutputWrapper = require('wml!Controls/List/TreeGridView/ItemOutputWrapper');
-require('wml!Controls/List/TreeGridView/NodeFooter');
-require('css!theme?Controls/List/TreeGridView/TreeGridView');
+import 'wml!Controls/List/TreeGridView/NodeFooter';
+import 'css!theme?Controls/List/TreeGridView/TreeGridView';
 
 var
     TreeGridView = GridView.extend({

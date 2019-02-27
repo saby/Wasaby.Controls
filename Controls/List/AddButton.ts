@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/List/AddButton/AddButton');
 import entity = require('Types/entity');
-require('css!theme?Controls/List/AddButton/AddButton');
+import 'css!theme?Controls/List/AddButton/AddButton';
 
 /**
  *

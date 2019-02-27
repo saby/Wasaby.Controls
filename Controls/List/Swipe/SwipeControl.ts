@@ -4,8 +4,8 @@ import TouchContextField = require('Controls/Context/TouchContextField');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import Deferred = require('Core/Deferred');
 import entity = require('Types/entity');
-require('Controls/Utils/Toolbar');
-require('css!theme?Controls/List/Swipe/Swipe');
+import 'Controls/Utils/Toolbar';
+import 'css!theme?Controls/List/Swipe/Swipe';
 
 var MEASURER_NAMES = {
     tile: 'Controls/List/Swipe/Tile',

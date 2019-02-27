@@ -8,12 +8,12 @@ import Env = require('Env/Env');
 import GroupTemplate = require('wml!Controls/List/Grid/GroupTemplate');
 import OldGridView = require('wml!Controls/List/Grid/OldGridView');
 import NewGridView = require('wml!Controls/List/Grid/NewGridView');
-require('wml!Controls/List/Grid/Header');
-require('wml!Controls/List/Grid/Results');
-require('wml!Controls/List/Grid/ColGroup');
-require('css!theme?Controls/List/Grid/Grid');
-require('css!theme?Controls/List/Grid/OldGrid');
-require('Controls/List/BaseControl/Scroll/Emitter');
+import 'wml!Controls/List/Grid/Header';
+import 'wml!Controls/List/Grid/Results';
+import 'wml!Controls/List/Grid/ColGroup';
+import 'css!theme?Controls/List/Grid/Grid';
+import 'css!theme?Controls/List/Grid/OldGrid';
+import 'Controls/List/BaseControl/Scroll/Emitter';
 
 // todo: removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
 function isEqualWithSkip(obj1, obj2, skipFields) {

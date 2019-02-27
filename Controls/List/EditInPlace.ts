@@ -5,7 +5,7 @@ import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import EditConstants = require('Controls/EditableArea/Constants');
-require('css!theme?Controls/List/EditInPlace/Text');
+import 'css!theme?Controls/List/EditInPlace/Text';
 
 var
     typographyStyles = [

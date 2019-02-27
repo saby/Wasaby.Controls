@@ -16,8 +16,8 @@ import tUtil = require('Controls/Utils/Toolbar');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
-require('wml!Controls/List/BaseControl/Footer');
-require('css!theme?Controls/List/BaseControl/BaseControl');
+import 'wml!Controls/List/BaseControl/Footer';
+import 'css!theme?Controls/List/BaseControl/BaseControl';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18

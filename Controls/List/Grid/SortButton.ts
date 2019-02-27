@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import template = require('wml!Controls/List/Grid/SortButton');
-require('css!theme?Controls/List/Grid/SortButton');
+import 'css!theme?Controls/List/Grid/SortButton';
 
 /**
  * Graphical control element that used for changing sorting in Grid control

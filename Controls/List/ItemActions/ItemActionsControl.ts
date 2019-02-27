@@ -5,7 +5,7 @@ import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
-require('css!theme?Controls/List/ItemActions/ItemActionsControl');
+import 'css!theme?Controls/List/ItemActions/ItemActionsControl';
 
 var
     ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';

@@ -8,8 +8,8 @@ import ListViewTpl = require('wml!Controls/List/ListView/ListView');
 import defaultItemTemplate = require('wml!Controls/List/ItemTemplate');
 import GroupTemplate = require('wml!Controls/List/GroupTemplate');
 import ItemOutputWrapper = require('wml!Controls/List/resources/ItemOutputWrapper');
-require('wml!Controls/List/resources/ItemOutput');
-require('css!theme?Controls/List/ListView/ListView');
+import 'wml!Controls/List/resources/ItemOutput';
+import 'css!theme?Controls/List/ListView/ListView';
 
 var
     DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
