@@ -1,4 +1,4 @@
-import Control from './_list/List';
+import Control = require('Controls/_list/List');
 
 /**
  * Plain list with custom item template. Can load data from data source.
