@@ -6,7 +6,7 @@ define(
       'Types/collection'
    ],
    (Dropdown, Clone, sourceLib, collection) => {
-      describe('Dropdown', () => {
+      describe('Input/Dropdown', () => {
          let items = [
             {
                id: '1',
@@ -67,13 +67,18 @@ define(
          let dropdownList = new Dropdown(config);
 
          it('_afterUpdate', () => {
-            let ddl = getDropdown(config);
+            let ddl = getDropdown(config),
+               text;
             ddl._notify = (e, data) => {
-               assert.deepEqual(data[0], 'Запись 8');
+               if (e === 'textValueChanged') {
+                  text = data[0];
+               }
             };
             let newConfig = Clone(config);
             newConfig.selectedKeys = ['8'];
-            ddl._beforeUpdate(newConfig);
+            ddl._text = 'Запись 8';
+            ddl._afterUpdate(newConfig);
+            assert.equal(text, 'Запись 8');
          });
 
          it('data load callback', () => {
@@ -99,6 +104,18 @@ define(
             let ddl = getDropdown(config);
             ddl._setText([]);
             assert.equal(ddl._text, '');
+         });
+
+         it('_setText emptyText=true', () => {
+            let newConfig = Clone(config);
+            newConfig.emptyText = true;
+            let ddl = getDropdown(newConfig);
+            ddl._setText([null]);
+            assert.equal(ddl._text, 'Не выбрано');
+            assert.isNull(ddl._icon);
+            ddl._setText([{id: null}]);
+            assert.equal(ddl._text, 'Не выбрано');
+            assert.isNull(ddl._icon);
          });
       });
    }

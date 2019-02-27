@@ -32,6 +32,13 @@ define('Controls/List/interface/IExplorer', [
     */
 
    /**
+    * @name Controls/List/interface/IExplorer#backButtonStyle
+    * @cfg {String} Back heading display style.
+    * @default secondary
+    * @see Controls/Heading/Back#style
+    */
+
+   /**
     * @name Controls/List/interface/IExplorer#showActionButton
     * @cfg {Boolean} Determines whether the arrow near "back" button should be shown.
     * @default

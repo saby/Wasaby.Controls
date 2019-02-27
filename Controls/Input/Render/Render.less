@@ -95,6 +95,11 @@
       background: ~"@{background_Render_style_@{_item}_active}";
    } });
 
+   .for(@variants, { &_@{_item}:focus-within {
+      border-color: ~"@{border-color_Render_style_@{_item}_active}";
+      background: ~"@{background_Render_style_@{_item}_active}";
+   } });
+
    .for(@variants, { &_@{_item}_readOnly {
       border-color: ~"@{border-color_Render_style_@{_item}_readOnly}";
       background: ~"@{background_Render_style_@{_item}_readOnly}";
