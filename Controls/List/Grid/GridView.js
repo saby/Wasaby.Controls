@@ -66,6 +66,15 @@ define('Controls/List/Grid/GridView', [
             });
             return result;
          },
+         detectLayoutFixed: function(self, columns) {
+            self._layoutFixed = true;
+            for (var i = 0; i < columns.length; i++) {
+               if (!columns[i].width || columns[i].width === 'auto') {
+                  self._layoutFixed = false;
+                  break;
+               }
+            }
+         },
          prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
                resultsPadding,
@@ -118,6 +127,9 @@ define('Controls/List/Grid/GridView', [
          _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
+            if (cDetection.isNotFullGridSupport) {
+               _private.detectLayoutFixed(this, cfg.columns);
+            }
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
          },
@@ -127,6 +139,9 @@ define('Controls/List/Grid/GridView', [
 
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
+               if (cDetection.isNotFullGridSupport) {
+                  _private.detectLayoutFixed(this, newCfg.columns);
+               }
                this._listModel.setColumns(newCfg.columns);
                if (!cDetection.isNotFullGridSupport) {
                   _private.prepareHeaderAndResultsIfFullGridSupport(this._listModel.getResultsPosition(), this._listModel.getHeader(), this._container);
