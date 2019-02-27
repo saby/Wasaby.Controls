@@ -7,7 +7,7 @@
                      controls-Checkbox__icon-border-color__{{_options.readOnly ? 'disabled': 'enabled'}} controls-Checkbox__icon">
             <svg attr:xmlns="http://www.w3.org/2000/svg"
                  attr:viewBox="0 0 18 18"
-                 class="controls-Checkbox__icon-checked
+                 attr:class="controls-Checkbox__icon-checked
                         {{_options.value ? 'controls-Checkbox__icon-checked-color_'+ (_options.readOnly ? 'disabled':'enabled') : 'controls-Checkbox__icon-checked-color_transparent'}}">
                 <path attr:xmlns="http://www.w3.org/2000/svg" attr:d="M13,17.69l3.94,3.38,10.13-9L17.5,25Z" attr:transform="translate(-13 -12.06)"/>
             </svg>
