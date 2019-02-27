@@ -6,8 +6,8 @@ import ListControlTpl = require('wml!Controls/List/List');
 import ListViewModel = require('Controls/List/ListViewModel');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-require('Controls/List/ListView');
-require('Controls/List/ListControl');
+import 'Controls/List/ListView';
+import 'Controls/List/ListControl';
 
 /**
  * Plain list with custom item template. Can load data from data source.
