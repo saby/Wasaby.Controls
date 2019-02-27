@@ -76,8 +76,14 @@ define('Controls/Container/Adapter/Enum',
          },
 
          _changeKey: function(e, key) {
+            var resultKey = key;
+            
+            //support of multiselection in dropdown
+            if (key instanceof Array) {
+               resultKey = key[0];
+            }
             if (this._enum) {
-               this._enum.setByValue(key);
+               this._enum.setByValue(resultKey);
             }
          }
 

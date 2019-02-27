@@ -1,6 +1,7 @@
 <div attr:class="controls-Input-DateRange">
    <Controls.Input.DateTime
       name="startValueField"
+      class="controls-Input-DateRange_startValue"
       bind:value="_rangeModel.startValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
@@ -18,6 +19,7 @@
    <div class="controls-Input-DateRange__dash"></div>
    <Controls.Input.DateTime
       name="endValueField"
+      class="controls-Input-DateRange_endValue"
       bind:value="_rangeModel.endValue"
       mask="{{_options.mask}}"
       size="{{ _options.size }}"
@@ -42,7 +44,7 @@
    <Controls.Popup.Opener.Sticky name="opener">
       <ws:popupOptions
          template="SBIS3.CONTROLS/Date/RangeBigChoose"
-         closeByExternalClick="{{true}}"
+         closeOnOutsideClick="{{true}}"
       />
    </Controls.Popup.Opener.Sticky>
 </div>

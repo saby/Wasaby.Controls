@@ -82,6 +82,7 @@
                    {{!!itemData.isActive ? ' controls-GridView__item_active'}}
                             {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                             {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
+                            {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}
                             controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
        attr:style="{{((colspan || colspanCurrentNode) && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
       <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
