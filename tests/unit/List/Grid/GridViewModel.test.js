@@ -661,7 +661,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   },
                   {
                      title: 'second',
-                     width: 'auto'
+                     width: '100%'
                   },
                   {
                      title: 'third',

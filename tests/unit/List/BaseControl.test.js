@@ -159,6 +159,7 @@ define([
          assert.deepEqual(BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
       });
 
+
       it('errback to callback', function(done) {
          var source = new sourceLib.Memory({
             idProperty: 'id',
@@ -533,6 +534,53 @@ define([
             BaseControl._private.prepareFooter.apply(null, test.data);
             assert.deepEqual(test.data[0], test.result, 'Invalid prepare footer on step #' + index);
          });
+      });
+
+      it('virtualScrollCalculation on list change', function() {
+         var callBackCount = 0;
+         var cfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               virtualScrolling: true,
+               viewModelConfig: {
+                  items: [],
+                  idProperty: 'id'
+               },
+               viewModelConstructor: ListViewModel,
+               markedKey: 0,
+               source: source,
+               navigation: {
+                  view: 'infinity'
+               }
+            },
+            instance = new BaseControl(cfg),
+            itemData = {
+               key: 1
+            };
+
+         instance.saveOptions(cfg);
+         instance._beforeMount(cfg);
+
+         var vm = instance.getViewModel();
+         vm.getCount = function() {
+            return 2;
+         };
+         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
+
+         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
+         assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
+         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
+         assert.equal(2, instance.getVirtualScroll().ItemsIndexes.stop);
+
+         vm.getCount = function() {
+            return 1;
+         };
+         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
+         assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
+         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
+         assert.equal(1, instance.getVirtualScroll().ItemsIndexes.stop);
       });
 
       it('loadToDirection up', function(done) {
@@ -1808,6 +1856,8 @@ define([
             assert.equal(instance.getViewModel()._markedKey, 1);
             assert.equal(callBackCount, 0);
          });
+
+
 
          it('showActionsMenu context', function() {
             var callBackCount = 0;
