@@ -7,12 +7,14 @@ define('Controls/Popup/Opener/Stack',
        * Component that opens the popup to the right of content area at the full height of the screen. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_2 See more}.
        *
        * @class Controls/Popup/Opener/Stack
+       * @extends Controls/Popup/Opener/BaseOpener
        * @control
-       * @public
        * @author Красильников А.С.
        * @category Popup
        * @mixes Controls/Popup/Opener/Stack/StackStyles
        * @demo Controls-demo/Popup/Opener/StackPG
+       * @public
+       *
        */
 
       var _private = {
@@ -129,42 +131,6 @@ define('Controls/Popup/Opener/Stack',
  *    });
  * </pre>
  * @see open
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#isOpened
- * @description Popup opened status.
- * @function
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#autofocus
- * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#modal
- * @cfg {Boolean} Determines whether the window is modal.
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#className
- * @cfg {String} Class names of popup.
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#closeOnOutsideClick
- * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#template
- * @cfg {String|Function} Template inside popup.
- */
-
-/**
- * @name Controls/Popup/Opener/Stack#templateOptions
- * @cfg {String|Function} Template options inside popup.
  */
 
 /**

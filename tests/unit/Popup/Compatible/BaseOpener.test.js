@@ -109,7 +109,7 @@ define(
             assert.equal(config.className, 'testClass');
             assert.equal(config.templateOptions.draggable, config.draggable);
             assert.isTrue(config.isModal);
-            assert.isFalse(config.closeByExternalClick);
+            assert.isFalse(config.closeOnOutsideClick);
             assert.isTrue(cInstance.instanceOfModule(config.context, 'Core/Abstract'));
             config.side = null;
             config.modal = true;
@@ -117,12 +117,12 @@ define(
                offset: undefined
             };
             config.offset = 0;
-            config.closeByExternalClick = false;
+            config.closeOnOutsideClick = false;
             delete config.draggable;
             config._popupComponent = 'dialog';
             BaseOpener._preparePopupCfgFromOldToNew(config);
             assert.equal(config.templateOptions.draggable, true);
-            assert.isFalse(config.closeByExternalClick);
+            assert.isFalse(config.closeOnOutsideClick);
             assert.isFalse(!!config.horizontalAlign.side);
             assert.isFalse(!!config.horizontalAlign.offset);
             assert.isTrue(config.isModal);
@@ -290,7 +290,7 @@ define(
 
             config.target = 'testTarget';
             config.className = 'testClass';
-            config.closeByExternalClick = false;
+            config.closeOnOutsideClick = false;
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.dialogOptions._isCompatibleArea, true);
@@ -301,7 +301,7 @@ define(
             assert.equal(newConfig.target, config.target);
             assert.isTrue(newConfig.dialogOptions.modal);
             assert.equal(newConfig.dialogOptions.handlers, config.handlers);
-            assert.equal(newConfig.dialogOptions.autoHide, config.closeByExternalClick);
+            assert.equal(newConfig.dialogOptions.autoHide, config.closeOnOutsideClick);
             assert.equal(newConfig.dialogOptions.className, config.className);
             assert.equal(newConfig.dialogOptions.title, config.title);
             assert.isTrue(newConfig.dialogOptions.border);

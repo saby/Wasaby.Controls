@@ -141,7 +141,7 @@ define('Controls/Popup/Manager',
             var item = ManagerController.find(id);
             if (item) {
                item.isActive = false;
-               if (item.popupOptions.closeByExternalClick) {
+               if (item.popupOptions.closeOnOutsideClick) {
                   if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
                      _private.finishPendings(id, function() {
                         if (!_private.activeElement[id]) {
