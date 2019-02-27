@@ -6,7 +6,7 @@ define('Controls/Button/MenuButton',
    function(Menu, Env) {
 
       var logger = Env.IoC.resolve('ILogger');
-      logger.warn('Контрол "Controls/Button/MenuButton" перенесён, используйте "Controls/Button/Menu"');
+      logger.warn('Controls/Button/MenuButton', 'Контрол перенесён, используйте "Controls/Button/Menu"');
       return Menu;
    }
 );
