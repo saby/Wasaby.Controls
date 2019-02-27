@@ -13,17 +13,15 @@ define('Controls/Selector/Lookup/_Lookup', [
    'Controls/Utils/tmplNotify',
    'Core/helpers/Object/isEqual',
    'Controls/Selector/SelectedCollection/Utils',
-   'Core/helpers/Function/debounce',
    'wml!Controls/Input/resources/input',
    'css!theme?Controls/Selector/Lookup/Lookup'
-], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils, debounce) {
+], function(Control, template, BaseViewModel, chain, merge, getWidthUtil, DOMUtil, Collection, itemsTemplate, clearRecordsTemplate, showSelectorTemplate, tmplNotify, isEqual, selectedCollectionUtils) {
    'use strict';
 
    var
       MAX_VISIBLE_ITEMS = 20,
       SHOW_SELECTOR_WIDTH = 0,
-      CLEAR_RECORDS_WIDTH = 0,
-      UPDATE_RATE_WHEN_RESIZE = 50;
+      CLEAR_RECORDS_WIDTH = 0;
 
    var _private = {
       initializeConstants: function() {
@@ -269,7 +267,6 @@ define('Controls/Selector/Lookup/_Lookup', [
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
-      _resizeDebounce: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -292,8 +289,6 @@ define('Controls/Selector/Lookup/_Lookup', [
 
          _private.initializeConstants();
          _private.initializeContainers(this);
-
-         this._resizeDebounce = debounce(this._resize, UPDATE_RATE_WHEN_RESIZE);
 
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);
@@ -338,7 +333,6 @@ define('Controls/Selector/Lookup/_Lookup', [
 
       _beforeUnmount: function() {
          this._simpleViewModel = null;
-         this._resizeDebounce = null;
       },
 
       _changeValueHandler: function(event, value) {
