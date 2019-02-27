@@ -212,6 +212,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             width: horizontalPosition.size || popupCfg.config.maxWidth,
             height: verticalPosition.size || popupCfg.config.maxHeight
          };
+         position.top = verticalPosition.coordinate;
 
          return position;
       },
