@@ -381,6 +381,29 @@ define([
             assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
          });
 
+         it('getFirstItem and getLastItem', function() {
+            var
+               cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        { id: 1, title: 'item 1', type: null, parent: null },
+                        { id: 2, title: 'item 2', type: true, parent: null },
+                        { id: 3, title: 'item 3', type: true, parent: null },
+                        { id: 21, title: 'item 2-1', type: null, parent: 2 },
+                        { id: 31, title: 'item 3-1', type: null, parent: 3 }
+                     ],
+                     idProperty: 'id'
+                  }),
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  parentProperty: 'parent',
+                  nodeProperty: 'type'
+               },
+               model = new TreeViewModel(cfg);
+            assert.equal(model.getFirstItem(), model.getItems().at(0));
+            assert.equal(model.getLastItem(), model.getItems().at(2));
+         });
+
          it('hasChildren should be true when an item gets added to an empty folder', function() {
             var newItem = new entity.Record({
                rawData: {
