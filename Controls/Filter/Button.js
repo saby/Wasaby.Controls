@@ -43,7 +43,8 @@ define('Controls/Filter/Button',
                      if (!self._filterCompatible) {
                         self._filterCompatible = new _FilterCompatible({
                            filterButton: self,
-                           filterButtonOptions: self._options
+                           filterButtonOptions: self._options,
+                           tabindex: 0
                         });
                      }
                      result.callback(self._filterCompatible);
