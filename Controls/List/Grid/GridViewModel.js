@@ -48,11 +48,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          isFirstInGroup: function(self, dispItem) {
 
-            // If rendering a group, separator is not needed.
-            if (dispItem.isGroup) {
-               return false;
-            }
-
             var
                item = dispItem.item,
                display = self._model._display,
