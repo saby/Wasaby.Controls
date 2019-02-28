@@ -28,6 +28,7 @@
    </ws:if>
 </ws:template>
 <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
+   <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
