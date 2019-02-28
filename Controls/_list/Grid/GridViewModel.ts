@@ -42,19 +42,52 @@ var
             return preparedClasses;
         },
 
-        prepareRowSeparatorClasses: function(rowSeparatorVisibility, rowIndex, rowCount) {
+        isFirstInGroup: function(self, dispItem) {
+
             var
-                result = '';
-            if (rowSeparatorVisibility) {
-                if (rowIndex === 0) {
-                    result += ' controls-Grid__row-cell_firstRow';
-                    result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
+                item = dispItem.item,
+                display = self._model._display,
+                groupingKeyCallback = self._options.groupingKeyCallback,
+                currentItemGroup,
+                currentGroupItems;
+
+            // If grouping is not enabled.
+            if (!groupingKeyCallback) {
+                return false;
+            }
+
+            // Getting all items of the current items' group.
+            currentItemGroup = groupingKeyCallback(item);
+            currentGroupItems = display.getGroupItems(currentItemGroup);
+
+            // If current item is out of any group.
+            if (!currentGroupItems || currentGroupItems.length === 0) {
+                return false;
+            }
+
+
+            return item === currentGroupItems[0].getContents();
+        },
+        prepareRowSeparatorClasses: function(current) {
+            var
+                result = '',
+                rowCount = current.dispItem.getOwner().getCount();
+
+            if (current.rowSeparatorVisibility) {
+
+                if (current.isFirstInGroup) {
+                    result += ' controls-Grid__row-cell_first-row-in-group';
                 } else {
-                    result += ' controls-Grid__row-cell_withRowSeparator';
-                }
-                if (rowIndex === rowCount - 1) {
-                    result += ' controls-Grid__row-cell_lastRow';
-                    result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                    if (current.index === 0) {
+                        result += ' controls-Grid__row-cell_firstRow';
+                        result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
+                    } else {
+                        result += ' controls-Grid__row-cell_withRowSeparator';
+                    }
+                    if (current.index === rowCount - 1) {
+                        result += ' controls-Grid__row-cell_lastRow';
+                        result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                    }
                 }
             } else {
                 result += ' controls-Grid__row-cell_withoutRowSeparator';
@@ -66,7 +99,7 @@ var
             var cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
             var currentStyle = current.style || 'default';
 
-            cellClasses += _private.prepareRowSeparatorClasses(current.rowSeparatorVisibility, current.index, current.dispItem.getOwner().getCount());
+            cellClasses += _private.prepareRowSeparatorClasses(current);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0) {
@@ -635,7 +668,6 @@ var
 
             current.isNotFullGridSupport = Env.detection.isNotFullGridSupport;
             current.style = this._options.style;
-
             if (current.multiSelectVisibility !== 'hidden') {
                 current.columns = [{}].concat(this._columns);
             } else {
@@ -654,7 +686,13 @@ var
                 }
             }
 
-            current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+            current.isFirstInGroup = !current.isGroup && _private.isFirstInGroup(this, current);
+
+            if (current.isFirstInGroup) {
+                current.rowSeparatorVisibility = false;
+            } else {
+                current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+            }
 
             current.columnIndex = 0;
 

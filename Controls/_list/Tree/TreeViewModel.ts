@@ -101,7 +101,13 @@ var
                 _private.checkRemovedNodes(self, removedItems);
             }
             if (_private.getExpanderVisibility(self._options) === 'hasChildren') {
+                var currentValue = self._thereIsChildItem;
+
                 _private.determinePresenceChildItem(self);
+
+                if (currentValue !== self._thereIsChildItem) {
+                    self._nextModelVersion();
+                }
             }
         },
 

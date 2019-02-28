@@ -4,20 +4,20 @@
 }
 
 .controls-GridView__itemV_marker {
-  position: absolute;
-  width: @width_Grid-selection-marker;
-  background-color: @color_Grid-selection-marker;
-  left: 0;
+   position: absolute;
+   width: @width_Grid-selection-marker;
+   background-color: @color_Grid-selection-marker;
+   left: 0;
 }
 
 .controls-GridView-without-rowSeparator_item_marker {
-  height: ~'calc(100% + @{height_Grid-row-separator})';
-  top: -@height_Grid-row-separator;
+   height: ~'calc(100% + @{height_Grid-row-separator})';
+   top: -@height_Grid-row-separator;
 }
 
 .controls-GridView-with-rowSeparator_item_marker{
-  top: 0px;
-  height: 100%;
+   top: 0px;
+   height: 100%;
 }
 
 .controls-Grid__header {
@@ -54,7 +54,7 @@
 }
 
 .controls-Grid__header-cell_valign_bottom {
-  justify-content: flex-end;
+   justify-content: flex-end;
 }
 
 .controls-Grid__header-cell_valign_top {
@@ -62,7 +62,7 @@
 }
 
 .controls-Grid__header-cell_valign_middle {
-  justify-content: center;
+   justify-content: center;
 }
 
 .controls-Grid__results {
@@ -187,6 +187,10 @@
 
 .controls-Grid__row-cell_lastRow {
    border-bottom: @height_Grid-row-separator solid;
+}
+
+.controls-Grid__row-cell_first-row-in-group {
+   border-top-color: transparent;
 }
 
 .controls-Grid__row-cell_withRowSeparator_firstRow {
