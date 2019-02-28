@@ -67,13 +67,14 @@ define('Controls/List/Grid/GridView', [
             return result;
          },
          detectLayoutFixed: function(self, columns) {
-            self._layoutFixed = true;
+            var
+               autoColumnsCount = 0;
             for (var i = 0; i < columns.length; i++) {
                if (!columns[i].width || columns[i].width === 'auto') {
-                  self._layoutFixed = false;
-                  break;
+                  autoColumnsCount++;
                }
             }
+            self._layoutFixed = autoColumnsCount !== 1;
          },
          prepareHeaderAndResultsIfFullGridSupport: function(resultsPosition, header, container) {
             var
