@@ -1,7 +1,10 @@
 <ws:template name="cellContent">
    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
       <ws:if data="{{!!headerColumn.column.template}}">
-         <ws:partial attr:class="controls-Grid__row-header__content_baseline" template="{{headerColumn.column.template}}" colData="{{headerColumn}}"/>
+         <ws:partial attr:class="controls-Grid__row-header__content_baseline"
+                     template="{{headerColumn.column.template}}"
+                     scope="{{ headerColumn.column.templateOptions }}"
+                     colData="{{headerColumn}}"/>
       </ws:if>
       <ws:else>
          <ws:partial attr:class="controls-Grid__row-header__content_baseline" template="{{defaultHeaderContent}}" colData="{{headerColumn}}"/>
@@ -33,7 +36,8 @@
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
    <Controls.StickyHeader.Group>
-      <ws:partial template="header"/>
+      <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
+      <ws:partial template="header" listModel="{{ listModel }}" temp="{{ listModel.getVersion() }}"/>
    </Controls.StickyHeader.Group>
 </ws:if>
 <ws:else>

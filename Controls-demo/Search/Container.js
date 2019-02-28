@@ -9,9 +9,9 @@ define('Controls-demo/Search/Container', [
    'Controls-demo/Utils/MemorySourceFilter',
    'css!Controls-demo/Search/Container'
 ], function(Control, template, sourceLib, memorySourceData, memorySourceFilter) {
-   
+
    'use strict';
-   
+
    var SearchContainer = Control.extend({
       _template: template,
       _navigation: null,
@@ -26,7 +26,7 @@ define('Controls-demo/Search/Container', [
             sourceConfig: {
                pageSize: 20,
                page: 0,
-               mode: 'totalCount'
+               hasMore: false
             }
          };
          this._source = new sourceLib.Memory({

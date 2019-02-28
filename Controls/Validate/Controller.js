@@ -2,7 +2,7 @@ define('Controls/Validate/Controller',
    [
       'Core/Control',
       'wml!Controls/Validate/Controller',
-      'Core/IoC',
+      'Env/Env',
       'Core/ParallelDeferred',
       'Core/Deferred',
       'Core/helpers/isNewEnvironment',
@@ -13,7 +13,7 @@ define('Controls/Validate/Controller',
    function(
       Base,
       template,
-      IoC,
+      Env,
       ParallelDeferred,
       Deferred,
       isNewEnvironment,
@@ -113,7 +113,9 @@ define('Controls/Validate/Controller',
          },
          _beforeUnmount: function() {
             this._notify('validateDestroyed', [this], { bubbling: true });
-            _private.forceCloseInfoBox(this);
+            if (this._isOpened) {
+               _private.forceCloseInfoBox(this);
+            }
          },
          _validationResult: undefined,
 
@@ -187,7 +189,7 @@ define('Controls/Validate/Controller',
                this.setValidationResult(validationResult);
                resultDeferred.callback(validationResult);
             }.bind(this)).addErrback(function(e) {
-               IoC.resolve('ILogger').error('Validate', 'Validation error', e);
+               Env.IoC.resolve('ILogger').error('Validate', 'Validation error', e);
             });
 
             return resultDeferred;
@@ -246,6 +248,13 @@ define('Controls/Validate/Controller',
          },
          _valueChangedHandler: function(event, value) {
             this._notify('valueChanged', [value]);
+            this._cleanValid();
+
+         },
+         _cleanValid: function() {
+            if (this._validationResult) {
+               this.setValidationResult(null);
+            }
          },
 
          /**

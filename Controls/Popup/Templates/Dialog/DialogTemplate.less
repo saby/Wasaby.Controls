@@ -30,20 +30,32 @@
    z-index: 1;
 }
 
+.controls-DialogTemplate__headerContentTemplate {
+   margin-right: @spacing_DialogTemplate-between-content-close-button;
+   position: relative;
+}
+
 .controls-DialogTemplate__top-area-content {
    width: 100%;
    flex-shrink: 1;
    display: flex;
    align-items: baseline;
-   margin-right: @spacing_dialogTemplate-between-head-border-right;
    overflow: hidden;
+   justify-content: space-between;
 }
 
 .controls-DialogTemplate__close_button {
-   position: absolute;
+   position: relative;
    z-index: 2; // The close button is above the content
-   top: 8px; //todo themes
+   margin-top: @spacing_DialogTemplate-between-border-close-button;
+   align-self: flex-start;
+}
+
+.controls-DialogTemplate__close-button_without_head {
+   position: absolute;
    right: 0;
+   top: 0;
+   display: flex;
 }
 
 .controls-DialogTemplate__caption{

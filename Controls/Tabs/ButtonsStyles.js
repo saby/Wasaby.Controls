@@ -23,6 +23,7 @@ define('Controls/Tabs/ButtonsStyles',
     * @css @border-width_Tabs-item_hovered Thickness of line under tabs items in hovered state.
     *
     * @css @border-color_Tabs Border color of line under tabs items.
+    * @css @border-color_Tabs-item_selected Border color of line tabs items in hovered state.
     * @css @background-color_Tabs-separator Color of tabs items separator.
     * @css @text-color_Tabs Color of tabs items text.
     * @css @text-color_Tabs-item_selected_primary Color of tabs items with style 'primary' and selected state.

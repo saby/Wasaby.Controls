@@ -26,6 +26,18 @@ define([
          SelectedCollection._private.getCounterWidth = function() {};
       }
 
+      SelectedCollection._private.getHistoryService = function() {
+         return {
+            addCallback: function(func) {
+               func({
+                  update: function(item) {
+                     item._isUpdateHistory = true;
+                  }
+               });
+            }
+         }
+      };
+
       it('setSelectedKeys', function() {
          var self = getBaseSelectedCollection();
 
@@ -69,6 +81,7 @@ define([
 
       it('addItem', function() {
          var
+            selectedItems,
             textValue = '',
             keysChanged = false,
             self = getBaseSelectedCollection(),
@@ -89,7 +102,7 @@ define([
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
             } else if (eventName === 'textValueChanged') {
-               textValue = data;
+               textValue = data[0];
             }
          };
 
@@ -105,6 +118,7 @@ define([
          assert.isFalse(keysChanged);
          assert.equal(self._items.at(0), item);
 
+         selectedItems = self._items;
          self._options.multiSelect = true;
          SelectedCollection._private.addItem(self, item2);
          assert.deepEqual(self._selectedKeys, [1, 2]);
@@ -112,15 +126,21 @@ define([
          assert.equal(self._items.at(0), item);
          assert.equal(self._items.at(1), item2);
          assert.equal(textValue, 'Roman, Aleksey');
+         assert.notEqual(selectedItems, self._items);
+         assert.equal(self._items.getCount(), 2);
+
       });
 
       it('removeItem', function() {
          var
+            textValue,
+            selectedItems,
             keysChanged = false,
             self = getBaseSelectedCollection(),
             item = new entity.Model({
                rawData: {
-                  id: 1
+                  id: 1,
+                  title: 'Roman'
                }
             }),
             fakeItem = new entity.Model({
@@ -129,9 +149,11 @@ define([
                }
             });
 
-         self._notify = function(eventName) {
+         self._notify = function(eventName, data) {
             if (eventName === 'selectedKeysChanged') {
                keysChanged = true;
+            }  else if (eventName === 'textValueChanged') {
+               textValue = data[0];
             }
          };
 
@@ -139,22 +161,30 @@ define([
 
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isTrue(keysChanged);
+         assert.equal(self._items.getCount(), 1);
 
          keysChanged = false;
          SelectedCollection._private.removeItem(self, fakeItem);
          assert.deepEqual(self._selectedKeys, [1]);
          assert.isFalse(keysChanged);
+         assert.equal(self._items.getCount(), 1);
+         assert.equal(textValue, 'Roman');
 
-         SelectedCollection._private.removeItem(self, item);
+
+         selectedItems = self._items;
+         SelectedCollection._private.removeItem(self, item.clone());
          assert.deepEqual(self._selectedKeys, []);
          assert.isTrue(keysChanged);
+         assert.notEqual(selectedItems, self._items);
+         assert.equal(self._items.getCount(), 0);
+         assert.equal(textValue, '');
       });
 
       it('_beforeMount', function() {
          var selectedCollection = new SelectedCollection();
          var selectedKeys = [1];
-         var emptySelectedKeys = [];
-         var beforeMountResult = selectedCollection._beforeMount({
+
+         selectedCollection._beforeMount({
             selectedKeys: selectedKeys,
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
@@ -184,7 +214,8 @@ define([
 
       it('_beforeUpdate', function(done) {
          var selectedCollection = new SelectedCollection();
-         var selectedKeys = [1];
+         var selectedKeysLink;
+         var selectedKeys = [];
          var textValue = '';
          var result;
          var source = new sourceLib.Memory({
@@ -196,12 +227,14 @@ define([
             idProperty: 'id'
          });
 
+         selectedCollection._options.selectedKeys = selectedKeys;
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
             if (eventName === 'textValueChanged') {
                textValue = data;
             }
          };
+
 
          result = selectedCollection._beforeMount({
             selectedKeys: [],
@@ -213,7 +246,7 @@ define([
          assert.equal(result, undefined);
 
          result = selectedCollection._beforeMount({
-            selectedKeys: selectedKeys,
+            selectedKeys: [1],
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
@@ -225,6 +258,20 @@ define([
             selectedKeys: []
          });
          assert.deepEqual(selectedCollection._selectedKeys, []);
+
+         selectedKeysLink = selectedCollection._selectedKeys = [1];
+         selectedCollection._beforeUpdate({
+            selectedKeys: selectedKeys,
+            source: selectedCollection._options.source
+         });
+         assert.equal(selectedKeysLink, selectedCollection._selectedKeys);
+
+         selectedKeysLink = selectedCollection._selectedKeys = [1];
+         selectedCollection._beforeUpdate({
+            selectedKeys: selectedKeys.slice(),
+            source: selectedCollection._options.source
+         });
+         assert.notEqual(selectedKeysLink, selectedCollection._selectedKeys);
 
          selectedCollection._beforeUpdate({
             selectedKeys: [1]
@@ -269,6 +316,7 @@ define([
 
       it('_setItems', function() {
          var
+            selectedItems,
             selectedCollection = new SelectedCollection(),
             items = [
                new entity.Model({
@@ -288,6 +336,29 @@ define([
 
          assert.deepEqual(selectedCollection._selectedKeys, [1, 2]);
          assert.equal(selectedCollection._items.getCount(), items.length);
+
+         selectedItems = selectedCollection._items;
+         selectedCollection._setItems([]);
+         assert.deepEqual(selectedCollection._selectedKeys, []);
+         assert.equal(selectedCollection._items.getCount(), 0);
+         assert.notEqual(selectedItems, selectedCollection._items);
+      });
+
+      it('_selectCallback', function() {
+         var
+            selectedCollection = new SelectedCollection(),
+            item = new entity.Model({
+               rawData: {id: 1}
+            });
+
+         selectedCollection._options.historyId = 'historyField';
+         selectedCollection._selectCallback(
+            new collection.List({
+               items: [item]
+            })
+         );
+
+         assert.isTrue(item._isUpdateHistory);
       });
 
       it('showSelector', function() {
@@ -295,14 +366,18 @@ define([
             templateOptions,
             isShowSelector = false,
             selectedCollection = new SelectedCollection(),
+            items = new collection.List(),
+            selectedItems,
             opener;
 
          selectedCollection._options.selectorTemplate = {};
+         selectedCollection._items = items;
          selectedCollection._children.selectorOpener = {
             open: function(config) {
                isShowSelector = true;
                templateOptions = config.templateOptions;
                opener = config.opener;
+               selectedItems = config.selectedItem;
             }
          };
 
@@ -311,6 +386,7 @@ define([
          });
 
          assert.isTrue(isShowSelector);
+         assert.isTrue(items !== selectedItems);
          assert.equal(templateOptions.selectedTab, 'Employees');
          assert.equal(opener, selectedCollection);
       });

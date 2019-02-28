@@ -86,7 +86,7 @@ function(cMerge,
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
             if (!cfg.autoShow) {
-               cfg.closeByExternalClick = false;
+               cfg.closeOnOutsideClick = false;
                cfg.className += ' ws-hidden';
             }
          }
@@ -189,13 +189,13 @@ function(cMerge,
 
          cfg.className = cfg.className || '';
 
-         if (!cfg.hasOwnProperty('closeByExternalClick')) {
-            cfg.closeByExternalClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
+         if (!cfg.hasOwnProperty('closeOnOutsideClick')) {
+            cfg.closeOnOutsideClick = cfg.hasOwnProperty('autoHide') ? cfg.autoHide : true;
          }
 
          if (cfg._type === 'dialog' && !cfg.hasOwnProperty('modal')) {
             cfg.isModal = true;
-            cfg.closeByExternalClick = false;
+            cfg.closeOnOutsideClick = false;
          }
 
          if (cfg.horizontalAlign) {
@@ -281,7 +281,17 @@ function(cMerge,
             cfg.autofocus = cfg.catchFocus;
          }
 
-         cfg.isCompoundTemplate = true;
+         /**
+          * Let's protect ourselves from the case when the template was not loaded. In theory, this should not be.
+          */
+         if (requirejs.defined(cfg.template)) {
+            /**
+             * Determine the 'compound' or 'VDOM' template build.
+             */
+            cfg.isCompoundTemplate = !isVDOMTemplate(requirejs(cfg.template));
+         } else {
+            cfg.isCompoundTemplate = true;
+         }
       },
       _prepareConfigForNewTemplate: function(cfg, templateClass) {
          cfg.componentOptions = { templateOptions: cfg.templateOptions || cfg.componentOptions };
@@ -303,7 +313,25 @@ function(cMerge,
             cfg.componentOptions.onCloseHandler = cfg.onCloseHandler;
          }
 
+         if (cfg.onCloseHandlerEvent) {
+            cfg.componentOptions.onCloseHandlerEvent = cfg.onCloseHandlerEvent;
+         }
+
+         if (cfg.onResultHandlerEvent) {
+            cfg.componentOptions.onResultHandlerEvent = cfg.onResultHandlerEvent;
+         }
+
+         if (cfg.onOpenHandlerEvent) {
+            cfg.componentOptions.onOpenHandlerEvent = cfg.onOpenHandlerEvent;
+         }
+
          this._setSizes(cfg, templateClass);
+
+         cfg.componentOptions._popupOptions = {
+            minWidth: cfg.minWidth,
+            maxWidth: cfg.maxWidth,
+            minimizedWidth: cfg.minimizedWidth
+         };
       },
       _getConfigFromTemplate: function(cfg) {
          // get options from template.getDefaultOptions
@@ -318,6 +346,7 @@ function(cMerge,
             template: cfg.template,
             _initCompoundArea: cfg._initCompoundArea,
             dialogOptions: {
+               _isCompatibleArea: true,
                isStack: cfg._type === 'stack',
                target: cfg.target,
                modal: cfg.isModal,
@@ -336,8 +365,8 @@ function(cMerge,
             center: 'center'
          };
 
-         if (cfg.hasOwnProperty('closeByExternalClick')) {
-            cfg.dialogOptions.autoHide = cfg.closeByExternalClick;
+         if (cfg.hasOwnProperty('closeOnOutsideClick')) {
+            cfg.dialogOptions.autoHide = cfg.closeOnOutsideClick;
          }
 
          if (cfg.hasOwnProperty('closeChildWindows')) {
@@ -363,6 +392,9 @@ function(cMerge,
             // Пытаемся совместить старое и новое api
             if (cfg.horizontalAlign && cfg.horizontalAlign.side) {
                newCfg.dialogOptions.direction = cfg.horizontalAlign.side;
+               if (newCfg.dialogOptions.direction === 'center') {
+                  newCfg.dialogOptions.direction = '';
+               }
             } else {
                // Для стека всегда значение left, иначе ломается анимация
                if (cfg._type === 'stack') {
@@ -430,12 +462,33 @@ function(cMerge,
             }
          }
 
+         if (newCfg.hasOwnProperty('maximize')) {
+            newCfg.dialogOptions.maximize = newCfg.maximize;
+         }
+
          if (newCfg.eventHandlers && newCfg.eventHandlers.onResult) {
             newCfg.dialogOptions.onResultHandler = newCfg.eventHandlers.onResult;
          }
 
          if (newCfg.eventHandlers && newCfg.eventHandlers.onClose) {
             newCfg.dialogOptions.onCloseHandler = newCfg.eventHandlers.onClose;
+         }
+
+         if (newCfg._events && newCfg._events.onClose) {
+            newCfg.dialogOptions.onCloseHandlerEvent = newCfg._events.onClose;
+         }
+
+         if (newCfg._events && newCfg._events.onResult) {
+            newCfg.dialogOptions.onResultHandlerEvent = newCfg._events.onResult;
+         }
+
+         if (newCfg._events && newCfg._events.onOpen) {
+            newCfg.dialogOptions.onOpenHandlerEvent = newCfg._events.onOpen;
+         }
+
+         if (newCfg.hasOwnProperty('maximized')) {
+            newCfg.dialogOptions.maximized = newCfg.maximized;
+            newCfg.componentOptions.maximized = newCfg.maximized;
          }
 
          return newCfg;
@@ -499,7 +552,7 @@ function(cMerge,
       },
 
       _getDimensions: function(templateClass) {
-         return templateClass.dimensions || templateClass.prototype.dimensions || {};
+         return templateClass.dimensions || (templateClass.prototype && templateClass.prototype.dimensions) || {};
       },
 
       _getTemplateOptions: function(templateClass) {

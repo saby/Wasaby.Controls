@@ -6,10 +6,11 @@ define('Controls/Container/Suggest/List',
       'Core/Control',
       'wml!Controls/Container/Suggest/List/List',
       'Core/core-clone',
-      'Controls/Container/Suggest/Layout/_SuggestOptionsField'
+      'Controls/Container/Suggest/Layout/_SuggestOptionsField',
+      'Controls/Utils/tmplNotify'
    ],
    
-   function(Control, template, clone, _SuggestOptionsField) {
+   function(Control, template, clone, _SuggestOptionsField, tmplNotify) {
       
       /**
        * Container for list inside Suggest.
@@ -68,6 +69,7 @@ define('Controls/Container/Suggest/List',
       var List = Control.extend({
          
          _template: template,
+         _notifyHandler: tmplNotify,
          
          _beforeMount: function(options, context) {
             _private.checkContext(this, context);
@@ -78,14 +80,24 @@ define('Controls/Container/Suggest/List',
             
             /* Need notify after getting tab from query */
             if (_private.isTabChanged(this._suggestListOptions, tabKey)) {
-               this._tabsSelectedKeyChanged(null, tabKey);
+               this._notify('tabsSelectedKeyChanged', [tabKey]);
             }
             
             _private.checkContext(this, context);
          },
    
          _tabsSelectedKeyChanged: function(event, key) {
-            this._notify('tabsSelectedKeyChanged', [key]);
+            /* It is necessary to separate the processing of the tab change by suggest layout and
+               a user of a control.
+               To do this, using the callback-option that only suggest layout can pass.
+               Event should fired only once and after list was loading,
+               because in this event user can change template of a List control. */
+            this._suggestListOptions.tabsSelectedKeyChangedCallback(key);
+            
+            //FIXME remove after https://online.sbis.ru/opendoc.html?guid=5c91cf92-f61e-4851-be28-3f196945884c
+            if (this._options.task1176635657) {
+               this._notify('tabsSelectedKeyChanged', [key]);
+            }
          },
 
          _inputKeydown: function(event, domEvent) {

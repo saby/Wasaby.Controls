@@ -5,15 +5,15 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Core/constants',
+      'Env/Env',
       'Core/core-clone',
       'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cConstants, cClone, Vdom) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, Env, cClone, Vdom) {
       'use strict';
-      var HAS_ANIMATION = cConstants.browser.chrome && !cConstants.browser.isMobilePlatform;
+      var HAS_ANIMATION = false;
       var STACK_CLASS = 'controls-Stack';
       var _private = {
 
@@ -75,7 +75,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          removeAnimationClasses: function(className) {
-            return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting|controls-Stack__will-change/ig, '').trim();
+            return (className || '').replace(/controls-Stack__close|controls-Stack__open|controls-Stack__waiting/ig, '').trim();
          },
 
          addShadowClass: function(item) {
@@ -157,34 +157,12 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          elementCreated: function(item, container) {
-            _private.prepareSizes(item, container);
-            _private.setStackContent(item);
-            this._stack.add(item);
-            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName += ' controls-Stack__waiting';
-               _private.updatePopupOptions(item);
-               item.popupState = BaseController.POPUP_STATE_CREATING;
+            if (item.popupOptions.isCompoundTemplate) {
+               _private.prepareSizes(item, container);
+               _private.setStackContent(item);
+               this._stack.add(item);
+               this._update();
             }
-            this._update();
-         },
-
-         _elementAfterUpdated: function(item) {
-            // TODO временное решение. Добиться окончательного по задаче https://online.sbis.ru/opendoc.html?guid=58fda458-40ff-4b9b-bf56-c078f6f432c6
-            if (item.popupState === BaseController.POPUP_STATE_CREATING && !item.isOpening && HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.isOpening = true;
-               setTimeout(function() {
-                  item.popupOptions.stackClassName += ' controls-Stack__open';
-                  _private.updatePopupOptions(item);
-                  this._update();
-
-                  /**
-                   * Perfoming animation. Changing rAF for rIC
-                   */
-                  Vdom.animationWaiter(true);
-                  require('Controls/Popup/Manager/ManagerController').getContainer()._forceUpdate();
-               }.bind(this), 100);
-            }
-            return StackController.superclass._elementAfterUpdated.apply(this, arguments);
          },
 
          elementUpdated: function(item, container) {
@@ -206,7 +184,7 @@ define('Controls/Popup/Opener/Stack/StackController',
                item.popupOptions.stackClassName += ' controls-Stack__close';
                _private.updatePopupOptions(item);
                this._fixTemplateAnimation(item);
-               
+
                /**
                 * Perfoming animation. Changing rAF for rIC
                 */
@@ -222,6 +200,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             item.popupOptions.stackClassName = _private.removeAnimationClasses(item.popupOptions.stackClassName);
             _private.updatePopupOptions(item);
             if (item.popupState === BaseController.POPUP_STATE_DESTROYING) {
+               Vdom.animationWaiter(false);
                _private.elementDestroyed(this, item);
             } else {
                item.popupState = BaseController.POPUP_STATE_CREATED;
@@ -236,7 +215,7 @@ define('Controls/Popup/Opener/Stack/StackController',
             this._stack.each(function(item) {
                if (item.popupState !== BaseController.POPUP_STATE_DESTROYING) {
                   item.position = _private.getItemPosition(item);
-                  var currentWidth = item.containerWidth || item.position.width;
+                  var currentWidth = item.containerWidth || item.position.width || item.position.maxWidth;
 
                   // Drawing only 1 shadow on popup of the same size. Done in order not to duplicate the shadow.
                   if (currentWidth > maxWidth) {
@@ -257,9 +236,7 @@ define('Controls/Popup/Opener/Stack/StackController',
          },
 
          getDefaultConfig: function(item) {
-            var baseCoord = { top: 0, right: 0 };
             _private.prepareSizes(item);
-            var position = StackStrategy.getPosition(baseCoord, item);
             _private.setStackContent(item);
             _private.addStackClasses(item.popupOptions);
             item.popupOptions.stackClassName = '';
@@ -269,17 +246,20 @@ define('Controls/Popup/Opener/Stack/StackController',
                var maximizedState = item.popupOptions.hasOwnProperty('maximized') ? item.popupOptions.maximized : false;
                _private.setMaximizedState(item, maximizedState);
             }
-            if (HAS_ANIMATION && !item.popupOptions.isCompoundTemplate) {
-               item.popupOptions.stackClassName = 'controls-Stack__will-change';
-            }
 
-            // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
-            item.position = {
-               top: -10000,
-               left: -10000,
-               height: _private.getWindowSize().height,
-               width: position.width || undefined
-            };
+            if (item.popupOptions.isCompoundTemplate) {
+               // set sizes before positioning. Need for templates who calculate sizes relatively popup sizes
+               var position = _private.getItemPosition(item);
+               item.position = {
+                  top: -10000,
+                  left: -10000,
+                  height: _private.getWindowSize().height,
+                  width: position.width || undefined
+               };
+            } else {
+               this._stack.add(item);
+               this._update();
+            }
          },
 
          // TODO: For Compatible

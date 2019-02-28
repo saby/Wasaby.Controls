@@ -12,6 +12,7 @@ define('Controls-demo/List/Grid/Grid', [
    'css!Controls-demo/List/Grid/Grid',
    'Controls/Container/Scroll',
    'Controls/Grid',
+   'wml!Controls-demo/List/Grid/Results',
    'Controls/Render/Money/Money',
    'Controls/List/Grid/SortButton'
 ], function(BaseControl, GridData, template, source) {
@@ -46,7 +47,9 @@ define('Controls-demo/List/Grid/Grid', [
             displayProperty: 'balance',
             width: 'auto',
             align: 'right',
-            template: 'wml!Controls-demo/List/Grid/DemoBalancePrice'
+            template: 'wml!Controls-demo/List/Grid/DemoBalancePrice',
+            resultTemplate: 'wml!Controls-demo/List/Grid/Results',
+            result: 7893.87
          },
          {
             displayProperty: 'reserve',
@@ -57,7 +60,9 @@ define('Controls-demo/List/Grid/Grid', [
             displayProperty: 'costPrice',
             width: 'auto',
             align: 'right',
-            template: 'wml!Controls-demo/List/Grid/DemoCostPrice'
+            template: 'wml!Controls-demo/List/Grid/DemoCostPrice',
+            resultTemplate: 'wml!Controls-demo/List/Grid/Results',
+            result: 983.36
          },
          {
             displayProperty: 'balanceCostSumm',

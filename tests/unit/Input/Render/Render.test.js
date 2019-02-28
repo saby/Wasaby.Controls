@@ -1,10 +1,11 @@
 define(
    [
       'Controls/Input/Render',
-      'tests/resources/TemplateUtil',
-      'wml!tests/Input/Render/Content'
+      'unit/resources/TemplateUtil',
+      'wml!unit/Input/Render/Content',
+      'Env/Env'
    ],
-   function(Render, TemplateUtil, Content) {
+   function(Render, TemplateUtil, Content, Env) {
       'use strict';
 
       describe('Controls.Input.Render', function() {
@@ -24,8 +25,11 @@ define(
                it('Control in active mode.', function() {
                   ctrl._options.readOnly = false;
                   ctrl._contentActive = true;
-
-                  assert.equal(ctrl._getState(), '_active');
+                  if (Env.detection.isIE) {
+                     assert.equal(ctrl._getState(), '_active');
+                  } else {
+                     assert.equal(ctrl._getState(), '');
+                  }
                });
                it('Control in inactive mode.', function() {
                   ctrl._options.readOnly = false;
@@ -53,7 +57,7 @@ define(
                assert.equal(template(ctrl), '<div class="controls-Render controls-Render_style controls-Render_fontStyle_default controls-Render_textAlign_left controls-Render_style_info controls-Render_fontStyle_default_size_m controls-Render_size_m">' +
                                                 '<div class="controls-Render__wrapper">' +
                                                    '<span class="controls-Render__baseline">&#65279;</span>' +
-                                                   '<div class="controls-Render__field_textAlign_left">' +
+                                                   '<div class="controls-Render__field controls-Render__field_textAlign_left">' +
                                                       '<div>testing the content</div>' +
                                                       '<div class="controls-Render__placeholder controls-Render__placeholder_overflow">test placeholder</div>' +
                                                    '</div>' +

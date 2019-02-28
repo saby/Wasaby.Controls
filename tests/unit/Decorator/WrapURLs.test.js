@@ -1,13 +1,29 @@
 define(
    [
-      'Controls/Decorator/WrapURLs'
+      'Controls/Decorator/WrapURLs',
+      'unit/resources/TemplateUtil'
    ],
-   function(WrapURLs) {
-
+   function(WrapURLs, TemplateUtil) {
       'use strict';
 
       describe('Controls.Decorator.WrapURLs', function() {
          var result;
+
+         describe('Template', function() {
+            var template = TemplateUtil.clearTemplate(new WrapURLs({})._template);
+
+            it('Text', function() {
+               var parsedText = [{
+                  end: '.',
+                  type: 'text',
+                  value: 'test..'
+               }];
+
+               assert.equal(template({
+                  _parsedText: parsedText
+               }), '<div>test...</div>');
+            });
+         });
 
          describe('parseText', function() {
             var parseText = WrapURLs._private.parseText.bind(WrapURLs._private);

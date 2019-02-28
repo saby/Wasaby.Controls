@@ -21,6 +21,7 @@
    <ws:if data="{{_historyId && _historyItems.getCount()}}">
       <Controls.Filter.Button.History.List
               items="{{_historyItems}}"
+              filterItems="{{_items}}"
               historyId="{{_historyId}}"
               on:historyChanged="_historyItemsChanged()"
               attr:class="controls-HistoryList__{{_options.orientation}}"
@@ -44,10 +45,12 @@
                 <Controls.Button viewMode="link" style="secondary" readOnly="{{!_isChanged || _options.readOnly}}" caption="{[По умолчанию]}"
                                  on:click="_resetFilter()"
                                  name="resetButton"
+                                 attr:tabindex="-1"
                                  attr:class="controls-FilterPanel__resetButton"/>
              </ws:if>
 
              <Controls.Button viewMode="button" style="primary" caption="{[Отобрать]}" on:click="_applyFilter()"
+                              attr:tabindex="-1"
                               attr:class="controls-FilterPanel__filterButton"/>
           </div>
        </ws:topArea>

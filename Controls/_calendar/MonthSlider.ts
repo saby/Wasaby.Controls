@@ -92,3 +92,4 @@ Component.getOptionTypes = function () {
 Component._private = _private;
 
 export default Component;
+export {default as Base} from './MonthSlider/Slider';

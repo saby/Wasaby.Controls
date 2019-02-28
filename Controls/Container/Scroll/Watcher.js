@@ -8,9 +8,10 @@ define('Controls/Container/Scroll/Watcher',
       'Core/Control',
       'wml!Controls/Container/Scroll/Watcher/Watcher',
       'Controls/Event/Registrar',
-      'Core/detection'
+      'Env/Env',
+      'Core/helpers/Object/isEmpty'
    ],
-   function(Control, template, Registrar, detection) {
+   function(Control, template, Registrar, Env, isEmpty) {
 
       'use strict';
 
@@ -85,11 +86,19 @@ define('Controls/Container/Scroll/Watcher',
                clientHeight: clientHeight
             };
          },
+         
+         getSizeCache: function(self, container) {
+            if (isEmpty(self._sizeCache)) {
+               _private.calcSizeCache(self, container);
+            }
+            return self._sizeCache;
+         },
 
          onResizeContainer: function(self, container, withObserver) {
             var scrollCompensation = 0;
+            var sizeCache = _private.getSizeCache(self, container);
             if (self._needCompensation) {
-               var prevHeight = self._sizeCache.scrollHeight;
+               var prevHeight = sizeCache.scrollHeight;
                var curHeight = container.scrollHeight;
 
                if (self._scrollTopCache < (curHeight - prevHeight)) {
@@ -97,8 +106,9 @@ define('Controls/Container/Scroll/Watcher',
                }
             }
             _private.calcSizeCache(self, container);
+            sizeCache = _private.getSizeCache(self, container);
             container.scrollTop = self._scrollTopCache;
-            _private.sendCanScroll(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight);
+            _private.sendCanScroll(self, sizeCache.clientHeight, sizeCache.scrollHeight);
             if (!withObserver) {
                if (scrollCompensation) {
                   container.scrollTop += scrollCompensation;
@@ -106,10 +116,10 @@ define('Controls/Container/Scroll/Watcher',
                   //TODO https://online.sbis.ru/opendoc.html?guid=0fb7a3a6-a05d-4eb3-a45a-c76cbbddb16f
                   //если была компенсация скролла, то следующую проверку необходимости надо звать по таймауту, чтоб подскролл точно успел пройти
                   window.setTimeout(function() {
-                     _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                     _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                   }, 60);
                } else {
-                  _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                  _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                }
             }
 
@@ -117,14 +127,16 @@ define('Controls/Container/Scroll/Watcher',
 
          onScrollContainer: function(self, container, withObserver) {
             var curPosition;
+            var sizeCache = _private.getSizeCache(self, container);
             self._scrollTopCache = container.scrollTop;
-            if (!self._sizeCache.clientHeight) {
+            if (!sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
+               sizeCache = _private.getSizeCache(self, container);
             }
 
             if (self._scrollTopCache <= 0) {
                curPosition = 'up';
-            } else if (self._scrollTopCache + self._sizeCache.clientHeight >= self._sizeCache.scrollHeight) {
+            } else if (self._scrollTopCache + sizeCache.clientHeight >= sizeCache.scrollHeight) {
                curPosition = 'down';
             } else {
                curPosition = 'middle';
@@ -136,7 +148,7 @@ define('Controls/Container/Scroll/Watcher',
                   position: curPosition
                });
                if (!withObserver) {
-                  _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                  _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                }
                self._scrollPositionCache = curPosition;
                self._scrollTopTimer = null;
@@ -146,7 +158,7 @@ define('Controls/Container/Scroll/Watcher',
                      if (self._scrollTopTimer) {
                         _private.sendByRegistrar(self, 'scrollMove', {scrollTop: self._scrollTopCache, position: curPosition});
                         if (!withObserver) {
-                           _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+                           _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
                         }
                         self._scrollTopTimer = null;
                      }
@@ -191,7 +203,7 @@ define('Controls/Container/Scroll/Watcher',
                      eventName = null;
                   }
                }
-            }, {});
+            }, {root: self._container});
             self._observer.observe(elements.topLoadTrigger);
             self._observer.observe(elements.bottomLoadTrigger);
 
@@ -200,10 +212,12 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          onRegisterNewComponent: function(self, container, component, withObserver) {
-            if (!self._sizeCache.clientHeight) {
+            var sizeCache = _private.getSizeCache(self, container);
+            if (!sizeCache.clientHeight) {
                _private.calcSizeCache(self, container);
+               sizeCache = _private.getSizeCache(self, container);
             }
-            if (self._sizeCache.clientHeight < self._sizeCache.scrollHeight) {
+            if (sizeCache.clientHeight < sizeCache.scrollHeight) {
                self._registrar.startOnceTarget(component, 'canScroll');
             } else {
                self._registrar.startOnceTarget(component, 'cantScroll');
@@ -211,7 +225,7 @@ define('Controls/Container/Scroll/Watcher',
 
             if (!withObserver) {
                //TODO надо кидать не всем компонентам, а адресно одному
-               _private.sendEdgePositions(self, self._sizeCache.clientHeight, self._sizeCache.scrollHeight, self._scrollTopCache);
+               _private.sendEdgePositions(self, sizeCache.clientHeight, sizeCache.scrollHeight, self._scrollTopCache);
             }
          },
 
@@ -219,9 +233,10 @@ define('Controls/Container/Scroll/Watcher',
             if (scrollParam === 'top') {
                container.scrollTop = 0;
             } else {
-               var clientHeight = self._sizeCache.clientHeight, scrollHeight;
+               var sizeCache = _private.getSizeCache(self, container);
+               var clientHeight = sizeCache.clientHeight, scrollHeight;
                if (scrollParam === 'bottom') {
-                  scrollHeight = self._sizeCache.scrollHeight;
+                  scrollHeight = sizeCache.scrollHeight;
                   container.scrollTop = scrollHeight - clientHeight;
                } else {
                   if (scrollParam === 'pageUp') {
@@ -276,8 +291,10 @@ define('Controls/Container/Scroll/Watcher',
          },
 
          _afterMount: function() {
-            _private.calcSizeCache(this, _private.getDOMContainer(this._container));
-            _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+            if (!isEmpty(this._registrar._registry)) {
+               _private.calcSizeCache(this, _private.getDOMContainer(this._container));
+               _private.sendCanScroll(this, this._sizeCache.clientHeight, this._sizeCache.scrollHeight);
+            }
             this._notify('register', ['controlResize', this, this._resizeHandler], {bubbling: true});
          },
 
@@ -297,7 +314,7 @@ define('Controls/Container/Scroll/Watcher',
 
                //IntersectionObserver doesn't work correctly in Edge and Firefox
                //https://online.sbis.ru/opendoc.html?guid=aa514bbc-c5ac-40f7-81d4-50ba55f8e29d
-               if (global && global.IntersectionObserver && triggers && !detection.isIE && !detection.isIE12 && !detection.firefox) {
+               if (global && global.IntersectionObserver && triggers && !Env.detection.isIE && !Env.detection.isIE12 && !Env.detection.firefox) {
                   if (!this._observer) {
                      _private.initIntersectionObserver(this, triggers);
                   }

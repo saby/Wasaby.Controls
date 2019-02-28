@@ -69,7 +69,7 @@ define('Controls/Filter/Controller',
                minItems.push({
                   id: getPropValue(item, 'id'),
                   value: getPropValue(item, 'value'),
-                  textValue: getPropValue(item, 'textValue'),
+                  textValue: getPropValue(item, 'visibility') !== false ? getPropValue(item, 'textValue') : undefined,
                   visibility: getPropValue(item, 'visibility')
                });
             });
@@ -77,25 +77,41 @@ define('Controls/Filter/Controller',
          },
 
          getHistoryItems: function(self, id) {
+            var source = historyUtils.getHistorySource(id),
+               result, recent, lastFilter;
+   
             if (!id) {
-               return Deferred.success([]);
+               result =  Deferred.success([]);
             }
-            var recent, lastFilter,
-               source = historyUtils.getHistorySource(id);
 
             if (!self._sourceController) {
                self._sourceController = new SourceController({
                   source: source
                });
             }
-
-            return self._sourceController.load({ $_history: true }).addCallback(function() {
-               recent = source.getRecent();
-               if (recent.getCount()) {
-                  lastFilter = recent.at(0);
-                  return source.getDataObject(lastFilter.get('ObjectData'));
-               }
-            });
+            
+            if (id) {
+               result = new Deferred();
+   
+               self._sourceController.load({ $_history: true })
+                  .addCallback(function(res) {
+                     recent = source.getRecent();
+                     if (recent.getCount()) {
+                        lastFilter = recent.at(0);
+                        result.callback(source.getDataObject(lastFilter.get('ObjectData')));
+                     } else {
+                        result.callback([]);
+                     }
+                     return res;
+                  })
+                  .addErrback(function(error) {
+                     error.processed = true;
+                     result.callback([]);
+                     return error;
+                  });
+            }
+   
+            return result;
          },
 
          updateHistory: function(self, filterButtonItems, fastFilterItems, historyId) {
@@ -158,7 +174,8 @@ define('Controls/Filter/Controller',
             var filter = {};
 
             function processItems(elem) {
-               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue'))) {
+               // The filter can be changed by another control, in which case the value is set to the filter button, but textValue is not set.
+               if (!isEqual(getPropValue(elem, 'value'), getPropValue(elem, 'resetValue')) && getPropValue(elem, 'textValue')) {
                   filter[getPropValue(elem, 'id')] = getPropValue(elem, 'value');
                }
             }
@@ -186,10 +203,13 @@ define('Controls/Filter/Controller',
          },
 
          setFilterButtonItems: function(filterButtonItems, fastFilterItems) {
-            function clearTextValue(index) {
+            function prepareFastFilterItem(index) {
                setPropValue(filterButtonItems[index], 'textValue', '');
+
+               // Fast filters could not be reset from the filter button. We set flag for filters duplicated in the fast filter.
+               filterButtonItems[index].isFast = true;
             }
-            _private.equalItemsIterator(filterButtonItems, fastFilterItems, clearTextValue);
+            _private.equalItemsIterator(filterButtonItems, fastFilterItems, prepareFastFilterItem);
          },
 
          resolveFilterButtonItems: function(filterButtonItems, fastFilterItems) {
@@ -212,8 +232,10 @@ define('Controls/Filter/Controller',
             _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
          },
 
-         resolveItems: function(self, historyId, filterButtonItems, fastFilterItems) {
-            return _private.getHistoryItems(self, historyId).addCallback(function(historyItems) {
+         resolveItems: function(self, historyId, filterButtonItems, fastFilterItems, historyItems) {
+            var historyItemsDef = historyItems ? Deferred.success(historyItems) : _private.getHistoryItems(self, historyId);
+            
+            return historyItemsDef.addCallback(function(historyItems) {
                _private.setFilterItems(self, filterButtonItems, fastFilterItems, historyItems);
                return historyItems;
             });
@@ -252,7 +274,9 @@ define('Controls/Filter/Controller',
                delete filterClone[key];
             });
 
-            merge(filterClone, itemsFilter);
+            // FIXME when using merge witout {rec: false} we will get wrong data:
+            // {arr: [123]} <-- {arr: []} results {arr: [123]} instead {arr: []}
+            merge(filterClone, itemsFilter, {rec: false});
 
             return filterClone;
          },
@@ -406,6 +430,12 @@ define('Controls/Filter/Controller',
        * @name Controls/Filter/Controller#historyId
        * @cfg {String} The identifier under which the filter history will be saved.
        */
+   
+      /**
+       * Controls/Filter/Controller#historyItems
+       * @cfg {Array|Types/collection:IList} You can prepare filter items from history by your self,
+       * this items will applied/merged to filterButtonItems and fastFilterItem. Filter history will not loading, if this option setted.
+       */
 
       var Container = Control.extend(/** @lends Controls/Filter/Container.prototype */{
 
@@ -421,9 +451,8 @@ define('Controls/Filter/Controller',
                _private.resolveFilterButtonItems(this._filterButtonItems, this._fastFilterItems);
                _private.applyItemsToFilter(this, options.filter, this._filterButtonItems, this._fastFilterItems);
             } else {
-               var self = this,
-                  itemsDef = _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource);
-               return itemsDef.addCallback(function(items) {
+               var self = this;
+               return _private.resolveItems(this, options.historyId, options.filterButtonSource, options.fastFilterSource, options.historyItems).addCallback(function(items) {
                   _private.resolveFilterButtonItems(self._filterButtonItems, self._fastFilterItems);
                   _private.applyItemsToFilter(self, options.filter, self._filterButtonItems, self._fastFilterItems);
                   return items;

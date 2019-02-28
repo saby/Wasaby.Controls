@@ -70,7 +70,6 @@
 }
 
 .controls-Grid__results-cell {
-   .position-sticky();
    background-color: @background-color_Grid-row-sticky;
    z-index: 1;
    min-width: 0;
@@ -188,6 +187,10 @@
 
 .controls-Grid__row-cell_lastRow {
    border-bottom: @height_Grid-row-separator solid;
+}
+
+.controls-Grid__row-cell_first-row-in-group {
+   border-top-color: transparent;
 }
 
 .controls-Grid__row-cell_withRowSeparator_firstRow {
@@ -311,7 +314,7 @@
    left: 0;
 }
 
-.controls-GridView__checkbox-onhover {
+.controls-GridView__checkbox.controls-GridView__checkbox-onhover {
    display: none;
 }
 
@@ -329,6 +332,7 @@
    display: inline-flex;
    align-items: baseline;
    min-width: 0; //https://css-tricks.com/flexbox-truncated-text/
+   flex-shrink: 1;
 }
 
 //MasterList styles
@@ -349,9 +353,9 @@
       content: '';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @border-width_List-masterList-item_selected;
+      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
       border-style: solid;
-      border-color: @border-color_List-masterList-item_selected;
+      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
       box-shadow: @box-shadow_Grid-masterList-item_selected;
       width: ~'calc(100% + @{border-width_List-masterList-right})';
       position: absolute;

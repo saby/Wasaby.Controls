@@ -36,7 +36,8 @@ define('Controls-demo/List/TreeGrid/BasePG',
                nodeProperty: 'type',
                expandedItems: [],
                collapsedItems: [],
-               singleExpand: false
+               singleExpand: false,
+               header: data.headerColumns
             };
             this._metaData = config[this._content].properties['ws-config'].options;
          }

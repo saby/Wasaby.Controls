@@ -3,10 +3,10 @@ define([
    'Core/core-merge',
    'Controls/Date/PeriodLiteDialog',
    'Controls/Utils/Date',
-   'tests/Calendar/Utils',
-   'wml!Controls/Date/PeriodLiteDialog/ItemFull',
-   'wml!Controls/Date/PeriodLiteDialog/ItemMonths',
-   'wml!Controls/Date/PeriodLiteDialog/ItemQuarters'
+   'unit/Calendar/Utils',
+   'wml!Controls/_dateLitePopup/ItemFull',
+   'wml!Controls/_dateLitePopup/ItemMonths',
+   'wml!Controls/_dateLitePopup/ItemQuarters'
 ], function(
    coreMerge,
    PeriodLiteDialog,
@@ -99,6 +99,27 @@ define([
             sinon.assert.calledWith(
                component._notify, 'sendResult', [new Date(2000, 0, 1), new Date(2000, 11, 31)], { bubbling: true });
             sandbox.restore();
+         });
+         it('should not generate events if year selection is disabled', function() {
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog, {chooseYears: false});
+            sinon.stub(component, '_notify');
+            component._onYearClick(null, 2000);
+
+            sinon.assert.notCalled(component._notify);
+            component._notify.restore();
+         });
+      });
+
+      describe('_onYearMouseEnter', function() {
+         it('should set _yearHovered to true', function() {
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog, {});
+            component._onYearMouseEnter();
+            assert.isTrue(component._yearHovered);
+         });
+         it('should not set _yearHovered to true', function() {
+            const component = calendarTestUtils.createComponent(PeriodLiteDialog, {chooseYears: false});
+            component._onYearMouseEnter();
+            assert.isFalse(component._yearHovered);
          });
       });
 

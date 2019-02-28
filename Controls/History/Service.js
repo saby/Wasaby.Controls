@@ -5,7 +5,7 @@ define('Controls/History/Service', [
    'Controls/History/Constants',
    'Core/Deferred',
    'Core/core-clone',
-   'Core/constants'
+   'Env/Env'
 ], function(
    CoreExtend,
    entity,
@@ -13,7 +13,7 @@ define('Controls/History/Service', [
    Constants,
    Deferred,
    coreClone,
-   coreConstants
+   Env
 ) {
    'use strict';
 
@@ -126,7 +126,7 @@ define('Controls/History/Service', [
       }
    };
 
-   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin], {
+   var Service = CoreExtend.extend([source.ISource, entity.OptionsToPropertyMixin, entity.SerializableMixin], {
       _historyDataSource: null,
       _historyId: null,
       _historyIds: null,
@@ -142,6 +142,7 @@ define('Controls/History/Service', [
          this._historyIds = cfg.historyIds;
          this._pinned = cfg.pinned;
          this._frequent = cfg.frequent;
+         this._recent = cfg.recent;
          this._dataLoaded = cfg.dataLoaded;
       },
 
@@ -163,7 +164,7 @@ define('Controls/History/Service', [
          var self = this;
          var getValueDef = new Deferred();
 
-         if (!STORAGES[self._historyId] || coreConstants.isBuildOnServer) {
+         if (!STORAGES[self._historyId] || Env.constants.isBuildOnServer) {
             getValueDef = _private.getHistoryDataSource(this).call('UnionMultiHistoryIndexesList', {
                params: {
                   historyIds: this._historyId ? [this._historyId] : this._historyIds,
@@ -174,7 +175,7 @@ define('Controls/History/Service', [
                      count: this._frequent ? (Constants.MAX_HISTORY - Constants.MIN_RECENT) : 0
                   },
                   recent: {
-                     count: Constants.MAX_HISTORY
+                     count: this._recent || Constants.MAX_HISTORY
                   },
                   getObjectData: this._dataLoaded
                }

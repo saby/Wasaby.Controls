@@ -62,6 +62,48 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
 
       describe('DropdownList::_beforeUpdate', function() {
 
+         it('_itemMouseEnter', function() {
+            var dropDownConfig, dropDownList;
+            var opened = false;
+   
+            dropDownConfig = getDropDownConfig();
+            dropDownList = getDropDownListWithConfig(dropDownConfig);
+   
+            dropDownList._beforeMount(dropDownConfig);
+            dropDownList._beforeUpdate(dropDownConfig);
+            
+            //moch child opener
+            dropDownList._children = { subDropdownOpener: { close: function() {opened = false;}, open: function() {opened = true;} } };
+            dropDownList._hasHierarchy = false;
+            dropDownList._subDropdownOpened = false;
+   
+            dropDownList._itemMouseEnter({}, items.at(4), true);
+            assert.isTrue(dropDownList._subDropdownOpened)
+            assert.isFalse(opened);
+            
+            return new Promise(function(resolve) {
+               setTimeout(function() {
+                  assert.isTrue(opened);
+      
+                  dropDownList._hasHierarchy = false;
+                  dropDownList._itemMouseEnter({}, items.at(4), true);
+                  assert.isTrue(opened);
+      
+                  dropDownList._hasHierarchy = false;
+                  dropDownList._subDropdownOpened = false;
+                  dropDownList._itemMouseEnter({}, items.at(4), true);
+                  assert.isTrue(opened);
+      
+      
+                  dropDownList._hasHierarchy = true;
+                  dropDownList._subDropdownOpened = true;
+                  dropDownList._itemMouseEnter({}, items.at(4), false);
+                  assert.isFalse(opened);
+                  resolve();
+               }, 120);
+            });
+         });
+         
          it('check hierarchy', function() {
             var dropDownConfig, dropDownList;
 
@@ -196,7 +238,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
                }
             };
             dropdownList._children = { subDropdownOpener: { close: function() {return true;} } };
-            dropdownList.resultHandler({ action: 'itemClick', data: [items.at(0)] });
+            dropdownList._resultHandler({ action: 'itemClick', data: [items.at(0)] });
          });
          it('resultHandler pinClick', function() {
             var dropdownList = getDropDownListWithConfig(getDropDownConfig());
@@ -205,7 +247,7 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
                   assert.equal(data[0].action, 'pinClicked');
                }
             };
-            dropdownList.resultHandler({ action: 'pinClicked' });
+            dropdownList._resultHandler({ action: 'pinClicked' });
          });
       });
    });

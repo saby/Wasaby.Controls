@@ -4,10 +4,10 @@ define([
    var modDeps = {
       "aaa/aaa": [],
       "css!aaa/bbb": [],
-      "css!themed?aaat/bbbt": [],
+      "css!aaat/bbbt": [],
       "tmpl!aaa/ccc": [],
       "css!aaa/ddd": [],
-      "css!theme?aaat/dddt": [],
+      "css!aaat/dddt": [],
       "ccc/aaa": ["ccc/ccc", "css"],
       "ccc/ccc": ["ddd/aaa"],
       "js/tmplDep": ["tmpl!tmplDep"],
@@ -24,7 +24,7 @@ define([
    var bundlesRoute = {
       "aaa/aaa": "resources/bdl/aaa.package.min.js",
       "css!aaa/bbb": "resources/bdl/aaa.package.min.css",
-      "css!theme?aaat/bbbt": "resources/bdl/aaat.package.min.css",
+      "css!aaat/bbbt": "resources/bdl/aaat.package.min.css",
       "tmpl!aaa/ccc": "resources/bdl/bbb.package.min.js",
       "vvv/aaa": "resources/bdl/ccc.package.min.js",
       "vvv/bbb": "resources/bdl/ccc.package.min.js",
@@ -94,6 +94,13 @@ define([
          var deps = depsCollectorWithThemes.collectDependencies(["tmpl!ppp/ppp"]);
          assert.deepEqual(deps.js, ["bdl/tmplpckd.package"]);
          assert.deepEqual(deps.tmpl, []);
+      });
+      it('Localization enabled', function() {
+         var depsCollectorWithLocalization = new DepsCollector(modDeps, modInfo, bundlesRoute, true, true);
+         depsCollectorWithLocalization.getLang = function() { return 'ru-RU'; };
+         depsCollectorWithLocalization.getAvailableDictList = function() { return { 'bdl/lang/ru-RU/ru-RU.json' : true }; };
+         var deps = depsCollectorWithLocalization.collectDependencies(["aaa/aaa"]);
+         assert.deepEqual(deps.js, [ "bdl/lang/ru-RU/ru-RU.json", "bdl/aaa.package" ]);
       });
    });
 });

@@ -72,7 +72,7 @@ define([
          lv._onItemClick({}, dispItem);
          assert.equal(notifyResult, dispItem.getContents(), 'Incorrect selected item before updating');
       });
-   
+
       it('_beforeUpdate', function () {
          var model = new ListViewModel({
             items: data,

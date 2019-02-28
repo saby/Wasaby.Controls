@@ -2,9 +2,10 @@ define(
    [
       'Controls/Filter/Fast',
       'Types/source',
-      'Core/core-clone'
+      'Core/core-clone',
+      'Controls/History/Source'
    ],
-   function(FastData, sourceLib, Clone) {
+   function(FastData, sourceLib, Clone, HistorySource) {
       describe('FastFilterVDom', function() {
          var items = [
             [{ key: 0, title: 'все страны' },
@@ -74,7 +75,7 @@ define(
                      data: items[0],
                      idProperty: 'key'
                   }),
-                  navigation: {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}}
+                  navigation: {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}}
                }
             }
          ];
@@ -129,10 +130,9 @@ define(
             fastFilter._beforeMount(configWithItems);
             var newConfigItems = Clone(configWithItems);
             newConfigItems.items[0].value = 'США';
-            newConfigItems.items[0].properties.displayProperty = 'text';
+            newConfigItems.items[0].properties.navigation = {page: 2};
             fastFilter._beforeUpdate(newConfigItems).addCallback(function() {
                assert.equal(fastFilter._items.at(0).value, 'США');
-               assert.equal(fastFilter._configs[0].displayProperty, 'text');
                done();
             });
          });
@@ -264,10 +264,10 @@ define(
             var oldItems = Clone(source),
                newItems = Clone(source),
                newItems2 = Clone(source);
-            newItems[0].properties.displayProperty = 'text';
-            var result = FastData._private.isItemsPropertiesChanged(oldItems, newItems);
+            newItems[0].properties.navigation = {page: 2};
+            var result = FastData._private.isNeedReload(oldItems, newItems);
             assert.isTrue(result);
-            result = FastData._private.isItemsPropertiesChanged(oldItems, newItems2);
+            result = FastData._private.isNeedReload(oldItems, newItems2);
             assert.isFalse(result);
          });
 
@@ -282,6 +282,23 @@ define(
             };
             var result = FastData._private.getItemPopupConfig(properties);
             assert.deepEqual(properties, result);
+         });
+         
+         it('_private.prepareItems', function() {
+            var self = {};
+            var items = [{properties: {source: new HistorySource({})}}];
+            FastData._private.prepareItems(self, items);
+            assert.isTrue(self._items.at(0).properties.source instanceof HistorySource);
+         });
+
+         it('_needShowCross', function() {
+            var item = {value: 'test1', resetValue: 'test2'};
+            var fastFilter = getFastFilter(config);
+            assert.isTrue(fastFilter._needShowCross(item));
+            item = {value: 'test1'};
+            assert.isFalse(fastFilter._needShowCross(item));
+            item = {value: ['test1'], resetValue: ['test1']};
+            assert.isFalse(fastFilter._needShowCross(item));
          });
 
          function setTrue(assert) {

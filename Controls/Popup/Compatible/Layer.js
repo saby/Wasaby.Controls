@@ -4,14 +4,13 @@
 define('Controls/Popup/Compatible/Layer', [
    'Core/Deferred',
    'Core/ParallelDeferred',
-   'Core/constants',
+   'Env/Env',
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
-   'Core/IoC',
    'Types/source',
    'Types/chain'
-], function(Deferred, ParallelDeferred, Constants, RightsManager, ExtensionsManager, moduleStubs, IoC, source, chain) {
+], function(Deferred, ParallelDeferred, Env, RightsManager, ExtensionsManager, moduleStubs, source, chain) {
    'use strict';
 
    var loadDeferred;
@@ -34,9 +33,15 @@ define('Controls/Popup/Compatible/Layer', [
       defaultLicense: true
    };
 
+   // Не загружаем провайдеры данных в тестах и демках, где нет соответствующих методов
+   function shouldLoadDataProviders() {
+      var sbisModule = typeof window !== 'undefined' && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu;
+      return sbisModule && (sbisModule.dict || sbisModule.buildnumber);
+   }
+
    function loadDataProviders(parallelDef) {
       parallelDef.push(ExtensionsManager.loadExtensions().addErrback(function(err) {
-         IoC.resolve('ILogger').error('Layer', 'Can\'t load system extensions', err);
+         Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load system extensions', err);
          return err;
       }));
 
@@ -61,10 +66,10 @@ define('Controls/Popup/Compatible/Layer', [
                }
             });
          }
-         Constants.rights = true;
+         Env.constants.rights = true;
          window.rights = rights || {};
       }, function(err) {
-         IoC.resolve('ILogger').error('Layer', 'Can\'t load user rights', err);
+         Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load user rights', err);
       }));
 
       // parallelDef.push(viewSettingsData().addCallbacks(function(viewSettings) {
@@ -77,11 +82,11 @@ define('Controls/Popup/Compatible/Layer', [
          window && (window.userInfo = userInfo);
       }));
 
-      parallelDef.push(getUserLicense().addCallbacks(function(userLicense) {
-         window.userLicense = userLicense || defaultLicense;
-      }, function(err) {
-         IoC.resolve('ILogger').error('Layer', 'Can\'t load user license', err);
-      }));
+      // parallelDef.push(getUserLicense().addCallbacks(function(userLicense) {
+      //    window.userLicense = userLicense || defaultLicense;
+      // }, function(err) {
+      //    IoC.resolve('ILogger').error('Layer', 'Can\'t load user license', err);
+      // }));
 
       // globalClientConfig
       // параметры пользователськие, клиенстские, глобальные. причем они в session или localStorage могут быть
@@ -136,7 +141,7 @@ define('Controls/Popup/Compatible/Layer', [
             data = modules[0].Info.getAll();
             return expandUserInfo(data);
          }, function(err) {
-            IoC.resolve('ILogger').error('Layer', 'Can\'t load EngineUser/Info', err);
+            Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load EngineUser/Info', err);
          });
       }
 
@@ -145,15 +150,19 @@ define('Controls/Popup/Compatible/Layer', [
       function expandUserInfo(data) {
          var deferred;
 
-         data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
-         data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
+         if (data) {
+            data.isDemo = data['ВыводимоеИмя'] === 'Демо-версия';
+            data.isPersonalAccount = data['КлассПользователя'] === '__сбис__физики';
 
-         if (data['КлассПользователя'] === '__сбис__физики') {
-            deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
-               data.hasMoreAccounts = res.getScalar();
-               return data;
-            });
-         } else {
+            if (data['КлассПользователя'] === '__сбис__физики') {
+               deferred = profileSource.call('ЕстьЛиУМеняАккаунтПомимоФизика').addCallback(function(res) {
+                  data.hasMoreAccounts = res.getScalar();
+                  return data;
+               });
+            }
+         }
+
+         if (!deferred) {
             deferred = Deferred.success(data);
          }
 
@@ -161,22 +170,22 @@ define('Controls/Popup/Compatible/Layer', [
       }
    }
 
-   function getUserLicense() {
-      var def = new Deferred();
-
-      new source.SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
-         if (record && record.getRow().get('ПараметрыЛицензии')) {
-            var data = chain.factory(record.getRow().get('ПараметрыЛицензии')).toObject();
-            def.callback(data);
-         } else {
-            def.callback(defaultLicense);
-         }
-      }, function(err) {
-         def.errback(err);
-      });
-
-      return def;
-   }
+   // function getUserLicense() {
+   //    var def = new Deferred();
+   //
+   //    new source.SbisService({ endpoint: 'Биллинг' }).call('ДанныеЛицензии', {}).addCallbacks(function(record) {
+   //       if (record && record.getRow().get('ПараметрыЛицензии')) {
+   //          var data = chain.factory(record.getRow().get('ПараметрыЛицензии')).toObject();
+   //          def.callback(data);
+   //       } else {
+   //          def.callback(defaultLicense);
+   //       }
+   //    }, function(err) {
+   //       def.errback(err);
+   //    });
+   //
+   //    return def;
+   // }
 
    // function readGlobalClientConfig() {
    //    var def = new Deferred();
@@ -198,14 +207,14 @@ define('Controls/Popup/Compatible/Layer', [
    function finishLoad(loadDeferred, result) {
       var coreControl = require('Core/Control'),
          controlCompatible = require('Lib/Control/Control.compatible');
-      moduleStubs.require(['Core/core-extensions', 'cdn!jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
+      moduleStubs.require(['Core/core-extensions', 'cdn!JQuery/jquery-cookie/04-04-2014/jquery-cookie-min.js']).addCallbacks(function() {
          // частично поддерживаем старое API. поддержка gedId
          coreControl.prototype._isCorrectContainer = controlCompatible._isCorrectContainer;
          coreControl.prototype.getId = controlCompatible.getId;
 
          loadDeferred.callback(result);
       }, function(e) {
-         IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
+         Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load core extensions', e);
 
          // частично поддерживаем старое API. поддержка gedId
          coreControl.prototype._isCorrectContainer = controlCompatible._isCorrectContainer;
@@ -223,7 +232,7 @@ define('Controls/Popup/Compatible/Layer', [
          parallelDefRes.addCallbacks(function() {
             finishLoad(loadDeferred, result);
          }, function(e) {
-            IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
+            Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load data providers', e);
             loadDepsDef.addCallback(function() {
                finishLoad(loadDeferred, result);
             });
@@ -267,9 +276,9 @@ define('Controls/Popup/Compatible/Layer', [
             mainDeferred.addCallback(function loadDeps() {
                moduleStubs.require(deps).addCallback(function(_result) {
                   if (window && window.$) {
-                     Constants.$win = $(window);
-                     Constants.$doc = $(document);
-                     Constants.$body = $('body');
+                     Env.constants.$win = $(window);
+                     Env.constants.$doc = $(document);
+                     Env.constants.$body = $('body');
                   }
 
                   // constants.compat = tempCompatVal; //TODO выпилить
@@ -296,7 +305,7 @@ define('Controls/Popup/Compatible/Layer', [
                   result = _result;
                   loadDepsDef.callback(result);
                }).addErrback(function(e) {
-                  IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
+                  Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load dependencies', e);
                   loadDepsDef.errback(e);
                });
             });
@@ -305,26 +314,26 @@ define('Controls/Popup/Compatible/Layer', [
             var parallelDefRes = parallelDef.done().getResult();
 
             // var tempCompatVal = constants.compat;
-            Constants.compat = true;
+            Env.constants.compat = true;
 
             // для тестов и демок не нужно грузить ни дата провайдеры, ни активность
-            if (window && window.contents && window.contents.modules && window.contents.modules.OnlineSbisRu) {
-               Constants.systemExtensions = true;
-               Constants.userConfigSupport = true;
+            if (shouldLoadDataProviders()) {
+               Env.constants.systemExtensions = true;
+               Env.constants.userConfigSupport = true;
                loadDataProviders(parallelDef);
                parallelDefRes.addCallbacks(function() {
                   moduleStubs.require(['optional!WS3MiniCard/MiniCard']).addCallback(function() {
                      self.loadActivity(parallelDefRes, loadDepsDef, result);
                   }).addErrback(function(err) {
-                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
+                     Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', err);
                      self.loadActivity(parallelDefRes, loadDepsDef, result);
                   });
                }, function(err) {
-                  IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
+                  Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
                   moduleStubs.require(['optional!WS3MiniCard/MiniCard']).addCallback(function() {
                      self.loadActivity(parallelDefRes, loadDepsDef, result);
                   }).addErrback(function(activityErr) {
-                     IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', activityErr);
+                     Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load UserActivity', activityErr);
                      self.loadActivity(parallelDefRes, loadDepsDef, result);
                   });
                });
@@ -332,7 +341,7 @@ define('Controls/Popup/Compatible/Layer', [
                parallelDefRes.addCallbacks(function() {
                   self.loadActivity(parallelDefRes, loadDepsDef, result);
                }, function(err) {
-                  IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
+                  Env.IoC.resolve('ILogger').error('Layer', 'Can\'t load ' + JSON.stringify(deps), err);
                   self.loadActivity(parallelDefRes, loadDepsDef, result);
                });
             }

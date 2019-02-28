@@ -41,6 +41,7 @@ define('Controls/Search/Controller',
             self._loading = false;
             self._previousViewMode = self._viewMode;
             self._viewMode = 'search';
+            self._searchValue = filter[self._options.searchParam] || '';
             self._forceUpdate();
             self._notify('filterChanged', [filter], {bubbling: true});
             self._notify('itemsChanged', [result.data], {bubbling: true});
@@ -56,6 +57,7 @@ define('Controls/Search/Controller',
                self._viewMode = self._previousViewMode;
                self._previousViewMode = null;
                self._searchValue = '';
+               self._inputSearchValue = '';
                self._misspellValue = '';
                self._forceUpdate();
                self._notify('filterChanged', [filter], {bubbling: true});
@@ -64,6 +66,10 @@ define('Controls/Search/Controller',
    
          searchStartCallback: function(self) {
             self._loading = true;
+            
+            /* need to call _forceUpdate, because searchStartCallback is not event handler,
+               this is callback function that called asynchronously. */
+            self._forceUpdate();
          },
          
          needUpdateSearchController: function(options, newOptions) {
@@ -141,7 +147,7 @@ define('Controls/Search/Controller',
 
          _search: function(event, value, force) {
             _private.getSearchController(this).search(value, force);
-            this._searchValue = value;
+            this._inputSearchValue = value;
          },
    
          _beforeUnmount: function() {

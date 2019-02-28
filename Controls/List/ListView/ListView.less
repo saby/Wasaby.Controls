@@ -16,7 +16,7 @@
    float: left;
    margin-top: @spacing_ListView-item-between-checkbox-borderTop;
 }
-.controls-ListView__checkbox-onhover {
+.controls-ListView__checkbox.controls-ListView__checkbox-onhover {
   display: none;
 }
 
@@ -32,10 +32,28 @@
    padding-left: @spacing_ListView-item-between-content-borderLeft_l;
 }
 
-.controls-ListView__itemContent_withCheckboxes,
-.controls-ListView__itemContent_withoutCheckboxes {
-   padding-top: @spacing_ListView-item-between-content-borderTop;
-   padding-bottom: @spacing_ListView-item-between-content-borderBottom;
+.controls-ListView__item-topPadding_null {
+  padding-top: 0;
+}
+
+.controls-ListView__item-bottomPadding_null {
+  padding-bottom: 0;
+}
+
+.controls-ListView__item-topPadding_default {
+  padding-top: @spacing_ListView-item-between-content-borderTop;
+}
+
+.controls-ListView__item-bottomPadding_default {
+  padding-bottom: @spacing_ListView-item-between-content-borderBottom;
+}
+
+.controls-ListView__item-topPadding_s {
+  padding-top: @spacing_ListView-item-between-content-borderTop;
+}
+
+.controls-ListView__item-bottomPadding_s {
+  padding-bottom: @spacing_ListView-item-between-content-borderBottom;
 }
 
 .controls-ListView__itemContent_withCheckboxes {
@@ -160,7 +178,9 @@
    height: @spacing_ListView-groupSeparator-between-content-borderTop;
    margin-bottom: @spacing_ListView-groupSeparator-between-content-borderBottom;
    border-bottom: @border-width_ListView-groupSeparator solid @border-color_ListView-groupSeparator;
+   min-width: 0;
    width: 100%;
+   flex-shrink: 1;
    font-size: @font-size_ListView-groupExpander;
 }
 
@@ -282,9 +302,9 @@
       content: '';
       z-index: 2;
       box-sizing: border-box;
-      border-width: @border-width_List-masterList-item_selected;
+      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
       border-style: solid;
-      border-color: @border-color_List-masterList-item_selected;
+      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
       box-shadow: @box-shadow_List-masterList-item_selected;
       width: ~'calc(100% + @{border-width_List-masterList-right})';
       position: absolute;

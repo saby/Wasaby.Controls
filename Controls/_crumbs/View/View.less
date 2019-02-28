@@ -1,6 +1,6 @@
 .controls-BreadCrumbsView {
    white-space: nowrap;
-   height: @height_BreadCrumbs-items;
+   flex-grow: 1;
 }
 
 .controls-BreadCrumbsView__wrapper {
@@ -12,11 +12,11 @@
 .controls-BreadCrumbsView__items {
    display: inline-flex;
    align-items: center;
-   height: @height_BreadCrumbs-items;
    width: 100%;
 }
 
 .controls-BreadCrumbsView__crumb {
+   height: @height_BreadCrumbs-items;
    display: inline-flex;
    align-items: center;
    flex-shrink: 0;
@@ -66,6 +66,7 @@
    .icon(@font-size_BreadCrumbs-arrow);
    cursor: pointer;
    color: @color_BreadCrumbs-arrow;
+   flex-shrink: 0;
 }
 
 .controls-BreadCrumbsView__title_min {
@@ -92,24 +93,22 @@
 }
 
 .controls-BreadCrumbsView__indentation {
-   display: inline-flex;
+   .icon(@font-size_BreadCrumbs-hierarchyIcon);
+   color: @color_BreadCrumbs-hierarchyIcon;
+   align-self: flex-start;
    flex-shrink: 0;
-   height: @height_BreadCrumbs-corner;
-   width: @width_BreadCrumbs-corner;
-   &:last-of-type {
-      background: @background_BreadCrumbs-corner no-repeat;
-      align-self: flex-start;
-   }
 }
 
 .ws-is-no-touch {
-   .controls-BreadCrumbsView__title:hover {
-      color: @color_BreadCrumbs-title_hovered;
-      text-decoration: underline;
-   }
+   .controls-BreadCrumbsView__crumb:hover {
+      .controls-BreadCrumbsView__title_enabled {
+         color: @color_BreadCrumbs-title_hovered;
+         text-decoration: underline;
+      }
 
-   .controls-BreadCrumbsView__arrow:hover {
-      color: @color_BreadCrumbs-arrow_hovered;
+      .controls-BreadCrumbsView__arrow_enabled {
+         color: @color_BreadCrumbs-arrow_hovered;
+      }
    }
 }
 

@@ -1,11 +1,11 @@
 define('Controls/Input/Number',
    [
-      'Core/IoC',
+      'Env/Env',
       'Controls/Input/Base',
       'Types/entity',
       'Controls/Input/Number/ViewModel'
    ],
-   function(IoC, Base, entity, ViewModel) {
+   function(Env, Base, entity, ViewModel) {
       'use strict';
 
       /**
@@ -73,8 +73,8 @@ define('Controls/Input/Number',
        * @default false
        * @remark
        * The option is applied after the completed of the input.
-       * true - trailing zeros are hidden in the fractional part.
-       * false - trailing zeros are shown in the fractional part.
+       * true - trailing zeros are shown in the fractional part.
+       * false - trailing zeros are hidden in the fractional part.
        * @example
        * In this example you the _inputValue in the control state will store a number with a trailing  zeros in the fractional part.
        * <pre>
@@ -94,7 +94,7 @@ define('Controls/Input/Number',
       var _private = {
          validateOptions: function(options) {
             if (options.integersLength <= 0) {
-               IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
+               Env.IoC.resolve('ILogger').error('Number', 'Incorrect integers length: ' + options.integersLength + '. Integers length must be greater than 0.');
             }
          }
       };

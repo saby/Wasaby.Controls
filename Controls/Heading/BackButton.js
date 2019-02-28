@@ -1,10 +1,10 @@
 define('Controls/Heading/BackButton',
    [
       'Controls/Heading/Back',
-      'Core/IoC'
+      'Env/Env'
    ],
-   function(Menu, IoC) {
-      var logger = IoC.resolve('ILogger');
+   function(Menu, Env) {
+      var logger = Env.IoC.resolve('ILogger');
       logger.warn('Контрол "Controls/Heading/BackButton" перенесён, используйте "Controls/Heading/Back"');
       return Menu;
    });

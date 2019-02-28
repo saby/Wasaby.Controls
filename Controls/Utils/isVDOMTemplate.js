@@ -44,8 +44,8 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
 
    return function isVDOMTemplate(templateClass) {
       // на VDOM классах есть св-во _template.
-      // Если его нет, но есть _stable, значит это функция от tmpl файла
-      var isVDOM = templateClass && (templateClass.prototype && templateClass.prototype._template || templateClass.stable);
+      // Если его нет, но есть stable или isDataArray, значит это функция от tmpl файла
+      var isVDOM = templateClass && (templateClass.prototype && templateClass.prototype._template || templateClass.stable || templateClass.isDataArray);
       return !!isVDOM;
    };
 });

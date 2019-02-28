@@ -11,11 +11,18 @@
                     style="{{_displayState.heightFix ? '' : _contentStyles}}"
                     class="controls-Scroll__content ws-BlockGroup
                            {{_useNativeScrollbar && _options.scrollbarVisible ? '' : 'controls-Scroll__content_hideNativeScrollbar'}}
-                           {{_hasHover ? 'controls-Scroll__content_possibleScroll'}}
-                           {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}"
+                           {{_displayState.hasScroll ? 'controls-Scroll__content_possibleScroll'}}
+                           {{_useNativeScrollbar ? 'controls-Scroll__content_auto' : _displayState.heightFix || _contentStyles === undefined ? 'controls-Scroll__content_hidden' : 'controls-Scroll__content_scroll'}}
+                           {{_overflowScrolling ? 'controls-Scroll__content-overflowScrolling'}}"
                     on:controlResize="_resizeHandler()"
                     on:scroll="_scrollHandler()">
-                  <ws:partial template="{{_options.content}}" scope="{{_options}}" attr:class="controls-Scroll__userContent" on:fixed="_fixedHandler()" on:selectedKeysChanged="_tmplNotify('selectedKeysChanged')" on:excludedKeysChanged="_tmplNotify('excludedKeysChanged')"/>
+                  <ws:partial template="{{_options.content}}"
+                              scope="{{_options}}"
+                              attr:class="controls-Scroll__userContent"
+                              on:fixed="_fixedHandler()"
+                              on:stickyRegister="_stickyRegisterHandler()"
+                              on:selectedKeysChanged="selectedKeysChanged()"
+                              on:excludedKeysChanged="excludedKeysChanged()"/>
                </span>
             </Controls.Event.Registrator>
          </Controls.Event.Registrator>
@@ -38,7 +45,7 @@
          <Controls.Container.Scroll.Scrollbar
             position="{{_scrollTop}}"
             contentHeight="{{_displayState.contentHeight}}"
-            attr:class="controls-Scroll__scrollbar"
+            attr:class="controls-Scroll__scrollbar {{!_dragging ? 'controls-Scroll__scrollbar_hidden'}}"
             on:positionChanged="_positionChangedHandler()"
             on:draggingChanged="_draggingChangedHandler()"/>
       </ws:if>

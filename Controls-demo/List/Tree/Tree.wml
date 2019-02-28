@@ -40,7 +40,7 @@
                                   keyProperty="id"
 								  attr:class="ControlsDemo-Tree__Container">
             <ws:navigation source="page" view="infinity">
-               <ws:sourceConfig pageSize="{{3}}" page="{{0}}" mode="totalCount"></ws:sourceConfig>
+               <ws:sourceConfig pageSize="{{3}}" page="{{0}}" hasMore="{{false}}"></ws:sourceConfig>
                <ws:viewConfig pagingMode="direct"></ws:viewConfig>
             </ws:navigation>
             <ws:content>

@@ -7,6 +7,7 @@ define('Controls/Popup/Opener/Sticky',
       /**
        * Component that opens a popup that is positioned relative to a specified element. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#sticky See more}.
        * @class Controls/Popup/Opener/Sticky
+       * @extends Controls/Popup/Opener/BaseOpener
        * @control
        * @author Красильников А.С.
        * @category Popup
@@ -140,42 +141,6 @@ define('Controls/Popup/Opener/Sticky',
  *  });
  *  </pre>
  *  @see open
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#isOpened
- * @description Popup opened status.
- * @function
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#autofocus
- * @cfg {Boolean} Determines whether focus is set to the template when popup is opened.
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#modal
- * @cfg {Boolean} Determines whether the window is modal.
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#className
- * @cfg {String} Class names of popup.
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#closeOnOutsideClick
- * @cfg {Boolean} Determines whether possibility of closing the popup when clicking past.
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#template
- * @cfg {String|Function} Template inside popup.
- */
-
-/**
- * @name Controls/Popup/Opener/Sticky#templateOptions
- * @cfg {String|Function} Template options inside popup.
  */
 
 /**

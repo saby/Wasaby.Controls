@@ -6,9 +6,9 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
    'css!Controls-demo/Input/Suggest/SuggestPG',
    'css!Controls-demo/Input/Search/Suggest/SuggestPG'
 ], function(Control, template, propertyGridConfig, sourceLib) {
-   
+
    'use strict';
-   
+
    var cityData = [
       {id: 1, city: 'Yaroslavl'},
       {id: 2, city: 'Moscow'},
@@ -16,7 +16,7 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
       {id: 4, city: 'Ivanovo'},
       {id: 5, city: 'Kazan'}
    ];
-   
+
    var namesData = [
       {id: 1, name: 'Sasha'},
       {id: 2, name: 'Aleksey'},
@@ -24,18 +24,18 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
       {id: 4, name: 'Maksim'},
       {id: 5, name: 'Dmitry'}
    ];
-   
+
    return Control.extend({
       _template: template,
       _content: 'Controls/Input/Search/Suggest',
       _dataObject: null,
       _componentOptions: null,
-      
+
       _beforeMount: function() {
          var sourceFilter = function(item, queryFilter) {
             var itemValue = item.get('city') || item.get('name');
             var queryValue = queryFilter['city'] || queryFilter['name'];
-            
+
             if (queryValue) {
                queryValue = queryValue && queryValue.toLowerCase();
                itemValue = itemValue && itemValue.toLowerCase();
@@ -43,7 +43,7 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
             }
             return true;
          };
-         
+
          this._citiesSource = new sourceLib.Memory({
             idProperty: 'id',
             data: cityData,
@@ -112,7 +112,7 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
                         sourceConfig: {
                            pageSize: 5,
                            page: 0,
-                           mode: 'totalCount'
+                           hasMore: false
                         }
                      }
                   },
@@ -123,7 +123,7 @@ define('Controls-demo/Input/Search/Suggest/SuggestPG', [
                         sourceConfig: {
                            pageSize: 2,
                            page: 0,
-                           mode: 'totalCount'
+                           hasMore: false
                         }
                      }
                   },

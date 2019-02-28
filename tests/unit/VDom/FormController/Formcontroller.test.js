@@ -1,7 +1,8 @@
 define([
    'Controls/FormController',
+   'Core/Deferred',
    'Types/entity'
-], (FormController, entity) => {
+], (FormController, Deferred, entity) => {
    'use strict';
 
    describe('FormController', () => {
@@ -84,7 +85,9 @@ define([
 
          setRecordCalled = false;
          FC._beforeUpdate({
-            record: 'record',
+            record: {
+               isChanged: () => false
+            },
             key: 'key'
          });
 
@@ -102,7 +105,53 @@ define([
          assert.equal(setRecordCalled, false);
          assert.equal(readCalled, false);
          assert.equal(createCalled, true);
-         assert.equal(FC._isNewRecord, true);
+
+         createCalled = false;
+         let updateCalled = false;
+         let confirmPopupCalled = false;
+         FC._showConfirmPopup = () => {
+            confirmPopupCalled = true;
+            return (new Deferred()).callback(true);
+         };
+         FC.update = () => {
+            updateCalled = true;
+            return (new Deferred()).callback();
+         };
+         let record = {
+            isChanged: () => true
+         };
+         FC._options.record = record;
+         FC._beforeUpdate({
+            record: record,
+            key: 'key'
+         });
+
+         assert.equal(setRecordCalled, false);
+         assert.equal(confirmPopupCalled, true);
+         assert.equal(readCalled, true);
+         assert.equal(updateCalled, true);
+         assert.equal(createCalled, false);
+
+         FC._showConfirmPopup = () => {
+            confirmPopupCalled = true;
+            return (new Deferred()).callback(false);
+         };
+
+         updateCalled = false;
+         readCalled = false;
+         confirmPopupCalled = false;
+         FC._beforeUpdate({
+            record: record,
+            key: 'key'
+         });
+
+         assert.equal(setRecordCalled, false);
+         assert.equal(confirmPopupCalled, true);
+         assert.equal(readCalled, true);
+         assert.equal(updateCalled, false);
+         assert.equal(createCalled, false);
+
+         FC.destroy();
       });
 
       it('delete new record', () => {

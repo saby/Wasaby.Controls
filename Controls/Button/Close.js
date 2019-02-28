@@ -1,9 +1,9 @@
 define('Controls/Button/Close', [
    'Core/Control',
    'wml!Controls/Button/Close',
-   'Core/IoC',
+   'Env/Env',
    'css!theme?Controls/Button/Close'
-], function(Control, template, IoC) {
+], function(Control, template, Env) {
    /**
     * Specialized type of button for closing windows.
     *
@@ -77,12 +77,19 @@ define('Controls/Button/Close', [
 
       // TODO: удалить по подзадаче, когда уберем поддержку старых опций https://online.sbis.ru/opendoc.html?guid=375f4d56-c47c-4ee2-abbc-e38a45fd474a
       compatibleViewMode: function(options, self) {
+         if (options.transparent !== undefined) {
+            self._transparent = options.transparent;
+         }
          if (options.viewMode !== undefined) {
             self._viewMode = options.viewMode;
          } else {
             self._viewMode = (options.style === 'light' ? 'link' : 'toolButton');
             if (options.style !== undefined) {
-               IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
+               Env.IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and removed in 19.200. Use option "viewMode".');
+               if (options.style === 'primary') {
+                  Env.IoC.resolve('ILogger').warn('Close', 'Option "style" is deprecated and not regulated transparency. Use option "transparent".');
+                  self._transparent = false;
+               }
             }
          }
       }
@@ -91,6 +98,7 @@ define('Controls/Button/Close', [
    var CloseButton = Control.extend({
       _template: template,
       _viewMode: null,
+      _transparent: true,
 
       _beforeMount: function(options) {
          _private.compatibleViewMode(options, this);
@@ -102,8 +110,7 @@ define('Controls/Button/Close', [
 
    CloseButton.getDefaultOptions = function() {
       return {
-         size: 'l',
-         transparent: true
+         size: 'l'
       };
    };
 

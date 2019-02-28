@@ -2,11 +2,12 @@ define(
    [
       'Core/core-instance',
       'Controls/Input/Money',
-      'tests/resources/TemplateUtil',
-      'wml!tests/Input/Money/ZeroValueTest',
-      'wml!tests/Input/Money/EmptyValueTest'
+      'unit/resources/TemplateUtil',
+      'unit/Input/Base/InputUtility',
+      'wml!unit/Input/Money/ZeroValueTest',
+      'wml!unit/Input/Money/EmptyValueTest'
    ],
-   function(instance, Money, TemplateUtil, zeroValueTemplate, emptyValueTemplate) {
+   function(instance, Money, TemplateUtil, InputUtility, zeroValueTemplate, emptyValueTemplate) {
       'use strict';
 
       describe('Controls.Input.Money', function() {
@@ -21,6 +22,9 @@ define(
                beforeMount.apply(this, arguments);
 
                ctrl._children[this._fieldName] = {
+                  selectionStart: 0,
+                  selectionEnd: 0,
+                  value: '',
                   focus: function() {
                   },
                   setSelectionRange: function(start, end) {
@@ -47,6 +51,20 @@ define(
                ctrl._readOnlyField.scope.value = '0.00';
 
                assert.equal(ctrl._readOnlyField.template(ctrl._readOnlyField.scope), zeroValueTemplate({}));
+            });
+         });
+
+         describe('User input.', function() {
+            it('Enter "0" in the empty field.', function() {
+               InputUtility.init(ctrl);
+               InputUtility.insert(ctrl, '0');
+               InputUtility.triggerInput(ctrl);
+
+               assert.equal(ctrl._viewModel.value, '0.00');
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 1,
+                  end: 1
+               });
             });
          });
       });

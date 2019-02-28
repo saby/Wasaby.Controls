@@ -1,14 +1,14 @@
 define('Controls/List/Grid/GridViewModel', [
-   'Core/IoC',
+   
    'Controls/List/BaseViewModel',
    'Controls/List/ListViewModel',
    'wml!Controls/List/Grid/LadderWrapper',
    'Controls/Constants',
    'Core/core-clone',
-   'Core/detection',
+   'Env/Env',
    'Core/helpers/Object/isEqual',
    'Controls/StickyHeader/Utils'
-], function(IoC, BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, cDetection, isEqual, stickyUtil) {
+], function(BaseViewModel, ListViewModel, LadderWrapper, ControlsConstants, cClone, Env, isEqual, stickyUtil) {
    'use strict';
 
    var
@@ -42,26 +42,56 @@ define('Controls/List/Grid/GridViewModel', [
                preparedClasses += ' controls-Grid__row-cell_rowSpacingBottom_' + (params.itemPadding.bottom || 'default').toLowerCase();
             }
 
-            // Вертикальное выравнивание хедера
-            if (params.columns[params.columnIndex].valign) {
-               preparedClasses += ' controls-Grid__header-cell_valign_' + params.columns[params.columnIndex].valign;
-            }
+
             return preparedClasses;
          },
 
-         prepareRowSeparatorClasses: function(rowSeparatorVisibility, rowIndex, rowCount) {
+         isFirstInGroup: function(self, dispItem) {
+
             var
-               result = '';
-            if (rowSeparatorVisibility) {
-               if (rowIndex === 0) {
-                  result += ' controls-Grid__row-cell_firstRow';
-                  result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
+               item = dispItem.item,
+               display = self._model._display,
+               groupingKeyCallback = self._options.groupingKeyCallback,
+               currentItemGroup,
+               currentGroupItems;
+
+            // If grouping is not enabled.
+            if (!groupingKeyCallback) {
+               return false;
+            }
+
+            // Getting all items of the current items' group.
+            currentItemGroup = groupingKeyCallback(item);
+            currentGroupItems = display.getGroupItems(currentItemGroup);
+
+            // If current item is out of any group.
+            if (!currentGroupItems || currentGroupItems.length === 0) {
+               return false;
+            }
+
+
+            return item === currentGroupItems[0].getContents();
+         },
+         prepareRowSeparatorClasses: function(current) {
+            var
+               result = '',
+               rowCount = current.dispItem.getOwner().getCount();
+
+            if (current.rowSeparatorVisibility) {
+
+               if (current.isFirstInGroup) {
+                  result += ' controls-Grid__row-cell_first-row-in-group';
                } else {
-                  result += ' controls-Grid__row-cell_withRowSeparator';
-               }
-               if (rowIndex === rowCount - 1) {
-                  result += ' controls-Grid__row-cell_lastRow';
-                  result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                  if (current.index === 0) {
+                     result += ' controls-Grid__row-cell_firstRow';
+                     result += ' controls-Grid__row-cell_withRowSeparator_firstRow';
+                  } else {
+                     result += ' controls-Grid__row-cell_withRowSeparator';
+                  }
+                  if (current.index === rowCount - 1) {
+                     result += ' controls-Grid__row-cell_lastRow';
+                     result += ' controls-Grid__row-cell_withRowSeparator_lastRow';
+                  }
                }
             } else {
                result += ' controls-Grid__row-cell_withoutRowSeparator';
@@ -70,10 +100,10 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          getItemColumnCellClasses: function(current) {
-            var
-               cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
+            var cellClasses = 'controls-Grid__row-cell' + (current.isEditing ? ' controls-Grid__row-cell-background-editing' : ' controls-Grid__row-cell-background-hover');
+            var currentStyle = current.style || 'default';
 
-            cellClasses += _private.prepareRowSeparatorClasses(current.rowSeparatorVisibility, current.index, current.dispItem.getOwner().getCount());
+            cellClasses += _private.prepareRowSeparatorClasses(current);
 
             // Если включен множественный выбор и рендерится первая колонка с чекбоксом
             if (current.multiSelectVisibility !== 'hidden' && current.columnIndex === 0) {
@@ -89,21 +119,16 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             if (current.isSelected) {
-               cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + (current.style || 'default');
+               cellClasses += ' controls-Grid__row-cell_selected' + ' controls-Grid__row-cell_selected-' + currentStyle;
 
                if (current.columnIndex === 0) {
-
-                  /* В старых браузерах маркер навешивается стилями данного класса, т.к. вёрстка там другая.
-                  *  Не навешиваем класс, если не нужно показывать маркер
-                  */
-                  if (!(current.isNotFullGridSupport && current.markerVisibility === 'hidden')) {
-                     cellClasses += ' controls-Grid__row-cell_selected__first';
-                  }
-                  cellClasses += ' controls-Grid__row-cell_selected__first-' + (current.style || 'default');
+                  cellClasses += ' controls-Grid__row-cell_selected__first-' + currentStyle;
                }
                if (current.columnIndex === current.getLastColumnIndex()) {
-                  cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + (current.style || 'default');
+                  cellClasses += ' controls-Grid__row-cell_selected__last' + ' controls-Grid__row-cell_selected__last-' + currentStyle;
                }
+            } else if (current.columnIndex === current.getLastColumnIndex()) {
+               cellClasses += ' controls-Grid__row-cell__last' + ' controls-Grid__row-cell__last-' + currentStyle;
             }
 
             return cellClasses;
@@ -162,7 +187,7 @@ define('Controls/List/Grid/GridViewModel', [
 
             function processStickyLadder(params) {
                processLadder(params);
-               if (params.ladder.ladderLength && params.ladder.ladderLength > 1 && !cDetection.isNotFullGridSupport) {
+               if (params.ladder.ladderLength && params.ladder.ladderLength > 1 && !Env.detection.isNotFullGridSupport) {
                   params.ladder.headingStyle = 'grid-area: ' +
                      (params.itemIndex + 1) + ' / ' +
                      '1 / ' +
@@ -226,6 +251,11 @@ define('Controls/List/Grid/GridViewModel', [
             }
 
             return sortingDirection;
+         },
+
+         isNeedToHighlight: function(item, dispProp, searchValue) {
+            var itemValue = item.get(dispProp);
+            return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
          }
       },
 
@@ -248,25 +278,36 @@ define('Controls/List/Grid/GridViewModel', [
          _ladder: null,
 
          constructor: function(cfg) {
-            var
-               self = this;
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
-            this._model.subscribe('onListChange', function() {
-               self._ladder = _private.prepareLadder(self);
-               self._nextVersion();
-               self._notify('onListChange');
-            });
-            this._model.subscribe('onMarkedKeyChanged', function(event, key) {
-               self._notify('onMarkedKeyChanged', key);
-            });
-            this._model.subscribe('onGroupsExpandChange', function(event, changes) {
-               self._notify('onGroupsExpandChange', changes);
-            });
+            this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+               if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
+                  this._ladder = _private.prepareLadder(this);
+               }
+               this._nextVersion();
+               this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+            }.bind(this);
+            this._onMarkedKeyChangedFn = function(event, key) {
+               this._notify('onMarkedKeyChanged', key);
+            }.bind(this);
+            this._onGroupsExpandChangeFn = function(event, changes) {
+               this._notify('onGroupsExpandChange', changes);
+            }.bind(this);
+            this._onCollectionChangeFn = function() {
+               this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
+            }.bind(this);
+            this._model.subscribe('onListChange', this._onListChangeFn);
+            this._model.subscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
+            this._model.subscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
+            this._model.subscribe('onCollectionChange', this._onCollectionChangeFn);
             this._ladder = _private.prepareLadder(this);
-            this.setColumns(this._options.columns);
-            this.setHeader(this._options.header);
+            this._setColumns(this._options.columns);
+            this._setHeader(this._options.header);
+         },
+
+         _nextModelVersion: function(notUpdatePrefixItemVersion) {
+            this._model.nextModelVersion(notUpdatePrefixItemVersion);
          },
 
          _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
@@ -274,7 +315,7 @@ define('Controls/List/Grid/GridViewModel', [
                result = cClone(column);
             if (isNotFullGridSupport) {
                if (result.width === '1fr') {
-                  result.width = 'auto';
+                  result.width = '100%';
                }
             }
             return result;
@@ -284,7 +325,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                result = [];
             for (var i = 0; i < columns.length; i++) {
-               result.push(this._prepareCrossBrowserColumn(columns[i], cDetection.isNotFullGridSupport));
+               result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport));
             }
             return result;
          },
@@ -305,11 +346,14 @@ define('Controls/List/Grid/GridViewModel', [
             return this._header;
          },
 
-         setHeader: function(columns) {
+         _setHeader: function(columns) {
             this._header = columns;
             this._prepareHeaderColumns(this._header, this._options.multiSelectVisibility !== 'hidden');
-            this._nextVersion();
-            this._notify('onListChange');
+         },
+
+         setHeader: function(columns) {
+            this._setHeader(columns);
+            this._nextModelVersion();
          },
 
          _prepareHeaderColumns: function(columns, multiSelectVisibility) {
@@ -326,7 +370,7 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          isNotFullGridSupport: function() {
-            return cDetection.isNotFullGridSupport;
+            return Env.detection.isNotFullGridSupport;
          },
 
          isStickyHeader: function() {
@@ -360,6 +404,9 @@ define('Controls/List/Grid/GridViewModel', [
             }
             if (headerColumn.column.align) {
                cellClasses += ' controls-Grid__header-cell_halign_' + headerColumn.column.align;
+            }
+            if (headerColumn.column.valign) {
+               cellClasses += ' controls-Grid__header-cell_valign_' + headerColumn.column.valign;
             }
             headerColumn.cellClasses = cellClasses;
 
@@ -482,13 +529,16 @@ define('Controls/List/Grid/GridViewModel', [
          // -------------------------- items --------------------------
          // -----------------------------------------------------------
 
-         setColumns: function(columns) {
+         _setColumns: function(columns) {
             this._columns = this._prepareColumns(columns);
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
-            this._nextVersion();
-            this._notify('onListChange');
+         },
+
+         setColumns: function(columns) {
+            this._setColumns(columns);
+            this._nextModelVersion();
          },
 
          setLeftSpacing: function(leftSpacing) {
@@ -548,8 +598,11 @@ define('Controls/List/Grid/GridViewModel', [
          getMarkedKey: function() {
             return this._model.getMarkedKey();
          },
-         getFirstItemKey: function() {
-            return this._model.getFirstItemKey.apply(this._model, arguments);
+         getFirstItem: function() {
+            return this._model.getFirstItem.apply(this._model, arguments);
+         },
+         getLastItem: function() {
+            return this._model.getLastItem.apply(this._model, arguments);
          },
          getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);
@@ -563,12 +616,20 @@ define('Controls/List/Grid/GridViewModel', [
             return this._model.getNextItemKey.apply(this._model, arguments);
          },
 
+         setIndexes: function(startIndex, stopIndex) {
+            this._model.setIndexes(startIndex, stopIndex);
+         },
+
          getPreviousItemKey: function() {
             return this._model.getPreviousItemKey.apply(this._model, arguments);
          },
 
          setSorting: function(sorting) {
             this._model.setSorting(sorting);
+         },
+
+         setSearchValue: function(value) {
+            this._model.setSearchValue(value);
          },
 
          getSorting: function() {
@@ -609,16 +670,15 @@ define('Controls/List/Grid/GridViewModel', [
             //TODO: Выпилить в 19.200 или если закрыта -> https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
             current.rowSpacing = this._options.rowSpacing;
 
-            current.isNotFullGridSupport = cDetection.isNotFullGridSupport;
+            current.isNotFullGridSupport = Env.detection.isNotFullGridSupport;
             current.style = this._options.style;
-
             if (current.multiSelectVisibility !== 'hidden') {
                current.columns = [{}].concat(this._columns);
             } else {
                current.columns = this._columns;
             }
 
-            if (stickyColumn && !cDetection.isNotFullGridSupport) {
+            if (stickyColumn && !Env.detection.isNotFullGridSupport) {
                current.styleLadderHeading = self._ladder.stickyLadder[current.index].headingStyle;
                current.stickyColumnIndex = stickyColumn.index;
             }
@@ -630,7 +690,13 @@ define('Controls/List/Grid/GridViewModel', [
                }
             }
 
-            current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+            current.isFirstInGroup = !current.isGroup && _private.isFirstInGroup(this, current);
+
+            if (current.isFirstInGroup) {
+               current.rowSeparatorVisibility = false;
+            } else {
+               current.rowSeparatorVisibility = this._options.showRowSeparator !== undefined ? this._options.showRowSeparator : this._options.rowSeparatorVisibility;
+            }
 
             current.columnIndex = 0;
 
@@ -667,9 +733,13 @@ define('Controls/List/Grid/GridViewModel', [
                   currentColumn.ladder = self._ladder.ladder[current.index];
                   currentColumn.ladderWrapper = LadderWrapper;
                }
+               if (current.item.get) {
+                  currentColumn.column.needSearchHighlight = !!_private.isNeedToHighlight(current.item, currentColumn.column.displayProperty, current.searchValue);
+                  currentColumn.searchValue = current.searchValue;
+               }
                if (stickyColumn) {
                   isStickedColumn = stickyColumn.index === (current.multiSelectVisibility !== 'hidden' ? currentColumn.columnIndex + 1 : currentColumn.columnIndex);
-                  if (cDetection.isNotFullGridSupport) {
+                  if (Env.detection.isNotFullGridSupport) {
                      currentColumn.hiddenForLadder = isStickedColumn && !self._ladder.stickyLadder[current.index].ladderLength;
                   } else {
                      currentColumn.hiddenForLadder = isStickedColumn && self._ladder.stickyLadder[current.index].ladderLength !== 1;
@@ -705,15 +775,13 @@ define('Controls/List/Grid/GridViewModel', [
          setStickyColumn: function(stickyColumn) {
             this._options.stickyColumn = stickyColumn;
             this._ladder = _private.prepareLadder(this);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setLadderProperties: function(ladderProperties) {
             this._options.ladderProperties = ladderProperties;
             this._ladder = _private.prepareLadder(this);
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          updateIndexes: function(startIndex, stopIndex) {
@@ -752,9 +820,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.setItemActions(item, actions);
          },
 
+         nextModelVersion: function() {
+            this._model.nextModelVersion.apply(this._model, arguments);
+         },
+
          _setEditingItemData: function(itemData) {
             this._model._setEditingItemData(itemData);
-            this._nextVersion();
          },
 
          setItemActionVisibilityCallback: function(callback) {
@@ -791,24 +862,20 @@ define('Controls/List/Grid/GridViewModel', [
 
          setRightSwipedItem: function(itemData) {
             this._model.setRightSwipedItem(itemData);
-            this._nextVersion();
          },
 
          setShowRowSeparator: function(showRowSeparator) {
             this._options.showRowSeparator = showRowSeparator;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setRowSeparatorVisibility: function(rowSeparatorVisibility) {
             this._options.rowSeparatorVisibility = rowSeparatorVisibility;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          updateSelection: function(selectedKeys) {
             this._model.updateSelection(selectedKeys);
-            this._nextVersion();
          },
 
          setDragTargetPosition: function(position) {
@@ -848,6 +915,10 @@ define('Controls/List/Grid/GridViewModel', [
          },
 
          destroy: function() {
+            this._model.unsubscribe('onListChange', this._onListChangeFn);
+            this._model.unsubscribe('onMarkedKeyChanged', this._onMarkedKeyChangedFn);
+            this._model.unsubscribe('onGroupsExpandChange', this._onGroupsExpandChangeFn);
+            this._model.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
             this._model.destroy();
             GridViewModel.superclass.destroy.apply(this, arguments);
          }

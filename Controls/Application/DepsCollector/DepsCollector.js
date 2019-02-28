@@ -1,8 +1,9 @@
 define('Controls/Application/DepsCollector/DepsCollector', [
    'View/Logger',
-   'Core/IoC',
-   'Core/core-extend'
-], function(Logger, IoC, coreExtend) {
+   'Env/Env',
+   'Core/core-extend',
+   'Core/i18n'
+], function(Logger, Env, coreExtend, i18n) {
    var DEPTYPES = {
       BUNDLE: 1,
       SINGLE: 2
@@ -68,13 +69,18 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       if (res && res.length) {
          return res[0].slice(1);
       }
-      IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
+      Env.IoC.resolve('ILogger').error('Incorrect extension: ' + fileName);
       return '';
    }
 
    function isThemedCss(key) {
       return !!~key.indexOf('theme?');
    }
+
+   function removeThemeParam(name) {
+      return name.replace('theme?', '');
+   }
+
 
    function parseModuleName(name) {
       var typeInfo = getType(name);
@@ -139,7 +145,8 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       };
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
-            var bundleName = bundlesRoute[key];
+            var noParamsName = removeThemeParam(key);
+            var bundleName = bundlesRoute[noParamsName];
             if (bundleName) {
                Logger.log('Custom packets logs', ['Module ' + key + ' in bundle ' + bundleName]);
                delete allDeps[key];
@@ -153,10 +160,11 @@ define('Controls/Application/DepsCollector/DepsCollector', [
       }
       for (var key in allDeps) {
          if (allDeps.hasOwnProperty(key)) {
+            var noParamsName = removeThemeParam(key).split('css!')[1];
             if (isThemedCss(key)) {
-               packages.themedCss[key.split('theme?')[1]] = DEPTYPES.SINGLE;
+               packages.themedCss[noParamsName] = DEPTYPES.SINGLE;
             } else {
-               packages.simpleCss[key.split('css!')[1]] = DEPTYPES.SINGLE;
+               packages.simpleCss[noParamsName] = DEPTYPES.SINGLE;
             }
          }
       }
@@ -234,19 +242,48 @@ define('Controls/Application/DepsCollector/DepsCollector', [
        * @param modInfo - contains info about path to module files
        * @param bundlesRoute - contains info about custom packets with modules
        */
-      constructor: function(modDeps, modInfo, bundlesRoute, themesActive) {
+      constructor: function(modDeps, modInfo, bundlesRoute, themesActive, needLocalisation) {
          this.modDeps = modDeps;
          this.modInfo = modInfo;
          this.bundlesRoute = bundlesRoute;
          this.themesActive = themesActive;
+         this.localizationEnabled = needLocalisation;
       },
       collectDependencies: function(deps) {
          var files = {
-            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: []
+            js: [], css: { themedCss: [], simpleCss: [] }, tmpl: [], wml: [],
+            cssToDefine: []
          };
          var allDeps = {};
          recursiveWalker(allDeps, deps, this.modDeps, this.modInfo);
+         if (allDeps.css) {
+            for (var key in allDeps.css) {
+               files.cssToDefine.push(key);
+            }
+         }
          var packages = getAllPackagesNames(allDeps, this.bundlesRoute, this.themesActive); // Find all bundles, and removes dependencies that are included in bundles
+
+         // Collect dictionaries
+         if (this.localizationEnabled) {
+            var collectedDictList = {};
+            var module;
+            var moduleLang;
+            var lang = this.getLang();
+            var availableDictList = this.getAvailableDictList(lang);
+            for (var key in packages.js) {
+               module = key.split('/')[0];
+               moduleLang = module + '/lang/' + lang + '/' + lang + '.json';
+               if (availableDictList[moduleLang]) {
+                  collectedDictList[moduleLang] = true;
+               }
+            }
+            for (var key in collectedDictList) {
+               if (collectedDictList.hasOwnProperty(key)) {
+                  files.js.push(key);
+               }
+            }
+         }
+
          for (var key in packages.js) {
             if (packages.js.hasOwnProperty(key)) {
                files.js.push(key);
@@ -279,6 +316,12 @@ define('Controls/Application/DepsCollector/DepsCollector', [
             }
          }
          return files;
+      },
+      getLang: function() {
+         return i18n.getLang();
+      },
+      getAvailableDictList: function(lang) {
+         return i18n._dictNames[lang] || {};
       }
    });
 

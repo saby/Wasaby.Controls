@@ -1,6 +1,6 @@
 define('Controls/Controllers/QueryParamsController/Position',
-   ['Core/core-simpleExtend', 'Types/source', 'Core/IoC'],
-   function(cExtend, sourceLib, IoC) {
+   ['Core/core-simpleExtend', 'Types/source', 'Env/Env'],
+   function(cExtend, sourceLib, Env) {
       var _private = {
          resolveField: function(optField) {
             return (optField instanceof Array) ? optField : [optField];
@@ -98,6 +98,20 @@ define('Controls/Controllers/QueryParamsController/Position',
             };
          },
 
+         setState: function(state) {
+            if (state.more) {
+               this._more = state.more;
+            }
+            if (state.position) {
+               if (state.position.after !== undefined) {
+                  this._afterPosition = _private.resolvePosition(state.position.after, this._options.field);
+               }
+               if (state.position.before !== undefined) {
+                  this._beforePosition = _private.resolvePosition(state.position.before, this._options.field);
+               }
+            }
+         },
+
          calculateState: function(list, loadDirection) {
             var more, navDirection, edgeElem, metaNextPostion;
             more = list.getMetaData().more;
@@ -107,14 +121,14 @@ define('Controls/Controllers/QueryParamsController/Position',
                   navDirection = _private.resolveDirection(loadDirection, this._options.direction);
                   this._more[navDirection] = more;
                } else {
-                  IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
+                  Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be object');
                }
             } else {
                if (more instanceof Object) {
                   if (!loadDirection &&  this._options.direction === 'both') {
                      this._more = more;
                   } else {
-                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
+                     Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"more\" value. Must be boolean');
                   }
                }
             }
@@ -130,7 +144,7 @@ define('Controls/Controllers/QueryParamsController/Position',
                         this._beforePosition = metaNextPostion;
                      }
                   } else {
-                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
+                     Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
                   }
                } else {
                   if (!loadDirection && this._options.direction === 'both') {
@@ -138,10 +152,10 @@ define('Controls/Controllers/QueryParamsController/Position',
                         this._beforePosition = metaNextPostion.before;
                         this._afterPosition = metaNextPostion.after;
                      } else {
-                        IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties. Each properties must be Arrays');
+                        Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties. Each properties must be Arrays');
                      }
                   } else {
-                     IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
+                     Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Array');
                   }
                }
 

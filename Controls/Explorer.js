@@ -8,15 +8,17 @@ define('Controls/Explorer', [
    'Controls/Utils/applyHighlighter',
    'Types/chain',
    'Core/core-instance',
-   'Core/constants',
+   'Env/Env',
    'Controls/Utils/keysHandler',
+   'css!theme?Controls/Explorer/Explorer',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
    'Controls/TreeGrid',
-   'Controls/BreadCrumbs/Path'
+   'Controls/BreadCrumbs/Path',
+   'css!Controls/Explorer/Explorer'
 ], function(
    Control,
    template,
@@ -27,14 +29,14 @@ define('Controls/Explorer', [
    applyHighlighter,
    chain,
    cInstance,
-   cConstants,
+   Env,
    keysHandler
 ) {
    'use strict';
 
    var
       HOT_KEYS = {
-         backByPath: cConstants.key.backspace
+         backByPath: Env.constants.key.backspace
       };
 
    var
@@ -61,6 +63,7 @@ define('Controls/Explorer', [
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
+            self._forceUpdate();
          },
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
@@ -89,7 +92,6 @@ define('Controls/Explorer', [
             self._swipeViewMode = viewMode === 'search' ? 'table' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
-            self._leftPadding = viewMode === 'search' ? 'search' : undefined;
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -98,6 +100,7 @@ define('Controls/Explorer', [
                } else {
                   _private.setRoot(self, self._options.root);
                }
+               self._notify('rootChanged', [self._root]);
             }
          },
          dragItemsFromRoot: function(self, dragItems) {
@@ -150,7 +153,6 @@ define('Controls/Explorer', [
       _viewName: null,
       _viewMode: null,
       _viewModelConstructor: null,
-      _leftPadding: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
 
@@ -164,6 +166,9 @@ define('Controls/Explorer', [
       _beforeUpdate: function(cfg) {
          if (this._viewMode !== cfg.viewMode) {
             _private.setViewMode(this, cfg.viewMode);
+         }
+         if (this._options.root !== cfg.root) {
+            _private.setRoot(this, cfg.root);
          }
       },
       _dragEndBreadCrumbs: function(event, dragObject) {
@@ -193,10 +198,12 @@ define('Controls/Explorer', [
       _onItemClick: function(event, item) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
+            this._notify('rootChanged', [this._root]);
          }
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
+         this._notify('rootChanged', [this._root]);
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);
@@ -232,7 +239,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         root: null
+         root: null,
+         backButtonStyle: 'secondary'
       };
    };
 

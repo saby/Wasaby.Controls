@@ -1,4 +1,34 @@
-<div class="controls-BaseControl" on:showIndicator="_showIndicator()" on:hideIndicator="_hideIndicator()" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
+<ws:template name="footerTemplateIf">
+   <ws:if data="{{_loadingIndicatorState}}">
+      <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
+         <ws:if data="{{_showLoadingIndicatorImage}}">
+            <div class="controls-BaseControl__loadingIndicatorImg"></div>
+         </ws:if>
+      </div>
+   </ws:if>
+   <ws:if data="{{_options.footerTemplate}}">
+      <div class="controls-BaseControl__footer-content">
+         <ws:partial template="{{_options.footerTemplate}}"/>
+      </div>
+   </ws:if>
+   <ws:if data="{{_shouldDrawFooter}}">
+      <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
+   </ws:if>
+</ws:template>
+<ws:template name="multiSelectTplIf">
+   <ws:if data="{{_options.multiSelectVisibility}}">
+      <ws:partial template="wml!Controls/List/BaseControl/multiSelect" scope="{{multiSelectTpl.templateOptions}}" />
+   </ws:if>
+</ws:template>
+<ws:template name="emptyTemplateIf">
+   <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
+      <div class="controls-BaseControl__emptyTemplate">
+         <ws:partial template="{{_options.emptyTemplate}}"/>
+      </div>
+   </ws:if>
+</ws:template>
+<div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
+   <div name="fakeFocusElem" tabindex="0" class="controls-BaseControl__fakeFocusElem"></div>
     <ws:if data="{{_needScrollCalculation}}">
         <div class="controls-BaseControl__trigger controls-BaseControl__topListTrigger" name="topListTrigger"></div>
         <div class="controls-BaseControl__topPlaceholder" style="height: {{_topPlaceholderHeight}}px;"></div>
@@ -43,29 +73,14 @@
                         on:deactivated="_onDeactivated()"/>
          </ws:viewTemplate>
          <ws:footerTemplate>
-            <ws:if data="{{_loadingIndicatorState}}">
-               <div class="controls-BaseControl__loadingIndicator controls-BaseControl__loadingIndicator__state-{{_loadingIndicatorState}}">
-                  <ws:if data="{{_showLoadingIndicatorImage}}">
-                     <div class="controls-BaseControl__loadingIndicatorImg"></div>
-                  </ws:if>
-               </div>
-            </ws:if>
-            <ws:if data="{{_options.footerTemplate}}">
-                <div class="controls-BaseControl__footer-content">
-                    <ws:partial template="{{_options.footerTemplate}}"/>
-                </div>
-            </ws:if>
-            <ws:if data="{{_shouldDrawFooter}}">
-               <ws:partial template="wml!Controls/List/BaseControl/Footer" loadMoreCaption="{{_loadMoreCaption}}"/>
-            </ws:if>
+            <ws:partial template="footerTemplateIf"/>
          </ws:footerTemplate>
          <ws:multiSelectTpl>
-             <ws:if data="{{_options.multiSelectVisibility}}">
-                 <Controls.Container.Async name="multiSelectContainer" templateName="wml!Controls/List/BaseControl/multiSelect">
-                     <ws:partial template="{{'wml!Controls/List/BaseControl/multiSelect'}}" />
-                 </Controls.Container.Async>
-             </ws:if>
+             <ws:partial template="multiSelectTplIf"/>
          </ws:multiSelectTpl>
+          <ws:emptyTemplate>
+              <ws:partial template="emptyTemplateIf"/>
+          </ws:emptyTemplate>
       </ws:partial>
    </ws:template>
 
@@ -108,6 +123,7 @@
           menuIsShown="{{_menuIsShown}}"
           itemActions="{{_options.itemActions}}"
           itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
+          itemActionsProperty="{{_options.itemActionsProperty}}"
           itemActionsPosition="{{_options.itemActionsPosition}}"/>
        <Controls.List.Swipe.SwipeControl
           ws:content="listView"
@@ -119,12 +135,6 @@
           swipeViewMode="{{_options.swipeViewMode}}"
           itemActions="{{_options.itemActions}}"
           name="swipeControl"/>
-
-        <ws:if data="{{_options.emptyTemplate && !_listViewModel.getCount() && (!_loadingState || _loadingState === 'all')}}">
-            <div class="controls-BaseControl__emptyTemplate">
-                <ws:partial template="{{_options.emptyTemplate}}"/>
-            </div>
-        </ws:if>
     </ws:if>
 
     <ws:if data="{{_needScrollCalculation}}">

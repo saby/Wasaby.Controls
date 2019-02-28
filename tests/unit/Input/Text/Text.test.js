@@ -2,7 +2,7 @@ define(
    [
       'Core/core-instance',
       'Controls/Input/Text',
-      'tests/resources/ProxyCall',
+      'unit/resources/ProxyCall',
       'Vdom/Vdom'
    ],
    function(instance, Text, ProxyCall, Vdom) {

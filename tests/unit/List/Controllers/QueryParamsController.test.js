@@ -78,10 +78,10 @@ define(
                assert.isTrue(pNav.hasMoreData('up'), 'Method hasMoreData returns incorrect value after reload');
             });
 
-            it('calculateState + withTotalCount', function () {
+            it('calculateState + withHasMore=False', function () {
                var pNav = new PageNavigation({
                   page: 0,
-                  mode: 'totalCount',
+                  hasMore: false,
                   pageSize: 4
                });
                dataRs.setMetaData({more: 8});

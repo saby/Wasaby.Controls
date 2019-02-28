@@ -143,12 +143,12 @@ define([
                assert.deepEqual(dragObject.position, {x: 30, y: 15});
             });
             it('dragLeave', function() {
-               controller._mouseLeave();
+               controller._mouseLeave(createSyntheticEvent());
                assert.equal(events.join(', '), 'dragLeave');
                assert.isFalse(controller._insideDragging);
             });
             it('dragEnter', function() {
-               controller._mouseEnter();
+               controller._mouseEnter(createSyntheticEvent());
                assert.equal(events.join(', '), 'dragEnter');
                assert.isTrue(controller._insideDragging);
             });
@@ -186,12 +186,12 @@ define([
                assert.deepEqual(dragObject.position, {x: 30, y: 15});
             });
             it('dragLeave', function() {
-               controller._mouseLeave();
+               controller._mouseLeave(createSyntheticEvent());
                assert.equal(events.join(', '), 'dragLeave');
                assert.isFalse(controller._insideDragging);
             });
             it('dragEnter', function() {
-               controller._mouseEnter();
+               controller._mouseEnter(createSyntheticEvent());
                assert.equal(events.join(', '), 'dragEnter');
                assert.isTrue(controller._insideDragging);
             });

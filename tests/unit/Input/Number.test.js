@@ -2,7 +2,7 @@ define(
    [
       'Core/core-instance',
       'Controls/Input/Number',
-      'tests/resources/ProxyCall',
+      'unit/resources/ProxyCall',
       'Vdom/Vdom'
    ],
    function(instance, NumberInput, ProxyCall, Vdom) {
@@ -34,6 +34,7 @@ define(
             assert.deepEqual(NumberInput.getDefaultOptions(), {
                size: 'm',
                value: 0,
+               tooltip: '',
                style: 'info',
                placeholder: '',
                useGrouping: true,
@@ -49,6 +50,7 @@ define(
             assert.deepEqual(Object.keys(NumberInput.getOptionTypes()).sort(), [
                'size',
                'style',
+               'tooltip',
                'tagStyle',
                'textAlign',
                'fontStyle',

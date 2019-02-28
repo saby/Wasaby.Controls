@@ -1,7 +1,7 @@
 define('Controls/StickyHeader/_StickyHeader',
    [
       'Core/Control',
-      'Core/detection',
+      'Env/Env',
       'Types/entity',
       'Controls/StickyHeader/Context',
       'Controls/StickyHeader/Utils',
@@ -11,7 +11,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
       'css!theme?Controls/StickyHeader/_StickyHeader/StickyHeader'
    ],
-   function(Control, detection, entity, Context, stickyUtils, IntersectionObserver, Model, template) {
+   function(Control, Env, entity, Context, stickyUtils, IntersectionObserver, Model, template) {
 
       'use strict';
 
@@ -54,7 +54,7 @@ define('Controls/StickyHeader/_StickyHeader',
           * type {Boolean} Determines whether the component is built on the Android mobile platform.
           * @private
           */
-         _isMobilePlatform: detection.isMobilePlatform,
+         _isMobilePlatform: Env.detection.isMobilePlatform,
 
          _shadowVisible: true,
          _stickyHeadersHeight: null,
@@ -74,6 +74,8 @@ define('Controls/StickyHeader/_StickyHeader',
          _afterMount: function() {
             var children = this._children;
 
+            this._notify('stickyRegister', [this._index, true], { bubbling: true });
+
             this._observer = new IntersectionObserver(this._observeHandler);
             this._model = new Model({
                topTarget: children.observationTargetTop,
@@ -92,6 +94,7 @@ define('Controls/StickyHeader/_StickyHeader',
             //Let the listeners know that the element is no longer fixed before the unmount.
             this._fixationStateChangeHandler('', this._model.fixedPosition);
             this._observeHandler = undefined;
+            this._notify('stickyRegister', [this._index, false], { bubbling: true });
          },
 
          /**
@@ -115,10 +118,15 @@ define('Controls/StickyHeader/_StickyHeader',
           * @private
           */
          _fixationStateChangeHandler: function(newPosition, prevPosition) {
+            // If the header is hidden we cannot calculate its current height.
+            // Use the height that it had before it was hidden.
+            if (this._container.offsetParent !== null) {
+               this._offsetHeight = this._container.offsetHeight;
+            }
             var information = {
                id: this._index,
                fixedPosition: newPosition,
-               offsetHeight: this._container.offsetHeight,
+               offsetHeight: this._offsetHeight,
                prevPosition: prevPosition,
                mode: this._options.mode
             };
@@ -134,8 +142,6 @@ define('Controls/StickyHeader/_StickyHeader',
                offset,
                position,
                style = '';
-
-
 
             if (this._model && !!this._model.fixedPosition) {
                /**
@@ -159,6 +165,7 @@ define('Controls/StickyHeader/_StickyHeader',
 
                if (offset) {
                   style += 'padding-' + this._model.fixedPosition + ': ' + offset + 'px;';
+                  style += 'margin-' + this._model.fixedPosition + ': -' + offset + 'px;';
                }
 
                style += 'z-index: ' + this._options.fixedZIndex + ';';

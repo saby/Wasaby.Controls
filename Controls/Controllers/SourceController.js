@@ -2,7 +2,7 @@ define('Controls/Controllers/SourceController',
    [
       'Core/core-simpleExtend',
       'Core/core-instance',
-      'Core/IoC',
+      'Env/Env',
       'Controls/Controllers/QueryParamsController/Page',
       'Controls/Controllers/QueryParamsController/Offset',
       'Controls/Controllers/QueryParamsController/Position',
@@ -11,28 +11,29 @@ define('Controls/Controllers/SourceController',
       'Core/core-clone',
       'require'
    ],
-   function(cExtend, cInstance, IoC, Page, Offset, Position, sourceLib, cDeferred, cClone) {
+   function(cExtend, cInstance, Env, Page, Offset, Position, sourceLib, cDeferred, cClone) {
       var _private = {
          prepareSource: function(sourceOpt) {
             if (!cInstance.instanceOfMixin(sourceOpt, 'Types/_source/ICrud')) {
-               IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
+               Env.IoC.resolve('ILogger').error('SourceController', 'Source option has incorrect type');
             }
             return sourceOpt;
          },
 
-         getQueryInstance: function(filter, sorting, offset, limit) {
+         getQueryInstance: function(filter, sorting, offset, limit, meta) {
             var query = new sourceLib.Query();
             query.where(filter)
                .offset(offset)
                .limit(limit)
-               .orderBy(sorting);
+               .orderBy(sorting)
+               .meta(meta);
             return query;
          },
 
-         callQuery: function(dataSource, idProperty, filter, sorting, offset, limit) {
+         callQuery: function(dataSource, idProperty, filter, sorting, offset, limit, meta) {
             var queryDef, queryIns;
 
-            queryIns = _private.getQueryInstance(filter, sorting, offset, limit);
+            queryIns = _private.getQueryInstance(filter, sorting, offset, limit, meta);
 
             queryDef = dataSource.query(queryIns).addCallback((function(dataSet) {
                if (idProperty && idProperty !== dataSet.idProperty) {
@@ -69,7 +70,7 @@ define('Controls/Controllers/SourceController',
                   cntCtr = Position;
                   break;
                default:
-                  IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
+                  Env.IoC.resolve('ILogger').error('SourceController', 'Undefined navigation source type "' + type + '"');
             }
             if (cntCtr) {
                cntInstance = new cntCtr(cfg);
@@ -95,6 +96,10 @@ define('Controls/Controllers/SourceController',
                      resultParams.filter[i] = navFilter[i];
                   }
                }
+            }
+
+            if (navigParams.meta) {
+               resultParams.meta = navigParams.meta;
             }
 
             return resultParams;
@@ -135,7 +140,8 @@ define('Controls/Controllers/SourceController',
                queryParams.filter,
                queryParams.sorting,
                queryParams.offset,
-               queryParams.limit)
+               queryParams.limit,
+               queryParams.meta)
                .addCallback(function(list) {
                   if (self._queryParamsController) {
                      self._queryParamsController.calculateState(list, direction);
@@ -176,6 +182,12 @@ define('Controls/Controllers/SourceController',
          calculateState: function(list) {
             if (this._queryParamsController) {
                this._queryParamsController.calculateState(list);
+            }
+         },
+
+         setState: function(state) {
+            if (this._queryParamsController) {
+               this._queryParamsController.setState(state);
             }
          },
 

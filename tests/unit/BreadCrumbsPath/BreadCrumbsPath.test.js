@@ -164,21 +164,18 @@ define([
                assert.equal(path._options.items[path._options.items.length - 2].get('parent'), args[0].get('parent'));
             }
          };
-         path._onBackButtonClick();
+         path._onBackButtonClick({
+            stopPropagation: function() {
+            }
+         });
       });
 
       it('_onHomeClick', function() {
-         var root = null;
-
          path._notify = function(e, args) {
             if (e === 'itemClick') {
-               assert.equal(root, args[0].get('id'));
+               assert.equal(data[0].parent, args[0].get('id'));
             }
          };
-         path._onHomeClick();
-
-         root = 'itemsRoot';
-         path._options.root = root;
          path._onHomeClick();
       });
 
@@ -189,7 +186,10 @@ define([
                eventFired = true;
             }
          };
-         path._onArrowClick();
+         path._onArrowClick({
+            stopPropagation: function() {
+            }
+         });
          assert.isTrue(eventFired);
       });
    });

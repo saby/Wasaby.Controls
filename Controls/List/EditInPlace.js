@@ -41,6 +41,12 @@ define('Controls/List/EditInPlace', [
             self._notify('afterBeginEdit', [self._editingItem, isAdd]);
             self._setEditingItemData(self._editingItem, self._options.listModel);
 
+            /**
+             * This code exists because there's no way to declaratively change editing item, so the users are forced to write something like this:
+             * editingItem.set('field', 'value').
+             */
+            self._editingItem.subscribe('onPropertyChange', self._resetValidation);
+
             return options;
          },
 
@@ -50,9 +56,9 @@ define('Controls/List/EditInPlace', [
             if (eventResult === EditConstants.CANCEL) {
                result = Deferred.success({ cancelled: true });
             } else if (eventResult && eventResult.addBoth) {
-               self._notify('showIndicator', [], { bubbling: true });
+               var id = self._notify('showIndicator', [{}], { bubbling: true });
                eventResult.addBoth(function(defResult) {
-                  self._notify('hideIndicator', [], { bubbling: true });
+                  self._notify('hideIndicator', [id], { bubbling: true });
                   return defResult;
                });
                result = eventResult;
@@ -123,6 +129,9 @@ define('Controls/List/EditInPlace', [
          },
 
          resetVariables: function(self) {
+            if (self._editingItem) {
+               self._editingItem.unsubscribe('onPropertyChange', self._resetValidation);
+            }
             self._originalItem = null;
             self._editingItem = null;
             self._isAdd = null;
@@ -247,6 +256,23 @@ define('Controls/List/EditInPlace', [
 
    var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace.prototype */{
       _template: template,
+
+      constructor: function() {
+         EditInPlace.superclass.constructor.apply(this, arguments);
+         this._resetValidation = function() {
+            /**
+             * We should manually trigger update of the list, otherwise only inputs with validators are gonna get updated.
+             */
+            this._forceUpdate();
+
+            /**
+             * Validation doesn't reset if the value was changed without user input, so we have to reset it here.
+             * Ideally, validation should take value through options and reset automagically.
+             * TODO: https://online.sbis.ru/opendoc.html?guid=951f6762-8e37-4182-a7fc-3104a35ce27a
+             */
+            this._children.formController.setValidationResult();
+         }.bind(this);
+      },
 
       _beforeMount: function(newOptions) {
          if (newOptions.editingConfig) {

@@ -28,7 +28,7 @@ define('Controls-demo/Filter/Container', [
             sourceConfig: {
                pageSize: 20,
                page: 0,
-               mode: 'totalCount'
+               hasMore: false
             }
          };
          this._filter = {};

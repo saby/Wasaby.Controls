@@ -34,6 +34,23 @@ define(
             opener._notify = () => {};
             opener.destroy();
          });
+
+         it('_beforeUnmount', () => {
+            let opener = new BaseOpener();
+            let isHideIndicatorCall = false;
+            opener._indicatorId = '123';
+
+            opener._notify = (eventName, args) => {
+               if (eventName === 'hideIndicator') {
+                  isHideIndicatorCall = true;
+               }
+            };
+
+            opener._beforeUnmount();
+            assert.equal(opener._indicatorId, null);
+            assert.equal(isHideIndicatorCall, true);
+            opener.destroy();
+         });
       });
    }
 );

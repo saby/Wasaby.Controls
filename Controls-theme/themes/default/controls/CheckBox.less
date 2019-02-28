@@ -1,20 +1,20 @@
 //CheckBox
 @height_CheckBox__clickArea:       @height_control_default;
-@width_CheckBox__clickArea:        24px;
+@width_CheckBox__clickArea:        @width_control_s;
 @font-size_CheckBox:               @font-size_text_m;
 
 //iconBox
-@color_CheckBox__iconBox:           #999999; //почему не #CCC ??
+@color_CheckBox__iconBox:           @color2; //почему не #CCC ??
 @color_CheckBox__iconBox_disabled:  @color_border_disabled;
-@size_CheckBox__icon-box:           12px;
+@size_CheckBox__icon-box:           @size_CheckBox__icon-box_val;
 
 //icon
 @color_CheckBox__icon_disabled:         @color_active-element_disabled;
 @color_CheckBox__icon_enabled:          @color_active-element;
-@size_CheckBox__iconSuccessful:         18px;
-@top_CheckBox__iconSuccessful:          0px;
-@left_CheckBox__iconSuccessful:         5px;
-@size_CheckBox__iconTristate:           6px;
+@size_CheckBox__iconSuccessful:         @size_CheckBox__iconSuccessful_val;
+@top_CheckBox__iconSuccessful:          @top_CheckBox__iconSuccessful_val;
+@left_CheckBox__iconSuccessful:         @left_CheckBox__iconSuccessful_val;
+@size_CheckBox__iconTristate:           @size_CheckBox__iconTristate_val;
 
 //caption
 @color_CheckBox__caption_enabled:     @color_text_default;
@@ -22,6 +22,6 @@
 @line-height_CheckBox__caption:       @line-height_default;
 
 //other
-@padding-horizontal_CheckBox-caption:     3px;
+@padding-horizontal_CheckBox-caption:     @padding-horizontal_CheckBox-caption_val;
 @spacing_CheckBox-between-icon-caption:   @padding-horizontal_CheckBox-caption 0;
 @width_CheckBox__border:                  @thickness_border_default;

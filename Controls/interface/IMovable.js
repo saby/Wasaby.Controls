@@ -17,6 +17,12 @@ define('Controls/interface/IMovable', [
     */
 
    /**
+    * @typedef {Object} Selection
+    * @property {Array.<Number|String>} selected Array of selected keys.
+    * @property {Array.<Number|String>} excluded Array of excluded keys.
+    */
+
+   /**
     * @typedef {String} BeforeItemsMoveResult
     * @variant Custom Your own logic of moving items.
     * @variant MoveInItems Move in the list without calling move on source.
@@ -71,7 +77,7 @@ define('Controls/interface/IMovable', [
 
    /**
     * @event Controls/interface/IMovable#beforeItemsMove Occurs before the items are moved.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
@@ -97,7 +103,7 @@ define('Controls/interface/IMovable', [
 
    /**
     * @event Controls/interface/IMovable#afterItemsMove Occurs after moving items.
-    * @param {Core/EventObject} eventObject The event descriptor.
+    * @param {Env/Event:Object} eventObject The event descriptor.
     * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
     * @param {Types/entity:Record|String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
@@ -191,7 +197,7 @@ define('Controls/interface/IMovable', [
    /**
     * Moves the transferred items relative to the specified target item.
     * @function Controls/interface/IMovable#moveItems
-    * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
+    * @param {Array.<String>|Array.<Number>|Selection} movedItems Items to be moved.
     * @param {String|Number} target Target item to move.
     * @param {MovePosition} position Position to move.
     * @returns {Core/Deferred} Deferred with the result of the move.
@@ -221,7 +227,7 @@ define('Controls/interface/IMovable', [
    /**
     * Move the transferred items with the pre-selection of the parent node using the dialog.
     * @function Controls/interface/IMovable#moveItemsWithDialog
-    * @param {Array.<String>|Array.<Number>} movedItems Array of items to be moved.
+    * @param {Array.<String>|Array.<Number>|Selection} movedItems Items to be moved.
     * @remark
     * The component specified in the {@link moveDialogTemplate moveDialogTemplate} option will be used as a template for the move dialog.
     * @example

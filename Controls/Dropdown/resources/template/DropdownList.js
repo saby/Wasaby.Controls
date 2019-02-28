@@ -1,20 +1,26 @@
 define('Controls/Dropdown/resources/template/DropdownList',
    [
       'Core/Control',
-      'Core/IoC',
+      'Env/Env',
       'wml!Controls/Dropdown/resources/template/DropdownList',
       'Controls/Dropdown/resources/DropdownViewModel',
       'wml!Controls/Dropdown/resources/template/defaultGroupTemplate',
       'wml!Controls/Dropdown/resources/template/itemTemplate',
       'wml!Controls/Dropdown/resources/template/defaultHeadTemplate',
+      'Core/helpers/Function/debounce',
 
       'css!theme?Controls/Dropdown/resources/template/DropdownList'
    ],
-   function(Control, IoC, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate) {
+   function(Control, Env, MenuItemsTpl, DropdownViewModel, groupTemplate, itemTemplate, defaultHeadTemplate, debounce) {
+   
+      //need to open subdropdowns with a delay
+      //otherwise, the interface will slow down.
+      //Popup/Opener method "open" is called on every "mouseenter" event on item with hierarchy.
+      var SUB_DROPDOWN_OPEN_DELAY = 100;
       var _private = {
          checkDeprecated: function(cfg) {
             if (cfg.groupMethod) {
-               IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+               Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
             }
          },
          setPopupOptions: function(self, horizontalAlign) {
@@ -31,7 +37,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
                   horizontal: align
                },
                eventHandlers: {
-                  onResult: self.resultHandler
+                  onResult: self._resultHandler,
+                  onClose: self._subDropdownClose
                }
             };
          },
@@ -100,6 +107,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _defaultHeadTemplate: defaultHeadTemplate,
          _hasHierarchy: false,
          _listModel: null,
+         _subDropdownOpened: false,
 
          constructor: function(config) {
             var self = this;
@@ -133,8 +141,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                }
             }
             DropdownList.superclass.constructor.apply(this, arguments);
-            this.resultHandler = this.resultHandler.bind(this);
+            this._resultHandler = this._resultHandler.bind(this);
+            this._subDropdownClose = this._subDropdownClose.bind(this);
             this._mousemoveHandler = this._mousemoveHandler.bind(this);
+            this._openSubDropdown = debounce(this._openSubDropdown.bind(this), SUB_DROPDOWN_OPEN_DELAY);
          },
          _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions);
@@ -190,14 +200,28 @@ define('Controls/Dropdown/resources/template/DropdownList',
          _itemMouseEnter: function(event, item, hasChildren) {
             // Close the already opened sub menu. Installation of new data sets new size of the container.
             // If you change the size of the update, you will see the container twitch.
-            if (this._hasHierarchy) {
+            if (this._hasHierarchy && this._subDropdownOpened) {
                this._children.subDropdownOpener.close();
+               this._subDropdownOpened = false;
             }
 
             if (hasChildren) {
-               var config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
+               this._subDropdownOpened = true;
+               this._openSubDropdown(event, item);
+            }
+         },
+         
+         _openSubDropdown: function(event, item) {
+            var config;
+            
+            if (this._subDropdownOpened) {
+               config = _private.getSubMenuOptions(this._options, this._popupOptions, event, item);
                this._children.subDropdownOpener.open(config, this);
             }
+         },
+         
+         _subDropdownClose: function() {
+            this._subDropdownOpened = false;
          },
 
          //TODO FOR COMPATIBLE. для чистого вдома этот метод излишен, но логику не ломает
@@ -215,7 +239,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
 
-         resultHandler: function(result) {
+         _resultHandler: function(result) {
             switch (result.action) {
                case 'itemClick':
                   if (!result.data[0].get(this._options.nodeProperty)) {
@@ -278,6 +302,11 @@ define('Controls/Dropdown/resources/template/DropdownList',
                this._listModel.destroy();
                this._listModel = null;
             }
+            this._resultHandler = null;
+            this._subDropdownClose = null;
+            this._mousemoveHandler = null;
+            this._openSubDropdown = null;
+            this._headConfig = null;
          }
       });
 

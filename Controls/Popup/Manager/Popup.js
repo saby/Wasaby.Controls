@@ -2,12 +2,21 @@ define('Controls/Popup/Manager/Popup',
    [
       'Core/Control',
       'wml!Controls/Popup/Manager/Popup',
+      'Controls/Popup/Compatible/EscProcessing',
       'Core/helpers/Function/runDelayed',
-      'Core/constants',
+      'Env/Env',
       'wml!Controls/Popup/Manager/PopupContent'
    ],
-   function(Control, template, runDelayed, CoreConstants) {
+   function(Control, template, EscProcessing, runDelayed, Env) {
       'use strict';
+
+      var _private = {
+         keyUp: function(event) {
+            if (event.nativeEvent.keyCode === Env.constants.key.esc) {
+               this._close();
+            }
+         }
+      };
 
       var Popup = Control.extend({
 
@@ -39,6 +48,12 @@ define('Controls/Popup/Manager/Popup',
          // After updating the position of the current popup, calls the repositioning of popup from child openers
          _openersUpdateCallback: [],
 
+         constructor: function() {
+            Popup.superclass.constructor.apply(this, arguments);
+
+            this._escProcessing = new EscProcessing();
+         },
+
          _beforeMount: function() {
             // Popup лишний раз провоцирет обновление, реагируя на события внутри него.
             // Для того, чтобы заблокировать это обновление, переопределим _forceUpdate в момент между _beforeMount и _afterMount
@@ -60,11 +75,7 @@ define('Controls/Popup/Manager/Popup',
                }).bind(this);
             } else {
                this._notify('popupCreated', [this._options.id], { bubbling: true });
-
-               // TODO Compatible
-               if (this._options.autofocus && !this._options.isCompoundTemplate) {
-                  this.activate();
-               }
+               this.activatePopup();
             }
          },
 
@@ -73,6 +84,13 @@ define('Controls/Popup/Manager/Popup',
          },
          _beforeUnmount: function() {
             this._notify('popupDestroyed', [this._options.id], { bubbling: true });
+         },
+
+         activatePopup: function() {
+            // TODO Compatible
+            if (this._options.autofocus && !this._options.isCompoundTemplate) {
+               this.activate();
+            }
          },
 
          /**
@@ -127,6 +145,10 @@ define('Controls/Popup/Manager/Popup',
             runDelayed(this._callOpenersUpdate.bind(this));
          },
 
+         _controlResize: function() {
+            this._notify('popupControlResize', [this._options.id], { bubbling: true });
+         },
+
          /**
           * Proxy popup result
           * @function Controls/Popup/Manager/Popup#_sendResult
@@ -142,9 +164,11 @@ define('Controls/Popup/Manager/Popup',
           * @param event
           */
          _keyUp: function(event) {
-            if (event.nativeEvent.keyCode === CoreConstants.key.esc) {
-               this._close();
-            }
+            this._escProcessing.keyUpHandler(_private.keyUp, this, [event]);
+         },
+
+         _keyDown: function(e) {
+            this._escProcessing.keyDownHandler(e);
          }
       });
 

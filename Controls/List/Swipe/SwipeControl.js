@@ -34,7 +34,8 @@ define('Controls/List/Swipe/SwipeControl', [
          if (self._animationState === 'open') {
             self._animationState = 'close';
             if (withAnimation) {
-               self._options.listModel._nextVersion();
+               // todo removed by: https://online.sbis.ru/opendoc.html?guid=58959ea6-ca75-4f30-a902-8bc26caf2a8b
+               self._options.listModel._nextModelVersion();
             } else {
                _private.notifyAndResetSwipe(self);
             }
@@ -157,6 +158,11 @@ define('Controls/List/Swipe/SwipeControl', [
          if (this._animationState === 'close') {
             _private.notifyAndResetSwipe(this);
          }
+      },
+
+      _beforeUnmount: function() {
+         this._measurer = null;
+         this._swipeConfig = null;
       }
    });
 

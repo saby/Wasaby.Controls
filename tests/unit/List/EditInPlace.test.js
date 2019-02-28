@@ -135,6 +135,9 @@ define([
             formController: {
                submit: function() {
                   return Deferred.success();
+               },
+               setValidationResult: function() {
+                  return;
                }
             }
          };
@@ -271,6 +274,26 @@ define([
       });
 
       describe('beginAdd', function() {
+         it('new item should not take itemActions from existing items', async function() {
+            var source = new sourceLib.Memory({
+               idProperty: 'id',
+               data: items
+            });
+
+            eip.saveOptions({
+               listModel: listModel,
+               source: source
+            });
+
+            listModel.setItemActions(listModel.at(0).getContents(), [{
+               id: 0,
+               title: 'Удалить'
+            }]);
+
+            await eip.beginAdd();
+            assert.isUndefined(eip._editingItemData.itemActions);
+         });
+
          it('Without handler', function(done) {
             var source = new sourceLib.Memory({
                idProperty: 'id',
@@ -1283,5 +1306,26 @@ define([
             assert.isTrue(eip._sequentialEditing);
          });
       });
+
+      it('property change of an editing item should reset validation', function() {
+         var setValidationResultCalled = false;
+         eip.saveOptions({
+            listModel: listModel
+         });
+
+         eip.beginEdit({
+            item: listModel.at(0).getContents()
+         });
+         eip._children = {
+            formController: {
+               setValidationResult: function() {
+                  setValidationResultCalled = true;
+               }
+            }
+         };
+         eip._editingItem.set('title', 'test');
+         assert.isTrue(setValidationResultCalled);
+      });
+
    });
 });

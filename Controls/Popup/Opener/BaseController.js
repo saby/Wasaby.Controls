@@ -156,7 +156,7 @@ define('Controls/Popup/Opener/BaseController',
          },
          popupDeactivated: function(item) {
             var ManagerController = _private.getManagerController();
-            if (item.popupOptions.closeByExternalClick && ManagerController) {
+            if (item.popupOptions.closeOnOutsideClick && ManagerController) {
                ManagerController.remove(item.id);
             }
          },
@@ -169,6 +169,14 @@ define('Controls/Popup/Opener/BaseController',
 
          },
 
+         popupResize: function(element, container) {
+            return this._elementUpdated(element, container);
+         },
+
+         elementAnimated: function() {
+
+         },
+
          getDefaultConfig: function(item) {
             item.position = {
                top: -10000,
@@ -178,6 +186,10 @@ define('Controls/Popup/Opener/BaseController',
 
          needRecalcOnKeyboardShow: function() {
             return false;
+         },
+
+         getCustomZIndex: function() {
+            return null;
          },
 
          _getPopupSizes: function(config, container) {

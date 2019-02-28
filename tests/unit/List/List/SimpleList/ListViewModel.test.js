@@ -29,6 +29,21 @@ define([
          ];
       });
 
+      it('getFirstItem and getLastItem', function() {
+         var
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new ListViewModel(cfg);
+         assert.equal(model.getFirstItem(), model.getItems().at(0));
+         assert.equal(model.getLastItem(), model.getItems().at(2));
+      });
+
       it('getCurrent', function() {
          var cfg = {
             items: data,
@@ -84,6 +99,43 @@ define([
          });
          assert.equal(model._startIndex, 0, 'Invalid value of "_startIndex" after items.removeAt(0).');
          assert.equal(model._stopIndex, 2, 'Invalid value of "_stopIndex" after items.removeAt(0).');
+      });
+
+      it('set marker after setting items', function() {
+         var
+            items = new collection.RecordSet({
+               rawData: [
+                  { id: 1, title: 'item 1' }
+               ],
+               idProperty: 'id'
+            }),
+            model = new ListViewModel({
+               keyProperty: 'id',
+               items: new collection.RecordSet({
+                  rawData: [],
+                  idProperty: 'id'
+               })
+            }),
+            markerSetCount = 0;
+         model._setMarkerAfterUpdateItems = function() {
+            markerSetCount++;
+         };
+
+         // Should not set marker
+         model._options.markerVisibility = 'hidden';
+         model.setItems(items);
+         assert.equal(markerSetCount, 0);
+
+         // Should set set marker
+         model._options.markerVisibility = 'visible';
+         model.setItems(items);
+         model._options.markerVisibility = 'always';
+         model.setItems(items);
+         model._options.markerVisibility = 'onactivated';
+         model.setItems(items);
+
+         assert.equal(markerSetCount, 3);
+
       });
 
       it('Selection', function() {
@@ -195,6 +247,24 @@ define([
          lv.setRightSwipedItem(itemData);
          assert.equal(lv._rightSwipedItem, itemData);
          assert.isTrue(nextVersionCalled, 'setRightSwipedItem should change the version of the model');
+      });
+
+      it('setActiveItem should not change version of the model if the item is already active', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1]
+            },
+            lv = new ListViewModel(cfg),
+            itemData,
+            version;
+         itemData = lv.getCurrent();
+         lv.setActiveItem(itemData);
+         version = lv.getVersion();
+         lv.setActiveItem(itemData);
+         assert.equal(version, lv.getVersion());
       });
 
       describe('DragNDrop methods', function() {
@@ -315,14 +385,24 @@ define([
                      right: 'XS'
                   },
                   multiSelectVisibility: 'hidden'
-               }), ' controls-ListView__item-leftPadding_m controls-ListView__item-rightPadding_xs');
+               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_default controls-ListView__item-bottomPadding_default' +
+                  ' controls-ListView__item-rightPadding_xs controls-ListView__item-leftPadding_m');
                assert.equal(ListViewModel._private.getSpacingClassList({
                   itemPadding: {
                      left: 'XS',
-                     right: 'm'
+                     right: 'm',
+                     top: 'null',
+                     bottom: 's'
                   },
                   multiSelectVisibility: 'visible'
-               }), ' controls-ListView__item-rightPadding_m');
+               }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
+                  ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
+            });
+   
+            it('check search value', function() {
+               lvm.setSearchValue('test');
+               assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');
+               lvm.setSearchValue(null);
             });
          });
 

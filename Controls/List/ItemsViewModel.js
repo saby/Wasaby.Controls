@@ -6,8 +6,16 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
    'Controls/Constants',
-   'Core/IoC'
-], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, IoC) {
+   'Env/Env',
+   'Types/collection'
+], function(
+   BaseViewModel,
+   ItemsUtil,
+   cInstance,
+   ControlsConstants,
+   Env,
+   collection
+) {
    /**
     *
     * @author Авраменко А.С.
@@ -20,22 +28,22 @@ define('Controls/List/ItemsViewModel', [
 
          if (cfg.leftSpacing && !this.leftSpacing) {
             this.leftSpacing = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.leftPadding && !this.leftPadding) {
             this.leftPadding = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "leftPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
          }
          if (cfg.rightSpacing && !this.rightSpacing) {
             this.rightSpacing = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "rightSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
          if (cfg.rightPadding && !this.rightPadding) {
             this.rightPadding = true;
-            IoC.resolve('ILogger')
+            Env.IoC.resolve('ILogger')
                .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
          }
 
@@ -92,8 +100,10 @@ define('Controls/List/ItemsViewModel', [
       _curIndex: 0,
       _onCollectionChangeFnc: null,
       _collapsedGroups: null,
+      _prefixItemVersion: null,
 
       constructor: function(cfg) {
+         this._prefixItemVersion = 0;
          ItemsViewModel.superclass.constructor.apply(this, arguments);
          this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
          this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
@@ -132,8 +142,7 @@ define('Controls/List/ItemsViewModel', [
          if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
             this._startIndex = startIndex;
             this._stopIndex = stopIndex;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion(false, 'indexesChanged');
          }
       },
 
@@ -156,8 +165,34 @@ define('Controls/List/ItemsViewModel', [
          return this.getItemDataByItem(dispItem);
       },
 
+      _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+         if (!notUpdatePrefixItemVersion) {
+            this._prefixItemVersion++;
+         }
+         this._nextVersion();
+         this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+      },
+
+      nextModelVersion: function(notUpdatePrefixItemVersion) {
+         this._nextModelVersion(notUpdatePrefixItemVersion);
+      },
+
+      _calcItemVersion: function(item) {
+         var
+            version = '' + this._prefixItemVersion;
+
+         // records have defined method getVersion, groups haven't
+         if (item.getVersion) {
+            version += item.getVersion();
+         } else {
+            version += item;
+         }
+         return version;
+      },
+
       getItemDataByItem: function(dispItem) {
          var
+            self = this,
             itemData = {
                getPropValue: ItemsUtil.getPropertyValue,
                style: this._options.style,
@@ -171,12 +206,9 @@ define('Controls/List/ItemsViewModel', [
                leftSpacing: this._options.leftSpacing || this._options.leftPadding,
                rightSpacing: this._options.rightSpacing || this._options.rightPadding,
                key: ItemsUtil.getPropertyValue(dispItem.getContents(), this._options.keyProperty),
+               _preferVersionAPI: true,
                getVersion: function() {
-                  // records have defined method nextVersion, groups haven't
-                  if (this.item.getVersion) {
-                     return this.item.getVersion();
-                  }
-                  return this.item;
+                  return self._calcItemVersion(itemData.item, itemData.key);
                }
             };
          if (this._options.groupMethod || this._options.groupingKeyCallback) {
@@ -198,8 +230,7 @@ define('Controls/List/ItemsViewModel', [
             this._collapsedGroups[collapsedGroups[i]] = true;
          }
          this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-         this._nextVersion();
-         this._notify('onListChange');
+         this._nextModelVersion();
       },
 
       toggleGroup: function(group, state) {
@@ -212,17 +243,17 @@ define('Controls/List/ItemsViewModel', [
             this._collapsedGroups[group] = true;
          }
          this.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-         this._nextVersion();
+         this._nextModelVersion();
          this._notify('onGroupsExpandChange', {
             group: group,
             changeType: state ? 'expand' : 'collapse',
             collapsedGroups: _private.prepareCollapsedGroupsByObject(this._collapsedGroups)
          });
-         this._notify('onListChange');
       },
 
       setFilter: function(filter) {
          this._display.setFilter(filter);
+         this.nextModelVersion();
       },
 
       prepareDisplayFilterData: function() {
@@ -237,8 +268,7 @@ define('Controls/List/ItemsViewModel', [
 
       setGroupMethod: function(groupMethod) {
          this._options.groupMethod = groupMethod;
-         this._nextVersion();
-         this._notify('onListChange');
+         this._nextModelVersion();
       },
 
       getNext: function() {
@@ -269,9 +299,8 @@ define('Controls/List/ItemsViewModel', [
 
       _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
-         this._nextVersion();
-
-         this._notify('onListChange');
+         this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+         this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {
@@ -290,12 +319,12 @@ define('Controls/List/ItemsViewModel', [
             }
             this._items = items;
             if (this._display) {
+               this._display.unsubscribe('onCollectionChange', this._onCollectionChangeFnc);
                this._display.destroy();
             }
             this._display = this._prepareDisplay(this._items, this._options);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
-            this._nextVersion();
-            this._notify('onListChange');
+            this.setIndexes(0, this.getCount());
          }
       },
 

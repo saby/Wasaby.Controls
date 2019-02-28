@@ -6,12 +6,12 @@ define('Controls/Popup/Manager',
       'Core/helpers/Number/randomId',
       'Core/helpers/Function/runDelayed',
       'Types/collection',
-      'Core/EventBus',
-      'Core/detection',
-      'Core/IoC'
+      'Env/Event',
+      'Env/Env',
+      'Vdom/Vdom'
    ],
 
-   function(Control, template, ManagerController, randomId, runDelayed, collection, EventBus, cDetection, IoC) {
+   function(Control, template, ManagerController, randomId, runDelayed, collection, EnvEvent, Env, Vdom) {
       'use strict';
 
       var _private = {
@@ -35,22 +35,43 @@ define('Controls/Popup/Manager',
 
             self._notify('managerPopupBeforeDestroyed', [element, self._popupItems, container], { bubbling: true });
             return removeDeferred.addCallback(function afterRemovePopup() {
+               _private.fireEventHandler.call(self, id, 'onClose');
+               self._popupItems.remove(element);
+
+               // If the popup is not active, don't set the focus
+               if (element.isActive) {
+                  _private.activatePopup(element, self._popupItems);
+               }
+
+               _private.updateOverlay.call(self);
+               _private.redrawItems(self._popupItems);
                self._notify('managerPopupDestroyed', [element, self._popupItems], { bubbling: true });
-               return element;
             });
          },
 
-         activatePopup: function(items) {
-            var maxId = _private.getMaxZIndexPopupIdForActivate(items);
-            if (maxId) {
-               var popupContainer = ManagerController.getContainer();
-               var child = popupContainer && popupContainer._children[maxId];
+         activatePopup: function(element, items) {
+            // wait, until closing popup will be removed from DOM
+            runDelayed(function activatePopup() {
+               // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
+               if (element.activeNodeAfterDestroy && element.activeNodeAfterDestroy.parentElement) {
+                  element.activeNodeAfterDestroy.focus(); // TODO: COMPATIBLE
+               } else if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
+                  if (element.activeControlAfterDestroy.activate) {
+                     element.activeControlAfterDestroy.activate();
+                  } else if (element.activeControlAfterDestroy.setActive) { // TODO: COMPATIBLE
+                     element.activeControlAfterDestroy.setActive(true);
+                  }
+               } else {
+                  var maxId = _private.getMaxZIndexPopupIdForActivate(items);
+                  if (maxId) {
+                     var child = ManagerController.getContainer().getPopupById(maxId);
 
-               // wait, until closing popup will be removed from DOM
-               if (child) {
-                  runDelayed(child.activate.bind(child));
+                     if (child) {
+                        child.activate();
+                     }
+                  }
                }
-            }
+            });
          },
 
          getMaxZIndexPopupIdForActivate: function(items) {
@@ -111,6 +132,7 @@ define('Controls/Popup/Manager',
             var item = ManagerController.find(id);
             if (item) {
                item.waitDeactivated = false;
+               item.isActive = true;
             }
             _private.activeElement = {};
          },
@@ -118,7 +140,8 @@ define('Controls/Popup/Manager',
          popupDeactivated: function(id) {
             var item = ManagerController.find(id);
             if (item) {
-               if (item.popupOptions.closeByExternalClick) {
+               item.isActive = false;
+               if (item.popupOptions.closeOnOutsideClick) {
                   if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
                      _private.finishPendings(id, function() {
                         if (!_private.activeElement[id]) {
@@ -147,11 +170,23 @@ define('Controls/Popup/Manager',
             return document && document.activeElement;
          },
 
+         getActiveControl: function() {
+            return Vdom.DOMEnvironment._goUpByControlTree(_private.getActiveElement())[0];
+         },
+
          popupDragStart: function(id, offset) {
             var element = ManagerController.find(id);
             if (element) {
                element.controller.popupDragStart(element, _private.getItemContainer(id), offset);
                return true;
+            }
+            return false;
+         },
+
+         popupControlResize: function(id) {
+            var element = ManagerController.find(id);
+            if (element) {
+               return element.controller.popupResize(element, _private.getItemContainer(id));
             }
             return false;
          },
@@ -182,8 +217,12 @@ define('Controls/Popup/Manager',
                // its need to focus element on _afterUnmount, thereby _popupDeactivated not be when focus is occured.
                // but _afterUnmount is not exist, thereby its called setTimeout on _beforeUnmount of popup for wait needed state.
                setTimeout(function() {
-                  _private.activeElement[id].focus();
-                  delete _private.activeElement[id];
+                  // new popup can be activated and take focus during the timeout
+                  // will be fixed by https://online.sbis.ru/opendoc.html?guid=95166dc7-7eae-4728-99e2-e65251dd3ee3
+                  if (_private.activeElement[id]) {
+                     _private.activeElement[id].focus();
+                     delete _private.activeElement[id];
+                  }
                }, 0);
             }
             return false;
@@ -252,7 +291,7 @@ define('Controls/Popup/Manager',
                   finishDef.addCallbacks(function() {
                      pendingsFinishedCallback && pendingsFinishedCallback(popup);
                   }, function(e) {
-                     IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
+                     Env.IoC.resolve('ILogger').error('Controls/Popup/Manager/Container', 'Не получилось завершить пендинги: (name: ' + e.name + ', message: ' + e.message + ', details: ' + e.details + ')', e);
                      pendingsFinishedCallback && pendingsFinishedCallback(popup);
                   });
                }
@@ -261,7 +300,7 @@ define('Controls/Popup/Manager',
 
          isIgnoreActivationArea: function(focusedContainer) {
             while (focusedContainer) {
-               if (focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
+               if (focusedContainer.classList && focusedContainer.classList.contains('controls-Popup__isolatedFocusingContext')) {
                   return true;
                }
                focusedContainer = focusedContainer.parentElement;
@@ -301,10 +340,10 @@ define('Controls/Popup/Manager',
             ManagerController.setManager(this);
             this._hasMaximizePopup = false;
             this._popupItems = new collection.List();
-            if (cDetection.isMobileIOS) {
+            if (Env.detection.isMobileIOS) {
                _private.controllerVisibilityChangeHandler = _private.controllerVisibilityChangeHandler.bind(_private, this);
-               EventBus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
-               EventBus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
+               EnvEvent.Bus.globalChannel().subscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
+               EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
             }
          },
 
@@ -322,6 +361,14 @@ define('Controls/Popup/Manager',
             return item.id;
          },
 
+         updateOptionsAfterInitializing: function(id, options) {
+            var item = this.find(id);
+            if (item && item.popupState === item.controller.POPUP_STATE_INITIALIZING) {
+               item.popupOptions = options;
+               item.controller.getDefaultConfig(item);
+            }
+         },
+
          _createItemConfig: function(options, controller) {
             if (!this._hasMaximizePopup && options.maximize) {
                this._hasMaximizePopup = true;
@@ -331,7 +378,10 @@ define('Controls/Popup/Manager',
                isModal: options.isModal,
                controller: controller,
                popupOptions: options,
+               isActive: false,
                sizes: {},
+               activeControlAfterDestroy: _private.getActiveControl(),
+               activeNodeAfterDestroy: _private.getActiveElement(), // TODO: COMPATIBLE
                popupState: controller.POPUP_STATE_INITIALIZING,
                hasMaximizePopup: this._hasMaximizePopup
             };
@@ -339,7 +389,7 @@ define('Controls/Popup/Manager',
 
          _contentClick: function(event) {
             this._popupItems.each(function(item) {
-               if (item.waitDeactivated) {
+               if (item && item.waitDeactivated) {
                   if (!_private.isIgnoreActivationArea(event.target)) {
                      _private.popupDeactivated(item.id);
                   }
@@ -361,6 +411,11 @@ define('Controls/Popup/Manager',
                if (element.controller._elementUpdated(element, _private.getItemContainer(id))) {
                   _private.updateOverlay.call(this);
                   _private.redrawItems(this._popupItems);
+
+                  // wait, until popup will be update options
+                  runDelayed(function() {
+                     ManagerController.getContainer().activatePopup(id);
+                  });
                } else {
                   element.popupOptions = oldOptions;
                }
@@ -375,18 +430,9 @@ define('Controls/Popup/Manager',
           * @param id popup id
           */
          remove: function(id) {
-            var self = this;
             var element = this.find(id);
             if (element) {
-               _private.removeElement.call(this, element, _private.getItemContainer(id), id).addCallback(function() {
-                  _private.fireEventHandler.call(self, id, 'onClose');
-                  self._popupItems.remove(element);
-                  _private.activatePopup(self._popupItems);
-
-                  _private.updateOverlay.call(self);
-                  _private.redrawItems(self._popupItems);
-                  return element;
-               });
+               _private.removeElement.call(this, element, _private.getItemContainer(id), id);
             }
          },
 
@@ -421,9 +467,9 @@ define('Controls/Popup/Manager',
             }
          },
          _beforeUnmount: function() {
-            if (cDetection.isMobileIOS) {
-               EventBus.globalChannel().unsubscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
-               EventBus.globalChannel().unsubscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
+            if (Env.detection.isMobileIOS) {
+               EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocus', _private.controllerVisibilityChangeHandler);
+               EnvEvent.Bus.globalChannel().unsubscribe('MobileInputFocusOut', _private.controllerVisibilityChangeHandler);
             }
          }
       });

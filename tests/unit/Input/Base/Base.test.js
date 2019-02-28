@@ -1,14 +1,15 @@
 define(
    [
-      'Core/EventBus',
-      'Core/constants',
+      'Env/Event',
+      'Env/Env',
       'Core/core-instance',
       'Controls/Input/Base',
-      'tests/resources/ProxyCall',
-      'tests/resources/TemplateUtil',
+      'unit/resources/ProxyCall',
+      'unit/Input/Base/InputUtility',
+      'unit/resources/TemplateUtil',
       'Vdom/Vdom'
    ],
-   function(EventBus, constants, instance, Base, ProxyCall, TemplateUtil, Vdom) {
+   function(EnvEvent, Env, instance, Base, ProxyCall, InputUtility, TemplateUtil, Vdom) {
       'use strict';
 
       describe('Controls.Input.Base', function() {
@@ -186,6 +187,7 @@ define(
                   ctrl._beforeMount({
                      value: 'test value'
                   });
+                  ctrl._options.tooltip = 'test tooltip';
                });
                it('The value fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
@@ -194,7 +196,7 @@ define(
 
                   ctrl._mouseEnterHandler();
 
-                  assert.equal(ctrl._tooltip, '');
+                  assert.equal(ctrl._tooltip, 'test tooltip');
                });
                it('The value no fits in the field.', function() {
                   ctrl._hasHorizontalScroll = function() {
@@ -396,7 +398,7 @@ define(
             });
          });
          describe('Focus in event', function() {
-            var savedNotify = EventBus.globalChannel().notify;
+            var savedNotify = EnvEvent.Bus.globalChannel().notify;
 
             beforeEach(function() {
                ctrl._beforeMount({
@@ -405,10 +407,10 @@ define(
                ctrl._getActiveElement = function() {
                   return {};
                };
-               EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
+               EnvEvent.Bus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
             });
             afterEach(function() {
-               EventBus.globalChannel().notify = savedNotify;
+               EnvEvent.Bus.globalChannel().notify = savedNotify;
             });
             it('Notification to the global channel about the occurrence of the focus in event. The environment is mobile IOS.', function() {
                ctrl._isMobileIOS = true;
@@ -431,18 +433,30 @@ define(
 
                assert.deepEqual(calls.length, 0);
             });
+            it('Focus the field by tab.', function() {
+               ctrl._beforeUpdate({
+                  value: 'test'
+               });
+
+               ctrl._focusInHandler();
+
+               assert.deepEqual(ctrl._viewModel.selection, {
+                  start: 4,
+                  end: 4
+               });
+            });
          });
          describe('Focus out event', function() {
-            var savedNotify = EventBus.globalChannel().notify;
+            var savedNotify = EnvEvent.Bus.globalChannel().notify;
 
             beforeEach(function() {
-               EventBus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
+               EnvEvent.Bus.globalChannel().notify = ProxyCall.apply(savedNotify, 'notify', calls, true);
                ctrl._beforeMount({
                   value: ''
                });
             });
             afterEach(function() {
-               EventBus.globalChannel().notify = savedNotify;
+               EnvEvent.Bus.globalChannel().notify = savedNotify;
             });
             it('Scroll to start.', function() {
                ctrl._getField().scrollLeft = 100;
@@ -506,7 +520,7 @@ define(
             });
             it('Pressing the up arrow', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.up
+                  keyCode: Env.constants.key.up
                }));
 
                assert.deepEqual(calls, [{
@@ -519,7 +533,7 @@ define(
             });
             it('Pressing the right arrow', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.right
+                  keyCode: Env.constants.key.right
                }));
 
                assert.deepEqual(calls, [{
@@ -532,7 +546,7 @@ define(
             });
             it('Pressing the down arrow', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.down
+                  keyCode: Env.constants.key.down
                }));
 
                assert.deepEqual(calls, [{
@@ -545,7 +559,7 @@ define(
             });
             it('Pressing the left arrow', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.left
+                  keyCode: Env.constants.key.left
                }));
 
                assert.deepEqual(calls, [{
@@ -558,7 +572,7 @@ define(
             });
             it('Pressing the key end', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.end
+                  keyCode: Env.constants.key.end
                }));
 
                assert.deepEqual(calls, [{
@@ -571,7 +585,7 @@ define(
             });
             it('Pressing the key home', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.home
+                  keyCode: Env.constants.key.home
                }));
 
                assert.deepEqual(calls, [{
@@ -584,10 +598,74 @@ define(
             });
             it('Pressing the key which no changed selection', function() {
                ctrl._keyUpHandler(new Vdom.SyntheticEvent({
-                  keyCode: constants.key.b
+                  keyCode: Env.constants.key.b
                }));
 
                assert.equal(calls.length, 0);
+            });
+         });
+         describe('Calling the inputCompleted event.', function() {
+            var block = function() {
+               return false;
+            };
+
+            it('Pressing the key enter.', function() {
+               InputUtility.init(ctrl);
+
+               ctrl._focusInHandler();
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: Env.constants.key.enter
+               }));
+
+               assert.equal(calls.length, 0);
+            });
+            it('Pressing the key enter and enter "test".', function() {
+               InputUtility.init(ctrl);
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test');
+               InputUtility.triggerInput(ctrl);
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: Env.constants.key.enter
+               }));
+
+               assert.deepEqual(calls, [
+                  {
+                     name: 'notify',
+                     arguments: ['valueChanged', ['test', 'test']]
+                  },
+                  {
+                     name: 'notify',
+                     arguments: ['inputCompleted', ['test', 'test']]
+                  }
+               ]);
+            });
+            it('Block the change event. Pressing the key enter.', function() {
+               InputUtility.init(ctrl);
+               ctrl._isTriggeredChangeEventByEnterKey = block;
+
+               ctrl._focusInHandler();
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: Env.constants.key.enter
+               }));
+
+               assert.equal(calls.length, 0);
+            });
+            it('Block the change event. Pressing the key enter and enter "test".', function() {
+               InputUtility.init(ctrl);
+               ctrl._isTriggeredChangeEventByEnterKey = block;
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test');
+               InputUtility.triggerInput(ctrl);
+               ctrl._keyUpHandler(new Vdom.SyntheticEvent({
+                  keyCode: Env.constants.key.enter
+               }));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test', 'test']]
+               }]);
             });
          });
          describe('The value in the field is changed via auto-complete.', function() {
@@ -621,6 +699,21 @@ define(
                ctrl._getField().selectionStart = 24;
                ctrl._getField().selectionEnd = 24;
                ctrl._inputHandler(new Vdom.SyntheticEvent({}));
+
+               assert.deepEqual(calls, [{
+                  name: 'notify',
+                  arguments: ['valueChanged', ['test auto-complete value', 'test auto-complete value']]
+               }]);
+            });
+            it('In an browser "Edge".', function() {
+               ctrl._isEdge = true;
+               InputUtility.init(ctrl);
+
+               ctrl._focusInHandler();
+               InputUtility.insert(ctrl, 'test auto-complete value');
+               InputUtility.triggerInput(ctrl);
+               InputUtility.insert(ctrl, 'test auto-complete value');
+               InputUtility.triggerInput(ctrl);
 
                assert.deepEqual(calls, [{
                   name: 'notify',

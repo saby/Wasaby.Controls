@@ -1,12 +1,12 @@
 <div>
-    <div class="content_tab_margin controls-huge-text-size header_demo_class">{{item.get(displayProperty)}}</div>
+    <div class="content_tab_margin controls-Tabs__content_heading{{selected ? '_state_selected' : ''}}">{{item.get(displayProperty)}}</div>
     <div class="content_tab_margin">
        textBox was here
     </div>
     <div class="content_tab_margin">
         dateRange was here
     </div>
-    <div class=" content_tab_margin controls-default-text-size controls-addition-color">
+    <div class=" content_tab_margin controls-Tabs__content_additionaltext">
         small text
     </div>
 </div>

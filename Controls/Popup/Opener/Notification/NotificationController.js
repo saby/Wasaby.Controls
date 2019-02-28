@@ -40,6 +40,19 @@ define('Controls/Popup/Opener/Notification/NotificationController',
             return new Deferred().callback();
          },
 
+         getCustomZIndex: function(popupItems) {
+            // Notification windows must be above all popup windows
+            // will be fixed by https://online.sbis.ru/opendoc.html?guid=e6a136fc-be49-46f3-84d5-be135fae4761
+            var count = popupItems.getCount();
+            for (var i = 0; i < count; i++) {
+               if (popupItems.at(i).hasMaximizePopup) {
+                  var maximizedPopupZIndex = (i + 1) * 10;
+                  return maximizedPopupZIndex - 1;
+               }
+            }
+            return 100;
+         },
+
          _updatePositions: function() {
             var height = 0;
 

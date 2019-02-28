@@ -4,16 +4,14 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/resources/utils/TreeItemsUtil',
    'Core/core-clone',
    'Types/entity',
-   'Types/collection',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Types/collection'
 ], function(
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
    cClone,
    _entity,
-   collection,
-   ArraySimpleValuesUtil
+   collection
 ) {
 
    'use strict';
@@ -113,7 +111,13 @@ define('Controls/List/Tree/TreeViewModel', [
                _private.checkRemovedNodes(self, removedItems);
             }
             if (_private.getExpanderVisibility(self._options) === 'hasChildren') {
+               var currentValue = self._thereIsChildItem;
+
                _private.determinePresenceChildItem(self);
+
+               if (currentValue !== self._thereIsChildItem) {
+                  self._nextModelVersion();
+               }
             }
          },
 
@@ -121,10 +125,15 @@ define('Controls/List/Tree/TreeViewModel', [
             if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
                // If it is necessary to delete only the nodes deleted from the items, add this condition:
                // if (!self._items.getRecordById(nodeId)) {
-               delete self._expandedItems[nodeId];
-               self._notify('onNodeRemoved', nodeId);
+               _private.removeNodeFromExpanded(self, nodeId);
             }
          },
+
+         removeNodeFromExpanded: function(self, nodeId) {
+            delete self._expandedItems[nodeId];
+            self._notify('onNodeRemoved', nodeId);
+         },
+
 
          checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
@@ -195,7 +204,7 @@ define('Controls/List/Tree/TreeViewModel', [
             } else {
                for (var itemId in self._expandedItems) {
                   if (self._expandedItems.hasOwnProperty(itemId)) {
-                     _private.removeNodeFromExpandedIfNeed(self, itemId);
+                     _private.removeNodeFromExpanded(self, itemId);
                   }
                }
             }
@@ -236,8 +245,7 @@ define('Controls/List/Tree/TreeViewModel', [
             this._expandedItems = _private.prepareExpandedItems(expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          getExpandedItems: function() {
@@ -258,7 +266,7 @@ define('Controls/List/Tree/TreeViewModel', [
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                : !!this._expandedItems[itemId];
          },
-         
+
          isExpandAll: function() {
             return _private.isExpandAll(this.getExpandedItems());
          },
@@ -284,14 +292,17 @@ define('Controls/List/Tree/TreeViewModel', [
                   }
                }
                this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
-               this._nextVersion();
-               this._notify('onListChange');
+               this._nextModelVersion();
             }
          },
 
          getDisplayFilter: function(data, cfg) {
             return Array.prototype.concat(TreeViewModel.superclass.getDisplayFilter.apply(this, arguments),
                _private.getDisplayFilter(data, cfg));
+         },
+
+         getLastItem: function() {
+            return ItemsUtil.getLastItem(this._display.getChildren(this._display.getRoot()));
          },
 
          prepareDisplayFilterData: function() {
@@ -312,20 +323,17 @@ define('Controls/List/Tree/TreeViewModel', [
 
          setNodeFooterTemplate: function(nodeFooterTemplate) {
             this._options.nodeFooterTemplate = nodeFooterTemplate;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setExpanderDisplayMode: function(expanderDisplayMode) {
             this._options.expanderDisplayMode = expanderDisplayMode;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setExpanderVisibility: function(expanderVisibility) {
             this._options.expanderVisibility = expanderVisibility;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setItems: function() {
@@ -499,15 +507,24 @@ define('Controls/List/Tree/TreeViewModel', [
 
          setHasMoreStorage: function(hasMoreStorage) {
             this._hasMoreStorage = hasMoreStorage;
-            this._nextVersion();
-            this._notify('onListChange');
+            this._nextModelVersion();
          },
 
          setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
-            this._nextVersion();
-            this._notify('onListChange');
+
+            /**
+             * По стандарту в Explorrer'e, если маркер видимый, то при проваливании в папку должна отмечаться первая запись.
+             * Чтобы не ломать тесты, всегда отмечаем первую запись. Однако нужно учитывать случаи, когда корень меняется с
+             * частичным обновлением коллекции. Может получиться, что отмеченный ранее элемент останется в коллекции, но маркер
+             * всёравно переместится на первую запись.
+             * Исправить по задаче https://online.sbis.ru/opendoc.html?guid=f75e5bfd-6e9f-4710-bad7-b9be704f0dff
+             * */
+            if (this._options.markerVisibility !== 'hidden' && this.getCount()) {
+               this.setMarkedKey(this._items.at(0).getId());
+            }
+            this._nextModelVersion();
          },
 
          getChildren: function(rootId) {

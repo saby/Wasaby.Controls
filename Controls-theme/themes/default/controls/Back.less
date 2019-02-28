@@ -1,10 +1,10 @@
 //background-image
-@background_BackArrow_primary_small:                                                                                    url('../img/BackArrowOrangeSmall.svg');
-@background_BackArrow_primary_default:                                                                                  url('../img/BackArrowOrange.svg');
-@background_BackArrow_secondary_small:                                                                                  url('../img/BackArrowBlueSmall.svg');
-@background_BackArrow_secondary_default:                                                                                url('../img/BackArrowBlue.svg');
+@background_BackArrow_primary_small:                                                                                    @backArrowOrangeSmall_icon;
+@background_BackArrow_primary_default:                                                                                  @backArrowOrange_icon;
+@background_BackArrow_secondary_small:                                                                                  @backArrowBlueSmall_icon;
+@background_BackArrow_secondary_default:                                                                                @backArrowBlue_icon;
 //spacing for back
-@spacing_Back_between_icon_caption_standart:                                                                            3px;
+@spacing_Back_between_icon_caption_standart:                                                                            @spacing_Back_between_icon_caption_standart_val;
 
 @background-image-Back_style-secondary_size-s:                                                                          @background_BackArrow_primary_small;
 @background-image-Back_style-secondary_size-m:                                                                          @background_BackArrow_primary_default;
@@ -30,7 +30,7 @@
 
 
 //sizes
-@font-weight_Back:                                                                                                      bold;
+@font-weight_Back:                                                                                                      @font-weight_Back_val;
 @spacing-Back-between-icon-text_size_s:                                                                                 @spacing_Back_between_icon_caption_standart;
 @spacing-Back-between-icon-text_size_m:                                                                                 @spacing_Back_between_icon_caption_standart;
 @spacing-Back-between-icon-text_size_l:                                                                                 @spacing_default_xxs;
@@ -38,13 +38,13 @@
 
 
 //icon
-@width-Back__icon_size-l:                                                                                               10px;
-@height-Back__icon_size-l:                                                                                              14px;
-@width-Back__icon_size-m:                                                                                               9px;
-@height-Back__icon_size-m:                                                                                              12px;
-@width-Back__icon_size-s:                                                                                               9px;
-@height-Back__icon_size-s:                                                                                              11px;
+@width-Back__icon_size-l:                                                                                               @width-Back__icon_size-l_val;
+@height-Back__icon_size-l:                                                                                              @height-Back__icon_size-l_val;
+@width-Back__icon_size-m:                                                                                               @width-Back__icon_size-m_val;
+@height-Back__icon_size-m:                                                                                              @height-Back__icon_size-m_val;
+@width-Back__icon_size-s:                                                                                               @width-Back__icon_size-s_val;
+@height-Back__icon_size-s:                                                                                              @height-Back__icon_size-s_val;
 
 //content
-@content_Back_secondary:                                                                                                '';
-@content_Back_primary:                                                                                                  '';
+@content_Back_secondary:                                                                                                @content_Back_secondary_val;
+@content_Back_primary:                                                                                                  @content_Back_primary_val;

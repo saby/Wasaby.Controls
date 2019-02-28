@@ -1,4 +1,4 @@
-@max-width_DropdownList:                  700px;
+@max-width_DropdownList:                  @max-width_DropdownList_val;
 @background_DropdownList:                 @background-color_default;
 
 //border
@@ -15,8 +15,8 @@
 //shadow
 @box-shadow-color_DropdownList:                          @color_shadow_default;
 @box-shadow-size_DropdownList-shadowStyle_center:        @size_shadow_default;
-@box-shadow-size_DropdownList-shadowStyle_centerBottom:  0 6px 12px;
-@box-shadow-size_DropdownList-shadowStyle_centerTop:     0 -6px 12px;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom:  @box-shadow-size_DropdownList-shadowStyle_centerBottom_val;
+@box-shadow-size_DropdownList-shadowStyle_centerTop:     @box-shadow-size_DropdownList-shadowStyle_centerTop_val;
 
 //list
 @height_DropdownList-row:                          @height_control_l;
@@ -74,3 +74,11 @@
 
 @color_DropdownList-group-text:                                @color_additional;
 @font-size_DropdownList-group-text:                            @font-size-group-text;
+
+
+//row separator
+@background-color_DropdownList-row_separator:                  @background-color_DropdownList-row_separator_val;
+@height_DropdownList-row-separator:                            @height_DropdownList-row-separator_val;
+@spacing_DropdownList-row-between-leftBorder-row-separator:    @spacing_DropdownList-row-between-leftBorder-row-separator_val;
+@spacing_DropdownList-row-between-rightBorder-row-separator:   @spacing_DropdownList-row-between-rightBorder-row-separator_val;
+@spacing_DropdownList-row-between-bottomBorder-row-separator:  @spacing_DropdownList-row-between-bottomBorder-row-separator_val;

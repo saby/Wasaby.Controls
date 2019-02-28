@@ -14,7 +14,7 @@
                                           attr:class="example-Suggest__suggest">
                      <ws:suggestTemplate templateName="Controls-demo/Suggest/resources/SuggestTemplate"/>
                      <ws:navigation source="page" view="page">
-                        <ws:sourceConfig pageSize="{{10}}" page="{{0}}" mode="totalCount"/>
+                        <ws:sourceConfig pageSize="{{10}}" page="{{0}}" hasMore="{{false}}"/>
                      </ws:navigation>
                   </Controls.Input.Suggest>
                </ws:template>

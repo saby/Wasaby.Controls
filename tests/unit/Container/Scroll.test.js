@@ -1,10 +1,11 @@
 define(
    [
-      'Core/constants',
+      'Env/Env',
       'Controls/Container/Scroll',
-      'wml!tests/Container/resources/Content'
+      'Controls/StickyHeader/Utils',
+      'wml!unit/Container/resources/Content'
    ],
-   function(Constants, Scroll, Content) {
+   function(Env, Scroll, stickyUtils, Content) {
 
       'use strict';
 
@@ -27,6 +28,7 @@ define(
 
                return markup;
             };
+            scroll._registeredHeadersIds = [];
             scroll._stickyHeadersIds = {
                top: [],
                bottom: []
@@ -86,7 +88,7 @@ define(
          });
 
          describe('_adjustContentMarginsForBlockRender', function() {
-            if (!Constants.isBrowserPlatform) {
+            if (!Env.constants.isBrowserPlatform) {
                return;
             }
 
@@ -100,6 +102,16 @@ define(
                scroll._adjustContentMarginsForBlockRender();
                sinon.assert.notCalled(scroll._stickyHeaderContext.updateConsumers);
                sinon.restore();
+            });
+         });
+
+         describe('_stickyRegisterHandler', function() {
+            it('should update blockUpdate event field', function() {
+               let event = {
+                  blockUpdate: false
+               };
+               scroll._stickyRegisterHandler(event);
+               assert.isTrue(event.blockUpdate);
             });
          });
 
@@ -131,7 +143,7 @@ define(
                stopPropagation: function() {}
             };
 
-            describe('updateFixationState', function() {
+            describe('_fixedHandler', function() {
                it('Header with id equal to "sticky" stops being fixed', function() {
                   scroll._fixedHandler(event, {
                      id: 'sticky',
@@ -240,6 +252,28 @@ define(
                   });
                   assert.equal(scroll._stickyHeadersHeight.top, 10);
                });
+               it('Should not notify new state if one header registered', function() {
+                  scroll._registeredHeadersIds = ['sticky1'];
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     fixedPosition: 'top',
+                     mode: 'stackable',
+                     offsetHeight: 10
+                  });
+                  sinon.assert.notCalled(scroll._children.stickyHeaderShadow.start);
+                  sinon.assert.notCalled(scroll._children.stickyHeaderHeight.start);
+               });
+               it('Should notify new state if few header registered', function() {
+                  scroll._registeredHeadersIds = ['sticky1', 'sticky2'];
+                  scroll._fixedHandler(event, {
+                     id: 'sticky1',
+                     fixedPosition: 'top',
+                     mode: 'stackable',
+                     offsetHeight: 10
+                  });
+                  sinon.assert.called(scroll._children.stickyHeaderShadow.start);
+                  sinon.assert.called(scroll._children.stickyHeaderHeight.start);
+               });
             });
          });
 
@@ -269,6 +303,82 @@ define(
                assert.equal('normal', scroll._pagingState.stateDown, 'Wrong paging state');
             });
 
+         });
+      });
+
+      describe('selectedKeysChanged', function() {
+         var instance;
+         beforeEach(function() {
+            instance = new Scroll();
+         })
+         it('should forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return false;
+                  }
+               };
+            instance._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'selectedKeysChanged');
+               assert.deepEqual(eventArgs, ['1', '2', '3']);
+               notifyCalled = true;
+            };
+            instance.selectedKeysChanged(event, '1', '2', '3');
+            assert.isTrue(notifyCalled);
+         });
+
+         it('should not forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return true;
+                  }
+               };
+            instance._notify = function() {
+               notifyCalled = true;
+            };
+            instance.selectedKeysChanged(event, '1', '2', '3');
+            assert.isFalse(notifyCalled);
+         });
+      });
+
+      describe('excludedKeysChanged', function() {
+         var instance;
+         beforeEach(function() {
+            instance = new Scroll();
+         })
+         it('should forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return false;
+                  }
+               };
+            instance._notify = function(eventName, eventArgs) {
+               assert.equal(eventName, 'excludedKeysChanged');
+               assert.deepEqual(eventArgs, ['1', '2', '3']);
+               notifyCalled = true;
+            };
+            instance.excludedKeysChanged(event, '1', '2', '3');
+            assert.isTrue(notifyCalled);
+         });
+
+         it('should not forward event', function() {
+            var
+               notifyCalled = false,
+               event = {
+                  propagating: function() {
+                     return true;
+                  }
+               };
+            instance._notify = function() {
+               notifyCalled = true;
+            };
+            instance.excludedKeysChanged(event, '1', '2', '3');
+            assert.isFalse(notifyCalled);
          });
       });
 

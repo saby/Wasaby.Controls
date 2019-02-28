@@ -2,16 +2,18 @@ define('Controls/Application/HeadData', [
    'Core/core-extend',
    'Controls/Application/DepsCollector/DepsCollector',
    'Core/Deferred',
-   'Core/cookie',
+   'Env/Env',
    'Core/Themes/ThemesController',
-   'View/Request'
+   'View/Request',
+   'Core/i18n'
 
 ], function(extend,
    DepsCollector,
    Deferred,
-   cookie,
+   Env,
    ThemesController,
-   Request) {
+   Request,
+   i18n) {
    var bundles, modDeps, contents;
 
    function joinPaths(arr) {
@@ -65,7 +67,7 @@ define('Controls/Application/HeadData', [
 
       pushWaiterDeferred: function(def) {
          var self = this;
-         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive);
+         var depsCollector = new DepsCollector(modDeps.links, modDeps.nodes, bundles, self.themesActive, true);
          self.waiterDef = def;
          self.waiterDef.addCallback(function() {
             if (self.defRender.isReady()) {
@@ -104,14 +106,20 @@ define('Controls/Application/HeadData', [
                   }
                }
             }
+
+            // if (!self.isDebug) {
+            //    files.js = files.js.concat(self._getDictionaries());
+            // }
+
             self._version++;
             self.defRender.callback({
-               js: files.js || [],
+               js: files.js,
                tmpl: files.tmpl || [],
                css: files.css || { themedCss: [], simpleCss: [] },
                errorState: self.err,
                receivedStateArr: rcsData.serialized,
-               additionalDeps: Object.keys(rcsData.additionalDeps).concat(Object.keys(self.additionalDeps))
+               additionalDeps: Object.keys(rcsData.additionalDeps).concat(Object.keys(self.additionalDeps)),
+               cssToDefine: files.cssToDefine
             });
          });
       },
@@ -125,7 +133,7 @@ define('Controls/Application/HeadData', [
          this.additionalDeps = {};
          this.themesActive = true;
          this.cssLinks = cssLinks || [];
-         this.isDebug = cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
+         this.isDebug = this.isDebug();
 
          // переедет в константы реквеста, изменяется в Controls/Application
          this.isNewEnvironment = false;
@@ -142,6 +150,25 @@ define('Controls/Application/HeadData', [
       },
       resetRenderDeferred: function() {
          this.defRender = new Deferred();
+      },
+
+      isDebug: function() {
+         return Env.cookie.get('s3debug') === 'true' || contents.buildMode === 'debug';
+      },
+
+      _getDictList: function() {
+         return i18n._dictNames;
+      },
+
+      _getDictionaries: function() {
+         var dictList = this._getDictList();
+         var dicts = {};
+         for (var lang in dictList) {
+            for (var key in dictList[lang]) {
+               dicts[key] = true;
+            }
+         }
+         return Object.keys(dicts);
       }
    });
 });

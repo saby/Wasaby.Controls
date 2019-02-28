@@ -11,11 +11,11 @@ define([
    'Controls/Utils/Toolbar',
    'Core/Deferred',
    'Core/core-instance',
-   'Core/constants',
+   'Env/Env',
    'Controls/List/ListView',
    'Types/entity',
    'Types/collection'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, cConstants) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -159,6 +159,7 @@ define([
          assert.deepEqual(BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
       });
 
+
       it('errback to callback', function(done) {
          var source = new sourceLib.Memory({
             idProperty: 'id',
@@ -291,7 +292,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -340,7 +341,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -364,6 +365,59 @@ define([
                done();
             }, 100);
          }, 100);
+      });
+
+      it('Navigation position', function() {
+         return new Promise(function(resolve, reject) {
+            var
+               ctrl,
+               source = new sourceLib.Memory({
+                  idProperty: 'id',
+                  data: data,
+                  filter: function() {
+                     return true;
+                  }
+               }),
+               cfg = {
+                  viewName: 'Controls/List/ListView',
+                  itemsReadyCallback: function(items) {
+                     setTimeout(function() {
+                        var
+                           newItem = items.at(items.getCount() - 1).clone();
+                        newItem.set('id', 777);
+                        items.add(newItem);
+                        try {
+                           assert.deepEqual(ctrl._sourceController._queryParamsController._afterPosition, [777]);
+                           resolve();
+                        } catch (e) {
+                           reject(e);
+                        }
+                     });
+                  },
+                  source: source,
+                  viewConfig: {
+                     keyProperty: 'id'
+                  },
+                  viewModelConfig: {
+                     items: [],
+                     keyProperty: 'id'
+                  },
+                  viewModelConstructor: ListViewModel,
+                  navigation: {
+                     source: 'position',
+                     sourceConfig: {
+                        field: 'id',
+                        position: 0,
+                        direction: 'after',
+                        limit: 20
+                     }
+                  }
+               };
+
+            ctrl = new BaseControl(cfg);
+            ctrl.saveOptions(cfg);
+            ctrl._beforeMount(cfg);
+         });
       });
 
       it('prepareFooter', function() {
@@ -482,6 +536,53 @@ define([
          });
       });
 
+      it('virtualScrollCalculation on list change', function() {
+         var callBackCount = 0;
+         var cfg = {
+               viewName: 'Controls/List/ListView',
+               viewConfig: {
+                  idProperty: 'id'
+               },
+               virtualScrolling: true,
+               viewModelConfig: {
+                  items: [],
+                  idProperty: 'id'
+               },
+               viewModelConstructor: ListViewModel,
+               markedKey: 0,
+               source: source,
+               navigation: {
+                  view: 'infinity'
+               }
+            },
+            instance = new BaseControl(cfg),
+            itemData = {
+               key: 1
+            };
+
+         instance.saveOptions(cfg);
+         instance._beforeMount(cfg);
+
+         var vm = instance.getViewModel();
+         vm.getCount = function() {
+            return 2;
+         };
+         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
+
+         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_ADD, [1,2], 0, [], null);
+         assert.equal(2, instance.getVirtualScroll()._itemsHeights.length);
+         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
+         assert.equal(2, instance.getVirtualScroll().ItemsIndexes.stop);
+
+         vm.getCount = function() {
+            return 1;
+         };
+         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_REMOVE, [], null, [1], 1);
+         assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
+         assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
+         assert.equal(1, instance.getVirtualScroll().ItemsIndexes.stop);
+      });
+
       it('loadToDirection up', function(done) {
          var source = new sourceLib.Memory({
             idProperty: 'id',
@@ -504,7 +605,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 1,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -549,7 +650,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -602,7 +703,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -616,16 +717,27 @@ define([
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
-               assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+               //TODO remove after https://online.sbis.ru/opendoc.html?guid=006711c6-917b-4028-8484-369361546446
+               try {
+                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\'t load with started "scrollloadmode"');
+                  BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
+                  BaseControl._private.checkLoadToDirectionCapability(ctrl);
 
-               BaseControl._private.onScrollLoadEdgeStop(ctrl, 'down');
-               BaseControl._private.checkLoadToDirectionCapability(ctrl);
+                  setTimeout(function() {
+                     try {
+                        assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     }
+                     catch(e) {
+                        done(e);
+                     }
 
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items was load without started "scrollloadmode"');
+                     done();
+                  }, 100);
+               }
+               catch (e) {
+                  done(e);
+               }
 
-                  done();
-               }, 100);
             }, 100);
          }, 100);
       });
@@ -697,7 +809,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -747,7 +859,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             },
          };
@@ -805,7 +917,7 @@ define([
                sourceConfig: {
                   pageSize: 3,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             }
          };
@@ -846,7 +958,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -903,7 +1015,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -971,7 +1083,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -1054,43 +1166,43 @@ define([
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
-                     keyCode: cConstants.key.down
+                     keyCode: Env.constants.key.down
                   }
                });
                assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "down".');
 
+               lnBaseControl._children = {
+                  selectionController: {
+                     onCheckBoxClick: function() {
+                     }
+                  }
+               };
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
+                  nativeEvent: {
+                     keyCode: Env.constants.key.space
+                  },
                   preventDefault: function() {
                      preventDefaultCalled = true;
-                  },
-                  nativeEvent: {
-                     keyCode: cConstants.key.space
                   }
                });
-               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "space".');
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 3, 'Invalid value of markedKey after press "space".');
+               assert.isTrue(preventDefaultCalled);
 
                lnBaseControl._onViewKeyDown({
                   stopImmediatePropagation: function() {
                      stopImmediateCalled = true;
                   },
-                  preventDefault: function() {
-                     preventDefaultCalled = true;
-                  },
                   nativeEvent: {
-                     keyCode: cConstants.key.up
+                     keyCode: Env.constants.key.up
                   }
                });
-               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 1, 'Invalid value of markedKey after press "up".');
+               assert.equal(lnBaseControl.getViewModel().getMarkedKey(), 2, 'Invalid value of markedKey after press "up".');
 
                assert.isTrue(stopImmediateCalled, 'Invalid value "stopImmediateCalled"');
-               assert.isTrue(preventDefaultCalled, 'Invalid value "preventDefaultCalled"');
 
                // reload with new source (first item with id "firstItem")
                lnBaseControl._beforeUpdate(lnCfg2);
@@ -1132,7 +1244,7 @@ define([
                sourceConfig: {
                   pageSize: 6,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                },
                view: 'infinity',
                viewConfig: {
@@ -1224,7 +1336,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1267,7 +1379,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1307,7 +1419,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1346,7 +1458,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1380,7 +1492,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1419,7 +1531,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1456,7 +1568,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1493,7 +1605,7 @@ define([
                   sourceConfig: {
                      pageSize: 6,
                      page: 0,
-                     mode: 'totalCount'
+                     hasMore: false
                   },
                   view: 'infinity',
                   viewConfig: {
@@ -1555,6 +1667,30 @@ define([
          assert.isTrue(dragEnded);
          assert.isFalse(!!ctrl._loadingState);
 
+      });
+
+      it('getSelectionForDragNDrop', function() {
+         var selection;
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 4);
+         assert.deepEqual(selection.selected, [4, 1, 2, 3]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [], 2);
+         assert.deepEqual(selection.selected, [2, 1, 3]);
+         assert.deepEqual(selection.excluded, []);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 3);
+         assert.deepEqual(selection.selected, [3, 1, 2]);
+         assert.deepEqual(selection.excluded, [4]);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 5);
+         assert.deepEqual(selection.selected, [5, 1, 2, 3]);
+         assert.deepEqual(selection.excluded, [4]);
+
+         selection = BaseControl._private.getSelectionForDragNDrop([1, 2, 3], [4], 4);
+         assert.deepEqual(selection.selected, [4, 1, 2, 3]);
+         assert.deepEqual(selection.excluded, []);
       });
 
       describe('ItemActions', function() {
@@ -1720,6 +1856,8 @@ define([
             assert.equal(instance.getViewModel()._markedKey, 1);
             assert.equal(callBackCount, 0);
          });
+
+
 
          it('showActionsMenu context', function() {
             var callBackCount = 0;
@@ -1966,6 +2104,169 @@ define([
                   }
                }]});
             assert.equal(instance._menuIsShown, null);
+         });
+
+         describe('_listSwipe animation', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false
+               },
+               instance;
+            function initTest(multiSelectVisibility) {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     multiSelectVisibility: multiSelectVisibility,
+                     selectedKeysCount: 1
+                  };
+               instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+            }
+
+            it('multiSelectVisibility: visible, should start animation', function() {
+               initTest('visible');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: onhover, should start animation', function() {
+               initTest('onhover');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.equal(itemData, instance.getViewModel()._rightSwipedItem);
+            });
+
+            it('multiSelectVisibility: hidden, should not start animation', function() {
+               initTest('hidden');
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isNotOk(instance.getViewModel()._rightSwipedItem);
+            });
+         });
+         describe('itemSwipe event', function() {
+            var
+               childEvent = {
+                  nativeEvent: {
+                     direction: 'right'
+                  }
+               },
+               itemData = {
+                  key: 1,
+                  multiSelectStatus: false,
+                  item: {}
+               };
+            it('list has item actions, event should not fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     itemActions: []
+                  },
+                  instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName) {
+                  if (eventName === 'itemSwipe') {
+                     throw new Error('itemSwipe event should not fire if the list has itemActions');
+                  }
+               };
+               instance._listSwipe({}, itemData, childEvent);
+            });
+
+            it('list has multiselection, event should not fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source,
+                     selectedKeysCount: 1
+                  },
+                  instance = new BaseControl(cfg);
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName) {
+                  if (eventName === 'itemSwipe') {
+                     throw new Error('itemSwipe event should not fire if the list has multiselection');
+                  }
+               };
+               instance._listSwipe({}, itemData, childEvent);
+            });
+
+            it('list doesn\'t handle swipe, event should fire', function() {
+               var
+                  cfg = {
+                     viewName: 'Controls/List/ListView',
+                     viewConfig: {
+                        idProperty: 'id'
+                     },
+                     viewModelConfig: {
+                        items: rs,
+                        idProperty: 'id'
+                     },
+                     viewModelConstructor: ListViewModel,
+                     source: source
+                  },
+                  instance = new BaseControl(cfg),
+                  notifyCalled = false;
+               instance._children = {
+                  itemActionsOpener: {
+                     close: function() {}
+                  }
+               };
+               instance.saveOptions(cfg);
+               instance._beforeMount(cfg);
+               instance._notify = function(eventName, eventArgs, eventOptions) {
+                  assert.equal(eventName, 'itemSwipe');
+                  assert.deepEqual(eventArgs, [itemData.item, childEvent]);
+                  notifyCalled = true;
+               };
+               instance._listSwipe({}, itemData, childEvent);
+               assert.isTrue(notifyCalled);
+            });
          });
 
          it('_listSwipe  multiSelectStatus = true', function(done) {

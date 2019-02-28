@@ -1,6 +1,7 @@
 define('Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper', [
    'Core/Control',
-   'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper/ComponentWrapper'
+   'wml!Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper/ComponentWrapper',
+   'css!Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper/ComponentWrapper'
 ], function(Control, template) {
    return Control.extend({
       _template: template,
@@ -10,7 +11,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/ComponentWrapper', [
          this._onResultHandler = cfg.templateOptions._onResultHandler;
          this._onRegisterHandler = cfg.templateOptions._onRegisterHandler;
          this._onActivatedHandler = cfg.templateOptions._onActivatedHandler;
+         this._onMaximizedHandler = cfg.templateOptions._onMaximizedHandler;
          this._onDeactivatedHandler = cfg.templateOptions._onDeactivatedHandler;
+      },
+      finishPendingOperations: function() {
+         return this._children.PendingRegistrator.finishPendingOperations();
       },
       _beforeMount: function(cfg) {
          this._fillCallbacks(cfg);

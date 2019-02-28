@@ -195,7 +195,7 @@ define('Controls-demo/Layouts/SearchLayout', [
                sourceConfig: {
                   pageSize: 20,
                   page: 0,
-                  mode: 'totalCount'
+                  hasMore: false
                }
             };
          },

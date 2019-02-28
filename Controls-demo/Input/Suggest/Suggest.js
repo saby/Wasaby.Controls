@@ -129,7 +129,7 @@ define('Controls-demo/Input/Suggest/Suggest', [
             {id: '1', title: 'men'},
             {id: '2', title: 'women'}
          ];
-         this.navigationConfig = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, mode: 'totalCount'}};
+         this.navigationConfig = {view: 'page', source: 'page', sourceConfig: {pageSize: 2, page: 0, hasMore: false}};
          _private.createMemory(this);
       },
       _validationChangedHandler: function() {

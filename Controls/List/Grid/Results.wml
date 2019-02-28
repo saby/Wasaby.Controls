@@ -1,16 +1,46 @@
-<div class="controls-Grid__results">
-   <ws:if data="{{userTemplate}}">
-      <ws:partial template="{{userTemplate}}" model="{{model}}" />
+<ws:template name="cellContent">
+   <ws:if data="{{!!currentResultsColumn.column.resultTemplate && (multiSelectVisibility === 'hidden' || currentResultsColumn.index !== 0)}}">
+      <ws:partial template="{{currentResultsColumn.column.resultTemplate}}"
+                  listModel="{{listModel}}"
+                  column="{{currentResultsColumn.column}}" />
    </ws:if>
-   <ws:else>
-      <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
-         <div class="{{listModel.getCurrentResultsColumn().cellClasses}}{{listModel.getCurrentResultsColumn().column.align ? ' controls-Grid__row-cell__content_halign_' + listModel.getCurrentResultsColumn().column.align : ''}}">
-            <ws:if data="{{!!listModel.getCurrentResultsColumn().column.resultTemplate && (listModel.getMultiSelectVisibility() === 'hidden' || listModel.getCurrentResultsColumn().index !== 0)}}">
-               <ws:partial template="{{listModel.getCurrentResultsColumn().column.resultTemplate}}"
-                           listModel="{{listModel}}"
-                           column="{{listModel.getCurrentResultsColumn().column}}" />
-            </ws:if>
-         </div>
-      </ws:for>
-   </ws:else>
-</div>
+</ws:template>
+<ws:template name="cell">
+   <div class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}">
+      <ws:partial template="cellContent"/>
+   </div>
+</ws:template>
+<ws:template name="stickyCell">
+   <Controls.StickyHeader attr:class="{{currentResultsColumn.cellClasses}}{{currentResultsColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentResultsColumn.column.align : ''}}"
+                          mode="stackable"
+                          fixedZIndex="3">
+      <ws:partial template="cellContent"/>
+   </Controls.StickyHeader>
+</ws:template>
+<ws:template name="results">
+   <div class="controls-Grid__results">
+      <ws:if data="{{userTemplate}}">
+         <ws:partial template="{{userTemplate}}" model="{{model}}" />
+      </ws:if>
+      <ws:else>
+         <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+         <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+         {{ listModel.resetResultsColumns() }}
+         <ws:for data="listModel.resetResultsColumns(); listModel.isEndResultsColumn(); listModel.goToNextResultsColumn();">
+            <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
+                        listModel="{{ listModel }}"
+                        multiSelectVisibility="{{listModel.getMultiSelectVisibility()}}"
+                        currentResultsColumn="{{listModel.getCurrentResultsColumn()}}"/>
+         </ws:for>
+      </ws:else>
+   </div>
+</ws:template>
+<ws:if data="{{listModel.isStickyHeader() && listModel.getResultsPosition() === 'top'}}">
+   <Controls.StickyHeader.Group>
+      <!-- Fix after complete https://online.sbis.ru/opendoc.html?guid=8758be7a-08df-42dc-b185-1b5592e23a64 -->
+      <ws:partial template="results" temp="{{ listModel.getVersion() }}"/>
+   </Controls.StickyHeader.Group>
+</ws:if>
+<ws:else>
+   <ws:partial template="results"/>
+</ws:else>

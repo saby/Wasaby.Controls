@@ -1,11 +1,13 @@
 <Controls.Popup.Templates.Dialog.ConfirmationTemplate
+        on:keydown="_keyDown()"
         on:keyup="_keyPressed()" ws-tab-cycling="true"
         ws-delegates-tabfocus="true" style="{{_options.style}}"
         hideCross="{{true}}" size="{{_options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? 'big' : 'standart'}}">
    <ws:bodyContentTemplate>
       <ws:partial
               template="{{_contentTemplate}}"
-              message="{{_options.message}}"
+              message="{{_getMessage()}}"
+              hasMarkup="{{_hasMarkup()}}"
               messageTemplate="{{_messageTemplate}}"
               details="{{_options.details}}"
               detailsTemplate="{{_detailsTemplate}}">

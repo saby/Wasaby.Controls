@@ -1,6 +1,5 @@
 define('Controls/List/BaseControl', [
    'Core/Control',
-   'Core/IoC',
    'Core/core-clone',
    'Core/core-merge',
    'Core/core-instance',
@@ -11,7 +10,8 @@ define('Controls/List/BaseControl', [
    'Controls/Controllers/SourceController',
    'Core/helpers/Object/isEqual',
    'Core/Deferred',
-   'Core/constants',
+   'Env/Env',
+   'Controls/Utils/getItemsBySelection',
    'Controls/Utils/scrollToElement',
    'Types/collection',
    'Controls/Utils/Toolbar',
@@ -22,7 +22,6 @@ define('Controls/List/BaseControl', [
    'css!theme?Controls/List/BaseControl/BaseControl'
 ], function(
    Control,
-   IoC,
    cClone,
    cMerge,
    cInstance,
@@ -33,7 +32,8 @@ define('Controls/List/BaseControl', [
    SourceController,
    isEqualObject,
    Deferred,
-   cConstants,
+   Env,
+   getItemsBySelection,
    scrollToElement,
    collection,
    tUtil,
@@ -51,10 +51,10 @@ define('Controls/List/BaseControl', [
 
    var
       HOT_KEYS = {
-         moveMarkerToNext: cConstants.key.down,
-         moveMarkerToPrevious: cConstants.key.up,
-         toggleSelection: cConstants.key.space,
-         enterHandler: cConstants.key.enter
+         moveMarkerToNext: Env.constants.key.down,
+         moveMarkerToPrevious: Env.constants.key.up,
+         toggleSelection: Env.constants.key.space,
+         enterHandler: Env.constants.key.enter
       };
 
    var LOAD_TRIGGER_OFFSET = 100;
@@ -62,12 +62,13 @@ define('Controls/List/BaseControl', [
    var _private = {
       checkDeprecated: function(cfg) {
          if (cfg.historyIdCollapsedGroups) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
          }
          if (cfg.groupMethod) {
-            IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
          }
       },
+
       reload: function(self, cfg) {
          var
             filter = cClone(cfg.filter),
@@ -85,7 +86,7 @@ define('Controls/List/BaseControl', [
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                var
-                  markedKey, isActive,
+                  markedItem, markedKey, isActive,
                   listModel = self._listViewModel;
 
                if (cfg.dataLoadCallback instanceof Function) {
@@ -103,11 +104,12 @@ define('Controls/List/BaseControl', [
                   markedKey = listModel.getMarkedKey();
                   if (markedKey !== null) {
                      if (listModel.getIndexByKey(markedKey) === -1) {
-                        markedKey = listModel.getFirstItemKey();
-                     }
-                     if (markedKey !== undefined) {
-                        listModel.setMarkedKey(markedKey);
-                        self._restoreMarkedKey = markedKey;
+                        markedItem = listModel.getFirstItem();
+                        if (markedItem) {
+                           markedKey = markedItem.getId();
+                           listModel.setMarkedKey(markedKey);
+                           self._restoreMarkedKey = markedKey;
+                        }
                      }
                   }
                   if (isActive === true) {
@@ -119,7 +121,7 @@ define('Controls/List/BaseControl', [
                   потеряли актуальность, сбрасываем их. */
                if (self._virtualScroll) {
                   self._virtualScroll.resetItemsIndexes();
-                  self._virtualScroll.setItemsCount(listModel.getCount());
+                  self._virtualScroll.ItemsCount = listModel.getCount();
                   self._virtualScroll.updateItemsIndexes('down');
                   _private.applyVirtualScroll(self);
                }
@@ -138,7 +140,7 @@ define('Controls/List/BaseControl', [
             });
          } else {
             resDeferred.callback();
-            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
          }
          resDeferred.addCallback(function(items) {
             if (cfg.afterReloadCallback) {
@@ -149,7 +151,17 @@ define('Controls/List/BaseControl', [
          return resDeferred;
       },
       scrollToItem: function(self, key) {
-         scrollToElement(self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)], true);
+         // todo now is one safe variant to fix call stack: beforeUpdate->reload->afterUpdate
+         // due to asynchronous reload and afterUpdate, a "race" is possible and afterUpdate is called after reload
+         // changes in branch "19.110/bugfix/aas/basecontrol_reload_by_afterupdate"
+         // https://git.sbis.ru/sbis/controls/merge_requests/65854
+         // corrupting integration tests
+         // fixed by error: https://online.sbis.ru/opendoc.html?guid=d348adda-5fee-4d1b-8cb7-9501026f4f3c
+         var
+            container = self._children.listView.getItemsContainer().children[self.getViewModel().getIndexByKey(key)];
+         if (container) {
+            scrollToElement(container, true);
+         }
       },
       setMarkedKey: function(self, key) {
          if (key !== undefined) {
@@ -181,7 +193,7 @@ define('Controls/List/BaseControl', [
             self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
          }
       },
-      toggleSelection: function(self) {
+      toggleSelection: function(self, event) {
          var
             model, markedKey;
          if (self._children.selectionController) {
@@ -189,6 +201,7 @@ define('Controls/List/BaseControl', [
             markedKey = model.getMarkedKey();
             self._children.selectionController.onCheckBoxClick(markedKey, model.getSelectionStatus(markedKey));
             _private.moveMarkerToNext(self);
+            event.preventDefault();
          }
       },
       prepareFooter: function(self, navigation, sourceController) {
@@ -227,15 +240,22 @@ define('Controls/List/BaseControl', [
 
                _private.hideIndicator(self);
 
+               //TODO https://online.sbis.ru/news/c467b1aa-21e4-41cc-883b-889ff5c10747
+               //до реализации функционала и проблемы из новости делаем решение по месту:
+               //посчитаем число отображаемых записей до и после добавления, если не поменялось, значит прилетели элементы, попадающие в невидимую группу,
+               //надо инициировать подгрузку порции записей, больше за нас это никто не сделает.
+               //Под опцией, потому что в другом месте это приведет к ошибке. Хорошее решение будет в задаче ссылка на которую приведена
+               var cnt1 = self._listViewModel.getCount();
                if (direction === 'down') {
                   self._listViewModel.appendItems(addedItems);
                } else if (direction === 'up') {
                   self._listViewModel.prependItems(addedItems);
                }
+               var cnt2 = self._listViewModel.getCount();
 
                // If received list is empty, make another request.
                // If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
-               if (!addedItems.getCount()) {
+               if (!addedItems.getCount() || (self._options.task1176625749 && cnt2 == cnt1)) {
                   _private.checkLoadToDirectionCapability(self);
                }
 
@@ -244,7 +264,7 @@ define('Controls/List/BaseControl', [
                if (self._virtualScroll) {
 
                   // Обновляем общее количество записей
-                  self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                  self._virtualScroll.ItemsCount = self._listViewModel.getCount();
 
                   _private.applyVirtualScroll(self, direction);
                }
@@ -256,14 +276,14 @@ define('Controls/List/BaseControl', [
                return _private.processLoadError(self, error, userErrback);
             });
          }
-         IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+         Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
       },
 
       // Основной метод пересчета состояния Virtual Scroll
       applyVirtualScroll: function(self) {
          var
-            indexes = self._virtualScroll.getItemsIndexes(),
-            placeholdersSizes = self._virtualScroll.getPlaceholdersSizes();
+            indexes = self._virtualScroll.ItemsIndexes,
+            placeholdersSizes = self._virtualScroll.PlaceholdersSizes;
 
          self._listViewModel.setIndexes(indexes.start, indexes.stop);
          self._topPlaceholderHeight = placeholdersSizes.top;
@@ -323,7 +343,7 @@ define('Controls/List/BaseControl', [
 
       // Метод, в котором опеределяется необходимость догрузки данных
       updateVirtualWindow: function(self, direction) {
-         var indexes = self._virtualScroll.getItemsIndexes();
+         var indexes = self._virtualScroll.ItemsIndexes;
 
          // Если в рекордсете записей меньше, чем stopIndex, то требуется догрузка данных
          if (self._listViewModel.getCount() <= indexes.stop) {
@@ -431,6 +451,31 @@ define('Controls/List/BaseControl', [
          return def;
       },
 
+      getSelectionForDragNDrop: function(selectedKeys, excludedKeys, dragKey) {
+         var
+            selected,
+            excluded,
+            dragItemIndex;
+
+         selected = cClone(selectedKeys) || [];
+         dragItemIndex = selected.indexOf(dragKey);
+         if (dragItemIndex !== -1) {
+            selected.splice(dragItemIndex, 1);
+         }
+         selected.unshift(dragKey);
+
+         excluded = cClone(excludedKeys) || [];
+         dragItemIndex = excluded.indexOf(dragKey);
+         if (dragItemIndex !== -1) {
+            excluded.splice(dragItemIndex, 1);
+         }
+
+         return {
+            selected: selected,
+            excluded: excluded
+         };
+      },
+
       showIndicator: function(self, direction) {
          self._loadingState = direction || 'all';
          self._loadingIndicatorState = self._loadingState;
@@ -509,7 +554,22 @@ define('Controls/List/BaseControl', [
       },
 
       initListViewModelHandler: function(self, model) {
-         model.subscribe('onListChange', function() {
+         model.subscribe('onListChange', function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+            if (changesType === 'collectionChanged') {
+               if (self._options.navigation && self._options.navigation.source === 'position') {
+                  _private.recalculateNavigationState(self);
+               }
+               if (!!action && self.getVirtualScroll()) {
+                  self._virtualScroll.ItemsCount = self.getViewModel().getCount();
+                  if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
+                     self._virtualScroll.insertItemsHeights(newItemsIndex - 1, newItems.length);
+                  }
+                  if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
+                     self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
+                  }
+                  _private.applyVirtualScroll(self);
+               }
+            }
             self._hasUndrawChanges = true;
             self._forceUpdate();
          });
@@ -553,7 +613,7 @@ define('Controls/List/BaseControl', [
                      onResult: self._closeActionsMenu,
                      onClose: self._closeActionsMenu
                   },
-                  closeByExternalClick: true,
+                  closeOnOutsideClick: true,
                   corner: {vertical: 'top', horizontal: 'right'},
                   horizontalAlign: {side: context ? 'right' : 'left'},
                   className: 'controls-Toolbar__popup_list',
@@ -586,6 +646,17 @@ define('Controls/List/BaseControl', [
             closeMenu();
          }
          self._forceUpdate();
+      },
+
+      recalculateNavigationState: function(self) {
+         var
+            state = {
+               position: {
+                  before: self._listViewModel.getFirstItem(),
+                  after: self._listViewModel.getLastItem()
+               }
+            };
+         self._sourceController.setState(state);
       },
 
       bindHandlers: function(self) {
@@ -721,7 +792,7 @@ define('Controls/List/BaseControl', [
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (this._needScrollCalculation) {
-            if (newOptions.virtualScrolling === true) {
+            if (newOptions.virtualScrolling) {
                this._virtualScroll = new VirtualScroll({
                   virtualPageSize: newOptions.virtualPageSize,
                   virtualSegmentSize: newOptions.virtualSegmentSize
@@ -760,8 +831,8 @@ define('Controls/List/BaseControl', [
                   }
                   if (self._virtualScroll) {
                      // При серверной верстке применяем начальные значения
-                     var indexes = self._virtualScroll.getItemsIndexes();
-                     self._virtualScroll.setItemsCount(self._listViewModel.getCount());
+                     var indexes = self._virtualScroll.ItemsIndexes;
+                     self._virtualScroll.ItemsCount = self._listViewModel.getCount();
                      self._listViewModel.setIndexes(indexes.start, indexes.stop);
                   }
                   _private.prepareFooter(self, newOptions.navigation, self._sourceController);
@@ -793,7 +864,7 @@ define('Controls/List/BaseControl', [
             _private.startScrollEmitter(this);
          }
          if (this._virtualScroll) {
-            this._virtualScroll.setItemsContainer(this._children.listView.getItemsContainer());
+            this._virtualScroll.ItemsContainer = this._children.listView.getItemsContainer();
          }
          if (this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
@@ -802,8 +873,8 @@ define('Controls/List/BaseControl', [
 
       _beforeUpdate: function(newOptions) {
          var filterChanged = !isEqualObject(newOptions.filter, this._options.filter);
-         var recreateSource = newOptions.source !== this._options.source ||
-             !isEqualObject(newOptions.navigation, this._options.navigation);
+         var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
+         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
          var sortingChanged = newOptions.sorting !== this._options.sorting;
 
          if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
@@ -828,6 +899,10 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMarkerVisibility(newOptions.markerVisibility);
          }
 
+         if (newOptions.searchValue !== this._options.searchValue) {
+            this._listViewModel.setSearchValue(newOptions.searchValue);
+         }
+
          this._needScrollCalculation = _private.needScrollCalculation(newOptions.navigation);
 
          if (recreateSource) {
@@ -845,14 +920,6 @@ define('Controls/List/BaseControl', [
             this._listViewModel.setMultiSelectVisibility(newOptions.multiSelectVisibility);
          }
          this._needSelectionController = this._options.multiSelectVisibility !== 'hidden' || this._delayedSelect;
-
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
-
-         if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
-            this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
-         }
 
          if (newOptions.itemTemplateProperty !== this._options.itemTemplateProperty) {
             this._listViewModel.setItemTemplateProperty(newOptions.itemTemplateProperty);
@@ -911,6 +978,8 @@ define('Controls/List/BaseControl', [
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                this._virtualScroll.updateItemsSizes();
+               this._topPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.top;
+               this._bottomPlaceholderHeight = this._virtualScroll.PlaceholdersSizes.bottom;
             }
          }
          if (this._delayedSelect && this._children.selectionController) {
@@ -963,7 +1032,17 @@ define('Controls/List/BaseControl', [
       _listSwipe: function(event, itemData, childEvent) {
          var direction = childEvent.nativeEvent.direction;
          this._children.itemActionsOpener.close();
-         if (direction === 'right' && !itemData.isSwiped) {
+
+         /**
+          * TODO: Сейчас нет возможности понять предусмотрено выделение в списке или нет.
+          * Опция multiSelectVisibility не подходит, т.к. даже если она hidden, то это не значит, что выделение отключено.
+          * Пока единственный надёжный способ различить списки с выделением и без него - смотреть на то, приходит ли опция selectedKeysCount.
+          * Если она пришла, то значит выше есть Controls/Container/MultiSelector и в списке точно предусмотрено выделение.
+          *
+          * По этой задаче нужно придумать нормальный способ различать списки с выделением и без:
+          * https://online.sbis.ru/opendoc.html?guid=ae7124dc-50c9-4f3e-a38b-732028838290
+          */
+         if (direction === 'right' && !itemData.isSwiped && typeof this._options.selectedKeysCount !== 'undefined') {
             /**
              * After the right swipe the item should get selected.
              * But, because selectionController is a component, we can't create it and call it's method in the same event handler.
@@ -973,12 +1052,19 @@ define('Controls/List/BaseControl', [
                key: itemData.key,
                status: itemData.multiSelectStatus
             };
-            this.getViewModel().setRightSwipedItem(itemData);
+
+            //Animation should be played only if checkboxes are visible.
+            if (this._options.multiSelectVisibility !== 'hidden') {
+               this.getViewModel().setRightSwipedItem(itemData);
+            }
          }
          if (direction === 'right' || direction === 'left') {
             var newKey = ItemsUtil.getPropertyValue(itemData.item, this._options.keyProperty);
             this._listViewModel.setMarkedKey(newKey);
             this._listViewModel.setActiveItem(itemData);
+         }
+         if (!this._options.itemActions && typeof this._options.selectedKeysCount === 'undefined') {
+            this._notify('itemSwipe', [itemData.item, childEvent]);
          }
       },
 
@@ -1002,6 +1088,10 @@ define('Controls/List/BaseControl', [
          return _private.reload(this, this._options);
       },
 
+      getVirtualScroll: function() {
+         return this._virtualScroll;
+      },
+
       _onGroupClick: function(e, item, baseEvent) {
          if (baseEvent.target.closest('.controls-ListView__groupExpander')) {
             this._listViewModel.toggleGroup(item);
@@ -1021,6 +1111,7 @@ define('Controls/List/BaseControl', [
          }
          var newKey = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
          this._listViewModel.setMarkedKey(newKey);
+         e.blockUpdate = true;
       },
 
       _viewResize: function() {
@@ -1080,23 +1171,28 @@ define('Controls/List/BaseControl', [
 
       _itemMouseDown: function(event, itemData, domEvent) {
          var
-            items,
-            dragItemIndex,
+            selection,
+            self = this,
             dragStartResult;
 
          if (this._options.itemsDragNDrop && !domEvent.target.closest('.controls-DragNDrop__notDraggable')) {
-            items = cClone(this._options.selectedKeys) || [];
-            dragItemIndex = items.indexOf(itemData.key);
-            if (dragItemIndex !== -1) {
-               items.splice(dragItemIndex, 1);
-            }
-            items.unshift(itemData.key);
-            dragStartResult = this._notify('dragStart', [items]);
-            if (dragStartResult) {
-               this._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
-               this._itemDragData = itemData;
-            }
+
+            //Support moving with mass selection.
+            //Full transition to selection will be made by: https://online.sbis.ru/opendoc.html?guid=080d3dd9-36ac-4210-8dfa-3f1ef33439aa
+            selection = _private.getSelectionForDragNDrop(this._options.selectedKeys, this._options.excludedKeys, itemData.key);
+            getItemsBySelection(selection, this._options.source, this._listViewModel.getItems(), this._options.filter).addCallback(function(items) {
+               dragStartResult = self._notify('dragStart', [items]);
+               if (dragStartResult) {
+                  self._children.dragNDropController.startDragNDrop(dragStartResult, domEvent);
+                  self._itemDragData = itemData;
+               }
+            });
          }
+
+         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
+         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+         this._children.fakeFocusElem.focus();
+         event.blockUpdate = true;
       },
 
       _onLoadMoreClick: function() {
@@ -1179,6 +1275,7 @@ define('Controls/List/BaseControl', [
                this._listViewModel.setDragTargetPosition(dragPosition);
             }
          }
+         event.blockUpdate = true;
       },
 
       _sortingChanged: function(event, propName, sortingType) {

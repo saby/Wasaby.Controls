@@ -1,4 +1,4 @@
-define(['Controls/Filter/Controller'], function(Filter) {
+define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferred) {
    
    describe('Controls.Filter.Controller', function () {
 
@@ -24,6 +24,14 @@ define(['Controls/Filter/Controller'], function(Filter) {
          filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems });
          assert.deepEqual(filterLayout._filterButtonItems[0].textValue, '');
          assert.deepEqual(filterLayout._filterButtonItems[1].textValue, 'testText2');
+         
+         return new Promise(function(resolve) {
+            filterLayout._beforeMount({ filterButtonSource: items, fastFilterSource: fastItems, historyId: 'TEST_HISTORY_ID', historyItems: []}).addCallback(function(items) {
+               assert.deepEqual(items, []);
+               resolve();
+               return items;
+            });
+         });
       });
 
       it('_beforeMount::receivedState', function() {
@@ -339,6 +347,12 @@ define(['Controls/Filter/Controller'], function(Filter) {
             value: 'testValue2',
             textValue: 'textTextValue',
             resetValue: ''
+         }, {
+            id: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            resetValue: '',
+            visibility: true
          }];
          var minItems = Filter._private.minimizeFilterItems(items);
          assert.deepEqual(minItems, [{
@@ -349,13 +363,18 @@ define(['Controls/Filter/Controller'], function(Filter) {
          }, {
             id: 'testId2',
             value: 'testValue',
-            textValue: '',
+            textValue: undefined,
             visibility: false
          }, {
             id: 'testId3',
             value: 'testValue2',
             textValue: 'textTextValue',
             visibility: undefined
+         }, {
+            id: 'testId4',
+            value: 'testValue4',
+            textValue: 'textTextValue',
+            visibility: true
          }]);
       });
 
@@ -386,7 +405,8 @@ define(['Controls/Filter/Controller'], function(Filter) {
             id: 'testId2',
             value: '',
             textValue: '',
-            resetValue: ''
+            resetValue: '',
+            isFast: true
          }, {
             id: 'testId3',
             value: 'testValue',
@@ -469,6 +489,30 @@ define(['Controls/Filter/Controller'], function(Filter) {
             resetValue: ''
          }];
          assert.isTrue(Filter._private.isFilterChanged(filterButtonItems, fastFilterItems));
+         fastFilterItems = [{
+            id: 'testId',
+            value: '',
+            resetValue: ''
+         }, {
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }];
+
+         filterButtonItems = [{
+            id: 'testId2',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId3',
+            value: 'testValue',
+            resetValue: ''
+         }, {
+            id: 'testId4',
+            value: '',
+            resetValue: ''
+         }];
+         assert.isFalse(Filter._private.isFilterChanged(filterButtonItems, fastFilterItems));
       });
 
       it('_private.getHistoryData', function() {
@@ -503,7 +547,19 @@ define(['Controls/Filter/Controller'], function(Filter) {
       it('_private.getHistoryItems', function(done) {
          Filter._private.getHistoryItems({}, 'TEST_HISTORY_ID').addCallback(function(items) {
             assert.deepEqual(items.length, 15);
-            done();
+            
+            var self = {
+               _sourceController: {
+                  load: function() {
+                     return Deferred.fail();
+                  }
+               }
+            };
+   
+            Filter._private.getHistoryItems(self, 'TEST_HISTORY_ID').addCallback(function(hItems) {
+               assert.equal(hItems.length, 0);
+               done();
+            });
          });
       });
 
@@ -518,6 +574,35 @@ define(['Controls/Filter/Controller'], function(Filter) {
          });
       });
 
+      it('applyItemsToFilter', function() {
+         var
+            self = {},
+            filter = {
+               testId: 'testValue'
+            },
+            filter1 = {
+               testId: [123]
+            },
+            filterButtonItems = [{
+               id: 'testId',
+               value: 'testValue1',
+               textValue: 'test1',
+               resetValue: ''
+            }], filterButtonItems1 = [{
+               id: 'testId',
+               value: [],
+               textValue: undefined,
+               resetValue: []
+            }];
+
+         Filter._private.applyItemsToFilter(self, filter, filterButtonItems, []);
+         assert.equal(self._filter.testId, filterButtonItems[0].value);
+
+         self = {};
+
+         Filter._private.applyItemsToFilter(self, filter1, filterButtonItems1, []);
+         assert.equal(self._filter.testId, filterButtonItems1[0].value);
+      });
    });
 
 });

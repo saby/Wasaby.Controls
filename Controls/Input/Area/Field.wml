@@ -1,17 +1,20 @@
 <div name="fieldWrapper" class="controls-Area__fieldWrapper controls-Area__field_margin">
    <div class="controls-Area__fakeField"
         style="{{'min-height: ' + calculateHeightContainer(options.minLines, false) + 'px;'}}">
-      <ws:if data="{{value}}">{{value}}&#65279;</ws:if>
-      <ws:else><ws:partial template="{{placeholderTemplate}}"/></ws:else>
+      <ws:if data="{{value}}">{{value}}{{emptySymbol}}</ws:if>
+      <ws:else data="{{options.placeholder}}">
+         <ws:partial template="{{placeholderTemplate}}"/>
+      </ws:else>
+      <ws:else>{{emptySymbol}}</ws:else>
    </div>
    <textarea
       wrap="hard"
-      spellcheck="false"
+      spellcheck="true"
       name="{{fieldName}}"
       value="{{calculateValueForTemplate()}}"
       class="controls-InputBase__nativeField controls-Area__realField
                    {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
-      placeholder="{{hidePlaceholderUsingCSS ? '&#65279;'}}"
+      placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
       on:keyup="_keyUpHandler()"
       on:click="_clickHandler()"
       on:input="_inputHandler()"

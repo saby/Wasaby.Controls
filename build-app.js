@@ -1,95 +1,27 @@
-var root = process.cwd(),
-   fs = require('fs'),
-   path = require('path');
+const
+    root = process.cwd(),
+    fs = require('fs-extra'),
+    path = require('path');
 
-function getBuildMode(gultConfig) {
-   return gultConfig.minimize ? 'release' : 'debug';
+/**
+ * Симличим основные мета-файлы билдера в resources.
+ * Это связано с проблемами запроса данных файлов
+ * серверной частью Controls/Application:
+ * у облака на клиенте resourceRoot - это auth/resources
+ * а не сервере - auth_ps/resources.
+ * TODO надо добить данную проблему и спилить костыль.
+ * https://online.sbis.ru/opendoc.html?guid=8a9a3195-6a05-4db5-a26d-2853a373eb7b
+ * @returns {Promise<void>}
+ */
+async function postProcessBuilderOutput() {
+   await fs.ensureDir(path.join(root, 'application', 'resources'));
+   await fs.ensureSymlink(
+      path.join(root, 'application', 'contents.json'),
+      path.join(root, 'application', 'resources', 'contents.min.json')
+   );
+   await fs.ensureSymlink(
+      path.join(root, 'application', 'contents.json'),
+      path.join(root, 'application', 'resources', 'contents.json')
+   );
 }
-
-var gultConfig = require('./buildTemplate.json');
-var buildMode = getBuildMode(gultConfig);
-var gultConfigStringified = JSON.stringify(gultConfig);
-gultConfigStringified = gultConfigStringified.replace(/%cd%/ig, root).replace(/\\/ig, '/');
-
-if (!fs.existsSync(path.join(root, 'application'))) {
-   fs.mkdirSync(path.join(root, 'application'));
-}
-if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
-   fs.mkdirSync(path.join(root, 'application', 'resources'));
-}
-
-fs.writeFile(path.join(root, 'builderCfg.json'), gultConfigStringified, function(){
-   const { spawn } = require('child_process');
-
-   const child = spawn('node',[
-      root+'/node_modules/gulp/bin/gulp.js',
-      '--gulpfile', root+'/node_modules/sbis3-builder/gulpfile.js',
-      'build',
-      '--config='+root+'/builderCfg.json',
-      '-LLLL'
-   ]);
-
-   child.stdout.on('data', (data) => {
-         console.log(`${data}`);
-   });
-
-      child.stderr.on('data', (data) => {
-         console.log(`ERROR: ${data}`);
-   });
-
-
-   child.on('exit', function (code, signal) {
-      console.log('child process exited with ' +
-         `code ${code} and signal ${signal}`);
-
-      gultConfigStringified = JSON.parse(gultConfigStringified);
-      gultConfigStringified.modules.forEach((one) => {
-         let oldName = one.path.split('/');
-         oldName = oldName[oldName.length - 1];
-         if (one.name !== oldName) {
-            fs.renameSync(path.join(root, 'application', oldName), path.join(root, 'application', 'tempName'));
-            fs.renameSync(path.join(root, 'application', 'tempName'), path.join(root, 'application', one.name));
-         }
-      });
-
-      const allJson = {links: {}, nodes: {}};
-      const contents = { buildMode: buildMode, modules: {} };
-      const bundles = {};
-
-      gultConfigStringified.modules.forEach((one) => {
-         if (one.name.indexOf('WS.Core') === -1)
-         {
-            let fileName = path.join(root, 'application', one.name, 'module-dependencies.json');
-            if (fs.existsSync(fileName)) {
-               let oneJson = require(fileName);
-
-               for (let i in oneJson.links) {
-                  allJson.links[i] = oneJson.links[i];
-               }
-
-               for (let j in oneJson.nodes) {
-                  allJson.nodes[j] = oneJson.nodes[j];
-               }
-            }
-         }
-      });
-
-      fs.writeFileSync(path.join(root, 'application', 'contents.js'),
-         'contents = ' + JSON.stringify(contents, '', 3)+';' );
-      fs.linkSync(path.join(root, 'application', 'contents.js'), path.join(root, 'application', 'contents.min.js'));
-      fs.writeFileSync(path.join(root, 'application', 'bundles.js'),
-         'bundles = ' + JSON.stringify(bundles, '', 3)+';' );
-
-
-      if (!fs.existsSync(path.join(root, 'application', 'resources'))) {
-         fs.mkdirSync(path.join(root, 'application', 'resources'));
-      }
-
-      fs.writeFileSync(path.join(root, 'application', 'resources', 'module-dependencies.json'),
-         JSON.stringify(allJson, '', 3).replace(/ws\/core/ig, 'WS.Core/core').replace(/resources\//i, ''));
-
-      fs.writeFileSync(path.join(root, 'application', 'router.js'),
-         'define(\'router\', [], function(){ return {}; })');
-   });
-
-});
+postProcessBuilderOutput().then(() => console.log('build-app finished successfully'));

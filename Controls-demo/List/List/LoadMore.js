@@ -19,7 +19,7 @@ define('Controls-demo/List/List/LoadMore', [
             sourceConfig: {
                pageSize: 5,
                page: 0,
-               mode: 'totalCount'
+               hasMore: false
             },
             viewConfig: {
                pagingMode: 'direct'

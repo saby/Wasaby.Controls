@@ -212,7 +212,6 @@ html>body .clearfix {
 @import "Controls-theme/themes/default/helpers/_misc";
 
 @import "Controls-theme/themes/default/helpers/_flex";
-@import "Controls-theme/themes/default/helpers/_typography";
 
 //icons compatibility with new params
 //тут определяю только размеры иконок. Делаю это через новые алиасы, чтоб работала темизация. Вообще от этих иконок избавлюсь по проекту
@@ -269,4 +268,17 @@ html>body .clearfix {
    text-transform: none;
    line-height: 1;
    display: inline-block;
+}
+
+.ws-link {
+   cursor: pointer;
+   text-decoration: none;
+   background-color: transparent;
+   color: @color_App-link;
+}
+
+.ws-is-no-touch .ws-link:hover,
+.ws-link:active {
+   text-decoration: underline;
+   color: @color_App-link_hover;
 }

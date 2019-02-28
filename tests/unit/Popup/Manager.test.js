@@ -6,7 +6,7 @@ define(
       'Controls/Popup/Opener/BaseController'
    ],
 
-   function (ManagerConstructor, ManagerController, ManagerContainer, BaseController) {
+   function(ManagerConstructor, ManagerController, ManagerContainer, BaseController) {
       'use strict';
 
       function getManager() {
@@ -18,12 +18,12 @@ define(
       }
 
       before(() => {
-         BaseController.prototype._checkContainer = () => { return true; };
+         BaseController.prototype._checkContainer = () => true;
       });
 
       describe('Controls/Popup/Manager/ManagerController', () => {
          it('initialize', function() {
-            //Manager and container doesn't initialized
+            // Manager and container doesn't initialized
             ManagerController._manager = undefined;
             assert.equal(ManagerController.find(), false);
          });
@@ -50,7 +50,7 @@ define(
          });
       });
 
-      describe('Controls/Popup/Manager', function () {
+      describe('Controls/Popup/Manager', function() {
          var id, element;
          let Manager = getManager();
 
@@ -72,7 +72,7 @@ define(
          it('getMaxZIndexPopupIdForActivate', function() {
             let Manager = getManager();
             let id1 = Manager.show({}, new BaseController());
-            let id2 = Manager.show({autofocus: false}, new BaseController());
+            let id2 = Manager.show({ autofocus: false }, new BaseController());
             let id3 = Manager.show({}, new BaseController());
 
             let maxPopupId = Manager._private.getMaxZIndexPopupIdForActivate(Manager._popupItems);
@@ -100,9 +100,6 @@ define(
          });
 
          it('update popup', function() {
-            // todo: убрать по https://online.sbis.ru/opendoc.html?guid=17de8adc-d754-4e3d-83a0-996a7da49b81
-            if(typeof window === 'undefined')
-               this.skip();
             let Manager = getManager();
             id = Manager.show({
                testOption: 'created'
@@ -116,9 +113,6 @@ define(
          });
 
          it('fireEventHandler', function() {
-            // todo: убрать по https://online.sbis.ru/opendoc.html?guid=17de8adc-d754-4e3d-83a0-996a7da49b81
-            if(typeof window === 'undefined')
-               this.skip();
             let Manager = getManager();
             let eventOnCloseFired = false;
             id = Manager.show({
@@ -167,7 +161,7 @@ define(
             let eventOnCloseFired = false;
             id = Manager.show({
                eventHandlers: {
-                  onClose: function () {
+                  onClose: function() {
                      eventCloseFired = true;
                   }
                },
@@ -232,7 +226,6 @@ define(
             }, new BaseController());
 
             assert.equal(Manager._popupItems.at(1).hasMaximizePopup, false);
-
          });
 
          it('popup deactivated', () => {
@@ -242,11 +235,11 @@ define(
                popupDeactivated: () => {
                   isDeactivated = true;
                },
-               getDefaultConfig: () => { return {}},
+               getDefaultConfig: () => ({}),
                POPUP_STATE_INITIALIZING: 'initializing'
             };
             let id = Manager.show({
-               closeByExternalClick: true
+               closeOnOutsideClick: true
             }, controller);
 
 
@@ -259,7 +252,7 @@ define(
 
             isDeactivated = false;
             let item = Manager.find(id);
-            item.popupOptions.closeByExternalClick = false;
+            item.popupOptions.closeOnOutsideClick = false;
             Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, false);
 
@@ -282,7 +275,6 @@ define(
             let id0 = Manager.show(popupOptions, new BaseController());
             Manager._private.popupMaximized(id0);
             assert.isTrue(isMaximizeNotified);
-
          });
          it('managerPopupUpdated notified', function() {
             let popupOptions = {
@@ -300,7 +292,6 @@ define(
             let id0 = Manager.show(popupOptions, new BaseController());
             Manager._private.popupUpdated(id0);
             assert.isTrue(isUpdateNotified);
-
          });
          it('managerPopupDestroyed notified', function() {
             let popupOptions = {
@@ -310,13 +301,33 @@ define(
             var isDestroyNotified;
             Manager._notify = function(event, args, params) {
                isDestroyNotified = event === 'managerPopupDestroyed';
-               assert.isTrue(popupOptions === args[0].popupOptions);
-               assert.isTrue(params.hasOwnProperty('bubbling'));
+               if (event === 'managerPopupDestroyed') {
+                  assert.equal(popupOptions, args[1].getCount(), 0);
+               }
+               assert.equal(popupOptions, args[0].popupOptions);
+               assert.equal(params.hasOwnProperty('bubbling'), true);
             };
             id = Manager.show(popupOptions, new BaseController());
             Manager.remove(id);
             assert.isTrue(isDestroyNotified);
-
+         });
+         it('isIgnoreActivationArea', function() {
+            let focusedContainer = {
+               classList: {
+                  contains: function(str) {
+                     if (str === 'controls-Popup__isolatedFocusingContext') {
+                        return true;
+                     }
+                     return false;
+                  }
+               }
+            };
+            let focusedArea = {};
+            let Manager = getManager();
+            var firstResult = Manager._private.isIgnoreActivationArea(focusedContainer);
+            assert.equal(firstResult, true);
+            var secondResult = Manager._private.isIgnoreActivationArea(focusedArea);
+            assert.equal(secondResult, false);
          });
          it('managerPopupCreated notified', function() {
             let isPopupOpenedEventTriggered = false;

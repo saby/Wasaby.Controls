@@ -21,7 +21,7 @@
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__single">
                         <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
@@ -46,7 +46,7 @@
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__bolditems">
                         <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
@@ -73,7 +73,7 @@
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__accentitems">
                         <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
@@ -98,7 +98,7 @@
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__primaryitems">
                         <ws:selectorTemplate templateName="Controls-demo/Input/Lookup/FlatListSelector/FlatListSelector"/>
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                         <ws:itemTemplate>
@@ -127,7 +127,7 @@
                             <Controls.Selector.Lookup.Link caption="имя" on:click="showSelector()"/>
                         </ws:placeholder>
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                     </Controls.Selector.Lookup>
@@ -154,7 +154,7 @@
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                     </Controls.Selector.Lookup>
@@ -177,7 +177,7 @@
                             keyProperty="id"
                             attr:class="control-Lookup-demo-Lookup ControlsDemo-Lookup__readonly">
                         <ws:navigation source="page" view="page">
-                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" mode="totalCount"/>
+                            <ws:sourceConfig pageSize="{{2}}" page="{{0}}" hasMore="{{false}}"/>
                         </ws:navigation>
                         <ws:suggestTemplate templateName="Controls-demo/Input/Lookup/Suggest/SuggestTemplate"/>
                     </Controls.Selector.Lookup>

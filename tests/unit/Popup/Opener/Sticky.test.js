@@ -2,8 +2,9 @@ define(
    [
       'Controls/Popup/Opener/Sticky/StickyStrategy',
       'Controls/Popup/Opener/Sticky/StickyController',
+      'Controls/Popup/Manager/ManagerController'
    ],
-   (StickyStrategy, StickyController) => {
+   (StickyStrategy, StickyController, ManagerController) => {
       'use strict';
 
       describe('Controls/Popup/Opener/Sticky', () => {
@@ -275,7 +276,7 @@ define(
                horizontalAlign: { side: 'right', offset: 0 },
                verticalAlign: { side: 'bottom', offset: 0 }
             };
-            StickyController._private.prepareConfig(itemConfig, sizes);
+            StickyController._private.prepareConfig(StickyController, itemConfig, sizes);
             assert.deepEqual(itemConfig.popupOptions.stickyPosition, stickyPosition);
          });
 
@@ -305,6 +306,20 @@ define(
 
             StickyController.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes); // Классы не поменялись
+         });
+
+         it('Sticky check visible target on elementCreated', () => {
+            StickyController._private.isTargetVisible = () => false;
+            let isRemoveCalled = false;
+            let ManagerControllerRemove = ManagerController.remove;
+            ManagerController.remove = () => {
+               isRemoveCalled = true;
+            };
+            StickyController.elementCreated({});
+            assert.equal(isRemoveCalled, true);
+
+            ManagerController.remove = ManagerControllerRemove;
+            StickyController._private.isTargetVisible = () => true;
          });
 
          it('Sticky with option locationStrategy=fixed', () => {

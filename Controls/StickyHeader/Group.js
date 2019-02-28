@@ -68,11 +68,13 @@ define('Controls/StickyHeader/Group',
          _afterMount: function() {
             this._notify('register', ['updateStickyShadow', this, this._updateStickyShadow], {bubbling: true});
             this._notify('register', ['updateStickyHeight', this, this._updateStickyHeight], {bubbling: true});
+            this._notify('stickyRegister', [this._index, true], { bubbling: true });
          },
 
          _beforeUnmount: function() {
             this._notify('unregister', ['updateStickyShadow', this], {bubbling: true});
             this._notify('unregister', ['updateStickyHeight', this], {bubbling: true});
+            this._notify('stickyRegister', [this._index, false], { bubbling: true });
          },
 
          _fixedHandler: function(event, fixedHeaderData) {
@@ -89,7 +91,8 @@ define('Controls/StickyHeader/Group',
             if (!!fixedHeaderData.fixedPosition && !this._fixed) {
                this._fixed = true;
                _private._notifyFixed(this, fixedHeaderData);
-            } else if (!fixedHeaderData.fixedPosition && this._fixed) {
+            } else if (!fixedHeaderData.fixedPosition && this._fixed &&
+                        this._stickyHeadersIds.top.length === 0 && this._stickyHeadersIds.bottom.length === 0) {
                this._fixed = false;
                _private._notifyFixed(this, fixedHeaderData);
             }
@@ -107,6 +110,11 @@ define('Controls/StickyHeader/Group',
             if (!this._fixed) {
                this._children.stickyHeaderHeight.start(height);
             }
+         },
+
+         _stickyRegisterHandler: function(event) {
+            event.blockUpdate = true;
+            event.stopImmediatePropagation();
          }
       });
 

@@ -1,0 +1,45 @@
+<Controls.Container.Suggest.Layout
+        attr:class="{{_options.suggestState ? 'controls-Scroll_webkitOverflowScrollingTouch'}}"
+        on:choose="_choose()"
+        on:deactivated="_deactivated()"
+        on:suggestStateChanged="_suggestStateChanged()"
+        suggestState="{{_suggestState}}"
+        value="{{_simpleViewModel.getDisplayValue()}}"
+        suggestTemplate="{{_suggestTemplate}}"
+        footerTemplate="{{_options.footerTemplate}}"
+        emptyTemplate="{{_options.emptyTemplate}}"
+        minSearchLength="{{_options.minSearchLength}}"
+        source="{{_options.source}}"
+        keyProperty="{{_options.keyProperty}}"
+        historyId="{{_options.historyId}}"
+        navigation="{{_options.navigation}}"
+        searchParam="{{_options.searchParam}}"
+        searchDelay="{{_options.searchDelay}}"
+        trim="{{_options.trim}}"
+        autoDropDown="{{_options.autoDropDown}}"
+        filter="{{_options.filter}}"
+        sorting="{{_options.sorting}}"
+        layerName="Controls/Container/Suggest/__PopupLayer">
+   <Controls.Input.resources.InputRender.InputRender
+           size="{{_options.size}}"
+           tooltip="{{_options.tooltip}}"
+           tagStyle="{{_options.tagStyle}}"
+           viewModel="{{_simpleViewModel}}"
+           on:tagClick="_notifyHandler('tagClick')"
+           on:tagHover="_notifyHandler('tagHover')"
+           on:valueChanged="_changeValueHandler()"
+           placeholder="{{_options.placeholder}}"
+           validationErrors="{{_options.validationErrors}}"
+           class="controls-ComboBox-InputRender">
+
+      <ws:content>
+         <ws:partial
+                 template="wml!Controls/Input/resources/input"/>
+      </ws:content>
+
+      <ws:afterFieldWrapper>
+         <Controls.Button.Separator attr:ws-no-focus="{{true}}" if="{{!_options.readOnly}}" value="{{_suggestState}}" on:click="_open()"/>
+      </ws:afterFieldWrapper>
+
+   </Controls.Input.resources.InputRender.InputRender>
+</Controls.Container.Suggest.Layout>

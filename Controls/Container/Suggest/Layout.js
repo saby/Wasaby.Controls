@@ -9,12 +9,25 @@
       'Controls/Search/Misspell/getSwitcherStrFromData',
       'Core/Deferred',
       'Core/helpers/Object/isEqual',
+      'Env/Env',
+      'Controls/History/LoadService',
       'css!theme?Controls/Container/Suggest/Layout'
    ],
-   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual) {
+   function(Control, template, emptyTemplate, entity, mStubs, clone, getSwitcherStrFromData, Deferred, isEqual, Env, LoadService) {
       'use strict';
+      
       var CURRENT_TAB_META_FIELD = 'tabsSelectedKey';
+      var HISTORY_KEYS_FIELD = 'historyKeys';
+      
+      /* if suggest is opened and marked key from suggestions list was changed,
+         we should select this item on enter keydown, otherwise keydown event should be propagated as default. */
+      var ENTER_KEY = Env.constants.key.enter;
+      
+      /* hot keys, that list (suggestList) will process, do not respond to the press of these keys when suggest is opened */
+      var IGNORE_HOT_KEYS = [Env.constants.key.down, Env.constants.key.up, ENTER_KEY];
+      
       var DEPS = ['Controls/Container/Suggest/Layout/_SuggestListWrapper', 'Controls/Container/Scroll', 'Controls/Search/Misspell', 'Controls/Container/LoadingIndicator'];
+      
       var _private = {
          hasMore: function(searchResult) {
             return searchResult && searchResult.hasMore;
@@ -25,12 +38,30 @@
          suggestStateNotify: function(self, state) {
             if (self._options.suggestState !== state) {
                self._notify('suggestStateChanged', [state]);
+            } else {
+               self._forceUpdate();
             }
          },
          setCloseState: function(self) {
             self._showContent = false;
             self._loading = null;
+
+            // when closing popup we reset the cache with recent keys
+            self._historyLoad = null;
+            if (self._filter) {
+               delete self._filter[HISTORY_KEYS_FIELD];
+            }
          },
+         
+         setSuggestMarkedKey: function(self, key) {
+            var currentMarkedKey = self._suggestMarkedKey;
+            self._suggestMarkedKey = key;
+            
+            if (currentMarkedKey !== self._suggestMarkedKey) {
+               self._notify('suggestMarkedKeyChanged', [key]);
+            }
+         },
+         
          close: function(self) {
             this.setCloseState(self);
             this.suggestStateNotify(self, false);
@@ -44,27 +75,48 @@
             });
          },
          
-         inputActivated: function(self) {
+         openWithHistory: function(self) {
+            var historyKeys = self._filter && self._filter[HISTORY_KEYS_FIELD];
             var filter;
             
-            if (self._options.autoDropDown && !self._options.readOnly) {
-               if (self._options.historyId) {
-                  _private.getRecentKeys(self).addCallback(function(keys) {
-                     if (keys) {
-                        filter = clone(self._options.filter || {});
-                        filter['historyKeys'] = keys;
-                        _private.setFilter(self, filter);
-                     }
+            if (!historyKeys) {
+               return _private.getRecentKeys(self).addCallback(function(keys) {
+                  if (keys && keys.length) {
+                     filter = clone(self._options.filter || {});
+                     filter[HISTORY_KEYS_FIELD] = keys;
+                     _private.setSearchValue(self, '');
+                     _private.setFilter(self, filter);
                      _private.open(self);
-                  });
-               } else {
+                  }
+                  return keys;
+               });
+            } else {
+               if (!self._options.suggestState) {
                   _private.open(self);
+               }
+               return Deferred.success(historyKeys);
+            }
+         },
+         
+         setSearchValue: function(self, value) {
+            self._searchValue = value;
+         },
+         
+         inputActivated: function(self) {
+            if (self._options.autoDropDown && !self._options.readOnly) {
+               if (self._options.historyId && !self._searchValue) {
+                  _private.openWithHistory(self);
+               } else if (!self._options.suggestState) {
+                  _private.updateSuggestState(self);
                }
             }
          },
          
          searchErrback: function(self, error) {
-            self._loading = false;
+            //aborting of the search may be caused before the search start, because of the delay before searching
+            if (self._loading !== null) {
+               self._loading = false;
+            }
             if (!error || !error.canceled) {
                requirejs(['tmpl!Controls/Container/Suggest/Layout/emptyError'], function(result) {
                   self._emptyTemplate = result;
@@ -76,7 +128,14 @@
             return self._active && value.length >= self._options.minSearchLength;
          },
          shouldShowSuggest: function(self, searchResult) {
-            return (searchResult && searchResult.data.getCount()) || self._searchValue && self._options.emptyTemplate;
+            var hasItems = searchResult && searchResult.data.getCount();
+            
+            /* do not suggest if:
+             * 1) loaded list is empty and empty template option is doesn't set
+             * 2) loaded list is empty and list loaded from history, expect that the list is loaded from history, becouse input field is empty and historyId options is set  */
+            return hasItems ||
+                   hasItems && self._options.historyId && !self._searchValue ||
+                  (!self._options.historyId || self._searchValue) && self._options.emptyTemplate;
          },
          precessResultData: function(self, resultData) {
             self._searchResult = resultData;
@@ -110,7 +169,7 @@
             return emptyTemplate && emptyTemplate.templateName ? emptyTemplate.templateName : emptyTemplate;
          },
          updateSuggestState: function(self) {
-            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown) {
+            if (_private.shouldSearch(self, self._searchValue) || self._options.autoDropDown && !self._options.suggestState) {
                _private.setFilter(self, self._options.filter);
                _private.open(self);
             } else if (!self._options.autoDropDown) {
@@ -139,37 +198,39 @@
             self._misspellingCaption = value;
          },
          getHistoryService: function(self) {
-            if (!self._historyService) {
-               self._historyServiceLoad = new Deferred();
-               require(['Controls/History/Service'], function(HistoryService) {
-                  self._historyService = new HistoryService({
-                     historyId: self._options.historyId
-                  });
-                  self._historyServiceLoad.callback(self._historyService);
+            if (!self._historyServiceLoad) {
+               self._historyServiceLoad = LoadService({
+                  historyId: self._options.historyId
                });
             }
 
             return self._historyServiceLoad;
          },
          getRecentKeys: function(self) {
-            var deferredWithKeys = new Deferred();
+            if (self._historyLoad) {
+               return self._historyLoad;
+            }
+
+            self._historyLoad = new Deferred();
 
             //toDO Пока что делаем лишний вызов на бл, ждем доработки хелпера от Шубина
             _private.getHistoryService(self).addCallback(function(historyService) {
                historyService.query().addCallback(function(dataSet) {
-                  var keys = [];
+                  if (self._historyLoad) {
+                     var keys = [];
 
-                  dataSet.getRow().get('recent').each(function(item) {
-                     keys.push(item.get('ObjectId'));
-                  });
+                     dataSet.getRow().get('recent').each(function(item) {
+                        keys.push(item.get('ObjectId'));
+                     });
 
-                  deferredWithKeys.callback(keys);
+                     self._historyLoad.callback(keys);
+                  }
                });
 
                return historyService;
             });
 
-            return deferredWithKeys;
+            return self._historyLoad;
          }
       };
 
@@ -198,9 +259,10 @@
          _searchResult: null,
          _searchDelay: null,
          _dependenciesDeferred: null,
-         _historyService: null,
+         _historyLoad: null,
          _showContent: false,
          _inputActive: false,
+         _suggestMarkedKey: null,
 
          /**
           * three state flag
@@ -215,9 +277,9 @@
             this._searchStart = this._searchStart.bind(this);
             this._searchEnd = this._searchEnd.bind(this);
             this._searchErrback = this._searchErrback.bind(this);
-            this._select = this._select.bind(this);
             this._searchDelay = options.searchDelay;
             this._emptyTemplate = _private.getEmptyTemplate(options.emptyTemplate);
+            this._tabsSelectedKeyChanged = this._tabsSelectedKeyChanged.bind(this);
          },
          _afterMount: function() {
             _private.setFilter(this, this._options.filter);
@@ -228,29 +290,35 @@
             this._searchStart = null;
             this._searchEnd = null;
             this._searchErrback = null;
-            this._select = null;
          },
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
-            
-            if (!newOptions.suggestState) {
-               _private.setCloseState(this);
+            var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
+            var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
+
+            if (newOptions.suggestState !== this._options.suggestState) {
+               if (newOptions.suggestState) {
+                  _private.open(this);
+               } else {
+                  _private.setCloseState(this);
+                  _private.setSuggestMarkedKey(this, null);
+               }
             }
-      
-            if (valueChanged) {
+
+            if (needSearchOnValueChanged || valueCleared) {
                this._searchValue = newOptions.value;
             }
-   
-            if (valueChanged || !isEqual(this._options.filter, newOptions.filter)) {
+
+            if (needSearchOnValueChanged || valueCleared || !isEqual(this._options.filter, newOptions.filter)) {
                _private.setFilter(this, newOptions.filter);
             }
-      
+
             if (this._options.emptyTemplate !== newOptions.emptyTemplate) {
                this._emptyTemplate = _private.getEmptyTemplate(newOptions.emptyTemplate);
                this._dependenciesDeferred = null;
             }
       
-            if (this._options.footerTemplate !== newOptions.footerTemplate) {
+            if (!isEqual(this._options.footerTemplate, newOptions.footerTemplate)) {
                this._dependenciesDeferred = null;
             }
             
@@ -272,14 +340,31 @@
             _private.close(this);
          },
          _changeValueHandler: function(event, value) {
+            var historyId = this._options.historyId;
+            var self = this;
+            var shouldSearch;
+            
             if (this._options.trim) {
                value = value.trim();
             }
-            this._searchValue = _private.shouldSearch(this, value) ? value : '';
+   
+            shouldSearch = _private.shouldSearch(this, value);
 
             /* preload suggest dependencies on value changed */
             _private.loadDependencies(this);
-            _private.updateSuggestState(this);
+            
+            if (!shouldSearch && historyId) {
+               _private.openWithHistory(this).addCallback(function(res) {
+                  if (!res.length && self._options.suggestState) {
+                     _private.close(self);
+                  }
+      
+                  return res;
+               });
+            } else {
+               _private.setSearchValue(self, shouldSearch ? value : '');
+               _private.updateSuggestState(this);
+            }
          },
          _inputActivated: function() {
             this._inputActive = true;
@@ -295,8 +380,9 @@
                _private.inputActivated(this);
             }
          },
-         _tabsSelectedKeyChanged: function(event, key) {
+         _tabsSelectedKeyChanged: function(key) {
             this._searchDelay = 0;
+            _private.setSuggestMarkedKey(this, null);
 
             // change only filter for query, tabSelectedKey will be changed after processing query result,
             // otherwise interface will blink
@@ -306,7 +392,14 @@
 
             // move focus from tabs to input, after change tab
             this.activate();
+            
+            /* because activate() does not call _forceUpdate and _tabsSelectedKeyChanged is callback function,
+               we should call _forceUpdate, otherwise child controls (like suggestionsList) does not get new filter */
+            this._forceUpdate();
          },
+   
+         // <editor-fold desc="List handlers">
+         
          _select: function(event, item) {
             item = item || event;
             _private.close(this);
@@ -322,6 +415,13 @@
                });
             }
          },
+   
+         _markedKeyChangedHandler: function(event, key) {
+            _private.setSuggestMarkedKey(this, key);
+         },
+   
+         // </editor-fold>
+         
          _searchStart: function() {
             this._loading = true;
             this._children.indicator.show();
@@ -356,28 +456,24 @@
             requirejs(['Controls/Container/Suggest/Layout/Dialog'], function() {
                self._children.stackOpener.open({ opener: self }); // TODO: убрать, когда сделают https://online.sbis.ru/opendoc.html?guid=48ab258a-2675-4d16-987a-0261186d8661
             });
-            _private.setFilter(self, self._options.filter);
             _private.close(this);
          },
-
-         /* По стандарту все выпадающие списки закрываются при скроле.
-            Мы не можем понять, что вызвало изменение положения элемента, ресайз или скролл,
-            поэтому при ресайзе тоже закрываем. */
-         _resize: function(syntheticEvent, event) {
-            /* событие resize могут вызывать компоненты при изменении своего размера,
-               но нам интересен только resize у window, поэтому проверяем */
-            if (event.target === window) {
-               _private.close(this);
-            }
-         },
+         
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
          },
 
          _keydown: function(event) {
-            if (this._children.inputKeydown) {
-               this._children.inputKeydown.start(event);
+            var eventKeyCode = event.nativeEvent.keyCode;
+            var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
+            
+            if (this._options.suggestState && needProcessKey) {
+               event.preventDefault();
+               
+               if (this._children.inputKeydown) {
+                  this._children.inputKeydown.start(event);
+               }
             }
          }
 

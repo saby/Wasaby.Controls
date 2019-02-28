@@ -1,6 +1,12 @@
 define('Controls-demo/List/TreeGrid/resources/DataDemoPG', [],
    function() {
    var data = {
+      headerColumns: [
+         {
+            title: 'Gadget name',
+            width: 'auto'
+         }
+      ],
       catalog: [
          {
             id: 1,

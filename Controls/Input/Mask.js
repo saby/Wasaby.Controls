@@ -1,8 +1,9 @@
 define('Controls/Input/Mask',
    [
-      'Core/IoC',
+      
       'Controls/Utils/tmplNotify',
       'Core/Control',
+      'Env/Env',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
@@ -13,7 +14,7 @@ define('Controls/Input/Mask',
       'wml!Controls/Input/resources/input',
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Control, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
+   function(tmplNotify, Control, Env, isEqual, ViewModel, runDelayed, entity, MaskTpl) {
 
       'use strict';
 
@@ -151,22 +152,13 @@ define('Controls/Input/Mask',
                if (position < selectedPosition) {
                   input.setSelectionRange(position, position);
                }
-
-               // ВРЕМЕННОЕ РЕШЕНИЕ, заведена ошибка https://online.sbis.ru/opendoc.html?guid=7b969897-2c73-4564-b8d4-78554d8391c1
-
-               runDelayed(function() {
-                  var rp = new RegExp('[' + replacer + '.:-]', 'g');
-                  if (document.activeElement === input && !this._destroyed && replacer && !value.replace(rp, '')) {
-                     input.setSelectionRange(0, 0);
-                  }
-               }.bind(this));
             },
             validateReplacer: function(replacer, mask) {
                var validation;
 
                if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
-                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
                } else {
                   validation = true;
                }
@@ -183,13 +175,32 @@ define('Controls/Input/Mask',
             _viewModel: null,
             _notifyHandler: tmplNotify,
 
+            _maskWrapperCss: null,
+
             _beforeMount: function(options) {
+               this._maskWrapperCss = '';
+               if (Env.detection.isIE) {
+                  this._maskWrapperCss += ' controls-Mask__inputWrapper_ie';
+                  if (Env.detection.IEVersion > 11) {
+                     this._maskWrapperCss += ' controls-Mask__inputWrapper_edge';
+                  }
+               }
                this._viewModel = new ViewModel({
                   value: options.value,
                   mask: options.mask,
                   replacer: _private.calcReplacer(options.replacer, options.mask),
                   formatMaskChars: options.formatMaskChars
                });
+            },
+
+            //Временное решение для фиксации https://online.sbis.ru/opendoc.html?guid=6853df25-ba30-47d7-8255-5929ecefb237.
+            //Иначе - нужно переделывать логику InputRender, в чем нет смысла, т.к. по задаче https://online.sbis.ru/opendoc.html?guid=ce71491f-3a24-49fb-a628-ed3b1149b8ab
+            //маска будет переведена на Input.Base уже в феврале'18
+            _afterMount: function() {
+               this._children.inputRender._selection = {
+                  selectionStart: 0,
+                  selectionEnd: 0
+               };
             },
 
             _beforeUpdate: function(newOptions) {
@@ -212,13 +223,16 @@ define('Controls/Input/Mask',
                var
                   input = this._children.input,
                   value = this._viewModel.getDisplayValue(),
-                  replacer = this._options.replacer;
+                  replacer = this._options.replacer,
+                  self = this;
 
                /**
                 * At the moment of focus, the selectionEnd property is not set.
                 */
                runDelayed(function() {
-                  _private.setCaretPosition(input, input.selectionEnd, value, replacer);
+                  if (!self._options.readOnly) {
+                     _private.setCaretPosition(input, input.selectionEnd, value, replacer);
+                  }
                });
             },
 

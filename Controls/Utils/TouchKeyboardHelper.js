@@ -1,10 +1,10 @@
 /**
  * Утилита рассчета высоты клавиатуры на тач устройствах
  */
-define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus', 'Core/helpers/isNewEnvironment'], function(constants, EventBus, isNewEnvironment) {
+define('Controls/Utils/TouchKeyboardHelper', ['Env/Env', 'Env/Event', 'Core/helpers/isNewEnvironment'], function(Env, EnvEvent, isNewEnvironment) {
    var ipadCoefficient = {
       portrait: 0.3,
-      landscape: 0.56
+      landscape: 0.53
    };
 
    var TouchKeyboardHelper = {
@@ -43,7 +43,14 @@ define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus',
 
       getKeyboardHeight: function() {
          if (this.isKeyboardVisible()) {
-            if (constants.browser.isMobileIOS) {
+            if (Env.detection.isMobileIOS) {
+               // на новых версиях ios(12.1.3/12.1.4), в горизонтальной ориентации иногда(!!!) клавиатура при своем показе
+               // уменьшает высоту экрана(как это и должно быть). в этом случае хэлпер должен вернуть высоту 0, чтобы
+               // окна не вычитали высоту клавиатуры из высоты страницы. P.S. Если открыть клаву в вертикальной ориентации
+               // и не закрывая ее поменять ориантацию, этот хак не поможет, код будет работать по старой логике.м
+               if (!this.isPortrait() && window.screen.availHeight / window.innerHeight > 2) {
+                  return 0;
+               }
                return window.innerHeight * (this.isPortrait() ? ipadCoefficient.portrait : ipadCoefficient.landscape);
             }
          }
@@ -71,9 +78,9 @@ define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus',
       }
    };
 
-   if (constants.compatibility.touch) {
-      EventBus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
-      EventBus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
+   if (Env.constants.compatibility.touch) {
+      EnvEvent.Bus.globalChannel().subscribe('MobileInputFocus', TouchKeyboardHelper._keyboardShowHandler.bind(TouchKeyboardHelper));
+      EnvEvent.Bus.globalChannel().subscribe('MobileInputFocusOut', TouchKeyboardHelper._keyboardHideHandler.bind(TouchKeyboardHelper));
    }
 
    return TouchKeyboardHelper;

@@ -9,9 +9,8 @@ define('Controls/Utils/keysHandler', [], function() {
       for (var action in keys) {
          if (keys.hasOwnProperty(action)) {
             if (event.nativeEvent.keyCode === keys[action]) {
-               handlerSet[action](scope);
+               handlerSet[action](scope, event);
                event.stopImmediatePropagation();
-               event.preventDefault();
                return;
             }
          }

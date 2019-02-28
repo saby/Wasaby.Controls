@@ -81,7 +81,7 @@ define('Controls/Filter/Button',
          },
          setPopupOptions: function(self, options) {
             self._popupOptions = {
-               closeByExternalClick: true,
+               closeOnOutsideClick: true,
                eventHandlers: {
                   onResult: self._onFilterChanged
                },
@@ -107,14 +107,17 @@ define('Controls/Filter/Button',
                });
             }
             return self._depsDeferred;
-            
+
          },
-         
+
          resetItems: function(self, items) {
             chain.factory(items).each(function(item) {
-               Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
-               if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
-                  Utils.object.setPropertyValue(item, 'visibility', false);
+               // Fast filters could not be reset from the filter button.
+               if (!Utils.object.getPropertyValue(item, 'isFast')) {
+                  Utils.object.setPropertyValue(item, 'value', Utils.object.getPropertyValue(item, 'resetValue'));
+                  if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
+                     Utils.object.setPropertyValue(item, 'visibility', false);
+                  }
                }
             });
          }
@@ -157,6 +160,7 @@ define('Controls/Filter/Button',
                });
             } else {
                _private.resetItems(this, this._items);
+               this._notify('filterChanged', [{}]);
                this._notify('itemsChanged', [this._items]);
             }
             this._text = '';

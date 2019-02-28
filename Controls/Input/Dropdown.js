@@ -109,12 +109,12 @@ define('Controls/Input/Dropdown',
          },
 
          _selectedItemsChangedHandler: function(event, items) {
-            this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
+            return this._notify('selectedKeysChanged', [_private.getSelectedKeys(items, this._options.keyProperty)]);
          },
 
          _setText: function(items) {
             if (items.length) {
-               this._isEmptyItem = getPropValue(items[0], this._options.keyProperty) === null || items[0] === null;
+               this._isEmptyItem = this._options.emptyText && (getPropValue(items[0], this._options.keyProperty) === null || items[0] === null);
                if (this._isEmptyItem) {
                   this._text = dropdownUtils.prepareEmpty(this._options.emptyText);
                   this._icon = null;

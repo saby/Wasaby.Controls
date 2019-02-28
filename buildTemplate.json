@@ -1,7 +1,7 @@
 {
-  "cache": "%cd%/builder-ui/builder-json-cache",
-  "output": "%cd%/application",
-  "logs": "%cd%/builder-ui/logs",
+  "cache": "./builder-ui/builder-json-cache",
+  "output": "./application",
+  "logs": "./builder-ui/logs",
   "typescript": true,
   "less": true,
   "contents": true,
@@ -13,93 +13,96 @@
   "customPack": false,
   "dependenciesGraph": false,
   "resourcesUrl": false,
+  "joinedMeta": true,
   "modules": [
     {
       "name": "Controls",
-      "path": "%cd%/Controls",
+      "path": "./Controls",
       "required": true
     },
     {
       "name": "Controls-demo",
-      "path": "%cd%/Controls-demo"
+      "path": "./Controls-demo"
     },
     {
       "name": "Controls-theme",
-      "path": "%cd%/Controls-theme"
+      "path": "./Controls-theme"
     },
     {
       "name": "WS.Core",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core",
+      "path": "./node_modules/sbis3-ws/WS.Core",
       "required": true
     },
     {
       "name": "WS.Deprecated",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Deprecated"
+      "path": "./node_modules/sbis3-ws/WS.Deprecated"
     },
     {
       "name": "Transport",
-      "path": "%cd%/node_modules/sbis3-ws/WS.Core/transport"
+      "path": "./node_modules/sbis3-ws/WS.Core/transport"
     },
     {
       "name": "View",
-      "path": "%cd%/node_modules/sbis3-ws/View",
+      "path": "./node_modules/sbis3-ws/View",
       "required": true
     },
     {
       "name": "WS.Data",
-      "path": "%cd%/node_modules/ws-data/WS.Data",
+      "path": "./node_modules/ws-data/WS.Data",
       "required": true
     },
     {
       "name": "Types",
-      "path": "%cd%/node_modules/saby-types/Types",
+      "path": "./node_modules/saby-types/Types",
       "required": true
     },
     {
       "name": "SBIS3.CONTROLS",
-      "path": "%cd%/SBIS3.CONTROLS"
+      "path": "./SBIS3.CONTROLS"
     },
     {
       "name": "Examples",
-      "path": "%cd%/Examples"
+      "path": "./Examples"
     },
     {
       "name": "WSTest",
-      "path": "%cd%/tests/WSTest"
+      "path": "./tests/WSTest"
     },
     {
       "name": "ControlsSandbox",
-      "path": "%cd%/pages/sandbox"
+      "path": "./pages/sandbox"
     },
     {
       "name": "tests",
-      "path": "%cd%/tests/unit"
+      "path": "./tests/unit"
     },
     {
       "name": "File",
-      "path": "%cd%/node_modules/rmi/src/client/File"
+      "path": "./node_modules/rmi/src/client/File"
     },
     {
       "name": "Env",
-      "path": "%cd%/node_modules/rmi/src/client/Env"
+      "path": "./node_modules/rmi/src/client/Env",
+      "required": true
     },
     {
       "name": "Browser",
-      "path": "%cd%/node_modules/rmi/src/client/Browser"
+      "path": "./node_modules/rmi/src/client/Browser",
+      "required": true
     },
     {
       "name": "Vdom",
-      "path": "%cd%/node_modules/sbis3-ws/Vdom",
+      "path": "./node_modules/sbis3-ws/Vdom",
       "required": true
     },
     {
       "name": "Router",
-      "path": "%cd%/node_modules/Router/Router",
+      "path": "./node_modules/Router/Router",
       "required": true
     },
     {
       "name": "Inferno",
-      "path": "%cd%/node_modules/sbis3-ws/Inferno",
+      "path": "./node_modules/sbis3-ws/Inferno",
       "required": true
     }
   ]

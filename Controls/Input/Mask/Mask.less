@@ -12,3 +12,12 @@
    align-items: center;
    height: 100%;
 }
+
+// To prevent 2 pixel scrolling in input in ie and edge.
+.controls-Mask__inputWrapper_ie {
+   width: calc(100% + 3px);
+}
+// Inputs has 1 pixel indent in edge.
+.controls-Mask__inputWrapper_edge {
+   margin-left: -1px;
+}

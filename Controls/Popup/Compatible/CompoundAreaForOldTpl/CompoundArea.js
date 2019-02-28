@@ -4,15 +4,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'wml!Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Lib/Mixins/LikeWindowMixin',
       'Core/helpers/Array/findIndex',
-      'Core/core-debug',
       'Core/Deferred',
-      'Core/IoC',
       'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Core/helpers/Function/runDelayed',
-      'Core/constants',
+      'Env/Env',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
-      'Core/EventBus',
+      'Env/Event',
       'Controls/Popup/Manager/ManagerController',
       'Types/entity',
       'Core/helpers/Function/callNext',
@@ -25,15 +23,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       template,
       LikeWindowMixin,
       arrayFindIndex,
-      coreDebug,
       cDeferred,
-      IoC,
       makeInstanceCompatible,
       runDelayed,
-      CoreConstants,
+      Env,
       doAutofocus,
       DialogRecord,
-      cEventBus,
+      EnvEvent,
       ManagerController,
       entity,
       callNext,
@@ -51,7 +47,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          return !(result instanceof Error || result === false);
       }
 
-      var logger = IoC.resolve('ILogger');
+      var logger = Env.IoC.resolve('ILogger');
       var allProducedPendingOperations = [];
       var invisibleRe = /ws-invisible/ig;
       var hiddenRe = /ws-hidden/ig;
@@ -164,7 +160,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             });
             self.once('onAfterLoad', function() {
                self._setCustomHeader();
-               cEventBus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
+               EnvEvent.Bus.globalChannel().notify('onWindowCreated', self); // StickyHeaderMediator listens for onWindowCreated
             });
 
             rebuildDeferred = CompoundArea.superclass.rebuildChildControl.apply(self, arguments);
@@ -214,11 +210,16 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this._logicParent.callbackCreated && this._logicParent.callbackCreated();
             this._logicParent.waitForPopupCreated = false;
             var self = this;
-            runDelayed(function() {
-               if (self._container.length && self._options.catchFocus) {
-                  doAutofocus(self._container);
-               }
-            });
+            if (this._waitClose) {
+               this._waitClose = false;
+               this.close();
+            } else {
+               runDelayed(function() {
+                  if (self._container.length && self._options.catchFocus) {
+                     doAutofocus(self._container);
+                  }
+               });
+            }
          },
 
          _afterMount: function(cfg) {
@@ -315,12 +316,23 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             } else {
                this.getContainer().removeClass('controls-CompoundArea-headerPadding');
             }
+            this._titleBar = customHeaderContainer;
             if (!this._options.maximize && customHeaderContainer.length && this._options.draggable) {
                // Drag поддержан на шапке DialogTemplate. Т.к. шапка в слое совместимости своя - ловим событие
                // mousedown на ней и проксируем его на dialogTemplate.
                customHeaderContainer.addClass('controls-CompoundArea__move-cursor');
                customHeaderContainer.bind('mousedown', this._headerMouseDown.bind(this));
             }
+         },
+
+         setSize: function(sizes) {
+            if (sizes.width) {
+               this._container.width(sizes.width);
+            }
+            if (sizes.height) {
+               this._container.height(sizes.height);
+            }
+            this._notifyVDOM('controlResize', null, { bubbling: true });
          },
 
          setCaption: function(newTitle) {
@@ -387,9 +399,13 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
 
          _rebuildTitleBar: function() {
+            this._removeCustomHeader();
+            this._setCustomHeader();
+         },
+
+         _removeCustomHeader: function() {
             var customTitles = this._container.find('.ws-window-titlebar-custom.controls-CompoundArea-custom-header');
             customTitles.remove();
-            this._setCustomHeader();
          },
 
          handleCommand: function(commandName, args) {
@@ -508,9 +524,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return opener === this;
          },
          _keyDown: function(event) {
-            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
                this.close();
-               if (CoreConstants.browser.safari) {
+               if (Env.detection.safari) {
                   // Need to prevent default behaviour if popup is opened
                   // because safari escapes fullscreen mode on 'ESC' pressed
                   event.preventDefault();
@@ -519,20 +535,31 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             }
          },
          _keyUp: function(event) {
-            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === CoreConstants.key.esc) {
+            if (!event.nativeEvent.shiftKey && event.nativeEvent.keyCode === Env.constants.key.esc) {
                event.stopPropagation();
             }
          },
 
-         _setCompoundAreaOptions: function(newOptions) {
+         _setCompoundAreaOptions: function(newOptions, popupOptions) {
             if (newOptions.record) { // recordFloatArea
                this._record = newOptions.record;
             }
+            this._popupOptions = popupOptions;
             this._childControlName = newOptions.template;
             this._childConfig = newOptions.templateOptions || {};
          },
 
          reload: function() {
+            if (this._popupOptions) {
+               // set new sizes for popup
+               var popupCfg = this._getManagerConfig();
+               if (popupCfg && this._popupOptions.minWidth && this._popupOptions.maxWidth) {
+                  popupCfg.popupOptions.minWidth = this._popupOptions.minWidth;
+                  popupCfg.popupOptions.maxWidth = this._popupOptions.maxWidth;
+                  ManagerController.update(popupCfg.id, popupCfg.popupOptions);
+               }
+            }
+            this._removeCustomHeader();
             this.rebuildChildControl();
          },
          setTemplate: function(template, templateOptions) {
@@ -767,6 +794,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.close();
          },
          close: function(arg) {
+            if (this._logicParent.waitForPopupCreated) {
+               this._waitClose = true;
+               return;
+            }
+
             if (this._options.autoCloseOnHide === false) {
                this._toggleVisible(false);
             } else if (this._childControl && !this._childControl.isDestroyed()) {
@@ -926,7 +958,42 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._unregisterPendingOperation(operation);
             }
 
+            // В _afterMount CompoundArea регистрируется у родителя, нужно
+            // эту связь разорвать
+            if (this.__parentFromCfg) {
+               this._clearInformationOnParentFromCfg();
+            }
+
             CompoundArea.superclass.destroy.apply(this, arguments);
+         },
+
+         _clearInformationOnParentFromCfg: function() {
+            var
+               parent = this.__parentFromCfg,
+               id = this._id,
+               name = this._options.name,
+               tabindex = this._options.tabindex;
+
+            if (parent._childsMapId) {
+               var mapId = parent._childsMapId[id];
+               if (typeof mapId !== 'undefined') {
+                  if (parent._childControls) {
+                     delete parent._childControls[mapId];
+                  }
+                  if (parent._childContainers) {
+                     delete parent._childContainers[mapId];
+                  }
+                  delete parent._childsMapId[id];
+               }
+            }
+
+            if (parent._childsMapName) {
+               delete parent._childsMapName[name || id];
+            }
+
+            if (parent._childsTabindex) {
+               delete parent._childsTabindex[tabindex];
+            }
          },
 
          _unregisterEventListener: function() {
@@ -1026,7 +1093,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                if (childOps.length === 0) {
                   allChildrenPendingOperation = this._allChildrenPendingOperation;
                   this._allChildrenPendingOperation = null;
-                  coreDebug.checkAssertion(!!allChildrenPendingOperation);
+                  Env.coreDebug.checkAssertion(!!allChildrenPendingOperation);
 
                   this._unregisterPendingOperation(allChildrenPendingOperation);
                }
@@ -1101,7 +1168,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             var result = !!(dOperation && (dOperation instanceof cDeferred));
             if (result) {
                this._pending.push(dOperation);
-               this._pendingTrace.push(coreDebug.getStackTrace());
+               this._pendingTrace.push(Env.coreDebug.getStackTrace());
                dOperation.addBoth(this._checkPendingOperations.bind(this));
             }
             return result;

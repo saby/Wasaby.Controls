@@ -1,5 +1,5 @@
 define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Types/collection', 'Types/entity'], function(Search, sourceLib, cInstance, collection, entity) {
-   
+
    var data = [
       {
          id: 0,
@@ -18,11 +18,11 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          title: 'test2'
       }
    ];
-   
+
    var memorySource = new sourceLib.Memory({
       data: data
    });
-   
+
    var defaultOptions = {
       searchParam: 'test',
       minSearchLength: 3,
@@ -35,31 +35,31 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          sourceConfig: {
             pageSize: 2,
             page: 0,
-            mode: 'totalCount'
+            hasMore: false
          }
       }
    };
-   
+
    var getSearchController = function() {
       var controller = new Search(defaultOptions);
       controller.saveOptions(defaultOptions);
       return controller;
    };
-   
+
    describe('Controls.Search.Controller', function() {
-      
+
       it('_private.searchCallback', function() {
          var controller = getSearchController();
          var filterChanged = false;
          var itemsChanged = false;
          var filter;
-   
+
          controller._notify = function(eventName, value) {
             if (eventName === 'filterChanged') {
                filterChanged = true;
                filter = value[0];
             }
-   
+
             if (eventName === 'itemsChanged') {
                itemsChanged = true;
             }
@@ -67,14 +67,15 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
          controller._searchContext = { updateConsumers: function() {} };
 
-         Search._private.searchCallback(controller, {});
-         
+         Search._private.searchCallback(controller, {}, {test: 'testFilterValue'});
+
          assert.isFalse(controller._loading);
          assert.isTrue(filterChanged);
          assert.isTrue(itemsChanged);
          assert.isTrue(controller._viewMode === 'search');
-   
-   
+         assert.equal(controller._searchValue, 'testFilterValue');
+
+
          var rs = new collection.RecordSet({
             rawData: [],
             idProperty: 'id'
@@ -93,18 +94,19 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
             test: 'test'
          };
          Search._private.searchCallback(controller, result, filter);
-         
+
          assert.equal(controller._misspellValue, 'testStr');
          assert.deepEqual(filter, {test: 'test'});
       });
-   
+
       it('_private.abortCallback', function() {
          var controller = getSearchController();
          controller._viewMode = 'search';
          controller._misspellValue = 'testStr';
          controller._loading = true;
+         controller._searchValue = 'test';
          var filterChanged = false;
-   
+
          controller._notify = function(eventName) {
             if (eventName = 'filterChanged') {
                filterChanged = true;
@@ -114,47 +116,56 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          controller._searchContext = { updateConsumers: function() {} };
 
          Search._private.abortCallback(controller);
-   
+
          assert.isTrue(filterChanged);
          assert.isFalse(controller._viewMode === 'search');
          assert.isFalse(controller._loading);
          assert.equal(controller._misspellValue, '');
+         assert.equal(controller._searchValue, '');
+         assert.equal(controller._inputSearchValue, '');
       });
-   
+
       it('_private.searchStartCallback', function() {
          var self = {};
+         var forceUpdateCalled = false;
+         
+         self._forceUpdate = function() {
+            forceUpdateCalled = true;
+         };
          Search._private.searchStartCallback(self);
          assert.isTrue(self._loading);
+         assert.isTrue(forceUpdateCalled);
       });
-   
+
       it('_private.needUpdateSearchController', function() {
          assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
          assert.isTrue(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
       });
-   
+
       it('_private.getSearchController', function() {
          var searchController = getSearchController();
          searchController._dataOptions = defaultOptions;
          assert.isTrue(cInstance.instanceOfModule(Search._private.getSearchController(searchController), 'Controls/Controllers/_SearchController'));
       });
-      
+
       it('_search', function() {
          var searchController = getSearchController();
          var value;
          searchController._dataOptions = defaultOptions;
          //initialize searchController
          Search._private.getSearchController(searchController);
-         
+
          //moch method
          searchController._searchController.search = function(searchVal) {
             value = searchVal;
          };
-   
+
          searchController._search(null, 'test');
-         
+
          assert.equal(value, 'test');
+         assert.equal(searchController._inputSearchValue, 'test');
       });
-      
+
    });
-   
+
 });

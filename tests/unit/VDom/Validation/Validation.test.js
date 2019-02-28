@@ -2,7 +2,7 @@ define([
    'Controls/Validate/FormController',
    'Controls/Validate/Controller',
    'Core/Deferred',
-   'tests/resources/ProxyCall',
+   'unit/resources/ProxyCall',
 ], function(ValidateFC, Controller, Deferred, ProxyCall) {
    'use strict';
 
@@ -41,6 +41,10 @@ define([
             arguments: ['valueChanged', ['test']]
          }]);
       });
+      it('cleanValid', () => {
+         validCtrl._valueChangedHandler();
+         assert.deepEqual(validCtrl._validationResult, undefined);
+      });
    });
    describe('Validate/FormController', () => {
       it('add/remove validator', () => {
@@ -48,13 +52,13 @@ define([
          let validator1 = getValidator();
          let validator2 = getValidator();
 
-         FC.onValidateCreated(null, validator1);
-         FC.onValidateCreated(null, validator2);
+         FC.onValidateCreated({}, validator1);
+         FC.onValidateCreated({}, validator2);
 
          assert.equal(FC._validates.length, 2);
 
-         FC.onValidateDestroyed(null, validator1);
-         FC.onValidateDestroyed(null, validator2);
+         FC.onValidateDestroyed({}, validator1);
+         FC.onValidateDestroyed({}, validator2);
 
          assert.equal(FC._validates.length, 0);
 
@@ -65,8 +69,8 @@ define([
          let FC = new ValidateFC();
          let validator1 = getValidator();
          let validator2 = getValidator();
-         FC.onValidateCreated(null, validator1);
-         FC.onValidateCreated(null, validator2);
+         FC.onValidateCreated({}, validator1);
+         FC.onValidateCreated({}, validator2);
 
          let results = FC.isValid();
          assert.equal(validator1._isValidCall, results[0], true);
@@ -79,8 +83,8 @@ define([
          let FC = new ValidateFC();
          let validator1 = getValidator();
          let validator2 = getValidator();
-         FC.onValidateCreated(null, validator1);
-         FC.onValidateCreated(null, validator2);
+         FC.onValidateCreated({}, validator1);
+         FC.onValidateCreated({}, validator2);
 
          FC.setValidationResult();
          assert.equal(validator1._validationResult, null);
@@ -93,8 +97,8 @@ define([
          let FC = new ValidateFC();
          let validator1 = getValidator(true);
          let validator2 = getValidator(false);
-         FC.onValidateCreated(null, validator1);
-         FC.onValidateCreated(null, validator2);
+         FC.onValidateCreated({}, validator1);
+         FC.onValidateCreated({}, validator2);
 
          FC.submit().addCallback((result) => {
             assert.equal(validator1._validateCall, true, 'is validate1 call');

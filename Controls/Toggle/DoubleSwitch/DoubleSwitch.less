@@ -8,6 +8,23 @@
    border-radius: @size_Switch__border-radius;
    border-style: solid;
    box-sizing: border-box;
+   user-select: none;
+}
+
+.controls-DoubleSwitch__line_vertical_checked {
+   bottom: @spacing-between-track-and-toggleCircle;
+}
+
+.controls-DoubleSwitch__line_vertical_notChecked {
+   top: @spacing-between-track-and-toggleCircle;
+}
+
+.controls-DoubleSwitch__line_horizontal_notChecked {
+   left: @spacing-between-track-and-toggleCircle;
+}
+
+.controls-DoubleSwitch__line_horizontal_checked {
+   right: @spacing-between-track-and-toggleCircle;
 }
 
 .controls-DoubleSwitch__toggle_enabled {
@@ -43,12 +60,14 @@
 
 .controls-DoubleSwitch__line_horizontal {
    height: @thickness_Switch-track;
-   width: @length_Switch-track - @width_ToggleCircle;
+   width: @length_Switch-track - @width_ToggleCircle + @spacing-between-track-and-toggleCircle;
+   position: relative;
 }
 
 .controls-DoubleSwitch__line_vertical {
-   height: @length_Switch-track - @height_ToggleCircle;
+   height: @length_Switch-track - @height_ToggleCircle + @spacing-between-track-and-toggleCircle;
    width: @thickness_Switch-track;
+   position: relative;
 }
 
 .controls-DoubleSwitch__line_vertical_checked {

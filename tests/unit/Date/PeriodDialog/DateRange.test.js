@@ -1,8 +1,8 @@
 define([
    'Core/core-merge',
-   'Controls/Date/PeriodDialog/DateRange',
+   'Controls/_datePopup/DateRange',
    'Controls/Utils/Date',
-   'tests/Calendar/Utils'
+   'unit/Calendar/Utils'
 ], function(
    coreMerge,
    DateRange,
@@ -15,7 +15,7 @@ define([
       end = new Date(2018, 0, 2),
       year = new Date(2018, 0, 1);
 
-   describe('Controls/Date/PeriodDialog/DateRange', function() {
+   describe('Controls/_datePopup/DateRange', function() {
       describe('Initialisation', function() {
 
          it('should create the correct models when empty range passed.', function() {

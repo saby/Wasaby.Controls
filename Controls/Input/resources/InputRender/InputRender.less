@@ -138,6 +138,15 @@
    display: inline-flex;
 }
 
+/*
+ *  В продолжении хака выше.
+ *  Для отображения placeholder'a в IE сделана реализация через require на input'e,
+ *  но когда на input'e висит readOnly, require перестаёт работать и хак выше отваливается.
+ *  Сам блок с placeholder'ом скрывется по условиям в контролах, поэтому показ placeholder'a при readOnly ничего не поломает.
+ */
+.controls-InputRender__content_ie[readonly=""] + .controls-InputRender__placeholder {
+   display: inline-flex;
+}
 /**
  * При построении браузер может автоматически подставить значение в поле и placeholder-shown не работает пока
  * пользователь не начнет работать с полем.

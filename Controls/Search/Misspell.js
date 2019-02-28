@@ -13,9 +13,18 @@ define('Controls/Search/Misspell',
     * @public
     * @author Герасимов А.М.
     *
-    * @css @min-height_MissSpell A min-height of the misspelling control.
-    * @css @color_MissSpell_caption A color of the misspelling caption.
-    * @css @color_MissSpell_caption-hover A hover color of the misspelling caption.
+    * @css @line-height_Misspell A line-height of the misspelling control.
+    *
+    * @css @color_Misspell-caption A color of the misspelling caption.
+    *
+    * @css @color_Misspell-caption_hover A hover color of the misspelling caption.
+    * @css @text-decoration_Misspell-caption_hover text-decoration of caption at hover.
+    *
+    * @css @color_Misspell-caption_active A active color of the misspelling caption.
+    * @css @text-decoration_Misspell-caption_active text-decoration of caption at active.
+    *
+    * @css @font-weight_Misspell-text A font-weight of
+    * @css @font-weight_Misspell-caption
     */
    
    function(Control, template) {

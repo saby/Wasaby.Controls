@@ -1,6 +1,15 @@
 define(['Controls/Search/Input/Container'], function(Container) {
    
    describe('Controls.Search.Input.Container', function() {
+   
+      it('_beforeUpdate', function() {
+         var cont = new Container();
+         cont.saveOptions({});
+         cont._value = '';
+   
+         cont._beforeUpdate({inputSearchValue: 'test'});
+         assert.equal(cont._value, 'test');
+      });
       
       it('_notifySearch', function() {
          var cont = new Container();

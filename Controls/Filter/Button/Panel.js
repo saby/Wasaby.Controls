@@ -7,11 +7,11 @@ define('Controls/Filter/Button/Panel', [
    'Controls/Filter/Button/History/resources/historyUtils',
    'Controls/Filter/Button/Panel/Wrapper/_FilterPanelOptions',
    'wml!Controls/Filter/Button/Panel/Panel',
-   'Core/IoC',
+   'Env/Env',
    'css!theme?Controls/Filter/Button/Panel/Panel',
    'Controls/Controllers/PrimaryAction'
 
-], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, IoC) {
+], function(Control, chain, Utils, Clone, isEqual, historyUtils, _FilterPanelOptions, template, Env) {
    /**
     * Component for displaying a filter panel template. Displays each filters by specified templates.
     * It consists of three blocks: Selected, Possible to selected, Previously selected.
@@ -48,7 +48,7 @@ define('Controls/Filter/Button/Panel', [
             self._items = this.cloneItems(options.items);
          } else if (self._contextOptions) {
             self._items = this.cloneItems(context.filterPanelOptionsField.options.items);
-            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
+            Env.IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the items option for the panel.');
          } else {
             throw new Error('Controls/Filter/Button/Panel::items option is required');
          }
@@ -59,7 +59,7 @@ define('Controls/Filter/Button/Panel', [
             self._historyId = options.historyId;
          } else if (context && context.historyId) {
             self._historyId = context.historyId;
-            IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
+            Env.IoC.resolve('ILogger').error('Controls/Filter/Button/Panel:', 'You must pass the historyId option for the panel.');
          }
       },
 
@@ -72,6 +72,10 @@ define('Controls/Filter/Button/Panel', [
          }
       },
 
+      reloadHistoryItems: function(self, historyId) {
+         self._historyItems = historyUtils.getHistorySource(historyId).getItems();
+      },
+
       cloneItems: function(items) {
          if (items['[Types/_entity/CloneableMixin]']) {
             return items.clone();
@@ -79,9 +83,9 @@ define('Controls/Filter/Button/Panel', [
          return Clone(items);
       },
 
-      getFilter: function(self, items) {
+      getFilter: function(items) {
          var filter = {};
-         chain.factory(items || self._items).each(function(item) {
+         chain.factory(items).each(function(item) {
             if (!isEqual(getPropValue(item, 'value'), getPropValue(item, 'resetValue')) &&
                (getPropValue(item, 'visibility') === undefined || getPropValue(item, 'visibility'))) {
                filter[item.id] = getPropValue(item, 'value');
@@ -175,7 +179,7 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _historyItemsChanged: function() {
-         this._loadDeferred = _private.loadHistoryItems(this, this._historyId);
+         _private.reloadHistoryItems(this, this._historyId);
       },
 
       _itemsChangedHandler: function(event, items) {
@@ -183,13 +187,14 @@ define('Controls/Filter/Button/Panel', [
       },
 
       _applyHistoryFilter: function(event, items) {
-         var filter = _private.getFilter(this, items);
+         var filter = _private.getFilter(items);
          filter.$_history = true;
          this._applyFilter(event, items);
       },
 
       _applyFilter: function(event, items) {
-         var self = this;
+         var self = this,
+            curItems = items || this._items;
          _private.validate(this).addCallback(function(result) {
             if (_private.isPassedValidation(result)) {
 
@@ -198,8 +203,8 @@ define('Controls/Filter/Button/Panel', [
                and the popup captures the sendResult operation from the root node, bubbling must be set in true.
                */
                self._notify('sendResult', [{
-                  filter: _private.getFilter(self),
-                  items: _private.prepareItems(items || self._items)
+                  filter: _private.getFilter(curItems),
+                  items: _private.prepareItems(curItems)
                }], {bubbling: true});
                self._notify('close', [], {bubbling: true});
             }

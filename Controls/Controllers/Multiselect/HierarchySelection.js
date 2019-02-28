@@ -67,6 +67,7 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
 
             var
                parentId = _private.getParentId(key, items, hierarchyRelation.getParentProperty()),
+               parentExcluded = false,
                parentSelected = false;
 
             while (parentId) {
@@ -75,12 +76,16 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
                   break;
                }
                if (excludedKeys.indexOf(parentId) !== -1) {
+                  parentExcluded = true;
                   break;
                }
                parentId = _private.getParentId(parentId, items, hierarchyRelation.getParentProperty());
             }
 
-            if (parentId === null && selectedKeys[0] === null) {
+            /**
+             * parentId can be undefined if the user is inside a folder. But if everything is selected and none of the item's parents is excluded then parentSelected should be true.
+             */
+            if (!parentExcluded && !parentId && selectedKeys[0] === null) {
                parentSelected = true;
             }
 

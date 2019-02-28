@@ -6,8 +6,9 @@ import FontLoadUtil = require('Controls/Utils/FontLoadUtil');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import applyHighlighter = require('Controls/Utils/applyHighlighter');
 import template = require('wml!Controls/_crumbs/HeadingPath/HeadingPath');
-import backButtonTemplate = require('wml!Controls/Heading/Back/Back');
+import backButtonTemplate = require('wml!Controls/_crumbs/HeadingPath/Back');
 import {Model} from 'Types/entity';
+import Common from './HeadingPath/Common';
 import 'Controls/Heading/Back';
 import 'css!theme?Controls/_crumbs/HeadingPath/HeadingPath';
 
@@ -28,43 +29,37 @@ var _private = {
         }
     },
 
-    calculateItems: function (self, items, containerWidth) {
+    calculateItems: function (self, options, containerWidth) {
         var
             backButtonWidth,
             availableWidth,
             homeWidth;
 
-        self._backButtonCaption = ItemsUtil.getPropertyValue(items[items.length - 1], self._options.displayProperty);
-        if (items.length > 1) {
-            self._breadCrumbsItems = items.slice(0, items.length - 1);
-            backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
-                _options: {
-                    caption: self._backButtonCaption,
-                    style: 'default',
-                    size: 'm'
-                }
-            }));
-            homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
-            _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, self._options.displayProperty), backButtonWidth, containerWidth - homeWidth);
+        self._backButtonCaption = ItemsUtil.getPropertyValue(options.items[options.items.length - 1], self._options.displayProperty);
+        if (options.items.length > 1) {
+            self._breadCrumbsItems = options.items.slice(0, options.items.length - 1);
+           homeWidth = getWidthUtil.getWidth('<div class="controls-BreadCrumbsPath__home icon-size icon-Home3"></div>');
+           if (!options.header) {
+              backButtonWidth = getWidthUtil.getWidth(backButtonTemplate({
+                 _options: {
+                    backButtonCaption: self._backButtonCaption,
+                    counterCaption: self._getCounterCaption(options.items)
+                 }
+              }));
+              _private.calculateClasses(self, BreadCrumbsUtil.getMaxCrumbsWidth(self._breadCrumbsItems, options.displayProperty), backButtonWidth, containerWidth - homeWidth);
 
-            availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
-            BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
+              availableWidth = self._breadCrumbsClass === 'controls-BreadCrumbsPath__breadCrumbs_half' ? containerWidth / 2 : containerWidth;
+              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, availableWidth - homeWidth);
+           } else {
+              BreadCrumbsUtil.calculateBreadCrumbsToDraw(self, self._breadCrumbsItems, containerWidth - homeWidth);
+              self._breadCrumbsClass = 'controls-BreadCrumbsPath__breadCrumbs_short';
+           }
         } else {
             self._visibleItems = null;
             self._breadCrumbsItems = null;
             self._backButtonClass = '';
             self._breadCrumbsClass = '';
         }
-    },
-
-    getRootModel: function (root, keyProperty) {
-        var rawData = {};
-
-        rawData[keyProperty] = root;
-        return new Model({
-            idProperty: keyProperty,
-            rawData: rawData
-        });
     }
 };
 
@@ -81,6 +76,13 @@ var _private = {
  * @author Зайцев А.С.
  *
  * @demo Controls-demo/BreadCrumbs/PathPG
+ */
+
+/**
+ * @name Controls/_crumbs/HeadingPath#backButtonStyle
+ * @cfg {String} Back heading display style.
+ * @default secondary
+ * @see Controls/Heading/Back#style
  */
 
 /**
@@ -109,7 +111,7 @@ var BreadCrumbsPath = Control.extend({
         if (this._options.items && this._options.items.length > 0) {
             FontLoadUtil.waitForFontLoad('controls-BreadCrumbsView__crumbMeasurer').addCallback(function () {
                 FontLoadUtil.waitForFontLoad('controls-BreadCrumbsPath__backButtonMeasurer').addCallback(function () {
-                    _private.calculateItems(this, this._options.items, this._oldWidth);
+                    _private.calculateItems(this, this._options, this._oldWidth);
                     this._forceUpdate();
                 }.bind(this));
             }.bind(this));
@@ -120,24 +122,16 @@ var BreadCrumbsPath = Control.extend({
         var containerWidth = this._container.clientWidth;
         if (BreadCrumbsUtil.shouldRedraw(this._options.items, newOptions.items, this._oldWidth, containerWidth)) {
             this._oldWidth = containerWidth;
-            _private.calculateItems(this, newOptions.items, containerWidth);
+            _private.calculateItems(this, newOptions, containerWidth);
         }
     },
 
     _notifyHandler: tmplNotify,
     _applyHighlighter: applyHighlighter,
-    _getRootModel: _private.getRootModel,
+    _getRootModel: Common.getRootModel,
 
-    _onBackButtonClick: function () {
-        var item;
-
-        if (this._options.items.length > 1) {
-            item = this._options.items[this._options.items.length - 2];
-        } else {
-            item = this._getRootModel(this._options.root, this._options.keyProperty);
-        }
-
-        this._notify('itemClick', [item]);
+    _onBackButtonClick: function (e: Event) {
+        Common.onBackButtonClick.call(this, e);
     },
 
     _onResize: function () {
@@ -145,18 +139,27 @@ var BreadCrumbsPath = Control.extend({
     },
 
     _onHomeClick: function () {
-        this._notify('itemClick', [this._getRootModel(this._options.root, this._options.keyProperty)]);
+       /**
+        * TODO: _options.root is actually current root, so it's wrong to use it. For now, we can take root from the first item. Revert this commit after:
+        * https://online.sbis.ru/opendoc.html?guid=93986788-48e1-48df-9595-be9d8fb99e81
+        */
+       this._notify('itemClick', [this._getRootModel(this._options.items[0].get(this._options.parentProperty), this._options.keyProperty)]);
     },
 
-    _onArrowClick: function () {
-        this._notify('arrowActivated');
-    }
+    _onArrowClick: function (e: Event) {
+        Common.onArrowClick.call(this, e);
+    },
+
+   _getCounterCaption: function(items) {
+      return items[items.length - 1].get('counterCaption');
+   }
 });
 
 BreadCrumbsPath.getDefaultOptions = function () {
     return {
         displayProperty: 'title',
         root: null,
+        backButtonStyle: 'secondary',
         showActionButton: true,
     };
 };

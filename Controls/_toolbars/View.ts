@@ -68,6 +68,21 @@ import 'css!theme?Controls/_toolbars/View';
  */
 
 /**
+ * @name Controls/Toolbar#itemsSpacing
+ * @cfg {Types/source:Base} Type of spacing between items
+ * @default medium
+ * @example
+ * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
+ * <pre>
+ *    <Controls.Toolbar
+ *              keyProperty="key"
+ *              source="{{_source}}"
+ *              itemsSpacing="big"
+ *    />
+ * </pre>
+ */
+
+/**
  * @event Controls/Toolbar#itemClick Occurs when item was clicked.
  * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
  * @param {Types/entity:Record} item Clicked item.
@@ -203,13 +218,14 @@ var _private = {
         return {
             className: 'controls-Toolbar__popup__list ' + (self._options.popupClassName || ''),
             templateOptions: {
-                items: self._menuItems
+                items: self._menuItems,
+                itemTemplateProperty: self._options.itemTemplateProperty
             },
             target: self._children.popupTarget
         };
     },
     openPopup: function (config, self) {
-        require(['css!Controls/_toolbars/ToolbarPopup'], function () {
+        require(['css!theme?Controls/_toolbars/ToolbarPopup'], function () {
             self._children.menuOpener.open(config, self);
         });
     }
@@ -300,6 +316,12 @@ var Toolbar = Control.extend({
         this._notify('menuClosed', [], {bubbling: true});
     }
 });
+
+Toolbar.getDefaultOptions = function() {
+    return {
+        itemsSpacing: 'medium'
+    };
+};
 
 Toolbar._private = _private;
 

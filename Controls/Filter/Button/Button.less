@@ -1,6 +1,8 @@
 .controls-FilterButton {
 	height: @height_FilterButton;
 	display: inline-block;
+	min-width: @min-width_FilterButton;
+	flex-shrink: 1;
 }
 
 .controls-FilterButton__icon_state_default {
@@ -54,6 +56,7 @@
 
 .controls-FilterButton__text-wrapper {
 	.inline-flexbox();
+	flex-shrink: 1;
 	.align-items(center);
 	min-width: 0;
 }
@@ -84,6 +87,7 @@
 
 .controls-FilterButton__text {
 	.text-overflow();
+	flex-shrink: 1;
 	font-size: @font-size_FilterButton_text;
 }
 

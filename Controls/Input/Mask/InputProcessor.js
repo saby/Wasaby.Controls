@@ -20,11 +20,18 @@ define('Controls/Input/Mask/InputProcessor',
              *    }|undefined
              * }
              */
-            getDataBySplitValue: function(format, splitValue) {
-               return Formatter.getFormatterData(format, {
-                  value: splitValue.before + splitValue.after,
-                  position: splitValue.before.length
-               });
+            getDataBySplitValue: function(format, splitValue, replacer, inputType) {
+               if (inputType === 'insert' && replacer) {
+                  return Formatter.getFormatterData(format, {
+                     value: splitValue.before + splitValue.after,
+                     position: splitValue.before.replace(new RegExp(replacer + '*$', 'g'), '').length
+                  });
+               } else {
+                  return Formatter.getFormatterData(format, {
+                     value: splitValue.before + splitValue.after,
+                     position: splitValue.before.length
+                  });
+               }
             }
          },
          InputProcessor = {
@@ -83,7 +90,7 @@ define('Controls/Input/Mask/InputProcessor',
                         after: oldClearSplitValue.after.slice(0, -1)
                      };
 
-                     data = _private.getDataBySplitValue(format, newClearSplitValue);
+                     data = _private.getDataBySplitValue(format, newClearSplitValue, replacer, 'insert');
                   } else {
                      // Добавляем символ без замены следующего.
                      newClearSplitValue = {
@@ -91,7 +98,7 @@ define('Controls/Input/Mask/InputProcessor',
                         after: oldClearSplitValue.after
                      };
 
-                     data = _private.getDataBySplitValue(format, newClearSplitValue);
+                     data = _private.getDataBySplitValue(format, newClearSplitValue, replacer, 'insert');
 
                      // Если не получилось, то поробуем заменить.
                      if (!data) {
@@ -100,7 +107,7 @@ define('Controls/Input/Mask/InputProcessor',
                            after: oldClearSplitValue.after.substring(1)
                         };
 
-                        data = _private.getDataBySplitValue(format, newClearSplitValue);
+                        data = _private.getDataBySplitValue(format, newClearSplitValue, replacer, 'insert');
                      }
                   }
 
@@ -125,7 +132,7 @@ define('Controls/Input/Mask/InputProcessor',
                return _private.getDataBySplitValue(format, {
                   before: clearSplitValue.before,
                   after: clearSplitValue.delete.replace(/./g, replacer) + clearSplitValue.after
-               });
+               }, replacer, 'delete');
             },
 
             /**
@@ -150,7 +157,7 @@ define('Controls/Input/Mask/InputProcessor',
                   };
                }
 
-               return _private.getDataBySplitValue(format, newClearSplitValue);
+               return _private.getDataBySplitValue(format, newClearSplitValue, replacer, 'deleteForward');
             },
 
             /**
@@ -175,7 +182,7 @@ define('Controls/Input/Mask/InputProcessor',
                   };
                }
 
-               return _private.getDataBySplitValue(format, newClearSplitValue);
+               return _private.getDataBySplitValue(format, newClearSplitValue, replacer, 'deleteBackward');
             },
 
             /**

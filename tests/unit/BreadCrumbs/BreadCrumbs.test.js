@@ -48,7 +48,8 @@ define([
                });
             }),
             keyProperty: 'id',
-            parentProperty: 'parent'
+            parentProperty: 'parent',
+            displayProperty: 'test'
          });
       });
       afterEach(function() {
@@ -95,6 +96,7 @@ define([
                   open: function(openerOptions) {
                      assert.equal(openerOptions.target, 123);
                      assert.equal(openerOptions.templateOptions.items.at(0).get('title'), data[0].title);
+                     assert.equal(openerOptions.templateOptions.displayProperty, 'test');
                   }
                }
             };

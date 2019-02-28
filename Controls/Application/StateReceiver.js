@@ -1,7 +1,7 @@
 define('Controls/Application/StateReceiver', ['Core/core-extend',
    'Core/Serializer',
-   'Core/IoC',
-   'View/Executor/Utils'], function(extend, Serializer, IoC, Utils) {
+   'Env/Env',
+   'View/Executor/Utils'], function(extend, Serializer, Env, Utils) {
    function getDepsFromSerializer(slr) {
       var moduleInfo;
       var deps = {};
@@ -71,7 +71,7 @@ define('Controls/Application/StateReceiver', ['Core/core-extend',
          try {
             this._deserialized = JSON.parse(str, slr.deserialize);
          } catch (e) {
-            IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
+            Env.IoC.resolve('ILogger').error('Deserialize', 'Cant\'t deserialize ' + str);
          }
       },
 

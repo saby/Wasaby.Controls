@@ -2,10 +2,10 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
    [
       'Core/Control',
       'wml!Controls/Popup/Templates/Dialog/DialogTemplate',
-      'Core/IoC',
+      'Env/Env',
       'css!theme?Controls/Popup/Templates/Dialog/DialogTemplate'
    ],
-   function(Control, template, IoC) {
+   function(Control, template, Env) {
       'use strict';
 
       var DialogTemplate = Control.extend({
@@ -74,19 +74,19 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
             this._closeButtonVisibility = options.hideCross === undefined ? options.closeButtonVisibility : !options.hideCross;
 
             if (options.contentArea) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция contentArea, используйте bodyContentTemplate');
             }
             if (options.caption) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция caption, используйте headingCaption');
             }
             if (options.captionStyle) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция captionStyle, используйте headingStyle');
             }
             if (options.topArea) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция topArea, используйте headerContentTemplate');
             }
             if (options.hideCross) {
-               IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
+               Env.IoC.resolve('ILogger').warn('ConfirmationTemplate', 'Используется устаревшая опция hideCross, используйте closeButtonVisibility');
             }
          },
          _beforeUpdate: function(options) {
@@ -119,7 +119,7 @@ define('Controls/Popup/Templates/Dialog/DialogTemplate',
          return {
             headingStyle: 'secondary',
             closeButtonVisibility: true,
-            closeButtonViewMode: 'default'
+            closeButtonViewMode: 'toolButton'
          };
       };
 

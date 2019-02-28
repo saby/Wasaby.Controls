@@ -1,10 +1,11 @@
 define('Controls/Controllers/PrimaryAction',
    [
       'Core/Control',
+      'Env/Env',
       'wml!Controls/Controllers/PrimaryAction/PrimaryAction'
    ],
 
-   function(Control, template) {
+   function(Control, Env, template) {
 
       'use strict';
 
@@ -15,8 +16,8 @@ define('Controls/Controllers/PrimaryAction',
       return Control.extend({
          _template: template,
 
-         keyPressHandler: function(e) {
-            if (!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey)) { // Ctrl+Enter, Cmd+Enter, Win+Enter
+         keyDownHandler: function(e) {
+            if (!(e.nativeEvent.altKey || e.nativeEvent.shiftKey) && (e.nativeEvent.ctrlKey || e.nativeEvent.metaKey) && e.nativeEvent.keyCode === Env.constants.key.enter) { // Ctrl+Enter, Cmd+Enter, Win+Enter
                this._notify('triggered');
             }
          }
