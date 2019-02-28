@@ -162,31 +162,35 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
       },
 
+      invertPosition: function(popupCfg, direction) {
+         popupCfg.corner[direction] = INVERTING_CONST[popupCfg.corner[direction]];
+         popupCfg.align[direction].side = INVERTING_CONST[popupCfg.align[direction].side];
+      },
+
       calculatePosition: function(popupCfg, targetCoords, direction) {
          var property = direction === 'horizontal' ? 'width' : 'height';
-         var position1 = _private.getPosition(popupCfg, targetCoords, direction);
-         var maxOverflow1 = _private.checkOverflow(popupCfg, targetCoords, position1, direction);
-         if (maxOverflow1 > 0) {
-            _private.invert(popupCfg, direction);
+         var position = _private.getPosition(popupCfg, targetCoords, direction);
+         var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
+         if (positionOverflow > 0) {
+            _private.invertPosition(popupCfg, direction);
 
-            // https://online.sbis.ru/opendoc.html?guid=9a71628a-26ae-4527-a52b-2ebf146b4ecd
-            popupCfg.sizes.margins[direction === 'horizontal' ? 'left' : 'top'] *= -1;
-            var position2 = _private.getPosition(popupCfg, targetCoords, direction);
-            var maxOverflow2 = _private.checkOverflow(popupCfg, targetCoords, position2, direction);
-            if (maxOverflow2 > 0) {
-               if (maxOverflow1 < maxOverflow2) {
-                  position1[property] = popupCfg.sizes[property] - maxOverflow1;
-                  return position1;
+            var revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
+            var revertPositionOverflow = _private.checkOverflow(popupCfg, targetCoords, revertPosition, direction);
+            if (revertPositionOverflow > 0) {
+               if (positionOverflow < revertPositionOverflow) {
+                  _private.invertPosition(popupCfg, direction);
+                  position[property] = popupCfg.sizes[property] - positionOverflow;
+                  return position;
                }
-               if (position2.bottom) {
-                  position2.bottom += TouchKeyboardHelper.getKeyboardHeight();
+               if (revertPosition.bottom) {
+                  revertPosition.bottom += TouchKeyboardHelper.getKeyboardHeight();
                }
-               position2[property] = popupCfg.sizes[property] - maxOverflow2;
-               return position2;
+               revertPosition[property] = popupCfg.sizes[property] - revertPositionOverflow;
+               return revertPosition;
             }
-            return position2;
+            return revertPosition;
          }
-         return position1;
+         return position;
       },
 
       getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
