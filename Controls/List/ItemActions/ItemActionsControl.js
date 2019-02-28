@@ -90,7 +90,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       updateModel: function(self, newOptions) {
          _private.updateActions(self, newOptions);
-         newOptions.listModel.subscribe('onCollectionChange', self._onCollectionChangeFn);
+         newOptions.listModel.subscribe('onListChange', self._onCollectionChangeFn);
       },
 
       needActionsMenu: function(actions, itemActionsPosition) {
@@ -114,12 +114,16 @@ define('Controls/List/ItemActions/ItemActionsControl', [
 
       _template: template,
 
+      constructor: function() {
+         ItemActionsControl.superclass.constructor.apply(this, arguments);
+         this._onCollectionChangeFn = this._onCollectionChange.bind(this);
+      },
+
       _beforeMount: function(newOptions) {
          if (typeof window === 'undefined') {
             this.serverSide = true;
             return;
          }
-         this._onCollectionChangeFn = this._onCollectionChange.bind(this);
 
          if (newOptions.listModel) {
             _private.updateModel(this, newOptions);
@@ -136,7 +140,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
             this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
             this._options.itemActionsPosition !== newOptions.itemActionsPosition
          ) {
-            this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
             _private.updateModel.apply(null, args);
          }
       },
@@ -159,11 +163,14 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       _beforeUnmount: function() {
-         this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+         this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
       },
 
-      _onCollectionChange: function() {
-         _private.updateActions(this, this._options, true);
+      _onCollectionChange: function(e, type) {
+         if (type !== 'collectionChanged' && type !== 'indexesChanged') {
+            return;
+         }
+         _private.updateActions(this, this._options, type === 'collectionChanged');
       }
    });
 
