@@ -1,0 +1,24 @@
+<div class="controlsDemo-dateRange-RelationController">
+   <h1>Controls.dateRange.RelationController</h1>
+
+   <Controls.dateRange:RelationController
+         bind:startValue0="_startValue0"
+         bind:endValue0="_endValue0"
+         bind:startValue1="_startValue1"
+         bind:endValue1="_endValue1"
+         bind:startValue2="_startValue2"
+         bind:endValue2="_endValue2"
+   />
+   <div class="controlsDemo-dateRange-RelationController__row">
+      <Controls.Input.Date.RangeLinkLite
+         bind:startValue="_startValue0"
+         bind:endValue="_endValue0"/>
+      <Controls.Input.Date.RangeLinkLite
+         bind:startValue="_startValue1"
+         bind:endValue="_endValue1"/>
+      <Controls.Input.Date.RangeLinkLite
+         bind:startValue="_startValue2"
+         bind:endValue="_endValue2"/>
+   </div>
+
+</div>
