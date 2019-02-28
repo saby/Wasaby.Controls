@@ -44,6 +44,12 @@ define('Controls/Controllers/QueryParamsController/Page',
             return addParams;
          },
 
+         setState: function(state) {
+            if (state.more) {
+               this._more = state.more;
+            }
+         },
+
          calculateState: function(list, direction) {
             var meta = list.getMetaData();
 
