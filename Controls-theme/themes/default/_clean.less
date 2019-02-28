@@ -1,4 +1,473 @@
 //colors
+@color_shadow_default:              rgba(0,0,0,.25);
+@color_shadow_secondary:            rgba(0,0,0,.4);
+@color_shadow_danger:               rgba(239, 70, 58, 0.4);
+
+@color_warning:                       #FEC63F;
+@color_success:                       #72BE44;
+@color_link:                          #0055BB;
+@color_link-hover:                    #313E78;
+@color_danger:                        #EF463A;
+@color_primaryV:                      #FF7033;
+@color_active-element:                @color_primaryV;
+@color_info:                          #CCC;
+@color_active-element_disabled:		  #313E78;
+@color_secondary:                     #587AB0;
+@color_unselected:                    #999;
+@color_additional:                    #8991A9;
+@color_readOnly:                      #CCC;
+
+@color_text_default:                  #000;
+@color_text_readonly:                 @color_readOnly;
+@color_placeholder:                   #CCC;
+@color_text_additional:               #999;
+
+@background-color_footer:           #F5F5F5;
+@background-color_default:          #FFFFFF;
+@background-color_danger:           #FADADD;
+@background-color_toolbar:          #e5ecf5; //используется в пмо и в тулбаре бтра
+@background_color_editing:          #F3F3F3;
+@background-color_additional:       #F8F8F8;
+@background-color_item_hovered:     #F0F5FB;
+@background-color_header:           #F4F4F4; // Headers in the period dialogs, dropdown and filter panels
+
+@color_border:                      #CCC;
+@color_border_danger:               @color_danger;
+@color_border_disabled:             #E4E4E4;
+@color_border_secondary:            #BDBDBD;
+
+@color_overlay_default:             rgba(0, 0, 0, 0.1);
+
+//sizes
+@thickness_border_default:    1px;
+@thickness_border_accent:     2px;
+@thickness_border_big:        3px;
+
+@height_control_default:    @height_m;
+@height_control_l:          @height_xl;
+
+@height_xs:          16px;
+@height_s:           18px;
+@height_m:           24px;
+@height_l:           30px;
+@height_xl:          32px;
+@height_2xl:         44px;
+
+@line-height_default:       18px;
+@size_shadow_default:       0 0 12px 0;
+
+@border-radius_size_m:        4px;
+
+@font-size_text_s:     12px;
+@font-size_text_m:     14px;
+@font-size_text_l:     15px;
+@font-size_text_xl:    16px;
+@font-size_text_2xl:   17px;
+@font-size_text_3xl:   18px;
+@font-size_text_4xl:   20px;
+@font-size_text_5xl:   24px;
+
+@spacing_default_xxs:      2px;
+@spacing_default_xs:       4px;
+@spacing_default_s:        6px;
+@spacing_default_m:        8px;
+@spacing_default_l:        12px;
+@spacing_default_xl:       16px;
+@spacing_default_xxl:      24px;
+
+@size_icon_s:                 16px;
+@size_icon_m:                 24px;
+@size_icon_l:                 32px;
+
+@font-family_icon_size-s:         'cbuc-icons';
+@font-family_icon_size-m:         'cbuc-icons24';
+@font-family_icon_size-l:         'cbuc-icons';
+@font-family_text_default:        'TensorFont', sans-serif;
+
+//period dialog
+@color_border_PeriodDialog:       #EAEAEA;
+
+// loadingindicator
+@path_spinner:             url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
+
+// d'n'd
+@color_drop-target:                   #0055BB;
+
+// stack
+@color_border_lite:                 @color_border_lite_val;
+
+// tile
+@color_shadow_light:                rgba(0,0,0,.15);
+@color_shadow_dark:                 rgba(0, 0, 0, 0.5);
+
+// icon urls
+@backArrowOrangeSmall_icon:          url('img/BackArrowOrangeSmall.svg');
+@backArrowOrange_icon:               url('img/BackArrowOrange.svg');
+@backArrowBlueSmall_icon:            url('img/BackArrowBlueSmall.svg');
+@backArrowBlue_icon:                 url('img/BackArrowBlue.svg');
+@loadingIndicator_icon_l:            url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
+@loadingIndicator_icon_s:            url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator-16-16.gif');
+
+// border
+@border-style_solid:       solid;
+
+//standard dimensions
+@height_control_default:      24px;
+@height_control_m:            28px;
+@height_control_l:            32px;
+@height_control_xl:           36px;
+@line-height_default:         18px;
+
+@width_control_s:             24px;
+@width_control_m:             32px;
+
+// unic vars
+// Button
+@border-radius-ToolButton_val:                                    2px;
+@min-width_Button_common_val:                                     48px;
+@box-shadow-ToolButton_val:                                       0 1px 4px rgba(0, 0, 0, 0.05);
+@text-shadow_Button_readOnly_val:                                 0;
+@text-shadow_Button_button_val:                                   none;
+@box-shadow_Button_common_val:                                    none;
+@box-shadow_Button_active_val:                                    none;
+@box-shadow-ToolButton_activated_val:                             none;
+@text-shadow_ToolButton_val:                                      none;
+@text-shadow_ToolButton_readOnly_val:                             none;
+@background-color-ToolButton_transparent_val:                     transparent;
+@border-color-ToolButton_val:                                     rgba(0, 0, 0, 0.08);
+@border-color-ToolButton_readOnly_val:                            rgba(0, 0, 0, 0.08);
+@background-color-ToolButton_val:                                 #F8F8F8;
+@background_Button_button_primary_hovered_val:                    #FDECD9;
+@background_Button_secondary_active_val:                          #E1ECF6;
+@background_Button_button_primary_active_val:                     #FDD2C0;
+
+// Image
+@border-radius_Image_m_val:                                       8px;
+
+// Infobox
+@max-width_Infobox_val:                                           500px;
+@spacing_Infobox-between-message-border_val:                      18px;
+@size_Infobox-float-element_val:                                  16px;
+@spacing_Infobox-between-target-popup_val:                        11px;
+@vertical-offset_Infobox-arrow_val:                               9px;
+@size_Infobox-arrow_val:                                          12px;
+@horizontal-offset_Infobox-arrow_val:                             12px;
+@background-color_Infobox_secondary_val:                          #F4F9FD;
+@background-color_Infobox_primary_val:                            #FFF9F3;
+@background-color_Infobox_secondary_val:                          #F4F9FD;
+
+// InputRender
+@line-height_InputRender_l_val:                                   23px;
+@horizontal-padding_InputRender_val:                              4px;
+@height_InputRender-tagStyle_val:                                 8px;
+@width_InputRender-tagStyle_val:                                  8px;
+@background-color_InputRender_disabled_val:                       transparent;
+@font-weight_InputRender_style_header_val:                        bold;
+@font-weight_InputRender_style_accentHeader_val:                  bold;
+
+// ListView
+@opacity_ListView-item_dragging_val:                              0.6;
+@spacing_ListView-item-between-checkbox-borderTop_val:            3px;
+@spacing_ListView-empty-between-content-borderTop_xxl_val:        44px;
+@spacing_ListView-empty-between-content-borderBottom_xxl_val:     44px;
+@spacing_ListView-empty-between-content-borderTop_xs_val:         0;
+@spacing_ListView-empty-between-content-borderBottom_xs_val:      0;
+@spacing_ListView-item-between-content-borderRight_xs_val:        0;
+@spacing_ListView-item-between-content-borderLeft_xs_val:         0;
+@spacing_ListView-between-content-checkbox_val:                   0;
+@spacing_ListView-empty-between-content-borderTop_xs_val:         0;
+@box-shadow_List-masterList-item_selected_val:                    4px 0 8px rgba(0, 0, 0, .15);
+@border-color_List-masterList-item_selected_val:                  #C2D0DE transparent #9CB3CA transparent;
+@background-color_ListView-item_active_val:                       #F0F5FB;
+@background-color_ListView-item_hover_val:                        #F0F5FB;
+@border-color_List-masterList_val:                                #EAEAEA;
+@color-group-separator_val:                                       #EAEAEA;
+@border-width_List-masterList-item-right_val:                     0;
+@border-width_List-masterList-item-left_val:                      0;
+@border-color_List-masterList-item_selected-right_val:            transparent;
+@border-color_List-masterList-item_selected-left_val:             transparent;
+@border-color_List-masterList-item_selected-top_val:              #C2D0DE;
+@border-color_List-masterList-item_selected-bottom_val:           #9CB3CA;
+
+// Menu
+@shift-top_MenuButton-button-popup_val:                           -5px;
+@shift-top_MenuButton-link-popup_val:                             -9px;
+@shift-top_MenuButton-toolButton_medium-popup_val:                -3px;
+@shift-top_MenuButton-link_small-popup_val:                       -8px;
+
+// MoveDialog
+@width_MoveDialog_val:                                            408px;
+@height_MoveDialog_val:                                           446px;
+@width_MoveDialog-search_val:                                     184px;
+
+// NotificationBase
+@min-dimentions-NotificationBase:                                 40px;
+
+// PeriodDialog
+@width_PeriodDialog-dateRange-monthPanel_val:                     82px;
+@width_PeriodDialog_val:                                          364px;
+@height_PeriodDialog_val:                                         487px;
+@spacing_PeriodDialog-header-between-borderLeft-content_val:      10px;
+@width_PeriodDialog-years-leftRight_val:                          33px;
+@font-size_PeriodDialog-monthRange-month-date_val:                8px;
+@height_PeriodDialog-monthRange-month-date_val:                   13px;
+@dimentions_PeriodDialog-monthRange-monthWrapper:                 100px;
+
+// Render
+@size_Render-tagStyle_val:                                        8px;
+@font-weight_Render_fontStyle_primary_size_s_val:                 bold;
+@font-weight_Render_fontStyle_secondary_size_s_val:               bold;
+@font-weight_Render_fontStyle_primary_size_m_val:                 bold;
+@font-weight_Render_fontStyle_secondary_size_m_val:               bold;
+@font-weight_Render_fontStyle_primary_size_l_val:                 bold;
+@font-weight_Render_fontStyle_secondary_size_l_val:               bold;
+@font-weight_Render_fontStyle_default_size_s_val:                 normal;
+@font-weight_Render_fontStyle_default_size_m_val:                 normal;
+@font-weight_Render_fontStyle_default_size_l_val:                 normal;
+@border-color_Render_style_info_readOnly_multiline_val:           transparent;
+@border-color_input_val:                                          #EAEAEA;
+@border-color-bottom_Render_val:                                  #AAB0C1;
+
+// SelectedCollection
+@width_SelectedCollection-counter-shadow_val:                     20px;
+
+// StackTemplate
+@size_Stack-shadow_val:                                           12px -8px 12px 12px;
+@animate-duration_Stack_val:                                      0.2s;
+@min-height_StackTemplate-head_val:                               38px;
+@spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
+@spacing_StackTemplate-between-close-button-border-top_val:       5px;
+@color_border_lite_val:                                           #F0F0F0;
+
+// Suggest
+@box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 8px;
+@box-shadow-size_Suggest-popup-verticalAlign_bottom_val:          0 4px 8px;
+
+// Switch
+@width_Switch_val:                                                46px;
+@length_Switch-track_val:                                         34px;
+@thickness_Switch-track_val:                                      2px;
+@size_Switch__ToggleCircle_val:                                   12px;
+@text-decoration_Switch-text_enabled_hovered_val:                 none;
+@background-color_Switch-track__enabled_val:                      #CCC;
+@spacing-between-track-and-toggleCircle_val:                      2px;
+
+// TabButtons
+@max-width_Tabs_item_val:                                         630px;
+@border-color_Tabs_val:                                           #F0F0F0;
+@background-color_Tabs-separator_val:                             #F0F0F0;
+
+// Toolbar
+@shift-top_Toolbar-toolButton-popup_val:                          -6px;
+@shift-top_Toolbar-list-popup_val:                                -8px;
+
+// TreeGridView
+@spacing_TreeGridView-row-expander-between-content_borderRight_m_val:     10px;
+@spacing_TreeGridView-row-expander-between-content_borderRight_l_val:     14px;
+@spacing_TreeGridView-row-expander-between-content_borderRight_xl_val:    18px;
+@icon_TreeGridView-expander_node-collapsed_val:                   '\e96e';
+@icon_TreeGridView-expander_node-expanded_val:                    '\e96d';
+@icon_TreeGridView-expander_hiddenNode-collapsed_val:             '\e9c2';
+@icon_TreeGridView-expander_hiddenNode-expanded_val:              '\e9c1';
+@width-TreeGridView-levelPadding_size_m_val:                      30px;
+@width-TreeGridView-levelPadding_size_l_val:                      38px;
+@width-TreeGridView-levelPadding_size_xl_val:                     46px;
+@height_TreeTileView-node_val:                                    40px;
+@color_TreeGridView-expander_val:                                 #313E78;
+@border-color_TreeGridView-item_dragging_val:                     #0055BB;
+
+// DialogTemplate
+@spacing_dialogTemplate-between-head-border-right_val:                    48px;
+@line-height_dialogTemplate_caption_val:                                  42px;
+
+// TileView
+@spacing_TileView-between-title-topBorder_val:                            3px;
+@spacing_TileView-between-title-bottomBorder_val:                         3px;
+@spacing_TileView-between-title-leftBorder_val:                           3px;
+@spacing_TileView-between-title-rightBorder_val:                          3px;
+
+// Grid
+@spacing_Grid-row-between-content-borderLeft_xl_val:                      20px;
+@spacing_Grid-row-between-content-borderRight_xl_val:                     20px;
+@spacing_Grid-row-between-checkbox-borderTop_val:                         3px;
+@min-height_Grid-row_val:                                                 31px;
+@spacing_Grid-row-between-content-borderLeft_xs_val:                      0;
+@spacing_Grid-row-between-content-borderRight_xs_val:                     0;
+@box-shadow_Grid-masterList-item_selected_val:                            4px 0 8px @color_shadow_light;
+@border-color_Grid-firstRow-separator_val:                                #EAEAEA;
+@border-color_Grid-lastRow-separator_val:                                 #EAEAEA;
+@background-color_Grid-row_hover_val:                                     #F0F5FB;
+@border-color_Grid-row-separator_val:                                     #F5F5F5;
+
+// Back
+@spacing_Back_between_icon_caption_standart_val:                          3px;
+@height_ItemActions_outside_val:                                          29px;
+@spacing_ItemActions-between-content-border-top_position_inside_val:      0;
+@spacing_ItemActions-between-content-border-bottom_position_inside_val:   3px;
+@spacing_ItemActions-between-content-border-top_position_outside_val:     0;
+@spacing_ItemActions-between-content-border-bottom_position_outside_val:  3px;
+@spacing_ItemActions-between-content-border-left_position_outside_val:    0;
+@background-color_Swipe_val:                                              #F4F9FD;
+@background-color_Swipe-shadow_val:                                       rgba(0, 0, 0, 0.12);
+@background-color_Swipe-separator_val:                                    #EBF1F6;
+@spacing_Swipe-between-vertical-separator-and-border_val:                 3px;
+@spacing_Swipe-between-actions_top_size_m_val:                            3px;
+@spacing_Swipe-between-actions_bottom_size_m_val:                         3px;
+@max-width_Swipe-title_position_bottom_val:                               160px;
+@max-width_Swipe-title_position_right_val:                                220px;
+@animation-offset-Swipe-left-to-right_val:                                16px;
+@width-Back__icon_size-s_val:                                             9px;
+@width-Back__icon_size-m_val:                                             9px;
+@width-Back__icon_size-l_val:                                             10px;
+@height-Back__icon_size-s_val:                                            11px;
+@height-Back__icon_size-m_val:                                            12px;
+@height-Back__icon_size-l_val:                                            14px;
+@content_Back_secondary_val:                                              '';
+@content_Back_primary_val:                                                '';
+@font-weight_Back_val:                                                    bold;
+@color-Back__caption_style-primary_val:                                   #D94700;
+@color-Back__caption_style-secondary_val:                                 #313E78;
+@color-Back__caption_style-secondary_hovered_val:                         #0055BB;
+
+// Link
+@text-decoration_Link_default_val:                                        none;
+@text-decoration_Link_secondary_val:                                      none;
+@text-decoration_Link_primary_val:                                        none;
+@text-decoration_Link_danger_val:                                         none;
+@text-decoration_Link_warning_val:                                        none;
+@text-decoration_Link_success_val:                                        none;
+@text-decoration_Link_info_val:                                           none;
+@color_Link_magic_val:                                                    #9122BF;
+@color_App-link_val:                                                      #313E78;
+@color_App-link_hover_val:                                                #0055BB;
+
+// Checkbox
+@left_CheckBox__iconSuccessful_val:                                       7px;
+@size_CheckBox__iconTristate_val:                                         6px;
+@size_CheckBox__icon-box_val:                                             12px;
+@size_CheckBox__iconSuccessful_val:                                       18px;
+@padding-horizontal_CheckBox-caption_val:                                 3px;
+@top_CheckBox__iconSuccessful_val:                                        3px;
+@color_CheckBox__iconBox_val:                                             #999;
+
+// FilterButton
+@shift-top_FilterButton-popup_val:                                        -11px;
+
+// CloseButton
+@width_CloseButton-icon_toolButton_val:                                   12px;
+@width_CloseButton-icon_link_val:                                         12px;
+@width_CloseButton_toolButton_m_val:                                      29px;
+@width_CloseButton_toolButton_l_val:                                      36px;
+@content_CloseButton_icon_val:                                            '\e66c';
+@border-right-width_CloseButton_toolButton_val:                           0;
+@border-right-radius_CloseButton_toolButton_val:                          0;
+@border-bottom-radius_CloseButton_toolButton_val:                         0;
+@background-color_CloseButton_toolButton_transparent_val:                 transparent;
+
+// ToggleCircle
+@width_ToggleCircle_val:                                                  12px;
+@height_ToggleCircle_val:                                                 12px;
+@color_ToggleCircle_innerCircle__unselected_val:                          none;
+
+// BreadCrumbs
+@max-width_BreadCrumbs-menu_val:                                          800px;
+@min-width_BreadCrumbs-text_val:                                          36px;
+
+// DigitButton
+@min-width_Paging-digitButton_val:                                        28px;
+@background-color_Paging-digitButton_hover_val:                           #F0F5FB;
+@background-color_Paging-button_hover_val:                                #F0F5FB;
+
+// ConfirmationDialog
+@color_SubmitPopup-details_val:                                           inherit;
+@min-width_SubmitPopup-button-small_val:                                  80px;
+@min-width_SubmitPopup-button_val:                                        86px;
+@font-weight_SubmitPopup-message_val:                                     normal;
+@border-color_SubmitPopup-footer-top_val:                                 #EAEAEA;
+
+// ConfirmationTemplate
+@width_ConfirmationTemplate-m_val:                                        350px;
+@width_ConfirmationTemplate-l_val:                                        440px;
+
+// FilterPanel
+@width_FilterPanel-size_m_val:                                            400px;
+@width_FilterPanel-size_l_val:                                            600px;
+@width_FilterPanel-size_xl_val:                                           800px;
+@background-color_FilterPanel-history_vertical_val:                       #F4F4F4;
+
+// DropdownList
+@height_DropdownList-row-separator_val:                                   0;
+@spacing_DropdownList-row-between-rightBorder-row-separator_val:          0;
+@spacing_DropdownList-row-between-bottomBorder-row-separator_val:         0;
+@spacing_DropdownList-row-between-leftBorder-row-separator_val:           0;
+@shift-top_Dropdown-popup_val:                                            -8px;
+@shift-top_Dropdown-head-popup_val:                                       -6px;
+@background-color_DropdownList-row_separator_val:                         inherit;
+@max-width_DropdownList_val:                                              700px;
+@box-shadow-size_DropdownList-shadowStyle_centerTop_val:                  0 -6px 12px;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom_val:               0 6px 12px;
+@background_DropdownList-header_val:                                      #F4F4F4;
+@color-marker_dark_val:                                                   #D94700;
+@color-marker_val:                                                        #FF7033;
+
+// InputBase
+@spacing_InputBase_between-topBorder-text_val:                            0;
+@spacing_InputBase_between-bottomBorder-text_val:                         0;
+
+// ProgressBar
+@height-ProgressBar_bar_val:                                              3px;
+@color-ProgressBar__bar_val:                                              #CCC;
+
+// LoadingIndicator
+@color_LoadingIndicator-overlay-default_val:                              transparent;
+
+// PeriodDialog
+@background-color_PeriodDialog-dateRange-months-button_val:               transparent;
+@background-color_PeriodDialog-dateRange-months-button_hover_val:         transparent;
+@background-color_PeriodDialog-dateRange-monthsWithDates-title_val:       transparent;
+@background-color_PeriodDialog-dateRange-monthsWithDates-title_hover_val: transparent;
+@background-color_PeriodDialog-dateRange-months-nextYearButton_val:       transparent;
+@background-color_PeriodDialog-dateRange-months-nextYearButton_hover_val: transparent;
+@font-weight_PeriodDialog-dateRange-header-year_val:                      bold;
+@height_PeriodDialog-monthRange-month-title_val:                          auto;
+
+// Search
+@border-color_Search_val:                                                 transparent;
+@border-color_Search_readOnly_val:                                        transparent;
+@border-color_Search_active_val:                                          #DFDFDF;
+@background-color_Search_val:                                             #F2F2F2;
+
+// ToggleButton
+@background_ToggleButton_common_val:                                      transparent;
+@border-color_ToggleButton_common_val:                                    transparent;
+@background_ToggleButton_pushButton_hovered_val:                          #F0F5FB;
+@border-color_ToggleButton_pushButton_hovered_val:                        #F0F5FB;
+@background_ToggleButton_pushButton_toggled_val:                          #F3F3F3;
+
+//Heading
+@color-Separator__icon_style-secondary_hovered_val:     #313E78;
+@color-Separator__icon_style-additional_hovered_val:    #313E78;
+@color_Heading__caption_style-secondary_hovered_val:    #0055BB;
+@color_Heading_primary:                                 #D94700;
+@color_Heading_secondary:                               #313E78;
+@size_Heading_s:                                        @font-size_text_m;
+@size_Heading_m:                                        @font-size_text_l;
+@size_Heading_l:                                        @font-size_text_3xl;
+@size_Heading_xl:                                       @font-size_text_4xl;
+@color_HeaderSeparator__primary_hovered_val:            #729EE6;
+@color_HeaderSeparator__secondary_hovered_val:          #729EE6;
+
+//Popup
+@color_border_Notification_default_val:                 #0055BB;
+
+// Misspell
+@text-decoration_Misspell-caption_hover_val:    underline;
+@text-decoration_Misspell-caption_active_val:   underline;
+@font-weight_Misspell-text_val:                 bold;
+@font-weight_Misspell-caption_val:              bold;
+
+// colors with numbers 0-201 placed here for backward compatibility
+// this variables is not using in controls repository
 @color0:                #000;
 @color1:                #CCC;
 @color2:                #999;
@@ -33,352 +502,3 @@
 @color102:              #F4F9FD;
 @color103:              #FFF9F3;
 @color201:              #F0F0F0;
-
-@color_shadow_default:              rgba(0,0,0,.25);
-@color_shadow_secondary:            rgba(0,0,0,.4);
-@color_shadow_danger:               rgba(239, 70, 58, 0.4);
-
-@color301:              #C2D0DE;
-@color302:              #9CB3CA;
-
-@color_warning:                       @color10;
-@color_success:                       @color11;
-@color_link:                          @color16;
-@color_link-hover:                    @color6;
-@color_danger:                        @color13;
-@color_primaryV:                      @color14;
-@color_active-element:                @color_primaryV;
-@color_info:                          @color1;
-@color_active-element_disabled:		  @color6;
-@color_secondary:                     @color7;
-@color_unselected:                    @color2;
-@color_additional:                    @color8;
-@color_readOnly:                      @color1;
-
-@color_text_default:                  @color0;
-@color_text_readonly:                 @color_readOnly;
-@color_placeholder:                   @color1;
-@color_text_additional:               @color2;
-
-@background-color_footer:           @color50;
-@background-color_default:          @color9;
-@background-color_danger:           @color15;
-@background-color_toolbar:          @color26; //используется в пмо и в тулбаре бтра
-@background_color_editing:          @color25;
-@background-color_additional:       @color23;
-@background-color_item_hovered:     @color18;
-@background-color_header:           @color27; // Headers in the period dialogs, dropdown and filter panels
-
-@color_border:                      @color1;
-@color_border_danger:               @color_danger;
-@color_border_disabled:             @color3;
-@color_border_secondary:            @color5;
-
-@color_overlay_default:             rgba(0, 0, 0, 0.1);
-
-@color_Heading_primary:             @color12;
-@color_Heading_secondary:           @color6;
-
-//sizes
-@thickness_border_default:    1px;
-@thickness_border_accent:     2px;
-@thickness_border_big:     3px;
-
-@height_control_default:    @height_m;
-@height_control_l:          @height_xl;
-
-@height_xs:          16px;
-@height_s:           18px;
-@height_m:           24px;
-@height_l:           30px;
-@height_xl:          32px;
-@height_2xl:         44px;
-
-@line-height_default:       18px;
-@size_shadow_default:       0 0 12px 0;
-
-@border-radius_size_m:        4px;
-
-@font-size_text_s:     12px;
-@font-size_text_m:     14px;
-@font-size_text_l:     15px;
-@font-size_text_xl:    16px;
-@font-size_text_2xl:   17px;
-@font-size_text_3xl:   18px;
-@font-size_text_4xl:   20px;
-@font-size_text_5xl:   24px;
-
-@size_Heading_s:            @font-size_text_m;
-@size_Heading_m:            @font-size_text_l;
-@size_Heading_l:            @font-size_text_3xl;
-@size_Heading_xl:           @font-size_text_4xl;
-
-@spacing_default_xxs:      2px;
-@spacing_default_xs:       4px;
-@spacing_default_s:        6px;
-@spacing_default_m:        8px;
-@spacing_default_l:        12px;
-@spacing_default_xl:       16px;
-@spacing_default_xxl:      24px;
-
-@size_icon_s:                 16px;
-@size_icon_m:                 24px;
-@size_icon_l:                 32px;
-
-@font-family_icon_size-s:         'cbuc-icons';
-@font-family_icon_size-m:         'cbuc-icons24';
-@font-family_icon_size-l:         'cbuc-icons';
-@font-family_text_default:        'TensorFont', sans-serif;
-
-//period dialog
-@color_border_PeriodDialog:       @color4;
-
-// loadingindicator
-@path_spinner:             url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
-
-// d'n'd
-@color_drop-target:                   @color16;
-
-//stack
-@color_border_lite:                 @color201;
-
-//tile
-@color_shadow_light:                rgba(0,0,0,.15);
-@color_shadow_dark:                 rgba(0, 0, 0, 0.5);
-
-//icon urls
-@backArrowOrangeSmall_icon:          url('img/BackArrowOrangeSmall.svg');
-@backArrowOrange_icon:               url('img/BackArrowOrange.svg');
-@backArrowBlueSmall_icon:            url('img/BackArrowBlueSmall.svg');
-@backArrowBlue_icon:                 url('img/BackArrowBlue.svg');
-@loadingIndicator_icon_l:            url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
-@loadingIndicator_icon_s:            url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator-16-16.gif');
-
-//border
-@border-style_solid:       solid;
-
-//standard dimensions
-@height_control_default:      24px;
-@height_control_m:            28px;
-@height_control_l:            32px;
-@height_control_xl:           36px;
-@line-height_default:         18px;
-
-@width_control_s:             24px;
-@width_control_m:             32px;
-
-//unic vars
-@border-radius_size_s_val:                                        2px;
-@border-radius_size_l_val:                                        8px;
-@color28:                                                         #729EE6;
-@color29:                                                         #AAB0C1;
-@max-width_Infobox_val:                                           500px;
-@spacing_Infobox-between-message-border_val:                      18px;
-@size_Infobox-float-element_val:                                  16px;
-@line-height_InputRender_l_val:                                   23px;
-@horizontal-padding_InputRender_val:                              4px;
-@height_InputRender-tagStyle_val:                                 8px;
-@width_InputRender-tagStyle_val:                                  8px;
-@opacity_ListView-item_dragging_val:                              0.6;
-@shift-top_MenuButton-button-popup_val:                           -5px;
-@shift-top_MenuButton-link-popup_val:                             -9px;
-@shift-top_MenuButton-toolButton_medium-popup_val:                -3px;
-@shift-top_MenuButton-link_small-popup_val:                       -8px;
-@shift-top_Dropdown-popup_val:                                    -8px;
-@shift-top_Dropdown-head-popup_val:                               -6px;
-@width_MoveDialog_val:                                            408px;
-@height_MoveDialog_val:                                           446px;
-@width_MoveDialog-search_val:                                     184px;
-@min-dimentions-NotificationBase:                                 40px;
-@width_PeriodDialog-dateRange-monthPanel_val:                     82px;
-@width_PeriodDialog_val:                                          364px;
-@height_PeriodDialog_val:                                         487px;
-@spacing_PeriodDialog-header-between-borderLeft-content_val:      10px;
-@width_PeriodDialog-years-leftRight_val:                          33px;
-@font-size_PeriodDialog-monthRange-month-date_val:                8px;
-@height_PeriodDialog-monthRange-month-date_val:                   13px;
-@dimentions_PeriodDialog-monthRange-monthWrapper:                 100px;
-@size_Render-tagStyle_val:                                        8px;
-@width_SelectedCollection-counter-shadow_val:                     20px;
-@size_Stack-shadow_val:                                           12px -8px 12px 12px;
-@animate-duration_Stack_val:                                      0.2s;
-@min-height_StackTemplate-head_val:                               38px;
-@spacing_StackTemplate-between-maximized-button-content-top_val:  7px;
-@box-shadow-size_Suggest-popup-verticalAlign_top_val:             0 -4px 8px;
-@box-shadow-size_Suggest-popup-verticalAlign_bottom_val:          0 4px 8px;
-@width_Switch_val:                                                46px;
-@length_Switch-track_val:                                         34px;
-@thickness_Switch-track_val:                                      2px;
-@spacing-between-track-and-toggleCircle_val:                      2px;
-@max-width_Tabs_item_val:                                         630px;
-@shift-top_Toolbar-toolButton-popup_val:                          -6px;
-@shift-top_Toolbar-list-popup_val:                                -8px;
-
-@spacing_TreeGridView-row-expander-between-content_borderRight_m_val:     10px;
-@spacing_TreeGridView-row-expander-between-content_borderRight_l_val:     14px;
-@spacing_TreeGridView-row-expander-between-content_borderRight_xl_val:    18px;
-
-@icon_TreeGridView-expander_node-collapsed_val:                   '\e96e';
-@icon_TreeGridView-expander_node-expanded_val:                    '\e96d';
-@icon_TreeGridView-expander_hiddenNode-collapsed_val:             '\e9c2';
-@icon_TreeGridView-expander_hiddenNode-expanded_val:              '\e9c1';
-@width-TreeGridView-levelPadding_size_m_val:                      30px;
-@width-TreeGridView-levelPadding_size_l_val:                      38px;
-@width-TreeGridView-levelPadding_size_xl_val:                     46px;
-@height_TreeTileView-node_val:                                    40px;
-
-@line-height_dialogTemplate_caption_val:                                  42px;
-@left_CheckBox__iconSuccessful_val:                                       7px;
-@spacing_StackTemplate-between-close-button-border-top_val:               5px;
-@spacing_dialogTemplate-between-head-border-right_val:                    48px;
-@spacing_TileView-between-title-topBorder_val:                            3px;
-@spacing_TileView-between-title-bottomBorder_val:                         3px;
-@spacing_TileView-between-title-leftBorder_val:                           3px;
-@spacing_TileView-between-title-rightBorder_val:                          3px;
-@spacing_ListView-item-between-checkbox-borderTop_val:                    3px;
-@spacing_Grid-row-between-checkbox-borderTop_val:                         3px;
-@padding-horizontal_CheckBox-caption_val:                                 3px;
-@spacing_Back_between_icon_caption_standart_val:                          3px;
-@spacing_Infobox-between-target-popup_val:                                11px;
-@shift-top_FilterButton-popup_val:                                        -11px;
-@spacing_Grid-row-between-content-borderLeft_xl_val:                      20px;
-@spacing_Grid-row-between-content-borderRight_xl_val:                     20px;
-@spacing_ListView-empty-between-content-borderTop_xxl_val:                44px;
-@spacing_ListView-empty-between-content-borderBottom_xxl_val:             44px;
-@vertical-offset_Infobox-arrow_val:                                       9px;
-@height_ItemActions_outside_val:                                          29px;
-@spacing_ItemActions-between-content-border-top_position_inside_val:      0;
-@spacing_ItemActions-between-content-border-bottom_position_inside_val:   3px;
-@spacing_ItemActions-between-content-border-top_position_outside_val:     0;
-@spacing_ItemActions-between-content-border-bottom_position_outside_val:  3px;
-@spacing_ItemActions-between-content-border-left_position_outside_val:    0;
-@background-color_Swipe_val:                                              #F4F9FD;
-@background-color_Swipe-shadow_val:                                       rgba(0, 0, 0, 0.12);
-@background-color_Swipe-separator_val:                                    #EBF1F6;
-@spacing_Swipe-between-vertical-separator-and-border_val:                 3px;
-@spacing_Swipe-between-actions_top_size_m_val:                            3px;
-@spacing_Swipe-between-actions_bottom_size_m_val:                         3px;
-@max-width_Swipe-title_position_bottom_val:                               160px;
-@max-width_Swipe-title_position_right_val:                                220px;
-@animation-offset-Swipe-left-to-right_val:                                16px;
-@width-Back__icon_size-s_val:                                             9px;
-@width-Back__icon_size-m_val:                                             9px;
-@width-Back__icon_size-l_val:                                             10px;
-@height-Back__icon_size-s_val:                                            11px;
-@height-Back__icon_size-m_val:                                            12px;
-@height-Back__icon_size-l_val:                                            14px;
-@size_CheckBox__iconTristate_val:                                         6px;
-@size_CheckBox__icon-box_val:                                             12px;
-@width_CloseButton-icon_toolButton_val:                                   12px;
-@width_CloseButton-icon_link_val:                                         12px;
-@width_ToggleCircle_val:                                                  12px;
-@height_ToggleCircle_val:                                                 12px;
-@size_Infobox-arrow_val:                                                  12px;
-@horizontal-offset_Infobox-arrow_val:                                     12px;
-@size_Switch__ToggleCircle_val:                                           12px;
-@size_CheckBox__iconSuccessful_val:                                       18px;
-@min-width_Paging-digitButton_val:                                        28px;
-@width_CloseButton_toolButton_m_val:                                      29px;
-@min-width_BreadCrumbs-text_val:                                          36px;
-@width_CloseButton_toolButton_l_val:                                      36px;
-@min-width_Button_common_val:                                             48px;
-@min-height_Grid-row_val:                                                 31px;
-@width_ConfirmationTemplate-m_val:                                        350px;
-@width_ConfirmationTemplate-l_val:                                        440px;
-@width_FilterPanel-size_m_val:                                            400px;
-@width_FilterPanel-size_l_val:                                            600px;
-@max-width_DropdownList_val:                                              700px;
-@max-width_BreadCrumbs-menu_val:                                          800px;
-@width_FilterPanel-size_xl_val:                                           800px;
-@min-width_SubmitPopup-button-small_val:                                  80px;
-@min-width_SubmitPopup-button_val:                                        86px;
-@box-shadow-ToolButton_val:                                               0 1px 4px @color21;
-@box-shadow-size_DropdownList-shadowStyle_centerTop_val:                  0 -6px 12px;
-@box-shadow-size_DropdownList-shadowStyle_centerBottom_val:               0 6px 12px;
-@box-shadow_Grid-masterList-item_selected_val:                            4px 0 8px @color_shadow_light;
-@box-shadow_List-masterList-item_selected_val:                            4px 0 8px rgba(0, 0, 0, .15);
-@border-width_List-masterList-item-right_val:                             0;
-@border-width_List-masterList-item-left_val:                              0;
-@border-color_List-masterList-item_selected-right_val:                    transparent;
-@border-color_List-masterList-item_selected-left_val:                     transparent;
-@border-color_List-masterList-item_selected-top_val:                      #C2D0DE;
-@border-color_List-masterList-item_selected-bottom_val:                   #9CB3CA;
-@border-color_List-masterList_val:                                        #EAEAEA;
-@content_CloseButton_icon_val:                                            '\e66c';
-@height-ProgressBar_bar_val:                                              3px;
-@top_CheckBox__iconSuccessful_val:                                        3px;
-@border-right-width_CloseButton_toolButton_val:                           0;
-@border-right-radius_CloseButton_toolButton_val:                          0;
-@border-bottom-radius_CloseButton_toolButton_val:                         0;
-@height_DropdownList-row-separator_val:                                   0;
-@spacing_DropdownList-row-between-rightBorder-row-separator_val:          0;
-@spacing_DropdownList-row-between-bottomBorder-row-separator_val:         0;
-@spacing_DropdownList-row-between-leftBorder-row-separator_val:           0;
-@spacing_Grid-row-between-content-borderLeft_xs_val:                      0;
-@spacing_Grid-row-between-content-borderRight_xs_val:                     0;
-@spacing_InputBase_between-topBorder-text_val:                            0;
-@spacing_InputBase_between-bottomBorder-text_val:                         0;
-@spacing_ListView-empty-between-content-borderTop_xs_val:                 0;
-@spacing_ListView-empty-between-content-borderBottom_xs_val:              0;
-@spacing_ListView-item-between-content-borderRight_xs_val:                0;
-@spacing_ListView-item-between-content-borderLeft_xs_val:                 0;
-@spacing_ListView-between-content-checkbox_val:                           0;
-@spacing_ListView-empty-between-content-borderTop_xs_val:                 0;
-@text-shadow_Button_readOnly_val:                                         0;
-@content_Back_secondary_val:                                              '';
-@content_Back_primary_val:                                                '';
-@font-weight_Back_val:                                                    bold;
-@text-decoration_Switch-text_enabled_hovered_val:                         none;
-@color_ToggleCircle_innerCircle__unselected_val:                          none;
-@text-shadow_Button_button_val:                                           none;
-@box-shadow_Button_common_val:                                            none;
-@box-shadow_Button_active_val:                                            none;
-@box-shadow-ToolButton_activated_val:                                     none;
-@text-shadow_ToolButton_val:                                              none;
-@text-shadow_ToolButton_readOnly_val:                                     none;
-@text-decoration_Link_default_val:                                        none;
-@text-decoration_Link_secondary_val:                                      none;
-@text-decoration_Link_primary_val:                                        none;
-@text-decoration_Link_danger_val:                                         none;
-@text-decoration_Link_warning_val:                                        none;
-@text-decoration_Link_success_val:                                        none;
-@text-decoration_Link_info_val:                                           none;
-@color_SubmitPopup-details_val:                                           inherit;
-@background-color_DropdownList-row_separator_val:                         inherit;
-@background-color-ToolButton_transparent_val:                             transparent;
-@background-color_CloseButton_toolButton_transparent_val:                 transparent;
-@color_LoadingIndicator-overlay-default_val:                              transparent;
-@background-color_PeriodDialog-dateRange-months-button_val:               transparent;
-@background-color_PeriodDialog-dateRange-months-button_hover_val:         transparent;
-@background-color_PeriodDialog-dateRange-monthsWithDates-title_val:       transparent;
-@background-color_PeriodDialog-dateRange-monthsWithDates-title_hover_val: transparent;
-@background-color_PeriodDialog-dateRange-months-nextYearButton_val:       transparent;
-@background-color_PeriodDialog-dateRange-months-nextYearButton_hover_val: transparent;
-@border-color_Render_style_info_readOnly_multiline_val:                   transparent;
-@border-color_Search_val:                                                 transparent;
-@border-color_Search_readOnly_val:                                        transparent;
-@background_ToggleButton_common_val:                                      transparent;
-@border-color_ToggleButton_common_val:                                    transparent;
-@background-color_InputRender_disabled_val:                               transparent;
-@font-weight_InputRender_style_header_val:                                bold;
-@font-weight_InputRender_style_accentHeader_val:                          bold;
-@font-weight_PeriodDialog-dateRange-header-year_val:                      bold;
-@font-weight_Render_fontStyle_primary_size_s_val:                         bold;
-@font-weight_Render_fontStyle_secondary_size_s_val:                       bold;
-@font-weight_Render_fontStyle_primary_size_m_val:                         bold;
-@font-weight_Render_fontStyle_secondary_size_m_val:                       bold;
-@font-weight_Render_fontStyle_primary_size_l_val:                         bold;
-@font-weight_Render_fontStyle_secondary_size_l_val:                       bold;
-@font-weight_Render_fontStyle_default_size_s_val:                         normal;
-@font-weight_Render_fontStyle_default_size_m_val:                         normal;
-@font-weight_Render_fontStyle_default_size_l_val:                         normal;
-@font-weight_SubmitPopup-message_val:                                     normal;
-@height_PeriodDialog-monthRange-month-title_val:                          auto;
-
-@color_App-link_val:                                                      @color_link-hover;
-@color_App-link_hover_val:                                                @color_link;
-
-@text-decoration_Misspell-caption_hover_val:    underline;
-@text-decoration_Misspell-caption_active_val:   underline;
-@font-weight_Misspell-text_val:                 bold;
-@font-weight_Misspell-caption_val:              bold;
