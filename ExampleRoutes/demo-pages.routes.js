@@ -58,9 +58,9 @@ module.exports = function(Component) {
 
       // Демо-пример: cвайп при работе со списочным компонентом на тач-устройствах.
       '/demo-ws4-swipe': function(req, res) {
-        requirejs('Examples/Swipe/Module');
+        requirejs('Controls-demo/List/Swipe/Scenarios');
         res.render('wml!Controls/Application/Route', {
-           application: 'Examples/Swipe/Module',
+           application: 'Controls-demo/List/Swipe/Scenarios',
            initDependencies: false
          }, []);
       },

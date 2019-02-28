@@ -1,0 +1,10 @@
+<ws:partial template="wml!Controls/List/Grid/Column" scope="{{_options}}">
+   <ws:contentTemplate>
+      <div class="ws-flexbox ws-flex-column">
+         <div class="demo-Shipments__title">{{itemData.item.title}}</div>
+         <ws:for data="item in itemData.item.additionalInfo">
+            <div class="demo-Shipments__additionalInfo">{{item}}</div>
+         </ws:for>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>
