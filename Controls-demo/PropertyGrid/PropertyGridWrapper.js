@@ -49,7 +49,11 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                'enum': enumTmpl,
                'Object': objTmpl
             };
+
+            opts.componentOpt._version = 0;
+            opts.componentOpt.getVersion = function() { return this._version; };
             this._exampleControlOptions = opts.componentOpt;
+
             var def = new Deferred();
             opts.description = cMerge(opts.description, opts.dataObject);
             if (typeof opts.content === 'string') {
@@ -91,6 +95,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
          },
          _valueChangedHandler: function(event, option, newValue) {
             this._exampleControlOptions[option] = newValue;
+            this._exampleControlOptions._version++;
             this._notify('optionsChanged', [this._options]);
          },
          reset: function() {
