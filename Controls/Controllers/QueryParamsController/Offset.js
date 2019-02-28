@@ -24,6 +24,10 @@ define('Controls/Controllers/QueryParamsController/Offset',
 
          },
 
+         setState: function(state) {
+
+         },
+
          getLoadedDataCount: function() {
 
          },
