@@ -4,7 +4,7 @@
 define('Controls/Utils/TouchKeyboardHelper', ['Core/constants', 'Core/EventBus', 'Core/helpers/isNewEnvironment'], function(constants, EventBus, isNewEnvironment) {
    var ipadCoefficient = {
       portrait: 0.3,
-      landscape: 0.56
+      landscape: 0.53
    };
 
    var TouchKeyboardHelper = {
