@@ -1190,6 +1190,10 @@ define('Controls/List/BaseControl', [
                }
             });
          }
+
+         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
+         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+         this._children.fakeFocusElem.focus();
          event.blockUpdate = true;
       },
 
