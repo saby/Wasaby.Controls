@@ -4,7 +4,7 @@ import Utils = require('Types/util');
 
 var ItemsUtil = {
 
-    getDefaultDisplayFlat: function (items, cfg, filter) {
+    getDefaultDisplayFlat: function(items, cfg, filter) {
         var projCfg = {};
         projCfg.keyProperty = cfg.keyProperty;
         if (cfg.groupMethod) {
@@ -20,7 +20,7 @@ var ItemsUtil = {
         return displayLib.Abstract.getDefaultDisplay(items, projCfg);
     },
 
-    getPropertyValue: function (itemContents, field) {
+    getPropertyValue: function(itemContents, field) {
         if (!(itemContents instanceof Object)) {
             return itemContents;
         } else {
@@ -29,13 +29,13 @@ var ItemsUtil = {
     },
 
     //TODO это наверное к Лехе должно уехать
-    getDisplayItemById: function (display, id, keyProperty) {
+    getDisplayItemById: function(display, id, keyProperty) {
         var list = display.getCollection();
         if (cInstance.instanceOfModule(list, 'Types/collection:RecordSet')) {
             return display.getItemBySourceItem(list.getRecordById(id));
         } else {
             var resItem;
-            display.each(function (item, i) {
+            display.each(function(item, i) {
                 if (ItemsUtil.getPropertyValue(item.getContents(), keyProperty) == id) {
                     resItem = item;
                 }
@@ -44,8 +44,35 @@ var ItemsUtil = {
         }
     },
 
-    getDefaultDisplayItem: function (display, item) {
+    getDefaultDisplayItem: function(display, item) {
         return display.createItem({contents: item});
+    },
+
+    getFirstItem: function(display) {
+        var
+            itemIdx = 0,
+            item,
+            itemsCount = display.getCount();
+        while (itemIdx < itemsCount) {
+            item = display.at(itemIdx).getContents();
+            if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
+                return display.at(itemIdx).getContents();
+            }
+            itemIdx++;
+        }
+    },
+
+    getLastItem: function(display) {
+        var
+            itemIdx = display.getCount() - 1,
+            item;
+        while (itemIdx >= 0) {
+            item = display.at(itemIdx).getContents();
+            if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
+                return display.at(itemIdx).getContents();
+            }
+            itemIdx--;
+        }
     }
 };
 export = ItemsUtil;

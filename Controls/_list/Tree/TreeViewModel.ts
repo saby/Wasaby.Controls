@@ -8,7 +8,7 @@ import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 
 var
     _private = {
-        isVisibleItem: function (item) {
+        isVisibleItem: function(item) {
             var
                 itemParent = item.getParent ? item.getParent() : undefined,
                 isExpandAll = this.isExpandAll(this.expandedItems),
@@ -17,7 +17,6 @@ var
                 expandedItems = this.expandedItems,
                 hasChildItem = this.hasChildItem,
                 itemParentContents;
-
             function isExpanded(contents) {
                 var
                     expanded = false,
@@ -32,7 +31,6 @@ var
                 }
                 return expanded;
             }
-
             if (itemParent) {
                 itemParentContents = itemParent.getContents();
                 if (itemParent.isRoot()) {
@@ -46,7 +44,7 @@ var
             return true;
         },
 
-        getExpanderVisibility: function (cfg) {
+        getExpanderVisibility: function(cfg) {
 
             // Если передана новая опция, смотрим на нее, иначе приводим значения старой опции к новому,
             // поддерживая дефолтное значение "visible"
@@ -57,11 +55,11 @@ var
             return cfg.expanderDisplayMode === 'adaptive' ? 'hasChildren' : 'visible';
         },
 
-        displayFilterTree: function (item, index, itemDisplay) {
+        displayFilterTree: function(item, index, itemDisplay) {
             return _private.isVisibleItem.call(this, itemDisplay);
         },
 
-        getDisplayFilter: function (data, cfg) {
+        getDisplayFilter: function(data, cfg) {
             var
                 filter = [];
             filter.push(_private.displayFilterTree.bind(data));
@@ -71,7 +69,7 @@ var
             return filter;
         },
 
-        hasChildItem: function (self, key) {
+        hasChildItem: function(self, key) {
             var
                 item;
             if (self._options.hasChildrenProperty) {
@@ -81,7 +79,7 @@ var
             return !!self._hierarchyRelation.getChildren(key, self._items).length;
         },
 
-        determinePresenceChildItem: function (self) {
+        determinePresenceChildItem: function(self) {
             var
                 thereIsChildItem = false,
                 items = self._items,
@@ -98,7 +96,7 @@ var
             self._thereIsChildItem = thereIsChildItem;
         },
 
-        onBeginCollectionChange: function (self, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        onBeginCollectionChange: function(self, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
             if (action === collection.IObservable.ACTION_REMOVE) {
                 _private.checkRemovedNodes(self, removedItems);
             }
@@ -107,7 +105,7 @@ var
             }
         },
 
-        removeNodeFromExpandedIfNeed: function (self, nodeId) {
+        removeNodeFromExpandedIfNeed: function(self, nodeId) {
             if (self._expandedItems[nodeId] && !_private.hasChildItem(self, nodeId)) {
                 // If it is necessary to delete only the nodes deleted from the items, add this condition:
                 // if (!self._items.getRecordById(nodeId)) {
@@ -115,13 +113,13 @@ var
             }
         },
 
-        removeNodeFromExpanded: function (self, nodeId) {
+        removeNodeFromExpanded: function(self, nodeId) {
             delete self._expandedItems[nodeId];
             self._notify('onNodeRemoved', nodeId);
         },
 
 
-        checkRemovedNodes: function (self, removedItems) {
+        checkRemovedNodes: function(self, removedItems) {
             if (removedItems.length) {
                 for (var idx = 0; idx < removedItems.length; idx++) {
 
@@ -132,7 +130,7 @@ var
                 }
             }
         },
-        shouldDrawExpander: function (itemData, expanderIcon) {
+        shouldDrawExpander: function(itemData, expanderIcon) {
             var
                 itemType = itemData.item.get(itemData.nodeProperty);
 
@@ -140,11 +138,11 @@ var
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem && itemData.hasChildItem) &&
                 itemType !== null && expanderIcon !== 'none';
         },
-        shouldDrawExpanderPadding: function (itemData, expanderIcon, expanderSize) {
+        shouldDrawExpanderPadding: function(itemData, expanderIcon, expanderSize) {
             return (itemData.expanderVisibility !== 'hasChildren' || itemData.thereIsChildItem) &&
                 !expanderSize && expanderIcon !== 'none';
         },
-        prepareExpanderClasses: function (itemData, expanderIcon, expanderSize) {
+        prepareExpanderClasses: function(itemData, expanderIcon, expanderSize) {
             var
                 itemType = itemData.item.get(itemData.nodeProperty),
                 expanderClasses = 'controls-TreeGrid__row-expander',
@@ -164,29 +162,29 @@ var
 
             return expanderClasses;
         },
-        prepareExpandedItems: function (expandedItems) {
+        prepareExpandedItems: function(expandedItems) {
             var
                 result = {};
             if (expandedItems) {
-                expandedItems.forEach(function (item) {
+                expandedItems.forEach(function(item) {
                     result[item] = true;
                 });
             }
             return result;
         },
-        prepareCollapsedItems: function (expandedItems, collapsedItems) {
+        prepareCollapsedItems: function(expandedItems, collapsedItems) {
             if (_private.isExpandAll(expandedItems) && collapsedItems) {
                 return cClone(collapsedItems);
             }
             return {};
         },
-        isExpandAll: function (expandedItems) {
+        isExpandAll: function(expandedItems) {
             return expandedItems && !!expandedItems[null];
         },
 
-        resetExpandedItems: function (self) {
+        resetExpandedItems: function(self) {
             if (_private.isExpandAll(self._expandedItems)) {
-                self._expandedItems = {null: true};
+                self._expandedItems = { null: true };
             } else {
                 for (var itemId in self._expandedItems) {
                     if (self._expandedItems.hasOwnProperty(itemId)) {
@@ -196,8 +194,8 @@ var
             }
             self._collapsedItems = _private.prepareCollapsedItems(self._expandedItems, self._options.collapsedItems);
         },
-        collapseChildNodes: function (self, nodeId) {
-            self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function (item) {
+        collapseChildNodes: function(self, nodeId) {
+            self._hierarchyRelation.getChildren(nodeId, self._items).forEach(function(item) {
                 var
                     itemId = item.getId();
                 delete self._expandedItems[itemId];
@@ -212,7 +210,7 @@ var
         _hasMoreStorage: null,
         _thereIsChildItem: false,
 
-        constructor: function (cfg) {
+        constructor: function(cfg) {
             this._options = cfg;
             this._expandedItems = _private.prepareExpandedItems(cfg.expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(cfg.expandedItems, cfg.collapsedItems);
@@ -227,37 +225,37 @@ var
             }
         },
 
-        setExpandedItems: function (expandedItems) {
+        setExpandedItems: function(expandedItems) {
             this._expandedItems = _private.prepareExpandedItems(expandedItems);
             this._collapsedItems = _private.prepareCollapsedItems(expandedItems, this._options.collapsedItems);
             this._display.setFilter(this.getDisplayFilter(this.prepareDisplayFilterData(), this._options));
             this._nextModelVersion();
         },
 
-        getExpandedItems: function () {
+        getExpandedItems: function() {
             return this._expandedItems;
         },
 
-        resetExpandedItems: function () {
+        resetExpandedItems: function() {
             _private.resetExpandedItems(this);
         },
 
-        _prepareDisplay: function (items, cfg) {
+        _prepareDisplay: function(items, cfg) {
             return TreeItemsUtil.getDefaultDisplayTree(items, cfg, this.getDisplayFilter(this.prepareDisplayFilterData(), cfg));
         },
 
-        isExpanded: function (dispItem) {
+        isExpanded: function(dispItem) {
             var
                 itemId = dispItem.getContents().getId();
             return _private.isExpandAll(this._expandedItems) ? !this._collapsedItems[itemId]
                 : !!this._expandedItems[itemId];
         },
 
-        isExpandAll: function () {
+        isExpandAll: function() {
             return _private.isExpandAll(this.getExpandedItems());
         },
 
-        toggleExpanded: function (dispItem, expanded) {
+        toggleExpanded: function(dispItem, expanded) {
             var
                 itemId = dispItem.getContents().getId(),
                 currentExpanded = this.isExpanded(dispItem);
@@ -282,12 +280,16 @@ var
             }
         },
 
-        getDisplayFilter: function (data, cfg) {
+        getDisplayFilter: function(data, cfg) {
             return Array.prototype.concat(TreeViewModel.superclass.getDisplayFilter.apply(this, arguments),
                 _private.getDisplayFilter(data, cfg));
         },
 
-        prepareDisplayFilterData: function () {
+        getLastItem: function() {
+            return ItemsUtil.getLastItem(this._display.getChildren(this._display.getRoot()));
+        },
+
+        prepareDisplayFilterData: function() {
             var
                 data = TreeViewModel.superclass.prepareDisplayFilterData.apply(this, arguments);
             data.keyProperty = this._options.keyProperty;
@@ -298,34 +300,34 @@ var
             return data;
         },
 
-        _onBeginCollectionChange: function (action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
+        _onBeginCollectionChange: function(action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
             TreeViewModel.superclass._onBeginCollectionChange.apply(this, arguments);
             _private.onBeginCollectionChange(this, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
         },
 
-        setNodeFooterTemplate: function (nodeFooterTemplate) {
+        setNodeFooterTemplate: function(nodeFooterTemplate) {
             this._options.nodeFooterTemplate = nodeFooterTemplate;
             this._nextModelVersion();
         },
 
-        setExpanderDisplayMode: function (expanderDisplayMode) {
+        setExpanderDisplayMode: function(expanderDisplayMode) {
             this._options.expanderDisplayMode = expanderDisplayMode;
             this._nextModelVersion();
         },
 
-        setExpanderVisibility: function (expanderVisibility) {
+        setExpanderVisibility: function(expanderVisibility) {
             this._options.expanderVisibility = expanderVisibility;
             this._nextModelVersion();
         },
 
-        setItems: function () {
+        setItems: function() {
             TreeViewModel.superclass.setItems.apply(this, arguments);
             if (_private.getExpanderVisibility(this._options) === 'hasChildren') {
                 _private.determinePresenceChildItem(this);
             }
         },
 
-        getItemDataByItem: function (dispItem) {
+        getItemDataByItem: function(dispItem) {
             var
                 current = TreeViewModel.superclass.getItemDataByItem.apply(this, arguments);
             current.isExpanded = current.item.get && this.isExpanded(dispItem);
@@ -376,12 +378,12 @@ var
             return current;
         },
 
-        setDragEntity: function (entity) {
+        setDragEntity: function(entity) {
             var item;
 
             if (entity) {
                 //Collapse all the nodes that we move.
-                entity.getItems().forEach(function (id) {
+                entity.getItems().forEach(function(id) {
                     item = this.getItemById(id, this._options.keyProperty);
 
                     //Not all of the moved items can be in the current recordSet
@@ -394,7 +396,7 @@ var
             TreeViewModel.superclass.setDragEntity.apply(this, arguments);
         },
 
-        setDragItemData: function (itemDragData) {
+        setDragItemData: function(itemDragData) {
             //Displays the movable item as closed
             if (itemDragData && itemDragData.isExpanded) {
                 itemDragData.isExpanded = false;
@@ -402,7 +404,7 @@ var
             TreeViewModel.superclass.setDragItemData.apply(this, arguments);
         },
 
-        calculateDragTargetPosition: function (targetData, position) {
+        calculateDragTargetPosition: function(targetData, position) {
             var result;
 
             //If you hover over the dragged item, and the current position is on the folder,
@@ -427,7 +429,7 @@ var
             return result;
         },
 
-        _calculateDragTargetPosition: function (itemData, position) {
+        _calculateDragTargetPosition: function(itemData, position) {
             var
                 result,
                 startPosition,
@@ -455,7 +457,7 @@ var
             return result;
         },
 
-        setDragTargetPosition: function (targetPosition) {
+        setDragTargetPosition: function(targetPosition) {
             if (targetPosition && targetPosition.position === 'on') {
 
                 //When an item is moved to a folder, the fake record should be displayed at the previous position.
@@ -472,7 +474,7 @@ var
             TreeViewModel.superclass.setDragTargetPosition.apply(this, arguments);
         },
 
-        _setPrevDragTargetPosition: function (targetPosition) {
+        _setPrevDragTargetPosition: function(targetPosition) {
             if (!this._prevDragTargetPosition) {
                 if (this._dragTargetPosition) {
                     this._prevDragTargetPosition = this._dragTargetPosition;
@@ -487,12 +489,12 @@ var
             }
         },
 
-        setHasMoreStorage: function (hasMoreStorage) {
+        setHasMoreStorage: function(hasMoreStorage) {
             this._hasMoreStorage = hasMoreStorage;
             this._nextModelVersion();
         },
 
-        setRoot: function (root) {
+        setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
 
@@ -509,7 +511,7 @@ var
             this._nextModelVersion();
         },
 
-        getChildren: function (rootId) {
+        getChildren: function(rootId) {
             return this._hierarchyRelation.getChildren(rootId, this._items);
         }
     });

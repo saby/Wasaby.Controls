@@ -15,7 +15,7 @@ var
     DEBOUNCE_HOVERED_ITEM_CHANGED = 150;
 
 var _private = {
-    checkDeprecated: function (cfg) {
+    checkDeprecated: function(cfg) {
         // TODO: https://online.sbis.ru/opendoc.html?guid=837b45bc-b1f0-4bd2-96de-faedf56bc2f6
         if (cfg.leftSpacing !== undefined) {
             Env.IoC.resolve('ILogger').warn('IList', 'Option "leftSpacing" is deprecated and will be removed in 19.200. Use option "itemPadding.left".');
@@ -46,12 +46,12 @@ var _private = {
         }
     },
 
-    onListChange: function (self) {
+    onListChange: function(self) {
         self._listChanged = true;
         self._forceUpdate();
     },
 
-    resizeNotifyOnListChanged: function (self) {
+    resizeNotifyOnListChanged: function(self) {
         if (self._listChanged) {
             self._listChanged = false;
 
@@ -60,7 +60,7 @@ var _private = {
         }
     },
 
-    setHoveredItem: cDebounce(function (self, item, nativeEvent) {
+    setHoveredItem: cDebounce(function(self, item, nativeEvent) {
         if (item !== self._hoveredItem) {
             self._hoveredItem = item;
             var container = nativeEvent ? nativeEvent.target.closest('.controls-ListView__itemV') : null;
@@ -81,11 +81,11 @@ var ListView = BaseControl.extend(
         _listChanged: false,
         _itemOutputWrapper: ItemOutputWrapper,
 
-        constructor: function () {
+        constructor: function() {
             ListView.superclass.constructor.apply(this, arguments);
             var self = this;
             this._queue = [];
-            this._onListChangeFnc = function (e) {
+            this._onListChangeFnc = function(e) {
                 if (self._lockForUpdate) {
                     self._queue.push(_private.onListChange.bind(null, self));
                 } else {
@@ -94,7 +94,7 @@ var ListView = BaseControl.extend(
             };
         },
 
-        _beforeMount: function (newOptions) {
+        _beforeMount: function(newOptions) {
             _private.checkDeprecated(newOptions);
             if (newOptions.groupTemplate) {
                 this._groupTemplate = newOptions.groupTemplate;
@@ -107,7 +107,7 @@ var ListView = BaseControl.extend(
             this._itemTemplate = newOptions.itemTemplate || this._defaultItemTemplate;
         },
 
-        _beforeUpdate: function (newOptions) {
+        _beforeUpdate: function(newOptions) {
             if (newOptions.listModel && (this._listModel != newOptions.listModel)) {
                 this._listModel = newOptions.listModel;
                 this._listModel.subscribe('onListChange', this._onListChangeFnc);
@@ -142,14 +142,14 @@ var ListView = BaseControl.extend(
             this._lockForUpdate = true;
         },
 
-        _afterMount: function () {
+        _afterMount: function() {
             _private.resizeNotifyOnListChanged(this);
             if (this._options.markedKey === undefined && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible')) {
                 this._notify('markedKeyChanged', [this._listModel.getMarkedKey()]);
             }
         },
 
-        _afterUpdate: function () {
+        _afterUpdate: function() {
             this._lockForUpdate = false;
             _private.resizeNotifyOnListChanged(this);
             if (this._queue.length > 0) {
@@ -160,85 +160,71 @@ var ListView = BaseControl.extend(
             }
         },
 
-        getItemsContainer: function () {
+        getItemsContainer: function() {
             return this._children.itemsContainer;
         },
 
-        _onItemClick: function (e, dispItem) {
+        _onItemClick: function(e, dispItem) {
             var item = dispItem.getContents();
             this._notify('itemClick', [item, e], {bubbling: true});
         },
 
-        _onGroupClick: function (e, dispItem) {
+        _onGroupClick: function(e, dispItem) {
             var
                 item = dispItem.getContents();
             this._notify('groupClick', [item, e], {bubbling: true});
         },
 
-        _onItemContextMenu: function (event, itemData) {
+        _onItemContextMenu: function(event, itemData) {
             if (this._options.contextMenuEnabled !== false && this._options.contextMenuVisibility !== false) {
                 this._notify('itemContextMenu', [itemData, event, true]);
             }
         },
 
-        _onItemSwipe: function (event, itemData) {
+        _onItemSwipe: function(event, itemData) {
             if (event.nativeEvent.direction === 'left' || event.nativeEvent.direction === 'right') {
                 event.currentTarget.focus();
             }
             this._notify('itemSwipe', [itemData, event]);
         },
 
-        _onRowDeactivated: function (event, eventOptions) {
+        _onRowDeactivated: function(event, eventOptions) {
             this._notify('rowDeactivated', [eventOptions]);
         },
 
-        _onItemMouseDown: function (event, itemData) {
+        _onItemMouseDown: function(event, itemData) {
             this._notify('itemMouseDown', [itemData, event]);
             event.blockUpdate = true;
         },
 
-        _onItemMouseEnter: function (event, itemData) {
+        _onItemMouseEnter: function(event, itemData) {
             this._notify('itemMouseEnter', [itemData, event]);
             _private.setHoveredItem(this, itemData.item, event);
             event.blockUpdate = true;
         },
 
-
-        // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
-        // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-        _focusInHandler: function (event) {
-            // todo: add fakeFocusElement in 19.122
-            // var
-            //    tag = event.target.tagName.toLowerCase(),
-            //    isContentEditable = !!event.target.attributes.contenteditable && event.target.attributes.contenteditable.value !== 'false';
-            // if (tag !== 'input' && tag !== 'textarea' && !isContentEditable) {
-            //    this._container.focus();
-            // }
-        },
-
         //TODO: из-за того что ItemOutput.wml один для всех таблиц, приходится подписываться в нем на события,
         //которые не нужны для ListView. Выписана задача https://online.sbis.ru/opendoc.html?guid=9fd4922f-eb37-46d5-8c39-dfe094605164
-        _onItemMouseLeave: function (event) {
+        _onItemMouseLeave: function(event) {
             _private.setHoveredItem(this, null);
             event.blockUpdate = true;
         },
 
-        _onItemMouseMove: function (event, itemData) {
+        _onItemMouseMove: function(event, itemData) {
             this._notify('itemMouseMove', [itemData, event]);
             event.blockUpdate = true;
         },
 
-        _onItemWheel: function () {
-        },
+        _onItemWheel: function() {},
 
-        _onMarkedKeyChangedHandler: function (event, key) {
+        _onMarkedKeyChangedHandler: function(event, key) {
             this._notify('markedKeyChanged', [key]);
         }
     });
 
 ListView._private = _private;
 
-ListView.getDefaultOptions = function () {
+ListView.getDefaultOptions = function() {
     return {
         contextMenuVisibility: true,
         markerVisibility: 'onactivated'

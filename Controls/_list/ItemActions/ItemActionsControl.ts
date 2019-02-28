@@ -90,7 +90,7 @@ var _private = {
 
     updateModel: function(self, newOptions, isTouch) {
         _private.updateActions(self, newOptions, isTouch);
-        newOptions.listModel.subscribe('onCollectionChange', self._onCollectionChangeFn);
+        newOptions.listModel.subscribe('onListChange', self._onCollectionChangeFn);
     },
 
     needActionsMenu: function(actions, itemActionsPosition) {
@@ -114,12 +114,16 @@ var ItemActionsControl = Control.extend({
 
     _template: template,
 
+    constructor: function() {
+        ItemActionsControl.superclass.constructor.apply(this, arguments);
+        this._onCollectionChangeFn = this._onCollectionChange.bind(this);
+    },
+
     _beforeMount: function(newOptions, context) {
         if (typeof window === 'undefined') {
             this.serverSide = true;
             return;
         }
-        this._onCollectionChangeFn = this._onCollectionChange.bind(this);
 
         /**
          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
@@ -152,7 +156,7 @@ var ItemActionsControl = Control.extend({
             this._options.toolbarVisibility !== newOptions.toolbarVisibility ||
             this._options.itemActionsPosition !== newOptions.itemActionsPosition
         ) {
-            this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+            this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
             _private.updateModel.apply(null, args);
         }
     },
@@ -183,10 +187,14 @@ var ItemActionsControl = Control.extend({
     },
 
     _beforeUnmount: function() {
-        this._options.listModel.unsubscribe('onCollectionChange', this._onCollectionChangeFn);
+        this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
     },
 
-    _onCollectionChange: function() {
+    _onCollectionChange: function(e, type) {
+        if (type !== 'collectionChanged' && type !== 'indexesChanged') {
+            return;
+        }
+
         /**
          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
@@ -195,7 +203,7 @@ var ItemActionsControl = Control.extend({
         if (this._context && this._context.isTouch) {
             isTouchValue = this._context.isTouch.isTouch;
         }
-        _private.updateActions(this, this._options, isTouchValue, true);
+        _private.updateActions(this, this._options, isTouchValue, type === 'collectionChanged');
     }
 });
 

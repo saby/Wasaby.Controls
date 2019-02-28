@@ -121,7 +121,7 @@ var
         _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
             this._gridTemplate = Env.detection.isNotFullGridSupport ? OldGridView : NewGridView;
-            if (cDetection.isNotFullGridSupport) {
+            if (Env.detection.isNotFullGridSupport) {
                 _private.detectLayoutFixed(this, cfg.columns);
             }
             GridView.superclass._beforeMount.apply(this, arguments);
@@ -133,7 +133,7 @@ var
 
             // todo removed by task https://online.sbis.ru/opendoc.html?guid=728d200e-ff93-4701-832c-93aad5600ced
             if (!isEqualWithSkip(this._options.columns, newCfg.columns, { template: true, resultTemplate: true })) {
-                if (cDetection.isNotFullGridSupport) {
+                if (Env.detection.isNotFullGridSupport) {
                     _private.detectLayoutFixed(this, newCfg.columns);
                 }
                 this._listModel.setColumns(newCfg.columns);
