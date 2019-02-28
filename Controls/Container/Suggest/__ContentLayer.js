@@ -35,6 +35,7 @@ define('Controls/Container/Suggest/__ContentLayer',
 
             var container = self._container;
             var targetContainer = self._options.target;
+            
             //TODO https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             if (container.get) {
                container = container.get(0);
