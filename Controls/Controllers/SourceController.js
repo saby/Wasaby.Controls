@@ -185,6 +185,12 @@ define('Controls/Controllers/SourceController',
             }
          },
 
+         setState: function(state) {
+            if (this._queryParamsController) {
+               this._queryParamsController.setState(state);
+            }
+         },
+
          isLoading: function() {
             return this._loader && !this._loader.isReady();
          },

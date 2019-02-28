@@ -98,6 +98,20 @@ define('Controls/Controllers/QueryParamsController/Position',
             };
          },
 
+         setState: function(state) {
+            if (state.more) {
+               this._more = state.more;
+            }
+            if (state.position) {
+               if (state.position.after !== undefined) {
+                  this._afterPosition = _private.resolvePosition(state.position.after, this._options.field);
+               }
+               if (state.position.before !== undefined) {
+                  this._beforePosition = _private.resolvePosition(state.position.before, this._options.field);
+               }
+            }
+         },
+
          calculateState: function(list, loadDirection) {
             var more, navDirection, edgeElem, metaNextPostion;
             more = list.getMetaData().more;
