@@ -6,6 +6,7 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import ControlsConstants = require('Controls/Constants');
 import Env = require('Env/Env');
+import collection = require('Types/collection');
 
 /**
  *
