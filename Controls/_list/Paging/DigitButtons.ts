@@ -2,7 +2,7 @@
  * Created by kraynovdo on 01.11.2017.
  */
 import BaseControl = require('Core/Control');
-import template = require('wml!Controls/List/Paging/DigitButtons');
+import template = require('wml!Controls/_list/Paging/DigitButtons');
 import 'css!theme?Controls/List/Paging/DigitButtons';
 
 var SUR_ELEMENTS_STEP = 3, _private, ModuleClass;

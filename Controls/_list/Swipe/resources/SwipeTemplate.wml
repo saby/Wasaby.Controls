@@ -10,7 +10,7 @@
             <div class="controls-itemActionsV_{{swipeConfig.direction}}
                 {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
                 <ws:partial
-                        template="wml!Controls/List/Swipe/resources/SwipeFor"
+                        template="wml!Controls/_list/Swipe/resources/SwipeFor"
                         itemData="{{itemData}}"
                         columnNumber="{{1}}"
                         showedActions="{{swipeConfig.direction === 'row' ? itemData.itemActions.showed : itemData.itemActions.showedFirst}}"
@@ -24,7 +24,7 @@
                 <div class="controls-itemActionsV_column
                     {{swipeConfig.isFull? 'controls-itemActionsV_column_full'}}">
                     <ws:partial
-                            template="wml!Controls/List/Swipe/resources/SwipeFor"
+                            template="wml!Controls/_list/Swipe/resources/SwipeFor"
                             itemData="{{itemData}}"
                             showedActions="{{itemData.itemActions.showedSecond}}"
                             columnNumber="{{2}}"

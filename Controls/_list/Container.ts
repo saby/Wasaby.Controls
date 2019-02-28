@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/Container');
+import template = require('wml!Controls/_list/Container');
 import DataOptions = require('Controls/Container/Data/ContextOptions');
 
 /**

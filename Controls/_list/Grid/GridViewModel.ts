@@ -1,6 +1,6 @@
 import BaseViewModel = require('Controls/List/BaseViewModel');
 import ListViewModel = require('Controls/List/ListViewModel');
-import LadderWrapper = require('wml!Controls/List/Grid/LadderWrapper');
+import LadderWrapper = require('wml!Controls/_list/Grid/LadderWrapper');
 import ControlsConstants = require('Controls/Constants');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');

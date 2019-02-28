@@ -1,10 +1,10 @@
 <ws:if data="{{itemData.item.getId}}">
-   <ws:partial template="wml!Controls/List/Grid/Item"
+   <ws:partial template="wml!Controls/_list/Grid/Item"
                itemData="{{itemData}}"
                multiSelectTpl="{{multiSelectTpl}}"/>
 </ws:if>
 <ws:else>
-   <ws:partial template="wml!Controls/List/TreeGridView/Item"
+   <ws:partial template="wml!Controls/_list/TreeGridView/Item"
                itemData="{{itemData}}"
                multiSelectTpl="{{multiSelectTpl}}"
                colspan="{{true}}"
@@ -14,7 +14,7 @@
             <ws:itemTemplate>
                <ws:partial template="wml!Controls/BreadCrumbs/View/resources/itemTemplate">
                   <ws:contentTemplate>
-                     <ws:partial template="wml!Controls/List/SearchView/SearchBreadCrumbsContent" searchValue="{{itemData.searchValue}}"/>
+                     <ws:partial template="wml!Controls/_list/SearchView/SearchBreadCrumbsContent" searchValue="{{itemData.searchValue}}"/>
                   </ws:contentTemplate>
                </ws:partial>
             </ws:itemTemplate>

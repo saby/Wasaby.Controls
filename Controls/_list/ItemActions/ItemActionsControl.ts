@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/ItemActions/ItemActionsControl');
+import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import tUtil = require('Controls/Utils/Toolbar');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');

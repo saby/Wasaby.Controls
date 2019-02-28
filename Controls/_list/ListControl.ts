@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import ListControlTpl = require('wml!Controls/List/ListControl/ListControl');
+import ListControlTpl = require('wml!Controls/_list/ListControl/ListControl');
 import Deferred = require('Core/Deferred');
 
 /**

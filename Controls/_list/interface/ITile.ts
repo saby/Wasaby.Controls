@@ -58,7 +58,7 @@
  *                   parentProperty="Раздел"
  *                   nodeProperty="Раздел@">
  *       <ws:itemTemplate>
- *          <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl"
+ *          <ws:partial template="wml!Controls/_list/TreeTileView/DefaultItemTpl"
  *                      imageProperty="img" >
  *       </ws:itemTemplate>
  *    </Controls.Tile>

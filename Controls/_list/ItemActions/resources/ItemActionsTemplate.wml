@@ -8,7 +8,7 @@
             {{itemData.isSwiped ? 'controls-itemActionsV_swiped'}}">
     <div attr:class="controls-itemActionsV__wrapper_{{itemActionsPosition}}">
         <ws:partial
-                template="wml!Controls/List/ItemActions/resources/ItemActionsFor"
+                template="wml!Controls/_list/ItemActions/resources/ItemActionsFor"
                 itemData="{{itemData}}"
                 size="{{size}}"
                 showedActions="{{itemData.itemActions.showed}}"/>

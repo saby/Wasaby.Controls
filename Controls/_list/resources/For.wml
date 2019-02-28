@@ -38,7 +38,7 @@
    <ws:partial
       on:click="_onItemClick(editingItemData.dispItem)"
       itemTemplate="{{itemTemplate}}"
-      template="wml!Controls/List/ItemTemplateWrapper"
+      template="wml!Controls/_list/ItemTemplateWrapper"
       itemActionsTemplate="{{itemActionsTemplate}}"
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"

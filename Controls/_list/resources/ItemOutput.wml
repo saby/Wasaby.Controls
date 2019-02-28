@@ -12,7 +12,7 @@
       swipeTemplate="{{swipeTemplate}}"
       multiSelectTpl="{{multiSelectTpl}}"
       itemTemplate="{{itemTemplate}}"
-      template="wml!Controls/List/ItemTemplateWrapper"
+      template="wml!Controls/_list/ItemTemplateWrapper"
       itemData="{{itemData}}"
       actionsType="{{itemActionsPosition}}"/>
 </ws:template>

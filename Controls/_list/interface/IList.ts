@@ -18,7 +18,7 @@
  * @cfg {Function} Template for the empty list.
  * <a href="/materials/demo-ws4-list-base">Example</a>.
  * @remark
- * We recommend to use default template for emptyTemplate: wml!Controls/List/emptyTemplate
+ * We recommend to use default template for emptyTemplate: wml!Controls/_list/emptyTemplate
  * The template accepts the following options:
  * - contentTemplate content of emptyTemplate
  * - topSpacing Spacing between top border and content of emptyTemplate
@@ -27,7 +27,7 @@
  * <pre>
  *    <Controls.List>
  *       <ws:emptyTemplate>
- *          <ws:partial template="wml!Controls/List/emptyTemplate" topSpacing="xl" bottomSpacing="l">
+ *          <ws:partial template="wml!Controls/_list/emptyTemplate" topSpacing="xl" bottomSpacing="l">
  *             <ws:contentTemplate>Нет данных</ws:contentTemplate>
  *          </ws:partial>
  *       </ws:emptyTemplate>

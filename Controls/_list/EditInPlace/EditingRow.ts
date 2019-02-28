@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import scrollToElement = require('Controls/Utils/scrollToElement');
-import template = require('wml!Controls/List/EditInPlace/EditingRow');
+import template = require('wml!Controls/_list/EditInPlace/EditingRow');
 
 var EditingRow = Control.extend({
     _template: template,

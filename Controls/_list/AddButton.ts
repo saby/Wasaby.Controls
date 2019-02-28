@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/AddButton/AddButton');
+import template = require('wml!Controls/_list/AddButton/AddButton');
 import entity = require('Types/entity');
 import 'css!theme?Controls/List/AddButton/AddButton';
 

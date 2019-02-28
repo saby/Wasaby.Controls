@@ -1,6 +1,6 @@
 import ListView = require('Controls/List/ListView');
-import template = require('wml!Controls/List/TileView/TileView');
-import defaultItemTpl = require('wml!Controls/List/TileView/DefaultItemTpl');
+import template = require('wml!Controls/_list/TileView/TileView');
+import defaultItemTpl = require('wml!Controls/_list/TileView/DefaultItemTpl');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import ItemSizeUtils = require('Controls/List/TileView/resources/ItemSizeUtils');
 import 'css!theme?Controls/List/TileView/TileView';

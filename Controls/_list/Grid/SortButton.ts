@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/Grid/SortButton');
+import template = require('wml!Controls/_list/Grid/SortButton');
 import 'css!theme?Controls/List/Grid/SortButton';
 
 /**

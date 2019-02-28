@@ -1,10 +1,10 @@
 <ws:if data="{{listModel.getCurrent().hasSeparator}}">
-   <ws:partial template="wml!Controls/List/TileView/resources/InvisibleFor" itemTemplate="{{itemTemplate}}" listModel="{{listModel}}"/>
+   <ws:partial template="wml!Controls/_list/TileView/resources/InvisibleFor" itemTemplate="{{itemTemplate}}" listModel="{{listModel}}"/>
    <div class="controls-TreeTileView__separator"></div>
 </ws:if>
 <ws:partial
    __noDirtyChecking="{{true}}"
-   template="{{'wml!Controls/List/resources/ItemOutput'}}"
+   template="{{'wml!Controls/_list/resources/ItemOutput'}}"
    listModel="{{listModel}}"
    itemActionsTemplate="{{itemActionsTemplate}}"
    swipeTemplate="{{swipeTemplate}}"

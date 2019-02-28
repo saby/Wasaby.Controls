@@ -2,7 +2,7 @@
  * Created by kraynovdo on 15.02.2018.
  */
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/BaseControl/Scroll/Emitter/Emitter');
+import template = require('wml!Controls/_list/BaseControl/Scroll/Emitter/Emitter');
 
 var ScrollEmitter = Control.extend({
     _template: template,

@@ -1,8 +1,8 @@
 import GridView = require('Controls/List/Grid/GridView');
-import DefaultItemTpl = require('wml!Controls/List/SearchView/Item');
+import DefaultItemTpl = require('wml!Controls/_list/SearchView/Item');
 import 'Controls/BreadCrumbs';
 import 'Controls/Decorator/Highlight';
-import 'wml!Controls/List/SearchView/SearchBreadCrumbsContent';
+import 'wml!Controls/_list/SearchView/SearchBreadCrumbsContent';
 
 var
     SearchView = GridView.extend({

@@ -5,7 +5,7 @@ import sourceLib = require('Types/source');
 import dataOptions = require('Controls/Container/Data/ContextOptions');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import TreeItemsUtil = require('Controls/List/resources/utils/TreeItemsUtil');
-import template = require('wml!Controls/List/Mover/Mover');
+import template = require('wml!Controls/_list/Mover/Mover');
 
 var BEFORE_ITEMS_MOVE_RESULT = {
     CUSTOM: 'Custom',

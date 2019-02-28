@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/EditInPlace/EditInPlace');
+import template = require('wml!Controls/_list/EditInPlace/EditInPlace');
 import Deferred = require('Core/Deferred');
 import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');

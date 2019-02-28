@@ -2,7 +2,7 @@
  * Created by kraynovdo on 22.09.2017.
  */
 import BaseControl = require('Core/Control');
-import ItemsRenderTpl = require('wml!Controls/List/ItemsView');
+import ItemsRenderTpl = require('wml!Controls/_list/ItemsView');
 import ItemsViewModel = require('Controls/List/ItemsViewModel');
 
 var _private = {

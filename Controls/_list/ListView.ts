@@ -4,11 +4,11 @@
 import BaseControl = require('Core/Control');
 import cDebounce = require('Core/helpers/Function/debounce');
 import Env = require('Env/Env');
-import ListViewTpl = require('wml!Controls/List/ListView/ListView');
-import defaultItemTemplate = require('wml!Controls/List/ItemTemplate');
-import GroupTemplate = require('wml!Controls/List/GroupTemplate');
-import ItemOutputWrapper = require('wml!Controls/List/resources/ItemOutputWrapper');
-import 'wml!Controls/List/resources/ItemOutput';
+import ListViewTpl = require('wml!Controls/_list/ListView/ListView');
+import defaultItemTemplate = require('wml!Controls/_list/ItemTemplate');
+import GroupTemplate = require('wml!Controls/_list/GroupTemplate');
+import ItemOutputWrapper = require('wml!Controls/_list/resources/ItemOutputWrapper');
+import 'wml!Controls/_list/resources/ItemOutput';
 import 'css!theme?Controls/List/ListView/ListView';
 
 var

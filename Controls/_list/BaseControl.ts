@@ -2,7 +2,7 @@ import Control = require('Core/Control');
 import cClone = require('Core/core-clone');
 import cMerge = require('Core/core-merge');
 import cInstance = require('Core/core-instance');
-import BaseControlTpl = require('wml!Controls/List/BaseControl/BaseControl');
+import BaseControlTpl = require('wml!Controls/_list/BaseControl/BaseControl');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import VirtualScroll = require('Controls/List/Controllers/VirtualScroll');
 import SourceController = require('Controls/Controllers/SourceController');
@@ -16,7 +16,7 @@ import tUtil = require('Controls/Utils/Toolbar');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
-import 'wml!Controls/List/BaseControl/Footer';
+import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/List/BaseControl/BaseControl';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые

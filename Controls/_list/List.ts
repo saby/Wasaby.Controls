@@ -2,7 +2,7 @@
  * Created by kraynovdo on 31.01.2018.
  */
 import Control = require('Core/Control');
-import ListControlTpl = require('wml!Controls/List/List');
+import ListControlTpl = require('wml!Controls/_list/List');
 import ListViewModel = require('Controls/List/ListViewModel');
 import Deferred = require('Core/Deferred');
 import tmplNotify = require('Controls/Utils/tmplNotify');

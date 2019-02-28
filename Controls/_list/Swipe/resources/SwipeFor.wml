@@ -1,6 +1,6 @@
 <ws:for data="action in showedActions">
     <ws:partial
-            template="wml!Controls/List/Swipe/resources/SwipeAction"
+            template="wml!Controls/_list/Swipe/resources/SwipeAction"
             action="{{action}}"
             swipeConfig="{{swipeConfig}}"
             needShowIcon="{{needShowIcon}}"

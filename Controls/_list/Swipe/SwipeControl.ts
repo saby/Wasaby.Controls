@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/Swipe/SwipeControl');
+import template = require('wml!Controls/_list/Swipe/SwipeControl');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import Deferred = require('Core/Deferred');

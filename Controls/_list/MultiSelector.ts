@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/MultiSelector/MultiSelector');
+import template = require('wml!Controls/_list/MultiSelector/MultiSelector');
 
 /**
  * Container for list components.

@@ -1,6 +1,6 @@
 <ws:partial
    __noDirtyChecking="{{true}}"
-   template="{{'wml!Controls/List/resources/ItemOutput'}}"
+   template="{{'wml!Controls/_list/resources/ItemOutput'}}"
    listModel="{{listModel}}"
    editingItemData="{{editingItemData}}"
    isAdd="{{isAdd}}"

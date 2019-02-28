@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/List/Mover/MoveDialog/MoveDialog');
+import template = require('wml!Controls/_list/Mover/MoveDialog/MoveDialog');
 import 'css!theme?Controls/List/Mover/MoveDialog/MoveDialog';
 
    /**
