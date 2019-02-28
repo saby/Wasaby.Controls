@@ -21,11 +21,20 @@ define('Controls/Popup/Templates/Notification/Simple',
          _template: template,
 
          _timerId: null,
-
+         _iconStyle: null,
          _beforeMount: function(options) {
             if (options.autoClose) {
                this._autoClose();
             }
+            this._iconStyle = {
+               warning: 'attention',
+               attention: 'attention',
+               success: 'done',
+               done: 'done',
+               danger: 'error',
+               error: 'error',
+               primary: 'primary'
+            };
          },
 
          _closeClick: function() {

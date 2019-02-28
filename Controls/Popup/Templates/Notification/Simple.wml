@@ -5,7 +5,10 @@
     <ws:bodyContentTemplate>
         <div class="controls-Notification__simpleTemplate">
             <ws:if data="{{_options.icon}}">
-                <div class="controls-Notification__simpleTemplate-icon icon-24 icon-{{_options.style}} icon-{{_options.icon}}"></div>
+                <div class="controls-Notification__simpleTemplate-icon
+                controls-Notification__simpleTemplate-icon-size
+                icon-{{_iconStyle[_options.style]}}
+                 icon-{{_options.icon}}"></div>
             </ws:if>
             <div class="controls-Notification__simpleTemplate-message">{{_options.text}}</div>
         </div>
