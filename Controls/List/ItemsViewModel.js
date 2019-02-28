@@ -165,12 +165,12 @@ define('Controls/List/ItemsViewModel', [
          return this.getItemDataByItem(dispItem);
       },
 
-      _nextModelVersion: function(notUpdatePrefixItemVersion, changesType) {
+      _nextModelVersion: function(notUpdatePrefixItemVersion, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          if (!notUpdatePrefixItemVersion) {
             this._prefixItemVersion++;
          }
          this._nextVersion();
-         this._notify('onListChange', changesType);
+         this._notify('onListChange', changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
 
       nextModelVersion: function(notUpdatePrefixItemVersion) {
@@ -299,7 +299,7 @@ define('Controls/List/ItemsViewModel', [
 
       _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
-         this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged');
+         this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },

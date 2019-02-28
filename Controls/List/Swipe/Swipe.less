@@ -134,6 +134,12 @@
   line-height: @font-size_swipe_icon_small;
 }
 
-.controls-ListView__item_rightSwipeAnimation {
+/**
+TODO: на андроиде дёргается запись в списке если после анимации перестраивается ПМО.
+Нужно или разобраться почему дёргается запись, или откладывать перестраивание ПМО.
+Верну анимацию по задаче:
+https://online.sbis.ru/opendoc.html?guid=a1a72f4f-de87-400c-8cb1-1e32d8b63068
+ */
+body:not(.ws-is-mobile-android) .controls-ListView__item_rightSwipeAnimation {
    animation: rightSwipe 0.3s;
 }

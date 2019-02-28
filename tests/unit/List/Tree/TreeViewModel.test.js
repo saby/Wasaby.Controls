@@ -114,7 +114,7 @@ define([
       describe('"_private" block', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
-         
+
          it('removeNodeFromExpanded', function() {
             var removed = false;
             var self = {
@@ -126,19 +126,19 @@ define([
                }
             };
             TreeViewModel._private.removeNodeFromExpanded(self, 'test');
-            
+
             assert.equal(Object.keys(self._expandedItems).length, 0);
             assert.isTrue(removed);
          });
-   
+
          it('resetExpandedItems', function() {
             treeViewModel.setExpandedItems(['123', '234', '1']);
             assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 3);
-            
+
             treeViewModel.resetExpandedItems();
             assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 0);
          });
-         
+
          it('isVisibleItem', function() {
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
@@ -397,11 +397,11 @@ define([
             treeViewModel._curIndex = 4;
             assert.isTrue(treeViewModel.getCurrent().hasChildren);
          });
-   
+
          it('isExpandAll', function() {
             treeViewModel.setExpandedItems(['123', '234', '3']);
             assert.isFalse(treeViewModel.isExpandAll());
-   
+
             treeViewModel.setExpandedItems([null]);
             assert.isTrue(treeViewModel.isExpandAll());
          });

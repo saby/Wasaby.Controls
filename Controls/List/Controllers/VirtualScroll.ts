@@ -157,22 +157,34 @@ class VirtualScroll {
         this._updatePlaceholdersSizes();
     }
 
+    public insertItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
+        let topItemsHeight = this._itemsHeights.slice(0, itemIndex + 1),
+            insertedItemsHeights = [],
+            bottomItemsHeight = this._itemsHeights.slice(itemIndex + 1);
+
+        for (let i = 0; i < itemsHeightsCount; i++) {
+            insertedItemsHeights[i] = 0;
+        }
+
+        this._itemsHeights = topItemsHeight.concat(insertedItemsHeights, bottomItemsHeight);
+        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
+        this._updatePlaceholdersSizes();
+    }
+
+    public cutItemsHeights(itemIndex: number, itemsHeightsCount: number): void {
+        this._itemsHeights.splice(itemIndex + 1, itemsHeightsCount);
+        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
+        this._updatePlaceholdersSizes();
+    }
+
     public updateItemsIndexesOnToggle(toggledItemIndex, isExpanded, childItemsCount): void {
         if (!!childItemsCount) {
             if (isExpanded) {
-
-                let topItemsHeight = this._itemsHeights.slice(0, toggledItemIndex + 1),
-                    insertedItemsHeights = new Array(childItemsCount),
-                    bottomItemsHeight = this._itemsHeights.slice(toggledItemIndex + 1);
-
-                this._itemsHeights = topItemsHeight.concat(insertedItemsHeights, bottomItemsHeight);
+                this.insertItemsHeights(toggledItemIndex, childItemsCount);
             } else {
-                this._itemsHeights.splice(toggledItemIndex + 1, childItemsCount);
+                this.cutItemsHeights(toggledItemIndex, childItemsCount);
             }
         }
-        this._needToUpdateAllItemsHeight = true;
-        this._stopIndex = Math.min(this._itemsCount, this._startIndex + this._virtualPageSize);
-        this._updatePlaceholdersSizes();
     }
 
     public updateItemsIndexesOnScrolling(scrollTop: number): void {

@@ -4,10 +4,10 @@ define('Controls/Popup/Previewer',
       'wml!Controls/Popup/Previewer/Previewer',
       'Core/helpers/Function/debounce',
       'Controls/Popup/Opener/Previewer',
-      'Core/IoC',
-      'Core/Deferred'
+      'Core/IoC'
    ],
-   function(Control, template, debounce, PreviewerOpener, IoC, Deferred) {
+   function(Control, template, debounce, PreviewerOpener, IoC) {
+
       'use strict';
 
       /**
@@ -39,7 +39,6 @@ define('Controls/Popup/Previewer',
             return 'click';
          },
          getCfg: function(self, event) {
-            var getZIndex = requirejs('Controls/Utils/getZIndex'); // TODO COMPATIBLE
             return {
                opener: self,
                target: event.currentTarget || event.target,
@@ -48,7 +47,6 @@ define('Controls/Popup/Previewer',
                   vertical: 'bottom',
                   horizontal: 'right'
                },
-               zIndex: getZIndex(self),
                isCompoundTemplate: self._options.isCompoundTemplate,
                eventHandlers: {
                   onResult: self._resultHandler
@@ -65,6 +63,8 @@ define('Controls/Popup/Previewer',
       var Previewer = Control.extend({
          _template: template,
 
+         _isNewEnvironment: PreviewerOpener.isNewEnvironment,
+
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
             this._debouncedAction = debounce(this._debouncedAction, 10);
@@ -72,30 +72,36 @@ define('Controls/Popup/Previewer',
             if (options.templateName) {
                IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшая опция templateName, используйте опцию template');
             }
-
-            if (!PreviewerOpener.isNewEnvironment) {
-               var def = new Deferred();
-               requirejs(['Controls/Utils/getZIndex'], def.callback.bind(def));
-               return def;
-            }
          },
 
          _open: function(event) {
             var type = _private.getType(event.type);
 
             if (!this._isPopupOpened()) {
-               this._close(event); // close opened popup to avoid jerking the content for repositioning
-               this._notify('openPreviewer', [_private.getCfg(this, event), type], { bubbling: true });
+               if (this._isNewEnvironment()) { // TODO: COMPATIBLE
+                  this._close(event); // close opened popup to avoid jerking the content for repositioning
+                  this._notify('openPreviewer', [_private.getCfg(this, event), type], {bubbling: true});
+               } else {
+                  this._children.openerPreviewer.open(_private.getCfg(this, event), type);
+               }
             }
          },
 
          _close: function(event) {
             var type = _private.getType(event.type);
-            this._notify('closePreviewer', [type], { bubbling: true });
+
+            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
+               this._notify('closePreviewer', [type], { bubbling: true });
+            } else {
+               this._children.openerPreviewer.close(type);
+            }
          },
 
          _isPopupOpened: function() {
-            return this._notify('isPreviewerOpened', [], { bubbling: true });
+            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
+               return this._notify('isPreviewerOpened', [], {bubbling: true});
+            }
+            return this._children.openerPreviewer.isOpened();
          },
 
          // Pointer action on hover with content and popup are executed sequentially.
@@ -105,7 +111,11 @@ define('Controls/Popup/Previewer',
          },
 
          _cancel: function(event, action) {
-            this._notify('cancelPreviewer', [action], { bubbling: true });
+            if (this._isNewEnvironment()) { // TODO: COMPATIBLE
+               this._notify('cancelPreviewer', [action], { bubbling: true });
+            } else {
+               this._children.openerPreviewer.cancel(action);
+            }
          },
 
          _contentMousedownHandler: function(event) {
