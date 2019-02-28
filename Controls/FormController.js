@@ -4,10 +4,25 @@ define('Controls/FormController', [
    'wml!Controls/FormController/FormController',
    'Core/Deferred',
    'Env/Env',
-   'Controls/Utils/error/Mode',
-   'Controls/Utils/ErrorController'
-], function(Control, cInstance, tmpl, Deferred, Env, ErrorMode, ErrorController) {
+   'Controls/dataSource'
+], function(Control, cInstance, tmpl, Deferred, Env, dataSource) {
    'use strict';
+
+   /**
+    * Object with state from server side rendering
+    * @typedef {Object}
+    * @name ReceivedState
+    * @property {*} [data]
+    * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+    */
+
+   /**
+    * @typedef {Object}
+    * @name CrudResult
+    * @property {*} [data]
+    * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+    * @property {Controls/_dataSource/_error/ViewConfig} [error]
+    */
 
    var _private = {
       checkRecordType: function(record) {
@@ -26,13 +41,15 @@ define('Controls/FormController', [
                _private.readRecordBeforeMountNotify(instance);
             }
 
-            return record;
+            return {
+               data: record
+            };
          });
          readDef.addErrback(function(e) {
             Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
             instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
             instance._readInMounting = { isError: true, result: e };
-            throw e;
+            return instance._crudErrback(e);
          });
 
          return readDef;
@@ -54,17 +71,20 @@ define('Controls/FormController', [
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
          var createDef = cfg.dataSource.create(cfg.initValues);
          instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
-         createDef.addCallbacks(function(record) {
+         createDef.addCallback(function(record) {
             instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
 
             if (instance._isMount) {
                _private.createRecordBeforeMountNotify(instance);
             }
-         }, instance._crudErrback.bind(instance));
+            return {
+               data: record
+            };
+         });
          createDef.addErrback(function(e) {
             instance._createdInMounting = { isError: true, result: e };
-            return e;
+            return instance._crudErrback(e);
          });
          return createDef;
       },
@@ -106,14 +126,23 @@ define('Controls/FormController', [
       constructor: function(options) {
          FormController.superclass.constructor.apply(this, arguments);
          options = options || {};
-         this.__errorController = options.errorController || new ErrorController({});
+         this.__errorController = options.errorController || new dataSource.error.Controller({});
       },
-      _beforeMount: function(cfg) {
+      _beforeMount: function(cfg, _, receivedState) {
          this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
 
+         receivedState = receivedState || {};
+         var receivedError = receivedState.errorConfig;
+         var receivedData = receivedState.data;
+
+         if (receivedError) {
+            return this._showError(receivedError);
+         }
+         var record = receivedData || cfg.record;
+
          // use record
-         if (cfg.record && _private.checkRecordType(cfg.record)) {
-            this._setRecord(cfg.record);
+         if (record && _private.checkRecordType(record)) {
+            this._setRecord(record);
             this._isNewRecord = !!cfg.isNewRecord;
 
             // If there is a key - read the record. Not waiting for answer BL
@@ -392,7 +421,9 @@ define('Controls/FormController', [
          function updateCallback(result) {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-               var res = self._update();
+               var res = self._update().addCallback(function(result /* result: CrudResult */) {
+                  return _private.getData(result);
+               });
                updateResult.dependOn(res);
             } else {
                updateResult.callback(true);
@@ -467,9 +498,11 @@ define('Controls/FormController', [
                });
             }
          });
-         validationDef.addErrback(function(e) {
-            updateDef.errback(e);
-            return e;
+         validationDef.addErrback(function(error) {
+            return this._crudErrback(error).then(function(result /* result: CrudResult */) {
+               updateDef.callback(result);
+               return result;
+            });
          });
          return updateDef;
       },
@@ -497,18 +530,45 @@ define('Controls/FormController', [
          return this._children.validation.submit();
       },
 
-      _crudErrback: function(error) {
-         var errorTemplate = this.__errorController.process({
-            error: error,
-            mode: ErrorMode.include
+      /**
+       *
+       * @param {Error} error
+       * @param {Controls/_dataSource/_error/Mode} [mode]
+       * @return {Promise<CrudResult>}
+       * @private
+       */
+      _crudErrback: function(error, mode) {
+         return this._processError(error, mode).then(function(errorConfig) {
+            this._showError(errorConfig);
+            return {
+               error: config.error,
+               errorConfig: errorConfig
+            };
          });
-         if (!errorTemplate) {
+      },
+
+      /**
+       * @param {Error} error
+       * @param {Controls/_dataSource/_error/Mode} [mode]
+       * @return {Promise.<Controls/_dataSource/_error/ViewConfig | void>}
+       * @private
+       */
+      _processError: function(error, mode) {
+         return this.__errorController.process({
+            error: error,
+            mode: mode || dataSource.error.Mode.include
+         });
+      },
+
+      /**
+       * @param {Controls/_dataSource/_error/ViewConfig} [config]
+       * @private
+       */
+      _showError: function(config) {
+         if (!config) {
             return;
          }
-         return this._showError(errorTemplate);
-      },
-      _showError: function(config) {
-         if (config.mode != ErrorMode.dialog) {
+         if (config.mode != dataSource.error.Mode.dialog) {
             // отрисовка внутри компонента
             this.__error = config;
             this._forceUpdate();
@@ -516,11 +576,14 @@ define('Controls/FormController', [
          }
 
          // диалоговое с ошибкой
+         this._children &&
+         this._children.dialogOpener &&
          this._children.dialogOpener.open({
             template: config.template,
             templateOptions: config.options
          });
       },
+
       _hideError: function() {
          if (this.__error) {
             this.__error = null;
@@ -534,6 +597,14 @@ define('Controls/FormController', [
             this._children.dialogOpener.close();
          }
       },
+
+      _getData: function(crudResult /* crudResult: CrudResult */) {
+         if (crudResult.data) {
+            return Promise.resolve(crudResult.data);
+         }
+         return Promise.reject(crudResult.error);
+      },
+
       _crudHandler: function(event) {
          var eventName = event.type;
          var args = Array.prototype.slice.call(arguments, 1);

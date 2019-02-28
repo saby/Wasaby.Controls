@@ -1,0 +1,6 @@
+<Controls.Popup.Opener.Confirmation.Dialog
+    type="ok"
+    style="error"
+    message="{{ _options.message || message }}"
+    details="{{ _options.details || details }}"
+/>
