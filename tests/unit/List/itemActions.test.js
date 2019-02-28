@@ -149,8 +149,6 @@ define([
             unsubscribe: function() {
 
             }};
-         ctrl._onCollectionChangeFn = function() {
-         };
          ctrl._beforeUpdate(cfg, {isTouch: {isTouch: false}});
          assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
@@ -207,8 +205,6 @@ define([
             unsubscribe: function() {
             }
          };
-         ctrl._onCollectionChangeFn = function() {
-         };
          ctrl._beforeUpdate(cfg, { isTouch: { isTouch: false } });
          assert.deepEqual(data[0].test, listViewModel._actions[0].all);
          assert.deepEqual(data[1].test, listViewModel._actions[1].all);
@@ -222,10 +218,10 @@ define([
          var eHandler = function() {};
          var ctrl = new ItemActionsControl(cfg);
          ctrl._onCollectionChangeFn = eHandler;
-         listViewModel.subscribe('onCollectionChange', eHandler);
+         listViewModel.subscribe('onListChange', eHandler);
          ctrl._options.listModel = listViewModel;
 
-         assert.isTrue(listViewModel.hasEventHandlers('onCollectionChange'));
+         assert.isTrue(listViewModel.hasEventHandlers('onListChange'));
 
          ctrl._beforeUpdate({
             listModel: new ListViewModel({
@@ -234,8 +230,48 @@ define([
             })
          });
 
-         assert.isFalse(listViewModel.hasEventHandlers('onCollectionChange'));
+         assert.isFalse(listViewModel.hasEventHandlers('onListChange'));
+      });
 
+      describe('_onCollectionChange', function() {
+         it('items should not update if the type is neither collectionChanged nor indexesChanged', function() {
+            var
+               cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               ctrl = new ItemActionsControl(cfg),
+               oldVersion = listViewModel.getVersion();
+            ctrl.saveOptions(cfg);
+            ctrl._onCollectionChange({}, 'test');
+            assert.equal(listViewModel.getVersion(), oldVersion);
+         });
+
+         it('items should update once if the type is collectionChanged', function() {
+            var
+               cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               ctrl = new ItemActionsControl(cfg),
+               oldVersion = listViewModel.getVersion();
+            ctrl.saveOptions(cfg);
+            ctrl._onCollectionChange({}, 'collectionChanged');
+            assert.equal(1, listViewModel.getVersion() - oldVersion);
+         });
+
+         it('items should update once if the type is indexesChanged', function() {
+            var
+               cfg = {
+                  listModel: listViewModel,
+                  itemActions: actions
+               },
+               ctrl = new ItemActionsControl(cfg),
+               oldVersion = listViewModel.getVersion();
+            ctrl.saveOptions(cfg);
+            ctrl._onCollectionChange({}, 'indexesChanged');
+            assert.equal(1, listViewModel.getVersion() - oldVersion);
+         });
       });
 
       it('_onItemActionClick', function() {
