@@ -150,7 +150,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _beforeUpdate: function(newOptions) {
          var
             self = this,
-            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
+            keysChanged = newOptions.selectedKeys !== this._options.selectedKeys &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
