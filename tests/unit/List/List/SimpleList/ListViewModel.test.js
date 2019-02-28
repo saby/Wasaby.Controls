@@ -29,6 +29,21 @@ define([
          ];
       });
 
+      it('getFirstItem and getLastItem', function() {
+         var
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new ListViewModel(cfg);
+         assert.equal(model.getFirstItem(), model.getItems().at(0));
+         assert.equal(model.getLastItem(), model.getItems().at(2));
+      });
+
       it('getCurrent', function() {
          var cfg = {
             items: data,
