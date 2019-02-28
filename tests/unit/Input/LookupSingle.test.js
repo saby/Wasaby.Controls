@@ -141,11 +141,12 @@ define([
       });
 
       it('_afterUpdate', function() {
+         var activated = false;
          var lookup = new Lookup();
+
          lookup._needSetFocusInInput = true;
          lookup._active = true;
-
-         var activated = false;
+         lookup._options.items = getItems(0);
          lookup.activate = function() {
             activated = true;
          };
@@ -237,6 +238,7 @@ define([
 
          lookup._suggestState = true;
          lookup._isPickerVisible = false;
+         lookup._options.items = getItems(0);
          lookup._suggestStateChanged();
          assert.isTrue(lookup._suggestState);
 

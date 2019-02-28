@@ -330,7 +330,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             }
          }
 
-         if (!this._isShowInput()) {
+         if (!this._isInputVisible()) {
             this._suggestState = false;
          }
       },
@@ -380,20 +380,20 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly || this._infoboxOpened || !this._isShowInput()) {
+         if (this._options.readOnly || this._infoboxOpened || !this._isInputVisible()) {
             this._suggestState = false;
          }
       },
 
       _determineAutoDropDown: function() {
-         return this._options.autoDropDown && this._isShowInput();
+         return this._options.autoDropDown && this._isInputVisible();
       },
 
       _isEmpty: function() {
          return !this._options.items.getCount();
       },
 
-      _isShowInput: function() {
+      _isInputVisible: function() {
          return this._isEmpty() || this._options.multiSelect;
       },
       
