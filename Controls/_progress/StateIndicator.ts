@@ -98,7 +98,7 @@ var StateIndicator = Control.extend(
       },
 
       _mouseOverIndicatorHandler: function(e, data) {
-         this._notify('onItemOver', data);
+         this._notify('onItemOver', [e.target, data]);
       },
 
       applyNewState: function(opts) {
