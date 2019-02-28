@@ -26,6 +26,18 @@ define([
          SelectedCollection._private.getCounterWidth = function() {};
       }
 
+      SelectedCollection._private.getHistoryService = function() {
+         return {
+            addCallback: function(func) {
+               func({
+                  update: function(item) {
+                     item._isUpdateHistory = true;
+                  }
+               });
+            }
+         }
+      };
+
       it('setSelectedKeys', function() {
          var self = getBaseSelectedCollection();
 
@@ -330,6 +342,23 @@ define([
          assert.deepEqual(selectedCollection._selectedKeys, []);
          assert.equal(selectedCollection._items.getCount(), 0);
          assert.notEqual(selectedItems, selectedCollection._items);
+      });
+
+      it('_selectCallback', function() {
+         var
+            selectedCollection = new SelectedCollection(),
+            item = new entity.Model({
+               rawData: {id: 1}
+            });
+
+         selectedCollection._options.historyId = 'historyField';
+         selectedCollection._selectCallback(
+            new collection.List({
+               items: [item]
+            })
+         );
+
+         assert.isTrue(item._isUpdateHistory);
       });
 
       it('showSelector', function() {

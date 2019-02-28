@@ -180,18 +180,11 @@ define('Controls/List/ListViewModel',
             this._nextModelVersion();
          },
 
-         getFirstItemKey: function() {
-            var
-               nextItemId = 0,
-               nextItem,
-               itemsCount = this._display.getCount();
-            while (nextItemId < itemsCount) {
-               nextItem = this._display.at(nextItemId).getContents();
-               if (cInstance.instanceOfModule(nextItem, 'Types/entity:Model')) {
-                  return this._display.at(nextItemId).getContents().getId();
-               }
-               nextItemId++;
-            }
+         getFirstItem: function() {
+            return ItemsUtil.getFirstItem(this._display);
+         },
+         getLastItem: function() {
+            return ItemsUtil.getLastItem(this._display);
          },
          getIndexByKey: function(key) {
             var
@@ -336,7 +329,6 @@ define('Controls/List/ListViewModel',
             if (this._options.markerVisibility !== 'hidden') {
                this._setMarkerAfterUpdateItems();
             }
-            this._nextModelVersion();
          },
 
          // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.

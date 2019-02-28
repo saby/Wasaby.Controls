@@ -88,7 +88,7 @@ define('Controls/List/BaseControl', [
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                var
-                  markedKey, isActive,
+                  markedItem, markedKey, isActive,
                   listModel = self._listViewModel;
 
                if (cfg.dataLoadCallback instanceof Function) {
@@ -106,11 +106,12 @@ define('Controls/List/BaseControl', [
                   markedKey = listModel.getMarkedKey();
                   if (markedKey !== null) {
                      if (listModel.getIndexByKey(markedKey) === -1) {
-                        markedKey = listModel.getFirstItemKey();
-                     }
-                     if (markedKey !== undefined) {
-                        listModel.setMarkedKey(markedKey);
-                        self._restoreMarkedKey = markedKey;
+                        markedItem = listModel.getFirstItem();
+                        if (markedItem) {
+                           markedKey = markedItem.getId();
+                           listModel.setMarkedKey(markedKey);
+                           self._restoreMarkedKey = markedKey;
+                        }
                      }
                   }
                   if (isActive === true) {
@@ -650,7 +651,14 @@ define('Controls/List/BaseControl', [
       },
 
       recalculateNavigationState: function(self) {
-         self._sourceController.calculateState(self._listViewModel.getItems());
+         var
+            state = {
+               position: {
+                  before: self._listViewModel.getFirstItem(),
+                  after: self._listViewModel.getLastItem()
+               }
+            };
+         self._sourceController.setState(state);
       },
 
       bindHandlers: function(self) {
@@ -1182,6 +1190,10 @@ define('Controls/List/BaseControl', [
                }
             });
          }
+
+         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
+         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+         this._children.fakeFocusElem.focus();
          event.blockUpdate = true;
       },
 

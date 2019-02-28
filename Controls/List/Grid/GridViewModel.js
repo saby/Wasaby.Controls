@@ -565,8 +565,11 @@ define('Controls/List/Grid/GridViewModel', [
          getMarkedKey: function() {
             return this._model.getMarkedKey();
          },
-         getFirstItemKey: function() {
-            return this._model.getFirstItemKey.apply(this._model, arguments);
+         getFirstItem: function() {
+            return this._model.getFirstItem.apply(this._model, arguments);
+         },
+         getLastItem: function() {
+            return this._model.getLastItem.apply(this._model, arguments);
          },
          getIndexByKey: function() {
             return this._model.getIndexByKey.apply(this._model, arguments);

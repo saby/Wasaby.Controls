@@ -6,8 +6,16 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
    'Controls/Constants',
-   'Core/IoC'
-], function(BaseViewModel, ItemsUtil, cInstance, ControlsConstants, IoC) {
+   'Core/IoC',
+   'Types/collection'
+], function(
+   BaseViewModel,
+   ItemsUtil,
+   cInstance,
+   ControlsConstants,
+   IoC,
+   collection
+) {
    /**
     *
     * @author Авраменко А.С.
@@ -134,7 +142,7 @@ define('Controls/List/ItemsViewModel', [
          if (this._startIndex !== startIndex || this._stopIndex !== stopIndex) {
             this._startIndex = startIndex;
             this._stopIndex = stopIndex;
-            this._nextModelVersion();
+            this._nextModelVersion(false, 'indexesChanged');
          }
       },
 
@@ -298,7 +306,7 @@ define('Controls/List/ItemsViewModel', [
           * https://online.sbis.ru/opendoc.html?guid=e7978ebd-881c-494b-8449-d04af83f3404
           */
          this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
-         this._nextModelVersion(true, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+         this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {
