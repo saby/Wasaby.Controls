@@ -1,5 +1,5 @@
 define('Controls/Calendar/Utils', [
-   'Controls/Date/Utils/getFormattedDateRange',
+   'Core/helpers/Date/getFormattedDateRange',
    'Core/helpers/i18n/locales',
    'Controls/Utils/Date'
 ], function(
