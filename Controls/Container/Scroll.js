@@ -430,12 +430,10 @@ define('Controls/Container/Scroll',
             },
 
             _mouseenterHandler: function(event) {
-               event.blockUpdate = true;
                this._scrollbarTaken(true);
             },
 
             _mouseleaveHandler: function(event) {
-               event.blockUpdate = true;
                if (this._showScrollbarOnHover) {
                   this._notify('scrollbarReleased', [], {bubbling: true});
                }
