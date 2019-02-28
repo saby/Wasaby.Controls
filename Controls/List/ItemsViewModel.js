@@ -6,15 +6,15 @@ define('Controls/List/ItemsViewModel', [
    'Controls/List/resources/utils/ItemsUtil',
    'Core/core-instance',
    'Controls/Constants',
-   'Types/collection',
-   'Env/Env'
+   'Env/Env',
+   'Types/collection'
 ], function(
    BaseViewModel,
    ItemsUtil,
    cInstance,
    ControlsConstants,
-   collection,
-   Env
+   Env,
+   collection
 ) {
    /**
     *
