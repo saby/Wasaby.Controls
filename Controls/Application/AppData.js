@@ -2,11 +2,11 @@
  * Created by dv.zuev on 01.02.2018.
  */
 define('Controls/Application/AppData', [
-   'Core/DataContext'
-], function(DataContext) {
+   'Core/core-extend',
+   'View/Request'
+], function(extend, Request) {
 
-   return DataContext.extend({
-      jsLinks: [],
+   var AppData = extend.extend({
       constructor: function(cfg) {
          this.appRoot = cfg.appRoot;
          this.lite = cfg.lite;
@@ -20,6 +20,21 @@ define('Controls/Application/AppData', [
          this.buildnumber = cfg.buildnumber;
          this.servicesPath = cfg.servicesPath;
          this.staticDomains = cfg.staticDomains;
+      },
+      registerConsumer: function() {
+
+         // Need this to pass AppData as context field
+      },
+      updateConsumers: function() {
+
+         // Need this to pass AppData as context field
       }
    });
+   AppData.initAppData = function(cfg) {
+      Request.getCurrent().setStorage('AppData', new AppData(cfg));
+   };
+   AppData.getAppData = function() {
+      return Request.getCurrent().getStorage('AppData');
+   };
+   return AppData;
 });

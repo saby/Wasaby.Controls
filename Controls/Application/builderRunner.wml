@@ -11,7 +11,10 @@
          var headData = new HeadData([], true);
          Request.getCurrent().setStorage('HeadData', headData);
 
-         window.startContextData = {AppData: new AppData({})};
+         AppData.initAppData({});
+         var appData = AppData.getAppData();
+
+         window.startContextData = { AppData: appData };
          require([ {{_options.dependencies | unescape}} ], function (){
             var templateFn = {{_options.builder | unescape}};
             templateFn.stable = true;
