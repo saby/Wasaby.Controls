@@ -178,6 +178,9 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
                   position1[property] = popupCfg.sizes[property] - maxOverflow1;
                   return position1;
                }
+               if (position2.bottom) {
+                  position2.bottom += TouchKeyboardHelper.getKeyboardHeight();
+               }
                position2[property] = popupCfg.sizes[property] - maxOverflow2;
                return position2;
             }
