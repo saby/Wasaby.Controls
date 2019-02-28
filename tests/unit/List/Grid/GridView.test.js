@@ -46,13 +46,22 @@ define(['Controls/List/Grid/GridView'], function(GridView) {
                { width: '30%'   },
                { width: 'auto'  }
             ],
-            result1 = {}, result2 = {}, result3 = {};
+            columns4 = [
+               { width: '1fr'   },
+               { width: '100px' },
+               { width: '30%'   },
+               { width: 'auto'  },
+               {}
+            ],
+            result1 = {}, result2 = {}, result3 = {}, result4 = {};
          GridView._private.detectLayoutFixed(result1, columns1);
          GridView._private.detectLayoutFixed(result2, columns2);
          GridView._private.detectLayoutFixed(result3, columns3);
+         GridView._private.detectLayoutFixed(result4, columns4);
          assert.isTrue(result1._layoutFixed);
          assert.isTrue(!result2._layoutFixed);
-         assert.isTrue(!result3._layoutFixed);
+         assert.isTrue(!result2._layoutFixed);
+         assert.isTrue(result4._layoutFixed);
       });
       it('Footer', function() {
          assert.equal('controls-GridView__footer controls-GridView__footer__paddingLeft_withCheckboxes',
