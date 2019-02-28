@@ -22,6 +22,8 @@ define('Controls/Button/CloseStyles',
     *
     * @css @background-color_CloseButton_toolButton_transparent Background of close button with options viewMode 'toolButton' and transparent true.
     * @css @background-color_CloseButton_primary_untransparent Background of close button with options viewMode 'toolButton' and transparent false.
+    * @css @background-color_CloseButton-primary-untransparent_active Background of close button in active state with options viewMode 'toolButton' and transparent false.
+    * @css @background-color_CloseButton-primary-untransparent_hovered Background of close button in hovered state with options viewMode 'toolButton' and transparent false.
     *
     * @css @border-color_CloseButton_toolButton Border color of close button with option viewMode 'toolButton'.
     * @css @border-color_CloseButton_toolButton_hover Border color of close button in hover state with option viewMode 'toolButton'.
@@ -37,6 +39,7 @@ define('Controls/Button/CloseStyles',
     * @css @border-left-radius_CloseButton_toolButton Left border radius of close button with option viewMode 'toolButton'.
     *
     * @css @box-shadow_CloseButton_toolButton Box shadow of close button with option viewMode 'toolButton'.
+    * @css @box-shadow_CloseButton-toolButton_active Box shadow of close button in active state with option viewMode 'toolButton'.
     *
     * @css @font-size_CloseButton_link Font size of close button with option viewMode 'link'.
     *

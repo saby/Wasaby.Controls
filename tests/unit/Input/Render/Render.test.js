@@ -2,9 +2,10 @@ define(
    [
       'Controls/Input/Render',
       'unit/resources/TemplateUtil',
-      'wml!unit/Input/Render/Content'
+      'wml!unit/Input/Render/Content',
+      'Env/Env'
    ],
-   function(Render, TemplateUtil, Content) {
+   function(Render, TemplateUtil, Content, Env) {
       'use strict';
 
       describe('Controls.Input.Render', function() {
@@ -24,8 +25,11 @@ define(
                it('Control in active mode.', function() {
                   ctrl._options.readOnly = false;
                   ctrl._contentActive = true;
-
-                  assert.equal(ctrl._getState(), '_active');
+                  if (Env.detection.isIE) {
+                     assert.equal(ctrl._getState(), '_active');
+                  } else {
+                     assert.equal(ctrl._getState(), '');
+                  }
                });
                it('Control in inactive mode.', function() {
                   ctrl._options.readOnly = false;

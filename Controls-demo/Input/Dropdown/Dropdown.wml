@@ -61,7 +61,13 @@
                                keyProperty="id"
                                displayProperty="title"
                                emptyText="{{true}}"
+                               attr:class="ControlsDemo-InputDropdown__item"
                                source="{{_createMemory(_emptyItems)}}"/>
+      <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysEmpty2"
+                               keyProperty="id"
+                               displayProperty="title"
+                               emptyText="Other region"
+                               source="{{_createMemory(_emptyItems2)}}"/>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">
       <h3>With title</h3>
@@ -102,6 +108,17 @@
                                keyProperty="id"
                                displayProperty="title"
                                source="{{_historySource}}">
+      </Controls.Input.Dropdown>
+   </div>
+   <div class="ControlsDemo-InputDropdown__wrapper">
+      <h3>Text with ellipsis</h3>
+      <Controls.Input.Dropdown bind:selectedKeys="_selectedKeysLong"
+                               keyProperty="id"
+                               displayProperty="title"
+                               source="{{_createMemory(_longItems)}}">
+         <ws:itemTemplate>
+            <ws:partial template="wml!Controls/Dropdown/resources/template/itemTemplate" class="ControlsDemo-InputDropdown-limitWidth" />
+         </ws:itemTemplate>
       </Controls.Input.Dropdown>
    </div>
    <div class="ControlsDemo-InputDropdown__wrapper">

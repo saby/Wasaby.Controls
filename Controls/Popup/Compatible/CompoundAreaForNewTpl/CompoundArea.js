@@ -49,6 +49,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._panel = this.getParent();
             this._panel.subscribe('onBeforeClose', this._beforeCloseHandler);
             this._panel.subscribe('onAfterClose', this._callCloseHandler.bind(this));
+            this._maximized = !!this._options.templateOptions.maximized;
 
             this._runInBatchUpdate('CompoundArea - init - ' + this._id, function() {
                var def = new Deferred();
@@ -57,7 +58,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                   if (this._options.innerComponentOptions._template) {
                      this._options.template = this._options.innerComponentOptions._template;
                   }
-                  this._options.templateOptions = this._options.innerComponentOptions;
+                  this._saveTemplateOptions(this._options.innerComponentOptions);
                   Env.IoC.resolve('ILogger').error('Шаблон CompoundArea задается через опцию template. Конфигурация шаблона через опцию templateOptions');
                }
 
@@ -239,15 +240,16 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          onBringToFront: function() {
             this._vDomTemplate && this._vDomTemplate.activate();
          },
-         _onMaximizedHandler: function(event, maximized) {
+         _onMaximizedHandler: function() {
             if (!this._panel._updateAreaWidth) {
                return;
             }
 
+            this._maximized = !this._maximized;
             var coords = { top: 0, right: 0 };
             var item = {
                popupOptions: {
-                  maximized: maximized,
+                  maximized: this._maximized,
                   minWidth: this._options._popupOptions.minWidth,
                   maxWidth: this._options._popupOptions.maxWidth,
                   minimizedWidth: this._options._popupOptions.minimizedWidth,
@@ -256,12 +258,13 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             };
             var width = StackStrategy.getPosition(coords, item).width;
 
+            this._panel._options.maximized = this._maximized;
             this._panel._updateAreaWidth(width);
             this._panel.getContainer()[0].style.maxWidth = '';
             this._panel.getContainer()[0].style.minWidth = '';
 
             var newOptions = clone(this._options.templateOptions);
-            newOptions.maximized = maximized;
+            newOptions.maximized = this._maximized;
 
             this._updateVDOMTemplate(newOptions);
          },
@@ -299,7 +302,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
          setTemplateOptions: function(newOptions) {
             // Могут позвать перерисоку до того, как компонент создался
             // Если компонент еще не создался а его уже перерисовали, то создаться должент с новыми опциями
-            this._options.templateOptions = newOptions;
+            this._saveTemplateOptions(newOptions);
             this._modifyInnerOptionsByHandlers();
 
             if (this._vDomTemplate) {
@@ -309,6 +312,11 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                this._panel.getContainer().closest('.ws-float-area').addClass('ws-invisible');
                this._updateVDOMTemplate(this._options.templateOptions);
             }
+         },
+
+         _saveTemplateOptions: function(newOptions) {
+            this._options.templateOptions = newOptions;
+            this._maximized = !!this._options.templateOptions.maximized;
          },
 
          _updateVDOMTemplate: function(templateOptions) {

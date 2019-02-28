@@ -447,7 +447,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   'updateIndexes', 'setItems', 'setActiveItem', 'appendItems', 'prependItems', 'setItemActions', 'getDragTargetPosition',
                   'getIndexBySourceItem', 'at', 'getCount', 'setSwipeItem', 'getSwipeItem', 'updateSelection', 'getItemActions', 'getCurrentIndex',
                   '_prepareDisplayItemForAdd', 'mergeItems', 'toggleGroup', '_setEditingItemData', 'getMarkedKey',
-                  'getChildren', 'getActiveItem', 'setRightSwipedItem', 'destroy'],
+                  'getChildren', 'getActiveItem', 'setRightSwipedItem', 'destroy', 'nextModelVersion'],
                callStackMethods = [];
 
             gridViewModel._model = {};
@@ -661,7 +661,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   },
                   {
                      title: 'second',
-                     width: 'auto'
+                     width: '100%'
                   },
                   {
                      title: 'third',

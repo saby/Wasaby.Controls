@@ -10,7 +10,7 @@
    <Controls.Popup.Opener.Sticky name="opener">
       <ws:popupOptions
          template="Controls/Date/PeriodLiteDialog"
-         closeByExternalClick="{{true}}"
+         closeOnOutsideClick="{{true}}"
       >
          <ws:eventHandlers onResult="{{_onResult}}"/>
          <ws:verticalAlign side="bottom"/>

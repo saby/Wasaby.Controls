@@ -73,8 +73,8 @@ define('Controls/Input/Number',
        * @default false
        * @remark
        * The option is applied after the completed of the input.
-       * true - trailing zeros are hidden in the fractional part.
-       * false - trailing zeros are shown in the fractional part.
+       * true - trailing zeros are shown in the fractional part.
+       * false - trailing zeros are hidden in the fractional part.
        * @example
        * In this example you the _inputValue in the control state will store a number with a trailing  zeros in the fractional part.
        * <pre>

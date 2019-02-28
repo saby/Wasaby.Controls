@@ -239,7 +239,7 @@ define(
                POPUP_STATE_INITIALIZING: 'initializing'
             };
             let id = Manager.show({
-               closeByExternalClick: true
+               closeOnOutsideClick: true
             }, controller);
 
 
@@ -252,7 +252,7 @@ define(
 
             isDeactivated = false;
             let item = Manager.find(id);
-            item.popupOptions.closeByExternalClick = false;
+            item.popupOptions.closeOnOutsideClick = false;
             Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, false);
 

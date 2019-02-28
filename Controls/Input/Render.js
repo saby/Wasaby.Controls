@@ -5,9 +5,10 @@ define('Controls/Input/Render',
       'Controls/Utils/tmplNotify',
 
       'wml!Controls/Input/Render/Render',
+      'Env/Env',
       'css!theme?Controls/Input/Render/Render'
    ],
-   function(Control, entity, tmplNotify, template) {
+   function(Control, entity, tmplNotify, template, Env) {
       'use strict';
 
       var Render = Control.extend({
@@ -29,7 +30,9 @@ define('Controls/Input/Render',
 
                return '_readOnly';
             }
-            if (this._contentActive) {
+
+            //return "_active" state only for ie and edge. Other browsers can work with :focus-within pseudo selector
+            if (this._contentActive && Env.detection.isIE) {
                return '_active';
             }
 

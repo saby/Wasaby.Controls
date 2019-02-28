@@ -10,6 +10,7 @@ define('Controls/Explorer', [
    'Core/core-instance',
    'Env/Env',
    'Controls/Utils/keysHandler',
+   'css!theme?Controls/Explorer/Explorer',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
@@ -91,7 +92,6 @@ define('Controls/Explorer', [
             self._swipeViewMode = viewMode === 'search' ? 'table' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
-            self._leftPadding = viewMode === 'search' ? 'search' : undefined;
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
@@ -153,7 +153,6 @@ define('Controls/Explorer', [
       _viewName: null,
       _viewMode: null,
       _viewModelConstructor: null,
-      _leftPadding: null,
       _dragOnBreadCrumbs: false,
       _hoveredBreadCrumb: undefined,
 
@@ -201,6 +200,8 @@ define('Controls/Explorer', [
             _private.setRoot(this, item.getId());
             this._notify('rootChanged', [this._root]);
          }
+         event.stopPropagation();
+         this._notify('onItemClick', Array.prototype.slice.call(arguments, 1));
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
@@ -240,7 +241,8 @@ define('Controls/Explorer', [
       return {
          multiSelectVisibility: 'hidden',
          viewMode: DEFAULT_VIEW_MODE,
-         root: null
+         root: null,
+         backButtonStyle: 'secondary'
       };
    };
 

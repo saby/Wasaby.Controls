@@ -134,7 +134,7 @@
 @color_border_PeriodDialog:       @color4;
 
 // loadingindicator
-@path_spinner:             url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
+@path_spinner:             url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
 
 // d'n'd
 @color_drop-target:                   @color16;
@@ -151,9 +151,8 @@
 @backArrowOrange_icon:               url('img/BackArrowOrange.svg');
 @backArrowBlueSmall_icon:            url('img/BackArrowBlueSmall.svg');
 @backArrowBlue_icon:                 url('img/BackArrowBlue.svg');
-@breadCrumbs_corner_icon:            url('img/BreadCrumbs_corner.svg');
-@loadingIndicator_icon_l:            url('/cdn/img/common/1.0.0/ajax-loader-indicator.gif');
-@loadingIndicator_icon_s:            url('/cdn/img/common/1.0.0/ajax-loader-indicator-16-16.gif');
+@loadingIndicator_icon_l:            url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator.gif');
+@loadingIndicator_icon_s:            url('/cdn/LoaderIndicator/1.0.0/ajax-loader-indicator-16-16.gif');
 
 //border
 @border-style_solid:       solid;
@@ -185,6 +184,8 @@
 @shift-top_MenuButton-link-popup_val:                             -9px;
 @shift-top_MenuButton-toolButton_medium-popup_val:                -3px;
 @shift-top_MenuButton-link_small-popup_val:                       -8px;
+@shift-top_Dropdown-popup_val:                                    -8px;
+@shift-top_Dropdown-head-popup_val:                               -6px;
 @width_MoveDialog_val:                                            408px;
 @height_MoveDialog_val:                                           446px;
 @width_MoveDialog-search_val:                                     184px;
@@ -267,8 +268,6 @@
 @horizontal-offset_Infobox-arrow_val:                                     12px;
 @size_Switch__ToggleCircle_val:                                           12px;
 @size_CheckBox__iconSuccessful_val:                                       18px;
-@width_BreadCrumbs-corner_val:                                            13px;
-@height_BreadCrumbs-corner_val:                                           14px;
 @min-width_Paging-digitButton_val:                                        28px;
 @width_CloseButton_toolButton_m_val:                                      29px;
 @min-width_BreadCrumbs-text_val:                                          36px;
@@ -302,6 +301,10 @@
 @border-right-width_CloseButton_toolButton_val:                           0;
 @border-right-radius_CloseButton_toolButton_val:                          0;
 @border-bottom-radius_CloseButton_toolButton_val:                         0;
+@height_DropdownList-row-separator_val:                                   0;
+@spacing_DropdownList-row-between-rightBorder-row-separator_val:          0;
+@spacing_DropdownList-row-between-bottomBorder-row-separator_val:         0;
+@spacing_DropdownList-row-between-leftBorder-row-separator_val:           0;
 @spacing_Grid-row-between-content-borderLeft_xs_val:                      0;
 @spacing_Grid-row-between-content-borderRight_xs_val:                     0;
 @spacing_InputBase_between-topBorder-text_val:                            0;
@@ -332,6 +335,7 @@
 @text-decoration_Link_success_val:                                        none;
 @text-decoration_Link_info_val:                                           none;
 @color_SubmitPopup-details_val:                                           inherit;
+@background-color_DropdownList-row_separator_val:                         inherit;
 @background-color-ToolButton_transparent_val:                             transparent;
 @background-color_CloseButton_toolButton_transparent_val:                 transparent;
 @color_LoadingIndicator-overlay-default_val:                              transparent;
@@ -362,5 +366,10 @@
 @font-weight_SubmitPopup-message_val:                                     normal;
 @height_PeriodDialog-monthRange-month-title_val:                          auto;
 
-@color_App-link_val:                                                      #313E78;
-@color_App-link_hover_val:                                                #0055BB;
+@color_App-link_val:                                                      @color_link-hover;
+@color_App-link_hover_val:                                                @color_link;
+
+@text-decoration_Misspell-caption_hover_val:    underline;
+@text-decoration_Misspell-caption_active_val:   underline;
+@font-weight_Misspell-text_val:                 bold;
+@font-weight_Misspell-caption_val:              bold;

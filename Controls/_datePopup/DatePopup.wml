@@ -21,7 +21,7 @@
             on:onBeforeSelectionStarted="_yearsSelectionStarted()"
             on:selectionEnded="_yearsRangeSelectionEnded()">
 
-         <Controls.Date.PeriodDialog.YearsRange
+         <Controls._datePopup.YearsRange
             year="{{_displayedDate}}"
          />
       </Controls.Date.Controllers.DateRangeSelectionController>
@@ -36,7 +36,7 @@
          on:selectionChanged="_monthsSelectionChanged()"
          on:selectionEnded="_monthsRangeSelectionEnded()">
 
-         <Controls.Date.PeriodDialog.MonthsRange
+         <Controls._datePopup.MonthsRange
             attr:class="controls-DateRangeBigChoose__months-month-wrapper"
             monthClickable="{{_monthStateEnabled}}"
             bind:selectionViewType="_monthRangeSelectionViewType"
@@ -57,7 +57,7 @@
       on:selectionChanged="_dateRangeSelectionChanged()"
       on:selectionEnded="_dateRangeSelectionEnded()">
 
-      <Controls.Date.PeriodDialog.DateRange
+      <Controls._datePopup.DateRange
          attr:class="controls-DateRangeBigChoose__months-month-wrapper"
          on:fixedPeriodClick="_dateRangeFixedPeriodClick()"
          bind:month="_displayedDate"
