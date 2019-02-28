@@ -329,6 +329,10 @@ define('Controls/Selector/Lookup/_Lookup', [
                this.activate();
             }
          }
+
+         if (!this._isShowInput()) {
+            this._suggestState = false;
+         }
       },
 
       _beforeUnmount: function() {
@@ -376,17 +380,21 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly || this._infoboxOpened) {
+         if (this._options.readOnly || this._infoboxOpened || !this._isShowInput()) {
             this._suggestState = false;
          }
       },
 
       _determineAutoDropDown: function() {
-         return this._options.autoDropDown && (this._isEmpty() || this._options.multiSelect);
+         return this._options.autoDropDown && this._isShowInput();
       },
 
       _isEmpty: function() {
          return !this._options.items.getCount();
+      },
+
+      _isShowInput: function() {
+         return this._isEmpty() || this._options.multiSelect;
       },
       
       _openInfoBox: function(event, config) {
