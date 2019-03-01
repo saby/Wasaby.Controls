@@ -9,6 +9,7 @@
     ]
   },
   "include": [
-    "Controls/**/*.ts"
+    "Controls/**/*.ts",
+    "Controls-demo/**/*.ts"
   ]
 }

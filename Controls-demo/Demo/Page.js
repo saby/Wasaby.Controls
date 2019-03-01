@@ -110,7 +110,10 @@ define('Controls-demo/Demo/Page',
 
          constructor: function(cfg) {
             DemoPage.superclass.constructor.apply(this, arguments);
-            this.ctxData = new AppData(cfg);
+
+            AppData.initAppData(cfg);
+            this.ctxData = new AppData.getAppData();
+
             this.scrollData = new ScrollData({
                pagingVisible: false
             });

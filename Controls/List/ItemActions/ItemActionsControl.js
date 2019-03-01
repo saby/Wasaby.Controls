@@ -4,7 +4,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    'Controls/Utils/Toolbar',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Constants',
-   'Controls/Context/TouchContextField',
    'Controls/List/ItemActions/Utils/getStyle',
    'css!theme?Controls/List/ItemActions/ItemActionsControl'
 ], function(
@@ -13,7 +12,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
    tUtil,
    aUtil,
    ControlsConstants,
-   TouchContextField,
    getStyle
 ) {
    'use strict';
@@ -22,11 +20,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
 
    var _private = {
-
-      sortActions: function(first, second) {
-         return (second.showType || 0) - (first.showType || 0);
-      },
-
       fillItemAllActions: function(item, options) {
          var actions = [];
          if (options.itemActionsProperty) {
@@ -46,7 +39,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          return actions;
       },
 
-      updateItemActions: function(self, item, options, isTouch) {
+      updateItemActions: function(self, item, options) {
          var
             all = _private.fillItemAllActions(item, options),
 
@@ -56,14 +49,10 @@ define('Controls/List/ItemActions/ItemActionsControl', [
                   return action.showType === tUtil.showType.TOOLBAR || action.showType === tUtil.showType.MENU_TOOLBAR;
                });
 
-         if (isTouch) {
-            showed.sort(_private.sortActions);
-         }
-
          if (_private.needActionsMenu(all, options.itemActionsPosition)) {
             showed.push({
                icon: 'icon-ExpandDown icon-primary ' + ACTION_ICON_CLASS,
-               isMenu: true
+               _isMenu: true
             });
          }
 
@@ -73,14 +62,14 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          });
       },
 
-      updateActions: function(self, options, isTouch, collectionChanged) {
+      updateActions: function(self, options, collectionChanged) {
          if (options.itemActions) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                var
                   itemData = options.listModel.getCurrent(),
                   item = itemData.item;
                if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                  _private.updateItemActions(self, item, options, isTouch);
+                  _private.updateItemActions(self, item, options);
                }
             }
 
@@ -99,8 +88,8 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          }
       },
 
-      updateModel: function(self, newOptions, isTouch) {
-         _private.updateActions(self, newOptions, isTouch);
+      updateModel: function(self, newOptions) {
+         _private.updateActions(self, newOptions);
          newOptions.listModel.subscribe('onListChange', self._onCollectionChangeFn);
       },
 
@@ -130,35 +119,19 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          this._onCollectionChangeFn = this._onCollectionChange.bind(this);
       },
 
-      _beforeMount: function(newOptions, context) {
+      _beforeMount: function(newOptions) {
          if (typeof window === 'undefined') {
             this.serverSide = true;
             return;
          }
 
-         /**
-          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
-          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
-          */
-         var isTouch = false;
-         if (context && context.isTouch) {
-            isTouch = context.isTouch.isTouch;
-         }
          if (newOptions.listModel) {
-            _private.updateModel(this, newOptions, isTouch);
+            _private.updateModel(this, newOptions);
          }
       },
 
-      _beforeUpdate: function(newOptions, context) {
-         /**
-          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
-          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
-          */
-         var isTouch = false;
-         if (context && context.isTouch) {
-            isTouch = context.isTouch.isTouch;
-         }
-         var args = [this, newOptions, isTouch];
+      _beforeUpdate: function(newOptions) {
+         var args = [this, newOptions];
 
          if (
             this._options.listModel !== newOptions.listModel ||
@@ -185,15 +158,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       },
 
       updateItemActions: function(item) {
-         /**
-          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
-          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
-          */
-         var isTouch = false;
-         if (this._context && this._context.isTouch) {
-            isTouch = this._context.isTouch.isTouch;
-         }
-         _private.updateItemActions(this, item, this._options, isTouch);
+         _private.updateItemActions(this, item, this._options);
          this._options.listModel.nextModelVersion();
       },
 
@@ -205,16 +170,7 @@ define('Controls/List/ItemActions/ItemActionsControl', [
          if (type !== 'collectionChanged' && type !== 'indexesChanged') {
             return;
          }
-
-         /**
-          * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
-          * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
-          */
-         var isTouchValue = false;
-         if (this._context && this._context.isTouch) {
-            isTouchValue = this._context.isTouch.isTouch;
-         }
-         _private.updateActions(this, this._options, isTouchValue, type === 'collectionChanged');
+         _private.updateActions(this, this._options, type === 'collectionChanged');
       }
    });
 
@@ -222,12 +178,6 @@ define('Controls/List/ItemActions/ItemActionsControl', [
       return {
          itemActionsPosition: 'inside',
          itemActions: []
-      };
-   };
-
-   ItemActionsControl.contextTypes = function contextTypes() {
-      return {
-         isTouch: TouchContextField
       };
    };
 

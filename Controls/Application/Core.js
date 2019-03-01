@@ -64,16 +64,13 @@ define('Controls/Application/Core',
             Request.getCurrent().setStorage('HeadData', headData);
 
             AppCore.superclass.constructor.apply(this, arguments);
-            this.ctxData = new AppData(cfg);
+
+            AppData.initAppData(cfg);
+            this.ctxData = new AppData.getAppData();
 
             // Put Application/Core instance into the current request where
             // other modules can get it from
             Request.getCurrent().setStorage('CoreInstance', { instance: this });
-         },
-         _getChildContext: function() {
-            return {
-               AppData: this.ctxData
-            };
          },
          coreTheme: '',
          setTheme: function(ev, theme) {
@@ -94,7 +91,13 @@ define('Controls/Application/Core',
                result = false;
             }
             return result;
+         },
+         _getChildContext: function() {
+            return {
+               AppData: this.ctxData
+            };
          }
+
       });
 
       return AppCore;

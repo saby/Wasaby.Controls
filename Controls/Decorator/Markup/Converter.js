@@ -80,13 +80,16 @@ define('Controls/Decorator/Markup/Converter', [
     * @returns {String}
     */
    var jsonToHtml = function(json, tagResolver, resolverParams) {
-      return template({
+      var result = template({
          _options: {
             value: json,
             tagResolver: tagResolver,
             resolverParams: resolverParams
          }
       }, {});
+
+      // Invisible node in vdom equals empty string in html.
+      return result === '<invisible-node></invisible-node>' ? '' : result;
    };
 
    /**

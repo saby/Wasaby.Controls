@@ -299,8 +299,14 @@ define('Controls/List/ItemsViewModel', [
 
       _onCollectionChange: function(event, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
          this._onBeginCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
-         this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
+
+         /**
+          * Virtual scroll should update indexes before onListChange event fires, otherwise subscribers of the onListChange event are going to work with the stale indexes.
+          * It can cause all kinds of troubles, e.g. out of bounds access.
+          * https://online.sbis.ru/opendoc.html?guid=e7978ebd-881c-494b-8449-d04af83f3404
+          */
          this._notify.apply(this, ['onCollectionChange'].concat(Array.prototype.slice.call(arguments, 1)));
+         this._nextModelVersion(action !== collection.IObservable.ACTION_RESET, 'collectionChanged', action, newItems, newItemsIndex, removedItems, removedItemsIndex);
          this._onEndCollectionChange(action, newItems, newItemsIndex, removedItems, removedItemsIndex);
       },
       _onBeginCollectionChange: function() {

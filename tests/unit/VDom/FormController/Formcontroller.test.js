@@ -154,6 +154,19 @@ define([
          FC.destroy();
       });
 
+      it('beforeUnmount', () => {
+         let FC = new FormController();
+         let isRecordUnsubscribe = false;
+         FC._record = {
+            unsubscribe: () => {
+               isRecordUnsubscribe = true;
+            }
+         };
+         FC._beforeUnmount();
+         assert.equal(isRecordUnsubscribe, true);
+         FC.destroy();
+      });
+
       it('delete new record', () => {
          let FC = new FormController();
          let isDestroyCalled = false;

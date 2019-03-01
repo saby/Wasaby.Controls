@@ -2,9 +2,7 @@ define('Controls/Button/Menu',
    [
       'Core/Control',
       'wml!Controls/Button/Menu/Menu',
-      'Controls/Button/Menu/MenuUtils',
-      'css!theme?Controls/Button/Menu/Menu',
-      'Controls/Button'
+      'Controls/Button/Menu/MenuUtils'
    ],
    function(Control, template, MenuUtils) {
 
@@ -75,6 +73,8 @@ define('Controls/Button/Menu',
             transparent: true
          };
       };
+
+      Menu._theme = ['Controls/Button/Menu/Menu'];
 
       return Menu;
    }

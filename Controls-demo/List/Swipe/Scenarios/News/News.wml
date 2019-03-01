@@ -1,0 +1,35 @@
+<Controls.List attr:class="demo-News"
+               itemActions="{{_itemActions}}"
+               source="{{_source}}"
+               swipeDirection="column"
+               titlePosition="bottom"
+               markerVisibility="hidden"
+               itemActionVisibilityCallback="{{_visibilityCallback}}"
+               keyProperty="id">
+   <ws:itemPadding left="null" right="null" bottom="null" top="null" />
+   <ws:itemTemplate>
+      <ws:partial template="wml!Controls/List/ItemTemplate"
+                  itemActionsClass="demo-News__itemActions_position{{itemTemplate.itemData.item.banner ? ' demo-News__itemActions_position_withBanner'}}">
+         <ws:contentTemplate>
+            <div class="demo-News__item">
+               <img if="{{itemTemplate.itemData.item.banner}}" class="demo-News__banner" src="{{itemTemplate.itemData.item.banner}}"/>
+               <div class="demo-News__header">
+                  <img class="demo-News__authorPhoto" src="{{itemTemplate.itemData.item.authorPhoto}}"/>
+                  <span class="demo-News__author">{{itemTemplate.itemData.item.author}}</span>
+                  <span if="{{itemTemplate.itemData.item.orgName}}" class="demo-News__orgName">{{itemTemplate.itemData.item.orgName}}</span>
+                  <span class="demo-News__date{{itemTemplate.itemData.item.isNew ? ' demo-News__date_new'}}">{{itemTemplate.itemData.item.date}}</span>
+               </div>
+               <div class="demo-News__content">
+                  <div if="{{itemTemplate.itemData.item.title}}" class="demo-News__title">{{itemTemplate.itemData.item.title}}</div>
+                  <div class="demo-News__text">{{itemTemplate.itemData.item.text}}</div>
+               </div>
+               <img if="{{itemTemplate.itemData.item.photo}}" class="demo-News__photo" src="{{itemTemplate.itemData.item.photo}}"/>
+               <div class="demo-News__footer">
+                  <div class="demo-News__comments icon-16 icon-EmptyMessage icon-disabled"></div>
+                  <div class="demo-News__viewCount icon-16 icon-Show icon-disabled"></div>
+               </div>
+            </div>
+         </ws:contentTemplate>
+      </ws:partial>
+   </ws:itemTemplate>
+</Controls.List>

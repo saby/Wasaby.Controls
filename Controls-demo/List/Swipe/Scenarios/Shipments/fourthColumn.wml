@@ -1,0 +1,8 @@
+<ws:partial template="wml!Controls/List/Grid/Column" scope="{{_options}}">
+   <ws:contentTemplate>
+      <ws:if data="{{itemData.item.sum}}">
+         <Controls.Decorator.Money number="{{itemData.item.sum}}"
+                                   style="noAccentRegistry" />
+      </ws:if>
+   </ws:contentTemplate>
+</ws:partial>
