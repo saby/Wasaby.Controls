@@ -116,7 +116,7 @@ define('Controls/List/Grid/GridView', [
 
          _beforeMount: function(cfg) {
             _private.checkDeprecated(cfg);
-            this._gridTemplate = cDetection.isNotFullGridSupport ? OldGridView : NewGridView;
+            this._gridTemplate = Env.detection.isNotFullGridSupport ? OldGridView : NewGridView;
             GridView.superclass._beforeMount.apply(this, arguments);
             this._listModel.setColumnTemplate(ColumnTpl);
          },
