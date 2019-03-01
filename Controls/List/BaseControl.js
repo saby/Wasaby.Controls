@@ -556,9 +556,12 @@ define('Controls/List/BaseControl', [
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
             if (changesType === 'collectionChanged') {
-               if (self._options.navigation && self._options.navigation.source === 'position') {
-                  _private.recalculateNavigationState(self);
+
+               //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+               if (self._options.navigation && self._options.navigation.source) {
+                  self._sourceController.setState(self._listViewModel);
                }
+
                if (!!action && self.getVirtualScroll()) {
                   self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                   if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
@@ -646,17 +649,6 @@ define('Controls/List/BaseControl', [
             closeMenu();
          }
          self._forceUpdate();
-      },
-
-      recalculateNavigationState: function(self) {
-         var
-            state = {
-               position: {
-                  before: self._listViewModel.getFirstItem(),
-                  after: self._listViewModel.getLastItem()
-               }
-            };
-         self._sourceController.setState(state);
       },
 
       bindHandlers: function(self) {
