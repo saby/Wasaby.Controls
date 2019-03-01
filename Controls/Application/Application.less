@@ -212,6 +212,8 @@ html>body .clearfix {
 //все эти класcы есть в старых темах и должны прилетать со слоем совместимости
 //для всех кто по каким то причинам их использует в VDOM я выписываю задачи и оставляю временно классы в этом блоке
 //пока что достоверно известно что asLink используют в новостях на главной
+
+//action-hover тоже
 .asLink {
    cursor: pointer;
    text-decoration: none;
@@ -224,6 +226,13 @@ html>body .clearfix {
    text-decoration: underline;
    color: @color_App-link_hover;
 }
+
+.ws-is-desktop-platform {
+   .action-hover:not(.ws-disabled):hover {
+      color: @color_link-hover;
+   }
+}
+
 @import "Controls-theme/themes/default/helpers/_flex";
 
 //icons compatibility with new params
