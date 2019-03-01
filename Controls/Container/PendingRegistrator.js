@@ -99,7 +99,7 @@ define('Controls/Container/PendingRegistrator', [
          };
          if (config.showLoadingIndicator && !def.isReady()) {
             // show indicator if deferred still not finished on moment of registration
-            this._children.loadingIndicator.show();
+            this._pendings[cnt].loadingIndicatorId = this._children.loadingIndicator.show({ id: this._pendings[cnt].loadingIndicatorId });
          }
 
          def.addBoth(function(cnt, res) {
@@ -110,13 +110,9 @@ define('Controls/Container/PendingRegistrator', [
          cnt++;
       },
       _unregisterPending: function(id) {
-         delete this._pendings[id];
-
          // hide indicator if no more pendings with indicator showing
-         if (!this._hasPendingsWithIndicator()) {
-            //TODO https://online.sbis.ru/opendoc.html?guid=c27db898-1abf-4883-8015-187f6d18b5b7
-            this._children.loadingIndicator && this._children.loadingIndicator.hide();
-         }
+         this._hideIndicators();
+         delete this._pendings[id];
 
          // notify if no more pendings
          if (!this._hasRegisteredPendings()) {
@@ -126,16 +122,13 @@ define('Controls/Container/PendingRegistrator', [
       _hasRegisteredPendings: function() {
          return !!Object.keys(this._pendings).length;
       },
-      _hasPendingsWithIndicator: function() {
+      _hideIndicators: function() {
          var self = this;
-         var res = false;
          Object.keys(this._pendings).forEach(function(key) {
-            var pending = self._pendings[key];
-            if (pending.showLoadingIndicator) {
-               res = true;
+            if (self._pendings[key].loadingIndicatorId) {
+               self._children.loadingIndicator.hide(self._pendings[key].loadingIndicatorId);
             }
          });
-         return res;
       },
 
       /**
