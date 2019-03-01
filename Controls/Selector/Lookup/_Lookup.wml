@@ -42,7 +42,7 @@
             controls-Lookup__inputRender_content_width_{{_inputWidth ? 'custom' : 'default'}}">
 
       <ws:content>
-         <ws:if data="{{_isEmpty() || _options.multiSelect}}">
+         <ws:if data="{{_isInputVisible()}}">
             <ws:partial template="wml!Controls/Input/resources/input" attr:style="width: {{_inputWidth}}px;"/>
          </ws:if>
       </ws:content>
