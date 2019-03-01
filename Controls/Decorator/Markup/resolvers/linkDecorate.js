@@ -16,6 +16,12 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
     * @author Кондаков Р.Н.
     */
    return function linkDecorate(value, parent) {
-      return utils.decorateLinkIfNeed(value, parent);
+      var result;
+      if (utils.needDecorate(value, parent)) {
+         result = utils.getDecoratedLink(value);
+      } else {
+         result = value;
+      }
+      return result;
    };
 });

@@ -22,12 +22,13 @@ define('Controls/Decorator/Markup/Converter', [
          var json = [];
 
          // json[0] is a tag name.
-         json[0] = node.nodeName.toLowerCase();
+         var tagName = node.nodeName.toLowerCase();
+         json[0] = tagName;
 
          // If node has attributes, they are located in json[1].
-         if (node.attributes.length > 0) {
-            var jsonAttributes = {},
-               nodeAttributes = node.attributes;
+         var nodeAttributes = node.attributes;
+         if (nodeAttributes.length) {
+            var jsonAttributes = {};
             for (var i = 0; i < nodeAttributes.length; ++i) {
                jsonAttributes[nodeAttributes[i].name] = nodeAttributes[i].value;
             }
@@ -35,16 +36,27 @@ define('Controls/Decorator/Markup/Converter', [
          }
 
          // After that convert child nodes and push them to array.
+         var firstChild;
          if (node.hasChildNodes()) {
-            var childNodes = node.childNodes;
+            var childNodes = node.childNodes,
+               child;
+
+            // Recursive converting of children.
             for (var i = 0; i < childNodes.length; ++i) {
-               // Recursive converting of children.
-               json.push(nodeToJson(childNodes[i]));
+               child = nodeToJson(childNodes[i]);
+               if (!i) {
+                  firstChild = child;
+               }
+               json.push(child);
             }
          }
 
          // By agreement, json shouldn't contain decorated link. Undecorate it if found.
-         return linkDecorateUtils.undecorateLinkIfNeed(json);
+         if (linkDecorateUtils.isDecoratedLink(tagName, firstChild)) {
+            json = linkDecorateUtils.getUndecoratedLink(firstChild);
+         }
+
+         return json;
       }
 
       // Return empty array if node is neither text nor element.
@@ -80,9 +92,12 @@ define('Controls/Decorator/Markup/Converter', [
     * @returns {Array}
     */
    var htmlToJson = function(html) {
-      var div = document.createElement('div');
+      var div = document.createElement('div'),
+         result;
       div.innerHTML = wrapUrl(html).trim();
-      return nodeToJson(div).slice(1);
+      result = nodeToJson(div).slice(1);
+      div = null;
+      return result;
    };
 
    /**
