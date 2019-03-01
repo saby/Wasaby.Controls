@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-// import Model = require('./RelationController/Model');
+import Model from './RelationController/Model';
 import template = require('wml!Controls/_dateRange/RelationController/RelationController');
 
 /**
@@ -118,36 +118,53 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * Shifts periods backward
  * @function Controls/_dateRange/RelationController#shiftBackward
  */
+
+var _private = {
+    notifyRangeChanged: function(self, newRanges, ranges?) {
+        let changed = false;
+        for (let i in newRanges) {
+            if (!ranges || ranges[i][0] !== newRanges[i][0]) {
+                self._notify('startValue' + i + 'Changed', [newRanges[i][0]]);
+                changed = true;
+            }
+            if (!ranges || ranges[i][1] !== newRanges[i][1]) {
+                self._notify('endValue' + i + 'Changed', [newRanges[i][1]]);
+                changed = true;
+            }
+        }
+        self._notify('periodsChanged');
+    }
+};
+
 var Component = Control.extend({
     _template: template,
     _model: null,
 
     _beforeMount: function (options) {
-        // this._model = new Model(options);
+        this._model = new Model(options);
     },
 
     _beforeUpdate: function (options) {
-        // let ranges = this._model.ranges,
-        //     newRanges;
-        // this._model.update(options);
-        // newRanges = this._model.ranges;
-        // console.log('RangeRelationController._beforeUpdate', options);
-        //
-        // for (let i in ranges) {
-        //     if (ranges[i][0] !== newRanges[i][0]) {
-        //         this._notify('startValue' + i + 'Changed', [newRanges[i][0]]);
-        //     } else if (ranges[i][1] !== newRanges[i][1]) {
-        //         this._notify('startValue' + i + 'Changed', [newRanges[i][1]]);
-        //     }
-        // }
+        let ranges = this._model.ranges,
+            newRanges;
+        this._model.update(options);
+        newRanges = this._model.ranges;
+
+        _private.notifyRangeChanged(this, newRanges, ranges);
+
+        if (options.bindType !== this._model.bindType) {
+            this._notify('bindTypeChanged', [this._model.bindType]);
+        }
     },
 
     shiftForward: function() {
-
+        this._model.shiftForward();
+        _private.notifyRangeChanged(this, this._model.ranges);
     },
 
     shiftBackward: function() {
-
+        this._model.shiftBackward();
+        _private.notifyRangeChanged(this, this._model.ranges);
     },
 
     _beforeUnmount: function() {
