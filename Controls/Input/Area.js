@@ -56,12 +56,26 @@ define('Controls/Input/Area',
       var _private = {
          heightRegExp: {},
 
+         /**
+          * The regular expression describes the margin css property with a value.
+          */
          MARGIN_REG_EXP: /margin: ?((\d+px ?)+)/,
 
          PATH_TO_THEME_VARIABLES: 'Controls/Input/Area/MeasuredVariables',
 
+         /**
+          * Returns a regular expression to find the height value of one row of the corresponding field size.
+          * @remark
+          * The height value is stored at $1.
+          * @param {Controls/Input/Area#size} size
+          * @return {RegExp}
+          */
          getHeightRegExp: function(size) {
             if (!(size in _private.heightRegExp)) {
+               /**
+                * The regular expression describes classes consisting of "_size_{{size}}"
+                * with the height parameter inside.
+                */
                _private.heightRegExp[size] = new RegExp('_size_' + size + ' ?{[\\s\\S]*?height: ?(\\d+)');
             }
 
