@@ -1,0 +1,8 @@
+<ws:partial template="wml!Controls/List/Grid/Column" scope="{{_options}}">
+   <ws:contentTemplate>
+      <div class="ws-flexbox ws-flex-column">
+         <div>{{itemData.item.date}}</div>
+         <div class="demo-Shipments__additionalText">{{itemData.item.additionalText}}</div>
+      </div>
+   </ws:contentTemplate>
+</ws:partial>

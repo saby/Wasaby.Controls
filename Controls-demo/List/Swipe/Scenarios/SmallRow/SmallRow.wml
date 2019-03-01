@@ -1,0 +1,7 @@
+<Controls.Explorer itemActions="{{_itemActions}}"
+                   header="{{_header}}"
+                   source="{{_source}}"
+                   columns="{{_columns}}"
+                   nodeProperty="parent@"
+                   parentProperty="parent"
+                   keyProperty="id" />

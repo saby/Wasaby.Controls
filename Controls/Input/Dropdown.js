@@ -6,8 +6,7 @@ define('Controls/Input/Dropdown',
       'Types/util',
       'Types/chain',
       'Controls/Dropdown/Util',
-      'Core/helpers/Object/isEqual',
-      'css!theme?Controls/Input/Dropdown/Dropdown'
+      'Core/helpers/Object/isEqual'
    ],
    function(Control, template, defaultContentTemplate, Utils, chain, dropdownUtils, isEqual) {
       /**
@@ -85,7 +84,7 @@ define('Controls/Input/Dropdown',
          }
       };
 
-      var DropdownList = Control.extend({
+      var Dropdown = Control.extend({
          _template: template,
          _defaultContentTemplate: defaultContentTemplate,
          _text: '',
@@ -129,5 +128,7 @@ define('Controls/Input/Dropdown',
          }
       });
 
-      return DropdownList;
+      Dropdown._theme = ['Controls/Input/Dropdown/Dropdown'];
+
+      return Dropdown;
    });

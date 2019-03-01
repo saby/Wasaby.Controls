@@ -620,6 +620,7 @@ define('Controls/List/BaseControl', [
                   nativeEvent: context ? childEvent.nativeEvent : false
                });
                self._menuIsShown = true;
+               self._forceUpdate();
             });
          }
       },

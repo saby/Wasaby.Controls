@@ -241,6 +241,8 @@ define('Controls/Application',
             var self = this,
                def = new Deferred();
 
+            var appData = AppData.getAppData();
+
             self._scrollData = new ScrollContext({pagingVisible: false});
 
             self.onServer = typeof window === 'undefined';
@@ -253,8 +255,8 @@ define('Controls/Application',
             self.buildnumber = cfg.buildnumber || Env.constants.buildnumber;
 
             // TODO Ждем https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
-            self.appRoot = cfg.appRoot || context.AppData.appRoot || (cfg.builder ? '/' : Env.constants.appRoot);
-            self.staticDomains = cfg.staticDomains || context.AppData.staticDomains || Env.constants.staticDomains || '[]';
+            self.appRoot = cfg.appRoot || appData.appRoot || (cfg.builder ? '/' : Env.constants.appRoot);
+            self.staticDomains = cfg.staticDomains || appData.staticDomains || Env.constants.staticDomains || '[]';
             if (typeof self.staticDomains !== 'string') {
                self.staticDomains = '[]';
             }
@@ -264,15 +266,14 @@ define('Controls/Application',
 
             // TODO сейчас нельзя удалить, ждем реквеста https://online.sbis.ru/opendoc.html?guid=c3d5e330-e4d6-44cd-9025-21c1594a9877
             // Т.к. это должно храниться в отдельном сторе
-            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (context.AppData ? context.AppData.RUMEnabled : '');
-            self.product = cfg.product || Env.constants.product;
+            self.RUMEnabled = cfg.RUMEnabled ? cfg.RUMEnabled : (appData.RUMEnabled || '');
+            self.product = appData.product || cfg.product || Env.constants.product;
             self.lite = cfg.lite || false;
 
             // TODO нужно удалить после решения https://online.sbis.ru/opendoc.html?guid=a9ceff55-1c8b-4238-90a7-22dde0e1bdbe
-            self.servicesPath = (context.AppData ? context.AppData.servicesPath : cfg.servicesPath) || Env.constants.defaultServiceUrl || '/service/';
+            self.servicesPath = appData.servicesPath || cfg.servicesPath || Env.constants.defaultServiceUrl || '/service/';
             self.BodyClasses = _private.calculateBodyClasses;
-            self.application = context.AppData.application;
-            self.product = context.AppData.product;
+            self.application = appData.application;
 
 
             if (typeof window === 'undefined' && cfg.theme !== 'default') {

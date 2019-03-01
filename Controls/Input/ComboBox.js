@@ -5,8 +5,7 @@ define('Controls/Input/ComboBox',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Types/util',
       'Controls/Dropdown/Util',
-      'Controls/Utils/tmplNotify',
-      'css!theme?Controls/Input/ComboBox/ComboBox'
+      'Controls/Utils/tmplNotify'
    ],
 
    function(Control, template, BaseViewModel, Utils, dropdownUtils, tmplNotify) {
@@ -105,6 +104,8 @@ define('Controls/Input/ComboBox',
       };
 
       ComboBox._private = _private;
+
+      ComboBox._theme = ['Controls/Input/ComboBox/ComboBox'];
 
       return ComboBox;
    });
