@@ -11,7 +11,7 @@
             <i class="controls-Toolbar__item_icon_{{(item['iconStyle'] || item[iconStyleProperty]) || 'secondary'}} controls-Toolbar__item_icon {{item['icon'] || item[iconProperty]}}"/>
         </ws:if>
         <ws:else data="{{!!item['buttonStyle']}}">
-            <Controls.Button readOnly="{{buttonReadOnly || item['buttonReadOnly']}}"
+            <Controls.buttons:Button readOnly="{{buttonReadOnly || item['buttonReadOnly']}}"
                              caption="{{item[displayProperty] || item['buttonCaption']}}"
                              transparent="{{buttonTransparent || item['buttonTransparent']}}"
                              iconStyle="{{item['buttonIconStyle'] || item['iconStyle']}}"
