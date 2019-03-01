@@ -40,6 +40,9 @@ define('Controls/Controllers/QueryParamsController/Position',
          _more: null,
          _beforePosition: null,
          _afterPosition: null,
+
+         //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+         _positionByMeta: null,
          constructor: function(cfg) {
             this._options = cfg;
             PositionNavigation.superclass.constructor.apply(this, arguments);
@@ -98,24 +101,26 @@ define('Controls/Controllers/QueryParamsController/Position',
             };
          },
 
-         setState: function(state) {
-            if (state.more) {
-               this._more = state.more;
-            }
-            if (state.position) {
-               if (state.position.after !== undefined) {
-                  this._afterPosition = _private.resolvePosition(state.position.after, this._options.field);
+         //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+         setState: function(model) {
+            if (!this._positionByMeta) {
+               var beforePosition = model.getFirstItem();
+               var afterPosition = model.getLastItem();
+               if (afterPosition !== undefined) {
+                  this._afterPosition = _private.resolvePosition(afterPosition, this._options.field);
                }
-               if (state.position.before !== undefined) {
-                  this._beforePosition = _private.resolvePosition(state.position.before, this._options.field);
+               if (beforePosition !== undefined) {
+                  this._beforePosition = _private.resolvePosition(beforePosition, this._options.field);
                }
             }
+
          },
 
          calculateState: function(list, loadDirection) {
             var more, navDirection, edgeElem, metaNextPostion;
-            more = list.getMetaData().more;
-            metaNextPostion = list.getMetaData().nextPosition;
+            this._savedMeta = list.getMetaData();
+            more = this._savedMeta.more;
+            metaNextPostion = this._savedMeta.nextPosition;
             if (typeof more === 'boolean') {
                if (loadDirection || this._options.direction !== 'both') {
                   navDirection = _private.resolveDirection(loadDirection, this._options.direction);
@@ -135,13 +140,16 @@ define('Controls/Controllers/QueryParamsController/Position',
 
             //if we have "nextPosition" in meta we must set this position for next query
             //else we set this positions from records
+            this._positionByMeta = null;
             if (metaNextPostion) {
                if (metaNextPostion instanceof Array) {
                   if (loadDirection || this._options.direction !== 'both') {
                      if (loadDirection === 'down' || this._options.direction === 'after') {
                         this._afterPosition = metaNextPostion;
+                        this._positionByMeta = true;
                      } else if (loadDirection === 'up' || this._options.direction === 'before') {
                         this._beforePosition = metaNextPostion;
+                        this._positionByMeta = true;
                      }
                   } else {
                      Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be object');
@@ -151,6 +159,7 @@ define('Controls/Controllers/QueryParamsController/Position',
                      if (metaNextPostion.before && metaNextPostion.before instanceof Array && metaNextPostion.after && metaNextPostion.after instanceof Array) {
                         this._beforePosition = metaNextPostion.before;
                         this._afterPosition = metaNextPostion.after;
+                        this._positionByMeta = true;
                      } else {
                         Env.IoC.resolve('ILogger').error('QueryParamsController/Position', 'Wrong type of \"nextPosition\" value. Must be Object width `before` and `after` properties. Each properties must be Arrays');
                      }
@@ -206,6 +215,7 @@ define('Controls/Controllers/QueryParamsController/Position',
             this._more = null;
             this._afterPosition = null;
             this._beforePosition = null;
+            this._positionByMeta = null;
          }
       });
 
