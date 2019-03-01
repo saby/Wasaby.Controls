@@ -76,6 +76,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          keyProperty: 'id',
          displayProperty: 'title',
          markedKey: '123',
+         markerVisibility: 'visible',
          multiSelectVisibility: 'visible',
          header: gridHeader,
          columns: gridColumns,

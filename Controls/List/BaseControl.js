@@ -1299,7 +1299,8 @@ define('Controls/List/BaseControl', [
          markerVisibility: 'onactivated',
          style: 'default',
          selectedKeys: defaultSelectedKeys,
-         excludedKeys: defaultExcludedKeys
+         excludedKeys: defaultExcludedKeys,
+         markedKey: null
       };
    };
    return BaseControl;
