@@ -35,7 +35,7 @@ var defaultColors = [
             state = [ +state ];
          }
          for (i = 0; i < Math.min(_numValues, state.length); i++) {
-            // Больше чем знаем цветов не рисуем
+            // do not draw more colors, than we know
             if (i < _colors.length) {
                // convert to number, ignore negative ones
                itemValue = Math.max(0, +state[i] || 0);
