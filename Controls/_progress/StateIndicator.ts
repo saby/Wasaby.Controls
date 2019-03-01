@@ -35,14 +35,13 @@ var defaultColors = [
             state = [ +state ];
          }
          for (i = 0; i < Math.min(_numValues, state.length); i++) {
-            // Больше чем знаем цветов не рисуем
+            // do not draw more colors, than we know
             if (i < _colors.length) {
-               // Приводим к числу, отрицательные игнорируем 
+               // convert to number, ignore negative ones
                itemValue = Math.max(0, +state[i] || 0);
                itemNumSectors = Math.floor(itemValue / sectorSize);
                if (itemValue > 0 && itemNumSectors === 0) {
-                  // Если значение элемента не нулевое, 
-                  // а количество секторов нулевое (из-за округления) то увеличим до 1 (см. спецификацию)
+                  // if state value is positive and corresponding sector number is zero? increase it by 1 (look specification)
                   itemNumSectors = 1;
                }
                if (itemNumSectors > maxSectorsPerValue) {
@@ -55,7 +54,7 @@ var defaultColors = [
                }
             }
          }
-         // Если собрали больше секторов чем есть - урежем самый длинный на величину превышения
+         // if we count more sectors, than we have in indicator, trim the longest value
          if (totalSectorsUsed > _numSectors) {
             excess = totalSectorsUsed - _numSectors;
             colorValues.splice(longestValueStart, excess);
