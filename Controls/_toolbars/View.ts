@@ -6,6 +6,7 @@ import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
 import 'css!theme?Controls/_toolbars/View';
+import 'css!theme?Controls/_toolbars/ToolbarPopup';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -225,9 +226,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!theme?Controls/_toolbars/ToolbarPopup'], function () {
-            self._children.menuOpener.open(config, self);
-        });
+        self._children.menuOpener.open(config, self);
     }
 };
 
