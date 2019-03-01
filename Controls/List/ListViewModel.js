@@ -337,7 +337,6 @@ define('Controls/List/ListViewModel',
             if (this._options.markerVisibility !== 'hidden') {
                this._setMarkerAfterUpdateItems();
             }
-            this._nextModelVersion();
          },
 
          // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.

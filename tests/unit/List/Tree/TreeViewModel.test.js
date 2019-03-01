@@ -269,6 +269,37 @@ define([
                   'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
             });
          });
+         it('should redrow list if once folder was deleted', function() {
+            var
+               rs = new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        parent: null,
+                        hasChild: false,
+                        type: null
+                     }
+                  ],
+                  idProperty: 'id'
+               }),
+               treeViewModel = new TreeViewModel({
+                  items: rs,
+                  hasChildrenProperty: 'hasChild',
+                  expanderVisibility: 'hasChildren',
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
+               });
+            treeViewModel._thereIsChildItem = true;
+            var updated = false;
+            treeViewModel._nextModelVersion = function() {
+               updated = true;
+            };
+            TreeViewModel._private.onBeginCollectionChange(treeViewModel);
+            assert.isTrue(updated);
+
+
+         });
          it('prepareExpanderClasses', function() {
             var
                testsPrepareExpanderClasses = [{
