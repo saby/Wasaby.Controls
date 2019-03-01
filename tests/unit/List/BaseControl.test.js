@@ -1311,7 +1311,7 @@ define([
          ctrl._beforeMount(cfg);
          ctrl._onItemClick(event, rs.at(2), originalEvent);
          assert.isTrue(stopPropagationCalled);
-         assert.equal(rs.at(2), ctrl._listViewModel._markedItem.getContents());
+         assert.equal(rs.at(2), ctrl._listViewModel.getMarkedItem().getContents());
       });
 
       describe('EditInPlace', function() {
@@ -1812,6 +1812,13 @@ define([
          it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        { id: 1, title: 'item 1' },
+                        { id: 2, title: 'item 2' }
+                     ],
+                     idProperty: 'id'
+                  }),
                   viewName: 'Controls/List/ListView',
                   viewConfig: {
                      idProperty: 'id'
@@ -1820,8 +1827,8 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
+                  markedKey: null,
                   viewModelConstructor: ListViewModel,
-                  markedKey: 0,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -1851,7 +1858,7 @@ define([
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            assert.equal(instance.getViewModel()._markedKey, 0);
+            assert.equal(instance.getViewModel()._markedKey, undefined);
             instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
             assert.equal(instance.getViewModel()._markedKey, 1);
             assert.equal(callBackCount, 0);
