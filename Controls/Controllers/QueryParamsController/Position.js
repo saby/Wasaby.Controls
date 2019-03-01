@@ -40,7 +40,7 @@ define('Controls/Controllers/QueryParamsController/Position',
          _more: null,
          _beforePosition: null,
          _afterPosition: null,
-         
+
          //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
          _positionByMeta: null,
          constructor: function(cfg) {
@@ -104,8 +104,8 @@ define('Controls/Controllers/QueryParamsController/Position',
          //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
          setState: function(model) {
             if (!this._positionByMeta) {
-               var beforePosition = self._listViewModel.getFirstItem();
-               var afterPosition = self._listViewModel.getLastItem();
+               var beforePosition = model.getFirstItem();
+               var afterPosition = model.getLastItem();
                if (afterPosition !== undefined) {
                   this._afterPosition = _private.resolvePosition(afterPosition, this._options.field);
                }
