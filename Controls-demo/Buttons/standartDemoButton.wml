@@ -345,6 +345,6 @@
     </div>
     <h2 class="ControlsDemo__textLink-text">Text link</h2>
     <div attr:class="demo-Button_margin-10 ControlsDemo__textLink">
-        Today the site with the <a attr:class="asLink" href="https://wi.sbis.ru/doc/platform/">documentation</a> was updated
+        Today the site with the <a attr:class="ws-link" href="https://wi.sbis.ru/doc/platform/">documentation</a> was updated
     </div>
 </div>

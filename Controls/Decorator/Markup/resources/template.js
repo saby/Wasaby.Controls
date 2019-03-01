@@ -43,7 +43,7 @@ define('Controls/Decorator/Markup/resources/template', [
             found = true;
             newValue.push(['a',
                {
-                  'class': 'asLink',
+                  'class': 'ws-link',
                   rel: 'noreferrer',
                   href: value[i][1].href,
                   target: '_blank'

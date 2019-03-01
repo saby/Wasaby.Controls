@@ -11,7 +11,7 @@
          <span class="ControlsDemo-EditableArea__label">Шаблон:</span>
          <Controls.EditableArea.Templates.Editors.Base
               bind:value="content.editObject.text1"
-              style="asLink"
+              style="ws-link"
          >
             <ws:editorTemplate>
                <Controls.Input.Text selectOnClick="{{ false }}" />

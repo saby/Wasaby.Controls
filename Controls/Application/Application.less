@@ -205,12 +205,25 @@ html>body .clearfix {
 /*import basic style to application.less*/
 @import "Controls-theme/themes/default/fonts/TensorFont";
 @import "Controls-theme/themes/default/fonts/cbus-icons";
-
 @import "Controls-theme/themes/default/helpers/AreaBlocks";
-@import "Controls-theme/themes/default/helpers/_header";
 @import "Controls-theme/themes/default/helpers/_mixins";
-@import "Controls-theme/themes/default/helpers/_misc";
+//
+//Удаляю всякие старые классы из VDOM согласно новости https://online.sbis.ru/news/711232e7-7c9c-4800-bcb4-5c71a9d68da5
+//все эти класcы есть в старых темах и должны прилетать со слоем совместимости
+//для всех кто по каким то причинам их использует в VDOM я выписываю задачи и оставляю временно классы в этом блоке
+//пока что достоверно известно что asLink используют в новостях на главной
+.asLink {
+   cursor: pointer;
+   text-decoration: none;
+   background-color: transparent;
+   color: @color_App-link;
+}
 
+.ws-is-no-touch .asLink:hover,
+.asLink:active {
+   text-decoration: underline;
+   color: @color_App-link_hover;
+}
 @import "Controls-theme/themes/default/helpers/_flex";
 
 //icons compatibility with new params
