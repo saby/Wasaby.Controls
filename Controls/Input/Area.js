@@ -54,7 +54,19 @@ define('Controls/Input/Area',
        * @default enter
        */
       var _private = {
+         heightRegExp: {},
+
+         MARGIN_REG_EXP: /margin: ?((\d+px ?)+)/,
+
          PATH_TO_THEME_VARIABLES: 'Controls/Input/Area/MeasuredVariables',
+
+         getHeightRegExp: function(size) {
+            if (!(size in _private.heightRegExp)) {
+               _private.heightRegExp[size] = new RegExp('_size_' + size + ' ?{[\\s\\S]*?height: ?(\\d+)');
+            }
+
+            return _private.heightRegExp[size];
+         },
 
          /**
           * @param {String} css
@@ -70,8 +82,7 @@ define('Controls/Input/Area',
             /**
              * Get the margin value of css.
              */
-            var marginRegExp = /margin: ?((\d+px ?)+)/;
-            var margin = marginRegExp.exec(css)[1].split(' ').map(parseFloat);
+            var margin = _private.MARGIN_REG_EXP.exec(css)[1].split(' ').map(parseFloat);
 
             /**
              * The indentation is made up of margin-top and margin-bottom.
@@ -107,7 +118,7 @@ define('Controls/Input/Area',
             /**
              * Get the height value of css for the current field size.
              */
-            var heightRegExp = new RegExp('_size_' + size + ' ?{[\\s\\S]*?height: ?(\\d+)');
+            var heightRegExp = _private.getHeightRegExp(size);
             sizes.rowHeight = parseFloat(heightRegExp.exec(css)[1]);
 
             return sizes;
