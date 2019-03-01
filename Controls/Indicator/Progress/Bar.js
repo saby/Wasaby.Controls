@@ -1,17 +1,7 @@
-define(
-   'Controls/Indicator/Progress/Bar',
-   [
-      'Core/Control',
-      'wml!Controls/Indicator/Progress/Bar/Bar',
-      'Types/entity',
-
-      'css!Controls/Indicator/Progress/Bar/Bar'
-   ],
-   function(
-      Control,
-      template,
-      entity
-   ) {
+define('Controls/Indicator/Progress/Bar', [
+      'Controls/progress',
+      'Env/Env'
+], function(progressLib, Env) {
       'use strict';
 
       /**
@@ -37,23 +27,10 @@ define(
        * @cfg {Number} Progress in percents (ratio of the filled part)
        */
 
-      var
-         Bar = Control.extend({
-            _template: template
-         });
+      Env.IoC.resolve('ILogger').error(
+      'Controls/Indicator/Progress/Bar',
+      'This control is deprecated. Use \'Controls/progress:Bar\' instead'
+   );
 
-      Bar.getOptionTypes = function() {
-         return {
-            value: entity.descriptor(Number).required()
-         };
-      };
-
-      Bar.getDefaultOptions = function() {
-         return {
-            value: 0
-         };
-      };
-
-      return Bar;
-   }
-);
+   return progressLib.Bar;
+});

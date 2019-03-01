@@ -1,0 +1,6 @@
+<div class="controls-ProgressBar_style">
+   <div
+      class="controls-ProgressBar_style__filled"
+      style="width: {{ _options.value > 0 ? _options.value+'%' : '0px' }};"
+   ></div>
+</div>
