@@ -11,6 +11,7 @@ define('Controls/Popup/Templates/Dialog/DialogTmplStyles', [],
     * @css @color_DialogTemplate-caption Color of caption.
     * @css @spacing_DialogTemplate-between-caption-border-left Spacing between caption and border-left.
     * @css @height_dialogTemplate_caption Height of caption.
+    * @css @height_DialogTemplate-top-area Height of top area.
     * @css @line-height_dialogTemplate_caption line-height of caption.
     *
     * @css @font-size_dialogTemplate_head Font-size of heading.
