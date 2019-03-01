@@ -369,7 +369,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      nesting++;
                   }
                   if (nesting < 5) {
-                     return $(customHeader[i]);
+                     var cH = $(customHeader[i]);
+                     cH.addClass('ws-window-titlebar');
+                     return cH;
                   }
                }
             }
