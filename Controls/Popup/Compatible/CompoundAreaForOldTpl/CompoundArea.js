@@ -401,6 +401,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _rebuildTitleBar: function() {
             this._removeCustomHeader();
             this._setCustomHeader();
+            return true; // команда rebuildTitleBar не должна всплывать выше окна
          },
 
          _removeCustomHeader: function() {
