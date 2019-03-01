@@ -44,10 +44,8 @@ define('Controls/Controllers/QueryParamsController/Page',
             return addParams;
          },
 
-         setState: function(state) {
-            if (state.more) {
-               this._more = state.more;
-            }
+         setState: function() {
+            //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
          },
 
          calculateState: function(list, direction) {
