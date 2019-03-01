@@ -20,7 +20,7 @@
                                keyProperty="id"
                                on:arrowActivated="_onArrowActivated()"
                                on:itemClick="_onItemClick()" />
-    <div id="reset" class="asLink" on:click="_resetCrumbs()">Сбросить крошки</div>
+    <div id="reset" class="ws-link" on:click="_resetCrumbs()">Сбросить крошки</div>
     <div id="info">Нажали на элемент с id: {{info}}</div>
     <ws:if data="{{_arrowActivated}}">
         <div id="arrowInfo">Нажали на стрелку</div>
