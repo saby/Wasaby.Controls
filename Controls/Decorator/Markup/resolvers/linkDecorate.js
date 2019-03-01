@@ -55,7 +55,7 @@ define('Controls/Decorator/Markup/resolvers/linkDecorate', [
             linkAttrs[key] = value[1][key];
          }
       }
-      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('ws-link', '') + ' ' : '') + 'LinkDecorator__linkWrap';
+      linkAttrs.class = (linkAttrs.class ? linkAttrs.class.replace('asLink', '') + ' ' : '') + 'LinkDecorator__linkWrap';
       linkAttrs.href = linkAttrs.href.replace(/\\/g, '/');
       linkAttrs.target = '_blank';
 

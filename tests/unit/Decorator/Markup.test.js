@@ -45,7 +45,7 @@ define([
          attributedNode = ['span', { 'class': 'someClass' }, 'text'],
          linkNode = ['a',
             {
-               'class': 'ws-link',
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'https://ya.ru',
                target: '_blank'
@@ -54,7 +54,7 @@ define([
          ],
          httpLinkNode = ['a',
             {
-               'class': 'ws-link',
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'http://ya.ru',
                target: '_blank'
@@ -63,7 +63,7 @@ define([
          ],
          wwwLinkNode = ['a',
             {
-               'class': 'ws-link',
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'http://www.ya.ru',
                target: '_blank'
@@ -72,7 +72,7 @@ define([
          ],
          ftpLinkNode = ['a',
             {
-               'class': 'ws-link',
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'ftp://ya.ru',
                target: '_blank'
@@ -81,7 +81,7 @@ define([
          ],
          fileLinkNode = ['a',
             {
-               'class': 'ws-link',
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'file://ya.ru',
                target: '_blank'
@@ -90,7 +90,7 @@ define([
          ],
          smbLinkNode = ['a',
             {
-               'class': 'ws-link',
+               'class': 'asLink',
                rel: 'noreferrer',
                href: 'smb://ya.ru',
                target: '_blank'
@@ -101,7 +101,7 @@ define([
          nbsp = String.fromCharCode(160),
          openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
          deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
-         linkHtml = '<a class="ws-link" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
+         linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
          decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
       function sortAttrs(html) {
@@ -183,7 +183,7 @@ define([
                ['p',
                   ['a',
                      {
-                        'class': 'ws-link',
+                        'class': 'asLink',
                         rel: 'noreferrer',
                         href: 'http://update*.sbis.ru/tx_stat',
                         target: '_blank'
