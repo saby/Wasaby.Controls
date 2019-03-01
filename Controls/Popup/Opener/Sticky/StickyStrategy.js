@@ -183,7 +183,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
                   return position;
                }
                if (revertPosition.bottom) {
-                  revertPosition.bottom += TouchKeyboardHelper.getKeyboardHeight();
+                  revertPosition.bottom += TouchKeyboardHelper.getKeyboardHeight() + targetCoords.topScroll;
                }
                revertPosition[property] = popupCfg.sizes[property] - revertPositionOverflow;
                return revertPosition;
