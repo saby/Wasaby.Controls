@@ -182,15 +182,20 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
                   position[property] = popupCfg.sizes[property] - positionOverflow;
                   return position;
                }
-               if (revertPosition.bottom) {
-                  revertPosition.bottom += TouchKeyboardHelper.getKeyboardHeight() + targetCoords.topScroll;
-               }
+               _private.fixPosition(position, targetCoords);
                revertPosition[property] = popupCfg.sizes[property] - revertPositionOverflow;
                return revertPosition;
             }
+            _private.fixPosition(position, targetCoords);
             return revertPosition;
          }
          return position;
+      },
+
+      fixPosition: function(position, targetCoords) {
+         if (position.bottom) {
+            position.bottom += TouchKeyboardHelper.getKeyboardHeight() + targetCoords.topScroll;
+         }
       },
 
       getPositionCoordinatesFixed: function(popupCfg, targetCoords) {
