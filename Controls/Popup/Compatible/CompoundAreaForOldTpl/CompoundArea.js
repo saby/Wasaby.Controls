@@ -369,7 +369,9 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                      nesting++;
                   }
                   if (nesting < 5) {
-                     return $(customHeader[i]);
+                     var cH = $(customHeader[i]);
+                     cH.addClass('ws-window-titlebar');
+                     return cH;
                   }
                }
             }
@@ -401,6 +403,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _rebuildTitleBar: function() {
             this._removeCustomHeader();
             this._setCustomHeader();
+            return true; // команда rebuildTitleBar не должна всплывать выше окна
          },
 
          _removeCustomHeader: function() {

@@ -24,6 +24,10 @@ define('Controls/Controllers/QueryParamsController/Offset',
 
          },
 
+         setState: function(state) {
+
+         },
+
          getLoadedDataCount: function() {
 
          },
@@ -34,6 +38,10 @@ define('Controls/Controllers/QueryParamsController/Offset',
 
          hasMoreData: function(direction) {
 
+         },
+
+         setState: function() {
+            //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
          },
 
          prepareSource: function(source) {

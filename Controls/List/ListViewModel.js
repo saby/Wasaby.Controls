@@ -43,6 +43,12 @@ define('Controls/List/ListViewModel',
             }
 
             return classList;
+         },
+         getItemByMarkedKey: function(self, markedKey) {
+            if (markedKey === null) {
+               return;
+            }
+            return self.getItemById(markedKey, self._options.keyProperty);
          }
       };
 
@@ -60,13 +66,9 @@ define('Controls/List/ListViewModel',
             this._actions = [];
             ListViewModel.superclass.constructor.apply(this, arguments);
 
-            if (cfg.markedKey !== undefined) {
+            if (this._items && (cfg.markedKey !== null || cfg.markerVisibility === 'visible')) {
                this._markedKey = cfg.markedKey;
-               this._markedItem = this.getItemById(cfg.markedKey, cfg.keyProperty);
-            }
-            if (!this._markedItem && (this._options.markerVisibility === 'always' || this._options.markerVisibility === 'visible') && this._items && this._items.getCount()) {
-               this._markedKey = this._items.at(0).getId();
-               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
+               this.updateMarker(cfg.markedKey);
             }
 
             this._selectedKeys = cfg.selectedKeys || [];
@@ -106,7 +108,7 @@ define('Controls/List/ListViewModel',
                itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
                dragItems,
                drawedActions;
-            itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === this._markedItem;
+            itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
             itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
             itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
             itemsModelCurrent.showActions = !this._editingItemData && (!this._activeItem || (!this._activeItem.contextEvent && itemsModelCurrent.isActive));
@@ -178,9 +180,28 @@ define('Controls/List/ListViewModel',
                return;
             }
             this._markedKey = key;
-            this._markedItem = this.getItemById(key, this._options.keyProperty);
+            this.updateMarker(key);
             this._nextModelVersion(true);
-            this._notify('onMarkedKeyChanged', key);
+         },
+
+         updateMarker: function(markedKey) {
+
+            if (!this.getCount() || this._options.markerVisibility === 'hidden') {
+               return;
+            }
+
+            if (this._options.markerVisibility === 'onactivated' && this._markedKey === null) {
+               return;
+            }
+
+            var markedItem = _private.getItemByMarkedKey(this, markedKey);
+            if (markedItem) {
+               this._markedKey = markedKey;
+            } else {
+               this._markedKey = this._items.at(0).getId();
+            }
+
+            this._notify('onMarkedKeyChanged', this._markedKey);
          },
 
          setMarkerVisibility: function(markerVisibility) {
@@ -188,18 +209,11 @@ define('Controls/List/ListViewModel',
             this._nextModelVersion();
          },
 
-         getFirstItemKey: function() {
-            var
-               nextItemId = 0,
-               nextItem,
-               itemsCount = this._display.getCount();
-            while (nextItemId < itemsCount) {
-               nextItem = this._display.at(nextItemId).getContents();
-               if (cInstance.instanceOfModule(nextItem, 'Types/entity:Model')) {
-                  return this._display.at(nextItemId).getContents().getId();
-               }
-               nextItemId++;
-            }
+         getFirstItem: function() {
+            return ItemsUtil.getFirstItem(this._display);
+         },
+         getLastItem: function() {
+            return ItemsUtil.getLastItem(this._display);
          },
          getIndexByKey: function(key) {
             var
@@ -235,6 +249,9 @@ define('Controls/List/ListViewModel',
          },
          getMarkedKey: function() {
             return this._markedKey;
+         },
+         getMarkedItem: function() {
+            return _private.getItemByMarkedKey(this, this._markedKey);
          },
          getSelectionStatus: function(key) {
             return this._selectedKeys[key] !== undefined;
@@ -341,32 +358,9 @@ define('Controls/List/ListViewModel',
 
          setItems: function(items) {
             ListViewModel.superclass.setItems.apply(this, arguments);
-            if (this._options.markerVisibility !== 'hidden') {
-               this._setMarkerAfterUpdateItems();
-            }
+            var markedItem = _private.getItemByMarkedKey(this, this._markedKey);
+            this.updateMarker(this._options.markedKey);
             this._nextModelVersion();
-         },
-
-         // Поиск отмеченного элемента в коллекции по идентификатору отмеченного элементы.
-         _restoreMarkedItem: function() {
-            if (this._markedKey !== undefined) {
-               this._markedItem = this.getItemById(this._markedKey, this._options.keyProperty);
-            }
-         },
-
-
-
-         _setMarkerAfterUpdateItems: function() {
-
-            // При обновлении коллекции объекты пересоздаются, поэтому нужно обновить ссылку на отмеченный элемент.
-            this._restoreMarkedItem();
-
-            // Если отмеченный элемент не найден, а маркер показывать нужно, то отмечаем первый элемент
-            if (this._options.markerVisibility !== 'onactivated') {
-               if (!this._markedItem && this._items.getCount()) {
-                  this.setMarkedKey(this._items.at(0).getId());
-               }
-            }
          },
 
          _onBeginCollectionChange: function() {
@@ -430,7 +424,7 @@ define('Controls/List/ListViewModel',
          getSorting: function() {
             return this._options.sorting;
          },
-         
+
          setSearchValue: function(value) {
             this._options.searchValue = value;
          },

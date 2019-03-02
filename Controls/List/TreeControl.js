@@ -58,7 +58,7 @@ define('Controls/List/TreeControl', [
          var
             model = self._children.baseControl.getViewModel(),
             markedItemKey = model.getMarkedKey(),
-            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+            markedItem = model.getMarkedItem();
          if (!model.isExpanded(markedItem)) {
             self.toggleExpanded(markedItemKey);
          }
@@ -67,7 +67,7 @@ define('Controls/List/TreeControl', [
          var
             model = self._children.baseControl.getViewModel(),
             markedItemKey = model.getMarkedKey(),
-            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+            markedItem = model.getMarkedItem();
          if (model.isExpanded(markedItem)) {
             self.toggleExpanded(markedItemKey);
          }

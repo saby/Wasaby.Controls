@@ -217,11 +217,14 @@ define([
 
          result = instance._notifyHandler({}, 'itemActionsClick', 1, 2);
          instance._notifyHandler({}, 'beforeBeginEdit');
+         instance._notifyHandler({}, 'sortingChanged', {field: 'DESC'});
          assert.equal(result, 123);
          assert.equal(events[0].eventName, 'itemActionsClick');
          assert.deepEqual(events[0].eventArgs, [1, 2]);
          assert.equal(events[1].eventName, 'beforeBeginEdit');
          assert.deepEqual(events[1].eventArgs, []);
+         assert.equal(events[2].eventName, 'sortingChanged');
+         assert.deepEqual(events[2].eventArgs, [{field: 'DESC'}]);
       });
 
       describe('_notify(rootChanged)', function() {

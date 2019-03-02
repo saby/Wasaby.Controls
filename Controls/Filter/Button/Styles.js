@@ -7,6 +7,7 @@ define('Controls/Filter/Button/Styles', [],
     * @public
     *
     * @css @height_FilterButton Filter/Button height.
+    * @css @min-width_FilterButton min-width of Filter/Button.
     *
     * @css @color_FilterButton_icon Button icon color.
     * @css @color_FilterButton_icon_hover Button icon color when button is hovered.

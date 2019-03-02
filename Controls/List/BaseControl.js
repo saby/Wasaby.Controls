@@ -86,7 +86,7 @@ define('Controls/List/BaseControl', [
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                var
-                  markedKey, isActive,
+                  markedItem, markedKey, isActive,
                   listModel = self._listViewModel;
 
                if (cfg.dataLoadCallback instanceof Function) {
@@ -104,11 +104,12 @@ define('Controls/List/BaseControl', [
                   markedKey = listModel.getMarkedKey();
                   if (markedKey !== null) {
                      if (listModel.getIndexByKey(markedKey) === -1) {
-                        markedKey = listModel.getFirstItemKey();
-                     }
-                     if (markedKey !== undefined) {
-                        listModel.setMarkedKey(markedKey);
-                        self._restoreMarkedKey = markedKey;
+                        markedItem = listModel.getFirstItem();
+                        if (markedItem) {
+                           markedKey = markedItem.getId();
+                           listModel.setMarkedKey(markedKey);
+                           self._restoreMarkedKey = markedKey;
+                        }
                      }
                   }
                   if (isActive === true) {
@@ -555,9 +556,12 @@ define('Controls/List/BaseControl', [
       initListViewModelHandler: function(self, model) {
          model.subscribe('onListChange', function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
             if (changesType === 'collectionChanged') {
-               if (self._options.navigation && self._options.navigation.source === 'position') {
-                  _private.recalculateNavigationState(self);
+
+               //TODO костыль https://online.sbis.ru/opendoc.html?guid=b56324ff-b11f-47f7-a2dc-90fe8e371835
+               if (self._options.navigation && self._options.navigation.source) {
+                  self._sourceController.setState(self._listViewModel);
                }
+
                if (!!action && self.getVirtualScroll()) {
                   self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                   if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
@@ -645,10 +649,6 @@ define('Controls/List/BaseControl', [
             closeMenu();
          }
          self._forceUpdate();
-      },
-
-      recalculateNavigationState: function(self) {
-         self._sourceController.calculateState(self._listViewModel.getItems());
       },
 
       bindHandlers: function(self) {
@@ -1180,6 +1180,10 @@ define('Controls/List/BaseControl', [
                }
             });
          }
+
+         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
+         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+         this._children.fakeFocusElem.focus();
          event.blockUpdate = true;
       },
 
@@ -1287,7 +1291,8 @@ define('Controls/List/BaseControl', [
          markerVisibility: 'onactivated',
          style: 'default',
          selectedKeys: defaultSelectedKeys,
-         excludedKeys: defaultExcludedKeys
+         excludedKeys: defaultExcludedKeys,
+         markedKey: null
       };
    };
    return BaseControl;

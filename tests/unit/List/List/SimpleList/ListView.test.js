@@ -53,7 +53,8 @@ define([
       it('Item click', function () {
          var model = new ListViewModel({
             items: data,
-            keyProperty: 'id'
+            keyProperty: 'id',
+            markedKey: null
          });
          var cfg = {
             listModel: model,
@@ -76,7 +77,8 @@ define([
       it('_beforeUpdate', function () {
          var model = new ListViewModel({
             items: data,
-            keyProperty: 'id'
+            keyProperty: 'id',
+            markedKey: null
          });
          var cfg = {
             listModel: model,
@@ -86,41 +88,42 @@ define([
          var lv = new ListView(cfg);
          lv.saveOptions(cfg);
          lv._beforeMount(cfg);
-      
-      
+
+
          model = new ListViewModel({
             items: data2,
-            keyProperty: 'id'
+            keyProperty: 'id',
+            markedKey: null
          });
-      
+
          cfg = {
             listModel: model,
             keyProperty: 'id',
             markedKey: 2
          };
-      
+
          lv._beforeUpdate(cfg);
          assert.equal(model, lv._listModel, 'Incorrect listModel before update');
       });
-   
+
       it('_private.resizeNotifyOnListChanged', function () {
          var listView = new ListView(),
              eventNotifyed = false;
-   
+
          listView._notify = function(event) {
             if (event === 'controlResize') {
                eventNotifyed = true;
             }
          };
-         
+
          listView._listChanged = false;
          ListView._private.resizeNotifyOnListChanged(listView);
-         
+
          assert.isFalse(eventNotifyed);
-   
+
          listView._listChanged = true;
          ListView._private.resizeNotifyOnListChanged(listView);
-   
+
          assert.isTrue(eventNotifyed);
       });
       it('ListView updating queue', function () {
@@ -167,7 +170,8 @@ define([
             eventQueue = [],
             model = new ListViewModel({
                items: data,
-               keyProperty: 'id'
+               keyProperty: 'id',
+               markedKey: null
             }),
             cfg = {
                listModel: model,
@@ -204,7 +208,8 @@ define([
             var
                model = new ListViewModel({
                   items: data,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  markedKey: null
                }),
                cfg = {
                   listModel: model,
@@ -231,7 +236,8 @@ define([
             var
                model = new ListViewModel({
                   items: data,
-                  keyProperty: 'id'
+                  keyProperty: 'id',
+                  markedKey: null
                }),
                cfg = {
                   listModel: model,

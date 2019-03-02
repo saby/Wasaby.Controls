@@ -88,7 +88,7 @@ define('Controls/Selector/Suggest',
          _choose: function(event, item) {
             this.activate();
             _private.updateValue(this, item.get(this._options.displayProperty) || '');
-            this._notify('selectedKey', [item.get(this._options.keyProperty)]);
+            this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
             this._notify('valueChanged', [this._value]);
          },
 

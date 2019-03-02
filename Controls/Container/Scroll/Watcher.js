@@ -203,7 +203,7 @@ define('Controls/Container/Scroll/Watcher',
                      eventName = null;
                   }
                }
-            }, {});
+            }, {root: self._container});
             self._observer.observe(elements.topLoadTrigger);
             self._observer.observe(elements.bottomLoadTrigger);
 

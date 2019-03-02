@@ -29,12 +29,28 @@ define([
          ];
       });
 
+      it('getFirstItem and getLastItem', function() {
+         var
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new ListViewModel(cfg);
+         assert.equal(model.getFirstItem(), model.getItems().at(0));
+         assert.equal(model.getLastItem(), model.getItems().at(2));
+      });
+
       it('getCurrent', function() {
          var cfg = {
             items: data,
             keyProperty: 'id',
             displayProperty: 'title',
             markedKey: 1,
+            markerVisibility: 'visible',
             selectedKeys: {1: true}
          };
 
@@ -99,27 +115,29 @@ define([
                items: new collection.RecordSet({
                   rawData: [],
                   idProperty: 'id'
-               })
-            }),
-            markerSetCount = 0;
-         model._setMarkerAfterUpdateItems = function() {
-            markerSetCount++;
-         };
+               }),
+               markedKey: null
+            });
 
          // Should not set marker
          model._options.markerVisibility = 'hidden';
          model.setItems(items);
-         assert.equal(markerSetCount, 0);
+         assert.equal(undefined, model._markedKey);
 
-         // Should set set marker
-         model._options.markerVisibility = 'visible';
-         model.setItems(items);
-         model._options.markerVisibility = 'always';
-         model.setItems(items);
          model._options.markerVisibility = 'onactivated';
          model.setItems(items);
+         assert.equal(undefined, model._markedKey);
 
-         assert.equal(markerSetCount, 3);
+         // Should set marker
+         model._options.markerVisibility = 'visible';
+         model.setItems(items);
+         assert.equal(1, model._markedKey);
+         model._markedKey = 0;
+
+         model._options.markerVisibility = 'always';
+         model.setItems(items);
+         assert.equal(1, model._markedKey);
+         model._markedKey = 0;
 
       });
 
@@ -128,17 +146,18 @@ define([
             items: data,
             keyProperty: 'id',
             displayProperty: 'title',
+            markerVisibility: 'visible',
             markedKey: 2
          };
 
          var iv = new ListViewModel(cfg);
-         var marItem = iv._markedItem;
+         var marItem = iv.getMarkedItem();
          assert.equal(iv._display.at(1), marItem, 'Incorrect selectedItem');
          assert.equal(iv._markedKey, 2, 'Incorrect _markedKey value');
 
 
          iv.setMarkedKey(3);
-         marItem = iv._markedItem;
+         marItem = iv.getMarkedItem();
          assert.equal(2, iv._options.markedKey, 'Incorrect markedKey option value');
          assert.equal(iv._markedKey, 3, 'Incorrect _markedKey value');
          assert.equal(iv._display.at(2), marItem, 'Incorrect selectedItem');
@@ -149,7 +168,8 @@ define([
          var
             cfg = {
                keyProperty: 'id',
-               markerVisibility: 'visible'
+               markerVisibility: 'visible',
+               markedKey: null
             },
             listModel = new ListViewModel(cfg),
             markedKeyChangedFired = false;
@@ -160,7 +180,7 @@ define([
          });
          listModel.setItems(new collection.RecordSet({rawData: data, idProperty: 'id'}));
          assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
-         assert.equal(listModel._markedItem, listModel._display.at(0), 'Incorrect _markedItem after setItems.');
+         assert.equal(listModel.getMarkedItem(), listModel._display.at(0), 'Incorrect _markedItem after setItems.');
          assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
       });
 
@@ -169,7 +189,8 @@ define([
             items: data,
             keyProperty: 'id',
             displayProperty: 'title',
-            selectedKeys: [1]
+            selectedKeys: [1],
+            markedKey: null
          };
 
          var iv = new ListViewModel(cfg);
@@ -184,7 +205,8 @@ define([
                items: data,
                keyProperty: 'id',
                displayProperty: 'title',
-               selectedKeys: [1]
+               selectedKeys: [1],
+               markedKey: null
             },
             itemData = {
                test: 'test'
@@ -206,10 +228,66 @@ define([
                items: data,
                keyProperty: 'id',
                displayProperty: 'title',
+               markerVisibility: 'visible',
                markedKey: 1
             };
          var lv = new ListViewModel(cfg);
          assert.equal(lv.getMarkedKey(), 1);
+      });
+
+      it('initialMarker', function() {
+         var
+            rs = new collection.RecordSet({
+               rawData: [
+                  {
+                     id: 1,
+                     title: 'item 1'
+                  },
+                  {
+                     id: 2,
+                     title: 'item 2'
+                  },
+                  {
+                     id: 3,
+                     title: 'item 3'
+                  },
+                  {
+                     id: 4,
+                     title: 'item 4'
+                  }
+               ],
+               idProperty: 'id'
+            }),
+            cfg, lv;
+
+         cfg = {
+            items: rs,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markedKey: 1
+         };
+         lv = new ListViewModel(cfg);
+         assert.equal(lv.getMarkedKey(), 1);
+
+         cfg = {
+            items: rs,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markedKey: null,
+            markerVisibility: 'visible',
+         };
+         lv = new ListViewModel(cfg);
+         assert.equal(lv.getMarkedKey(), 1);
+
+         cfg = {
+            items: rs,
+            keyProperty: 'id',
+            displayProperty: 'title',
+            markedKey: null,
+            markerVisibility: 'onactivated',
+         };
+         lv = new ListViewModel(cfg);
+         assert.equal(lv.getMarkedKey(), undefined);
       });
 
       it('setRightSwipedItem', function() {
@@ -218,7 +296,8 @@ define([
                items: data,
                keyProperty: 'id',
                displayProperty: 'title',
-               selectedKeys: [1]
+               selectedKeys: [1],
+               markedKey: null
             },
             itemData = {
                test: 'test'
@@ -240,7 +319,8 @@ define([
                items: data,
                keyProperty: 'id',
                displayProperty: 'title',
-               selectedKeys: [1]
+               selectedKeys: [1],
+               markedKey: null
             },
             lv = new ListViewModel(cfg),
             itemData,
@@ -266,7 +346,8 @@ define([
             target = { index: 1, key: 2, position: 'after' };
             lvm = new ListViewModel({
                items: data,
-               keyProperty: 'id'
+               keyProperty: 'id',
+               markedKey: null
             });
          });
 
@@ -383,7 +464,7 @@ define([
                }), ' controls-ListView__itemContent controls-ListView__item-topPadding_null controls-ListView__item-bottomPadding_s' +
                   ' controls-ListView__item-rightPadding_m controls-ListView__itemContent_withCheckboxes');
             });
-   
+
             it('check search value', function() {
                lvm.setSearchValue('test');
                assert.equal(lvm.getItemDataByItem(lvm._display.at(0)).searchValue, 'test');

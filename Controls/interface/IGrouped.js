@@ -25,7 +25,7 @@ define('Controls/interface/IGrouped', [
     * <ul>
     *    <li>separatorVisibility {Boolean} - The presence of a horizontal line - separator.</li>
     *    <li>expanderVisibility {Boolean} - The presence of a group expander.</li>
-    *    <li>textAlign {String} - Group text horizontal alignment. Supported values: 'left' and 'right'. By default using right text alignment.</li>
+    *    <li>textAlign {String} - Group text horizontal alignment. Supported values: 'left' and 'right'. By default using center text alignment.</li>
     *    <li>rightTemplate {Function} - Template of group right part. May be using for rendering totals.</li>
     * </ul>
     * @example
