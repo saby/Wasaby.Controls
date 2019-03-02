@@ -73,6 +73,6 @@
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.210",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.210",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.210",
-      "sbis-cdn": "git+https://git.sbis.ru/sbis/cdn.git#19.200/feature/package_json"
+      "sbis-cdn": "git+https://git.sbis.ru/sbis/cdn.git#rc-19.200"
    }
 }
