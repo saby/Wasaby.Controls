@@ -1,5 +1,1 @@
-<div class="controls-ListView__empty
-            controls-ListView__empty_topSpacing_{{topSpacing || 'l'}}
-            controls-ListView__empty_bottomSpacing_{{bottomSpacing || 'l'}}">
-    <ws:partial template="{{contentTemplate}}"/>
-</div>
+<ws:partial template="wml!Controls/_list/emptyTemplate" scope="{{_options}}" />

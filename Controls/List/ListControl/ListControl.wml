@@ -1,5 +1,1 @@
-<Controls.List.BaseControl scope="{{_options}}"
-                           name="baseControl">
-   <!--прокидываем itemTemplate т.к. иначе мы не понимаем, что нужно перестраивать partail, потому что изменения только в замыкании функции-->
-   <ws:partial template="{{content.viewTemplate}}" itemTemplate="{{_options.itemTemplate}}"/>
-</Controls.List.BaseControl>
+<ws:partial template="wml!Controls/_list/ListControl/ListControl" scope="{{_options}}" />

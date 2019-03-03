@@ -243,8 +243,8 @@ class VirtualScroll {
 
     private _updateItemsSizes(startUpdateIndex, updateLength, isUnitTesting = false): void {
         /*
-        * uDimension работает с window, для того чтобы протестировать функцию есть параметр isUnitTesting
-        */
+         * uDimension работает с window, для того чтобы протестировать функцию есть параметр isUnitTesting
+         */
         if (this._updateItemsHeightsMode == 'onChangeCollection') {
             if (isUnitTesting) {
                 for (let i = 0; i < updateLength; i++) {
@@ -258,7 +258,7 @@ class VirtualScroll {
         } else if (this._updateItemsHeightsMode === 'always') {
             for (var i = 0; i < this._itemsContainer.children.length; i++) {
                 this._itemsHeights[i] = uDimension(this._itemsContainer.children[i]).height;
-             }
+            }
 
         }
 

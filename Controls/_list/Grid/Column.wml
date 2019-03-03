@@ -1,0 +1,17 @@
+<div class="controls-Grid__row-cell__content controls-Grid__row-cell__content_baseline_L">
+   <ws:if data="{{contentTemplate}}">
+      <ws:partial template="{{contentTemplate}}" itemData="{{itemData}}"/>
+   </ws:if>
+   <ws:else>
+      <ws:if data="{{itemData.column.needSearchHighlight}}">
+         <Controls.Decorator.Highlight highlight="{{itemData.searchValue}}">
+            <ws:text>
+               <ws:String>{{itemData.item[itemData.column.displayProperty]}}</ws:String>
+            </ws:text>
+         </Controls.Decorator.Highlight>
+      </ws:if>
+      <ws:else>
+         {{itemData.item[itemData.column.displayProperty]}}
+      </ws:else>
+   </ws:else>
+</div>

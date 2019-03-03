@@ -1,1 +1,1 @@
-<ws:partial template="{{content}}" attr:class="{{itemData.ladder[ladderProperty].ladderLength >= 1 ? '' : 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
+<ws:partial template="wml!Controls/_list/Grid/LadderWrapper" scope="{{_options}}" />

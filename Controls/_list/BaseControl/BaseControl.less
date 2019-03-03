@@ -1,0 +1,72 @@
+.controls-BaseControl__fakeFocusElem {
+   position: fixed;
+   top: 50%;
+   left: 50%;
+   width: 1px;
+   height: 1px;
+}
+
+/*
+https://online.sbis.ru/opendoc.html?guid=16c81a19-f2a0-4b3f-a7e8-56d154b68e4c
+*/
+.ws-is-desktop-safari,
+.ws-is-sbis-desktop {
+   .controls-BaseControl__fakeFocusElem {
+      left: 0;
+   }
+}
+
+.controls-BaseControl__loadMore {
+   height: @height_BaseControl-button-loadMore;
+}
+.controls-BaseControl__pagingContainer {
+   pointer-events: none;
+   position: absolute;
+   position: -webkit-sticky;
+   position: sticky;
+   bottom: 0;
+   right: 0;
+   top: auto;
+   z-index: 1;
+   display: flex;
+   justify-content: flex-end;
+}
+.controls-BaseControl__scrollPaging {
+   pointer-events: auto;
+   border: 0 solid @border-color_BaseControl-scrollPaging;
+   border-top-width: @border-width_BaseControl-scrollPaging-top;
+}
+.controls-BaseControl__loadingIndicator {
+   left: 0;
+   right: 0;
+   background-color: transparent;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   cursor: auto;
+   z-index: 1;
+}
+.controls-BaseControl__loadingIndicator__state-up {
+   position: absolute;
+   top: 0;
+}
+.controls-BaseControl__loadingIndicator__state-down {
+   position: absolute;
+   bottom: 32px;
+}
+.controls-BaseControl__loadingIndicator__state-all {
+   position: absolute;
+   top: 0;
+   bottom: 0;
+}
+.controls-BaseControl__loadingIndicatorImg {
+   background: @background-image_BaseControl-loadingIndicator 0 0 no-repeat;/**/
+   width: @width_BaseControl-loadingIndicator-img;
+   height: @height_BaseControl-loadingIndicator-img;
+}
+.controls-BaseControl__trigger  {
+   position: relative;
+}
+.controls-BaseControl__footer-content {
+   min-height: @min-height_BaseControl-footer-content;
+}

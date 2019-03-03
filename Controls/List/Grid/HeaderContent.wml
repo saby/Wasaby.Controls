@@ -1,10 +1,1 @@
-<div class="controls-Grid__header-cell__content controls-Grid__header-cell_baseline_XL">
-    <ws:if data="{{colData.column.sortingProperty}}">
-        <Controls.List.Grid.SortButton
-                caption="{{colData.column.caption || colData.column.title}}"
-                property="{{colData.column.sortingProperty}}"
-                type="{{colData.column.sortingType}}"
-                value="{{colData.sortingDirection}}"/>
-    </ws:if>
-    <ws:else>{{colData.column.caption || colData.column.title}}</ws:else>
-</div>
+<ws:partial template="wml!Controls/_list/Grid/HeaderContent" scope="{{_options}}" />

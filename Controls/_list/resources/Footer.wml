@@ -1,0 +1,1 @@
+<Controls.Button size="s" attr:class="controls-BaseControl__loadMore" viewMode="link" caption="{{rk('Еще') + '...'}}" on:click="_loadMore()"/>
