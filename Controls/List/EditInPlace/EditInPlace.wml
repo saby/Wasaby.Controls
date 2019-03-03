@@ -1,10 +1,1 @@
-<Controls.Validate.FormController name="formController">
-    <ws:partial template="{{_options.content}}"
-                editingItemData="{{_editingItemData}}"
-                isAdd="{{_isAdd}}"
-                scope="{{_options}}"
-                on:editingRowKeyDown="_onKeyDown()"
-                on:rowDeactivated="_onRowDeactivated()"
-                on:itemClick="_onItemClick()">
-    </ws:partial>
-</Controls.Validate.FormController>
+<ws:partial template="wml!Controls/_list/EditInPlace/EditInPlace" scope="{{_options}}" />

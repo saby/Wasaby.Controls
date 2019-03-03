@@ -1,6 +1,1 @@
-<ws:for data="listModel.reset(); listModel.isEnd(); listModel.goToNext();">
-   <ws:partial
-           on:click="_onItemClick(listModel.getCurrent().dispItem)"
-           template="{{itemTemplate}}"
-           itemData="{{listModel.getCurrent()}}"/>
-</ws:for>
+<ws:partial template="wml!Controls/_list/ItemsView/resources/For" scope="{{_options}}" />

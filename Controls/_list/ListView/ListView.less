@@ -1,0 +1,336 @@
+.controls-ListView__itemV {
+   cursor: pointer;
+   position: relative;
+}
+
+.controls-ListView__itemV_marker {
+   position: absolute;
+   width: @width_ListView-marker;
+   background-color: @color_ListView-marker;
+   height: 100%;
+   left: 0;
+   top: 0;
+}
+
+.controls-ListView__checkbox {
+   float: left;
+   margin-top: @spacing_ListView-item-between-checkbox-borderTop;
+}
+.controls-ListView__checkbox.controls-ListView__checkbox-onhover {
+  display: none;
+}
+
+.ws-is-no-touch .controls-ListView__itemV:hover .controls-ListView__checkbox-onhover {
+  display: inline-block;
+}
+
+.controls-ListView__footer__paddingLeft_withCheckboxes {
+   padding-left: @spacing_ListView-between-content-checkbox + @width_CheckBox__clickArea;
+}
+
+.controls-ListView__footer__paddingLeft_default {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_l;
+}
+
+.controls-ListView__item-topPadding_null {
+  padding-top: 0;
+}
+
+.controls-ListView__item-bottomPadding_null {
+  padding-bottom: 0;
+}
+
+.controls-ListView__item-topPadding_default {
+  padding-top: @spacing_ListView-item-between-content-borderTop;
+}
+
+.controls-ListView__item-bottomPadding_default {
+  padding-bottom: @spacing_ListView-item-between-content-borderBottom;
+}
+
+.controls-ListView__item-topPadding_s {
+  padding-top: @spacing_ListView-item-between-content-borderTop;
+}
+
+.controls-ListView__item-bottomPadding_s {
+  padding-bottom: @spacing_ListView-item-between-content-borderBottom;
+}
+
+.controls-ListView__itemContent_withCheckboxes {
+   padding-left: @spacing_ListView-between-content-checkbox + @width_CheckBox__clickArea;
+}
+
+.controls-ListView__item-leftPadding_default {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_l;
+}
+
+.controls-ListView__item-leftPadding_null {
+   padding-left: 0;
+}
+
+.controls-ListView__item-leftPadding_xs {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_xs;
+}
+
+.controls-ListView__item-leftPadding_s {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_s;
+}
+
+.controls-ListView__item-leftPadding_m {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_m;
+}
+
+.controls-ListView__item-leftPadding_l {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_l;
+}
+
+.controls-ListView__item-leftPadding_xl {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_xl;
+}
+
+.controls-ListView__item-leftPadding_xxl {
+   padding-left: @spacing_ListView-item-between-content-borderLeft_xxl;
+}
+
+.controls-ListView__item-rightPadding_default {
+   padding-right: @spacing_ListView-item-between-content-borderRight_l;
+}
+
+.controls-ListView__item-rightPadding_null {
+   padding-right: 0;
+}
+
+.controls-ListView__item-rightPadding_xs {
+   padding-right: @spacing_ListView-item-between-content-borderRight_xs;
+}
+
+.controls-ListView__item-rightPadding_s {
+   padding-right: @spacing_ListView-item-between-content-borderRight_s;
+}
+
+.controls-ListView__item-rightPadding_m {
+   padding-right: @spacing_ListView-item-between-content-borderRight_m;
+}
+
+.controls-ListView__item-rightPadding_l {
+   padding-right: @spacing_ListView-item-between-content-borderRight_l;
+}
+
+.controls-ListView__item-rightPadding_xl {
+   padding-right: @spacing_ListView-item-between-content-borderRight_xl;
+}
+
+.controls-ListView__item-rightPadding_xxl {
+   padding-right: @spacing_ListView-item-between-content-borderRight_xxl;
+}
+
+.controls-ListView__itemContent {
+   z-index: 1;
+}
+
+.controls-itemActionsV {
+   z-index: 1;
+}
+
+.controls-ListView__item_active {
+   background-color: @background-color_ListView-item_active;
+}
+
+.controls-ListView__item_editing {
+   background-color: @background-color_ListView-item_editing;
+   > .controls-itemActionsV {
+      display: inline-block;
+   }
+}
+
+.controls-ListView__item_dragging {
+   opacity: @opacity_ListView-item_dragging;
+}
+
+//Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
+//TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_showActions {
+      &:hover {
+         > .controls-itemActionsV {
+            display: inline-block;
+         }
+      }
+   }
+   .controls-ListView__item_highlightOnHover_default {
+      &:hover {
+         background-color: @background-color_ListView-item_hover;
+      }
+   }
+   .controls-ListView__item_highlightOnHover_editing {
+      &:hover {
+         background-color: @background-color_ListView-item_editing;
+      }
+   }
+}
+
+.controls-ListView__groupContent {
+   display: flex;
+   align-items: baseline;
+}
+
+.controls-ListView__groupSeparator-left, .controls-ListView__groupSeparator-right {
+   height: @spacing_ListView-groupSeparator-between-content-borderTop;
+   margin-bottom: @spacing_ListView-groupSeparator-between-content-borderBottom;
+   border-bottom: @border-width_ListView-groupSeparator solid @border-color_ListView-groupSeparator;
+   min-width: 0;
+   width: 100%;
+   flex-shrink: 1;
+   font-size: @font-size_ListView-groupExpander;
+}
+
+.controls-ListView__groupContent-text {
+   display: inline-block;
+   padding-left: @spacing_ListView-group-between-text-separator;
+   padding-right: @spacing_ListView-group-between-text-separator;
+   color: @color_ListView-group-text;
+   font-size: @font-size_ListView-group-text;
+   white-space: nowrap;
+   text-align: center;
+   flex-shrink: 0;
+   user-select: none;
+}
+
+.controls-ListView__groupExpander {
+   cursor: pointer;
+}
+
+.controls-ListView__groupExpander:before {
+   width: @width_ListView-groupExpander;
+   font-size: @font-size_ListView-groupExpander;
+   padding-right: @spacing_ListView-group-between-text-expander;
+   content: '\e000';
+}
+
+.controls-ListView__groupExpander:hover {
+   color: @color_ListView-groupExpander_hover;
+}
+
+.controls-ListView__groupExpander:active {
+   color: @color_ListView-groupExpander_active;
+}
+
+.controls-ListView__groupExpander_collapsed:before {
+   content: '\e013';
+}
+
+.controls-ListView__groupHidden {
+   display: none;
+}
+
+.controls-ListView__groupContent-rightTemplate {
+   padding-left: @spacing_ListView-group-between-rightTemplate-separator;
+   flex-shrink: 0;
+}
+
+.controls-ListView__empty {
+   color: @color_ListView-empty;
+   text-align: center;
+}
+
+.controls-ListView__empty_topSpacing_null {
+   margin-top: 0;
+}
+
+.controls-ListView__empty_topSpacing_xs {
+   margin-top: @spacing_ListView-empty-between-content-borderTop_xs;
+}
+
+.controls-ListView__empty_topSpacing_s {
+   margin-top: @spacing_ListView-empty-between-content-borderTop_s;
+}
+
+.controls-ListView__empty_topSpacing_m {
+   margin-top: @spacing_ListView-empty-between-content-borderTop_m;
+}
+
+.controls-ListView__empty_topSpacing_l {
+   margin-top: @spacing_ListView-empty-between-content-borderTop_l;
+}
+
+.controls-ListView__empty_topSpacing_xl {
+   margin-top: @spacing_ListView-empty-between-content-borderTop_xl;
+}
+
+.controls-ListView__empty_topSpacing_xxl {
+   margin-top: @spacing_ListView-empty-between-content-borderTop_xxl;
+}
+
+.controls-ListView__empty_bottomSpacing_null{
+   margin-bottom: 0;
+}
+
+.controls-ListView__empty_bottomSpacing_xs {
+   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xs;
+}
+
+.controls-ListView__empty_bottomSpacing_s {
+   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_s;
+}
+
+.controls-ListView__empty_bottomSpacing_m {
+   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_m;
+}
+
+.controls-ListView__empty_bottomSpacing_l {
+   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_l;
+}
+
+.controls-ListView__empty_bottomSpacing_xl {
+   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xl;
+}
+
+.controls-ListView__empty_bottomSpacing_xxl {
+   margin-bottom: @spacing_ListView-empty-between-content-borderBottom_xxl;
+}
+
+//MasterList styles
+
+.controls-ListView_master {
+   padding-right: @border-width_List-masterList-right;
+   box-sizing: border-box;
+}
+
+.controls-ListView__item__marked_master {
+   background-color: @background-color_List-masterList-item_selected;
+   &:before {
+      content: '';
+      z-index: 2;
+      box-sizing: border-box;
+      border-width: @border-width_List-masterList-item-top @border-width_List-masterList-item-right @border-width_List-masterList-item-bottom @border-width_List-masterList-item-left;
+      border-style: solid;
+      border-color: @border-color_List-masterList-item_selected-top @border-color_List-masterList-item_selected-right @border-color_List-masterList-item_selected-bottom @border-color_List-masterList-item_selected-left;
+      box-shadow: @box-shadow_List-masterList-item_selected;
+      width: ~'calc(100% + @{border-width_List-masterList-right})';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      pointer-events: none;
+      height: 100%;
+   }
+   &:after {
+      content: '';
+      z-index: 1;
+      height: 100%;
+      top: 0;
+      width: @border-width_List-masterList-right;
+      position: absolute;
+      right: -@border-width_List-masterList-right;
+      background-color: @background-color_List-masterList-item_marked;
+   }
+}
+
+//Пока страница не ожила, мы не знаем тач устройство или нет, так что на мобильных устройствах нужно скрыть операции над записью
+//TODO: после этой задачи нужно убрать not https://online.sbis.ru/opendoc.html?guid=87ddbeeb-fa7e-4462-b69b-c15188df61da
+.ws-is-no-touch:not(.ws-is-mobile-platform) {
+   .controls-ListView__item_master {
+      &:hover {
+         background-color: @background-color_List-masterList-item_hover;
+      }
+   }
+}

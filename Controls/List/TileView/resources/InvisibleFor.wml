@@ -1,3 +1,1 @@
-<ws:for data="i in 10">
-   <ws:partial template="{{itemTemplate}}" invisible="{{true}}" itemData="{{listModel.getTileItemData()}}"/>
-</ws:for>
+<ws:partial template="wml!Controls/_list/TileView/resources/InvisibleFor" scope="{{_options}}" />

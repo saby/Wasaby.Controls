@@ -1,0 +1,5 @@
+<colgroup class="controls-Grid__colgroup">
+   <ws:for data="listModel.resetColgroupColumns(); listModel.isEndColgroupColumn(); listModel.goToNextColgroupColumn();">
+      <col attr:class="controls-Grid__colgroup-column{{listModel.getCurrentColgroupColumn().multiSelectVisibility && listModel.getCurrentColgroupColumn().index === 0 ? ' controls-Grid__colgroup-columnMultiselect'}}" attr:style="{{listModel.getCurrentColgroupColumn().style}}"/>
+   </ws:for>
+</colgroup>

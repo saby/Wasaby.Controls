@@ -1,1 +1,1 @@
-<Controls.Decorator.Highlight highlight="{{searchValue}}" text="{{itemData.getPropValue(itemData.item, displayProperty)}}"/>
+<ws:partial template="wml!Controls/_list/SearchView/SearchBreadCrumbsContent" scope="{{_options}}" />
