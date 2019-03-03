@@ -1,13 +1,13 @@
-<table attr:class="controls-Grid {{_layoutFixed ? 'controls-Grid_layout_fixed '}}controls-Grid_{{_options.style}}">
-   <ws:partial template="wml!Controls/_list/Grid/ColGroup" listModel="{{_listModel}}"/>
+<table attr:class="controls-Grid {{_listModel.isLayoutFixed() ? 'controls-Grid_layout_fixed '}}controls-Grid_{{_options.style}}">
+   <ws:partial template="wml!Controls/List/Grid/ColGroup" listModel="{{_listModel}}"/>
    <ws:if data="{{_listModel.getHeader()}}">
-      <ws:partial template="wml!Controls/_list/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
+      <ws:partial template="wml!Controls/List/Grid/Header" listModel="{{_listModel}}" defaultHeaderContent="{{_headerContentTemplate}}"/>
    </ws:if>
    <ws:if data="{{_listModel.getResultsPosition() === 'top'}}">
-      <ws:partial template="wml!Controls/_list/Grid/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+      <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
    </ws:if>
    <tbody name="itemsContainer">
-   <ws:partial template="wml!Controls/_list/resources/For"
+   <ws:partial template="wml!Controls/List/resources/For"
                listModel="{{_listModel}}"
                itemTemplate="{{_itemTemplate}}"
                multiSelectTpl="{{_options.multiSelectTpl}}"
@@ -27,7 +27,7 @@
    </ws:if>
    </tbody>
    <ws:if data="{{_listModel.getResultsPosition() === 'bottom'}}">
-      <ws:partial template="wml!Controls/_list/Grid/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
+      <ws:partial template="wml!Controls/List/Grid/Results" userTemplate="{{_listModel.getResultsTemplate()}}" listModel="{{_listModel}}"/>
    </ws:if>
    <div attr:class="{{_calcFooterPaddingClass(_options)}}">
       <ws:partial template="{{_options.footerTemplate}}"/>
