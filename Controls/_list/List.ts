@@ -28,6 +28,7 @@ import 'Controls/List/ListControl';
  * @mixes Controls/List/BaseControlStyles
  * @mixes Controls/List/ListStyles
  * @mixes Controls/List/ItemActions/ItemActionsStyles
+ * @mixes Controls/List/Swipe/SwipeStyles
  *
  * @mixes Controls/List/Mover/MoveDialog/Styles
  * @mixes Controls/List/PagingStyles
@@ -46,42 +47,42 @@ var ListControl = Control.extend(/** @lends Controls/List.prototype */{
     _viewTemplate: 'Controls/List/ListControl',
     _viewModelConstructor: null,
 
-    _beforeMount: function () {
+    _beforeMount: function() {
         this._viewModelConstructor = this._getModelConstructor();
     },
 
-    _getModelConstructor: function () {
+    _getModelConstructor: function() {
         return ListViewModel;
     },
 
-    reload: function () {
+    reload: function() {
         return this._children.listControl.reload();
     },
 
-    reloadItem: function (key, readMeta, direction) {
+    reloadItem: function(key, readMeta, direction) {
         return this._children.listControl.reloadItem(key, readMeta, direction);
     },
 
-    beginEdit: function (options) {
+    beginEdit: function(options) {
         return this._options.readOnly ? Deferred.fail() : this._children.listControl.beginEdit(options);
     },
 
-    beginAdd: function (options) {
+    beginAdd: function(options) {
         return this._options.readOnly ? Deferred.fail() : this._children.listControl.beginAdd(options);
     },
 
-    cancelEdit: function () {
+    cancelEdit: function() {
         return this._options.readOnly ? Deferred.fail() : this._children.listControl.cancelEdit();
     },
 
-    commitEdit: function () {
+    commitEdit: function() {
         return this._options.readOnly ? Deferred.fail() : this._children.listControl.commitEdit();
     },
 
     _notifyHandler: tmplNotify
 });
 
-ListControl.getDefaultOptions = function () {
+ListControl.getDefaultOptions = function() {
     return {
         multiSelectVisibility: 'hidden',
         style: 'default'

@@ -1,7 +1,7 @@
 export = {
     itemActionsClick: function (self, event, action, itemData, showAll) {
         event.stopPropagation();
-        if (action.isMenu) {
+        if (action._isMenu) {
             self._notify('menuActionsClick', [itemData, event, showAll]);
         } else {
             //TODO: self._container может быть не HTMLElement, а jQuery-элементом, убрать после https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
