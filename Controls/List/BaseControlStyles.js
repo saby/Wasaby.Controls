@@ -1,5 +1,4 @@
-define('Controls/List/BaseControlStyles', ['Controls/_list/BaseControlStyles'], function(Control){
-
+define('Controls/List/BaseControlStyles', ['Controls/_list/BaseControlStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/BaseControlStyles
@@ -14,4 +13,5 @@ define('Controls/List/BaseControlStyles', ['Controls/_list/BaseControlStyles'], 
  * @css @background-image_BaseControl-loadingIndicator background image of loading indicator
  * @css @min-height_BaseControl-footer-content min height of footer content
  */
-return Control});
+   return Control;
+});

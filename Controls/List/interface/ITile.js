@@ -1,5 +1,4 @@
-define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], function(Control){
-
+define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], function(Control) {
 /**
  * Interface for lists in which items are displayed as tiles.
  *
@@ -7,7 +6,7 @@ define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], func
  * @public
  * @author Авраменко А.С.
  */
-/**
+   /**
  * @name Controls/List/interface/ITile#tileHeight
  * @cfg {Number} The height of the tile items.
  * @default 150
@@ -23,7 +22,7 @@ define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], func
  *                   nodeProperty="Раздел@"/>
  * </pre>
  */
-/**
+   /**
  * @name Controls/List/interface/ITile#tileScalingMode
  * @cfg {String} Scale mode for items when you hover over them.
  * @variant none On hover the size of the items is not changed.
@@ -43,7 +42,7 @@ define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], func
  *                   nodeProperty="Раздел@"/>
  * </pre>
  */
-/**
+   /**
  * @name Controls/List/interface/ITile#imageProperty
  * @cfg {String} Name of the item property that contains the link to the image.
  * @default image
@@ -63,4 +62,5 @@ define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], func
  *    </Controls.Tile>
  * </pre>
  */
-return Control});
+   return Control;
+});

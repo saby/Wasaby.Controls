@@ -1,5 +1,4 @@
-define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_list/ItemActions/ItemActionsStyles'], function(Control){
-
+define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_list/ItemActions/ItemActionsStyles'], function(Control) {
 /**
  * @author Зайцев А.С.
  * @mixin Controls/List/ItemActions/ItemActionsStyles
@@ -36,4 +35,5 @@ define('Controls/List/ItemActions/ItemActionsStyles', ['Controls/_list/ItemActio
  * @css @border-color_ItemActions-action_style_danger Border color of action with the "iconStyle" option set to "danger".
  * @css @border-color_ItemActions-action_style_success Border color of action with the "iconStyle" option set to "success".
  */
-return Control});
+   return Control;
+});

@@ -1,5 +1,4 @@
-define('Controls/List/DigitButtonsStyles', ['Controls/_list/DigitButtonsStyles'], function(Control){
-
+define('Controls/List/DigitButtonsStyles', ['Controls/_list/DigitButtonsStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/DigitButtonsStyles
@@ -15,4 +14,5 @@ define('Controls/List/DigitButtonsStyles', ['Controls/_list/DigitButtonsStyles']
  * @css @border-bottom-width_Paging-digitButton_marked border width of marker on marked digit button
  * @css @color_Paging-digitButton-text font color of digit buttons
  */
-return Control});
+   return Control;
+});

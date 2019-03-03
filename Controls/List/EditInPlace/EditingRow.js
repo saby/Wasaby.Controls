@@ -1,5 +1,4 @@
-define('Controls/List/EditInPlace/EditingRow', ['Controls/_list/EditInPlace/EditingRow'], function(Control){
-
+define('Controls/List/EditInPlace/EditingRow', ['Controls/_list/EditInPlace/EditingRow'], function(Control) {
 /*
          Останавливаем всплытие любых кликов, если строка редактируется. Если клики будут всплывать, то их будет ловить список
          и генерировать событие itemClick, которое не должно стрелять на редактируемой строке.
@@ -7,4 +6,5 @@ define('Controls/List/EditInPlace/EditingRow', ['Controls/_list/EditInPlace/Edit
          - На каждом компоненте, который будет лежать внутри редактируемой строки, придется останавливать всплытие.
          - Другие компоненты (например, TouchDetector) могут следить за кликами на поле ввода, т.е. безусловный stopPropagation сломал бы ту логику.
          */
-return Control});
+   return Control;
+});

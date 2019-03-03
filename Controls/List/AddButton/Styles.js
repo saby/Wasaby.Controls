@@ -1,5 +1,4 @@
-define('Controls/List/AddButton/Styles', ['Controls/_list/AddButton/Styles'], function(Control){
-
+define('Controls/List/AddButton/Styles', ['Controls/_list/AddButton/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/AddButton/Styles
@@ -12,4 +11,5 @@ define('Controls/List/AddButton/Styles', ['Controls/_list/AddButton/Styles'], fu
  * @css @font-size_listAddButton capture font-size of button "Add" in List
  *
  */
-return Control});
+   return Control;
+});

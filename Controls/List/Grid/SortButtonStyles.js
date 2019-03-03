@@ -1,5 +1,4 @@
-define('Controls/List/Grid/SortButtonStyles', ['Controls/_list/Grid/SortButtonStyles'], function(Control){
-
+define('Controls/List/Grid/SortButtonStyles', ['Controls/_list/Grid/SortButtonStyles'], function(Control) {
 /**
  * @author Gerasimov A.M.
  * @mixin Controls/List/Grid/SortButtonStyles
@@ -11,4 +10,5 @@ define('Controls/List/Grid/SortButtonStyles', ['Controls/_list/Grid/SortButtonSt
  * @css @font-size_SortButton-caption Font-size of the button caption.
  * @css @color_SortButton-caption Color of the button caption.
  */
-return Control});
+   return Control;
+});

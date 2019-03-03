@@ -1,4 +1,4 @@
-define('Controls/List/Mover', ['Controls/_list/Mover'], function(Control){
+define('Controls/List/Mover', ['Controls/_list/Mover'], function(Control) {
    /**
     * Сontrol to move the list items in recordSet and dataSource.
     * Сontrol must be in one Controls.Container.Data with a list.
@@ -11,4 +11,5 @@ define('Controls/List/Mover', ['Controls/_list/Mover'], function(Control){
     * @author Авраменко А.С.
     * @category List
     */
-return Control});
+   return Control;
+});

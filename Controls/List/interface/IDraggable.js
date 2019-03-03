@@ -1,5 +1,4 @@
-define('Controls/List/interface/IDraggable', ['Controls/_list/interface/IDraggable'], function(Control){
-
+define('Controls/List/interface/IDraggable', ['Controls/_list/interface/IDraggable'], function(Control) {
    /**
     * Interface to move elements of the list by using drag'n'drop.
     * More information you can read <a href="/doc/platform/developmentapl/interface-development/wasaby/components/drag-n-drop/">here</a>.
@@ -239,5 +238,5 @@ define('Controls/List/interface/IDraggable', ['Controls/_list/interface/IDraggab
     */
 
 
-
-   return Control});
+   return Control;
+});

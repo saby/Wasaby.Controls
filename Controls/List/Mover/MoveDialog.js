@@ -1,5 +1,4 @@
-define('Controls/List/Mover/MoveDialog', ['Controls/_list/Mover/MoveDialog'], function(Control){
-
+define('Controls/List/Mover/MoveDialog', ['Controls/_list/Mover/MoveDialog'], function(Control) {
 /**
     * A standard dialog template for selecting a target item for moving items.
     * <a href="/materials/demo/demo-ws4-operations-panel">Demo examples.</a>.
@@ -15,13 +14,14 @@ define('Controls/List/Mover/MoveDialog', ['Controls/_list/Mover/MoveDialog'], fu
     * @author Авраменко А.С.
     * @category List
     */
-/**
+   /**
     * @name Controls/List/Mover/MoveDialog#root
     * @cfg {String} Identifier of the root node.
     * @default null
     */
-/**
+   /**
     * @name Controls/Input/interface/ISearch#searchParam
     * @cfg {String} Name of the field that search should operate on. Search value will insert in filter by this parameter.
     */
-return Control});
+   return Control;
+});

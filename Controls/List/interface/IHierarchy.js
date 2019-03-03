@@ -1,5 +1,4 @@
-define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarchy'], function(Control){
-
+define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarchy'], function(Control) {
 /**
  * Interface for hierarchical lists.
  *
@@ -7,7 +6,7 @@ define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarc
  * @public
  * @author Авраменко А.С.
  */
-/**
+   /**
  * @name Controls/List/interface/IHierarchy#nodeProperty
  * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
  * @example
@@ -36,7 +35,7 @@ define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarc
     *    });
  * </pre>
  */
-/**
+   /**
  * @name Controls/List/interface/IHierarchy#parentProperty
  * @cfg {String} Name of the field that contains information about parent node.
  * @example
@@ -65,4 +64,5 @@ define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarc
     *    });
  * </pre>
  */
-return Control});
+   return Control;
+});

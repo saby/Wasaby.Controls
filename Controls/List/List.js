@@ -1,9 +1,8 @@
-define('Controls/List/List', ['Controls/_list/List'], function(Control){
-
+define('Controls/List/List', ['Controls/_list/List'], function(Control) {
 /**
  * Created by kraynovdo on 31.01.2018.
  */
-/**
+   /**
  * Plain list with custom item template. Can load data from data source.
  *
  * @class Controls/List
@@ -33,5 +32,6 @@ define('Controls/List/List', ['Controls/_list/List'], function(Control){
  * @category List
  * @demo Controls-demo/List/List/BasePG
  */
-/** @lends Controls/List.prototype */
-return Control});
+   /** @lends Controls/List.prototype */
+   return Control;
+});

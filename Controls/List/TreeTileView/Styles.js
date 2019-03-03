@@ -1,5 +1,4 @@
-define('Controls/List/TreeTileView/Styles', ['Controls/_list/TreeTileView/Styles'], function(Control){
-
+define('Controls/List/TreeTileView/Styles', ['Controls/_list/TreeTileView/Styles'], function(Control) {
 /**
  * @mixin Controls/List/TreeTileView/Styles
  * @public
@@ -10,4 +9,5 @@ define('Controls/List/TreeTileView/Styles', ['Controls/_list/TreeTileView/Styles
  * @css @spacing_TreeTileView-between-title-rightBorder Spacing between title and right border.
  * @css @spacing_TreeTileView-between-nodeIcon-leftBorder Spacing between node icon and left border.
  */
-return Control});
+   return Control;
+});

@@ -1,5 +1,4 @@
-define('Controls/List/ListStyles', ['Controls/_list/ListStyles'], function(Control){
-
+define('Controls/List/ListStyles', ['Controls/_list/ListStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/ListStyles
@@ -52,4 +51,5 @@ define('Controls/List/ListStyles', ['Controls/_list/ListStyles'], function(Contr
  * @css @spacing_ListView-group-between-rightTemplate-separator color of right template and text in group separator
  *
  */
-return Control});
+   return Control;
+});

@@ -1,5 +1,4 @@
-define('Controls/List/TreeGrid/Styles', ['Controls/_list/TreeGrid/Styles'], function(Control){
-
+define('Controls/List/TreeGrid/Styles', ['Controls/_list/TreeGrid/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/TreeGrid/Styles
@@ -47,4 +46,5 @@ define('Controls/List/TreeGrid/Styles', ['Controls/_list/TreeGrid/Styles'], func
  * @css @font-family-TreeGridView-icons font family of TreeGridView icons
  *
  */
-return Control});
+   return Control;
+});

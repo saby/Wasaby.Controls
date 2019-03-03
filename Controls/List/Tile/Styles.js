@@ -1,5 +1,4 @@
-define('Controls/List/Tile/Styles', ['Controls/_list/Tile/Styles'], function(Control){
-
+define('Controls/List/Tile/Styles', ['Controls/_list/Tile/Styles'], function(Control) {
 /**
  * @mixin Controls/List/Tile/Styles
  * @public
@@ -24,4 +23,5 @@ define('Controls/List/Tile/Styles', ['Controls/_list/Tile/Styles'], function(Con
  * @css @border-color_TileView-title Border color of the title.
  * @css @background-color_TileView-checkbox Background color of the checkbox.
  */
-return Control});
+   return Control;
+});

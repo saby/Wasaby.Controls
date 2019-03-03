@@ -1,4 +1,4 @@
-define('Controls/List/interface/IList', ['Controls/_list/interface/IList'], function(Control){
+define('Controls/List/interface/IList', ['Controls/_list/interface/IList'], function(Control) {
    /**
     * Interface for lists.
     *
@@ -239,4 +239,5 @@ define('Controls/List/interface/IList', ['Controls/_list/interface/IList'], func
     * @name Controls/List/interface/IList#itemPadding
     */
 
-return Control});
+   return Control;
+});

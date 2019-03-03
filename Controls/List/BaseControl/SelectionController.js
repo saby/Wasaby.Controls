@@ -1,5 +1,4 @@
-define('Controls/List/BaseControl/SelectionController', ['Controls/_list/BaseControl/SelectionController'], function(Control){
-
+define('Controls/List/BaseControl/SelectionController', ['Controls/_list/BaseControl/SelectionController'], function(Control) {
 /**
  * @class Controls/List/BaseControl/SelectionController
  * @extends Core/Control
@@ -7,7 +6,7 @@ define('Controls/List/BaseControl/SelectionController', ['Controls/_list/BaseCon
  * @author Зайцев А.С.
  * @private
  */
-/*
+   /*
          TODO: удалить это после того, как количество отмеченных записей будет рассчитываться на БЛ: https://online.sbis.ru/opendoc.html?guid=d9b840ba-8c99-49a5-98d3-78715d10d540
          Такие костыли из-за ситуации, когда прикладники в браузер кладут список, обёрнутый в Container/Scroll, и события перестают всплывать по всем нашим обёрткам, лежащим внутри браузера.
          С большинством событий нет проблем, т.к. наши обёртки ничего с ними не делают, и всё работает по опциям, которые приходят сверху.
@@ -27,5 +26,6 @@ define('Controls/List/BaseControl/SelectionController', ['Controls/_list/BaseCon
          4) Прокидывать событие в Container/Scroll.
          Сработает, но Container/Scroll ничего не должен знать про выделение. И не поможет в ситуациях, когда вместо Container/Scroll любая другая обёртка.
          */
-/** @lends Controls/List/BaseControl/SelectionController.prototype */
-return Control});
+   /** @lends Controls/List/BaseControl/SelectionController.prototype */
+   return Control;
+});

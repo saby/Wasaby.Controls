@@ -1,5 +1,4 @@
-define('Controls/List/ItemActions/Helpers', ['Controls/_list/ItemActions/Helpers'], function(Control){
-
+define('Controls/List/ItemActions/Helpers', ['Controls/_list/ItemActions/Helpers'], function(Control) {
 /**
  * List of helpers for displaying item actions.
  * @class Controls/List/ItemActions/Helpers
@@ -7,11 +6,11 @@ define('Controls/List/ItemActions/Helpers', ['Controls/_list/ItemActions/Helpers
  * @author Сухоручкин А.С.
  * @category List
  */
-/** @typedef {String} MoveDirection
+   /** @typedef {String} MoveDirection
      *  @variant {String} up Move up
      *  @variant {String} down Move down
      */
-/**
+   /**
      * Helper to display up/down item actions.
      * @param {MoveDirection} direction
      * @param {Types/entity:Record} item Instance of the item whose action is being processed.
@@ -19,7 +18,7 @@ define('Controls/List/ItemActions/Helpers', ['Controls/_list/ItemActions/Helpers
      * @param {Controls/List/interface/IHierarchy#parentProperty} parentProperty Name of the field that contains information about parent node.
      * @param {Controls/List/interface/IHierarchy#nodeProperty} nodeProperty Name of the field describing the type of the node (list, node, hidden node).
      */
-/**
+   /**
      * @example
      * In the following example, only items that are in the same parent are allowed to be moved.
      * JS:
@@ -49,4 +48,5 @@ define('Controls/List/ItemActions/Helpers', ['Controls/_list/ItemActions/Helpers
        * }
      * </pre>
      */
-return Control});
+   return Control;
+});

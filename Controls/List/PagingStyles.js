@@ -1,5 +1,4 @@
-define('Controls/List/PagingStyles', ['Controls/_list/PagingStyles'], function(Control){
-
+define('Controls/List/PagingStyles', ['Controls/_list/PagingStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/PagingStyles
@@ -16,4 +15,5 @@ define('Controls/List/PagingStyles', ['Controls/_list/PagingStyles'], function(C
  * @css @font-size_Paging-arrow-button font-size of icons in paging buttons
  *
  */
-return Control});
+   return Control;
+});

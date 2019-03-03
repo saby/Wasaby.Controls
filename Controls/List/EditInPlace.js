@@ -1,4 +1,4 @@
-define('Controls/List/EditInPlace', ['Controls/_list/EditInPlace'], function(Control){
+define('Controls/List/EditInPlace', ['Controls/_list/EditInPlace'], function(Control) {
    /**
     * @class Controls/List/EditInPlace
     * @extends Core/Control
@@ -6,4 +6,5 @@ define('Controls/List/EditInPlace', ['Controls/_list/EditInPlace'], function(Con
     * @author Зайцев А.С.
     * @private
     */
-return Control});
+   return Control;
+});

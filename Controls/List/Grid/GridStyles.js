@@ -1,5 +1,4 @@
-define('Controls/List/Grid/GridStyles', ['Controls/_list/Grid/GridStyles'], function(Control){
-
+define('Controls/List/Grid/GridStyles', ['Controls/_list/Grid/GridStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/Grid/GridStyles
@@ -49,4 +48,5 @@ define('Controls/List/Grid/GridStyles', ['Controls/_list/Grid/GridStyles'], func
  * @css @spacing_Grid-row-with-checkbox-between-content-borderLeft spacing between grid row content and checkbox
  *
  */
-return Control});
+   return Control;
+});

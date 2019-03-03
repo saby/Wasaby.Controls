@@ -1,5 +1,4 @@
-define('Controls/List/Mover/MoveDialog/Styles', ['Controls/_list/Mover/MoveDialog/Styles'], function(Control){
-
+define('Controls/List/Mover/MoveDialog/Styles', ['Controls/_list/Mover/MoveDialog/Styles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/Mover/MoveDialog/Styles
@@ -13,4 +12,5 @@ define('Controls/List/Mover/MoveDialog/Styles', ['Controls/_list/Mover/MoveDialo
  * @css @spacing_MoveDialog-between-search-leftSide spacing between the search and the left side of the dialog.
  *
  */
-return Control});
+   return Control;
+});

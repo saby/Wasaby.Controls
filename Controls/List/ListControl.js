@@ -1,5 +1,4 @@
-define('Controls/List/ListControl', ['Controls/_list/ListControl'], function(Control){
-
+define('Controls/List/ListControl', ['Controls/_list/ListControl'], function(Control) {
 /**
  * Plain list control with custom item template. Can load data from data source.
  *
@@ -19,5 +18,6 @@ define('Controls/List/ListControl', ['Controls/_list/ListControl'], function(Con
  * @author Авраменко А.С.
  * @category List
  */
-/** @lends Controls/List/ListControl.prototype */
-return Control});
+   /** @lends Controls/List/ListControl.prototype */
+   return Control;
+});

@@ -1,4 +1,4 @@
-define('Controls/List/TreeControl', ['Controls/_list/TreeControl'], function(Control){
+define('Controls/List/TreeControl', ['Controls/_list/TreeControl'], function(Control) {
    /**
     * Hierarchical list control with custom item template. Can load data from data source.
     *
@@ -10,4 +10,5 @@ define('Controls/List/TreeControl', ['Controls/_list/TreeControl'], function(Con
     * @public
     * @category List
     */
-return Control});
+   return Control;
+});
