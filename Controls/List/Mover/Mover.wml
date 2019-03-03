@@ -1,3 +1,1 @@
-<Controls.Popup.Opener.Dialog name="dialogOpener" on:result="_onDialogResult()">
-   <ws:popupOptions isModal="{{true}}" template="{{_options.moveDialogTemplate}}"/>
-</Controls.Popup.Opener.Dialog>
+<ws:partial template="wml!Controls/_list/Mover/Mover" scope="{{_options}}" />

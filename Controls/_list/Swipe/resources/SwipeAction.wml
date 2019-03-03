@@ -1,0 +1,12 @@
+<div class="controls-itemActionsV__action
+            controls-itemActionsV__action_padding_swipe
+            controls-itemActionsV__action_style_{{action.style}}
+            controls-itemActionsV__action_iconStyle_{{action.iconStyle}}"
+      style="{{'height:' + action.height}}">
+   <ws:if data="{{needShowIcon(action, direction, hasShowedItemActionWithIcon)}}">
+        <i class="{{action.icon}} controls-itemActionsV__action_icon_{{swipeIconSize}} controls-itemActionsV__action_icon_swipe"/>
+    </ws:if>
+    <ws:if data="{{needShowTitle(action, type)}}">
+        <span class="controls-itemActionsV__action_title_swipe {{bigTitle ? 'controls-itemActionsV__action_title_lonely'}}">{{action.title}}</span>
+    </ws:if>
+</div>

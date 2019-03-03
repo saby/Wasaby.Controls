@@ -1,7 +1,1 @@
-<ws:for data="action in showedActions">
-    <ws:partial
-            template="wml!Controls/List/ItemActions/resources/ItemAction"
-            itemData="{{itemData}}"
-            size="{{size}}"
-            action="{{action}}"/>
-</ws:for>
+<ws:partial template="wml!Controls/_list/ItemActions/resources/ItemActionsFor" scope="{{_options}}" />
