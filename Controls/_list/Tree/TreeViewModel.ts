@@ -503,17 +503,7 @@ var
         setRoot: function(root) {
             this._expandedItems = {};
             this._display.setRoot(root);
-
-            /**
-             * По стандарту в Explorrer'e, если маркер видимый, то при проваливании в папку должна отмечаться первая запись.
-             * Чтобы не ломать тесты, всегда отмечаем первую запись. Однако нужно учитывать случаи, когда корень меняется с
-             * частичным обновлением коллекции. Может получиться, что отмеченный ранее элемент останется в коллекции, но маркер
-             * всёравно переместится на первую запись.
-             * Исправить по задаче https://online.sbis.ru/opendoc.html?guid=f75e5bfd-6e9f-4710-bad7-b9be704f0dff
-             * */
-            if (this._options.markerVisibility !== 'hidden' && this.getCount()) {
-                this.setMarkedKey(this._items.at(0).getId());
-            }
+            this.updateMarker(this._markedKey);
             this._nextModelVersion();
         },
 

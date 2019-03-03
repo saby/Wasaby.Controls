@@ -47,7 +47,7 @@ var _private = {
         var
             model = self._children.baseControl.getViewModel(),
             markedItemKey = model.getMarkedKey(),
-            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+            markedItem = model.getMarkedItem();
         if (!model.isExpanded(markedItem)) {
             self.toggleExpanded(markedItemKey);
         }
@@ -56,7 +56,7 @@ var _private = {
         var
             model = self._children.baseControl.getViewModel(),
             markedItemKey = model.getMarkedKey(),
-            markedItem = model.getItemById(markedItemKey, self._options.keyProperty);
+            markedItem = model.getMarkedItem();
         if (model.isExpanded(markedItem)) {
             self.toggleExpanded(markedItemKey);
         }

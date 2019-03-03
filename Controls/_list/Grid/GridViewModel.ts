@@ -610,6 +610,9 @@ var
         getMarkedKey: function() {
             return this._model.getMarkedKey();
         },
+        getMarkedItem: function() {
+            return this._model.getMarkedItem();
+        },
         getFirstItem: function() {
             return this._model.getFirstItem.apply(this._model, arguments);
         },
