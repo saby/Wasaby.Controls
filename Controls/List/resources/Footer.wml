@@ -1,1 +1,1 @@
-<Controls.Button size="s" attr:class="controls-BaseControl__loadMore" viewMode="link" caption="{{rk('Еще') + '...'}}" on:click="_loadMore()"/>
+<ws:partial template="wml!Controls/_list/resources/Footer" scope="{{_options}}" />

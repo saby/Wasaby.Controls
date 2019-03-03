@@ -1,0 +1,3 @@
+<ws:for data="i in 10">
+   <ws:partial template="{{itemTemplate}}" invisible="{{true}}" itemData="{{listModel.getTileItemData()}}"/>
+</ws:for>

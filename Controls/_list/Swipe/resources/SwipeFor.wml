@@ -1,0 +1,19 @@
+<ws:for data="action in showedActions">
+    <ws:partial
+            template="wml!Controls/_list/Swipe/resources/SwipeAction"
+            action="{{action}}"
+            swipeConfig="{{swipeConfig}}"
+            needShowIcon="{{needShowIcon}}"
+            needShowTitle="{{needShowTitle}}"
+            direction="{{swipeConfig.direction}}"
+            swipeIconSize="{{swipeConfig.swipeIconSize}}"
+            type="{{swipeConfig.type}}"
+            bigTitle="{{swipeConfig.bigTitle}}"
+            hasShowedItemActionWithIcon="{{itemData.hasShowedItemActionWithIcon}}"
+            on:click="_onItemActionsClick(action, itemData)"/>
+    <ws:if data="{{needShowSeparator(action, itemData.itemActions, swipeConfig.type)}}">
+        <div class="controls-itemActionsV__separator
+        controls-itemActionsV__separator_{{swipeConfig.direction === 'row' ? 'vertical' : 'horizontal'}}
+        controls-itemActionsV__separator_{{swipeConfig.direction === 'row' ? 'vertical' : 'horizontal'}}_{{columnNumber === 1 ? 'first' : 'second'}}"></div>
+    </ws:if>
+</ws:for>
