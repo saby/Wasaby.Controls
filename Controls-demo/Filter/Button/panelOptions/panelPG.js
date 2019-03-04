@@ -125,6 +125,23 @@ define('Controls-demo/Filter/Button/panelOptions/panelPG',
                },
                {
                   id: 'document', value: '', resetValue: '', visibility: false
+               },
+               {
+                  id: 'detailingPeriod',
+                  value: [1],
+                  resetValue: [1],
+                  textValue: '',
+                  visibility: false,
+                  source: new sourceLib.Memory({
+                     idProperty: 'key',
+                     data: [
+                        { key: 1, title: 'On documents', 'parent@': false, parent: null },
+                        { key: 2, title: 'Summary', 'parent@': true, parent: null },
+                        { key: 3, title: 'Day', text: 'Summary by day', parent: 2, 'parent@': false },
+                        { key: 4, title: 'Month', text: 'Summary by monthly', parent: 2, 'parent@': false },
+                        { key: 5, title: 'Year', text: 'Summary by year', parent: 2, 'parent@': false }
+                     ]
+                  })
                }
             ];
             this._itemsSimple = [
