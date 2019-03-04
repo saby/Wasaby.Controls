@@ -139,6 +139,35 @@ define([
          }, 1);
       });
 
+      it('beforeMount: right indexes with virtual scroll and receivedState', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: ListViewModel,
+            source: source
+         };
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         return new Promise(function (resolve, reject) {
+            ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
+            setTimeout(function () {
+               assert.equal(ctrl.getViewModel().getStartIndex(), 0);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               resolve();
+            }, 10);
+         });
+      });
+
       it('_private::getSortingOnChange', function() {
          var getEmptySorting = function() {
             return [];
