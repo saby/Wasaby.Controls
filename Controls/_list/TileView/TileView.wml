@@ -14,5 +14,8 @@
       <ws:if data="{{_options.tileMode === 'static'}}">
          <ws:partial template="wml!Controls/_list/TileView/resources/InvisibleFor" itemTemplate="{{_itemTemplate}}" listModel="{{_listModel}}"/>
       </ws:if>
+      <ws:if data="{{_options.emptyTemplate}}">
+         <ws:partial template="{{_options.emptyTemplate}}"/>
+      </ws:if>
    </ws:if>
 </div>
