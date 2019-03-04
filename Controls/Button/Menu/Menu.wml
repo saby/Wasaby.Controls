@@ -1,4 +1,4 @@
-<div class="controls-MenuButton theme_{{_options.theme}}">
+<div class="controls-MenuButton_theme_{{_options.theme}}">
    <Controls.Dropdown.Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
