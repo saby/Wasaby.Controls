@@ -16,7 +16,7 @@
       />
       <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
          <div class="controls-EditableArea__Toolbar">
-            <Controls.Button
+            <Controls.buttons:Button
                on:click="commitEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
                viewMode="toolButton"

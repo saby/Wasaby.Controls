@@ -3,7 +3,7 @@
    <Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
       <ws:topArea>
          <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-            <Controls.Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
+            <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
          </div>
       </ws:topArea>
       <ws:contentArea>
