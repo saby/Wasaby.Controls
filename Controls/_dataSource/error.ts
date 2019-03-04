@@ -1,5 +1,4 @@
 /// <amd-module name="Controls/_dataSource/error" />
-import * as DefaultTemplate from 'wml!Controls/_dataSource/_error/DefaultTemplate';
 export {
     Handler,
     ViewConfig,
@@ -7,4 +6,4 @@ export {
 } from 'Controls/_dataSource/_error/Handler';
 export { default as Controller, Config } from 'Controls/_dataSource/_error/Controller';
 export { default as Mode } from 'Controls/_dataSource/_error/Mode';
-export { DefaultTemplate };
+export { default as DefaultTemplate } from 'Controls/_dataSource/_error/DefaultTemplate';
