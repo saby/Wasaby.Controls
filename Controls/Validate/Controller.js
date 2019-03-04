@@ -200,9 +200,11 @@ define('Controls/Validate/Controller',
           * @returns {*}
           */
          validate: function validate() {
-            var validators = this._options.validators || [];
-            this.setValidationResult(undefined);
-            return this._callValidators(validators);
+            if(!this._options.readOnly) {
+               var validators = this._options.validators || [];
+               this.setValidationResult(undefined);
+               return this._callValidators(validators);
+            }
          },
 
          /**
