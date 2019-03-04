@@ -1,3 +1,3 @@
-<div  style="text-align: center">   <Controls.Button caption="Custom Body Template"/> </div>
+<div  style="text-align: center">   <Controls.buttons:Button caption="Custom Body Template"/> </div>
 
 

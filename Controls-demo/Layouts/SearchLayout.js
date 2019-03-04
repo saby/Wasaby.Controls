@@ -14,7 +14,7 @@ define('Controls-demo/Layouts/SearchLayout', [
    'Controls/Input/Text',
    'Controls-demo/Layouts/LayoutFilterComponent',
    'Controls/Filter/Button',
-   'Controls/Button',
+   'Controls/buttons',
    'Controls/Input/Dropdown',
    'wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/filterItemsTemplate',
    'wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/additionalItemsTemplate',
