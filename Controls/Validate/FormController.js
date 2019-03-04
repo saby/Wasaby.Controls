@@ -34,7 +34,7 @@ define('Controls/Validate/FormController',
             // The infobox should be displayed on the first not valid field.
             this._validates.reverse();
             this._validates.forEach(function(validate) {
-               if (!validate._options.readOnly) {
+               if (!(validate._options && validate._options.readOnly)) {
                   var def = validate.validate();
                   parallelDeferred.push(def);
                }
