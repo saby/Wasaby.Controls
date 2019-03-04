@@ -57,6 +57,11 @@
       "required": true
     },
     {
+      "name": "I18n",
+      "path": "./node_modules/saby-i18n/I18n",
+      "required": true
+    },
+    {
       "name": "SBIS3.CONTROLS",
       "path": "./SBIS3.CONTROLS"
     },
