@@ -1,0 +1,31 @@
+<div class="my_class_slider">
+   <Controls.DragNDrop.Controller name="dragNDrop" on:mousedown="_onMouseDownHandler()"
+                                  on:dragmove="_onDragMoveHandler()"
+                                  on:dragend="_onDragEndHandler()">
+      <div class="controls-Slider{{_options.bigPoint ? ' controls-Slider__big'}}">
+         <div class="controls-Slider__wrapper">
+            <div class="controls-Slider__mainSlider{{_options.bigPoint ? ' controls-Slider__big'}}">
+               <div class="controls-Slider__point controls-Slider__point__start{{_single ? ' ws-hidden'}}"></div>
+               <div class="controls-Slider__point controls-Slider__point__end"></div>
+               <div class="controls-Slider__line__wrapper">
+                  <div class="controls-Slider__line controls-Slider__line__empty"></div>
+               </div>
+               <div class="controls-Slider__line__wrapper">
+                  <div class="controls-Slider__line controls-Slider__line__full"></div>
+               </div>
+            </div>
+         </div>
+         <div if="{{_options.scaleStep}}" class="controls-Slider__scale">
+            <ws:for data="key, value in scaleArr">
+               <span class="controls-Slider__segment">{{value}}</span>
+            </ws:for>
+         </div>
+         <div if="{{startLabel || endLabel}}" class="controls-Slider__labels">
+            <div class="controls-Slider__label controls-Slider__label__start">{{startLabel}}</div>
+            <div class="controls-Slider__label controls-Slider__label__end">{{endLabel}}</div>
+         </div>
+         {{ _startValue }}
+         {{ _endValue }}
+      </div>
+   </Controls.DragNDrop.Controller>
+</div>
