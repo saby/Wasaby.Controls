@@ -1,4 +1,4 @@
-import { IItemAction } from 'Controls/List/Swipe/interface/IItemAction';
+import { IItemAction } from 'Controls/_list/Swipe/interface/IItemAction';
 // @ts-ignore
 import { Model } from 'Types/entity';
 
