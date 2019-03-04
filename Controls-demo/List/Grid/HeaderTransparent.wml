@@ -1,0 +1,14 @@
+<div style="display: flex">
+    <div style="background-color: #216E58;">
+        <Controls.Container.Scroll attr:style="height: 320px; width: 500px;">
+            <Controls.Grid
+                    source="{{_viewSource}}"
+                    keyProperty="id"
+                    displayProperty="title"
+                    header="{{gridHeader}}"
+                    stickyHeader="{{false}}"
+                    columns="{{gridColumns}}">
+            </Controls.Grid>
+        </Controls.Container.Scroll>
+    </div>
+</div>
