@@ -158,7 +158,7 @@ define('Controls/Popup/Opener/BaseOpener',
           * @private
           */
          _requireModule: function(module) {
-            return module === 'string' ? library.load(module) : Promise.success(module);
+            return typeof module === 'string' ? library.load(module) : Promise.resolve(module);
          },
 
          _getConfig: function(popupOptions) {
