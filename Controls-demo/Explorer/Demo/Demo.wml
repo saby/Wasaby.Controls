@@ -18,6 +18,13 @@
       <ws:tileItemTemplate>
          <ws:partial template="wml!Controls/List/TreeTileView/DefaultItemTpl" hasTitle="{{tileItemTemplate.itemData.item.isDocument}}"/>
       </ws:tileItemTemplate>
+      <ws:emptyTemplate>
+         <ws:partial template="wml!Controls/List/emptyTemplate">
+            <ws:contentTemplate>
+               Нет данных
+            </ws:contentTemplate>
+         </ws:partial>
+      </ws:emptyTemplate>
    </Controls.Explorer>
    <h2>Плитка с разной шириной</h2>
    <Controls.Tile
