@@ -92,6 +92,14 @@ module.exports = function(Component) {
          }, []);
       },
 
+      '/demo-ws4-breadcrumbs': function(req, res) {
+         requirejs('Controls-demo/BreadCrumbs/ScenariosWithApplication');
+         res.render('wml!Controls/Application/Route', {
+            application: 'Controls-demo/BreadCrumbs/ScenariosWithApplication',
+            initDependencies: false
+         }, []);
+      },
+
       // Демо-пример: концепция использования прикладных шаблонов.
       '/demo-ws4-templates': function(req, res) {
          requirejs('Examples/List/Base');
