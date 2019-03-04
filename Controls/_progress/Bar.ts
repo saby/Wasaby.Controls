@@ -14,7 +14,8 @@ var
    };
 
    Bar.getDefaultOptions = function() {
-      return {
+      return {      
+         theme: "default",
          value: 0
       };
    };
