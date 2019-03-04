@@ -124,13 +124,13 @@ define('Controls/Popup/Opener/BaseOpener',
 
          // Lazy load template
 
-          /**
-           *
-           * @param config
-           * @param controller
-           * @return {Promise.<{template: Function; controller: Function}>}
-           * @private
-           */
+         /**
+          *
+          * @param config
+          * @param controller
+          * @return {Promise.<{template: Function; controller: Function}>}
+          * @private
+          */
          _requireModules: function(config, controller) {
             var self = this;
             if (this._requireModulesPromise) {
@@ -144,7 +144,7 @@ define('Controls/Popup/Opener/BaseOpener',
                delete self._requireModulesPromise;
                result.controller = controller;
                return result;
-            }).catch(function (error) {
+            }).catch(function(error) {
                delete self._requireModulesPromise;
                return Promise.reject(error);
             });
@@ -152,15 +152,15 @@ define('Controls/Popup/Opener/BaseOpener',
             return self._requireModulesPromise;
          },
 
-          /**
-           * @param {String | Function} module
-           * @return {Promise.<Function>}
-           * @private
-           */
+         /**
+          * @param {String | Function} module
+          * @return {Promise.<Function>}
+          * @private
+          */
          _requireModule: function(module) {
-            return module === 'string' ?
-               library.load(module) :
-               Promise.success(module)
+            return module === 'string'?
+               library.load(module):
+               Promise.success(module);
          },
 
          _getConfig: function(popupOptions) {
