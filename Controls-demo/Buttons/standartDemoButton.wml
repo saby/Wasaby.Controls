@@ -96,7 +96,7 @@
         </div>
         <h3>Text toggle-button</h3>
         <div attr:class="demo-Button_margin-10  ControlsDemo__textToggle">
-            <Controls.Toggle.Button readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link" attr:class="ControlsDemo__textToggleButton"/>
+            <Controls.Toggle.Button theme="online" readOnly="{{false}}" bind:value="toggleState3" size="m" captions="{{['Change', 'Save']}}" style="info" viewMode="link" attr:class="ControlsDemo__textToggleButton"/>
         </div>
         <h3>Bordered button-icon with m size</h3>
         <div attr:class="demo-Button_margin-10 ControlsDemo__borderedIconM">
@@ -149,7 +149,7 @@
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="success" icon="icon-16 icon-Yes" style="success" viewMode="toolButton" transparent="{{true}}" size="m"/>
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="danger" icon="icon-16 icon-TFDelete" style="danger" viewMode="toolButton" transparent="{{true}}" size="m"/>
                     <Controls.Button attr:class="demo-Button__testBlock__controlPanel" readOnly="{{false}}" iconStyle="secondary" icon="icon-16 icon-EmptyMessage" style="secondary" viewMode="toolButton" transparent="{{true}}" size="m"/>
-                    <Controls.Button.Close attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton"/>
+                    <Controls.Button.Close theme="online" attr:class="demo-Button__testBlock__controlPanel" viewMode="toolButton"/>
                 </div>
             </div>
             <div>

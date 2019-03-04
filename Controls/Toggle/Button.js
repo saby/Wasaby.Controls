@@ -112,6 +112,8 @@ define('Controls/Toggle/Button', [
       }
    });
 
+   ToggleButton._theme = ['Controls/_buttons/Button', 'Controls/Toggle/Button/Button'];
+
    ToggleButton.getDefaultOptions = function() {
       return {
          viewMode: 'link',
