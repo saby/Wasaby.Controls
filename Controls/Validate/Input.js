@@ -12,8 +12,10 @@ define('Controls/Validate/Input',
       return Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
-            this._shouldValidate = true;
-            this._forceUpdate();
+            if(!this._options.readOnly) {
+               this._shouldValidate = true;
+               this._forceUpdate();
+            }
          },
          _valueChangedHandler: function(event, value) {
             this._notify('valueChanged', [value]);
