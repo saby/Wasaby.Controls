@@ -53,7 +53,8 @@ define('Controls/Popup/Manager',
             // wait, until closing popup will be removed from DOM
             runDelayed(function activatePopup() {
                // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
-               if (element.activeNodeAfterDestroy && element.activeNodeAfterDestroy.parentElement) {
+               // The node can be hidden through display: none
+               if (element.activeNodeAfterDestroy && element.activeNodeAfterDestroy.parentElement && element.activeNodeAfterDestroy.getBoundingClientRect().width) {
                   element.activeNodeAfterDestroy.focus(); // TODO: COMPATIBLE
                } else if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
                   if (element.activeControlAfterDestroy.activate) {
