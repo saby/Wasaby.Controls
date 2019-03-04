@@ -588,7 +588,7 @@ define('Controls/FormController', [
                templateOptions: config.options
             });
             self.__error.isShowed = true;
-            return
+            return;
          }
       },
 

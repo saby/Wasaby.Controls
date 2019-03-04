@@ -792,7 +792,7 @@ define('Controls/List/BaseControl', [
                templateOptions: config.options
             });
             self.__error.isShowed = true;
-            return
+            return;
          }
       },
 
