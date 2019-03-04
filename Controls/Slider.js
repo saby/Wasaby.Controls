@@ -30,7 +30,7 @@ define('Controls/Slider',
                return this._options.minValue + percent * rangeLength;
             }
          },
-         _checkBuildOptions: function(opts){
+         _checkBuildOptions: function(opts) {
             if (!opts.minValue || !opts.maxValue) {
                throw new Error('You must set minValue and maxValue for slider.');
             }
