@@ -1,0 +1,9 @@
+<div>
+   <ws:for data="i in state.length">
+      <span style="display: block;">         
+         <span style="display: inline-block; background: {{i==data-1?'#ccc':'#fff'}};">            
+            {{state[i]}} %
+         </span>
+      </span>
+   </ws:for>
+</div>
