@@ -29,7 +29,7 @@
 </ws:template>
 <div class="controls-BaseControl" on:sortingChanged="_sortingChanged()" on:keyDown="_onViewKeyDown()">
     <Controls.Popup.Opener.Dialog name="dialogOpener" />
-    <ws:if data="{{ __error }}">
+    <ws:if data="{{ __error && __error.mode != 'dialog' }}">
         <ws:partial
             template="{{ __error.template }}"
             scope="{{ __error.options }}"

@@ -6,4 +6,8 @@ import * as template from 'wml!Controls/_dataSource/_error/DefaultTemplate';
 
 export default class DefaultTemplate extends Control {
     _template = template;
+    _closeHandler() {
+        // @ts-ignore
+        this._notify('close', [], { bubbling: true });
+    }
 }

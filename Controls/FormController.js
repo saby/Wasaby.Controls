@@ -136,7 +136,8 @@ define('Controls/FormController', [
          var receivedData = receivedState.data;
 
          if (receivedError) {
-            return this._showError(receivedError);
+            this.__error = receivedError;
+            return this._showError();
          }
          var record = receivedData || cfg.record;
 
@@ -164,6 +165,9 @@ define('Controls/FormController', [
          // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
          if (this._readInMounting) {
             _private.readRecordBeforeMountNotify(this);
+         }
+         if (this.__error) {
+            this._showError();
          }
          this._isMount = true;
       },
@@ -539,7 +543,8 @@ define('Controls/FormController', [
        */
       _crudErrback: function(error, mode) {
          return this._processError(error, mode).then(function(errorConfig) {
-            this._showError(errorConfig);
+            this.__error = errorConfig;
+            this._showError();
             return {
                error: config.error,
                errorConfig: errorConfig
@@ -561,27 +566,30 @@ define('Controls/FormController', [
       },
 
       /**
-       * @param {Controls/_dataSource/_error/ViewConfig} [config]
        * @private
        */
-      _showError: function(config) {
-         if (!config) {
-            return;
-         }
-         if (config.mode != dataSource.error.Mode.dialog) {
-            // отрисовка внутри компонента
-            this.__error = config;
-            this._forceUpdate();
+      _showError: function() {
+         var config = self.__error;
+         if (!config || config.isShowed) {
             return;
          }
 
-         // диалоговое с ошибкой
-         this._children &&
-         this._children.dialogOpener &&
-         this._children.dialogOpener.open({
-            template: config.template,
-            templateOptions: config.options
-         });
+         if (config.mode != dataSource.error.Mode.dialog) {
+            // отрисовка внутри компонента
+            self._forceUpdate();
+            self.__error.isShowed = true;
+            return;
+         }
+
+         if (self._children && self._children.dialogOpener) {
+            // диалоговое с ошибкой
+            self._children.dialogOpener.open({
+               template: config.template,
+               templateOptions: config.options
+            });
+            self.__error.isShowed = true;
+            return
+         }
       },
 
       _hideError: function() {

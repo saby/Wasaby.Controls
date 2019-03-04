@@ -155,6 +155,7 @@ define('Controls/List/BaseControl', [
                   _private.checkLoadToDirectionCapability(self);
                }
             }).addErrback(function(error) {
+               _private.hideIndicator(self);
                return _private.crudErrback(self, {
                   error: error,
                   dataLoadErrback: cfg.dataLoadErrback
@@ -300,6 +301,7 @@ define('Controls/List/BaseControl', [
                };
 
             }).addErrback(function(error) {
+               _private.hideIndicator(self);
                return _private.crudErrback(self, {
                   error: error,
                   dataLoadErrback: userErrback
@@ -743,7 +745,8 @@ define('Controls/List/BaseControl', [
             config.dataLoadErrback(config.error);
          }
          return _private.processError(self, config.error, config.mode).then(function(errorConfig) {
-            _private.showError(self, errorConfig);
+            self.__error = errorConfig;
+            _private.showError(self);
             return {
                error: config.error,
                errorConfig: errorConfig
@@ -767,27 +770,30 @@ define('Controls/List/BaseControl', [
 
       /**
        * @param {Controls/List/BaseControl} self
-       * @param {Controls/_dataSource/_error/ViewConfig} config
        * @private
        */
-      showError: function(self, config) {
-         if (!config) {
-            return;
-         }
-         if (config.mode != dataSource.error.Mode.dialog) {
-            // отрисовка внутри компонента
-            self.__error = config;
-            self._forceUpdate();
+      showError: function(self) {
+         var config = self.__error;
+         if (!config || config.isShowed) {
             return;
          }
 
-         // диалоговое с ошибкой
-         self._children &&
-         self._children.dialogOpener &&
-         self._children.dialogOpener.open({
-            template: config.template,
-            templateOptions: config.options
-         });
+         if (config.mode != dataSource.error.Mode.dialog) {
+            // отрисовка внутри компонента
+            self._forceUpdate();
+            self.__error.isShowed = true;
+            return;
+         }
+
+         if (self._children && self._children.dialogOpener) {
+            // диалоговое с ошибкой
+            self._children.dialogOpener.open({
+               template: config.template,
+               templateOptions: config.options
+            });
+            self.__error.isShowed = true;
+            return
+         }
       },
 
       hideError: function(self) {
@@ -944,7 +950,8 @@ define('Controls/List/BaseControl', [
                   return;
                }
                if (receivedError) {
-                  return _private.showError(self, receivedError);
+                  self.__error = receivedError;
+                  return _private.showError(self);
                }
                return _private.reload(self, newOptions).addCallback(function(result /* result: CrudResult */) {
                   /*
@@ -984,6 +991,9 @@ define('Controls/List/BaseControl', [
          }
          if (this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
+         }
+         if (this.__error) {
+            _private.showError(this);
          }
       },
 
