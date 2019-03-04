@@ -110,8 +110,8 @@ define('Controls/Decorator/Markup/resources/linkDecorateUtils', [
          var firstChildTagName = getTagName(firstChildNode),
             firstChildAttributes = getAttributes(firstChildNode);
 
-         result = firstChildTagName === 'a' &&
-            firstChildAttributes.class === getClasses().link && firstChildAttributes.href;
+         result = firstChildTagName === 'a' && !!firstChildAttributes.href &&
+            firstChildAttributes.class === getClasses().link;
       } else {
          result = false;
       }
@@ -184,8 +184,8 @@ define('Controls/Decorator/Markup/resources/linkDecorateUtils', [
          newLinkAttributes = objectMerge({}, linkAttributes, { clone: true }),
          decoratedLinkClasses = getClasses();
 
-      newLinkAttributes.class = (newLinkAttributes.class ? newLinkAttributes.class.replace('asLink', '') + ' ' : '') +
-         decoratedLinkClasses.link;
+      newLinkAttributes.class = ((newLinkAttributes.class ? newLinkAttributes.class.replace('asLink', '') + ' ' : '') +
+         decoratedLinkClasses.link).trim();
       newLinkAttributes.target = '_blank';
 
       // '\' is a screen character, link decorate service can't decode the link with it.

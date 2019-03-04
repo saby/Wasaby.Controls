@@ -47,13 +47,14 @@ define([
          {
             'href': 'https://ya.ru',
             'target': '_blank',
-            'class': 'LinkDecorator__linkWrap'
+            'class': 'LinkDecorator__linkWrap',
+            'rel': 'noreferrer'
          },
          ['img',
             {
                'class': 'LinkDecorator__image',
                'alt': 'https://ya.ru',
-               'src': (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1'
+               'src': (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&id=0&srv=1'
             }
          ]
       ],
@@ -420,11 +421,11 @@ define([
    describe('Controls.Decorator.Markup.resources.linkDecorateUtils', function() {
       describe('isDecoratedLink', function() {
          it('decorated link node', function() {
-            assert.isTrue('span', linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNode));
+            assert.isTrue(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNode));
          });
          it('wrong tag name', function() {
-            assert.isTrue('span', linkDecorateUtils.isDecoratedLink('div', decoratedLinkFirstChildNode));
-            assert.isTrue('span', linkDecorateUtils.isDecoratedLink('', decoratedLinkFirstChildNode));
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('div', decoratedLinkFirstChildNode));
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('', decoratedLinkFirstChildNode));
          });
          it('have not first child', function() {
             assert.isFalse(linkDecorateUtils.isDecoratedLink('span'));
@@ -462,15 +463,129 @@ define([
             ]));
          });
       });
-      describe('needDecorate', function() {
-         // TODO: many cases.
-      });
       describe('getUndecoratedLink', function() {
          it('undecorate a decorated link', function() {
-            assert.deepEqual(linkDecorateUtils.getUndecoratedLink(['span',
-               { 'class': 'LinkDecorator__wrap' },
-               decoratedLinkFirstChildNode
-            ]), linkNode);
+            assert.deepEqual(linkDecorateUtils.getUndecoratedLink(decoratedLinkFirstChildNode), linkNode);
+         });
+      });
+      describe('needDecorate', function() {
+         beforeEach(function() {
+            decoratedLinkService = Env.constants.decoratedLinkService;
+            Env.constants.decoratedLinkService = '/test/';
+         });
+         afterEach(function() {
+            Env.constants.decoratedLinkService = decoratedLinkService;
+         });
+         it('not a link', function() {
+            var parentNode = ['p', ['b',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('parent node is not a paragraph', function() {
+            var parentNode = ['span', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href is not equal link value', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'not https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href length more then given maximum', function() {
+            var maxLenght = linkDecorateUtils.getHrefMaxLength(),
+               linkHref = 'https://ya.ru/';
+            linkHref = linkHref + 'a'.repeat(maxLenght - linkHref.length + 1);
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: linkHref,
+                  target: '_blank'
+               },
+               linkHref
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link is not in the end of paragraph', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'not https://ya.ru'
+            ], 'some node after link'];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 1', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 2', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ], '       '];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 3', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ], ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 4', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ], '      ', ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
          });
       });
       describe('decorateLink', function() {
