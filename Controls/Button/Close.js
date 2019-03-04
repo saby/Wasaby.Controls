@@ -108,6 +108,8 @@ define('Controls/Button/Close', [
       }
    });
 
+   CloseButton._theme = ['Controls/Button/Close'];
+
    CloseButton.getDefaultOptions = function() {
       return {
          size: 'l'
