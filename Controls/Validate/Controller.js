@@ -200,7 +200,7 @@ define('Controls/Validate/Controller',
           * @returns {*}
           */
          validate: function validate() {
-            if(!this._options.readOnly) {
+            if (!this._options.readOnly) {
                var validators = this._options.validators || [];
                this.setValidationResult(undefined);
                return this._callValidators(validators);
@@ -251,7 +251,6 @@ define('Controls/Validate/Controller',
          _valueChangedHandler: function(event, value) {
             this._notify('valueChanged', [value]);
             this._cleanValid();
-
          },
          _cleanValid: function() {
             if (this._validationResult) {
