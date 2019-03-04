@@ -230,9 +230,13 @@ define([
       describe('_notify(rootChanged)', function() {
          var
             isNotified = false,
+            isWeNotified = false,
             _notify = function(eName) {
                if (eName === 'rootChanged') {
                   isNotified = true;
+               }
+               if (eName === 'itemClick') {
+                  isWeNotified = true;
                }
             };
 
@@ -274,15 +278,20 @@ define([
 
          it('_onItemClick', function() {
             isNotified = false;
+            isWeNotified = false;
 
             var
-               explorer = new Explorer({});
+               explorer = new Explorer({}),
+               isPropagationStopped = false;
+
             explorer.saveOptions({});
             Explorer._private.setRoot = function(){};
             explorer._notify = _notify;
 
             explorer._onItemClick({
-               stopPropagation: function() {}
+               stopPropagation: function() {
+                  isPropagationStopped = true;
+               }
             }, {
                get: function() {
                   return true;
@@ -291,6 +300,8 @@ define([
             });
 
             assert.isTrue(isNotified);
+            assert.isTrue(isPropagationStopped);
+            assert.isTrue(isWeNotified);
          });
 
          it('_onBreadCrumbsClick', function() {
