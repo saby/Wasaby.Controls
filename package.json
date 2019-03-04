@@ -72,6 +72,7 @@
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.300",
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.300",
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.300",
+      "saby-i18n": "git+https://github.com/saby/i18n.git#rc-19.300",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.300",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.300"
    }
