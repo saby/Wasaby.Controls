@@ -12,7 +12,7 @@ define('Controls/Validate/Input',
       return Controller.extend({
          _template: template,
          _deactivatedHandler: function() {
-            if(!this._options.readOnly) {
+            if (!this._options.readOnly) {
                this._shouldValidate = true;
                this._forceUpdate();
             }
