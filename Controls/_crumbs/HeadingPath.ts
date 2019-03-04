@@ -65,6 +65,7 @@ var _private = {
 
 /**
  * Breadcrumbs with back button.
+ * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
  *
  * @class Controls/_crumbs/HeadingPath
  * @extends Core/Control
