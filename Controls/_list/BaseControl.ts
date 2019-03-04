@@ -603,6 +603,46 @@ var _private = {
         }
     },
 
+    showActionMenu(
+       self: Control,
+       itemData: object,
+       childEvent: Event,
+       action: object
+    ): void {
+       /**
+        * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
+        * When we get fragments or something similar, it would be possible to move this code where it really belongs.
+        */
+       const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
+       if (children.length) {
+          self._listViewModel.setActiveItem(itemData);
+          require(['css!Controls/Input/Dropdown/Dropdown'], () => {
+             self._children.itemActionsOpener.open({
+                opener: self._children.listView,
+                target: childEvent.target,
+                templateOptions: {
+                   items: new collection.RecordSet({ rawData: children }),
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   rootKey: action.id,
+                   showHeader: true,
+                   headConfig: {
+                       caption: action.title
+                   }
+                },
+                eventHandlers: {
+                   onResult: self._closeActionsMenu,
+                   onClose: self._closeActionsMenu
+                },
+                className: 'controls-DropdownList__margin-head'
+             });
+             self._actionMenuIsShown = true;
+             self._forceUpdate();
+          });
+       }
+    },
+
     closeActionsMenu: function(self, args) {
         var
             actionName = args && args.action,
@@ -612,6 +652,7 @@ var _private = {
             self._listViewModel.setActiveItem(null);
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
+            self._actionMenuIsShown = false;
         }
 
         if (actionName === 'itemClick') {
@@ -1127,6 +1168,15 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
+
+   _showActionMenu(
+      event: Event,
+      itemData: object,
+      childEvent: Event,
+      action: object
+   ): void {
+      _private.showActionMenu(this, itemData, childEvent, action);
+   },
 
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);
