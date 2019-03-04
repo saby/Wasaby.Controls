@@ -1,0 +1,7 @@
+<div>
+   <Controls.Popup.Previewer trigger="hoverAndClick" template="Controls-demo/Popup/Edit/MyFormController">
+      <ws:content>
+         Таргет
+      </ws:content>
+   </Controls.Popup.Previewer>
+</div>
