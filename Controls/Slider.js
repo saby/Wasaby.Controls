@@ -29,12 +29,28 @@ define('Controls/Slider',
                percent = (pageX - this._shift - box.left - window.pageXOffset) / box.width;
                return this._options.minValue + percent * rangeLength;
             }
+         },
+         _checkBuildOptions: function(opts){
+            if (!opts.minValue || !opts.maxValue) {
+               throw new Error('You must set minValue and maxValue for slider.');
+            }
+            return true;
+         },
+         _prepareBuildOptions: function(opts) {
+            if (opts.scaleStep) {
+               this.scaleArr = [];
+               this.scaleArr.push(1);
+               this.scaleArr.push(2);
+            }
          }
       };
 
       var Slider = Control.extend({
          _template: template,
+         _single: true,
          _beforeMount: function(options) {
+            _private._checkBuildOptions(options);
+            _private._prepareBuildOptions.call(this, options);
             this._endValue = options.endValue || options.maxValue;
             this._startValue = options.startValue || options.minValue;
          },
