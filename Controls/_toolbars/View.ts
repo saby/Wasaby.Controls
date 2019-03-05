@@ -142,6 +142,18 @@ import 'css!theme?Controls/_toolbars/View';
  * </pre>
  */
 
+/**
+ * @name Controls/Toolbar#popupClassName
+ * @cfg {String} Class for drop-down list in toolbar menu.
+ * @example
+ * <pre>
+ *    <Controls.Toolbar
+ *       popupClassName="your-custom-class"
+ *       source="{{_source}}"
+ *       on:itemClick="_itemClick()"/>
+ * </pre>
+ */
+
 var _private = {
     loadItems: function (instance, source) {
         var self = this;

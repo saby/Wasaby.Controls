@@ -799,7 +799,13 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     }
                     if (self._virtualScroll) {
                         // При серверной верстке применяем начальные значения
-                        var indexes = self._virtualScroll.ItemsIndexes;
+                        let indexes = self._virtualScroll.ItemsIndexes;
+
+                        /*
+                        * The virtual scroll does not update the indexes on first load, they remain the same as at the time of initialization.
+                        * If the size of the virtual page is larger than the size of the navigation, need to set the smallest index to avoid errors.
+                        * */
+                        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
                         self._virtualScroll.ItemsCount = self._listViewModel.getCount();
                         self._listViewModel.setIndexes(indexes.start, indexes.stop);
                     }

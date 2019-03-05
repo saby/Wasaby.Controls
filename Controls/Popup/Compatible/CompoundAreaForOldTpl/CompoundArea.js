@@ -414,7 +414,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          handleCommand: function(commandName, args) {
             var arg = args[0];
 
-            if (commandName === 'close') {
+            if (commandName === 'close' || commandName === 'hide') {
                this.close(arg);
                return true; // команда close не должна всплывать выше окна
             } if (commandName === 'ok') {

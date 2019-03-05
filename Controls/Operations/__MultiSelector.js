@@ -10,13 +10,13 @@ define('Controls/Operations/__MultiSelector', [
    'use strict';
    var _defaultItems = [{
       id: 'selectAll',
-      title: 'Всё'
+      title: rk('Всё')
    }, {
       id: 'unselectAll',
-      title: 'Снять'
+      title: rk('Снять')
    }, {
       id: 'toggleAll',
-      title: 'Инвертировать'
+      title: rk('Инвертировать')
    }];
 
    var MultiSelector = Control.extend({

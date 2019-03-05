@@ -22,6 +22,7 @@
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
         attr:class="controls-Dropdown {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid'}}">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
+               item="{{_item}}"
                icon="{{_icon}}"
                text="{{_text}}"
                class="{{!_options.readOnly ? 'controls-Dropdown__' + (_isEmptyItem ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}}"/>

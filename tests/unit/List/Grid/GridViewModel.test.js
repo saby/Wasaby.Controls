@@ -365,6 +365,37 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
 
 
          });
+         it('should update last item after append items', function () {
+            var
+                gridViewModel = new GridViewModel(cfg),
+                oldLastIndex = gridViewModel.getCount()-1,
+                firstItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(0)),
+                lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex)),
+                newLastItem;
+
+            // first item should have updated version identificator
+            assert.isTrue(firstItem.getVersion().indexOf('LAST_ITEM') === -1);
+
+            // last item should have updated version identificator
+            assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') !== -1);
+
+            gridViewModel.appendItems(new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 121212, title: 'i0'},
+                  { id: 231313, title: 'i1'}
+               ]
+            }));
+
+            // old last item now must be updated and shouldn't have prefix "LAST_ITEM" in version identificator
+            lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex));
+            assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') === -1);
+
+            // last item should have updated version identificator
+            newLastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(gridViewModel.getCount()-1));
+            assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
+
+         });
          it('getItemColumnCellClasses', function() {
             var
                gridViewModel = new GridViewModel(cfg),

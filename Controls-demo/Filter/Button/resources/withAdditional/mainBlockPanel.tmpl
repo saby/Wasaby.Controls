@@ -90,5 +90,18 @@
         bind:selectedKeys="item.value"/>
 </ws:template>
 
+<ws:template name="detailingPeriod">
+<Controls.Filter.Button.Panel.Dropdown displayProperty="title"
+                                       bind:selectedKeys="item.value"
+                                       keyProperty="key"
+                                       parentProperty="parent"
+                                       nodeProperty="parent@"
+                                       source="{{item.source}}">
+   <ws:contentTemplate>
+      <div>{{contentTemplate.item.get('text') || contentTemplate.item.get('title')}}</div>
+   </ws:contentTemplate>
+</Controls.Filter.Button.Panel.Dropdown>
+</ws:template>
+
 
 <ws:partial template="{{item.id}}" item="{{item}}"/>
