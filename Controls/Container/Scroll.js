@@ -429,35 +429,29 @@ define('Controls/Container/Scroll',
                }
             },
 
-            _mouseenterHandler: function() {
-               if (this._showScrollbarOnHover) {
-                  this._hasHover = true;
-               }
+            _mouseenterHandler: function(event) {
                this._scrollbarTaken(true);
             },
 
-            _mouseleaveHandler: function() {
-               if (this._hasHover) {
-                  this._hasHover = false;
+            _mouseleaveHandler: function(event) {
+               if (this._showScrollbarOnHover) {
                   this._notify('scrollbarReleased', [], {bubbling: true});
                }
             },
 
             _scrollbarTakenHandler: function() {
-               this._hasHover = false;
                this._showScrollbarOnHover = false;
             },
 
             _scrollbarReleasedHandler: function(event) {
                if (!this._showScrollbarOnHover) {
                   this._showScrollbarOnHover = true;
-                  this._hasHover = true;
                   event.preventDefault();
                }
             },
 
             _scrollbarVisibility: function() {
-               return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && (this._hasHover || this._dragging) && this._displayState.hasScroll);
+               return Boolean(!this._useNativeScrollbar && this._options.scrollbarVisible && this._displayState.hasScroll && this._showScrollbarOnHover);
             },
 
             /**

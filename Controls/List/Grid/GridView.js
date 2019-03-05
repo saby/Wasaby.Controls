@@ -69,7 +69,7 @@ define('Controls/List/Grid/GridView', [
             var
                resultsPadding,
                cells;
-   
+
             //FIXME remove container[0] after fix https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             container = container[0] || container;
             if (resultsPosition) {

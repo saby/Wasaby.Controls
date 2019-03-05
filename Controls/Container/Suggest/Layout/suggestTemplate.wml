@@ -1,0 +1,7 @@
+<Controls.Container.Suggest.List>
+   <Controls.List>
+      <ws:itemTemplate>
+         <ws:partial template="wml!Controls/List/ItemTemplate" displayProperty="{{displayProperty}}"/>
+      </ws:itemTemplate>
+   </Controls.List>
+</Controls.Container.Suggest.List>

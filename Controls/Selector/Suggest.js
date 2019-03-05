@@ -5,9 +5,10 @@ define('Controls/Selector/Suggest',
       'Controls/Controllers/SourceController',
       'Controls/Input/resources/InputRender/BaseViewModel',
       'Types/util',
-      'Types/entity'
+      'Types/entity',
+      'Core/core-merge'
    ],
-   function(Control, template, SourceController, BaseViewModel, util, entity) {
+   function(Control, template, SourceController, BaseViewModel, util, entity, Merge) {
       'use strict';
 
       /**
@@ -52,6 +53,11 @@ define('Controls/Selector/Suggest',
             self._simpleViewModel.updateOptions({
                value: value
             });
+         },
+
+         prepareSuggestTemplate: function(displayProperty, suggestTemplate) {
+            var suggestTemplateConfig = { templateOptions: { displayProperty: displayProperty } };
+            return Merge(suggestTemplateConfig, suggestTemplate);
          }
       };
 
@@ -62,6 +68,7 @@ define('Controls/Selector/Suggest',
          _suggestState: false,
 
          _beforeMount: function(options) {
+            this._suggestTemplate = _private.prepareSuggestTemplate(options.displayProperty, options.suggestTemplate);
             if (options.selectedKey) {
                return _private.loadSelectedItem(this, options).addCallback(function(items) {
                   return items;
@@ -81,7 +88,7 @@ define('Controls/Selector/Suggest',
          _choose: function(event, item) {
             this.activate();
             _private.updateValue(this, item.get(this._options.displayProperty) || '');
-            this._notify('selectedKey', [item.get(this._options.keyProperty)]);
+            this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
             this._notify('valueChanged', [this._value]);
          },
 
@@ -134,7 +141,10 @@ define('Controls/Selector/Suggest',
       Suggest.getDefaultOptions = function() {
          return {
             minSearchLength: 3,
-            suggestState: false
+            suggestState: false,
+            suggestTemplate: {
+               templateName: 'wml!Controls/Container/Suggest/Layout/suggestTemplate'
+            }
          };
       };
 

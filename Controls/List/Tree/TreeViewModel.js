@@ -4,16 +4,14 @@ define('Controls/List/Tree/TreeViewModel', [
    'Controls/List/resources/utils/TreeItemsUtil',
    'Core/core-clone',
    'Types/entity',
-   'Types/collection',
-   'Controls/Utils/ArraySimpleValuesUtil'
+   'Types/collection'
 ], function(
    ListViewModel,
    ItemsUtil,
    TreeItemsUtil,
    cClone,
    _entity,
-   collection,
-   ArraySimpleValuesUtil
+   collection
 ) {
 
    'use strict';
@@ -113,7 +111,13 @@ define('Controls/List/Tree/TreeViewModel', [
                _private.checkRemovedNodes(self, removedItems);
             }
             if (_private.getExpanderVisibility(self._options) === 'hasChildren') {
+               var currentValue = self._thereIsChildItem;
+
                _private.determinePresenceChildItem(self);
+
+               if (currentValue !== self._thereIsChildItem) {
+                  self._nextModelVersion();
+               }
             }
          },
 
@@ -295,6 +299,10 @@ define('Controls/List/Tree/TreeViewModel', [
          getDisplayFilter: function(data, cfg) {
             return Array.prototype.concat(TreeViewModel.superclass.getDisplayFilter.apply(this, arguments),
                _private.getDisplayFilter(data, cfg));
+         },
+
+         getLastItem: function() {
+            return ItemsUtil.getLastItem(this._display.getChildren(this._display.getRoot()));
          },
 
          prepareDisplayFilterData: function() {

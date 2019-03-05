@@ -1,25 +1,33 @@
 .controls-Misspell {
-	min-height: @min-height_Misspell;
-	display: inline-flex;
-	align-items: center;
+	line-height: @line-height_Misspell;
 }
 .controls-Misspell__text {
-	font-weight: bold;
+	font-weight: @font-weight_Misspell-caption;
 	white-space: nowrap;
 }
 
 .controls-Misspell__caption {
-	font-weight: bold;
-	color: @color_Misspell_caption;
+	display: inline-flex;
+	flex-shrink: 1;
+	font-weight: @font-weight_Misspell-text;
+	color: @color_Misspell-caption;
 	cursor: pointer;
 	text-align: left;
 	max-width: 100%;
+}
+
+.controls-Misspell__caption-content {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
 
 .ws-is-no-touch .controls-Misspell__caption:hover {
-	text-decoration: underline;
-	color: @color_Misspell_caption-hover;
+	text-decoration: @text-decoration_Misspell-caption_hover;
+	color: @color_Misspell-caption_hover;
+}
+
+.controls-Misspell__caption:active {
+	text-decoration: @text-decoration_Misspell-caption_active;
+	color: @color_Misspell-caption_active;
 }

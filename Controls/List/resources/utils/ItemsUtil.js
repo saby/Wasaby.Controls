@@ -47,6 +47,33 @@ define('Controls/List/resources/utils/ItemsUtil', [
 
       getDefaultDisplayItem: function(display, item) {
          return display.createItem({contents: item});
+      },
+
+      getFirstItem: function(display) {
+         var
+            itemIdx = 0,
+            item,
+            itemsCount = display.getCount();
+         while (itemIdx < itemsCount) {
+            item = display.at(itemIdx).getContents();
+            if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
+               return display.at(itemIdx).getContents();
+            }
+            itemIdx++;
+         }
+      },
+
+      getLastItem: function(display) {
+         var
+            itemIdx = display.getCount() - 1,
+            item;
+         while (itemIdx >= 0) {
+            item = display.at(itemIdx).getContents();
+            if (cInstance.instanceOfModule(item, 'Types/entity:Model')) {
+               return display.at(itemIdx).getContents();
+            }
+            itemIdx--;
+         }
       }
    };
    return ItemsUtil;

@@ -26,6 +26,18 @@ define([
          SelectedCollection._private.getCounterWidth = function() {};
       }
 
+      SelectedCollection._private.getHistoryService = function() {
+         return {
+            addCallback: function(func) {
+               func({
+                  update: function(item) {
+                     item._isUpdateHistory = true;
+                  }
+               });
+            }
+         }
+      };
+
       it('setSelectedKeys', function() {
          var self = getBaseSelectedCollection();
 
@@ -202,7 +214,8 @@ define([
 
       it('_beforeUpdate', function(done) {
          var selectedCollection = new SelectedCollection();
-         var selectedKeys = [1];
+         var selectedKeysLink;
+         var selectedKeys = [];
          var textValue = '';
          var result;
          var source = new sourceLib.Memory({
@@ -214,12 +227,14 @@ define([
             idProperty: 'id'
          });
 
+         selectedCollection._options.selectedKeys = selectedKeys;
          selectedCollection._options.displayProperty = 'title';
          selectedCollection._notify = function(eventName, data) {
             if (eventName === 'textValueChanged') {
                textValue = data;
             }
          };
+
 
          result = selectedCollection._beforeMount({
             selectedKeys: [],
@@ -231,7 +246,7 @@ define([
          assert.equal(result, undefined);
 
          result = selectedCollection._beforeMount({
-            selectedKeys: selectedKeys,
+            selectedKeys: [1],
             source: new sourceLib.Memory({
                data: [ {id: 1} ],
                idProperty: 'id'
@@ -243,6 +258,20 @@ define([
             selectedKeys: []
          });
          assert.deepEqual(selectedCollection._selectedKeys, []);
+
+         selectedKeysLink = selectedCollection._selectedKeys = [1];
+         selectedCollection._beforeUpdate({
+            selectedKeys: selectedKeys,
+            source: selectedCollection._options.source
+         });
+         assert.equal(selectedKeysLink, selectedCollection._selectedKeys);
+
+         selectedKeysLink = selectedCollection._selectedKeys = [1];
+         selectedCollection._beforeUpdate({
+            selectedKeys: selectedKeys.slice(),
+            source: selectedCollection._options.source
+         });
+         assert.notEqual(selectedKeysLink, selectedCollection._selectedKeys);
 
          selectedCollection._beforeUpdate({
             selectedKeys: [1]
@@ -313,6 +342,23 @@ define([
          assert.deepEqual(selectedCollection._selectedKeys, []);
          assert.equal(selectedCollection._items.getCount(), 0);
          assert.notEqual(selectedItems, selectedCollection._items);
+      });
+
+      it('_selectCallback', function() {
+         var
+            selectedCollection = new SelectedCollection(),
+            item = new entity.Model({
+               rawData: {id: 1}
+            });
+
+         selectedCollection._options.historyId = 'historyField';
+         selectedCollection._selectCallback(
+            new collection.List({
+               items: [item]
+            })
+         );
+
+         assert.isTrue(item._isUpdateHistory);
       });
 
       it('showSelector', function() {

@@ -8,6 +8,7 @@
       selectorTemplate="{{_options.selectorTemplate || _options.lookupTemplate}}"
       isCompoundTemplate="{{_options.isCompoundTemplate}}"
       multiSelect="{{_options.multiSelect}}"
+      historyId="{{_options.historyId}}"
       attr:class="controls-Lookup">
    <Controls.Selector.Lookup._Lookup scope="{{_options}}"/>
 </Controls.Selector.SelectedCollection.Controller>

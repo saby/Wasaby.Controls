@@ -8,8 +8,9 @@ define('Controls/Selector/SelectedCollection/Controller', [
    'Types/collection',
    'Core/core-merge',
    'Controls/Utils/tmplNotify',
-   'Controls/Utils/ToSourceModel'
-], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel) {
+   'Controls/Utils/ToSourceModel',
+   'Controls/History/LoadService'
+], function(Control, template, clone, Deferred, SourceController, isEqual, collection, merge, tmplNotify, ToSourceModel, LoadService) {
    'use strict';
 
    var _private = {
@@ -125,6 +126,16 @@ define('Controls/Selector/SelectedCollection/Controller', [
 
       setItems: function(self, items) {
          self._items = items;
+      },
+
+      getHistoryService: function(self) {
+         if (!self._historyServiceLoad) {
+            self._historyServiceLoad = LoadService({
+               historyId: self._options.historyId
+            });
+         }
+
+         return self._historyServiceLoad;
       }
    };
 
@@ -133,6 +144,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _notifyHandler: tmplNotify,
       _selectedKeys: null,
       _items: null,
+      _historyServiceLoad: null,
 
       _beforeMount: function(options, context, receivedState) {
          this._selectCallback = this._selectCallback.bind(this);
@@ -150,7 +162,7 @@ define('Controls/Selector/SelectedCollection/Controller', [
       _beforeUpdate: function(newOptions) {
          var
             self = this,
-            keysChanged = !isEqual(newOptions.selectedKeys, this._options.selectedKeys) &&
+            keysChanged = newOptions.selectedKeys !== this._options.selectedKeys &&
                !isEqual(newOptions.selectedKeys, this._selectedKeys),
             sourceIsChanged = newOptions.source !== this._options.source;
 
@@ -231,7 +243,18 @@ define('Controls/Selector/SelectedCollection/Controller', [
       },
 
       _selectCallback: function(result) {
+         var prepareItems;
+
          this._setItems(result);
+         prepareItems = _private.getItems(this);
+
+         // give the record in the correct format
+         if (prepareItems && prepareItems.getCount() && this._options.historyId) {
+            _private.getHistoryService(this).addCallback(function(historyService) {
+               historyService.update(prepareItems.at(0), {$_history: true});
+               return historyService;
+            });
+         }
       },
 
       _onShowSelectorHandler: function(event, templateOptions) {

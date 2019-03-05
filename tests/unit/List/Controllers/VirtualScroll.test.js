@@ -62,6 +62,32 @@ define([
          assert.deepEqual({start: 23, stop: 57}, vsInstance.ItemsIndexes);
       });
 
+      it('insert heights', function() {
+         var
+            vsInstance = new VirtualScroll({});
+
+         vsInstance._itemsHeights = [1, 1, 1, 1, 1, 1];
+         assert.equal(6,vsInstance._itemsHeights.length);
+
+         vsInstance.insertItemsHeights(2, 3);
+
+         assert.equal(9,vsInstance._itemsHeights.length);
+         assert.deepEqual([1, 1, 1, 0, 0, 0, 1, 1, 1], vsInstance._itemsHeights);
+      });
+
+      it('cut heights', function() {
+         var
+            vsInstance = new VirtualScroll({});
+
+         vsInstance._itemsHeights = [1, 1, 1, 0, 0, 0, 1, 1, 1];
+         assert.equal(9,vsInstance._itemsHeights.length);
+
+         vsInstance.cutItemsHeights(2, 3);
+
+         assert.equal(6,vsInstance._itemsHeights.length);
+         assert.deepEqual([1, 1, 1, 1, 1, 1], vsInstance._itemsHeights);
+      });
+
       it('setter ItemsContainer', function() {
          var
             vsInstance = new VirtualScroll({}),

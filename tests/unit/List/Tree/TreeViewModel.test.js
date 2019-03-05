@@ -114,7 +114,7 @@ define([
       describe('"_private" block', function() {
          var
             treeViewModel = new TreeViewModel(cfg);
-         
+
          it('removeNodeFromExpanded', function() {
             var removed = false;
             var self = {
@@ -126,19 +126,19 @@ define([
                }
             };
             TreeViewModel._private.removeNodeFromExpanded(self, 'test');
-            
+
             assert.equal(Object.keys(self._expandedItems).length, 0);
             assert.isTrue(removed);
          });
-   
+
          it('resetExpandedItems', function() {
             treeViewModel.setExpandedItems(['123', '234', '1']);
             assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 3);
-            
+
             treeViewModel.resetExpandedItems();
             assert.equal(Object.keys(treeViewModel.getExpandedItems()).length, 0);
          });
-         
+
          it('isVisibleItem', function() {
             var
                item = treeViewModel.getItemById('123', cfg.keyProperty),
@@ -269,6 +269,37 @@ define([
                   'Invalid value "shouldDrawExpander(...)" for step ' + i + '.');
             });
          });
+         it('should redrow list if once folder was deleted', function() {
+            var
+               rs = new collection.RecordSet({
+                  rawData: [
+                     {
+                        id: 1,
+                        parent: null,
+                        hasChild: false,
+                        type: null
+                     }
+                  ],
+                  idProperty: 'id'
+               }),
+               treeViewModel = new TreeViewModel({
+                  items: rs,
+                  hasChildrenProperty: 'hasChild',
+                  expanderVisibility: 'hasChildren',
+                  parentProperty: 'parent',
+                  keyProperty: 'id',
+                  nodeProperty: 'type'
+               });
+            treeViewModel._thereIsChildItem = true;
+            var updated = false;
+            treeViewModel._nextModelVersion = function() {
+               updated = true;
+            };
+            TreeViewModel._private.onBeginCollectionChange(treeViewModel);
+            assert.isTrue(updated);
+
+
+         });
          it('prepareExpanderClasses', function() {
             var
                testsPrepareExpanderClasses = [{
@@ -381,6 +412,29 @@ define([
             assert.deepEqual({ '123': true, '234': true }, treeViewModel.getExpandedItems(), 'Invalid value "_expandedItems" after setItems.');
          });
 
+         it('getFirstItem and getLastItem', function() {
+            var
+               cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        { id: 1, title: 'item 1', type: null, parent: null },
+                        { id: 2, title: 'item 2', type: true, parent: null },
+                        { id: 3, title: 'item 3', type: true, parent: null },
+                        { id: 21, title: 'item 2-1', type: null, parent: 2 },
+                        { id: 31, title: 'item 3-1', type: null, parent: 3 }
+                     ],
+                     idProperty: 'id'
+                  }),
+                  keyProperty: 'id',
+                  displayProperty: 'title',
+                  parentProperty: 'parent',
+                  nodeProperty: 'type'
+               },
+               model = new TreeViewModel(cfg);
+            assert.equal(model.getFirstItem(), model.getItems().at(0));
+            assert.equal(model.getLastItem(), model.getItems().at(2));
+         });
+
          it('hasChildren should be true when an item gets added to an empty folder', function() {
             var newItem = new entity.Record({
                rawData: {
@@ -397,11 +451,11 @@ define([
             treeViewModel._curIndex = 4;
             assert.isTrue(treeViewModel.getCurrent().hasChildren);
          });
-   
+
          it('isExpandAll', function() {
             treeViewModel.setExpandedItems(['123', '234', '3']);
             assert.isFalse(treeViewModel.isExpandAll());
-   
+
             treeViewModel.setExpandedItems([null]);
             assert.isTrue(treeViewModel.isExpandAll());
          });
