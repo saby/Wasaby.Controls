@@ -188,8 +188,7 @@ define([
          assert.deepEqual(BaseControl._private.getSortingOnChange(getMultiSorting(), 'test', 'single'), getSortingDESC());
       });
 
-
-      it('errback to callback', function(done) {
+      it('source errback to crudResult', function(done) {
          var source = new sourceLib.Memory({
             idProperty: 'id',
             data: data
@@ -224,11 +223,14 @@ define([
                return def;
             };
 
-            BaseControl._private.reload(ctrl, ctrl._options).addCallback(function() {
+            BaseControl._private.reload(ctrl, ctrl._options).addCallbacks(function(crudResult) {
+               assert.isDefined(crudResult, 'reload returns undefined');
+               assert.isObject(crudResult);
+               assert.isDefined(crudResult.error);
+               assert.isDefined(crudResult.errorConfig);
                done();
-            }).addErrback(function() {
-               assert.isTrue(false, 'reload() returns errback');
-               done();
+            }, function(error) {
+               done(error);
             });
          }, 100);
       });
@@ -771,6 +773,7 @@ define([
          }, 100);
       });
 
+/*
       it('processLoadError', function() {
          var cfg = {};
          var ctrl = new BaseControl(cfg);
@@ -784,6 +787,7 @@ define([
 
          assert.equal(error, result, 'UserErrback doesn\'t return instance of Error');
       });
+*/
 
       it('indicator', function() {
          var cfg = {};
