@@ -143,8 +143,10 @@ var _private = {
                     error: error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: CrudResult) {
-                    resDeferred.callback(result);
-                    return result;
+                    resDeferred.callback({
+                        data: null,
+                        ...result
+                    });
                 });
             });
         } else {
@@ -810,7 +812,7 @@ var _private = {
         if (!crudResult) {
             return Promise.resolve();
         }
-        if (crudResult.data) {
+        if (crudResult.hasOwnProperty('data')) {
             return Promise.resolve(crudResult.data);
         }
         return Promise.reject(crudResult.error);

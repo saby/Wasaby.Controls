@@ -33,14 +33,8 @@ define([
             let beforeMountResult = FC._beforeMount(cfg);
             assert.equal(isReading, false);
             assert.equal(isCreating, false);
-            assert.isTrue(
-                beforeMountResult instanceOf Deferred ||
-                beforeMountResult instanceOf Promise
-            );
-            beforeMountResult.then(({data}) => {
-               assert.notEqual(data, true);
-               resolve();
-            });
+            assert.notEqual(beforeMountResult, true);
+            resolve();
          });
 
          let p2 = new Promise((resolve) => {
@@ -49,11 +43,11 @@ define([
             assert.equal(isReading, true);
             assert.equal(isCreating, false);
             assert.isTrue(
-               beforeMountResult instanceOf Deferred ||
-               beforeMountResult instanceOf Promise
+               beforeMountResult instanceof Deferred ||
+               beforeMountResult instanceof Promise
             );
                beforeMountResult.then(({data}) => {
-                  assert.notEqual(data, true);
+                  assert.equal(data, true);
                   resolve();
             });
          });
@@ -67,8 +61,8 @@ define([
             assert.equal(isReading, true);
             assert.equal(isCreating, false);
             assert.isTrue(
-               beforeMountResult instanceOf Deferred ||
-               beforeMountResult instanceOf Promise
+               beforeMountResult instanceof Deferred ||
+               beforeMountResult instanceof Promise
             );
             beforeMountResult.then(({data}) => {
                assert.equal(data, true);
@@ -82,8 +76,8 @@ define([
             assert.equal(isReading, false);
             assert.equal(isCreating, true);
             assert.isTrue(
-               beforeMountResult instanceOf Deferred ||
-               beforeMountResult instanceOf Promise
+               beforeMountResult instanceof Deferred ||
+               beforeMountResult instanceof Promise
             );
             beforeMountResult.then(({data}) => {
                assert.equal(data, true);
@@ -95,6 +89,7 @@ define([
             FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
             FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
             FC.destroy();
+            done();
          });
       });
 
