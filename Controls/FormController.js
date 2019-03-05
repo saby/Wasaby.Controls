@@ -429,7 +429,7 @@ define('Controls/FormController', [
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
                var res = self._update().addCallback(function(result /* result: CrudResult */) {
-                  return _private.getData(result);
+                  return self._getData(result);
                });
                updateResult.dependOn(res);
             } else {
