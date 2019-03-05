@@ -4,9 +4,9 @@ define(
       'Core/core-clone',
       'Types/source',
       'Controls/Input/resources/InputRender/BaseViewModel',
-      'Types/collection'
+      'Types/entity'
    ],
-   (Suggest, Clone, sourceLib, BaseViewModel, collection) => {
+   (Suggest, Clone, sourceLib, BaseViewModel, entity) => {
       describe('Selector.Suggest', () => {
          let items = [
             {
@@ -109,6 +109,33 @@ define(
             suggest._changeValueHandler('valueChanged', 'New Text');
             assert.equal(suggest._simpleViewModel.getDisplayValue(), 'New Text');
             assert.equal(newValue, 'New Text');
+
+         });
+
+         it('_choose', function() {
+            let suggest = getSuggest(config),
+               newValue = '',
+               newKey,
+               isActivate,
+               choosedItem = new entity.Model({
+                  rawData: {
+                     id: 'testId',
+                     title: 'testTitle'
+                  }
+               });
+            suggest.activate = () => {isActivate = true;};
+            suggest._notify = function(e, d) {
+               if (e === 'selectedKeyChanged') {
+                  newKey = d[0];
+               } else if (e === 'valueChanged') {
+                  newValue = d[0];
+               }
+            };
+
+            suggest._choose('choose', choosedItem);
+            assert.equal(newKey, 'testId');
+            assert.equal(newValue, 'testTitle');
+            assert.isTrue(isActivate);
 
          });
 

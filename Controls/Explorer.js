@@ -200,8 +200,6 @@ define('Controls/Explorer', [
             _private.setRoot(this, item.getId());
             this._notify('rootChanged', [this._root]);
          }
-         event.stopPropagation();
-         this._notify('onItemClick', Array.prototype.slice.call(arguments, 1));
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());

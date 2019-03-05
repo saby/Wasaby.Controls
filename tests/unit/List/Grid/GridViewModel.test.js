@@ -117,6 +117,37 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
 
       describe('"_private" block', function() {
+         it('isLayoutFixed', function() {
+            var
+               columns1 = [
+                  { width: '1fr'   },
+                  { width: '100px' },
+                  { width: '30%'   }
+               ],
+               columns2 = [
+                  { width: '1fr'   },
+                  { width: '100px' },
+                  { width: '30%'   },
+                  {}
+               ],
+               columns3 = [
+                  { width: '1fr'   },
+                  { width: '100px' },
+                  { width: '30%'   },
+                  { width: 'auto'  }
+               ],
+               columns4 = [
+                  { width: '1fr'   },
+                  { width: '100px' },
+                  { width: '30%'   },
+                  { width: 'auto'  },
+                  {}
+               ];
+            assert.isTrue(GridViewModel._private.isLayoutFixed(columns1));
+            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns2));
+            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns3));
+            assert.isTrue(GridViewModel._private.isLayoutFixed(columns4));
+         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -202,14 +233,109 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   ' controls-Grid__row-cell_withoutRowSeparator',
                   ' controls-Grid__row-cell_withoutRowSeparator',
                   ' controls-Grid__row-cell_withoutRowSeparator'
-               ];
-            assert.equal(expectedResultWithRowSeparator[0], GridViewModel._private.prepareRowSeparatorClasses(true, 0, 3));
-            assert.equal(expectedResultWithRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses(true, 1, 3));
-            assert.equal(expectedResultWithRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses(true, 2, 3));
+               ],
+               expectedResultForFirstItemInGroup = ' controls-Grid__row-cell_first-row-in-group';
 
-            assert.equal(expectedResultWithoutRowSeparator[0], GridViewModel._private.prepareRowSeparatorClasses(false, 0, 3));
-            assert.equal(expectedResultWithoutRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses(false, 1, 3));
-            assert.equal(expectedResultWithoutRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses(false, 2, 3));
+            assert.equal(expectedResultWithRowSeparator[0], GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: false,
+               index: 0,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
+            assert.equal(expectedResultWithRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: false,
+               index: 1,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
+            assert.equal(expectedResultWithRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: false,
+               index: 2,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
+
+            assert.equal(expectedResultWithoutRowSeparator[0], GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: false,
+               isFirstInGroup: false,
+               index: 0,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
+            assert.equal(expectedResultWithoutRowSeparator[1], GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: false,
+               isFirstInGroup: false,
+               index: 1,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
+            assert.equal(expectedResultWithoutRowSeparator[2], GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: false,
+               isFirstInGroup: false,
+               index: 2,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
+
+            assert.equal(expectedResultForFirstItemInGroup, GridViewModel._private.prepareRowSeparatorClasses({
+               rowSeparatorVisibility: true,
+               isFirstInGroup: true,
+               index: 0,
+               dispItem: {
+                  getOwner: function() {
+                     return {
+                        getCount: function() {
+                           return 3
+                        }
+                     }
+                  }
+               }
+            }));
          });
          it('getItemColumnCellClasses for old browsers', function() {
             var
