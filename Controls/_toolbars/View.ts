@@ -6,6 +6,9 @@ import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
 import 'css!theme?Controls/_toolbars/View';
+//TODO: Пока не добавлена возможность загружать темизированную css-ку, загружаю статически.
+//TODO: https://online.sbis.ru/opendoc.html?guid=b963cb6d-f640-45a9-acdc-aab887ea2f4a
+import 'css!theme?Controls/_toolbars/ToolbarPopup';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -237,9 +240,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!theme?Controls/_toolbars/ToolbarPopup'], function () {
-            self._children.menuOpener.open(config, self);
-        });
+        self._children.menuOpener.open(config, self);
     }
 };
 
