@@ -35,14 +35,14 @@
 }
 
 .controls-Area__measuredBlock_size {
-   @variants: s, m, l;
+   @variants: s, m, l, default;
    .for(@variants, { &_@{_item} {
       height: ~"@{height_Area_oneLine_size_@{_item}}";
    } });
 }
 
 .controls-Area_size {
-   @variants: s, m, l;
+   @variants: s, m, l, default;
 
    /**
     * When using line-height: normal, the row height in Firefox differs from the row height in other browsers.

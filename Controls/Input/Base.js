@@ -923,9 +923,9 @@ define('Controls/Input/Base',
 
       Base.getDefaultOptions = function() {
          return {
-            size: 'm',
             tooltip: '',
             style: 'info',
+            size: 'default',
             placeholder: '',
             textAlign: 'left',
             fontStyle: 'default',
@@ -948,7 +948,8 @@ define('Controls/Input/Base',
             size: entity.descriptor(String).oneOf([
                's',
                'm',
-               'l'
+               'l',
+               'default'
             ]),
             fontStyle: entity.descriptor(String).oneOf([
                'default',
