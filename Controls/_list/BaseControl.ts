@@ -195,6 +195,12 @@ var _private = {
         }
     },
 
+    correctIndexesOnReload: function(self) {
+        let indexes = self._virtualScroll.ItemsIndexes;
+        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
+        self._listViewModel.setIndexes(indexes.start, indexes.stop);
+    },
+
     loadToDirection: function(self, direction, userCallback, userErrback) {
         _private.showIndicator(self, direction);
 
@@ -547,6 +553,15 @@ var _private = {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
                     }
                     _private.applyVirtualScroll(self);
+
+                    if (action === collection.IObservable.ACTION_RESET) {
+                        self._virtualScroll.resetItemsIndexes();
+                        /*
+                        * The virtual scroll does not update the indexes on first load/reload, they remain the same as at the time of initialization.
+                        * If the size of the virtual page is larger than the size of the navigation, need to set the smallest index to avoid errors.
+                        * */
+                        _private.correctIndexesOnReload(self);
+                    }
                 }
             }
             self._hasUndrawChanges = true;
@@ -797,17 +812,14 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
-                    if (self._virtualScroll) {
-                        // При серверной верстке применяем начальные значения
-                        let indexes = self._virtualScroll.ItemsIndexes;
 
+                    // При серверной верстке применяем начальные значения
+                    if (self._virtualScroll) {
                         /*
                         * The virtual scroll does not update the indexes on first load, they remain the same as at the time of initialization.
                         * If the size of the virtual page is larger than the size of the navigation, need to set the smallest index to avoid errors.
                         * */
-                        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
-                        self._virtualScroll.ItemsCount = self._listViewModel.getCount();
-                        self._listViewModel.setIndexes(indexes.start, indexes.stop);
+                        _private.correctIndexesOnReload(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                 } else {
