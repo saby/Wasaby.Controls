@@ -13,7 +13,7 @@
                 size="{{size}}"
                 showedActions="{{itemData.itemActions.showed}}"/>
         <ws:if data ="{{itemData.isEditing && toolbarVisibility}}">
-            <Controls.Button
+            <Controls.buttons:Button
                on:click="_applyEdit()"
                attr:class="controls-itemActionsV__action_padding"
                viewMode="toolButton"

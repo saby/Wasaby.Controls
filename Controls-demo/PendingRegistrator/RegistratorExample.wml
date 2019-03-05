@@ -11,5 +11,5 @@
             attr:class="controls-demo__indicator_content"
       />
    </Controls.Container.PendingRegistrator>
-   <Controls.Button caption="call finishPendingOperations" class="controls-demo__pending-finish" on:click="_finish()"/>
+   <Controls.buttons:Button caption="call finishPendingOperations" class="controls-demo__pending-finish" on:click="_finish()"/>
 </div>

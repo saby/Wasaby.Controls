@@ -3,38 +3,64 @@
  */
 define('Controls/Decorator/Markup/Converter', [
    'Controls/Decorator/Markup/resources/template',
+   'Controls/Decorator/Markup/resources/linkDecorateUtils',
    'Core/core-merge'
 ], function(template,
+   linkDecorateUtils,
    objectMerge) {
    'use strict';
 
-   function domToJson(dom) {
-      if (dom.nodeType === 3) {
-         // Text node.
-         return dom.nodeValue;
+   // Convert node to jsonML array.
+   function nodeToJson(node) {
+      // Text node, in jsonML it is just a string.
+      if (node.nodeType === Node.TEXT_NODE) {
+         return node.nodeValue;
       }
 
-      // Tag name.
-      var json = [dom.nodeName.toLowerCase()];
+      // Element node, in jsonML it is an array.
+      if (node.nodeType === Node.ELEMENT_NODE) {
+         var json = [];
 
-      if (dom.nodeType === 1 && dom.attributes.length > 0) {
-         // Element node with attributes.
-         json.push({});
-         for (var j = 0; j < dom.attributes.length; ++j) {
-            var attribute = dom.attributes.item(j);
-            json[1][attribute.nodeName] = attribute.nodeValue;
+         // json[0] is a tag name.
+         var tagName = node.nodeName.toLowerCase();
+         json[0] = tagName;
+
+         // If node has attributes, they are located in json[1].
+         var nodeAttributes = node.attributes;
+         if (nodeAttributes.length) {
+            var jsonAttributes = {};
+            for (var i = 0; i < nodeAttributes.length; ++i) {
+               jsonAttributes[nodeAttributes[i].name] = nodeAttributes[i].value;
+            }
+            json[1] = jsonAttributes;
          }
-      }
 
-      if (dom.hasChildNodes()) {
-         for (var i = 0; i < dom.childNodes.length; ++i) {
+         // After that convert child nodes and push them to array.
+         var firstChild;
+         if (node.hasChildNodes()) {
+            var childNodes = node.childNodes,
+               child;
+
             // Recursive converting of children.
-            var item = domToJson(dom.childNodes.item(i));
-            json.push(item);
+            for (var i = 0; i < childNodes.length; ++i) {
+               child = nodeToJson(childNodes[i]);
+               if (!i) {
+                  firstChild = child;
+               }
+               json.push(child);
+            }
          }
+
+         // By agreement, json shouldn't contain decorated link. Undecorate it if found.
+         if (linkDecorateUtils.isDecoratedLink(tagName, firstChild)) {
+            json = linkDecorateUtils.getUndecoratedLink(firstChild);
+         }
+
+         return json;
       }
 
-      return json;
+      // Return empty array if node is neither text nor element.
+      return [];
    }
 
    var linkParseRegExp = /(?:(((?:https?|ftp|file|smb):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|&nbsp;|(<[^>]*>)))/g,
@@ -66,9 +92,12 @@ define('Controls/Decorator/Markup/Converter', [
     * @returns {Array}
     */
    var htmlToJson = function(html) {
-      var div = document.createElement('div');
+      var div = document.createElement('div'),
+         result;
       div.innerHTML = wrapUrl(html).trim();
-      return domToJson(div).slice(1);
+      result = nodeToJson(div).slice(1);
+      div = null;
+      return result;
    };
 
    /**

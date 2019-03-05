@@ -9,7 +9,7 @@ define('Controls/Button/interface/IIconStyle', [
     */
 
    /**
-    * @name Controls/Button#iconStyle
+    * @name Controls.buttons:Button#iconStyle
     * @cfg {Enum} Icon display style.
     * @variant primary
     * @variant secondary
@@ -22,11 +22,11 @@ define('Controls/Button/interface/IIconStyle', [
     * @example
     * Primary button with default icon style.
     * <pre>
-    *    <Controls.Button icon="icon-small icon-Add" style="buttonPrimary"/>
+    *    <Controls.buttons:Button icon="icon-small icon-Add" style="buttonPrimary"/>
     * </pre>
     * Primary button with done icon style.
     * <pre>
-    *    <Controls.Button icon="icon-small icon-Add" iconStyle="done" style="buttonPrimary"/>
+    *    <Controls.buttons:Button icon="icon-small icon-Add" iconStyle="done" style="buttonPrimary"/>
     * </pre>
     * @see Icon
     */
