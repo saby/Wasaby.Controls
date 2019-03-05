@@ -10,6 +10,8 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
       _template: template,
       _value: '',
       _value2: '',
+      _value3: '',
+      _value5: 'readOnly',
       _items: null,
       _placeholder: 'Input text',
       _setValue: function(e, record) {
