@@ -1,8 +1,11 @@
 // В Престо все стили окон уже есть, слой совместимости не должен их перебивать
-body:not(.rtl-Body) .controls-CompoundArea {
-   background: #FFFFFF;
+.controls-CompoundArea {
    width: 100%;
    height: 100%;
+}
+
+body:not(.rtl-Body) .controls-CompoundArea {
+   background: #FFFFFF;
 
    //TODO Поддержка стилей старой шапки
    .controls-StackTemplate .controls-StackTemplate__content-area .ws-window-titlebar-custom, &.ws-float-area .ws-window-titlebar {
@@ -54,6 +57,22 @@ body:not(.rtl-Body) .controls-CompoundArea {
       text-decoration: none;
       color: #313E78;
    }
+
+   &.ws-window {
+      .ws-window-titlebar {
+         left: 1px;
+         right: 1px;
+      }
+      .controls-DialogTemplate {
+         background: none;
+         border: none;
+      }
+   }
+
+   .controls-CompoundArea__move-cursor {
+      cursor: move;
+   }
+
 
    &.controls-CompoundArea-headerPadding .controls-StackTemplate {
       padding-top: 39px;
@@ -107,19 +126,3 @@ body:not(.rtl-Body) .controls-CompoundArea {
    right: 0;
    height: 40px;
 }
-
-.ws-window.controls-CompoundArea {
-   .ws-window-titlebar {
-      left: 1px;
-      right: 1px;
-   }
-   .controls-DialogTemplate {
-      background: none;
-      border: none;
-   }
-}
-
-.controls-CompoundArea__move-cursor {
-   cursor: move;
-}
-
