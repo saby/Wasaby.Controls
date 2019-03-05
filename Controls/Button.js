@@ -9,7 +9,7 @@ define('Controls/Button', [
     *
     * <a href="/materials/demo-ws4-buttons">Demo-example</a>.
     *
-    * @class Controls/Button
+    * @class Controls/buttons:Button
     * @extends Core/Control
     * @mixes Controls/Button/interface/IHref
     * @mixes Controls/interface/ICaption
@@ -27,7 +27,7 @@ define('Controls/Button', [
     */
 
    /**
-    * @name Controls/Button#transparent
+    * @name Controls.buttons:Button#transparent
     * @cfg {Boolean} Determines whether button having background.
     * @default false
     * @remark
@@ -36,11 +36,11 @@ define('Controls/Button', [
     * @example
     * Button has transparent background.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Button hasn't transparent background.
     * <pre>
-    *    <Controls.Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+    *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
     * </pre>
     * @see style
     */

@@ -4,7 +4,7 @@
                      readOnly="{{true}}"
                      attr:class="ControlsDemo-EipScenarios__headerCaption"
                      size="m"/>
-   <Controls.Button icon="icon-small icon-AddButtonNew"
+   <Controls.buttons:Button icon="icon-small icon-AddButtonNew"
                     style="secondary"
                     iconStyle="secondary"
                     viewMode="toolButton"

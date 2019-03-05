@@ -8,6 +8,6 @@
          keyProperty="id">
       </Controls.List>
    </Controls.Container.Scroll>
-   <Controls.Button caption="scroll to top" on:click="_scrollTo('top')" />
-   <Controls.Button caption="scroll to bottom" on:click="_scrollTo('bottom')" />
+   <Controls.buttons:Button caption="scroll to top" on:click="_scrollTo('top')" />
+   <Controls.buttons:Button caption="scroll to bottom" on:click="_scrollTo('bottom')" />
 </div>

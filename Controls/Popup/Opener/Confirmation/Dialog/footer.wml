@@ -1,6 +1,6 @@
 <div class="controls-ConfirmationDialog__buttonContainer">
    <ws:if data="{{type === 'ok'}}">
-      <Controls.Button
+      <Controls.buttons:Button
          ws-autofocus="{{true}}"
          style="primary"
          viewMode="button"
@@ -9,7 +9,7 @@
          on:click="_sendResult()"/>
    </ws:if>
    <ws:else>
-      <Controls.Button
+      <Controls.buttons:Button
          ws-autofocus="{{true}}"
          style="primary"
          viewMode="button"
@@ -17,13 +17,13 @@
          attr:class="controls-ConfirmationDialog__button{{type === 'yesnocancel' ? ' controls-ConfirmationDialog__button-mini' : ' controls-ConfirmationDialog__button-standard'}} controls-Button__ellipsis"
          on:click="_sendResult(true)"
       />
-      <Controls.Button
+      <Controls.buttons:Button
          caption="{{noCaption}}"
          attr:class="controls-ConfirmationDialog__button{{type === 'yesnocancel' ? ' controls-ConfirmationDialog__button-mini' : ' controls-ConfirmationDialog__button-standard'}} controls-Button__ellipsis"
          on:click="_sendResult(false)"
       />
       <ws:if data="{{type === 'yesnocancel'}}">
-         <Controls.Button
+         <Controls.buttons:Button
             caption="{{cancelCaption}}"
             attr:class="controls-ConfirmationDialog__button controls-ConfirmationDialog__button-mini controls-Button__ellipsis"
             on:click="_sendResult()"
