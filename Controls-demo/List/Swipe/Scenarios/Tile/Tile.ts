@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/Tile/Tile';
-import { IItemAction, ShowType } from 'Controls/List/Swipe/interface/IItemAction';
+import { IItemAction, ShowType } from 'Controls/_list/Swipe/interface/IItemAction';
 import { HierarchicalMemory } from 'Types/source';
 import explorerImages = require('Controls-demo/Explorer/ExplorerImages');
 

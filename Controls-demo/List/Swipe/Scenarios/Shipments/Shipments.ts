@@ -1,6 +1,6 @@
 import Control = require('Core/Control');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/Shipments/Shipments';
-import { IItemAction, ShowType } from 'Controls/List/Swipe/interface/IItemAction';
+import { IItemAction, ShowType } from 'Controls/_list/Swipe/interface/IItemAction';
 import { HierarchicalMemory } from 'Types/source';
 import 'css!Controls-demo/List/Swipe/Scenarios/Shipments/Shipments';
 import 'wml!Controls-demo/List/Swipe/Scenarios/Shipments/firstColumn';

@@ -109,7 +109,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         var
             itemsModelCurrent = ListViewModel.superclass.getItemDataByItem.apply(this, arguments),
             dragItems,
-            drawedActions;
+            drawnActions;
         itemsModelCurrent.isSelected = itemsModelCurrent.dispItem === _private.getItemByMarkedKey(this, this._markedKey);
         itemsModelCurrent.itemActions = this.getItemActions(itemsModelCurrent.item);
         itemsModelCurrent.isActive = this._activeItem && itemsModelCurrent.dispItem.getContents() === this._activeItem.item;
@@ -127,22 +127,18 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
         //When you drag'n'drop of items do not need to show itemActions.
         if (itemsModelCurrent.itemActions && !this._dragEntity) {
-            if (itemsModelCurrent.itemActions.showed && itemsModelCurrent.itemActions.showed.length) {
-                drawedActions = itemsModelCurrent.itemActions.showed;
-            } else {
-                drawedActions = itemsModelCurrent.itemActions.showedFirst;
-            }
+           drawnActions = itemsModelCurrent.itemActions.showed;
         }
         if (this._editingItemData) {
             itemsModelCurrent.drawActions = itemsModelCurrent.key === this._editingItemData.key;
         } else {
-            itemsModelCurrent.drawActions = drawedActions && drawedActions.length;
+            itemsModelCurrent.drawActions = drawnActions && drawnActions.length;
         }
-        if (itemsModelCurrent.drawActions && drawedActions) {
-            itemsModelCurrent.hasShowedItemActionWithIcon = false;
-            for (var i = 0; i < drawedActions.length; i++) {
-                if (drawedActions[i].icon) {
-                    itemsModelCurrent.hasShowedItemActionWithIcon = true;
+        if (itemsModelCurrent.drawActions && drawnActions) {
+            itemsModelCurrent.hasActionWithIcon = false;
+            for (let i = 0; i < drawnActions.length; i++) {
+                if (drawnActions[i].icon) {
+                    itemsModelCurrent.hasActionWithIcon = true;
                     break;
                 }
             }

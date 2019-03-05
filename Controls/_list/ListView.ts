@@ -193,6 +193,12 @@ var ListView = BaseControl.extend(
         },
 
         _onItemMouseDown: function(event, itemData) {
+            if (itemData && itemData.isSwiped) {
+               // TODO: Сейчас на itemMouseDown список переводит фокус на fakeFocusElement и срабатывает событие listDeactivated.
+               // Из-за этого события закрывается свайп, это неправильно, т.к. из-за этого становится невозможным открытие меню.
+               // Выпилить после решения задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
+               return;
+            }
             this._notify('itemMouseDown', [itemData, event]);
             event.blockUpdate = true;
         },

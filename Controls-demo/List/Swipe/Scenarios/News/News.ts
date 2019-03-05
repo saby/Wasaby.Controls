@@ -4,7 +4,7 @@ import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/News/News';
 import {
    IItemAction,
    ShowType
-} from 'Controls/List/Swipe/interface/IItemAction';
+} from 'Controls/_list/Swipe/interface/IItemAction';
 import { Memory } from 'Types/source';
 import { Model } from 'Types/entity';
 import 'css!Controls-demo/List/Swipe/Scenarios/News/News';

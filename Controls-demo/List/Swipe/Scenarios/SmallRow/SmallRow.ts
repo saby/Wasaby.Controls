@@ -3,7 +3,7 @@ import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/SmallRow/Small
 import {
    IItemAction,
    ShowType
-} from 'Controls/List/Swipe/interface/IItemAction';
+} from 'Controls/_list/Swipe/interface/IItemAction';
 // @ts-ignore
 import { HierarchicalMemory } from 'Types/source';
 

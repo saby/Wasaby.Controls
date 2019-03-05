@@ -1,5 +1,5 @@
 import { IItemAction } from './IItemAction';
-import { IListModel } from 'Controls/List/interface/IListViewModel';
+import { IListModel } from 'Controls/_list/interface/IListViewModel';
 
 export type TitlePosition = 'right' | 'bottom' | 'none';
 export type SwipeDirection = 'row' | 'column';
