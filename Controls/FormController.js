@@ -402,10 +402,10 @@ define('Controls/FormController', [
          readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
          res.addCallbacks(this._readHandler.bind(this), function(error) {
-             return self._crudErrback(error).addCallback(function(crudResult) {
-                return self._getData(crudResult);
-             });
-          });
+            return self._crudErrback(error).addCallback(function(crudResult) {
+               return self._getData(crudResult);
+            });
+         });
          return res;
       },
       _readHandler: function(record) {
