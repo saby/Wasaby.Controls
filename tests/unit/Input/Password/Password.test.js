@@ -27,10 +27,10 @@ define(
 
          it('Checking default values of options.', function() {
             assert.deepEqual(Password.getDefaultOptions(), {
-               size: 'm',
                value: '',
                tooltip: '',
                style: 'info',
+               size: 'default',
                placeholder: '',
                revealable: true,
                textAlign: 'left',
