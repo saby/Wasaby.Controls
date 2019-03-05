@@ -779,33 +779,6 @@ define([
          }, 100);
       });
 
-      it('correctIndexesOnReload', function () {
-         var bcInstance = {
-            _virtualScroll: {
-               get ItemsIndexes() {
-                  return {
-                     start: 0,
-                     stop: 100
-                  }
-               }
-            },
-            _listViewModel: {
-               _startIndex: null,
-               _stopIndex: null,
-               setIndexes: function (start, stop) {
-                  this._startIndex = start;
-                  this._stopIndex = stop;
-               },
-               getCount: function () {
-                  return 12;
-               }
-            }
-         };
-         BaseControl._private.correctIndexesOnReload(bcInstance);
-
-         assert.equal(bcInstance._listViewModel._startIndex, 0);
-         assert.equal(bcInstance._listViewModel._stopIndex, 12);
-      });
       it('processLoadError', function() {
          var cfg = {};
          var ctrl = new BaseControl(cfg);

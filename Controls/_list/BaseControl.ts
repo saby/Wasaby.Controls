@@ -195,12 +195,6 @@ var _private = {
         }
     },
 
-    correctIndexesOnReload: function(self) {
-        let indexes = self._virtualScroll.ItemsIndexes;
-        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
-        self._listViewModel.setIndexes(indexes.start, indexes.stop);
-    },
-
     loadToDirection: function(self, direction, userCallback, userErrback) {
         _private.showIndicator(self, direction);
 
@@ -262,11 +256,18 @@ var _private = {
     },
 
     // Основной метод пересчета состояния Virtual Scroll
-    applyVirtualScroll: function(self) {
-        var
+    applyVirtualScroll: function (self) {
+        let
             indexes = self._virtualScroll.ItemsIndexes,
             placeholdersSizes = self._virtualScroll.PlaceholdersSizes;
 
+        /*
+         * The virtual scroll updates the indexes only on scroll events. After reload and at the moment of first load,
+         * indexes in virtual scroll remain the same as at the time of initialization. Source may return fewer records
+         * than the size of the virtual page and the stopIndex in the model will be bigger than the stopIndex in the
+         * virtual scroll. It can cause all kinds of troubles, e.g. out of bounds access.
+         */
+        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
         self._listViewModel.setIndexes(indexes.start, indexes.stop);
         self._topPlaceholderHeight = placeholdersSizes.top;
         self._bottomPlaceholderHeight = placeholdersSizes.bottom;
@@ -543,7 +544,6 @@ var _private = {
                 if (self._options.navigation && self._options.navigation.source) {
                     self._sourceController.setState(self._listViewModel);
                 }
-
                 if (!!action && self.getVirtualScroll()) {
                     self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
@@ -552,21 +552,16 @@ var _private = {
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
                     }
-                    _private.applyVirtualScroll(self);
-
                     if (action === collection.IObservable.ACTION_RESET) {
                         self._virtualScroll.resetItemsIndexes();
-                        /*
-                        * The virtual scroll does not update the indexes on first load/reload, they remain the same as at the time of initialization.
-                        * If the size of the virtual page is larger than the size of the navigation, need to set the smallest index to avoid errors.
-                        * */
-                        _private.correctIndexesOnReload(self);
                     }
+                    _private.applyVirtualScroll(self);
                 }
             }
             self._hasUndrawChanges = true;
             self._forceUpdate();
         });
+
         model.subscribe('onGroupsExpandChange', function(event, changes) {
             _private.groupsExpandChangeHandler(self, changes);
         });
@@ -813,13 +808,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                         newOptions.dataLoadCallback(self._items);
                     }
 
-                    // При серверной верстке применяем начальные значения
                     if (self._virtualScroll) {
-                        /*
-                        * The virtual scroll does not update the indexes on first load, they remain the same as at the time of initialization.
-                        * If the size of the virtual page is larger than the size of the navigation, need to set the smallest index to avoid errors.
-                        * */
-                        _private.correctIndexesOnReload(self);
+                        // При серверной верстке применяем начальные значения
+                        _private.applyVirtualScroll(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                 } else {
