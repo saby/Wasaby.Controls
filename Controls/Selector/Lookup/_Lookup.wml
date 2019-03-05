@@ -56,7 +56,7 @@
                   itemsLayout="{{_multiLineState ? 'default' : 'oneRow'}}"
                   items="{{_options.items}}"
                   _counterWidth="{{_counterWidth}}"
-                  maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems}}"
+                  maxVisibleItems="{{!_options.readOnly || _options.multiLine || _maxVisibleItems === _options.items.getCount() ? _maxVisibleItems : 0}}"
                   readOnly="{{_options.readOnly}}"
                   on:itemClick="_itemClick()"
                   on:crossClick="_crossClick()"
