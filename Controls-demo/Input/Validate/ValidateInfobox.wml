@@ -3,7 +3,7 @@
         <ws:content>
             <div>
                 Validate/Input (Валидация происходит по focusOut)
-                <Controls.Validate.Input   name="InputValidate" attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
+                <Controls.Validate.Input name="InputValidate" attr:style="margin: 30px" attr:class="ControlsDemo-ValidateInfobox__inputValidate">
                     <ws:validators>
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsINN</ws:Function>
                         <ws:Function value="{{_value }}">Controls/Validate/Validators/IsEmail</ws:Function>
@@ -45,14 +45,27 @@
         <ws:content>
             <div>
                 Validate/Controller(Кнопка запускает процесс валидации)
-                <Controls.Validate.Controller   name="ControllerValidate" attr:style="margin: 30px"  attr:class="ControlsDemo-ValidateInfobox_infobox">
+                <Controls.Validate.Controller  name="ControllerValidate"   attr:style="margin: 30px"  attr:class="ControlsDemo-ValidateInfobox_infobox">
                     <ws:validators>
-                        <ws:Function value="{{_value2 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                        <ws:Function value="{{_value2 }}" >Controls/Validate/Validators/IsEmail</ws:Function>
                     </ws:validators>
                     <ws:content>
                         <Controls.Input.Text
                                 name="textBox2"
                                 bind:value="_value2"
+                                placeholder="Email"
+                                tagStyle="primary"
+                        />
+                    </ws:content>
+                </Controls.Validate.Controller>
+                <Controls.Validate.Controller readOnly="true"  name="ControllerValidate2"  attr:style="margin: 30px"  attr:class="ControlsDemo-ValidateInfobox_infobox">
+                    <ws:validators>
+                        <ws:Function value="{{_value5 }}">Controls/Validate/Validators/IsEmail</ws:Function>
+                    </ws:validators>
+                    <ws:content>
+                        <Controls.Input.Text
+                                name="textBox5"
+                                bind:value="_value5"
                                 placeholder="Email"
                                 tagStyle="primary"
                         />
