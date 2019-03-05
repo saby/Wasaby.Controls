@@ -1,8 +1,6 @@
 define('Controls/BreadCrumbs/Path', [
-   'Controls/crumbs',
-   'Env/Env'
-], function(breadCrumbsLib,
-   Env) {
+   'Controls/crumbs'
+], function(breadCrumbsLib) {
    'use strict';
 
    /**
@@ -31,8 +29,6 @@ define('Controls/BreadCrumbs/Path', [
     * @event Controls/BreadCrumbs/Path#arrowActivated Happens after clicking the button "View Model".
     * @param {Core/vdom/Synchronizer/resources/SyntheticEvent} eventObject Descriptor of the event.
     */
-
-   Env.IoC.resolve('ILogger').error('Controls/BreadCrumbs/Path', 'Контрол переехал. Используйте Controls/crumbs:HeadingPath');
 
    return breadCrumbsLib.HeadingPath;
 });
