@@ -5,7 +5,10 @@ define([
 ) {
    describe('Controls.Container.Async', function() {
       var async;
+
+
       beforeEach(function() {
+
          async = new Async();
          async._options = {
             templateName: 'myTemplate'
@@ -22,6 +25,10 @@ define([
                resolve(name);
             });
          };
+         async._loadFileSync = function(name) {
+            async.loadedSync.push(name);
+            return name;
+         }
          async._forceUpdate = function() {
             if (!async.fuCnt) {
                async.fuCnt = 1;
@@ -39,124 +46,221 @@ define([
          async._setErrorState(false);
          assert.isNull(async.error);
       });
-      it('Server side loading', function(done) {
-         var promise = async._loadServerSide(async._options.templateName, {opt: '123'});
-         promise.then(function() {
-            assert.deepEqual(async.loadedAsync, ["myTemplate"]);
-            assert.deepEqual(async.pushedToHeadData, ["myTemplate"]);
-            assert.equal(async.optionsForComponent.opt, '123');
-            assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
-            done();
-         });
-      });
-      it('Server side loading failed', function() {
-         async._loadFileAsync = function(done) {
-            return new Promise(function(resolve, reject) {
-               reject('loading error');
-            });
-         };
-         var promise = async._loadServerSide(async._options.templateName);
-         promise.then(function() {
-            assert.equal(async.error, "Couldn't load module myTemplate Error: loading error");
-            assert.isUndefined(async.optionsForComponent.opt);
-            assert.isUndefined(async.optionsForComponent.resolvedTemplate);
-            done();
-         });
-      });
-      it('Client side loading', function(done) {
-         async._loadContentAsync(async._options.templateName, {opt: '123'}).then(function() {
-            assert.deepEqual(async.loadedAsync, ["myTemplate"]);
-            assert.equal(async.optionsForComponent.opt, '123');
-            assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
-            done();
-         });
-         assert.isUndefined(async.optionsForComponent.opt);
-         assert.isUndefined(async.optionsForComponent.resolvedTemplate);
-      });
-      it('Client side loading failed', function(done) {
-         async._loadFileAsync = function() {
-            return new Promise(function(resolve, reject) {
-               reject('loading error');
-            });
-         };
-         async._loadContentAsync(async._options.templateName).catch(function() {
-            assert.equal(async.error, "Couldn't load module myTemplate loading error");
-            assert.isUndefined(async.optionsForComponent.opt);
-            assert.isUndefined(async.optionsForComponent.resolvedTemplate);
-            done();
-         });
-      });
-      it('Update content first', function() {
-         async._updateOptionsForComponent('myTemplate', {opt: '123'});
+      it('Loading synchronous', function() {
+         async._loadContentSync(async._options.templateName, {opt: '123'});
+         assert.deepEqual(async.loadedSync, ["myTemplate"]);
+         assert.deepEqual(async.pushedToHeadData, []);
          assert.equal(async.optionsForComponent.opt, '123');
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
       });
-      it('_beforeUpdate new template', function(done) {
-         async._updateOptionsForComponent('myTemplate', {opt: '123'});
-         async._beforeUpdate({templateName: 'myTemplateNew', templateOptions: {opt: '234'}});
-         setTimeout(function() {
-            assert.deepEqual(async.loadedAsync, ['myTemplateNew']);
-            assert.equal(async.optionsForComponent.opt, '234');
-            done();
-         }, 10);
+      it('Loading synchronous server-side', function() {
+         async._loadContentSync(async._options.templateName, {opt: '123'}, true);
+         assert.deepEqual(async.pushedToHeadData, ["myTemplate"]);
       });
-      it('_beforeUpdate template not changed', function() {
-         async._updateOptionsForComponent('myTemplate', {opt: '123'});
-         async._beforeUpdate({templateName: 'myTemplate', templateOptions: {opt: '234'}});
-         assert.deepEqual(async.loadedAsync, []);
-         assert.equal(async.optionsForComponent.opt, '234');
+
+      it('Loading synchronous error', function() {
+         async._loadFileSync = function() {
+            return null;
+         };
+         var res = async._loadContentSync(async._options.templateName, {opt: '123'});
+         assert.equal(res, null);
       });
-      it('Before mount', function(done) {
-         var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}});
-         if (typeof window !== 'undefined') {
-            bmRes.then(function(tpl) {
-               assert.equal(tpl, 'myTemplate');
-               done();
-            });
-         } else {
-            bmRes.then(function(tpl) {
-               assert.isNull(tpl);
-               done();
-            });
-         }
-      });
-      it('Load lib server-side', function(done) {
-         async._options.templateName = "Test/Lib:Control";
-         var promise = async._loadServerSide(async._options.templateName, {opt: '123'});
-         promise.then(function() {
-            assert.deepEqual(async.loadedAsync, ["Test/Lib:Control"]);
-            assert.deepEqual(async.pushedToHeadData, ["Test/Lib"]);
+      it('Loading asynchronous', function(done) {
+         var promiseResult = async._loadContentAsync(async._options.templateName, {opt: '123'});
+         assert.equal(async.canUpdate, false);
+         promiseResult.then(function(res) {
+            assert.isTrue(async.canUpdate);
+            assert.deepEqual(async.loadedAsync, ["myTemplate"]);
             assert.equal(async.optionsForComponent.opt, '123');
-            assert.equal(async.optionsForComponent.resolvedTemplate, 'Test/Lib:Control');
+            assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
+            assert.isTrue(res);
+            assert.equal(async.fuCnt, 1);
             done();
          });
       });
-      it('Load content async no force update', function(done) {
-         async._loadContentAsync(async._options.templateName, {opt: '123'}, true).then(function() {
+      it('Loading asynchronous no update', function(done) {
+         var promiseResult = async._loadContentAsync(async._options.templateName, {opt: '123'}, true);
+         promiseResult.then(function(res) {
             assert.isUndefined(async.fuCnt);
             done();
          });
       });
-      it('No update while loading', function(done) {
+      it('Loading asynchronous failed', function(done) {
+         async._loadFileAsync = function() {
+            return new Promise(function(_, reject) {
+               reject('Loading error');
+            });
+         };
+         var promiseResult = async._loadContentAsync(async._options.templateName, {opt: '123'});
+         assert.equal(async.canUpdate, false);
+         promiseResult.then(function(res) {
+            assert.isTrue(async.canUpdate);
+            assert.isUndefined(async.optionsForComponent.opt);
+            assert.isUndefined(async.optionsForComponent.resolvedTemplate);
+            assert.isFalse(res);
+            assert.equal(async.error, 'Couldn\'t load module myTemplate Loading error');
+            done();
+         });
+      });
+      it('Update content', function() {
          async._updateOptionsForComponent('myTemplate', {opt: '123'});
-
-         async._loadContentAsyncOrigin = async._loadContentAsync;
+         assert.equal(async.optionsForComponent.opt, '123');
+         assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
+      });
+      it('Update content no options', function() {
+         async._updateOptionsForComponent('myTemplate', undefined);
+         assert.isTrue(async.optionsForComponent !== undefined);
+         assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
+      });
+      it('_checkLoadedError error', function() {
+         async._checkLoadedError(null);
+         assert.equal(async.error, "Couldn't load module myTemplate ");
+      });
+      it('_checkLoadedError no error', function() {
+         async._checkLoadedError('asdasdasd');
+         assert.isNull(async.error);
+      });
+      it('_beforeMount client no rc, not loaded', function(done) {
+         var loadContentAsyncCalled;
+         var args;
+         var promiseResult;
+         async._isServer = function() { return false; };
+         async._isLoaded = function() { return false; };
          async._loadContentAsync = function() {
-            var promise = async._loadContentAsyncOrigin.apply(async, arguments);
-            async.__loadPromise = promise;
-            if(!async._loadContentAsyncCalled) {
-               async._loadContentAsyncCalled = 1;
-            } else {
-               async._loadContentAsyncCalled++;
-            }
-         }
-
-         async._beforeUpdate({templateName: 'myTemplateNew', templateOptions: {opt: '234'}});
-         async._beforeUpdate({templateName: 'myTemplateNew2', templateOptions: {opt: '345'}});
-         async.__loadPromise.then(function() {
-            assert.deepEqual(async.loadedAsync, ['myTemplateNew']);
-            assert.equal(async.optionsForComponent.opt, '234');
-            assert.equal(async._loadContentAsyncCalled, 1);
+            loadContentAsyncCalled = true;
+            args = arguments;
+            promiseResult = new Promise(function(res) {
+               res();
+            });
+            return promiseResult;
+         };
+         var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}});
+         assert.isTrue(loadContentAsyncCalled);
+         assert.equal(promiseResult, bmRes);
+         assert.equal(args[0], 'myTemplate');
+         assert.equal(args[1].opt, '123');
+         assert.equal(args[2], true);
+         bmRes.then(function() {
+            done();
+         });
+      });
+      it('_beforeMount client no rc, already loaded', function() {
+         var loadContentSyncCalled;
+         var args;
+         var promiseResult;
+         async._isServer = function() { return false; };
+         async._isLoaded = function() { return true; };
+         async._loadContentSync = function() {
+            args = arguments;
+            loadContentSyncCalled = true;
+         };
+         async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}});
+         assert.isTrue(loadContentSyncCalled);
+         assert.equal(args[0], 'myTemplate');
+         assert.equal(args[1].opt, '123');
+         assert.equal(args[2], false);
+      });
+      it('_beforeMount client rc', function() {
+         var loadContentSyncCalled;
+         var args;
+         async._isServer = function() { return false; };
+         async._isLoaded = function() { return false; };
+         async._loadContentSync = function() {
+            args = arguments;
+            loadContentSyncCalled = true;
+         };
+         async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {}, true);
+         assert.isTrue(loadContentSyncCalled);
+         assert.equal(args[0], 'myTemplate');
+         assert.equal(args[1].opt, '123');
+         assert.equal(args[2], false);
+      });
+      it('_beforeMount server', function(done) {
+         var loadContentSyncCalled;
+         var args;
+         async._isServer = function() { return true; };
+         async._isLoaded = function() { return false; };
+         async._loadContentSync = function() {
+            args = arguments;
+            loadContentSyncCalled = true;
+         };
+         var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {});
+         assert.isTrue(loadContentSyncCalled);
+         assert.equal(args[0], 'myTemplate');
+         assert.equal(args[1].opt, '123');
+         assert.equal(args[2], true);
+         bmRes.then(function(res) {
+            assert.isTrue(res);
+            done();
+         });
+      });
+      it('_beforeMount server failed', function(done) {
+         var loadContentSyncCalled;
+         var args;
+         async._isServer = function() { return true; };
+         async._isLoaded = function() { return false; };
+         async._loadContentSync = function() {
+            async._setErrorState(true);
+         };
+         var bmRes = async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {});
+         bmRes.catch(function(res) {
+            assert.isUndefined(res);
+            done();
+         });
+      });
+      it('_beforeUpdate canUpdate true, same templateName', function() {
+         async._updateOptionsForComponent('myTemplate', {opt: '123'});
+         async._beforeUpdate({templateName: 'myTemplate', templateOptions: { opt: '456'}});
+         assert.equal(async.optionsForComponent.opt, '456');
+      });
+      it('_beforeUpdate canUpdate false', function() {
+         async.canUpdate = false;
+         async.methodCalled = 0;
+         async._loadContentSync = function() { async.methodCalled++; };
+         async._updateOptionsForComponent = function() { async.methodCalled++; };
+         async._beforeUpdate();
+         assert.equal(async.methodCalled, 0);
+      });
+      it('_beforeUpdate canUpdate true, template changed, already loaded', function() {
+         var args;
+         var promiseResult;
+         async._isLoaded = function() { return true; };
+         async._loadContentSync = function(name) {
+            args = arguments;
+         };
+         async.canUpdate = true;
+         async._options = { templateName: 'myTemplate', templateOptions: {opt: '123'} };
+         async._beforeUpdate({ templateName: 'myTemplate2', templateOptions: { opt: '456'} });
+         assert.equal(args[0], 'myTemplate2');
+         assert.equal(args[1].opt, '456');
+         assert.equal(args.length, 2);
+      });
+      it('_afterUpdate canUpdate false', function() {
+         async.canUpdate = false;
+         async.methodCalled = 0;
+         async._loadContentAsync = function() { async.methodCalled++; };
+         async._loadContentSync = function() { async.methodCalled++; };
+         async._updateOptionsForComponent = function() { async.methodCalled++; };
+         async._afterUpdate();
+         assert.equal(async.methodCalled, 0);
+      });
+      it('_afterUpdate canUpdate true, template changed, not loaded', function(done) {
+         var args;
+         var promiseResult;
+         async._isLoaded = function() { return false; };
+         async._loadContentAsync = function(name) {
+            args = arguments;
+            promiseResult = new Promise(function(res) {
+               res(name);
+            });
+         };
+         async.canUpdate = true;
+         async._options = { templateName: 'myTemplate2', templateOptions: {opt: '456'} };
+         async._afterUpdate({ templateName: 'myTemplate', templateOptions: { opt: '123'} });
+         assert.equal(args[0], 'myTemplate2');
+         assert.equal(args[1].opt, '456');
+         assert.equal(args.length, 2);
+         promiseResult.then(function() {
             done();
          });
       });
