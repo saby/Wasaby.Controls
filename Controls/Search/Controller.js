@@ -128,7 +128,7 @@ define('Controls/Search/Controller',
             this._previousViewMode = this._viewMode = options.viewMode;
             
             if (options.searchValue) {
-               this._search(null, options.searchvalue);
+               this._search(null, options.searchValue);
             }
          },
    
