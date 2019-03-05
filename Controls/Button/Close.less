@@ -7,9 +7,7 @@
 }
 
 .controls-Button__close__icon_toolButton {
-   fill: @color_CloseButton-icon_toolButton;
-   width: @width_CloseButton-icon_toolButton;
-   height: @height_CloseButton-icon_toolButton;
+   background-image: @background-image_CloseButton-toolButton;
 }
 
 .controls-Button__close__wrapper {
@@ -55,21 +53,18 @@
 }
 
 .controls-Button__close__icon_link {
-   width: @width_CloseButton-icon_link;
-   height: @height_CloseButton-icon_link;
-   fill: @color_CloseButton-icon_link;
-   background-image: @background-image-Back_style-secondary_size-s_hovered;
+   background-image: @background-image_CloseButton-link;
 }
 
 .controls-Button__close__icon_link:active {
-   fill: @color_CloseButton-light-icon_hover;
+   background-image: @background-image_CloseButton-link;
 }
 
 .controls-Button__close_toolButton:active {
    border-color: @default-border-color-second;
    box-shadow: @box-shadow_CloseButton-toolButton_active;
    .controls-Button__close__icon_default:active, .controls-Button__close__icon_primary {
-      fill: @color_CloseButton-icon_hover;
+      fill: @background-image_CloseButton-toolButton_hovered;
    }
 }
 
