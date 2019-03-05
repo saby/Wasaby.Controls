@@ -10,6 +10,7 @@ define('Controls/Input/Suggest/SuggestStyles',
        * @css @width_Suggest-spinner "Spinner" icon width
        * @css @spacing_Suggest-between-spinner-clear Spacing between "Clear" button and spinner
        * @css @color_Suggest-clear "Clear" button color
+       * @css @icon-size_Suggest-clear "Clear" button size
        * @public
        * @author Герасимов А.М.
        */
