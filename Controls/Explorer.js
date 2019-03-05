@@ -89,7 +89,6 @@ define('Controls/Explorer', [
                self._root = self._options.root;
             }
             self._viewMode = viewMode;
-            self._swipeViewMode = viewMode === 'search' ? 'table' : viewMode;
             self._viewName = VIEW_NAMES[viewMode];
             self._viewModelConstructor = VIEW_MODEL_CONSTRUCTORS[viewMode];
          },

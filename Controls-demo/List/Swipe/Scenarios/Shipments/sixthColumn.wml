@@ -1,0 +1,7 @@
+<ws:partial template="wml!Controls/List/Grid/Column" scope="{{_options}}">
+   <ws:contentTemplate>
+      <ws:if data="{{itemData.item.author}}">
+         <div class="demo-Shipments__author">{{itemData.item.author}}</div>
+      </ws:if>
+   </ws:contentTemplate>
+</ws:partial>
