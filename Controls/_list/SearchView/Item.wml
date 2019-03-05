@@ -1,12 +1,10 @@
 <ws:if data="{{itemData.item.getId}}">
    <ws:partial template="wml!Controls/_list/Grid/Item"
-               itemData="{{itemData}}"
-               multiSelectTpl="{{multiSelectTpl}}"/>
+               scope="{{_options}}"/>
 </ws:if>
 <ws:else>
    <ws:partial template="wml!Controls/_list/TreeGridView/Item"
-               itemData="{{itemData}}"
-               multiSelectTpl="{{multiSelectTpl}}"
+               scope="{{_options}}"
                colspan="{{true}}"
                on:click="_onSearchItemClick(itemData.dispItem)">
       <ws:colspanTemplate>
