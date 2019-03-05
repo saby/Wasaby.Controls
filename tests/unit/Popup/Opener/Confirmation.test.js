@@ -1,7 +1,8 @@
 define(
    [
       'Controls/Popup/Opener/Confirmation',
-      'Core/Deferred'
+      'Core/Deferred',
+      'Core/polyfill/PromiseAPIDeferred'
    ],
 
    (PopupOpener, Deferred) => {

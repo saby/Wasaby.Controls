@@ -615,6 +615,9 @@ define('Controls/FormController', [
       },
 
       _getData: function(crudResult /* crudResult: CrudResult */) {
+         if (!crudResult) {
+            return Promise.resolve();
+         }
          if (crudResult.data) {
             return Promise.resolve(crudResult.data);
          }

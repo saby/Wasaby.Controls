@@ -18,6 +18,7 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import keysHandler = require('Controls/Utils/keysHandler');
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/List/BaseControl/BaseControl';
+import { error as dataSourceError } from 'Controls/dataSource';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -34,6 +35,29 @@ var
     };
 
 var LOAD_TRIGGER_OFFSET = 100;
+
+/**
+ * Object with state from server side rendering
+ * @typedef {Object}
+ * @name ReceivedState
+ * @property {*} [data]
+ * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+ */
+type ReceivedState = {
+    data?: any;
+    errorConfig?: dataSourceError.ViewConfig;
+}
+
+/**
+ * @typedef {Object}
+ * @name CrudResult
+ * @property {*} [data]
+ * @property {Controls/_dataSource/_error/ViewConfig} [errorConfig]
+ * @property {Error} [error]
+ */
+type CrudResult = ReceivedState & {
+    error: Error;
+}
 
 var _private = {
     checkDeprecated: function(cfg) {
@@ -57,6 +81,7 @@ var _private = {
         }
         if (self._sourceController) {
             _private.showIndicator(self);
+            _private.hideError(self);
 
             // Need to create new Deffered, returned success result
             // load() method may be fired with errback
@@ -104,25 +129,33 @@ var _private = {
 
                 _private.prepareFooter(self, navigation, self._sourceController);
 
-                resDeferred.callback(list);
+                resDeferred.callback({
+                    data: list
+                });
 
                 // If received list is empty, make another request. If it’s not empty, the following page will be requested in resize event handler after current items are rendered on the page.
                 if (!list.getCount()) {
                     _private.checkLoadToDirectionCapability(self);
                 }
             }).addErrback(function(error) {
-                _private.processLoadError(self, error, cfg.dataLoadErrback);
-                resDeferred.callback(null);
+                _private.hideIndicator(self);
+                return _private.crudErrback(self, {
+                    error: error,
+                    dataLoadErrback: cfg.dataLoadErrback
+                }).then(function(result: CrudResult) {
+                    resDeferred.callback(result);
+                    return result;
+                });
             });
         } else {
             resDeferred.callback();
             Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
         }
-        resDeferred.addCallback(function(items) {
+        resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
                 cfg.afterReloadCallback();
             }
-            return items;
+            return result;
         });
         return resDeferred;
     },
@@ -246,10 +279,16 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
-                return addedItems;
+                return {
+                    data: addedItems
+                };
 
             }).addErrback(function(error) {
-                return _private.processLoadError(self, error, userErrback);
+                _private.hideIndicator(self);
+                return _private.crudErrback(self, {
+                    error: error,
+                    dataLoadErrback: userErrback
+                });
             });
         }
         Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
@@ -264,30 +303,6 @@ var _private = {
         self._listViewModel.setIndexes(indexes.start, indexes.stop);
         self._topPlaceholderHeight = placeholdersSizes.top;
         self._bottomPlaceholderHeight = placeholdersSizes.bottom;
-    },
-
-    processLoadError: function(self, error, dataLoadErrback) {
-        if (!error.canceled) {
-            _private.hideIndicator(self);
-
-            if (dataLoadErrback instanceof Function) {
-                dataLoadErrback(error);
-            }
-
-            // _isOfflineMode is set to true if disconnect has happened. In that case message box will not be shown
-            if (!(error.processed || error._isOfflineMode)) {
-                // Control show messagebox only in clientside
-                if (self._children && self._children.errorMsgOpener) {
-                    self._children.errorMsgOpener.open({
-                        message: error.message,
-                        style: 'error',
-                        type: 'ok'
-                    });
-                }
-                error.processed = true;
-            }
-        }
-        return error;
     },
 
     checkLoadToDirectionCapability: function(self) {
@@ -313,7 +328,13 @@ var _private = {
     loadToDirectionIfNeed: function(self, direction) {
         //source controller is not created if "source" option is undefined
         if (self._sourceController && self._sourceController.hasMoreData(direction) && !self._sourceController.isLoading() && !self._hasUndrawChanges) {
-            _private.loadToDirection(self, direction, self._options.dataLoadCallback, self._options.dataLoadErrback);
+            _private.loadToDirection(
+                self, direction,
+                self._options.dataLoadCallback,
+                self._options.dataLoadErrback
+            ).addCallback((result: CrudResult) => {
+                return _private.getData(result);
+            });
         }
     },
 
@@ -452,7 +473,7 @@ var _private = {
         };
     },
 
-    showIndicator: function(self, direction) {
+    showIndicator: function(self, direction?) {
         self._loadingState = direction || 'all';
         self._loadingIndicatorState = self._loadingState;
         if (!self._loadingIndicatorTimer) {
@@ -691,8 +712,109 @@ var _private = {
         }
 
         return sorting;
-    }
+    },
 
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @param {Object} config
+     * @param {Error} config.error
+     * @param {Controls/_dataSource/_error/Mode} [config.mode]
+     * @param {Function} [config.dataLoadErrback]
+     * @return {Promise.<CrudResult>}
+     * @private
+     */
+    crudErrback(self: BaseControl, config: {
+        dataLoadErrback?: (error: Error) => any;
+        mode?: dataSourceError.Mode;
+        error: Error;
+    }): Promise<CrudResult>{
+        if (config.dataLoadErrback instanceof Function) {
+            config.dataLoadErrback(config.error);
+        }
+        return _private.processError(self, config.error, config.mode).then((errorConfig) => {
+            self.__error = errorConfig;
+            _private.showError(self);
+            return {
+                error: config.error,
+                errorConfig: errorConfig
+            };
+        });
+    },
+
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @param {Error} error
+     * @param {Controls/_dataSource/_error/Mode} [mode]
+     * @return {Promise.<Controls/_dataSource/_error/ViewConfig | void>}
+     * @private
+     */
+    processError(
+        self: BaseControl,
+        error: Error,
+        mode?: dataSourceError.Mode
+    ): Promise<dataSourceError.ViewConfig> {
+        return self.__errorController.process({
+            error: error,
+            mode: mode || dataSourceError.Mode.include
+        });
+    },
+
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @private
+     */
+    showError(self: BaseControl): void {
+        var config = self.__error;
+        if (!config || config.isShowed) {
+            return;
+        }
+
+        if (config.mode != dataSourceError.Mode.dialog) {
+            // отрисовка внутри компонента
+            self._forceUpdate();
+            self.__error.isShowed = true;
+            return;
+        }
+
+        if (self._children && self._children.dialogOpener) {
+            // диалоговое с ошибкой
+            self._children.dialogOpener.open({
+                template: config.template,
+                templateOptions: config.options
+            });
+            self.__error.isShowed = true;
+            return;
+        }
+    },
+
+    hideError(self: BaseControl): void {
+        if (self.__error) {
+            self.__error = null;
+            self._forceUpdate();
+        }
+        if (
+            self._children &&
+            self._children.dialogOpener &&
+            self._children.dialogOpener.isOpened()
+        ) {
+            self._children.dialogOpener.close();
+        }
+    },
+
+    /**
+     * не ломаем внешнее поведение и возвращаем только реальный результат
+     * @param {CrudResult} crudResult
+     * @return {Promise}
+     */
+    getData(crudResult: CrudResult): Promise<any> {
+        if (!crudResult) {
+            return Promise.resolve();
+        }
+        if (crudResult.data) {
+            return Promise.resolve(crudResult.data);
+        }
+        return Promise.reject(crudResult.error);
+    }
 };
 
 /**
@@ -750,9 +872,24 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _popupOptions: null,
     _hasUndrawChanges: false,
 
-    _beforeMount: function(newOptions, context, receivedState) {
-        var
-            self = this;
+    constructor(options) {
+        BaseControl.superclass.constructor.apply(this, arguments);
+        options = options || {};
+        this.__errorController = options.errorController || new dataSourceError.Controller({});
+    },
+
+    /**
+     * @param {Object} newOptions
+     * @param {Object} context
+     * @param {ReceivedState} receivedState
+     * @return {Promise}
+     * @protected
+     */
+    _beforeMount: function(newOptions, context, receivedState = {}) {
+        var self = this;
+
+        var receivedError = receivedState.errorConfig;
+        var receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
 
@@ -779,8 +916,8 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 viewModelConfig = collapsedGroups ? cMerge(cClone(newOptions), { collapsedGroups: collapsedGroups }) : cClone(newOptions);
             if (newOptions.viewModelConstructor) {
                 self._viewModelConstructor = newOptions.viewModelConstructor;
-                if (receivedState) {
-                    viewModelConfig.items = receivedState;
+                if (receivedData) {
+                    viewModelConfig.items = receivedData;
                 }
                 self._listViewModel = new newOptions.viewModelConstructor(viewModelConfig);
                 _private.initListViewModelHandler(self, self._listViewModel);
@@ -792,28 +929,34 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     navigation: newOptions.navigation // TODO возможно не всю навигацию надо передавать а только то, что касается source
                 });
 
-                if (receivedState) {
-                    self._sourceController.calculateState(receivedState);
+                if (receivedData) {
+                    self._sourceController.calculateState(receivedData);
                     self._items = self._listViewModel.getItems();
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
                     if (self._virtualScroll) {
                         // При серверной верстке применяем начальные значения
-                        let indexes = self._virtualScroll.ItemsIndexes;
-
-                        /*
-                        * The virtual scroll does not update the indexes on first load, they remain the same as at the time of initialization.
-                        * If the size of the virtual page is larger than the size of the navigation, need to set the smallest index to avoid errors.
-                        * */
-                        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
+                        var indexes = self._virtualScroll.ItemsIndexes;
                         self._virtualScroll.ItemsCount = self._listViewModel.getCount();
                         self._listViewModel.setIndexes(indexes.start, indexes.stop);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
-                } else {
-                    return _private.reload(self, newOptions);
+                    return;
                 }
+                if (receivedError) {
+                    self.__error = receivedError;
+                    return _private.showError(self);
+                }
+                return _private.reload(self, newOptions).addCallback((result:CrudResult) => {
+                    /*
+                     * проброс реальной ошибки от reload нуден только для внешнего api
+                     * при серверной вёрстке нормально не сможем сериализовать/десериализовать конкретный тип ошибки,
+                     * поэтому уберём её
+                     */
+                    delete result.error;
+                    return result;
+                });
             }
         });
     },
@@ -843,6 +986,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
         if (this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
+        }
+        if (this.__error) {
+            _private.showError(this);
         }
     },
 
@@ -924,7 +1070,14 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
             } else {
                 items.at(currentItemIndex).merge(item);
             }
-            return item;
+            return { data: item };
+        }, (error) => {
+            return _private.crudErrback(this, {
+                error: error,
+                mode: dataSourceError.Mode.dialog
+            });
+        }).addCallback((result: CrudResult) => {
+            retrun _private.getData(result);
         });
     },
 
@@ -1060,7 +1213,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     },
 
     reload: function() {
-        return _private.reload(this, this._options);
+        return _private.reload(this, this._options).addCallback((result: CrudResult) => {
+            return _private.getData(result);
+        });
     },
 
     getVirtualScroll: function() {

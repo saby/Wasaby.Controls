@@ -1,12 +1,13 @@
 define([
    'Controls/FormController',
    'Core/Deferred',
-   'Types/entity'
+   'Types/entity',
+   'Core/polyfill/PromiseAPIDeferred'
 ], (FormController, Deferred, entity) => {
    'use strict';
 
    describe('FormController', () => {
-      it('initializingWay', () => {
+      it('initializingWay', (done) => {
          let FC = new FormController();
 
          let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
@@ -20,44 +21,81 @@ define([
 
          FormController._private.readRecordBeforeMount = () => {
             isReading = true;
-            return true;
+            return Promise.resolve({ data: true });
          };
 
          FormController._private.createRecordBeforeMount = () => {
             isCreating = true;
-            return true;
+            return Promise.resolve({ data: true });
          };
 
-         let beforeMountResult = FC._beforeMount(cfg);
-         assert.equal(isReading, false);
-         assert.equal(isCreating, false);
-         assert.notEqual(beforeMountResult, true);
+         let p1 = new Promise((resolve) => {
+            let beforeMountResult = FC._beforeMount(cfg);
+            assert.equal(isReading, false);
+            assert.equal(isCreating, false);
+            assert.isTrue(
+                beforeMountResult instanceOf Deferred ||
+                beforeMountResult instanceOf Promise
+            );
+            beforeMountResult.then(({data}) => {
+               assert.notEqual(data, true);
+               resolve();
+            });
+         });
 
-         cfg.key = '123';
-         beforeMountResult = FC._beforeMount(cfg);
-         assert.equal(isReading, true);
-         assert.equal(isCreating, false);
-         assert.notEqual(beforeMountResult, true);
+         let p2 = new Promise((resolve) => {
+            cfg.key = '123';
+            let beforeMountResult = FC._beforeMount(cfg);
+            assert.equal(isReading, true);
+            assert.equal(isCreating, false);
+            assert.isTrue(
+               beforeMountResult instanceOf Deferred ||
+               beforeMountResult instanceOf Promise
+            );
+               beforeMountResult.then(({data}) => {
+                  assert.notEqual(data, true);
+                  resolve();
+            });
+         });
 
-         cfg = {
-            key: 123
-         };
-         isReading = false;
-         beforeMountResult = FC._beforeMount(cfg);
-         assert.equal(isReading, true);
-         assert.equal(isCreating, false);
-         assert.equal(beforeMountResult, true);
+         let p3 = new Promise((resolve) => {
+            cfg = {
+               key: 123
+            };
+            isReading = false;
+            let beforeMountResult = FC._beforeMount(cfg);
+            assert.equal(isReading, true);
+            assert.equal(isCreating, false);
+            assert.isTrue(
+               beforeMountResult instanceOf Deferred ||
+               beforeMountResult instanceOf Promise
+            );
+            beforeMountResult.then(({data}) => {
+               assert.equal(data, true);
+               resolve();
+            });
+         });
+         let p4 = new Promise((resolve) => {
+            isReading = false;
+            isCreating = false;
+            let beforeMountResult = FC._beforeMount({});
+            assert.equal(isReading, false);
+            assert.equal(isCreating, true);
+            assert.isTrue(
+               beforeMountResult instanceOf Deferred ||
+               beforeMountResult instanceOf Promise
+            );
+            beforeMountResult.then(({data}) => {
+               assert.equal(data, true);
+               resolve();
+            });
+         });
 
-         isReading = false;
-         isCreating = false;
-         beforeMountResult = FC._beforeMount({});
-         assert.equal(isReading, false);
-         assert.equal(isCreating, true);
-         assert.equal(beforeMountResult, true);
-
-         FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
-         FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
-         FC.destroy();
+         Promise.all([p1, p2, p3, p4]).then(() => {
+            FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
+            FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
+            FC.destroy();
+         });
       });
 
       it('beforeUpdate', () => {
