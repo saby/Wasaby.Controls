@@ -59,7 +59,7 @@ define('Controls/Explorer', [
       _private = {
          setRoot: function(self, root) {
             self._root = root;
-            self._notify('itemOpen', root);
+            self._notify('itemOpen', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
