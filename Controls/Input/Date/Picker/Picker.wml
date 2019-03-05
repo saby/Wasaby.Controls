@@ -14,7 +14,7 @@
       on:tagClick="_proxyEvent('tagClick')"
       on:tagHover="_proxyEvent('tagHover')">
    </Controls.Input.DateTime>
-   <Controls.Button
+   <Controls.buttons:Button
       attr:class="controls-Input-DatePicker__button"
       attr:tabindex="-1"
       style="secondary"

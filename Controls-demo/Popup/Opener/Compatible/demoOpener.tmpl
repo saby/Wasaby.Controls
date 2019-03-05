@@ -8,15 +8,15 @@
    </Controls.Popup.Opener.Stack>
    
    <div style="padding:5px;">
-      <Controls.Button name="stackButton" caption="stack" on:click="openStack()" attr:class="demo-OpenerCompatible__stackButton"/>
+      <Controls.buttons:Button name="stackButton" caption="stack" on:click="openStack()" attr:class="demo-OpenerCompatible__stackButton"/>
    </div>
    <div style="padding:5px;">
-      <Controls.Button name="floatAreaButton" caption="openFloat" on:click="openFloat()" attr:class="demo-OpenerCompatible__floatAreaButton"/>
-      <Controls.Button name="dialogButton" caption="openDialog" on:click="openDialog()" attr:class="demo-OpenerCompatible__dialogButton"/>
+      <Controls.buttons:Button name="floatAreaButton" caption="openFloat" on:click="openFloat()" attr:class="demo-OpenerCompatible__floatAreaButton"/>
+      <Controls.buttons:Button name="dialogButton" caption="openDialog" on:click="openDialog()" attr:class="demo-OpenerCompatible__dialogButton"/>
    </div>
    <div style="padding:5px">
-      <Controls.Button name="stickyButton" caption="openSticky" on:click="openSticky()" attr:class="demo-OpenerCompatible__stickyButton"/>
-      <Controls.Button name="dimensionButton" caption="openDimension" on:click="openDimension()" attr:class="demo-OpenerCompatible__dimensionButton"/>
+      <Controls.buttons:Button name="stickyButton" caption="openSticky" on:click="openSticky()" attr:class="demo-OpenerCompatible__stickyButton"/>
+      <Controls.buttons:Button name="dimensionButton" caption="openDimension" on:click="openDimension()" attr:class="demo-OpenerCompatible__dimensionButton"/>
    </div>
    <div style="padding:5px;">
       <div>
@@ -71,7 +71,7 @@
               bind:value="_handlerText"
               placeholder="отображение отработки событий со старой панели"
       />
-      <Controls.Button name="clearButton" caption="clearText" on:click="clearHandlers()" attr:class="demo-OpenerCompatible__clearButton"/>
+      <Controls.buttons:Button name="clearButton" caption="clearText" on:click="clearHandlers()" attr:class="demo-OpenerCompatible__clearButton"/>
    </div>
    <div class='controls-demo__combobox-container'>
       Set Width
@@ -106,7 +106,7 @@
 							   attr:class="demo-OpenerCompatible__setMaxWidth"
       />
       <div style="position: absolute; margin-left: 45%">
-         <Controls.Button name="testTarget" caption="testTarget" attr:class="demo-OpenerCompatible__testTarget"/>
+         <Controls.buttons:Button name="testTarget" caption="testTarget" attr:class="demo-OpenerCompatible__testTarget"/>
       </div>
    </div>
    <div class='controls-demo__combobox-container'>

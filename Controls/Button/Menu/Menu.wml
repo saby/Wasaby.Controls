@@ -25,7 +25,7 @@
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"
         attr:class="controls-MenuButton__Wrapper">
-   <Controls.Button
+   <Controls.buttons:Button
                     attr:class="controls-MenuButton__BaseButton"
                     icon="{{_options.icon}}"
                     iconStyle="{{_options.iconStyle}}"

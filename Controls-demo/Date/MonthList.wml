@@ -25,7 +25,7 @@
          </ws:partial>
       </ws:dayTemplate>
    </Controls.Date.MonthList>
-   <Controls.Button caption="_setEndValue" style="buttonAdd" on:click="_setEndValue()"/>
-   <Controls.Button caption="_setselectionProcessing" style="buttonAdd" on:click="_setSelectionProcessing()"/>
-   <Controls.Button caption="_setSelection" style="buttonAdd" on:click="_setSelection()"/>
+   <Controls.buttons:Button caption="_setEndValue" style="buttonAdd" on:click="_setEndValue()"/>
+   <Controls.buttons:Button caption="_setselectionProcessing" style="buttonAdd" on:click="_setSelectionProcessing()"/>
+   <Controls.buttons:Button caption="_setSelection" style="buttonAdd" on:click="_setSelection()"/>
 </div>

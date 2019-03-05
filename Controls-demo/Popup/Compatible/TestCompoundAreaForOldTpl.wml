@@ -34,14 +34,14 @@
             isCompoundTemplate="{{true}}"/>
     </Controls.Popup.Opener.Stack>
     <div>
-        <Controls.Button attr:class="openStackButton" caption="Open Stack" on:click="openTestStack()"/>
-        <Controls.Button attr:class="openReviveButton" caption="Revive Test" on:click="openReviveStack()"/>
-        <Controls.Button attr:class="openInputButton" caption="Input Test" on:click="openInputStack()"/>
-        <Controls.Button attr:class="openValidateButton" caption="Validate Test" on:click="openValidateStack()"/>
-        <Controls.Button attr:class="openOpenerButton" caption="Opener Test" on:click="openOpenerStack()"/>
+        <Controls.buttons:Button attr:class="openStackButton" caption="Open Stack" on:click="openTestStack()"/>
+        <Controls.buttons:Button attr:class="openReviveButton" caption="Revive Test" on:click="openReviveStack()"/>
+        <Controls.buttons:Button attr:class="openInputButton" caption="Input Test" on:click="openInputStack()"/>
+        <Controls.buttons:Button attr:class="openValidateButton" caption="Validate Test" on:click="openValidateStack()"/>
+        <Controls.buttons:Button attr:class="openOpenerButton" caption="Opener Test" on:click="openOpenerStack()"/>
     </div>
     <div style="text-align: center;">
-        <Controls.Button attr:class="openDialogButton" name="dialogButton" caption="Dialog Test" on:click="openDialog()"/>
+        <Controls.buttons:Button attr:class="openDialogButton" name="dialogButton" caption="Dialog Test" on:click="openDialog()"/>
     </div>
     <div>
         <Controls.Input.Text attr:class="outerTextInput" attr:tabindex="{{1}}" placeholder="For catching focus"/>
