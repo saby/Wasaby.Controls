@@ -2,7 +2,7 @@
     <Controls.Popup.Templates.Dialog.DialogTemplate headingCaption="Создание категории" closeButtonVisibility="true">
         <ws:headerContentTemplate>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;" ws-no-focus="true">
-                <Controls.Button caption="Button" attr:ws-no-focus="true" attr:tabindex="-1"/>
+                <Controls.buttons:Button caption="Button" attr:ws-no-focus="true" attr:tabindex="-1"/>
             </div>
         </ws:headerContentTemplate>
         <ws:bodyContentTemplate>

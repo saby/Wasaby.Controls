@@ -95,7 +95,7 @@
     </div>
     <div class="eventBlock">
         <span>Event that surfaced:</span>
-        <Controls.Button 
+        <Controls.buttons:Button 
             attr:class="demo-ResetButton" 
             on:click="reset()" 
             style="linkMain3" 

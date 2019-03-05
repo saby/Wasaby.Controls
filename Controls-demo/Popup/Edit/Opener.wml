@@ -2,7 +2,7 @@
    <div>
       <div class="demo-Grid__container" on:itemClick="_itemClick()" attr:style="margin-top: 20px;">
 
-         <Controls.Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
+         <Controls.buttons:Button caption="Добавить запись" on:click="_addRecord()" class="demo-PopupEditOpener__addRecord"/>
          Вставить в позицию <Controls.Input.Number bind:value="_addPosition" precision="{{0}}" onlyPositive="{{true}}" class="demo-PopupEditOpener__addPosition"/>
 
          <Controls.Container.Scroll attr:class="demo-Grid__wrapper" attr:test_name="selected_record">
