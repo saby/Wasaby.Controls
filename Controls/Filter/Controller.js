@@ -139,7 +139,7 @@ define('Controls/Filter/Controller',
                   var value = getPropValue(elem, 'value');
                   var visibility = getPropValue(elem, 'visibility');
 
-                  if (value !== undefined && value !== null && (visibility === undefined || visibility === true)) {
+                  if (value !== undefined && (visibility === undefined || visibility === true)) {
                      if (differentCallback) {
                         differentCallback(elem);
                      }
