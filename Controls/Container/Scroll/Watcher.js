@@ -203,7 +203,7 @@ define('Controls/Container/Scroll/Watcher',
                      eventName = null;
                   }
                }
-            }, {root: self._container});
+            }, {root: self._container[0] || self._container});//FIXME self._container[0] remove after https://online.sbis.ru/opendoc.html?guid=d7b89438-00b0-404f-b3d9-cc7e02e61bb3
             self._observer.observe(elements.topLoadTrigger);
             self._observer.observe(elements.bottomLoadTrigger);
 
