@@ -6,6 +6,7 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
+import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 
 var
     _private = {
@@ -715,6 +716,10 @@ var
 
             current.columnIndex = 0;
 
+            current.getVersion = function() {
+                return self._calcItemVersion(current.item, current.key);
+            };
+
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
 
             current.resetColumnIndex = function() {
@@ -845,6 +850,17 @@ var
 
         setItemActionVisibilityCallback: function(callback) {
             this._model.setItemActionVisibilityCallback(callback);
+        },
+
+        _calcItemVersion: function(item, key) {
+            var
+                version = this._model._calcItemVersion(item, key),
+                lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+
+            if (lastItemKey === key) {
+                version = 'LAST_ITEM_' + version;
+            }
+            return version;
         },
 
         _prepareDisplayItemForAdd: function(item) {
