@@ -8,6 +8,7 @@ define([
    'Controls/Decorator/Markup/resolvers/linkDecorate',
    'Controls/Decorator/Markup/resolvers/noOuterTag',
    'Controls/Decorator/Markup/resolvers/innerText',
+   'Controls/Decorator/Markup/resources/linkDecorateUtils',
    'Env/Env'
 ], function(Converter,
    template,
@@ -15,95 +16,111 @@ define([
    linkDecorateResolver,
    noOuterTagResolver,
    innerTextResolver,
+   linkDecorateUtils,
    Env) {
    'use strict';
 
-   describe('Controls.Decorator.Markup.Converter', function() {
-      var simpleNode = ['span', 'text'],
-         deepNode = ['span',
-            {
-               'style': 'text-decoration: line-through;',
-               'data-mce-style': 'text-decoration: line-through;'
-            },
+   var simpleNode = ['span', 'text'],
+      deepNode = ['span',
+         {
+            'style': 'text-decoration: line-through;',
+            'data-mce-style': 'text-decoration: line-through;'
+         },
+         'text',
+         ['strong',
             'text',
-            ['strong',
+            ['em',
                'text',
-               ['em',
-                  'text',
-                  ['span',
-                     {
-                        'style': 'text-decoration: underline;',
-                        'data-mce-style': 'text-decoration: underline;'
-                     },
-                     'text'
-                  ],
+               ['span',
+                  {
+                     'style': 'text-decoration: underline;',
+                     'data-mce-style': 'text-decoration: underline;'
+                  },
                   'text'
                ],
-               'text'],
-            'text'
-         ],
-         attributedNode = ['span', { 'class': 'someClass' }, 'text'],
-         linkNode = ['a',
+               'text'
+            ],
+            'text'],
+         'text'
+      ],
+      decoratedLinkFirstChildNode = ['a',
+         {
+            'href': 'https://ya.ru',
+            'target': '_blank',
+            'class': 'LinkDecorator__linkWrap',
+            'rel': 'noreferrer'
+         },
+         ['img',
             {
-               'class': 'asLink',
-               rel: 'noreferrer',
-               href: 'https://ya.ru',
-               target: '_blank'
-            },
-            'https://ya.ru'
-         ],
-         httpLinkNode = ['a',
-            {
-               'class': 'asLink',
-               rel: 'noreferrer',
-               href: 'http://ya.ru',
-               target: '_blank'
-            },
-            'http://ya.ru'
-         ],
-         wwwLinkNode = ['a',
-            {
-               'class': 'asLink',
-               rel: 'noreferrer',
-               href: 'http://www.ya.ru',
-               target: '_blank'
-            },
-            'www.ya.ru'
-         ],
-         ftpLinkNode = ['a',
-            {
-               'class': 'asLink',
-               rel: 'noreferrer',
-               href: 'ftp://ya.ru',
-               target: '_blank'
-            },
-            'ftp://ya.ru'
-         ],
-         fileLinkNode = ['a',
-            {
-               'class': 'asLink',
-               rel: 'noreferrer',
-               href: 'file://ya.ru',
-               target: '_blank'
-            },
-            'file://ya.ru'
-         ],
-         smbLinkNode = ['a',
-            {
-               'class': 'asLink',
-               rel: 'noreferrer',
-               href: 'smb://ya.ru',
-               target: '_blank'
-            },
-            'smb://ya.ru'
-         ],
-         decoratedLinkService,
-         nbsp = String.fromCharCode(160),
-         openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
-         deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
-         linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
-         decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
+               'class': 'LinkDecorator__image',
+               'alt': 'https://ya.ru',
+               'src': (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&id=0&srv=1'
+            }
+         ]
+      ],
+      attributedNode = ['span', { 'class': 'someClass' }, 'text'],
+      linkNode = ['a',
+         {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: 'https://ya.ru',
+            target: '_blank'
+         },
+         'https://ya.ru'
+      ],
+      httpLinkNode = ['a',
+         {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: 'http://ya.ru',
+            target: '_blank'
+         },
+         'http://ya.ru'
+      ],
+      wwwLinkNode = ['a',
+         {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: 'http://www.ya.ru',
+            target: '_blank'
+         },
+         'www.ya.ru'
+      ],
+      ftpLinkNode = ['a',
+         {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: 'ftp://ya.ru',
+            target: '_blank'
+         },
+         'ftp://ya.ru'
+      ],
+      fileLinkNode = ['a',
+         {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: 'file://ya.ru',
+            target: '_blank'
+         },
+         'file://ya.ru'
+      ],
+      smbLinkNode = ['a',
+         {
+            'class': 'asLink',
+            rel: 'noreferrer',
+            href: 'smb://ya.ru',
+            target: '_blank'
+         },
+         'smb://ya.ru'
+      ],
+      decoratedLinkService,
+      nbsp = String.fromCharCode(160),
+      openTagRegExp = /(<[^/][^ >]* )([^>]*")(( \/)?>)/g,
+      deepHtml = '<span style="text-decoration: line-through;" data-mce-style="text-decoration: line-through;">text<strong>text<em>text<span style="text-decoration: underline;" data-mce-style="text-decoration: underline;">text</span>text</em>text</strong>text</span>',
+      linkHtml = '<a class="asLink" rel="noreferrer" href="https://ya.ru" target="_blank">https://ya.ru</a>',
+      decoratedLinkHtml = '<span class="LinkDecorator__wrap"><a class="LinkDecorator__linkWrap" rel="noreferrer" href="https://ya.ru" target="_blank"><img class="LinkDecorator__image" alt="https://ya.ru" src="' + (typeof location === 'object' ? location.protocol + '//' + location.host : '') + '/test/?method=LinkDecorator.DecorateAsSvg&amp;params=eyJTb3VyY2VMaW5rIjoiaHR0cHM6Ly95YS5ydSJ9&amp;id=0&amp;srv=1" /></a></span>';
 
+   describe('Controls.Decorator.Markup.Converter', function() {
       function sortAttrs(html) {
          return html.replace(openTagRegExp, function(match, begin, attrs, end) {
             return begin + (attrs + ' ').split('" ').sort().join('" ') + end;
@@ -140,6 +157,12 @@ define([
             var json = [['p', 'text&'], ['p', deepNode], ['p', attributedNode], ['p', linkNode], ['p', simpleNode]];
             assert.deepEqual(Converter.htmlToJson(html), json);
             assert.deepEqual(Converter.htmlToJson('   \n    \n   '), []);
+         });
+
+         it('undecorate link', function() {
+            var html = '<p>' + decoratedLinkHtml + '</p>';
+            var json = [['p', linkNode]];
+            assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
          it('Wrapping url', function() {
@@ -392,6 +415,193 @@ define([
             var html = '<p>text&amp;amp;</p><p>' + deepHtml + '</p><p><span class="someClass">text</span></p><p>' + linkHtml + '</p><p><span>text</span></p>';
             assert.isTrue(equalsHtml(Converter.jsonToHtml(json, noOuterTagResolver), html));
             assert.equal(Converter.jsonToHtml([], noOuterTagResolver), '');
+         });
+      });
+   });
+
+   describe('Controls.Decorator.Markup.resources.linkDecorateUtils', function() {
+      describe('isDecoratedLink', function() {
+         it('decorated link node', function() {
+            assert.isTrue(linkDecorateUtils.isDecoratedLink('span', decoratedLinkFirstChildNode));
+         });
+         it('wrong tag name', function() {
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('div', decoratedLinkFirstChildNode));
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('', decoratedLinkFirstChildNode));
+         });
+         it('have not first child', function() {
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('span'));
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('span', null));
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('span', []));
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('span', ''));
+         });
+         it('wrong class name first child', function() {
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('span', ['a',
+               {
+                  'href': 'https://ya.ru',
+                  'target': '_blank',
+                  'class': 'LinkDecorator__linkWrapOrNotLinkWrap'
+               },
+               ['img',
+                  {
+                     'class': 'LinkDecorator__image',
+                     'alt': 'https://ya.ru',
+                  }
+               ]
+            ]));
+         });
+         it('wrong have not href first child', function() {
+            assert.isFalse(linkDecorateUtils.isDecoratedLink('span', ['a',
+               {
+                  'target': '_blank',
+                  'class': 'LinkDecorator__linkWrap'
+               },
+               ['img',
+                  {
+                     'class': 'LinkDecorator__image',
+                     'alt': 'https://ya.ru',
+                  }
+               ]
+            ]));
+         });
+      });
+      describe('getUndecoratedLink', function() {
+         it('undecorate a decorated link', function() {
+            assert.deepEqual(linkDecorateUtils.getUndecoratedLink(decoratedLinkFirstChildNode), linkNode);
+         });
+      });
+      describe('needDecorate', function() {
+         beforeEach(function() {
+            decoratedLinkService = Env.constants.decoratedLinkService;
+            Env.constants.decoratedLinkService = '/test/';
+         });
+         afterEach(function() {
+            Env.constants.decoratedLinkService = decoratedLinkService;
+         });
+         it('not a link', function() {
+            var parentNode = ['p', ['b',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('parent node is not a paragraph', function() {
+            var parentNode = ['span', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href is not equal link value', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'not https://ya.ru'
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link href length more then given maximum', function() {
+            var maxLenght = linkDecorateUtils.getHrefMaxLength(),
+               linkHref = 'https://ya.ru/';
+            linkHref = linkHref + 'a'.repeat(maxLenght - linkHref.length + 1);
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: linkHref,
+                  target: '_blank'
+               },
+               linkHref
+            ]];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('link is not in the end of paragraph', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'not https://ya.ru'
+            ], 'some node after link'];
+            assert.isFalse(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 1', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ]];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 2', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ], '       '];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 3', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ], ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+         it('need decorate case - 4', function() {
+            var parentNode = ['p', ['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: 'https://ya.ru',
+                  target: '_blank'
+               },
+               'https://ya.ru'
+            ], '      ', ['br']];
+            assert.isTrue(linkDecorateUtils.needDecorate(parentNode[1], parentNode));
+         });
+      });
+      describe('decorateLink', function() {
+         beforeEach(function() {
+            decoratedLinkService = Env.constants.decoratedLinkService;
+            Env.constants.decoratedLinkService = '/test/';
+         });
+         afterEach(function() {
+            Env.constants.decoratedLinkService = decoratedLinkService;
+         });
+         it('decorate a good link', function() {
+            assert.deepEqual(linkDecorateUtils.getDecoratedLink(linkNode), ['span',
+               { 'class': 'LinkDecorator__wrap' },
+               decoratedLinkFirstChildNode
+            ]);
          });
       });
    });
