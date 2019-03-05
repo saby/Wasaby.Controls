@@ -883,7 +883,7 @@ define('Controls/Input/Base',
           * @private
           */
          _getTooltip: function() {
-            var valueDisplayElement = this._getField() || this._getReadOnlyField();
+            var valueDisplayElement = this._options.readOnly ? this._getReadOnlyField() : this._getField();
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
