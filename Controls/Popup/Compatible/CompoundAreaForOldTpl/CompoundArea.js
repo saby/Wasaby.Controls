@@ -797,7 +797,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.close();
          },
          close: function(arg) {
-            if (this._logicParent.waitForPopupCreated) {
+            if (!this.isDestroyed() && this._logicParent.waitForPopupCreated) {
                this._waitClose = true;
                return;
             }
