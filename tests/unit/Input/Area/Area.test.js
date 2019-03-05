@@ -229,68 +229,6 @@ define(
                }]);
             });
          });
-         describe('Calculating dimension values.', function() {
-            it('The field of small size in the theme to "default".', function() {
-               ctrl._beforeMount({
-                  size: 's',
-                  theme: 'default'
-               }).then(function() {
-                  if (Env.constants.isNodePlatform) {
-                     assert.deepEqual(ctrl._sizes, {
-                        indents: 0,
-                        rowHeight: 0
-                     });
-                  }
-
-                  if (Env.constants.isBrowserPlatform) {
-                     assert.deepEqual(ctrl._sizes, {
-                        indents: 4,
-                        rowHeight: 18
-                     });
-                  }
-               });
-            });
-            it('The field of medium size in the theme to "default".', function() {
-               ctrl._beforeMount({
-                  size: 'm',
-                  theme: 'default'
-               }).then(function() {
-                  if (Env.constants.isNodePlatform) {
-                     assert.deepEqual(ctrl._sizes, {
-                        indents: 0,
-                        rowHeight: 0
-                     });
-                  }
-
-                  if (Env.constants.isBrowserPlatform) {
-                     assert.deepEqual(ctrl._sizes, {
-                        indents: 4,
-                        rowHeight: 18
-                     });
-                  }
-               });
-            });
-            it('The field of large size in the theme to "default".', function() {
-               ctrl._beforeMount({
-                  size: 'l',
-                  theme: 'default'
-               }).then(function() {
-                  if (Env.constants.isNodePlatform) {
-                     assert.deepEqual(ctrl._sizes, {
-                        indents: 0,
-                        rowHeight: 0
-                     });
-                  }
-
-                  if (Env.constants.isBrowserPlatform) {
-                     assert.deepEqual(ctrl._sizes, {
-                        indents: 4,
-                        rowHeight: 18
-                     });
-                  }
-               });
-            });
-         });
       });
    }
 );

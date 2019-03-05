@@ -53,3 +53,25 @@
       width: ~"calc(100% + 6px)";
    }
 }
+
+& {
+   @sizes: s, m, l;
+   @countSupportLines: 10;
+
+   .for(@countSupportLines * length(@sizes), {
+      @lines: mod(@_i - 1, @countSupportLines) + 1;
+      @size: extract(@sizes, ceil(@_i / @countSupportLines));
+      @sizeVariable: "height_Area_oneLine_size_@{size}";
+      @sizeLines: @lines * @@sizeVariable;
+
+      .controls-Area__minHeight_theme_@{themeName}_countLines_@{lines}_size_@{size} {
+         min-height: @sizeLines;
+      }
+      .controls-Area__scroll.controls-Area__minHeight_theme_@{themeName}_countLines_@{lines}_size_@{size}_indented {
+         min-height: @sizeLines + @spacing_Area_between-topBorder-text + @spacing_Area_between-bottomBorder-text;
+      }
+      .controls-Area__scroll.controls-Area__maxHeight_theme_@{themeName}_countLines_@{lines}_size_@{size}_indented {
+         max-height: @sizeLines + @spacing_Area_between-topBorder-text + @spacing_Area_between-bottomBorder-text;
+      }
+   });
+}

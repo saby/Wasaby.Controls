@@ -3,7 +3,6 @@ define('Controls/Input/Area',
       'Env/Env',
       'Types/entity',
       'Controls/Input/Text',
-      'Core/Themes/ThemesControllerNew',
       'Core/helpers/Function/runDelayed',
 
       'wml!Controls/Input/Area/Area',
@@ -13,7 +12,7 @@ define('Controls/Input/Area',
       'Controls/Decorator/WrapURLs'
    ],
    function(
-      Env, entity, Text, ThemesControllerNew, runDelayed,
+      Env, entity, Text, runDelayed,
       template, fieldTemplate, readOnlyFieldTemplate
    ) {
       'use strict';
@@ -38,12 +37,16 @@ define('Controls/Input/Area',
       /**
        * @name Controls/Input/Area#minLines
        * @cfg {Number} Minimum number of lines.
+       * @remark
+       * A value between 1 and 10 is supported.
        * @default 1
        */
 
       /**
        * @name Controls/Input/Area#maxLines
        * @cfg {Number} Maximum number of lines.
+       * @remark
+       * A value between 1 and 10 is supported.
        */
 
       /**
@@ -54,132 +57,6 @@ define('Controls/Input/Area',
        * @default enter
        */
       var _private = {
-         heightRegExp: {},
-
-         /**
-          * The regular expression describes the margin css property with a value.
-          */
-         MARGIN_REG_EXP: /margin: ?((\d+px ?)+)/,
-
-         PATH_TO_THEME_VARIABLES: 'Controls/Input/Area/MeasuredVariables',
-
-         /**
-          * Returns a regular expression to find the height value of one row of the corresponding field size.
-          * @remark
-          * The height value is stored at $1.
-          * @param {Controls/Input/Area#size} size
-          * @return {RegExp}
-          */
-         getHeightRegExp: function(size) {
-            if (!(size in _private.heightRegExp)) {
-               /**
-                * The regular expression describes classes consisting of "_size_{{size}}"
-                * with the height parameter inside.
-                */
-               _private.heightRegExp[size] = new RegExp('_size_' + size + ' ?{[\\s\\S]*?height: ?(\\d+)');
-            }
-
-            return _private.heightRegExp[size];
-         },
-
-         /**
-          * @param {String} css
-          * @param {Controls/Input/Area#size} size
-          * @return {Controls/Input/Area/Types/FieldSizes.typedef}
-          */
-         calcSizesByCss: function(css, size) {
-            var sizes = {
-               rowHeight: null,
-               indents: null
-            };
-
-            /**
-             * Get the margin value of css.
-             */
-            var margin = _private.MARGIN_REG_EXP.exec(css)[1].split(' ').map(parseFloat);
-
-            /**
-             * The indentation is made up of margin-top and margin-bottom.
-             * The margin properties has different ways of declaring them.
-             * https://developer.mozilla.org/ru/docs/Web/CSS/margin#%D0%A1%D0%B8%D0%BD%D1%82%D0%B0%D0%BA%D1%81%D0%B8%D1%81
-             * ALL - when one value is specified, it applies the same margin to all four sides.
-             * VERTICAL_HORIZONTAL - when two values are specified, the first margin applies to the top
-             * and bottom, the second to the left and right.
-             * TOP_HORIZONTAL_BOTTOM - when three values are specified, the first margin applies to the top,
-             * the second to the left and right, the third to the bottom
-             * TOP_RIGHT_BOTTOM_LEFT - When four values are specified, the margins apply to the top, right,
-             * bottom, and left in that order
-             */
-            var ALL = 1;
-            var VERTICAL_HORIZONTAL = 2;
-            var TOP_HORIZONTAL_BOTTOM = 3;
-            var TOP_RIGHT_BOTTOM_LEFT = 4;
-
-            switch (margin.length) {
-               case ALL:
-               case VERTICAL_HORIZONTAL:
-                  sizes.indents = margin[0] * 2;
-                  break;
-               case TOP_HORIZONTAL_BOTTOM:
-               case TOP_RIGHT_BOTTOM_LEFT:
-                  sizes.indents = margin[0] + margin[2];
-                  break;
-               default:
-                  sizes.indents = 0;
-                  break;
-            }
-
-            /**
-             * Get the height value of css for the current field size.
-             */
-            var heightRegExp = _private.getHeightRegExp(size);
-            sizes.rowHeight = parseFloat(heightRegExp.exec(css)[1]);
-
-            return sizes;
-         },
-
-         /**
-          * @param {Controls/Input/Area} self
-          * @param {Controls/Input/Area#theme} theme
-          * @param {Controls/Input/Area#size} areaSize
-          * @return {Promise}
-          */
-         calcSizesByMeasuredBlock: function(self, theme, areaSize) {
-            /**
-             * Get a controller to make it read the css file.
-             */
-            var themesController = ThemesControllerNew.getInstance();
-
-            /**
-             * TODO: Method customLoadCssAsync falls on the server. Because of this control is not built.
-             * Remove after execution: https://online.sbis.ru/opendoc.html?guid=46581472-e279-4786-8e18-7757cc9ba1bb
-             */
-            if (typeof window === 'undefined') {
-               self._sizes = {
-                  rowHeight: 0,
-                  indents: 0
-               };
-               return new Promise(function(resolve) {
-                  resolve();
-               });
-            }
-
-            /**
-             * Load the css file to read the variable size of the field.
-             */
-            var loadCss = themesController.customLoadCssAsync(_private.PATH_TO_THEME_VARIABLES, theme);
-
-            /**
-             * Process the resulting css file.
-             * Get the size of the field on the string content of the css file.
-             */
-            loadCss.then(function(css) {
-               self._sizes = _private.calcSizesByCss(css, areaSize);
-            });
-
-            return loadCss;
-         },
-
          calcPositionCursor: function(container, textBeforeCursor) {
             var measuredBlock = document.createElement('div');
 
@@ -194,18 +71,6 @@ define('Controls/Input/Area',
             container.removeChild(measuredBlock);
 
             return position;
-         },
-
-         /**
-          * @param {Controls/Input/Area/Types/FieldSizes.typedef} sizes
-          * @param {Number} count Number of rows in the container.
-          * @param {Boolean} [hasIndents] Determine whether to ignore the indents.
-          * @return {Number}
-          */
-         calculateHeightContainer: function(sizes, count, hasIndents) {
-            var indents = hasIndents ? sizes.indents : 0;
-
-            return sizes.rowHeight * count + indents;
          },
 
          /**
@@ -300,6 +165,11 @@ define('Controls/Input/Area',
                Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
             }
 
+            if (min > 10 || max > 10) {
+               validated = false;
+               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.');
+            }
+
             return validated;
          }
       };
@@ -309,18 +179,10 @@ define('Controls/Input/Area',
 
          _multiline: true,
 
-         constructor: function(cfg) {
-            Area.superclass.constructor.call(this, cfg);
-
-            this._calculateHeightContainer = this._calculateHeightContainer.bind(this);
-         },
-
          _beforeMount: function(options) {
             Area.superclass._beforeMount.apply(this, arguments);
 
             _private.validateLines(options.minLines, options.maxLines);
-
-            return _private.calcSizesByMeasuredBlock(this, options.theme, options.size);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -329,13 +191,6 @@ define('Controls/Input/Area',
             if (this._options.minLines !== newOptions.minLines || this._options.maxLines !== newOptions.maxLines) {
                _private.validateLines(newOptions.minLines, newOptions.maxLines);
             }
-            if (this._options.theme !== newOptions.theme || this._options.size !== newOptions.size) {
-               return _private.calcSizesByMeasuredBlock(this, newOptions.theme, newOptions.size);
-            }
-         },
-
-         _beforeUnmount: function() {
-            this._calculateHeightContainer = undefined;
          },
 
          _keyDownHandler: function(event) {
@@ -359,10 +214,6 @@ define('Controls/Input/Area',
 
             this._field.template = fieldTemplate;
             this._readOnlyField.template = readOnlyFieldTemplate;
-         },
-
-         _calculateHeightContainer: function(count, hasIndents) {
-            return _private.calculateHeightContainer(this._sizes, count, hasIndents);
          },
 
          _isTriggeredChangeEventByEnterKey: function() {
