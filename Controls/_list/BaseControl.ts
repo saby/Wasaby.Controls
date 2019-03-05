@@ -627,6 +627,7 @@ var _private = {
                    nodeProperty: 'parent@',
                    rootKey: action.id,
                    showHeader: true,
+                   dropdownClassName: 'controls-itemActionsV__popup',
                    headConfig: {
                        caption: action.title
                    }
