@@ -16,9 +16,7 @@ define('Controls/Input/Base',
 
       'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Base/Field',
-      'wml!Controls/Input/Base/ReadOnly',
-
-      'css!theme?Controls/Input/Base/Base'
+      'wml!Controls/Input/Base/ReadOnly'
    ],
    function(
       Control, EnvEvent, Env, entity, tmplNotify, isEqual,
@@ -481,7 +479,7 @@ define('Controls/Input/Base',
           * @type {Controls/Input/Render#style}
           * @protected
           */
-         get _style() {
+         get _renderStyle() {
             return this._options.style;
          },
 
@@ -920,6 +918,8 @@ define('Controls/Input/Base',
             _private.handleInput(this, splitValue, 'insert');
          }
       });
+
+      Base._theme = ['Controls/Input/Base/Base'];
 
       Base.getDefaultOptions = function() {
          return {
