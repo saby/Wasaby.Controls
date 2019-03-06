@@ -32,7 +32,6 @@
 <Controls.Controllers.PrimaryAction on:triggered="_applyFilter()">
     <Controls.Popup.Templates.Dialog.DialogTemplate caption="{{_options.headingCaption}}"
                                                     captionStyle="{{_options.headingStyle}}"
-                                                    attr:ws-tab-cycling="true"
                                                     attr:class="controls-PanelFilter
                                                     {{_options.orientation === 'horizontal' ? 'controls-FilterPanel__horizontal'}}">
        <ws:topArea>
