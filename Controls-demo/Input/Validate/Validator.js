@@ -6,8 +6,8 @@ define('Controls-demo/Input/Validate/Validator', ['wml!Controls-demo/Input/Valid
          return true;
       }
       var value = args.value.toString();
-      if (value.length !== 3) {
+      if (value.length < 3) {
          return 'wml!Controls-demo/Input/Validate/ErrorMssg';
-      }
+      } return true;
    };
 });
