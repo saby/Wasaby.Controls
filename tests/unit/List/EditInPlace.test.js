@@ -1327,5 +1327,27 @@ define([
          assert.isTrue(setValidationResultCalled);
       });
 
+      it('index of a new item should update if the list gets changed', async function() {
+         const source = new sourceLib.Memory({
+            idProperty: 'id',
+            data: items
+         });
+
+         eip.saveOptions({
+            listModel: listModel,
+            source: source
+         });
+
+         await eip.beginAdd();
+         assert.equal(eip._editingItemData.index, 3);
+         listModel._items.append([new entity.Record({
+            rawData: {
+               id: 4,
+               title: 'test'
+            }
+         })]);
+         assert.equal(eip._editingItemData.index, 4);
+      });
+
    });
 });
