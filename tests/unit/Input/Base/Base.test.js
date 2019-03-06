@@ -13,7 +13,9 @@ define(
       'use strict';
 
       describe('Controls.Input.Base', function() {
-         var ctrl, calls;
+         var calls;
+         var ctrl = new Base();
+         ctrl._template({});
 
          beforeEach(function() {
             calls = [];
