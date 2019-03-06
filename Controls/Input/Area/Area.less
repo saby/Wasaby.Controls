@@ -29,7 +29,7 @@
 }
 
 .controls-Area_theme_@{themeName}_size {
-   @variants: s, m, l;
+   @variants: s, m, l, default;
 
    /**
     * When using line-height: normal, the row height in Firefox differs from the row height in other browsers.
@@ -64,7 +64,7 @@
 }
 
 & {
-   @sizes: s, m, l;
+   @sizes: s, m, l, default;
    @countSupportLines: 10;
 
    .for(@countSupportLines * length(@sizes), {

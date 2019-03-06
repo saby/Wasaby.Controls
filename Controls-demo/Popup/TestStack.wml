@@ -1,7 +1,7 @@
 <Controls.Popup.Templates.Stack.StackTemplate caption="PopupManager">
    <ws:topArea>
       <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-         <Controls.Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
+         <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
       </div>
    </ws:topArea>
    <ws:contentArea>
@@ -16,34 +16,34 @@
                <ws:templateOptions type="dialog"/>
             </ws:popupOptions>
          </Controls.Popup.Opener.Dialog>
-         <Controls.Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
+         <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (TestStack, dialog)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (TestStack, dialog)"
                           on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'dialog')"/>
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (TestStack, floatArea, stack)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (TestStack, floatArea, stack)"
                           on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'floatArea', true)"/>
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (TestStack, floatArea, not stack)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (TestStack, floatArea, not stack)"
                           on:click="_openOldPanel('Controls-demo/Popup/TestStack', 'floatArea', false)"/>
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, dialog)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (MyTextBox, dialog)"
                           on:click="_openOldPanel('Controls-demo/Popup/resources/MyTextBox', 'dialog')"/>
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea)"
                           on:click="_openOldPanel('Controls-demo/Popup/resources/MyTextBox', 'floatArea', true)"/>
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea, not stack)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (MyTextBox, floatArea, not stack)"
                           on:click="_openOldPanel('Controls-demo/Popup/resources/MyTextBox', 'floatArea', false)"/>
 
          <br/>
-         <Controls.Button caption="Открыть через OpenEditDialog (FormController, dialog)"
+         <Controls.buttons:Button caption="Открыть через OpenEditDialog (FormController, dialog)"
                           on:click="_openOldPanel('Controls-demo/Popup/resources/SimpleListEditDialog', 'dialog')"/>
          <br/>
-         <Controls.Button caption="Открыть modalDialog" on:click="_openModalDialog()"
+         <Controls.buttons:Button caption="Открыть modalDialog" on:click="_openModalDialog()"
                           attr:class="ControlsDemo-TestStack__modalDialog"/>
          <br/>
-         <Controls.Button name="infoboxButton" caption="Открыть Инфобокс" on:click="_openInfobox()"
+         <Controls.buttons:Button name="infoboxButton" caption="Открыть Инфобокс" on:click="_openInfobox()"
                           attr:class="ControlsDemo-TestStack__infobox"/>
 
       </div>

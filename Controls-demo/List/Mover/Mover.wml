@@ -21,6 +21,6 @@
          </Controls.List.Container>
       </div>
    </Controls.Container.Data>
-   <Controls.Button on:click="_onClick()" caption="{{_reloadCaption}}" />
+   <Controls.buttons:Button on:click="_onClick()" caption="{{_reloadCaption}}" />
    <Controls.Popup.Opener.Confirmation name="popupOpener" />
 </div>;

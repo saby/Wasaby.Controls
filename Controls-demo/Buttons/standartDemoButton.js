@@ -2,7 +2,7 @@ define('Controls-demo/Buttons/standartDemoButton', [
    'Core/Control',
    'wml!Controls-demo/Buttons/standartDemoButton',
    'css!Controls-demo/Buttons/standartDemoButton',
-   'Controls/Button'
+   'Controls/buttons'
 ], function(Control, template) {
    'use strict';
 

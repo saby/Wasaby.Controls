@@ -49,7 +49,7 @@
 }
 
 .controls-Render_theme_@{themeName}_size {
-   @variants: s, m, l;
+   @variants: s, m, l, default;
    .for(@variants, { &_@{_item} {
       height: ~"@{height_Render_size_@{_item}}";
    } });
@@ -68,7 +68,7 @@
 }
 
 .controls-Render_theme_@{themeName}_fontStyle {
-   @variants: default s, primary s, secondary s, default m, primary m, secondary m, default l, primary l, secondary l;
+   @variants: default s, primary s, secondary s, default m, primary m, secondary m, default l, primary l, secondary l, default default, primary default, secondary default;
    .for(@variants, { @fontStyle: extract(@_item, 1); @size: extract(@_item, 2); &_@{fontStyle}_size_@{size} {
       font-size: ~"@{font-size_Render_fontStyle_@{fontStyle}_size_@{size}}";
       font-weight: ~"@{font-weight_Render_fontStyle_@{fontStyle}_size_@{size}}";

@@ -11,6 +11,7 @@
                      on:dragStart="_dragStartFirst()"
                      on:dragEnd="_dragEndFirst()"
                      itemsDragNDrop="{{true}}"
+                     multiSelectVisibility="onhover"
                      itemsReadyCallback="{{_itemsReadyCallbackFirst}}"
                      itemActions="{{_itemActionsFirst}}">
                      <ws:itemTemplate>

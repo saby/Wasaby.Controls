@@ -59,7 +59,8 @@ define('Controls/Input/Render',
             size: entity.descriptor(String).oneOf([
                's',
                'm',
-               'l'
+               'l',
+               'default'
             ]).required(),
             fontStyle: entity.descriptor(String).oneOf([
                'default',

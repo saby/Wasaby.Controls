@@ -881,7 +881,7 @@ define('Controls/Input/Base',
           * @private
           */
          _getTooltip: function() {
-            var valueDisplayElement = this._getField() || this._getReadOnlyField();
+            var valueDisplayElement = this._options.readOnly ? this._getReadOnlyField() : this._getField();
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
@@ -923,9 +923,9 @@ define('Controls/Input/Base',
 
       Base.getDefaultOptions = function() {
          return {
-            size: 'm',
             tooltip: '',
             style: 'info',
+            size: 'default',
             placeholder: '',
             textAlign: 'left',
             fontStyle: 'default',
@@ -948,7 +948,8 @@ define('Controls/Input/Base',
             size: entity.descriptor(String).oneOf([
                's',
                'm',
-               'l'
+               'l',
+               'default'
             ]),
             fontStyle: entity.descriptor(String).oneOf([
                'default',
