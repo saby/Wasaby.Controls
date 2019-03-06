@@ -253,17 +253,6 @@ define('Controls/List/Grid/GridViewModel', [
             return sortingDirection;
          },
 
-         isLayoutFixed: function(columns) {
-            var
-               autoColumnsCount = 0;
-            for (var i = 0; i < columns.length; i++) {
-               if (!columns[i].width || columns[i].width === 'auto') {
-                  autoColumnsCount++;
-               }
-            }
-            return autoColumnsCount !== 1;
-         },
-
          isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
@@ -321,12 +310,12 @@ define('Controls/List/Grid/GridViewModel', [
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
          },
 
-         _prepareCrossBrowserColumn: function(column, isNotFullGridSupport, columnsCount) {
+         _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
             var
                result = cClone(column);
             if (isNotFullGridSupport) {
-               if (result.width === '1fr' || !result.width && columnsCount === 1) {
-                  result.width = '100%';
+               if (result.width === '1fr') {
+                  result.width = 'auto';
                }
             }
             return result;
@@ -336,7 +325,7 @@ define('Controls/List/Grid/GridViewModel', [
             var
                result = [];
             for (var i = 0; i < columns.length; i++) {
-               result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport, columns.length));
+               result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport));
             }
             return result;
          },
@@ -386,10 +375,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          isStickyHeader: function() {
             return this._options.stickyHeader;
-         },
-
-         isLayoutFixed: function() {
-            return this._layoutFixed;
          },
 
          getCurrentHeaderColumn: function() {
@@ -546,7 +531,6 @@ define('Controls/List/Grid/GridViewModel', [
 
          _setColumns: function(columns) {
             this._columns = this._prepareColumns(columns);
-            this._layoutFixed = _private.isLayoutFixed(this._columns);
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
