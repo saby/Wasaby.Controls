@@ -38,6 +38,9 @@ var _private = {
             Env.IoC.resolve('ILogger')
                 .warn('IList', 'Option "rightPadding" is deprecated and will be removed in 19.200. Use option "itemPadding.right".');
         }
+        if (cfg.groupMethod) {
+            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+        }
 
     },
 
@@ -76,7 +79,7 @@ var _private = {
     getDisplayFilter: function(data, cfg) {
         var
             filter = [];
-        if (cfg.groupMethod || cfg.groupingKeyCallback) {
+        if (cfg.groupingKeyCallback) {
             filter.push(_private.displayFilterGroups.bind({ collapsedGroups: data.collapsedGroups }));
         }
         if (cfg.itemsFilterMethod) {
@@ -99,12 +102,13 @@ var ItemsViewModel = BaseViewModel.extend({
         ItemsViewModel.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFnc = this._onCollectionChange.bind(this);
         this._collapsedGroups = _private.prepareCollapsedGroupsByArray(cfg.collapsedGroups);
+        this._options.groupingKeyCallback = cfg.groupingKeyCallback || cfg.groupMethod;
         if (cfg.items) {
             if (cfg.itemsReadyCallback) {
                 cfg.itemsReadyCallback(cfg.items);
             }
             this._items = cfg.items;
-            this._display = this._prepareDisplay(cfg.items, cfg);
+            this._display = this._prepareDisplay(cfg.items, this._options);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
         }
     },
@@ -203,7 +207,7 @@ var ItemsViewModel = BaseViewModel.extend({
                     return self._calcItemVersion(itemData.item, itemData.key);
                 }
             };
-        if (this._options.groupMethod || this._options.groupingKeyCallback) {
+        if (this._options.groupingKeyCallback) {
             if (itemData.item === ControlsConstants.view.hiddenGroup || !itemData.item.get) {
                 itemData.isGroup = true;
                 itemData.isHiddenGroup = itemData.item === ControlsConstants.view.hiddenGroup;
@@ -260,6 +264,11 @@ var ItemsViewModel = BaseViewModel.extend({
 
     setGroupMethod: function(groupMethod) {
         this._options.groupMethod = groupMethod;
+        this._nextModelVersion();
+    },
+
+    setGroupingKeyCallback: function(groupingKeyCallback) {
+        this._options.groupingKeyCallback = groupingKeyCallback;
         this._nextModelVersion();
     },
 
