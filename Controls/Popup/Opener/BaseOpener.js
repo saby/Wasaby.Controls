@@ -214,7 +214,8 @@ define('Controls/Popup/Opener/BaseOpener',
                }
             }
 
-            CoreMerge(baseConfig, coreClone(popupOptions || {}));
+            var baseCfg = coreClone(baseConfig);
+            CoreMerge(baseCfg, coreClone(popupOptions || {}));
 
             if (baseConfig.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
