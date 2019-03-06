@@ -195,13 +195,13 @@ define('Controls/Explorer', [
       _hoveredCrumbChanged: function(event, item) {
          this._hoveredBreadCrumb = item ? item.getId() : undefined;
       },
-      _onItemClick: function(event, item) {
+      _onItemClick: function(event, item, clickEvent) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
             this._notify('rootChanged', [this._root]);
          }
          event.stopPropagation();
-         this._notify('itemClick', [item]);
+         this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
