@@ -1,9 +1,8 @@
 define('Controls/Input/Mask',
    [
-      'Core/IoC',
+      'Env/Env',
       'Controls/Utils/tmplNotify',
       'Controls/Input/Base',
-      'Core/detection',
       'Core/helpers/Object/isEqual',
       'Controls/Input/Mask/ViewModel',
       'Core/helpers/Function/runDelayed',
@@ -13,7 +12,7 @@ define('Controls/Input/Mask',
 
       'css!Controls/Input/Mask/Mask'
    ],
-   function(IoC, tmplNotify, Base, cDetection, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl) {
+   function(Env, tmplNotify, Base, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl) {
 
       'use strict';
 
@@ -142,7 +141,7 @@ define('Controls/Input/Mask',
 
                if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
-                  IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
                } else {
                   validation = true;
                }
