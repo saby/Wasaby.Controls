@@ -217,15 +217,15 @@ define('Controls/Popup/Opener/BaseOpener',
             var baseCfg = coreClone(baseConfig);
             CoreMerge(baseCfg, coreClone(popupOptions || {}));
 
-            if (baseConfig.hasOwnProperty('closeByExternalClick')) {
+            if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-               baseConfig.closeOnOutsideClick = baseConfig.closeByExternalClick;
+               baseCfg.closeOnOutsideClick = baseConfig.closeByExternalClick;
             }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
-            baseConfig.opener = baseConfig.opener || Vdom.DefaultOpenerFinder.find(this) || this;
-            this._prepareNotifyConfig(baseConfig);
-            return baseConfig;
+            baseCfg.opener = baseCfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
+            this._prepareNotifyConfig(baseCfg);
+            return baseCfg;
          },
 
          _prepareNotifyConfig: function(cfg) {
