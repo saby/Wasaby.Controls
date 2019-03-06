@@ -310,10 +310,16 @@ define([
 
       it('_onItemActionClick', function() {
          var callBackCount = 0;
-         var instance = new ItemActionsControl();
+         var cfg = {
+            listModel: listViewModel,
+            itemActions: actions
+         };
+         var instance = new ItemActionsControl(cfg);
+         instance.saveOptions(cfg);
          var fakeItemData = {
             item: {},
-            index: 0
+            index: 0,
+            key: 2
          };
          var fakeHTMLElement = {
             className: 'controls-ListView__itemV'
@@ -343,6 +349,7 @@ define([
          };
          instance._onItemActionsClick({ stopPropagation: function() {} }, action, fakeItemData);
          assert.equal(callBackCount, 2);
+         assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
       });
 
       it('getDefaultOptions ', function() {
