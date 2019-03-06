@@ -9,7 +9,7 @@ define('Controls/Button/interface/IIconStyle', [
     */
 
    /**
-    * @name Controls.buttons:Button/interface/IIconStyle#iconStyle
+    * @name Controls/Button/interface/IIconStyle#iconStyle
     * @cfg {Enum} Icon display style.
     * @variant primary
     * @variant secondary
