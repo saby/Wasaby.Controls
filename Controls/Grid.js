@@ -12,6 +12,7 @@ define('Controls/Grid', [
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/demo-ws4-edit-in-place-row-editor">How to configure editing in your list with row editor template.</a>.</li>
     * </ul>
     *
     * @class Controls/Grid
