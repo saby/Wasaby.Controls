@@ -48,6 +48,19 @@ define([
          Loading._show('message 3');
          assert.equal(Loading._stack.getCount(), 3);
          assert.equal(Loading._stack.at(2).message, 'message 3');
+
+         config = {
+            message: 'message 4',
+            overlay: 'none'
+         };
+
+         id = Loading.show(config);
+         assert.equal(Loading._stack.getCount(), 4);
+         assert.equal(Loading._stack.at(3).message, 'message 4');
+         assert.equal(typeof id, 'string');
+
+         Loading.hide(id);
+         assert.equal(Loading._stack.getCount(), 3);
       });
 
       it('LoadingIndicator - isOpened', () => {
