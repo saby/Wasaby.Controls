@@ -8,7 +8,8 @@ define('Controls/Selector/Suggest',
       'Controls/History/Service',
       'Types/util',
       'Types/entity',
-      'Core/core-merge'
+      'Core/core-merge',
+      'css!Controls/Selector/Suggest/Suggest'
    ],
    function(Control, template, SourceController, BaseViewModel, HistorySource, HistoryService, util, entity, Merge) {
       'use strict';
@@ -38,23 +39,13 @@ define('Controls/Selector/Suggest',
             });
             return self._sourceController.load(filter).addCallback(function(items) {
                var value = util.object.getPropertyValue(items.at(0), options.displayProperty);
-               _private.createViewModel(self, value);
+               _private.updateValue(self, value);
                return items;
-            });
-         },
-
-         createViewModel: function(self, value) {
-            self._value = value;
-            self._simpleViewModel = new BaseViewModel({
-               value: value
             });
          },
 
          updateValue: function(self, value) {
             self._value = value;
-            self._simpleViewModel.updateOptions({
-               value: value
-            });
          },
 
          prepareSuggestTemplate: function(displayProperty, suggestTemplate) {
@@ -89,7 +80,7 @@ define('Controls/Selector/Suggest',
                   return items;
                });
             }
-            _private.createViewModel(this, '');
+            _private.updateValue(this, '');
             this._searchValue = '';
          },
 
