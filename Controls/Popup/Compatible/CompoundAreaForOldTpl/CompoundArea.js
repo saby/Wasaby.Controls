@@ -798,8 +798,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          close: function(arg) {
             if (!this.isDestroyed()) {
-               if (this._logicParent.waitForPopupCreated)
-               {
+               if (this._logicParent.waitForPopupCreated) {
                   this._waitClose = true;
                   return;
                }
@@ -813,7 +812,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                   }
                   this._isClosing = true;
                   if (this._notifyCompound('onBeforeClose', arg) !== false) {
-                     this._notifyVDOM('close', null, {bubbling: true});
+                     this._notifyVDOM('close', null, { bubbling: true });
                      this._notifyCompound('onClose', arg);
                      this._notifyCompound('onAfterClose', arg);
                   }
