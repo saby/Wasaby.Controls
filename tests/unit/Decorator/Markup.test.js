@@ -169,6 +169,7 @@ define([
             var html =
                '<p>' + linkHtml + '</p>' +
                '<p>texthttps://ya.ru. More text</p>' +
+               '<p><a>https://ya.ru</a>https://ya.ru<a>https://ya.ru</a></p>' +
                '<p>https://ya.ru</p>' +
                '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
@@ -189,6 +190,7 @@ define([
             var json = [
                ['p', linkNode],
                ['p', 'text', linkNode, '. More text'],
+               ['p', ['a', 'https://ya.ru'], linkNode, ['a', 'https://ya.ru']],
                ['p', linkNode],
                ['p', linkNode, nbsp, linkNode, nbsp],
                ['p', '  ', linkNode, '  '],

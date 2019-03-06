@@ -63,7 +63,7 @@ define('Controls/Decorator/Markup/Converter', [
       return [];
    }
 
-   var linkTagPattern = '((?:<a[ >])|(?:/a>))',
+   var linkTagPattern = '(/?a[ >])',
       linkPrefixPattern = '((?:https?|ftp|file|smb)://|www\\.)',
       linkPattern = '(' + linkPrefixPattern + '(?:[^\\s\\x16<>]+?))',
       emailPattern = '([^\\s\\x16<>]+@[^\\s\\x16<>]+(?:\\.[^\\s\\x16<>]{2,6}?))',
@@ -78,9 +78,9 @@ define('Controls/Decorator/Markup/Converter', [
    function wrapUrl(html) {
       var resultHtml = html.replace(nbspRegExp, nbspReplacer),
          inLink = false;
-      resultHtml = resultHtml.replace(linkParseRegExp, function(match, linkTag, link, linkPrefix, email, ending) {
+      resultHtml = resultHtml.replace(linkParseRegExp, function(match, linkTag, link, linkPrefix, email, ending, index, origin) {
          var linkParseResult;
-         if (linkTag) {
+         if (linkTag && origin[index - 1] === '<') {
             inLink = !inLink;
             linkParseResult = match;
          } else if (inLink) {
