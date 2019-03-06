@@ -122,6 +122,7 @@ var
         resetVariables: function (self) {
             if (self._editingItem) {
                 self._editingItem.unsubscribe('onPropertyChange', self._resetValidation);
+                self._options.listModel.unsubscribe('onCollectionChange', self._updateIndex);
             }
             self._originalItem = null;
             self._editingItem = null;
@@ -263,6 +264,7 @@ var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace.prototype 
              */
             this._children.formController.setValidationResult();
         }.bind(this);
+        this._updateIndex = this._updateIndex.bind(this);
     },
 
     _beforeMount: function (newOptions) {
@@ -451,6 +453,16 @@ var EditInPlace = Control.extend(/** @lends Controls/List/EditInPlace.prototype 
             this._editingItemData.drawActions = this._options.editingConfig && this._options.editingConfig.toolbarVisibility;
         }
         listModel._setEditingItemData(this._editingItemData);
+        listModel.subscribe('onCollectionChange', this._updateIndex);
+    },
+
+    _updateIndex() {
+       if (this._isAdd) {
+          /**
+           * If an item gets added to the list during editing we should update index of editing item to preserve its position.
+           */
+          this._editingItemData.index = _private.getEditingItemIndex(this, this._editingItem, this._options.listModel);
+       }
     },
 
     _onRowDeactivated: function (e, eventOptions) {
