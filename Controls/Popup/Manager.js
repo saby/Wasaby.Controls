@@ -169,9 +169,9 @@ define('Controls/Popup/Manager',
                         if (!_private.activeElement[id]) {
                            _private.activeElement[id] = _private.getActiveElement();
                         }
-                     }, function(popup) {
+                     }, function() {
                         // if pendings is exist, take focus back while pendings are finishing
-                        popup._container.focus();
+                        _private.getPopupContainer().getPopupById(id).activate();
                      }, function() {
                         var itemContainer = _private.getItemContainer(id);
                         if (item.popupOptions.isCompoundTemplate) {
