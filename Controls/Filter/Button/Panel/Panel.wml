@@ -55,7 +55,7 @@
           </div>
        </ws:topArea>
        <ws:contentArea>
-          <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex">
+          <Controls.Container.Scroll attr:class="controls-ScrollContainer__flex" attr:ws-autofocus="true">
              <ws:if data="{{_options.orientation === 'horizontal'}}">
                 <div class="controls-FilterPanel__content-horizontal">
                    <div class="controls-FilterPanel__filtersWrapper">

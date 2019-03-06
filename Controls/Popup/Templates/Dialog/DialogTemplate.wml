@@ -1,5 +1,5 @@
-<Controls.DragNDrop.Controller name="dragNDrop" on:dragmove="_onDragMove()" on:dragend="_onDragEnd()" >
-    <div class="controls-DialogTemplate">
+<Controls.DragNDrop.Controller name="dragNDrop" on:dragmove="_onDragMove()" on:dragend="_onDragEnd()">
+    <div class="controls-DialogTemplate" ws-tab-cycling="true">
         <ws:if data="{{_options.caption || _options.headingCaption || _options.topArea || _options.headerContentTemplate }}">
             <div class="controls-DialogTemplate__top-area {{_options.draggable ? 'controls-DialogTemplate__top-area-draggable'}}">
             <div class="controls-DialogTemplate__top-area-content" on:mousedown="_onMouseDown()" on:touchstart="_onMouseDown()">
