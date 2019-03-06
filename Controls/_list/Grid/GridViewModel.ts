@@ -278,6 +278,7 @@ var
             this._options = cfg;
             GridViewModel.superclass.constructor.apply(this, arguments);
             this._model = this._createModel(cfg);
+            this._options.groupingKeyCallback = cfg.groupingKeyCallback || cfg.groupMethod;
             this._onListChangeFn = function(event, changesType, action, newItems, newItemsIndex, removedItems, removedItemsIndex) {
                 if (changesType === 'collectionChanged' || changesType === 'indexesChanged') {
                     this._ladder = _private.prepareLadder(this);
@@ -683,7 +684,7 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (this._options.groupMethod || this._options.groupingKeyCallback) {
+            if (this._options.groupingKeyCallback) {
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
                     return current;
