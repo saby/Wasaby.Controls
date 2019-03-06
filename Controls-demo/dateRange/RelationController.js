@@ -32,24 +32,7 @@ define('Controls-demo/dateRange/RelationController', [
       _bindType2: 'normal',
 
       _beforeMount: function() {
-      },
-
-      _onRelationButtonClick: function() {
-         if (this._bindType === 'normal') {
-            this._bindType = 'byCapacity';
-         } else {
-            this._bindType = 'normal';
-         }
-      },
-
-      _onRelationButtonClick2: function() {
-         if (this._bindType2 === 'normal') {
-            this._bindType2 = 'byCapacity';
-         } else {
-            this._bindType2 = 'normal';
-         }
       }
-
    });
    return ModuleClass;
 });

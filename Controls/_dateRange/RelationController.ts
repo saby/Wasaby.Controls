@@ -22,7 +22,7 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * @example
  * This example shows how to bind 2 range input controls.
  * <pre>
- *    <Controls.dateRange.RelationController
+ *    <Controls.dateRange:RelationController
  *          bind:startValue0="_startValue0"
  *          bind:endValue0="_endValue0"
  *          bind:startValue1="_startValue1"
@@ -40,7 +40,7 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * @example
  * This example shows how to bind 2 range input controls.
  * <pre>
- *    <Controls.dateRange.RelationController
+ *    <Controls.dateRange:RelationController
  *          bind:startValue0="_startValue0"
  *          bind:endValue0="_endValue0"
  *          bind:startValue1="_startValue1"
@@ -58,7 +58,8 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * @example
  * This example shows how to set the bind type.
  * <pre>
- *    <Controls._dateRange.RelationController bind:bindType="_bindType" />
+ *    <Controls.dateRange:RelationButton bind:value="_bindType"/>
+ *    <Controls.dateRange:RelationController bind:bindType="_bindType" />
  * </pre>
  * <pre>
  *    Control.extend({
@@ -74,7 +75,7 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * @param {String} bindType New bind type value.
  * @example
  * <pre>
- *    <Controls._dateRange.RelationController on:bindTypeChanged="_bindTypeChangedHandler()"/>
+ *    <Controls.dateRange:RelationController on:bindTypeChanged="_bindTypeChangedHandler()"/>
  * </pre>
  * <pre>
  *    Control.extend({
@@ -96,7 +97,7 @@ import template = require('wml!Controls/_dateRange/RelationController/RelationCo
  * @param {Array} value Array with periods.
  * @example
  * <pre>
- *    <Controls._dateRange.RelationController on:periodsChanged="_periodsChangedHandler()"/>
+ *    <Controls.dateRange:RelationController on:periodsChanged="_periodsChangedHandler()"/>
  * </pre>
  * <pre>
  *    Control.extend({
