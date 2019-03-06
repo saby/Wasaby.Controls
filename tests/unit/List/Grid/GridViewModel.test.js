@@ -117,37 +117,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
 
       describe('"_private" block', function() {
-         it('isLayoutFixed', function() {
-            var
-               columns1 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   }
-               ],
-               columns2 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  {}
-               ],
-               columns3 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  { width: 'auto'  }
-               ],
-               columns4 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  { width: 'auto'  },
-                  {}
-               ];
-            assert.isTrue(GridViewModel._private.isLayoutFixed(columns1));
-            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns2));
-            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns3));
-            assert.isTrue(GridViewModel._private.isLayoutFixed(columns4));
-         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -787,7 +756,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   },
                   {
                      title: 'second',
-                     width: '100%'
+                     width: 'auto'
                   },
                   {
                      title: 'third',
