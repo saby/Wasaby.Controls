@@ -61,7 +61,7 @@ define('Controls/Container/Async',
             var result;
             var self = this;
             if (!self._isServer()) {
-               if (!constants.compat && (receivedState || self._isLoaded(options.templateName))) {
+               if (!this._isCompat() && (receivedState || self._isLoaded(options.templateName))) {
                   self._loadContentSync(options.templateName, options.templateOptions, false);
                } else {
                   result = self._loadContentAsync(options.templateName, options.templateOptions, true);
@@ -185,6 +185,10 @@ define('Controls/Container/Async',
 
          _isServer: function() {
             return typeof window === 'undefined';
+         },
+
+         _isCompat: function() {
+            return constants.compat;
          }
       });
 
