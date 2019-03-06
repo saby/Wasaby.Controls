@@ -641,7 +641,6 @@ define('Controls/Input/Base',
          _clickHandler: function() {
             if (this._options.selectOnClick && this._firstClick) {
                this._viewModel.select();
-               this._firstClick = false;
             } else {
                var self = this;
 
@@ -660,6 +659,8 @@ define('Controls/Input/Base',
                   self._viewModel.changesHaveBeenApplied();
                });
             }
+
+            this._firstClick = false;
          },
 
          /**
