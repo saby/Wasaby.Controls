@@ -3,6 +3,7 @@ define('Controls/Container/Async',
       'Core/Control',
       'Core/Deferred',
       'View/Request',
+      'Core/constants',
       'wml!Controls/Container/Async/Async',
       'Controls/Container/Async/ModuleLoader',
       'View/Executor/Utils',
@@ -14,6 +15,7 @@ define('Controls/Container/Async',
    function(Base,
       Deferred,
       Request,
+      constants,
       template,
       ModuleLoader,
       Utils,
@@ -59,7 +61,7 @@ define('Controls/Container/Async',
             var result;
             var self = this;
             if (!self._isServer()) {
-               if (receivedState || self._isLoaded(options.templateName)) {
+               if (!constants.compat && (receivedState || self._isLoaded(options.templateName))) {
                   self._loadContentSync(options.templateName, options.templateOptions, false);
                } else {
                   result = self._loadContentAsync(options.templateName, options.templateOptions, true);
