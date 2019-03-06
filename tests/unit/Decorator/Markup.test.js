@@ -84,7 +84,7 @@ define([
             href: 'http://www.ya.ru',
             target: '_blank'
          },
-         'www.ya.ru'
+         'http://www.ya.ru'
       ],
       ftpLinkNode = ['a',
          {
@@ -168,6 +168,7 @@ define([
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
+               '<p>texthttps://ya.ru. More text</p>' +
                '<p>https://ya.ru</p>' +
                '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
@@ -187,6 +188,7 @@ define([
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
                ['p', linkNode],
+               ['p', 'text', linkNode, '. More text'],
                ['p', linkNode],
                ['p', linkNode, nbsp, linkNode, nbsp],
                ['p', '  ', linkNode, '  '],
