@@ -1,21 +1,24 @@
-.controls-Render_style_search {
+.controls-Render_theme_@{themeName}_style_search {
    border-color: @border-color_Search;
    background: @background-color_Search;
 }
-.controls-Render_style_search_active {
+
+.controls-Render_theme_@{themeName}_style_search_active {
    border-color: @border-color_Search_active;
    background: @background-color_Search;
 }
-.controls-Render_style_search:focus-within {
-   border-color: @border-color_Search_active;
-   background: @background-color_Search;
-}
-.controls-Render_style_search_readOnly {
+
+.controls-Render_theme_@{themeName}_style_search_readOnly {
    border-color: @border-color_Search_readOnly;
    background: @background-color_Search;
 }
 
-.controls-Search__field_margin {
+.controls-Render_theme_@{themeName}_style_search:focus-within {
+   border-color: @border-color_Search_active;
+   background: @background-color_Search;
+}
+
+.controls-Search__field_theme_@{themeName}_margin {
    margin: 0 @iconReset-iconSearch_spacing 0 @border-left_content_spacing_Search;
 }
 
@@ -24,49 +27,49 @@
    align-self: center;
 }
 
-.controls-Search__button {
+.controls-Search__button_theme_@{themeName} {
    cursor: pointer;
    .icon-size(@icon-size_Search);
 }
 
-.controls-Search__button_readOnly {
+.controls-Search__button_theme_@{themeName}_readOnly {
    cursor: default;
 }
 
-.controls-Search__searchButton_position {
+.controls-Search__searchButton_theme_@{themeName}_position {
    margin-right: @border-right_content_spacing_Search;
 }
 
-.controls-Search__resetButton_position {
+.controls-Search__resetButton_theme_@{themeName}_position {
    margin-right: @iconReset-iconSearch_spacing;
 }
 
-.controls-Search__searchButton_color {
+.controls-Search__searchButton_theme_@{themeName}_color {
    color: @color_Search_iconSearch;
 }
 
-.controls-Search__searchButton_color:active {
+.controls-Search__searchButton_theme_@{themeName}_color:active {
    color: @color_Search_iconSearch_active;
 }
 
 .ws-is-no-touch {
-   .controls-Render_style_search:hover {
+   .controls-Render_theme_@{themeName}_style_search:hover {
       border-color: @border-color_Search_active;
       background: @background-color_Search;
    }
-   .controls-Search__searchButton_color:hover {
+   .controls-Search__searchButton_theme_@{themeName}_color:hover {
       color: @color_Search_iconSearch_hovered;
    }
 }
 
-.controls-Search__searchButton_color_readOnly {
+.controls-Search__searchButton_theme_@{themeName}_color_readOnly {
    color: @color_Search_iconSearch_readOnly;
 }
 
-.controls-Search__resetButton_color {
+.controls-Search__resetButton_theme_@{themeName}_color {
    color: @color_Search_iconReset;
 }
 
-.controls-Search__nativeField_caretEmpty {
+.controls-Search__nativeField_theme_@{themeName}_caretEmpty {
    caret-color: @color_Search-caret_empty;
 }

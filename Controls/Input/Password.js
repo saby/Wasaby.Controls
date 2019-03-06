@@ -4,9 +4,7 @@ define('Controls/Input/Password',
       'Types/entity',
       'Controls/Input/Password/ViewModel',
 
-      'wml!Controls/Input/Password/PasswordVisibilityButton',
-
-      'css!theme?Controls/Input/Password/Password'
+      'wml!Controls/Input/Password/PasswordVisibilityButton'
    ],
 
    function(Base, entity, ViewModel, passwordVisibilityButtonTemplate) {
@@ -48,6 +46,9 @@ define('Controls/Input/Password',
 
          isVisiblePassword: function() {
             return this._passwordVisible;
+         },
+         getTheme: function() {
+            return this._options.theme;
          }
       };
 
@@ -71,6 +72,7 @@ define('Controls/Input/Password',
             this._type = _private.calculateType(this._passwordVisible, options.autoComplete);
 
             this._afterFieldWrapper.template = passwordVisibilityButtonTemplate;
+            this._afterFieldWrapper.scope.getTheme = _private.getTheme.bind(this);
             this._afterFieldWrapper.scope.isVisibleButton = _private.isVisibleButton.bind(this);
             this._afterFieldWrapper.scope.isVisiblePassword = _private.isVisiblePassword.bind(this);
          },
@@ -105,6 +107,8 @@ define('Controls/Input/Password',
             return autoComplete || passwordVisible ? displayValue : '•'.repeat(displayValue.length);
          }
       });
+
+      Password._theme.push('Controls/Input/Password/Password');
 
       Password.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();
