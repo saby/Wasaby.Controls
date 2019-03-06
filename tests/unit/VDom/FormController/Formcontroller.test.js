@@ -42,14 +42,10 @@ define([
             let beforeMountResult = FC._beforeMount(cfg);
             assert.equal(isReading, true);
             assert.equal(isCreating, false);
-            assert.isTrue(
-               beforeMountResult instanceof Deferred ||
-               beforeMountResult instanceof Promise
-            );
-               beforeMountResult.then(({data}) => {
-                  assert.equal(data, true);
-                  resolve();
-            });
+            assert.notEqual(beforeMountResult, true);
+            resolve();
+         }).catch((error) => {
+               done(error);
          });
 
          let p3 = new Promise((resolve) => {
@@ -67,6 +63,8 @@ define([
             beforeMountResult.then(({data}) => {
                assert.equal(data, true);
                resolve();
+            }).catch((error) => {
+               done(error);
             });
          });
          let p4 = new Promise((resolve) => {

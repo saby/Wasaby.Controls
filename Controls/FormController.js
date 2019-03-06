@@ -145,7 +145,7 @@ define('Controls/FormController', [
 
             // If there is a key - read the record. Not waiting for answer BL
             if (cfg.key !== undefined && cfg.key !== null) {
-               return _private.readRecordBeforeMount(this, cfg).addCallback(prepareCrudResult);
+               _private.readRecordBeforeMount(this, cfg).addCallback(prepareCrudResult);
             }
          } else if (cfg.key !== undefined && cfg.key !== null) {
             return _private.readRecordBeforeMount(this, cfg).addCallback(prepareCrudResult);
@@ -399,6 +399,7 @@ define('Controls/FormController', [
          return record;
       },
       read: function(key, readMetaData) {
+         var self = this;
          readMetaData = readMetaData || this._options.readMetaData;
          var res = this._children.crud.read(key, readMetaData);
          res.addCallbacks(this._readHandler.bind(this), function(error) {
@@ -589,7 +590,7 @@ define('Controls/FormController', [
             return;
          }
 
-         if (self._children && self._children.dialogOpener) {
+         if (Env.constants.isBrowserPlatform) {
             // диалоговое с ошибкой
             self._children.dialogOpener.open({
                template: config.template,

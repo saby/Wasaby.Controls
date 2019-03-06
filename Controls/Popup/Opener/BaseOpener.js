@@ -136,20 +136,15 @@ define('Controls/Popup/Opener/BaseOpener',
             if (this._requireModulesPromise) {
                return this._requireModulesPromise;
             }
-            var result = {};
-            self._requireModulesPromise = self._requireModule(config.template).then(function(template) {
-               result.template = template;
-               return self._requireModule(controller);
-            }).then(function(controller) {
-               delete self._requireModulesPromise;
-               result.controller = controller;
-               return result;
-            }).catch(function(error) {
-               delete self._requireModulesPromise;
-               return Promise.reject(error);
+            return Promise.all([
+               self._requireModule(config.template),
+               self._requireModule(controller)
+            ]).then(function(results) {
+               return {
+                  template: results[0],
+                  controller: results[1]
+               }
             });
-
-            return self._requireModulesPromise;
          },
 
          /**

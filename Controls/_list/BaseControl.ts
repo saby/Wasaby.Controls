@@ -778,7 +778,7 @@ var _private = {
             return;
         }
 
-        if (self._children && self._children.dialogOpener) {
+        if (Env.constants.isBrowserPlatform) {
             // диалоговое с ошибкой
             self._children.dialogOpener.open({
                 template: config.template,
