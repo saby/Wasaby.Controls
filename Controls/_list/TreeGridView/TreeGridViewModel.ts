@@ -50,13 +50,28 @@ var
         getCurrent: function () {
             var
                 current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
-                superGetCurrentColumn = current.getCurrentColumn;
+                superGetCurrentColumn = current.getCurrentColumn,
+                superGetItemColumnCellClasses = current.getItemColumnCellClasses;
+
             current.getCurrentColumn = function () {
-                var
-                    currentColumn = superGetCurrentColumn();
+                let
+                    currentColumn = superGetCurrentColumn(),
+                    nodeType = current.item.get(current.nodeProperty);
+
                 currentColumn.isExpanded = current.isExpanded;
+                currentColumn.cellClasses += ' controls-TreeGrid__row-cell';
+
+                if (nodeType) {
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node';
+                } else if (nodeType === false) {
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode';
+                } else {
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
+                }
+
                 return currentColumn;
             };
+
             return current;
         },
         _onNodeRemoved: function (event, nodeId) {

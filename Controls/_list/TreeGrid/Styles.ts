@@ -36,12 +36,12 @@
  * @css @icon_TreeGridView-expander_node-expanded icon of TreeGridView group expander in expanded node
  * @css @icon_TreeGridView-expander_hiddenNode-collapsed icon of TreeGridView group expander in collapsed hiden node
  * @css @icon_TreeGridView-expander_hiddenNode-expanded icon of TreeGridView group expander in expanded hiden node
- * @css @spacing_TreeGridView-nodeFooterHasMore-between-content-borderTop spacing between footer content and top border in TreeGridView that has more non rendered data
- * @css @spacing_TreeGridView-nodeFooterHasMore-between-content-borderBottom spacing between footer content and bottom border in TreeGridView that has more non rendered data
  * @css @width-TreeGridView-levelPadding_size_s width of TreeGridView s level padding
  * @css @width-TreeGridView-levelPadding_size_m width of TreeGridView m level padding
  * @css @width-TreeGridView-levelPadding_size_l width of TreeGridView l level padding
  * @css @width-TreeGridView-levelPadding_size_xl width of TreeGridView xl level padding
  * @css @font-family-TreeGridView-icons font family of TreeGridView icons
- *
+ * @css @font-size_TreeGridView-row-cell-node cell content font size of node item
+ * @css @font-size_TreeGridView-row-cell-hiddenNode cell content font size of hidden node item
+ * @css @font-size_TreeGridView-row-cell-item cell content font size of item wich hasn't children
  */
