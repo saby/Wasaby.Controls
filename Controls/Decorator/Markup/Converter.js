@@ -63,26 +63,42 @@ define('Controls/Decorator/Markup/Converter', [
       return [];
    }
 
-   var linkParseRegExp = /(?:(((?:https?|ftp|file|smb):\/\/|www\.)[^\s<>]+?)|([^\s<>]+@[^\s<>]+(?:\.[^\s<>]{2,6}?))|([^\s<>]*?))([.,:]?(?:\s|$|&nbsp;|(<[^>]*>)))/g,
-      hasOpenATagRegExp = /<a(( )|(>))/i;
+   var linkTagPattern = '(/?a[ >])',
+      linkPrefixPattern = '((?:https?|ftp|file|smb)://|www\\.)',
+      linkPattern = '(' + linkPrefixPattern + '(?:[^\\s\\x16<>]+?))',
+      emailPattern = '([^\\s\\x16<>]+@[^\\s\\x16<>]+(?:\\.[^\\s\\x16<>]{2,6}?))',
+      endingPattern = '([.,:]?(?:[\\s\\x16<>]|$))',
+      nbsp = '&nbsp;',
+      nbspReplacer = '\x16',
+      nbspRegExp = new RegExp(nbsp, 'g'),
+      nbspReplacerRegExp = new RegExp(nbspReplacer, 'g'),
+      linkParseRegExp = new RegExp(linkTagPattern + '|(?:(?:' + linkPattern + '|' + emailPattern + ')' + endingPattern + ')', 'g');
 
    // Wrap all links and email addresses placed not in tag a.
    function wrapUrl(html) {
-      var inLink = false;
-      return html.replace(linkParseRegExp, function(match, link, linkPrefix, email, text, end) {
-         if (link && !inLink) {
-            return '<a class="asLink" rel="noreferrer" href="' + (linkPrefix === 'www.' ? 'http://' : '') + link + '" target="_blank">' + link + '</a>' + end;
+      var resultHtml = html.replace(nbspRegExp, nbspReplacer),
+         inLink = false;
+      resultHtml = resultHtml.replace(linkParseRegExp, function(match, linkTag, link, linkPrefix, email, ending, index, origin) {
+         var linkParseResult;
+         if (linkTag && origin[index - 1] === '<') {
+            inLink = !inLink;
+            linkParseResult = match;
+         } else if (inLink) {
+            linkParseResult = match;
+         } else {
+            if (link) {
+               if (linkPrefix === 'www.') {
+                  link = 'http://' + link;
+               }
+               linkParseResult = '<a class="asLink" rel="noreferrer" href="' + link + '" target="_blank">' + link + '</a>' + ending;
+            } else {
+               linkParseResult = '<a href="mailto:' + email + '">' + email + '</a>' + ending;
+            }
          }
-         if (email && !inLink) {
-            return '<a href="mailto:' + email + '">' + email + '</a>' + end;
-         }
-         if (end.match(hasOpenATagRegExp)) {
-            inLink = true;
-         } else if (~end.indexOf('</a>')) {
-            inLink = false;
-         }
-         return match;
+         return linkParseResult;
       });
+      resultHtml = resultHtml.replace(nbspReplacerRegExp, nbsp);
+      return resultHtml;
    }
 
    /**
