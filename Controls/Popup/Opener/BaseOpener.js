@@ -34,7 +34,7 @@ define('Controls/Popup/Opener/BaseOpener',
       /**
        * Base Popup opener
        * @category Popup
-       * @class Controls/Popup/Opener/Base
+       * @class Controls/Popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
        * @control
        * @private
