@@ -1,14 +1,13 @@
 define('Controls/Input/Render',
    [
+      'Env/Env',
       'Core/Control',
       'Types/entity',
       'Controls/Utils/tmplNotify',
 
       'wml!Controls/Input/Render/Render',
-      'Env/Env',
-      'css!theme?Controls/Input/Render/Render'
    ],
-   function(Control, entity, tmplNotify, template, Env) {
+   function(Env, Control, entity, tmplNotify, template) {
       'use strict';
 
       var Render = Control.extend({
@@ -47,6 +46,8 @@ define('Controls/Input/Render',
             this._contentActive = false;
          }
       });
+
+      Render._theme = ['Controls/Input/Render/Render'];
 
       Render.getDefaultTypes = function() {
          return {

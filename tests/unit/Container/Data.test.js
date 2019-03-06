@@ -45,8 +45,12 @@ define(
             });
             data._dataOptionsContext = new ContextOptions();
             data._beforeUpdate({source: newSource, idProperty: 'id'}).addCallback(function(items) {
-               assert.deepEqual(data._items.getRawData(), sourceDataEdited);
-               done();
+               try {
+                  assert.deepEqual(data._items.getRawData(), sourceDataEdited);
+                  done();
+               } catch (e) {
+                  done(e)
+               }
             });
          });
 
@@ -80,25 +84,29 @@ define(
 
                data._beforeUpdate({source: new sourceLib.Memory({
                   idProperty: 'id',
-                  data: sourceDataEdited,
-                  adapter: 'Types/entity:adapter.Sbis'
+                  model: 'Types/entity:Record',
+                  data: sourceDataEdited
                }), idProperty: 'id'}).addCallback(function() {
-                  assert.isFalse(data._items === items);
-                  done();
+                  try {
+                     assert.isFalse(data._items === items);
+                     done();
+                  } catch (e) {
+                     done(e);
+                  }
                });
             });
          });
-   
+
          it('data source options tests', function(done) {
             var config = {source: null, keyProperty: 'id'},
                data = getDataWithConfig(config);
-      
+
             //creating without source
             data._beforeMount(config);
-            
+
             assert.equal(data._source, null);
             assert.isTrue(!!data._dataOptionsContext);
-            
+
             //new source received in _beforeUpdate
             data._beforeUpdate({source: source}).addCallback(function() {
                assert.isTrue(data._source === source);
@@ -124,11 +132,11 @@ define(
                done();
             });
          });
-   
+
          it('filterChanged', function() {
             var config = {source: source, keyProperty: 'id', filter: {test: 'test'}};
             var data = getDataWithConfig(config);
-      
+
             return new Promise(function(resolve) {
                data._beforeMount(config).addCallback(function() {
                   data._filterChanged(null, {test1: 'test1'});
