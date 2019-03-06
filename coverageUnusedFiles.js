@@ -4,9 +4,9 @@ let path = require('path'),
     controlsPath = path.join(__dirname, 'Controls'),
     componentsPath = path.join(__dirname, 'SBIS3.CONTROLS'),
     coveragePath = require('./package.json')['saby-units']['jsonCoverageReport'],
-    coverageAllPath = path.join(__dirname, 'artifacts', 'coverageAll.json'),
-    coverageControlsPath = path.join(__dirname, 'artifacts', 'coverageControls.json'),
-    coverageComponentsPath = path.join(__dirname, 'artifacts', 'coverageComponents.json'),
+    coverageAllPath = path.join(__dirname, 'application', 'artifacts', 'coverageAll.json'),
+    coverageControlsPath = path.join(__dirname, 'application', 'artifacts', 'coverageControls.json'),
+    coverageComponentsPath = path.join(__dirname, 'application', 'artifacts', 'coverageComponents.json'),
     allFiles = [];
 
 // функция пробегает по папке и находит все js файлы
