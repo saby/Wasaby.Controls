@@ -13,10 +13,18 @@
 @spacing_DropdownList_withClose-item-between-rightBorder-content:       @spacing_default_m + @size_icon_m + @spacing_default_s;
 
 //shadow
-@box-shadow-color_DropdownList:                          @color_shadow_default;
-@box-shadow-size_DropdownList-shadowStyle_center:        @size_shadow_default;
-@box-shadow-size_DropdownList-shadowStyle_centerBottom:  @box-shadow-size_DropdownList-shadowStyle_centerBottom_val;
-@box-shadow-size_DropdownList-shadowStyle_centerTop:     @box-shadow-size_DropdownList-shadowStyle_centerTop_val;
+@box-shadow-color_DropdownList:                             @color_shadow_default;
+@box-shadow-size_DropdownList-shadowStyle_center:           @size_shadow_default;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-left:      @box-shadow-size_DropdownList-shadowStyle_centerBottom-left_val;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-right:     @box-shadow-size_DropdownList-shadowStyle_centerBottom-right_val;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-bottom:    @box-shadow-size_DropdownList-shadowStyle_centerBottom-bottom_val;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-left:         @box-shadow-size_DropdownList-shadowStyle_centerTop-left_val;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-right:        @box-shadow-size_DropdownList-shadowStyle_centerTop-right_val;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-top:          @box-shadow-size_DropdownList-shadowStyle_centerTop-top_val;
+
+//TODO: Удалить после переименования в themes
+@box-shadow-size_DropdownList-shadowStyle_centerBottom:     @box-shadow-size_DropdownList-shadowStyle_centerTop_val;
+@box-shadow-size_DropdownList-shadowStyle_centerTop:        @box-shadow-size_DropdownList-shadowStyle_centerBottom_val;
 
 //list
 @height_DropdownList-row:                          @height_control_l;
