@@ -62,7 +62,8 @@ define('Controls/Operations/Panel', [
 
    /**
     * Control for grouping operations.
-    * <a href="/materials/demo-ws4-operations-panel">Демо-пример</a>.
+    * The detailed description and instructions on how to configure the control you can read <a href='/doc/platform/developmentapl/interface-development/wasaby/components/operations/'>here</a>.
+    * <a href="/materials/demo-ws4-operations-panel">Demo</a>.
     *
     * @class Controls/Operations/Panel
     * @extends Core/Control
