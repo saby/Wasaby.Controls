@@ -599,7 +599,10 @@ define('Controls/FormController', [
             return;
          }
 
-         if (Env.constants.isBrowserPlatform) {
+         if (
+             Env.constants.isBrowserPlatform &&
+             this._children.dialogOpener
+         ) {
             // диалоговое с ошибкой
             self._children.dialogOpener.open({
                template: config.template,
@@ -617,6 +620,7 @@ define('Controls/FormController', [
          }
          if (
             Env.constants.isBrowserPlatform &&
+            this._children.dialogOpener &&
             this._children.dialogOpener.isOpened()
          ) {
             this._children.dialogOpener.close();

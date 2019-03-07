@@ -845,7 +845,10 @@ var _private = {
             return;
         }
 
-        if (constants.isBrowserPlatform) {
+        if (
+            constants.isBrowserPlatform &&
+            self._children.dialogOpener
+        ) {
             // диалоговое с ошибкой
             self._children.dialogOpener.open({
                 template: config.template,
@@ -863,6 +866,7 @@ var _private = {
         }
         if (
             constants.isBrowserPlatform &&
+            self._children.dialogOpener &&
             self._children.dialogOpener.isOpened()
         ) {
             self._children.dialogOpener.close();
