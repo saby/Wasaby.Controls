@@ -298,6 +298,8 @@
 
 .controls-ListView__item__marked_master {
    background-color: @background-color_List-masterList-item_selected;
+   //z-index 1 is needed to overlap the right line of master
+   z-index: 1;
    &:before {
       content: '';
       z-index: 2;
