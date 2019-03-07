@@ -3,7 +3,6 @@ import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import tUtil = require('Controls/Utils/Toolbar');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
-import TouchContextField = require('Controls/Context/TouchContextField');
 import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
 import { relation, Model } from 'Types/entity';
