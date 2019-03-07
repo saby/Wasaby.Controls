@@ -72,7 +72,7 @@ import 'css!theme?Controls/_toolbars/ToolbarPopup';
 
 /**
  * @name Controls/Toolbar#itemsSpacing
- * @cfg {Types/source:Base} Type of spacing between items
+ * @cfg {String} Type of spacing between items.
  * @default medium
  * @example
  * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.

@@ -18,15 +18,17 @@ define('Controls/EditableArea', [
             return self._children.formController.submit();
          },
          afterEndEdit: function(self, commit) {
-            if (!commit) {
-               _private.rejectChanges(self);
+            if (commit) {
+               _private.acceptChanges(self);
+            } else {
+               self._editObject.rejectChanges();
             }
             self._isEditing = false;
-            self._notify('afterEndEdit', [self._options.editObject], { bubbling: true });
+            self._notify('afterEndEdit', [self._editObject], { bubbling: true });
             return Deferred.success();
          },
          endEdit: function(self, commit) {
-            var result = self._notify('beforeEndEdit', [self._options.editObject, commit], { bubbling: true });
+            var result = self._notify('beforeEndEdit', [self._editObject, commit], { bubbling: true });
 
             if (result === EditConstants.CANCEL) {
                return Deferred.success();
@@ -40,7 +42,7 @@ define('Controls/EditableArea', [
 
             return _private.afterEndEdit(self, commit);
          },
-         rejectChanges: function(self) {
+         acceptChanges: function(self) {
             /*
              * TL;DR: we should never change the state of the record and leave it to the owner.
              *
@@ -53,12 +55,13 @@ define('Controls/EditableArea', [
              * wouldn't work: start editing - make changes - commit - start editing again - make changes - cancel. If
              * acceptChanges() is never called then rejectChanges() will revert everything, not just changes made since last commit.
              */
-            var changedFields = self._options.editObject.getChanged();
+            var changedFields = self._editObject.getChanged();
             if (changedFields) {
                changedFields.forEach(function(field) {
-                  self._options.editObject.set(field, self._oldEditObject.get(field));
+                  self._options.editObject.set(field, self._editObject.get(field));
                });
             }
+            self._editObject.acceptChanges();
          }
       };
 
@@ -84,6 +87,13 @@ define('Controls/EditableArea', [
 
       _beforeMount: function(newOptions) {
          this._isEditing = newOptions.editWhenFirstRendered;
+         this._editObject = newOptions.editObject.clone();
+      },
+
+      _beforeUpdate: function(newOptions) {
+         if (this._options.editObject !== newOptions.editObject) {
+            this._editObject = newOptions.editObject.clone();
+         }
       },
 
       _afterUpdate: function() {
@@ -101,7 +111,7 @@ define('Controls/EditableArea', [
       },
 
       _onDeactivatedHandler: function() {
-         if (!this._options.readOnly && this._isEditing) {
+         if (!this._options.readOnly && this._isEditing && !this._options.toolbarVisibility) {
             this.commitEdit();
          }
       },
@@ -121,12 +131,11 @@ define('Controls/EditableArea', [
 
       beginEdit: function(event, res) {
          // TODO: res - это результат события со старым названием. Снести вместе со старым контролом 3.19.110, как только появится веха
-         var result = res || this._notify('beforeBeginEdit', [this._options.editObject], {
+         var result = res || this._notify('beforeBeginEdit', [this._editObject], {
             bubbling: true
          });
          if (result !== EditConstants.CANCEL) {
             this._isEditing = true;
-            this._oldEditObject = this._options.editObject.clone();
             this._beginEditTarget = event ? event.target.closest('.controls-EditableArea__editorWrapper') : null;
          }
       },

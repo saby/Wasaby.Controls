@@ -124,6 +124,7 @@ define([
          var loadContentAsyncCalled;
          var args;
          var promiseResult;
+         async._isCompat = function() { return false };
          async._isServer = function() { return false; };
          async._isLoaded = function() { return false; };
          async._loadContentAsync = function() {
@@ -148,6 +149,7 @@ define([
          var loadContentSyncCalled;
          var args;
          var promiseResult;
+         async._isCompat = function() { return false };
          async._isServer = function() { return false; };
          async._isLoaded = function() { return true; };
          async._loadContentSync = function() {
@@ -163,6 +165,7 @@ define([
       it('_beforeMount client rc', function() {
          var loadContentSyncCalled;
          var args;
+         async._isCompat = function() { return false };
          async._isServer = function() { return false; };
          async._isLoaded = function() { return false; };
          async._loadContentSync = function() {

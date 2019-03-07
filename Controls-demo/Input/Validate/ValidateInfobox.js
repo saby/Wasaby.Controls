@@ -3,7 +3,8 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
    'wml!Controls-demo/Input/Validate/ValidateInfobox',
    'css!Controls-demo/Input/resources/VdomInputs',
    'Controls/Validate/Validators/IsINN',
-   'Controls/Validate/Validators/IsEmail'
+   'Controls/Validate/Validators/IsEmail',
+   'Controls-demo/Input/Validate/Validator'
 ], function(Control, template) {
    'use strict';
    var VdomDemoText = Control.extend({
@@ -11,7 +12,9 @@ define('Controls-demo/Input/Validate/ValidateInfobox', [
       _value: '',
       _value2: '',
       _value3: '',
+      _value4: '',
       _value5: 'readOnly',
+      _value6: '',
       _items: null,
       _placeholder: 'Input text',
       _setValue: function(e, record) {
