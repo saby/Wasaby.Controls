@@ -3,7 +3,6 @@ define(
       'Controls/Popup/Opener/BaseOpener'
    ],
    (BaseOpener) => {
-
       'use strict';
 
       describe('Controls/Popup/Opener/BaseOpener', () => {
@@ -32,6 +31,27 @@ define(
             };
             opener._afterMount();
             opener._notify = () => {};
+            opener.destroy();
+         });
+
+         it('_getConfig', () => {
+            let opener = new BaseOpener();
+            opener._options.templateOptions = {
+               type: 'dialog',
+               name: 'options'
+            };
+            var popupOptions = {
+               templateOptions: {
+                  type: 'stack',
+                  name: 'popupOptions'
+               }
+            };
+            var baseConfig = opener._getConfig(popupOptions);
+
+            assert.equal(opener._options.templateOptions.type, 'dialog');
+            assert.equal(opener._options.templateOptions.name, 'options');
+            assert.equal(baseConfig.templateOptions.name, 'popupOptions');
+            assert.equal(baseConfig.templateOptions.type, 'stack');
             opener.destroy();
          });
 
