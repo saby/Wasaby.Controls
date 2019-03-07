@@ -3,11 +3,11 @@ import template = require('wml!Controls/_list/ItemActions/ItemActionsControl');
 import tUtil = require('Controls/Utils/Toolbar');
 import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
-import TouchContextField = require('Controls/Context/TouchContextField');
 import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { relation } from 'Types/entity';
+import { relation, Model } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
+import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/_list/ItemActions/ItemActionsControl';
 
 var
@@ -56,7 +56,7 @@ var _private = {
         });
     },
 
-    updateActions: function(self, options, collectionChanged) {
+    updateActions: function(self, options) {
         if (options.itemActions) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
@@ -67,18 +67,7 @@ var _private = {
                 }
             }
 
-            /**
-             * Item's version consists of two parts:
-             * 1) Version from item.getVersion()
-             * 2) Version from list model which all items share.
-             *
-             * If we pass true as the first argument to nextModelVersion then the version inside list model will not get incremented,
-             * but the changed items will still get redrawn because their inner version was changed.
-             *
-             * We can use this behavior here to make updates a faster - if we know that the collection has changed then we don't need
-             * to update the version inside list model.
-             */
-            options.listModel.nextModelVersion(collectionChanged);
+            options.listModel.nextModelVersion();
         }
     },
 
@@ -186,11 +175,37 @@ var ItemActionsControl = Control.extend({
         this._options.listModel.unsubscribe('onListChange', this._onCollectionChangeFn);
     },
 
-    _onCollectionChange: function(e, type) {
+    _onCollectionChange(
+       e: EventObject,
+       type: string,
+       action: string,
+       newItems: Model[]
+    ): void {
         if (type !== 'collectionChanged' && type !== 'indexesChanged') {
             return;
         }
-        _private.updateActions(this, this._options, type === 'collectionChanged');
+       if (type === 'collectionChanged' && newItems) {
+          newItems.forEach((item) => {
+             if (item !== ControlsConstants.view.hiddenGroup && item.get) {
+                _private.updateItemActions(this, item, this._options);
+             }
+          });
+
+          /**
+           * Item's version consists of two parts:
+           * 1) Version from item.getVersion()
+           * 2) Version from list model which all items share.
+           *
+           * If we pass true as the first argument to nextModelVersion then the version inside list model will not get incremented,
+           * but the changed items will still get redrawn because their inner version was changed.
+           *
+           * We can use this behavior here to make updates a faster - if we know that the collection has changed then we don't need
+           * to update the version inside list model.
+           */
+          this._options.listModel.nextModelVersion(true);
+       } else if (type === 'indexesChanged') {
+          _private.updateActions(this, this._options);
+       }
     },
 
    getChildren(
