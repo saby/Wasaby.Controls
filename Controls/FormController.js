@@ -24,6 +24,33 @@ define('Controls/FormController', [
     * @property {Controls/_dataSource/_error/ViewConfig} [error]
     */
 
+   /**
+    * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+    * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
+    * @param {CrudResult} crudResult
+    * @return {ReceivedState}
+    */
+   var getState = function(crudResult) {
+      delete crudResult.error;
+      return crudResult;
+   };
+
+
+   /**
+    * getting result from <CrudResult> wrapper
+    * @param {CrudResult} [crudResult]
+    * @return {Promise}
+    */
+   var getData = function(crudResult) {
+      if (!crudResult) {
+         return Promise.resolve();
+      }
+      if (crudResult.data) {
+         return Promise.resolve(crudResult.data);
+      }
+      return Promise.reject(crudResult.error);
+   },
+
    var _private = {
       checkRecordType: function(record) {
          return cInstance.instanceOfModule(record, 'Types/entity:Record');
@@ -46,7 +73,7 @@ define('Controls/FormController', [
             Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
             instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
             instance._readInMounting = { isError: true, result: e };
-            return instance._crudErrback(e);
+            return instance._processError(e).then(getState);
          });
       },
       readRecordBeforeMountNotify: function(instance) {
@@ -77,7 +104,7 @@ define('Controls/FormController', [
             };
          }, function(e) {
             instance._createdInMounting = { isError: true, result: e };
-            return instance._crudErrback(e);
+            return instance._processError(e).then(getState);
          });
          return createDef;
       },
@@ -135,22 +162,18 @@ define('Controls/FormController', [
          var record = receivedData || cfg.record;
 
          // use record
-         var prepareCrudResult = function(crudResult) {
-            delete crudResult.error;
-            return crudResult;
-         };
          if (record && _private.checkRecordType(record)) {
             this._setRecord(record);
             this._isNewRecord = !!cfg.isNewRecord;
 
             // If there is a key - read the record. Not waiting for answer BL
             if (cfg.key !== undefined && cfg.key !== null) {
-               _private.readRecordBeforeMount(this, cfg).addCallback(prepareCrudResult);
+               _private.readRecordBeforeMount(this, cfg);
             }
          } else if (cfg.key !== undefined && cfg.key !== null) {
-            return _private.readRecordBeforeMount(this, cfg).addCallback(prepareCrudResult);
+            return _private.readRecordBeforeMount(this, cfg);
          } else {
-            return _private.createRecordBeforeMount(this, cfg).addCallback(prepareCrudResult);
+            return _private.createRecordBeforeMount(this, cfg);
          }
       },
       _afterMount: function() {
@@ -378,14 +401,10 @@ define('Controls/FormController', [
 
       create: function(initValues) {
          initValues = initValues || this._options.initValues;
-         var res = this._children.crud.create(initValues);
-         var self = this;
-         res.addCallbacks(this._createHandler.bind(this), function(error) {
-            return self._crudErrback(error).addCallback(function(crudResult) {
-               return self._getData(crudResult);
-            });
-         });
-         return res;
+         return this._children.crud.create(initValues).addCallbacks(
+            this._createHandler.bind(this),
+            this._crudErrback.bind(this)
+         );
       },
       _createHandler: function(record) {
          // when FormController create record, its need to check previous record was saved or not.
@@ -399,15 +418,11 @@ define('Controls/FormController', [
          return record;
       },
       read: function(key, readMetaData) {
-         var self = this;
          readMetaData = readMetaData || this._options.readMetaData;
-         var res = this._children.crud.read(key, readMetaData);
-         res.addCallbacks(this._readHandler.bind(this), function(error) {
-            return self._crudErrback(error).addCallback(function(crudResult) {
-               return self._getData(crudResult);
-            });
-         });
-         return res;
+         return this._children.crud.read(key, readMetaData).addCallbacks(
+             this._readHandler.bind(this),
+             this._crudErrback.bind(this)
+         );
       },
       _readHandler: function(record) {
          // when FormController read record, its need to check previous record was saved or not.
@@ -429,9 +444,7 @@ define('Controls/FormController', [
          function updateCallback(result) {
             // if result is true, custom update called and we dont need to call original update.
             if (result !== true) {
-               var res = self._update().addCallback(function(result /* result: CrudResult */) {
-                  return self._getData(result);
-               });
+               var res = self._update().addCallback(getData);
                updateResult.dependOn(res);
             } else {
                updateResult.callback(true);
@@ -493,9 +506,7 @@ define('Controls/FormController', [
                   updateDef.callback({ data: true });
                   return arg;
                });
-               res.addErrback(function(e) {
-                  return self._crudErrback(e);
-               });
+               res.addErrback(self._processError.bind(self));
             } else {
                // если были ошибки валидации, уведомим о них
                var validationErrors = self._children.validation.isValid();
@@ -526,9 +537,7 @@ define('Controls/FormController', [
             self._forceUpdate();
             return record;
          }, function(error) {
-            return self._crudErrback(error, dataSource.error.Mode.dialog).addCallback(function(crudResult) {
-               return self._getData(crudResult);
-            });
+            return self._crudErrback(error, dataSource.error.Mode.dialog);
          });
          return resultDef;
       },
@@ -545,31 +554,31 @@ define('Controls/FormController', [
        *
        * @param {Error} error
        * @param {Controls/_dataSource/_error/Mode} [mode]
-       * @return {Promise<CrudResult>}
+       * @return {Promise<*>}
        * @private
        */
       _crudErrback: function(error, mode) {
+         return this._processError(error, mode).then(getData);
+      },
+
+      /**
+       * @param {Error} error
+       * @param {Controls/_dataSource/_error/Mode} [mode]
+       * @return {Promise.<CrudResult>}
+       * @private
+       */
+      _processError: function(error, mode) {
          var self = this;
-         return self._processError(error, mode).then(function(errorConfig) {
+         return self.__errorController.process({
+            error: error,
+            mode: mode || dataSource.error.Mode.include
+         }).then(function(errorConfig) {
             self.__error = errorConfig;
             self._showError();
             return {
                error: error,
                errorConfig: errorConfig
             };
-         });
-      },
-
-      /**
-       * @param {Error} error
-       * @param {Controls/_dataSource/_error/Mode} [mode]
-       * @return {Promise.<Controls/_dataSource/_error/ViewConfig | void>}
-       * @private
-       */
-      _processError: function(error, mode) {
-         return this.__errorController.process({
-            error: error,
-            mode: mode || dataSource.error.Mode.include
          });
       },
 
@@ -607,22 +616,11 @@ define('Controls/FormController', [
             this._forceUpdate();
          }
          if (
-            this._children &&
-            this._children.dialogOpener &&
+            Env.constants.isBrowserPlatform &&
             this._children.dialogOpener.isOpened()
          ) {
             this._children.dialogOpener.close();
          }
-      },
-
-      _getData: function(crudResult /* crudResult: CrudResult */) {
-         if (!crudResult) {
-            return Promise.resolve();
-         }
-         if (crudResult.data) {
-            return Promise.resolve(crudResult.data);
-         }
-         return Promise.reject(crudResult.error);
       },
 
       _crudHandler: function(event) {

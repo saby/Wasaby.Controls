@@ -8,7 +8,6 @@ import VirtualScroll = require('Controls/List/Controllers/VirtualScroll');
 import SourceController = require('Controls/Controllers/SourceController');
 import isEqualObject = require('Core/helpers/Object/isEqual');
 import Deferred = require('Core/Deferred');
-import Env = require('Env/Env');
 import getItemsBySelection = require('Controls/Utils/getItemsBySelection');
 import scrollToElement = require('Controls/Utils/scrollToElement');
 import collection = require('Types/collection');
@@ -19,6 +18,7 @@ import keysHandler = require('Controls/Utils/keysHandler');
 import 'wml!Controls/_list/BaseControl/Footer';
 import 'css!theme?Controls/List/BaseControl/BaseControl';
 import { error as dataSourceError } from 'Controls/dataSource';
+import { constants, IoC } from 'Env/Env';
 
 //TODO: getDefaultOptions зовётся при каждой перерисовке, соответственно если в опции передаётся не примитив, то они каждый раз новые
 //Нужно убрать после https://online.sbis.ru/opendoc.html?guid=1ff4a7fb-87b9-4f50-989a-72af1dd5ae18
@@ -28,10 +28,10 @@ var
 
 var
     HOT_KEYS = {
-        moveMarkerToNext: Env.constants.key.down,
-        moveMarkerToPrevious: Env.constants.key.up,
-        toggleSelection: Env.constants.key.space,
-        enterHandler: Env.constants.key.enter
+        moveMarkerToNext: constants.key.down,
+        moveMarkerToPrevious: constants.key.up,
+        toggleSelection: constants.key.space,
+        enterHandler: constants.key.enter
     };
 
 var LOAD_TRIGGER_OFFSET = 100;
@@ -59,13 +59,45 @@ type CrudResult = ReceivedState & {
     error: Error;
 }
 
+type ErrbackConfig = {
+    dataLoadErrback?: (error: Error) => any;
+    mode?: dataSourceError.Mode;
+    error: Error;
+}
+
+/**
+ * Удаляет оригинал ошибки из CrudResult перед вызовом сриализатора состояния,
+ * который не сможет нормально разобрать/собрать экземпляр случайной ошибки
+ * @param {CrudResult} crudResult
+ * @return {ReceivedState}
+ */
+let getState = (crudResult: CrudResult): ReceivedState => {
+    delete crudResult.error;
+    return crudResult;
+};
+
+/**
+ * getting result from <CrudResult> wrapper
+ * @param {CrudResult} [crudResult]
+ * @return {Promise}
+ */
+let getData = (crudResult: CrudResult): Promise<any> => {
+    if (!crudResult) {
+        return Promise.resolve();
+    }
+    if (crudResult.hasOwnProperty('data')) {
+        return Promise.resolve(crudResult.data);
+    }
+    return Promise.reject(crudResult.error);
+};
+
 var _private = {
     checkDeprecated: function(cfg) {
         if (cfg.historyIdCollapsedGroups) {
-            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
+            IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
         if (cfg.groupMethod) {
-            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
+            IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
         }
     },
 
@@ -139,7 +171,7 @@ var _private = {
                 }
             }).addErrback(function(error) {
                 _private.hideIndicator(self);
-                return _private.crudErrback(self, {
+                return _private.processError(self, {
                     error: error,
                     dataLoadErrback: cfg.dataLoadErrback
                 }).then(function(result: CrudResult) {
@@ -151,7 +183,7 @@ var _private = {
             });
         } else {
             resDeferred.callback();
-            Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+            IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
         }
         resDeferred.addCallback(function(result: CrudResult) {
             if (cfg.afterReloadCallback) {
@@ -281,10 +313,7 @@ var _private = {
                 }
 
                 _private.prepareFooter(self, self._options.navigation, self._sourceController);
-                return {
-                    data: addedItems
-                };
-
+                return addedItems;
             }).addErrback(function(error) {
                 _private.hideIndicator(self);
                 return _private.crudErrback(self, {
@@ -293,7 +322,7 @@ var _private = {
                 });
             });
         }
-        Env.IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
+        IoC.resolve('ILogger').error('BaseControl', 'Source option is undefined. Can\'t load data');
     },
 
     // Основной метод пересчета состояния Virtual Scroll
@@ -334,9 +363,7 @@ var _private = {
                 self, direction,
                 self._options.dataLoadCallback,
                 self._options.dataLoadErrback
-            ).addCallback((result: CrudResult) => {
-                return _private.getData(result);
-            });
+            );
         }
     },
 
@@ -718,46 +745,34 @@ var _private = {
 
     /**
      * @param {Controls/List/BaseControl} self
-     * @param {Object} config
-     * @param {Error} config.error
-     * @param {Controls/_dataSource/_error/Mode} [config.mode]
-     * @param {Function} [config.dataLoadErrback]
+     * @param {ErrbackConfig} config
+     * @return {Promise}
+     * @private
+     */
+    crudErrback(self: BaseControl, config: ErrbackConfig): Promise<CrudResult>{
+        return _private.processError(self, config).then(getData);
+    },
+
+    /**
+     * @param {Controls/List/BaseControl} self
+     * @param {ErrbackConfig} config
      * @return {Promise.<CrudResult>}
      * @private
      */
-    crudErrback(self: BaseControl, config: {
-        dataLoadErrback?: (error: Error) => any;
-        mode?: dataSourceError.Mode;
-        error: Error;
-    }): Promise<CrudResult>{
+    processError(self: BaseControl, config: ErrbackConfig): Promise<CrudResult> {
         if (config.dataLoadErrback instanceof Function) {
             config.dataLoadErrback(config.error);
         }
-        return _private.processError(self, config.error, config.mode).then((errorConfig) => {
+        return self.__errorController.process({
+            error: config.error,
+            mode: config.mode || dataSourceError.Mode.include
+        }).then((errorConfig) => {
             self.__error = errorConfig;
             _private.showError(self);
             return {
                 error: config.error,
                 errorConfig: errorConfig
             };
-        });
-    },
-
-    /**
-     * @param {Controls/List/BaseControl} self
-     * @param {Error} error
-     * @param {Controls/_dataSource/_error/Mode} [mode]
-     * @return {Promise.<Controls/_dataSource/_error/ViewConfig | void>}
-     * @private
-     */
-    processError(
-        self: BaseControl,
-        error: Error,
-        mode?: dataSourceError.Mode
-    ): Promise<dataSourceError.ViewConfig> {
-        return self.__errorController.process({
-            error: error,
-            mode: mode || dataSourceError.Mode.include
         });
     },
 
@@ -778,7 +793,7 @@ var _private = {
             return;
         }
 
-        if (Env.constants.isBrowserPlatform) {
+        if (constants.isBrowserPlatform) {
             // диалоговое с ошибкой
             self._children.dialogOpener.open({
                 template: config.template,
@@ -795,28 +810,12 @@ var _private = {
             self._forceUpdate();
         }
         if (
-            self._children &&
-            self._children.dialogOpener &&
+            constants.isBrowserPlatform &&
             self._children.dialogOpener.isOpened()
         ) {
             self._children.dialogOpener.close();
         }
     },
-
-    /**
-     * не ломаем внешнее поведение и возвращаем только реальный результат
-     * @param {CrudResult} crudResult
-     * @return {Promise}
-     */
-    getData(crudResult: CrudResult): Promise<any> {
-        if (!crudResult) {
-            return Promise.resolve();
-        }
-        if (crudResult.hasOwnProperty('data')) {
-            return Promise.resolve(crudResult.data);
-        }
-        return Promise.reject(crudResult.error);
-    }
 };
 
 /**
@@ -887,11 +886,11 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
      * @return {Promise}
      * @protected
      */
-    _beforeMount: function(newOptions, context, receivedState = {}) {
+    _beforeMount: function(newOptions, context, receivedState: ReceivedState = {}) {
         var self = this;
 
-        var receivedError = receivedState.errorConfig;
-        var receivedData = receivedState.data;
+        let receivedError = receivedState.errorConfig;
+        let receivedData = receivedState.data;
 
         _private.checkDeprecated(newOptions);
 
@@ -950,15 +949,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     self.__error = receivedError;
                     return _private.showError(self);
                 }
-                return _private.reload(self, newOptions).addCallback((result:CrudResult) => {
-                    /*
-                     * проброс реальной ошибки от reload нуден только для внешнего api
-                     * при серверной вёрстке нормально не сможем сериализовать/десериализовать конкретный тип ошибки,
-                     * поэтому уберём её
-                     */
-                    delete result.error;
-                    return result;
-                });
+                return _private.reload(self, newOptions).addCallback(getState);
             }
         });
     },
@@ -1078,8 +1069,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 error: error,
                 mode: dataSourceError.Mode.dialog
             });
-        }).addCallback((result: CrudResult) => {
-            retrun _private.getData(result);
         });
     },
 
@@ -1215,9 +1204,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     },
 
     reload: function() {
-        return _private.reload(this, this._options).addCallback((result: CrudResult) => {
-            return _private.getData(result);
-        });
+        return _private.reload(this, this._options).addCallback(getData);
     },
 
     getVirtualScroll: function() {
