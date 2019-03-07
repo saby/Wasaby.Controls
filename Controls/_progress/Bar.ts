@@ -1,3 +1,10 @@
+/// <amd-module name="Controls/_progress/Bar" />
+/**
+ * Progress Bar
+ * @class Controls/_progress/Bar 
+ * @author Колесов В.А.
+ */
+
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import template = require('wml!Controls/_progress/Bar/Bar');
@@ -5,7 +12,7 @@ import template = require('wml!Controls/_progress/Bar/Bar');
 var
    _private = {
       getWidth: function(val){
-        return val > 0 ? val+'%' : '0px'
+        return (val > 0 ? Math.min(val,100)+'%' : '0px');
       }
    },
    Bar = Control.extend({
@@ -15,7 +22,7 @@ var
       _beforeMount: function(opts){
          this._width = _private.getWidth(opts.value);
       },
-      _beforUpdate: function(opts){
+      _beforeUpdate: function(opts){
          this._width = _private.getWidth(opts.value);
       },
    });
@@ -29,8 +36,13 @@ var
    Bar.getDefaultOptions = function() {
       return {      
          theme: "default",
+         /**
+          * @cfg {Number} Progress in percents (ratio of the filled part)
+          */
          value: 0
       };
    };
 
+Bar._theme = ['Controls/_progress/progress'];
+Bar._private = _private;
 export default Bar;
