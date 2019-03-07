@@ -143,7 +143,7 @@ define('Controls/Popup/Opener/BaseOpener',
                return {
                   template: results[0],
                   controller: results[1]
-               }
+               };
             });
          },
 
