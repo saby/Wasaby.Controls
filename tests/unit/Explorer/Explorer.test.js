@@ -500,11 +500,6 @@ define([
             assert.isTrue(explorer._dragOnBreadCrumbs);
          });
          it('_documentDragEnd', function() {
-            explorer._dragOnBreadCrumbs = true;
-            explorer._documentDragEnd();
-            assert.isFalse(explorer._dragOnBreadCrumbs);
-         });
-         it('_dragEndBreadCrumbs', function() {
             var
                dragEnrArgs,
                dragEntity = new DragEntity();
@@ -514,12 +509,14 @@ define([
                   dragEnrArgs = args;
                }
             };
+            explorer._dragOnBreadCrumbs = true;
 
-            explorer._dragEndBreadCrumbs({}, {});
+            explorer._documentDragEnd({}, {});
             assert.equal(dragEnrArgs, undefined);
+            assert.isFalse(explorer._dragOnBreadCrumbs);
 
             explorer._hoveredBreadCrumb = 'hoveredItemKey';
-            explorer._dragEndBreadCrumbs({}, {
+            explorer._documentDragEnd({}, {
                entity: dragEntity
             });
             assert.equal(dragEnrArgs[0], dragEntity);
