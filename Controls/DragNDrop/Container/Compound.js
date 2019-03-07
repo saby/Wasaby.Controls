@@ -42,12 +42,16 @@ define('Controls/DragNDrop/Container/Compound',
          _updateDraggingTemplate: function(event, draggingTemplateOptions, draggingTemplate) {
             this._removeDraggingTemplate();
 
+            //На старых страницах нет application, который отвечает за создание и позиционирование draggingTemplate.
+            //Поэтому сами создади его и добавим в body.
             if (draggingTemplate) {
                this._draggingTemplate = $(draggingTemplateWrapper({
                   draggingTemplateOptions: draggingTemplateOptions,
                   draggingTemplate: draggingTemplate
                }));
                this._draggingTemplate.appendTo(document.body);
+
+               //На старых страницах стартовый z-index всплывающих окон 1050. Сделаем наш z-index заведомо больше.
                this._draggingTemplate.css('z-index', ZINDEX_FOR_OLD_PAGE);
             }
          }
