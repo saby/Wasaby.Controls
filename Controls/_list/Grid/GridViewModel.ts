@@ -705,7 +705,7 @@ var
                 current.stickyColumnIndex = stickyColumn.index;
             }
 
-            if (this._options.groupMethod || this._options.groupingKeyCallback) {
+            if (this._options.groupingKeyCallback) {
                 if (current.item === ControlsConstants.view.hiddenGroup || !current.item.get) {
                     current.groupResultsSpacingClass = ' controls-Grid__cell_spacingLastCol_' + ((current.itemPadding && current.itemPadding.right) || current.rightSpacing || 'default').toLowerCase();
                     return current;
