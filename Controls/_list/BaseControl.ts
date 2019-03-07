@@ -40,9 +40,6 @@ var _private = {
         if (cfg.historyIdCollapsedGroups) {
             Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "historyIdCollapsedGroups" is deprecated and removed in 19.200. Use option "groupHistoryId".');
         }
-        if (cfg.groupMethod) {
-            Env.IoC.resolve('ILogger').warn('IGrouped', 'Option "groupMethod" is deprecated and removed in 19.200. Use option "groupingKeyCallback".');
-        }
     },
 
     reload: function(self, cfg) {
