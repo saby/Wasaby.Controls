@@ -1,14 +1,19 @@
-<div key="scripts">
-   <ws:if data="{{!_options.compat && _options.onServer}}">
+<ws:if data="{{ _options.compat }}">
+   <div key="scripts">
+      <ws:partial template="wml!Controls/Application/CompatibleScripts" />
+   </div>
+</ws:if>
+<ws:else data="{{ _options.onServer }}">
+   <div key="scripts">
       <script key="init_script">
          require(['Core/polyfill', 'Core/app', 'Controls/Application/AppData'], function(polyfill, app, AppData){
-            window.startContextData = {AppData: new AppData({})};
-            var deps = {{ __setHTMLUnsafe(getDeps()) }};
-            app(deps);
+         window.startContextData = {AppData: new AppData({})};
+         var deps = {{ __setHTMLUnsafe(getDeps()) }};
+         app(deps);
          });
       </script>
-   </ws:if>
-   <ws:if data="{{ _options.compat }}">
-      <ws:partial template="wml!Controls/Application/CompatibleScripts" />
-   </ws:if>
-</div>
+   </div>
+</ws:else>
+<ws:else>
+   <invisible-node />
+</ws:else>
