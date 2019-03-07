@@ -10,6 +10,28 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 
 var
     _private = {
+        isDrawActions: function(itemData, currentColumn, colspan) {
+            return itemData.drawActions &&
+                (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
+                colspan && currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1));
+        },
+        getCellStyle: function(itemData, currentColumn, colspan, isNotFullGridSupport) {
+           var
+               style = '';
+           if (currentColumn.styleForLadder) {
+              style += currentColumn.styleForLadder;
+           }
+           if (colspan) {
+              if (currentColumn.columnIndex === itemData.multiSelectVisibility === 'hidden' ? 0 : 1) {
+                 if (isNotFullGridSupport) {
+                    style += ' colspan: ' + (itemData.multiSelectVisibility === 'hidden' ? itemData.columns.length : itemData.columns.length - 1);
+                 } else {
+                    style += ' grid-column: ' + (itemData.multiSelectVisibility === 'hidden' ? 1 : 2) + ' / ' + (itemData.columns.length + 1);
+                 }
+              }
+           }
+           return style;
+        },
         getPaddingCellClasses: function(params) {
             var
                 preparedClasses = '';
@@ -715,6 +737,8 @@ var
             current.getLastColumnIndex = function() {
                 return current.columns.length - 1;
             };
+            current.isDrawActions = _private.isDrawActions;
+            current.getCellStyle = _private.getCellStyle;
             current.getCurrentColumn = function() {
                 var
                     currentColumn = {
