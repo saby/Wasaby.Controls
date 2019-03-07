@@ -1,5 +1,7 @@
-define(['Controls/Button/validateIconStyle', 'Types/collection'], function(Validator, collection) {
+define(['Controls/buttons', 'Types/collection'], function(buttons, collection) {
    'use strict';
+
+   var Validator = buttons.iconsUtil;
 
    describe('Controls.Button.validateIconStyle', function() {
       it('iconStyleTransformation', function() {
