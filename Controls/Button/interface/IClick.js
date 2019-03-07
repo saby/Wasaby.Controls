@@ -9,7 +9,7 @@ define('Controls/Button/interface/IClick', [
     */
 
    /**
-    * @event Controls.buttons:Button/interface/IClick#click Occurs when item was clicked.
+    * @event Controls/Button/interface/IClick#click Occurs when item was clicked.
     * @remark If button with readOnly set to true then event does not bubble.
     * @example
     * Button with style 'primary' viewMode 'button' and icon 'icon-Send'. If user click to button then document send.
