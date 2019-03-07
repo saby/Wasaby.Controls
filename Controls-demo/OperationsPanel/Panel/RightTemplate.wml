@@ -1,4 +1,4 @@
-<Controls.Button
+<Controls.buttons:Button
         caption="Доп. операции"
         icon="icon-small icon-Settings"
         style="linkMain"/>

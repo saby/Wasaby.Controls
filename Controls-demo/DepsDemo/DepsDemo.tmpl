@@ -2,11 +2,11 @@
    <Controls.Container.Async templateName="Controls/Input/Text" class="ControlsDemo-DepsDemo__container">
       <ws:partial template="{{content.resolvedTemplate}}" value="Test dependencies preload"></ws:partial>
    </Controls.Container.Async>
-   <Controls.Button attr:class="ControlsDemo-DepsDemo__button">
+   <Controls.buttons:Button attr:class="ControlsDemo-DepsDemo__button">
       <ws:caption>
          <span attr:class="checkSpan">{{is_OK}}</span>
       </ws:caption>
-   </Controls.Button>
+   </Controls.buttons:Button>
    <script>
       function checkDebug(scripts) {
          for (var i = 0; i < scripts.length; i++) {
@@ -22,7 +22,7 @@
          if (checkDebug(arr)) {
             window.$is_OK$ = true;
          } else {
-            var depArray = ['Controls/Input/Text', 'Controls/Button'];
+            var depArray = ['Controls/Input/Text', 'Controls.buttons:Button'];
             var depName;
             var allDepsDefined = true;
             for (var j = 0; j < depArray.length; j++) {

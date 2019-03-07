@@ -127,6 +127,11 @@
          shouldSearch: function(self, value) {
             return self._active && value.length >= self._options.minSearchLength;
          },
+   
+         prepareValue: function(self, value) {
+            return self._options.trim ? value.trim() : value;
+         },
+         
          shouldShowSuggest: function(self, searchResult) {
             var hasItems = searchResult && searchResult.data.getCount();
             
@@ -294,7 +299,7 @@
          _beforeUpdate: function(newOptions) {
             var valueChanged = this._options.value !== newOptions.value;
             var valueCleared = valueChanged && !newOptions.value && typeof newOptions.value === 'string';
-            var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, newOptions.value);
+            var needSearchOnValueChanged = valueChanged && _private.shouldSearch(this, _private.prepareValue(this, newOptions.value));
 
             if (newOptions.suggestState !== this._options.suggestState) {
                if (newOptions.suggestState) {
@@ -344,10 +349,7 @@
             var self = this;
             var shouldSearch;
             
-            if (this._options.trim) {
-               value = value.trim();
-            }
-   
+            value = _private.prepareValue(self, value);
             shouldSearch = _private.shouldSearch(this, value);
 
             /* preload suggest dependencies on value changed */

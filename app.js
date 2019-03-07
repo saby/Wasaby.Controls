@@ -58,6 +58,8 @@ var resourcesPath = path.join('', 'application');
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use('/', serveStatic(resourcesPath));
+app.use('/cdn/', serveStatic('./node_modules/sbis-cdn'));
+
 
 var port = process.env.PORT || 777;
 var server = app.listen(port);
@@ -187,9 +189,6 @@ var simpleProxy = function(proxyParams, req, res) {
    );
 };
 
-app.get('/cdn*', (req, res) => {
-   res.redirect('http://dev-cdn.wasaby.io' + req.url.replace('/cdn/', '/'));
-});
 
 // Параметры, куда и как перенаправлять запросы
 var PROXY_PARAMS = {

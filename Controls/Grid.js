@@ -12,6 +12,7 @@ define('Controls/Grid', [
     * List of examples:
     * <ul>
     *    <li><a href="/materials/demo-ws4-edit-in-place">How to configure editing in your list</a>.</li>
+    *    <li><a href="/materials/demo-ws4-edit-in-place-row-editor">How to configure editing in your list with row editor template.</a>.</li>
     * </ul>
     *
     * @class Controls/Grid
@@ -39,6 +40,7 @@ define('Controls/Grid', [
     * @mixes Controls/List/Grid/SortButtonStyles
     *
     * @cssModifier controls-Grid__cell_ellipsis With single-line content, cuts the text to the width of the cell, adding an ellipsis at the end
+    * @cssModifier controls-Grid__header-cell_spacing_money sets the right indent for the content of the header cell to align by integers in money fields
     *
     * @control
     * @public

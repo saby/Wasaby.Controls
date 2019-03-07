@@ -2,7 +2,7 @@ define('Controls-demo/Input/Suggest/resources/SuggestFooterTemplatePG', [
    'Core/Control',
    'wml!Controls-demo/Input/Suggest/resources/SuggestFooterTemplatePG',
    'css!Controls-demo/Input/Suggest/resources/SuggestFooterTemplatePG',
-   'Controls/Button',
+   'Controls/buttons',
 ], function(Control, template) {
    'use strict';
    

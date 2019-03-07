@@ -5,7 +5,10 @@ import aUtil = require('Controls/List/ItemActions/Utils/Actions');
 import ControlsConstants = require('Controls/Constants');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
-import 'css!theme?Controls/List/ItemActions/ItemActionsControl';
+import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { relation } from 'Types/entity';
+import { RecordSet } from 'Types/collection';
+import 'css!theme?Controls/_list/ItemActions/ItemActionsControl';
 
 var
     ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
@@ -98,7 +101,27 @@ var _private = {
         });
 
         return actions && (additional + main !== actions.length) && itemActionsPosition !== 'outside';
-    }
+    },
+
+    getAllChildren(
+       hierarchyRelation: relation.Hierarchy,
+       rootId: unknown,
+       items: RecordSet
+    ): object[] {
+       const children = [];
+
+       hierarchyRelation.getChildren(rootId, items).forEach((child) => {
+          if (hierarchyRelation.isNode(child) !== null) {
+             ArraySimpleValuesUtil.addSubArray(
+                children,
+                _private.getAllChildren(hierarchyRelation, child.getId(), items)
+             );
+          }
+          ArraySimpleValuesUtil.addSubArray(children, [child]);
+       });
+
+       return children;
+   }
 };
 
 var ItemActionsControl = Control.extend({
@@ -108,6 +131,11 @@ var ItemActionsControl = Control.extend({
     constructor: function() {
         ItemActionsControl.superclass.constructor.apply(this, arguments);
         this._onCollectionChangeFn = this._onCollectionChange.bind(this);
+        this._hierarchyRelation = new relation.Hierarchy({
+           idProperty: 'id',
+           parentProperty: 'parent',
+           nodeProperty: 'parent@'
+        });
     },
 
     _beforeMount: function(newOptions) {
@@ -138,6 +166,7 @@ var ItemActionsControl = Control.extend({
 
     _onItemActionsClick: function(event, action, itemData) {
         aUtil.itemActionsClick(this, event, action, itemData);
+        this._options.listModel.setMarkedKey(itemData.key);
     },
 
     _applyEdit: function(item) {
@@ -162,7 +191,23 @@ var ItemActionsControl = Control.extend({
             return;
         }
         _private.updateActions(this, this._options, type === 'collectionChanged');
-    }
+    },
+
+   getChildren(
+      action: object,
+      actions: object[]
+   ): object[] {
+      return _private
+         .getAllChildren(
+            this._hierarchyRelation,
+            action.id,
+            new RecordSet({
+               idProperty: 'id',
+               rawData: actions
+            })
+         )
+         .map((item) => item.getRawData());
+   }
 });
 
 ItemActionsControl.getDefaultOptions = function() {

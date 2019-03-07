@@ -50,7 +50,7 @@
             </div>
 
                <div attr:class="form-content__submit">
-                  <Controls.Button caption="Submit" name="updateButton" on:click="_clickUpdateHandler()" />
+                  <Controls.buttons:Button caption="Submit" name="updateButton" on:click="_clickUpdateHandler()" />
                </div>
 
             <div class="form-result">
@@ -68,14 +68,14 @@
    </Controls.Container.PendingRegistrator>
 
    <div class="form-content__create">
-      <Controls.Button caption="{{'create with id = ' + idCount}}" name="createButton" on:click="_clickCreateHandler()"/>
+      <Controls.buttons:Button caption="{{'create with id = ' + idCount}}" name="createButton" on:click="_clickCreateHandler()"/>
    </div>
    <div class="form-content__select">
       <ws:for data="data in _dataSource._data">
-         <Controls.Button caption="{{ 'id = ' + data.id }}" name="selectButton" on:click="_clickReadHandler(data.id)"/>
+         <Controls.buttons:Button caption="{{ 'id = ' + data.id }}" name="selectButton" on:click="_clickReadHandler(data.id)"/>
       </ws:for>
    </div>
    <div class="form-content__destroy">
-      <Controls.Button caption="Delete" name="deleteButton" on:click="_clickDeleteHandler()"/>
+      <Controls.buttons:Button caption="Delete" name="deleteButton" on:click="_clickDeleteHandler()"/>
    </div>
 </div>

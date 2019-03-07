@@ -1,19 +1,20 @@
 define('Controls/Input/Area',
    [
-      
       'Env/Env',
-      'Controls/Input/Text',
       'Types/entity',
+      'Controls/Input/Text',
+      'Core/helpers/Function/runDelayed',
+
       'wml!Controls/Input/Area/Area',
       'wml!Controls/Input/Area/Field',
       'wml!Controls/Input/Area/ReadOnly',
-      'Core/helpers/Function/runDelayed',
 
-      'Controls/Decorator/WrapURLs',
-
-      'css!theme?Controls/Input/Area/Area'
+      'Controls/Decorator/WrapURLs'
    ],
-   function(Env, Text, entity, template, fieldTemplate, readOnlyFieldTemplate, runDelayed) {
+   function(
+      Env, entity, Text, runDelayed,
+      template, fieldTemplate, readOnlyFieldTemplate
+   ) {
       'use strict';
 
       /**
@@ -36,12 +37,16 @@ define('Controls/Input/Area',
       /**
        * @name Controls/Input/Area#minLines
        * @cfg {Number} Minimum number of lines.
+       * @remark
+       * A value between 1 and 10 is supported.
        * @default 1
        */
 
       /**
        * @name Controls/Input/Area#maxLines
        * @cfg {Number} Maximum number of lines.
+       * @remark
+       * A value between 1 and 10 is supported.
        */
 
       /**
@@ -52,24 +57,6 @@ define('Controls/Input/Area',
        * @default enter
        */
       var _private = {
-
-         /**
-          * @param {Controls/Input/Area#size} areaSize
-          * @return {Controls/Input/Area/Types/FieldSizes.typedef}
-          */
-         calcSizesByMeasuredBlock: function(areaSize) {
-            var measuredBlock = document.createElement('div');
-            measuredBlock.className = 'controls-Area__measuredBlock controls-Area__measuredBlock_size_' + areaSize;
-            document.body.appendChild(measuredBlock);
-            var sizes = {
-               rowHeight: measuredBlock.clientHeight,
-               indents: measuredBlock.offsetHeight - measuredBlock.clientHeight
-            };
-            document.body.removeChild(measuredBlock);
-
-            return sizes;
-         },
-
          calcPositionCursor: function(container, textBeforeCursor) {
             var measuredBlock = document.createElement('div');
 
@@ -84,19 +71,6 @@ define('Controls/Input/Area',
             container.removeChild(measuredBlock);
 
             return position;
-         },
-
-         /**
-          *
-          * @param {Controls/Input/Area/Types/FieldSizes.typedef} sizes
-          * @param {Number} count Number of rows in the container.
-          * @param {Boolean} [hasIndents] Determine whether to ignore the indents.
-          * @return {*}
-          */
-         calculateHeightContainer: function(sizes, count, hasIndents) {
-            var indents = hasIndents ? sizes.indents : 0;
-
-            return sizes.rowHeight * count + indents;
          },
 
          /**
@@ -191,6 +165,11 @@ define('Controls/Input/Area',
                Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
             }
 
+            if (min > 10 || max > 10) {
+               validated = false;
+               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.');
+            }
+
             return validated;
          }
       };
@@ -204,13 +183,6 @@ define('Controls/Input/Area',
             Area.superclass._beforeMount.apply(this, arguments);
 
             _private.validateLines(options.minLines, options.maxLines);
-
-            this._sizes = typeof window === 'undefined' ? {
-               rowHeight: 0,
-               indents: 0
-            } : _private.calcSizesByMeasuredBlock(options.size);
-
-            this._calculateHeightContainer = this._calculateHeightContainer.bind(this);
          },
 
          _beforeUpdate: function(newOptions) {
@@ -244,14 +216,12 @@ define('Controls/Input/Area',
             this._readOnlyField.template = readOnlyFieldTemplate;
          },
 
-         _calculateHeightContainer: function(count, hasIndents) {
-            return _private.calculateHeightContainer(this._sizes, count, hasIndents);
-         },
-
          _isTriggeredChangeEventByEnterKey: function() {
             return false;
          }
       });
+
+      Area._theme.push('Controls/Input/Area/Area');
 
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();

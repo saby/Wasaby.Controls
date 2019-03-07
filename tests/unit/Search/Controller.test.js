@@ -165,6 +165,13 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          assert.equal(value, 'test');
          assert.equal(searchController._inputSearchValue, 'test');
       });
+   
+      it('_beforeMount', function() {
+         var searchController = getSearchController(defaultOptions);
+         searchController._beforeMount({searchValue: 'test'}, {dataOptions: defaultOptions});
+
+         assert.equal(searchController._inputSearchValue, 'test');
+      });
 
    });
 

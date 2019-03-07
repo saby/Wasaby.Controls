@@ -26,7 +26,7 @@ define('Controls/Utils/isVDOMTemplate', [], function() {
     * <h2>Usage example</h2>
     * <pre>
     * require(
-    * ['Controls/Button', 'SBIS3.CONTROLS/Button', 'Controls/Utils/isVDOMTemplate'],
+    * ['Controls/buttons:Button', 'SBIS3.CONTROLS/Button', 'Controls/Utils/isVDOMTemplate'],
     * function(VDOMButton, WS3Button, isVDOMTemplate) {
     *
     *   // true

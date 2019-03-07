@@ -13,15 +13,15 @@
          </ws:itemTemplate>
       </Controls.Selector.SelectedCollection>
       <ws:if data="{{_options.multiSelect && !_options.readOnly}}">
-         <Controls.Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
+         <Controls.buttons:Button style="info" viewMode="link" size="s" caption="{[+еще]}" on:click="_open()"
                           attr:class="controls-Selectorbutton_button-more"/>
       </ws:if>
       <ws:if data="{{_options.items.getCount() > 1 && !_options.readOnly}}">
-         <Controls.Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"
+         <Controls.buttons:Button style="info" viewMode="link" size="s" caption="{[Очистить]}" on:click="_reset()"
                           attr:class="controls-Selectorbutton__button-reset"/>
       </ws:if>
    </ws:if>
    <ws:else>
-      <Controls.Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
+      <Controls.buttons:Button name="link" on:click="_open()" style="{{_options.style}}" viewMode="link" caption="{{_options.caption}}"/>
    </ws:else>
 </div>

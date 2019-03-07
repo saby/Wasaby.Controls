@@ -11,7 +11,7 @@
     </div>
     <div class="controls-demo_event-example__wrapper " style="">
         <div class="controls-demo_example-wrapper">
-            <Controls.Button caption="Open" on:click="_openHandler()"/>
+            <Controls.buttons:Button caption="Open" on:click="_openHandler()"/>
             <ws:partial template="{{_options.content}}"
                         scope="{{_exampleControlOptions}}"
                         name="{{_options.nameOpener}}"
@@ -27,7 +27,7 @@
                     attr:class="PropertyGrid_events">
                 <div attr:style="width:200px; word-spacing:200px;">{{myEvent}}</div>
             </Controls.Container.Scroll>
-            <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+            <Controls.buttons:Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
 
         </div>
     </div>

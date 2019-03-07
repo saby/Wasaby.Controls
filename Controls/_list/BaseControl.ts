@@ -326,11 +326,18 @@ var _private = {
     },
 
     // Основной метод пересчета состояния Virtual Scroll
-    applyVirtualScroll: function(self) {
-        var
+    applyVirtualScroll: function (self) {
+        let
             indexes = self._virtualScroll.ItemsIndexes,
             placeholdersSizes = self._virtualScroll.PlaceholdersSizes;
 
+        /*
+         * The virtual scroll updates the indexes only on scroll events. After reload and at the moment of first load,
+         * indexes in virtual scroll remain the same as at the time of initialization. Source may return fewer records
+         * than the size of the virtual page and the stopIndex in the model will be bigger than the stopIndex in the
+         * virtual scroll. It can cause all kinds of troubles, e.g. out of bounds access.
+         */
+        indexes.stop = Math.min(indexes.stop, self._listViewModel.getCount());
         self._listViewModel.setIndexes(indexes.start, indexes.stop);
         self._topPlaceholderHeight = placeholdersSizes.top;
         self._bottomPlaceholderHeight = placeholdersSizes.bottom;
@@ -587,7 +594,6 @@ var _private = {
                 if (self._options.navigation && self._options.navigation.source) {
                     self._sourceController.setState(self._listViewModel);
                 }
-
                 if (!!action && self.getVirtualScroll()) {
                     self._virtualScroll.ItemsCount = self.getViewModel().getCount();
                     if (action === collection.IObservable.ACTION_ADD || action === collection.IObservable.ACTION_MOVE) {
@@ -596,12 +602,16 @@ var _private = {
                     if (action === collection.IObservable.ACTION_REMOVE || action === collection.IObservable.ACTION_MOVE) {
                         self._virtualScroll.cutItemsHeights(removedItemsIndex - 1, removedItems.length);
                     }
+                    if (action === collection.IObservable.ACTION_RESET) {
+                        self._virtualScroll.resetItemsIndexes();
+                    }
                     _private.applyVirtualScroll(self);
                 }
             }
             self._hasUndrawChanges = true;
             self._forceUpdate();
         });
+
         model.subscribe('onGroupsExpandChange', function(event, changes) {
             _private.groupsExpandChangeHandler(self, changes);
         });
@@ -654,6 +664,47 @@ var _private = {
         }
     },
 
+    showActionMenu(
+       self: Control,
+       itemData: object,
+       childEvent: Event,
+       action: object
+    ): void {
+       /**
+        * For now, BaseControl opens menu because we can't put opener inside ItemActionsControl, because we'd get 2 root nodes.
+        * When we get fragments or something similar, it would be possible to move this code where it really belongs.
+        */
+       const children = self._children.itemActions.getChildren(action, itemData.itemActions.all);
+       if (children.length) {
+          self._listViewModel.setActiveItem(itemData);
+          require(['css!Controls/Input/Dropdown/Dropdown'], () => {
+             self._children.itemActionsOpener.open({
+                opener: self._children.listView,
+                target: childEvent.target,
+                templateOptions: {
+                   items: new collection.RecordSet({ rawData: children }),
+                   keyProperty: 'id',
+                   parentProperty: 'parent',
+                   nodeProperty: 'parent@',
+                   rootKey: action.id,
+                   showHeader: true,
+                   dropdownClassName: 'controls-itemActionsV__popup',
+                   headConfig: {
+                       caption: action.title
+                   }
+                },
+                eventHandlers: {
+                   onResult: self._closeActionsMenu,
+                   onClose: self._closeActionsMenu
+                },
+                className: 'controls-DropdownList__margin-head'
+             });
+             self._actionMenuIsShown = true;
+             self._forceUpdate();
+          });
+       }
+    },
+
     closeActionsMenu: function(self, args) {
         var
             actionName = args && args.action,
@@ -663,6 +714,7 @@ var _private = {
             self._listViewModel.setActiveItem(null);
             self._children.swipeControl.closeSwipe();
             self._menuIsShown = false;
+            self._actionMenuIsShown = false;
         }
 
         if (actionName === 'itemClick') {
@@ -936,11 +988,10 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     if (newOptions.dataLoadCallback instanceof Function) {
                         newOptions.dataLoadCallback(self._items);
                     }
+
                     if (self._virtualScroll) {
                         // При серверной верстке применяем начальные значения
-                        var indexes = self._virtualScroll.ItemsIndexes;
-                        self._virtualScroll.ItemsCount = self._listViewModel.getCount();
-                        self._listViewModel.setIndexes(indexes.start, indexes.stop);
+                        _private.applyVirtualScroll(self);
                     }
                     _private.prepareFooter(self, newOptions.navigation, self._sourceController);
                     return;
@@ -1063,7 +1114,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
             } else {
                 items.at(currentItemIndex).merge(item);
             }
-            return { data: item };
+            return item;
         }, (error) => {
             return _private.crudErrback(this, {
                 error: error,
@@ -1278,6 +1329,15 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _showActionsMenu: function(event, itemData, childEvent, showAll) {
         _private.showActionsMenu(this, event, itemData, childEvent, showAll);
     },
+
+   _showActionMenu(
+      event: Event,
+      itemData: object,
+      childEvent: Event,
+      action: object
+   ): void {
+      _private.showActionMenu(this, itemData, childEvent, action);
+   },
 
     _onItemContextMenu: function(event, itemData) {
         this._showActionsMenu.apply(this, arguments);

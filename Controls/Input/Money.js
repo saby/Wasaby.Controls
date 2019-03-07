@@ -3,9 +3,7 @@ define('Controls/Input/Money',
       'Controls/Input/Base',
       'Controls/Input/Money/ViewModel',
 
-      'wml!Controls/Input/Money/ReadOnly',
-
-      'css!theme?Controls/Input/Money/Money'
+      'wml!Controls/Input/Money/ReadOnly'
    ],
    function(Base, ViewModel, readOnlyFieldTemplate) {
       'use strict';
@@ -56,6 +54,8 @@ define('Controls/Input/Money',
             return ViewModel;
          }
       });
+
+      Money._theme.push('Controls/Input/Money/Money');
 
       return Money;
    });

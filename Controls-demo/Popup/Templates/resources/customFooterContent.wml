@@ -1,5 +1,5 @@
 <div  style="text-align: center">
-    <Controls.Button caption="yes" attr:style="margin-right: 3px"/>
-    <Controls.Button caption="no" attr:style="margin-right: 3px"/>
-    <Controls.Button caption="cancel"/>
+    <Controls.buttons:Button caption="yes" attr:style="margin-right: 3px"/>
+    <Controls.buttons:Button caption="no" attr:style="margin-right: 3px"/>
+    <Controls.buttons:Button caption="cancel"/>
 </div>

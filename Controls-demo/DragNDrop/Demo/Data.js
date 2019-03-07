@@ -22,7 +22,7 @@ define('Controls-demo/DragNDrop/Demo/Data', ['Controls-demo/resources/Images'], 
          image: Images.groups.sport
       }, {
          id: 3,
-         title: 'Стандарты интерфейса и другие ',
+         title: 'Стандарты интерфейса',
          additional: 'Застандартизируем нестандартизируемое или даешь семь красных линий белым цветом!',
          usersCunt: 114,
          image: Images.groups.standards

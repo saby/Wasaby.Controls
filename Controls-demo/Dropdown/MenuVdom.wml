@@ -9,6 +9,7 @@
          name="myDropdownList0"
          keyProperty="id"
          source="{{_getDefaultMemory()}}"
+			attr:class="controls-demo-Dropdown"
       />
    </div>
 
@@ -21,6 +22,7 @@
 				  keyProperty="id"
               itemTemplateProperty="myTemplate"
               source="{{_getItemTemplateData()}}"
+				  attr:class="controls-demo-Dropdown"
       />
    </div>
 
@@ -33,6 +35,7 @@
 			keyProperty="id"
          itemTemplateProperty="myTemplate"
          source="{{_getItemTemplateData()}}"
+			attr:class="controls-demo-Dropdown"
       />
    </div>
 
@@ -44,6 +47,7 @@
 			keyProperty="id"
          itemTemplate="wml!Controls-demo/Dropdown/resources/ItemsTemplate2"
          source="{{_getItemTemplateData()}}"
+			attr:class="controls-demo-Dropdown"
       />
    </div>
 
@@ -54,6 +58,7 @@
 			displayProperty="title"
 			keyProperty="id"
          source="{{_getIconItems()}}"
+			attr:class="controls-demo-Dropdown"
       />
    </div>
 
@@ -66,7 +71,7 @@
          parentProperty="parent"
          nodeProperty="@parent"
          source="{{_getHierarchyItems()}}"
-		 attr:class="ControlsDemo-MenuDemo__hierarchy""
+		 attr:class="ControlsDemo-MenuDemo__hierarchy controls-demo-Dropdown"
       />
    </div>
 
@@ -82,6 +87,7 @@
          headTemplate="wml!Controls-demo/Dropdown/resources/headerTemplate"
          footerTemplate="wml!Controls-demo/Dropdown/resources/footerTemplate"
          source="{{_getMultiData()}}"
+			attr:class="controls-demo-Dropdown"
       />
 	</div>
 
@@ -94,6 +100,7 @@
 				displayProperty="title"
 				readOnly="{{true}}"
 				source="{{_getDefaultMemory()}}"
+				attr:class="controls-demo-Dropdown"
 		/>
 	</div>
    <h2>MenuButton</h2>

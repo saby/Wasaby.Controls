@@ -6,9 +6,32 @@ import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
 import isEqual = require('Core/helpers/Object/isEqual');
 import stickyUtil = require('Controls/StickyHeader/Utils');
+import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 
 var
     _private = {
+        isDrawActions: function(itemData, currentColumn, colspan) {
+            return itemData.drawActions &&
+                (itemData.getLastColumnIndex() === currentColumn.columnIndex ||
+                colspan && currentColumn.columnIndex === (itemData.multiSelectVisibility === 'hidden' ? 0 : 1));
+        },
+        getCellStyle: function(itemData, currentColumn, colspan, isNotFullGridSupport) {
+           var
+               style = '';
+           if (currentColumn.styleForLadder) {
+              style += currentColumn.styleForLadder;
+           }
+           if (colspan) {
+              if (currentColumn.columnIndex === itemData.multiSelectVisibility === 'hidden' ? 0 : 1) {
+                 if (isNotFullGridSupport) {
+                    style += ' colspan: ' + (itemData.multiSelectVisibility === 'hidden' ? itemData.columns.length : itemData.columns.length - 1);
+                 } else {
+                    style += ' grid-column: ' + (itemData.multiSelectVisibility === 'hidden' ? 1 : 2) + ' / ' + (itemData.columns.length + 1);
+                 }
+              }
+           }
+           return style;
+        },
         getPaddingCellClasses: function(params) {
             var
                 preparedClasses = '';
@@ -249,17 +272,6 @@ var
             return sortingDirection;
         },
 
-        isLayoutFixed: function(columns) {
-            var
-                autoColumnsCount = 0;
-            for (var i = 0; i < columns.length; i++) {
-                if (!columns[i].width || columns[i].width === 'auto') {
-                    autoColumnsCount++;
-                }
-            }
-            return autoColumnsCount !== 1;
-        },
-
         isNeedToHighlight: function(item, dispProp, searchValue) {
             var itemValue = item.get(dispProp);
             return itemValue && searchValue && String(itemValue).toLowerCase().indexOf(searchValue.toLowerCase()) !== -1;
@@ -317,12 +329,12 @@ var
             this._model.nextModelVersion(notUpdatePrefixItemVersion);
         },
 
-        _prepareCrossBrowserColumn: function(column, isNotFullGridSupport, columnsCount) {
+        _prepareCrossBrowserColumn: function(column, isNotFullGridSupport) {
             var
                 result = cClone(column);
             if (isNotFullGridSupport) {
-                if (result.width === '1fr' || !result.width && columnsCount === 1) {
-                    result.width = '100%';
+                if (result.width === '1fr') {
+                    result.width = 'auto';
                 }
             }
             return result;
@@ -332,7 +344,7 @@ var
             var
                 result = [];
             for (var i = 0; i < columns.length; i++) {
-                result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport, columns.length));
+                result.push(this._prepareCrossBrowserColumn(columns[i], Env.detection.isNotFullGridSupport));
             }
             return result;
         },
@@ -382,10 +394,6 @@ var
 
         isStickyHeader: function() {
             return this._options.stickyHeader;
-        },
-
-        isLayoutFixed: function() {
-            return this._layoutFixed;
         },
 
         getCurrentHeaderColumn: function() {
@@ -542,7 +550,6 @@ var
 
         _setColumns: function(columns) {
             this._columns = this._prepareColumns(columns);
-            this._layoutFixed = _private.isLayoutFixed(this._columns);
             this._ladder = _private.prepareLadder(this);
             this._prepareResultsColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
             this._prepareColgroupColumns(this._columns, this._options.multiSelectVisibility !== 'hidden');
@@ -715,6 +722,10 @@ var
 
             current.columnIndex = 0;
 
+            current.getVersion = function() {
+                return self._calcItemVersion(current.item, current.key);
+            };
+
             current.getItemColumnCellClasses = _private.getItemColumnCellClasses;
 
             current.resetColumnIndex = function() {
@@ -726,6 +737,8 @@ var
             current.getLastColumnIndex = function() {
                 return current.columns.length - 1;
             };
+            current.isDrawActions = _private.isDrawActions;
+            current.getCellStyle = _private.getCellStyle;
             current.getCurrentColumn = function() {
                 var
                     currentColumn = {
@@ -845,6 +858,17 @@ var
 
         setItemActionVisibilityCallback: function(callback) {
             this._model.setItemActionVisibilityCallback(callback);
+        },
+
+        _calcItemVersion: function(item, key) {
+            var
+                version = this._model._calcItemVersion(item, key),
+                lastItemKey = ItemsUtil.getPropertyValue(this.getLastItem(), this._options.keyProperty);
+
+            if (lastItemKey === key) {
+                version = 'LAST_ITEM_' + version;
+            }
+            return version;
         },
 
         _prepareDisplayItemForAdd: function(item) {
