@@ -2,10 +2,10 @@ define('Controls/Toggle/Button', [
    'Core/Control',
    'Controls/Toggle/Button/Classes',
    'wml!Controls/Button/Button',
-   'Controls/Button/validateIconStyle',
+   'Controls/buttons',
    'css!theme?Controls/Button/Button',
    'css!theme?Controls/Toggle/Button/Button'
-], function(Control, Classes, template, validateIconStyle) {
+], function(Control, Classes, template, buttons) {
    /**
     * Button that switches between two states: on-state and off-state.
     *
@@ -93,7 +93,7 @@ define('Controls/Toggle/Button', [
          self._state = (stickyButton.indexOf(self._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
          self._caption = (options.captions ? (!options.value && options.captions[1] ? options.captions[1] : options.captions[0]) : '');
          self._icon = (options.icons ? (!options.value && options.icons[1] ? options.icons[1] : options.icons[0]) : '');
-         self._iconStyle = validateIconStyle.iconStyleTransformation(options.iconStyle);
+         self._iconStyle = buttons.iconsUtil.iconStyleTransformation(options.iconStyle);
       }
    };
    var ToggleButton = Control.extend({
