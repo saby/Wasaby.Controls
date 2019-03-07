@@ -49,7 +49,7 @@ define('Controls/FormController', [
          return Promise.resolve(crudResult.data);
       }
       return Promise.reject(crudResult.error);
-   },
+   }
 
    var _private = {
       checkRecordType: function(record) {
