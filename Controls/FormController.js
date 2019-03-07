@@ -600,8 +600,8 @@ define('Controls/FormController', [
          }
 
          if (
-             Env.constants.isBrowserPlatform &&
-             this._children.dialogOpener
+            Env.constants.isBrowserPlatform &&
+            this._children.dialogOpener
          ) {
             // диалоговое с ошибкой
             self._children.dialogOpener.open({
