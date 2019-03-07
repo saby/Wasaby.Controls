@@ -26,25 +26,6 @@ define('Controls/Button', [
     * @demo Controls-demo/Buttons/ButtonDemoPG
     */
 
-   /**
-    * @name Controls.buttons:Button#transparent
-    * @cfg {Boolean} Determines whether button having background.
-    * @default false
-    * @remark
-    * true - Button has transparent background.
-    * false - Button has default background for this viewmode and style.
-    * @example
-    * Button has transparent background.
-    * <pre>
-    *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
-    * </pre>
-    * Button hasn't transparent background.
-    * <pre>
-    *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
-    * </pre>
-    * @see style
-    */
-
    Env.IoC.resolve('ILogger').error(
       'Controls/Button',
       'This control is deprecated. Use \'Controls/buttons:Button\' instead'

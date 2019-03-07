@@ -9,7 +9,7 @@ define('Controls/Button/interface/IIcon', [
     */
 
    /**
-    * @name Controls.buttons:Button#icon
+    * @name Controls/Button/interface/IIcon#icon
     * @cfg {String} Button icon.
     * @default Undefined
     * @remark Icon is given by size and icon classes. Icons have three size: icon-small, icon-medium, icon-large. Sizes are set by CSS rules.
