@@ -1,7 +1,7 @@
 /// <amd-module name="Controls/_progress/StateIndicator" />
 /**
  * Progress state indicator
- * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
+ * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator 
  * @author Колесов В.А.
  */
