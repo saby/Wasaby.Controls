@@ -1,79 +1,89 @@
 define('Controls/Input/Phone/ViewModel',
    [
-      'Controls/Input/Phone/MaskBuilder',
+      'Controls/Input/Base/ViewModel',
       'Controls/Input/Mask/Formatter',
+      'Controls/Input/Phone/MaskBuilder',
       'Controls/Input/Mask/FormatBuilder',
-      'Controls/Input/Mask/InputProcessor',
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/Mask/InputProcessor'
    ],
-   function(MaskBuilder, Formatter, FormatBuilder, InputProcessor, BaseViewModel) {
-
+   function(BaseViewModel, Formatter, MaskBuilder, FormatBuilder, InputProcessor) {
       'use strict';
 
       /**
        * @class Controls/Input/Text/ViewModel
        * @private
-       * @author Журавлев М.С.
+       * @author Миронов А.Ю.
        */
-      var
-         replacer = '',
-         formatMaskChars = {
-            'd': '[0-9]',
-            '+': '[+]'
-         };
 
       var _private = {
-         valueValidate: function(options) {
-            if (!options.value) {
-               options.value = '';
-            }
+         REPLACER: '',
+
+         FORMAT_MASK_CHARS: {
+            'd': '[0-9]',
+            '+': '[+]'
+         },
+
+         updateFormat: function(self, value) {
+            var mask = MaskBuilder.getMask(value);
+
+            self._format = FormatBuilder.getFormat(mask, _private.FORMAT_MASK_CHARS, _private.REPLACER);
+         },
+
+         prepareData: function(result) {
+            var position = result.position;
+
+            return {
+               before: result.value.substring(0, position),
+               after: result.value.substring(position, result.value.length),
+               insert: '',
+               delete: ''
+            };
          }
       };
 
       var ViewModel = BaseViewModel.extend({
-         constructor: function(options) {
-            _private.valueValidate(options);
-            ViewModel.superclass.constructor.call(this, options);
-            this._format = FormatBuilder.getFormat(MaskBuilder.getMask(options.value), formatMaskChars, replacer);
+         _format: null,
+
+         _convertToValue: function(displayValue) {
+            _private.updateFormat(this, displayValue);
+
+            return Formatter.getClearData(this._format, displayValue).value;
          },
 
-         updateOptions: function(newOptions) {
-            _private.valueValidate(newOptions);
-            ViewModel.superclass.updateOptions.call(this, newOptions);
-            this._format = FormatBuilder.getFormat(MaskBuilder.getMask(newOptions.value), formatMaskChars, replacer);
-         },
+         _convertToDisplayValue: function(value) {
+            var stringValue = value === null ? '' : value;
 
-         handleInput: function(splitValue, inputType) {
-            var newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after);
-            var newFormat = FormatBuilder.getFormat(newMask, formatMaskChars, replacer);
-            var result = InputProcessor.input(splitValue, inputType, replacer, this._format, newFormat);
+            _private.updateFormat(this, stringValue);
 
-            this._options.value = Formatter.getClearData(result.format, result.value).value;
-            this._format = result.format;
-            this._nextVersion();
-
-            return result;
-         },
-
-         getDisplayValue: function() {
             return Formatter.getFormatterData(this._format, {
-               value: this._options.value,
+               value: stringValue,
                position: 0
             }).value;
          },
 
+         handleInput: function(splitValue, inputType) {
+            var newMask = MaskBuilder.getMask(splitValue.before + splitValue.insert + splitValue.after);
+            var newFormat = FormatBuilder.getFormat(newMask, _private.FORMAT_MASK_CHARS, _private.REPLACER);
+            var result = InputProcessor.input(splitValue, inputType, _private.REPLACER, this._format, newFormat);
+
+            return ViewModel.superclass.handleInput.call(this, _private.prepareData(result), inputType);
+         },
+
          isFilled: function() {
-            var value = this._options.value;
+            var value = this._value === null ? '' : this._value;
             var mask = MaskBuilder.getMask(value);
-            var keysRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('|') + ']', 'g');
+            var keysRegExp = new RegExp('[' + Object.keys(_private.FORMAT_MASK_CHARS).join('|') + ']', 'g');
             var maskOfKeys = mask.match(keysRegExp);
 
             return value.length === maskOfKeys.length;
+         },
+
+         moveCarriageToEnd: function() {
+            this.selection = this.displayValue.length;
+
+            this._shouldBeChanged = true;
          }
       });
 
-      ViewModel._private = _private;
-
       return ViewModel;
-   }
-);
+   });
