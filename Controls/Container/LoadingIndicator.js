@@ -40,7 +40,7 @@ define('Controls/Container/LoadingIndicator', [
     * @author Krasilnikov A.
     * @public
     * @category Container
-    * @demo Controls-demo/Container/LoadingIndicator
+    * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG
     */
 
    /**
