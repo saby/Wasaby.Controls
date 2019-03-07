@@ -1,10 +1,10 @@
 <div>
 	<span class="controls-StateIndicator_theme-{{_options.theme}}">		
-	   <ws:for data="i in _options.numSectors">
+	   <ws:for data="i in _numSectors">
 	      <span 
             class="controls-StateIndicator__box_theme-{{_options.theme}} {{ _colorState[i] ? _colors[_colorState[i]-1] : 'controls-StateIndicator__emptySector' }}_theme-{{_options.theme}}" 
 	         data-item="{{ _colorState[i] ? _colorState[i] : -1 }}"
-	         on:mouseover="_mouseOverIndicatorHandler(_colorState[i] ? _colorState[i] : -1)"
+	         on:mouseenter="_mouseEnterIndicatorHandler()"
 	      ></span>
 	   </ws:for>
 	</span>	
