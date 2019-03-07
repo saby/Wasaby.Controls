@@ -1,8 +1,8 @@
 define([
-   'Controls/List/Swipe/SwipeControl',
-   'Controls/List/ItemActions/Utils/Actions',
-   'Controls/List/Swipe/HorizontalMeasurer',
-   'Controls/List/Swipe/VerticalMeasurer'
+   'Controls/_list/Swipe/SwipeControl',
+   'Controls/_list/ItemActions/Utils/Actions',
+   'Controls/_list/Swipe/HorizontalMeasurer',
+   'Controls/_list/Swipe/VerticalMeasurer'
 ], function(
    SwipeControl,
    actionsUtil,

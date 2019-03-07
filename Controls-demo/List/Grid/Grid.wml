@@ -1,5 +1,5 @@
 <div class="demo-Grid">
-   <Controls.Button caption="Toggle columns" on:click="_onToggleColumnsClicked()"/>
+   <Controls.buttons:Button caption="Toggle columns" on:click="_onToggleColumnsClicked()"/>
    <div class="demo-Grid__container">
       <Controls.Container.Data source="{{_viewSource}}" keyProperty="id">
          <Controls.Container.MultiSelector
@@ -11,7 +11,7 @@
                      <Controls.Grid
                              attr:class="demo-Grid__control test_grid_1"
                              displayProperty="title"
-                             markedKey="{{448390}}"
+                             markedKey="448390"
                              stickyHeader="{{false}}"
                              resultsPosition="top"
                              rowSeparatorVisibility="{{true}}"
@@ -39,7 +39,7 @@
                     rowSpacing="M"
                     keyProperty="id"
                     displayProperty="title"
-                    markedKey="{{448390}}"
+                    markedKey="448390"
                     resultsPosition="top"
                     rowSeparatorVisibility="{{true}}"
                     header="{{gridHeader}}"
@@ -66,7 +66,7 @@
                              leftPadding="M"
                              rightPadding="L"
                              displayProperty="title"
-                             markedKey="{{448390}}"
+                             markedKey="448390"
                              rowSeparatorVisibility="{{true}}"
                              multiSelectVisibility="visible"
                              itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
@@ -90,7 +90,7 @@
                     rowSpacing="L"
                     keyProperty="id"
                     displayProperty="title"
-                    markedKey="{{448390}}"
+                    markedKey="448390"
                     rowSeparatorVisibility="{{true}}"
                     itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
                     source = "{{_viewSource}}"

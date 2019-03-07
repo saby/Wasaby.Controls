@@ -6,6 +6,9 @@ import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
 import 'css!theme?Controls/_toolbars/View';
+//TODO: Пока не добавлена возможность загружать темизированную css-ку, загружаю статически.
+//TODO: https://online.sbis.ru/opendoc.html?guid=b963cb6d-f640-45a9-acdc-aab887ea2f4a
+import 'css!theme?Controls/_toolbars/ToolbarPopup';
 
 /**
  * Graphical control element on which buttons, menu and other input or output elements are placed.
@@ -69,7 +72,7 @@ import 'css!theme?Controls/_toolbars/View';
 
 /**
  * @name Controls/Toolbar#itemsSpacing
- * @cfg {Types/source:Base} Type of spacing between items
+ * @cfg {String} Type of spacing between items.
  * @default medium
  * @example
  * Tabs buttons will be rendered data from _source. First item render with left align, other items render with defult, right align.
@@ -139,6 +142,18 @@ import 'css!theme?Controls/_toolbars/View';
  *             iconProperty="icon"
  *          />
  *      </ws:itemTemplate>
+ * </pre>
+ */
+
+/**
+ * @name Controls/Toolbar#popupClassName
+ * @cfg {String} Class for drop-down list in toolbar menu.
+ * @example
+ * <pre>
+ *    <Controls.Toolbar
+ *       popupClassName="your-custom-class"
+ *       source="{{_source}}"
+ *       on:itemClick="_itemClick()"/>
  * </pre>
  */
 
@@ -225,9 +240,7 @@ var _private = {
         };
     },
     openPopup: function (config, self) {
-        require(['css!theme?Controls/_toolbars/ToolbarPopup'], function () {
-            self._children.menuOpener.open(config, self);
-        });
+        self._children.menuOpener.open(config, self);
     }
 };
 

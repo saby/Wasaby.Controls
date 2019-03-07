@@ -6,6 +6,7 @@ import template = require('wml!Controls/_crumbs/Path/Path');
 
 /**
  * Breadcrumbs.
+ * <a href="/materials/demo-ws4-breadcrumbs">Demo</a>.
  *
  * @class Controls/BreadCrumbs
  * @extends Core/Control

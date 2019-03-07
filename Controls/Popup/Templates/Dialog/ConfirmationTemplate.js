@@ -47,7 +47,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
           */
 
          /**
-          * @name Controls/Popup/Opener/Confirmation/ConfirmationTemplate#size
+          * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#size
           * @cfg {String} Option description.
           * @variant m
           * @variant l

@@ -32,10 +32,10 @@ define(
 
          it('Checking default values of options.', function() {
             assert.deepEqual(NumberInput.getDefaultOptions(), {
-               size: 'm',
                value: 0,
                tooltip: '',
                style: 'info',
+               size: 'default',
                placeholder: '',
                useGrouping: true,
                textAlign: 'left',

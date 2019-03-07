@@ -76,6 +76,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
          keyProperty: 'id',
          displayProperty: 'title',
          markedKey: '123',
+         markerVisibility: 'visible',
          multiSelectVisibility: 'visible',
          header: gridHeader,
          columns: gridColumns,
@@ -117,37 +118,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
 
       describe('"_private" block', function() {
-         it('isLayoutFixed', function() {
-            var
-               columns1 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   }
-               ],
-               columns2 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  {}
-               ],
-               columns3 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  { width: 'auto'  }
-               ],
-               columns4 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  { width: 'auto'  },
-                  {}
-               ];
-            assert.isTrue(GridViewModel._private.isLayoutFixed(columns1));
-            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns2));
-            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns3));
-            assert.isTrue(GridViewModel._private.isLayoutFixed(columns4));
-         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -362,6 +332,37 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
+
+         });
+         it('should update last item after append items', function () {
+            var
+                gridViewModel = new GridViewModel(cfg),
+                oldLastIndex = gridViewModel.getCount()-1,
+                firstItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(0)),
+                lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex)),
+                newLastItem;
+
+            // first item should have updated version identificator
+            assert.isTrue(firstItem.getVersion().indexOf('LAST_ITEM') === -1);
+
+            // last item should have updated version identificator
+            assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') !== -1);
+
+            gridViewModel.appendItems(new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 121212, title: 'i0'},
+                  { id: 231313, title: 'i1'}
+               ]
+            }));
+
+            // old last item now must be updated and shouldn't have prefix "LAST_ITEM" in version identificator
+            lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex));
+            assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') === -1);
+
+            // last item should have updated version identificator
+            newLastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(gridViewModel.getCount()-1));
+            assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
          });
          it('getItemColumnCellClasses', function() {
@@ -787,7 +788,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   },
                   {
                      title: 'second',
-                     width: '100%'
+                     width: 'auto'
                   },
                   {
                      title: 'third',

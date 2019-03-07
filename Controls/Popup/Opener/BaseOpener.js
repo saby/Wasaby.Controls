@@ -34,7 +34,7 @@ define('Controls/Popup/Opener/BaseOpener',
       /**
        * Base Popup opener
        * @category Popup
-       * @class Controls/Popup/Opener/Base
+       * @class Controls/Popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
        * @control
        * @private
@@ -268,9 +268,15 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#close
           */
          close: function() {
+            var self = this;
+            var popupId = this._getCurrentPopupId();
             if (this._getCurrentPopupId()) {
-               ManagerController.remove(this._getCurrentPopupId());
-               this._popupIds.pop();
+               ManagerController.remove(this._getCurrentPopupId()).addCallback(function() {
+                  // todo: Перейти с массива на collection.list
+                  if (self._popupIds.indexOf(popupId) > -1) {
+                     self._popupIds.splice(self._popupIds.indexOf(popupId), 1);
+                  }
+               });
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.closeDialog();
             }

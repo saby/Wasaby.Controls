@@ -403,6 +403,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          _rebuildTitleBar: function() {
             this._removeCustomHeader();
             this._setCustomHeader();
+            return true; // команда rebuildTitleBar не должна всплывать выше окна
          },
 
          _removeCustomHeader: function() {
@@ -413,7 +414,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          handleCommand: function(commandName, args) {
             var arg = args[0];
 
-            if (commandName === 'close') {
+            if (commandName === 'close' || commandName === 'hide') {
                this.close(arg);
                return true; // команда close не должна всплывать выше окна
             } if (commandName === 'ok') {
@@ -796,27 +797,29 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             this.close();
          },
          close: function(arg) {
-            if (this._logicParent.waitForPopupCreated) {
-               this._waitClose = true;
-               return;
-            }
+            if (!this.isDestroyed()) {
+               if (this._logicParent.waitForPopupCreated) {
+                  this._waitClose = true;
+                  return;
+               }
 
-            if (this._options.autoCloseOnHide === false) {
-               this._toggleVisible(false);
-            } else if (this._childControl && !this._childControl.isDestroyed()) {
-               // Закрытие панели могут вызвать несколько раз подряд
-               if (this._isClosing) {
-                  return false;
+               if (this._options.autoCloseOnHide === false) {
+                  this._toggleVisible(false);
+               } else if (this._childControl && !this._childControl.isDestroyed()) {
+                  // Закрытие панели могут вызвать несколько раз подряд
+                  if (this._isClosing) {
+                     return false;
+                  }
+                  this._isClosing = true;
+                  if (this._notifyCompound('onBeforeClose', arg) !== false) {
+                     this._notifyVDOM('close', null, { bubbling: true });
+                     this._notifyCompound('onClose', arg);
+                     this._notifyCompound('onAfterClose', arg);
+                  }
+                  this._isClosing = false;
                }
-               this._isClosing = true;
-               if (this._notifyCompound('onBeforeClose', arg) !== false) {
-                  this._notifyVDOM('close', null, { bubbling: true });
-                  this._notifyCompound('onClose', arg);
-                  this._notifyCompound('onAfterClose', arg);
-               }
-               this._isClosing = false;
+               return true;
             }
-            return true;
          },
 
          _toggleVisibleClass: function(className, visible) {

@@ -127,7 +127,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/List/Tree/TreeViewModel'));
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_list/Tree/TreeViewModel'));
             assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
@@ -137,6 +137,35 @@ define([
                done();
             }, 100);
          }, 1);
+      });
+
+      it('beforeMount: right indexes with virtual scroll and receivedState', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: ListViewModel,
+            source: source
+         };
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         return new Promise(function (resolve, reject) {
+            ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
+            setTimeout(function () {
+               assert.equal(ctrl.getViewModel().getStartIndex(), 0);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               resolve();
+            }, 10);
+         });
       });
 
       it('_private::getSortingOnChange', function() {
@@ -581,6 +610,14 @@ define([
          assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
          assert.equal(1, instance.getVirtualScroll().ItemsIndexes.stop);
+
+         vm.getCount = function() {
+            return 5;
+         };
+         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, [1,2,3,4,5], 0, [1], 0);
+         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
+         assert.equal(0, instance.getViewModel()._startIndex);
+         assert.equal(5, instance.getViewModel()._stopIndex);
       });
 
       it('loadToDirection up', function(done) {
@@ -1311,7 +1348,7 @@ define([
          ctrl._beforeMount(cfg);
          ctrl._onItemClick(event, rs.at(2), originalEvent);
          assert.isTrue(stopPropagationCalled);
-         assert.equal(rs.at(2), ctrl._listViewModel._markedItem.getContents());
+         assert.equal(rs.at(2), ctrl._listViewModel.getMarkedItem().getContents());
       });
 
       describe('EditInPlace', function() {
@@ -1812,6 +1849,13 @@ define([
          it('_onItemContextMenu', function() {
             var callBackCount = 0;
             var cfg = {
+                  items: new collection.RecordSet({
+                     rawData: [
+                        { id: 1, title: 'item 1' },
+                        { id: 2, title: 'item 2' }
+                     ],
+                     idProperty: 'id'
+                  }),
                   viewName: 'Controls/List/ListView',
                   viewConfig: {
                      idProperty: 'id'
@@ -1820,8 +1864,8 @@ define([
                      items: [],
                      idProperty: 'id'
                   },
+                  markedKey: null,
                   viewModelConstructor: ListViewModel,
-                  markedKey: 0,
                   source: source
                },
                instance = new BaseControl(cfg),
@@ -1851,7 +1895,7 @@ define([
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            assert.equal(instance.getViewModel()._markedKey, 0);
+            assert.equal(instance.getViewModel()._markedKey, undefined);
             instance._onItemContextMenu(fakeEvent, itemData, childEvent, false);
             assert.equal(instance.getViewModel()._markedKey, 1);
             assert.equal(callBackCount, 0);

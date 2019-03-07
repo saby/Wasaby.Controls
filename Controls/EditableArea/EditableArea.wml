@@ -9,14 +9,14 @@
       <ws:partial
          template="{{_options.content}}"
          scope="{{_options}}"
-         editObject="{{_options.editObject}}"
+         editObject="{{_editObject}}"
          on:click="_onClickHandler()"
          on:keyDown="_onKeyDown()"
          isEditing="{{_isEditing}}"
       />
       <ws:if data="{{_options.toolbarVisibility && _isEditing}}">
          <div class="controls-EditableArea__Toolbar">
-            <Controls.Button
+            <Controls.buttons:Button
                on:click="commitEdit()"
                attr:class="controls-EditableArea__Toolbar__Button"
                viewMode="toolButton"

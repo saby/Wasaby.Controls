@@ -230,9 +230,18 @@ define([
       describe('_notify(rootChanged)', function() {
          var
             isNotified = false,
-            _notify = function(eName) {
+            isWeNotified = false,
+            isNativeClickEventExists = false,
+
+            _notify = function(eName, eArgs) {
                if (eName === 'rootChanged') {
                   isNotified = true;
+               }
+               if (eName === 'itemClick') {
+                  isWeNotified = true;
+                  if (eArgs[1] && eArgs[1].nativeEvent) {
+                     isNativeClickEventExists = true;
+                  }
                }
             };
 
@@ -274,23 +283,37 @@ define([
 
          it('_onItemClick', function() {
             isNotified = false;
+            isWeNotified = false;
 
             var
-               explorer = new Explorer({});
+               explorer = new Explorer({}),
+               isPropagationStopped = isNotified = isNativeClickEventExists = false;
+
             explorer.saveOptions({});
             Explorer._private.setRoot = function(){};
             explorer._notify = _notify;
 
             explorer._onItemClick({
-               stopPropagation: function() {}
+               stopPropagation: function() {
+                  isPropagationStopped = true;
+               }
             }, {
                get: function() {
                   return true;
                },
                getId: function() {}
+            }, {
+               nativeEvent: 123
             });
 
+            assert.isTrue(isPropagationStopped);
+            // Click
+            assert.isTrue(isWeNotified);
+            // RootChanged
             assert.isTrue(isNotified);
+
+            /* https://online.sbis.ru/opendoc.html?guid=3523e32f-2bb3-4ed4-8b0f-cde55cb81f75 */
+            assert.isTrue(isNativeClickEventExists);
          });
 
          it('_onBreadCrumbsClick', function() {

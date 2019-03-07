@@ -2,6 +2,6 @@
     <ul>
         <li>Hello, it is custom template </li>
         <li>London is the capital of Great Britain.</li>
-        <li>How are you?</li>  <Controls.Button caption="{{value}}"/>
+        <li>How are you?</li>  <Controls.buttons:Button caption="{{value}}"/>
     </ul>
   </div>

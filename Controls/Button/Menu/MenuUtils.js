@@ -1,13 +1,13 @@
 define('Controls/Button/Menu/MenuUtils', [
-   'Controls/Button/Classes'
-], function(Classes) {
+   'Controls/buttons'
+], function(buttonLib) {
 
    function cssStyleGeneration(options) {
       var sizes = ['small', 'medium', 'large'],
          menuStyle = options.headConfig && options.headConfig.menuStyle,
          currentButtonClass, iconSize;
 
-      currentButtonClass = Classes.getCurrentButtonClass(options.style);
+      currentButtonClass = buttonLib.classesUtil.getCurrentButtonClass(options.style);
 
       // для каждого размера вызывающего элемента создаем класс, который выравнивает popup через margin.
       var offsetClassName = 'controls-MenuButton_' + (currentButtonClass.viewMode || options.viewMode);

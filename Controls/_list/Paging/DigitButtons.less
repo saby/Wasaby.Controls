@@ -1,0 +1,23 @@
+.controls-DigitButtons__ellipsis {
+   width: @width_Paging-digitButton-ellipsis;
+   color: @color_Paging-digitButton-ellipsis-text;
+   background-color: @background-color_Paging-digitButton-ellipsis;
+   font-size: @font-size_Paging-digitButton;
+}
+.controls-DigitButtons__digit {
+   border: 0 solid transparent;
+   border-bottom-width: @border-bottom-width_Paging-digitButton_marked;
+   min-width: @min-width_Paging-digitButton;
+   padding: 0 @spacing_Paging-digitButton-between-buttons / 2;
+   background-color: @background-color_Paging-digitButton;
+   cursor: pointer;
+   box-sizing: border-box;
+   color: @color_Paging-digitButton-text;
+   font-size: @font-size_Paging-digitButton;
+}
+.ws-is-no-touch .controls-DigitButtons__digit:hover {
+   background-color: @background-color_Paging-digitButton_hover;
+}
+.controls-DigitButtons__digit__selected {
+   border-bottom-color: @border-color_Paging-digitButton_marked;
+}

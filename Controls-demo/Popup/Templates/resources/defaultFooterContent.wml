@@ -1,1 +1,1 @@
-<div  style="text-align: center">  <Controls.Button caption="ok"/> </div>
+<div  style="text-align: center">  <Controls.buttons:Button caption="ok"/> </div>

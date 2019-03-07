@@ -1,4 +1,4 @@
-<div class="controls-MenuButton theme_{{_options.theme}}">
+<div class="controls-MenuButton_theme_{{_options.theme}}">
    <Controls.Dropdown.Controller
         source="{{_options.source}}"
         keyProperty="{{_options.keyProperty}}"
@@ -26,7 +26,7 @@
         on:selectedItemsChanged="_onItemClickHandler()"
         on:pinClicked="_onPinClickHandler()"
         attr:class="controls-MenuButton__Wrapper theme_{{_options.theme}}">
-   <Controls.Button
+   <Controls.buttons:Button
                     attr:class="controls-MenuButton__BaseButton theme_{{_options.theme}}"
                     icon="{{_options.icon}}"
                     iconStyle="{{_options.iconStyle}}"

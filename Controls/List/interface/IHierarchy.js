@@ -1,30 +1,27 @@
-define('Controls/List/interface/IHierarchy', [
-], function() {
-
+define('Controls/List/interface/IHierarchy', ['Controls/_list/interface/IHierarchy'], function(Control) {
+/**
+ * Interface for hierarchical lists.
+ *
+ * @interface Controls/List/interface/IHierarchy
+ * @public
+ * @author Авраменко А.С.
+ */
    /**
-    * Interface for hierarchical lists.
-    *
-    * @interface Controls/List/interface/IHierarchy
-    * @public
-    * @author Авраменко А.С.
-    */
-
-   /**
-    * @name Controls/List/interface/IHierarchy#nodeProperty
-    * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
-    * @example
-    * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
-    * TMPL:
-    * <pre>
-    *    <Controls.Tree
-    *       keyProperty="id"
-    *       source="{{_source}}"
-    *       parentProperty="parent"
-    *       nodeProperty="parent@"/>
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory({
+ * @name Controls/List/interface/IHierarchy#nodeProperty
+ * @cfg {String} Name of the field describing the type of the node (list, node, hidden node).
+ * @example
+ * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
+ * TMPL:
+ * <pre>
+ *    <Controls.Tree
+ *       keyProperty="id"
+ *       source="{{_source}}"
+ *       parentProperty="parent"
+ *       nodeProperty="parent@"/>
+ * </pre>
+ * JS:
+ * <pre>
+ *    this._source = new Memory({
     *       data: [
     *           { id: 1, title: 'Task in development', parent: null, 'parent@': false },
     *           { id: 2, title: 'Error in development', parent: null, 'parent@': false },
@@ -36,25 +33,24 @@ define('Controls/List/interface/IHierarchy', [
     *       ],
     *       idProperty: 'id'
     *    });
-    * </pre>
-    */
-
+ * </pre>
+ */
    /**
-    * @name Controls/List/interface/IHierarchy#parentProperty
-    * @cfg {String} Name of the field that contains information about parent node.
-    * @example
-    * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
-    * TMPL:
-    * <pre>
-    *    <Controls.Tree
-    *       keyProperty="id"
-    *       source="{{_source}}"
-    *       parentProperty="parent"
-    *       nodeProperty="parent@"/>
-    * </pre>
-    * JS:
-    * <pre>
-    *    this._source = new Memory({
+ * @name Controls/List/interface/IHierarchy#parentProperty
+ * @cfg {String} Name of the field that contains information about parent node.
+ * @example
+ * In this example, item with id: 4 is parent for items with id: 5, 6, 7.
+ * TMPL:
+ * <pre>
+ *    <Controls.Tree
+ *       keyProperty="id"
+ *       source="{{_source}}"
+ *       parentProperty="parent"
+ *       nodeProperty="parent@"/>
+ * </pre>
+ * JS:
+ * <pre>
+ *    this._source = new Memory({
     *       data: [
     *           { id: 1, title: 'Task in development', parent: null, 'parent@': false },
     *           { id: 2, title: 'Error in development', parent: null, 'parent@': false },
@@ -66,8 +62,7 @@ define('Controls/List/interface/IHierarchy', [
     *       ],
     *       idProperty: 'id'
     *    });
-    * </pre>
-    */
-
-
+ * </pre>
+ */
+   return Control;
 });

@@ -59,7 +59,7 @@ define('Controls/Explorer', [
       _private = {
          setRoot: function(self, root) {
             self._root = root;
-            self._notify('itemOpen', root);
+            self._notify('itemOpen', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
@@ -194,11 +194,13 @@ define('Controls/Explorer', [
       _hoveredCrumbChanged: function(event, item) {
          this._hoveredBreadCrumb = item ? item.getId() : undefined;
       },
-      _onItemClick: function(event, item) {
+      _onItemClick: function(event, item, clickEvent) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
             this._notify('rootChanged', [this._root]);
          }
+         event.stopPropagation();
+         this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
