@@ -3,7 +3,7 @@
  * Progress indicators library
  * @library Controls/progress
  * @includes StateIndicator Controls/_progress/StateIndicator
- * @includes Legend Controls/_progress/Lenend
+ * @includes Legend Controls/_progress/Legend
  * @author Колесов В.А.
  */
 
