@@ -290,7 +290,21 @@ define([
                ctrl = new ItemActionsControl(cfg),
                oldVersion = listViewModel.getVersion();
             ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged');
+            ctrl._onCollectionChange(
+               {},
+               'collectionChanged',
+               collection.IObservable.ACTION_CHANGE,
+               [
+                  new entity.Record({
+                     rawData: {
+                        id: 1,
+                        title: 'Первый',
+                        type: 1
+                     }
+                  })
+               ]
+            );
+
             assert.equal(1, listViewModel.getVersion() - oldVersion);
          });
 
