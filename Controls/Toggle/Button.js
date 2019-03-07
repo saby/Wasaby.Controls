@@ -87,7 +87,8 @@ define('Controls/Toggle/Button', [
       optionsGeneration: function(self, options) {
          var currentButtonClass = Classes.getCurrentButtonClass(options.style);
 
-         self._style = currentButtonClass.style ? currentButtonClass.style : options.style;
+         // Называть _style нельзя, так как это состояние используется для темизации
+         self._buttonStyle = currentButtonClass.style ? currentButtonClass.style : options.style;
          self._transparent = options.transparent;
          self._viewMode = currentButtonClass.style ? currentButtonClass.viewMode : options.viewMode;
          self._state = (stickyButton.indexOf(self._viewMode) !== -1 && options.value ? '_toggle_on' : '') + (options.readOnly ? '_readOnly' : '');
@@ -110,6 +111,8 @@ define('Controls/Toggle/Button', [
          _private.optionsGeneration(this, newOptions);
       }
    });
+
+   ToggleButton._theme = ['Controls/_buttons/Button', 'Controls/Toggle/Button/Button'];
 
    ToggleButton.getDefaultOptions = function() {
       return {
