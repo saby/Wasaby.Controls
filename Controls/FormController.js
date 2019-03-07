@@ -49,7 +49,7 @@ define('Controls/FormController', [
          return Promise.resolve(crudResult.data);
       }
       return Promise.reject(crudResult.error);
-   }
+   };
 
    var _private = {
       checkRecordType: function(record) {
@@ -420,8 +420,8 @@ define('Controls/FormController', [
       read: function(key, readMetaData) {
          readMetaData = readMetaData || this._options.readMetaData;
          return this._children.crud.read(key, readMetaData).addCallbacks(
-             this._readHandler.bind(this),
-             this._crudErrback.bind(this)
+            this._readHandler.bind(this),
+            this._crudErrback.bind(this)
          );
       },
       _readHandler: function(record) {
