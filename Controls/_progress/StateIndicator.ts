@@ -3,7 +3,33 @@
  * Progress state indicator
  * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator 
+ * @extends Core/Control
  * @author Колесов В.А.
+ * @ignoreOptions independentContext contextRestriction extendedTooltip validators
+ * @ignoreOptions element linkedContext handlers parent autoHeight autoWidth horizontalAlignment
+ * @ignoreOptions isContainerInsideParent owner stateKey subcontrol verticalAlignment
+ *
+ * @ignoreMethods activateFirstControl activateLastControl addPendingOperation applyEmptyState applyState clearMark
+ * @ignoreMethods changeControlTabIndex destroyChild detectNextActiveChildControl disableActiveCtrl findParent
+ * @ignoreMethods focusCatch getActiveChildControl getChildControlById getChildControlByName getChildControls
+ * @ignoreMethods getClassName getContext getEventBusOf getEventHandlers getEvents getExtendedTooltip getOpener
+ * @ignoreMethods getImmediateChildControls getLinkedContext getNearestChildControlByName getOwner getOwnerId
+ * @ignoreMethods getReadyDeferred getStateKey getTabindex getUserData getValue hasActiveChildControl hasChildControlByName
+ * @ignoreMethods hasEventHandlers isActive isAllReady isDestroyed isMarked isReady makeOwnerName setOwner setSize
+ * @ignoreMethods markControl moveFocus moveToTop once registerChildControl registerDefaultButton saveToContext
+ * @ignoreMethods sendCommand setActive setChildActive setClassName setExtendedTooltip setOpener setStateKey activate
+ * @ignoreMethods setTabindex setTooltip setUserData setValidators setValue storeActiveChild subscribe unregisterChildControl
+ * @ignoreMethods unregisterDefaultButton unsubscribe validate waitAllPendingOperations waitChildControlById waitChildControlByName
+ *
+ * @ignoreEvents onActivate onAfterLoad onAfterShow onBeforeControlsLoad onBeforeLoad onBeforeShow onChange onClick
+ * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
+ * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
+ * 
+ * @ignoreOptions colorState
+ *
+ * @public
+ * @control
+ * @initial
  */
 
 import Control = require('Core/Control');
@@ -102,6 +128,12 @@ var defaultColors = [
    
 var StateIndicator = Control.extend(
    {
+
+      /**
+       * @event _mouseEnterIndicatorHandler appears when mouse enters sectors of indicator
+       * @param {Env/Event:Object} eventObject event descriptor.              
+       * 
+       */
       _template: template,
       _colorState: [],
       _colors: [],
