@@ -18,6 +18,7 @@
                   size="{{_options.editingConfig ? 's' : 'm'}}"
                   template="wml!Controls/_list/ItemActions/resources/ItemActionsTemplate"
                   itemActionsPosition="{{_options.itemActionsPosition}}"
+                  actionMenuIsShown="{{_options.actionMenuIsShown}}"
                   scope="{{itemActionsTemplate}}"/>
       </ws:itemActionsTemplate>
    </ws:partial>

@@ -1,4 +1,4 @@
-<div class="controls-InputBase__field_readOnly controls-InputBase__field_margin">
+<div class="controls-InputBase__field_readOnly controls-InputBase__field_theme_{{options.theme}}_margin">
    <span>{{integerPart(value)}}</span>
-   <span class="controls-Money__fractionPart_readOnly">{{fractionPart(value)}}</span>
+   <span class="controls-Money__fractionPart_theme_{{options.theme}}_readOnly">{{fractionPart(value)}}</span>
 </div>

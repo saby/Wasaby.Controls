@@ -1,5 +1,5 @@
 <Controls.Input.Render attr:title="{{_tooltip}}"
-                       style="{{_style}}"
+                       style="{{_renderStyle}}"
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
                        multiline="{{_multiline}}"
@@ -12,7 +12,8 @@
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
    <ws:beforeFieldWrapper>
-      <ws:partial scope="{{_beforeFieldWrapper.scope}}"
+      <ws:partial options="{{_options}}"
+                  scope="{{_beforeFieldWrapper.scope}}"
                   template="{{_beforeFieldWrapper.template}}"/>
    </ws:beforeFieldWrapper>
    <ws:content>
@@ -34,7 +35,8 @@
       </ws:else>
    </ws:content>
    <ws:afterFieldWrapper>
-      <ws:partial scope="{{_afterFieldWrapper.scope}}"
+      <ws:partial options="{{_options}}"
+                  scope="{{_afterFieldWrapper.scope}}"
                   template="{{_afterFieldWrapper.template}}"/>
    </ws:afterFieldWrapper>
 </Controls.Input.Render>

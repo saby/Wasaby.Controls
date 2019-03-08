@@ -9,6 +9,8 @@ define('Controls/Heading/HeadingStyles',
     * @mixin Controls/Heading/HeadingStyles
     * @public
     *
+    * @css @font-weight_Heading-caption Font weight of heading caption.
+    *
     * @css @font-size_Heading__caption_size-s Small text size.
     * @css @font-size_Heading__caption_size-m Medium text size.
     * @css @font-size_Heading__caption_size-l Large text size.

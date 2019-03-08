@@ -23,12 +23,12 @@ define('Controls-demo/LoadingIndicator/LoadingIndicatorPG',
                name: 'loadingIndicator',
 
                isGlobal: false,
-               message: '',
+               message: 'Пожалуйста,подождите',
                scroll: '',
                small: '',
                overlay: 'dark',
                mods: '',
-               delay: 0
+               delay: 3
             };
             this._dataObject = {
                isGlobal: {
@@ -46,6 +46,7 @@ define('Controls-demo/LoadingIndicator/LoadingIndicatorPG',
                      { id: '3', title: 'top', value: 'top' },
                      { id: '4', title: 'bottom', value: 'bottom' }
                   ],
+                  value: 'top'
                },
                small: {
                   type: 'String',
@@ -53,6 +54,7 @@ define('Controls-demo/LoadingIndicator/LoadingIndicatorPG',
                      { id: '1', title: 'yes', value: 'yes' },
                      { id: '2', title: 'no', value: 'no' }
                   ],
+                  value: 'no'
                },
                overlay: {
                   items: [
@@ -73,6 +75,7 @@ define('Controls-demo/LoadingIndicator/LoadingIndicatorPG',
                         id: '2', title: 'gray', value: 'gray'
                      }
                   ],
+                     value: 'gray'
                },
                delay: {
                   type: 'Number',

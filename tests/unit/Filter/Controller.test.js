@@ -183,7 +183,7 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
       it('_private.getFilterByItems(fastFilterItems)', function () {
          var fastFilterItems = [{
             id: 'testId',
-            value: null,
+            value: undefined,
             resetValue: ''
          }, {
             id: 'testId2',
@@ -197,7 +197,7 @@ define(['Controls/Filter/Controller', 'Core/Deferred'], function(Filter, Deferre
       it('_private.getFilterByItems(filterButtonItems, fastFilterItems)', function () {
          var fastFilterItems = [{
             id: 'testId',
-            value: null,
+            value: undefined,
             resetValue: ''
          }, {
             id: 'testId2',

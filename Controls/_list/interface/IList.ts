@@ -92,6 +92,8 @@
  * @property {String} style Operation style.
  * @property {String} iconStyle Style of the action's icon. (secondary | warning | danger | success).
  * @property {Function} handler Operation handler.
+ * @property {String} parent Key of the action's parent.
+ * @property {boolean|null} parent@ Field that describes the type of the node (list, node, hidden node).
  */
 
 /**
