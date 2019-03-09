@@ -267,6 +267,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
+      _maxVisibleItems: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -277,10 +278,13 @@ define('Controls/Selector/Lookup/_Lookup', [
             value: options.value
          });
 
-         if (options.multiLine) {
-            this._maxVisibleItems = options.maxVisibleItems;
-         } else {
-            this._maxVisibleItems = options.items.getCount();
+         //The first rendering takes place before the calculation sizes, so only in read mode
+         if (options.readOnly) {
+            if (options.multiLine) {
+               this._maxVisibleItems = options.maxVisibleItems;
+            } else {
+               this._maxVisibleItems = options.items.getCount();
+            }
          }
       },
 

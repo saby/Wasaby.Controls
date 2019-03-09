@@ -124,12 +124,15 @@ define([
 
       it('_beforeMount', function() {
          var lookup = new Lookup();
-         lookup._beforeMount({multiLine: true, maxVisibleItems: 10});
+         lookup._beforeMount({multiLine: true, maxVisibleItems: 10, readOnly: true});
          assert.isNotNull(lookup._simpleViewModel);
          assert.equal(lookup._maxVisibleItems, 10);
 
-         lookup._beforeMount({items: getItems(5)});
+         lookup._beforeMount({items: getItems(5), readOnly: true});
          assert.equal(lookup._maxVisibleItems, 5);
+
+         lookup._beforeMount({items: getItems(5)});
+         assert.equal(lookup._maxVisibleItems, null);
       });
 
       it('_beforeUnmount', function() {
