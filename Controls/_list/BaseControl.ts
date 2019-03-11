@@ -783,9 +783,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _pagingCfg: null,
     _pagingVisible: false,
 
-    // TODO пока спорные параметры
-    _sorting: undefined,
-
     _itemTemplate: null,
 
     _needScrollCalculation: false,
