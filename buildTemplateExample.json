@@ -45,10 +45,6 @@
       "path": "%cd%/node_modules/sbis3-ws/View"
     },
     {
-      "name": "WS.Data",
-      "path": "%cd%/node_modules/ws-data/WS.Data"
-    },
-    {
       "name": "Data",
       "path": "%cd%/node_modules/ws-data/Data"
     },
