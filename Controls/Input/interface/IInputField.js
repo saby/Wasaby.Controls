@@ -10,7 +10,7 @@ define('Controls/Input/interface/IInputField', [], function() {
 
    /**
     * @name Controls/Input/interface/IInputField#value
-    * @cfg {String} Text in the field.
+    * @cfg {String|null} Text in the field.
     * @default '' (empty string)
     * @remark If you don`t update value option, will not be able to enter anything in the field. You need to subscribe to _valueChanged event and update value that is passed to the control. To make it simpler, you can use bind notation.
     * @example

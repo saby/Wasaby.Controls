@@ -53,6 +53,7 @@
                itemsDragNDrop="{{true}}"
                parentProperty="parent"
                nodeProperty="type"
+               displayProperty="title"
                viewMode="table"
                header="{{_gridHeader}}"
                columns="{{_gridColumns}}"

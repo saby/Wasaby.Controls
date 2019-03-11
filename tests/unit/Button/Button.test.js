@@ -22,7 +22,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'secondary' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'link');
          });
 
          it('style linkMain2',function () {
@@ -32,7 +32,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'info' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
          it('style linkMain3',function () {
@@ -42,7 +42,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'info' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional',function () {
@@ -52,7 +52,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'info' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional2',function () {
@@ -62,7 +62,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'default' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'default' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional3',function () {
@@ -72,7 +72,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'danger' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'danger' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional4',function () {
@@ -82,7 +82,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'success' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'success' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional5',function () {
@@ -92,7 +92,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'magic' && fakeThis._viewMode === 'link');
+            assert(fakeThis._buttonStyle === 'magic' && fakeThis._viewMode === 'link');
          });
 
          it('style buttonPrimary',function () {
@@ -102,7 +102,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'primary' && fakeThis._viewMode === 'button');
+            assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
          });
 
          it('style buttonDefault',function () {
@@ -112,7 +112,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'secondary' && fakeThis._viewMode === 'button');
+            assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'button');
          });
 
          it('style buttonAdd',function () {
@@ -122,7 +122,7 @@ define(['Controls/buttons'], function (buttons) {
             };
             var fakeThis = {};
             buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'primary' && fakeThis._viewMode === 'button');
+            assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
          });
       });
       describe('constructor() and _beforeUpdate()', function() {

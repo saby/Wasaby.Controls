@@ -4,7 +4,7 @@ define('Controls/Operations/Panel', [
    'Controls/toolbars',
    'Types/source',
    'Controls/Operations/Panel/Utils',
-   'Controls/Button/validateIconStyle',
+   'Controls/buttons',
    'css!theme?Controls/Operations/Panel/Panel'
 ], function(
    Control,
@@ -12,7 +12,7 @@ define('Controls/Operations/Panel', [
    toolbars,
    sourceLib,
    WidthUtils,
-   validateIconStyle
+   buttons
 ) {
    'use strict';
 
@@ -51,7 +51,7 @@ define('Controls/Operations/Panel', [
 
                // TODO: убрать когда полностью откажемся от поддержки задавания цвета в опции иконки. icon: icon-error, icon-done и т.д.
                // TODO: https://online.sbis.ru/opendoc.html?guid=05bbeb41-d353-4675-9f73-6bfc654a5f00
-               validateIconStyle.itemsSetOldIconStyle(self._items);
+               buttons.iconsUtil.itemsSetOldIconStyle(self._items);
                return self._items;
             });
          }

@@ -113,7 +113,7 @@ define('Controls/Dropdown/Controller',
                   
                   //dropDown must close by default, but user can cancel closing, if returns false from event
                   //res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
-                  if (res !== undefined && res !== false || !result.data[0].get(this._options.nodeProperty)) {
+                  if (res === true || !(result.data[0].get(this._options.nodeProperty) || res === false)) {
                      this._children.DropdownOpener.close();
                   }
                   break;

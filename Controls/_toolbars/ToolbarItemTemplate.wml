@@ -1,4 +1,4 @@
-<div class="controls-Toolbar_item"
+<div class="controls-Toolbar_item controls-Toolbar_item_{{itemsSpacing}}"
      title="{{item['tooltip']}}">
     <ws:if data="{{contentTemplate}}">
         <ws:partial
