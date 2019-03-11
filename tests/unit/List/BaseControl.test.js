@@ -1787,7 +1787,7 @@ define([
                   }
                }
             ];
-         it('showActionsMenu context', function() {
+         it('showActionsMenu context', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1828,21 +1828,16 @@ define([
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.isTrue(itemData.contextEvent);
+                     assert.equal(callBackCount, 3);
+                     done();
                   }
                }
             };
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            setTimeout(function() {
-               assert.equal(itemData, instance._listViewModel._activeItem);
-               assert.isTrue(itemData.contextEvent);
-               assert.equal(callBackCount, 3);
-            }, 100);
-
-            // dont show by long tap
-            instance._isTouch = true;
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 

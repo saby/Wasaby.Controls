@@ -3,7 +3,7 @@ define('Controls/Input/Mask/ViewModel',
       'Controls/Input/Mask/FormatBuilder',
       'Controls/Input/Mask/Formatter',
       'Controls/Input/Mask/InputProcessor',
-      'Controls/Input/resources/InputRender/BaseViewModel'
+      'Controls/Input/Base/ViewModel'
    ],
    function(FormatBuilder, Formatter, InputProcessor, BaseViewModel) {
 
@@ -12,7 +12,7 @@ define('Controls/Input/Mask/ViewModel',
       /**
        * @class Controls/Input/Text/ViewModel
        * @private
-       * @author Журавлев М.С.
+       * @author Миронов А.Ю.
        */
       var _private = {
          updateFormatMaskChars: function(self, formatMaskChars) {
@@ -21,60 +21,44 @@ define('Controls/Input/Mask/ViewModel',
             }
             self._formatMaskChars = formatMaskChars;
             self.formatMaskCharsRegExp = new RegExp('[' + Object.keys(formatMaskChars).join('') + ']', 'g');
+         },
+
+         prepareSplitValue: function(result) {
+            var position = result.position;
+            var before = result.value.substring(0, position);
+            var after = result.value.substring(position, result.value.length);
+
+            return {
+               before: before,
+               after: after,
+               insert: '',
+               delete: ''
+            };
          }
       };
 
       var ViewModel = BaseViewModel.extend({
-         constructor: function(options) {
-            this._options = {
-               value: options.value
-            };
-            _private.updateFormatMaskChars(this, options.formatMaskChars);
-            this._mask = options.mask;
-            this._replacer = options.replacer;
-            this._format = FormatBuilder.getFormat(options.mask, options.formatMaskChars, options.replacer);
+         _convertToValue: function(displayValue) {
+            var value = Formatter.getClearData(this._format, displayValue).value;
+            return value;
          },
-
-         /**
-          * Обновить опции.
-          * @param newOptions Новые опции(replacer, mask).
-          */
-         updateOptions: function(newOptions) {
-            this._options.value = newOptions.value;
-            _private.updateFormatMaskChars(this, newOptions.formatMaskChars);
-            this._mask = newOptions.mask;
-            this._replacer = newOptions.replacer;
-            this._format = FormatBuilder.getFormat(newOptions.mask, newOptions.formatMaskChars, newOptions.replacer);
-            this._nextVersion();
-         },
-
-         /**
-          * Подготовить данные.
-          * @param splitValue значение разбитое на части before, insert, after, delete.
-          * @param inputType тип ввода.
-          * @returns {{value: (String), position: (Integer)}}
-          */
-         handleInput: function(splitValue, inputType) {
-            var result = InputProcessor.input(splitValue, inputType, this._replacer, this._format, this._format);
-
-            this._options.value = Formatter.getClearData(this._format, result.value).value;
-            this._nextVersion();
-
-            return result;
-         },
-
-         getDisplayValue: function() {
-            var fData;
-
-            fData = Formatter.getFormatterData(this._format, { value: this.getValue(), position: 0 });
-
-            if (fData && fData.value) {
-               return fData.value;
+         _convertToDisplayValue: function(value) {
+            this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
+            var fDate = Formatter.getFormatterData(this._format, { value: value, position: 0 });
+            _private.updateFormatMaskChars(this, this.options.formatMaskChars);
+            if (fDate && fDate.value) {
+               return fDate.value;
             }
-            if (this._replacer) {
-               return this._mask.replace(this.formatMaskCharsRegExp, this._replacer);
+            if (this.options.replacer) {
+               return this._options.mask.replace(this.formatMaskCharsRegExp, this.options.replacer);
             }
             return '';
+         },
+         handleInput: function(splitValue, inputType) {
+            this._format = FormatBuilder.getFormat(this.options.mask, this.options.formatMaskChars, this.options.replacer);
+            _private.updateFormatMaskChars(this, this.options.formatMaskChars);
+            var result = InputProcessor.input(splitValue, inputType, this.options.replacer, this._format, this._format);
+            return ViewModel.superclass.handleInput.call(this, _private.prepareSplitValue(result));
          }
       });
 
