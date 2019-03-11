@@ -48,6 +48,7 @@ define('Controls/Controllers/Multiselect/Selection', [
          this._options = options;
          this._selectedKeys = options.selectedKeys;
          this._excludedKeys = options.excludedKeys;
+         this._listModel = options.listModel;
 
          this._items = options.items;
 
@@ -135,6 +136,10 @@ define('Controls/Controllers/Multiselect/Selection', [
        */
       setItems: function(items) {
          this._items = items;
+      },
+
+      setListModel: function(model) {
+         this._listModel = model;
       },
 
       /**

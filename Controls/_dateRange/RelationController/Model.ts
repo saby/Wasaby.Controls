@@ -71,8 +71,7 @@ class ModuleClass {
             this._bindType = 'byCapacity';
         }
 
-        // Временно ограничиваем эту логику. Если связано больше 2х контролов, то не меняем тип связи.
-         if (ranges.length > 2) {
+         if (ranges.length > 2 || this._bindType === 'normal') {
             return;
          }
 
