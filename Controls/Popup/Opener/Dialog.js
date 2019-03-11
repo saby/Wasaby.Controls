@@ -7,6 +7,8 @@ define('Controls/Popup/Opener/Dialog',
        * Component that opens a popup that is positioned in the center of the browser window. {@link https://wi.sbis.ru/doc/platform/developmentapl/interface-development/wasaby/components/openers/#_3 See more}
        * @class Controls/Popup/Opener/Dialog
        * @extends Controls/Popup/Opener/BaseOpener
+       * @mixes Controls/interface/IOpener
+       * @mixes Controls/Popup/Opener/Confirmation/Dialog/DialogStyles
        * @control
        * @author Красильников А.С.
        * @category Popup
