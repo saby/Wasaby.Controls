@@ -4,17 +4,10 @@
   position:absolute;
 }
 
-.controls-itemActionsV__wrapper_inside, .controls-itemActionsV__wrapper_outside {
-  display: inline-flex;
-  align-items: center;
-}
-
-.controls-itemActionsV__wrapper_inside {
-  height: @height_ItemActions_inside;
-}
-
-.controls-itemActionsV__wrapper_outside {
-  height: @height_ItemActions_outside;
+.controls-itemActionsV__wrapper {
+   height: 100%;
+   display: inline-flex;
+   align-items: center;
 }
 
 .controls-itemActionsV_invisible {
@@ -117,15 +110,15 @@
 
 //since Opener does not know the specific size of the icon
 .controls-itemActionsV__popup .icon-size{
-  .icon-size-without-important(@default-icon-size-medium, @default-icon-medium-font);
+  .icon-size-without-important(@default-icon-size-medium, @font-family_ItemActions-icon_size_m);
 }
 
 .controls-itemActionsV__action_icon_size_m {
-   .icon(@font-size_ItemActions-icon_size_m, @default-icon-medium-font);
+   .icon(@font-size_ItemActions-icon_size_m, @font-family_ItemActions-icon_size_m);
 }
 
 .controls-itemActionsV__action_icon_size_s {
-   .icon(@font-size_ItemActions-icon_size_s);
+   .icon(@font-size_ItemActions-icon_size_s, @font-family_ItemActions-icon_size_s);
 }
 
 .controls-itemActionsV__action_title {
@@ -142,6 +135,22 @@
    .controls-itemActionsV__action_title:hover {
       color: @color_ItemActions-title_hover;
       text-decoration: underline;
+   }
+
+   .controls-itemActionsV__action_iconStyle_danger:hover {
+      color: @color_ItemActions-icon_style_danger_hover;
+   }
+
+   .controls-itemActionsV__action_iconStyle_success:hover {
+      color: @color_ItemActions-icon_style_success_hover;
+   }
+
+   .controls-itemActionsV__action_iconStyle_secondary:hover {
+      color: @color_ItemActions-icon_style_secondary_hover;
+   }
+
+   .controls-itemActionsV__action_iconStyle_warning:hover {
+      color: @color_ItemActions-icon_style_warning_hover;
    }
 
    .controls-itemActionsV__action_iconStyle_danger:hover {
