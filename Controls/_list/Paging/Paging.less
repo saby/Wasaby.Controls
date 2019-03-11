@@ -1,5 +1,6 @@
 .controls-Paging__wrapper {
    display: flex;
+   background-color: @background-color_Paging;
 }
 .controls-Paging__btn {
    height: @height_Paging-button;
@@ -8,6 +9,13 @@
    justify-content: center;
    user-select: none;
    margin: 0;
+   margin-left: @spacing_Paging-between-buttons;
+}
+.controls-Paging__btn_first {
+   margin-left: @spacing_Paging-between-firstButton-borderLeft;
+}
+.controls-Paging__btn_last {
+   margin-right: @spacing_Paging-between-firstButton-borderRight;
 }
 .controls-Paging__digitButtons {
    display: inline-flex;

@@ -171,15 +171,13 @@ define('Controls/Explorer', [
             _private.setRoot(this, cfg.root);
          }
       },
-      _dragEndBreadCrumbs: function(event, dragObject) {
-         if (this._hoveredBreadCrumb !== undefined) {
-            this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
-         }
-      },
       _dragHighlighter: function(itemKey) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
       },
-      _documentDragEnd: function() {
+      _documentDragEnd: function(event, dragObject) {
+         if (this._hoveredBreadCrumb !== undefined) {
+            this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
+         }
          this._dragOnBreadCrumbs = false;
       },
       _documentDragStart: function(event, dragObject) {
@@ -195,13 +193,13 @@ define('Controls/Explorer', [
       _hoveredCrumbChanged: function(event, item) {
          this._hoveredBreadCrumb = item ? item.getId() : undefined;
       },
-      _onItemClick: function(event, item) {
+      _onItemClick: function(event, item, clickEvent) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
             this._notify('rootChanged', [this._root]);
          }
          event.stopPropagation();
-         this._notify('itemClick', [item]);
+         this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());

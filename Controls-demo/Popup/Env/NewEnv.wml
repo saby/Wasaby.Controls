@@ -12,16 +12,16 @@
 
    <br/>
    <div>
-      <Controls.Button name="dialogButton" caption="newDialog + oldTemplate" on:click="openDialog()"/>
+      <Controls.buttons:Button name="dialogButton" caption="newDialog + oldTemplate" on:click="openDialog()"/>
    </div>
    <div>
-      <Controls.Button name="stackButton" caption="newStack + oldTemplate" on:click="openStack()"/>
+      <Controls.buttons:Button name="stackButton" caption="newStack + oldTemplate" on:click="openStack()"/>
    </div>
    <br/>
    <div>
-      <Controls.Button name="oldStackButton" caption="oldDialog + newTemplate" on:click="openNewTemplate('dialog')"/>
+      <Controls.buttons:Button name="oldStackButton" caption="oldDialog + newTemplate" on:click="openNewTemplate('dialog')"/>
    </div>
    <div>
-      <Controls.Button name="oldStackButton" caption="oldStack + newTemplate" on:click="openNewTemplate('floatArea')"/>
+      <Controls.buttons:Button name="oldStackButton" caption="oldStack + newTemplate" on:click="openNewTemplate('floatArea')"/>
    </div>
 </div>

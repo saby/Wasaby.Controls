@@ -21,7 +21,7 @@ define('Controls/Button/Close', [
     */
 
    /**
-    * @name Controls/Button/Close#viewMode
+    * @name Controls.buttons:Button/Close#viewMode
     * @cfg {String} Close button display view mode.
     * @variant toolButton  Close display style as button toolButton.
     * @variant link Close display style as button link.
@@ -29,16 +29,16 @@ define('Controls/Button/Close', [
     * @example
     * Close button display as link.
     * <pre>
-    *    <Controls.Button.Close viewMode="link" size="l"/>
+    *    <Controls.buttons:Button.Close viewMode="link" size="l"/>
     * </pre>
     * Close button display as toolButton.
     * <pre>
-    *    <Controls.Button.Close viewMode="toolButton" size="l"/>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" size="l"/>
     * </pre>
     */
 
    /**
-    * @name Controls/Button/Close#transparent
+    * @name Controls.buttons:Button/Close#transparent
     * @cfg {String} Determines whether close button background color.
     * @variant true Close button has transparent background.
     * @variant false Close button has their viewmode's background.
@@ -46,16 +46,16 @@ define('Controls/Button/Close', [
     * @example
     * Close button has transparent background.
     * <pre>
-    *    <Controls.Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Close button has toolButton's background.
     * <pre>
-    *    <Controls.Button.Close viewMode="toolButton" transparent="{{false}}" size="l"/>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="l"/>
     * </pre>
     */
 
    /**
-    * @name Controls/Button/Close#size
+    * @name Controls.buttons:Button/Close#size
     * @cfg {String} Close button size. The value is given by common size notations.
     * @variant l Medium button size.
     * @variant m Large button size.
@@ -65,11 +65,11 @@ define('Controls/Button/Close', [
     * @example
     * Close button has l size.
     * <pre>
-    *    <Controls.Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{true}}" size="l"/>
     * </pre>
     * Close button has m size.
     * <pre>
-    *    <Controls.Button.Close viewMode="toolButton" transparent="{{false}}" size="m"/>
+    *    <Controls.buttons:Button.Close viewMode="toolButton" transparent="{{false}}" size="m"/>
     * </pre>
     */
 
@@ -107,6 +107,8 @@ define('Controls/Button/Close', [
          _private.compatibleViewMode(newOptions, this);
       }
    });
+
+   CloseButton._theme = ['Controls/Button/Close'];
 
    CloseButton.getDefaultOptions = function() {
       return {

@@ -56,6 +56,7 @@
    },
    "dependencies": {},
    "devDependencies": {
+      "tslint": "^5.13.1",
       "@tensor-corp/eslint-config": "^2.0.3",
       "@types/typedef": "git+https://git.sbis.ru/av.zalyaev/typedef.git#master",
       "body-parser": "^1.18.3",
@@ -72,6 +73,7 @@
       "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.210",
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.210",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.210",
-      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.210"
+      "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.210",
+      "sbis-cdn": "git+https://git.sbis.ru/sbis/cdn.git#rc-19.210"
    }
 }

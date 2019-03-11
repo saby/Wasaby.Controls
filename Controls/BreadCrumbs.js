@@ -1,8 +1,6 @@
 define('Controls/BreadCrumbs', [
-   'Controls/crumbs',
-   'Env/Env'
-], function(breadCrumbsLib,
-   Env) {
+   'Controls/crumbs'
+], function(breadCrumbsLib) {
    'use strict';
 
    /**
@@ -17,7 +15,5 @@ define('Controls/BreadCrumbs', [
     * @author Зайцев А.С.
     * @demo Controls-demo/BreadCrumbs/BreadCrumbsPG
     */
-
-   Env.IoC.resolve('ILogger').error('Controls/BreadCrumbs', 'Контрол переехал. Используйте Controls/crumbs:Path');
    return breadCrumbsLib.Path;
 });

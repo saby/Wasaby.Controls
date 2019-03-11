@@ -11,6 +11,7 @@
                      on:dragStart="_dragStartFirst()"
                      on:dragEnd="_dragEndFirst()"
                      itemsDragNDrop="{{true}}"
+                     multiSelectVisibility="onhover"
                      itemsReadyCallback="{{_itemsReadyCallbackFirst}}"
                      itemActions="{{_itemActionsFirst}}">
                      <ws:itemTemplate>
@@ -52,6 +53,7 @@
                itemsDragNDrop="{{true}}"
                parentProperty="parent"
                nodeProperty="type"
+               displayProperty="title"
                viewMode="table"
                header="{{_gridHeader}}"
                columns="{{_gridColumns}}"

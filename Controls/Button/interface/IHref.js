@@ -16,7 +16,7 @@ define('Controls/Button/interface/IHref', [
     * @example
     * When button pressed, we go to google.com
     * <pre>
-    *    <Controls.Button href="https://www.google.com/" icon="icon-Add" style="primary" viewMode="button"/>
+    *    <Controls.buttons:Button href="https://www.google.com/" icon="icon-Add" style="primary" viewMode="button"/>
     * </pre>
     */
 });

@@ -249,7 +249,6 @@ define('Controls/Validate/Controller',
          _valueChangedHandler: function(event, value) {
             this._notify('valueChanged', [value]);
             this._cleanValid();
-
          },
          _cleanValid: function() {
             if (this._validationResult) {

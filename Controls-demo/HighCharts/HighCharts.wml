@@ -1,15 +1,15 @@
 <div>
-    <Controls.Button
+    <Controls.buttons:Button
             name="button1"
             caption="Нажмите для смены фильтра"
             on:click="_updateFilter()"
     />
-    <Controls.Button
+    <Controls.buttons:Button
             name="button2"
             caption="Нажмите для смены настроек"
             on:click="_updateConfig()"
     />
-    <Controls.Button
+    <Controls.buttons:Button
             name="button3"
             caption="Нажмите для смены фильтра и настроек"
             on:click="_updateConfigNFilter()"

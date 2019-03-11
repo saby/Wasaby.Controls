@@ -57,19 +57,19 @@
 
          <div>
             <span>startValue: </span>
-            <Controls.Button caption="-1 день" on:click="_clickHandler(-1)"/>
-            <Controls.Button caption="+1 день" on:click="_clickHandler(1)"/>
+            <Controls.buttons:Button caption="-1 день" on:click="_clickHandler(-1)"/>
+            <Controls.buttons:Button caption="+1 день" on:click="_clickHandler(1)"/>
          </div>
          <div>
             <span>endValue: </span>
-            <Controls.Button caption="-1 день" on:click="_clickHandler(-1)"/>
-            <Controls.Button caption="+1 день" on:click="_clickHandler(1)"/>
+            <Controls.buttons:Button caption="-1 день" on:click="_clickHandler(-1)"/>
+            <Controls.buttons:Button caption="+1 день" on:click="_clickHandler(1)"/>
          </div>
 
          <div>
             <span>Отображаемый месяц: </span>
-            <Controls.Button caption="-1 месяц" on:click="_changeMonth(-1)"/>
-            <Controls.Button caption="+1 месяц" on:click="_changeMonth(1)"/>
+            <Controls.buttons:Button caption="-1 месяц" on:click="_changeMonth(-1)"/>
+            <Controls.buttons:Button caption="+1 месяц" on:click="_changeMonth(1)"/>
          </div>
       </div>
 

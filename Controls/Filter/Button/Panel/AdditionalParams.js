@@ -27,7 +27,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
 
    'use strict';
 
-   var MAX_NUMBER_ITEMS = 10;
+   var MAX_NUMBER_ITEMS_COLUMN = 5;
 
    var _private = {
 
@@ -38,18 +38,53 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
          return Clone(items);
       },
 
-      countItems: function(self, items) {
-         var result = 0;
-         chain.factory(items).each(function(elem) {
-            if (!self._isItemVisible(elem)) {
-               result++;
+      getVisibleItemsCount: function(items) {
+         var count = 0;
+         chain.factory(items).each(function(item) {
+            if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
+               count++;
             }
          });
-         return result;
+         return count;
+      },
+
+      getColumnsByItems: function(items) {
+         var countItemsColumn = _private.getVisibleItemsCount(items) / 2;
+         var columns = {
+            leftColumn: [],
+            rightColumn: []
+         };
+         chain.factory(items).each(function(item, index) {
+            if (Utils.object.getPropertyValue(item, 'visibility') !== undefined) {
+               if (columns.leftColumn.length < countItemsColumn) {
+                  columns.leftColumn.push(index);
+               } else {
+                  columns.rightColumn.push(index);
+               }
+            }
+         });
+         return columns;
+      },
+
+      needShowArrow: function(items, countItems) {
+         var countLeftItems = 0, countRightItems = 0;
+         chain.factory(items).each(function(item, index) {
+            if (Utils.object.getPropertyValue(item, 'visibility') === false) {
+               if (countItems.leftColumn.indexOf(index) !== -1) {
+                  countLeftItems++;
+               } else {
+                  countRightItems++;
+               }
+            }
+         });
+         if (countLeftItems > MAX_NUMBER_ITEMS_COLUMN || countRightItems > MAX_NUMBER_ITEMS_COLUMN) {
+            return true;
+         }
+         return false;
       },
 
       onResize: function(self) {
-         self._arrowVisible = _private.countItems(self, self._options.items) > MAX_NUMBER_ITEMS;
+         self._arrowVisible = _private.needShowArrow(self.items, self._columns);
 
          if (!self._arrowVisible) {
             self._isMaxHeight = true;
@@ -62,9 +97,11 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       _template: template,
       _isMaxHeight: true,
       _arrowVisible: false,
+      _columns: null,
 
       _beforeMount: function(options) {
          this.items = _private.cloneItems(options.items);
+         this._columns = _private.getColumnsByItems(options.items);
       },
 
       _afterMount: function() {
@@ -74,6 +111,7 @@ define('Controls/Filter/Button/Panel/AdditionalParams', [
       _afterUpdate: function() {
          if (!isEqual(this.items, this._options.items)) {
             this.items = _private.cloneItems(this._options.items);
+            this._columns = _private.getColumnsByItems(this._options.items);
             _private.onResize(this);
          }
       },

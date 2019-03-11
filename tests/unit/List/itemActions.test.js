@@ -10,7 +10,6 @@ define([
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
 ], function(ItemActionsControl, source, entity, collection, ListViewModel, aUtil, tUtil) {
-
    describe('Controls.List.ItemActions', function() {
       var data, listViewModel, rs, actions;
       beforeEach(function() {
@@ -233,6 +232,41 @@ define([
          assert.isFalse(listViewModel.hasEventHandlers('onListChange'));
       });
 
+      it('getChildren', function() {
+         const
+            actionsWithHierarchy = [
+               {
+                  id: 1,
+                  icon: 'icon-PhoneNull',
+                  title: 'phone'
+               },
+               {
+                  id: 2,
+                  title: 'Добавить',
+                  parent: null,
+                  'parent@': true
+               },
+               {
+                  id: 3,
+                  title: 'Компанию',
+                  parent: 2,
+                  'parent@': null
+               },
+               {
+                  id: 6,
+                  title: 'ИП',
+                  parent: 2,
+                  'parent@': null
+               }
+            ],
+            cfg = {
+               listModel: listViewModel,
+               itemActions: actionsWithHierarchy
+            },
+            ctrl = new ItemActionsControl(cfg);
+         assert.deepEqual(actionsWithHierarchy.slice(-2), ctrl.getChildren(actionsWithHierarchy[1], actionsWithHierarchy));
+      });
+
       describe('_onCollectionChange', function() {
          it('items should not update if the type is neither collectionChanged nor indexesChanged', function() {
             var
@@ -256,7 +290,21 @@ define([
                ctrl = new ItemActionsControl(cfg),
                oldVersion = listViewModel.getVersion();
             ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged');
+            ctrl._onCollectionChange(
+               {},
+               'collectionChanged',
+               collection.IObservable.ACTION_CHANGE,
+               [
+                  new entity.Record({
+                     rawData: {
+                        id: 1,
+                        title: 'Первый',
+                        type: 1
+                     }
+                  })
+               ]
+            );
+
             assert.equal(1, listViewModel.getVersion() - oldVersion);
          });
 
@@ -276,10 +324,16 @@ define([
 
       it('_onItemActionClick', function() {
          var callBackCount = 0;
-         var instance = new ItemActionsControl();
+         var cfg = {
+            listModel: listViewModel,
+            itemActions: actions
+         };
+         var instance = new ItemActionsControl(cfg);
+         instance.saveOptions(cfg);
          var fakeItemData = {
             item: {},
-            index: 0
+            index: 0,
+            key: 2
          };
          var fakeHTMLElement = {
             className: 'controls-ListView__itemV'
@@ -309,6 +363,7 @@ define([
          };
          instance._onItemActionsClick({ stopPropagation: function() {} }, action, fakeItemData);
          assert.equal(callBackCount, 2);
+         assert.equal(instance._options.listModel.getMarkedKey(), fakeItemData.key);
       });
 
       it('getDefaultOptions ', function() {
@@ -416,6 +471,34 @@ define([
    });
 
    describe('Controls.List.Utils.Actions', function() {
+      it('itemActionClick action with menu', function() {
+         var
+            stopPropagationCalled = false,
+            notifyCalled = false,
+            fakeEvent = {
+               stopPropagation: function() {
+                  stopPropagationCalled = true;
+               }
+            },
+            action = {
+               'parent@': true
+            },
+            itemData = {
+               item: 'test'
+            },
+            instance = {
+               _notify: function(eventName, args) {
+                  notifyCalled = true;
+                  assert.equal(args[0], itemData);
+                  assert.equal(args[1], fakeEvent);
+                  assert.equal(args[2], action);
+                  assert.equal(eventName, 'menuActionClick');
+               }
+            };
+         aUtil.itemActionsClick(instance, fakeEvent, action, itemData);
+         assert.isTrue(stopPropagationCalled);
+         assert.isTrue(notifyCalled);
+      });
 
       it('itemActionClick menu', function() {
          var

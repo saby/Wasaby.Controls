@@ -32,11 +32,11 @@
                   keyProperty="id"
                   source="{{_toolbarSource}}"
                />
-               <Controls.Button caption="Сохранить"
+               <Controls.buttons:Button caption="Сохранить"
                                 style="linkMain2"
                                 size="m"
                                 attr:class="ControlsDemo-EditableArea__button" />
-               <Controls.Button caption="На выполнение"
+               <Controls.buttons:Button caption="На выполнение"
                                 style="buttonPrimary"
                                 attr:class="ControlsDemo-EditableArea__button" />
             </div>
@@ -59,7 +59,7 @@
       <ws:topArea>
          <div class="ControlsDemo-EditableArea__topAreaWrapper">
             <div class="ControlsDemo-EditableArea__row">
-               <Controls.Button caption="Сохранить"
+               <Controls.buttons:Button caption="Сохранить"
                                 style="linkMain2"
                                 size="m"
                                 attr:class="ControlsDemo-EditableArea__button" />

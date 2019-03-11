@@ -1,14 +1,13 @@
 define('Controls/Input/Render',
    [
+      'Env/Env',
       'Core/Control',
       'Types/entity',
       'Controls/Utils/tmplNotify',
 
       'wml!Controls/Input/Render/Render',
-      'Env/Env',
-      'css!theme?Controls/Input/Render/Render'
    ],
-   function(Control, entity, tmplNotify, template, Env) {
+   function(Env, Control, entity, tmplNotify, template) {
       'use strict';
 
       var Render = Control.extend({
@@ -48,6 +47,8 @@ define('Controls/Input/Render',
          }
       });
 
+      Render._theme = ['Controls/Input/Render/Render'];
+
       Render.getDefaultTypes = function() {
          return {
             content: entity.descriptor(Function).required(),
@@ -58,7 +59,8 @@ define('Controls/Input/Render',
             size: entity.descriptor(String).oneOf([
                's',
                'm',
-               'l'
+               'l',
+               'default'
             ]).required(),
             fontStyle: entity.descriptor(String).oneOf([
                'default',

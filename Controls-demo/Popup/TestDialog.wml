@@ -2,7 +2,7 @@
     <Controls.Popup.Templates.Dialog.DialogTemplate caption="PopupManager" bind:draggable="_draggable">
         <ws:topArea>
             <div style="display: flex;justify-content: flex-end;flex-grow: 1;">
-                <Controls.Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
+                <Controls.buttons:Button caption="Закрыть {{_options.type}}" on:click="_close()"/>
             </div>
         </ws:topArea>
         <ws:contentArea>
@@ -15,7 +15,7 @@
                 </Controls.Popup.Opener.Stack>
                 <Controls.Toggle.Checkbox bind:value="_draggable" caption="Включить d'n'd" on:valueChanged="_draggableChanged()"/>
                 <br />
-                <Controls.Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
+                <Controls.buttons:Button caption="{{_options.type === 'sticky' ? '123' : 'Открыть stack'}}" on:click="_onClick()"/>
             </div>
         </ws:contentArea>
     </Controls.Popup.Templates.Dialog.DialogTemplate>

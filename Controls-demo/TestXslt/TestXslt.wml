@@ -27,7 +27,7 @@
       bind:value="_result"
    />
    
-   <Controls.Button
+   <Controls.buttons:Button
       name="check"
       attr:class="check ControlsDemo-TestXslt__check"
       caption="{{'проверить'}}"

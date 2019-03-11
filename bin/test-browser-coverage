@@ -9,7 +9,7 @@ node build-app
 npm run test:browser-coverage
 
 # подготавливаем файлы покрытия для создания отчетов
-mkdir -p artifacts/{all,controls,file,components}
+mkdir -p artifacts/{all,controls,components}
 
 # дописываем 0 покрытие для файлов которые не использовались в тестах
 node coverageUnusedFiles

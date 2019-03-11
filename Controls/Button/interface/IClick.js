@@ -14,7 +14,7 @@ define('Controls/Button/interface/IClick', [
     * @example
     * Button with style 'primary' viewMode 'button' and icon 'icon-Send'. If user click to button then document send.
     * <pre>
-    *    <Controls.Button on:click="_clickHandler()" icon="icon-Send" style="primary" viewMode="button"/>
+    *    <Controls.buttons:Button on:click="_clickHandler()" icon="icon-Send" style="primary" viewMode="button"/>
     * </pre>
     * <pre>
     *    Control.extend({

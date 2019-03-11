@@ -77,4 +77,23 @@ define('Controls/interface/IButton', [
     * </pre>
     * @see style
     */
+
+   /**
+    * @name Controls/interface/IButton#transparent
+    * @cfg {Boolean} Determines whether button having background.
+    * @default false
+    * @remark
+    * true - Button has transparent background.
+    * false - Button has default background for this viewmode and style.
+    * @example
+    * Button has transparent background.
+    * <pre>
+    *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{true}}" size="l"/>
+    * </pre>
+    * Button hasn't transparent background.
+    * <pre>
+    *    <Controls.buttons:Button caption="Send document" style="primary" viewMode="toolButton" transparent="{{false}}"/>
+    * </pre>
+    * @see style
+    */
 });

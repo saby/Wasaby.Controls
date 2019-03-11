@@ -40,7 +40,7 @@ define('Controls/Container/LoadingIndicator', [
     * @author Krasilnikov A.
     * @public
     * @category Container
-    * @demo Controls-demo/Container/LoadingIndicator
+    * @demo Controls-demo/LoadingIndicator/LoadingIndicatorPG
     */
 
    /**
@@ -238,7 +238,7 @@ define('Controls/Container/LoadingIndicator', [
          if (!config) {
             return this._toggleIndicator(true, {});
          }
-         this._show(config, waitPromise);
+         return this._show(config, waitPromise);
       },
 
       _show: function(config, waitPromise) {

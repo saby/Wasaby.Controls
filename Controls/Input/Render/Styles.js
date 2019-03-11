@@ -10,6 +10,7 @@ define('Controls/Input/Render/Styles',
        * @css @height_Render_size_s Height of the small sized input field.
        * @css @height_Render_size_m Height of the medium sized input field.
        * @css @height_Render_size_l Height of the large sized input field.
+       * @css @height_Render_size_default Height of the default sized input field.
        *
        * @css @border-color_Render_style_info Color of the border of the input field displayed in the information style.
        * @css @border-color_Render_style_danger Color of the border of the input field displayed in the danger style.
@@ -94,6 +95,9 @@ define('Controls/Input/Render/Styles',
        * @css @font-size_Render_fontStyle_default_size_l Font size of the large sized input field with font in the default style.
        * @css @font-size_Render_fontStyle_primary_size_l Font size of the large sized input field with font in the primary style.
        * @css @font-size_Render_fontStyle_secondary_size_l Font size of the large sized input field with font in the secondary style.
+       * @css @font-size_Render_fontStyle_default_size_default Font size of the default sized input field with font in the default style.
+       * @css @font-size_Render_fontStyle_primary_size_default Font size of the default sized input field with font in the primary style.
+       * @css @font-size_Render_fontStyle_secondary_size_default Font size of the default sized input field with font in the secondary style.
        *
        * @css @font-weight_Render_fontStyle_default_size_s Font weight of the small sized input field with font in the default style.
        * @css @font-weight_Render_fontStyle_primary_size_s Font weight of the small sized input field with font in the primary style.
@@ -104,6 +108,9 @@ define('Controls/Input/Render/Styles',
        * @css @font-weight_Render_fontStyle_default_size_l Font weight of the large sized input field with font in the default style.
        * @css @font-weight_Render_fontStyle_primary_size_l Font weight of the large sized input field with font in the primary style.
        * @css @font-weight_Render_fontStyle_secondary_size_l Font weight of the large sized input field with font in the secondary style.
+       * @css @font-weight_Render_fontStyle_default_size_default Font weight of the default sized input field with font in the default style.
+       * @css @font-weight_Render_fontStyle_primary_size_default Font weight of the default sized input field with font in the primary style.
+       * @css @font-weight_Render_fontStyle_secondary_size_default Font weight of the default sized input field with font in the secondary style.
        *
        * @css @size_Render-tagStyle Height and width of the information icon.
        *

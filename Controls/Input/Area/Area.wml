@@ -1,5 +1,5 @@
 <Controls.Input.Render attr:title="{{_tooltip}}"
-                       attr:class="controls-Area controls-Area_size_{{_options.size}}"
+                       attr:class="controls-Area controls-Area_theme_{{_options.theme}}_size_{{_options.size}}"
                        viewModel="{{_viewModel}}"
                        size="{{_options.size}}"
                        style="{{_options.style}}"
@@ -12,9 +12,9 @@
                        on:tagClick="_notifyHandler('tagClick')"
                        on:tagHover="_notifyHandler('tagHover')">
    <Controls.Container.Scroll name="scroll"
-                              attr:class="controls-InputBase__field"
-                              attr:style="{{'min-height: ' + _calculateHeightContainer(_options.minLines, true) + 'px;'}}
-                                          {{_options.maxLines ? 'max-height: ' + _calculateHeightContainer(_options.maxLines, true) + 'px;'}}">
+                              attr:class="controls-Area__scroll controls-InputBase__field
+                                          controls-Area__minHeight_theme_{{_options.theme}}_countLines_{{_options.minLines}}_size_{{_options.size}}_indented
+                                          {{_options.maxLines ? 'controls-Area__maxHeight_theme_' + _options.theme + '_countLines_' + _options.maxLines + '_size_' + _options.size + '_indented'}}">
       <ws:if data="{{_options.readOnly}}">
          <ws:partial options="{{_options}}"
                      scope="{{_readOnlyField.scope}}"
@@ -31,7 +31,6 @@
                      value="{{_viewModel.displayValue}}"
                      selection="{{_viewModel.selection}}"
                      hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
-                     calculateHeightContainer="{{_calculateHeightContainer}}"
                      isEdge="{{_isEdge}}" />
       </ws:else>
    </Controls.Container.Scroll>

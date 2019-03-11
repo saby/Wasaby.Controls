@@ -13,7 +13,9 @@ define(
       'use strict';
 
       describe('Controls.Input.Base', function() {
-         var ctrl, calls;
+         var calls;
+         var ctrl = new Base();
+         ctrl._template({});
 
          beforeEach(function() {
             calls = [];
@@ -199,6 +201,26 @@ define(
                   assert.equal(ctrl._tooltip, 'test tooltip');
                });
                it('The value no fits in the field.', function() {
+                  ctrl._hasHorizontalScroll = function() {
+                     return true;
+                  };
+
+                  ctrl._mouseEnterHandler();
+
+                  assert.equal(ctrl._tooltip, 'test value');
+               });
+               it('The value fits in the field is read mode.', function() {
+                  ctrl._options.readOnly = true;
+                  ctrl._hasHorizontalScroll = function() {
+                     return false;
+                  };
+
+                  ctrl._mouseEnterHandler();
+
+                  assert.equal(ctrl._tooltip, 'test tooltip');
+               });
+               it('The value no fits in the field is read mode.', function() {
+                  ctrl._options.readOnly = true;
                   ctrl._hasHorizontalScroll = function() {
                      return true;
                   };

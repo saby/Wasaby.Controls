@@ -34,7 +34,7 @@ define('Controls/Popup/Opener/BaseOpener',
       /**
        * Base Popup opener
        * @category Popup
-       * @class Controls/Popup/Opener/Base
+       * @class Controls/Popup/Opener/BaseOpener
        * @mixes Controls/interface/IOpener
        * @control
        * @private
@@ -214,17 +214,18 @@ define('Controls/Popup/Opener/BaseOpener',
                }
             }
 
-            CoreMerge(baseConfig, coreClone(popupOptions || {}));
+            var baseCfg = coreClone(baseConfig);
+            CoreMerge(baseCfg, coreClone(popupOptions || {}));
 
-            if (baseConfig.hasOwnProperty('closeByExternalClick')) {
+            if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-               baseConfig.closeOnOutsideClick = baseConfig.closeByExternalClick;
+               baseCfg.closeOnOutsideClick = baseConfig.closeByExternalClick;
             }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
-            baseConfig.opener = baseConfig.opener || Vdom.DefaultOpenerFinder.find(this) || this;
-            this._prepareNotifyConfig(baseConfig);
-            return baseConfig;
+            baseCfg.opener = baseCfg.opener || Vdom.DefaultOpenerFinder.find(this) || this;
+            this._prepareNotifyConfig(baseCfg);
+            return baseCfg;
          },
 
          _prepareNotifyConfig: function(cfg) {
@@ -268,9 +269,15 @@ define('Controls/Popup/Opener/BaseOpener',
           * @function Controls/Popup/Opener/Base#close
           */
          close: function() {
+            var self = this;
+            var popupId = this._getCurrentPopupId();
             if (this._getCurrentPopupId()) {
-               ManagerController.remove(this._getCurrentPopupId());
-               this._popupIds.pop();
+               ManagerController.remove(this._getCurrentPopupId()).addCallback(function() {
+                  // todo: Перейти с массива на collection.list
+                  if (self._popupIds.indexOf(popupId) > -1) {
+                     self._popupIds.splice(self._popupIds.indexOf(popupId), 1);
+                  }
+               });
             } else if (!Base.isNewEnvironment() && this._action) {
                this._action.closeDialog();
             }

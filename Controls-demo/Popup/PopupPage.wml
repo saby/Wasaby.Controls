@@ -74,44 +74,44 @@
       </ws:popupOptions>
    </Controls.Popup.Opener.Stack>
    <div>
-      <Controls.Button name="dialogButton" caption="dialog" on:click="openDialog()" attr:class="ControlsDemo-PopupPage__dialogButton"/>
+      <Controls.buttons:Button name="dialogButton" caption="dialog" on:click="openDialog()" attr:class="ControlsDemo-PopupPage__dialogButton"/>
    </div>
    <div>
-      <Controls.Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()" attr:class="ControlsDemo-PopupPage__modalDialogButton"/>
+      <Controls.buttons:Button name="modalDialogButton" caption="modal dialog" on:click="openModalDialog()" attr:class="ControlsDemo-PopupPage__modalDialogButton"/>
    </div>
    <div>
-      <Controls.Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-PopupPage__stickyButton"/>
+      <Controls.buttons:Button name="stickyButton" caption="sticky" on:click="openSticky()" attr:class="ControlsDemo-PopupPage__stickyButton"/>
    </div>
    <div>
-      <Controls.Button name="notificationButton" caption="notification" on:click="openNotification()" attr:class="ControlsDemo-PopupPage__notificationButton"/>
+      <Controls.buttons:Button name="notificationButton" caption="notification" on:click="openNotification()" attr:class="ControlsDemo-PopupPage__notificationButton"/>
    </div>
    <div>
-      <Controls.Button name="stackButton" caption="stack" on:click="openStack()" attr:class="ControlsDemo-PopupPage__stackButton"/>
+      <Controls.buttons:Button name="stackButton" caption="stack" on:click="openStack()" attr:class="ControlsDemo-PopupPage__stackButton"/>
    </div>
    <div>
-      <Controls.Button name="openStackWithTemplateSizes" caption="openStackWithTemplateSizes" on:click="openStackWithTemplateSizes()" attr:class="ControlsDemo-PopupPage__stackWithTemplateSizesButton"/>
+      <Controls.buttons:Button name="openStackWithTemplateSizes" caption="openStackWithTemplateSizes" on:click="openStackWithTemplateSizes()" attr:class="ControlsDemo-PopupPage__stackWithTemplateSizesButton"/>
    </div>
    <div>
-      <Controls.Button name="stackExecutingButton" caption="openExecutingPopup" on:click="openExecutingPopup()" attr:class="ControlsDemo-PopupPage__openExecutingPopupButton"/>
+      <Controls.buttons:Button name="stackExecutingButton" caption="openExecutingPopup" on:click="openExecutingPopup()" attr:class="ControlsDemo-PopupPage__openExecutingPopupButton"/>
    </div>
    <div>
-      <Controls.Button name="maxButton" caption="maximizedStack" on:click="openMaximizedStack()" attr:class="ControlsDemo-PopupPage__maximizedStackButton"/>
+      <Controls.buttons:Button name="maxButton" caption="maximizedStack" on:click="openMaximizedStack()" attr:class="ControlsDemo-PopupPage__maximizedStackButton"/>
    </div>
    <div>
-      <Controls.Button name="notifyButton" caption="notifyStack" on:click="openNotifyStack()" attr:class="ControlsDemo-PopupPage__notifyStackButton"/>
+      <Controls.buttons:Button name="notifyButton" caption="notifyStack" on:click="openNotifyStack()" attr:class="ControlsDemo-PopupPage__notifyStackButton"/>
       <span class="ControlsDemo-PopupPage__notifyStackText">{{ _notifyStackText }}</span>
    </div>
    <div>
-      <Controls.Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>
+      <Controls.buttons:Button name="stackIgnoreButton" caption="ignoreActivationStack" on:click="openIgnoreActivationStack()" attr:class="ControlsDemo-PopupPage__stackIgnoreButton"/>
    </div>
    <div>
-      <Controls.Button name="stackButton2" caption="open old template" on:click="openOldTemplate()" attr:class="ControlsDemo-PopupPage__stackOldTemplateButton"/>
+      <Controls.buttons:Button name="stackButton2" caption="open old template" on:click="openOldTemplate()" attr:class="ControlsDemo-PopupPage__stackOldTemplateButton"/>
    </div>
    <div>
-      <Controls.Button name="stackButton3" caption="open stack with Controls-demo/Popup/PopupWithPending" on:click="openStackWithPending()" attr:class="ControlsDemo-PopupPage__withPendingButton"/>
+      <Controls.buttons:Button name="stackButton3" caption="open stack with Controls-demo/Popup/PopupWithPending" on:click="openStackWithPending()" attr:class="ControlsDemo-PopupPage__withPendingButton"/>
    </div>
    <div>
-      <Controls.Button name="stackButton4" caption="open stack with Controls-demo/FormController/FormController" on:click="openStackWithFormController()" attr:class="ControlsDemo-PopupPage__withFCButton"/>
+      <Controls.buttons:Button name="stackButton4" caption="open stack with Controls-demo/FormController/FormController" on:click="openStackWithFormController()" attr:class="ControlsDemo-PopupPage__withFCButton"/>
    </div>
    <div style="margin-top: 10px;">
       <Controls.Input.Text placeholder="for focusing" attr:class="ControlsDemo-PopupPage__forFocusing"/>
