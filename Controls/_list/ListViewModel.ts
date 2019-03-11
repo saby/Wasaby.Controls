@@ -7,6 +7,7 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
+import { CollectionItem } from 'Types/display';
 
 /**
  *
@@ -376,7 +377,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
-           [data.item],
+           [new CollectionItem({
+              contents: data.item
+           })],
            data.index,
            [],
            0
