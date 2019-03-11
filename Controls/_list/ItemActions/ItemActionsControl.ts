@@ -56,7 +56,7 @@ var _private = {
         });
     },
 
-    updateActions: function(self, options, isTouch) {
+    updateActions: function(self, options) {
         if (options.itemActions) {
             for (options.listModel.reset(); options.listModel.isEnd(); options.listModel.goToNext()) {
                 var
@@ -184,19 +184,10 @@ var ItemActionsControl = Control.extend({
             return;
         }
 
-        /**
-         * TODO: isTouch здесь используется только ради сортировки в свайпе. В .210 спилю все эти костыли по задаче, т.к. по новому стандарту порядок операций над записью всегда одинаковый:
-         * https://online.sbis.ru/opendoc.html?guid=eaeca195-74e3-4b01-8d34-88f218b22577
-         */
-        var isTouchValue = false;
-        if (this._context && this._context.isTouch) {
-            isTouchValue = this._context.isTouch.isTouch;
-        }
-
-       if (type === 'collectionChanged' && newItems) {
+        if (type === 'collectionChanged' && newItems) {
           newItems.forEach((item) => {
              if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                _private.updateItemActions(this, item, this._options, isTouchValue);
+                _private.updateItemActions(this, item, this._options);
              }
           });
 
@@ -213,7 +204,7 @@ var ItemActionsControl = Control.extend({
            */
           this._options.listModel.nextModelVersion(true);
        } else if (type === 'indexesChanged') {
-          _private.updateActions(this, this._options, isTouchValue);
+          _private.updateActions(this, this._options);
        }
     },
 
