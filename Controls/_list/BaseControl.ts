@@ -160,7 +160,7 @@ var _private = {
     },
     enterHandler: function(self) {
         let markedItem = self.getViewModel().getMarkedItem();
-        if (!!markedItem) {
+        if (markedItem) {
             self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
