@@ -719,9 +719,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          isAllReady: function() {
             return DialogRecord.prototype.isAllReady.apply(this, arguments);
          },
-         getChildControls: function() {
-            return DialogRecord.prototype.getChildControls.apply(this, arguments);
-         },
          getReports: function() {
             return DialogRecord.prototype.getReports.apply(this, arguments);
          },
