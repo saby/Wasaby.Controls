@@ -1,15 +1,11 @@
 import Control = require('Core/Control');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/SmallRow/SmallRow';
-import {
-   IItemAction,
-   ShowType
-} from 'Controls/List/Swipe/interface/IItemAction';
 // @ts-ignore
 import { HierarchicalMemory } from 'Types/source';
 
 export default class SmallRow extends Control {
    private _template: Function = template;
-   private _itemActions: IItemAction[];
+   private _itemActions: object[];
    private _header: object[];
    private _columns: object[];
    private _source: HierarchicalMemory;
@@ -20,26 +16,26 @@ export default class SmallRow extends Control {
             id: 1,
             icon: 'icon-PhoneNull',
             title: 'phone',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 2,
             icon: 'icon-EmptyMessage',
             title: 'message',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 3,
             icon: 'icon-Profile',
             title: 'profile',
-            showType: ShowType.MENU
+            showType: 0
          },
          {
             id: 4,
             icon: 'icon-Erase',
             iconStyle: 'danger',
             title: 'delete',
-            showType: ShowType.TOOLBAR
+            showType: 2
          }
       ];
       this._header = [

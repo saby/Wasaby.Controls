@@ -1,12 +1,11 @@
 import Control = require('Core/Control');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/Tile/Tile';
-import { IItemAction, ShowType } from 'Controls/List/Swipe/interface/IItemAction';
 import { HierarchicalMemory } from 'Types/source';
 import explorerImages = require('Controls-demo/Explorer/ExplorerImages');
 
 export default class Tile extends Control {
    private _template: Function = template;
-   private _itemActions: IItemAction[];
+   private _itemActions: object[];
    private _source: HierarchicalMemory;
 
    _beforeMount(): void {
@@ -15,51 +14,51 @@ export default class Tile extends Control {
             id: 1,
             icon: 'icon-PhoneNull',
             title: 'phone',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 2,
             icon: 'icon-EmptyMessage',
             title: 'message',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 3,
             icon: 'icon-Profile',
             title: 'profile',
-            showType: ShowType.MENU
+            showType: 0
          },
          {
             id: 4,
             icon: 'icon-Erase',
             title: 'delete',
             iconStyle: 'danger',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 5,
             icon: 'icon-PhoneNull',
             title: 'second phone',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 6,
             icon: 'icon-EmptyMessage',
             title: 'second message',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 7,
             icon: 'icon-Profile',
             title: 'second profile',
-            showType: ShowType.MENU
+            showType: 0
          },
          {
             id: 8,
             icon: 'icon-Erase',
             title: 'second delete',
             iconStyle: 'danger',
-            showType: ShowType.TOOLBAR
+            showType: 2
          }
       ];
       this._source = new HierarchicalMemory({
