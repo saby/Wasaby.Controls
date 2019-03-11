@@ -127,14 +127,15 @@
         itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
         itemActionsProperty="{{_options.itemActionsProperty}}"
         itemActionsPosition="{{_options.itemActionsPosition}}"/>
-    <Controls.List.Swipe.SwipeControl
+    <Controls._list.Swipe.SwipeControl
         ws:content="listView"
         on:menuActionsClick="_showActionsMenu()"
         on:closeSwipe="_closeSwipe()"
+        swipeDirection="{{_options.swipeDirection}}"
+        titlePosition="{{_options.titlePosition}}"
         menuIsShown="{{_menuIsShown}}"
         viewName="{{ _options.viewName }}"
         listModel="{{_listViewModel}}"
-        swipeViewMode="{{_options.swipeViewMode}}"
         itemActions="{{_options.itemActions}}"
         name="swipeControl"/>
 </ws:if>

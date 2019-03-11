@@ -1,0 +1,7 @@
+<ws:partial template="wml!Controls/List/Grid/Column" scope="{{_options}}">
+   <ws:contentTemplate>
+      <ws:if data="{{itemData.item.regulationName}}">
+         <div class="demo-Shipments__regulationName">{{itemData.item.regulationName}}</div>
+      </ws:if>
+   </ws:contentTemplate>
+</ws:partial>
