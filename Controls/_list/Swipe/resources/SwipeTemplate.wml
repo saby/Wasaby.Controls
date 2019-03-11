@@ -9,15 +9,15 @@
              on:animationend="_onAnimationEnd()">
             <div class="controls-Swipe_{{swipeDirection}}">
                 <ws:partial
-                    template="wml!Controls/List/Swipe/resources/SwipeFor"
-                    itemData="{{itemData}}"
-                    showedActions="{{itemData.itemActions.showed}}"
-                    swipeConfig="{{swipeConfig}}"
-                    swipeDirection="{{swipeDirection}}"
-                    titlePosition="{{titlePosition}}"
-                    needSeparator="{{needSeparator}}"
-                    needIcon="{{needIcon}}"
-                    needTitle="{{needTitle}}"/>
+                   template="wml!Controls/_list/Swipe/resources/SwipeFor"
+                   itemData="{{itemData}}"
+                   showedActions="{{itemData.itemActions.showed}}"
+                   swipeConfig="{{swipeConfig}}"
+                   swipeDirection="{{swipeDirection}}"
+                   titlePosition="{{titlePosition}}"
+                   needSeparator="{{needSeparator}}"
+                   needIcon="{{needIcon}}"
+                   needTitle="{{needTitle}}"/>
             </div>
         </div>
     </div>

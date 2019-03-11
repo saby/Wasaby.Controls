@@ -1,17 +1,13 @@
 import Control = require('Core/Control');
 import cConstants = require('Core/constants');
 import * as template from 'wml!Controls-demo/List/Swipe/Scenarios/News/News';
-import {
-   IItemAction,
-   ShowType
-} from 'Controls/List/Swipe/interface/IItemAction';
 import { Memory } from 'Types/source';
 import { Model } from 'Types/entity';
 import 'css!Controls-demo/List/Swipe/Scenarios/News/News';
 
 export default class News extends Control {
    private _template: Function = template;
-   private _itemActions: IItemAction[];
+   private _itemActions: object[];
    private _source: Memory;
 
    _beforeMount(): void {
@@ -66,20 +62,20 @@ export default class News extends Control {
             id: 1,
             icon: 'icon-PhoneNull',
             title: 'Прочитано',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 2,
             icon: 'icon-Erase',
             title: 'Удалить',
             iconStyle: 'danger',
-            showType: ShowType.TOOLBAR
+            showType: 2
          },
          {
             id: 3,
             icon: 'icon-EmptyMessage',
             title: 'В избранные',
-            showType: ShowType.TOOLBAR
+            showType: 2
          }
       ];
       this._source = new Memory({

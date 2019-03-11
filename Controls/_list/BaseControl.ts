@@ -911,9 +911,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _pagingCfg: null,
     _pagingVisible: false,
 
-    // TODO пока спорные параметры
-    _sorting: undefined,
-
     _itemTemplate: null,
 
     _needScrollCalculation: false,
@@ -1101,22 +1098,43 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     },
 
-    reloadItem: function(key, readMeta, replaceItem) {
+    reloadItem: function(key:String, readMeta:Object, replaceItem:Boolean, reloadType = 'read'):Deferred {
         var items = this._listViewModel.getItems();
         var currentItemIndex = items.getIndexByValue(this._options.keyProperty, key);
+        var reloadItemDeferred;
+        var filter;
 
-        if (currentItemIndex === -1) {
-            throw new Error('BaseControl::reloadItem no item with key ' + key);
-        }
-
-        return this._sourceController.read(key, readMeta).addCallback(function(item) {
+        function loadCallback(item):void {
             if (replaceItem) {
                 items.replace(item, currentItemIndex);
             } else {
                 items.at(currentItemIndex).merge(item);
             }
-            return item;
-        }, (error) => {
+        }
+
+        if (currentItemIndex === -1) {
+            throw new Error('BaseControl::reloadItem no item with key ' + key);
+        }
+
+        if (reloadType === 'query') {
+            filter = cClone(this._options.filter);
+            filter[this._options.keyProperty] = [key];
+            reloadItemDeferred = this._sourceController.load(filter).addCallback((items) => {
+                if (items.getCount() && items.getCount() === 1) {
+                    loadCallback(items.at(0));
+                } else {
+                    throw new Error('BaseControl::reloadItem query returns wrong amount of items for reloadItem call with key: ' + key);
+                }
+                return items;
+            });
+        } else {
+            reloadItemDeferred = this._sourceController.read(key, readMeta).addCallback((item) => {
+                loadCallback(item);
+                return item;
+            });
+        }
+
+        return reloadItemDeferred.addErrback((error) => {
             return _private.crudErrback(this, {
                 error: error,
                 mode: dataSourceError.Mode.dialog

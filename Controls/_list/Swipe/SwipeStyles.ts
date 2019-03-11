@@ -1,6 +1,6 @@
 /**
  * @author Зайцев А.С.
- * @mixin Controls/List/Swipe/SwipeStyles
+ * @mixin Controls/_list/Swipe/SwipeStyles
  * @public
  *
  * @css @background-color_Swipe Background color of the item actions.

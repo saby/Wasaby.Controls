@@ -55,7 +55,17 @@ define([
          ];
          source = new sourceLib.Memory({
             idProperty: 'id',
-            data: data
+            data: data,
+            filter: function (item, filter) {
+               var result = true;
+      
+               if (filter['id'] && filter['id'] instanceof Array) {
+                  result = filter['id'].indexOf(item.get('id')) !== -1;
+               }
+      
+               return result;
+            }
+   
          });
          rs = new collection.RecordSet({
             idProperty: 'id',
@@ -2470,6 +2480,42 @@ define([
             return done;
          });
 
+      });
+   
+      it('reloadItem', function() {
+         var filter = {};
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            keyProperty: 'id',
+            source: source,
+            filter: filter
+         };
+         var baseCtrl = new BaseControl(cfg);
+         baseCtrl.saveOptions(cfg);
+      
+         return new Promise(function(resolve) {
+            baseCtrl._beforeMount(cfg).addCallback(function() {
+               baseCtrl.reloadItem(1).addCallback(function(item) {
+                  assert.equal(item.get('id'), 1);
+                  assert.equal(item.get('title'), 'Первый');
+               
+                  baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
+                     assert.isTrue(!!items.getCount);
+                     assert.equal(items.getCount(), 1);
+                     assert.equal(items.at(0).get('id'), 1);
+                     resolve();
+                  });
+               });
+            });
+         });
       });
    });
 });

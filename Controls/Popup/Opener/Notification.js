@@ -38,7 +38,7 @@ define('Controls/Popup/Opener/Notification',
                'Controls/Popup/Compatible/OldNotification',
                config.template
             ], function(BaseOpenerCompat, InformationPopupManager) {
-               InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config));
+               InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config), true);
             });
          }
       };

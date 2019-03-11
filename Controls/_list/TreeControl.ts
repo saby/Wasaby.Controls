@@ -73,7 +73,7 @@ var _private = {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
             filter[self._options.parentProperty] = nodeKey;
-            self._nodesSourceControllers[nodeKey].load(filter, self._sorting).addCallback(function(list) {
+            self._nodesSourceControllers[nodeKey].load(filter, self._options.sorting).addCallback(function(list) {
                 listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
                 if (self._options.uniqueKeys) {
                     listViewModel.mergeItems(list);
@@ -102,7 +102,7 @@ var _private = {
             listViewModel = self._children.baseControl.getViewModel(),
             nodeKey = dispItem.getContents().getId();
         filter[self._options.parentProperty] = nodeKey;
-        self._nodesSourceControllers[nodeKey].load(filter, self._sorting, 'down').addCallback(function(list) {
+        self._nodesSourceControllers[nodeKey].load(filter, self._options.sorting, 'down').addCallback(function(list) {
             listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
             if (self._options.uniqueKeys) {
                 listViewModel.mergeItems(list);
@@ -330,13 +330,14 @@ var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype 
         });
     },
 
-    reloadItem: function(key, readMeta, direction) {
-        var result;
+    reloadItem: function(key, readMeta, direction):Deferred {
+        let baseControl = this._children.baseControl;
+        let result;
 
         if (direction === 'depth') {
             result = _private.reloadItem(this, key);
         } else {
-            result = this._children.baseControl.reloadItem(key, readMeta);
+            result = baseControl.reloadItem.apply(baseControl, arguments);
         }
 
         return result;

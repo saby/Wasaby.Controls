@@ -254,8 +254,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return lastRowCollectionWidth > availableWidth || !allItemsInOneRow;
       },
 
-      isNeedUpdate: function(itemsCount, multiLine, readOnly, maxVisibleItems) {
-         return multiLine || !readOnly || itemsCount > maxVisibleItems;
+      isNeedUpdate: function(multiSelect, itemsCount, multiLine, readOnly, maxVisibleItems) {
+         return multiSelect && (multiLine || !readOnly || itemsCount > maxVisibleItems);
       }
    };
 
@@ -267,6 +267,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
+      _maxVisibleItems: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
@@ -277,10 +278,15 @@ define('Controls/Selector/Lookup/_Lookup', [
             value: options.value
          });
 
-         if (options.multiLine) {
-            this._maxVisibleItems = options.maxVisibleItems;
-         } else {
-            this._maxVisibleItems = options.items.getCount();
+         // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
+         if (!options.multiSelect) {
+            this._maxVisibleItems = 1;
+         } else if (options.readOnly) {
+            if (options.multiLine) {
+               this._maxVisibleItems = options.maxVisibleItems;
+            } else {
+               this._maxVisibleItems = options.items.getCount();
+            }
          }
       },
 
@@ -293,7 +299,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);
 
-            if (_private.isNeedUpdate(itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
+            if (_private.isNeedUpdate(this._options.multiSelect, itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
                this._forceUpdate();
             }
          }
@@ -380,7 +386,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly || this._infoboxOpened || !this._isInputVisible()) {
+         if (this._infoboxOpened || !this._isInputVisible()) {
             this._suggestState = false;
          }
       },
@@ -394,7 +400,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _isInputVisible: function() {
-         return this._isEmpty() || this._options.multiSelect;
+         return !this._options.readOnly && (this._isEmpty() || this._options.multiSelect);
       },
       
       _openInfoBox: function(event, config) {
