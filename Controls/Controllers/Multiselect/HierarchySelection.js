@@ -163,6 +163,17 @@ define('Controls/Controllers/Multiselect/HierarchySelection', [
          }.bind(this));
       },
 
+      selectAll: function() {
+         HierarchySelection.superclass.selectAll.apply(this, arguments);
+         var root = this._listModel.getRoot().getContents();
+         if (root !== null) {
+            /**
+             * If a user selects all inside a folder we should not select the folder itself, only its children
+             */
+            this._selectedKeys = _private.getChildrenIds(this._hierarchyRelation, root.getId(), this._items);
+         }
+      },
+
       unselect: function(keys) {
          // 1) Удаляем всех из selectedKeys
          // 2) Удаляем всех детей из excludedKeys

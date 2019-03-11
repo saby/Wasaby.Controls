@@ -82,7 +82,8 @@ var _private = {
                     items: options.items,
                     keyProperty: options.keyProperty,
                     parentProperty: options.parentProperty,
-                    nodeProperty: options.nodeProperty
+                    nodeProperty: options.nodeProperty,
+                    listModel: options.listModel
                 }));
             });
         } else {
@@ -91,7 +92,8 @@ var _private = {
                     selectedKeys: options.selectedKeys,
                     excludedKeys: options.excludedKeys,
                     items: options.items,
-                    keyProperty: options.keyProperty
+                    keyProperty: options.keyProperty,
+                    listModel: options.listModel
                 }));
             });
         }
@@ -119,6 +121,10 @@ var SelectionController = Control.extend(/** @lends Controls/List/BaseControl/Se
         var
             oldSelection = this._multiselection.getSelection(),
             selectionChanged = !isEqual(newOptions.selectedKeys, oldSelection.selected) || !isEqual(newOptions.excludedKeys, oldSelection.excluded);
+
+        if (newOptions.listModel !== this._options.listModel) {
+            this._multiselection.setListModel(newOptions.listModel);
+        }
 
         if (newOptions.items !== this._options.items) {
             this._options.items.unsubscribe('onCollectionChange', this._onCollectionChangeHandler);
