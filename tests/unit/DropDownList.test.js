@@ -103,7 +103,23 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
                }, 120);
             });
          });
-         
+
+         it('_mouseenterHandler', function() {
+            let dropDownConfig = getDropDownConfig();
+            let dropDownList = getDropDownListWithConfig(dropDownConfig),
+               closed = false,
+               closeHandler = () => {
+                  closed = true;
+               };
+            dropDownList._children = {subDropdownOpener: { close: closeHandler } };
+            dropDownList._mouseenterHandler();
+            assert.isFalse(closed);
+
+            dropDownList._hasHierarchy = true;
+            dropDownList._mouseenterHandler();
+            assert.isTrue(closed);
+         });
+
          it('check hierarchy', function() {
             var dropDownConfig, dropDownList;
 
