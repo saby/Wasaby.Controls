@@ -132,6 +132,27 @@ define([
          });
       });
 
+      describe('step = 12 months, period = 1 month', function () {
+         describe('updating range with same period type', function () {
+            testCase([new Date(2017, 0, 1), 12, {}, 5, 1], createMonths(new Date(2016, 0, 1), 12, 1));
+         });
+         describe('updating range with other period type', function () {
+            testCase([new Date(2017, 0, 1), 12, {}, 5, 1], createMonths(new Date(2016, 0, 1), 12, 6));
+         });
+         describe('updating range with period type less than step', function () {
+            testCase([new Date(2017, 0, 1), 12, {}, 5, 1], createMonths(new Date(2016, 0, 1), 12, 3));
+         });
+      });
+
+      describe('step = 12 months, period = 1 year', function () {
+         describe('updating range with same period type', function () {
+            testCase([new Date(2017, 0, 1), 12, {}, 5, 1], createMonths(new Date(2016, 0, 1), 12, 12));
+         });
+         describe('updating range with other period type', function () {
+            testCase([new Date(2017, 0, 1), 12, {}, 5, 1], createMonths(new Date(2016, 0, 1), 12, 6));
+         });
+      });
+
       describe('period = 1 month, onlyByCapacity = true', function () {
          describe('updating range with other period type', function () {
             testCase([new Date(2017, 0, 1), 6, { bindType: 'byCapacity' }, 5, 1], createMonths(new Date(2016, 0, 1), 6, 6));
@@ -150,22 +171,19 @@ define([
             componentOptions: [new Date(2015, 0, 1), 1, { bindType: 'byCapacity' }, 2],
             updateToRange: [new Date(2014, 1, 1), new Date(2014, 2, 0)],
             updatedRangesOptions: [new Date(2014, 1, 1), 12, 1],
-            bindTypeTest: true,
-            bindType: 'normal'
+            bindTypeTest: true
          }, {
             title: 'should update relation type if period type is quarter and onlyByCapacity = true and checked related periods',
             componentOptions: [new Date(2015, 0, 1), 3, { bindType: 'byCapacity' }, 2],
             updateToRange: [new Date(2014, 3, 1), new Date(2014, 6, 0)],
             updatedRangesOptions: [new Date(2014, 3, 1), 12, 3, 2],
-            bindTypeTest: true,
-            bindType: 'normal'
+            bindTypeTest: true
          }, {
             title: 'should update relation type if period type is halfyear and onlyByCapacity = true and checked related periods',
             componentOptions: [new Date(2015, 0, 1), 6, { bindType: 'byCapacity' }, 2],
             updateToRange: [new Date(2014, 6, 1), new Date(2014, 12, 0)],
             updatedRangesOptions: [new Date(2014, 6, 1), 12, 6, 2],
-            bindTypeTest: true,
-            bindType: 'normal'
+            bindTypeTest: true
          }, {
             title: 'should not update relation type if period type changed to months',
             componentOptions: [new Date(2015, 0, 1), 12, { bindType: 'byCapacity' }, 2],
@@ -183,7 +201,7 @@ define([
             componentOptions: [new Date(2015, 0, 1), 12, { bindType: 'byCapacity' }, 2],
             updateToRange: [new Date(2013, 0, 1), new Date(2013, 12, 0)],
             updatedRangesOptions: [new Date(2013, 0, 1), 36, 12, 2],
-            bindTypeTest: false
+            bindTypeTest: true
          }].forEach(function(test) {
             it(test.title, function() {
                let
@@ -200,9 +218,9 @@ define([
                   assert.deepEqual(range, dates[i]);
                }
                if (test.bindTypeTest) {
-                  sinon.assert.calledWith(component._notify, 'bindTypeChanged', [test.bindType]);
+                  sinon.assert.calledWith(component._notify, 'bindTypeChanged', ['normal']);
                } else {
-                  assert.isFalse(component._notify.calledWith('bindTypeChanged', [test.bindType]));
+                  assert.isFalse(component._notify.calledWith('bindTypeChanged', ['normal']));
                }
                sandbox.restore();
             });

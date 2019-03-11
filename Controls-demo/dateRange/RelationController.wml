@@ -16,19 +16,20 @@
          icon="icon-medium icon-MarkLeftBold icon-primary"
          on:click="dateRelation.shiftBackward()"/>
       <Controls.Input.Date.RangeLinkLite
+         attr:class="controlsDemo-dateRange-RelationController__selector"
          bind:startValue="_startValue0"
          bind:endValue="_endValue0"/>
       <Controls.Input.Date.RangeLinkLite
+         attr:class="controlsDemo-dateRange-RelationController__selector"
          bind:startValue="_startValue1"
          bind:endValue="_endValue1"/>
       <Controls.Input.Date.RangeLinkLite
+         attr:class="controlsDemo-dateRange-RelationController__selector"
          bind:startValue="_startValue2"
          bind:endValue="_endValue2"/>
-      <Controls.buttons:Button
-         icon="icon-small icon-ConnectionPeriod {{ _bindType === 'byCapacity' ? 'icon-disabled'}}"
-         viewMode="link"
-         on:click="_onRelationButtonClick()"
-      />
+      <Controls.dateRange:RelationButton
+         attr:class="controlsDemo-dateRange-RelationController__relationButton"
+         bind:value="_bindType"/>
       <Controls.buttons:Button
          icon="icon-medium icon-MarkRightBold icon-primary"
          on:click="dateRelation.shiftForward()"/>
@@ -47,14 +48,12 @@
          icon="icon-medium icon-MarkLeftBold icon-primary"
          on:click="dateRelation2.shiftBackward()"/>
       <Controls.Input.Date.RangeLinkLite
+         attr:class="controlsDemo-dateRange-RelationController__selector"
          bind:startValue="_startValue2_0"
          bind:endValue="_endValue2_0"/>
-      <Controls.buttons:Button
-         icon="icon-small icon-ConnectionPeriod {{ _bindType2 === 'byCapacity' ? 'icon-disabled'}}"
-         viewMode="link"
-         on:click="_onRelationButtonClick2()"
-      />
+      <Controls.dateRange:RelationButton bind:value="_bindType2"/>
       <Controls.Input.Date.RangeLinkLite
+         attr:class="controlsDemo-dateRange-RelationController__selector"
          bind:startValue="_startValue2_1"
          bind:endValue="_endValue2_1"/>
       <Controls.buttons:Button

@@ -233,7 +233,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             }
          },
 
-         _additionMouseenter: function() {
+         _mouseenterHandler: function() {
             if (this._hasHierarchy) {
                this._children.subDropdownOpener.close();
             }

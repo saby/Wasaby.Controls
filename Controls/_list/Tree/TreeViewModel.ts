@@ -4,7 +4,7 @@ import TreeItemsUtil = require('Controls/List/resources/utils/TreeItemsUtil');
 import cClone = require('Core/core-clone');
 import _entity = require('Types/entity');
 import collection = require('Types/collection');
-import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
+import { TreeItem } from 'Types/display';
 
 var
     _private = {
@@ -505,6 +505,10 @@ var
             this._display.setRoot(root);
             this.updateMarker(this._markedKey);
             this._nextModelVersion();
+        },
+
+        getRoot(): TreeItem {
+            return this._display.getRoot();
         },
 
         getChildren: function(rootId) {

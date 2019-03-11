@@ -18,11 +18,15 @@ define('Controls/Popup/Templates/Stack/StackTemplateStyles', [],
      *
      * @css @color_StackTemplate-caption_default          Default color of heading
      * @css @font-size_StackTemplate-caption_default     Default size of heading
+    *  @css @font-weight_StackTemplate-caption_default     Default font-weight of heading
      * @css @color_StackTemplate-caption_accent         Accent color of heading
      * @css @font-size_StackTemplate-caption_accent       Accent size of heading
-     * @css @color_StackTemplate-caption_small            Color of small headingn
+      *@css @font-weight_StackTemplate-caption_accent        Accent font-weight of heading
+     * @css @color_StackTemplate-caption_small            Color of small heading
      * @css @font-size_StackTemplate-caption_small        Size of small heading
-     *
+    * @css @font-weight_StackTemplate-caption_small      Font-weight of small heading
+    *
      * @css @background-color_StackTemplate-footer        Background color of footer
+    *
      */
 );
