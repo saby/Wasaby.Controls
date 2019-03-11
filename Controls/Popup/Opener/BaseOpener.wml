@@ -2,5 +2,5 @@
    <Controls.Event.Listener event="scroll" on:scroll="_scrollHandler()"/>
 </ws:if>
 <ws:else>
-   <invisible-node />
+   <div></div>
 </ws:else>
