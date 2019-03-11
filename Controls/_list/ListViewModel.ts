@@ -363,7 +363,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setItems: function(items) {
         ListViewModel.superclass.setItems.apply(this, arguments);
-        this.updateMarker(this._options.markedKey);
+        this.updateMarker(this._markedKey);
         this._nextModelVersion();
     },
 
