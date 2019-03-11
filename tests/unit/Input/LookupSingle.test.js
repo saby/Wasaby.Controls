@@ -259,6 +259,23 @@ define([
          assert.isFalse(lookup._suggestState);
       });
 
+      it('_isInputVisible', function() {
+         var lookup = new Lookup();
+
+         lookup._options.multiSelect = false;
+         lookup._options.items = getItems(0);
+         assert.isTrue(lookup._isInputVisible());
+
+         lookup._options.items = getItems(1);
+         assert.isFalse(lookup._isInputVisible());
+
+         lookup._options.multiSelect = true;
+         assert.isTrue(lookup._isInputVisible());
+
+         lookup._options.readOnly = true;
+         assert.isFalse(lookup._isInputVisible());
+      });
+
       it('_determineAutoDropDown', function() {
          var lookup = new Lookup();
 
