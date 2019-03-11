@@ -81,6 +81,7 @@ define('Controls/Selector/Suggest',
          _changeValueHandler: function(event, value) {
             if (value !== this._value) {
                _private.updateValue(this, value);
+               this._notify('selectedKeyChanged', [null]);
                this._notify('valueChanged', [value]);
             }
          },

@@ -24,6 +24,7 @@
            tooltip="{{_options.tooltip}}"
            tagStyle="{{_options.tagStyle}}"
            viewModel="{{_simpleViewModel}}"
+           style="{{_options.style}}"
            on:tagClick="_notifyHandler('tagClick')"
            on:tagHover="_notifyHandler('tagHover')"
            on:valueChanged="_changeValueHandler()"
