@@ -76,7 +76,7 @@ define('Controls/Filter/Button',
    
             chain.factory(items).each(function(item) {
                if (!isChanged) {
-                  isChanged = !!Utils.object.getPropertyValue(item, 'resetValue') && _private.isItemChanged(item);
+                  isChanged = Utils.object.getPropertyValue(item, 'resetValue') !== undefined && _private.isItemChanged(item);
                }
             });
             
