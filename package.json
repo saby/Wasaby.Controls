@@ -70,7 +70,6 @@
       "stylelint": "^9.7.1",
       "stylelint-config-standard": "^18.2.0",
       "rmi": "git+https://git.sbis.ru/sbis/rmi.git#rc-19.220",
-      "ws-data": "git+https://git.sbis.ru/ws/data.git#rc-19.220",
       "saby-types": "git+https://platform-git.sbis.ru/saby/Types.git#rc-19.220",
       "saby-typescript": "git+https://platform-git.sbis.ru/saby/TypeScript.git#rc-19.220",
       "saby-units": "git+https://platform-git.sbis.ru/saby/Units.git#rc-19.220",
