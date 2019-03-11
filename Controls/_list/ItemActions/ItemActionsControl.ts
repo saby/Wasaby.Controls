@@ -6,10 +6,11 @@ import ControlsConstants = require('Controls/Constants');
 import TouchContextField = require('Controls/Context/TouchContextField');
 import getStyle = require('Controls/List/ItemActions/Utils/getStyle');
 import ArraySimpleValuesUtil = require('Controls/Utils/ArraySimpleValuesUtil');
-import { relation, Model } from 'Types/entity';
+import { relation } from 'Types/entity';
 import { RecordSet } from 'Types/collection';
 import { Object as EventObject } from 'Env/Event';
 import 'css!theme?Controls/_list/ItemActions/ItemActionsControl';
+import { CollectionItem } from 'Types/display';
 
 var
     ACTION_ICON_CLASS = 'controls-itemActionsV__action_icon  icon-size';
@@ -213,7 +214,7 @@ var ItemActionsControl = Control.extend({
        e: EventObject,
        type: string,
        action: string,
-       newItems: Model[]
+       newItems: CollectionItem[]
     ): void {
         if (type !== 'collectionChanged' && type !== 'indexesChanged') {
             return;
@@ -230,8 +231,9 @@ var ItemActionsControl = Control.extend({
 
        if (type === 'collectionChanged' && newItems) {
           newItems.forEach((item) => {
-             if (item !== ControlsConstants.view.hiddenGroup && item.get) {
-                _private.updateItemActions(this, item, this._options, isTouchValue);
+             const contents = item.getContents();
+             if (contents.get) {
+                _private.updateItemActions(this, contents, this._options, isTouchValue);
              }
           });
 
