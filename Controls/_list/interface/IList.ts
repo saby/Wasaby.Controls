@@ -176,8 +176,28 @@
  */
 
 /**
+ * @typedef {String} reloadType
+ * @variant query Item will be reloaded with query method
+ * @variant read Item will be reloaded with read method
+ * @default read
+ */
+
+/**
  * @function Controls/List/interface/IList#reloadItem
  * Loads model from data source, merges changes into the current data and renders the item.
+ * @param {String} key Identifier of the collection item, that should be reloaded from source.
+ * @param {Object} readMeta Meta information, that which will be passed to the query/read method.
+ * @param {Boolean} replaceItem Determine, how the loaded item will be applied to collection.
+ * If the parameter is set to true, item from collection will replaced with loaded item.
+ * if the parameter is set to false (by default), loaded item will merged to item from collection.
+ * @param {reloadType} Determine how the item will be reloaded.
+ * @example
+ *  <pre>
+ *      _itemUpdated: function(id) {
+ *          var list = this._children.myList;
+ *          list.reloadItem(id);
+ *      }
+ * </pre>
  */
 
 /**
