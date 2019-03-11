@@ -12,7 +12,11 @@ define('Controls/Popup/Compatible/OldNotification',
             this._options.waitCallback();
          },
          _close: function() {
-            this.getParent().close();
+            if (this.getParent && this.getParent()) {
+               this.getParent().close();
+            } else if (this._options.getParent && this._options.getParent()) {
+               this._options.getParent().close();
+            }
          }
       });
 
