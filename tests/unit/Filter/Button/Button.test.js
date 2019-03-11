@@ -56,5 +56,23 @@ define(
             assert.deepEqual(filter, {});
             assert.equal(button._text, '');
          });
+   
+         it('_private.isItemsChanged', function() {
+            var itemsChanged = [{id: 0, value: 'value', resetValue: 'resetValue'}];
+            var itemsNotChanged = [{id: 0, value: 'resetValue', resetValue: 'resetValue'}];
+            var itemsNotChangedWithoutResetValue = [{id: 0, value: 'value'}];
+   
+            assert.isTrue(FilterButton._private.isItemsChanged(itemsChanged));
+   
+            assert.isFalse(FilterButton._private.isItemsChanged(itemsNotChanged));
+   
+            assert.isFalse(FilterButton._private.isItemsChanged(itemsNotChangedWithoutResetValue));
+         });
+   
+         it('_private.isItemChanged', function() {
+            assert.isTrue(FilterButton._private.isItemChanged({id: 0, value: 'value', resetValue: 'resetValue'}));
+            assert.isFalse(FilterButton._private.isItemChanged({id: 0, value: 'resetValue', resetValue: 'resetValue'}));
+         });
+         
       });
    });
