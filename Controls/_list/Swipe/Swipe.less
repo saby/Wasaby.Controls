@@ -2,14 +2,17 @@
   0% {
     transform: translate(100%, 0);
   }
+
   100% {
     transform: translate(0, 0);
   }
 }
+
 @keyframes itemActionsSwipeClose {
   0% {
     transform: translate(0, 0);
   }
+
   100% {
     transform: translate(100%, 0);
   }
@@ -21,7 +24,7 @@
   }
 
   50% {
-    transform: translateX(16px);
+    transform: translateX(@animation-offset-Swipe-left-to-right);
   }
 
   100% {
@@ -39,99 +42,134 @@
   background-color: transparent;
   z-index: 2;
 }
-.controls-itemActionsV_swipe {
-  align-items:center;
+
+.controls-Swipe {
+  align-items: center;
   display: inline-flex;
   height: 100%;
-  padding: 0 @spacing_ItemActions-between-actions 0 @spacing_ItemActions-between-actions + @width_itemActions_swipeShadow;
-  overflow:hidden;
+
+  /**
+ Gradient takes some of the container's width on the left side, so we should compensate for it with larger padding.
+  */
+  padding: 0 @spacing-Swipe-between-content-and-borders 0 @spacing-Swipe-between-content-and-borders + @width_Swipe-shadow;
+  overflow: hidden;
   box-sizing: border-box;
   background-color: transparent;
-  background-image: -webkit-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
-  background-image: -moz-linear-gradient(left, transparent, @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
-  background-image: -ms-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
-  background-image: -o-linear-gradient(left, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
-  background-image: linear-gradient(to right, transparent,  @backgroun-color_itemActions_swipe_shadow @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe @width_itemActions_swipeShadow, @backgroun-color_itemActions_swipe 100%);
+  background-image: linear-gradient(to right, transparent, @background-color_Swipe-shadow @width_Swipe-shadow, @background-color_Swipe @width_Swipe-shadow, @background-color_Swipe 100%);
 }
-.controls-itemActionsV_swipe_open {
+
+.controls-Swipe__action {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  position: relative;
+}
+
+.controls-Swipe__action_column {
+  flex-direction: column;
+}
+
+.controls-Swipe_open {
   animation: itemActionsSwipeOpen 0.35s 0ms ease;
 }
-.controls-itemActionsV_swipe_close {
+
+.controls-Swipe_close {
   animation: itemActionsSwipeClose 0.35s 0ms ease;
   animation-fill-mode: forwards;
 }
-.controls-itemActionsV__action_padding_swipe {
-  padding: @padding_itemActions_action_swipe;
+
+.controls-Swipe__action_padding_size_m {
+  padding-top: @spacing_Swipe-between-actions_top_size_m;
+  padding-bottom: @spacing_Swipe-between-actions_bottom_size_m;
 }
 
-//каскад избавление от которого слишком дорогостоящее
-.controls-itemActionsV__action_icon_swipe {
-  &.icon-primary {
-    color: @color_swipe_icon;
-  }
-  &.controls-itemActionsV__action_icon_small {
-    .icon-size-without-important(@font-size_swipe_icon_small, @default-icon-medium-font);
-  }
-  &.controls-itemActionsV__action_icon_big {
-    .icon-size-without-important(@font-size_swipe_icon_big, @default-icon-medium-font);
-  }
+.controls-Swipe__action_padding_size_l {
+  padding-top: @spacing_Swipe-between-actions_top_size_l;
+  padding-bottom: @spacing_Swipe-between-actions_bottom_size_l;
 }
 
-.controls-itemActionsV__action_title_swipe {
-  color: @color_swipe_title;
-  font-size: @font-size_swipe_title;
-  max-width: @max-width_itemActions_title;
+.controls-Swipe__action_icon_size_m {
+  .icon(@font-size_Swipe-icon_size_m, @font-family_Swipe-icon);
+}
+
+.controls-Swipe__action_icon_size_l {
+  .icon(@font-size_Swipe-icon_size_l, @font-family_Swipe-icon);
+}
+
+.controls-Swipe__action_title {
+  color: @color_Swipe-title;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  min-height: @height-size_swipe_title;
 }
 
-.controls-itemActionsV__separator {
-  background: @backgroun-color_itemActions_separator;
+.controls-Swipe__action_title_position_right {
+  padding-left: @spacing-Swipe-between-title-and-icon_position_right;
+  max-width: @max-width_Swipe-title_position_right;
+}
+
+.controls-Swipe__action_title_position_bottom {
+  max-width: @max-width_Swipe-title_position_bottom;
+}
+
+.controls-Swipe__action_title_size_m {
+  font-size: @font-size_Swipe-title_size_m;
+}
+
+.controls-Swipe__action_title_size_l {
+  font-size: @font-size_Swipe-title_size_l;
+}
+
+.controls-Swipe__separator {
+  background: @background-color_Swipe-separator;
   flex-shrink: 0;
   display: block;
 }
 
-.controls-itemActionsV__separator_vertical {
-  width: @width_itemActions_separator;
-  height: calc(100% ~'-' 2 * @margin_itemActions_separator); //2 тк отсутпы сверху и снизу
-  margin: @margin_itemActions_separator 0;
+.controls-Swipe__separator_vertical {
+  width: @width_Swipe-separator;
+  height: calc(100% ~'-' 2 * @spacing_Swipe-between-vertical-separator-and-border);
+  margin: @spacing_Swipe-between-vertical-separator-and-border @spacing_Swipe-between-vertical-separator-and-icon;
 }
 
-.controls-itemActionsV__separator_horizontal {
-  width: calc(100% ~'-' @margin_itemActions_separator);
-  height: @width_itemActions_separator;
-  margin: 0 @margin_itemActions_separator;
+.controls-Swipe__separator_horizontal {
+  width: 100%;
+  height: @width_Swipe-separator;
+  padding-left: @spacing_Swipe-between-horizontal-separator-and-border;
+  padding-right: @spacing_Swipe-between-horizontal-separator-and-border;
+  box-sizing: border-box;
 }
 
-.controls-itemActionsV__separator_horizontal_first {
-  margin: 0 @margin_itemActions_separator 0 0;
-}
-
-.controls-itemActionsV__separator_horizontal_second {
-  margin: 0 0 0 @margin_itemActions_separator;
-}
-.controls-itemActionsV_row {
-  align-items: center;
-}
-.controls-itemActionsV_row,
-.controls-itemActionsV_column {
+.controls-Swipe_row,
+.controls-Swipe_column {
   display: inline-flex;
   height: 100%;
 }
 
-.controls-itemActionsV_column {
-  flex-direction: column;
+.controls-Swipe_row {
+  align-items: center;
 }
 
-.controls-itemActionsV_column_full {
+.controls-Swipe_column {
+  flex-direction: column;
   justify-content: space-evenly;
 }
 
-.controls-itemActionsV__action_title_lonely {
-  height: @font-size_swipe_icon_small;
-  line-height: @font-size_swipe_icon_small;
+.controls-Swipe__action_iconStyle_secondary {
+  color: @color_Swipe-icon_style_secondary;
+}
+
+.controls-Swipe__action_iconStyle_danger {
+  color: @color_Swipe-icon_style_danger;
+}
+
+.controls-Swipe__action_iconStyle_success {
+  color: @color_Swipe-icon_style_success;
+}
+
+.controls-Swipe__action_iconStyle_warning {
+  color: @color_Swipe-icon_style_warning;
 }
 
 /**

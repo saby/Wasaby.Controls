@@ -1,0 +1,8 @@
+<Controls.Grid
+   displayProperty="title"
+   keyProperty="id"
+   source="{{_source}}"
+   columns="{{_columns}}"
+   swipeDirection="column"
+   titlePosition="right"
+   itemActions="{{_itemActions}}" />

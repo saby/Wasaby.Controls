@@ -1,7 +1,7 @@
 export = {
     itemActionsClick: function (self, event, action, itemData, showAll) {
         event.stopPropagation();
-        if (action.isMenu) {
+        if (action._isMenu) {
             self._notify('menuActionsClick', [itemData, event, showAll]);
         } else if (action['parent@']) {
            self._notify('menuActionClick', [itemData, event, action]);

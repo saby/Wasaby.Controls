@@ -394,7 +394,7 @@ define([
          assert.equal(listViewModel.getVersion() - oldVersion, 1);
       });
 
-      it('updateItemActions, isTouch: false', function() {
+      it('updateItemActions', function() {
          var cfg = {
             listModel: listViewModel,
             itemActions: [{
@@ -410,8 +410,7 @@ define([
             itemActionsPosition: 'outside'
          };
          var ctrl = new ItemActionsControl(cfg);
-         ctrl._beforeMount(cfg, {isTouch: {isTouch: false}});
-         ctrl._saveContextObject({isTouch: {isTouch: false}});
+         ctrl._beforeMount(cfg);
          ctrl.saveOptions(cfg);
 
          listViewModel.reset();
@@ -429,43 +428,6 @@ define([
             iconStyle: 'secondary',
             style: 'secondary',
             showType: tUtil.showType.TOOLBAR
-         }], listViewModel._actions[0].showed);
-      });
-
-      it('updateItemActions, isTouch: true', function() {
-         var cfg = {
-            listModel: listViewModel,
-            itemActions: [{
-               id: 0,
-               title: 'first',
-               showType: tUtil.showType.MENU
-            },
-            {
-               id: 1,
-               title: 'second',
-               showType: tUtil.showType.TOOLBAR
-            }],
-            itemActionsPosition: 'outside'
-         };
-         var ctrl = new ItemActionsControl(cfg);
-         ctrl._beforeMount(cfg, {isTouch: {isTouch: true}});
-         ctrl._saveContextObject({isTouch: {isTouch: true}});
-         ctrl.saveOptions(cfg);
-
-         listViewModel.reset();
-         ctrl.updateItemActions(listViewModel.getCurrent().item);
-         assert.deepEqual([{
-            id: 1,
-            title: 'second',
-            iconStyle: 'secondary',
-            style: 'secondary',
-            showType: tUtil.showType.TOOLBAR
-         }, {
-            id: 0,
-            title: 'first',
-            iconStyle: 'secondary',
-            style: 'secondary',
-            showType: tUtil.showType.MENU
          }], listViewModel._actions[0].showed);
       });
    });
@@ -509,7 +471,7 @@ define([
                }
             },
             action = {
-               isMenu: true
+               _isMenu: true
             },
             itemData = {
                item: 'test'

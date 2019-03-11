@@ -606,6 +606,7 @@ var _private = {
                     nativeEvent: context ? childEvent.nativeEvent : false
                 });
                 self._menuIsShown = true;
+                self._forceUpdate();
             });
         }
     },

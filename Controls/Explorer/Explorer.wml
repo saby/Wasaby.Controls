@@ -13,7 +13,6 @@
                                     header="{{content.header}}"
                                     name="treeControl"
                                     viewName="{{_viewName}}"
-                                    swipeViewMode="{{_swipeViewMode}}"
                                     viewModelConstructor="{{_viewModelConstructor}}"
                                     leftPadding="{{_leftPadding}}"
                                     itemTemplate="{{_viewMode==='tile' ? _options.tileItemTemplate : _options.itemTemplate}}"

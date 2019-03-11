@@ -1,9 +1,13 @@
 define([
-   'Controls/List/Swipe/SwipeControl',
-   'Controls/List/ItemActions/Utils/Actions'
+   'Controls/_list/Swipe/SwipeControl',
+   'Controls/_list/ItemActions/Utils/Actions',
+   'Controls/_list/Swipe/HorizontalMeasurer',
+   'Controls/_list/Swipe/VerticalMeasurer'
 ], function(
    SwipeControl,
-   actionsUtil
+   actionsUtil,
+   HorizontalMeasurer,
+   VerticalMeasurer
 ) {
    describe('Controls.List.Swipe.SwipeControl', function() {
       var instance;
@@ -23,7 +27,7 @@ define([
             setActiveItem: function(item) {
                this.activeItem = item;
             },
-            _nextVersion: function() {
+            nextModelVersion: function() {
                this.version++;
             },
             _nextModelVersion: function() {
@@ -31,50 +35,49 @@ define([
             },
             setItemActions: function(item, itemActions) {
                item.itemActions = itemActions;
+            },
+            subscribe: function() {
+
             }
          };
       }
 
       beforeEach(function() {
-         instance = new SwipeControl();
+         instance = new SwipeControl.default();
       });
 
       afterEach(function() {
          instance = null;
       });
 
-      it('_needShowTitle', function() {
+      it('_needTitle', function() {
+         var testAction = {
+            id: 1,
+            icon: 'icon-PhoneNull',
+            title: 'Прочитано'
+         };
          instance._measurer = {
-            needShowTitle: function(action, type, hasIcon) {
-               assert.equal(action, 1);
-               assert.equal(type, 1);
-               assert.isTrue(hasIcon);
+            needTitle: function(action, titlePosition) {
+               assert.equal(testAction, action);
+               assert.equal('right', titlePosition);
             }
          };
-         instance._needShowTitle(1, 1, true);
+         instance._needTitle(testAction, 'right');
       });
 
-      it('_needShowIcon', function() {
+      it('_needIcon', function() {
+         var testAction = {
+            id: 1,
+            icon: 'icon-PhoneNull',
+            title: 'Прочитано'
+         };
          instance._measurer = {
-            needShowIcon: function(action, direction, hasShowedItemActionWithIcon) {
-               assert.equal(action, 1);
-               assert.equal(direction, 'row');
+            needIcon: function(action, hasShowedItemActionWithIcon) {
+               assert.equal(testAction, action);
                assert.isTrue(hasShowedItemActionWithIcon);
             }
          };
-         instance._needShowIcon(1, 'row', true);
-      });
-
-      it('_needShowSeparator', function() {
-         var itemActions = [1, 2, 3];
-         instance._measurer = {
-            needShowSeparator: function(action, actions, type) {
-               assert.equal(action, 1);
-               assert.equal(actions, itemActions);
-               assert.equal(type, 1);
-            }
-         };
-         instance._needShowSeparator(1, itemActions, 1);
+         instance._needIcon(testAction, true);
       });
 
       it('_onItemActionsClick', function() {
@@ -257,17 +260,49 @@ define([
          });
       });
 
+      describe('_beforeMount', function() {
+         it('should load HorizontalMeasurer', async function() {
+            await instance._beforeMount({
+               swipeDirection: 'row',
+               listModel: mockListModel({})
+            });
+
+            assert.equal(instance._measurer, HorizontalMeasurer.default);
+         });
+
+         it('should load VerticalMeasurer', async function() {
+            await instance._beforeMount({
+               swipeDirection: 'column',
+               listModel: mockListModel({})
+            });
+
+            assert.equal(instance._measurer, VerticalMeasurer.default);
+         });
+      });
+
       describe('_listSwipe', function() {
-         function mockChildEvent(direction) {
+         function mockChildEvent(direction, isActionsContainer) {
             return {
                nativeEvent: {
                   direction: direction
                },
                target: {
                   closest: function(selector) {
-                     if (selector === '.js-controls-SwipeControl__actionsContainer') {
+                     if (selector === '.controls-ListView__itemV') {
                         return {
-                           clientHeight: 1000
+                           clientHeight: 2000,
+                           classList: {
+                              contains: function() {
+                                 return isActionsContainer;
+                              }
+                           },
+                           querySelector: function(selector) {
+                              if (selector === '.js-controls-SwipeControl__actionsContainer') {
+                                 return {
+                                    clientHeight: 1000
+                                 };
+                              }
+                           }
                         };
                      }
                   }
@@ -277,7 +312,9 @@ define([
          var itemData;
          beforeEach(function() {
             itemData = {
-               itemActions: [1, 2, 3, 4, 5],
+               itemActions: {
+                  all: [1, 2, 3, 4, 5]
+               },
                item: {}
             };
          });
@@ -330,24 +367,19 @@ define([
             var
                swipeItem = {},
                swipeConfig = {
-                  type: 1
+                  itemActions: itemData.itemActions
                };
-            instance._animationState = 'close';
-            instance._swipeConfig = {};
             instance.saveOptions({
-               listModel: mockListModel(swipeItem)
+               listModel: mockListModel(swipeItem),
+               itemActionsPosition: 'inside',
+               titlePosition: 'none'
             });
             instance._measurer = {
-               getSwipeConfig: function(itemActions, actionsHeight) {
-                  assert.equal(itemActions, itemData.itemActions);
-                  assert.equal(actionsHeight, 1000);
+               getSwipeConfig: function(itemActions, rowHeight, titlePosition) {
+                  assert.equal(itemActions, itemData.itemActions.all);
+                  assert.equal(rowHeight, 1000);
+                  assert.equal(titlePosition, 'none');
                   return swipeConfig;
-               },
-               initItemsForSwipe: function(itemActions, actionsHeight, swipeType) {
-                  assert.equal(itemActions, itemData.itemActions);
-                  assert.equal(actionsHeight, 1000);
-                  assert.equal(swipeType, 1);
-                  return itemActions;
                }
             };
             instance._listSwipe({}, itemData, mockChildEvent('left'));
@@ -358,11 +390,36 @@ define([
             assert.equal(instance._animationState, 'open');
          });
 
+         it('direction: left', function() {
+            var
+               swipeItem = {},
+               swipeConfig = {
+                  itemActions: itemData.itemActions
+               };
+            instance.saveOptions({
+               listModel: mockListModel(swipeItem),
+               itemActionsPosition: 'inside',
+               titlePosition: 'none'
+            });
+            instance._measurer = {
+               getSwipeConfig: function(itemActions, rowHeight, titlePosition) {
+                  assert.equal(itemActions, itemData.itemActions.all);
+                  assert.equal(rowHeight, 2000);
+                  assert.equal(titlePosition, 'none');
+                  return swipeConfig;
+               }
+            };
+            instance._listSwipe({}, itemData, mockChildEvent('left', true));
+            assert.equal(instance._options.listModel.swipeItem, itemData);
+            assert.equal(instance._options.listModel.activeItem, itemData);
+            assert.equal(instance._swipeConfig, swipeConfig);
+            assert.equal(itemData.item.itemActions, itemData.itemActions);
+            assert.equal(instance._animationState, 'open');
+         });
+
          it('direction: left,itemActionsPosition: outside', function() {
             var
                swipeItem = {};
-            instance._animationState = 'close';
-            instance._swipeConfig = null;
             instance.saveOptions({
                listModel: mockListModel(swipeItem),
                itemActionsPosition: 'outside'
@@ -370,15 +427,12 @@ define([
             instance._measurer = {
                getSwipeConfig: function() {
                   throw new Error('getSwipeConfig shouldn\'t be called if itemActionsPosition === outside');
-               },
-               initItemsForSwipe: function() {
-                  throw new Error('initItemsForSwipe shouldn\'t be called if itemActionsPosition === outside');
                }
             };
             instance._listSwipe({}, itemData, mockChildEvent('left'));
             assert.equal(instance._options.listModel.swipeItem, itemData);
             assert.equal(instance._options.listModel.activeItem, itemData);
-            assert.isNull(instance._swipeConfig);
+            assert.isNotOk(instance._swipeConfig);
             assert.equal(instance._animationState, 'open');
          });
       });
