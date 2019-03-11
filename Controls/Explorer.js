@@ -170,15 +170,13 @@ define('Controls/Explorer', [
             _private.setRoot(this, cfg.root);
          }
       },
-      _dragEndBreadCrumbs: function(event, dragObject) {
-         if (this._hoveredBreadCrumb !== undefined) {
-            this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
-         }
-      },
       _dragHighlighter: function(itemKey) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
       },
-      _documentDragEnd: function() {
+      _documentDragEnd: function(event, dragObject) {
+         if (this._hoveredBreadCrumb !== undefined) {
+            this._notify('dragEnd', [dragObject.entity, this._hoveredBreadCrumb, 'on']);
+         }
          this._dragOnBreadCrumbs = false;
       },
       _documentDragStart: function(event, dragObject) {

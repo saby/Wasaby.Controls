@@ -276,7 +276,7 @@ define(
             let closed = false;
             let opened = false;
             let closeByNodeClick = false;
-   
+
             dropdownController._beforeMount(configLazyLoad);
             dropdownController._items = itemsRecords;
             dropdownController._children.DropdownOpener = {
@@ -287,24 +287,32 @@ define(
                   opened = true;
                }
             };
-            
+
             dropdownController._notify = (e, eventResult) => {
                var item = eventResult[0][0];
-               
+
                assert.equal(e, 'selectedItemsChanged');
-               
-               if (item.get('node')) {
-                  return closeByNodeClick && true;
-               }
+
+               return closeByNodeClick;
             };
-            
+
+            // returned false from handler and no hierarchy
             dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
-            assert.isTrue(closed);
-   
+            assert.isFalse(closed);
+
+            // returned undefined from handler and there is hierarchy
             closed = false;
+            closeByNodeClick = undefined;
             dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isFalse(closed);
-   
+
+            // returned undefined from handler and no hierarchy
+            closed = false;
+            closeByNodeClick = undefined;
+            dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(4)]});
+            assert.isTrue(closed);
+
+            // returned true from handler and there is hierarchy
             closeByNodeClick = true;
             dropdownController._onResult({action: 'itemClick', data: [dropdownController._items.at(5)]});
             assert.isTrue(closed);

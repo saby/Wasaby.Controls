@@ -1,5 +1,5 @@
 <div class="controls-Explorer">
-   <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:dragEnd="_dragEndBreadCrumbs()" on:documentDragEnd="_documentDragEnd()">
+   <Controls.DragNDrop.Controller on:documentDragStart="_documentDragStart()" on:documentDragEnd="_documentDragEnd()">
       <Controls.Explorer._PathController
                                  scope="{{_options}}"
                                  items="{{_breadCrumbsItems}}"
