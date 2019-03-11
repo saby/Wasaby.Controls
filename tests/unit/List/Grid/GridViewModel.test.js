@@ -130,6 +130,165 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             assert.isFalse(!!GridViewModel._private.isNeedToHighlight(item, 'title', ''));
             assert.isTrue(!!GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
          });
+         it('isDrawActions', function() {
+            var
+               testCases = [
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: false,
+                           multiSelectVisibility: 'hidden',
+                           getLastColumnIndex: function() {
+                              return 0;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        colspan: false
+                     },
+                     resultData: false
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'hidden',
+                           getLastColumnIndex: function() {
+                              return 0;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        colspan: false
+                     },
+                     resultData: true
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'hidden',
+                           getLastColumnIndex: function() {
+                              return 1;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        colspan: false
+                     },
+                     resultData: false
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'visible',
+                           getLastColumnIndex: function() {
+                              return 2;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 1
+                        },
+                        colspan: false
+                     },
+                     resultData: false
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'visible',
+                           getLastColumnIndex: function() {
+                              return 2;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 1
+                        },
+                        colspan: true
+                     },
+                     resultData: true
+                  }
+               ];
+            testCases.forEach(function(testCase, idx) {
+               assert.equal(testCase.resultData,
+                  GridViewModel._private.isDrawActions(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan),
+                  'Invalid result data in test #' + idx);
+            });
+         });
+         it('getCellStyle', function() {
+            var
+               testCases = [
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           styleForLadder: 'LADDER_STYLE;',
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: false,
+                        colspan: false
+                     },
+                     resultData: 'LADDER_STYLE;'
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: false,
+                        colspan: false
+                     },
+                     resultData: ''
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           styleForLadder: 'LADDER_STYLE;',
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: false,
+                        colspan: true
+                     },
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           styleForLadder: 'LADDER_STYLE;',
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: true,
+                        colspan: true
+                     },
+                     resultData: 'LADDER_STYLE; colspan: 2'
+                  }
+               ];
+            testCases.forEach(function(testCase, idx) {
+               assert.equal(testCase.resultData,
+                  GridViewModel._private.getCellStyle(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
+                  'Invalid result data in test #' + idx);
+            });
+         });
          it('getPaddingCellClasses', function() {
             var
                paramsWithoutMultiselect = {

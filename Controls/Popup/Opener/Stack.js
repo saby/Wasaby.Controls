@@ -12,6 +12,7 @@ define('Controls/Popup/Opener/Stack',
        * @author Красильников А.С.
        * @category Popup
        * @mixes Controls/Popup/Opener/Stack/StackStyles
+       * @mixes Controls/interface/IOpener
        * @demo Controls-demo/Popup/Opener/StackPG
        * @public
        *

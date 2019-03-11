@@ -1,39 +1,23 @@
-<Controls.Input.resources.InputRender.InputRender
-   name="inputRender"
-   autocomplete="{{_options.autocomplete}}"
-   viewModel="{{_viewModel}}"
-   style="{{_options.style}}"
-   size="{{ _options.size }}"
-   tagStyle="{{_options.tagStyle}}"
-   placeholder="{{_options.placeholder}}"
-   selectOnClick="{{_options.selectOnClick}}"
-   validationErrors="{{_options.validationErrors}}"
-   tooltip="{{_options.tooltip}}"
-   on:focusin="_focusinHandler()"
-   on:valueChanged="_valueChangedHandler()"
-   on:inputCompleted="_inputCompletedHandler()"
->
-   <ws:content>
-      <ws:if data="{{_isAutoWidth()}}">
-         <!--  The input does not know how to adjust its width to the width of the entered text. -->
-         <!--  If we need auto width, then set the width of the input by the parent container. -->
-         <div class="controls-Mask__inputWrapper {{_maskWrapperCss}}">
-            <ws:partial
-               name="input"
-               template="wml!Controls/Input/resources/input"
-               readOnly="{{_options.readOnly}}"
-            />
-         </div>
-         <!-- Fake container that stretches control to the correct width. -->
-         <div class="controls-Mask__stretcher">{{_viewModel.getDisplayValue()}}</div>
-      </ws:if>
-      <ws:else>
-         <ws:partial
-            name="input"
-            template="wml!Controls/Input/resources/input"
-            readOnly="{{_options.readOnly}}"
-         />
-      </ws:else>
-
-   </ws:content>
-</Controls.Input.resources.InputRender.InputRender>
+<div class="controls-Input-Mask">
+    <ws:partial
+         name="Mask"
+         class="controls-Input-Mask__wrapper__{{_isAutoWidth()}}"
+         template="{{_baseTemplate}}"
+         _renderStyle="{{_renderStyle}}"
+         _options="{{_options}}"
+         _tooltip="{{_tooltip}}"
+         _viewModel="{{_viewModel}}"
+         _multiline="{{_multiline}}"
+         _fieldName="{{_fieldName}}"
+         _readOnlyField="{{_readOnlyField}}"
+         _field="{{_field}}"
+         _type="{{_type}}"
+         _hidePlaceholderUsingCSS="{{_hidePlaceholderUsingCSS}}"
+         _isEdge="{{_isEdge}}"
+         _beforeFieldWrapper="{{_beforeFieldWrapper}}"
+         _afterFieldWrapper="{{_afterFieldWrapper}}"
+     />
+    <!-- It is necessary to move the extender inside the base control dom tree so as not to duplicate the margins on it. -->
+    <!-- https://online.sbis.ru/opendoc.html?guid=14d9022b-16a7-4e9f-bb3d-4fd57409d641 -->
+    <div class="controls-Input-Mask__stretcher controls-InputBase__field_theme_{{_options.theme}}_margin">{{_viewModel.displayValue}}</div>
+</div>

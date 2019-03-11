@@ -54,7 +54,17 @@ define([
          ];
          source = new sourceLib.Memory({
             idProperty: 'id',
-            data: data
+            data: data,
+            filter: function (item, filter) {
+               var result = true;
+      
+               if (filter['id'] && filter['id'] instanceof Array) {
+                  result = filter['id'].indexOf(item.get('id')) !== -1;
+               }
+      
+               return result;
+            }
+   
          });
          rs = new collection.RecordSet({
             idProperty: 'id',
@@ -1787,7 +1797,7 @@ define([
                   }
                }
             ];
-         it('showActionsMenu context', function() {
+         it('showActionsMenu context', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1828,21 +1838,16 @@ define([
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.isTrue(itemData.contextEvent);
+                     assert.equal(callBackCount, 3);
+                     done();
                   }
                }
             };
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            setTimeout(function() {
-               assert.equal(itemData, instance._listViewModel._activeItem);
-               assert.isTrue(itemData.contextEvent);
-               assert.equal(callBackCount, 3);
-            }, 100);
-
-            // dont show by long tap
-            instance._isTouch = true;
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
@@ -2470,6 +2475,42 @@ define([
             return done;
          });
 
+      });
+   
+      it('reloadItem', function() {
+         var filter = {};
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            keyProperty: 'id',
+            source: source,
+            filter: filter
+         };
+         var baseCtrl = new BaseControl(cfg);
+         baseCtrl.saveOptions(cfg);
+      
+         return new Promise(function(resolve) {
+            baseCtrl._beforeMount(cfg).addCallback(function() {
+               baseCtrl.reloadItem(1).addCallback(function(item) {
+                  assert.equal(item.get('id'), 1);
+                  assert.equal(item.get('title'), 'Первый');
+               
+                  baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
+                     assert.isTrue(!!items.getCount);
+                     assert.equal(items.getCount(), 1);
+                     assert.equal(items.at(0).get('id'), 1);
+                     resolve();
+                  });
+               });
+            });
+         });
       });
    });
 });

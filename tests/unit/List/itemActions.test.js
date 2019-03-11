@@ -6,10 +6,11 @@ define([
    'Types/source',
    'Types/entity',
    'Types/collection',
+   'Types/display',
    'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
-], function(ItemActionsControl, source, entity, collection, ListViewModel, aUtil, tUtil) {
+], function(ItemActionsControl, source, entity, collection, display, ListViewModel, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {
       var data, listViewModel, rs, actions;
       beforeEach(function() {
@@ -290,7 +291,21 @@ define([
                ctrl = new ItemActionsControl(cfg),
                oldVersion = listViewModel.getVersion();
             ctrl.saveOptions(cfg);
-            ctrl._onCollectionChange({}, 'collectionChanged');
+            ctrl._onCollectionChange(
+               {},
+               'collectionChanged',
+               collection.IObservable.ACTION_CHANGE,
+               [new display.CollectionItem({
+                  contents: new entity.Record({
+                     rawData: {
+                        id: 1,
+                        title: 'Первый',
+                        type: 1
+                     }
+                  })
+               })]
+            );
+
             assert.equal(1, listViewModel.getVersion() - oldVersion);
          });
 

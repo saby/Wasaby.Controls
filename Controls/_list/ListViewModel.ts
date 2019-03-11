@@ -5,6 +5,9 @@ import ItemsViewModel = require('Controls/List/ItemsViewModel');
 import entityLib = require('Types/entity');
 import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
+import { Object as EventObject } from 'Env/Event';
+import { IObservable } from 'Types/collection';
+import { CollectionItem } from 'Types/display';
 
 /**
  *
@@ -366,11 +369,21 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     _setEditingItemData: function(itemData) {
+        const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
         if (itemData && itemData.item) {
             this.setMarkedKey(itemData.item.get(this._options.keyProperty));
         }
-        this._onCollectionChange();
+        this._onCollectionChange(
+           new EventObject('oncollectionchange', this._display),
+           IObservable.ACTION_CHANGE,
+           [new CollectionItem({
+              contents: data.item
+           })],
+           data.index,
+           [],
+           0
+        );
         this._nextModelVersion();
     },
 
