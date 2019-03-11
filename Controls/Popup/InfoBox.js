@@ -133,7 +133,8 @@ define('Controls/Popup/InfoBox',
                style: self._options.style,
                floatCloseButton: self._options.floatCloseButton || self._options.float,
                eventHandlers: {
-                  onResult: self._resultHandler
+                  onResult: self._resultHandler,
+                  onClose: self._closeHandler
                },
                templateOptions: {
                   template: self._options.templateName || self._options.template,
@@ -154,6 +155,7 @@ define('Controls/Popup/InfoBox',
 
          _beforeMount: function(options) {
             this._resultHandler = this._resultHandler.bind(this);
+            this._closeHandler = this._closeHandler.bind(this);
             if (options.float) {
                Env.IoC.resolve('ILogger').warn('InfoBox', 'Используется устаревшя опция float, используйте floatCloseButton');
             }
@@ -294,6 +296,10 @@ define('Controls/Popup/InfoBox',
                   // Удалить, как будет сделана задача https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
                   this._opened = false;
             }
+         },
+
+         _closeHandler: function() {
+            this._opened = false;
          },
 
          _scrollHandler: function() {
