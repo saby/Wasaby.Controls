@@ -16,7 +16,7 @@
                attr:class="{{currentColumn.column.align ? ' controls-Grid__row-cell__content_halign_' + currentColumn.column.align : ''}}{{itemData.isRightSwiped ? ' controls-ListView__item_rightSwipeAnimation'}}"
                ladderWrapper="{{currentColumn.ladderWrapper}}"
                itemData="{{currentColumn}}" />
-   <ws:if data="{{itemData.getLastColumnIndex() === currentColumn.columnIndex && itemData.drawActions}}">
+   <ws:if data="{{itemData.isDrawActions(itemData, currentColumn, colspan)}}">
       <ws:if data="{{itemData.isSwiped}}">
          <ws:partial template="{{swipeTemplate}}" itemData="{{itemData}}" itemActionsTemplate="{{itemActionsTemplate}}"/>
       </ws:if>
@@ -63,7 +63,7 @@
                              {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                              {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-     attr:style="{{(currentColumn.styleForLadder ? currentColumn.styleForLadder:'')+((colspan || colspanCurrentNode) && currentColumn.columnIndex+''===(itemData.multiSelectVisibility !== 'hidden' ? '1' : '0') ? 'grid-column: ' + (itemData.multiSelectVisibility !== 'hidden' ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
+     attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}">
    <ws:partial template="columnContentWrapper"/>
 </div>
 </ws:template>
@@ -73,7 +73,7 @@
                              {{!!itemData.isDragging ? ' controls-ListView__item_dragging'}}
                              {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                              controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-                       style="{{(currentColumn.styleForLadder ? currentColumn.styleForLadder:'')+((colspan || colspanCurrentNode) && currentColumn.columnIndex+'' ===(itemData.multiSelectVisibility !== 'hidden' ? '1' : '0') ? 'grid-column: ' + (itemData.multiSelectVisibility !== 'hidden' ? '2' : '1') + ' / ' + (itemData.columns.length + 1) : '') }}">
+                       attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}">
    <ws:partial template="columnContentWrapper"/>
 </Controls.StickyHeader>
 </ws:template>
@@ -84,7 +84,7 @@
                             {{!!itemData.dragTargetNode ? ' js-controls-TreeView__dragTargetNode'}}
                             {{(marker !== false && itemData.markerVisibility !== 'hidden' && itemData.isSelected && itemData.columnIndex === 0)?' controls-Grid__row-cell_selected__first'}}
                             controls-TreeGrid__row js-controls-SwipeControl__actionsContainer"
-    attr:style="{{((colspan || colspanCurrentNode) && itemData.columnIndex===(itemData.multiSelectVisibility ? 1 : 0) ? 'colspan: ' + (itemData.multiSelectVisibility ? itemData.columns.length - 2 : itemData.columns.length - 1) : '')}}">
+    attr:style="{{itemData.getCellStyle(itemData, currentColumn, colspan || colspanCurrentNode, itemData.isNotFullGridSupport)}}">
    <ws:partial template="columnContent" attr:class="{{currentColumn.hiddenForLadder ? 'controls-Grid__row-cell__content_hiddenForLadder'}}"/>
    <div if="{{!!itemData.dragTargetNode}}" class="controls-TreeGridView__dragTargetNode {{itemData.columnIndex === 0 ? 'controls-TreeGridView__dragTargetNode_first'}}
                         {{itemData.columnIndex === itemData.getLastColumnIndex() ? 'controls-TreeGridView__dragTargetNode_last'}}"></div>
