@@ -254,8 +254,8 @@ define('Controls/Selector/Lookup/_Lookup', [
          return lastRowCollectionWidth > availableWidth || !allItemsInOneRow;
       },
 
-      isNeedUpdate: function(itemsCount, multiLine, readOnly, maxVisibleItems) {
-         return multiLine || !readOnly || itemsCount > maxVisibleItems;
+      isNeedUpdate: function(multiSelect, itemsCount, multiLine, readOnly, maxVisibleItems) {
+         return multiSelect && (multiLine || !readOnly || itemsCount > maxVisibleItems);
       }
    };
 
@@ -278,8 +278,10 @@ define('Controls/Selector/Lookup/_Lookup', [
             value: options.value
          });
 
-         //The first rendering takes place before the calculation sizes, so only in read mode
-         if (options.readOnly) {
+         // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
+         if (!options.multiSelect) {
+            this._maxVisibleItems = 1;
+         } else if (options.readOnly) {
             if (options.multiLine) {
                this._maxVisibleItems = options.maxVisibleItems;
             } else {
@@ -297,7 +299,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);
 
-            if (_private.isNeedUpdate(itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
+            if (_private.isNeedUpdate(this._options.multiSelect, itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
                this._forceUpdate();
             }
          }
