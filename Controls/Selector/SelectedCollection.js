@@ -24,12 +24,19 @@ define('Controls/Selector/SelectedCollection',
        * @author Капустин И.А.
        */
 
+      var CLICKABLE_CLASS = 'controls-SelectedCollection__item__caption-clickable';
+
       var _private = {
-         onResult: function(eventType, item) {
+         onResult: function(eventType, item, mouseEvent) {
             if (eventType === 'crossClick') {
                this._notify('crossClick', [item]);
             } else if (eventType === 'itemClick') {
                this._notify('itemClick', [item]);
+
+               // If the items are clickable, close the pop-up when click on a collection item
+               if ([].indexOf.call(mouseEvent.target.classList, CLICKABLE_CLASS) !== -1) {
+                  this._children.infoBox.close();
+               }
             }
          },
 
@@ -117,11 +124,11 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _itemClick: function(event, item) {
-            this._notify('itemClick', [item]);
+            this._notify('itemClick', [item, event]);
          },
 
          _crossClick: function(event, index) {
-            this._notify('crossClick', [this._visibleItems[index]]);
+            this._notify('crossClick', [this._visibleItems[index], event]);
          },
 
          _openInfoBox: function(event, config) {

@@ -24,13 +24,13 @@ define('Controls/Selector/SelectedCollection/Popup',
             }
          },
 
-         _itemClick: function(event, item) {
-            this._options.clickCallback('itemClick', item);
+         _itemClick: function(event, item, mouseEvent) {
+            this._options.clickCallback('itemClick', item, mouseEvent);
          },
 
-         _crossClick: function(event, item) {
+         _crossClick: function(event, item, mouseEvent) {
             this._items.remove(item);
-            this._options.clickCallback('crossClick', item);
+            this._options.clickCallback('crossClick', item, mouseEvent);
          }
       });
 
