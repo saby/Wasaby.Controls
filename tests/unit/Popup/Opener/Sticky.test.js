@@ -24,6 +24,35 @@ define(
             height: 1040
          });
 
+         function getPositionConfig() {
+            return {
+               revertPositionStyle: true,
+               corner: {
+                  vertical: 'top',
+                  horizontal: 'left'
+               },
+               align: {
+                  vertical: {
+                     side: 'top',
+                     offset: 0
+                  },
+                  horizontal: {
+                     side: 'right',
+                     offset: 0
+                  }
+               },
+               config: {},
+               sizes: {
+                  width: 200,
+                  height: 200,
+                  margins: {
+                     top: 0,
+                     left: 0
+                  }
+               }
+            };
+         }
+
          it('Simple sticky', () => {
             var position = StickyStrategy.getPosition({
                corner: {
@@ -352,6 +381,133 @@ define(
 
             assert.isTrue(position.top === 400);
             assert.isTrue(position.left === -190);
+         });
+
+         it ('Sticky [new position]', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            let cfg = getPositionConfig();
+
+            // 1 position
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 200);
+            assert.equal(position.bottom, 800);
+            assert.equal(Object.keys(position).length, 2);
+
+            // 2 position
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.align.vertical.side = 'bottom';
+
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 400);
+            assert.equal(position.top, 200);
+            assert.equal(Object.keys(position).length, 2);
+
+            // 3 position
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'bottom';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 600);
+            assert.equal(position.top, 400);
+            assert.equal(Object.keys(position).length, 2);
+
+            // 4 position
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 800);
+            assert.equal(position.bottom, 600);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+         it ('Sticky [new position] with margins', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            let cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.align.vertical.side = 'bottom';
+            cfg.sizes.margins.top = 10;
+            cfg.sizes.margins.left = 10;
+
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 410);
+            assert.equal(position.top, 210);
+            assert.equal(Object.keys(position).length, 2);
+
+            cfg = getPositionConfig();
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+            cfg.sizes.margins.top = 10;
+            cfg.sizes.margins.left = 10;
+            cfg.sizes.width = 100;
+            cfg.sizes.height = 100;
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 810);
+            assert.equal(position.bottom, 610);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+         it ('Sticky [new position] revert position', () => {
+            let cfg = getPositionConfig();
+            cfg.sizes.height = 400;
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 200);
+            assert.equal(position.top, 400);
+            assert.equal(Object.keys(position).length, 2);
+
+            cfg = getPositionConfig();
+            cfg.sizes.width = 400;
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 400);
+            assert.equal(position.bottom, 600);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+         it ('Sticky [new position] location strategy fixed', () => {
+            let cfg = getPositionConfig();
+            cfg.locationStrategy = 'fixed';
+            cfg.sizes.height = 400;
+            let position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.left, 200);
+            assert.equal(position.bottom, 800);
+            assert.equal(position.height, 200);
+            assert.equal(Object.keys(position).length, 3);
+
+            cfg = getPositionConfig();
+            cfg.locationStrategy = 'fixed';
+            cfg.sizes.width = 400;
+            cfg.corner.horizontal = 'left';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'top';
+            cfg.align.horizontal.side = 'left';
+
+            position = StickyStrategy.getPosition(cfg, targetCoords);
+            assert.equal(position.right, 800);
+            assert.equal(position.bottom, 600);
+            assert.equal(position.width, 200);
+            assert.equal(Object.keys(position).length, 3);
          });
       });
    }
