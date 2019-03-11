@@ -5,7 +5,7 @@
 </ws:template>
 
 <ws:template name="defaultContentTpl">
-   <div class="controls-TileView__itemContent
+   <div attr:class="controls-TileView__itemContent
                {{!!itemData.isActive ? ' controls-TileView__item_active'}}
                {{!!itemData.isSwiped ? ' controls-TileView__item_swiped'}}
                {{itemData.isHovered ? ' controls-TileView__item_hovered'}}
