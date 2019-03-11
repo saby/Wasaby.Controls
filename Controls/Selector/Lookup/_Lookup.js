@@ -190,7 +190,8 @@ define('Controls/Selector/Lookup/_Lookup', [
                _counterWidth: counterWidth
             }),
             _items: items,
-            _visibleItems: visibleItems
+            _visibleItems: visibleItems,
+            _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth
          });
 
          if (newOptions.multiLine) {
