@@ -51,6 +51,7 @@ define([
          assert.deepEqual(async.loadedSync, ["myTemplate"]);
          assert.deepEqual(async.pushedToHeadData, []);
          assert.equal(async.optionsForComponent.opt, '123');
+         assert.equal(async.currentTemplateName, 'myTemplate');
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
       });
       it('Loading synchronous server-side', function() {
@@ -67,11 +68,13 @@ define([
       });
       it('Loading asynchronous', function(done) {
          var promiseResult = async._loadContentAsync(async._options.templateName, {opt: '123'});
+         assert.isUndefined(async.currentTemplateName);
          assert.equal(async.canUpdate, false);
          promiseResult.then(function(res) {
             assert.isTrue(async.canUpdate);
             assert.deepEqual(async.loadedAsync, ["myTemplate"]);
             assert.equal(async.optionsForComponent.opt, '123');
+            assert.equal(async.currentTemplateName, 'myTemplate');
             assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
             assert.isTrue(res);
             assert.equal(async.fuCnt, 1);
@@ -96,6 +99,7 @@ define([
          promiseResult.then(function(res) {
             assert.isTrue(async.canUpdate);
             assert.isUndefined(async.optionsForComponent.opt);
+            assert.isUndefined(async.currentTemplateName);
             assert.isUndefined(async.optionsForComponent.resolvedTemplate);
             assert.isFalse(res);
             assert.equal(async.error, 'Couldn\'t load module myTemplate Loading error');
@@ -103,8 +107,9 @@ define([
          });
       });
       it('Update content', function() {
-         async._updateOptionsForComponent('myTemplate', {opt: '123'});
+         async._updateOptionsForComponent('myTemplate', {opt: '123'}, 'myTemplate');
          assert.equal(async.optionsForComponent.opt, '123');
+         assert.equal(async.currentTemplateName, 'myTemplate');
          assert.equal(async.optionsForComponent.resolvedTemplate, 'myTemplate');
       });
       it('Update content no options', function() {
@@ -214,6 +219,7 @@ define([
       it('_beforeUpdate canUpdate true, same templateName', function() {
          async._updateOptionsForComponent('myTemplate', {opt: '123'});
          async._beforeUpdate({templateName: 'myTemplate', templateOptions: { opt: '456'}});
+         async.currentTemplateName = 'myTemplate';
          assert.equal(async.optionsForComponent.opt, '456');
       });
       it('_beforeUpdate canUpdate false', function() {
@@ -228,7 +234,7 @@ define([
          var args;
          var promiseResult;
          async._isLoaded = function() { return true; };
-         async._loadContentSync = function(name) {
+         async._loadContentSync = function() {
             args = arguments;
          };
          async.canUpdate = true;
@@ -259,6 +265,7 @@ define([
          };
          async.canUpdate = true;
          async._options = { templateName: 'myTemplate2', templateOptions: {opt: '456'} };
+         async._updateOptionsForComponent('myTemplate', {opt: '123'}, 'myTemplate');
          async._afterUpdate({ templateName: 'myTemplate', templateOptions: { opt: '123'} });
          assert.equal(args[0], 'myTemplate2');
          assert.equal(args[1].opt, '456');
@@ -266,6 +273,18 @@ define([
          promiseResult.then(function() {
             done();
          });
+      });
+      it('_afterUpdate currentTemplateName already updated', function() {
+         async._isLoaded = function() { return false; };
+         async._methodCalled = 0;
+         async._loadContentAsync = function() {
+            this._methodCalled++;
+         };
+         async.canUpdate = true;
+         async._options = { templateName: 'myTemplate2', templateOptions: {opt: '456'} };
+         async._updateOptionsForComponent('myTemplate2', {opt: '456'}, 'myTemplate2');
+         async._afterUpdate({ templateName: 'myTemplate', templateOptions: { opt: '123'} });
+         assert.equal(async._methodCalled, 0);
       });
    });
 });
