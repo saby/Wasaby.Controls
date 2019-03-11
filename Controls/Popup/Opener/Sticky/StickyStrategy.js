@@ -172,6 +172,10 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          var position = _private.getPosition(popupCfg, targetCoords, direction);
          var positionOverflow = _private.checkOverflow(popupCfg, targetCoords, position, direction);
          if (positionOverflow > 0) {
+            if (popupCfg.locationStrategy === 'fixed') {
+               _private.restrictContainer(position, property, popupCfg, positionOverflow);
+               return position;
+            }
             _private.invertPosition(popupCfg, direction);
 
             var revertPosition = _private.getPosition(popupCfg, targetCoords, direction);
@@ -179,17 +183,21 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             if (revertPositionOverflow > 0) {
                if (positionOverflow < revertPositionOverflow) {
                   _private.invertPosition(popupCfg, direction);
-                  position[property] = popupCfg.sizes[property] - positionOverflow;
+                  _private.restrictContainer(position, property, popupCfg, positionOverflow);
                   return position;
                }
                _private.fixPosition(position, targetCoords);
-               revertPosition[property] = popupCfg.sizes[property] - revertPositionOverflow;
+               _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
                return revertPosition;
             }
             _private.fixPosition(position, targetCoords);
             return revertPosition;
          }
          return position;
+      },
+
+      restrictContainer: function(position, property, popupCfg, overflow) {
+         position[property] = popupCfg.sizes[property] - overflow;
       },
 
       fixPosition: function(position, targetCoords) {
