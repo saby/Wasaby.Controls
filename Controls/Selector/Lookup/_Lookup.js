@@ -380,7 +380,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly || this._infoboxOpened || !this._isInputVisible()) {
+         if (this._infoboxOpened || !this._isInputVisible()) {
             this._suggestState = false;
          }
       },
@@ -394,7 +394,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _isInputVisible: function() {
-         return this._isEmpty() || this._options.multiSelect;
+         return !this._options.readOnly && (this._isEmpty() || this._options.multiSelect);
       },
       
       _openInfoBox: function(event, config) {
