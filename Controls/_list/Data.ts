@@ -1,14 +1,9 @@
-define('Controls/Container/Data',
-   [
-      'Core/Control',
-      'Core/core-instance',
-      'wml!Controls/Container/Data/Data',
-      'Controls/Container/Data/getPrefetchSource',
-      'Controls/Container/Data/ContextOptions',
-      'Core/Deferred'
-   ],
-
-   function(Control, cInstance, template, getPrefetchSource, ContextOptions, Deferred) {
+import Control = require('Core/Control');
+import cInstance = require('Core/core-instance');
+import template = require('wml!Controls/Container/Data/Data');
+import getPrefetchSource = require('Controls/Container/Data/getPrefetchSource');
+import ContextOptions = require('Controls/Container/Data/ContextOptions');
+import Deferred = require('Core/Deferred');
       /**
        * Container component that provides a context field "dataOptions" with necessary data for child containers.
        *
@@ -33,7 +28,7 @@ define('Controls/Container/Data',
        * @cfg {String} Name of the item property that uniquely identifies collection item.
        */
 
-      'use strict';
+      
 
       var CONTEXT_OPTIONS = ['filter', 'navigation', 'keyProperty', 'sorting', 'source', 'prefetchSource', 'items'];
 
@@ -199,5 +194,5 @@ define('Controls/Container/Data',
       });
 
       Data._private = _private;
-      return Data;
-   });
+      export = Data;
+   
