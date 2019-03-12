@@ -174,7 +174,7 @@ define([
 
          lookup._inputValue = lookup._options.value = '';
          lookup._beforeMount({multiLine: true});
-         lookup._beforeUpdate({value: 'Тест'});
+         lookup._beforeUpdate({value: 'test'});
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
          assert.equal(lookup._inputValue, 'test');
