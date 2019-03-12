@@ -10,7 +10,6 @@ define('Controls/Explorer', [
    'Core/core-instance',
    'Env/Env',
    'Controls/Utils/keysHandler',
-   'css!theme?Controls/Explorer/Explorer',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
