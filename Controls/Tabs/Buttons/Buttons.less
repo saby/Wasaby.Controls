@@ -10,7 +10,6 @@
 }
 .controls-Tabs__itemClickableArea {
    min-height: 100%;
-   padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
    .tabs-baseline();
 }
 .controls-Tabs {
@@ -107,6 +106,17 @@
 .controls-Tabs__item_extreme {
    margin-right:0;
    margin-left: 0;
+}
+.controls-Tabs__item_extreme_first {
+   padding-right: @spacing_Tabs-item_default + @border-width_Tabs;
+   padding-left: @spacing_Tabs-item_default;
+}
+.controls-Tabs__item_extreme_last {
+   padding-right: @spacing_Tabs-item_default;
+   padding-left: @spacing_Tabs-item_default + @border-width_Tabs;
+}
+.controls-Tabs__item_default {
+   padding: 0 @spacing_Tabs-item_default + @border-width_Tabs;
 }
 .controls-Tabs_style_primary__item_state_selected {
    &:after {

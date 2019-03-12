@@ -63,6 +63,15 @@ define('Controls/Tabs/Buttons', [
          classes.push('controls-Tabs__item_align_' + (item.get('align') ? item.get('align') : 'right'));
          if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme');
+            if (order === 1 && item.get('align') === 'left') {
+               classes.push('controls-Tabs__item_extreme_first');
+            } else if (item.get('align') !== 'left') {
+               classes.push('controls-Tabs__item_extreme_last');
+            } else {
+               classes.push('controls-Tabs__item_default');
+            }
+         } else {
+            classes.push('controls-Tabs__item_default');
          }
          if (item.get(options.keyProperty) === options.selectedKey) {
             classes.push('controls-Tabs_style_' + modifyToNewStyle + '__item_state_selected');
