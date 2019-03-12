@@ -175,6 +175,14 @@ define(
             assert.equal(config.opener, null);
          });
 
+         it('_prepareConfigFromOldToOldByNewEnvironment', () => {
+            let cfg = {
+               flipWindow: 'vertical'
+            };
+            BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
+            assert.equal(cfg.locationStrategy, 'overflow');
+         });
+
          it('_setSizes', function() {
             BaseOpener._setSizes(config, DropdownExample);
             assert.isTrue(config.autoWidth);
