@@ -430,6 +430,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
    Lookup.getDefaultOptions = function() {
       return {
+         value: '',
          displayProperty: 'title',
          multiSelect: false,
          maxVisibleItems: 7
