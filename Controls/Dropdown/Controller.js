@@ -110,9 +110,9 @@ define('Controls/Dropdown/Controller',
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
-                  
-                  //dropDown must close by default, but user can cancel closing, if returns false from event
-                  //res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
+
+                  // dropDown must close by default, but user can cancel closing, if returns false from event
+                  // res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
                   if (res === true || !(result.data[0].get(this._options.nodeProperty) || res === false)) {
                      this._children.DropdownOpener.close();
                   }
@@ -182,7 +182,10 @@ define('Controls/Dropdown/Controller',
                   },
                   target: self._container,
                   corner: self._options.corner,
-                  opener: self
+                  opener: self,
+
+                  // TODO: https://online.sbis.ru/opendoc.html?guid=b2116aaf-e4f5-46f9-881d-587384a4ec5d
+                  revertPositionStyle: (self._options.revertPositionStyle ? self._options.revertPositionStyle : false)
                };
                self._children.DropdownOpener.open(config, self);
             }

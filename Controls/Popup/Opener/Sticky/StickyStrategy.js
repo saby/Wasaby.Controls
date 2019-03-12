@@ -156,9 +156,9 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          var isHorizontal = direction === 'horizontal';
          if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
             position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
-               targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'];
+               targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'] + popupCfg.align[direction].offset;
          } else {
-            position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'];
+            position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'] + popupCfg.align[direction].offset;
          }
          return position;
       },
