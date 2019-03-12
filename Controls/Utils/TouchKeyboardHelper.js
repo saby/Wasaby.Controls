@@ -65,7 +65,7 @@ define('Controls/Utils/TouchKeyboardHelper', ['Env/Env', 'Env/Event', 'Core/help
          // Для определения того, что клавиатура показалась и нужно на это отреагировать, в application можно проверять,
          // Куда пришел фокус, если это input/textarea/contenteditable, то через emitter/listener сообщать
          // об этом дочерним компонентам. Костыль актуален только для старой страницы, на вдом отключил.
-         if (!isNewEnvironment() && !isVisible && document.activeElement) {
+         if (!isNewEnvironment() && !isVisible && document && document.activeElement) {
             var isInput = document.activeElement.tagName === 'INPUT';
             var isTextArea = document.activeElement.tagName === 'TEXTAREA';
             var isContentEditable = document.activeElement.getAttribute('contenteditable') === 'true';

@@ -3,9 +3,12 @@
  */
 define([
    'Controls/List/ListViewModel',
-   'Types/collection'
+   'Types/collection',
+   'Types/entity'
 ], function(
-   ListViewModel, collection
+   ListViewModel,
+   collection,
+   entity
 ) {
    describe('Controls.List.ListControl.ListViewModel', function() {
       var data;
@@ -182,6 +185,28 @@ define([
          assert.equal(listModel._markedKey, 1, 'Incorrect _markedKey value after setItems.');
          assert.equal(listModel.getMarkedItem(), listModel._display.at(0), 'Incorrect _markedItem after setItems.');
          assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
+      });
+
+      it('setItemActions should not change actions if an item does not exist in display', function() {
+         var
+            cfg = {
+               keyProperty: 'id',
+               markerVisibility: 'visible',
+               markedKey: null
+            },
+            listModel = new ListViewModel(cfg);
+
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
+            idProperty: 'id'
+         }), {
+            all: [],
+            showed: []
+         });
+         assert.equal(0, listModel._actions.length);
       });
 
       it('_updateSelection', function() {

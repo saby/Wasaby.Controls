@@ -578,26 +578,26 @@ define([
       it('virtualScrollCalculation on list change', function() {
          var callBackCount = 0;
          var cfg = {
-               viewName: 'Controls/List/ListView',
-               viewConfig: {
-                  idProperty: 'id'
-               },
-               virtualScrolling: true,
-               viewModelConfig: {
-                  items: [],
-                  idProperty: 'id'
-               },
-               viewModelConstructor: ListViewModel,
-               markedKey: 0,
-               source: source,
-               navigation: {
-                  view: 'infinity'
-               }
-            },
-            instance = new BaseControl(cfg),
-            itemData = {
-               key: 1
-            };
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new BaseControl(cfg),
+             itemData = {
+                key: 1
+             };
 
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
@@ -628,6 +628,48 @@ define([
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, instance.getViewModel()._startIndex);
          assert.equal(5, instance.getViewModel()._stopIndex);
+      });
+
+      it('enterHandler', function () {
+        var notified = false;
+
+         // Without marker
+         BaseControl._private.enterHandler({
+            getViewModel: function () {
+               return {
+                  getMarkedItem: function () {
+                     return null;
+                  }
+               }
+            },
+            _notify: function (e, item, options) {
+               notified = true;
+            }
+         });
+         assert.isFalse(notified);
+
+         var myMarkedItem = {qwe: 123};
+         // With marker
+         BaseControl._private.enterHandler({
+            getViewModel: function () {
+               return {
+                  getMarkedItem: function () {
+                     return {
+                        getContents: function () {
+                           return myMarkedItem;
+                        }
+                     };
+                  }
+               }
+            },
+            _notify: function (e, item, options) {
+               notified = true;
+               assert.equal(e, 'itemClick');
+               assert.deepEqual(item, [myMarkedItem]);
+               assert.deepEqual(options, { bubbling: true });
+            }
+         });
+         assert.isTrue(notified);
       });
 
       it('loadToDirection up', function(done) {

@@ -73,7 +73,7 @@ var _private = {
             self._nodesSourceControllers[nodeKey] = _private.createSourceController(self._options.source, self._options.navigation);
 
             filter[self._options.parentProperty] = nodeKey;
-            self._nodesSourceControllers[nodeKey].load(filter, self._sorting).addCallback(function(list) {
+            self._nodesSourceControllers[nodeKey].load(filter, self._options.sorting).addCallback(function(list) {
                 listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
                 if (self._options.uniqueKeys) {
                     listViewModel.mergeItems(list);
@@ -102,7 +102,7 @@ var _private = {
             listViewModel = self._children.baseControl.getViewModel(),
             nodeKey = dispItem.getContents().getId();
         filter[self._options.parentProperty] = nodeKey;
-        self._nodesSourceControllers[nodeKey].load(filter, self._sorting, 'down').addCallback(function(list) {
+        self._nodesSourceControllers[nodeKey].load(filter, self._options.sorting, 'down').addCallback(function(list) {
             listViewModel.setHasMoreStorage(_private.prepareHasMoreStorage(self._nodesSourceControllers));
             if (self._options.uniqueKeys) {
                 listViewModel.mergeItems(list);

@@ -159,11 +159,9 @@ var _private = {
         _private.setMarkedKey(self, model.getPreviousItemKey(model.getMarkedKey()));
     },
     enterHandler: function(self) {
-        var
-            model = self.getViewModel(),
-            markedKey = model.getMarkedKey();
-        if (markedKey !== null) {
-            self._notify('itemClick', [model.getItemById(markedKey).getContents()], { bubbling: true });
+        let markedItem = self.getViewModel().getMarkedItem();
+        if (markedItem) {
+            self._notify('itemClick', [markedItem.getContents()], { bubbling: true });
         }
     },
     toggleSelection: function(self, event) {
@@ -783,9 +781,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     _pagingCfg: null,
     _pagingVisible: false,
-
-    // TODO пока спорные параметры
-    _sorting: undefined,
 
     _itemTemplate: null,
 

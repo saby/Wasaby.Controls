@@ -80,6 +80,7 @@ define('Controls/Selector/SelectedCollection',
          _counterWidth: 0,
 
          _beforeMount: function(options) {
+            this._getItemMaxWidth = selectedCollectionUtils.getItemMaxWidth;
             this._onResult = _private.onResult.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
