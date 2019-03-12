@@ -1,11 +1,9 @@
-define('Controls/Grid', [
-   'Controls/List',
-   'Controls/List/Grid/GridViewModel',
-   'Controls/List/Grid/GridView',
-   'Controls/List/BaseControl'
-], function(List, GridViewModel) {
+import List = require('Controls/List');
+import GridViewModel = require('Controls/List/Grid/GridViewModel');
+import 'Controls/List/Grid/GridView';
+import 'Controls/List/BaseControl';
 
-   'use strict';
+   
 
    /**
     * Table-looking list. Can load data from data source.
@@ -64,5 +62,5 @@ define('Controls/Grid', [
       };
    };
 
-   return Grid;
-});
+   export = Grid;
+
