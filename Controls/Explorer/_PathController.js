@@ -26,7 +26,8 @@ define('Controls/Explorer/_PathController', [
                   backButtonCaption: ItemsUtil.getPropertyValue(options.items[options.items.length - 1], options.displayProperty),
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
-               width: options.header[0].width
+               width: options.header[0].width,
+               isBreadCrumbs: true
             };
          }
          return newHeader;
