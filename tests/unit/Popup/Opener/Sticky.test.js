@@ -383,6 +383,37 @@ define(
             assert.isTrue(position.left === -190);
          });
 
+         it('Sticky with option locationStrategy=overflow', () => {
+            var position = StickyStrategy.getPosition({
+               locationStrategy: 'overflow',
+               corner: {
+                  vertical: 'top',
+                  horizontal: 'left'
+               },
+               align: {
+                  vertical: {
+                     side: 'top',
+                     offset: 0
+                  },
+                  horizontal: {
+                     side: 'left',
+                     offset: 0
+                  }
+               },
+               config: {},
+               sizes: {
+                  width: 400,
+                  height: 400,
+                  margins: {
+                     top: 0,
+                     left: 10
+                  }
+               }
+            }, targetCoords);
+
+            assert.isTrue(position.top === 0);
+         });
+
          it ('Sticky [new position]', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,

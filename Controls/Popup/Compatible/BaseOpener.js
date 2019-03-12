@@ -177,6 +177,12 @@ function(cMerge,
          }
       },
 
+      _prepareConfigFromOldToOldByNewEnvironment: function(cfg) {
+         if (cfg.flipWindow === 'vertical') {
+            cfg.locationStrategy = 'overflow';
+         }
+      },
+
       _preparePopupCfgFromOldToNew: function(cfg) {
          cfg.templateOptions = cfg.templateOptions || cfg.componentOptions || {};
 
