@@ -38,8 +38,23 @@ define('Controls/Popup/Opener/Notification',
                'Controls/Popup/Compatible/OldNotification',
                config.template
             ], function(BaseOpenerCompat, InformationPopupManager) {
-               InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config), true);
+               if (!self._popup) {
+                  self._popup = [];
+               }
+               self._popup.push(InformationPopupManager.showNotification(BaseOpenerCompat.prepareNotificationConfig(config), true));
             });
+         },
+
+         compatibleClose: function(self) {
+            // Close popup on old page
+            if (!isNewEnvironment()) {
+               if (self._popup) {
+                  for (var i = 0; i < self._popup.length; i++) {
+                     self._popup[i].close();
+                  }
+                  self._popup = [];
+               }
+            }
          }
       };
 
@@ -88,7 +103,13 @@ define('Controls/Popup/Opener/Notification',
             } else {
                _private.compatibleOpen(this, popupOptions);
             }
-         }
+         },
+         close: function() {
+            Notification.superclass.close.apply(this, arguments);
+            _private.compatibleClose(this);
+         },
+
+
       });
 
       Notification.getDefaultOptions = function() {
