@@ -185,7 +185,7 @@ define('Controls/Dropdown/Controller',
                   opener: self,
 
                   // TODO: https://online.sbis.ru/opendoc.html?guid=b2116aaf-e4f5-46f9-881d-587384a4ec5d
-                  revertPositionStyle: (self._options.revertPositionStyle ? self._options.revertPositionStyle : false)
+                  revertPositionStyle: self._options.revertPositionStyle
                };
                self._children.DropdownOpener.open(config, self);
             }
