@@ -295,7 +295,7 @@ define([
             all: [],
             showed: []
          });
-         assert.equal(0, listModel._actions.length);
+         assert.equal(0, Object.keys(listModel._actions).length);
       });
 
       it('_updateSelection', function() {
