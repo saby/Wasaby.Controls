@@ -466,6 +466,9 @@ function(cMerge,
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
             }
+            if (cfg.locationStrategy === 'fixed') {
+               newCfg.dialogOptions.flipWindow = false;
+            }
          }
 
          if (newCfg.hasOwnProperty('maximize')) {
