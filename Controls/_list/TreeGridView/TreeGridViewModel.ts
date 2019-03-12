@@ -72,6 +72,26 @@ var
                 return currentColumn;
             };
 
+            current.getLevelIndentClasses = function (expanderSize, levelIndentSize) {
+                let
+                    sizeEnum = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
+                    resultPaddingSize;
+
+                if (expanderSize && levelIndentSize) {
+                    if (sizeEnum.indexOf(expanderSize) >= sizeEnum.indexOf(levelIndentSize)) {
+                        resultPaddingSize = expanderSize;
+                    } else {
+                        resultPaddingSize = levelIndentSize;
+                    }
+                } else if (!expanderSize && !levelIndentSize) {
+                    resultPaddingSize = 'default';
+                } else {
+                    resultPaddingSize = expanderSize || levelIndentSize;
+                }
+
+                return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
+            };
+
             return current;
         },
         _onNodeRemoved: function (event, nodeId) {
