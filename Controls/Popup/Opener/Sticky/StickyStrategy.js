@@ -98,6 +98,15 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
                if (popupCfg.locationStrategy === 'fixed') {
                   // Reduce the size to fit the popup into the screen
                   size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] - maxOverflowValue;
+               } else if (popupCfg.locationStrategy === 'overflow') {
+                  // todo: переделать на новой схеме
+                  if (direction === 'vertical') {
+                     coordinate -= maxOverflowValue;
+                     if (coordinate < 0) {
+                        size = popupCfg.sizes[direction === 'horizontal' ? 'width' : 'height'] + coordinate;
+                        coordinate = 0;
+                     }
+                  }
                } else {
                   callback(maxOverflowValue);
                }
