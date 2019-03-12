@@ -140,7 +140,33 @@ define([
          model._options.markerVisibility = 'always';
          model.setItems(items);
          assert.equal(1, model._markedKey);
-         model._markedKey = 0;
+      });
+
+      it('should set markerFrom state', function () {
+
+         var
+             items = new collection.RecordSet({
+                rawData: [
+                   { id: 2, title: 'item 2' },
+                   { id: 3, title: 'item 3' }
+                ],
+                idProperty: 'id'
+             }),
+             model = new ListViewModel({
+                keyProperty: 'id',
+                items: new collection.RecordSet({
+                   rawData: [
+                      { id: 1, title: 'item 1' }
+                   ],
+                   idProperty: 'id'
+                }),
+                markerVisibility: 'visible',
+                markedKey: 1
+             });
+
+         model._markedKey = 2;
+         model.setItems(items);
+         assert.equal(2, model._markedKey);
 
       });
 
