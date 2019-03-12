@@ -71,9 +71,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._actions = [];
         ListViewModel.superclass.constructor.apply(this, arguments);
 
-        if (this._items && (cfg.markedKey !== null || cfg.markerVisibility === 'visible')) {
-            this._markedKey = cfg.markedKey;
-            this.updateMarker(cfg.markedKey);
+        if (this._items && cfg.markerVisibility !== 'hidden') {
+            if (cfg.markedKey !== null || cfg.markerVisibility === 'always' || cfg.markerVisibility === 'visible') {
+                this._markedKey = cfg.markedKey;
+                this.updateMarker(cfg.markedKey);
+            }
         }
 
         this._selectedKeys = cfg.selectedKeys || [];
