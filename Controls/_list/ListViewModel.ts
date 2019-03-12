@@ -68,7 +68,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     constructor: function(cfg) {
         var self = this;
-        this._actions = [];
+        this._actions = {};
         ListViewModel.superclass.constructor.apply(this, arguments);
 
         if (this._items && (cfg.markedKey !== null || cfg.markerVisibility === 'visible')) {
@@ -389,9 +389,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setItemActions: function(item, actions) {
         if (item.get) {
-            var itemById = this.getItemById(item.get(this._options.keyProperty));
-            if (itemById) {
-               this._actions[this.getIndexBySourceItem(itemById.getContents())] = actions;
+            const id = item.get(this._options.keyProperty);
+            if (this.getItemById(id, this._options.keyProperty)) {
+               this._actions[id] = actions;
             }
         }
     },
@@ -401,9 +401,8 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     getItemActions: function(item) {
-        var itemById = this.getItemById(ItemsUtil.getPropertyValue(item, this._options.keyProperty));
-        var collectionItem = itemById ? itemById.getContents() : item;
-        return this._actions[this.getIndexBySourceItem(collectionItem)];
+        const id = ItemsUtil.getPropertyValue(item, this._options.keyProperty);
+        return this._actions[id];
     },
 
     updateSelection: function(selectedKeys) {
