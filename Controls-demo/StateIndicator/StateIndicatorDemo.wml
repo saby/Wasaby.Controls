@@ -20,14 +20,10 @@
       <Controls.Input.Number precision="{{0}}" on:valueChanged="changeScale()" bind:value="_scale" />
       <br/>
       <Controls.Label caption="data:"/>
+      <Controls.Input.Text on:valueChanged="changeData0()" bind:value="_data0" />
+      <Controls.Input.Text on:valueChanged="changeData1()" bind:value="_data1" />
+      <Controls.Input.Text on:valueChanged="changeData2()" bind:value="_data2" />
+      <Controls.Input.Text on:valueChanged="changeData3()" bind:value="_data3" />
       <br/>
-      <Controls.Label caption="value:"/>
-      <Controls.Input.Text on:valueChanged="changeValues()" bind:value="_valueStr" />
-      <br/>
-      <Controls.Label caption="className:"/>
-      <Controls.Input.Text on:valueChanged="changeColors()" bind:value="_colorsStr" />
-      <br/>
-      <Controls.Label caption="title:"/>
-      <Controls.Input.Text on:valueChanged="changeTitles()" bind:value="_titlesStr" />     
    </div>
 </div>

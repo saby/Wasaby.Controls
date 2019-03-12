@@ -8,7 +8,14 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
 
 
    function parseData(str){
-      return JSON.parse(str);
+      var dataArray = JSON.parse('['+str+']');   
+      var data = {value: 0, className: "", title: ""};
+      if (dataArray.length === 3){                
+         data.value = typeof dataArray[0] == "number" ? dataArray[0] : 0;
+         data.className = typeof dataArray[1] == "string" ? dataArray[1] : "";
+         data.title = typeof dataArray[2] == "string" ? dataArray[2] : "";
+      }
+      return data;
    };
    function StringToNumArray(str) {
       return str.split(',').map(Number);
@@ -25,14 +32,12 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
          _popupTemplateOptions: {},
          _item:'',
          _eventName: 'no event',
+         _data1:'',
+         _data2:'',
+         _data3:'',
+         _data4:'',
          _data: [],
-         _valueStr: '',
-         _value: [],
          _scale: 10,
-         _titlesStr: '',
-         _titles: [],
-         _colorsStr: '',
-         _colors: [],
 
          _beforeMount: function() {            
             this._data = [
@@ -40,12 +45,11 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
                {value: 36, className: '', title: 'В работе'},
                {value: 2, className: '', title: 'Не выполнено'}
             ];
-            this._value = [25, 36, 2];
-            this._valueStr = this._value.toString();
-            this._colors = ['', '', ''];
-            this._colorsStr = this._colors.toString();
-            this._titles = ['Выполнено', 'В работе', 'Не выполнено'];
-            this._titlesStr = this._titles.toString();
+            this._data0 = '25,"","Выполнено"';
+            this._data1 = '36,"","В работе"';
+            this._data2 = '2,"","Не выполнено"';
+            this._data3 = '';
+
             this._popupTemplateOptions = {data: this._data};
          },
          changeScale: function(e, scale){
@@ -53,68 +57,45 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
             this._eventName = 'ScaleChanged';
          },
 
-         changeValues: function(e, state) {
-            this._value = StringToNumArray(state);
-            this._valueStr = this._value.toString();
-            this._eventName = 'StateChanged';
+         changeData0: function(e, newData){
+            var data = parseData(newData);
             this._data = this._data.slice();
-            for (var i = 0; i < this._value.length; i++){
-               if (this._data[i] == undefined){
-                  this._data.push({value: this._value[i], className:'', title: ''})
-               }
-               else{
-                  this._data[i].value = this._value[i];
-               }
-            };
-
+            this._data[0] = data;
+            this._eventName = 'DataChanged';
+         },        
+         changeData1: function(e, newData){
+            var data = parseData(newData);
+            this._data = this._data.slice();
+            this._data[1] = data;
+            this._eventName = 'DataChanged';
          },
-
-         changeTitles: function(e, titles) {
-            this._titles = StringToStrArray(titles);
-            this._titlesStr = this._titles.toString();
-            this._eventName = 'TitlesChanged';
+         changeData2: function(e, newData){
+            var data = parseData(newData);
             this._data = this._data.slice();
-            for (var i = 0; i < this._titles.length; i++){
-               if (this._data[i] == undefined){
-                  this._data.push({value:0, className:'', title: this._titles[i]})
-               }
-               else{
-                  this._data[i].title = this._titles[i];
-               }
-            };
-
+            this._data[2] = data;
+            this._eventName = 'DataChanged';
          },
-
-         changeColors: function(e, colors) {
-            this._colors = StringToStrArray(colors);
-            this._colorsStr = this._colors.toString();
-            this._eventName = 'ColorsChanged';
+         changeData3: function(e, newData){
+            var data = parseData(newData);
             this._data = this._data.slice();
-            for (var i = 0; i < this._colors.length; i++){
-               if (this._data[i] == undefined){
-                  this._data.push({value: 0, className: this._colors[i], title: ''})
-               }
-               else{
-                  this._data[i].className = this._colors[i];
-               }
-            };
+            this._data[3] = data;
+            this._eventName = 'DataChanged';
          },
 
          reset: function() {
             this._eventName = 'no event';
          },
          
-         _mouseLeaveHandler: function(e){
-            var t=e.nativeEvent.relatedTarget.classList.contains('legend');
-            if (!t)
-            this._notify('closeInfoBox', [], {bubbling: true});
+         _mouseLeaveHandler: function(e){           
+            this._notify('closeInfoBox', [2000], {bubbling: true});
          },
          _mouseEnterHandler: function(e, _item){ 
             var config = {
-               className: 'legend',
-               trigger: 'click',
+               trigger: 'hover',
+               name: 'legend',
                target: _item,
-               position: 'tl',
+               position: 'tc',
+               showDelay: 500,
                template: popupTemplate,
                templateOptions: {data: this._data}
             };

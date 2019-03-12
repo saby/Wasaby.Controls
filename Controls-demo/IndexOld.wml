@@ -309,10 +309,16 @@
          FormController
       </a>
 
-      <h1>Indicator</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FIndicator%252FProgressBar%252FProgressBar">Progress</a>
-
-      <h1>ProcessStateIndicator</h1>
-      <a href="/Controls-demo/app/Controls-demo%252FStateIndicator%252FStateIndicatorDemo">ProcessStateIndicator</a>
+      <h1>Progress</h1>
+      <div>
+         <a href="/Controls-demo/app/Controls-demo%252FIndicator%252FProgressBar%252FProgressBar">
+            Bar
+         </a>   
+      </div>
+      <div>   
+         <a href="/Controls-demo/app/Controls-demo%252FStateIndicator%252FStateIndicatorDemo">
+            StateIndicator
+         </a>
+      </div>
    </div>
 </div>
