@@ -7,8 +7,16 @@ define('Controls/Popup/Compatible/OldNotification',
    function(Control, template) {
       var OldNotification = Control.extend({
          _template: template,
+
+         _afterMount: function() {
+            this._options.waitCallback();
+         },
          _close: function() {
-            this.getParent().close();
+            if (this.getParent && this.getParent()) {
+               this.getParent().close();
+            } else if (this._options.getParent && this._options.getParent()) {
+               this._options.getParent().close();
+            }
          }
       });
 

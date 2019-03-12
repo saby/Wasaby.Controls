@@ -9,6 +9,18 @@ define('Controls/Input/interface/IInputBase', [], function() {
     */
 
    /**
+    * @name Controls/Input/interface/IInputBase#size
+    * @cfg {String} Field size.
+    * @variant s - The size of a small field.
+    * @variant m - The size of a medium field.
+    * @variant l - The size of a large field.
+    * @variant default - The size of a standard field.
+    * @default default
+    * @remark
+    * The size is selected depending on the context of the value in the field.
+    */
+
+   /**
     * @name Controls/Input/interface/IInputBase#fontStyle
     * @cfg {String} Fonts of the text in field.
     * @variant default - Font style in standard field.

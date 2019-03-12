@@ -16,9 +16,7 @@ define('Controls/Input/Base',
 
       'wml!Controls/Input/Base/Base',
       'wml!Controls/Input/Base/Field',
-      'wml!Controls/Input/Base/ReadOnly',
-
-      'css!theme?Controls/Input/Base/Base'
+      'wml!Controls/Input/Base/ReadOnly'
    ],
    function(
       Control, EnvEvent, Env, entity, tmplNotify, isEqual,
@@ -481,7 +479,7 @@ define('Controls/Input/Base',
           * @type {Controls/Input/Render#style}
           * @protected
           */
-         get _style() {
+         get _renderStyle() {
             return this._options.style;
          },
 
@@ -641,7 +639,6 @@ define('Controls/Input/Base',
          _clickHandler: function() {
             if (this._options.selectOnClick && this._firstClick) {
                this._viewModel.select();
-               this._firstClick = false;
             } else {
                var self = this;
 
@@ -660,6 +657,8 @@ define('Controls/Input/Base',
                   self._viewModel.changesHaveBeenApplied();
                });
             }
+
+            this._firstClick = false;
          },
 
          /**
@@ -703,6 +702,23 @@ define('Controls/Input/Base',
             var splitValue = InputUtil.splitValue(value, newValue, position, selection, inputType);
 
             /**
+             * The field is displayed according to the control options.
+             * When user enters data,the display changes and does not match the options.
+             * Therefore, return the field to the state before entering.
+             * Otherwise, the text will blink when the user performs a fast input.
+             * Fast input is pressing multiple keys at the same time or pressing a single key.
+             *
+             * On Android such actions cause bugs. For example:
+             * 1. https://online.sbis.ru/opendoc.html?guid=ce9d1d56-8f33-4e26-8284-157773fc08fd
+             * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
+             * 3. https://online.sbis.ru/doc/d7dcf883-1ebc-4408-8a72-3903f08c2c66
+             * Fast input on Android is carried out, if tap together more than one finger.
+             * A normal user does not enter data with multiple fingers at the same time.
+             * Therefore, the best option is to disable support for fast input on Android.
+             */
+            var isSupportFastInput = !this._isMobileAndroid;
+
+            /**
              * If the user works quickly with a field, the input event fires several times from
              * the last synchronization cycle to the next. Due to the fact that the field always displays
              * the value of the option value, after the second time in the field will be incorrect value.
@@ -713,25 +729,13 @@ define('Controls/Input/Base',
              * synchronization cycle -> field 13(the error should be 123).
              * For such situations to be handled correctly, we need to adjust the data.
              */
-            if (value !== model.displayValue) {
+            if (isSupportFastInput && value !== model.displayValue) {
                _private.adjustDataForFastInput(splitValue, inputType, model.displayValue, model.selection);
             }
 
             _private.handleInput(this, splitValue, inputType);
 
-            /**
-             * The field is displayed according to the control options.
-             * When user enters data,the display changes and does not match the options.
-             * Therefore, return the field to the state before entering.
-             * Otherwise, the text will blink when the user performs a fast input.
-             * Fast input is pressing multiple keys at the same time or pressing a single key.
-             *
-             * On Android such actions cause bugs. For example:
-             * 1. https://online.sbis.ru/opendoc.html?guid=ce9d1d56-8f33-4e26-8284-157773fc08fd
-             * 2. https://online.sbis.ru/opendoc.html?guid=92ce32b2-a6d5-467e-bf34-dbd273ee7c9b
-             * Fast input on Android is not carried out, so do not do these actions on it.
-             */
-            if (!this._isMobileAndroid) {
+            if (isSupportFastInput) {
                _private.updateField(this, value, selection);
             }
          },
@@ -883,7 +887,7 @@ define('Controls/Input/Base',
           * @private
           */
          _getTooltip: function() {
-            var valueDisplayElement = this._getField() || this._getReadOnlyField();
+            var valueDisplayElement = this._options.readOnly ? this._getReadOnlyField() : this._getField();
             var hasFieldHorizontalScroll = this._hasHorizontalScroll(valueDisplayElement);
 
             return hasFieldHorizontalScroll ? this._viewModel.displayValue : this._options.tooltip;
@@ -921,11 +925,13 @@ define('Controls/Input/Base',
          }
       });
 
+      Base._theme = ['Controls/Input/Base/Base'];
+
       Base.getDefaultOptions = function() {
          return {
-            size: 'm',
             tooltip: '',
             style: 'info',
+            size: 'default',
             placeholder: '',
             textAlign: 'left',
             fontStyle: 'default',
@@ -948,7 +954,8 @@ define('Controls/Input/Base',
             size: entity.descriptor(String).oneOf([
                's',
                'm',
-               'l'
+               'l',
+               'default'
             ]),
             fontStyle: entity.descriptor(String).oneOf([
                'default',

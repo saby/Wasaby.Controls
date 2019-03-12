@@ -115,17 +115,19 @@
         on:commitActionClick="_commitEditActionHandler()"
         on:cancelActionClick="_cancelEditActionHandler()"
         on:menuActionsClick="_showActionsMenu()"
+        on:menuActionClick="_showActionMenu()"
         on:itemActionsClick="_notifyHandler('itemActionsClick')"
         toolbarVisibility="{{_options.editingConfig.toolbarVisibility}}"
         name="itemActions"
         style="{{_options.style}}"
         listModel="{{_listViewModel}}"
         menuIsShown="{{_menuIsShown}}"
+        actionMenuIsShown="{{_actionMenuIsShown}}"
         itemActions="{{_options.itemActions}}"
         itemActionVisibilityCallback="{{_options.itemActionVisibilityCallback}}"
         itemActionsProperty="{{_options.itemActionsProperty}}"
         itemActionsPosition="{{_options.itemActionsPosition}}"/>
-    <Controls.List.Swipe.SwipeControl
+    <Controls._list.Swipe.SwipeControl
         ws:content="listView"
         on:menuActionsClick="_showActionsMenu()"
         on:closeSwipe="_closeSwipe()"

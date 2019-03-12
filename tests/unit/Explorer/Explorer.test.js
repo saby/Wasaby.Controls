@@ -231,12 +231,17 @@ define([
          var
             isNotified = false,
             isWeNotified = false,
-            _notify = function(eName) {
+            isNativeClickEventExists = false,
+
+            _notify = function(eName, eArgs) {
                if (eName === 'rootChanged') {
                   isNotified = true;
                }
                if (eName === 'itemClick') {
                   isWeNotified = true;
+                  if (eArgs[1] && eArgs[1].nativeEvent) {
+                     isNativeClickEventExists = true;
+                  }
                }
             };
 
@@ -282,7 +287,7 @@ define([
 
             var
                explorer = new Explorer({}),
-               isPropagationStopped = false;
+               isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
             Explorer._private.setRoot = function(){};
@@ -297,11 +302,18 @@ define([
                   return true;
                },
                getId: function() {}
+            }, {
+               nativeEvent: 123
             });
 
-            assert.isTrue(isNotified);
             assert.isTrue(isPropagationStopped);
+            // Click
             assert.isTrue(isWeNotified);
+            // RootChanged
+            assert.isTrue(isNotified);
+
+            /* https://online.sbis.ru/opendoc.html?guid=3523e32f-2bb3-4ed4-8b0f-cde55cb81f75 */
+            assert.isTrue(isNativeClickEventExists);
          });
 
          it('_onBreadCrumbsClick', function() {
@@ -488,11 +500,6 @@ define([
             assert.isTrue(explorer._dragOnBreadCrumbs);
          });
          it('_documentDragEnd', function() {
-            explorer._dragOnBreadCrumbs = true;
-            explorer._documentDragEnd();
-            assert.isFalse(explorer._dragOnBreadCrumbs);
-         });
-         it('_dragEndBreadCrumbs', function() {
             var
                dragEnrArgs,
                dragEntity = new DragEntity();
@@ -502,12 +509,14 @@ define([
                   dragEnrArgs = args;
                }
             };
+            explorer._dragOnBreadCrumbs = true;
 
-            explorer._dragEndBreadCrumbs({}, {});
+            explorer._documentDragEnd({}, {});
             assert.equal(dragEnrArgs, undefined);
+            assert.isFalse(explorer._dragOnBreadCrumbs);
 
             explorer._hoveredBreadCrumb = 'hoveredItemKey';
-            explorer._dragEndBreadCrumbs({}, {
+            explorer._documentDragEnd({}, {
                entity: dragEntity
             });
             assert.equal(dragEnrArgs[0], dragEntity);

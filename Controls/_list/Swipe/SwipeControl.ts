@@ -1,180 +1,225 @@
 import Control = require('Core/Control');
-import template = require('wml!Controls/_list/Swipe/SwipeControl');
+import * as template from 'wml!Controls/_list/Swipe/SwipeControl';
 import TouchContextField = require('Controls/Context/TouchContextField');
-import aUtil = require('Controls/List/ItemActions/Utils/Actions');
-import Deferred = require('Core/Deferred');
-import entity = require('Types/entity');
-import 'Controls/Utils/Toolbar';
-import 'css!theme?Controls/List/Swipe/Swipe';
+import aUtil = require('Controls/_list/ItemActions/Utils/Actions');
+import 'css!theme?Controls/_list/Swipe/Swipe';
+import { IMeasurer } from './interface/IMeasurer';
+import { IItemAction } from './interface/IItemAction';
+import { ISwipeConfig } from './interface/ISwipeConfig';
+import {
+   ISwipeContext,
+   ISwipeControlOptions,
+   ISwipeEvent,
+   SwipeDirection,
+   TitlePosition
+} from './interface/ISwipeControl';
+import { PickOptionalProperties } from 'Controls/Utils/Types';
+// @ts-ignore
+import { descriptor } from 'Types/entity';
+import { IItemData, IListModel } from 'Controls/_list/interface/IListViewModel';
 
-var MEASURER_NAMES = {
-    tile: 'Controls/List/Swipe/Tile',
-    table: 'Controls/List/Swipe/List'
+const MEASURER_NAMES: Record<SwipeDirection, string> = {
+   row: 'Controls/_list/Swipe/HorizontalMeasurer',
+   column: 'Controls/_list/Swipe/VerticalMeasurer'
 };
 
-var _private = {
-    notifyAndResetSwipe: function (self) {
-        self._swipeConfig = null;
-        self._notify('closeSwipe', [self._options.listModel.getSwipeItem()]);
-        self._options.listModel.setSwipeItem(null);
-        self._options.listModel.setActiveItem(null);
-    },
+export default class SwipeControl extends Control {
+   protected _options: ISwipeControlOptions;
+   private _template: Function = template;
+   private _measurer: IMeasurer;
+   private _swipeConfig: ISwipeConfig;
+   private _animationState: 'close' | 'open' = 'close';
 
-    closeSwipe: function (self, withAnimation) {
-        if (self._animationState === 'open') {
-            self._animationState = 'close';
-            if (withAnimation) {
-                // todo removed by: https://online.sbis.ru/opendoc.html?guid=58959ea6-ca75-4f30-a902-8bc26caf2a8b
-                self._options.listModel._nextModelVersion();
-            } else {
-                _private.notifyAndResetSwipe(self);
-            }
-        }
-    },
+   constructor() {
+      super();
+      this._needTitle = this._needTitle.bind(this);
+      this._needIcon = this._needIcon.bind(this);
+   }
 
-    updateModel: function (self, newOptions) {
-        self.closeSwipe(self);
-        newOptions.listModel.subscribe('onListChange', function () {
-            self.closeSwipe(self);
-        });
-    },
+   private _listSwipe(
+      event: Event,
+      itemData: IItemData,
+      childEvent: ISwipeEvent
+   ): void {
+      if (childEvent.nativeEvent.direction === 'left' && itemData.itemActions) {
+         this._initSwipe(this._options.listModel, itemData, childEvent);
+      } else {
+         this.closeSwipe(true);
+      }
+   }
 
-    initSwipe: function (self, listModel, itemData, childEvent) {
-        var actionsHeight = childEvent.target.closest('.js-controls-SwipeControl__actionsContainer').clientHeight;
-        listModel.setSwipeItem(itemData);
-        listModel.setActiveItem(itemData);
-        if (self._options.itemActionsPosition !== 'outside') {
-            self._swipeConfig = self._measurer.getSwipeConfig(itemData.itemActions, actionsHeight);
-            listModel.setItemActions(itemData.item, self._measurer.initItemsForSwipe(itemData.itemActions, actionsHeight, self._swipeConfig.type));
-        }
-        self._animationState = 'open';
-    }
-};
+   private _onAnimationEnd(): void {
+      if (this._animationState === 'close') {
+         this._notifyAndResetSwipe();
+      }
+   }
 
-var SwipeControl = Control.extend({
-    _template: template,
-    _swipeConfig: null,
+   private _needIcon(
+      action: IItemAction,
+      hasShowedItemActionWithIcon: boolean
+   ): boolean {
+      return this._measurer.needIcon(action, hasShowedItemActionWithIcon);
+   }
 
-    constructor: function () {
-        SwipeControl.superclass.constructor.apply(this, arguments);
-        this._needShowSeparator = this._needShowSeparator.bind(this);
-        this._needShowTitle = this._needShowTitle.bind(this);
-        this._needShowIcon = this._needShowIcon.bind(this);
-    },
+   private _needTitle(
+      action: IItemAction,
+      titlePosition: TitlePosition
+   ): boolean {
+      return this._measurer.needTitle(action, titlePosition);
+   }
 
-    _beforeMount: function (newOptions) {
-        var
-            def = new Deferred(),
-            self = this;
-        if (newOptions.listModel) {
-            _private.updateModel(this, newOptions);
-        }
-        require([MEASURER_NAMES[newOptions.swipeViewMode]], function (result) {
-            self._measurer = result;
-            def.callback();
-        });
-        return def;
-    },
+   private _notifyAndResetSwipe(): void {
+      this._swipeConfig = null;
+      this._notify('closeSwipe', [this._options.listModel.getSwipeItem()]);
+      this._options.listModel.setSwipeItem(null);
+      this._options.listModel.setActiveItem(null);
+   }
 
-    _beforeUpdate: function (newOptions, context) {
-        var self = this;
-        if (this._swipeConfig && context.isTouch && !context.isTouch.isTouch) {
-            _private.closeSwipe(this);
-        }
-        if (
-            newOptions.itemActions &&
-            this._options.itemActions !== newOptions.itemActions
-        ) {
-            _private.closeSwipe(this);
-        }
-        if (
-            newOptions.listModel &&
-            this._options.listModel !== newOptions.listModel
-        ) {
-            _private.updateModel(this, newOptions);
-        }
+   private _updateModel(newOptions: ISwipeControlOptions): void {
+      this.closeSwipe();
+      newOptions.listModel.subscribe('onListChange', () => {
+         this.closeSwipe();
+      });
+   }
 
-        if (this._options.swipeViewMode !== newOptions.swipeViewMode) {
-            // TODO: убрать определение measurer после того, как стандарты свайпа в плитке и в списках сделают одинаковыми.
-            // Поручение: https://online.sbis.ru/opendoc.html?guid=fe815afd-db06-476a-ac50-d9a647a84cd3
-            require([MEASURER_NAMES[newOptions.swipeViewMode]], function (result) {
-                self._measurer = result;
-                self._forceUpdate();
-            });
-        }
-    },
+   private _getActionsHeight(target: HTMLElement): number {
+      const listItem = target.closest('.controls-ListView__itemV');
 
-    _listSwipe: function (event, itemData, childEvent) {
-        if (
-            childEvent.nativeEvent.direction === 'left' &&
-            itemData.itemActions
-        ) {
-            _private.initSwipe(this, this._options.listModel, itemData, childEvent);
-        } else {
-            _private.closeSwipe(this, true);
-        }
-    },
+      /**
+       * Sometimes an item is larger that the area available for actions (e.g. a tile with a title) and the user can accidentally swipe outside of the actions container.
+       * So we can't use closest to find a container.
+       */
+      if (
+         listItem.classList.contains(
+            'js-controls-SwipeControl__actionsContainer'
+         )
+      ) {
+         return listItem.clientHeight;
+      } else {
+         return listItem.querySelector(
+            '.js-controls-SwipeControl__actionsContainer'
+         ).clientHeight;
+      }
+   }
 
+   private _initSwipe(
+      listModel: IListModel,
+      itemData: IItemData,
+      childEvent: ISwipeEvent
+   ): void {
+      const actionsHeight = this._getActionsHeight(childEvent.target);
+      listModel.setSwipeItem(itemData);
+      listModel.setActiveItem(itemData);
+      if (this._options.itemActionsPosition !== 'outside') {
+         this._swipeConfig = this._measurer.getSwipeConfig(
+            itemData.itemActions.all,
+            actionsHeight,
+            this._options.titlePosition
+         );
+         listModel.setItemActions(itemData.item, this._swipeConfig.itemActions);
+      }
+      this._animationState = 'open';
+   }
 
-    _listDeactivated: function () {
-        _private.closeSwipe(this);
-    },
+   private _onItemActionsClick(
+      event: Event,
+      action: IItemAction,
+      itemData: IItemData
+   ): void {
+      aUtil.itemActionsClick(this, event, action, itemData, true);
+   }
 
-    _listClick: function () {
-        _private.closeSwipe(this);
-    },
+   private _listClick(): void {
+      this.closeSwipe();
+   }
 
-    _needShowSeparator: function (action, itemActions, type) {
-        return this._measurer.needShowSeparator(action, itemActions, type);
-    },
+   private _listDeactivated(): void {
+      this.closeSwipe();
+   }
 
-    _needShowIcon: function (action, direction, hasShowedItemActionWithIcon) {
-        return this._measurer.needShowIcon(action, direction, hasShowedItemActionWithIcon);
-    },
+   _beforeMount(newOptions: ISwipeControlOptions): Promise<void> {
+      this._updateModel(newOptions);
+      return import(MEASURER_NAMES[newOptions.swipeDirection]).then(
+         (result) => {
+            this._measurer = result.default;
+         }
+      );
+   }
 
-    _needShowTitle: function (action, type, hasIcon) {
-        return this._measurer.needShowTitle(action, type, hasIcon);
-    },
+   _beforeUpdate(
+      newOptions: ISwipeControlOptions,
+      context: ISwipeContext
+   ): void {
+      if (
+         this._swipeConfig &&
+         context &&
+         context.isTouch &&
+         !context.isTouch.isTouch
+      ) {
+         this.closeSwipe();
+      }
+      if (
+         newOptions.itemActions &&
+         this._options.itemActions !== newOptions.itemActions
+      ) {
+         this.closeSwipe();
+      }
+      if (
+         newOptions.listModel &&
+         this._options.listModel !== newOptions.listModel
+      ) {
+         this._updateModel(newOptions);
+      }
 
-    _onItemActionsClick: function (event, action, itemData) {
-        aUtil.itemActionsClick(this, event, action, itemData, true);
-    },
+      if (this._options.swipeDirection !== newOptions.swipeDirection) {
+         import(MEASURER_NAMES[newOptions.swipeDirection]).then((result) => {
+            this._measurer = result;
+            this._forceUpdate();
+         });
+      }
+   }
 
-    closeSwipe: function () {
-        _private.closeSwipe(this);
-    },
+   _beforeUnmount(): void {
+      this._swipeConfig = null;
+      this._measurer = null;
+   }
 
-    _onAnimationEnd: function () {
-        if (this._animationState === 'close') {
-            _private.notifyAndResetSwipe(this);
-        }
-    },
+   closeSwipe(withAnimation: boolean = false): void {
+      if (this._animationState === 'open') {
+         this._animationState = 'close';
+         if (withAnimation) {
+            this._options.listModel.nextModelVersion();
+         } else {
+            this._notifyAndResetSwipe();
+         }
+      }
+   }
 
-    _beforeUnmount: function () {
-        this._measurer = null;
-        this._swipeConfig = null;
-    }
-});
+   static getOptionTypes(): Record<keyof ISwipeControlOptions, object> {
+      return {
+         listModel: descriptor(Object).required(),
+         /**
+          * TODO: itemActions should be required, but it would break lists without them because SwipeControl always gets created.
+          * Make SwipeControl async after this: https://online.sbis.ru/opendoc.html?guid=515423be-194b-4655-aba9-bba005c2e5c6
+          */
+         itemActions: descriptor(Array),
+         itemActionsPosition: descriptor(String).oneOf(['inside', 'outside']),
+         swipeDirection: descriptor(String).oneOf(['row', 'column']),
+         titlePosition: descriptor(String).oneOf(['right', 'bottom', 'none'])
+      };
+   }
 
-SwipeControl.getDefaultOptions = function () {
-    return {
-        swipeViewMode: 'table'
-    };
-};
+   static contextTypes(): ISwipeContext {
+      return {
+         isTouch: TouchContextField
+      };
+   }
 
-SwipeControl.getOptionTypes = function () {
-    return {
-        swipeViewMode: entity.descriptor(String).oneOf([
-            'table',
-            'tile'
-        ])
-    };
-};
-
-SwipeControl.contextTypes = function contextTypes() {
-    return {
-        isTouch: TouchContextField
-    };
-};
-
-export = SwipeControl;
+   static getDefaultOptions(): PickOptionalProperties<ISwipeControlOptions> {
+      return {
+         swipeDirection: 'row',
+         titlePosition: 'none',
+         itemActionsPosition: 'inside'
+      };
+   }
+}

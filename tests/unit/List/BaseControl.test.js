@@ -54,7 +54,17 @@ define([
          ];
          source = new sourceLib.Memory({
             idProperty: 'id',
-            data: data
+            data: data,
+            filter: function (item, filter) {
+               var result = true;
+      
+               if (filter['id'] && filter['id'] instanceof Array) {
+                  result = filter['id'].indexOf(item.get('id')) !== -1;
+               }
+      
+               return result;
+            }
+   
          });
          rs = new collection.RecordSet({
             idProperty: 'id',
@@ -137,6 +147,35 @@ define([
                done();
             }, 100);
          }, 1);
+      });
+
+      it('beforeMount: right indexes with virtual scroll and receivedState', function () {
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            navigation: {
+               view: 'infinity'
+            },
+            virtualScrolling: true,
+            viewModelConstructor: ListViewModel,
+            source: source
+         };
+         var ctrl = new BaseControl(cfg);
+         ctrl.saveOptions(cfg);
+         return new Promise(function (resolve, reject) {
+            ctrl._beforeMount(cfg,null, [{id:1, title: 'qwe'}]);
+            setTimeout(function () {
+               assert.equal(ctrl.getViewModel().getStartIndex(), 0);
+               assert.equal(ctrl.getViewModel().getStopIndex(), 1);
+               resolve();
+            }, 10);
+         });
       });
 
       it('_private::getSortingOnChange', function() {
@@ -581,6 +620,14 @@ define([
          assert.equal(1, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, instance.getVirtualScroll().ItemsIndexes.start);
          assert.equal(1, instance.getVirtualScroll().ItemsIndexes.stop);
+
+         vm.getCount = function() {
+            return 5;
+         };
+         vm._notify('onListChange', 'collectionChanged', collection.IObservable.ACTION_RESET, [1,2,3,4,5], 0, [1], 0);
+         assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
+         assert.equal(0, instance.getViewModel()._startIndex);
+         assert.equal(5, instance.getViewModel()._stopIndex);
       });
 
       it('loadToDirection up', function(done) {
@@ -1750,7 +1797,7 @@ define([
                   }
                }
             ];
-         it('showActionsMenu context', function() {
+         it('showActionsMenu context', function(done) {
             var callBackCount = 0;
             var cfg = {
                   viewName: 'Controls/List/ListView',
@@ -1791,21 +1838,16 @@ define([
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
                      assert.equal(args.templateOptions.nodeProperty, 'parent@');
+                     assert.equal(itemData, instance._listViewModel._activeItem);
+                     assert.isTrue(itemData.contextEvent);
+                     assert.equal(callBackCount, 3);
+                     done();
                   }
                }
             };
 
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
-            setTimeout(function() {
-               assert.equal(itemData, instance._listViewModel._activeItem);
-               assert.isTrue(itemData.contextEvent);
-               assert.equal(callBackCount, 3);
-            }, 100);
-
-            // dont show by long tap
-            instance._isTouch = true;
             instance._showActionsMenu(fakeEvent, itemData, childEvent, false);
          });
 
@@ -2433,6 +2475,42 @@ define([
             return done;
          });
 
+      });
+   
+      it('reloadItem', function() {
+         var filter = {};
+         var cfg = {
+            viewName: 'Controls/List/ListView',
+            viewConfig: {
+               keyProperty: 'id'
+            },
+            viewModelConfig: {
+               items: [],
+               keyProperty: 'id'
+            },
+            viewModelConstructor: ListViewModel,
+            keyProperty: 'id',
+            source: source,
+            filter: filter
+         };
+         var baseCtrl = new BaseControl(cfg);
+         baseCtrl.saveOptions(cfg);
+      
+         return new Promise(function(resolve) {
+            baseCtrl._beforeMount(cfg).addCallback(function() {
+               baseCtrl.reloadItem(1).addCallback(function(item) {
+                  assert.equal(item.get('id'), 1);
+                  assert.equal(item.get('title'), 'Первый');
+               
+                  baseCtrl.reloadItem(1, null, true, 'query').addCallback(function(items) {
+                     assert.isTrue(!!items.getCount);
+                     assert.equal(items.getCount(), 1);
+                     assert.equal(items.at(0).get('id'), 1);
+                     resolve();
+                  });
+               });
+            });
+         });
       });
    });
 });

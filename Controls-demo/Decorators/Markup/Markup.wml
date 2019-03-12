@@ -15,7 +15,7 @@
          <Controls.Input.Text bind:value="_newParamValue"
                               attr:id="ControlsDemo-Markup__newParamValue"
                               placeholder="значение" />
-         <Controls.Button
+         <Controls.buttons:Button
                on:click="_applyNewResolverParam()"
                attr:id="ControlsDemo-Markup__applyNewParam"
                caption="Подтвердить" />
@@ -30,7 +30,7 @@
          <Controls.Label name="myLabel3" caption="json массив: {{ strJson }}" />
          <Controls.Label name="myLabel4" caption="резолвер: {{ tagResolverName }}" />
          <Controls.Label name="myLabel5" caption="параметры резолвера: {{ objectToStr(resolverParams) }}" />
-         <Controls.Button on:click="_applyJson()"
+         <Controls.buttons:Button on:click="_applyJson()"
                           attr:id="ControlsDemo-Markup__finalApply"
                           caption="Подтвердить все введённые данные" />
       </div>

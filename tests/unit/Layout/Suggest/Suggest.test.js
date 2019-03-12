@@ -489,6 +489,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
             footerTemplate: 'anyTp',
             suggestState: true,
             value: '',
+            trim: true,
             searchParam: 'testSearchParam',
             minSearchLength: 3
          };
@@ -509,6 +510,10 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.equal(suggestComponent._filter, null);
          assert.equal(suggestComponent._suggestMarkedKey, null);
    
+         suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: '   '});
+         assert.equal(suggestComponent._filter, null);
+         assert.equal(suggestComponent._searchValue, '');
+         
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl', value: 'test'});
          assert.deepEqual(suggestComponent._filter, {testSearchParam: 'test'});
          assert.equal(suggestComponent._searchValue, 'test');

@@ -110,7 +110,7 @@ var StateIndicator = Control.extend(
 
 StateIndicator.getDefaultOptions = function getDefaultOptions() {
    return {
-      theme: "default"
+      theme: "default",
       numSectors: 10,
       numValues: 1,
       state: [0],

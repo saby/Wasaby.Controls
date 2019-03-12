@@ -1,6 +1,6 @@
 <div class="controls-PeriodDialog__header">
    <!--<div class="controls-PeriodDialog__stateButton-wrapper">-->
-      <Controls.Button
+      <Controls.buttons:Button
          if="{{_yearStateEnabled}}"
          attr:class="controls-PeriodDialog__stateButton"
          style="secondary"
@@ -42,7 +42,7 @@
       </div>
    </div>
 
-   <Controls.Button
+   <Controls.buttons:Button
       if="{{_homeButtonVisible}}"
       style="secondary"
       viewMode="link"
@@ -52,7 +52,7 @@
       icon="icon-size icon-small icon-Home3 icon-primary"
    />
    <!--<div class="controls-DateRangeBigChoose__header-date-pickers">-->
-   <Controls.Button
+   <Controls.buttons:Button
       viewMode="toolButton"
       transparent="{{true}}"
       style="success"

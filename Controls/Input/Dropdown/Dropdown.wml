@@ -21,8 +21,9 @@
         dataLoadCallback="{{_setText}}"
         theme="{{_options.theme}}"
         on:selectedItemsChanged="_selectedItemsChangedHandler()"
-        attr:class="controls-Dropdown {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid'}} theme_{{_options.theme}}">
+        attr:class="controls-Dropdown_theme_{{_options.theme}} {{_options.style === 'invalid' ? 'controls-Dropdown-style_invalid_theme_' + _options.theme}}">
    <ws:partial template="{{_options.contentTemplate || _defaultContentTemplate}}"
+               item="{{_item}}"
                icon="{{_icon}}"
                text="{{_text}}"
                class="{{!_options.readOnly ? 'controls-Dropdown__' + (_isEmptyItem ? 'emptyItem' : 'defaultItem') + ' controls-Dropdown__text_enabled'}} theme_{{_options.theme}}"/>

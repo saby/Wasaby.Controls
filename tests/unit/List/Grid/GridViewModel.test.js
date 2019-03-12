@@ -118,37 +118,6 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
       });
 
       describe('"_private" block', function() {
-         it('isLayoutFixed', function() {
-            var
-               columns1 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   }
-               ],
-               columns2 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  {}
-               ],
-               columns3 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  { width: 'auto'  }
-               ],
-               columns4 = [
-                  { width: '1fr'   },
-                  { width: '100px' },
-                  { width: '30%'   },
-                  { width: 'auto'  },
-                  {}
-               ];
-            assert.isTrue(GridViewModel._private.isLayoutFixed(columns1));
-            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns2));
-            assert.isTrue(!GridViewModel._private.isLayoutFixed(columns3));
-            assert.isTrue(GridViewModel._private.isLayoutFixed(columns4));
-         });
          it('isNeedToHighlight', function() {
             var item = new entity.Model({
                rawData: {
@@ -160,6 +129,165 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
             assert.isFalse(!!GridViewModel._private.isNeedToHighlight(item, 'title', 'xxx'));
             assert.isFalse(!!GridViewModel._private.isNeedToHighlight(item, 'title', ''));
             assert.isTrue(!!GridViewModel._private.isNeedToHighlight(item, 'title', 'tes'));
+         });
+         it('isDrawActions', function() {
+            var
+               testCases = [
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: false,
+                           multiSelectVisibility: 'hidden',
+                           getLastColumnIndex: function() {
+                              return 0;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        colspan: false
+                     },
+                     resultData: false
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'hidden',
+                           getLastColumnIndex: function() {
+                              return 0;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        colspan: false
+                     },
+                     resultData: true
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'hidden',
+                           getLastColumnIndex: function() {
+                              return 1;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        colspan: false
+                     },
+                     resultData: false
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'visible',
+                           getLastColumnIndex: function() {
+                              return 2;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 1
+                        },
+                        colspan: false
+                     },
+                     resultData: false
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           drawActions: true,
+                           multiSelectVisibility: 'visible',
+                           getLastColumnIndex: function() {
+                              return 2;
+                           }
+                        },
+                        currentColumn: {
+                           columnIndex: 1
+                        },
+                        colspan: true
+                     },
+                     resultData: true
+                  }
+               ];
+            testCases.forEach(function(testCase, idx) {
+               assert.equal(testCase.resultData,
+                  GridViewModel._private.isDrawActions(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan),
+                  'Invalid result data in test #' + idx);
+            });
+         });
+         it('getCellStyle', function() {
+            var
+               testCases = [
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           styleForLadder: 'LADDER_STYLE;',
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: false,
+                        colspan: false
+                     },
+                     resultData: 'LADDER_STYLE;'
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: false,
+                        colspan: false
+                     },
+                     resultData: ''
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           styleForLadder: 'LADDER_STYLE;',
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: false,
+                        colspan: true
+                     },
+                     resultData: 'LADDER_STYLE; grid-column: 1 / 3'
+                  },
+                  {
+                     inputData: {
+                        itemData: {
+                           multiSelectVisibility: 'hidden',
+                           columns: [{}, {}]
+                        },
+                        currentColumn: {
+                           styleForLadder: 'LADDER_STYLE;',
+                           columnIndex: 0
+                        },
+                        isNotFullGridSupport: true,
+                        colspan: true
+                     },
+                     resultData: 'LADDER_STYLE; colspan: 2'
+                  }
+               ];
+            testCases.forEach(function(testCase, idx) {
+               assert.equal(testCase.resultData,
+                  GridViewModel._private.getCellStyle(testCase.inputData.itemData, testCase.inputData.currentColumn, testCase.inputData.colspan, testCase.inputData.isNotFullGridSupport),
+                  'Invalid result data in test #' + idx);
+            });
          });
          it('getPaddingCellClasses', function() {
             var
@@ -363,6 +491,37 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                GridViewModel._private.getItemColumnCellClasses(current, current.columnIndex),
                'Incorrect value "GridViewModel._private.getPaddingCellClasses(params)".');
 
+
+         });
+         it('should update last item after append items', function () {
+            var
+                gridViewModel = new GridViewModel(cfg),
+                oldLastIndex = gridViewModel.getCount()-1,
+                firstItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(0)),
+                lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex)),
+                newLastItem;
+
+            // first item should have updated version identificator
+            assert.isTrue(firstItem.getVersion().indexOf('LAST_ITEM') === -1);
+
+            // last item should have updated version identificator
+            assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') !== -1);
+
+            gridViewModel.appendItems(new collection.RecordSet({
+               idProperty: 'id',
+               rawData: [
+                  { id: 121212, title: 'i0'},
+                  { id: 231313, title: 'i1'}
+               ]
+            }));
+
+            // old last item now must be updated and shouldn't have prefix "LAST_ITEM" in version identificator
+            lastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(oldLastIndex));
+            assert.isTrue(lastItem.getVersion().indexOf('LAST_ITEM') === -1);
+
+            // last item should have updated version identificator
+            newLastItem = gridViewModel.getItemDataByItem(gridViewModel._model._display.at(gridViewModel.getCount()-1));
+            assert.isTrue(newLastItem.getVersion().indexOf('LAST_ITEM') !== -1);
 
          });
          it('getItemColumnCellClasses', function() {
@@ -788,7 +947,7 @@ define(['Controls/List/Grid/GridViewModel', 'Core/core-merge', 'Types/collection
                   },
                   {
                      title: 'second',
-                     width: '100%'
+                     width: 'auto'
                   },
                   {
                      title: 'third',

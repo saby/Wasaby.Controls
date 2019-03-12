@@ -1459,6 +1459,11 @@
               "horizontal": "Horizontal orientation of the panel. History block is displayed on the right."
             }
           },
+          "applyButtonCaption" : {
+            "type": "String",
+            "title": "Caption of apply button",
+            "default": "Отобрать"
+          },
           "headingCaption": {
             "default": "Отбираются",
             "title": "Text heading.",

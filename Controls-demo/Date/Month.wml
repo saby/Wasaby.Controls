@@ -8,13 +8,13 @@
          <Controls.Date.Month month="{{_month}}" bind:startValue="_startValue" bind:endValue="_endValue" showCaption="{{true}}" selectionType="range"/>
          <div>
             <span>startValue: </span>
-            <Controls.Button caption="-1 день" on:click="_clickHandler(-1)"/>
-            <Controls.Button caption="+1 день" on:click="_clickHandler(1)"/>
+            <Controls.buttons:Button caption="-1 день" on:click="_clickHandler(-1)"/>
+            <Controls.buttons:Button caption="+1 день" on:click="_clickHandler(1)"/>
          </div>
          <div>
             <span>Отображаемый месяц: </span>
-            <Controls.Button caption="-1 месяц" on:click="_changeMonth(-1)"/>
-            <Controls.Button caption="+1 месяц" on:click="_changeMonth(1)"/>
+            <Controls.buttons:Button caption="-1 месяц" on:click="_changeMonth(-1)"/>
+            <Controls.buttons:Button caption="+1 месяц" on:click="_changeMonth(1)"/>
          </div>
       </div>
    </div>

@@ -1,4 +1,4 @@
-define(['Controls/Button'], function (Button) {
+define(['Controls/buttons'], function (buttons) {
    'use strict';
 
    var btn;
@@ -6,7 +6,7 @@ define(['Controls/Button'], function (Button) {
    describe('Controls.Button', function () {
       describe('private cssStyleGeneration', function () {
          beforeEach(function () {
-            btn = new Button({
+            btn = new buttons.Button({
                style: 'buttonDefault'
             });
          });
@@ -21,8 +21,8 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'secondary' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'link');
          });
 
          it('style linkMain2',function () {
@@ -31,8 +31,8 @@ define(['Controls/Button'], function (Button) {
                size: 'l'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'info' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
          it('style linkMain3',function () {
@@ -41,8 +41,8 @@ define(['Controls/Button'], function (Button) {
                size: 'default'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'info' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional',function () {
@@ -51,8 +51,8 @@ define(['Controls/Button'], function (Button) {
                size: 's'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'info' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'info' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional2',function () {
@@ -61,8 +61,8 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'default' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'default' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional3',function () {
@@ -71,8 +71,8 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'danger' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'danger' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional4',function () {
@@ -81,8 +81,8 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'success' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'success' && fakeThis._viewMode === 'link');
          });
 
          it('style linkAdditional5',function () {
@@ -91,8 +91,8 @@ define(['Controls/Button'], function (Button) {
                size: 'xl'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'magic' && fakeThis._viewMode === 'link');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'magic' && fakeThis._viewMode === 'link');
          });
 
          it('style buttonPrimary',function () {
@@ -101,8 +101,8 @@ define(['Controls/Button'], function (Button) {
                size: 'default'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'primary' && fakeThis._viewMode === 'button');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
          });
 
          it('style buttonDefault',function () {
@@ -111,8 +111,8 @@ define(['Controls/Button'], function (Button) {
                size: 'big'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'secondary' && fakeThis._viewMode === 'button');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'secondary' && fakeThis._viewMode === 'button');
          });
 
          it('style buttonAdd',function () {
@@ -121,20 +121,20 @@ define(['Controls/Button'], function (Button) {
                size: 'default'
             };
             var fakeThis = {};
-            Button.prototype.cssStyleGeneration.call(fakeThis, opt);
-            assert(fakeThis._style === 'primary' && fakeThis._viewMode === 'button');
+            buttons.Button.prototype.cssStyleGeneration.call(fakeThis, opt);
+            assert(fakeThis._buttonStyle === 'primary' && fakeThis._viewMode === 'button');
          });
       });
       describe('constructor() and _beforeUpdate()', function() {
          var optionsCorrect = false;
          function redefinitionCssStyleGeneration() {
-            var original = Button.prototype.cssStyleGeneration;
-            Button.prototype.cssStyleGeneration = function(options) {
+            var original = buttons.Button.prototype.cssStyleGeneration;
+            buttons.Button.prototype.cssStyleGeneration = function(options) {
                if (options.style === 'test' && options.size === 'size') {
                   optionsCorrect = true;
                }
             };
-            Button.prototype.cssStyleGeneration.original = original;
+            buttons.Button.prototype.cssStyleGeneration.original = original;
          }
 
          it('constructor', function() {
@@ -143,7 +143,7 @@ define(['Controls/Button'], function (Button) {
                style: 'test',
                size: 'size'
             };
-            Button.prototype._beforeMount(opt);
+            buttons.Button.prototype._beforeMount(opt);
             assert(optionsCorrect);
          });
 
@@ -153,12 +153,12 @@ define(['Controls/Button'], function (Button) {
                style: 'test',
                size: 'size'
             };
-            Button.prototype._beforeUpdate(opt);
+            buttons.Button.prototype._beforeUpdate(opt);
             assert(optionsCorrect);
          });
 
          afterEach(function () {
-            Button.prototype.cssStyleGeneration = Button.prototype.cssStyleGeneration.original;
+            buttons.Button.prototype.cssStyleGeneration = buttons.Button.prototype.cssStyleGeneration.original;
          });
       });
       describe('click', function () {
@@ -168,7 +168,7 @@ define(['Controls/Button'], function (Button) {
             customEvent.stopPropagation = function () {
                eventBublle = false;
             };
-            btn = new Button({
+            btn = new buttons.Button({
                style: 'buttonDefault'
             });
          }

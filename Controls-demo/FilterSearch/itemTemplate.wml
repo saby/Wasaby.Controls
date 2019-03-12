@@ -1,5 +1,7 @@
 <ws:template name="owner">
-    <Controls.Input.Dropdown bind:selectedKeys="item.value" keyProperty='lastName' displayProperty='title' source='{{item.source}}'/>
+    <Controls.Container.Adapter.SelectedKey bind:selectedKey="item.value">
+        <Controls.Input.Dropdown keyProperty='lastName' displayProperty='title' source='{{item.source}}'/>
+    </Controls.Container.Adapter.SelectedKey>
 </ws:template>
 
 

@@ -1,5 +1,6 @@
 import TreeViewModel = require('Controls/List/Tree/TreeViewModel');
 import GridViewModel = require('Controls/List/Grid/GridViewModel');
+import { TreeItem } from 'Types/display';
 
 var
     TreeGridViewModel = GridViewModel.extend({
@@ -29,6 +30,9 @@ var
         },
         setRoot: function (root) {
             this._model.setRoot(root);
+        },
+        getRoot(): TreeItem {
+           return this._model.getRoot();
         },
         setNodeFooterTemplate: function (nodeFooterTemplate) {
             this._model.setNodeFooterTemplate(nodeFooterTemplate);

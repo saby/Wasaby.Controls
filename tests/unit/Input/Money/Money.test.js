@@ -40,6 +40,9 @@ define(
                ctrl._beforeMount({
                   value: ''
                });
+               ctrl._readOnlyField.scope.options = {
+                  theme: 'default'
+               };
                ctrl._readOnlyField.template = TemplateUtil.clearTemplate(ctrl._readOnlyField.template);
             });
             it('Empty value', function() {

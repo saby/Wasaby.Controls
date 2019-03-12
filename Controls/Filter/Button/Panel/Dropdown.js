@@ -7,15 +7,7 @@ define('Controls/Filter/Button/Panel/Dropdown', [
     * Input for selection from the list of options with cross.
     *
     * @class Controls/Filter/Button/Panel/Dropdown
-    * @extends Core/Control
-    * @mixes Controls/interface/ISource
-    * @mixes Controls/interface/IItemTemplate
-    * @mixes Controls/Input/interface/IValidation
-    * @mixes Controls/interface/IMultiSelectable
-    * @mixes Controls/Input/interface/IDropdownEmptyText
-    * @mixes Controls/Input/interface/IInputDropdown
-    * @mixes Controls/interface/IDropdown
-    * @mixes Controls/interface/ITextValue
+    * @extends Control/Input/Dropdown
     * @control
     * @public
     * @author Герасимов А.М.
@@ -39,6 +31,12 @@ define('Controls/Filter/Button/Panel/Dropdown', [
       }
 
    });
+
+   FilterDropdown.getDefaultOptions = function() {
+      return {
+         displayProperty: 'title'
+      };
+   };
 
    return FilterDropdown;
 });

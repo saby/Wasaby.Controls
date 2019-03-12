@@ -25,6 +25,10 @@
       "path": "%cd%/node_modules/sbis3-ws/ws"
     },
     {
+      "name": "I18n",
+      "path": "%cd%/node_modules/saby-i18n/I18n"
+    },
+    {
       "name": "Lib",
       "path": "%cd%/node_modules/sbis3-ws/ws/lib"
     },

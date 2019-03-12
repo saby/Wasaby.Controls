@@ -46,24 +46,6 @@ define(
             assert.equal(calcReplacer(' ', 'd\\*'), '');
          });
 
-         describe('_valueChangedHandler', function() {
-            it('should generate valueChanged event', function() {
-               const
-                  sandbox = sinon.sandbox.create(),
-                  component = testUtils.createComponent(Mask, { value: '1234', mask: 'dd:dd' });
-               sandbox.stub(component, '_notify');
-               component._valueChangedHandler(null, '1234', '12.34');
-               sinon.assert.calledWith(component._notify, 'valueChanged');
-            });
-            it('should generate inputCompleted event', function() {
-               const
-                  sandbox = sinon.sandbox.create(),
-                  component = testUtils.createComponent(Mask, { value: '1234', mask: 'dd:dd' });
-               sandbox.stub(component, '_notify');
-               component._inputCompletedHandler(null, '1234', '12.34');
-               sinon.assert.calledWith(component._notify, 'inputCompleted');
-            });
-         });
       });
    }
 );
