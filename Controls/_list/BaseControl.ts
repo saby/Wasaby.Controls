@@ -562,6 +562,15 @@ var _private = {
         });
     },
 
+    mockTarget(target: HTMLElement): {
+       getBoundingClientRect: () => ClientRect
+    } {
+        const clientRect = target.getBoundingClientRect();
+        return {
+            getBoundingClientRect: () => clientRect
+        };
+    },
+
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         var
             context = event.type === 'itemcontextmenu',
@@ -574,6 +583,13 @@ var _private = {
             : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
                 return action.showType !== tUtil.showType.TOOLBAR;
             });
+        /**
+         * During an opening of a menu, a row can get wrapped in a HoC and it would cause a full redraw of the row,
+         * which would remove the target from the DOM.
+         * So, we have to save target's ClientRect here in order to work around it.
+         * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
+         */
+        const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
             var
                 rs = new collection.RecordSet({ rawData: showActions });
@@ -584,7 +600,7 @@ var _private = {
             require(['css!Controls/Toolbar/ToolbarPopup'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
-                    target: !context ? childEvent.target : false,
+                    target,
                     templateOptions: {
                         items: rs,
                         keyProperty: 'id',
