@@ -149,7 +149,7 @@ define('Controls/Dropdown/resources/template/DropdownList',
             if (newOptions.items) {
                this._listModel = new DropdownViewModel({
                   items: newOptions.items,
-                  rootKey: newOptions.rootKey || null,
+                  rootKey: newOptions.rootKey !== undefined ? newOptions.rootKey : null,
                   selectedKeys: newOptions.selectedKeys,
                   keyProperty: newOptions.keyProperty,
                   additionalProperty: newOptions.additionalProperty,
