@@ -80,14 +80,6 @@ define(
             assert.isTrue(suggest._suggestState);
          });
 
-         it('_beforeUpdate new value', function() {
-            let newConfig = Clone(config);
-            newConfig.value = 'Test text';
-            let suggest = getSuggest(config);
-            suggest._beforeUpdate(newConfig);
-            assert.equal(suggest._simpleViewModel.getDisplayValue(), newConfig.value);
-         });
-
          it('_beforeUpdate new selectedKey', function(done) {
             let newConfig = Clone(config);
             newConfig.selectedKey = '3';
