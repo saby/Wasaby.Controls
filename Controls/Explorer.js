@@ -10,14 +10,14 @@ define('Controls/Explorer', [
    'Core/core-instance',
    'Env/Env',
    'Controls/Utils/keysHandler',
+   'css!theme?Controls/Explorer/Explorer',
    'Controls/List/TreeTileView/TreeTileView',
    'Controls/List/TreeGridView/TreeGridView',
    'Controls/List/SearchView',
    'Controls/List/TreeControl',
    'Types/entity',
    'Controls/TreeGrid',
-   'Controls/BreadCrumbs/Path',
-   'css!Controls/Explorer/Explorer'
+   'Controls/BreadCrumbs/Path'
 ], function(
    Control,
    template,
