@@ -44,9 +44,9 @@ define('Controls/Selector/Lookup/_Lookup', [
          self._notify('valueChanged', [value]);
       },
 
-      updateModel: function(self, value) {
+      updateModel: function(self) {
          self._simpleViewModel.updateOptions({
-            value: value
+            value: self._inputValue
          });
       },
 
@@ -263,6 +263,7 @@ define('Controls/Selector/Lookup/_Lookup', [
    var Lookup = Control.extend({
       _template: template,
       _notifyHandler: tmplNotify,
+      _inputValue: '',
       _suggestState: false,
       _simpleViewModel: null,
       _availableWidthCollection: null,
@@ -275,6 +276,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       _needSetFocusInInput: false,
 
       _beforeMount: function(options) {
+         this._inputValue = options.value;
          this._simpleViewModel = new BaseViewModel({
             value: options.value
          });
@@ -312,7 +314,11 @@ define('Controls/Selector/Lookup/_Lookup', [
             isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
             listOfDependentOptions = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'];
 
-         _private.updateModel(this, newOptions.value);
+         if (newOptions.value !== this._options.value && newOptions.value !== this._inputValue) {
+            this._inputValue = newOptions.value;
+         }
+
+         _private.updateModel(this);
 
          if (!isNeedUpdate) {
             listOfDependentOptions.forEach(function(optName) {
@@ -354,6 +360,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          this._notify('addItem', [item]);
 
          if (this._simpleViewModel.getValue() !== '') {
+            this._inputValue = '';
             _private.notifyValue(this, '');
          }
 
