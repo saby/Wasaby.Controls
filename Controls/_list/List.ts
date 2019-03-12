@@ -58,8 +58,9 @@ var ListControl = Control.extend(/** @lends Controls/List.prototype */{
         return this._children.listControl.reload();
     },
 
-    reloadItem: function (key, readMeta, direction) {
-        return this._children.listControl.reloadItem(key, readMeta, direction);
+    reloadItem: function():Deferred {
+        var listControl = this._children.listControl;
+        return listControl.reloadItem.apply(listControl, arguments);
     },
 
     beginEdit: function (options) {

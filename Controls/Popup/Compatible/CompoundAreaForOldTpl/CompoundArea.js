@@ -92,6 +92,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._className += ' controls-CompoundArea-close_button';
             }
 
+            this.subscribeTo(EnvEvent.Bus.channel('navigation'), 'onBeforeNavigate', this._onBeforeNavigate.bind(this));
+
             this._childControlName = _options.template;
 
             /**
@@ -135,6 +137,12 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
             }
             return false;
+         },
+
+         _onBeforeNavigate: function(event, activeElement, isIconClick) {
+            if (!isIconClick) {
+               this.close();
+            }
          },
 
          _changeMaximizedMode: function(event) {
@@ -718,9 +726,6 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
          },
          isAllReady: function() {
             return DialogRecord.prototype.isAllReady.apply(this, arguments);
-         },
-         getChildControls: function() {
-            return DialogRecord.prototype.getChildControls.apply(this, arguments);
          },
          getReports: function() {
             return DialogRecord.prototype.getReports.apply(this, arguments);

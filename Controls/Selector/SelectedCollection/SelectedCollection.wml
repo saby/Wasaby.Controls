@@ -14,7 +14,7 @@
    </ws:if>
    <ws:for data="index, item in _visibleItems">
       <ws:partial
-              attr:style="{{index === 0 && _items.length > _options.maxVisibleItems ? 'max-width: calc(100% - ' + _counterWidth + 'px);'}}"
+              attr:style="max-width: {{_getItemMaxWidth(index, _items.length, _options.maxVisibleItems, _options.itemsLayout, _counterWidth)}}"
               attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
               template="{{_options.itemTemplate}}"
               item="{{item}}"

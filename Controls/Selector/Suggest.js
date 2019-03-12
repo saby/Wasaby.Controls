@@ -74,13 +74,14 @@ define('Controls/Selector/Suggest',
                   return items;
                });
             } else {
-               _private.createViewModel(this, options.value || '');
+               _private.createViewModel(this, '');
             }
          },
 
          _changeValueHandler: function(event, value) {
             if (value !== this._value) {
                _private.updateValue(this, value);
+               this._notify('selectedKeyChanged', [null]);
                this._notify('valueChanged', [value]);
             }
          },
@@ -95,9 +96,6 @@ define('Controls/Selector/Suggest',
          _beforeUpdate: function(newOptions) {
             if (this._options.suggestState !== newOptions.suggestState) {
                this._suggestState = newOptions.suggestState;
-            }
-            if (this._options.value !== newOptions.value) {
-               _private.updateValue(this, newOptions.value);
             }
             if (newOptions.selectedKey && (newOptions.selectedKey !== this._options.selectedKey ||
                newOptions.source !== this._options.source)) {

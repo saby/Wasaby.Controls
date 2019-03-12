@@ -254,6 +254,8 @@ var Component = BaseControl.extend({
         }
         if (this._options.chooseMonths && this._options.chooseQuarters && this._options.chooseHalfyears) {
             css.push('controls-PeriodLiteDialog__year-medium');
+        } else if (this._options.chooseMonths) {
+            css.push('controls-PeriodLiteDialog__year-center-lite');
         }
         return css.join(' ');
     },

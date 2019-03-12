@@ -294,5 +294,23 @@ define([
          selectionInstance.setItems(items);
          assert.equal(selectionInstance._items, items);
       });
+
+      it('setListModel', function() {
+         cfg = {
+            selectedKeys: [],
+            excludedKeys: [],
+            items: new collection.RecordSet({
+               rawData: [],
+               idProperty: 'id'
+            }),
+            keyProperty: 'id'
+         };
+
+         var fakeModel = {};
+
+         selectionInstance = new Selection(cfg);
+         selectionInstance.setListModel(fakeModel);
+         assert.equal(selectionInstance._listModel, fakeModel);
+      });
    });
 });

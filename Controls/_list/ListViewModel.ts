@@ -7,6 +7,7 @@ import ItemsUtil = require('Controls/List/resources/utils/ItemsUtil');
 import cInstance = require('Core/core-instance');
 import { Object as EventObject } from 'Env/Event';
 import { IObservable } from 'Types/collection';
+import { CollectionItem } from 'Types/display';
 
 /**
  *
@@ -70,9 +71,11 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         this._actions = [];
         ListViewModel.superclass.constructor.apply(this, arguments);
 
-        if (this._items && (cfg.markedKey !== null || cfg.markerVisibility === 'visible')) {
-            this._markedKey = cfg.markedKey;
-            this.updateMarker(cfg.markedKey);
+        if (this._items && cfg.markerVisibility !== 'hidden') {
+            if (cfg.markedKey !== null || cfg.markerVisibility === 'always' || cfg.markerVisibility === 'visible') {
+                this._markedKey = cfg.markedKey;
+                this.updateMarker(cfg.markedKey);
+            }
         }
 
         this._selectedKeys = cfg.selectedKeys || [];
@@ -362,8 +365,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setItems: function(items) {
         ListViewModel.superclass.setItems.apply(this, arguments);
-        var markedItem = _private.getItemByMarkedKey(this, this._markedKey);
-        this.updateMarker(this._options.markedKey);
+        this.updateMarker(this._markedKey);
         this._nextModelVersion();
     },
 
@@ -374,13 +376,12 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _setEditingItemData: function(itemData) {
         const data = itemData ? itemData : this._editingItemData;
         this._editingItemData = itemData;
-        if (itemData && itemData.item) {
-            this.setMarkedKey(itemData.item.get(this._options.keyProperty));
-        }
         this._onCollectionChange(
            new EventObject('oncollectionchange', this._display),
            IObservable.ACTION_CHANGE,
-           [data.item],
+           [new CollectionItem({
+              contents: data.item
+           })],
            data.index,
            [],
            0
@@ -391,8 +392,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setItemActions: function(item, actions) {
         if (item.get) {
             var itemById = this.getItemById(item.get(this._options.keyProperty));
-            var collectionItem = itemById ? itemById.getContents() : item;
-            this._actions[this.getIndexBySourceItem(collectionItem)] = actions;
+            if (itemById) {
+               this._actions[this.getIndexBySourceItem(itemById.getContents())] = actions;
+            }
         }
     },
 

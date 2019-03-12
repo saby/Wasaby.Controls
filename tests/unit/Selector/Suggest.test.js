@@ -80,14 +80,6 @@ define(
             assert.isTrue(suggest._suggestState);
          });
 
-         it('_beforeUpdate new value', function() {
-            let newConfig = Clone(config);
-            newConfig.value = 'Test text';
-            let suggest = getSuggest(config);
-            suggest._beforeUpdate(newConfig);
-            assert.equal(suggest._simpleViewModel.getDisplayValue(), newConfig.value);
-         });
-
          it('_beforeUpdate new selectedKey', function(done) {
             let newConfig = Clone(config);
             newConfig.selectedKey = '3';
@@ -100,15 +92,18 @@ define(
 
          it('_changeValueHandler', function() {
             let suggest = getSuggest(config),
-               newValue = '';
+               newValue = '', key;
             suggest._notify = function(e, d) {
                if (e === 'valueChanged') {
                   newValue = d[0];
+               } else if (e === 'selectedKeyChanged') {
+                  key = d[0];
                }
             };
             suggest._changeValueHandler('valueChanged', 'New Text');
             assert.equal(suggest._simpleViewModel.getDisplayValue(), 'New Text');
             assert.equal(newValue, 'New Text');
+            assert.isNull(key);
 
          });
 

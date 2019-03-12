@@ -87,10 +87,11 @@ define([
       });
 
       it('isNeedUpdate', function() {
-         assert.isFalse(Lookup._private.isNeedUpdate(5, false, true, 10));
-         assert.isTrue(Lookup._private.isNeedUpdate(5, true, true, 10));
-         assert.isTrue(Lookup._private.isNeedUpdate(5, false, false, 10));
-         assert.isTrue(Lookup._private.isNeedUpdate(5, false, true, 3));
+         assert.isFalse(Lookup._private.isNeedUpdate(true, 5, false, true, 10));
+         assert.isTrue(Lookup._private.isNeedUpdate(true, 5, true, true, 10));
+         assert.isTrue(Lookup._private.isNeedUpdate(true, 5, false, false, 10));
+         assert.isTrue(Lookup._private.isNeedUpdate(true, 5, false, true, 3));
+         assert.isFalse(Lookup._private.isNeedUpdate(false, 5, false, true, 3));
       });
 
       it('isNeedCalculatingSizes', function() {
@@ -124,12 +125,22 @@ define([
 
       it('_beforeMount', function() {
          var lookup = new Lookup();
-         lookup._beforeMount({multiLine: true, maxVisibleItems: 10});
+         lookup._beforeMount({multiLine: true, maxVisibleItems: 10, readOnly: true, multiSelect: true});
          assert.isNotNull(lookup._simpleViewModel);
          assert.equal(lookup._maxVisibleItems, 10);
 
-         lookup._beforeMount({items: getItems(5)});
+         lookup._beforeMount({items: getItems(5), readOnly: true, multiSelect: true});
          assert.equal(lookup._maxVisibleItems, 5);
+
+         lookup._maxVisibleItems = null;
+         lookup._beforeMount({items: getItems(5), multiSelect: true});
+         assert.equal(lookup._maxVisibleItems, null);
+
+         lookup._beforeMount({items: getItems(5), readOnly: true});
+         assert.equal(lookup._maxVisibleItems, 1);
+
+         lookup._beforeMount({items: getItems(5)});
+         assert.equal(lookup._maxVisibleItems, 1);
       });
 
       it('_beforeUnmount', function() {
@@ -257,6 +268,23 @@ define([
          lookup._options.items = getItems(1);
          lookup._suggestStateChanged();
          assert.isFalse(lookup._suggestState);
+      });
+
+      it('_isInputVisible', function() {
+         var lookup = new Lookup();
+
+         lookup._options.multiSelect = false;
+         lookup._options.items = getItems(0);
+         assert.isTrue(lookup._isInputVisible());
+
+         lookup._options.items = getItems(1);
+         assert.isFalse(lookup._isInputVisible());
+
+         lookup._options.multiSelect = true;
+         assert.isTrue(lookup._isInputVisible());
+
+         lookup._options.readOnly = true;
+         assert.isFalse(lookup._isInputVisible());
       });
 
       it('_determineAutoDropDown', function() {
