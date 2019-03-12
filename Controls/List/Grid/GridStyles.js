@@ -1,4 +1,4 @@
-define('Controls/List/Grid/GridStyles', ['Controls/_list/Grid/GridStyles'], function(Control) {
+define('Controls/List/Grid/GridStyles', ['Controls/_lists/Grid/GridStyles'], function(Control) {
 /**
  * @author Родионов Е.А.
  * @mixin Controls/List/Grid/GridStyles

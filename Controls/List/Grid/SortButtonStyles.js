@@ -1,4 +1,4 @@
-define('Controls/List/Grid/SortButtonStyles', ['Controls/_list/Grid/SortButtonStyles'], function(Control) {
+define('Controls/List/Grid/SortButtonStyles', ['Controls/_lists/Grid/SortButtonStyles'], function(Control) {
 /**
  * @author Gerasimov A.M.
  * @mixin Controls/List/Grid/SortButtonStyles
