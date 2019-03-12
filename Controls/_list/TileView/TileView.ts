@@ -77,7 +77,7 @@ var _private = {
 };
 
 var
-    ZOOM_DELAY = 150,
+    ZOOM_DELAY = 100,
     ZOOM_COEFFICIENT = 1.5;
 
 
