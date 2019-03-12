@@ -4,7 +4,7 @@
       <div class="controls-PeriodLiteDialog__bodyWrapper">
          <div class="controls-PeriodLiteDialog__item-background-hovered{{ !_yearHovered ? ' ws-hidden'}}"></div>
          <div class="controls-PeriodLiteDialog__yearWrapper{{ _yearHovered ? ' controls-PeriodLiteDialog__background-transparent'}}">
-            <span class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></span>
+            <div class="controls-PeriodLiteDialog__year-prev" on:click="_onPrevYearBtnClick()"></div>
             <div class="controls-PeriodLiteDialog__home-wrapper{{ (!_options.chooseQuarters && !_options.chooseHalfyears) ? '-lite' }}">
                <Controls.buttons:Button
                   style="secondary"
@@ -13,15 +13,15 @@
                   on:click="_onHomeClick()"
                />
             </div>
-            <span
+            <div
                class="controls-PeriodLiteDialog__year {{ _getYearCssClasses() }}"
                on:mouseenter="_onYearMouseEnter()"
                on:mouseleave="_onYearMouseLeave()"
                on:click="_onYearClick(_year)"
             >
                {{ _year }}
-            </span>
-            <span class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()"></span>
+            </div>
+            <div class="controls-PeriodLiteDialog__year-next" on:click="_onNextYearBtnClick()"></div>
          </div>
          <ws:partial
                template="{{_options.itemTemplate}}"

@@ -393,7 +393,8 @@ var
         },
 
         isStickyHeader: function() {
-            return this._options.stickyHeader;
+           // todo https://online.sbis.ru/opendoc.html?guid=e481560f-ce95-4718-a7c1-c34eb8439c5b
+           return this._options.stickyHeader && !this.isNotFullGridSupport();
         },
 
         getCurrentHeaderColumn: function() {
