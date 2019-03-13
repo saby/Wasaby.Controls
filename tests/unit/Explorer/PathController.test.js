@@ -74,7 +74,8 @@ define([
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
-               width: '100px'
+               width: '100px',
+               isBreadCrumbs: true
             }, {
                title: 'second'
             }]);
@@ -120,7 +121,8 @@ define([
                   backButtonCaption: 'second',
                   counterCaption: 2
                },
-               width: '100px'
+               width: '100px',
+               isBreadCrumbs: true
             }, {
                title: 'second'
             }]);
