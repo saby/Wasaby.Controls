@@ -1,5 +1,5 @@
 <ws:if data="{{itemData.item.getId}}">
-   <ws:partial template="wml!Controls/_lists/Grid/Item"
+   <ws:partial template="wml!Controls/_grids/Item"
                scope="{{_options}}"/>
 </ws:if>
 <ws:else>
