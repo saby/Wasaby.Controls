@@ -4,6 +4,7 @@
    <div style="margin: 20px">
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter1"
+                              alignment="left"
                               on:filterChanged="_filterChangedHandler()"
                               templateName="wml!Controls-demo/Layouts/SearchLayout/FilterButtonTemplate/vdomFilterButtonTemplate">
          <ws:items>
@@ -31,6 +32,7 @@
    <div style="margin: 20px">
       <Controls.Filter.Button attr:style="max-width: 200px;"
                               attr:id="filter2"
+                              alignment="left"
                               on:filterChanged="_filterChangedHandler()"
                               templateName="wml!Controls-demo/FilterButton/Panel/resources/vdomFilterTemplate">
          <ws:items>
