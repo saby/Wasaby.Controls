@@ -137,6 +137,7 @@ var _private = {
                     _private.clearNodeSourceController(nodeSourceControllers, node);
                 }
             });
+            viewModel.setHasMoreStorage(_private.prepareHasMoreStorage(nodeSourceControllers));
         } else {
             expandedItemsKeys = cfg.expandedItems || [];
             isExpandAll = _private.isExpandAll(expandedItemsKeys);

@@ -1,7 +1,7 @@
 <ws:template name="folderTpl">
    <div class="controls-TileView__item js-controls-TileView__withoutZoom controls-ListView__itemV controls-TreeTileView__item js-controls-SwipeControl__actionsContainer
             {{!!itemData.showActions ? ' controls-ListView__item_showActions'}}
-            {{marker !== false && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
+            {{marker !== false && markerVisibility !== 'hidden' && itemData.isSelected ? ' controls-TileView__item_withMarker' : ' controls-TileView__item_withoutMarker'}}
             {{!!itemData.isActive ? ' controls-TreeTileView__item_active'}}"
         attr:style="{{'flex-basis: ' + (folderWidth || itemData.defaultFolderWidth)+ 'px;'}}">
       <ws:partial if="{{itemData.multiSelectVisibility !== 'hidden'}}"
@@ -40,6 +40,8 @@
          hasTitle="{{hasTitle}}"
          itemData="{{itemData}}"
          invisible="{{invisible}}"
+         marker="{{marker}}"
+         markerVisibility="{{markerVisibility}}"
          contentTemplate="{{contentTemplate}}"
          itemActionsTemplate="{{itemActionsTemplate}}"
          swipeTemplate="{{swipeTemplate}}"

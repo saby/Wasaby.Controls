@@ -331,9 +331,6 @@
     "Controls/EditableArea",
     "Controls/EditableArea/*"
   ],
-  "exclude": [
-    "Controls/EditableArea/Constants"
-  ],
   "output": "controls-editablearea.package.js"
 }, {
   "include": [

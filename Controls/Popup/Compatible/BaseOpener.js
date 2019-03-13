@@ -181,6 +181,9 @@ function(cMerge,
          if (cfg.flipWindow === 'vertical') {
             cfg.locationStrategy = 'overflow';
          }
+         if (cfg.cssClassName) {
+            cfg.className = cfg.cssClassName;
+         }
       },
 
       _preparePopupCfgFromOldToNew: function(cfg) {
@@ -465,6 +468,9 @@ function(cMerge,
             this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
+            }
+            if (cfg.locationStrategy === 'fixed') {
+               newCfg.dialogOptions.flipWindow = false;
             }
          }
 

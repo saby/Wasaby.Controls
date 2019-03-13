@@ -4,7 +4,7 @@ define('Controls-demo/List/EditInPlace', [
    'Types/source',
    'Types/entity',
    'Core/Deferred',
-   'Controls/EditableArea/Constants',
+   'Controls/Constants',
    'Controls/Validate/Validators/IsRequired',
    'css!Controls-demo/List/EditInPlace/EditInPlace'
 ], function (Control,
@@ -12,7 +12,7 @@ define('Controls-demo/List/EditInPlace', [
              source,
              entity,
              Deferred,
-             EditConstants
+             Constants
 ) {
    'use strict';
 
@@ -132,7 +132,7 @@ define('Controls-demo/List/EditInPlace', [
          }
          switch (options.item.get('id')) {
             case 1:
-               return EditConstants.CANCEL;
+               return Constants.editing.CANCEL;
             case 2:
                return {
                   item: new entity.Model({
@@ -172,7 +172,7 @@ define('Controls-demo/List/EditInPlace', [
 
       _cancelItemAdd: function(e, options, isAdd) {
          if (isAdd) {
-            return EditConstants.CANCEL;
+            return Constants.editing.CANCEL;
          }
       },
 

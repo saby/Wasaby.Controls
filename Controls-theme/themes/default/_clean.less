@@ -106,7 +106,11 @@
 @state-indicator-sector-height_val: 8px;
 @state-indicator-sector-spacing_val: 2px;
 
-//icon urls
+// icon urls
+@closeIconSvg-toolButton:            url('img/DefaultCloseIcon.svg');
+@closeIconSvg-toolButton-hovered:    url('img/CloseIconHovered.svg');
+@closeIconSvg-link:                  url('img/LightCloseIcon.svg');
+@closeIconSvg-link_hovered:          url('img/CloseIconHovered.svg');
 @backArrowOrangeSmall_icon:          url('img/BackArrowOrangeSmall.svg');
 @backArrowOrange_icon:               url('img/BackArrowOrange.svg');
 @backArrowBlueSmall_icon:            url('img/BackArrowBlueSmall.svg');
@@ -384,6 +388,7 @@
 @border-right-radius_CloseButton_toolButton_val:                          0;
 @border-bottom-radius_CloseButton_toolButton_val:                         0;
 @background-color_CloseButton_toolButton_transparent_val:                 transparent;
+@size-Close_button-icon:                                                  12px;
 
 // ToggleCircle
 @width_ToggleCircle_val:                                                  12px;
@@ -425,8 +430,12 @@
 @shift-top_Dropdown-head-popup_val:                                       -6px;
 @background-color_DropdownList-row_separator_val:                         inherit;
 @max-width_DropdownList_val:                                              700px;
-@box-shadow-size_DropdownList-shadowStyle_centerTop_val:                  0 -6px 12px;
-@box-shadow-size_DropdownList-shadowStyle_centerBottom_val:               0 6px 12px;
+@box-shadow-offset_DropdownList_m:                                        6px;
+@box-shadow-offset_DropdownList_xs:                                       0;
+@box-shadow-blur_DropdownList:                                            12px;
+@box-shadow-spread_DropdownList:                                          -6px;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom_val:                0px 6px 12px;
+@box-shadow-size_DropdownList-shadowStyle_centerTop_val:                   0px -6px 12px;
 @background_DropdownList-header_val:                                      #F4F4F4;
 @color-marker_dark_val:                                                   #D94700;
 @color-marker_val:                                                        #FF7033;

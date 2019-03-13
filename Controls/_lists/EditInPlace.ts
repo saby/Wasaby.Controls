@@ -4,7 +4,7 @@ import Deferred = require('Core/Deferred');
 import entity = require('Types/entity');
 import getWidthUtil = require('Controls/Utils/getWidth');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
-import EditConstants = require('Controls/EditableArea/Constants');
+import Constants = require('Controls/Constants');
 import 'css!theme?Controls/List/EditInPlace/Text';
 
 var
@@ -44,7 +44,7 @@ var
         processBeforeBeginEditResult: function (self, options, eventResult, isAdd) {
             var result;
 
-            if (eventResult === EditConstants.CANCEL) {
+            if (eventResult === Constants.editing.CANCEL) {
                 result = Deferred.success({cancelled: true});
             } else if (eventResult && eventResult.addBoth) {
                 var id = self._notify('showIndicator', [{}], {bubbling: true});
@@ -70,7 +70,7 @@ var
 
             var result = self._notify('beforeEndEdit', [self._editingItem, commit, self._isAdd]);
 
-            if (result === EditConstants.CANCEL) {
+            if (result === Constants.editing.CANCEL) {
                 return Deferred.success({cancelled: true});
             }
             if (result && result.addCallback) {

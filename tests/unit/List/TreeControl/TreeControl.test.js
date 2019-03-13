@@ -241,10 +241,14 @@ define([
             });
          var isSourceControllerNode1Destroyed = false;
          var isSourceControllerNode2Destroyed = false;
+         var vmHasMoreStorage = null;
 
          //viewmodel moch
          treeControl._children.baseControl.getViewModel = function() {
             return {
+               setHasMoreStorage: function (hms) {
+                  vmHasMoreStorage = hms;
+               },
                getExpandedItems: function() {
                   return {
                      '1': true
@@ -263,20 +267,28 @@ define([
             1: {
                destroy: function() {
                   isSourceControllerNode1Destroyed = true;
+               },
+               hasMoreData: function () {
+                  return false;
                }
             },
             2: {
                destroy: function() {
                   isSourceControllerNode2Destroyed = true;
+               },
+               hasMoreData: function () {
+                  return true;
                }
             }
          };
          setTimeout(function() {
+            assert.isTrue(treeControl._nodesSourceControllers['2'].hasMoreData());
             treeControl.reload();
             setTimeout(function() {
                assert.equal(Object.keys(treeControl._nodesSourceControllers).length, 1, 'Invalid value "_nodesSourceControllers" after call "treeControl.reload()".');
                assert.isFalse(isSourceControllerNode1Destroyed, 'Invalid value "isSourceControllerNode1Destroyed" after call "treeControl.reload()".');
                assert.isTrue(isSourceControllerNode2Destroyed, 'Invalid value "isSourceControllerNode2Destroyed" after call "treeControl.reload()".');
+               assert.deepEqual({1: false}, vmHasMoreStorage);
                done();
             }, 10);
          }, 10);

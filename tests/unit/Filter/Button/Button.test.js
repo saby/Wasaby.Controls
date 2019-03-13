@@ -73,6 +73,30 @@ define(
             assert.isTrue(FilterButton._private.isItemChanged({id: 0, value: 'value', resetValue: 'resetValue'}));
             assert.isFalse(FilterButton._private.isItemChanged({id: 0, value: 'resetValue', resetValue: 'resetValue'}));
          });
-         
+
+         it('_private.getPopupConfig', function() {
+            let expectedConfig = {
+               templateOptions: {
+                  template: 'testTemplateName',
+                  items: ['testItems'],
+                  historyId: 'testHistoryId'
+               },
+               locationStrategy: 'fixed',
+               template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+               target: 'panelTarget'
+            };
+            let self = {
+               _options: {
+                  templateName: 'testTemplateName',
+                  items: ['testItems'],
+                  historyId: 'testHistoryId'
+               },
+               _children: {
+                  panelTarget: 'panelTarget'
+               }
+            };
+            assert.deepEqual(expectedConfig, FilterButton._private.getPopupConfig(self));
+         });
+
       });
    });
