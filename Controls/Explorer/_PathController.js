@@ -27,6 +27,8 @@ define('Controls/Explorer/_PathController', [
                   counterCaption: options.items[options.items.length - 1].get('counterCaption')
                },
                width: options.header[0].width,
+
+               // TODO: удалить эту опцию после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                isBreadCrumbs: true
             };
          }

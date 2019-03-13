@@ -36,6 +36,8 @@ var
            columnIndex: number,
            isNotFullGridSupport: boolean,
            columnsLength: number,
+
+           // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
            isBreadCrumbs: boolean = false
         ): string {
           if (columnIndex === (multiSelectVisibility === 'hidden' ? 0 : 1)) {
@@ -70,6 +72,8 @@ var
             if (params.columnIndex === 0 && !params.multiSelectVisibility) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
             }
+
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (params.isBreadCrumbs) {
                preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
             }
@@ -444,6 +448,8 @@ var
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
                     isHeader: true,
+
+                    // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
                     isBreadCrumbs: headerColumn.column.isBreadCrumbs
                 });
             }
@@ -455,6 +461,7 @@ var
             }
             headerColumn.cellClasses = cellClasses;
 
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
             if (headerColumn.column.isBreadCrumbs) {
                headerColumn.style = _private.getColspan(
                   this._options.multiSelectVisibility,
