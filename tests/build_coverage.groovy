@@ -197,20 +197,6 @@ def building(workspace, version, scheduler=null) {
                 echo SDK
             }
 
-
-            dir(workspace){
-                echo "подкидываем istanbul в Controls"
-                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** --complete-copy --output ./controls-cover ./controls'
-                sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
-            }
-            dir (workspace) {
-                echo "подкидываем оргинальные файлы"
-                sh 'cp -rf ./controls-orig/bin/ ./controls/bin/'
-                sh 'cp -rf ./controls-orig/tests/ ./controls/tests/'
-                sh 'cp -rf ./controls-orig/viewsettings/ ./controls/viewsettings/'
-                sh 'cp -rf ./controls-orig/sbis3-app-engine/ ./controls/sbis3-app-engine/'
-            }
-
             echo "Собираем controls"
             sh "mkdir ${workspace}/controls2"
             sh "python3 ${workspace}/constructor/build_ui_components.py ${workspace}/controls ${env.BUILD_NUMBER} controls --deploy ${workspace}/controls2"
