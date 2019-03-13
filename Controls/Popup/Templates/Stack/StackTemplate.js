@@ -98,8 +98,13 @@ define('Controls/Popup/Templates/Stack/StackTemplate',
 
          _beforeUpdate: function(newOptions) {
             if (this._options.maximized !== newOptions.maximized) {
-               this._notify('controlResize', [], { bubbling: true });
                this._updateMaximizeButtonTitle(newOptions.maximized);
+            }
+         },
+
+         _afterUpdate: function(oldOptions) {
+            if (this._options.maximized !== oldOptions.maximized) {
+               this._notify('controlResize', [], { bubbling: true });
             }
          },
 
