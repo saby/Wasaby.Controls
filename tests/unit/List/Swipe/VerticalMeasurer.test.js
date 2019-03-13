@@ -13,9 +13,25 @@ define(['Controls/_list/Swipe/VerticalMeasurer', 'Core/i18n'], function(
       });
 
       it('needTitle', function() {
-         assert.isFalse(VerticalMeasurer.default.needTitle({}, 'none'));
-         assert.isFalse(VerticalMeasurer.default.needTitle({}, 'right'));
          assert.isFalse(
+            VerticalMeasurer.default.needTitle(
+               {
+                  icon: 'icon-Message'
+               },
+               'none'
+            )
+         );
+         assert.isFalse(
+            VerticalMeasurer.default.needTitle(
+               {
+                  icon: 'icon-Message'
+               },
+               'right'
+            )
+         );
+         assert.isTrue(VerticalMeasurer.default.needTitle({}, 'none'));
+         assert.isTrue(VerticalMeasurer.default.needTitle({}, 'right'));
+         assert.isTrue(
             VerticalMeasurer.default.needTitle(
                {
                   title: '123'
