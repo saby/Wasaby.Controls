@@ -28,46 +28,47 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
                7,
                ]
             this._datas = [
-               [{value: 0, className: '', title: ''}],               
-               [{value: 3, className: '', title: ''}],
-               [{value: 53, className: '', title: ''}],
-               [{value: 100, className: '', title: ''}],
+               [{value: 0, className: '', title: 'Положительно'}],               
+               [{value: 3, className: '', title: 'Положительно'}],
+               [{value: 53, className: '', title: 'Положительно'}],
+               [{value: 100, className: '', title: 'Положительно'}],
 
-               [{value: 0, className: '', title: ''}, 
-                  {value: 30, className: '', title: ''}],
+               [{value: 0, className: '', title: 'Положительно'}, 
+                  {value: 30, className: '', title: 'В работе'}],
 
-               [{value: 20, className: '', title: ''},
-                  {value: 80, className: '', title: ''}],
+               [{value: 20, className: '', title: 'Положительно'},
+                  {value: 80, className: '', title: 'В работе'}],
 
-               [{value: 40, className: '', title: ''},
-                  {value: 12, className: '', title: ''}],
+               [{value: 40, className: '', title: 'Положительно'},
+                  {value: 12, className: '', title: 'В работе'}],
 
-               [{value: 35, className: '', title: ''},
-                  {value: 40, className: '', title: ''}],
+               [{value: 35, className: '', title: 'Положительно'},
+                  {value: 40, className: '', title: 'В работе'}],
 
-               [{value: 30, className: '', title: ''},
-                  {value: 70, className: '', title: ''}],
+               [{value: 30, className: '', title: 'Положительно'},
+                  {value: 70, className: '', title: 'В работе'}],
 
-               [{value: 10, className: '', title: ''},
-                  {value: 30, className: '', title: ''},
-                  {value: 50, className: '', title: ''}], 
+               [{value: 10, className: '', title: 'Положительно'},
+                  {value: 30, className: '', title: 'В работе'},
+                  {value: 50, className: '', title: 'Отрицательно'}], 
 
-               [{value: 25, className: '', title: ''},
-                  {value: 25, className: '', title: ''},
-                  {value: 25, className: '', title: ''}], 
+               [{value: 25, className: '', title: 'Положительно'},
+                  {value: 25, className: '', title: 'В работе'},
+                  {value: 25, className: '', title: 'Отрицательно'}], 
 
-               [{value: 34, className: '', title: ''},
-                  {value: 33, className: '', title: ''},
-                  {value: 33, className: '', title: ''}], 
+               [{value: 33, className: '', title: 'Положительно'},
+                  {value: 33, className: '', title: 'В работе'},
+                  {value: 33, className: '', title: 'Отрицательно'},
+                  {value: 1, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}], 
 
-               [{value: 20, className: '', title: ''},
-                  {value: 30, className: '', title: ''},
-                  {value: 3, className: '', title: ''},
-                  {value: 47, className: 'controls-StateIndicator__emptySector', title: ''}],
+               [{value: 20, className: '', title: 'Положительно'},
+                  {value: 30, className: '', title: 'В работе'},
+                  {value: 3, className: '', title: 'Отрицательно'},
+                  {value: 47, className: 'controls-StateIndicator__emptySector', title: 'Не обработано'}],
             ];
          },
          _mouseLeaveHandler: function(){
-             this._notify('closeInfoBox', [], {bubbling: true});
+             this._notify('closeInfoBox', [1500], {bubbling: true});
          },
          _mouseEnterHandler: function(e, _item){
          	var config = {
