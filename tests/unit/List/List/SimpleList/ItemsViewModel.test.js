@@ -8,7 +8,7 @@ define([
    'Controls/Constants'
 ], function(ItemsViewModel, ItemsUtil, collection, ControlsConstants){
    describe('Controls.List.ListControl.ItemsViewModel', function () {
-      var data, data2, display;
+      var data, data2, data3, display;
       beforeEach(function() {
          data = [
             {
@@ -42,6 +42,13 @@ define([
                id : 6,
                title : 'Шестой',
                type: 2
+            }
+         ];
+         data3 = [
+            {
+               id : 7,
+               title : 'Седьмой',
+               type: 1
             }
          ];
 
@@ -108,9 +115,15 @@ define([
             rawData: data,
             idProperty : 'id'
          });
+
          var rs2 = new collection.RecordSet({
             rawData: data2,
             idProperty : 'id'
+         });
+
+         var rs3 = new collection.RecordSet({
+            rawData: data3,
+            idProperty: 'id'
          });
 
          var cfg1 = {
@@ -129,9 +142,10 @@ define([
          var iv = new ItemsViewModel(cfg1);
          iv.setItems(rs2);
          assert.equal(rs2, iv._items, 'Incorrect items after setItems');
-         assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
+         assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
          assert.equal(0, iv._startIndex, 'Incorrect startIndex after setItems');
          assert.equal(3, iv._stopIndex, 'Incorrect stopIndex after setItems');
+
 
          //второй кейс - были items - рекордсет, и ставим рекордсет. Должен остаться инстанс старого, но данные новые
          iv = new ItemsViewModel(cfg2);
@@ -139,6 +153,9 @@ define([
          assert.equal(rs1, iv._items, 'Incorrect items after setItems');
          assert.equal(4, iv._items.at(0).get('id'), 'Incorrect items after setItems');
          assert.equal(1, iv.getVersion(), 'Incorrect version setItems');
+
+         iv.setItems(rs3);
+         assert.equal(2, iv.getVersion(), 'Incorrect version setItems');
 
       });
 
