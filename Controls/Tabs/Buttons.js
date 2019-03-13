@@ -64,9 +64,9 @@ define('Controls/Tabs/Buttons', [
          if (order === 1 || order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme');
          }
-         if (order === 1 && item.get('align') === 'left') {
+         if (order === 1) {
             classes.push('controls-Tabs__item_extreme_first');
-         } else if (order === lastRightOrder && item.get('align') !== 'left') {
+         } else if (order === lastRightOrder) {
             classes.push('controls-Tabs__item_extreme_last');
          } else {
             classes.push('controls-Tabs__item_default');
