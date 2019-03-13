@@ -140,7 +140,8 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
          if (this._options.size) {
             return this._options.size;
          }
-         if (this._options.message.length > this._messageMaxLength || this._options.details.length > this._detailsMaxLength) {
+         if ((this._options.message && this._options.message.length) > this._messageMaxLength ||
+            (this._options.details && this._options.details.length) > this._detailsMaxLength) {
             return 'l';
          }
          return 'm';
