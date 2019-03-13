@@ -79,7 +79,9 @@ define('Controls/History/Source', [
             };
             if (self._pinned instanceof Array) {
                self._pinned.forEach(function(pinId) {
-                  self._history.pinned.add(_private.getRawHistoryItem(self, pinId, self.historySource.getHistoryId()));
+                  if (sourceItems.getRecordById(pinId)) {
+                     self._history.pinned.add(_private.getRawHistoryItem(self, pinId, self.historySource.getHistoryId()));
+                  }
                });
             }
          } else {
