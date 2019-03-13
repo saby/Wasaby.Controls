@@ -156,7 +156,7 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
          var isHorizontal = direction === 'horizontal';
          if (popupCfg.align[direction].side === (isHorizontal ? 'left' : 'top')) {
             position[isHorizontal ? 'right' : 'bottom'] = _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] -
-               targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'];
+               targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'] + targetCoords.topScroll;
          } else {
             position[isHorizontal ? 'left' : 'top'] = targetCoords[popupCfg.corner[direction]] + popupCfg.sizes.margins[isHorizontal ? 'left' : 'top'];
          }
@@ -166,9 +166,9 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
       checkOverflow: function(popupCfg, targetCoords, position, direction) {
          var isHorizontal = direction === 'horizontal';
          if (position[isHorizontal ? 'right' : 'bottom']) {
-            return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - targetCoords[popupCfg.corner[direction]];
+            return popupCfg.sizes[isHorizontal ? 'width' : 'height'] - (targetCoords[popupCfg.corner[direction]] - targetCoords.topScroll);
          }
-         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'];
+         return popupCfg.sizes[isHorizontal ? 'width' : 'height'] + targetCoords[popupCfg.corner[direction]] - _private.getWindowSizes()[isHorizontal ? 'width' : 'height'] - targetCoords.topScroll;
       },
 
       invertPosition: function(popupCfg, direction) {
@@ -192,10 +192,11 @@ define('Controls/Popup/Opener/Sticky/StickyStrategy', ['Controls/Utils/TouchKeyb
             if (revertPositionOverflow > 0) {
                if (positionOverflow < revertPositionOverflow) {
                   _private.invertPosition(popupCfg, direction);
+                  _private.fixPosition(position, targetCoords);
                   _private.restrictContainer(position, property, popupCfg, positionOverflow);
                   return position;
                }
-               _private.fixPosition(position, targetCoords);
+               _private.fixPosition(revertPosition, targetCoords);
                _private.restrictContainer(revertPosition, property, popupCfg, revertPositionOverflow);
                return revertPosition;
             }
