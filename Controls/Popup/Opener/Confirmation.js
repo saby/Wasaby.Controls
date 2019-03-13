@@ -34,6 +34,13 @@ define('Controls/Popup/Opener/Confirmation',
        */
 
       /**
+       * @name Controls/Popup/Opener/Confirmation#size
+       * @cfg {String} Option description.
+       * @variant m
+       * @variant l
+       */
+
+      /**
        * @name Controls/Popup/Opener/Confirmation#message
        * @cfg {String} Main text
        */

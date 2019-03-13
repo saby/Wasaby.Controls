@@ -2,7 +2,7 @@
         on:keydown="_keyDown()"
         on:keyup="_keyPressed()" ws-tab-cycling="true"
         ws-delegates-tabfocus="true" style="{{_options.style}}"
-        hideCross="{{true}}" size="{{_options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? 'big' : 'standart'}}">
+        hideCross="{{true}}" size="{{_options.size ? _options.size : _options.message.length > _messageMaxLength || _options.details.length > _detailsMaxLength ? 'l' : 'm'}}">
    <ws:bodyContentTemplate>
       <ws:partial
               template="{{_contentTemplate}}"
