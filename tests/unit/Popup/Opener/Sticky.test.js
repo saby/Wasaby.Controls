@@ -509,14 +509,20 @@ define(
             cfg.corner.vertical = 'bottom';
             cfg.align.vertical.side = 'top';
             cfg.align.horizontal.side = 'left';
+            targetCoords.topScroll = 10;
 
             position = StickyStrategy.getPosition(cfg, targetCoords);
+            targetCoords.topScroll = 0;
             assert.equal(position.left, 400);
-            assert.equal(position.bottom, 600);
+            assert.equal(position.bottom, 610);
             assert.equal(Object.keys(position).length, 2);
          });
 
          it ('Sticky [new position] location strategy fixed', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
             let cfg = getPositionConfig();
             cfg.locationStrategy = 'fixed';
             cfg.sizes.height = 400;
