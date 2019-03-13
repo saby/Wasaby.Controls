@@ -73,8 +73,7 @@ define('Controls/Search/Controller',
          },
          
          needUpdateSearchController: function(options, newOptions) {
-            return !isEqual(options.filter, newOptions.filter) ||
-                   !isEqual(options.navigation, newOptions.navigation) ||
+            return !isEqual(options.navigation, newOptions.navigation) ||
                    options.searchDelay !== newOptions.searchDelay ||
                    options.source !== newOptions.source ||
                    options.searchParam !== newOptions.searchParam ||
@@ -134,10 +133,21 @@ define('Controls/Search/Controller',
    
          _beforeUpdate: function(newOptions, context) {
             var currentOptions = this._dataOptions;
+            var filter;
+            
             this._dataOptions = context.dataOptions;
+   
+            if (!isEqual(this._options.filter, newOptions.filter)) {
+               filter = newOptions.filter;
+            }
 
-            if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
-               this._searchController = null;
+            if (this._searchController) {
+               if (_private.needUpdateSearchController(currentOptions, this._dataOptions) || _private.needUpdateSearchController(this._options, newOptions)) {
+                  this._searchController.abort();
+                  this._searchController = null;
+               } else if (filter) {
+                  this._searchController.setFilter(clone(filter));
+               }
             }
             
             if (this._options.searchValue !== newOptions.searchValue) {
