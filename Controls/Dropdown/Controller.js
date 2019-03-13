@@ -110,9 +110,9 @@ define('Controls/Dropdown/Controller',
                   if (this._options.source.getItems) {
                      this._items = this._options.source.getItems();
                   }
-                  
-                  //dropDown must close by default, but user can cancel closing, if returns false from event
-                  //res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
+
+                  // dropDown must close by default, but user can cancel closing, if returns false from event
+                  // res !== undefined - will deleted after https://online.sbis.ru/opendoc.html?guid=c7977290-b0d6-45b4-b83b-10108db89761
                   if (res === true || !(result.data[0].get(this._options.nodeProperty) || res === false)) {
                      this._children.DropdownOpener.close();
                   }
@@ -126,6 +126,14 @@ define('Controls/Dropdown/Controller',
          selectItem: function(item) {
             this._selectedItems = item;
             return this._notify('selectedItemsChanged', [this._selectedItems]);
+         },
+
+         // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
+         closeHandler: function() {
+            if (this._options.close) {
+               this._options.close();
+            }
+            this._notify('_close', []);
          }
       };
 
@@ -136,6 +144,7 @@ define('Controls/Dropdown/Controller',
          _beforeMount: function(options, context, receivedState) {
             this._selectedItems = [];
             this._onResult = _private.onResult.bind(this);
+            this._onClose = _private.closeHandler.bind(this);
             if (!options.lazyItemsLoad) {
                if (receivedState) {
                   this._items = receivedState;
@@ -150,6 +159,9 @@ define('Controls/Dropdown/Controller',
             if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
+               if (this._children.DropdownOpener.isOpened()) {
+                  this._open();
+               }
             }
             if ((newOptions.source && newOptions.source !== this._options.source) ||
                newOptions.navigation !== this._options.navigation ||
@@ -167,6 +179,13 @@ define('Controls/Dropdown/Controller',
             }
          },
 
+         _afterUpdate: function(options) {
+            // TODO: Пока не поддержан множественный выбор: https://online.sbis.ru/opendoc.html?guid=b770077d-f93e-4a67-8198-405f4c1c52be
+            if (options.selectedKeys !== this._options.selectedKeys && this._items && this._children.DropdownOpener.isOpened()) {
+               this._open();
+            }
+         },
+
          _open: function(event) {
             // Проверям что нажата левая кнопка мыши
             if (this._options.readOnly || event && event.nativeEvent.button !== 0) {
@@ -178,7 +197,8 @@ define('Controls/Dropdown/Controller',
                var config = {
                   templateOptions: {
                      items: self._items,
-                     width: self._options.width
+                     width: self._options.width,
+                     selectedKeys: self._options.selectedKeys
                   },
                   target: self._container,
                   corner: self._options.corner,
