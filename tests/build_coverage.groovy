@@ -223,6 +223,7 @@ def building(workspace, version, scheduler=null) {
                 sh 'istanbul instrument --complete-copy --output ./controls-cover ./controls2'
                 sh 'sudo mv ./controls2 ./controls2-orig && sudo mv ./controls-cover ./controls2'
             }
+        }
 
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
