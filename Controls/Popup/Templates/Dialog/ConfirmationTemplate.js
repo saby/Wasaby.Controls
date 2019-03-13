@@ -48,7 +48,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#size
-          * @cfg {String} Option description.
+          * @cfg {String} Confirmation size
           * @variant m
           * @variant l
           * @default m
@@ -56,7 +56,7 @@ define('Controls/Popup/Templates/Dialog/ConfirmationTemplate',
 
          /**
           * @name Controls/Popup/Templates/Dialog/ConfirmationTemplate#style
-          * @cfg {String} Option description.
+          * @cfg {String} Confirmation display style
           * @variant default default
           * @variant success success
           * @variant danger danger
