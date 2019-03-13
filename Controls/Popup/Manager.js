@@ -74,7 +74,7 @@ define('Controls/Popup/Manager',
             runDelayed(function activatePopup() {
                // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
                // The node can be hidden through display: none
-               if (element.activeControlAfterDestroy && !element.activeControlAfterDestroy._unmounted) {
+               if (_private.needActivateControl(element.activeControlAfterDestroy)) {
                   if (element.activeControlAfterDestroy.activate) {
                      element.activeControlAfterDestroy.activate();
                   } else if (element.activeControlAfterDestroy.setActive) { // TODO: COMPATIBLE
@@ -91,6 +91,10 @@ define('Controls/Popup/Manager',
                   }
                }
             });
+         },
+
+         needActivateControl: function(control) {
+            return control && !control._unmounted && control._container !== document.body;
          },
 
          getMaxZIndexPopupIdForActivate: function() {
