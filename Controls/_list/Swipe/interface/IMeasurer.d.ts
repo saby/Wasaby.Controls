@@ -8,6 +8,6 @@ export interface IMeasurer {
       rowHeight: number,
       titlePosition: TitlePosition
    ): ISwipeConfig;
-   needIcon(action: IItemAction, hasActionWithIcon?: boolean): boolean;
+   needIcon(action: IItemAction, titlePosition: TitlePosition, hasActionWithIcon?: boolean): boolean;
    needTitle(action: IItemAction, titlePosition: TitlePosition): boolean;
 }
