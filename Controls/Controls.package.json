@@ -387,5 +387,12 @@
       "Controls/Selector/__ControllerContext"
     ],
     "output": "controls-selector-stack.package.js"
+  },
+  {
+    "include": [
+      "Controls/EditableArea/Constants",
+      "Controls/Constants"
+    ],
+    "output": "controls-constants.package.js"
   }
 ]
