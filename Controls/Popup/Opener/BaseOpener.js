@@ -246,8 +246,9 @@ define('Controls/Popup/Opener/BaseOpener',
          _notifyEvent: function(eventName, args) {
             // Trim the prefix "on" in the event name
             var event = eventName.substr(2);
+            var newEvent = event.toLowerCase();
             this._notify(event, args);
-            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
+            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + newEvent + '" instead of "popup' + event + '"');
             this._notify('popup' + event, args);
          },
 
