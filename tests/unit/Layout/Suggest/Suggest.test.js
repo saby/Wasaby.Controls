@@ -650,6 +650,58 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isFalse(eventPreventDefault);
          assert.isTrue(eventTriggered);
       });
-      
+
+      it('Suggest::_private.openWithHistory', function () {
+         var
+            isCallOpenPopup = false,
+            suggestComponent = new Suggest(),
+            getRecentKeys = Suggest._private.getRecentKeys,
+            _privateOpen = Suggest._private.open;
+
+         Suggest._private.open = function() {
+            isCallOpenPopup = true;
+         };
+
+         suggestComponent._filter = {};
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter = {};
+         suggestComponent._options.suggestState = true;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter = {};
+         Suggest._private.getRecentKeys = function() {
+            return Deferred.success([]);
+         };
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         suggestComponent._options.suggestState = false;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter.historyKeys = [7, 8];
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isTrue(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter.historyKeys = [7, 8];
+         suggestComponent._options.suggestState = true;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         isCallOpenPopup = false;
+         suggestComponent._filter.historyKeys = [7, 8];
+         Suggest._private.getRecentKeys = getRecentKeys;
+         Suggest._private.openWithHistory(suggestComponent);
+         assert.isFalse(isCallOpenPopup);
+
+         Suggest._private.open = _privateOpen;
+      });
    });
 });
