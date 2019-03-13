@@ -22,6 +22,7 @@
                         name="explorer"
                         itemActions="{{_itemActions}}"
                         itemActionVisibilityCallback="{{_itemActionVisibilityCallback}}"
+                        showActionButton="{{false}}"
                         on:itemActionsClick="_onItemActionsClick()"
                         on:itemClick="_onItemClick()"
                         parentProperty="{{_options.parentProperty}}"
