@@ -332,6 +332,7 @@ var ItemsViewModel = BaseViewModel.extend({
             this._display = this._prepareDisplay(this._items, this._options);
             this._display.subscribe('onCollectionChange', this._onCollectionChangeFnc);
             this.setIndexes(0, this.getCount());
+            this._nextModelVersion();
         }
     },
 
