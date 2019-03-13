@@ -314,7 +314,7 @@ define('Controls/Selector/Lookup/_Lookup', [
             isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
             listOfDependentOptions = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'];
 
-         if (newOptions.value !== this._options.value && newOptions.value !== this._inputValue) {
+         if (newOptions.value !== this._options.value) {
             this._inputValue = newOptions.value;
          }
 
@@ -353,6 +353,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _changeValueHandler: function(event, value) {
+         this._inputValue = value;
          _private.notifyValue(this, value);
       },
 

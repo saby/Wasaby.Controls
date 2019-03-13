@@ -20,7 +20,7 @@
       sorting="{{_options.sorting}}"
       autoDropDown="{{_determineAutoDropDown()}}"
       layerName="Controls/Container/Suggest/__PopupLayer"
-      bind:value="_inputValue"
+      value="{{_inputValue}}"
       attr:class="controls-Lookup__suggest">
    <Controls.Input.resources.InputRender.InputRender
          name="inputRender"
@@ -31,7 +31,7 @@
          selectOnClick="{{ _options.selectOnClick }}"
          inputCharRegExp="{{ _options.inputCharRegExp }}"
          constraint="{{ _options.constraint }}"
-         bind:value="_inputValue"
+         value="{{_inputValue}}"
          tagStyle="{{ _options.tagStyle }}"
          placeholder="{{ _options.placeholder }}"
          validationErrors="{{ _options.validationErrors }}"
