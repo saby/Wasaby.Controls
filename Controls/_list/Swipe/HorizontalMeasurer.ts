@@ -45,11 +45,15 @@ const HorizontalMeasurer: IMeasurer = {
          paddingSize: 'm'
       };
    },
-   needIcon(action: IItemAction, hasActionWithIcon: boolean = false): boolean {
-      return !!action.icon || hasActionWithIcon;
+   needIcon(
+      action: IItemAction,
+      titlePosition: Exclude<TitlePosition, 'right'>,
+      hasActionWithIcon: boolean = false
+   ): boolean {
+      return !!action.icon || (hasActionWithIcon && titlePosition !== 'none');
    },
    needTitle(action: IItemAction, titlePosition: TitlePosition): boolean {
-      return titlePosition !== 'none' && !!action.title;
+      return !action.icon || (titlePosition !== 'none' && !!action.title);
    }
 };
 
