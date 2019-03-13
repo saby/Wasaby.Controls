@@ -87,6 +87,8 @@
                      _private.setSearchValue(self, '');
                      _private.setFilter(self, filter);
                      _private.open(self);
+                  } else if (!self._options.suggestState) {
+                     _private.open(self);
                   }
                   return keys;
                });
