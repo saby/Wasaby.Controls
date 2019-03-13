@@ -123,7 +123,7 @@ define('Controls/Input/Dropdown',
                   this._icon = getPropValue(items[0], 'icon');
                }
                if (items.length > 1) {
-                  this._text += ' и еще' + (items.length - 1);
+                  this._text += ', и еще ' + (items.length - 1);
                }
             }
          }

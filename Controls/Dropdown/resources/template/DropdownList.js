@@ -170,7 +170,8 @@ define('Controls/Dropdown/resources/template/DropdownList',
 
          _beforeUpdate: function(newOptions) {
             var rootChanged = newOptions.rootKey !== this._options.rootKey,
-               itemsChanged = newOptions.items !== this._options.items;
+               itemsChanged = newOptions.items !== this._options.items,
+               selectedKeysChanged = newOptions.selectedKeys !== this._options.selectedKeys;
 
             if (rootChanged) {
                this._listModel.setRootKey(newOptions.rootKey);
@@ -181,6 +182,10 @@ define('Controls/Dropdown/resources/template/DropdownList',
                if (this._hasHierarchy) {
                   this._children.subDropdownOpener.close();
                }
+            }
+
+            if (selectedKeysChanged) {
+               this._listModel.setSelectedKeys(newOptions.selectedKeys);
             }
 
             if (rootChanged || itemsChanged) {
