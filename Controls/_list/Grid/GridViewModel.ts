@@ -22,15 +22,39 @@ var
               style += currentColumn.styleForLadder;
            }
            if (colspan) {
-              if (currentColumn.columnIndex === itemData.multiSelectVisibility === 'hidden' ? 0 : 1) {
-                 if (isNotFullGridSupport) {
-                    style += ' colspan: ' + (itemData.multiSelectVisibility === 'hidden' ? itemData.columns.length : itemData.columns.length - 1);
-                 } else {
-                    style += ' grid-column: ' + (itemData.multiSelectVisibility === 'hidden' ? 1 : 2) + ' / ' + (itemData.columns.length + 1);
-                 }
-              }
+                style += _private.getColspan(
+                   itemData.multiSelectVisibility,
+                   currentColumn.columnIndex,
+                   isNotFullGridSupport,
+                   itemData.columns.length
+                );
            }
            return style;
+        },
+        getColspan(
+           multiSelectVisibility: 'hidden' | 'visible' | 'onhover',
+           columnIndex: number,
+           isNotFullGridSupport: boolean,
+           columnsLength: number,
+
+           // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+           isBreadCrumbs: boolean = false
+        ): string {
+          if (columnIndex === (multiSelectVisibility === 'hidden' ? 0 : 1)) {
+              if (isBreadCrumbs) {
+                 if (isNotFullGridSupport) {
+                    return ' colspan: ' + 1;
+                 } else {
+                    return ' grid-column: ' + 1 + ' / ' + (multiSelectVisibility === 'hidden' ? 2 : 3);
+                 }
+              } else {
+                 if (isNotFullGridSupport) {
+                    return ' colspan: ' + (multiSelectVisibility === 'hidden' ? columnsLength : columnsLength - 1);
+                 } else {
+                    return ' grid-column: ' + (multiSelectVisibility === 'hidden' ? 1 : 2) + ' / ' + (columnsLength + 1);
+                 }
+              }
+          }
         },
         getPaddingCellClasses: function(params) {
             var
@@ -47,6 +71,11 @@ var
             // Отступ для первой колонки. Если режим мультиселект, то отступ обеспечивается чекбоксом.
             if (params.columnIndex === 0 && !params.multiSelectVisibility) {
                 preparedClasses += ' controls-Grid__cell_spacingFirstCol_' + (params.itemPadding.left || 'default').toLowerCase();
+            }
+
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            if (params.isBreadCrumbs) {
+               preparedClasses += ' controls-Grid__cell_spacingFirstCol_null';
             }
 
             // Стиль колонки
@@ -419,7 +448,10 @@ var
                     columnIndex: columnIndex,
                     multiSelectVisibility: this._options.multiSelectVisibility !== 'hidden',
                     itemPadding: this._model.getItemPadding(),
-                    isHeader: true
+                    isHeader: true,
+
+                    // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+                    isBreadCrumbs: headerColumn.column.isBreadCrumbs
                 });
             }
             if (headerColumn.column.align) {
@@ -429,6 +461,17 @@ var
                 cellClasses += ' controls-Grid__header-cell_valign_' + headerColumn.column.valign;
             }
             headerColumn.cellClasses = cellClasses;
+
+            // TODO: удалить isBreadcrumbs после https://online.sbis.ru/opendoc.html?guid=b3647c3e-ac44-489c-958f-12fe6118892f
+            if (headerColumn.column.isBreadCrumbs) {
+               headerColumn.style = _private.getColspan(
+                  this._options.multiSelectVisibility,
+                  columnIndex,
+                  Env.detection.isNotFullGridSupport,
+                  this._headerColumns.length,
+                  true
+               );
+            }
 
             if (headerColumn.column.sortingProperty) {
                 headerColumn.sortingDirection = _private.getSortingDirectionByProp(this.getSorting(), headerColumn.column.sortingProperty);
