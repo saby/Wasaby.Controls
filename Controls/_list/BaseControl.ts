@@ -59,7 +59,7 @@ var _private = {
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 var
-                    markedItem, markedKey, isActive,
+                    isActive,
                     listModel = self._listViewModel;
 
                 if (cfg.dataLoadCallback instanceof Function) {
@@ -74,17 +74,7 @@ var _private = {
                     }
                     listModel.setItems(list);
                     self._items = listModel.getItems();
-                    markedKey = listModel.getMarkedKey();
-                    if (markedKey !== null) {
-                        if (listModel.getIndexByKey(markedKey) === -1) {
-                            markedItem = listModel.getFirstItem();
-                            if (markedItem) {
-                                markedKey = markedItem.getId();
-                                listModel.setMarkedKey(markedKey);
-                                self._restoreMarkedKey = markedKey;
-                            }
-                        }
-                    }
+                    self._restoreMarkedKey = listModel.getMarkedKey();
                     if (isActive === true) {
                         self._children.listView.activate();
                     }

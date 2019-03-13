@@ -1208,6 +1208,38 @@ define([
          }, 100);
       });
 
+      it('reload should call scroll to start', function() {
+
+         var
+             lnSource = new sourceLib.Memory({
+                idProperty: 'id',
+                data: data
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                markedKey: 3,
+                viewModelConstructor: ListViewModel
+             },
+             lnBaseControl = new BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+
+         assert.equal(lnBaseControl._restoreMarkedKey, null);
+
+         return new Promise(function (resolve) {
+            setTimeout(function () {
+               BaseControl._private.reload(lnBaseControl, lnCfg);
+               setTimeout(function () {
+                  assert.equal(lnBaseControl._restoreMarkedKey, 1);
+                  resolve();
+               }, 10);
+            },10);
+         });
+      });
+
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          BaseControl._private.scrollToItem = function() {};
