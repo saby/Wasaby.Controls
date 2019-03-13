@@ -12,30 +12,69 @@ define('Controls-demo/StateIndicator/StandartStateIndicatorDemo', [
 
          constructor: function(){
             Index.superclass.constructor.apply(this,arguments);
-            this._states = [
-               [0],
-               [3],
-               [53],
-               [100],
-               [0,30],
-               [20,80],
-               [40,12],
-               [35,40],
-               [30,70],
-               [10,0,50],
-               [25,25,25],
-               [34,33,33],
-               [20,30,3,47]
+            this._scales = [
+               10,
+               10,
+               10,
+               10,
+               10,
+               10,
+               10,
+               5,
+               5,
+               5,
+               5,
+               6,
+               7,
+               ]
+            this._datas = [
+               [{value: 0, className: '', title: ''}],               
+               [{value: 3, className: '', title: ''}],
+               [{value: 53, className: '', title: ''}],
+               [{value: 100, className: '', title: ''}],
+
+               [{value: 0, className: '', title: ''}, 
+                  {value: 30, className: '', title: ''}],
+
+               [{value: 20, className: '', title: ''},
+                  {value: 80, className: '', title: ''}],
+
+               [{value: 40, className: '', title: ''},
+                  {value: 12, className: '', title: ''}],
+
+               [{value: 35, className: '', title: ''},
+                  {value: 40, className: '', title: ''}],
+
+               [{value: 30, className: '', title: ''},
+                  {value: 70, className: '', title: ''}],
+
+               [{value: 10, className: '', title: ''},
+                  {value: 30, className: '', title: ''},
+                  {value: 50, className: '', title: ''}], 
+
+               [{value: 25, className: '', title: ''},
+                  {value: 25, className: '', title: ''},
+                  {value: 25, className: '', title: ''}], 
+
+               [{value: 34, className: '', title: ''},
+                  {value: 33, className: '', title: ''},
+                  {value: 33, className: '', title: ''}], 
+
+               [{value: 20, className: '', title: ''},
+                  {value: 30, className: '', title: ''},
+                  {value: 3, className: '', title: ''},
+                  {value: 47, className: 'controls-StateIndicator__emptySector', title: ''}],
             ];
          },
-
-         _mouseHandler: function(e, _item, _data){
+         _mouseLeaveHandler: function(){
+             this._notify('closeInfoBox', [], {bubbling: true});
+         },
+         _mouseEnterHandler: function(e, _item){
          	var config = {
               target: _item,
-              message: _data,
               position: 'tl',
               template: popupTemplate,
-              templateOptions: {state: this._states[_item.parentElement.parentElement.getAttribute("index")], data: _data}
+              templateOptions: {data: this._datas[_item.parentElement.parentElement.getAttribute("index")]}
          	};
          	this._notify('openInfoBox', [config], {bubbling: true});
          }
