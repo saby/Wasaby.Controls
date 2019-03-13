@@ -159,9 +159,6 @@ define('Controls/Dropdown/Controller',
             if (newOptions.selectedKeys !== this._options.selectedKeys && this._items) {
                this._selectedItems = [];
                _private.updateSelectedItems(this, newOptions.emptyText, newOptions.selectedKeys, newOptions.keyProperty, newOptions.dataLoadCallback);
-               if (this._children.DropdownOpener.isOpened()) {
-                  this._open();
-               }
             }
             if ((newOptions.source && newOptions.source !== this._options.source) ||
                newOptions.navigation !== this._options.navigation ||
@@ -197,8 +194,7 @@ define('Controls/Dropdown/Controller',
                var config = {
                   templateOptions: {
                      items: self._items,
-                     width: self._options.width,
-                     selectedKeys: self._options.selectedKeys
+                     width: self._options.width
                   },
                   target: self._container,
                   corner: self._options.corner,
