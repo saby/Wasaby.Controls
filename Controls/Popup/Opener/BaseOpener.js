@@ -330,7 +330,7 @@ define('Controls/Popup/Opener/BaseOpener',
          if (Base.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!Base.isNewEnvironment()) {
                Base.getManager().addCallback(function() {
-                  requirejs(['Controls/Utils/getZIndex'], function(getZIndex) {
+                  Base.getZIndexUtil().addCallback(function(getZIndex) {
                      cfg.zIndex = cfg.zIndex || getZIndex(opener);
                      Base._openPopup(popupId, cfg, controller, def);
                   });
@@ -396,6 +396,18 @@ define('Controls/Popup/Opener/BaseOpener',
             });
          }
          return def;
+      };
+
+      Base.getZIndexUtil = function() {
+         var deferred = new Deferred();
+         var module = 'Controls/Utils/getZIndex';
+         if (requirejs.defined(module)) {
+            return deferred.callback(requirejs(module));
+         }
+         requirejs([module], function(getZIndex) {
+            return deferred.callback(getZIndex);
+         });
+         return deferred;
       };
 
       Base._openPopup = function(popupId, cfg, controller, def) {
