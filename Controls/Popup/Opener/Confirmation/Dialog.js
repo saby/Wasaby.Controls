@@ -136,6 +136,15 @@ define('Controls/Popup/Opener/Confirmation/Dialog', [
          }
          return this._options.message;
       },
+      _getSize: function() {
+         if (this._options.size) {
+            return this._options.size;
+         }
+         if (this._options.message.length > this._messageMaxLength || this._options.details.length > this._detailsMaxLength) {
+            return 'l';
+         }
+         return 'm';
+      },
       _hasMarkup: function() {
          var message = this._options.message;
          return typeof message === 'string' && message.indexOf('<a') > -1 && message.indexOf('</a>') > -1;
