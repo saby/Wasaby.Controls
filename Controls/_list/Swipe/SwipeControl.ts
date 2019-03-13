@@ -56,9 +56,10 @@ export default class SwipeControl extends Control {
 
    private _needIcon(
       action: IItemAction,
+      titlePosition: TitlePosition,
       hasShowedItemActionWithIcon: boolean
    ): boolean {
-      return this._measurer.needIcon(action, hasShowedItemActionWithIcon);
+      return this._measurer.needIcon(action, titlePosition, hasShowedItemActionWithIcon);
    }
 
    private _needTitle(
