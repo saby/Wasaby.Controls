@@ -186,7 +186,7 @@ var _private = {
 
     setPopupOptions: function (self, newOptions) {
         self._popupOptions = {
-            className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup_list',
+            className: (newOptions.popupClassName || '') + ' controls-Toolbar__popup__list',
             corner: {vertical: 'top', horizontal: 'right'},
             horizontalAlign: {side: 'left'},
             eventHandlers: {
