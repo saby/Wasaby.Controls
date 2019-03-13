@@ -2,6 +2,7 @@
             {{_dropdownClass}}
             {{_options.dropdownClassName}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}"
+            attr:ws-no-focus="true"
      on:mouseleave="_mouseOutHandler()">
    <ws:if data="{{_options.showHeader || _options.headerTemplate}}">
       <ws:partial template="{{_options.headTemplate || _options.headerTemplate || _defaultHeadTemplate}}"
