@@ -10,7 +10,8 @@ define('Controls-demo/List/Grid/BasePG', [
    'wml!Controls-demo/List/Grid/resources/DemoMoney',
    'wml!Controls-demo/List/Grid/resources/DemoRating',
    'wml!Controls-demo/List/Grid/resources/DemoItem',
-   'wml!Controls-demo/List/Grid/resources/DemoResultAvgRating'
+   'wml!Controls-demo/List/Grid/resources/DemoResultAvgRating',
+   'wml!Controls-demo/List/Grid/resources/BasePG/HeaderMoneyTemplate'
    ], function(Control, Obj, source, data, template, config, emptyTpl) {
    'use strict';
    var Component = Control.extend({
@@ -121,7 +122,7 @@ define('Controls-demo/List/Grid/BasePG', [
          this._componentOptions = {
             name: 'BaseGridPG',
             source: this._sourceCatalog,
-            markedKey: '4',
+            markedKey: 4,
             itemTemplate: 'wml!Controls-demo/List/Grid/resources/DemoItem',
             columns: data.fullColumnsForBase,
             displayProperty: 'title',
