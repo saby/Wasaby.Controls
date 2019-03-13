@@ -91,6 +91,8 @@ define('Controls/Container/PendingRegistrator', [
             // its deferred what signalling about pending finish
             def: def,
 
+            validate: config.validate,
+
             // its function what helps pending to finish when query goes from finishPendingOperations
             onPendingFail: config.onPendingFail,
 
@@ -150,12 +152,18 @@ define('Controls/Container/PendingRegistrator', [
          var self = this;
          Object.keys(this._pendings).forEach(function(key) {
             var pending = self._pendings[key];
-            if (pending.onPendingFail) {
-               pending.onPendingFail(forceFinishValue, pending.def);
+            var isValid = true;
+            if (pending.validate) {
+               isValid = pending.validate();
             }
+            if (isValid) {
+               if (pending.onPendingFail) {
+                  pending.onPendingFail(forceFinishValue, pending.def);
+               }
 
-            // pending is waiting its def finish
-            parallelDef.push(pending.def);
+               // pending is waiting its def finish
+               parallelDef.push(pending.def);
+            }
          });
 
          // cancel previous query of pending finish. create new query.
