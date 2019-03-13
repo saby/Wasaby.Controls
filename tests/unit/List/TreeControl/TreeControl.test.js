@@ -190,6 +190,45 @@ define([
             }, 10);
          });
       });
+   
+      it('TreeControl.toggleExpanded with sorting', function() {
+         let treeControl = correctCreateTreeControl({
+            columns: [],
+            root: null,
+            sorting: [{sortField: 'DESC'}],
+            source: new sourceLib.Memory({
+               data: [],
+               idProperty: 'id'
+            })
+         });
+         let expandSorting;
+         let originalCreateSourceController = TreeControl._private.createSourceController;
+         TreeControl._private.createSourceController = function() {
+            return {
+               load: function(filter, sorting) {
+                  var result = Deferred.success([]);
+                  expandSorting = sorting;
+                  return result
+               }
+            }
+         };
+   
+         TreeControl._private.toggleExpanded(treeControl, {
+            getContents: function() {
+               return {
+                  getId: function() {
+                     return 1;
+                  }
+               };
+            },
+            isRoot: function() {
+               return false;
+            }
+         });
+         TreeControl._private.createSourceController = originalCreateSourceController;
+         
+         assert.deepEqual([{sortField: 'DESC'}], expandSorting);
+      });
 
 
       it('TreeControl.reload', function(done) {
@@ -465,19 +504,21 @@ define([
          var
             setHasMoreCalled = false,
             mergeItemsCalled = false,
+            loadMoreSorting,
             mockedTreeControlInstance = {
                _options: {
                   filter: {
                      testParam: 11101989
                   },
+                  sorting: [{'test': 'ASC'}],
                   parentProperty: 'parent',
                   uniqueKeys: true
                },
                _nodesSourceControllers: {
                   1: {
-                     load: function() {
-                        var
-                           result = new Deferred();
+                     load: (filter, sorting) => {
+                        let result = new Deferred();
+                        loadMoreSorting = sorting;
                         result.callback();
                         return result;
                      },
@@ -517,6 +558,7 @@ define([
          'Invalid value "filter" after call "TreeControl._private.loadMore(...)".');
          assert.isTrue(setHasMoreCalled, 'Invalid call "setHasMore" by "TreeControl._private.loadMore(...)".');
          assert.isTrue(mergeItemsCalled, 'Invalid call "mergeItemsCalled" by "TreeControl._private.loadMore(...)".');
+         assert.deepEqual(loadMoreSorting, [{'test': 'ASC'}]);
       });
       describe('EditInPlace', function() {
          it('beginEdit', function() {

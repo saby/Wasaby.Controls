@@ -24,10 +24,16 @@
  * @css @width_ItemActions-decorativeEdge Width of the decorative edge near item actions when they're are positioned outside a row.
  * @css @font-size_ItemActions-icon_size_m Font size of the icons of the item actions.
  * @css @font-size_ItemActions-icon_size_s Font size of the icons of the item actions inside editable lists.
+ * @css @font-family_ItemActions-icon_size_s Font family of the icons of the item actions.
+ * @css @font-family_ItemActions-icon_size_m Font family of the icons of the item actions inside editable lists.
  * @css @color_ItemActions-icon_style_danger Color of the icon with the "iconStyle" option set to "danger".
+ * @css @color_ItemActions-icon_style_danger_hover Color of the icon with the "iconStyle" option set to "danger" on hover.
  * @css @color_ItemActions-icon_style_success Color of the icon with the "iconStyle" option set to "success".
+ * @css @color_ItemActions-icon_style_success_hover Color of the icon with the "iconStyle" option set to "success" on hover.
  * @css @color_ItemActions-icon_style_secondary Color of the icon with the "iconStyle" option set to "secondary".
+ * @css @color_ItemActions-icon_style_secondary_hover Color of the icon with the "iconStyle" option set to "secondary" on hover.
  * @css @color_ItemActions-icon_style_warning Color of the icon with the "iconStyle" option set to "warning".
+ * @css @color_ItemActions-icon_style_warning_hover Color of the icon with the "iconStyle" option set to "warning" on hover.
  * @css @color_ItemActions-title Color of the title.
  * @css @color_ItemActions-title_hover Color of the title on hover.
  * @css @font-size_ItemActions-title Font size of the title.

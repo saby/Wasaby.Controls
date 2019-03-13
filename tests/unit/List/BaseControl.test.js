@@ -578,26 +578,26 @@ define([
       it('virtualScrollCalculation on list change', function() {
          var callBackCount = 0;
          var cfg = {
-               viewName: 'Controls/List/ListView',
-               viewConfig: {
-                  idProperty: 'id'
-               },
-               virtualScrolling: true,
-               viewModelConfig: {
-                  items: [],
-                  idProperty: 'id'
-               },
-               viewModelConstructor: ListViewModel,
-               markedKey: 0,
-               source: source,
-               navigation: {
-                  view: 'infinity'
-               }
-            },
-            instance = new BaseControl(cfg),
-            itemData = {
-               key: 1
-            };
+                viewName: 'Controls/List/ListView',
+                viewConfig: {
+                   idProperty: 'id'
+                },
+                virtualScrolling: true,
+                viewModelConfig: {
+                   items: [],
+                   idProperty: 'id'
+                },
+                viewModelConstructor: ListViewModel,
+                markedKey: 0,
+                source: source,
+                navigation: {
+                   view: 'infinity'
+                }
+             },
+             instance = new BaseControl(cfg),
+             itemData = {
+                key: 1
+             };
 
          instance.saveOptions(cfg);
          instance._beforeMount(cfg);
@@ -628,6 +628,48 @@ define([
          assert.equal(0, instance.getVirtualScroll()._itemsHeights.length);
          assert.equal(0, instance.getViewModel()._startIndex);
          assert.equal(5, instance.getViewModel()._stopIndex);
+      });
+
+      it('enterHandler', function () {
+        var notified = false;
+
+         // Without marker
+         BaseControl._private.enterHandler({
+            getViewModel: function () {
+               return {
+                  getMarkedItem: function () {
+                     return null;
+                  }
+               }
+            },
+            _notify: function (e, item, options) {
+               notified = true;
+            }
+         });
+         assert.isFalse(notified);
+
+         var myMarkedItem = {qwe: 123};
+         // With marker
+         BaseControl._private.enterHandler({
+            getViewModel: function () {
+               return {
+                  getMarkedItem: function () {
+                     return {
+                        getContents: function () {
+                           return myMarkedItem;
+                        }
+                     };
+                  }
+               }
+            },
+            _notify: function (e, item, options) {
+               notified = true;
+               assert.equal(e, 'itemClick');
+               assert.deepEqual(item, [myMarkedItem]);
+               assert.deepEqual(options, { bubbling: true });
+            }
+         });
+         assert.isTrue(notified);
       });
 
       it('loadToDirection up', function(done) {
@@ -1833,7 +1875,6 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isFalse(args.target);
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
@@ -2007,7 +2048,18 @@ define([
                   source: source
                },
                instance = new BaseControl(cfg),
-               target = 123,
+               target = {
+                  getBoundingClientRect: function() {
+                     return {
+                        bottom: 1,
+                        height: 2,
+                        left: 3,
+                        right: 4,
+                        top: 5,
+                        width: 6
+                     };
+                  }
+               },
                fakeEvent = {
                   type: 'click'
 
@@ -2030,7 +2082,7 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.equal(target, args.target);
+                     assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                   }
                }

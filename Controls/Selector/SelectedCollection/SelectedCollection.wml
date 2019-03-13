@@ -3,6 +3,7 @@
    <ws:if data="{{_items.length > _options.maxVisibleItems}}">
       <Controls.Popup.InfoBox
               attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
+              style="default controls-SelectedCollection__popup"
               trigger="click"
               templateName="Controls/Selector/SelectedCollection/Popup"
               templateOptions="{{_templateOptions}}"
@@ -14,7 +15,7 @@
    </ws:if>
    <ws:for data="index, item in _visibleItems">
       <ws:partial
-              attr:style="{{index === 0 && _items.length > _options.maxVisibleItems ? 'max-width: calc(100% - ' + _counterWidth + 'px);'}}"
+              attr:style="max-width: {{_getItemMaxWidth(index, _items.length, _options.maxVisibleItems, _options.itemsLayout, _counterWidth)}}"
               attr:class="controls-SelectedCollection__item controls-SelectedCollection__collectionItem_layout_{{_options.itemsLayout}}"
               template="{{_options.itemTemplate}}"
               item="{{item}}"
