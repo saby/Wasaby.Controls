@@ -1875,7 +1875,6 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isFalse(args.target);
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
@@ -2049,7 +2048,18 @@ define([
                   source: source
                },
                instance = new BaseControl(cfg),
-               target = 123,
+               target = {
+                  getBoundingClientRect: function() {
+                     return {
+                        bottom: 1,
+                        height: 2,
+                        left: 3,
+                        right: 4,
+                        top: 5,
+                        width: 6
+                     };
+                  }
+               },
                fakeEvent = {
                   type: 'click'
 
@@ -2072,7 +2082,7 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.equal(target, args.target);
+                     assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                   }
                }
