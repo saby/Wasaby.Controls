@@ -331,9 +331,6 @@
     "Controls/EditableArea",
     "Controls/EditableArea/*"
   ],
-  "exclude": [
-    "Controls/EditableArea/Constants"
-  ],
   "output": "controls-editablearea.package.js"
 }, {
   "include": [
@@ -387,12 +384,5 @@
       "Controls/Selector/__ControllerContext"
     ],
     "output": "controls-selector-stack.package.js"
-  },
-  {
-    "include": [
-      "Controls/EditableArea/Constants",
-      "Controls/Constants"
-    ],
-    "output": "controls-constants.package.js"
   }
 ]
