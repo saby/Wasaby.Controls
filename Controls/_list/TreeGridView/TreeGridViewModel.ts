@@ -50,13 +50,48 @@ var
         getCurrent: function () {
             var
                 current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
-                superGetCurrentColumn = current.getCurrentColumn;
+                superGetCurrentColumn = current.getCurrentColumn,
+                superGetItemColumnCellClasses = current.getItemColumnCellClasses;
+
             current.getCurrentColumn = function () {
-                var
-                    currentColumn = superGetCurrentColumn();
+                let
+                    currentColumn = superGetCurrentColumn(),
+                    nodeType = current.item.get(current.nodeProperty);
+
                 currentColumn.isExpanded = current.isExpanded;
+                currentColumn.cellClasses += ' controls-TreeGrid__row-cell';
+
+                if (nodeType) {
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__node';
+                } else if (nodeType === false) {
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__hiddenNode';
+                } else {
+                    currentColumn.cellClasses += ' controls-TreeGrid__row-cell__item';
+                }
+
                 return currentColumn;
             };
+
+            current.getLevelIndentClasses = function (expanderSize, levelIndentSize) {
+                let
+                    sizeEnum = ['null', 'xxs', 'xs', 's', 'm', 'l', 'xl', 'xxl'],
+                    resultPaddingSize;
+
+                if (expanderSize && levelIndentSize) {
+                    if (sizeEnum.indexOf(expanderSize) >= sizeEnum.indexOf(levelIndentSize)) {
+                        resultPaddingSize = expanderSize;
+                    } else {
+                        resultPaddingSize = levelIndentSize;
+                    }
+                } else if (!expanderSize && !levelIndentSize) {
+                    resultPaddingSize = 'default';
+                } else {
+                    resultPaddingSize = expanderSize || levelIndentSize;
+                }
+
+                return `controls-TreeGrid__row-levelPadding_size_${resultPaddingSize}`;
+            };
+
             return current;
         },
         _onNodeRemoved: function (event, nodeId) {
