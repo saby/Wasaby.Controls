@@ -100,6 +100,11 @@ define('Controls/Dropdown/resources/DropdownViewModel',
             this._itemsModel.setItems(options.items);
          },
 
+         setSelectedKeys: function(selectedKeys) {
+            this._options.selectedKeys = selectedKeys;
+            this._nextVersion();
+         },
+
          setRootKey: function(key) {
             this._options.rootKey = key;
             this.setFilter(this.getDisplayFilter());
