@@ -59,7 +59,7 @@ define('Controls/Explorer', [
       _private = {
          setRoot: function(self, root) {
             self._root = root;
-            self._notify('itemOpen', [root]);
+            self._notify('rootChanged', [root]);
             if (typeof self._options.itemOpenHandler === 'function') {
                self._options.itemOpenHandler(root);
             }
@@ -86,7 +86,7 @@ define('Controls/Explorer', [
          },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
-               self._root = self._options.root;
+               _private.setRoot(self, _private.getRoot(self));
             }
             self._viewMode = viewMode;
             self._viewName = VIEW_NAMES[viewMode];
@@ -94,22 +94,29 @@ define('Controls/Explorer', [
          },
          backByPath: function(self) {
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
-               if (self._breadCrumbsItems.length > 1) {
-                  _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 2].getId());
-               } else {
-                  _private.setRoot(self, self._options.root);
-               }
-               self._notify('rootChanged', [self._root]);
+               _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
             }
+         },
+         getRoot: function(self) {
+            var result;
+
+            if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
+               result = self._breadCrumbsItems[0].get(self._options.parentProperty);
+            } else {
+               result = self._options.root;
+            }
+
+            return result;
          },
          dragItemsFromRoot: function(self, dragItems) {
             var
                item,
-               itemFromRoot = true;
+               itemFromRoot = true,
+               root = _private.getRoot(self);
 
             for (var i = 0; i < dragItems.length; i++) {
                item = self._items.getRecordById(dragItems[i]);
-               if (!item || item.get(self._options.parentProperty) !== self._root) {
+               if (!item || item.get(self._options.parentProperty) !== root) {
                   itemFromRoot = false;
                   break;
                }
@@ -186,7 +193,7 @@ define('Controls/Explorer', [
          if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = this._root !== this._options.root || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = this._root !== _private.getRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {
@@ -195,14 +202,12 @@ define('Controls/Explorer', [
       _onItemClick: function(event, item, clickEvent) {
          if (item.get(this._options.nodeProperty) === ITEM_TYPES.node) {
             _private.setRoot(this, item.getId());
-            this._notify('rootChanged', [this._root]);
          }
          event.stopPropagation();
          this._notify('itemClick', [item, clickEvent]);
       },
       _onBreadCrumbsClick: function(event, item) {
          _private.setRoot(this, item.getId());
-         this._notify('rootChanged', [this._root]);
       },
       _onExplorerKeyDown: function(event) {
          keysHandler(event, HOT_KEYS, _private, this);

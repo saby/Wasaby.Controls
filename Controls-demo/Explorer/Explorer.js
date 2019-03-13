@@ -14,6 +14,7 @@ define('Controls-demo/Explorer/Explorer', [
          _viewColumns: null,
          _itemsHeight: 200,
          _viewMode: 'table',
+         _root: null,
          _selectedKeys: [],
          _excludedKeys: [],
          _changeViewIcon: 'icon-ArrangePreview',

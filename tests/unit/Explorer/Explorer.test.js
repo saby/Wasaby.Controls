@@ -121,6 +121,28 @@ define([
          }, self);
       });
 
+      it('_private.getRoot', function() {
+         var
+            cfg = {
+               parentProperty: 'parent',
+               root: 'root'
+            },
+            explorer = new Explorer(cfg);
+
+         explorer.saveOptions(cfg);
+
+         assert.equal(Explorer._private.getRoot(explorer), 'root');
+
+         explorer._breadCrumbsItems = [new entityLib.Model({
+            rawData: {
+               id: 2,
+               parent: 1
+            },
+            idProperty: 'id'
+         })];
+         assert.equal(Explorer._private.getRoot(explorer), 1);
+      });
+
       it('itemsReadyCallback', function() {
          var
             items = {},
@@ -229,6 +251,7 @@ define([
 
       describe('_notify(rootChanged)', function() {
          var
+            root,
             isNotified = false,
             isWeNotified = false,
             isNativeClickEventExists = false,
@@ -236,6 +259,7 @@ define([
             _notify = function(eName, eArgs) {
                if (eName === 'rootChanged') {
                   isNotified = true;
+                  root = eArgs[0];
                }
                if (eName === 'itemClick') {
                   isWeNotified = true;
@@ -246,21 +270,48 @@ define([
             };
 
          it('backByPath', function() {
-            isNotified = false,
-
-            Explorer._private.setRoot = function(){};
-            Explorer._private.backByPath({
-               _breadCrumbsItems: ['1'],
-               _notify,
-               _options: {
-                  root: 1
-               },
-               _root: -1
-            });
-
-            assert.isTrue(isNotified);
             isNotified = false;
 
+            var
+               explorer = new Explorer({});
+
+            explorer._notify = _notify;
+            explorer.saveOptions({
+               parentProperty: 'parent'
+            });
+            explorer._breadCrumbsItems = [new entityLib.Model({
+               rawData: {
+                  id: 2,
+                  parent: 1
+               },
+               idProperty: 'id'
+            })];
+
+            Explorer._private.backByPath(explorer);
+
+            assert.isTrue(isNotified);
+            assert.equal(root, 1);
+            isNotified = false;
+
+            explorer._breadCrumbsItems.push(new entityLib.Model({
+               rawData: {
+                  id: 3,
+                  parent: 2
+               },
+               idProperty: 'id'
+            }));
+
+            Explorer._private.backByPath(explorer);
+
+            assert.isTrue(isNotified);
+            assert.equal(root, 2);
+            isNotified = false;
+
+            explorer._breadCrumbsItems = [];
+
+            Explorer._private.backByPath(explorer);
+
+            assert.isFalse(isNotified);
          });
 
          it('_beforeUpdate', function() {
@@ -269,14 +320,13 @@ define([
             var
                explorer = new Explorer({});
             explorer.saveOptions({});
-            Explorer._private.setRoot = function(){};
             explorer._notify = _notify;
             explorer._beforeUpdate({
                root: 1,
                viewMode: null
             });
 
-            assert.isFalse(isNotified);
+            assert.isTrue(isNotified);
             isNotified = false;
 
          });
@@ -290,7 +340,6 @@ define([
                isPropagationStopped = isNotified = isNativeClickEventExists = false;
 
             explorer.saveOptions({});
-            Explorer._private.setRoot = function(){};
             explorer._notify = _notify;
 
             explorer._onItemClick({
@@ -301,7 +350,9 @@ define([
                get: function() {
                   return true;
                },
-               getId: function() {}
+               getId: function() {
+                  return 'itemId';
+               }
             }, {
                nativeEvent: 123
             });
@@ -310,6 +361,7 @@ define([
             // Click
             assert.isTrue(isWeNotified);
             // RootChanged
+            assert.equal(root, 'itemId');
             assert.isTrue(isNotified);
 
             /* https://online.sbis.ru/opendoc.html?guid=3523e32f-2bb3-4ed4-8b0f-cde55cb81f75 */
@@ -322,7 +374,6 @@ define([
             var
                explorer = new Explorer({});
             explorer.saveOptions({});
-            Explorer._private.setRoot = function(){};
             explorer._notify = _notify;
 
             explorer._onBreadCrumbsClick({}, {
