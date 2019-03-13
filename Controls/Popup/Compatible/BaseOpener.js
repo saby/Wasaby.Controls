@@ -181,6 +181,9 @@ function(cMerge,
          if (cfg.flipWindow === 'vertical') {
             cfg.locationStrategy = 'overflow';
          }
+         if (cfg.cssClassName) {
+            cfg.className = cfg.cssClassName;
+         }
       },
 
       _preparePopupCfgFromOldToNew: function(cfg) {
