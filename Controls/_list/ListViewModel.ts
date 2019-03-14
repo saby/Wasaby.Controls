@@ -175,6 +175,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._markedKey === key) {
             version = 'MARKED_' + version;
         }
+        if (this._activeItem && this._activeItem.item === item) {
+            version = 'ACTIVE_' + version;
+        }
         return version;
     },
 
@@ -267,7 +270,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setActiveItem: function(itemData) {
         if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
             this._activeItem = itemData;
-            this._nextModelVersion();
+            this._nextModelVersion(true);
         }
     },
 
