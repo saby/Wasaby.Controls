@@ -4,12 +4,12 @@ define('Controls/HighChartsLight',
       'wml!Controls/HighChartsLight/HighChartsLight',
       'Env/Env',
       'Core/core-clone',
+      'browser!/cdn/Highcharts/7.0.3/highcharts.js',
       'Core/Date',
       'css!theme?Controls/HighChartsLight/HighChartsLight',
-      'i18n!Controls/HighChartsLight',
-      'browser!/cdn/Highcharts/4.2.7-p1/highcharts-more.js'
+      'i18n!Controls/HighChartsLight'
    ],
-   function(Control, template, Env, cClone) {
+   function(Control, template, Env, cClone, Highcharts) {
       'use strict';
 
       /**
