@@ -31,6 +31,8 @@ class Coverage:
     def search_other_file(cover_file):
         """Ищем файлы, которые могут быть связаны"""
 
+        # соотносим конвертируемые ресурсы с исходниками
+        cover_file = cover_file.replace('/home/sbis/Controls/build-ui/resources', os.path.join(os.environ["WORKSPACE"], 'controls'))
         other_files = [cover_file]
         component_path = os.path.splitext(cover_file)[0]
         # если есть папка с названием компонента
@@ -82,7 +84,7 @@ class Coverage:
                         coverage_result.extend(self.search_other_file(k))
             # обрезаем пути, переменная берется из сборки
             for i, filename in enumerate(coverage_result):
-                coverage_result[i] = filename.replace('/home/sbis/Controls/build-ui/resources', '')
+                coverage_result[i] = filename.replace(os.path.join(os.environ["WORKSPACE"], 'controls'), '')
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
 
