@@ -126,13 +126,14 @@ function(cMerge,
       prepareNotificationConfig: function(config) {
          var template = typeof config.template === 'string' ? requirejs(config.template) : config.template;
          config.opener = null;
-         config.className = 'controls-OldNotification';
          config.isVDOM = true;
          config.template = 'Controls/Popup/Compatible/OldNotification';
          config.componentOptions = {
             template: template,
-            templateOptions: config.templateOptions
+            templateOptions: config.templateOptions,
+            className: config.className
          };
+         config.className = 'controls-OldNotification';
          return config;
       },
 

@@ -1,1 +1,1 @@
-<ws:partial template="{{_options.template}}" scope="{{_options.templateOptions}}" on:close="_close()"/>
+<ws:partial template="{{_options.template}}" attr:class="{{_options.className}}" scope="{{_options.templateOptions}}" on:close="_close()"/>
