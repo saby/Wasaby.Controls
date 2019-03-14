@@ -1,9 +1,8 @@
 {
   "extends": "./tsconfig.base",
   "compilerOptions": {
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "baseUrl": "application",
+    "noEmit": true,
     "types": [
       "typedef"
     ]
