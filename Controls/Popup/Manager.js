@@ -69,28 +69,30 @@ define('Controls/Popup/Manager',
             });
          },
 
-         activatePopup: function(element) {
-            // wait, until closing popup will be removed from DOM
-            runDelayed(function activatePopup() {
-               // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
-               // The node can be hidden through display: none
-               if (_private.needActivateControl(element.activeControlAfterDestroy)) {
-                  if (element.activeControlAfterDestroy.activate) {
-                     element.activeControlAfterDestroy.activate();
-                  } else if (element.activeControlAfterDestroy.setActive) { // TODO: COMPATIBLE
-                     element.activeControlAfterDestroy.setActive(true);
-                  }
-               } else {
-                  var maxId = _private.getMaxZIndexPopupIdForActivate();
-                  if (maxId) {
-                     var child = ManagerController.getContainer().getPopupById(maxId);
+         activatePopup: function(item) {
+            if (item.controller.needRestoreFocus()) {
+               // wait, until closing popup will be removed from DOM
+               runDelayed(function activatePopup() {
+                  // check is active control exist, it can be redrawn by vdom or removed from DOM while popup exist
+                  // The node can be hidden through display: none
+                  if (_private.needActivateControl(item.activeControlAfterDestroy)) {
+                     if (item.activeControlAfterDestroy.activate) {
+                        item.activeControlAfterDestroy.activate();
+                     } else if (item.activeControlAfterDestroy.setActive) { // TODO: COMPATIBLE
+                        item.activeControlAfterDestroy.setActive(true);
+                     }
+                  } else {
+                     var maxId = _private.getMaxZIndexPopupIdForActivate();
+                     if (maxId) {
+                        var child = ManagerController.getContainer().getPopupById(maxId);
 
-                     if (child) {
-                        child.activate();
+                        if (child) {
+                           child.activate();
+                        }
                      }
                   }
-               }
-            });
+               });
+            }
          },
 
          needActivateControl: function(control) {
