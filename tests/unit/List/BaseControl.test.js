@@ -137,7 +137,7 @@ define([
             ctrl.saveOptions(cfg);
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
-            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_list/Tree/TreeViewModel'));
+            assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_lists/Tree/TreeViewModel'));
             assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
