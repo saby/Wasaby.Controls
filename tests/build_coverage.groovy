@@ -271,6 +271,8 @@ def building(workspace, version, scheduler=null) {
                 echo "подкидываем istanbul в Controls"
                 sh 'sudo istanbul instrument --complete-copy --output ./Controls-cover ./Controls'
                 sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./Controls-cover ./Controls'
+                sh 'sudo istanbul instrument --complete-copy --output ./Controls-demo-cover ./Controls-demo'
+                sh 'sudo mv ./Controls-demo ./Controls-demo-orig && sudo mv ./Controls-demo-cover ./Controls-demo'
             }
             sh """  sudo systemctl start Controls
                     sudo systemctl start Controls_ps
