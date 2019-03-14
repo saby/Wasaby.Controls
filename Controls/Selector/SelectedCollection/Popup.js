@@ -31,7 +31,6 @@ define('Controls/Selector/SelectedCollection/Popup',
 
             // If the items are clickable, close the pop-up when click on a collection item
             if ([].indexOf.call(mouseEvent.target.classList, CLICKABLE_CLASS) !== -1) {
-               this._notify('sendResult', [{ type: 'close' }], { bubbling: true });
                this._notify('close', [], {bubbling: true});
             }
          },
