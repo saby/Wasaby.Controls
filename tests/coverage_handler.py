@@ -59,7 +59,6 @@ class Coverage:
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
 
-        env = os.environ["WORKSPACE"]
         test_path = os.listdir(path)
         for tdir in test_path:
             path_list = []
@@ -83,7 +82,7 @@ class Coverage:
                         coverage_result.extend(self.search_other_file(k))
             # обрезаем пути, переменная берется из сборки
             for i, filename in enumerate(coverage_result):
-                coverage_result[i] = filename.replace(os.sep.join([env, 'controls']), '')
+                coverage_result[i] = filename.replace('/home/sbis/Controls/build-ui/resources', '')
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
 

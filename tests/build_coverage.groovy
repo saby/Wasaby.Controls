@@ -331,7 +331,7 @@ def building(workspace, version, scheduler=null) {
                 dir("${workspace}/controls/tests/int/${type_controls}"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True --HEADLESS_MODE True --BROWSER_RESOLUTION 1920x1080
                     deactivate
                     """
                 }
@@ -340,7 +340,7 @@ def building(workspace, version, scheduler=null) {
                 dir("${workspace}/controls/tests/reg/${type_controls}"){
                 sh """
                 source /home/sbis/venv_for_test/bin/activate
-                python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
+                python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True --HEADLESS_MODE True --BROWSER_RESOLUTION 1920x1080
                 deactivate
                 """
                 }
