@@ -25,7 +25,7 @@ define('Controls/Operations/Panel/Utils', [
             itemsMark = '';
 
          visibleKeys.forEach(function(key) {
-            itemsMark += toolbars.ToolbarItemTemplate({
+            itemsMark += toolbars.ItemTemplate({
                item: items.getRecordById(key),
                size: 'm',
                itemsSpacing: 'medium'
