@@ -17,7 +17,7 @@ define('Controls/Explorer', [
    'Controls/List/TreeControl',
    'Types/entity',
    'Controls/TreeGrid',
-   'Controls/сrumbs'
+   'Controls/crumbs'
 ], function(
    Control,
    template,
