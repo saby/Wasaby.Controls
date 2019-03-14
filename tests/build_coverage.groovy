@@ -273,6 +273,8 @@ def building(workspace, version, scheduler=null) {
                 sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./Controls-cover ./Controls'
                 sh 'sudo istanbul instrument --complete-copy --output ./Controls-demo-cover ./Controls-demo'
                 sh 'sudo mv ./Controls-demo ./Controls-demo-orig && sudo mv ./Controls-demo-cover ./Controls-demo'
+                sh 'sudo istanbul instrument --complete-copy --output ./SBIS3.CONTROLS-cover ./SBIS3.CONTROLS'
+                sh 'sudo mv ./SBIS3.CONTROLS ./SBIS3.CONTROLS-orig && sudo mv ./SBIS3.CONTROLS-cover ./SBIS3.CONTROLS'
             }
             sh """  sudo systemctl start Controls
                     sudo systemctl start Controls_ps
