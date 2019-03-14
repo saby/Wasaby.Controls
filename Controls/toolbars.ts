@@ -1,4 +1,4 @@
-import ToolbarItemTemplate = require('wml!Controls/_toolbars/ToolbarItemTemplate');
+import ItemTemplate = require('wml!Controls/_toolbars/ToolbarItemTemplate');
 
 export {default as View} from './_toolbars/View';
-export {ToolbarItemTemplate};
+export {ItemTemplate};
