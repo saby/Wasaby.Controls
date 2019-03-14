@@ -44,10 +44,11 @@ class Coverage:
 
         # заберем все файлы не js в текущей папке
         current_dir = os.path.split(cover_file)[0]
-        for current_file in os.listdir(current_dir):
-            current_file_path = os.path.join(current_dir, current_file)
-            if os.path.isfile(current_file_path) and not current_file_path.endswith('.js'):
-                other_files.append(current_file_path)
+        if not current_dir.endswith('Controls') and not current_dir.endswith('SBIS3.CONTROLS'):
+            for current_file in os.listdir(current_dir):
+                current_file_path = os.path.join(current_dir, current_file)
+                if os.path.isfile(current_file_path) and not current_file_path.endswith('.js'):
+                    other_files.append(current_file_path)
 
         # Демки
         if 'Controls-demo' in cover_file:
