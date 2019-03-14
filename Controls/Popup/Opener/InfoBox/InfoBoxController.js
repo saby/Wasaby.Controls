@@ -155,6 +155,10 @@ define('Controls/Popup/Opener/InfoBox/InfoBoxController',
             }
          },
 
+         needRestoreFocus: function() {
+            return false;
+         },
+
          getDefaultConfig: function(item) {
             InfoBoxController.superclass.getDefaultConfig.apply(this, arguments);
 
