@@ -1,7 +1,11 @@
 /// <amd-module name="Controls/_dataSource/parking" />
 /**
- * @include Controls/_dataSource/_parking/Handler
- * @include Controls/_dataSource/_parking/Controller
+ * @library Controls/_dataSource/parking
+ * @include Handler Controls/_dataSource/_parking/Handler
+ * @include ViewConfig Controls/_dataSource/_parking/ViewConfig
+ * @include Controller Controls/_dataSource/_parking/Controller
+ * @public
+ * @author Заляев А.В.
  */
 export { Handler, ViewConfig } from 'Controls/_dataSource/_parking/Handler';
 export { default as Controller, Config } from 'Controls/_dataSource/_parking/Controller';

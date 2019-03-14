@@ -1,0 +1,12 @@
+<div>
+    <Controls.Popup.Opener.Dialog name="dialogOpener" />
+    <ws:if data="{{ __viewConfig && __viewConfig.mode != 'dialog' }}">
+        <ws:partial
+            template="{{ __viewConfig.template }}"
+            scope="{{ __viewConfig.options }}"
+        />
+    </ws:if>
+    <ws:else>
+        <ws:partial template="{{ _options.content }}" />
+    </ws:else>
+</div>
