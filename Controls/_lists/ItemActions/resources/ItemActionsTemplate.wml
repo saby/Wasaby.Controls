@@ -4,7 +4,6 @@
             controls-itemActionsV_{{itemActionsPosition}}
             {{itemData.isEditing ? 'controls-itemActionsV_editing'}}
             {{itemData.isEditing && toolbarVisibility ? 'controls-itemActionsV_editingToolbarVisible'}}
-            {{menuIsShown ? 'controls-itemActionsV_invisible'}}
             {{itemData.isActive && actionMenuIsShown ? 'controls-itemActionsV_visible'}}
             {{itemData.isSwiped ? 'controls-itemActionsV_swiped'}}">
     <div attr:class="controls-itemActionsV__wrapper">

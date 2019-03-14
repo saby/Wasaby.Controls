@@ -4,7 +4,6 @@
 <ws:else data="{{swipeConfig}}">
     <div class="controls-itemActionsV_swipe_animationContainer">
         <div class="controls-Swipe
-                {{menuIsShown ? 'controls-itemActionsV_invisible'}}
                 controls-Swipe_{{animationState}}"
              on:animationend="_onAnimationEnd()">
             <div class="controls-Swipe_{{swipeDirection}}">
