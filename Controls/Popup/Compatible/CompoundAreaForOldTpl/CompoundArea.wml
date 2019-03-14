@@ -11,10 +11,17 @@
          </ws:bodyContentTemplate>
       </Controls.Popup.Templates.Stack.StackTemplate>
    </ws:else>
-   <ws:else>
+   <ws:else data="{{_options.type === 'dialog'}}">
       <Controls.Popup.Templates.Dialog.DialogTemplate name="DialogTemplate" hideCross="{{_options.hideCross}}"  closeButtonStyle="{{_options.closeButtonStyle}}" draggable="{{_options.draggable}}">
          <ws:bodyContentTemplate>
             <div name="compoundBlock" attr:class="controls-CompoundArea__container ws-window-content"></div>
+         </ws:bodyContentTemplate>
+      </Controls.Popup.Templates.Dialog.DialogTemplate>
+   </ws:else>
+   <ws:else>
+      <Controls.Popup.Templates.Dialog.DialogTemplate name="DialogTemplate" hideCross="{{_options.hideCross}}"  closeButtonStyle="{{_options.closeButtonStyle}}" draggable="{{_options.draggable}}">
+         <ws:bodyContentTemplate>
+            <div name="compoundBlock" attr:class="controls-CompoundArea__container"></div>
          </ws:bodyContentTemplate>
       </Controls.Popup.Templates.Dialog.DialogTemplate>
    </ws:else>
