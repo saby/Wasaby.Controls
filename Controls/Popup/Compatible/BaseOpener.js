@@ -185,6 +185,17 @@ function(cMerge,
          if (cfg.cssClassName) {
             cfg.className = cfg.cssClassName;
          }
+         if (cfg.maxWidth) {
+            if (cfg.maxWidthWithoutSideBar !== true) {
+               var MINIMAL_PANEL_DISTANCE = 50;
+               var stackContainer = document.querySelector('.controls-Popup__stack-target-container');
+               var sideBar = document.querySelector('.online-Sidebar');
+               if (stackContainer && sideBar) {
+                  var maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - MINIMAL_PANEL_DISTANCE;
+                  cfg.maxWidth = Math.min(maxCompatibleWidth, cfg.maxWidth);
+               }
+            }
+         }
       },
 
       _preparePopupCfgFromOldToNew: function(cfg) {
