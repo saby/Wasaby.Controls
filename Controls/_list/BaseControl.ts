@@ -816,8 +816,7 @@ var _private = {
             error: config.error,
             mode: config.mode || dataSourceError.Mode.include
         }).then((errorConfig) => {
-            self.__error = errorConfig;
-            _private.showError(self);
+            _private.showError(self, errorConfig);
             return {
                 error: config.error,
                 errorConfig: errorConfig
@@ -827,46 +826,18 @@ var _private = {
 
     /**
      * @param {Controls/List/BaseControl} self
+     * @param {Controls/dataSource:error.ViewConfig} errorConfig
      * @private
      */
-    showError(self: BaseControl): void {
-        var config = self.__error;
-        if (!config || config.isShowed) {
-            return;
-        }
-
-        if (config.mode != dataSourceError.Mode.dialog) {
-            // отрисовка внутри компонента
-            self._forceUpdate();
-            self.__error.isShowed = true;
-            return;
-        }
-
-        if (
-            constants.isBrowserPlatform &&
-            self._children.dialogOpener
-        ) {
-            // диалоговое с ошибкой
-            self._children.dialogOpener.open({
-                template: config.template,
-                templateOptions: config.options
-            });
-            self.__error.isShowed = true;
-            return;
-        }
+    showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
+        this.__error = errorConfig;
+        this._forceUpdate();
     },
 
     hideError(self: BaseControl): void {
-        if (self.__error) {
-            self.__error = null;
-            self._forceUpdate();
-        }
-        if (
-            constants.isBrowserPlatform &&
-            self._children.dialogOpener &&
-            self._children.dialogOpener.isOpened()
-        ) {
-            self._children.dialogOpener.close();
+        if (this.__error) {
+            this.__error = null;
+            this._forceUpdate();
         }
     },
 };
@@ -995,8 +966,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                     return;
                 }
                 if (receivedError) {
-                    self.__error = receivedError;
-                    return _private.showError(self);
+                    return _private.showError(self, receivedError);
                 }
                 return _private.reload(self, newOptions).addCallback(getState);
             }
@@ -1028,9 +998,6 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
         if (this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
-        }
-        if (this.__error) {
-            _private.showError(this);
         }
     },
 

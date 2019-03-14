@@ -13,18 +13,14 @@
          dataSource="{{ _options.dataSource }}">
       <div>
          <Controls.Popup.Opener.Confirmation name="popupOpener"/>
-         <Controls.Popup.Opener.Dialog name="dialogOpener" />
-         <ws:if data="{{ __error && __error.mode != 'dialog'  }}">
-            <ws:partial
-               template="{{ __error.template }}"
-               scope="{{ __error.options }}"
-            />
-         </ws:if>
-         <ws:else>
+         <Controls.dataSource:error.Container
+            name="errorContainer"
+            viewConfig="{{ __error }}"
+         >
             <ws:partial
                template="{{ _options.content }}"
                record="{{ _record }}"/>
-         </ws:else>
+         </Controls.dataSource:error.Container>
       </div>
    </Controls.Container.Crud>
 </Controls.Validate.FormController>

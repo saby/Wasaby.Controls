@@ -156,8 +156,7 @@ define('Controls/FormController', [
          var receivedData = receivedState.data;
 
          if (receivedError) {
-            this.__error = receivedError;
-            return this._showError();
+            return this._showError(receivedError);
          }
          var record = receivedData || cfg.record;
 
@@ -185,9 +184,6 @@ define('Controls/FormController', [
          // если рекорд был прочитан через ключ во время beforeMount, уведомим об этом
          if (this._readInMounting) {
             _private.readRecordBeforeMountNotify(this);
-         }
-         if (this.__error) {
-            this._showError();
          }
          this._isMount = true;
       },
@@ -573,8 +569,7 @@ define('Controls/FormController', [
             error: error,
             mode: mode || dataSource.error.Mode.include
          }).then(function(errorConfig) {
-            self.__error = errorConfig;
-            self._showError();
+            self._showError(errorConfig);
             return {
                error: error,
                errorConfig: errorConfig
@@ -585,45 +580,15 @@ define('Controls/FormController', [
       /**
        * @private
        */
-      _showError: function() {
-         var self = this;
-         var config = self.__error;
-         if (!config || config.isShowed) {
-            return;
-         }
-
-         if (config.mode != dataSource.error.Mode.dialog) {
-            // отрисовка внутри компонента
-            self._forceUpdate();
-            self.__error.isShowed = true;
-            return;
-         }
-
-         if (
-            Env.constants.isBrowserPlatform &&
-            this._children.dialogOpener
-         ) {
-            // диалоговое с ошибкой
-            self._children.dialogOpener.open({
-               template: config.template,
-               templateOptions: config.options
-            });
-            self.__error.isShowed = true;
-            return;
-         }
+      _showError: function(errorConfig) {
+         this.__error = errorConfig;
+         this._forceUpdate();
       },
 
       _hideError: function() {
          if (this.__error) {
             this.__error = null;
             this._forceUpdate();
-         }
-         if (
-            Env.constants.isBrowserPlatform &&
-            this._children.dialogOpener &&
-            this._children.dialogOpener.isOpened()
-         ) {
-            this._children.dialogOpener.close();
          }
       },
 
