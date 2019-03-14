@@ -82,6 +82,8 @@ function(cMerge,
             cfg.templateOptions.hideCross = !cfg.border;
          }
 
+         cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
+
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
