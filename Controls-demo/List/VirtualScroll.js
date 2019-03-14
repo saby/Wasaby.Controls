@@ -18,7 +18,16 @@ define('Controls-demo/List/VirtualScroll', [
                idProperty: 'id',
                data: getData(1000)
             });
-
+            this._treeViewSource = new source.Memory({
+               idProperty: 'id',
+               data: getTreeData(100, [1, 3], [2, 5])
+            });
+            this._treeColumns = [
+               {
+                  displayProperty: 'title',
+                  width: 'auto'
+               }
+            ];
             this._columns = [
                {
                   displayProperty: 'id',
