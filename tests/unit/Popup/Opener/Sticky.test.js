@@ -384,6 +384,10 @@ define(
          });
 
          it('Sticky with option locationStrategy=overflow', () => {
+            let left = 1700;
+            let right = 1900;
+            let targetC = {...targetCoords, left, right};
+
             var position = StickyStrategy.getPosition({
                locationStrategy: 'overflow',
                corner: {
@@ -396,7 +400,7 @@ define(
                      offset: 0
                   },
                   horizontal: {
-                     side: 'left',
+                     side: 'right',
                      offset: 0
                   }
                },
@@ -409,9 +413,10 @@ define(
                      left: 10
                   }
                }
-            }, targetCoords);
+            }, targetC);
 
-            assert.isTrue(position.top === 0);
+            assert.equal(position.top, 0);
+            assert.equal(position.left, 1490);
          });
 
          it ('Sticky [new position]', () => {
