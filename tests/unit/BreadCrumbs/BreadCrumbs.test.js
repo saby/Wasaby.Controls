@@ -1,8 +1,8 @@
 define([
-   'Controls/BreadCrumbs/View',
+   'Controls/сrumbs',
    'Types/entity'
 ], function(
-   BreadCrumbsView,
+   сrumbs,
    entity
 ) {
    describe('Controls.BreadCrumbs.View', function() {
@@ -40,7 +40,7 @@ define([
                parent: 5
             }
          ];
-         bc = new BreadCrumbsView();
+         bc = new сrumbs.View();
          bc.saveOptions({
             items: data.map(function(item) {
                return new entity.Model({

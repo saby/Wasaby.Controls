@@ -90,7 +90,7 @@
    <div class="demo-BreadCrumbs__example">
       <Controls.Heading caption="Хлебные крошки вынесены в сервисный блок"
                         size="xl"/>
-      <Controls.BreadCrumbs.Path items="{{_breadCrumbs6}}"
+      <Controls.сrumbs:HeadingPath items="{{_breadCrumbs6}}"
                                  backButtonStyle="primary"
                                  keyProperty="id" />
    </div>
@@ -113,7 +113,7 @@
                         source="{{_toolbarSource7}}"
                      />
                   </div>
-                  <Controls.BreadCrumbs items="{{_breadCrumbs6}}"
+                  <Controls.сrumbs:Path items="{{_breadCrumbs6}}"
                                         readOnly="{{true}}"
                                         keyProperty="id" />
                </div>
@@ -160,11 +160,11 @@
       </Controls.Explorer>
    </div>
    <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
-      <Controls.BreadCrumbs items="{{_breadCrumbs7}}"
+      <Controls.сrumbs:Path items="{{_breadCrumbs7}}"
                             keyProperty="id" />
    </div>
    <div class="demo-BreadCrumbs__example demo-BreadCrumbs__example_narrow">
-      <Controls.BreadCrumbs items="{{_breadCrumbs8}}"
+      <Controls.сrumbs:Path items="{{_breadCrumbs8}}"
                             keyProperty="id" />
    </div>
 </div>
