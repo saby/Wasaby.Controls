@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import SourceController = require('Controls/Controllers/SourceController');
 import template = require('wml!Controls/_toolbars/View');
-import toolbarItemTemplate = require('wml!Controls/_toolbars/ToolbarItemTemplate');
+import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
