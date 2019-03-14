@@ -41,6 +41,7 @@ define(
                name: 'options'
             };
             var popupOptions = {
+               closeByExternalClick: true,
                templateOptions: {
                   type: 'stack',
                   name: 'popupOptions'
@@ -51,6 +52,7 @@ define(
             assert.equal(opener._options.templateOptions.type, 'dialog');
             assert.equal(opener._options.templateOptions.name, 'options');
             assert.equal(baseConfig.templateOptions.name, 'popupOptions');
+            assert.equal(baseConfig.closeOnOutsideClick, true);
             assert.equal(baseConfig.templateOptions.type, 'stack');
             opener.destroy();
          });
