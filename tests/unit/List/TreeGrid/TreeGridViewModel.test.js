@@ -86,6 +86,111 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
          treeGridViewModel.setRoot('testRoot');
          assert.isTrue(setRootCalled, 'Invalid call toggleExpanded on model instance.');
       });
+
+      it('getCurrent', function () {
+
+         var itemTypes = {
+            node: 'node',
+            hiddenNode: 'hiddenNode',
+            item: 'item'
+         };
+
+         function checkCellClasses(classes, itemType) {
+            assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell') !== -1);
+            if (itemType === itemTypes.node) {
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node') !== -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item') === -1);
+            }
+            if (itemType === itemTypes.hiddenNode) {
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode') !== -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item') === -1);
+            }
+            if (itemType === itemTypes.item) {
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__node') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__hiddenNode') === -1);
+               assert.isTrue(classes.indexOf('controls-TreeGrid__row-cell__item') !== -1);
+            }
+         }
+
+         var current,
+             initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             });
+
+         current = model.getCurrent();
+         checkCellClasses(current.getCurrentColumn().cellClasses, itemTypes.node);
+         model.goToNext();
+
+         current = model.getCurrent();
+         checkCellClasses(current.getCurrentColumn().cellClasses, itemTypes.hiddenNode);
+         model.goToNext();
+
+         current = model.getCurrent();
+         checkCellClasses(current.getCurrentColumn().cellClasses, itemTypes.item);
+      });
+
+
+      it('getLevelIndentClasses', function () {
+         var
+             initialColumns = [{
+                width: '1fr',
+                displayProperty: 'title'
+             }],
+             model = new TreeGridViewModel({
+                items: new collection.RecordSet({
+                   idProperty: 'id',
+                   rawData: [
+                      {id: 0, title: 'i0', parent: null, type: true},
+                      {id: 1, title: 'i1', parent: null, type: false},
+                      {id: 2, title: 'i2', parent: null, type: null}
+                   ]
+                }),
+                keyProperty: 'id',
+                nodeProperty: 'type',
+                parentProperty: 'parent',
+                columns: initialColumns
+             }),
+             current = model.getCurrent(),
+             expected = {
+                defaultOrNull: 'controls-TreeGrid__row-levelPadding_size_default',
+                onlyExpander_xs: 'controls-TreeGrid__row-levelPadding_size_xs',
+                onlyExpander_xl: 'controls-TreeGrid__row-levelPadding_size_xl',
+                onlyIndent_xxs: 'controls-TreeGrid__row-levelPadding_size_xxs',
+                onlyIndent_m: 'controls-TreeGrid__row-levelPadding_size_m',
+                s_m: 'controls-TreeGrid__row-levelPadding_size_m',
+                l_xl: 'controls-TreeGrid__row-levelPadding_size_xl'
+             };
+
+         assert.equal(expected.defaultOrNull, current.getLevelIndentClasses(null, null));
+
+         assert.equal(expected.onlyExpander_xs, current.getLevelIndentClasses('xs', null));
+         assert.equal(expected.onlyExpander_xl, current.getLevelIndentClasses('xl', null));
+
+         assert.equal(expected.onlyIndent_xxs, current.getLevelIndentClasses(null, 'xxs'));
+         assert.equal(expected.onlyIndent_m, current.getLevelIndentClasses(null, 'm'));
+
+         assert.equal(expected.s_m, current.getLevelIndentClasses('s', 'm'));
+         assert.equal(expected.l_xl, current.getLevelIndentClasses('l', 'xl'));
+      });
+
+
       it('setExpandedItems', function() {
 
          treeGridViewModel._model._expandedItems = null;

@@ -136,6 +136,18 @@ define('Controls/Filter/Button',
                   }
                }
             });
+         },
+         getPopupConfig: function(self) {
+            return {
+               templateOptions: {
+                  template: self._options.templateName,
+                  items: self._options.items,
+                  historyId: self._options.historyId
+               },
+               locationStrategy: 'fixed',
+               template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
+               target: self._children.panelTarget
+            };
          }
       };
 
@@ -193,15 +205,7 @@ define('Controls/Filter/Button',
                   });
                } else {
                   _private.requireDeps(this).addCallback(function(res) {
-                     self._children.filterStickyOpener.open({
-                        templateOptions: {
-                           template: self._options.templateName,
-                           items: self._options.items,
-                           historyId: self._options.historyId
-                        },
-                        template: 'Controls/Filter/Button/Panel/Wrapper/_FilterPanelWrapper',
-                        target: self._children.panelTarget
-                     });
+                     self._children.filterStickyOpener.open(_private.getPopupConfig(self));
                      return res;
                   });
                }
