@@ -7,12 +7,14 @@
    </ws:partial>
 </ws:if>
 <ws:else>
-   <ws:partial template="{{_options.content}}"
-           scope="{{_options}}">
+   <ws:partial
+      template="{{_options.content}}"
+      scope="{{_options}}"
+      attr:class="{{_options.menuIsShown ? 'controls-itemActionsV_invisible'}}"
+   >
       <ws:itemActionsTemplate>
           {{ '' }}
          <ws:partial
-                  menuIsShown="{{_options.menuIsShown}}"
                   toolbarVisibility="{{_options.toolbarVisibility}}"
                   style="{{_options.style}}"
                   size="{{_options.editingConfig ? 's' : 'm'}}"

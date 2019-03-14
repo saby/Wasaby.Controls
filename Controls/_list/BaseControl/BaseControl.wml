@@ -131,7 +131,6 @@
         ws:content="listView"
         on:menuActionsClick="_showActionsMenu()"
         on:closeSwipe="_closeSwipe()"
-        menuIsShown="{{_menuIsShown}}"
         viewName="{{ _options.viewName }}"
         listModel="{{_listViewModel}}"
         swipeViewMode="{{_options.swipeViewMode}}"
