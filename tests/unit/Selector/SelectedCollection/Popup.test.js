@@ -41,6 +41,7 @@ define(['Controls/Selector/SelectedCollection/Popup',
                }
             };
 
+         scPopup._options.clickCallback = function(){};
          scPopup._notify = function(eventType) {
             if (eventType === 'close') {
                callCloseInfoBox = true;
