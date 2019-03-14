@@ -181,8 +181,7 @@ define(
             };
             BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
             assert.equal(cfg.locationStrategy, 'overflow');
-         });
-
+      })
          it('_setSizes', function() {
             BaseOpener._setSizes(config, DropdownExample);
             assert.isTrue(config.autoWidth);
@@ -299,7 +298,9 @@ define(
             config.target = 'testTarget';
             config.className = 'testClass';
             config.closeOnOutsideClick = false;
+            config.locationStrategy = 'fixed';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
+            assert.isFalse(newConfig.dialogOptions.flipWindow);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.dialogOptions._isCompatibleArea, true);
             assert.equal(newConfig.componentOptions, config.templateOptions);

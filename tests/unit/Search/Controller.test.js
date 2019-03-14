@@ -22,23 +22,27 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
    var memorySource = new sourceLib.Memory({
       data: data
    });
-
-   var defaultOptions = {
-      searchParam: 'test',
-      minSearchLength: 3,
-      searchDelay: 50,
-      filter: {},
-      source: memorySource,
-      navigation: {
-         source: 'page',
-         view: 'page',
-         sourceConfig: {
-            pageSize: 2,
-            page: 0,
-            hasMore: false
+   
+   var getDefaultOptions = function() {
+      return {
+         searchParam: 'test',
+         minSearchLength: 3,
+         searchDelay: 50,
+         filter: {},
+         source: memorySource,
+         navigation: {
+            source: 'page',
+            view: 'page',
+            sourceConfig: {
+               pageSize: 2,
+               page: 0,
+               hasMore: false
+            }
          }
-      }
+      };
    };
+   
+   var defaultOptions = getDefaultOptions();
 
    var getSearchController = function() {
       var controller = new Search(defaultOptions);
@@ -139,7 +143,8 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
 
       it('_private.needUpdateSearchController', function() {
          assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test'}}));
-         assert.isTrue(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
+         assert.isFalse(Search._private.needUpdateSearchController({filter: {test: 'test'}}, {filter: {test: 'test1'}}));
+         assert.isTrue(Search._private.needUpdateSearchController({minSearchLength: 3}, {minSearchLength: 2}));
       });
 
       it('_private.getSearchController', function() {
@@ -171,6 +176,21 @@ define(['Controls/Search/Controller', 'Types/source', 'Core/core-instance', 'Typ
          searchController._beforeMount({searchValue: 'test'}, {dataOptions: defaultOptions});
 
          assert.equal(searchController._inputSearchValue, 'test');
+      });
+   
+      it('_beforeUpdate', function() {
+         var searchController = getSearchController(defaultOptions);
+         searchController._beforeMount({}, {dataOptions: defaultOptions});
+   
+         Search._private.getSearchController(searchController);
+         searchController._beforeUpdate({}, {dataOptions: defaultOptions});
+         assert.isNull(searchController._searchController);
+   
+         Search._private.getSearchController(searchController);
+         var options = getDefaultOptions();
+         options.filter = {test: 'testValue'};
+         searchController._beforeUpdate(options, {dataOptions: defaultOptions});
+         assert.deepEqual(searchController._searchController.getFilter(), {test: 'testValue'});
       });
 
    });

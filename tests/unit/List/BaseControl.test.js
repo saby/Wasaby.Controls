@@ -1208,6 +1208,38 @@ define([
          }, 100);
       });
 
+      it('reload should call scroll to start', function() {
+
+         var
+             lnSource = new sourceLib.Memory({
+                idProperty: 'id',
+                data: data
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                markedKey: 3,
+                viewModelConstructor: ListViewModel
+             },
+             lnBaseControl = new BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+
+         assert.equal(lnBaseControl._restoreMarkedKey, null);
+
+         return new Promise(function (resolve) {
+            setTimeout(function () {
+               BaseControl._private.reload(lnBaseControl, lnCfg);
+               setTimeout(function () {
+                  assert.equal(lnBaseControl._restoreMarkedKey, 1);
+                  resolve();
+               }, 10);
+            },10);
+         });
+      });
+
       it('List navigation by keys and after reload', function(done) {
          // mock function working with DOM
          BaseControl._private.scrollToItem = function() {};
@@ -1875,7 +1907,6 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.isFalse(args.target);
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                      assert.equal(args.templateOptions.keyProperty, 'id');
                      assert.equal(args.templateOptions.parentProperty, 'parent');
@@ -2049,7 +2080,18 @@ define([
                   source: source
                },
                instance = new BaseControl(cfg),
-               target = 123,
+               target = {
+                  getBoundingClientRect: function() {
+                     return {
+                        bottom: 1,
+                        height: 2,
+                        left: 3,
+                        right: 4,
+                        top: 5,
+                        width: 6
+                     };
+                  }
+               },
                fakeEvent = {
                   type: 'click'
 
@@ -2072,7 +2114,7 @@ define([
                itemActionsOpener: {
                   open: function(args) {
                      callBackCount++;
-                     assert.equal(target, args.target);
+                     assert.deepEqual(target.getBoundingClientRect(), args.target.getBoundingClientRect());
                      assert.isTrue(cInstance.instanceOfModule(args.templateOptions.items, 'Types/collection:RecordSet'));
                   }
                }

@@ -59,7 +59,7 @@ var _private = {
             // load() method may be fired with errback
             self._sourceController.load(filter, sorting).addCallback(function(list) {
                 var
-                    markedItem, markedKey, isActive,
+                    isActive,
                     listModel = self._listViewModel;
 
                 if (cfg.dataLoadCallback instanceof Function) {
@@ -74,17 +74,7 @@ var _private = {
                     }
                     listModel.setItems(list);
                     self._items = listModel.getItems();
-                    markedKey = listModel.getMarkedKey();
-                    if (markedKey !== null) {
-                        if (listModel.getIndexByKey(markedKey) === -1) {
-                            markedItem = listModel.getFirstItem();
-                            if (markedItem) {
-                                markedKey = markedItem.getId();
-                                listModel.setMarkedKey(markedKey);
-                                self._restoreMarkedKey = markedKey;
-                            }
-                        }
-                    }
+                    self._restoreMarkedKey = listModel.getMarkedKey();
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
@@ -562,6 +552,15 @@ var _private = {
         });
     },
 
+    mockTarget(target: HTMLElement): {
+       getBoundingClientRect: () => ClientRect
+    } {
+        const clientRect = target.getBoundingClientRect();
+        return {
+            getBoundingClientRect: () => clientRect
+        };
+    },
+
     showActionsMenu: function(self, event, itemData, childEvent, showAll) {
         var
             context = event.type === 'itemcontextmenu',
@@ -574,6 +573,13 @@ var _private = {
             : itemData.itemActions && itemData.itemActions.all.filter(function(action) {
                 return action.showType !== tUtil.showType.TOOLBAR;
             });
+        /**
+         * During an opening of a menu, a row can get wrapped in a HoC and it would cause a full redraw of the row,
+         * which would remove the target from the DOM.
+         * So, we have to save target's ClientRect here in order to work around it.
+         * But popups don't work with ClientRect, so we have to wrap it in an object with getBoundingClientRect method.
+         */
+        const target = context ? null : _private.mockTarget(childEvent.target);
         if (showActions && showActions.length) {
             var
                 rs = new collection.RecordSet({ rawData: showActions });
@@ -584,7 +590,7 @@ var _private = {
             require(['css!Controls/Toolbar/ToolbarPopup'], function() {
                 self._children.itemActionsOpener.open({
                     opener: self._children.listView,
-                    target: !context ? childEvent.target : false,
+                    target,
                     templateOptions: {
                         items: rs,
                         keyProperty: 'id',
@@ -600,7 +606,7 @@ var _private = {
                     closeOnOutsideClick: true,
                     corner: {vertical: 'top', horizontal: 'right'},
                     horizontalAlign: {side: context ? 'right' : 'left'},
-                    className: 'controls-Toolbar__popup_list',
+                    className: 'controls-Toolbar__popup__list',
                     nativeEvent: context ? childEvent.nativeEvent : false
                 });
                 self._menuIsShown = true;

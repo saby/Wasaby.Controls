@@ -77,7 +77,7 @@ var _private = {
 };
 
 var
-    ZOOM_DELAY = 150,
+    ZOOM_DELAY = 100,
     ZOOM_COEFFICIENT = 1.5;
 
 
@@ -115,6 +115,7 @@ var TileView = ListView.extend({
                 position: hoveredItem.endPosition
             });
         }
+        this._notify('controlResize', [], { bubbling: true });
     },
 
     //TODO: Удалить проверку на DOM. https://online.sbis.ru/opendoc.html?guid=85bf65db-66a4-4b17-a59d-010a5ecb15a9

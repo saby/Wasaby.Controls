@@ -9,8 +9,11 @@
 		on:selectedKeyChanged="changeTrigger()"
 		attr:class="ControlsDemo-Previewer__trigger"
 	/>
-   <ws:for data="image in ['Andrey', 'Valera', 'Maksim']">
-      <Controls.Popup.Previewer trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
+   <ws:for data="image in _images">
+      <Controls.Popup.Previewer attr:class="ControlsDemo-Previewer__previewer"
+                                on:dblClick="_clickHandler(image)"
+                                name="{{image}}"
+                                trigger="{{_trigger}}" trigger_1="{{_options.previewerTrigger}}">
          <ws:content>
                <img id="target_{{image}}" src="{{_resourceRoot}}Controls-demo/Previewer/image/{{image}}.png"/>
          </ws:content>
