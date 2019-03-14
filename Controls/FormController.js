@@ -213,7 +213,7 @@ define('Controls/FormController', [
          self._notify('registerPending', [new Deferred(), {
             showLoadingIndicator: false,
             validate: function() {
-               return self._record.isChanged();
+               return self._record && self._record.isChanged();
             },
             onPendingFail: function(forceFinishValue, deferred) {
                self._showConfirmDialog(deferred, forceFinishValue);
