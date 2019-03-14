@@ -115,7 +115,9 @@
    position: absolute;
    top: 0;
    left: -@width_TileView-itemActions-shadow;
-   background: linear-gradient(to right, transparent, @background-color_TileView-title);
+
+   //dont use transparent because https://stackoverflow.com/questions/38391457/linear-gradient-to-transparent-bug-in-latest-safari
+   background: linear-gradient(to right, fade(@background-color_TileView-title, 0), @background-color_TileView-title);
 }
 
 //Internal variable required to reduce the height of the image under the title.
