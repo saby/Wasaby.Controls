@@ -285,7 +285,7 @@ def building(workspace, version, scheduler=null) {
             """# UTF-8
             [general]
             browser = chrome
-            SITE = http://${NODE_NAME}:30010
+            SITE = http://${NODE_NAME}.unix.tensor.ru:30010
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
@@ -295,13 +295,13 @@ def building(workspace, version, scheduler=null) {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/${type_controls}"""
+            HTTP_PATH = http://${NODE_NAME}.unix.tensor.ru:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/${type_controls}"""
 
             writeFile file: "${workspace}/controls/tests/reg/${type_controls}/config.ini", text:
             """# UTF-8
             [general]
             browser = chrome
-            SITE = http://${NODE_NAME}:30010
+            SITE = http://${NODE_NAME}.unix.tensor.ru:30010
             DO_NOT_RESTART = True
             SOFT_RESTART = False
             NO_RESOURCES = True
@@ -309,7 +309,7 @@ def building(workspace, version, scheduler=null) {
             TAGS_TO_START = online
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg/${type_controls}
+            HTTP_PATH = http://${NODE_NAME}.unix.tensor.ru:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg/${type_controls}
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1"""
 
