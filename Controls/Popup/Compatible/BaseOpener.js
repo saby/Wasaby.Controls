@@ -82,6 +82,8 @@ function(cMerge,
             cfg.templateOptions.hideCross = !cfg.border;
          }
 
+         cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
+
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
@@ -126,13 +128,14 @@ function(cMerge,
       prepareNotificationConfig: function(config) {
          var template = typeof config.template === 'string' ? requirejs(config.template) : config.template;
          config.opener = null;
-         config.className = 'controls-OldNotification';
          config.isVDOM = true;
          config.template = 'Controls/Popup/Compatible/OldNotification';
          config.componentOptions = {
             template: template,
-            templateOptions: config.templateOptions
+            templateOptions: config.templateOptions,
+            className: config.className
          };
+         config.className = 'controls-OldNotification';
          return config;
       },
 
@@ -183,6 +186,17 @@ function(cMerge,
          }
          if (cfg.cssClassName) {
             cfg.className = cfg.cssClassName;
+         }
+         if (cfg.maxWidth) {
+            if (cfg.maxWidthWithoutSideBar !== true) {
+               var MINIMAL_PANEL_DISTANCE = 50;
+               var stackContainer = document.querySelector('.controls-Popup__stack-target-container');
+               var sideBar = document.querySelector('.online-Sidebar');
+               if (stackContainer && sideBar) {
+                  var maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - MINIMAL_PANEL_DISTANCE;
+                  cfg.maxWidth = Math.min(maxCompatibleWidth, cfg.maxWidth);
+               }
+            }
          }
       },
 

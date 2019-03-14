@@ -197,25 +197,14 @@ def building(workspace, version, scheduler=null) {
                 echo SDK
             }
 
-
-            dir(workspace){
-                echo "подкидываем istanbul в Controls"
-                sh 'istanbul instrument -x bin/** -x tests/** -x viewsettings/** -x sbis3-app-engine/** --complete-copy --output ./controls-cover ./controls'
-                sh 'sudo mv ./controls ./controls-orig && sudo mv ./controls-cover ./controls'
-            }
-            dir (workspace) {
-                echo "подкидываем оргинальные файлы"
-                sh 'cp -rf ./controls-orig/bin/ ./controls/bin/'
-                sh 'cp -rf ./controls-orig/tests/ ./controls/tests/'
-                sh 'cp -rf ./controls-orig/viewsettings/ ./controls/viewsettings/'
-                sh 'cp -rf ./controls-orig/sbis3-app-engine/ ./controls/sbis3-app-engine/'
-            }
-
             echo "Собираем controls"
             sh "mkdir ${workspace}/controls2"
             sh "python3 ${workspace}/constructor/build_ui_components.py ${workspace}/controls ${env.BUILD_NUMBER} controls --deploy ${workspace}/controls2"
             echo items
         }
+
+
+
         stage("Разворот стенда"){
             echo "Запускаем разворот стенда и подготавливаем окружение для тестов"
             // Создаем sbis-rpc-service.ini
@@ -269,9 +258,26 @@ def building(workspace, version, scheduler=null) {
             sh """cp -fr ./controls/Examples/ ./controls/tests/stand/Intest/Examples/"""
             sh """
                 sudo chmod -R 0777 ${workspace}
-                python3 "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "${workspace}/controls/tests/stand/conf/sbis-rpc-service.ini" "${workspace}/controls/tests/stand/distrib_branch_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --conf x86_64
+                python3 "./constructor/updater.py" "${version}" "/home/sbis/Controls" "css_${env.NODE_NAME}${ver}1" "${workspace}/controls/tests/stand/conf/sbis-rpc-service.ini" "${workspace}/controls/tests/stand/distrib_branch_debug_ps" --sdk_path "${SDK}" --items "${items}" --host test-autotest-db1 --stand nginx_branch --daemon_name Controls --conf x86_64
                 sudo chmod -R 0777 ${workspace}
                 sudo chmod -R 0777 /home/sbis/Controls
+            """
+        }
+        stage("Инструментируем код") {
+            sh """  sudo systemctl stop Controls
+                    sudo systemctl stop Controls_ps
+            """
+            dir("/home/sbis/Controls/build-ui/resources"){
+                echo "подкидываем istanbul в Controls"
+                sh 'sudo istanbul instrument --complete-copy --output ./Controls-cover ./Controls'
+                sh 'sudo mv ./Controls ./Controls-orig && sudo mv ./Controls-cover ./Controls'
+                sh 'sudo istanbul instrument --complete-copy --output ./Controls-demo-cover ./Controls-demo'
+                sh 'sudo mv ./Controls-demo ./Controls-demo-orig && sudo mv ./Controls-demo-cover ./Controls-demo'
+                sh 'sudo istanbul instrument --complete-copy --output ./SBIS3.CONTROLS-cover ./SBIS3.CONTROLS'
+                sh 'sudo mv ./SBIS3.CONTROLS ./SBIS3.CONTROLS-orig && sudo mv ./SBIS3.CONTROLS-cover ./SBIS3.CONTROLS'
+            }
+            sh """  sudo systemctl start Controls
+                    sudo systemctl start Controls_ps
             """
         }
         stage("Тесты"){
@@ -279,7 +285,7 @@ def building(workspace, version, scheduler=null) {
             """# UTF-8
             [general]
             browser = chrome
-            SITE = http://${NODE_NAME}:30010
+            SITE = http://${NODE_NAME}.unix.tensor.ru:30010
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1
             DO_NOT_RESTART = True
@@ -289,13 +295,13 @@ def building(workspace, version, scheduler=null) {
             TAGS_NOT_TO_START = iOSOnly
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/${type_controls}"""
+            HTTP_PATH = http://${NODE_NAME}.unix.tensor.ru:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/int/${type_controls}"""
 
             writeFile file: "${workspace}/controls/tests/reg/${type_controls}/config.ini", text:
             """# UTF-8
             [general]
             browser = chrome
-            SITE = http://${NODE_NAME}:30010
+            SITE = http://${NODE_NAME}.unix.tensor.ru:30010
             DO_NOT_RESTART = True
             SOFT_RESTART = False
             NO_RESOURCES = True
@@ -303,7 +309,7 @@ def building(workspace, version, scheduler=null) {
             TAGS_TO_START = online
             ELEMENT_OUTPUT_LOG = locator
             WAIT_ELEMENT_LOAD = 20
-            HTTP_PATH = http://${NODE_NAME}:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg/${type_controls}
+            HTTP_PATH = http://${NODE_NAME}.unix.tensor.ru:2100/controls_${version}/${env.JOB_BASE_NAME}/controls/tests/reg/${type_controls}
             SERVER = test-autotest-db1:5434
             BASE_VERSION = css_${NODE_NAME}${ver}1"""
 
@@ -329,7 +335,7 @@ def building(workspace, version, scheduler=null) {
                 dir("${workspace}/controls/tests/int/${type_controls}"){
                     sh """
                     source /home/sbis/venv_for_test/bin/activate
-                    python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
+                    python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True --HEADLESS_MODE True --BROWSER_RESOLUTION 1920x1080
                     deactivate
                     """
                 }
@@ -338,7 +344,7 @@ def building(workspace, version, scheduler=null) {
                 dir("${workspace}/controls/tests/reg/${type_controls}"){
                 sh """
                 source /home/sbis/venv_for_test/bin/activate
-                python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True
+                python start_tests.py --RESTART_AFTER_BUILD_MODE --SERVER_ADDRESS ${server_address} --STREAMS_NUMBER ${stream_number} --COVERAGE True --RECURSIVE_SEARCH True --HEADLESS_MODE True --BROWSER_RESOLUTION 1920x1080
                 deactivate
                 """
                 }
