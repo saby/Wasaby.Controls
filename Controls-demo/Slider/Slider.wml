@@ -1,3 +1,0 @@
-<div>
-    <Controls.Slider  scaleStep="{{10}}" minValue="{{1}}" maxValue="{{10}}"/>
-</div>

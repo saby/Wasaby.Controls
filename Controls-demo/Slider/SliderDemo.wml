@@ -1,0 +1,52 @@
+<div>
+   <div class="event-example__wrapper">
+      <div class="exampleBlock">
+         <h3>Example</h3>
+         <Controls.Slider  
+            scaleStep="{{_scaleStep}}" 
+            minValue="{{_minValue}}" 
+            maxValue="{{_maxValue}}"
+            single="{{_single}}"
+            bigPoint="{{_bigPoint}}"
+            decimals="{{_decimals}}"
+            input="{{_input}}"
+            bordered="{{_bordered}}"
+            startLabel="{{_startLabel}}"
+            centerLabel="{{_centerLabel}}"
+            endLabel="{{_endLabel}}"
+            orientation="{{_orientation}}"
+         />
+      </div>
+      <div class="eventBlock">
+         <div class="reset-header__wrapper">
+             <span>Event that surfaced:</span>
+             <Controls.Button attr:class="demo-ResetButton" on:click="reset()" style="linkMain3" caption="reset"/>
+         </div>
+         <br/>
+         <span>{{_eventName}}</span>
+      </div>
+   </div>
+   <div class="optionsBlock">
+      <h3>Options</h3>
+      <Controls.Label caption="minValue:"/>
+      <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeMinValue()" bind:value="_minValue" />
+        
+      <Controls.Label caption="maxValue:"/>
+      <Controls.Input.Number precision="{{_decimals}}" on:valueChanged="changeMaxValue()" bind:value="_maxValue" />             
+      <Controls.Label caption="scaleStep:"/>
+      <Controls.Input.Number precision="{{0}}" on:valueChanged="changeScaleStep()" bind:value="_scaleStep" />        
+      <Controls.Label caption="decimals:"/>
+      <Controls.Input.Number precision="{{0}}" on:valueChanged="changeDecimals()" bind:value="_decimals" />
+      <br/>
+      <Controls.Label caption="startLabel:"/>
+      <Controls.Input.Text on:valueChanged="changeStartLabel()" bind:value="_startLabel" />
+      <Controls.Label caption="centerLabel:"/>
+      <Controls.Input.Text on:valueChanged="changeCenterLabel()" bind:value="_centerLabel" />
+      <Controls.Label caption="endLabel:"/>
+      <Controls.Input.Text on:valueChanged="changeEndLabel()" bind:value="_endLabel" />
+      <Controls.Toggle.Checkbox caption="single" on:valueChanged="changeSingle()" bind:value="_single"/>
+      <Controls.Toggle.Checkbox caption="bigPoint" on:valueChanged="changeBigPoint()" bind:value="_bigPoint"/>
+      <Controls.Toggle.Checkbox caption="input" on:valueChanged="changeInput()" bind:value="_input"/>
+      <Controls.Toggle.Checkbox caption="bordered" on:valueChanged="changeBordered()" bind:value="_bordered"/>
+   </div>
+</div>
