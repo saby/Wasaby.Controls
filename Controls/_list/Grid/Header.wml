@@ -12,7 +12,7 @@
    </ws:if>
 </ws:template>
 <ws:template name="cell">
-   <div class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
+   <div attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
       <ws:partial template="cellContent"/>
    </div>
 </ws:template>
