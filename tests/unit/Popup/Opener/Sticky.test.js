@@ -62,11 +62,11 @@ define(
                align: {
                   vertical: {
                      side: 'bottom',
-                     offset: 0
+                     offset: 20
                   },
                   horizontal: {
                      side: 'right',
-                     offset: 0
+                     offset: 25
                   }
                },
                config: {},
@@ -79,8 +79,8 @@ define(
                   }
                }
             }, targetCoords);
-            assert.isTrue(position.top === 400);
-            assert.isTrue(position.left === 400);
+            assert.isTrue(position.top === 420);
+            assert.isTrue(position.left === 425);
          });
 
          it('Sticky position fixed', () => {
