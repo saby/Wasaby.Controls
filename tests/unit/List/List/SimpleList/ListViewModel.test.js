@@ -120,7 +120,12 @@ define([
                    idProperty: 'id'
                 }),
                 markedKey: null
-             });
+             }),
+            modelWithoutItems = new ListViewModel({
+               markerVisibility: 'visible',
+               keyProperty: 'id',
+               markedKey: 1
+            });
 
          // Should not set marker
          model._options.markerVisibility = 'hidden';
@@ -140,6 +145,10 @@ define([
          model._options.markerVisibility = 'always';
          model.setItems(items);
          assert.equal(1, model._markedKey);
+         
+         assert.equal(modelWithoutItems._markedKey, null);
+         modelWithoutItems.setItems(items);
+         assert.equal(modelWithoutItems._markedKey, 1);
       });
 
       it('should set markerFrom state', function () {
