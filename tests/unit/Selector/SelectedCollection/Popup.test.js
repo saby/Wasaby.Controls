@@ -3,6 +3,8 @@ define(['Controls/Selector/SelectedCollection/Popup',
    'Types/collection'
 ], function(SelectedCollectionPopup, entity, collection) {
 
+   var CLICKABLE_CLASS = 'controls-SelectedCollection__item__caption-clickable';
+
    describe('Controls/Selector/SelectedCollection/Popup', function() {
       it('_crossClick', function() {
          var
@@ -27,6 +29,30 @@ define(['Controls/Selector/SelectedCollection/Popup',
 
          scPopup._crossClick(null, item2);
          assert.equal(scPopup._items.getCount(), 0);
+      });
+
+      it('_itemClick', function() {
+         var
+            callCloseInfoBox = false,
+            scPopup = new SelectedCollectionPopup(),
+            mouseEvent = {
+               target: {
+                  classList: ['item-collection']
+               }
+            };
+
+         scPopup._notify = function(eventType) {
+            if (eventType === 'close') {
+               callCloseInfoBox = true;
+            }
+         };
+
+         scPopup._itemClick(null, null, mouseEvent);
+         assert.isFalse(callCloseInfoBox);
+
+         mouseEvent.target.classList.push(CLICKABLE_CLASS);
+         scPopup._itemClick(null, null, mouseEvent);
+         assert.isTrue(callCloseInfoBox);
       });
    });
 });

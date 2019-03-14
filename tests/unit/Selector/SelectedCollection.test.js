@@ -1,6 +1,4 @@
 define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
-   var CLICKABLE_CLASS = 'controls-SelectedCollection__item__caption-clickable';
-
    describe('Controls/Selector/SelectedCollection', function() {
       if (typeof window === 'undefined') {
          // Кастыль, дабы избежать работы с версткой
@@ -66,33 +64,6 @@ define(['Controls/Selector/SelectedCollection'], function(SelectedCollection) {
          selectedCollection._afterMount();
          assert.notEqual(selectedCollection._counterWidth, 0);
          assert.isTrue(isUpdate);
-      });
-
-      it('onResult', function() {
-         var callCloseInfoBox = false;
-         var selectedCollection = new SelectedCollection();
-         var mouseEvent = {
-            target: {
-               classList: ['item-collection']
-            }
-         };
-
-         selectedCollection._children.infoBox = {
-            close: function() {
-               callCloseInfoBox = true;
-            }
-         };
-
-         SelectedCollection._private.onResult.call(selectedCollection, 'itemClick', null, mouseEvent);
-         assert.isFalse(callCloseInfoBox);
-
-         mouseEvent.target.classList.push(CLICKABLE_CLASS);
-         SelectedCollection._private.onResult.call(selectedCollection, 'itemClick', null, mouseEvent);
-         assert.isTrue(callCloseInfoBox);
-
-         callCloseInfoBox = false;
-         SelectedCollection._private.onResult.call(selectedCollection, 'crossClick', null, mouseEvent);
-         assert.isFalse(callCloseInfoBox);
       });
    });
 });

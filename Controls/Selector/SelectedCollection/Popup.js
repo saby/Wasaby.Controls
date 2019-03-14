@@ -10,6 +10,8 @@ define('Controls/Selector/SelectedCollection/Popup',
    function(Control, template, collection) {
       'use strict';
 
+      var CLICKABLE_CLASS = 'controls-SelectedCollection__item__caption-clickable';
+
       var itemHiddenTemplate = Control.extend({
          _template: template,
 
@@ -26,6 +28,12 @@ define('Controls/Selector/SelectedCollection/Popup',
 
          _itemClick: function(event, item, mouseEvent) {
             this._options.clickCallback('itemClick', item, mouseEvent);
+
+            // If the items are clickable, close the pop-up when click on a collection item
+            if ([].indexOf.call(mouseEvent.target.classList, CLICKABLE_CLASS) !== -1) {
+               this._notify('sendResult', [{ type: 'close' }], { bubbling: true });
+               this._notify('close', [], {bubbling: true});
+            }
          },
 
          _crossClick: function(event, item, mouseEvent) {

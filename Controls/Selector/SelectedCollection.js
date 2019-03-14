@@ -24,19 +24,12 @@ define('Controls/Selector/SelectedCollection',
        * @author Капустин И.А.
        */
 
-      var CLICKABLE_CLASS = 'controls-SelectedCollection__item__caption-clickable';
-
       var _private = {
-         onResult: function(eventType, item, mouseEvent) {
+         clickCallbackPopup: function(eventType, item, mouseEvent) {
             if (eventType === 'crossClick') {
-               this._notify('crossClick', [item]);
+               this._notify('crossClick', [item, mouseEvent]);
             } else if (eventType === 'itemClick') {
-               this._notify('itemClick', [item]);
-
-               // If the items are clickable, close the pop-up when click on a collection item
-               if ([].indexOf.call(mouseEvent.target.classList, CLICKABLE_CLASS) !== -1) {
-                  this._children.infoBox.close();
-               }
+               this._notify('itemClick', [item, mouseEvent]);
             }
          },
 
@@ -60,7 +53,7 @@ define('Controls/Selector/SelectedCollection',
             templateOptions.readOnly = options.readOnly;
             templateOptions.displayProperty = options.displayProperty;
             templateOptions.itemTemplate = options.itemTemplate;
-            templateOptions.clickCallback = self._onResult.bind(this);
+            templateOptions.clickCallback = self._clickCallbackPopup;
             
             return templateOptions;
          },
@@ -88,7 +81,7 @@ define('Controls/Selector/SelectedCollection',
 
          _beforeMount: function(options) {
             this._getItemMaxWidth = selectedCollectionUtils.getItemMaxWidth;
-            this._onResult = _private.onResult.bind(this);
+            this._clickCallbackPopup = _private.clickCallbackPopup.bind(this);
             this._items = _private.getItemsInArray(options.items);
             this._visibleItems = _private.getVisibleItems(this._items, options.maxVisibleItems);
             this._templateOptions = _private.getTemplateOptions(this, options);
@@ -112,14 +105,6 @@ define('Controls/Selector/SelectedCollection',
                if (this._counterWidth) {
                   this._forceUpdate();
                }
-            }
-         },
-
-         _onResult: function(event, item) {
-            if (event === 'itemClick') {
-               this._itemClick(event, item);
-            } else if (event === 'crossClick') {
-               this._crossClick(event, item);
             }
          },
 
