@@ -12,10 +12,11 @@ define([
    'Core/Deferred',
    'Core/core-instance',
    'Env/Env',
+   'Core/core-clone',
    'Controls/List/ListView',
    'Types/entity',
    'Types/collection'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -1215,6 +1216,19 @@ define([
                 idProperty: 'id',
                 data: data
              }),
+             lnSource2 = new sourceLib.Memory({
+                idProperty: 'id',
+                data: [{
+                   id: 4,
+                   title: 'Четвертый',
+                   type: 1
+                },
+                   {
+                      id: 5,
+                      title: 'Пятый',
+                      type: 2
+                   }]
+             }),
              lnCfg = {
                 viewName: 'Controls/List/ListView',
                 source: lnSource,
@@ -1233,8 +1247,16 @@ define([
             setTimeout(function () {
                BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function () {
-                  assert.equal(lnBaseControl._restoreMarkedKey, 1);
-                  resolve();
+                  assert.equal(lnBaseControl._restoreMarkedKey, 3);
+                  
+                  lnCfg = clone(lnCfg);
+                  lnCfg.source = lnSource2;
+                  lnBaseControl._beforeUpdate(lnCfg);
+                  
+                  setTimeout(function() {
+                     assert.equal(lnBaseControl._restoreMarkedKey, 4);
+                     resolve();
+                  });
                }, 10);
             },10);
          });
