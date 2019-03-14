@@ -162,6 +162,7 @@ define(
             let config = {
                template,
                opener: 'opener',
+               className: 'myClass',
                templateOptions: {
                   myOpt: true
                }
@@ -170,6 +171,7 @@ define(
             assert.equal(config.template, 'Controls/Popup/Compatible/OldNotification');
             assert.equal(config.componentOptions.template, template);
             assert.equal(config.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(config.componentOptions.className, 'myClass');
             assert.equal(config.isVDOM, true);
             assert.equal(config.className, 'controls-OldNotification');
             assert.equal(config.opener, null);
