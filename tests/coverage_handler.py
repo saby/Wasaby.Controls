@@ -34,7 +34,7 @@ class Coverage:
         # соотносим конвертируемые ресурсы с исходниками
         cover_file = cover_file.replace('/home/sbis/Controls/build-ui/resources', os.path.join(os.environ["WORKSPACE"], 'controls'))
         other_files = [cover_file]
-        component_path = os.path.splitext(cover_file)[0]
+        component_path = cover_file.rsplit('.', 1)[0]
         # если есть папка с названием компонента
         if os.path.exists(component_path):
             for other in os.listdir(component_path):
