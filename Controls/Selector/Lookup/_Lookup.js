@@ -67,6 +67,10 @@ define('Controls/Selector/Lookup/_Lookup', [
          return itemsCount > 0 && options.multiSelect && (!options.readOnly || itemsCount > 1);
       },
 
+      getCounterWidth: function(itemsCount) {
+         return selectedCollectionUtils.getCounterWidth(itemsCount);
+      },
+
       calculatingSizes: function(self, newOptions) {
          var
             counterWidth,
@@ -83,7 +87,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (_private.isNeedCalculatingSizes(newOptions)) {
             // in mode read only and single line, counter does not affect the collection
             if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
-               counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+               counterWidth = _private.getCounterWidth(itemsCount);
             }
 
             fieldWrapperWidth = _private.getFieldWrapperWidth(self);
