@@ -15,6 +15,8 @@
             centerLabel="{{_centerLabel}}"
             endLabel="{{_endLabel}}"
             orientation="{{_orientation}}"
+            readOnly="{{_readOnly}}"
+            scaleAlign="{{_scaleAlign}}"
          />
       </div>
       <div class="eventBlock">
@@ -48,5 +50,7 @@
       <Controls.Toggle.Checkbox caption="bigPoint" on:valueChanged="changeBigPoint()" bind:value="_bigPoint"/>
       <Controls.Toggle.Checkbox caption="input" on:valueChanged="changeInput()" bind:value="_input"/>
       <Controls.Toggle.Checkbox caption="bordered" on:valueChanged="changeBordered()" bind:value="_bordered"/>
+      <Controls.Toggle.Checkbox caption="readOnly" on:valueChanged="changeReadOnly()" bind:value="_readOnly"/>
+      <Controls.Toggle.Checkbox caption="scaleAlign" on:valueChanged="changeScaleAlign()" bind:value="_scaleAlign"/>
    </div>
 </div>

@@ -21,6 +21,8 @@ define('Controls-demo/Slider/SliderDemo',
          _startLabel: 'from',
          _centerLabel: 'to',
          _endLabel: '$',
+         _readOnly: false,
+         _scaleAlign: false,
 
          _beforeMount: function(opts){
             
@@ -64,6 +66,12 @@ define('Controls-demo/Slider/SliderDemo',
          },
          changeOrientation: function(e, val){
             this._orientation = val;
+         },
+         changeReadOnly: function(e, val){
+            this._readOnly = val;
+         },
+         changeScaleAlign: function(e, val){
+            this._scaleAlign = val;
          },
       });
 
