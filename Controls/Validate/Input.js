@@ -19,7 +19,7 @@ define('Controls/Validate/Input',
             }
          },
          _valueChangedHandler: function(event, value, displayValue) {
-            if(this._currentValue !== value) {
+            if (this._currentValue !== value) {
                this._currentValue = value;
                this._notify('valueChanged', [value]);
                this._cleanValid();
