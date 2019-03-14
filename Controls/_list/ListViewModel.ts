@@ -364,8 +364,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setItems: function(items) {
+        var currentItems = this.getItems();
+
         ListViewModel.superclass.setItems.apply(this, arguments);
-        this.updateMarker(this._markedKey);
+
+        //we should try to set markedKey by options, if there were no items before
+        //this._markedKey setted in constructor only if items were in constructor config
+        this.updateMarker(currentItems ? this._markedKey : this._options.markedKey);
         this._nextModelVersion();
     },
 
