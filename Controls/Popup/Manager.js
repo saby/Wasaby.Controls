@@ -113,7 +113,7 @@ define('Controls/Popup/Manager',
          },
 
          popupCreated: function(id) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                // Register new popup
                _private.fireEventHandler(id, 'onOpen');
@@ -125,7 +125,7 @@ define('Controls/Popup/Manager',
          },
 
          popupUpdated: function(id) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                var needUpdate = element.controller._elementUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
                this._notify('managerPopupUpdated', [element, _private.popupItems], { bubbling: true });
@@ -135,7 +135,7 @@ define('Controls/Popup/Manager',
          },
 
          popupMaximized: function(id, state) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                element.controller.elementMaximized(element, _private.getItemContainer(id), state);
                this._notify('managerPopupMaximized', [element, _private.popupItems], { bubbling: true });
@@ -145,7 +145,7 @@ define('Controls/Popup/Manager',
          },
 
          popupAfterUpdated: function(id) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                return element.controller._elementAfterUpdated(element, _private.getItemContainer(id)); // при создании попапа, зарегистрируем его
             }
@@ -153,7 +153,7 @@ define('Controls/Popup/Manager',
          },
 
          popupActivated: function(id) {
-            var item = ManagerController.find(id);
+            var item = _private.find(id);
             if (item) {
                item.waitDeactivated = false;
                item.isActive = true;
@@ -162,10 +162,10 @@ define('Controls/Popup/Manager',
          },
 
          popupDeactivated: function(id) {
-            var item = ManagerController.find(id);
+            var item = _private.find(id);
             if (item) {
                item.isActive = false;
-               if (item.popupOptions.closeOnOutsideClick) {
+               if (_private.needClosePopupByDeactivated(item)) {
                   if (!_private.isIgnoreActivationArea(_private.getActiveElement())) {
                      _private.finishPendings(id, function() {
                         if (!_private.activeElement[id]) {
@@ -190,6 +190,10 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         needClosePopupByDeactivated: function(item) {
+            return item.popupOptions.closeOnOutsideClick && item.popupState !== item.controller.POPUP_STATE_INITIALIZING;
+         },
+
          getActiveElement: function() {
             return document && document.activeElement;
          },
@@ -199,7 +203,7 @@ define('Controls/Popup/Manager',
          },
 
          popupDragStart: function(id, offset) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                element.controller.popupDragStart(element, _private.getItemContainer(id), offset);
                return true;
@@ -208,7 +212,7 @@ define('Controls/Popup/Manager',
          },
 
          popupControlResize: function(id) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                return element.controller.popupResize(element, _private.getItemContainer(id));
             }
@@ -216,7 +220,7 @@ define('Controls/Popup/Manager',
          },
 
          popupDragEnd: function(id, offset) {
-            var element = ManagerController.find(id);
+            var element = _private.find(id);
             if (element) {
                element.controller.popupDragEnd(element, offset);
                return true;
@@ -335,6 +339,16 @@ define('Controls/Popup/Manager',
             return false;
          },
 
+         find: function(id) {
+            var item = _private.findItemById(id);
+
+            if (!item || item.popupState === item.controller.POPUP_STATE_DESTROYING || item.popupState === item.controller.POPUP_STATE_DESTROYED) {
+               return null;
+            }
+
+            return item;
+         },
+
          findItemById: function(id) {
             var index = _private.popupItems && _private.popupItems.getIndexByValue('id', id);
             if (index > -1) {
@@ -406,6 +420,7 @@ define('Controls/Popup/Manager',
                controller: controller,
                popupOptions: options,
                isActive: false,
+               waitDeactivated: true,
                sizes: {},
                activeControlAfterDestroy: _private.getActiveControl(),
                activeNodeAfterDestroy: _private.getActiveElement(), // TODO: COMPATIBLE
@@ -466,13 +481,7 @@ define('Controls/Popup/Manager',
           * @param id popup id
           */
          find: function(id) {
-            var item = _private.findItemById(id);
-
-            if (!item || item.popupState === item.controller.POPUP_STATE_DESTROYING || item.popupState === item.controller.POPUP_STATE_DESTROYED) {
-               return null;
-            }
-
-            return item;
+            return _private.find(id);
          },
 
          /**
