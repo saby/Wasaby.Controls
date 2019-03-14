@@ -214,6 +214,7 @@ define(
 
          it('_prepareConfigForOldTemplate', function() {
             BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
+            assert.equal(config.templateOptions.trackTarget, true);
             assert.equal(config.templateOptions.hoverTarget, config.hoverTarget);
             assert.equal(config.templateOptions.record, config.record);
             assert.equal(config.templateOptions.__parentFromCfg, config.parent);
@@ -234,7 +235,9 @@ define(
             newConfig.maximized = false;
             newConfig.canMaximize = true;
             newConfig.maxWidth = 150;
+            newConfig.trackTarget = false;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            assert.equal(config.templateOptions.trackTarget, false);
             assert.equal(newConfig.minimizedWidth, 100);
             assert.equal(newConfig.minWidth, 200);
             assert.isTrue(newConfig.templateOptions.canMaximize);
