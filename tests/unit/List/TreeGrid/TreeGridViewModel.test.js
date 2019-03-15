@@ -87,6 +87,19 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
          assert.isTrue(setRootCalled, 'Invalid call toggleExpanded on model instance.');
       });
 
+      it('getItemDataByItem', function() {
+         var
+            itemData,
+            originFn = TreeGridViewModel.superclass.getItemDataByItem;
+         TreeGridViewModel.superclass.getItemDataByItem = function() {
+            return {};
+         };
+         itemData = treeGridViewModel.getItemDataByItem();
+         assert.isTrue(!!itemData.getLevelIndentClasses);
+         assert.isTrue(!!itemData.getCurrentColumn);
+         TreeGridViewModel.superclass.getItemDataByItem = originFn;
+      });
+
       it('getCurrent', function () {
 
          var itemTypes = {

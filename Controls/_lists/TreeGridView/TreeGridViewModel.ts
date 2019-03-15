@@ -47,11 +47,10 @@ var
         resetExpandedItems: function () {
             this._model.resetExpandedItems();
         },
-        getCurrent: function () {
+        getItemDataByItem: function(dispItem) {
             var
-                current = TreeGridViewModel.superclass.getCurrent.apply(this, arguments),
-                superGetCurrentColumn = current.getCurrentColumn,
-                superGetItemColumnCellClasses = current.getItemColumnCellClasses;
+                current = TreeGridViewModel.superclass.getItemDataByItem.apply(this, arguments),
+                superGetCurrentColumn = current.getCurrentColumn;
 
             current.getCurrentColumn = function () {
                 let
