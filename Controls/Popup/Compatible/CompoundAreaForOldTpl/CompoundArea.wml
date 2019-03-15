@@ -14,7 +14,7 @@
    <ws:else>
       <Controls.Popup.Templates.Dialog.DialogTemplate name="DialogTemplate" hideCross="{{_options.hideCross}}"  closeButtonStyle="{{_options.closeButtonStyle}}" draggable="{{_options.draggable}}">
          <ws:bodyContentTemplate>
-               <div name="compoundBlock" attr:class="controls-CompoundArea__container {{_options.type === 'dialog' ? ' ws-window-content'}}"></div>
+               <div name="compoundBlock" attr:class="controls-CompoundArea__container {{_getDialogClasses()}}"></div>
          </ws:bodyContentTemplate>
       </Controls.Popup.Templates.Dialog.DialogTemplate>
    </ws:else>
