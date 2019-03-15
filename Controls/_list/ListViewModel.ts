@@ -172,6 +172,15 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     _calcItemVersion: function(item, key) {
         var
             version = ListViewModel.superclass._calcItemVersion.apply(this, arguments);
+
+        if (this._dragEntity && this._dragEntity.getItems().indexOf(key) !== -1) {
+            version = 'DRAG_ITEM_' + version;
+        }
+
+        if (this._dragTargetPosition && this._dragTargetPosition.item === item) {
+            version = 'DRAG_POSITION_' + version;
+        }
+
         if (this._markedKey === key) {
             version = 'MARKED_' + version;
         }
@@ -274,7 +283,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setDragEntity: function(entity) {
         if (this._dragEntity !== entity) {
             this._dragEntity = entity;
-            this._nextModelVersion();
+            this._nextModelVersion(true);
         }
     },
 
@@ -284,7 +293,6 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setDragItemData: function(itemData) {
         this._draggingItemData = itemData;
-        this._nextModelVersion();
     },
 
     getDragItemData: function() {
@@ -327,7 +335,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
 
     setDragTargetPosition: function(position) {
         this._dragTargetPosition = position;
-        this._nextModelVersion();
+        this._nextModelVersion(true);
     },
 
     getDragTargetPosition: function() {
