@@ -142,6 +142,13 @@ define([
             assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               ctrl._children.listView = {
+                  getItemsContainer: function () {
+                     return {
+                        children: []
+                     }
+                  }
+               };
                ctrl._afterUpdate({});
                assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
@@ -1209,7 +1216,7 @@ define([
          }, 100);
       });
 
-      it('reload should call scroll to start', function() {
+      it('reload with changing source/navig/filter should call scroll to start', function() {
 
          var
              lnSource = new sourceLib.Memory({
@@ -1241,20 +1248,19 @@ define([
          lnBaseControl.saveOptions(lnCfg);
          lnBaseControl._beforeMount(lnCfg);
 
-         assert.equal(lnBaseControl._restoreMarkedKey, null);
+         assert.equal(lnBaseControl._keyDisplayedItem, null);
 
          return new Promise(function (resolve) {
             setTimeout(function () {
                BaseControl._private.reload(lnBaseControl, lnCfg);
                setTimeout(function () {
-                  assert.equal(lnBaseControl._restoreMarkedKey, 3);
-                  
+                  assert.equal(lnBaseControl._keyDisplayedItem, null);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
                   lnBaseControl._beforeUpdate(lnCfg);
-                  
+
                   setTimeout(function() {
-                     assert.equal(lnBaseControl._restoreMarkedKey, 4);
+                     assert.equal(lnBaseControl._keyDisplayedItem, 4);
                      resolve();
                   });
                }, 10);
