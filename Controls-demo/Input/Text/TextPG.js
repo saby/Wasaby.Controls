@@ -29,6 +29,7 @@ define('Controls-demo/Input/Text/TextPG',
                },
 
                constraint: {
+                  updateInitiator: 'inputCompleted',
                   items: [
                      { id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits' },
                      { id: 2, title: '[a-zA-Z]', value: '[a-zA-Z]', example: 'You can use only letters' },
