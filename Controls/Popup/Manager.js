@@ -433,12 +433,19 @@ define('Controls/Popup/Manager',
 
          _contentClick: function(event) {
             _private.popupItems.each(function(item) {
-               if (item && item.waitDeactivated) {
+               // Закрываем только те окна, которые были открыты до mousedown'a
+               if (item && item.waitDeactivated && _private.popupItemsClone && _private.popupItemsClone.getIndexByValue('id', item.id) > -1) {
                   if (!_private.isIgnoreActivationArea(event.target)) {
                      _private.popupDeactivated(item.id);
                   }
                }
             });
+         },
+
+         _mouseDownHandler: function() {
+            if (_private.popupItems) {
+               _private.popupItemsClone = _private.popupItems.clone();
+            }
          },
 
          /**
