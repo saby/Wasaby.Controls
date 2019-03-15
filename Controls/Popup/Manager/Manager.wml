@@ -1,5 +1,6 @@
 <ws:partial template="{{_options.content}}"
             on:click="_contentClick()"
+            on:mousedown="_mouseDownHandler()"
             on:popupCreated="_eventHandler('popupCreated')"
             on:popupUpdated="_eventHandler('popupUpdated')"
             on:popupControlResize="_eventHandler('popupControlResize')"
