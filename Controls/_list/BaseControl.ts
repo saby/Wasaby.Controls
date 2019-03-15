@@ -993,6 +993,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     },
 
     _beforeUnmount: function() {
+        clearTimeout(this._focusTimeout);
         if (this._sourceController) {
             this._sourceController.destroy();
         }
@@ -1239,7 +1240,9 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-        this._children.fakeFocusElem.focus();
+        this._focusTimeout = setTimeout(() => {
+           this._children.fakeFocusElem.focus();
+        }, 0);
         event.blockUpdate = true;
     },
 
