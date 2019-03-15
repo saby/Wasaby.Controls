@@ -7,7 +7,7 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
       it('_createModel', function() {
          var
             createdModel = treeGridViewModel._createModel({});
-         assert.isTrue(cInstance.instanceOfModule(createdModel, 'Controls/_list/Tree/TreeViewModel'), 'Invalid type of created model.');
+         assert.isTrue(cInstance.instanceOfModule(createdModel, 'Controls/_lists/Tree/TreeViewModel'), 'Invalid type of created model.');
       });
       it('toggleExpanded', function() {
          var
@@ -85,6 +85,19 @@ define(['Controls/List/TreeGridView/TreeGridViewModel',
          };
          treeGridViewModel.setRoot('testRoot');
          assert.isTrue(setRootCalled, 'Invalid call toggleExpanded on model instance.');
+      });
+
+      it('getItemDataByItem', function() {
+         var
+            itemData,
+            originFn = TreeGridViewModel.superclass.getItemDataByItem;
+         TreeGridViewModel.superclass.getItemDataByItem = function() {
+            return {};
+         };
+         itemData = treeGridViewModel.getItemDataByItem();
+         assert.isTrue(!!itemData.getLevelIndentClasses);
+         assert.isTrue(!!itemData.getCurrentColumn);
+         TreeGridViewModel.superclass.getItemDataByItem = originFn;
       });
 
       it('getCurrent', function () {

@@ -122,7 +122,21 @@ define('Controls/Container/PendingRegistrator', [
          }
       },
       _hasRegisteredPendings: function() {
-         return !!Object.keys(this._pendings).length;
+         var self = this;
+         var hasPendings = false;
+         Object.keys(this._pendings).forEach(function(key) {
+            var pending = self._pendings[key];
+            var isValid = true;
+            if (pending.validate) {
+               isValid = pending.validate();
+            }
+
+            // We have at least 1 active pending
+            if (isValid) {
+               hasPendings = true;
+            }
+         });
+         return hasPendings;
       },
       _hideIndicators: function() {
          var self = this;

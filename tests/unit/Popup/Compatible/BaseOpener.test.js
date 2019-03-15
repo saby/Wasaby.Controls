@@ -213,8 +213,10 @@ define(
          });
 
          it('_prepareConfigForOldTemplate', function() {
+            config.fixed = true;
             BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
             assert.equal(config.templateOptions.trackTarget, true);
+            assert.equal(config.templateOptions.fixed, true);
             assert.equal(config.templateOptions.hoverTarget, config.hoverTarget);
             assert.equal(config.templateOptions.record, config.record);
             assert.equal(config.templateOptions.__parentFromCfg, config.parent);

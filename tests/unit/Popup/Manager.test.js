@@ -292,16 +292,20 @@ define(
                closeOnOutsideClick: true
             }, controller);
 
+            let item = Manager.find(id);
 
             let baseFinishPendings = Manager._private.finishPendings;
             Manager._private.finishPendings = (popupId, popupCallback, pendingCallback, pendingsFinishedCallback) => {
                pendingsFinishedCallback();
             };
             Manager._private.popupDeactivated(id);
+            assert.equal(isDeactivated, false);
+
+            item.popupState = 'create';
+            Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, true);
 
             isDeactivated = false;
-            let item = Manager.find(id);
             item.popupOptions.closeOnOutsideClick = false;
             Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, false);
