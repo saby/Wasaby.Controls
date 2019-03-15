@@ -383,6 +383,27 @@ define(
             var secondResult = Manager._private.isIgnoreActivationArea(focusedArea);
             assert.equal(secondResult, false);
          });
+         it('contentClick', function() {
+            let Manager = getManager();
+            let deactivatedCount = 0;
+            Manager._private.popupDeactivated = () => deactivatedCount++;
+            Manager._private.isIgnoreActivationArea = () => false;
+            let id1 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            let id2 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            let id3 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+
+            Manager._mouseDownHandler();
+            Manager._contentClick({});
+
+            assert.equal(deactivatedCount, 3);
+            Manager.destroy();
+         });
          it('managerPopupCreated notified', function() {
             let isPopupOpenedEventTriggered = false;
             let popupOptions = {
