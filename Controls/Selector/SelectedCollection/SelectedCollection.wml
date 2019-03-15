@@ -2,7 +2,6 @@
      attr:style="min-width: {{_options.collectionWidth}}px; max-width: {{_options.collectionWidth}}px;">
    <ws:if data="{{_items.length > _options.maxVisibleItems}}">
       <Controls.Popup.InfoBox
-              name="infoBox"
               attr:class="controls-SelectedCollection__InfoBox{{_options.itemsLayout === 'oneRow' && _options.readOnly && !_options.maxVisibleItems ? ' controls-SelectedCollection__InfoBox_fixed'}}"
               style="default controls-SelectedCollection__popup"
               trigger="click"

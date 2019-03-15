@@ -3,8 +3,6 @@ define(['Controls/Selector/SelectedCollection/Popup',
    'Types/collection'
 ], function(SelectedCollectionPopup, entity, collection) {
 
-   var CLICKABLE_CLASS = 'controls-SelectedCollection__item__caption-clickable';
-
    describe('Controls/Selector/SelectedCollection/Popup', function() {
       it('_crossClick', function() {
          var
