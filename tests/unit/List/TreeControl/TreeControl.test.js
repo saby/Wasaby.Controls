@@ -430,6 +430,7 @@ define([
             reloadCalled = false,
             setRootCalled = false,
             filterOnOptionChange = null,
+            resetExpandedItemsCalled = false,
             isSourceControllerDestroyed = false,
             treeControl = correctCreateTreeControl({
                columns: [],
@@ -445,7 +446,8 @@ define([
                parentProperty: 'parent'
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
-            reloadOriginal = treeControl._children.baseControl.reload;
+            reloadOriginal = treeControl._children.baseControl.reload,
+            resetExpandedItemsOriginal = treeGridViewModel.resetExpandedItems;
 
          treeControl._nodesSourceControllers = {
             1: {
@@ -457,6 +459,10 @@ define([
 
          treeGridViewModel.setRoot = function() {
             setRootCalled = true;
+         };
+         treeGridViewModel.resetExpandedItems = function() {
+            resetExpandedItemsCalled = true;
+            resetExpandedItemsOriginal.apply(this, arguments);
          };
          treeControl._children.baseControl.reload = function() {
             reloadCalled = true;
@@ -479,6 +485,7 @@ define([
                treeControl._beforeUpdate({root: 'testRoot'});
                assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
                assert.deepEqual(filterOnOptionChange, newFilter);
+               assert.isTrue(resetExpandedItemsCalled);
 
                treeControl._afterUpdate({root: null});
                setTimeout(function() {
