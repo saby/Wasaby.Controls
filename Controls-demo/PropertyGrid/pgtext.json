@@ -2033,8 +2033,6 @@
             "title": "Infobox display style.",
             "enum": {
               "default": "default",
-              "secondary": "secondary",
-              "primary": "primary",
               "danger": "danger"
             }
           },

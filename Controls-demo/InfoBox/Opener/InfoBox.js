@@ -99,18 +99,6 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                      style: 'default'
                   }
                }, {
-                  text: 'LITE',
-                  cfg: {
-                     message: message,
-                     style: 'lite'
-                  }
-               }, {
-                  text: 'HELP',
-                  cfg: {
-                     message: message,
-                     style: 'help'
-                  }
-               }, {
                   text: 'ERROR',
                   cfg: {
                      message: message,
@@ -122,17 +110,19 @@ define('Controls-demo/InfoBox/Opener/InfoBox',
                items: [{
                   text: 'TRUE',
                   cfg: {
-                     message: 'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i',
+                     message: 'American classical artists have long been known for their remarkable virtuosity.\n' +
+                        ' Every year the level of their music art is getting higher.\n' +
+                        ' Never before have so many unusually gifted American conductors organized\n' +
+                        ' lots of the country’s most prominent orchestras.',
                      float: true
                   }
                }, {
                   text: 'FALSE',
                   cfg: {
-                     message: 'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i ' +
-                        'i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i i',
+                     message: 'American classical artists have long been known for their remarkable virtuosity.\n' +
+                        ' Every year the level of their music art is getting higher.\n' +
+                        ' Never before have so many unusually gifted American conductors organized\n' +
+                        ' lots of the country’s most prominent orchestras.',
                      float: false
                   }
                }]
