@@ -96,8 +96,12 @@ const VerticalMeasurer: IMeasurer = {
          paddingSize: titlePosition === 'none' ? 'm' : 'l'
       };
    },
-   needIcon(action: IItemAction): boolean {
-      return !!action.icon;
+   needIcon(
+      action: IItemAction,
+      titlePosition: TitlePosition,
+      hasActionWithIcon: boolean = false
+   ): boolean {
+      return !!action.icon || (hasActionWithIcon && titlePosition === 'right');
    },
    needTitle(action: IItemAction, titlePosition: TitlePosition): boolean {
       return !action.icon || titlePosition !== 'none' && !!action.title;
