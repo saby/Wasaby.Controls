@@ -105,6 +105,10 @@ function(cMerge,
             cfg.templateOptions.enabled = cfg.enabled;
          }
 
+         if (cfg.hasOwnProperty('fixed')) {
+            cfg.templateOptions.fixed = cfg.fixed;
+         }
+
          if (!cfg.hasOwnProperty('catchFocus')) {
             cfg.catchFocus = true;
          }
