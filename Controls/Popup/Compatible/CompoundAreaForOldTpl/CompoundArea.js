@@ -194,6 +194,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return rebuildDeferred;
          },
 
+         _getDialogClasses: function() {
+            // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
+            // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
+            if (this._options.type === 'dialog' && !this._options.fixed) {
+               return ' ws-window-content';
+            }
+            return '';
+         },
+
          _fixIos: function() {
             // крутейшая бага, айпаду не хватает перерисовки.
             // уже с такой разбирались, подробности https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
