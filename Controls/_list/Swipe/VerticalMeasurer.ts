@@ -100,7 +100,7 @@ const VerticalMeasurer: IMeasurer = {
       return !!action.icon;
    },
    needTitle(action: IItemAction, titlePosition: TitlePosition): boolean {
-      return titlePosition !== 'none' && !!action.title;
+      return !action.icon || titlePosition !== 'none' && !!action.title;
    }
 };
 

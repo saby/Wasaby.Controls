@@ -239,7 +239,8 @@ define(['Controls/List/TileView/TileView',
       });
 
       it('_afterUpdate', function() {
-         var hoveredItem;
+         var hoveredItem,
+            controlResizeFired = false;
 
          tileView._setHoveredItem({
             key: 'itemKey1'
@@ -258,11 +259,17 @@ define(['Controls/List/TileView/TileView',
          tileView._hasFixedItemInDOM = function() {
             return true;
          };
+         tileView._notify = function(eventName) {
+            if (eventName === 'controlResize') {
+               controlResizeFired = true;
+            }
+         };
          tileView._afterUpdate();
          hoveredItem = tileView._listModel.getHoveredItem();
 
          assert.equal(hoveredItem.position, 'left: 5px; right: 5px; top: 5px; bottom: 5px; ');
          assert.equal(hoveredItem.key, 'itemKey1');
+         assert.isTrue(controlResizeFired, 'Invalid fire "controlResize" event from afterUpdate.');
       });
 
       it('_afterMount', function() {

@@ -1,3 +1,15 @@
+<ws:template name="headContent">
+      <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
+      <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
+      {{ listModel.resetHeaderColumns() }}
+      <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
+         <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
+                     defaultHeaderContent="{{defaultHeaderContent}}"
+                     listModel="{{listModel}}"
+                     headerColumn="{{ listModel.getCurrentHeaderColumn() }}"
+                     multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
+      </ws:for>
+</ws:template>
 <ws:template name="cellContent">
    <ws:if data="{{ multiselect === 'hidden' || headerColumn.index !== 0}}">
       <ws:if data="{{!!headerColumn.column.template}}">
@@ -12,12 +24,19 @@
    </ws:if>
 </ws:template>
 <ws:template name="cell">
-   <div class="{{headerColumn.cellClasses}}">
-      <ws:partial template="cellContent"/>
-   </div>
+   <ws:if data="{{listModel.isNotFullGridSupport()}}">
+      <th attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
+         <ws:partial template="cellContent"/>
+      </th>
+   </ws:if>
+   <ws:else>
+      <div attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}">
+         <ws:partial template="cellContent"/>
+      </div>
+   </ws:else>
 </ws:template>
 <ws:template name="stickyCell">
-   <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" mode="stackable" fixedZIndex="3">
+   <Controls.StickyHeader attr:class="{{headerColumn.cellClasses}}" attr:style="{{headerColumn.style}}" mode="stackable" fixedZIndex="3">
       <ws:partial template="cellContent"
                   defaultHeaderContent="{{defaultHeaderContent}}"
                   headerColumn="{{headerColumn}}"
@@ -25,17 +44,16 @@
    </Controls.StickyHeader>
 </ws:template>
 <ws:template name="header">
-   <div class="controls-Grid__header">
-      <!-- The iterator does not restart when the model changes. Instead, the internal partial is redrawn. We do a reboot forcibly. -->
-      <!-- Delete after the task is done https://online.sbis.ru/opendoc.html?guid=13786a2a-54c7-4a09-8fbc-11344cf0804d -->
-      {{ listModel.resetHeaderColumns() }}
-      <ws:for data="listModel.resetHeaderColumns(); listModel.isEndHeaderColumn(); listModel.goToNextHeaderColumn();">
-         <ws:partial template="{{listModel.isStickyHeader() ? 'stickyCell' : 'cell'}}"
-                     defaultHeaderContent="{{defaultHeaderContent}}"
-                     headerColumn="{{ listModel.getCurrentHeaderColumn() }}"
-                     multiselect="{{ listModel.getMultiSelectVisibility() }}"/>
-      </ws:for>
-   </div>
+   <ws:if data="{{listModel.isNotFullGridSupport()}}">
+      <thead class="controls-Grid__header">
+         <ws:partial template="headContent" />
+      </thead>
+   </ws:if>
+   <ws:else>
+      <div class="controls-Grid__header">
+         <ws:partial template="headContent" />
+      </div>
+   </ws:else>
 </ws:template>
 <ws:if data="{{listModel.isStickyHeader()}}">
    <Controls.StickyHeader.Group>

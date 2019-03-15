@@ -157,6 +157,12 @@ define(
             let checkData = current.isSelected && current.hasChildren && current.item.get(config.keyProperty) === '3' && viewModel.isEnd();
             assert.isTrue(checkData);
          });
+
+         it('setSelectedKeys', () => {
+            let keys = [1, 2, 3, 4];
+            viewModel.setSelectedKeys(keys);
+            assert.deepEqual(keys, viewModel._options.selectedKeys);
+         });
          describe('Groups and separator', function() {
                let newConfig = {
                   keyProperty: 'id',

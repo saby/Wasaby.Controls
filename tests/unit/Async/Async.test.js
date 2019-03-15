@@ -129,7 +129,7 @@ define([
          var loadContentAsyncCalled;
          var args;
          var promiseResult;
-         async._isCompat = function() { return false };
+         async._isCompat = function() { return false; };
          async._isServer = function() { return false; };
          async._isLoaded = function() { return false; };
          async._loadContentAsync = function() {
@@ -154,7 +154,7 @@ define([
          var loadContentSyncCalled;
          var args;
          var promiseResult;
-         async._isCompat = function() { return false };
+         async._isCompat = function() { return false; };
          async._isServer = function() { return false; };
          async._isLoaded = function() { return true; };
          async._loadContentSync = function() {
@@ -170,7 +170,7 @@ define([
       it('_beforeMount client rc', function() {
          var loadContentSyncCalled;
          var args;
-         async._isCompat = function() { return false };
+         async._isCompat = function() { return false; };
          async._isServer = function() { return false; };
          async._isLoaded = function() { return false; };
          async._loadContentSync = function() {
@@ -178,6 +178,38 @@ define([
             loadContentSyncCalled = true;
          };
          async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {}, true);
+         assert.isTrue(loadContentSyncCalled);
+         assert.equal(args[0], 'myTemplate');
+         assert.equal(args[1].opt, '123');
+         assert.equal(args[2], false);
+      });
+      it('_beforeMount client rc true, compat true, loaded false', function() {
+         var loadContentAsyncCalled;
+         var args;
+         async._isCompat = function() { return true; };
+         async._isServer = function() { return false; };
+         async._isLoaded = function() { return false; };
+         async._loadContentAsync = function() {
+            args = arguments;
+            loadContentAsyncCalled = true;
+         };
+         async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {}, true);
+         assert.isTrue(loadContentAsyncCalled);
+         assert.equal(args[0], 'myTemplate');
+         assert.equal(args[1].opt, '123');
+         assert.equal(args[2], true);
+      });
+      it('_beforeMount client rc false, compat true, loaded true', function() {
+         var loadContentSyncCalled;
+         var args;
+         async._isCompat = function() { return true; };
+         async._isServer = function() { return false; };
+         async._isLoaded = function() { return true; };
+         async._loadContentSync = function() {
+            args = arguments;
+            loadContentSyncCalled = true;
+         };
+         async._beforeMount({templateName: "myTemplate", templateOptions: {opt: '123'}}, {}, false);
          assert.isTrue(loadContentSyncCalled);
          assert.equal(args[0], 'myTemplate');
          assert.equal(args[1].opt, '123');

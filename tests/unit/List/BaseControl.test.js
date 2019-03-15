@@ -12,10 +12,11 @@ define([
    'Core/Deferred',
    'Core/core-instance',
    'Env/Env',
+   'Core/core-clone',
    'Controls/List/ListView',
    'Types/entity',
    'Types/collection'
-], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env) {
+], function(BaseControl, ItemsUtil, sourceLib, collection, ListViewModel, TreeViewModel, tUtil, cDeferred, cInstance, Env, clone) {
    describe('Controls.List.BaseControl', function() {
       var data, result, source, rs;
       beforeEach(function() {
@@ -141,6 +142,13 @@ define([
             assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
+               ctrl._children.listView = {
+                  getItemsContainer: function () {
+                     return {
+                        children: []
+                     }
+                  }
+               };
                ctrl._afterUpdate({});
                assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
@@ -1206,6 +1214,58 @@ define([
 
             done();
          }, 100);
+      });
+
+      it('reload with changing source/navig/filter should call scroll to start', function() {
+
+         var
+             lnSource = new sourceLib.Memory({
+                idProperty: 'id',
+                data: data
+             }),
+             lnSource2 = new sourceLib.Memory({
+                idProperty: 'id',
+                data: [{
+                   id: 4,
+                   title: 'Четвертый',
+                   type: 1
+                },
+                   {
+                      id: 5,
+                      title: 'Пятый',
+                      type: 2
+                   }]
+             }),
+             lnCfg = {
+                viewName: 'Controls/List/ListView',
+                source: lnSource,
+                keyProperty: 'id',
+                markedKey: 3,
+                viewModelConstructor: ListViewModel
+             },
+             lnBaseControl = new BaseControl(lnCfg);
+
+         lnBaseControl.saveOptions(lnCfg);
+         lnBaseControl._beforeMount(lnCfg);
+
+         assert.equal(lnBaseControl._keyDisplayedItem, null);
+
+         return new Promise(function (resolve) {
+            setTimeout(function () {
+               BaseControl._private.reload(lnBaseControl, lnCfg);
+               setTimeout(function () {
+                  assert.equal(lnBaseControl._keyDisplayedItem, null);
+                  lnCfg = clone(lnCfg);
+                  lnCfg.source = lnSource2;
+                  lnBaseControl._beforeUpdate(lnCfg);
+
+                  setTimeout(function() {
+                     assert.equal(lnBaseControl._keyDisplayedItem, 4);
+                     resolve();
+                  });
+               }, 10);
+            },10);
+         });
       });
 
       it('List navigation by keys and after reload', function(done) {

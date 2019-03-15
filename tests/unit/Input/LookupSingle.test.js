@@ -139,8 +139,9 @@ define([
          lookup._beforeMount({items: getItems(5), readOnly: true});
          assert.equal(lookup._maxVisibleItems, 1);
 
-         lookup._beforeMount({items: getItems(5)});
+         lookup._beforeMount({items: getItems(5), value: 'test'});
          assert.equal(lookup._maxVisibleItems, 1);
+         assert.equal(lookup._inputValue, 'test');
       });
 
       it('_beforeUnmount', function() {
@@ -171,25 +172,32 @@ define([
             items = new collection.List(),
             lookup = new Lookup();
 
+         lookup._inputValue = lookup._options.value = '';
          lookup._beforeMount({multiLine: true});
-         lookup._beforeUpdate({});
+         lookup._beforeUpdate({value: 'test'});
          assert.equal(lookup._multiLineState, undefined);
          assert.equal(lookup._counterWidth, undefined);
+         assert.equal(lookup._inputValue, 'test');
 
          lookup._beforeUpdate({
             items: new collection.List(),
-            multiLine: true
+            multiLine: true,
+            value: ''
          });
          assert.isFalse(lookup._multiLineState);
          assert.equal(lookup._maxVisibleItems, 0);
+         assert.equal(lookup._inputValue, 'test');
 
+         lookup._options.value = 'diff with new value';
          lookup._beforeUpdate({
             items: new collection.List(),
-            maxVisibleItems: 10
+            maxVisibleItems: 10,
+            value: ''
          });
          assert.equal(lookup._maxVisibleItems, 0);
          assert.equal(lookup._inputWidth, undefined);
          assert.equal(lookup._availableWidthCollection, undefined);
+         assert.equal(lookup._inputValue, '');
 
          lookup._counterWidth = 30;
          lookup._options.items = items;

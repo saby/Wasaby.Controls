@@ -413,6 +413,21 @@ define(
             assert.isFalse(opened);
          });
 
+         it('_private::closeHandler', function() {
+            let config2 = Clone(config), closed, closeActivated;
+            config2.close = () => {closeActivated = true};
+            let dropdownConroller = getDropdownController(config2);
+            dropdownConroller._notify = function(event) {
+               if (event === '_close') {
+                  closed = true;
+               }
+            };
+            dropdownConroller._beforeMount(config2);
+            dropdownConroller._onClose();
+            assert.isTrue(closeActivated);
+            assert.isTrue(closed);
+         });
+
          function setTrue(assert) {
             assert.equal(true, true);
          }

@@ -11,8 +11,18 @@
 }
 
 .controls-itemActionsV_invisible {
-  visibility: hidden;
-  display: inline-flex;
+   /**
+   When menu is shown we should hide item actions on all rows.
+   There're 2 options to achieve this:
+   1) Add class on every row.
+   2) Add class on container and use cascade.
+
+   Option 1 causes re-render of every item each time a user opens\closes menu, so we use option 2 here.
+    */
+   .controls-itemActionsV {
+      visibility: hidden;
+      display: inline-flex;
+   }
 }
 
 .controls-itemActionsV_visible {
@@ -132,6 +142,13 @@
 }
 
 .ws-is-no-touch {
+   //TODO: обратная совместимость, в 300 удаляю
+   .controls-itemActionsV__action_icon.icon-primary{
+      &:hover {
+         color: @color_ItemActions-icon_style_secondary_hover;
+      }
+   }
+
    .controls-itemActionsV__action_title:hover {
       color: @color_ItemActions-title_hover;
       text-decoration: underline;

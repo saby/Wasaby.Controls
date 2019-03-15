@@ -133,7 +133,6 @@
         on:closeSwipe="_closeSwipe()"
         swipeDirection="{{_options.swipeDirection}}"
         titlePosition="{{_options.titlePosition}}"
-        menuIsShown="{{_menuIsShown}}"
         viewName="{{ _options.viewName }}"
         listModel="{{_listViewModel}}"
         itemActions="{{_options.itemActions}}"

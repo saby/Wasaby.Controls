@@ -55,11 +55,11 @@
 </ws:template>
 
 <ws:if data="{{invisible}}">
-   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
+   <div class="controls-TileView__item controls-TileView__item_invisible" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}"></div>
 </ws:if>
 <ws:else>
    <ws:if data="{{itemData.tileMode === 'dynamic'}}">
-      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; flex-basis: ' + ((width || itemData.defaultItemWidth) * itemData.itemCompressionCoefficient) + 'px; height: ' + itemData.itemsHeight + 'px; max-width: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>
                <ws:partial template="imageWrapperTpl" attr:class="{{hasTitle ? 'controls-TileView__imageWrapper_reduced'}}" attr:style="{{'height: ' + itemData.itemsHeight + 'px;'}}">
@@ -70,7 +70,7 @@
       </ws:partial>
    </ws:if>
    <ws:else>
-      <ws:partial template="itemTpl" attr:style="{{'flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
+      <ws:partial template="itemTpl" attr:style="{{'-ms-flex-preferred-size: ' + (width || itemData.defaultItemWidth) + 'px; flex-basis: ' + (width || itemData.defaultItemWidth) + 'px;'}}">
          <div style="{{'padding-top: ' + (itemData.itemsHeight / (width || itemData.defaultItemWidth)) * 100 + '%;'}}"></div>
          <ws:partial template="defaultContentTpl">
             <ws:imageWrapper>

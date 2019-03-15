@@ -14,7 +14,6 @@
            needSeparator="{{_needSeparator}}"
            swipeDirection="{{_options.swipeDirection}}"
            titlePosition="{{_options.titlePosition}}"
-           menuIsShown="{{_options.menuIsShown}}"
            animationState="{{_animationState}}"
            itemActionsPosition="{{_options.itemActionsPosition}}"/>
     </ws:swipeTemplate>

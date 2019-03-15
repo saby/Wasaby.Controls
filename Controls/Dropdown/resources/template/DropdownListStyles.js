@@ -17,8 +17,12 @@ define('Controls/Dropdown/resources/template/DropdownListStyles', [],
     * @css @spacing_DropdownList_withClose-item-between-rightBorder-content Spacing between right border and list with cross.
     * @css @box-shadow-color_DropdownList Shadow Shadow color.
     * @css @box-shadow-size_DropdownList-shadowStyle_center Shadow size of dropdown list with shadow style 'center'.
-    * @css @box-shadow-size_DropdownList-shadowStyle_centerBottom Shadow size of dropdown list with shadow style 'centerBottom'.
-    * @css @box-shadow-size_DropdownList-shadowStyle_centerTop Shadow size of dropdown list with shadow style 'centerBottom'.
+    * @css @box-shadow-size_DropdownList-shadowStyle_centerTop-left Shadow size of dropdown list with shadow style 'centerTop' on the left side.
+    * @css @box-shadow-size_DropdownList-shadowStyle_centerTop-right Shadow size of dropdown list with shadow style 'centerTop' on the right side.
+    * @css @box-shadow-size_DropdownList-shadowStyle_centerTop-top Shadow size of dropdown list with shadow style 'centerTop' on the top side.
+    * @css @box-shadow-size_DropdownList-shadowStyle_centerBottom-left Shadow size of dropdown list with shadow style 'centerBottom' on the left side.
+    * @css @box-shadow-size_DropdownList-shadowStyle_centerBottom-right Shadow size of dropdown list with shadow style 'centerBottom' on the right side.
+    * @css @box-shadow-size_DropdownList-shadowStyle_centerBottom-bottom Shadow size of dropdown list with shadow style 'centerBottom' on the bottom side.
     * @css @height_DropdownList-row Height row.
     * @css @font-size_DropdownList Font size dropdown list.
     * @css @background_DropdownList-row_hover Background color for dropdown list in hovered state.

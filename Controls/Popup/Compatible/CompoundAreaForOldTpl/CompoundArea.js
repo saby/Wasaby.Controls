@@ -7,6 +7,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       'Core/Deferred',
       'Core/helpers/Hcontrol/makeInstanceCompatible',
       'Core/helpers/Function/runDelayed',
+      'Core/helpers/Hcontrol/trackElement',
       'Env/Env',
       'Core/helpers/Hcontrol/doAutofocus',
       'optional!Deprecated/Controls/DialogRecord/DialogRecord',
@@ -26,6 +27,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
       cDeferred,
       makeInstanceCompatible,
       runDelayed,
+      trackElement,
       Env,
       doAutofocus,
       DialogRecord,
@@ -177,6 +179,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             self._waitReadyDeferred = true;
             rebuildDeferred.addCallback(function() {
                self._getReadyDeferred();
+               self._fixIos();
                runDelayed(function() {
                   self._childControl._notifyOnSizeChanged();
                   runDelayed(function() {
@@ -190,6 +193,30 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
             return rebuildDeferred;
          },
+
+         _getDialogClasses: function() {
+            // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
+            // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
+            if (this._options.type === 'dialog' && !this._options.fixed) {
+               return ' ws-window-content';
+            }
+            return '';
+         },
+
+         _fixIos: function() {
+            // крутейшая бага, айпаду не хватает перерисовки.
+            // уже с такой разбирались, подробности https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
+            var container = this._childControl && this._childControl.getContainer();
+
+            // не вызывается браузерная перерисовка. вызываю вручную
+            if (container && Env.constants.browser.isMobileIOS) {
+               container = container.get ? container.get(0) : container;
+               setTimeout(function() {
+                  container.style.webkitTransform = 'scale(1)';
+               }, 100);
+            }
+         },
+
 
          // AreaAbstract.js::getReadyDeferred
          // getReadyDeferred с areaAbstract, который даёт возможность отложить показ компонента в области, пока
@@ -282,6 +309,8 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                this._notifyVDOM('controlResize', [], { bubbling: true });
             });
 
+            self._trackTarget(true);
+
             self.rebuildChildControl().addCallback(function() {
                runDelayed(function() {
                   runDelayed(function() {
@@ -303,6 +332,38 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
 
          isOpened: function() {
             return true;
+         },
+
+         _trackTarget: function(track) {
+            var target = this._options.target;
+            var self = this;
+            if (!this._options.trackTarget || !target) {
+               return;
+            }
+
+            // на всякий случай отписываемся, чтобы не было массовых подписок
+            trackElement(target, false);
+
+            if (track) {
+               trackElement(target)
+                  .subscribe('onMove',
+                     function(event, offset, isInitial) {
+                        if (!self.isDestroyed() && !isInitial) {
+                           if (self._options.closeOnTargetScroll) {
+                              self.close();
+                           } else {
+                              // Перепозиционируемся
+                              self._notifyVDOM('controlResize', [], { bubbling: true });
+                           }
+                        }
+                     })
+                  .subscribe('onVisible',
+                     function(event, visibility) {
+                        if (!self.isDestroyed() && !visibility) {
+                           self.close();
+                        }
+                     });
+            }
          },
 
          _setCustomHeader: function() {
@@ -943,6 +1004,7 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             if (this.isDestroyed()) {
                return;
             }
+            this._trackTarget(false);
 
             // Unregister CompoundArea's inner Event/Listener, before its
             // container is destroyed by compatibility layer
