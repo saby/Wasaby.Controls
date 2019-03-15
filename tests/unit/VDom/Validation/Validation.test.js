@@ -1,9 +1,10 @@
 define([
    'Controls/Validate/FormController',
    'Controls/Validate/Controller',
+   'Controls/Validate/Input',
    'Core/Deferred',
    'unit/resources/ProxyCall',
-], function(ValidateFC, Controller, Deferred, ProxyCall) {
+], function(ValidateFC, Controller, Input, Deferred, ProxyCall) {
    'use strict';
 
    function getValidator(validateResult) {
@@ -44,6 +45,16 @@ define([
       it('cleanValid', () => {
          validCtrl._valueChangedHandler();
          assert.deepEqual(validCtrl._validationResult, undefined);
+      });
+   });
+   describe('Validate/Input', () => {
+      it('cleanValidInput', () => {
+         var inputCtrl = new Input();
+         inputCtrl._valueChangedHandler(null, 'test');
+         assert.deepEqual(inputCtrl._validationResult, undefined);
+         inputCtrl._validationResult = 'Error';
+         inputCtrl._valueChangedHandler(null, 'test');
+         assert.deepEqual(inputCtrl._validationResult, 'Error');
       });
    });
    describe('Validate/FormController', () => {
