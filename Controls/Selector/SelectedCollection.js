@@ -25,11 +25,11 @@ define('Controls/Selector/SelectedCollection',
        */
 
       var _private = {
-         clickCallbackPopup: function(eventType, item, mouseEvent) {
+         clickCallbackPopup: function(eventType, item) {
             if (eventType === 'crossClick') {
-               this._notify('crossClick', [item, mouseEvent]);
+               this._notify('crossClick', [item]);
             } else if (eventType === 'itemClick') {
-               this._notify('itemClick', [item, mouseEvent]);
+               this._notify('itemClick', [item]);
             }
          },
 
@@ -109,11 +109,11 @@ define('Controls/Selector/SelectedCollection',
          },
 
          _itemClick: function(event, item) {
-            this._notify('itemClick', [item, event]);
+            this._notify('itemClick', [item]);
          },
 
          _crossClick: function(event, index) {
-            this._notify('crossClick', [this._visibleItems[index], event]);
+            this._notify('crossClick', [this._visibleItems[index]]);
          },
 
          _openInfoBox: function(event, config) {

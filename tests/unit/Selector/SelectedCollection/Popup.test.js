@@ -34,12 +34,7 @@ define(['Controls/Selector/SelectedCollection/Popup',
       it('_itemClick', function() {
          var
             callCloseInfoBox = false,
-            scPopup = new SelectedCollectionPopup(),
-            mouseEvent = {
-               target: {
-                  classList: ['item-collection']
-               }
-            };
+            scPopup = new SelectedCollectionPopup();
 
          scPopup._options.clickCallback = function(){};
          scPopup._notify = function(eventType) {
@@ -48,11 +43,7 @@ define(['Controls/Selector/SelectedCollection/Popup',
             }
          };
 
-         scPopup._itemClick(null, null, mouseEvent);
-         assert.isFalse(callCloseInfoBox);
-
-         mouseEvent.target.classList.push(CLICKABLE_CLASS);
-         scPopup._itemClick(null, null, mouseEvent);
+         scPopup._itemClick();
          assert.isTrue(callCloseInfoBox);
       });
    });
