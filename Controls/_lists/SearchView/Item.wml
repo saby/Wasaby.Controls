@@ -8,15 +8,15 @@
                colspan="{{true}}"
                on:click="_onSearchItemClick(itemData.dispItem)">
       <ws:colspanTemplate>
-         <Controls.BreadCrumbs items="{{colspanTemplate.itemData.item}}" on:itemClick="_onSearchPathClick()" keyProperty="{{itemData.keyProperty}}" displayProperty="{{itemData.displayProperty}}">
+         <Controls.crumbs:Path items="{{colspanTemplate.itemData.item}}" on:itemClick="_onSearchPathClick()" keyProperty="{{itemData.keyProperty}}" displayProperty="{{itemData.displayProperty}}">
             <ws:itemTemplate>
-               <ws:partial template="wml!Controls/BreadCrumbs/View/resources/itemTemplate">
+               <ws:partial template="Controls/crumbs:ItemTemplate">
                   <ws:contentTemplate>
                      <ws:partial template="wml!Controls/_lists/SearchView/SearchBreadCrumbsContent" searchValue="{{itemData.searchValue}}"/>
                   </ws:contentTemplate>
                </ws:partial>
             </ws:itemTemplate>
-         </Controls.BreadCrumbs>
+         </Controls.crumbs:Path>
       </ws:colspanTemplate>
    </ws:partial>
 </ws:else>
