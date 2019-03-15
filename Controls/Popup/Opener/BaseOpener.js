@@ -219,7 +219,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-               baseCfg.closeOnOutsideClick = baseConfig.closeByExternalClick;
+               baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
             }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control

@@ -31,8 +31,10 @@ class Coverage:
     def search_other_file(cover_file):
         """Ищем файлы, которые могут быть связаны"""
 
+        # соотносим конвертируемые ресурсы с исходниками
+        cover_file = cover_file.replace('/home/sbis/Controls/build-ui/resources', os.path.join(os.environ["WORKSPACE"], 'controls'))
         other_files = [cover_file]
-        component_path = os.path.splitext(cover_file)[0]
+        component_path = cover_file.split('.', 1)[0]
         # если есть папка с названием компонента
         if os.path.exists(component_path):
             for other in os.listdir(component_path):
@@ -42,10 +44,11 @@ class Coverage:
 
         # заберем все файлы не js в текущей папке
         current_dir = os.path.split(cover_file)[0]
-        for current_file in os.listdir(current_dir):
-            current_file_path = os.path.join(current_dir, current_file)
-            if os.path.isfile(current_file_path) and not current_file_path.endswith('.js'):
-                other_files.append(current_file_path)
+        if not current_dir.endswith('Controls') and not current_dir.endswith('SBIS3.CONTROLS'):
+            for current_file in os.listdir(current_dir):
+                current_file_path = os.path.join(current_dir, current_file)
+                if os.path.isfile(current_file_path) and not current_file_path.endswith('.js'):
+                    other_files.append(current_file_path)
 
         # Демки
         if 'Controls-demo' in cover_file:
@@ -59,7 +62,6 @@ class Coverage:
     def build(self, path):
         """Пробегает по всем папкам в поисках coverage.json"""
 
-        env = os.environ["WORKSPACE"]
         test_path = os.listdir(path)
         for tdir in test_path:
             path_list = []
@@ -83,7 +85,7 @@ class Coverage:
                         coverage_result.extend(self.search_other_file(k))
             # обрезаем пути, переменная берется из сборки
             for i, filename in enumerate(coverage_result):
-                coverage_result[i] = filename.replace(os.sep.join([env, 'controls']), '')
+                coverage_result[i] = filename.replace(os.path.join(os.environ["WORKSPACE"], 'controls'), '')
             s_result = sorted(set(coverage_result))
             self.build_result[item] = s_result
 

@@ -179,6 +179,9 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
         if (this._markedKey === key) {
             version = 'MARKED_' + version;
         }
+        if (this._activeItem && this._activeItem.item === item) {
+            version = 'ACTIVE_' + version;
+        }
         return version;
     },
 
@@ -271,7 +274,7 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     setActiveItem: function(itemData) {
         if (!this._activeItem || !itemData || itemData.dispItem.getContents() !== this._activeItem.item) {
             this._activeItem = itemData;
-            this._nextModelVersion();
+            this._nextModelVersion(true);
         }
     },
 
@@ -364,8 +367,13 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setItems: function(items) {
+        var currentItems = this.getItems();
+
         ListViewModel.superclass.setItems.apply(this, arguments);
-        this.updateMarker(this._markedKey);
+
+        //we should try to set markedKey by options, if there were no items before
+        //this._markedKey setted in constructor only if items were in constructor config
+        this.updateMarker(currentItems ? this._markedKey : this._options.markedKey);
         this._nextModelVersion();
     },
 
