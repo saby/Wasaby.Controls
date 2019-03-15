@@ -433,12 +433,20 @@ define('Controls/Popup/Manager',
 
          _contentClick: function(event) {
             _private.popupItems.each(function(item) {
-               if (item && item.waitDeactivated) {
+               // Закрываем только те окна, которые были открыты до mousedown'a
+               // todo: https://online.sbis.ru/opendoc.html?guid=00a8e7a6-c4b7-4301-a4eb-700d2ef01e9f
+               if (item && item.waitDeactivated && _private.popupItemsClone && _private.popupItemsClone.getIndexByValue('id', item.id) > -1) {
                   if (!_private.isIgnoreActivationArea(event.target)) {
                      _private.popupDeactivated(item.id);
                   }
                }
             });
+         },
+
+         _mouseDownHandler: function() {
+            if (_private.popupItems) {
+               _private.popupItemsClone = _private.popupItems.clone();
+            }
          },
 
          /**
