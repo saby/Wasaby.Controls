@@ -338,8 +338,10 @@ var ListViewModel = ItemsViewModel.extend([entityLib.VersionableMixin], {
     },
 
     setSwipeItem: function(itemData) {
-        this._swipeItem = itemData;
-        this._nextModelVersion();
+        if (!this._swipeItem || !itemData || itemData.item !== this._swipeItem.item) {
+           this._swipeItem = itemData;
+           this._nextModelVersion();
+        }
     },
 
     setRightSwipedItem: function(itemData) {
