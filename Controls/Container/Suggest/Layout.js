@@ -127,7 +127,7 @@
             }
          },
          shouldSearch: function(self, value) {
-            return self._active && value.length >= self._options.minSearchLength;
+            return self._inputActive && value.length >= self._options.minSearchLength;
          },
    
          prepareValue: function(self, value) {
@@ -380,6 +380,7 @@
          },
          
          _inputClicked: function() {
+            this._inputActive = true;
             if (!this._options.suggestState) {
                _private.inputActivated(this);
             }
