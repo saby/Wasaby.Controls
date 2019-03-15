@@ -42,8 +42,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             this._beforeCloseHandler = this._beforeCloseHandler.bind(this);
             this._onRegisterHandler = this._onRegisterHandler.bind(this);
             this._onMaximizedHandler = this._onMaximizedHandler.bind(this);
-            this._onActivatedHandler = this._onActivatedHandler.bind(this);
-            this._onDeactivatedHandler = this._onDeactivatedHandler.bind(this);
             this._onCloseHandler.control = this._onResultHandler.control = this;
 
             this._panel = this.getParent();
@@ -176,9 +174,7 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             innerOptions._onResultHandler = this._onResultHandler;
             innerOptions._onResizeHandler = this._onResizeHandler;
             innerOptions._onRegisterHandler = this._onRegisterHandler;
-            innerOptions._onActivatedHandler = this._onActivatedHandler;
             innerOptions._onMaximizedHandler = this._onMaximizedHandler;
-            innerOptions._onDeactivatedHandler = this._onDeactivatedHandler;
          },
          _onResizeHandler: function() {
             this._notifyOnSizeChanged();
@@ -223,19 +219,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
                ManagerWrapperController.unregisterListener(event, eventName, emitter);
             }
          },
-         _onActivatedHandler: function(event, opts) {
-            // если активность внутри CompoundArea - переопределяем onBringToFront чтобы он активировал правильный контрол (например при закрытии панели)
-            this._$onBringToFront = this.onBringToFront;
-            this.onBringToFront = function() {
-               if (!opts._$to.isDestroyed || !opts._$to.isDestroyed()) {
-                  if (opts._$to.setActive) {
-                     opts._$to.setActive(true);
-                  } else {
-                     opts._$to.activate();
-                  }
-               }
-            };
-         },
 
          onBringToFront: function() {
             this._vDomTemplate && this._vDomTemplate.activate();
@@ -267,12 +250,6 @@ define('Controls/Popup/Compatible/CompoundAreaForNewTpl/CompoundArea',
             newOptions.maximized = this._maximized;
 
             this._updateVDOMTemplate(newOptions);
-         },
-         _onDeactivatedHandler: function() {
-            // активность уходит - восстановим onBringToFront
-            if (this._$onBringToFront) {
-               this.onBringToFront = this._$onBringToFront;
-            }
          },
 
          _getRootContainer: function() {
