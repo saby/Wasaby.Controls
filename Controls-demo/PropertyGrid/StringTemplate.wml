@@ -4,7 +4,8 @@
       <Controls.Input.Text value="{{_options.value}}"
                            readOnly="{{_options.readOnly}}"
                            attr:class="demo-TextBox js-Controls-PropertyGridEditor__options-{{_options.caption}}"
-                           on:valueChanged="_valueChangedHandler()"/>
+                           on:valueChanged="_valueChangedHandler('text')"
+                           on:inputCompleted="_inputCompletedHandler('text')"/>
    </ws:if>
    <ws:else>
       <Controls-demo.PropertyGrid.SuggestTemplate.SuggestTemplate
@@ -15,7 +16,8 @@
               items="{{_options.items}}"
               caption="{{_options.caption}}"
               minSearchLength="1"
-              on:valueChanged="_suggestValueChanged()"
+              on:valueChanged="_valueChangedHandler('suggest')"
+              on:inputCompleted="_inputCompletedHandler('suggest')"
               on:choose="_chooseChangedHandler()"
               config="{{_options.config}}"
       />
