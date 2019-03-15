@@ -1,5 +1,5 @@
 import Control = require('Core/Control');
-import TreeControlTpl = require('wml!Controls/_lists/TreeControl/TreeControl');
+import TreeControlTpl = require('wml!Controls/_treeGrids/TreeControl/TreeControl');
 import SourceController = require('Controls/Controllers/SourceController');
 import cClone = require('Core/core-clone');
 import Env = require('Env/Env');
