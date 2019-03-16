@@ -335,21 +335,9 @@
 }, {
   "include": [
     "Controls/Explorer",
-    "Controls/Explorer/*",
-    "Controls/BreadCrumbs/Path",
-    "Controls/BreadCrumbs/Path/*"
+    "Controls/Explorer/*"
   ],
   "output": "controls-explorer.package.js"
-}, {
-  "include": [
-    "Controls/BreadCrumbs",
-    "Controls/BreadCrumbs/*"
-  ],
-  "exclude": [
-    "Controls/BreadCrumbs/Path",
-    "Controls/BreadCrumbs/Path/*"
-  ],
-  "output": "controls-breadcrumbs.package.js"
 }, {
   "include": [
     "Controls/SwitchableArea",
