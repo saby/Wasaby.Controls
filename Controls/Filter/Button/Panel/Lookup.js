@@ -2,8 +2,9 @@ define('Controls/Filter/Button/Panel/Lookup', [
    'Core/Control',
    'wml!Controls/Filter/Button/Panel/Lookup/Lookup',
    'Controls/Utils/tmplNotify',
+   'Env/Env',
    'css!theme?Controls/Filter/Button/Panel/Lookup/Lookup'
-], function(Control, template, tmplNotify) {
+], function(Control, template, tmplNotify, Env) {
    /**
     * Control link with lookup
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
@@ -27,7 +28,13 @@ define('Controls/Filter/Button/Panel/Lookup', [
 
    /**
     * @name Controls/Filter/Button/Panel/Lookup#caption
-    * @cfg {Object} Caption
+    * @cfg {String} Caption
+    */
+
+   /**
+    * @name Controls/Filter/Button/Panel/Lookup#lookupTemplate
+    * @cfg {String} Link to Lookup
+    * @default Controls/Selector/Lookup
     */
 
    'use strict';
@@ -45,7 +52,11 @@ define('Controls/Filter/Button/Panel/Lookup', [
       },
 
       showSelector: function() {
-         this._children.lookup.showSelector();
+         if (typeof this._options.lookupTemplate === 'string') {
+            this._children.lookup.showSelector();
+         } else {
+            Env.IoC.resolve('ILogger').error('Option "Controls/Filter/Button/Panel/Lookup:lookupTemplate" only supports string type');
+         }
       },
 
       _selectedKeysChanged: function(event, keys) {
@@ -53,6 +64,12 @@ define('Controls/Filter/Button/Panel/Lookup', [
          this._notify('selectedKeysChanged', [keys]);
       }
    });
+
+   Lookup.getDefaultOptions = function() {
+      return {
+         lookupTemplate: 'Controls/Selector/Lookup'
+      };
+   };
 
    return Lookup;
 });

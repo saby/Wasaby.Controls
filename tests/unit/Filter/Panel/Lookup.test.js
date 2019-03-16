@@ -26,5 +26,26 @@ define(['Controls/Filter/Button/Panel/Lookup'
          panelLookup._afterUpdate({selectedKeys: []});
          assert.isTrue(callResize);
       });
+
+      it('showSelector', function() {
+         var
+            isShowSelector = false,
+            pLookup = new PanelLookup();
+
+
+         pLookup._children.lookup = {
+            showSelector: function() {
+               isShowSelector = true;
+            }
+         };
+
+         pLookup._options.content = {};
+         pLookup.showSelector();
+         assert.isFalse(isShowSelector);
+
+         pLookup._options.lookupTemplate = 'string';
+         pLookup.showSelector();
+         assert.isTrue(isShowSelector);
+      });
    });
 });
