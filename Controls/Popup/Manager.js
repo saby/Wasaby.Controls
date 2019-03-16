@@ -422,7 +422,7 @@ define('Controls/Popup/Manager',
                controller: controller,
                popupOptions: options,
                isActive: false,
-               waitDeactivated: true,
+               waitDeactivated: false,
                sizes: {},
                activeControlAfterDestroy: _private.getActiveControl(),
                activeNodeAfterDestroy: _private.getActiveElement(), // TODO: COMPATIBLE

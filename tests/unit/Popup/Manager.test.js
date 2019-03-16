@@ -401,7 +401,7 @@ define(
             Manager._mouseDownHandler();
             Manager._contentClick({});
 
-            assert.equal(deactivatedCount, 3);
+            assert.equal(deactivatedCount, 0);
             Manager.destroy();
          });
          it('managerPopupCreated notified', function() {
