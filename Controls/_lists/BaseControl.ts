@@ -833,14 +833,14 @@ var _private = {
      * @private
      */
     showError(self: BaseControl, errorConfig: dataSourceError.ViewConfig): void {
-        this.__error = errorConfig;
-        this._forceUpdate();
+        self.__error = errorConfig;
+        self._forceUpdate();
     },
 
     hideError(self: BaseControl): void {
-        if (this.__error) {
-            this.__error = null;
-            this._forceUpdate();
+        if (self.__error) {
+            self.__error = null;
+            self._forceUpdate();
         }
     },
 };
