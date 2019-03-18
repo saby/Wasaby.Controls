@@ -9,7 +9,8 @@ define('Controls/History/Source', [
    'Controls/History/Constants',
    'Types/entity',
    'Types/source',
-   'Types/chain'
+   'Types/chain',
+   'Core/core-clone'
 ], function(CoreExtend,
    ParallelDeferred,
    Deferred,
@@ -17,7 +18,8 @@ define('Controls/History/Source', [
    Constants,
    entity,
    sourceLib,
-   chain) {
+   chain,
+   clone) {
    /**
     * Source
     * Proxy source adding history data to the original source
@@ -176,6 +178,8 @@ define('Controls/History/Source', [
          filteredHistory = this.getFilterHistory(self, self._history);
          historyIds = filteredHistory.pinned.concat(filteredHistory.frequent.concat(filteredHistory.recent));
 
+         // Нужно чтобы не потерялся формат https://online.sbis.ru/opendoc.html?guid=e76fca5b-3bda-401d-9eed-ead8f8a0d469
+         items.getFormat();
          items.clear();
          this.addProperty(this, items, 'pinned', 'boolean', false);
          this.addProperty(this, items, 'recent', 'boolean', false);
@@ -304,7 +308,7 @@ define('Controls/History/Source', [
                items: [this.getRawHistoryItem(self, item.getId(), item.get('HistoryId') || self.historySource.getHistoryId())]
             });
             recent.prepend(records);
-            self.historySource.saveHistory(self._history);
+            self.historySource.saveHistory(self.historySource.getHistoryId(), self._history);
          }
          return _private.getSourceByMeta(self, meta).update(item, meta);
       },
@@ -377,15 +381,23 @@ define('Controls/History/Source', [
          var where = query.getWhere();
          var newItems;
 
-         if (where && where['$_history'] === true) {
+         // For Selector/Suggest load data from history, if there is a historyKeys
+         if (where && (where['$_history'] === true || where['historyKeys'])) {
             delete query._where['$_history'];
 
             pd.push(self.historySource.query());
+
+            if (where['historyKeys']) {
+               where = clone(where);
+               delete where['historyKeys'];
+               query.where(where);
+            }
+
             pd.push(self.originSource.query(query));
 
             return pd.done().getResult().addBoth(function(data) {
                self._oldItems = data[1].getAll();
-               
+
                if (data[0] && !(data[0] instanceof Error)) {
                   _private.initHistory(self, data[0], self._oldItems);
                   newItems = _private.getItemsWithHistory(self, self._history, self._oldItems);

@@ -1,7 +1,6 @@
 define([
    'Controls/Controllers/Multiselect/HierarchySelection',
-   'Types/collection',
-   'Controls/List/Tree/TreeViewModel'
+   'Types/collection'
 ], function(
    HierarchySelection,
    collection
@@ -510,38 +509,6 @@ define([
          };
          selectionInstance = new HierarchySelection(cfg);
          assert.deepEqual({ 2: true }, selectionInstance.getSelectedKeysForRender());
-      });
-
-      it('selectAll inside folder should select everything inside that folder', function() {
-         function mockListModel(id) {
-            return {
-               getRoot: function() {
-                  return {
-                     getContents: function() {
-                        return {
-                           getId: function() {
-                              return id;
-                           }
-                        };
-                     }
-                  };
-               }
-            };
-         }
-
-         cfg = {
-            selectedKeys: [],
-            excludedKeys: [],
-            items: allData,
-            keyProperty: 'id',
-            listModel: mockListModel(1)
-         };
-         selectionInstance = new HierarchySelection(cfg);
-         selectionInstance.selectAll();
-         selection = selectionInstance.getSelection();
-
-         assert.deepEqual([3, 4, 2, 5], selection.selected);
-         assert.deepEqual([], selection.excluded);
       });
    });
 });

@@ -11,15 +11,19 @@ define('Controls/Validate/Input',
 
       return Controller.extend({
          _template: template,
+         _currentValue: undefined,
          _deactivatedHandler: function() {
             if (!this._options.readOnly) {
                this._shouldValidate = true;
                this._forceUpdate();
             }
          },
-         _valueChangedHandler: function(event, value) {
-            this._notify('valueChanged', [value]);
-            this._cleanValid();
+         _valueChangedHandler: function(event, value, displayValue) {
+            if (this._currentValue !== value) {
+               this._currentValue = value;
+               this._notify('valueChanged', [value]);
+               this._cleanValid();
+            }
          },
          _inputCompletedHandler: function(event, value) {
             this._notify('inputCompleted', [value]);
