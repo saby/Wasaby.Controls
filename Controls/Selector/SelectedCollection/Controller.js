@@ -27,6 +27,10 @@ define('Controls/Selector/SelectedCollection/Controller', [
          }
          self.sourceController.load(filter)
             .addCallback(function(result) {
+               if (self._options.dataLoadCallback) {
+                  self._options.dataLoadCallback(result);
+               }
+
                resultDef.callback(self._items = result);
                return result;
             })
