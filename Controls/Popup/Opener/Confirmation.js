@@ -34,6 +34,13 @@ define('Controls/Popup/Opener/Confirmation',
        */
 
       /**
+       * @name Controls/Popup/Opener/Confirmation#size
+       * @cfg {String} Confirmation size
+       * @variant m
+       * @variant l
+       */
+
+      /**
        * @name Controls/Popup/Opener/Confirmation#message
        * @cfg {String} Main text
        */
@@ -84,6 +91,7 @@ define('Controls/Popup/Opener/Confirmation',
                this._resultDef = null;
             }
          },
+
 
 
          /**

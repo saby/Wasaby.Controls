@@ -13,10 +13,14 @@
 @spacing_DropdownList_withClose-item-between-rightBorder-content:       @spacing_default_m + @size_icon_m + @spacing_default_s;
 
 //shadow
-@box-shadow-color_DropdownList:                          @color_shadow_default;
-@box-shadow-size_DropdownList-shadowStyle_center:        @size_shadow_default;
-@box-shadow-size_DropdownList-shadowStyle_centerBottom:  @box-shadow-size_DropdownList-shadowStyle_centerBottom_val;
-@box-shadow-size_DropdownList-shadowStyle_centerTop:     @box-shadow-size_DropdownList-shadowStyle_centerTop_val;
+@box-shadow-color_DropdownList:                                   @color_shadow_default;
+@box-shadow-size_DropdownList-shadowStyle_center:                 @size_shadow_default;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-left:      -@box-shadow-offset_DropdownList_m @box-shadow-offset_DropdownList_xs @box-shadow-blur_DropdownList @box-shadow-spread_DropdownList;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-right:     @box-shadow-offset_DropdownList_m @box-shadow-offset_DropdownList_xs @box-shadow-blur_DropdownList @box-shadow-spread_DropdownList;
+@box-shadow-size_DropdownList-shadowStyle_centerBottom-bottom:    @box-shadow-offset_DropdownList_xs @box-shadow-offset_DropdownList_m @box-shadow-blur_DropdownList @box-shadow-spread_DropdownList;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-left:         -@box-shadow-offset_DropdownList_m @box-shadow-offset_DropdownList_xs @box-shadow-blur_DropdownList @box-shadow-spread_DropdownList;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-right:        @box-shadow-offset_DropdownList_m @box-shadow-offset_DropdownList_xs @box-shadow-blur_DropdownList @box-shadow-spread_DropdownList;
+@box-shadow-size_DropdownList-shadowStyle_centerTop-top:          @box-shadow-offset_DropdownList_xs -@box-shadow-offset_DropdownList_m @box-shadow-blur_DropdownList @box-shadow-spread_DropdownList;
 
 //list
 @height_DropdownList-row:                          @height_control_l;

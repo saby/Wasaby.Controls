@@ -58,7 +58,7 @@ define('Controls-demo/Combobox/historySourceCombobox',
                data: items
             }),
             historySource: new HistoryService({
-               historyIds: ['TEST_HISTORY_ID_COMBOBOX'],
+               historyId: 'TEST_HISTORY_ID_COMBOBOX',
                pinned: true
             })
          });

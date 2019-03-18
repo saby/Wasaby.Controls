@@ -38,7 +38,7 @@
       attr:tabindex="-1"
       style="secondary"
       viewMode="link"
-      icon="icon-small icon-Calendar2 icon-primary"
+      icon="icon-Calendar2 icon-primary controls-Input-DateRange__icon-size"
       on:click="_openDialog()"
    />
    <Controls.Popup.Opener.Sticky name="opener">

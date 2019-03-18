@@ -19,6 +19,16 @@ define('Controls/interface/ISelectedCollection', [
     */
 
    /**
+    * @name Controls/interface/ISelectedCollection#maxVisibleItems
+    * @cfg {Integer} The maximum number of items to display, the rest will be hidden under the counter.
+    */
+
+   /**
+    * @name Controls/List/interface/IList#dataLoadCallback
+    * @cfg {Function} Callback function that will be called when list data loaded by source
+    */
+
+   /**
     * @name Controls/interface/ISelectedCollection#selectorTemplate
     * @cfg {Function} Items selection panel template.
     * @example

@@ -61,7 +61,7 @@ define('Controls/Container/Async',
             var result;
             var self = this;
             if (!self._isServer()) {
-               if (!this._isCompat() && (receivedState || self._isLoaded(options.templateName))) {
+               if (self._isLoaded(options.templateName) || (!this._isCompat() && receivedState)) {
                   self._loadContentSync(options.templateName, options.templateOptions, false);
                } else {
                   result = self._loadContentAsync(options.templateName, options.templateOptions, true);

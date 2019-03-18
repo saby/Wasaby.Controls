@@ -91,6 +91,8 @@ define('Controls/Container/PendingRegistrator', [
             // its deferred what signalling about pending finish
             def: def,
 
+            validate: config.validate,
+
             // its function what helps pending to finish when query goes from finishPendingOperations
             onPendingFail: config.onPendingFail,
 
@@ -120,7 +122,21 @@ define('Controls/Container/PendingRegistrator', [
          }
       },
       _hasRegisteredPendings: function() {
-         return !!Object.keys(this._pendings).length;
+         var self = this;
+         var hasPendings = false;
+         Object.keys(this._pendings).forEach(function(key) {
+            var pending = self._pendings[key];
+            var isValid = true;
+            if (pending.validate) {
+               isValid = pending.validate();
+            }
+
+            // We have at least 1 active pending
+            if (isValid) {
+               hasPendings = true;
+            }
+         });
+         return hasPendings;
       },
       _hideIndicators: function() {
          var self = this;
@@ -150,12 +166,18 @@ define('Controls/Container/PendingRegistrator', [
          var self = this;
          Object.keys(this._pendings).forEach(function(key) {
             var pending = self._pendings[key];
-            if (pending.onPendingFail) {
-               pending.onPendingFail(forceFinishValue, pending.def);
+            var isValid = true;
+            if (pending.validate) {
+               isValid = pending.validate();
             }
+            if (isValid) {
+               if (pending.onPendingFail) {
+                  pending.onPendingFail(forceFinishValue, pending.def);
+               }
 
-            // pending is waiting its def finish
-            parallelDef.push(pending.def);
+               // pending is waiting its def finish
+               parallelDef.push(pending.def);
+            }
          });
 
          // cancel previous query of pending finish. create new query.

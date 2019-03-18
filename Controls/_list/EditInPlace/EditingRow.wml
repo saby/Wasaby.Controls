@@ -1,5 +1,0 @@
-<ws:partial attr:class="controls-DragNDrop__notDraggable"
-            template="{{_options.content}}"
-            scope="{{_options}}"
-            on:click="_onClickHandler()"
-            on:keyDown="_onKeyDown()" />

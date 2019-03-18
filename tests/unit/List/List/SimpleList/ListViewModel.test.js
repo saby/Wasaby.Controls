@@ -3,9 +3,12 @@
  */
 define([
    'Controls/List/ListViewModel',
-   'Types/collection'
+   'Types/collection',
+   'Types/entity'
 ], function(
-   ListViewModel, collection
+   ListViewModel,
+   collection,
+   entity
 ) {
    describe('Controls.List.ListControl.ListViewModel', function() {
       var data;
@@ -104,19 +107,24 @@ define([
 
       it('set marker after setting items', function() {
          var
-            items = new collection.RecordSet({
-               rawData: [
-                  { id: 1, title: 'item 1' }
-               ],
-               idProperty: 'id'
-            }),
-            model = new ListViewModel({
+             items = new collection.RecordSet({
+                rawData: [
+                   { id: 1, title: 'item 1' }
+                ],
+                idProperty: 'id'
+             }),
+             model = new ListViewModel({
+                keyProperty: 'id',
+                items: new collection.RecordSet({
+                   rawData: [],
+                   idProperty: 'id'
+                }),
+                markedKey: null
+             }),
+            modelWithoutItems = new ListViewModel({
+               markerVisibility: 'visible',
                keyProperty: 'id',
-               items: new collection.RecordSet({
-                  rawData: [],
-                  idProperty: 'id'
-               }),
-               markedKey: null
+               markedKey: 1
             });
 
          // Should not set marker
@@ -137,7 +145,100 @@ define([
          model._options.markerVisibility = 'always';
          model.setItems(items);
          assert.equal(1, model._markedKey);
-         model._markedKey = 0;
+         
+         assert.equal(modelWithoutItems._markedKey, null);
+         modelWithoutItems.setItems(items);
+         assert.equal(modelWithoutItems._markedKey, 1);
+      });
+
+      it('should set markerFrom state', function () {
+
+         var
+             items = new collection.RecordSet({
+                rawData: [
+                   { id: 2, title: 'item 2' },
+                   { id: 3, title: 'item 3' }
+                ],
+                idProperty: 'id'
+             }),
+             model = new ListViewModel({
+                keyProperty: 'id',
+                items: new collection.RecordSet({
+                   rawData: [
+                      { id: 1, title: 'item 1' }
+                   ],
+                   idProperty: 'id'
+                }),
+                markerVisibility: 'visible',
+                markedKey: 1
+             });
+
+         model._markedKey = 2;
+         model.setItems(items);
+         assert.equal(2, model._markedKey);
+
+      });
+
+      it('set marker on ctor', function() {
+
+         var cfg = {
+                keyProperty: 'id',
+                items: new collection.RecordSet({
+                   rawData: [
+                      {id: 1, title: 'item 1'},
+                      {id: 2, title: 'item 2'},
+                      {id: 3, title: 'item 3'}
+                   ],
+                   idProperty: 'id'
+                }),
+                markedKey: null
+             },
+             model;
+
+         // Should not set marker
+         cfg.markedKey = null;
+         cfg.markerVisibility = 'onactivated';
+         model = new ListViewModel(cfg);
+         assert.equal(undefined, model._markedKey);
+
+         cfg.markedKey = null;
+         cfg.markerVisibility = 'hidden';
+         model = new ListViewModel(cfg);
+         assert.equal(undefined, model._markedKey);
+
+         cfg.markedKey = 1;
+         cfg.markerVisibility = 'hidden';
+         model = new ListViewModel(cfg);
+         assert.equal(undefined, model._markedKey);
+
+
+
+         // Should set marker
+         cfg.markedKey = 2;
+         cfg.markerVisibility = 'onactivated';
+         model = new ListViewModel(cfg);
+         assert.equal(2, model._markedKey);
+
+         cfg.markedKey = null;
+         cfg.markerVisibility = 'always';
+         model = new ListViewModel(cfg);
+         assert.equal(1, model._markedKey);
+
+         cfg.markedKey = null;
+         cfg.markerVisibility = 'visible';
+         model = new ListViewModel(cfg);
+         assert.equal(1, model._markedKey);
+
+         cfg.markedKey = 2;
+         cfg.markerVisibility = 'always';
+         model = new ListViewModel(cfg);
+         assert.equal(2, model._markedKey);
+
+         cfg.markedKey = 2;
+         cfg.markerVisibility = 'visible';
+         model = new ListViewModel(cfg);
+         assert.equal(2, model._markedKey);
+
 
       });
 
@@ -184,6 +285,28 @@ define([
          assert.isTrue(markedKeyChangedFired, 'onMarkedKeyChanged event should fire after setItems');
       });
 
+      it('setItemActions should not change actions if an item does not exist in display', function() {
+         var
+            cfg = {
+               keyProperty: 'id',
+               markerVisibility: 'visible',
+               markedKey: null
+            },
+            listModel = new ListViewModel(cfg);
+
+         listModel.setItemActions(new entity.Record({
+            rawData: {
+               id: 'test',
+               title: 'test'
+            },
+            idProperty: 'id'
+         }), {
+            all: [],
+            showed: []
+         });
+         assert.equal(0, Object.keys(listModel._actions).length);
+      });
+
       it('_updateSelection', function() {
          var cfg = {
             items: data,
@@ -222,6 +345,27 @@ define([
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
       });
 
+      it('setSwipeItem should only change version once if called with the same item multiple times in a row', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1],
+               markedKey: null
+            },
+            itemData = {
+               test: 'test'
+            },
+            lv = new ListViewModel(cfg);
+
+         lv.setSwipeItem(itemData);
+         lv.setSwipeItem(itemData);
+
+         assert.equal(lv._swipeItem, itemData);
+         assert.equal(1, lv.getVersion());
+      });
+
       it('getMarkedKey', function() {
          var
             cfg = {
@@ -233,61 +377,6 @@ define([
             };
          var lv = new ListViewModel(cfg);
          assert.equal(lv.getMarkedKey(), 1);
-      });
-
-      it('initialMarker', function() {
-         var
-            rs = new collection.RecordSet({
-               rawData: [
-                  {
-                     id: 1,
-                     title: 'item 1'
-                  },
-                  {
-                     id: 2,
-                     title: 'item 2'
-                  },
-                  {
-                     id: 3,
-                     title: 'item 3'
-                  },
-                  {
-                     id: 4,
-                     title: 'item 4'
-                  }
-               ],
-               idProperty: 'id'
-            }),
-            cfg, lv;
-
-         cfg = {
-            items: rs,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            markedKey: 1
-         };
-         lv = new ListViewModel(cfg);
-         assert.equal(lv.getMarkedKey(), 1);
-
-         cfg = {
-            items: rs,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            markedKey: null,
-            markerVisibility: 'visible',
-         };
-         lv = new ListViewModel(cfg);
-         assert.equal(lv.getMarkedKey(), 1);
-
-         cfg = {
-            items: rs,
-            keyProperty: 'id',
-            displayProperty: 'title',
-            markedKey: null,
-            markerVisibility: 'onactivated',
-         };
-         lv = new ListViewModel(cfg);
-         assert.equal(lv.getMarkedKey(), undefined);
       });
 
       it('setRightSwipedItem', function() {

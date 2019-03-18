@@ -2,7 +2,9 @@ define('Controls/Selector/Lookup', ['Core/Control', 'wml!Controls/Selector/Looku
    'use strict';
 
    /**
-    * Input for selection from source.
+    * The Lookup control allows you to select a value from a dialog or suggest containing a list of possible values.
+    * Сan be displayed in single-line and multi-line mode.
+    * Supports single and multiple selection.
     * Here you can see <a href="/materials/demo-ws4-engine-selector-lookup">demo-example</a>.
     *
     * @class Controls/Selector/Lookup

@@ -12,6 +12,11 @@ define('Controls/Input/Render/Styles',
        * @css @height_Render_size_l Height of the large sized input field.
        * @css @height_Render_size_default Height of the default sized input field.
        *
+       * @css @border-radius_Render_size_s Border radius of the small sized input field.
+       * @css @border-radius_Render_size_m Border radius of the medium sized input field.
+       * @css @border-radius_Render_size_l Border radius of the large sized input field.
+       * @css @border-radius_Render_size_default Border radius of the default sized input field.
+       *
        * @css @border-color_Render_style_info Color of the border of the input field displayed in the information style.
        * @css @border-color_Render_style_danger Color of the border of the input field displayed in the danger style.
        * @css @border-color_Render_style_invalid Color of the border of the input field displayed in the invalid style.

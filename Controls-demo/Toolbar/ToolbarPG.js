@@ -136,7 +136,7 @@ define('Controls-demo/Toolbar/ToolbarPG',
                      {
                         id: '2',
                         title: 'Default template',
-                        template: 'Controls/toolbars:ToolbarItemTemplate'
+                        template: 'Controls/toolbars:ItemTemplate'
                      }
                   ]
                },

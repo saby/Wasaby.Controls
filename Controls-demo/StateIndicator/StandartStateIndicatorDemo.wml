@@ -4,62 +4,62 @@
       <h2>With one value</h2>
       <div class="demo__block">
          <div class="demo__label">0% filled</div>
-         <Controls.progress:StateIndicator  attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="0" state="{{_states[0]}}" numValues="{{1}}" numSectors="{{10}}"/>      
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="0" data="{{_datas[0]}}" scale="{{_scales[0]}}" />      
       </div>
       <div class="demo__block">
          <div class="demo__label">3% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="1" state="{{_states[1]}}" numValues="{{1}}" numSectors="{{10}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element"on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="1" data="{{_datas[1]}}" scale="{{_scales[1]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">53% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="2" state="{{_states[2]}}"" numValues="{{1}}" numSectors="{{10}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element"on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="2"  data="{{_datas[2]}}" scale="{{_scales[2]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">100% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="3" state="{{_states[3]}}" numValues="{{1}}" numSectors="{{10}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element"on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="3"  data="{{_datas[3]}}" scale="{{_scales[3]}}" />
       </div>
       <h2>With two values</h2>
       <h3>10 sectors</h3>
       <div class="demo__block">
          <div class="demo__label">0%, 30% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="4" state="{{_states[4]}}" numValues="{{2}}" numSectors="{{10}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element"on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="4"  data="{{_datas[4]}}" scale="{{_scales[4]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">20%, 80% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="5" state="{{_states[5]}}" numValues="{{2}}" numSectors="{{10}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="5"  data="{{_datas[5]}}" scale="{{_scales[5]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">40%, 12% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="6" state="{{_states[6]}}" numValues="{{2}}" numSectors="{{10}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="6"  data="{{_datas[6]}}" scale="{{_scales[6]}}" />
       </div>
       <h3>20 sectors</h3>
       <div class="demo__block">
          <div class="demo__label">35%, 40% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="7" state="{{_states[7]}}" numValues="{{2}}" numSectors="{{20}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="7"  data="{{_datas[7]}}" scale="{{_scales[7]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">30%, 70% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="8" state="{{_states[8]}}" numValues="{{2}}" numSectors="{{20}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="8"  data="{{_datas[8]}}" scale="{{_scales[8]}}" />
       </div>
       <h2>With three values</h2>
       <h3>20 sectors</h3>
       <div class="demo__block">
          <div class="demo__label">10%, 0%, 50% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="9" state="{{_states[9]}}" numValues="{{3}}" numSectors="{{20}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="9"  data="{{_datas[9]}}" scale="{{_scales[9]}}" />
       </div>
       <div class="demo__block">
          <div class="demo__label">25%, 25%, 25% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" on:onItemOver="_mouseHandler()" attr:index="10" state="{{_states[10]}}" numValues="{{3}}" numSectors="{{20}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="10"  data="{{_datas[10]}}" scale="{{_scales[10]}}" />
       </div>
       <h2>With several values</h2>
       <h3>Custom number of sectors and colors</h3>
       <div class="demo__block">
          <div class="demo__label">34%, 33%, 33% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" colors="{{['controls-StateIndicator__sector3', 'controls-StateIndicator__sector1', 'controls-StateIndicator__sector2']}}" on:onItemOver="_mouseHandler()" attr:index="11" state="{{_states[11]}}" numValues="{{3}}" numSectors="{{24}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="11"  data="{{_datas[11]}}" scale="{{_scales[11]}}" />
       </div>      
       <div class="demo__block">
          <div class="demo__label">20%, 30%, 3%, 47% filled</div>
-         <Controls.progress:StateIndicator attr:class="demo__element" colors="{{['','','','controls-StateIndicator__emptySector']}}" on:onItemOver="_mouseHandler()" attr:index="12" state="{{_states[12]}}" numValues="{{4}}" numSectors="{{13}}"/>
+         <Controls.progress:StateIndicator attr:class="demo__element" on:itemEnter="_mouseEnterHandler()"  on:mouseleave="_mouseLeaveHandler()" attr:index="12"  data="{{_datas[12]}}" scale="{{_scales[12]}}" />
       </div>
     </div>    
 </div>

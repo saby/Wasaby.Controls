@@ -162,6 +162,7 @@ define(
             let config = {
                template,
                opener: 'opener',
+               className: 'myClass',
                templateOptions: {
                   myOpt: true
                }
@@ -170,11 +171,19 @@ define(
             assert.equal(config.template, 'Controls/Popup/Compatible/OldNotification');
             assert.equal(config.componentOptions.template, template);
             assert.equal(config.componentOptions.templateOptions, config.templateOptions);
+            assert.equal(config.componentOptions.className, 'myClass');
             assert.equal(config.isVDOM, true);
             assert.equal(config.className, 'controls-OldNotification');
             assert.equal(config.opener, null);
          });
 
+         it('_prepareConfigFromOldToOldByNewEnvironment', () => {
+            let cfg = {
+               flipWindow: 'vertical'
+            };
+            BaseOpener._prepareConfigFromOldToOldByNewEnvironment(cfg);
+            assert.equal(cfg.locationStrategy, 'overflow');
+      })
          it('_setSizes', function() {
             BaseOpener._setSizes(config, DropdownExample);
             assert.isTrue(config.autoWidth);
@@ -204,7 +213,10 @@ define(
          });
 
          it('_prepareConfigForOldTemplate', function() {
+            config.fixed = true;
             BaseOpener._prepareConfigForOldTemplate(config, DropdownExample);
+            assert.equal(config.templateOptions.trackTarget, true);
+            assert.equal(config.templateOptions.fixed, true);
             assert.equal(config.templateOptions.hoverTarget, config.hoverTarget);
             assert.equal(config.templateOptions.record, config.record);
             assert.equal(config.templateOptions.__parentFromCfg, config.parent);
@@ -225,7 +237,9 @@ define(
             newConfig.maximized = false;
             newConfig.canMaximize = true;
             newConfig.maxWidth = 150;
+            newConfig.trackTarget = false;
             BaseOpener._prepareConfigForOldTemplate(newConfig, DropdownExample);
+            assert.equal(config.templateOptions.trackTarget, false);
             assert.equal(newConfig.minimizedWidth, 100);
             assert.equal(newConfig.minWidth, 200);
             assert.isTrue(newConfig.templateOptions.canMaximize);
@@ -291,7 +305,9 @@ define(
             config.target = 'testTarget';
             config.className = 'testClass';
             config.closeOnOutsideClick = false;
+            config.locationStrategy = 'fixed';
             let newConfig = BaseOpener._prepareConfigFromNewToOld(config);
+            assert.isFalse(newConfig.dialogOptions.flipWindow);
             assert.equal(newConfig.templateOptions, config.templateOptions);
             assert.equal(newConfig.dialogOptions._isCompatibleArea, true);
             assert.equal(newConfig.componentOptions, config.templateOptions);

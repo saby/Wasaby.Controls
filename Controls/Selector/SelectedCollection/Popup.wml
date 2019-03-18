@@ -1,4 +1,4 @@
-<Controls.Container.Scroll attr:class="controls-SelectedCollection__popup-wrapper">
+<Controls.Container.Scroll attr:class="controls-SelectedCollection__infobox_content">
    <Controls.Heading caption="Выбрано" size="s" readOnly="{{true}}"/>
    <div>
       <Controls.Selector.SelectedCollection

@@ -4,11 +4,13 @@ define('Controls/Selector/Suggest',
       'wml!Controls/Selector/Suggest/Suggest',
       'Controls/Controllers/SourceController',
       'Controls/Input/resources/InputRender/BaseViewModel',
+      'Controls/History/Source',
+      'Controls/History/Service',
       'Types/util',
       'Types/entity',
       'Core/core-merge'
    ],
-   function(Control, template, SourceController, BaseViewModel, util, entity, Merge) {
+   function(Control, template, SourceController, BaseViewModel, HistorySource, HistoryService, util, entity, Merge) {
       'use strict';
 
       /**
@@ -58,6 +60,16 @@ define('Controls/Selector/Suggest',
          prepareSuggestTemplate: function(displayProperty, suggestTemplate) {
             var suggestTemplateConfig = { templateOptions: { displayProperty: displayProperty } };
             return Merge(suggestTemplateConfig, suggestTemplate);
+         },
+
+         createHistorySource: function(historyId, source) {
+            return new HistorySource({
+               originSource: source,
+               historySource: new HistoryService({
+                  historyId: historyId,
+                  frequent: true
+               })
+            });
          }
       };
 
@@ -66,21 +78,26 @@ define('Controls/Selector/Suggest',
 
          _template: template,
          _suggestState: false,
+         _searchValue: '',
 
          _beforeMount: function(options) {
             this._suggestTemplate = _private.prepareSuggestTemplate(options.displayProperty, options.suggestTemplate);
+            if (options.historyId) {
+               this._historySource = _private.createHistorySource(options.historyId, options.source);
+            }
             if (options.selectedKey) {
                return _private.loadSelectedItem(this, options).addCallback(function(items) {
                   return items;
                });
-            } else {
-               _private.createViewModel(this, options.value || '');
             }
+            _private.createViewModel(this, '');
+            this._searchValue = '';
          },
 
          _changeValueHandler: function(event, value) {
             if (value !== this._value) {
                _private.updateValue(this, value);
+               this._searchValue = value;
                this._notify('selectedKeyChanged', [null]);
                this._notify('valueChanged', [value]);
             }
@@ -89,16 +106,20 @@ define('Controls/Selector/Suggest',
          _choose: function(event, item) {
             this.activate();
             _private.updateValue(this, item.get(this._options.displayProperty) || '');
+            if (this._options.historyId && item.get(this._options.keyProperty) !== undefined) {
+               this._historySource.update(item, { $_history: true });
+            }
+            this._searchValue = '';
             this._notify('selectedKeyChanged', [item.get(this._options.keyProperty)]);
             this._notify('valueChanged', [this._value]);
          },
 
          _beforeUpdate: function(newOptions) {
+            if (newOptions.source !== this._options.source && newOptions.historyId) {
+               this._historySource = _private.createHistorySource(newOptions.historyId, newOptions.source);
+            }
             if (this._options.suggestState !== newOptions.suggestState) {
                this._suggestState = newOptions.suggestState;
-            }
-            if (this._options.value !== newOptions.value) {
-               _private.updateValue(this, newOptions.value);
             }
             if (newOptions.selectedKey && (newOptions.selectedKey !== this._options.selectedKey ||
                newOptions.source !== this._options.source)) {
@@ -117,7 +138,6 @@ define('Controls/Selector/Suggest',
             } else if (this._suggestState) {
                this._suggestState = false;
             }
-
             this.activate();
          },
 

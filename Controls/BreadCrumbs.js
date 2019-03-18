@@ -6,7 +6,7 @@ define('Controls/BreadCrumbs', [
    /**
     * Breadcrumbs.
     *
-    * @class Controls/BreadCrumbs
+    * @class Controls/crumbs:Path
     * @extends Core/Control
     * @mixes Controls/interface/IBreadCrumbs
     * @mixes Controls/BreadCrumbs/BreadCrumbsStyles

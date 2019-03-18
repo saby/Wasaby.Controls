@@ -1,5 +1,5 @@
 define('Controls/List', [
-   'Controls/_list/List'
+   'Controls/_lists/List'
 ], function(Control) {
    'use strict';
 
