@@ -165,6 +165,11 @@ define([
             assert.deepEqual(Converter.htmlToJson(html), json);
          });
 
+         it('long html', function() {
+            var text = 'a'.repeat(1000);
+            assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', text]]);
+         });
+
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
