@@ -242,6 +242,11 @@ define(
             assert.equal(config.templateOptions.trackTarget, false);
             assert.equal(newConfig.minimizedWidth, 100);
             assert.equal(newConfig.minWidth, 200);
+            assert.equal(newConfig.maxWidth, newConfig.templateOptions.maxWidth);
+            assert.equal(newConfig.minHeight, newConfig.templateOptions.minHeight);
+            assert.equal(newConfig.maxHeight, newConfig.templateOptions.maxHeight);
+            assert.equal(newConfig.width, newConfig.templateOptions.width);
+            assert.equal(newConfig.height, newConfig.templateOptions.height);
             assert.isTrue(newConfig.templateOptions.canMaximize);
             assert.equal(newConfig.templateOptions.templateOptions.isPanelMaximized, newConfig.maximized);
             delete newConfig.context;
