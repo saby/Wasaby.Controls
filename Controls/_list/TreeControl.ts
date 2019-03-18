@@ -297,8 +297,10 @@ var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype 
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
+
+            //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
+            this._children.baseControl.getViewModel().resetExpandedItems();
             this._children.baseControl.reload().addCallback(function() {
-                self._children.baseControl.getViewModel().setExpandedItems([]);
                 self._children.baseControl.getViewModel().setRoot(self._root);
             });
         }
