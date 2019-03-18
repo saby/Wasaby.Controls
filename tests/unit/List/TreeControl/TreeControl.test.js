@@ -348,6 +348,11 @@ define([
          }, treeViewModel.getExpandedItems());
          assert.equal(1, treeControl._options.root);
 
+         var resetExpandedItemsCalled = false;
+         treeViewModel.resetExpandedItems = function() {
+            resetExpandedItemsCalled = true;
+         };
+
          // Test
          return new Promise(function(resolve) {
             setTimeout(function() {
@@ -359,6 +364,7 @@ define([
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
+                  assert.isTrue(resetExpandedItemsCalled);
                   assert.deepEqual(reloadFilter, {testParentProperty: 12});
                   treeControl._beforeUpdate({root: treeControl._root});
                   TreeControl._private.clearSourceControllers = clearSourceControllersOriginal;
