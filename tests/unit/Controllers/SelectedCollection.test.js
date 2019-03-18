@@ -47,9 +47,14 @@ define([
       });
 
       it('LoadItems', function(done) {
-         var self = {
+         var
+            selectedItems,
+            self = {
             _notify: function() {},
             _options : {
+               dataLoadCallback: function(result) {
+                  selectedItems = result;
+               },
                selectedKeys : [1,2],
                source: new sourceLib.Memory({
                   data: [
@@ -63,6 +68,7 @@ define([
             }
          };
          SelectedCollection._private.loadItems(self, null, self._options.keyProperty, self._options.selectedKeys, self._options.source).addCallback(function(result) {
+            assert.equal(selectedItems, result);
             assert.equal(result.at(0).getId(), 1);
             assert.equal(result.at(1).getId(), 2);
             assert.equal(result.getCount(), 2);

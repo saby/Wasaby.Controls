@@ -6,7 +6,8 @@
       filter="{{_options.filter}}"
       isCompoundTemplate="{{_options.isCompoundTemplate}}"
       multiSelect="{{_options.multiSelect}}"
-      selectorTemplate="{{_options.selectorTemplate}}">
+      selectorTemplate="{{_options.selectorTemplate}}"
+      dataLoadCallback="{{_options.dataLoadCallback}}">
    <ws:content>
       <Controls.Selector.Button._SelectorButton scope="{{_options}}"/>
    </ws:content>

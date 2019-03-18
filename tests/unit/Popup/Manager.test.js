@@ -292,16 +292,20 @@ define(
                closeOnOutsideClick: true
             }, controller);
 
+            let item = Manager.find(id);
 
             let baseFinishPendings = Manager._private.finishPendings;
             Manager._private.finishPendings = (popupId, popupCallback, pendingCallback, pendingsFinishedCallback) => {
                pendingsFinishedCallback();
             };
             Manager._private.popupDeactivated(id);
+            assert.equal(isDeactivated, false);
+
+            item.popupState = 'create';
+            Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, true);
 
             isDeactivated = false;
-            let item = Manager.find(id);
             item.popupOptions.closeOnOutsideClick = false;
             Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, false);
@@ -378,6 +382,27 @@ define(
             assert.equal(firstResult, true);
             var secondResult = Manager._private.isIgnoreActivationArea(focusedArea);
             assert.equal(secondResult, false);
+         });
+         it('contentClick', function() {
+            let Manager = getManager();
+            let deactivatedCount = 0;
+            Manager._private.popupDeactivated = () => deactivatedCount++;
+            Manager._private.isIgnoreActivationArea = () => false;
+            let id1 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            let id2 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            let id3 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+
+            Manager._mouseDownHandler();
+            Manager._contentClick({});
+
+            assert.equal(deactivatedCount, 0);
+            Manager.destroy();
          });
          it('managerPopupCreated notified', function() {
             let isPopupOpenedEventTriggered = false;

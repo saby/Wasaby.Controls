@@ -155,15 +155,24 @@ define([
       });
 
       it('beforeUnmount', () => {
-         let FC = new FormController();
-         let isRecordUnsubscribe = false;
-         FC._record = {
-            unsubscribe: () => {
-               isRecordUnsubscribe = true;
+         let isDestroyCall = false;
+         let dataSource = {
+            destroy: (id) => {
+               assert.equal(id, 'id1');
+               isDestroyCall = true;
             }
          };
+         let FC = new FormController();
+         FC.saveOptions({dataSource});
+         FC._record = {
+            getId: () => 'id1'
+         };
          FC._beforeUnmount();
-         assert.equal(isRecordUnsubscribe, true);
+         assert.equal(isDestroyCall, false);
+
+         FC._isNewRecord = true;
+         FC._beforeUnmount();
+         assert.equal(isDestroyCall, true);
          FC.destroy();
       });
 

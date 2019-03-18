@@ -30,7 +30,6 @@ define('Controls/FormController', [
          });
          readDef.addErrback(function(e) {
             Env.IoC.resolve('ILogger').error('FormController', 'Не смог прочитать запись ' + cfg.key, e);
-            instance._record && instance._record.unsubscribe('onPropertyChange', instance._onPropertyChangeHandler);
             instance._readInMounting = { isError: true, result: e };
             throw e;
          });
@@ -53,7 +52,6 @@ define('Controls/FormController', [
          // если ни рекорда, ни ключа, создаем новый рекорд и используем его
          // в beforeMount еще нет потомков, в частности _children.crud, поэтому будем создавать рекорд напрямую
          var createDef = cfg.dataSource.create(cfg.initValues);
-         instance._record && instance._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
          createDef.addCallbacks(function(record) {
             instance._setRecord(record);
             instance._createdInMounting = { isError: false, result: record };
@@ -109,8 +107,6 @@ define('Controls/FormController', [
          this.__errorController = options.errorController || new ErrorController({});
       },
       _beforeMount: function(cfg) {
-         this._onPropertyChangeHandler = this._onPropertyChange.bind(this);
-
          // use record
          if (cfg.record && _private.checkRecordType(cfg.record)) {
             this._setRecord(cfg.record);
@@ -136,6 +132,7 @@ define('Controls/FormController', [
          if (this._readInMounting) {
             _private.readRecordBeforeMountNotify(this);
          }
+         this._createChangeRecordPending();
          this._isMount = true;
       },
       _beforeUpdate: function(newOptions) {
@@ -179,16 +176,12 @@ define('Controls/FormController', [
          }
       },
       _beforeUnmount: function() {
-         this._setRecord(null);
-
          // when FormController destroying, its need to check new record was saved or not. If its not saved, new record trying to delete.
          this._tryDeleteNewRecord();
       },
       _setRecord: function(record) {
          if (!record || _private.checkRecordType(record)) {
-            this._record && this._record.unsubscribe('onPropertyChange', this._onPropertyChangeHandler);
             this._record = record;
-            this._record && this._record.subscribe('onPropertyChange', this._onPropertyChangeHandler);
          }
       },
       _getRecordId: function() {
@@ -214,71 +207,18 @@ define('Controls/FormController', [
          // 2. The "create" method returned the key
          return this._record && this._isNewRecord && this._getRecordId();
       },
-      _onPropertyChange: function() {
+
+      _createChangeRecordPending: function() {
          var self = this;
-         if (!this._propertyChangeNotified && this._record.isChanged()) {
-            var def = new Deferred();
-            this._propertyChangedDef = def;
-
-            self._propertyChangeNotified = true;
-            self._notify('registerPending', [def, {
-               showLoadingIndicator: false,
-               onPendingFail: function(forceFinishValue, deferred) {
-                  if (self._record.isChanged()) {
-                     self._showConfirmDialog(deferred, forceFinishValue);
-                     deferred.addCallbacks(function(res) {
-                        self._propertyChangeNotified = false;
-                        return res;
-                     }, function(e) {
-                        self._propertyChangeNotified = false;
-                        return e;
-                     });
-                  } else {
-                     self._propertyChangeNotified = false;
-                     if (!deferred.isReady()) {
-                        deferred.callback(true);
-                     }
-                  }
-               }
-            }], { bubbling: true });
-         }
-
-         // if record actually is not changed after onPropertyChange, we must resolve pending
-         if (this._propertyChangeNotified && !this._record.isChanged()) {
-            if (!self._propertyChangedDef.isReady()) {
-               this._propertyChangedDef.callback(true);
+         self._notify('registerPending', [new Deferred(), {
+            showLoadingIndicator: false,
+            validate: function() {
+               return self._record && self._record.isChanged();
+            },
+            onPendingFail: function(forceFinishValue, deferred) {
+               self._showConfirmDialog(deferred, forceFinishValue);
             }
-
-            // сбрасываем флаг об изменении, потому что отстрелили callback и теперь надо будет заново создавать deferred
-            this._propertyChangeNotified = false;
-         }
-
-         // предполагалось что record оповещает в propertyChange и любых изменениях флага isChanged().
-         // оказалось, что мы узнаем только об изменениях полей. а если позовут acceptChanges рекорду,
-         // рекорд перестает быть измененным, но внутри у него есть измененные поля, так что propertyChange не стреляет.
-         // это приводит к тому, что deferred не завешается, и пендинг остается висеть.
-         // в PendingRegistrator мы ничего не знаем про рекорды и не можем там организовать проверку на их изменнность.
-         // сейчас есть только способ запросить onPendingFail который попробует сохранить рекорды и завершить пендинги.
-         // чтобы завершить пендинги на acceptChanges, переопределим метод и завершим пендинг вручную.
-         var acceptChanges = this._record.acceptChanges;
-         this._record.acceptChanges = function() {
-            var res = acceptChanges.apply(this, arguments);
-
-            // После acceptChanges рекорд может быть все еще изменен. Происходит в случае, когда вызывают метод и напрямую задают
-            // поля, которые нужно пометить неизмененными
-            if (!this.isChanged() && self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
-               self._propertyChangedDef.callback(true);
-            }
-            return res;
-         };
-         var rejectChanges = this._record.rejectChanges;
-         this._record.rejectChanges = function() {
-            var res = rejectChanges.apply(this, arguments);
-            if (!this.isChanged() && self._propertyChangedDef && !self._propertyChangedDef.isReady()) {
-               self._propertyChangedDef.callback(true);
-            }
-            return res;
-         };
+         }], { bubbling: true });
       },
       _showConfirmDialog: function(def, forceFinishValue) {
          function updating(answer) {
@@ -443,12 +383,6 @@ define('Controls/FormController', [
                   res.callback();
                }
                res.addCallback(function(arg) {
-                  if (isChanged && !self._propertyChangedDef.isReady()) {
-                     // если редактируемый рекорд и сохранение вызвано не из окна сохранения, завершаем пендинг
-                     // если из окна сохранения, пендинг завершится там
-                     self._propertyChangedDef.callback(true);
-                     self._propertyChangeNotified = false;
-                  }
                   self._isNewRecord = false;
 
                   updateDef.callback(true);

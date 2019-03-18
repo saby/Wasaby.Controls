@@ -2,12 +2,12 @@ define([
    'Controls/EditableArea',
    'Types/entity',
    'Core/Deferred',
-   'Controls/EditableArea/Constants'
+   'Controls/Constants'
 ], function(
    EditableArea,
    entity,
    Deferred,
-   EditConstants
+   Constants
 ) {
    'use strict';
 
@@ -195,7 +195,7 @@ define([
          it('cancel', function() {
             instance.saveOptions(cfg2);
             instance._beforeMount(cfg2);
-            instance._notify = mockNotify(EditConstants.CANCEL);
+            instance._notify = mockNotify(Constants.editing.CANCEL);
             instance.beginEdit(event);
             assert.equal(eventQueue[0].event, 'beforeBeginEdit');
             assert.isTrue(eventQueue[0].eventArgs[0].isEqual(instance._options.editObject));
@@ -226,7 +226,7 @@ define([
          it('cancel', function() {
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._notify = mockNotify(EditConstants.CANCEL);
+            instance._notify = mockNotify(Constants.editing.CANCEL);
             instance._editObject.set('text', 'changed');
             instance.cancelEdit();
             assert.equal(eventQueue.length, 1);
@@ -290,7 +290,7 @@ define([
             };
             instance.saveOptions(cfg);
             instance._beforeMount(cfg);
-            instance._notify = mockNotify(EditConstants.CANCEL);
+            instance._notify = mockNotify(Constants.editing.CANCEL);
             instance._editObject.set('text', 'asdf');
             await instance.commitEdit();
             assert.equal(eventQueue.length, 1);

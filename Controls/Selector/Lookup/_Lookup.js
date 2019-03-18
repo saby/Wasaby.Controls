@@ -44,9 +44,9 @@ define('Controls/Selector/Lookup/_Lookup', [
          self._notify('valueChanged', [value]);
       },
 
-      updateModel: function(self, value) {
+      updateModel: function(self) {
          self._simpleViewModel.updateOptions({
-            value: value
+            value: self._inputValue
          });
       },
 
@@ -67,6 +67,10 @@ define('Controls/Selector/Lookup/_Lookup', [
          return itemsCount > 0 && options.multiSelect && (!options.readOnly || itemsCount > 1);
       },
 
+      getCounterWidth: function(itemsCount) {
+         return selectedCollectionUtils.getCounterWidth(itemsCount);
+      },
+
       calculatingSizes: function(self, newOptions) {
          var
             counterWidth,
@@ -83,7 +87,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (_private.isNeedCalculatingSizes(newOptions)) {
             // in mode read only and single line, counter does not affect the collection
             if (isShowCounter && (!newOptions.readOnly || newOptions.multiLine)) {
-               counterWidth = selectedCollectionUtils.getCounterWidth(itemsCount);
+               counterWidth = _private.getCounterWidth(itemsCount);
             }
 
             fieldWrapperWidth = _private.getFieldWrapperWidth(self);
@@ -190,7 +194,8 @@ define('Controls/Selector/Lookup/_Lookup', [
                _counterWidth: counterWidth
             }),
             _items: items,
-            _visibleItems: visibleItems
+            _visibleItems: visibleItems,
+            _getItemMaxWidth: selectedCollectionUtils.getItemMaxWidth
          });
 
          if (newOptions.multiLine) {
@@ -254,33 +259,41 @@ define('Controls/Selector/Lookup/_Lookup', [
          return lastRowCollectionWidth > availableWidth || !allItemsInOneRow;
       },
 
-      isNeedUpdate: function(itemsCount, multiLine, readOnly, maxVisibleItems) {
-         return multiLine || !readOnly || itemsCount > maxVisibleItems;
+      isNeedUpdate: function(multiSelect, itemsCount, multiLine, readOnly, maxVisibleItems) {
+         return multiSelect && (multiLine || !readOnly || itemsCount > maxVisibleItems);
       }
    };
 
    var Lookup = Control.extend({
       _template: template,
       _notifyHandler: tmplNotify,
+      _inputValue: '',
       _suggestState: false,
       _simpleViewModel: null,
       _availableWidthCollection: null,
       _infoboxOpened: false,
       _fieldWrapperWidth: null,
+      _maxVisibleItems: null,
 
       /* needed, because input will be created only after VDOM synchronisation,
          and we can set focus only in afterUpdate */
       _needSetFocusInInput: false,
 
       _beforeMount: function(options) {
+         this._inputValue = options.value;
          this._simpleViewModel = new BaseViewModel({
             value: options.value
          });
 
-         if (options.multiLine) {
-            this._maxVisibleItems = options.maxVisibleItems;
-         } else {
-            this._maxVisibleItems = options.items.getCount();
+         // To draw entries you need to calculate the size, but in readOnly or multiSelect: false can be drawn without calculating the size
+         if (!options.multiSelect) {
+            this._maxVisibleItems = 1;
+         } else if (options.readOnly) {
+            if (options.multiLine) {
+               this._maxVisibleItems = options.maxVisibleItems;
+            } else {
+               this._maxVisibleItems = options.items.getCount();
+            }
          }
       },
 
@@ -293,7 +306,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          if (itemsCount) {
             _private.calculatingSizes(this, this._options);
 
-            if (_private.isNeedUpdate(itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
+            if (_private.isNeedUpdate(this._options.multiSelect, itemsCount, this._options.multiLine, this._options.readOnly, this._maxVisibleItems)) {
                this._forceUpdate();
             }
          }
@@ -305,7 +318,11 @@ define('Controls/Selector/Lookup/_Lookup', [
             isNeedUpdate = !isEqual(newOptions.selectedKeys, this._options.selectedKeys),
             listOfDependentOptions = ['multiSelect', 'multiLine', 'items', 'displayProperty', 'maxVisibleItems', 'readOnly'];
 
-         _private.updateModel(this, newOptions.value);
+         if (newOptions.value !== this._options.value) {
+            this._inputValue = newOptions.value;
+         }
+
+         _private.updateModel(this);
 
          if (!isNeedUpdate) {
             listOfDependentOptions.forEach(function(optName) {
@@ -340,6 +357,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _changeValueHandler: function(event, value) {
+         this._inputValue = value;
          _private.notifyValue(this, value);
       },
 
@@ -347,6 +365,7 @@ define('Controls/Selector/Lookup/_Lookup', [
          this._notify('addItem', [item]);
 
          if (this._simpleViewModel.getValue() !== '') {
+            this._inputValue = '';
             _private.notifyValue(this, '');
          }
 
@@ -380,7 +399,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _suggestStateChanged: function() {
-         if (this._options.readOnly || this._infoboxOpened || !this._isInputVisible()) {
+         if (this._infoboxOpened || !this._isInputVisible()) {
             this._suggestState = false;
          }
       },
@@ -394,7 +413,7 @@ define('Controls/Selector/Lookup/_Lookup', [
       },
 
       _isInputVisible: function() {
-         return this._isEmpty() || this._options.multiSelect;
+         return !this._options.readOnly && (this._isEmpty() || this._options.multiSelect);
       },
       
       _openInfoBox: function(event, config) {
@@ -423,6 +442,7 @@ define('Controls/Selector/Lookup/_Lookup', [
 
    Lookup.getDefaultOptions = function() {
       return {
+         value: '',
          displayProperty: 'title',
          multiSelect: false,
          maxVisibleItems: 7

@@ -6,41 +6,42 @@ define([
    'Types/source',
    'Types/entity',
    'Types/collection',
+   'Types/display',
    'Controls/List/ListViewModel',
    'Controls/List/ItemActions/Utils/Actions',
    'Controls/Utils/Toolbar'
-], function(ItemActionsControl, source, entity, collection, ListViewModel, aUtil, tUtil) {
+], function(ItemActionsControl, source, entity, collection, display, ListViewModel, aUtil, tUtil) {
    describe('Controls.List.ItemActions', function() {
       var data, listViewModel, rs, actions;
       beforeEach(function() {
          data = [
             {
-               id: 1,
+               id: 0,
                title: 'Первый',
                type: 1
             },
             {
-               id: 2,
+               id: 1,
                title: 'Второй',
                type: 2
             },
             {
-               id: 3,
+               id: 2,
                title: 'Третий',
                type: 2
             },
             {
-               id: 4,
+               id: 3,
                title: 'Четвертый',
                type: 1
             },
             {
-               id: 5,
+               id: 4,
                title: 'Пятый',
                type: 2
             },
             {
-               id: 6,
+               id: 5,
                title: 'Шестой',
                type: 2
             }
@@ -124,9 +125,9 @@ define([
             //под нодой это не тестируем
             assert.isTrue(true);
          } else {
-            assert.equal(listViewModel._actions.length, data.length);//число соответствий равно числу айтемов
+            assert.equal(Object.keys(listViewModel._actions).length, data.length);//число соответствий равно числу айтемов
             listViewModel._notify('onListChange');
-            assert.equal(listViewModel._actions.length, data.length);//число соответствий равно числу айтемов
+            assert.equal(Object.keys(listViewModel._actions).length, data.length);//число соответствий равно числу айтемов
             assert.equal(listViewModel._actions[0].all.length, actions.length);
             assert.equal(listViewModel._actions[0].showed.length, 4 + 1); // 3-showType.TOOLBAR 1-showType.MENU_TOOLBAR 1 -само menu
          }
@@ -149,14 +150,14 @@ define([
 
             }};
          ctrl._beforeUpdate(cfg, {isTouch: {isTouch: false}});
-         assert.equal(listViewModel._actions[1].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
+         assert.equal(listViewModel._actions[2].all.length, actions.length - 2);// для item`a  с id = 2 фильтруется два экшена
       });
 
       it('itemActionsProperty', function() {
          var
             data = [
                {
-                  id: 1,
+                  id: 0,
                   title: 'Первый',
                   type: 1,
                   test: [
@@ -168,7 +169,7 @@ define([
                   ]
                },
                {
-                  id: 2,
+                  id: 1,
                   title: 'Второй',
                   type: 2,
                   test: [
@@ -294,15 +295,15 @@ define([
                {},
                'collectionChanged',
                collection.IObservable.ACTION_CHANGE,
-               [
-                  new entity.Record({
+               [new display.CollectionItem({
+                  contents: new entity.Record({
                      rawData: {
                         id: 1,
                         title: 'Первый',
                         type: 1
                      }
                   })
-               ]
+               })]
             );
 
             assert.equal(1, listViewModel.getVersion() - oldVersion);

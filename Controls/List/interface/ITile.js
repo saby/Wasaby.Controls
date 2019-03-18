@@ -1,4 +1,4 @@
-define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], function(Control) {
+define('Controls/List/interface/ITile', ['Controls/_lists/interface/ITile'], function(Control) {
 /**
  * Interface for lists in which items are displayed as tiles.
  *
@@ -56,7 +56,7 @@ define('Controls/List/interface/ITile', ['Controls/_list/interface/ITile'], func
  *                   parentProperty="Раздел"
  *                   nodeProperty="Раздел@">
  *       <ws:itemTemplate>
- *          <ws:partial template="wml!Controls/_list/TreeTileView/DefaultItemTpl"
+ *          <ws:partial template="wml!Controls/_lists/TreeTileView/DefaultItemTpl"
  *                      imageProperty="img" >
  *       </ws:itemTemplate>
  *    </Controls.Tile>

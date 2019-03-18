@@ -47,11 +47,6 @@
       "required": true
     },
     {
-      "name": "WS.Data",
-      "path": "./node_modules/ws-data/WS.Data",
-      "required": true
-    },
-    {
       "name": "Types",
       "path": "./node_modules/saby-types/Types",
       "required": true

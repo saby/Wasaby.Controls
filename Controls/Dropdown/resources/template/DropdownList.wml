@@ -3,6 +3,7 @@
             {{_options.dropdownClassName}}
             theme_{{_options.theme}}"
             style="min-width: {{_options.width ? _options.width + 'px'}}"
+            attr:ws-no-focus="true"
      on:mouseleave="_mouseOutHandler()">
    <ws:if data="{{_options.showHeader || _options.headerTemplate}}">
       <ws:partial template="{{_options.headTemplate || _options.headerTemplate || _defaultHeadTemplate}}"
@@ -26,7 +27,7 @@
                      iconPadding="{{_options.iconPadding}}"
                      resultHandler="{{resultHandler}}"></ws:partial>
          <ws:if data="{{_hasAdditional}}">
-            <div class="controls-DropdownList__additional theme_{{_options.theme}}" on:mouseenter="_additionMouseenter()">
+            <div class="controls-DropdownList__additional theme_{{_options.theme}}" on:mouseenter="_mouseenterHandler()">
                <Controls.Button.BigSeparator bind:value="_expanded" on:valueChanged="_toggleExpanded()" attr:class="controls-DropdownList__additional-button theme_{{_options.theme}}"/>
             </div>
          </ws:if>
@@ -35,7 +36,7 @@
    <ws:if data="{{_options.showClose && !_options.showHeader}}">
       <Controls.Button.Close class="controls-DropdownList-cross theme_{{_options.theme}}" style="light" on:click="_closeClick()"/>
    </ws:if>
-   <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer theme_{{_options.theme}}" on:click="_footerClick()">
+   <div if="{{_options.footerTemplate}}" class="controls-DropdownList__footer theme_{{_options.theme}}" on:click="_footerClick()" on:mouseenter="_mouseenterHandler()">
       <ws:partial template="{{_options.footerTemplate}}"/>
    </div>
    <!--todo Emitter должен переехать в попап, когда будем делать попапы, показывающиеся при наведении мыши-->

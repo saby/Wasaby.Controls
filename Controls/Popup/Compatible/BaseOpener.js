@@ -82,6 +82,8 @@ function(cMerge,
             cfg.templateOptions.hideCross = !cfg.border;
          }
 
+         cfg.templateOptions.trackTarget = cfg.hasOwnProperty('trackTarget') ? cfg.trackTarget : true;
+
          if (cfg.hasOwnProperty('autoShow')) {
             cfg.templateOptions.autoShow = cfg.autoShow;
             cfg.templateOptions._isVisible = cfg.autoShow;
@@ -101,6 +103,10 @@ function(cMerge,
 
          if (cfg.hasOwnProperty('enabled')) {
             cfg.templateOptions.enabled = cfg.enabled;
+         }
+
+         if (cfg.hasOwnProperty('fixed')) {
+            cfg.templateOptions.fixed = cfg.fixed;
          }
 
          if (!cfg.hasOwnProperty('catchFocus')) {
@@ -126,13 +132,14 @@ function(cMerge,
       prepareNotificationConfig: function(config) {
          var template = typeof config.template === 'string' ? requirejs(config.template) : config.template;
          config.opener = null;
-         config.className = 'controls-OldNotification';
          config.isVDOM = true;
          config.template = 'Controls/Popup/Compatible/OldNotification';
          config.componentOptions = {
             template: template,
-            templateOptions: config.templateOptions
+            templateOptions: config.templateOptions,
+            className: config.className
          };
+         config.className = 'controls-OldNotification';
          return config;
       },
 
@@ -174,6 +181,26 @@ function(cMerge,
             cfg.templateOptions.handlers.onDestroy.push(destrFunc);
          } else {
             cfg.templateOptions.handlers.onDestroy = [cfg.templateOptions.handlers.onDestroy, destrFunc];
+         }
+      },
+
+      _prepareConfigFromOldToOldByNewEnvironment: function(cfg) {
+         if (cfg.flipWindow === 'vertical') {
+            cfg.locationStrategy = 'overflow';
+         }
+         if (cfg.cssClassName) {
+            cfg.className = cfg.cssClassName;
+         }
+         if (cfg.maxWidth) {
+            if (cfg.maxWidthWithoutSideBar !== true) {
+               var MINIMAL_PANEL_DISTANCE = 50;
+               var stackContainer = document.querySelector('.controls-Popup__stack-target-container');
+               var sideBar = document.querySelector('.online-Sidebar');
+               if (stackContainer && sideBar) {
+                  var maxCompatibleWidth = stackContainer.clientWidth - sideBar.clientWidth - MINIMAL_PANEL_DISTANCE;
+                  cfg.maxWidth = Math.min(maxCompatibleWidth, cfg.maxWidth);
+               }
+            }
          }
       },
 
@@ -459,6 +486,9 @@ function(cMerge,
             this._prepareTarget(newCfg);
             if (cfg.mode === 'floatArea') {
                newCfg.dialogOptions.fitWindow = true;
+            }
+            if (cfg.locationStrategy === 'fixed') {
+               newCfg.dialogOptions.flipWindow = false;
             }
          }
 

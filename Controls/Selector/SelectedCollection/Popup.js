@@ -26,6 +26,7 @@ define('Controls/Selector/SelectedCollection/Popup',
 
          _itemClick: function(event, item) {
             this._options.clickCallback('itemClick', item);
+            this._notify('close', [], {bubbling: true});
          },
 
          _crossClick: function(event, item) {

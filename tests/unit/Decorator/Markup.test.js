@@ -168,9 +168,12 @@ define([
          it('Wrapping url', function() {
             var html =
                '<p>' + linkHtml + '</p>' +
+               '<p> a </p>' +
                '<p>texthttps://ya.ru. More text</p>' +
                '<p><a>https://ya.ru</a>https://ya.ru<a>https://ya.ru</a></p>' +
                '<p>https://ya.ru</p>' +
+               '<p><iframe style="min-width: 350px; min-height: 214px;" src="https://www.youtube.com/embed/LY2I4IXN1zQ" width="430" height="300" frameborder="0" allowfullscreen="allowfullscreen"></iframe></p>' +
+               '<p><img src="https://ya.ru" alt="a2ae6fcf-a3fa-471f-8b92-2017f78e8155" /></p>' +
                '<p>https://ya.ru&nbsp;https://ya.ru&nbsp;</p>' +
                '<p>  https://ya.ru  </p>' +
                '<p><strong>https://ya.ru</strong></p>' +
@@ -189,9 +192,26 @@ define([
                '<p>http://update*.sbis.ru/tx_stat</p>';
             var json = [
                ['p', linkNode],
+               ['p', ' a '],
                ['p', 'text', linkNode, '. More text'],
                ['p', ['a', 'https://ya.ru'], linkNode, ['a', 'https://ya.ru']],
                ['p', linkNode],
+               ['p', ['iframe',
+                  {
+                     style: 'min-width: 350px; min-height: 214px;',
+                     src: 'https://www.youtube.com/embed/LY2I4IXN1zQ',
+                     width: '430',
+                     height: '300',
+                     frameborder: '0',
+                     allowfullscreen: 'allowfullscreen'
+                  }
+               ]],
+               ['p', ['img',
+                  {
+                     src: 'https://ya.ru',
+                     alt: 'a2ae6fcf-a3fa-471f-8b92-2017f78e8155'
+                  }
+               ]],
                ['p', linkNode, nbsp, linkNode, nbsp],
                ['p', '  ', linkNode, '  '],
                ['p', ['strong', linkNode]],

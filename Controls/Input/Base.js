@@ -512,14 +512,8 @@ define('Controls/Input/Base',
              * When processing input, we set a selection from the model if the value in the field is different
              * from the value in the model. And when you change the selection, the field starts to focus.
              * There is a situation that you can not withdraw focus from the field.
-             *
-             * The detection.chrome value is not invalid detecting on the server.
-             * https://online.sbis.ru/opendoc.html?guid=a17b59fb-f5bd-4ae3-87a7-38f47078980a
-             * Because of this, If the field already has a value substituted by the browser,
-             * the control does not hide the placeholder until the control is revived.
-             * As a solution, the value on the server is always true, and the recalculation is performed on the client.
              */
-            this._hidePlaceholderUsingCSS = Env.constants.isBuildOnServer || Env.detection.chrome;
+            this._hidePlaceholderUsingCSS = Env.detection.chrome;
          },
 
          _beforeMount: function(options) {

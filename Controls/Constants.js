@@ -4,6 +4,9 @@ define('Controls/Constants', [], function() {
       constants = {
          view: {
             hiddenGroup: 'CONTROLS_HIDDEN_GROUP'
+         },
+         editing: {
+            CANCEL: 'Cancel'
          }
       };
    return constants;

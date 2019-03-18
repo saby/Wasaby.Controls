@@ -216,7 +216,7 @@ define('Controls/Validate/Controller',
             }
             if (validationResult) {
                _private.openInfoBox(this);
-            } else if (this._isOpened) {
+            } else if (this._isOpened && validationResult === null) {
                _private.closeInfoBox(this);
             }
          },

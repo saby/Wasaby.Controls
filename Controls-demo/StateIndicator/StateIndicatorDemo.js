@@ -1,11 +1,22 @@
 define('Controls-demo/StateIndicator/StateIndicatorDemo', [
    'Core/Control',
-   'wml!Controls-demo/StateIndicator/StateIndicatorDemo',   
+   'wml!Controls-demo/StateIndicator/StateIndicatorDemo', 
+   'wml!Controls-demo/StateIndicator/template/template',   
    'css!Controls-demo/StateIndicator/StateIndicatorDemo',
-], function(Control, template) {
+], function(Control, template, popupTemplate) {
    'use strict';
 
 
+   function parseData(str){
+      var dataArray = JSON.parse('['+str+']');   
+      var data = {value: 0, className: "", title: ""};
+      if (dataArray.length === 3){                
+         data.value = typeof dataArray[0] == "number" ? dataArray[0] : 0;
+         data.className = typeof dataArray[1] == "string" ? dataArray[1] : "";
+         data.title = typeof dataArray[2] == "string" ? dataArray[2] : "";
+      }
+      return data;
+   };
    function StringToNumArray(str) {
       return str.split(',').map(Number);
    };
@@ -17,48 +28,79 @@ define('Controls-demo/StateIndicator/StateIndicatorDemo', [
    var Index = Control.extend(
       {
          _template: template,
-         _stateNumber: 3,
+         _popupTemplate: popupTemplate,
+         _popupTemplateOptions: {},
+         _item:'',
          _eventName: 'no event',
-         _stateStr: '',
-         _state: [],
-         _sectorNumber: 20,
-         _colorsStr: '',
-         _colors: [],
+         _data1:'',
+         _data2:'',
+         _data3:'',
+         _data4:'',
+         _data: [],
+         _scale: 10,
 
-         _beforeMount: function() {
-            this._colors = [];
-            this._state = [33,33,33];
-            this._stateStr = this._state.toString(),
-            this._stateNumber = 3;
+         _beforeMount: function() {            
+            this._data = [
+               {value: 25, className: '', title: 'Выполнено'},
+               {value: 36, className: '', title: 'В работе'},
+               {value: 2, className: '', title: 'Не выполнено'}
+            ];
+            this._data0 = '25,"","Выполнено"';
+            this._data1 = '36,"","В работе"';
+            this._data2 = '2,"","Не выполнено"';
+            this._data3 = '';
+
+            this._popupTemplateOptions = {data: this._data};
+         },
+         changeScale: function(e, scale){
+            this._scale = scale;
+            this._eventName = 'ScaleChanged';
          },
 
-         changeStateNumber: function(e, num) {
-            this._stateNumber = num;
-            this._eventName = 'StateNumberChanged';
+         changeData0: function(e, newData){
+            var data = parseData(newData);
+            this._data = this._data.slice();
+            this._data[0] = data;
+            this._eventName = 'DataChanged';
+         },        
+         changeData1: function(e, newData){
+            var data = parseData(newData);
+            this._data = this._data.slice();
+            this._data[1] = data;
+            this._eventName = 'DataChanged';
          },
-
-         changeSectorNumber: function(e, num) {
-            this._sectorNumber = num;
-            this._eventName = 'SectorNumberChanged';
+         changeData2: function(e, newData){
+            var data = parseData(newData);
+            this._data = this._data.slice();
+            this._data[2] = data;
+            this._eventName = 'DataChanged';
          },
-
-         changeState: function(e, state) {
-
-            this._state = StringToNumArray(state);
-            this._stateStr = this._state.toString();
-            this._eventName = 'StateChanged';
-         },
-
-         changeColors: function(e, colors) {
-
-            this._colors = StringToStrArray(colors);
-            this._colorsStr = this._colors.toString();
-            this._eventName = 'ColorsChanged';
+         changeData3: function(e, newData){
+            var data = parseData(newData);
+            this._data = this._data.slice();
+            this._data[3] = data;
+            this._eventName = 'DataChanged';
          },
 
          reset: function() {
             this._eventName = 'no event';
          },
+         
+         _mouseLeaveHandler: function(e){           
+            this._notify('closeInfoBox', [2000], {bubbling: true});
+         },
+         _mouseEnterHandler: function(e, _item){ 
+            var config = {
+               trigger: 'hover',
+               name: 'legend',
+               target: _item,
+               position: 'tc',
+               showDelay: 500,
+               template: popupTemplate,
+               templateOptions: {data: this._data}
+            };
+            this._notify('openInfoBox', [config], {bubbling: true});
+         }
 
       });
 

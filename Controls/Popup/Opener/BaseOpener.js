@@ -219,7 +219,7 @@ define('Controls/Popup/Opener/BaseOpener',
 
             if (baseCfg.hasOwnProperty('closeByExternalClick')) {
                Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use option "closeOnOutsideClick" instead of "closeByExternalClick"');
-               baseCfg.closeOnOutsideClick = baseConfig.closeByExternalClick;
+               baseCfg.closeOnOutsideClick = baseCfg.closeByExternalClick;
             }
 
             // Opener can't be empty. If we don't find the defaultOpener, then install the current control
@@ -246,8 +246,9 @@ define('Controls/Popup/Opener/BaseOpener',
          _notifyEvent: function(eventName, args) {
             // Trim the prefix "on" in the event name
             var event = eventName.substr(2);
+            var newEvent = event.toLowerCase();
             this._notify(event, args);
-            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + event + '" instead of "popup' + event + '"');
+            Env.IoC.resolve('ILogger').warn(this._moduleName, 'Use event "' + newEvent + '" instead of "popup' + event + '"');
             this._notify('popup' + event, args);
          },
 
@@ -330,7 +331,7 @@ define('Controls/Popup/Opener/BaseOpener',
          if (Base.isNewEnvironment() || cfg._vdomOnOldPage) {
             if (!Base.isNewEnvironment()) {
                Base.getManager().addCallback(function() {
-                  requirejs(['Controls/Utils/getZIndex'], function(getZIndex) {
+                  Base.getZIndexUtil().addCallback(function(getZIndex) {
                      cfg.zIndex = cfg.zIndex || getZIndex(opener);
                      Base._openPopup(popupId, cfg, controller, def);
                   });
@@ -396,6 +397,18 @@ define('Controls/Popup/Opener/BaseOpener',
             });
          }
          return def;
+      };
+
+      Base.getZIndexUtil = function() {
+         var deferred = new Deferred();
+         var module = 'Controls/Utils/getZIndex';
+         if (requirejs.defined(module)) {
+            return deferred.callback(requirejs(module));
+         }
+         requirejs([module], function(getZIndex) {
+            return deferred.callback(getZIndex);
+         });
+         return deferred;
       };
 
       Base._openPopup = function(popupId, cfg, controller, def) {

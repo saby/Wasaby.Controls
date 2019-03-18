@@ -6,7 +6,7 @@ define([
    'Types/source',
    'Controls/List/ListViewModel',
    'Controls/List/Tree/TreeViewModel',
-   'Controls/EditableArea/Constants'
+   'Controls/Constants'
 ], function(
    EditInPlace,
    collection,
@@ -15,7 +15,7 @@ define([
    sourceLib,
    ListViewModel,
    TreeViewModel,
-   EditConstants
+   Constants
 ) {
    describe('Controls.List.EditInPlace', function() {
       var eip, items, newItem, listModel, listModelWithGroups, data, treeData, treeModel;
@@ -182,7 +182,7 @@ define([
          it('Cancel', function() {
             eip._notify = function(e) {
                if (e === 'beforeBeginEdit') {
-                  return EditConstants.CANCEL;
+                  return Constants.editing.CANCEL;
                }
             };
 
@@ -438,7 +438,7 @@ define([
          it('Cancel', function() {
             eip._notify = function(e) {
                if (e === 'beforeEndEdit') {
-                  return EditConstants.CANCEL;
+                  return Constants.editing.CANCEL;
                }
             };
 

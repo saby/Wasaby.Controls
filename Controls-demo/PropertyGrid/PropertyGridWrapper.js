@@ -4,6 +4,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'Core/Deferred',
       'Core/core-clone',
       'Core/core-merge',
+      'Core/library',
       'wml!Controls-demo/PropertyGrid/PropertyGridWrapper',
       'wml!Controls-demo/PropertyGrid/PropertyGridTemplate',
       'wml!Controls-demo/PropertyGrid/Types/booleanOrNull',
@@ -24,7 +25,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
       'css!Controls-demo/Wrapper/Wrapper'
    ],
 
-   function(Control, Deferred, cClone, cMerge, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
+   function(Control, Deferred, cClone, cMerge, libHelper, template, myTmpl, booleanOrNull, stringTmpl, arrayTmpl, numberTmpl,
       datetimeTmpl, booleanTmpl, functOrString, functionTmpl, enumTmpl, objTmpl) {
       'use strict';
 
@@ -60,7 +61,7 @@ define('Controls-demo/PropertyGrid/PropertyGridWrapper',
                var testName = opts.content.split('/');
                testName.splice(0, 1);
                this._demoName = testName.join('');
-               require([opts.content], function() {
+               libHelper.load(opts.content).then(function() {
                   def.callback();
                });
                return def;
