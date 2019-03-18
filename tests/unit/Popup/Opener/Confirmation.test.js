@@ -2,7 +2,7 @@ define(
    [
       'Controls/Popup/Opener/Confirmation',
       'Controls/Popup/Opener/Confirmation/Dialog',
-      'Core/Deferred'
+      'Core/Deferred',
       'Core/polyfill/PromiseAPIDeferred'
    ],
 
