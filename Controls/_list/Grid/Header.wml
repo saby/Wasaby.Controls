@@ -41,6 +41,7 @@
       <!-- when the model changes. The 'header' option is an array in which templates can be set. -->
       <!-- Inside these templates can be bindings. But we do not track changes in objects inside. -->
       <!-- Most often, the headings are changed simultaneously with updating the table. -->
+      <!-- Remove after complete https://online.sbis.ru/opendoc.html?guid=660b0a02-abbd-433c-9b37-b2468076171c -->
       <ws:partial template="cellContent"
                   defaultHeaderContent="{{defaultHeaderContent}}"
                   headerColumn="{{headerColumn}}"

@@ -106,4 +106,38 @@
       <h3>Кликнули на </h3>
       <span class="action__last_clicked">{{_actionClicked}}</span>
    </div>
+   <div class="demo-Grid__container">
+      <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
+         <ws:content>
+            <Controls.Grid
+                    attr:class="demo-Grid__control test_grid_5"
+                    keyProperty="id"
+                    source = "{{_viewSource}}"
+                    displayProperty="title"
+                    resultsPosition="top"
+                    rowSeparatorVisibility="{{true}}"
+                    itemTemplate="wml!Controls-demo/List/Grid/DemoItem"
+                    columns="{{gridColumns2}}"
+                    bind:sorting="_sorting">
+               <ws:header>
+                  <ws:Array>
+                     <ws:Object title=""/>
+                     <ws:Object>
+                        <ws:template name="infoColumn">
+                           <Controls.Input.Dropdown
+                              keyProperty="key"
+                              displayProperty="title"
+                              multiselect="{{ false }}"
+                              source="{{ _columnSource }}"
+                              bind:selectedKeys="_selectKeyColumn"
+                              on:selectedKeysChanged="_selectedKeysChangeColumn()"
+                           />
+                        </ws:template>
+                     </ws:Object>
+                  </ws:Array>
+               </ws:header>
+            </Controls.Grid>
+         </ws:content>
+      </Controls.Container.Scroll>
+   </div>
 </div>
