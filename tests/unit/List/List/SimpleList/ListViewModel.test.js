@@ -345,6 +345,27 @@ define([
          assert.isTrue(nextVersionCalled, 'setSwipeItem should change version of the model');
       });
 
+      it('setSwipeItem should only change version once if called with the same item multiple times in a row', function() {
+         var
+            cfg = {
+               items: data,
+               keyProperty: 'id',
+               displayProperty: 'title',
+               selectedKeys: [1],
+               markedKey: null
+            },
+            itemData = {
+               test: 'test'
+            },
+            lv = new ListViewModel(cfg);
+
+         lv.setSwipeItem(itemData);
+         lv.setSwipeItem(itemData);
+
+         assert.equal(lv._swipeItem, itemData);
+         assert.equal(1, lv.getVersion());
+      });
+
       it('getMarkedKey', function() {
          var
             cfg = {

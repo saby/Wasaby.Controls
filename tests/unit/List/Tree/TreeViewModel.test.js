@@ -489,13 +489,6 @@ define([
             assert.deepEqual(treeViewModel.getExpandedItems(), {}, 'Invalid value "_expandedItems" after "onCollectionChange".');
             assert.isTrue(notifiedOnNodeRemoved, 'Event "onNodeRemoved" not notified.');
          });
-         it('getRoot', function() {
-            treeViewModel = new TreeViewModel(cfg);
-
-            assert.isNull(treeViewModel.getRoot().getContents());
-            treeViewModel.setRoot(treeViewModel.at(0));
-            assert.equal('123', treeViewModel.getRoot().getContents().getId());
-         });
       });
 
       describe('expanderDisplayMode', function() {

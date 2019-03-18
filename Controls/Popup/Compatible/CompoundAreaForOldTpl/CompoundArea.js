@@ -334,10 +334,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return true;
          },
 
+         _isValidTarget: function(target) {
+            var isValid = !target || target instanceof jQuery || (typeof Node !== 'undefined' && target instanceof Node);
+            if (!isValid) {
+               logger.error(this._moduleName, 'Передано некорректное значение опции target');
+            }
+            return isValid;
+         },
+
          _trackTarget: function(track) {
             var target = this._options.target;
             var self = this;
-            if (!this._options.trackTarget || !target) {
+
+            // Защита от неправильно переданной опции target
+            if (!this._options.trackTarget || !target || !this._isValidTarget(target)) {
                return;
             }
 

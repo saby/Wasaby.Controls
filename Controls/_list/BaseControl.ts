@@ -74,7 +74,6 @@ var _private = {
                     }
                     listModel.setItems(list);
                     self._items = listModel.getItems();
-                    self._restoreMarkedKey = listModel.getMarkedKey();
                     if (isActive === true) {
                         self._children.listView.activate();
                     }
@@ -132,10 +131,10 @@ var _private = {
             _private.scrollToItem(self, key);
         }
     },
-    restoreMarkedKey: function(self) {
-        if (self._restoreMarkedKey !== null) {
-            _private.scrollToItem(self, self._restoreMarkedKey);
-            self._restoreMarkedKey = null;
+    restoreScrollPosition: function(self) {
+        if (self._keyDisplayedItem !== null) {
+            _private.scrollToItem(self, self._keyDisplayedItem);
+            self._keyDisplayedItem = null;
         }
     },
     moveMarkerToNext: function(self) {
@@ -772,7 +771,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
     _template: BaseControlTpl,
     iWantVDOM: true,
     _isActiveByClick: false,
-    _restoreMarkedKey: null,
+    _keyDisplayedItem: null,
 
     _listViewModel: null,
     _viewModelConstructor: null,
@@ -894,6 +893,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         var navigationChanged = !isEqualObject(newOptions.navigation, this._options.navigation);
         var recreateSource = newOptions.source !== this._options.source || navigationChanged;
         var sortingChanged = newOptions.sorting !== this._options.sorting;
+        var self = this;
 
         if ((newOptions.groupMethod !== this._options.groupMethod) || (newOptions.viewModelConstructor !== this._viewModelConstructor)) {
             this._viewModelConstructor = newOptions.viewModelConstructor;
@@ -948,7 +948,16 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         }
 
         if (filterChanged || recreateSource || sortingChanged) {
-            _private.reload(this, newOptions);
+            _private.reload(this, newOptions).addCallback(function () {
+
+                /*
+                * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
+                * to first element.
+                */
+                if (self._listViewModel.getCount()) {
+                    self._keyDisplayedItem = self._listViewModel.getFirstItem().getId();
+                }
+            });
         }
 
     },
@@ -1014,7 +1023,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         /*Оставляю старое поведение без опции для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
         if (!this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
-            _private.restoreMarkedKey(this);
+            _private.restoreScrollPosition(this);
             _private.checkLoadToDirectionCapability(this);
             if (this._virtualScroll) {
                 this._virtualScroll.updateItemsSizes();
@@ -1159,7 +1168,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         /*только под опцией для скролла вверх. Спилить по задаче https://online.sbis.ru/opendoc.html?guid=ef8e4d25-1137-4c94-affd-759e20dd0d63*/
         if (this._options.fix1176592913 && this._hasUndrawChanges) {
             this._hasUndrawChanges = false;
-            _private.restoreMarkedKey(this);
+            _private.restoreScrollPosition(this);
             if (this._virtualScroll) {
                 this._virtualScroll.updateItemsSizes();
             }
@@ -1240,9 +1249,12 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
-        this._focusTimeout = setTimeout(() => {
-           this._children.fakeFocusElem.focus();
-        }, 0);
+        var target = domEvent.target;
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true') {
+            this._focusTimeout = setTimeout(() => {
+                this._children.fakeFocusElem.focus();
+            }, 0);
+        }
         event.blockUpdate = true;
     },
 

@@ -1,4 +1,4 @@
-﻿define('Controls/Container/Suggest/Layout',
+define('Controls/Container/Suggest/Layout',
    [
       'Core/Control',
       'wml!Controls/Container/Suggest/Layout',
@@ -127,7 +127,7 @@
             }
          },
          shouldSearch: function(self, value) {
-            return self._active && value.length >= self._options.minSearchLength;
+            return self._inputActive && value.length >= self._options.minSearchLength;
          },
    
          prepareValue: function(self, value) {
@@ -225,11 +225,9 @@
                historyService.query().addCallback(function(dataSet) {
                   if (self._historyLoad) {
                      var keys = [];
-
                      dataSet.getRow().get('recent').each(function(item) {
                         keys.push(item.get('ObjectId'));
                      });
-
                      self._historyLoad.callback(keys);
                   }
                });
@@ -380,6 +378,7 @@
          },
          
          _inputClicked: function() {
+            this._inputActive = true;
             if (!this._options.suggestState) {
                _private.inputActivated(this);
             }
@@ -425,7 +424,7 @@
          },
    
          // </editor-fold>
-         
+
          _searchStart: function() {
             this._loading = true;
             this._children.indicator.show();
@@ -436,7 +435,7 @@
          _searchEnd: function(result) {
             if (this._options.suggestState) {
                this._loading = false;
-               
+
                // _searchEnd may be called synchronously, for example, if local source is used,
                // then we must check, that indicator was created
                if (this._children.indicator) {
@@ -462,7 +461,7 @@
             });
             _private.close(this);
          },
-         
+
          _missSpellClick: function() {
             this._notify('valueChanged', [this._misspellingCaption]);
             _private.setMissSpellingCaption(this, '');
@@ -471,10 +470,10 @@
          _keydown: function(event) {
             var eventKeyCode = event.nativeEvent.keyCode;
             var needProcessKey = eventKeyCode === ENTER_KEY ? this._suggestMarkedKey !== null : IGNORE_HOT_KEYS.indexOf(eventKeyCode) !== -1;
-            
+
             if (this._options.suggestState && needProcessKey) {
                event.preventDefault();
-               
+
                if (this._children.inputKeydown) {
                   this._children.inputKeydown.start(event);
                }

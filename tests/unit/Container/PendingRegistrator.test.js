@@ -69,6 +69,21 @@ define(
 
             Registrator.destroy();
          });
+
+         it('hasRegisteredPendings', () => {
+            let Registrator = new PendingRegistrator();
+            Registrator._beforeMount();
+            let pendingCfg1 = {
+               validate: () => false
+            };
+            Registrator._registerPendingHandler(null, new Deferred(), pendingCfg1);
+            assert.equal(Registrator._hasRegisteredPendings(), false);
+
+            Registrator._registerPendingHandler(null, new Deferred(), {});
+            assert.equal(Registrator._hasRegisteredPendings(), true);
+
+            Registrator.destroy();
+         });
       });
    }
 );
