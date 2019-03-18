@@ -1,48 +1,27 @@
 define('Controls-demo/Input/Password/PasswordPG',
    [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
-
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper',
-      'css!Controls-demo/Input/Base/Base'
+      'Core/core-merge',
+      'Controls-demo/Input/Base/Base',
+      'json!Controls-demo/Input/Password/Password'
    ],
 
-   function(Control, template, config) {
+   function(cMerge, Base, config) {
       'use strict';
-      var PasswordPG = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/Password',
-         _dataObject: null,
-         _componentOptions: null,
+
+      var _private = {
+         CONTENT: 'Controls/Input/Password'
+      };
+
+      var PasswordPG = Base.extend({
+         _content: _private.CONTENT,
+
          _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               },
-               tagStyle: {
-                  emptyText: 'none',
-                  placeholder: 'select',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  selectedKey: 0
-               }
-            };
-            this._componentOptions = {
-               name: 'Password',
-               mask: '',
-               placeholder: 'Input text',
-               tagStyle: 'primary',
-               readOnly: false,
-               revealable: true,
-               tooltip: 'myTooltip',
-               validationErrors: '',
-               autoComplete: false
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
+            PasswordPG.superclass._beforeMount.apply(this, arguments);
+
+            this._componentOptions.revealable = true;
+            this._componentOptions.name = 'InputPassword';
+
+            this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }
       });
       return PasswordPG;

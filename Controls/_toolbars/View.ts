@@ -1,7 +1,7 @@
 import Control = require('Core/Control');
 import SourceController = require('Controls/Controllers/SourceController');
 import template = require('wml!Controls/_toolbars/View');
-import toolbarItemTemplate = require('wml!Controls/_toolbars/ToolbarItemTemplate');
+import toolbarItemTemplate = require('wml!Controls/_toolbars/ItemTemplate');
 import {factory} from 'Types/collection';
 import tUtil = require('Controls/Utils/Toolbar');
 import {iconsUtil as validateIconStyle} from 'Controls/buttons';
@@ -113,7 +113,7 @@ import 'css!theme?Controls/_toolbars/ToolbarPopup';
  * @name Controls/Toolbar#itemTemplate
  * @cfg {Function} Template for item render.
  * @remark
- * To determine the template, you should call the base template 'Controls/toolbars:ToolbarItemTemplate'.
+ * To determine the template, you should call the base template 'Controls/toolbars:ItemTemplate'.
  * The template is placed in the component using the ws:partial tag with the template attribute.
  * You can change the display of records by setting button options values:
  * <ul>
@@ -132,7 +132,7 @@ import 'css!theme?Controls/_toolbars/ToolbarPopup';
  *    >
  *       <ws:itemTemplate>
  *          <ws:partial
- *             template="Controls/toolbars:ToolbarItemTemplate"
+ *             template="Controls/toolbars:ItemTemplate"
  *             buttonStyle="{{myStyle}}"
  *             buttonReadOnly="{{readOnlyButton}}"
  *             buttonTransparent="{{myButtonTransparent}}"

@@ -26,12 +26,11 @@ define('Controls/Input/Area',
        *
        * @class Controls/Input/Area
        * @extends Controls/Input/Text
-       * @control
+       *
        * @public
-       * @category Input
        * @demo Controls-demo/Input/Area/AreaPG
        *
-       * @author Колесова П.С.
+       * @author Журавлев М.С.
        */
 
       /**

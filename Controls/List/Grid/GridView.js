@@ -1,3 +1,3 @@
-define('Controls/List/Grid/GridView', ['Controls/_list/Grid/GridView'], function(Control) {
+define('Controls/List/Grid/GridView', ['Controls/_grids/GridView'], function(Control) {
    return Control;
 });

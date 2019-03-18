@@ -194,6 +194,15 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return rebuildDeferred;
          },
 
+         _getDialogClasses: function() {
+            // При fixed таргета нет => совместимость определяет это окно как type === 'dialog' и использует его позиционирование
+            // Но на самом диалоге такой опции нет, т.к. это опция FloatArea => в этом случае класс диалога не вешаем
+            if (this._options.type === 'dialog' && !this._options.fixed) {
+               return ' ws-window-content';
+            }
+            return '';
+         },
+
          _fixIos: function() {
             // крутейшая бага, айпаду не хватает перерисовки.
             // уже с такой разбирались, подробности https://online.sbis.ru/opendoc.html?guid=e9a6ea23-6ded-40da-9b9e-4c2d12647d84
@@ -325,10 +334,20 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
             return true;
          },
 
+         _isValidTarget: function(target) {
+            var isValid = !target || target instanceof jQuery || (typeof Node !== 'undefined' && target instanceof Node);
+            if (!isValid) {
+               logger.error(this._moduleName, 'Передано некорректное значение опции target');
+            }
+            return isValid;
+         },
+
          _trackTarget: function(track) {
             var target = this._options.target;
             var self = this;
-            if (!this._options.trackTarget || !target) {
+
+            // Защита от неправильно переданной опции target
+            if (!this._options.trackTarget || !target || !this._isValidTarget(target)) {
                return;
             }
 

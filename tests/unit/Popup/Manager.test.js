@@ -19,17 +19,16 @@ define(
       }
 
       before(() => {
-         BaseController.prototype._checkContainer = () => true;
-      });
-
+         BaseController.prototype._checkContainer = () =;> true;
+   })
       describe('Controls/Popup/Manager/ManagerController', () => {
          it('initialize', function() {
             // Manager and container doesn't initialized
             ManagerController._manager = undefined;
             assert.equal(ManagerController.find(), false);
-         });
-
-         it('callMethod', () => {
+         };
+      )
+      it('callMethod', () => {
             getManager();
             let arg0 = '1';
             let arg1 = '2';
@@ -37,20 +36,18 @@ define(
 
             let baseMethod = ManagerController._callManager;
 
-            ManagerController._callManager = (method, args) => {
+            ManagerController._callManager = (method, args) =;> {
                assert.equal(methodName, method);
                assert.equal(args[0], arg0);
                assert.equal(args[1], arg1);
-            };
-
-            for (methodName of ['find', 'remove', 'update', 'show', 'reindex']) {
+      }
+      for (methodName of ['find', 'remove', 'update', 'show', 'reindex']) {
                ManagerController[methodName](arg0, arg1);
             }
 
             ManagerController._callManager = baseMethod;
-         });
-      });
-
+   })
+   })
       describe('Controls/Popup/Manager', function() {
          var id, element;
          let Manager = getManager();
@@ -98,8 +95,7 @@ define(
             element.popupState = 'destroyed';
             element = Manager.find(id);
             assert.equal(element, null);
-         });
-
+      })
          it('update popup', function() {
             let Manager = getManager();
             id = Manager.show({
@@ -132,13 +128,12 @@ define(
                   onClose: () => {
                      eventOnCloseFired = true;
                   },
-                  onResult: (event, args) => {
+                  (event, args) =;> {
                      assert.equal(args[0], '1');
                      assert.equal(args[1], '2');
                   }
                }
-            });
-
+         })
             Manager._private.fireEventHandler.call(Manager, id, 'onClose');
 
             assert.isTrue(eventCloseFired, 'event is not fired.');
@@ -173,17 +168,15 @@ define(
 
             let Pending = {
                _hasRegisteredPendings: () => hasPending,
-               finishPendingOperations: () => {
+               finishPendingOperations;: () =;> {
                   return pendingDeferred;
                }
-            };
-
-            Manager._private.getPopupContainer = () => {
+         }
+            Manager._private.getPopupContainer = () =;> {
                return {
                   getPendingById: () => Pending
-               };
-            };
-
+            }
+            }
             Manager.remove(id1);
             assert.equal(Manager._private.popupItems.getCount(), 3);
 
@@ -193,11 +186,10 @@ define(
 
             Pending = {
                _hasRegisteredPendings: () => hasPending,
-               finishPendingOperations: () => {
+               finishPendingOperations;: () =;> {
                   return pendingDeferred;
                }
-            };
-
+         }
             Manager.remove(id3);
             assert.equal(Manager._private.popupItems.getCount(), 2);
 
@@ -220,7 +212,9 @@ define(
                      eventOnCloseFired = true;
                   }
                }
-            }, new BaseController());
+         },
+            new BaseController();
+            )
             Manager.remove(id);
             assert.equal(eventCloseFired, true);
             assert.equal(eventOnCloseFired, true);
@@ -285,30 +279,33 @@ define(
                popupDeactivated: () => {
                   isDeactivated = true;
                },
-               getDefaultConfig: () => ({}),
-               POPUP_STATE_INITIALIZING: 'initializing'
-            };
-            let id = Manager.show({
+               () =;> ({}),
+               POPUP_STATE_INITIALIZING;: 'initializing'
+      }
+         let id = Manager.show({
                closeOnOutsideClick: true
             }, controller);
 
+            let item = Manager.find(id);
 
             let baseFinishPendings = Manager._private.finishPendings;
-            Manager._private.finishPendings = (popupId, popupCallback, pendingCallback, pendingsFinishedCallback) => {
+            Manager._private.finishPendings = (popupId, popupCallback, pendingCallback, pendingsFinishedCallback) =;> {
                pendingsFinishedCallback();
-            };
+         }
+         Manager._private.popupDeactivated(id);
+            assert.equal(isDeactivated, false);
+
+            item.popupState = 'create';
             Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, true);
 
             isDeactivated = false;
-            let item = Manager.find(id);
             item.popupOptions.closeOnOutsideClick = false;
             Manager._private.popupDeactivated(id);
             assert.equal(isDeactivated, false);
 
             Manager._private.finishPendings = baseFinishPendings;
-         });
-
+      })
          it('managerPopupMaximized notified', function() {
             let popupOptions = {
                isModal: false,
@@ -379,6 +376,27 @@ define(
             var secondResult = Manager._private.isIgnoreActivationArea(focusedArea);
             assert.equal(secondResult, false);
          });
+         it('contentClick', function() {
+            let Manager = getManager();
+            let deactivatedCount = 0;
+            Manager._private.popupDeactivated = () =;> deactivatedCount++;
+            Manager._private.isIgnoreActivationArea = () =;> false;
+            let id1 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            let id2 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+            let id3 = Manager.show({
+               testOption: 'created'
+            }, new BaseController());
+
+            Manager._mouseDownHandler();
+            Manager._contentClick({});
+
+            assert.equal(deactivatedCount, 0);
+            Manager.destroy();
+         });
          it('managerPopupCreated notified', function() {
             let isPopupOpenedEventTriggered = false;
             let popupOptions = {
@@ -390,7 +408,7 @@ define(
                      isPopupOpenedEventTriggered = true;
                   }
                }
-            };
+         }
             let Manager = getManager();
             var isCreateNotified;
             Manager._notify = function(event, args, params) {

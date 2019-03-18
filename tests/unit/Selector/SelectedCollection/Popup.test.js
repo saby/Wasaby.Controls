@@ -28,5 +28,21 @@ define(['Controls/Selector/SelectedCollection/Popup',
          scPopup._crossClick(null, item2);
          assert.equal(scPopup._items.getCount(), 0);
       });
+
+      it('_itemClick', function() {
+         var
+            callCloseInfoBox = false,
+            scPopup = new SelectedCollectionPopup();
+
+         scPopup._options.clickCallback = function(){};
+         scPopup._notify = function(eventType) {
+            if (eventType === 'close') {
+               callCloseInfoBox = true;
+            }
+         };
+
+         scPopup._itemClick();
+         assert.isTrue(callCloseInfoBox);
+      });
    });
 });

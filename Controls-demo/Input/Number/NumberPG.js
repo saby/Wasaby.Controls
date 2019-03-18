@@ -1,59 +1,32 @@
 define('Controls-demo/Input/Number/NumberPG',
    [
-      'Core/Control',
-      'tmpl!Controls-demo/PropertyGrid/DemoPG',
-      'json!Controls-demo/PropertyGrid/pgtext',
-
-      'css!Controls-demo/Filter/Button/PanelVDom',
-      'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper',
-      'css!Controls-demo/Input/Base/Base'
+      'Core/core-merge',
+      'Controls-demo/Input/Base/Base',
+      'json!Controls-demo/Input/Number/Number'
    ],
 
-   function(Control, template, config) {
+   function(cMerge, Base, config) {
       'use strict';
-      var NumberPG = Control.extend({
-         _template: template,
-         _metaData: null,
-         _content: 'Controls/Input/Number',
-         _dataObject: null,
-         _componentOptions: null,
+
+      var _private = {
+         CONTENT: 'Controls/Input/Number'
+      };
+
+      var NumberPG = Base.extend({
+         _content: _private.CONTENT,
+
          _beforeMount: function() {
-            this._dataObject = {
-               value: {
-                  readOnly: true
-               },
-               tagStyle: {
-                  emptyText: 'none',
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  placeholder: 'select',
-                  selectedKey: 0
-               },
-               textAlign: {
-                  keyProperty: 'id',
-                  displayProperty: 'title',
-                  placeholder: 'select',
-                  selectedKey: 0
-               }
-            };
-            this._componentOptions = {
-               name: 'Number',
-               value: null,
-               placeholder: 'Input number',
-               tagStyle: 'primary',
-               precision: 2,
-               onlyPositive: true,
-               integersLength: 5,
-               showEmptyDecimals: true,
-               textAlign: 'left',
-               readOnly: false,
-               tooltip: 'myTooltip',
-               validationErrors: '',
-               selectOnClick: false,
-               useGrouping: true
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
+            NumberPG.superclass._beforeMount.apply(this, arguments);
+
+            this._componentOptions.value = null;
+            this._componentOptions.precision = 2;
+            this._componentOptions.integersLength = 5;
+            this._componentOptions.name = 'InputNumber';
+            this._componentOptions.useGrouping = true;
+            this._componentOptions.onlyPositive = true;
+            this._componentOptions.showEmptyDecimals = true;
+
+            this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }
       });
       return NumberPG;

@@ -4,10 +4,11 @@ define(
       'Core/core-clone',
       'Types/source',
       'Controls/Input/resources/InputRender/BaseViewModel',
-      'Types/entity'
+      'Types/entity',
+      'Controls/History/Source'
    ],
-   (Suggest, Clone, sourceLib, BaseViewModel, entity) => {
-      describe('Selector.Suggest', () => {
+   (Suggest, Clone, sourceLib, BaseViewModel, entity, HistorySource) => {
+      describe('Selector.Suggest', () =;> {
          let items = [
             {
                id: '1',
@@ -50,6 +51,15 @@ define(
                assert.equal(suggest._value, 'Запись 2');
                done();
             });
+         });
+
+         it('_beforeMount historyId', function() {
+            let historyConfig = Clone(config);
+            historyConfig.historyId = 'TEST_HISTORY_ID';
+            historyConfig.selectedKey = undefined;
+            let suggest = getSuggest(historyConfig);
+            suggest._beforeMount(historyConfig);
+            assert.isTrue(suggest._historySource instanceof HistorySource);
          });
 
          it('_beforeMount suggestTemplateOptions', function() {
@@ -103,6 +113,7 @@ define(
             suggest._changeValueHandler('valueChanged', 'New Text');
             assert.equal(suggest._simpleViewModel.getDisplayValue(), 'New Text');
             assert.equal(newValue, 'New Text');
+            assert.equal(suggest._searchValue, 'New Text');
             assert.isNull(key);
 
          });
@@ -118,7 +129,11 @@ define(
                      title: 'testTitle'
                   }
                });
-            suggest.activate = () => {isActivate = true;};
+            suggest.activate = () =;
+            >
+            {
+               isActivate = true;
+            }
             suggest._notify = function(e, d) {
                if (e === 'selectedKeyChanged') {
                   newKey = d[0];
@@ -130,14 +145,17 @@ define(
             suggest._choose('choose', choosedItem);
             assert.equal(newKey, 'testId');
             assert.equal(newValue, 'testTitle');
+            assert.equal(suggest._searchValue, '');
             assert.isTrue(isActivate);
 
          });
 
          it('_open autoDropDown=false', function() {
             let suggest = getSuggest(config);
-            suggest.activate = () => {};
-
+            suggest.activate = () =;
+            >
+            {
+            }
             suggest._suggestState = true;
             suggest._open();
             assert.isFalse(suggest._suggestState);
@@ -151,8 +169,10 @@ define(
             let newConfig = Clone(config);
             newConfig.autoDropDown = true;
             let suggest = getSuggest(newConfig);
-            suggest.activate = () => {};
-
+            suggest.activate = () =;
+            >
+            {
+            }
             suggest._suggestState = true;
             suggest._open();
             assert.isFalse(suggest._suggestState);
@@ -161,6 +181,7 @@ define(
             suggest._open();
             assert.isFalse(suggest._suggestState);
          });
-      });
-   }
-);
+}
+)
+}
+)

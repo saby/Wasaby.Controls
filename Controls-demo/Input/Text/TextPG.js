@@ -1,10 +1,11 @@
 define('Controls-demo/Input/Text/TextPG',
    [
+      'Core/core-merge',
       'Controls-demo/Input/Base/Base',
       'json!Controls-demo/Input/Text/Text'
    ],
 
-   function(Base, config) {
+   function(cMerge, Base, config) {
       'use strict';
 
       var _private = {
@@ -18,6 +19,7 @@ define('Controls-demo/Input/Text/TextPG',
             TextPG.superclass._beforeMount.apply(this, arguments);
 
             this._dataObject.constraint = {
+               updateInitiator: 'inputCompleted',
                items: [
                   {
                      id: 1, title: '[0-9]', value: '[0-9]', example: 'You can use only digits'
@@ -38,13 +40,13 @@ define('Controls-demo/Input/Text/TextPG',
                   comment: 'example'
                }
             };
-            this._componentOptions = {
-               trim: false,
-               maxLength: 100,
-               constraint: '',
-               name: 'InputText'
-            };
-            this._metaData = config[this._content].properties['ws-config'].options;
+
+            this._componentOptions.trim = false;
+            this._componentOptions.maxLength = 100;
+            this._componentOptions.constraint = '';
+            this._componentOptions.name = 'InputText';
+
+            this._metaData = cMerge(this._metaData, config[_private.CONTENT].properties['ws-config'].options);
          }
       });
       return TextPG;

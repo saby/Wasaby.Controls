@@ -163,7 +163,7 @@ define('Controls/Operations/Panel', [
 
    Panel.getDefaultOptions = function() {
       return {
-         itemTemplate: toolbars.ToolbarItemTemplate
+         itemTemplate: toolbars.ItemTemplate
       };
    };
 

@@ -188,6 +188,10 @@ define('Controls/Popup/Opener/BaseController',
             return false;
          },
 
+         needRestoreFocus: function() {
+            return true;
+         },
+
          getCustomZIndex: function() {
             return null;
          },

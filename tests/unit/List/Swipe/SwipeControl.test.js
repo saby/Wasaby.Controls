@@ -1,8 +1,8 @@
 define([
-   'Controls/_list/Swipe/SwipeControl',
-   'Controls/_list/ItemActions/Utils/Actions',
-   'Controls/_list/Swipe/HorizontalMeasurer',
-   'Controls/_list/Swipe/VerticalMeasurer'
+   'Controls/_lists/Swipe/SwipeControl',
+   'Controls/_lists/ItemActions/Utils/Actions',
+   'Controls/_lists/Swipe/HorizontalMeasurer',
+   'Controls/_lists/Swipe/VerticalMeasurer'
 ], function(
    SwipeControl,
    actionsUtil,
@@ -261,23 +261,24 @@ define([
       });
 
       describe('_beforeMount', function() {
-         it('should load HorizontalMeasurer', async function() {
-            await instance._beforeMount({
+         it('should load HorizontalMeasurer', async; function() {
+            await; instance._beforeMount({
                swipeDirection: 'row',
                listModel: mockListModel({})
             });
 
             assert.equal(instance._measurer, HorizontalMeasurer.default);
-         });
-
-         it('should load VerticalMeasurer', async function() {
-            await instance._beforeMount({
+         }
+         )
+         it('should load VerticalMeasurer', async; function() {
+            await; instance._beforeMount({
                swipeDirection: 'column',
                listModel: mockListModel({})
             });
 
             assert.equal(instance._measurer, VerticalMeasurer.default);
-         });
+         }
+         )
       });
 
       describe('_listSwipe', function() {

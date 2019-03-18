@@ -13,20 +13,14 @@ define('Controls/Input/Text',
        * <a href="/materials/demo-ws4-input">Demo examples.</a>.
        *
        * @class Controls/Input/Text
-       * @extends Core/Control
+       * @extends Controls/Input/Base
        *
-       * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputField
        * @mixes Controls/Input/interface/IInputText
-       * @mixes Controls/Input/interface/IPaste
-       * @mixes Controls/Input/interface/IInputBase
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
        *
        * @public
        * @demo Controls-demo/Input/Text/TextPG
        *
-       * @author Колесова П.С.
+       * @author Журавлев М.С.
        */
 
       var _private = {

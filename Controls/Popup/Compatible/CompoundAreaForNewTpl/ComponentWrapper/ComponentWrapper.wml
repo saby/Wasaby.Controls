@@ -4,8 +4,6 @@
          template="{{_options.template}}"
          scope="{{_options.templateOptions}}"
          on:close="_onCloseHandler()"
-         on:activated="_onActivatedHandler()"
-         on:deactivated="_onDeactivatedHandler()"
          on:controlresize="_onResizeHandler()"
          on:sendresult="_onResultHandler()"
          on:register="_onRegisterHandler()"
