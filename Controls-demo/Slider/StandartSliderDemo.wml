@@ -1,0 +1,126 @@
+<div class="demo__wrapper">
+    <div >
+      <h1>Slider</h1>
+      <h2>Horizontal</h2>
+      <div class="demo__block">
+         <div class="demo__label">
+         </div>
+         <div class="demo__element">
+            <h3>Single</h3>
+         </div>
+         <div class="demo__element">
+            <h3>Double</h3>
+         </div>
+      </div>   
+      <div class="demo__block">
+         <div class="demo__label">
+            Small points:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider />
+         </div>
+      </div>  
+      <div class="demo__block">
+         <div class="demo__label">
+            Large points:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" bigPoint="{{true}}"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider bigPoint="{{true}}"/>
+         </div>
+      </div> 
+      <div class="demo__block">
+         <div class="demo__label">
+            Bordered:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" bordered="{{true}}"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider bordered="{{true}}"/>
+         </div>
+      </div> 
+      <div class="demo__block">
+         <div class="demo__label">
+            With scale:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" showScale="{{true}}"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider showScale="{{true}}"/>
+         </div> 
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            With scale align:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" scaleAlign="{{true}}" showScale="{{true}}"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider showScale="{{true}}" scaleAlign="{{true}}"/>
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            With input fields:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" input="{{true}}" showScale="{{true}}"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider showScale="{{true}}" input="{{true}}"/>
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            With input labels:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" input="{{true}}" showScale="{{true}}" startLabel="to" endLabel="₽"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider showScale="{{true}}" input="{{true}}" startLabel="from" centerLabel="to" endLabel="₽"/>
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            Bordered with input:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" input="{{true}}" bordered="{{true}}" startLabel="to" endLabel="₽"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider bordered="{{true}}" input="{{true}}" startLabel="from" centerLabel="to" endLabel="₽"/>
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            With labels:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" startLabel="less" endLabel="more"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider  startLabel="less" endLabel="more"/>
+         </div>
+      </div>
+      <div class="demo__block">
+         <div class="demo__label">
+            ReadOnly:
+         </div>
+         <div class="demo__element">
+            <Controls.Slider single="{{true}}" readOnly="{{true}}" input="{{true}}" showScale="{{true}}" startLabel="to" endLabel="₽"/>
+         </div>
+         <div class="demo__element">
+            <Controls.Slider showScale="{{true}}" readOnly="{{true}}" input="{{true}}" startLabel="from" centerLabel="to" endLabel="₽"/>
+         </div>
+      </div>
+   </div>
+</div>

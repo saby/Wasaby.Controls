@@ -9,10 +9,13 @@ define('Controls/Slider',
       'use strict';
 
       /**
+       * Slider.
+       *
+       * <a href="/materials/demo-ws4-header-separator">Demo-example</a>.
        * @public
        * @extends Core/Control
-       * @class Controls/StickyHeader
-       * @author Семашев Р.И.
+       * @class Controls/Slider
+       * @author Колесов В.А.
        */
       var _private = {
          _calcValue: function(wrapper, pos) {
@@ -27,10 +30,13 @@ define('Controls/Slider',
             } else {
                rangeLength = this._options.maxValue - this._options.minValue;
                percent = (pos - box.left - window.pageXOffset) / box.width;
-               return this._options.minValue + percent * rangeLength;
+               var val = percent * rangeLength;
+               if (this._options.scaleAlign && this.scaleArr.length>1){
+                  var scaleSize = this.scaleArr[1]-this.scaleArr[0];
+                  val =  Math.round(val / scaleSize) * scaleSize;
+               }
+               return this._options.minValue + val;
             }
-            
-            
          },
          _checkBuildOptions: function(opts) {
             if (opts.minValue == undefined || opts.maxValue == undefined) {
@@ -42,8 +48,8 @@ define('Controls/Slider',
             return true;
          },
          _prepareBuildOptions: function(opts) {
+            this.scaleArr = [];
             if (opts.scaleStep) {
-               this.scaleArr = [];
                for (var i = 0; i <= opts.scaleStep; i++){
                   this.scaleArr.push(opts.minValue + (opts.maxValue - opts.minValue) / opts.scaleStep * i);
                }
@@ -116,40 +122,69 @@ define('Controls/Slider',
             _private._checkBuildOptions(options);
             _private._prepareBuildOptions.call(this, options);
          },
+         /**
+          * Handler for the mousedown event. 
+          */
          _onMouseDownHandler: function(event) {
-            var nativeEvent = event.nativeEvent;
-            this._startElemPosition = event.nativeEvent.clientX;
-            var target;
-            target = _private._getPoint.call(this, event.target, nativeEvent.pageX); 
-            _private._setValues.call(this, target);
-            _private._render.call(this);
-            this._children.dragNDrop.startDragNDrop(target, event);
+            if (!this._options.readOnly){
+               var nativeEvent = event.nativeEvent;
+               this._startElemPosition = event.nativeEvent.clientX;
+               var target;
+               target = _private._getPoint.call(this, event.target, nativeEvent.pageX); 
+               _private._setValues.call(this, target);
+               _private._render.call(this);
+               this._children.dragNDrop.startDragNDrop(target, event);
+            }
          },
+         /**
+          * Handler for the dragmove event. 
+          */
          _onDragMoveHandler: function(e, dragObject) { 
-            
-            this._value = _private._calcValue.call(this, dragObject.entity.parentElement, dragObject.position.x);  
+            if (!this._options.readOnly){
+               this._value = _private._calcValue.call(this, dragObject.entity.parentElement, dragObject.position.x);  
 
-            this._value = Math.round(this._value*(10**this._options.decimals))/(10**this._options.decimals)
-            _private._setValues.call(this, dragObject.entity);
-            _private._render.call(this);
+               this._value = Math.round(this._value*(10**this._options.decimals))/(10**this._options.decimals)
+               _private._setValues.call(this, dragObject.entity);
+               _private._render.call(this);
+            }
          },
+         /**
+          * Handler for the dragend event. 
+          */
          _onDragEndHandler: function() {
-            this._startElemPosition = undefined;
-            this._value = undefined;
+            if (!this._options.readOnly){
+               this._startElemPosition = undefined;
+               this._value = undefined;
+            }
          },
          changeStartValue: function(e, val) {
             val = Math.round(val*(10**this._options.decimals))/(10**this._options.decimals)
             val = Math.min(val, this._options.maxValue);
             val = Math.max(val, this._options.minValue);
-
+            if (this._options.scaleAlign && this.scaleArr.length>1){
+                  var scaleSize = this.scaleArr[1]-this.scaleArr[0];
+                  val = this._options.minValue +Math.round((val - this._options.minValue) / scaleSize) * scaleSize;
+               }
             this._startValue = Math.max(val, this._options.minValue);
             this._endValue = Math.max(this._startValue, this._endValue);
             _private._render.call(this);
+
+         },
+         keyDownHeandler: function(e){
+            if (e.nativeEvent.key === 'Enter'){
+               this._children.input_end.activate();
+
+            }
+
          },
          changeEndValue: function(e, val) {
             val = Math.round(val*(10**this._options.decimals))/(10**this._options.decimals)
             val = Math.min(val, this._options.maxValue);
-            val = Math.max(val, this._options.minValue);
+            val = Math.max(val, this._options.minValue);            
+            if (this._options.scaleAlign && this.scaleArr.length>1){
+                  var scaleSize = this.scaleArr[1]-this.scaleArr[0];
+                  val = this._options.minValue +Math.round((val - this._options.minValue) / scaleSize) * scaleSize;
+               }
             this._endValue = Math.min(val, this._options.maxValue);
             this._startValue = Math.min(this._endValue, this._startValue);
             _private._render.call(this);
@@ -159,18 +194,62 @@ define('Controls/Slider',
 
       Slider.getDefaultOptions = function() {
          return {
+            /**
+             * @cfg {Boolean} Determines whether slider has one point or two
+             */
             single: false,
-            bigPoint: true,
+            /**
+             * @cfg {Boolean} Determines whether slider's points are of big
+             */
+            bigPoint: false,
+            /**
+             * @cfg {Boolean} Determines whether slider has input fields
+             */
             input: false,
-            minValue: 0,
-            maxValue: 10,
-            scaleStep: 5,
-            decimals: 2,
+            /**
+             * @cfg {Boolean} Determines whether slider has border. Cannot be used with visible scale
+             */
             bordered: false,
+            /**
+             * @cfg {Boolean} Determines whether user can change control's value
+             */
+            readOnly: false,
+            /**
+             * @cfg {Boolean} Determines whether value should align to scale marks
+             */
+            scaleAlign: false,
+            /**
+             * @cfg {Boolean} Determines whether scale is visible. Cannot be used with the border
+             */
+            showScale: false,
+            /**
+             * @cfg {Number} Minimum possible value
+             */            
+            minValue: 0,
+            /**
+             * @cfg {Number} Maximum possible value
+             */            
+            maxValue: 10,
+            /**
+             * @cfg {Number} Number of scale steps
+             */            
+            scaleStep: 5,
+            /**
+             * @cfg {Number} Number of characters in decimal part.
+             */            
+            decimals: 1,
+            /**
+             * @cfg {String} Left label
+             */            
             startLabel: '',
+            /**
+             * @cfg {String} Label between input fields
+             */            
             centerLabel: '',
+            /**
+             * @cfg {String} Right label
+             */            
             endLabel: '',
-            
          };
       };
 

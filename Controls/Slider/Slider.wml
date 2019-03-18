@@ -2,7 +2,7 @@
    <Controls.DragNDrop.Controller name="dragNDrop"
                                   on:dragmove="_onDragMoveHandler()"
                                   on:dragend="_onDragEndHandler()">
-      <div class="controls-Slider{{_options.bigPoint ? ' controls-Slider__big'}}">
+      <div class="controls-Slider{{_options.bigPoint ? ' controls-Slider__big'}}{{_options.readOnly ? ' ws-disabled'}}">
          <div class="controls-Slider__wrapper{{_options.bordered ? ' controls-Slider__withBorder'}}" 
                                   on:mousedown="_onMouseDownHandler()">
             <div class="controls-Slider__mainSlider{{_options.bigPoint ? ' controls-Slider__big'}}">
@@ -16,23 +16,21 @@
                </div>
             </div>
          </div>
-         <div if="{{_options.scaleStep&&!_options.bordered}}" class="controls-Slider__scale">
+         <div if="{{_options.showScale&&_options.scaleStep&&!_options.bordered}}" class="controls-Slider__scale">
             <ws:for data="key, value in scaleArr">
                <span class="controls-Slider__segment">{{value}}</span>
             </ws:for>
          </div>         
-         <div if="{{_options.input}}" class="controls-Slider__inputZone_wrapper">
-            
-            <Controls.Label arrt:class="controls-Slider__LabelStart" if="{{true}}" caption="{{_options.startLabel}}"/>
-            
-            <div class="controls-Slider__input_wrapper">
-               <Controls.Input.Number attr:class="controls-Slider__input" precision="{{_options.decimals}}" on:inputCompleted="changeStartValue()" bind:value="_startValue" />
+         <div class="controls-Slider__inputZone_wrapper">            
+            <Controls.Label if="{{_options.startLabel}}" attr:class="controls-Slider__LabelStart" caption="{{_options.startLabel}}"/>            
+            <div class="controls-Slider__input_wrapper" if="{{_options.input&&!_options.single}}" >
+               <Controls.Input.Number attr:tabindex="1" name="input_start" placeholder="{{_options.minValue}}" attr:class="controls-Slider__input" readOnly="{{_options.readOnly}}" precision="{{_options.decimals}}" on:keydown="keyDownHeandler()" on:inputCompleted="changeStartValue()" bind:value="_startValue" />
             </div>
-            <Controls.Label attr:class="controls-Slider__LabelCenter" if="{{true}}" caption="{{_options.centerLabel}}"/>
+            <Controls.Label if="{{_options.centerLabel}}" attr:class="controls-Slider__LabelCenter" caption="{{_options.centerLabel}}"/>
             <div class="controls-Slider__input_wrapper">
-               <Controls.Input.Number attr:class="controls-Slider__input" precision="{{_options.decimals}}" on:inputCompleted="changeEndValue()" bind:value="_endValue" />
+               <Controls.Input.Number attr:tabindex="2" name="input_end" if="{{_options.input}}" placeholder="{{_options.maxValue}}" attr:class="controls-Slider__input" readOnly="{{_options.readOnly}}" precision="{{_options.decimals}}" on:inputCompleted="changeEndValue()" bind:value="_endValue" />
             </div>
-            <Controls.Label attr:class="controls-Slider__LabelEnd" if="{{true}}" caption="{{_options.endLabel}}"/>
+            <Controls.Label if="{{_options.endLabel}}" attr:class="controls-Slider__LabelEnd" caption="{{_options.endLabel}}"/>
          </div>
       </div>
    </Controls.DragNDrop.Controller>
