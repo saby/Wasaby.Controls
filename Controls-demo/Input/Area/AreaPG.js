@@ -4,6 +4,7 @@ define('Controls-demo/Input/Area/AreaPG',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/PropertyGrid/pgtext',
 
+      'css!Controls-demo/Input/Base/Base',
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
       'css!Controls-demo/Wrapper/Wrapper',

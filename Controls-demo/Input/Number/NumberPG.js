@@ -6,7 +6,8 @@ define('Controls-demo/Input/Number/NumberPG',
 
       'css!Controls-demo/Filter/Button/PanelVDom',
       'css!Controls-demo/Input/resources/VdomInputs',
-      'css!Controls-demo/Wrapper/Wrapper'
+      'css!Controls-demo/Wrapper/Wrapper',
+      'css!Controls-demo/Input/Base/Base'
    ],
 
    function(Control, template, config) {

@@ -4,7 +4,7 @@ define('Controls-demo/Input/Money/Money',
       'tmpl!Controls-demo/PropertyGrid/DemoPG',
       'json!Controls-demo/Input/Money/Money',
 
-      'css!Controls-demo/Input/Money/Money'
+      'css!Controls-demo/Input/Base/Base'
    ],
 
    function(Control, template, config) {
