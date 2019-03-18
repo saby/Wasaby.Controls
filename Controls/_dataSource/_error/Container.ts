@@ -83,6 +83,8 @@ export default class Container extends Control {
     }
     private __updateConfig(options: Options) {
         this.__viewConfig = options.viewConfig;
-        this.__viewConfig.isShowed = this.__viewConfig.mode !== Mode.dialog;
+        if (this.__viewConfig) {
+            this.__viewConfig.isShowed = this.__viewConfig.mode !== Mode.dialog;
+        }
     }
 }
