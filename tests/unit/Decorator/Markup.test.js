@@ -166,9 +166,9 @@ define([
          });
 
          it('long html', function() {
-            var text = 'a'.repeat(1000);
+            var text = 'a'.repeat(2000);
             assert.deepEqual(Converter.htmlToJson('<p>' + text + '</p>'), [['p', text]]);
-         });
+         }).timeout(1000);
 
          it('Wrapping url', function() {
             var html =
