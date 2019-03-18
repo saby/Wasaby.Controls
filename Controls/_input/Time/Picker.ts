@@ -1,5 +1,4 @@
-define('Controls/Input/Time/Picker', [
-], function() {
+
 
    /**
     * Control for entering date and time.
@@ -9,15 +8,15 @@ define('Controls/Input/Time/Picker', [
     *    <li>just time,</li>
     *    <li>date and time.</li>
     * </ol>
-    * @class Controls/Input/Time/Picker
-    * @mixes Controls/Input/interface/IInputField
-    * @mixes Controls/Input/interface/IInputDateTime
-    * @mixes Controls/Input/interface/ITimeMask
-    * @mixes Controls/Input/interface/IValidation
+    * @class Controls/_input/Time/Picker
+    * @mixes Controls/_input/interface/IInputField
+    * @mixes Controls/_input/interface/IInputDateTime
+    * @mixes Controls/_input/interface/ITimeMask
+    * @mixes Controls/_input/interface/IValidation
     * @control
     * @public
     * @author Мироново А.Ю.
     * @category Input
     */
 
-});
+

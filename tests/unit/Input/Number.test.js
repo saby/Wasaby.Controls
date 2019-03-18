@@ -62,12 +62,12 @@ define(
             ].sort());
          });
 
-         it('The model belongs to the "Controls/Input/Number/ViewModel" class.', function() {
+         it('The model belongs to the "Controls/_input/Number/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: 0
             });
 
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Number/ViewModel'));
+            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Number/ViewModel'));
          });
          describe('Change event', function() {
             beforeEach(function() {
