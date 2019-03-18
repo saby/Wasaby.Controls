@@ -4,9 +4,10 @@ define(
       'Core/core-clone',
       'Types/source',
       'Controls/Input/resources/InputRender/BaseViewModel',
-      'Types/entity'
+      'Types/entity',
+      'Controls/History/Source'
    ],
-   (Suggest, Clone, sourceLib, BaseViewModel, entity) => {
+   (Suggest, Clone, sourceLib, BaseViewModel, entity, HistorySource) => {
       describe('Selector.Suggest', () => {
          let items = [
             {
@@ -50,6 +51,15 @@ define(
                assert.equal(suggest._value, 'Запись 2');
                done();
             });
+         });
+
+         it('_beforeMount historyId', function() {
+            let historyConfig = Clone(config);
+            historyConfig.historyId = 'TEST_HISTORY_ID';
+            historyConfig.selectedKey = undefined;
+            let suggest = getSuggest(historyConfig);
+            suggest._beforeMount(historyConfig);
+            assert.isTrue(suggest._historySource instanceof HistorySource);
          });
 
          it('_beforeMount suggestTemplateOptions', function() {
@@ -103,6 +113,7 @@ define(
             suggest._changeValueHandler('valueChanged', 'New Text');
             assert.equal(suggest._simpleViewModel.getDisplayValue(), 'New Text');
             assert.equal(newValue, 'New Text');
+            assert.equal(suggest._searchValue, 'New Text');
             assert.isNull(key);
 
          });
@@ -130,6 +141,7 @@ define(
             suggest._choose('choose', choosedItem);
             assert.equal(newKey, 'testId');
             assert.equal(newValue, 'testTitle');
+            assert.equal(suggest._searchValue, '');
             assert.isTrue(isActivate);
 
          });

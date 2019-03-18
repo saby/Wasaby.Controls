@@ -9,10 +9,11 @@ define('Controls/Container/List',
       'Controls/Container/Search/SearchContextField',
       'Controls/Container/Filter/FilterContextField',
       'Core/Deferred',
+      'Controls/History/Source',
       'Core/core-instance'
    ],
    
-   function(Control, template, sourceLib, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, cInstance) {
+   function(Control, template, sourceLib, SearchController, merge, isEqual, SearchContextField, FilterContextField, Deferred, HistorySource, cInstance) {
       
       'use strict';
       
@@ -221,7 +222,15 @@ define('Controls/Container/List',
             //костыль до перевода Suggest'a на Search/Controller,
             //могут в качестве source передать prefetchSource, у которого нет методов getModel, getAdapter.
             //После этого этот модуль можно будет удалить.
-            return cInstance.instanceOfModule(source, 'Types/source:PrefetchProxy') ? source._$target : source;
+            if (cInstance.instanceOfModule(source, 'Types/source:PrefetchProxy')) {
+               return source._$target;
+            }
+
+            // In Selector/Suggest as source can be set historySource, in this case history should work differently
+            if (source instanceof HistorySource) {
+               return source.originSource;
+            }
+            return source;
          }
       };
       
