@@ -181,8 +181,7 @@ define('Controls/Explorer', [
          }
       },
       _getCurrentRoot: function() {
-         var root = _private.getCurrentRoot(this);
-         return root;
+         return _private.getCurrentRoot(this);
       },
       _dragHighlighter: function(itemKey) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
