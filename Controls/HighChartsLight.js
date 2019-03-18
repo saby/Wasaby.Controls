@@ -35,10 +35,10 @@ define('Controls/HighChartsLight',
                self._chartInstance = new Highcharts.Chart(tempConfig);
             },
             patchHighchartsJs: function() {
-               if (window.Highcharts && !window.Highcharts._isPatched) {
-                  var originalIsObject = window.Highcharts.isObject;
+               if (Highcharts && !Highcharts._isPatched) {
+                  var originalIsObject = Highcharts.isObject;
 
-                  window.Highcharts._isPatched = true;
+                  Highcharts._isPatched = true;
 
                   /*
                      Highcharts in IE 10 fails because it exceeds stack size
@@ -50,7 +50,7 @@ define('Controls/HighChartsLight',
                      We replace this isObject function in IE 10 so it would not
                      deep clone WS Data objects.
                   */
-                  window.Highcharts.isObject = function(obj, strict) {
+                  Highcharts.isObject = function(obj, strict) {
                      var isWSObject = obj && obj._moduleName;
                      return !isWSObject && originalIsObject(obj, strict);
                   };
