@@ -1023,9 +1023,11 @@ define([
 
          BaseControl._private.onScrollHide(baseControl);
          assert.equal(baseControl._loadOffset, 0);
+         assert.isFalse(baseControl._scrollable);
 
          BaseControl._private.onScrollShow(baseControl);
          assert.equal(baseControl._loadOffset, 100);
+         assert.isTrue(baseControl._scrollable);
       });
 
       it('scrollToEdge without load', function(done) {
@@ -1257,6 +1259,7 @@ define([
                   assert.equal(lnBaseControl._keyDisplayedItem, null);
                   lnCfg = clone(lnCfg);
                   lnCfg.source = lnSource2;
+                  lnBaseControl._scrollable = true;
                   lnBaseControl._beforeUpdate(lnCfg);
 
                   setTimeout(function() {

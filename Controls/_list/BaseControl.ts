@@ -370,6 +370,7 @@ var _private = {
 
     onScrollShow: function(self) {
         self._loadOffset = LOAD_TRIGGER_OFFSET;
+        self._scrollable = true;
         if (!self._scrollPagingCtr) {
             if (_private.needScrollPaging(self._options.navigation)) {
                 _private.createScrollPagingController(self).addCallback(function(scrollPagingCtr) {
@@ -392,6 +393,7 @@ var _private = {
             self._pagingVisible = false;
             needUpdate = true;
         }
+        self._scrollable = false;
 
         if (needUpdate) {
             self._forceUpdate();
@@ -788,6 +790,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
 
     _itemTemplate: null,
 
+    _scrollable: false,
     _needScrollCalculation: false,
     _loadTriggerVisibility: null,
     _loadOffset: 0,
@@ -953,7 +956,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
                 * After reload need to reset scroll position to initial. Resetting a scroll position occurs by scrolling
                 * to first element.
                 */
-                if (self._listViewModel.getCount()) {
+                if (self._listViewModel.getCount() && self._scrollable) {
                     self._keyDisplayedItem = self._listViewModel.getFirstItem().getId();
                 }
             });
