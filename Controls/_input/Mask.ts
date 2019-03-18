@@ -1,13 +1,13 @@
 import Env = require('Env/Env');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import Base = require('Controls/Input/Base');
+import Base = require('Controls/_input/Base');
 import isEqual = require('Core/helpers/Object/isEqual');
-import ViewModel = require('Controls/Input/Mask/ViewModel');
+import ViewModel = require('Controls/_input/Mask/ViewModel');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import entity = require('Types/entity');
-import baseTemplate = require('wml!Controls/Input/Base/Base');
-import MaskTpl = require('wml!Controls/Input/Mask/Mask');
-import 'css!Controls/Input/Mask/Mask';
+import baseTemplate = require('wml!Controls/_input/Base/Base');
+import MaskTpl = require('wml!Controls/_input/Mask/Mask');
+import 'css!Controls/_input/Mask/Mask';
 
       
 
@@ -17,13 +17,13 @@ import 'css!Controls/Input/Mask/Mask';
        * If the input character does not fit the format, then character won't be added.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
-       * @class Controls/Input/Mask
+       * @class Controls/_input/Mask
        * @extends Core/Control
-       * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputMaskValue
-       * @mixes Controls/Input/interface/IValidation
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/_input/interface/IInputTag
+       * @mixes Controls/_input/interface/IInputMaskValue
+       * @mixes Controls/_input/interface/IValidation
+       * @mixes Controls/_input/interface/IInputPlaceholder
+       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        * @control
        * @public
        * @author Миронов А.Ю.
@@ -32,7 +32,7 @@ import 'css!Controls/Input/Mask/Mask';
        */
 
       /**
-       * @name Controls/Input/Mask#mask
+       * @name Controls/_input/Mask#mask
        * @cfg {String} Input mask.
        *
        * Mask can use the following keys:
@@ -69,7 +69,7 @@ import 'css!Controls/Input/Mask/Mask';
        */
 
       /**
-       * @name Controls/Input/Mask#replacer
+       * @name Controls/_input/Mask#replacer
        * @cfg {String} Symbol that will be shown when character is not entered.
        *
        * @remark If quantifiers are used in the mask, the replacer cannot be set.
@@ -83,7 +83,7 @@ import 'css!Controls/Input/Mask/Mask';
        */
 
       /**
-       * @name Controls/Input/Mask#formatMaskChars
+       * @name Controls/_input/Mask#formatMaskChars
        * @cfg {Object} Object, where keys are mask characters, and values are regular expressions that will be used to filter input characters for corresponding keys.
        *
        * @example
@@ -103,9 +103,9 @@ import 'css!Controls/Input/Mask/Mask';
        * </pre>
        */
 
-      // Add the interface "Controls/Input/interface/IInputBase" and delete "Controls/Input/Mask#tooltip" after remake base control to 'Controls/Input/Base'.
+      // Add the interface "Controls/_input/interface/IInputBase" and delete "Controls/_input/Mask#tooltip" after remake base control to 'Controls/_input/Base'.
       /**
-       * @name Controls/Input/Mask#tooltip
+       * @name Controls/_input/Mask#tooltip
        * @cfg {String} Text of the tooltip shown when the control is hovered over.
        * @remark
        * "Title" attribute added to the control's root node and default browser tooltip is shown on hover.
@@ -136,7 +136,7 @@ import 'css!Controls/Input/Mask/Mask';
 
                if (replacer && _private.regExpQuantifiers.test(mask)) {
                   validation = false;
-                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/Input/Mask/options/replacer/');
+                  Env.IoC.resolve('ILogger').error('Mask', 'Used not empty replacer and mask with quantifiers. More on https://wi.sbis.ru/docs/js/Controls/_input/Mask/options/replacer/');
                } else {
                   validation = true;
                }

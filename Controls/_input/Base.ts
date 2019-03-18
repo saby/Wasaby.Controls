@@ -6,14 +6,14 @@ import tmplNotify = require('Controls/Utils/tmplNotify');
 import isEqual = require('Core/helpers/Object/isEqual');
 import getTextWidth = require('Controls/Utils/getTextWidth');
 import randomName = require('Core/helpers/Number/randomId');
-import InputUtil = require('Controls/Input/Base/InputUtil');
-import ViewModel = require('Controls/Input/Base/ViewModel');
+import InputUtil = require('Controls/_input/Base/InputUtil');
+import ViewModel = require('Controls/_input/Base/ViewModel');
 import runDelayed = require('Core/helpers/Function/runDelayed');
 import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
 import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
-import template = require('wml!Controls/Input/Base/Base');
-import fieldTemplate = require('wml!Controls/Input/Base/Field');
-import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
+import template = require('wml!Controls/_input/Base/Base');
+import fieldTemplate = require('wml!Controls/_input/Base/Field');
+import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
       
 
       var _private = {
@@ -25,7 +25,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          WIDTH_CURSOR: 1,
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {Object} Ctr View model constructor.
           * @param {Object} options View model options.
           * @param {String} value View model value.
@@ -35,7 +35,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           */
          initField: function(self) {
             /**
@@ -53,7 +53,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {Object} newOptions New view model options.
           * @param {String} newValue New view model value.
           */
@@ -68,9 +68,9 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {String} value The value to be set in the field.
-          * @param {Controls/Input/Base/Types/Selection.typedef} selection The selection to be set in the field.
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection The selection to be set in the field.
           */
          updateField: function(self, value, selection) {
             var field = self._getField();
@@ -96,7 +96,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          /**
           * Determines whether the value of the selection in the field with the checked value is equal.
           * @param {Node} field Field to check.
-          * @param {Controls/Input/Base/Types/Selection.typedef} selection The checked value.
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection The checked value.
           * @return {boolean}
           */
          hasSelectionChanged: function(field, selection) {
@@ -133,14 +133,14 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           */
          notifyValueChanged: function(self) {
             self._notify('valueChanged', [self._viewModel.value, self._viewModel.displayValue]);
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           */
          notifyInputCompleted: function(self) {
             self._notify('inputCompleted', [self._viewModel.value, self._viewModel.displayValue]);
@@ -153,7 +153,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
           * This changes the size of the workspace and may require repositioning controls on the page, such as popup.
           * But on some devices, the size of the workspace does not change and controls do not react.
           * To enable them to respond, this method is used.
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {Boolean} hasFocus Does the field have focus.
           */
          notifyChangeOfFocusState: function(self, hasFocus) {
@@ -170,7 +170,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          },
 
          /**
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param splitValue Parsed value after user input.
           * @param inputType Type of user input.
           */
@@ -182,14 +182,14 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
 
          /**
           * Calculate what type of input was carried out by the user.
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {String} oldValue The value of the field before user input.
           * @param {String} newValue The value of the field after user input.
           * @param {Number} position The caret position of the field after user input.
-          * @param {Controls/Input/Base/Types/Selection.typedef} selection The selection of the field before user input.
-          * @param {Controls/Input/Base/Types/NativeInputType.typedef} [nativeInputType]
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection The selection of the field before user input.
+          * @param {Controls/_input/Base/Types/NativeInputType.typedef} [nativeInputType]
           * The value of the type property in the handle of the native input event.
-          * @return {Controls/Input/Base/Types/InputType.typedef}
+          * @return {Controls/_input/Base/Types/InputType.typedef}
           */
          calculateInputType: function(self, oldValue, newValue, position, selection, nativeInputType) {
             var inputType;
@@ -214,8 +214,8 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          /**
           * @param {String} pastedText
           * @param {String} displayedText
-          * @param {Controls/Input/Base/Types/Selection.typedef} selection
-          * @return {Controls/Input/Base/Types/SplitValue.typedef}
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection
+          * @return {Controls/_input/Base/Types/SplitValue.typedef}
           */
          calculateSplitValueToPaste: function(pastedText, displayedText, selection) {
             return {
@@ -230,10 +230,10 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
           * Change the location of the visible area of the field so that the cursor is visible.
           * If the cursor is visible, the location is not changed. Otherwise, the new location will be such that
           * the cursor is visible in the middle of the area.
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {Node} field
           * @param {String} value
-          * @param {Controls/Input/Base/Types/Selection.typedef} selection
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection
           */
          recalculateLocationVisibleArea: function(self, field, value, selection) {
             var textWidthBeforeCursor = self._getTextWidth(value.substring(0, selection.end));
@@ -259,8 +259,8 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
 
          /**
           * Get the beginning and end of the selected portion of the field's text.
-          * @param {Controls/Input/Base} self Control instance.
-          * @return {Controls/Input/Base/Types/Selection.typedef}
+          * @param {Controls/_input/Base} self Control instance.
+          * @return {Controls/_input/Base/Types/Selection.typedef}
           * @private
           */
          getFieldSelection: function(self) {
@@ -274,8 +274,8 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
 
          /**
           * The method executes a provided function once for field.
-          * @param {Controls/Input/Base} self Control instance.
-          * @param {Controls/Input/Base/Types/CallbackForField.typedef} callback Function to execute for field.
+          * @param {Controls/_input/Base} self Control instance.
+          * @param {Controls/_input/Base/Types/CallbackForField.typedef} callback Function to execute for field.
           * @private
           */
          forField: function(self, callback) {
@@ -288,7 +288,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          },
 
          /**
-          * @param {Controls/Input/Base/Types/SplitValue.typedef} data
+          * @param {Controls/_input/Base/Types/SplitValue.typedef} data
           * @param {String} displayValue Values in the field before changing it.
           */
          adjustDataForFastInput: function(data, inputType, displayValue, selection) {
@@ -326,15 +326,15 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
       /**
        * Base controls that allows user to enter text.
        *
-       * @class Controls/Input/Base
+       * @class Controls/_input/Base
        * @extends Core/Control
        *
-       * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IInputBase
-       * @mixes Controls/Input/interface/IInputPlaceholder
+       * @mixes Controls/_input/interface/IInputTag
+       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/_input/interface/IInputPlaceholder
        *
-       * @mixes Controls/Input/Base/Styles
-       * @mixes Controls/Input/Render/Styles
+       * @mixes Controls/_input/Base/Styles
+       * @mixes Controls/_input/Render/Styles
        *
        * @private
        * @demo Controls-demo/Input/Base/Base
@@ -351,19 +351,19 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          _template: template,
 
          /**
-          * @type {Controls/Input/Base/Types/DisplayingControl.typedef} Input field in edit mode.
+          * @type {Controls/_input/Base/Types/DisplayingControl.typedef} Input field in edit mode.
           * @protected
           */
          _field: null,
 
          /**
-          * @type {Controls/Input/Base/Types/DisplayingControl.typedef} Input field in read mode.
+          * @type {Controls/_input/Base/Types/DisplayingControl.typedef} Input field in read mode.
           * @protected
           */
          _readOnlyField: null,
 
          /**
-          * @type {Controls/Input/Base/ViewModel} The display model of the input field.
+          * @type {Controls/_input/Base/ViewModel} The display model of the input field.
           * @protected
           */
          _viewModel: null,
@@ -467,7 +467,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          _isEdge: null,
 
          /**
-          * @type {Controls/Input/Render#style}
+          * @type {Controls/_input/Render#style}
           * @protected
           */
          get _renderStyle() {
@@ -834,7 +834,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
 
          /**
           * Get the beginning and end of the selected portion of the field's text.
-          * @return {Controls/Input/Base/Types/Selection.typedef}
+          * @return {Controls/_input/Base/Types/Selection.typedef}
           * @private
           */
          _getFieldSelection: function() {
@@ -857,7 +857,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
 
          /**
           * Get the constructor for the view model.
-          * @return {Controls/Input/Base/ViewModel} View model constructor.
+          * @return {Controls/_input/Base/ViewModel} View model constructor.
           * @private
           */
          _getViewModelConstructor: function() {
@@ -910,7 +910,7 @@ import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
          }
       });
 
-      Base._theme = ['Controls/Input/Base/Base'];
+      Base._theme = ['Controls/_input/Base/Base'];
 
       Base.getDefaultOptions = function() {
          return {

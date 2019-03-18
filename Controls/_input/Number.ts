@@ -1,22 +1,22 @@
 import Env = require('Env/Env');
-import Base = require('Controls/Input/Base');
+import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
-import ViewModel = require('Controls/Input/Number/ViewModel');
+import ViewModel = require('Controls/_input/Number/ViewModel');
       
 
       /**
        * Controls that allows user to enter single-line number.
        * <a href="/materials/demo-ws4-input">Demo example.</a>.
        *
-       * @class Controls/Input/Number
+       * @class Controls/_input/Number
        * @extends Core/Control
        *
-       * @mixes Controls/Input/interface/IInputTag
-       * @mixes Controls/Input/interface/IPaste
-       * @mixes Controls/Input/interface/IInputBase
-       * @mixes Controls/Input/interface/IInputNumber
-       * @mixes Controls/Input/interface/IInputPlaceholder
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/_input/interface/IInputTag
+       * @mixes Controls/_input/interface/IPaste
+       * @mixes Controls/_input/interface/IInputBase
+       * @mixes Controls/_input/interface/IInputNumber
+       * @mixes Controls/_input/interface/IInputPlaceholder
+       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        *
        * @public
        * @demo Controls-demo/Input/Number/NumberPG
@@ -25,7 +25,7 @@ import ViewModel = require('Controls/Input/Number/ViewModel');
        */
 
       /**
-       * @name Controls/Input/Number#precision
+       * @name Controls/_input/Number#precision
        * @cfg {Number} Number of characters in decimal part.
        * @remark
        * If the fractional part is not fully filled, the missing signs will be replaced by 0.
@@ -38,7 +38,7 @@ import ViewModel = require('Controls/Input/Number/ViewModel');
        */
 
       /**
-       * @name Controls/Input/Number#onlyPositive
+       * @name Controls/_input/Number#onlyPositive
        * @cfg {Boolean} Determines whether only positive numbers can be entered in the field.
        * @default false
        * @remark
@@ -52,7 +52,7 @@ import ViewModel = require('Controls/Input/Number/ViewModel');
        */
 
       /**
-       * @name Controls/Input/Number#integersLength
+       * @name Controls/_input/Number#integersLength
        * @cfg {Number} Maximum integer part length.
        * @remark
        * When the value is not set, the integer part length is unlimited.
@@ -64,7 +64,7 @@ import ViewModel = require('Controls/Input/Number/ViewModel');
        */
 
       /**
-       * @name Controls/Input/Number#showEmptyDecimals
+       * @name Controls/_input/Number#showEmptyDecimals
        * @cfg {Boolean} Determines whether trailing zeros are shown in the fractional part.
        * @default false
        * @remark
@@ -79,7 +79,7 @@ import ViewModel = require('Controls/Input/Number/ViewModel');
        */
 
       /**
-       * @name Controls/Input/Number#useGrouping
+       * @name Controls/_input/Number#useGrouping
        * @cfg {Boolean} Determines whether to use grouping separators, such as thousands separators.
        * @default true
        * @remark

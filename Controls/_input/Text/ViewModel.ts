@@ -1,9 +1,9 @@
-import BaseViewModel = require('Controls/Input/Base/ViewModel');
+import BaseViewModel = require('Controls/_input/Base/ViewModel');
       
 
       /**
-       * @class Controls/Input/Text/ViewModel
-       * @extends Controls/Input/Base/ViewModel
+       * @class Controls/_input/Text/ViewModel
+       * @extends Controls/_input/Base/ViewModel
        *
        * @private
        *

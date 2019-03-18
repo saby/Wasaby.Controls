@@ -1,5 +1,5 @@
-import Base = require('Controls/Input/Base');
-import ViewModel = require('Controls/Input/Phone/ViewModel');
+import Base = require('Controls/_input/Base');
+import ViewModel = require('Controls/_input/Phone/ViewModel');
       
 
       /**
@@ -8,10 +8,10 @@ import ViewModel = require('Controls/Input/Phone/ViewModel');
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        * @remark
        * If you want the phone field without changing the format, you should use the
-       * {@link Controls/Input/Mask mask) control. For example, a field to enter a mobile phone or home.
+       * {@link Controls/_input/Mask mask) control. For example, a field to enter a mobile phone or home.
        *
-       * @class Controls/Input/Phone
-       * @extends Controls/Input/Base
+       * @class Controls/_input/Phone
+       * @extends Controls/_input/Base
        *
        * @public
        * @demo Controls-demo/Input/Phone/PhonePG

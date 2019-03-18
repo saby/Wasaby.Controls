@@ -1,23 +1,23 @@
 import Control = require('Core/Control');
 import coreMerge = require('Core/core-merge');
-import StringValueConverter = require('Controls/Input/DateTime/StringValueConverter');
-import IDateTimeMask = require('Controls/Input/interface/IDateTimeMask');
+import StringValueConverter = require('Controls/_input/DateTime/StringValueConverter');
+import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import template = require('wml!Controls/Input/Date/Picker/Picker');
-import 'css!theme?Controls/Input/Date/Picker/Picker';
+import template = require('wml!Controls/_input/Date/Picker/Picker');
+import 'css!theme?Controls/_input/Date/Picker/Picker';
 
    /**
     * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
     * <a href="/materials/demo-ws4-input-datepicker">Demo examples.</a>.
     *
-    * @class Controls/Input/Date/Picker
+    * @class Controls/_input/Date/Picker
     * @extends Core/Control
-    * @mixes Controls/Input/interface/IInputBase
-    * @mixes Controls/Input/interface/IInputField
-    * @mixes Controls/Input/interface/IInputDateTime
-    * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/Input/interface/IDateMask
-    * @mixes Controls/Input/interface/IValidation
+    * @mixes Controls/_input/interface/IInputBase
+    * @mixes Controls/_input/interface/IInputField
+    * @mixes Controls/_input/interface/IInputDateTime
+    * @mixes Controls/_input/interface/IInputTag
+    * @mixes Controls/_input/interface/IDateMask
+    * @mixes Controls/_input/interface/IValidation
     *
     * @css @spacing_DatePicker-between-input-button Spacing between input field and button.
     *

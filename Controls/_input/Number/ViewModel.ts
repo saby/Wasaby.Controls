@@ -1,11 +1,11 @@
-import BaseViewModel = require('Controls/Input/Base/ViewModel');
+import BaseViewModel = require('Controls/_input/Base/ViewModel');
 import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
-import SplitValueHelper = require('Controls/Input/Number/SplitValueHelper');
-import InputProcessor = require('Controls/Input/Number/InputProcessor');
+import SplitValueHelper = require('Controls/_input/Number/SplitValueHelper');
+import InputProcessor = require('Controls/_input/Number/InputProcessor');
       
 
       /**
-       * @class Controls/Input/Number/ViewModel
+       * @class Controls/_input/Number/ViewModel
        * @private
        * @author Журавлев М.С.
        */

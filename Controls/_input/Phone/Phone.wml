@@ -15,7 +15,7 @@
    <ws:content>
       <ws:partial
          name="input"
-         template="wml!Controls/Input/resources/input"
+         template="wml!Controls/_input/resources/input"
          readOnly="{{_options.readOnly}}"
       />
    </ws:content>

@@ -22,7 +22,7 @@ import RegExpUtil = require('Controls/Utils/RegExp');
 
             /**
              * Получить ключи маски в виде строки.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
+             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
              * @return {String} ключи маски.
              */
             getMaskKeysString: function(formatMaskChars) {
@@ -37,7 +37,7 @@ import RegExpUtil = require('Controls/Utils/RegExp');
 
             /**
              * Получить замену для ключа, как его значение.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
+             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
              * @param {String} key ключ.
              * @param {String} quantifier квантор.
              * @return {String} строка замены ключа.
@@ -48,8 +48,8 @@ import RegExpUtil = require('Controls/Utils/RegExp');
 
             /**
              * Получить замену для ключа, как его значение или заменитель.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
-             * @param {String} replacer заменитель {@link Controls/Input/Mask#replacer}.
+             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
+             * @param {String} replacer заменитель {@link Controls/_input/Mask#replacer}.
              * @param {String} key ключ.
              * @param {String} quantifier квантор.
              * @return {String} строка замены ключа.
@@ -226,9 +226,9 @@ import RegExpUtil = require('Controls/Utils/RegExp');
 
             /**
              * Получить данные о маске.
-             * @param {String} mask маска {@link Controls/Input/Mask#mask}.
-             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/Input/Mask#formatMaskChars}.
-             * @param {String} replacer заменитель {@link Controls/Input/Mask#replacer}.
+             * @param {String} mask маска {@link Controls/_input/Mask#mask}.
+             * @param {Object} formatMaskChars ключи и значения маски {@link Controls/_input/Mask#formatMaskChars}.
+             * @param {String} replacer заменитель {@link Controls/_input/Mask#replacer}.
              * @return {{searchingGroups: String регулрное выражение для поиска групп, delimiterGroups: Object.<String> значение групп разделителей}}
              */
             getFormat: function(mask, formatMaskChars, replacer) {

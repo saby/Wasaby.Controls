@@ -2,7 +2,7 @@ import simpleExtend = require('Core/core-simpleExtend');
       
 
       /**
-       * @class Controls/Input/Number/SplitValueHelper
+       * @class Controls/_input/Number/SplitValueHelper
        * @private
        * @author Журавлев М.С.
        */

@@ -24,9 +24,9 @@
        * @param {String} oldValue Values in the field before changing it.
        * @param {String} newValue Values in the field after changing it.
        * @param {Number} caretPosition Carriage position in the field after changing value.
-       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
-       * @param {Controls/Input/Base/Types/InputType.typedef} inputType Type of changing value in the field.
-       * @return {Controls/Input/Base/Types/SplitValue.typedef}
+       * @param {Controls/_input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
+       * @param {Controls/_input/Base/Types/InputType.typedef} inputType Type of changing value in the field.
+       * @return {Controls/_input/Base/Types/SplitValue.typedef}
        */
       splitValue: function(oldValue, newValue, caretPosition, selection, inputType) {
          var selectionLength = selection.end - selection.start;
@@ -59,8 +59,8 @@
        * @param {String} oldValue Values in the field before changing it.
        * @param {String} newValue Values in the field after changing it.
        * @param {Number} caretPosition Carriage position in the field after changing value.
-       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
-       * @returns {Controls/Input/Base/Types/InputType.typedef}
+       * @param {Controls/_input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
+       * @returns {Controls/_input/Base/Types/InputType.typedef}
        */
       getInputType: function(oldValue, newValue, caretPosition, selection) {
          var
@@ -83,9 +83,9 @@
       },
 
       /**
-       * @param {Controls/Input/Base/Types/InputType.typedef} inputType Type of changing value in the field.
-       * @param {Controls/Input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
-       * @returns {Controls/Input/Base/Types/InputType.typedef}
+       * @param {Controls/_input/Base/Types/InputType.typedef} inputType Type of changing value in the field.
+       * @param {Controls/_input/Base/Types/Selection.typedef} selection Selection in the field before changing value.
+       * @returns {Controls/_input/Base/Types/InputType.typedef}
        */
       getAdaptiveInputType: function(nativeInputType, selection) {
          var selectionLength, execType;

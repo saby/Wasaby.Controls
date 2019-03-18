@@ -74,7 +74,7 @@ import isEqual = require('Core/helpers/Object/isEqual');
          },
 
          /**
-          * @param {Controls/Input/Base/Types/Selection.typedef|Number} value
+          * @param {Controls/_input/Base/Types/Selection.typedef|Number} value
           */
          set selection(value) {
             var newSelection = typeof value === 'number' ? {

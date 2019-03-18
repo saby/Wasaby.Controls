@@ -1,12 +1,12 @@
-import FormatBuilder = require('Controls/Input/Mask/FormatBuilder');
-import Formatter = require('Controls/Input/Mask/Formatter');
-import InputProcessor = require('Controls/Input/Mask/InputProcessor');
-import BaseViewModel = require('Controls/Input/Base/ViewModel');
+import FormatBuilder = require('Controls/_input/Mask/FormatBuilder');
+import Formatter = require('Controls/_input/Mask/Formatter');
+import InputProcessor = require('Controls/_input/Mask/InputProcessor');
+import BaseViewModel = require('Controls/_input/Base/ViewModel');
 
       
 
       /**
-       * @class Controls/Input/Text/ViewModel
+       * @class Controls/_input/Text/ViewModel
        * @private
        * @author Миронов А.Ю.
        */

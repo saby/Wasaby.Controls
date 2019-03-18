@@ -1,8 +1,4 @@
-define('Controls/Input/interface/IDateTimeMask', [
-   'Types/entity'
-], function(
-   entity
-) {
+import entity = require('Types/entity');
 
    /**
     * Interface for date/time inputs mask.
@@ -12,7 +8,7 @@ define('Controls/Input/interface/IDateTimeMask', [
     * @author Миронов А.Ю.
     */
 
-   return {
+   export = {
       getDefaultOptions: function() {
          return {
 
@@ -115,4 +111,4 @@ define('Controls/Input/interface/IDateTimeMask', [
       }
    };
 
-});
+

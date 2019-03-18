@@ -1,10 +1,10 @@
 import Env = require('Env/Env');
 import entity = require('Types/entity');
-import Text = require('Controls/Input/Text');
+import Text = require('Controls/_input/Text');
 import runDelayed = require('Core/helpers/Function/runDelayed');
-import template = require('wml!Controls/Input/Area/Area');
-import fieldTemplate = require('wml!Controls/Input/Area/Field');
-import readOnlyFieldTemplate = require('wml!Controls/Input/Area/ReadOnly');
+import template = require('wml!Controls/_input/Area/Area');
+import fieldTemplate = require('wml!Controls/_input/Area/Field');
+import readOnlyFieldTemplate = require('wml!Controls/_input/Area/ReadOnly');
 import 'Controls/Decorator/WrapURLs';
       
 
@@ -15,8 +15,8 @@ import 'Controls/Decorator/WrapURLs';
        * You can move the text to the next line using {@link newLineKey hotkeys}.
        * <a href="/materials/demo-ws4-input">Демо-пример</a>.
        *
-       * @class Controls/Input/Area
-       * @extends Controls/Input/Text
+       * @class Controls/_input/Area
+       * @extends Controls/_input/Text
        * @control
        * @public
        * @category Input
@@ -26,7 +26,7 @@ import 'Controls/Decorator/WrapURLs';
        */
 
       /**
-       * @name Controls/Input/Area#minLines
+       * @name Controls/_input/Area#minLines
        * @cfg {Number} Minimum number of lines.
        * @remark
        * A value between 1 and 10 is supported.
@@ -34,14 +34,14 @@ import 'Controls/Decorator/WrapURLs';
        */
 
       /**
-       * @name Controls/Input/Area#maxLines
+       * @name Controls/_input/Area#maxLines
        * @cfg {Number} Maximum number of lines.
        * @remark
        * A value between 1 and 10 is supported.
        */
 
       /**
-       * @name Controls/Input/Area#newLineKey
+       * @name Controls/_input/Area#newLineKey
        * @cfg {String} The behavior of creating a new line.
        * @variant enter When user presses Enter.
        * @variant ctrlEnter When user presses Ctrl + Enter.
@@ -100,9 +100,9 @@ import 'Controls/Decorator/WrapURLs';
           * Change the location of the visible area of the field so that the cursor is visible.
           * If the cursor is visible, the location is not changed. Otherwise, the new location will be such that
           * the cursor is visible in the middle of the area.
-          * @param {Controls/Input/Base} self Control instance.
+          * @param {Controls/_input/Base} self Control instance.
           * @param {String} value
-          * @param {Controls/Input/Base/Types/Selection.typedef} selection
+          * @param {Controls/_input/Base/Types/Selection.typedef} selection
           */
          recalculateLocationVisibleArea: function(self, value, selection) {
             var scroll = self._children.scroll;
@@ -143,22 +143,22 @@ import 'Controls/Decorator/WrapURLs';
 
             if (min > max) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
+               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines and maxLines options are not set correctly. The minLines more than the maxLines.');
             }
 
             if (min < 1) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines options are not set correctly. The minLines less than one.');
+               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines options are not set correctly. The minLines less than one.');
             }
 
             if (max < 1) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
+               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The maxLines options are not set correctly. The maxLines less than one.');
             }
 
             if (min > 10 || max > 10) {
                validated = false;
-               Env.IoC.resolve('ILogger').error('Controls/Input/Area', 'The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.');
+               Env.IoC.resolve('ILogger').error('Controls/_input/Area', 'The minLines and maxLines options are not set correctly. Values greater than 10 are not supported.');
             }
 
             return validated;
@@ -212,7 +212,7 @@ import 'Controls/Decorator/WrapURLs';
          }
       });
 
-      Area._theme.push('Controls/Input/Area/Area');
+      Area._theme.push('Controls/_input/Area/Area');
 
       Area.getDefaultOptions = function() {
          var defaultOptions = Text.getDefaultOptions();

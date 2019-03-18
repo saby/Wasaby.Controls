@@ -2,10 +2,10 @@
 import Env = require('Env/Env');
 import coreMerge = require('Core/core-merge');
 import CalendarControlsUtils = require('Controls/Calendar/Utils');
-import Model = require('Controls/Input/DateTime/Model');
-import IDateTimeMask = require('Controls/Input/interface/IDateTimeMask');
+import Model = require('Controls/_input/DateTime/Model');
+import IDateTimeMask = require('Controls/_input/interface/IDateTimeMask');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import template = require('wml!Controls/Input/DateTime/DateTime');
+import template = require('wml!Controls/_input/DateTime/DateTime');
    
 
    /**
@@ -18,14 +18,14 @@ import template = require('wml!Controls/Input/DateTime/DateTime');
     * </ol>
     * <a href="/materials/demo-ws4-input-datetime">Demo examples.</a>.
     *
-    * @class Controls/Input/DateTime
+    * @class Controls/_input/DateTime
     * @extends Core/Control
-    * @mixes Controls/Input/interface/IInputBase
-    * @mixes Controls/Input/interface/IInputField
-    * @mixes Controls/Input/interface/IInputDateTime
-    * @mixes Controls/Input/interface/IInputTag
-    * @mixes Controls/Input/interface/IDateTimeMask
-    * @mixes Controls/Input/interface/IValidation
+    * @mixes Controls/_input/interface/IInputBase
+    * @mixes Controls/_input/interface/IInputField
+    * @mixes Controls/_input/interface/IInputDateTime
+    * @mixes Controls/_input/interface/IInputTag
+    * @mixes Controls/_input/interface/IDateTimeMask
+    * @mixes Controls/_input/interface/IValidation
     *
     * @control
     * @public

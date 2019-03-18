@@ -2,7 +2,7 @@ import simpleExtend = require('Core/core-simpleExtend');
       
 
       /**
-       * @class Controls/Input/Number/InputProcessor
+       * @class Controls/_input/Number/InputProcessor
        * @private
        * @author Журавлев М.С.
        */

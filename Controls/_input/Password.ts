@@ -1,16 +1,16 @@
-import Base = require('Controls/Input/Base');
+import Base = require('Controls/_input/Base');
 import entity = require('Types/entity');
-import ViewModel = require('Controls/Input/Password/ViewModel');
-import passwordVisibilityButtonTemplate = require('wml!Controls/Input/Password/PasswordVisibilityButton');
+import ViewModel = require('Controls/_input/Password/ViewModel');
+import passwordVisibilityButtonTemplate = require('wml!Controls/_input/Password/PasswordVisibilityButton');
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
        *  <a href="/materials/demo-ws4-input">Configured Inputs Demo.</a>.
        *
-       * @class Controls/Input/Password
-       * @extends Controls/Input/Base
+       * @class Controls/_input/Password
+       * @extends Controls/_input/Base
        *
-       * @mixes Controls/Input/Password/PasswordStyles
+       * @mixes Controls/_input/Password/PasswordStyles
        *
        * @public
        * @demo Controls-demo/Input/Password/Password
@@ -20,7 +20,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/Input/Password/P
        */
 
       /**
-       * @name Controls/Input/Password#revealable
+       * @name Controls/_input/Password#revealable
        * @cfg {Boolean} Determines whether to enables the reveal toggle button that will show the password in clear text.
        * @default true
        * @remark
@@ -103,7 +103,7 @@ import passwordVisibilityButtonTemplate = require('wml!Controls/Input/Password/P
          }
       });
 
-      Password._theme.push('Controls/Input/Password/Password');
+      Password._theme.push('Controls/_input/Password/Password');
 
       Password.getDefaultOptions = function() {
          var defaultOptions = Base.getDefaultOptions();
