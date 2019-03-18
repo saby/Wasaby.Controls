@@ -144,11 +144,11 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          var self = getComponentObject();
          self._options.minSearchLength = 3;
          
-         self._active = true;
+         self._inputActive = true;
          assert.isTrue(Suggest._private.shouldSearch(self, 'test'));
          assert.isFalse(Suggest._private.shouldSearch(self, 't'));
    
-         self._active = false;
+         self._inputActive = false;
          assert.isFalse(Suggest._private.shouldSearch(self, 'test'));
          assert.isFalse(Suggest._private.shouldSearch(self, 't'));
       });
@@ -378,7 +378,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          self._options.minSearchLength = 3;
          
          suggestComponent.saveOptions(self._options);
-         suggestComponent._active = true;
+         suggestComponent._inputActive = true;
    
          suggestComponent._changeValueHandler(null, 't');
          assert.equal(suggestComponent._searchValue, '');
@@ -499,7 +499,7 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          suggestComponent._loading = true;
          suggestComponent._showContent = true;
          suggestComponent._dependenciesDeferred = true;
-         suggestComponent._active = true;
+         suggestComponent._inputActive = true;
          suggestComponent._suggestMarkedKey = 'test'
 
          suggestComponent._beforeUpdate({suggestState: false, emptyTemplate: 'anotherTpl', footerTemplate: 'anotherTpl',  value: 'te'});
@@ -702,6 +702,13 @@ define(['Controls/Container/Suggest/Layout', 'Types/collection', 'Types/entity',
          assert.isFalse(isCallOpenPopup);
 
          Suggest._private.open = _privateOpen;
+      });
+
+      it('Suggest::_inputClicked', function() {
+         var suggestComponent = new Suggest();
+
+         suggestComponent._inputClicked();
+         assert.isTrue(suggestComponent._inputActive);
       });
    });
 });
