@@ -19,7 +19,7 @@ define(
             topScroll: 0
          };
 
-         StickyStrategy._private.getWindowSizes = () =;> ({
+         StickyStrategy._private.getWindowSizes = () => ({
             width: 1920,
             height: 1040
          });
@@ -81,8 +81,9 @@ define(
             }, targetCoords);
             assert.isTrue(position.top === 420);
             assert.isTrue(position.left === 425);
-})
-it('Sticky position fixed', () => {
+         });
+
+         it('Sticky position fixed', () => {
             var position = StickyStrategy.getPosition({
                corner: {
                   vertical: 'bottom',
@@ -112,8 +113,9 @@ it('Sticky position fixed', () => {
             assert.equal(position.top, 400);
             assert.equal(position.left, 400);
             assert.equal(position.height, 640);
-})
-it('Centered sticky', () => {
+         });
+
+         it('Centered sticky', () => {
             var position = StickyStrategy.getPosition({
                corner: {
                   vertical: 'bottom',
@@ -141,8 +143,9 @@ it('Centered sticky', () => {
             }, targetCoords);
             assert.isTrue(position.top === 400);
             assert.isTrue(position.left === 200);
-})
-it('Sticky with offset', () => {
+         });
+
+         it('Sticky with offset', () => {
             var position = StickyStrategy.getPosition({
                corner: {
                   vertical: 'top',
@@ -170,8 +173,9 @@ it('Sticky with offset', () => {
             }, targetCoords);
             assert.isTrue(position.top === 110);
             assert.isTrue(position.left === 90);
-})
-it('Sticky with offset on margins', () => {
+         });
+
+         it('Sticky with offset on margins', () => {
             var position = StickyStrategy.getPosition({
                corner: {
                   vertical: 'top',
@@ -199,8 +203,9 @@ it('Sticky with offset on margins', () => {
             }, targetCoords);
             assert.isTrue(position.top === 110);
             assert.isTrue(position.left === 90);
-})
-it('Sticky with inverting', () => {
+         });
+
+         it('Sticky with inverting', () => {
             var position = StickyStrategy.getPosition({
                corner: {
                   vertical: 'bottom',
@@ -228,26 +233,26 @@ it('Sticky with inverting', () => {
             }, targetCoords);
             assert.isTrue(position.top === 400);
             assert.isTrue(position.left === 390);
-})
-it('Check fixed state', function() {
+         });
+         it('Check fixed state', function() {
             var itemConfig = {
                popupOptions: {}
             };
-            StickyController._private.getWindowWidth = () =;> 1000;
+            StickyController._private.getWindowWidth = () => 1000;
             StickyController.getDefaultConfig(itemConfig);
             assert.isTrue(itemConfig.position.position === 'fixed');
             assert.equal(itemConfig.position.maxWidth, 1000);
             assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Sticky/StickyContent');
 
-            StickyController._checkContainer = () =;> false;
+            StickyController._checkContainer = () => false;
             StickyController._elementCreated(itemConfig);
             assert.isTrue(itemConfig.position.position === 'fixed');
             assert.equal(itemConfig.popupOptions.content, 'wml!Controls/Popup/Opener/Sticky/StickyContent');
          });
 
          it('Sticky state', function() {
-            StickyController._checkContainer = () =;> false;
-            StickyController._private.isTargetVisible = () =;> true;
+            StickyController._checkContainer = () => false;
+            StickyController._private.isTargetVisible = () => true;
             let itemConfig = {
                popupOptions: {}
             };
@@ -286,11 +291,11 @@ it('Check fixed state', function() {
                            y: 200
                         };
                      },
-                     [];
+                     children: []
                   }
                }
-}
-let sizes = {
+            };
+            let sizes = {
                margins: { left: 0, top: 0 },
                width: 100,
                height: 100
@@ -302,16 +307,18 @@ let sizes = {
             };
             StickyController._private.prepareConfig(StickyController, itemConfig, sizes);
             assert.deepEqual(itemConfig.popupOptions.stickyPosition, stickyPosition);
-})
-it('Sticky initializing state', () => {
+         });
+
+         it('Sticky initializing state', () => {
             let itemConfig = {
                popupState: StickyController.POPUP_STATE_INITIALIZING
             };
             let destroyDef = StickyController._elementDestroyed(itemConfig);
             assert.equal(destroyDef.isReady(), true);
-})
-it('Sticky updated classes', () => {
-            StickyController._private.isTargetVisible = () =;> true;
+         });
+
+         it('Sticky updated classes', () => {
+            StickyController._private.isTargetVisible = () => true;
             let item = {
                position: {},
                popupOptions: {},
@@ -328,21 +335,23 @@ it('Sticky updated classes', () => {
 
             StickyController.elementUpdated(item, container);
             assert.equal(item.popupOptions.className, classes); // Классы не поменялись
-})
-it('Sticky check visible target on elementCreated', () => {
-            StickyController._private.isTargetVisible = () =;> false;
+         });
+
+         it('Sticky check visible target on elementCreated', () => {
+            StickyController._private.isTargetVisible = () => false;
             let isRemoveCalled = false;
             let ManagerControllerRemove = ManagerController.remove;
-            ManagerController.remove = () =;> {
+            ManagerController.remove = () => {
                isRemoveCalled = true;
-}
-StickyController.elementCreated({});
+            };
+            StickyController.elementCreated({});
             assert.equal(isRemoveCalled, true);
 
             ManagerController.remove = ManagerControllerRemove;
-            StickyController._private.isTargetVisible = () =;> true;
-})
-it('Sticky with option locationStrategy=fixed', () => {
+            StickyController._private.isTargetVisible = () => true;
+         });
+
+         it('Sticky with option locationStrategy=fixed', () => {
             var position = StickyStrategy.getPosition({
                locationStrategy: 'fixed',
                corner: {
@@ -372,13 +381,14 @@ it('Sticky with option locationStrategy=fixed', () => {
 
             assert.isTrue(position.top === 400);
             assert.isTrue(position.left === -190);
-})
-it('Sticky with option locationStrategy=overflow', () => {
+         });
+
+         it('Sticky with option locationStrategy=overflow', () => {
             let left = 1700;
             let right = 1900;
-let targetC = {...targetCoords, left, right;
-}
-var position = StickyStrategy.getPosition({
+            let targetC = {...targetCoords, left, right};
+
+            var position = StickyStrategy.getPosition({
                locationStrategy: 'overflow',
                corner: {
                   vertical: 'top',
@@ -407,9 +417,10 @@ var position = StickyStrategy.getPosition({
 
             assert.equal(position.top, 0);
             assert.equal(position.left, 1490);
-})
-it ('Sticky [new position]', () => {
-            StickyStrategy._private.getWindowSizes = () =;> ({
+         });
+
+         it ('Sticky [new position]', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
             });
@@ -455,9 +466,10 @@ it ('Sticky [new position]', () => {
             assert.equal(position.right, 800);
             assert.equal(position.bottom, 600);
             assert.equal(Object.keys(position).length, 2);
-})
-it ('Sticky [new position] with margins', () => {
-            StickyStrategy._private.getWindowSizes = () =;> ({
+         });
+
+         it ('Sticky [new position] with margins', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
             });
@@ -486,8 +498,9 @@ it ('Sticky [new position] with margins', () => {
             assert.equal(position.right, 810);
             assert.equal(position.bottom, 610);
             assert.equal(Object.keys(position).length, 2);
-})
-it ('Sticky [new position] revert position', () => {
+         });
+
+         it ('Sticky [new position] revert position', () => {
             let cfg = getPositionConfig();
             cfg.sizes.height = 400;
             let position = StickyStrategy.getPosition(cfg, targetCoords);
@@ -508,9 +521,10 @@ it ('Sticky [new position] revert position', () => {
             assert.equal(position.left, 400);
             assert.equal(position.bottom, 610);
             assert.equal(Object.keys(position).length, 2);
-})
-it ('Sticky [new position] location strategy fixed', () => {
-            StickyStrategy._private.getWindowSizes = () =;> ({
+         });
+
+         it ('Sticky [new position] location strategy fixed', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
                height: 1000
             });
@@ -536,7 +550,7 @@ it ('Sticky [new position] location strategy fixed', () => {
             assert.equal(position.bottom, 600);
             assert.equal(position.width, 200);
             assert.equal(Object.keys(position).length, 3);
-})
-})
-}
-)
+         });
+      });
+   }
+);

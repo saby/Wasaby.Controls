@@ -7,7 +7,7 @@ define(
       'use strict';
 
       describe('Controls/Container/PendingRegistrator', () => {
-         it('finishPendingOperations', () =;> {
+         it('finishPendingOperations', () => {
             let Registrator = new PendingRegistrator();
             let def1 = new Deferred();
             let def2 = new Deferred();
@@ -39,9 +39,8 @@ define(
             assert.deepEqual(callPendingFail, [1, 3]);
 
             Registrator.destroy();
-}
-)
-it('register/unregister pending', () => {
+         });
+         it('register/unregister pending', () => {
             let Registrator = new PendingRegistrator();
             let def1 = new Deferred();
             let def2 = new Deferred();
@@ -55,8 +54,8 @@ it('register/unregister pending', () => {
                      assert.equal(id, 'id1');
                   }
                }
-}
-Registrator._registerPendingHandler(null, def1, {});
+            };
+            Registrator._registerPendingHandler(null, def1, {});
             Registrator._registerPendingHandler(null, def2, { showLoadingIndicator: true });
             Registrator._registerPendingHandler(null, def3, {});
 
@@ -69,21 +68,22 @@ Registrator._registerPendingHandler(null, def1, {});
             assert.equal(Object.keys(Registrator._pendings).length, 0);
 
             Registrator.destroy();
-})
-it('hasRegisteredPendings', () => {
+         });
+
+         it('hasRegisteredPendings', () => {
             let Registrator = new PendingRegistrator();
             Registrator._beforeMount();
             let pendingCfg1 = {
-               validate: () => false;
-}
-Registrator._registerPendingHandler(null, new Deferred(), pendingCfg1);
+               validate: () => false
+            };
+            Registrator._registerPendingHandler(null, new Deferred(), pendingCfg1);
             assert.equal(Registrator._hasRegisteredPendings(), false);
 
             Registrator._registerPendingHandler(null, new Deferred(), {});
             assert.equal(Registrator._hasRegisteredPendings(), true);
 
             Registrator.destroy();
-})
-})
-}
-)
+         });
+      });
+   }
+);

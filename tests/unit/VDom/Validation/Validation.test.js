@@ -17,16 +17,17 @@ define([
             validator._validateCall = true;
             return (new Deferred()).callback(validateResult);
          },
-         () =;> {
+         activate: () => {
             validator._activateCall = true;
          },
-         (result) =;> {
+         setValidationResult: (result) => {
             validator._validationResult = result;
          },
-         () =;> {
+         isValid: () => {
             validator._isValidCall = true; return true;
          }
-   }
+      };
+
       return validator;
    }
 
@@ -40,25 +41,24 @@ define([
             name: 'notify',
             arguments: ['valueChanged', ['test']]
          }]);
-})
-   it('cleanValid', () => {
+      });
+      it('cleanValid', () => {
          validCtrl._valueChangedHandler();
          assert.deepEqual(validCtrl._validationResult, undefined);
-})
-})
+      });
+   });
    describe('Validate/Input', () => {
-      it('cleanValidInput', () =;> {
+      it('cleanValidInput', () => {
          var inputCtrl = new Input();
          inputCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(inputCtrl._validationResult, undefined);
          inputCtrl._validationResult = 'Error';
          inputCtrl._valueChangedHandler(null, 'test');
          assert.deepEqual(inputCtrl._validationResult, 'Error');
-   }
-   )
-})
+      });
+   });
    describe('Validate/FormController', () => {
-      it('add/remove validator', () =;> {
+      it('add/remove validator', () => {
          let FC = new ValidateFC();
          let validator1 = getValidator();
          let validator2 = getValidator();
@@ -74,9 +74,9 @@ define([
          assert.equal(FC._validates.length, 0);
 
          FC.destroy();
-   }
-   )
-   it('isValid', () => {
+      });
+
+      it('isValid', () => {
          let FC = new ValidateFC();
          let validator1 = getValidator();
          let validator2 = getValidator();
@@ -88,8 +88,9 @@ define([
          assert.equal(validator2._isValidCall, results[1], true);
 
          FC.destroy();
-})
-   it('setValidationResult', () => {
+      });
+
+      it('setValidationResult', () => {
          let FC = new ValidateFC();
          let validator1 = getValidator();
          let validator2 = getValidator();
@@ -101,8 +102,9 @@ define([
          assert.equal(validator2._validationResult, null);
 
          FC.destroy();
-})
-   it('submit', () => {
+      });
+
+      it('submit', () => {
          let FC = new ValidateFC();
          let validator1 = getValidator(true);
          let validator2 = getValidator(false);
@@ -118,8 +120,8 @@ define([
 
             assert.equal(validator1._activateCall, true, 'is validate1 activate');
             assert.equal(validator2._activateCall, false, 'is validate2 activate');
-})
-   FC.destroy();
-})
-})
+         });
+         FC.destroy();
+      });
+   });
 });

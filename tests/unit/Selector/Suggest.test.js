@@ -8,7 +8,7 @@ define(
       'Controls/History/Source'
    ],
    (Suggest, Clone, sourceLib, BaseViewModel, entity, HistorySource) => {
-      describe('Selector.Suggest', () =;> {
+      describe('Selector.Suggest', () => {
          let items = [
             {
                id: '1',
@@ -129,11 +129,7 @@ define(
                      title: 'testTitle'
                   }
                });
-            suggest.activate = () =;
-            >
-            {
-               isActivate = true;
-            }
+            suggest.activate = () => {isActivate = true;};
             suggest._notify = function(e, d) {
                if (e === 'selectedKeyChanged') {
                   newKey = d[0];
@@ -152,10 +148,8 @@ define(
 
          it('_open autoDropDown=false', function() {
             let suggest = getSuggest(config);
-            suggest.activate = () =;
-            >
-            {
-            }
+            suggest.activate = () => {};
+
             suggest._suggestState = true;
             suggest._open();
             assert.isFalse(suggest._suggestState);
@@ -169,10 +163,8 @@ define(
             let newConfig = Clone(config);
             newConfig.autoDropDown = true;
             let suggest = getSuggest(newConfig);
-            suggest.activate = () =;
-            >
-            {
-            }
+            suggest.activate = () => {};
+
             suggest._suggestState = true;
             suggest._open();
             assert.isFalse(suggest._suggestState);
@@ -181,7 +173,6 @@ define(
             suggest._open();
             assert.isFalse(suggest._suggestState);
          });
-}
-)
-}
-)
+      });
+   }
+);

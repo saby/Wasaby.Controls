@@ -2257,14 +2257,13 @@ define([
                   type: 'click',
                   stopPropagation: ()=>{}
                },
-               data;: [{
+               data: [{
                   getRawData: function() {
                      return {
                         'parent@': true
                      };
                   }
-            }]
-         })
+               }]});
             assert.equal(instance._menuIsShown, null);
          });
 

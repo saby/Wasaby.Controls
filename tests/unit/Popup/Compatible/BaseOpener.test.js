@@ -158,10 +158,7 @@ define(
          });
 
          it('prepareNotificationConfig', function() {
-            let template = () =;
-            >
-            {
-            }
+            let template = () => {};
             let config = {
                template,
                opener: 'opener',

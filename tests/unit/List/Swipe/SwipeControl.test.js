@@ -261,24 +261,23 @@ define([
       });
 
       describe('_beforeMount', function() {
-         it('should load HorizontalMeasurer', async; function() {
-            await; instance._beforeMount({
+         it('should load HorizontalMeasurer', async function() {
+            await instance._beforeMount({
                swipeDirection: 'row',
                listModel: mockListModel({})
             });
 
             assert.equal(instance._measurer, HorizontalMeasurer.default);
-         }
-         )
-         it('should load VerticalMeasurer', async; function() {
-            await; instance._beforeMount({
+         });
+
+         it('should load VerticalMeasurer', async function() {
+            await instance._beforeMount({
                swipeDirection: 'column',
                listModel: mockListModel({})
             });
 
             assert.equal(instance._measurer, VerticalMeasurer.default);
-         }
-         )
+         });
       });
 
       describe('_listSwipe', function() {

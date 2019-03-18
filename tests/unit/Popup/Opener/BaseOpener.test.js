@@ -6,7 +6,7 @@ define(
       'use strict';
 
       describe('Controls/Popup/Opener/BaseOpener', () => {
-         it('clearPopupIds', () =;> {
+         it('clearPopupIds', () => {
             let clearPopupIds = BaseOpener._private.clearPopupIds;
             let popupIds = [1, 2, 3];
 
@@ -21,22 +21,20 @@ define(
 
             clearPopupIds(popupIds, false, 'single');
             assert.deepEqual(popupIds, []);
-}
-)
-it('registerOpenerUpdateCallback', () => {
+         });
+
+         it('registerOpenerUpdateCallback', () => {
             let opener = new BaseOpener();
-            opener._notify = (eventName, args) =;> {
+            opener._notify = (eventName, args) => {
                assert.equal(eventName, 'registerOpenerUpdateCallback');
                assert.equal(typeof args[0], 'function');
-}
-opener._afterMount();
-opener._notify = () =;
->
-{
-}
-opener.destroy();
-})
-it('_getConfig', () => {
+            };
+            opener._afterMount();
+            opener._notify = () => {};
+            opener.destroy();
+         });
+
+         it('_getConfig', () => {
             let opener = new BaseOpener();
             opener._options.templateOptions = {
                type: 'dialog',
@@ -57,22 +55,24 @@ it('_getConfig', () => {
             assert.equal(baseConfig.closeOnOutsideClick, true);
             assert.equal(baseConfig.templateOptions.type, 'stack');
             opener.destroy();
-})
-it('_beforeUnmount', () => {
+         });
+
+         it('_beforeUnmount', () => {
             let opener = new BaseOpener();
             let isHideIndicatorCall = false;
             opener._indicatorId = '123';
 
-            opener._notify = (eventName, args) =;> {
+            opener._notify = (eventName, args) => {
                if (eventName === 'hideIndicator') {
                   isHideIndicatorCall = true;
                }
-}
-opener._beforeUnmount();
+            };
+
+            opener._beforeUnmount();
             assert.equal(opener._indicatorId, null);
             assert.equal(isHideIndicatorCall, true);
             opener.destroy();
-})
-})
-}
-)
+         });
+      });
+   }
+);

@@ -6,7 +6,7 @@ define([
    'use strict';
 
    describe('FormController', () => {
-      it('initializingWay', () =;> {
+      it('initializingWay', () => {
          let FC = new FormController();
 
          let baseReadRecordBeforeMount = FormController._private.readRecordBeforeMount;
@@ -18,15 +18,17 @@ define([
          let isReading = false;
          let isCreating = false;
 
-         FormController._private.readRecordBeforeMount = () =;> {
+         FormController._private.readRecordBeforeMount = () => {
             isReading = true;
             return true;
-   }
-   FormController._private.createRecordBeforeMount = () =;> {
+         };
+
+         FormController._private.createRecordBeforeMount = () => {
             isCreating = true;
             return true;
-   }
-   let beforeMountResult = FC._beforeMount(cfg);
+         };
+
+         let beforeMountResult = FC._beforeMount(cfg);
          assert.equal(isReading, false);
          assert.equal(isCreating, false);
          assert.notEqual(beforeMountResult, true);
@@ -56,24 +58,25 @@ define([
          FormController._private.readRecordBeforeMount = baseReadRecordBeforeMount;
          FormController._private.createRecordBeforeMount = baseCreateRecordBeforeMount;
          FC.destroy();
-}
-)
-it('beforeUpdate', () => {
+      });
+
+      it('beforeUpdate', () => {
          let FC = new FormController();
          let setRecordCalled = false;
          let readCalled = false;
          let createCalled = false;
 
-         FC._setRecord = () =;> {
+         FC._setRecord = () => {
             setRecordCalled = true;
-}
-FC.read = () =;> {
+         };
+         FC.read = () => {
             readCalled = true;
-}
-FC.create = () =;> {
+         };
+         FC.create = () => {
             createCalled = true;
-}
-FC._beforeUpdate({
+         };
+
+         FC._beforeUpdate({
             record: 'record'
          });
          assert.equal(setRecordCalled, true);
@@ -85,9 +88,10 @@ FC._beforeUpdate({
             record: {
                isChanged: () => false
             },
-            key;: 'key';
-})
-assert.equal(setRecordCalled, true);
+            key: 'key'
+         });
+
+         assert.equal(setRecordCalled, true);
          assert.equal(readCalled, true);
          assert.equal(createCalled, false);
          assert.equal(FC._isNewRecord, false);
@@ -105,18 +109,18 @@ assert.equal(setRecordCalled, true);
          createCalled = false;
          let updateCalled = false;
          let confirmPopupCalled = false;
-         FC._showConfirmPopup = () =;> {
+         FC._showConfirmPopup = () => {
             confirmPopupCalled = true;
             return (new Deferred()).callback(true);
-}
-FC.update = () =;> {
+         };
+         FC.update = () => {
             updateCalled = true;
             return (new Deferred()).callback();
-}
-let record = {
-            isChanged: () => true;
-}
-FC._options.record = record;
+         };
+         let record = {
+            isChanged: () => true
+         };
+         FC._options.record = record;
          FC._beforeUpdate({
             record: record,
             key: 'key'
@@ -128,11 +132,12 @@ FC._options.record = record;
          assert.equal(updateCalled, true);
          assert.equal(createCalled, false);
 
-         FC._showConfirmPopup = () =;> {
+         FC._showConfirmPopup = () => {
             confirmPopupCalled = true;
             return (new Deferred()).callback(false);
-}
-updateCalled = false;
+         };
+
+         updateCalled = false;
          readCalled = false;
          confirmPopupCalled = false;
          FC._beforeUpdate({
@@ -147,54 +152,56 @@ updateCalled = false;
          assert.equal(createCalled, false);
 
          FC.destroy();
-})
-it('beforeUnmount', () => {
+      });
+
+      it('beforeUnmount', () => {
          let isDestroyCall = false;
          let dataSource = {
             destroy: (id) => {
                assert.equal(id, 'id1');
                isDestroyCall = true;
             }
-}
-let FC = new FormController();
+         };
+         let FC = new FormController();
          FC.saveOptions({dataSource});
          FC._record = {
-            getId: () => 'id1';
-}
-FC._beforeUnmount();
+            getId: () => 'id1'
+         };
+         FC._beforeUnmount();
          assert.equal(isDestroyCall, false);
 
          FC._isNewRecord = true;
          FC._beforeUnmount();
          assert.equal(isDestroyCall, true);
          FC.destroy();
-})
-it('delete new record', () => {
+      });
+
+      it('delete new record', () => {
          let FC = new FormController();
          let isDestroyCalled = false;
          FC._options.dataSource = {
             destroy: () => {
                isDestroyCalled = true;
             }
-}
-FC._tryDeleteNewRecord();
+         };
+         FC._tryDeleteNewRecord();
          assert.equal(isDestroyCalled, false);
 
          FC._record = {
-            getId: () => null;
-}
-FC._isNewRecord = true;
+            getId: () => null
+         };
+         FC._isNewRecord = true;
 
          FC._tryDeleteNewRecord();
          assert.equal(isDestroyCalled, false);
 
          FC._record = {
-            getId: () => 'key';
-}
-FC._tryDeleteNewRecord();
+            getId: () => 'key'
+         };
+         FC._tryDeleteNewRecord();
          assert.equal(isDestroyCalled, true);
 
          FC.destroy();
-})
-})
-})
+      });
+   });
+});
