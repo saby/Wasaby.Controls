@@ -82,6 +82,14 @@ define('Controls/Input/Dropdown',
                keys.push(getPropValue(item, keyProperty));
             });
             return keys;
+         },
+
+         getTooltip: function(items, displayProperty) {
+            var tooltips = [];
+            chain.factory(items).each(function(item) {
+               tooltips.push(getPropValue(item, displayProperty));
+            });
+            return tooltips.join(', ');
          }
       };
 
@@ -124,8 +132,9 @@ define('Controls/Input/Dropdown',
                   this._icon = getPropValue(items[0], 'icon');
                }
                if (items.length > 1) {
-                  this._text += ', и еще ' + (items.length - 1);
+                  this._text += ', еще ' + (items.length - 1);
                }
+               this._tooltip = _private.getTooltip(items, this._options.displayProperty);
             }
          }
       });
