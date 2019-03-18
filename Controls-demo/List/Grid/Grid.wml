@@ -106,7 +106,7 @@
       <h3>Кликнули на </h3>
       <span class="action__last_clicked">{{_actionClicked}}</span>
    </div>
-   <div class="demo-Grid__container">
+   <div class="demo-Grid__container test_container_3">
       <Controls.Container.Scroll attr:class="demo-Grid__wrapper">
          <ws:content>
             <Controls.Grid
