@@ -348,6 +348,11 @@ define([
          }, treeViewModel.getExpandedItems());
          assert.equal(1, treeControl._options.root);
 
+         var resetExpandedItemsCalled = false;
+         treeViewModel.resetExpandedItems = function() {
+            resetExpandedItemsCalled = true;
+         };
+
          // Test
          return new Promise(function(resolve) {
             setTimeout(function() {
@@ -359,6 +364,7 @@ define([
                   assert.equal(12, treeControl._root);
                   assert.isTrue(isNeedForceUpdate);
                   assert.isTrue(sourceControllersCleared);
+                  assert.isTrue(resetExpandedItemsCalled);
                   assert.deepEqual(reloadFilter, {testParentProperty: 12});
                   treeControl._beforeUpdate({root: treeControl._root});
                   TreeControl._private.clearSourceControllers = clearSourceControllersOriginal;
@@ -430,7 +436,6 @@ define([
             reloadCalled = false,
             setRootCalled = false,
             filterOnOptionChange = null,
-            resetExpandedItemsCalled = false,
             isSourceControllerDestroyed = false,
             treeControl = correctCreateTreeControl({
                columns: [],
@@ -446,8 +451,7 @@ define([
                parentProperty: 'parent'
             }),
             treeGridViewModel = treeControl._children.baseControl.getViewModel(),
-            reloadOriginal = treeControl._children.baseControl.reload,
-            resetExpandedItemsOriginal = treeGridViewModel.resetExpandedItems;
+            reloadOriginal = treeControl._children.baseControl.reload;
 
          treeControl._nodesSourceControllers = {
             1: {
@@ -459,10 +463,6 @@ define([
 
          treeGridViewModel.setRoot = function() {
             setRootCalled = true;
-         };
-         treeGridViewModel.resetExpandedItems = function() {
-            resetExpandedItemsCalled = true;
-            resetExpandedItemsOriginal.apply(this, arguments);
          };
          treeControl._children.baseControl.reload = function() {
             reloadCalled = true;
@@ -485,7 +485,6 @@ define([
                treeControl._beforeUpdate({root: 'testRoot'});
                assert.deepEqual(treeGridViewModel.getExpandedItems(), {});
                assert.deepEqual(filterOnOptionChange, newFilter);
-               assert.isTrue(resetExpandedItemsCalled);
 
                treeControl._afterUpdate({root: null});
                setTimeout(function() {

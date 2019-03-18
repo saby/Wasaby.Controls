@@ -281,11 +281,6 @@ var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype 
             // https://online.sbis.ru/opendoc.html?guid=d99190bc-e3e9-4d78-a674-38f6f4b0eeb0
             this._children.baseControl.getViewModel().setExpandedItems(newOptions.expandedItems);
         }
-
-        //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть.
-        if (this._updatedRoot) {
-            this._children.baseControl.getViewModel().resetExpandedItems();
-        }
         if (newOptions.nodeFooterTemplate !== this._options.nodeFooterTemplate) {
             this._children.baseControl.getViewModel().setNodeFooterTemplate(newOptions.nodeFooterTemplate);
         }
@@ -302,8 +297,10 @@ var TreeControl = Control.extend(/** @lends Controls/List/TreeControl.prototype 
             this._updatedRoot = false;
             _private.clearSourceControllers(this);
             var self = this;
+
+            //При смене корне, не надо запрашивать все открытые папки, т.к. их может не быть и мы загрузим много лишних данных.
+            this._children.baseControl.getViewModel().resetExpandedItems();
             this._children.baseControl.reload().addCallback(function() {
-                self._children.baseControl.getViewModel().setExpandedItems([]);
                 self._children.baseControl.getViewModel().setRoot(self._root);
             });
         }
