@@ -1,5 +1,5 @@
-define('Controls/Input/Base/InputUtil', [], function() {
-   'use strict';
+
+   
 
    var _private = {
       isCorrectlySplit: function(split, oldValue, newValue) {
@@ -17,7 +17,7 @@ define('Controls/Input/Base/InputUtil', [], function() {
       }
    };
 
-   return {
+   export = {
 
       /**
        * Get split by entered string.
@@ -96,4 +96,4 @@ define('Controls/Input/Base/InputUtil', [], function() {
          return selectionLength ? execType[1] : execType[1] + execType[2];
       }
    };
-});
+

@@ -1,19 +1,10 @@
-define('Controls/Input/Date/Picker', [
-   'Core/Control',
-   'Core/core-merge',
-   'Controls/Input/DateTime/StringValueConverter',
-   'Controls/Input/interface/IDateTimeMask',
-   'Controls/Utils/tmplNotify',
-   'wml!Controls/Input/Date/Picker/Picker',
-   'css!theme?Controls/Input/Date/Picker/Picker'
-], function(
-   Control,
-   coreMerge,
-   StringValueConverter,
-   IDateTimeMask,
-   tmplNotify,
-   template
-) {
+import Control = require('Core/Control');
+import coreMerge = require('Core/core-merge');
+import StringValueConverter = require('Controls/Input/DateTime/StringValueConverter');
+import IDateTimeMask = require('Controls/Input/interface/IDateTimeMask');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import template = require('wml!Controls/Input/Date/Picker/Picker');
+import 'css!theme?Controls/Input/Date/Picker/Picker';
 
    /**
     * Control for entering date. Also, the control allows you to select a date with the mouse using the drop-down box.
@@ -102,6 +93,6 @@ define('Controls/Input/Date/Picker', [
       return coreMerge({}, IDateTimeMask.getOptionTypes());
    };
 
-   return Component;
+   export = Component;
 
-});
+

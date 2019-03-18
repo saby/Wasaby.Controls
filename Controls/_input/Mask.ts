@@ -1,20 +1,15 @@
-define('Controls/Input/Mask',
-   [
-      'Env/Env',
-      'Controls/Utils/tmplNotify',
-      'Controls/Input/Base',
-      'Core/helpers/Object/isEqual',
-      'Controls/Input/Mask/ViewModel',
-      'Core/helpers/Function/runDelayed',
-      'Types/entity',
-      'wml!Controls/Input/Base/Base',
-      'wml!Controls/Input/Mask/Mask',
+import Env = require('Env/Env');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import Base = require('Controls/Input/Base');
+import isEqual = require('Core/helpers/Object/isEqual');
+import ViewModel = require('Controls/Input/Mask/ViewModel');
+import runDelayed = require('Core/helpers/Function/runDelayed');
+import entity = require('Types/entity');
+import baseTemplate = require('wml!Controls/Input/Base/Base');
+import MaskTpl = require('wml!Controls/Input/Mask/Mask');
+import 'css!Controls/Input/Mask/Mask';
 
-      'css!Controls/Input/Mask/Mask'
-   ],
-   function(Env, tmplNotify, Base, isEqual, ViewModel, runDelayed, entity, baseTemplate, MaskTpl) {
-
-      'use strict';
+      
 
       /**
        * A component for entering text in a {@link mask specific format}.
@@ -211,5 +206,5 @@ define('Controls/Input/Mask',
 
       Mask._private = _private;
 
-      return Mask;
-   });
+      export = Mask;
+   

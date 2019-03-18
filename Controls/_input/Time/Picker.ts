@@ -1,5 +1,4 @@
-define('Controls/Input/Time/Picker', [
-], function() {
+
 
    /**
     * Control for entering date and time.
@@ -20,4 +19,4 @@ define('Controls/Input/Time/Picker', [
     * @category Input
     */
 
-});
+

@@ -1,17 +1,8 @@
-define('Controls/Input/Number/ViewModel',
-   [
-      'Controls/Input/Base/ViewModel',
-      'Controls/Utils/splitIntoTriads',
-      'Controls/Input/Number/SplitValueHelper',
-      'Controls/Input/Number/InputProcessor'
-   ],
-   function(
-      BaseViewModel,
-      splitIntoTriads,
-      SplitValueHelper,
-      InputProcessor
-   ) {
-      'use strict';
+import BaseViewModel = require('Controls/Input/Base/ViewModel');
+import splitIntoTriads = require('Controls/Utils/splitIntoTriads');
+import SplitValueHelper = require('Controls/Input/Number/SplitValueHelper');
+import InputProcessor = require('Controls/Input/Number/InputProcessor');
+      
 
       /**
        * @class Controls/Input/Number/ViewModel
@@ -151,5 +142,5 @@ define('Controls/Input/Number/ViewModel',
          }
       });
 
-      return ViewModel;
-   });
+      export = ViewModel;
+   

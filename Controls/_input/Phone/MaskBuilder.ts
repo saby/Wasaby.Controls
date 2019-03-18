@@ -1,10 +1,8 @@
-define('Controls/Input/Phone/MaskBuilder',
-   [],
-   function() {
 
-      'use strict';
 
-      return {
+      
+
+      export = {
          getMask: function(value) {
             var
                mask = '',
@@ -47,5 +45,4 @@ define('Controls/Input/Phone/MaskBuilder',
             return mask || '+d\\*';
          }
       };
-   }
-);
+   

@@ -1,10 +1,6 @@
-define('Controls/Input/Phone',
-   [
-      'Controls/Input/Base',
-      'Controls/Input/Phone/ViewModel'
-   ],
-   function(Base, ViewModel) {
-      'use strict';
+import Base = require('Controls/Input/Base');
+import ViewModel = require('Controls/Input/Phone/ViewModel');
+      
 
       /**
        * A component for entering a phone number. Depending on the characters you enter, the phone number format changes.
@@ -60,5 +56,5 @@ define('Controls/Input/Phone',
          return defaultOptions;
       };
 
-      return Phone;
-   });
+      export = Phone;
+   

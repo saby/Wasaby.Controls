@@ -1,13 +1,9 @@
-define('Controls/Input/Mask/ViewModel',
-   [
-      'Controls/Input/Mask/FormatBuilder',
-      'Controls/Input/Mask/Formatter',
-      'Controls/Input/Mask/InputProcessor',
-      'Controls/Input/Base/ViewModel'
-   ],
-   function(FormatBuilder, Formatter, InputProcessor, BaseViewModel) {
+import FormatBuilder = require('Controls/Input/Mask/FormatBuilder');
+import Formatter = require('Controls/Input/Mask/Formatter');
+import InputProcessor = require('Controls/Input/Mask/InputProcessor');
+import BaseViewModel = require('Controls/Input/Base/ViewModel');
 
-      'use strict';
+      
 
       /**
        * @class Controls/Input/Text/ViewModel
@@ -62,6 +58,5 @@ define('Controls/Input/Mask/ViewModel',
          }
       });
 
-      return ViewModel;
-   }
-);
+      export = ViewModel;
+   

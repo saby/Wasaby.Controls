@@ -1,13 +1,7 @@
-define('Controls/Input/DateTime/StringValueConverter', [
-   'Core/core-simpleExtend',
-   'Core/helpers/Date/format',
-   'Controls/Utils/Date'
-], function(
-   cExtend,
-   formatDate,
-   dateUtils
-) {
-   'use strict';
+import cExtend = require('Core/core-simpleExtend');
+import formatDate = require('Core/helpers/Date/format');
+import dateUtils = require('Controls/Utils/Date');
+   
 
    var _private = {
       maskMap: {
@@ -349,5 +343,5 @@ define('Controls/Input/DateTime/StringValueConverter', [
       }
    });
 
-   return ModuleClass;
-});
+   export = ModuleClass;
+

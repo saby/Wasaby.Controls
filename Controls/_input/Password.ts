@@ -1,13 +1,7 @@
-define('Controls/Input/Password',
-   [
-      'Controls/Input/Base',
-      'Types/entity',
-      'Controls/Input/Password/ViewModel',
-
-      'wml!Controls/Input/Password/PasswordVisibilityButton'
-   ],
-
-   function(Base, entity, ViewModel, passwordVisibilityButtonTemplate) {
+import Base = require('Controls/Input/Base');
+import entity = require('Types/entity');
+import ViewModel = require('Controls/Input/Password/ViewModel');
+import passwordVisibilityButtonTemplate = require('wml!Controls/Input/Password/PasswordVisibilityButton');
       /**
        *  Control that hides all entered characters and shows replacer-symbols in place of them.
        *  Visibility of entered text can be toggled by clicking on 'eye' icon.
@@ -34,7 +28,7 @@ define('Controls/Input/Password',
        * The button does not appear in {@link readOnly read mode} or in an empty field.
        */
 
-      'use strict';
+      
 
       var _private = {
          calculateType: function(passwordVisible, autoComplete) {
@@ -129,5 +123,5 @@ define('Controls/Input/Password',
          return optionTypes;
       };
 
-      return Password;
-   });
+      export = Password;
+   

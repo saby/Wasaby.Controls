@@ -1,11 +1,5 @@
-define('Controls/Input/Number/SplitValueHelper',
-   [
-      'Core/core-simpleExtend'
-   ],
-   function(
-      simpleExtend
-   ) {
-      'use strict';
+import simpleExtend = require('Core/core-simpleExtend');
+      
 
       /**
        * @class Controls/Input/Number/SplitValueHelper
@@ -48,6 +42,5 @@ define('Controls/Input/Number/SplitValueHelper',
 
          });
 
-      return SplitValueHelper;
-   }
-);
+      export = SplitValueHelper;
+   

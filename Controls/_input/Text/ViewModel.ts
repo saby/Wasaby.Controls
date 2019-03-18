@@ -1,9 +1,5 @@
-define('Controls/Input/Text/ViewModel',
-   [
-      'Controls/Input/Base/ViewModel'
-   ],
-   function(BaseViewModel) {
-      'use strict';
+import BaseViewModel = require('Controls/Input/Base/ViewModel');
+      
 
       /**
        * @class Controls/Input/Text/ViewModel
@@ -44,5 +40,5 @@ define('Controls/Input/Text/ViewModel',
          }
       });
 
-      return ViewModel;
-   });
+      export = ViewModel;
+   

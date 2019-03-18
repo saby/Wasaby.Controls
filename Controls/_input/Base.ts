@@ -1,29 +1,20 @@
-define('Controls/Input/Base',
-   [
-      'Core/Control',
-      'Env/Event',
-      'Env/Env',
-      'Types/entity',
-      'Controls/Utils/tmplNotify',
-      'Core/helpers/Object/isEqual',
-      'Controls/Utils/getTextWidth',
-      'Core/helpers/Number/randomId',
-      'Controls/Input/Base/InputUtil',
-      'Controls/Input/Base/ViewModel',
-      'Core/helpers/Function/runDelayed',
-      'Core/helpers/String/unEscapeASCII',
-      'Controls/Utils/hasHorizontalScroll',
-
-      'wml!Controls/Input/Base/Base',
-      'wml!Controls/Input/Base/Field',
-      'wml!Controls/Input/Base/ReadOnly'
-   ],
-   function(
-      Control, EnvEvent, Env, entity, tmplNotify, isEqual,
-      getTextWidth, randomName, InputUtil, ViewModel, runDelayed, unEscapeASCII,
-      hasHorizontalScroll, template, fieldTemplate, readOnlyFieldTemplate
-   ) {
-      'use strict';
+import Control = require('Core/Control');
+import EnvEvent = require('Env/Event');
+import Env = require('Env/Env');
+import entity = require('Types/entity');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import isEqual = require('Core/helpers/Object/isEqual');
+import getTextWidth = require('Controls/Utils/getTextWidth');
+import randomName = require('Core/helpers/Number/randomId');
+import InputUtil = require('Controls/Input/Base/InputUtil');
+import ViewModel = require('Controls/Input/Base/ViewModel');
+import runDelayed = require('Core/helpers/Function/runDelayed');
+import unEscapeASCII = require('Core/helpers/String/unEscapeASCII');
+import hasHorizontalScroll = require('Controls/Utils/hasHorizontalScroll');
+import template = require('wml!Controls/Input/Base/Base');
+import fieldTemplate = require('wml!Controls/Input/Base/Field');
+import readOnlyFieldTemplate = require('wml!Controls/Input/Base/ReadOnly');
+      
 
       var _private = {
 
@@ -979,5 +970,5 @@ define('Controls/Input/Base',
          };
       };
 
-      return Base;
-   });
+      export = Base;
+   

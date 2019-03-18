@@ -1,10 +1,6 @@
-define('Controls/Input/Mask/FormatBuilder',
-   [
-      'Controls/Utils/RegExp'
-   ],
-   function(RegExpUtil) {
+import RegExpUtil = require('Controls/Utils/RegExp');
 
-      'use strict';
+      
 
       var
          _private = {
@@ -250,6 +246,5 @@ define('Controls/Input/Mask/FormatBuilder',
 
       FormatBuilder._private = _private;
 
-      return FormatBuilder;
-   }
-);
+      export = FormatBuilder;
+   

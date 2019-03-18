@@ -1,23 +1,12 @@
-﻿define('Controls/Input/DateTime', [
-   'Core/Control',
-   'Env/Env',
-   'Core/core-merge',
-   'Controls/Calendar/Utils',
-   'Controls/Input/DateTime/Model',
-   'Controls/Input/interface/IDateTimeMask',
-   'Controls/Utils/tmplNotify',
-   'wml!Controls/Input/DateTime/DateTime'
-], function(
-   Control,
-   Env,
-   coreMerge,
-   CalendarControlsUtils,
-   Model,
-   IDateTimeMask,
-   tmplNotify,
-   template
-) {
-   'use strict';
+﻿import Control = require('Core/Control');
+import Env = require('Env/Env');
+import coreMerge = require('Core/core-merge');
+import CalendarControlsUtils = require('Controls/Calendar/Utils');
+import Model = require('Controls/Input/DateTime/Model');
+import IDateTimeMask = require('Controls/Input/interface/IDateTimeMask');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import template = require('wml!Controls/Input/DateTime/DateTime');
+   
 
    /**
     * Control for entering date and time.
@@ -122,5 +111,5 @@
       return coreMerge({}, IDateTimeMask.getOptionTypes());
    };
 
-   return Component;
-});
+   export = Component;
+

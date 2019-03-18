@@ -1,11 +1,5 @@
-define('Controls/Input/Number/InputProcessor',
-   [
-      'Core/core-simpleExtend'
-   ],
-   function(
-      simpleExtend
-   ) {
-      'use strict';
+import simpleExtend = require('Core/core-simpleExtend');
+      
 
       /**
        * @class Controls/Input/Number/InputProcessor
@@ -434,6 +428,5 @@ define('Controls/Input/Number/InputProcessor',
          return _private.getValueWithDelimiters(splitValue);
       };
 
-      return InputProcessor;
-   }
-);
+      export = InputProcessor;
+   

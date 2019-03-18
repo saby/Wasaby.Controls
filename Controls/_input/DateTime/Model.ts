@@ -1,15 +1,8 @@
-define('Controls/Input/DateTime/Model', [
-   'Core/core-simpleExtend',
-   'Types/entity',
-   'Controls/Input/DateTime/StringValueConverter',
-   'Controls/Utils/Date'
-], function(
-   cExtend,
-   entity,
-   StringValueConverter,
-   dateUtils
-) {
-   'use strict';
+import cExtend = require('Core/core-simpleExtend');
+import entity = require('Types/entity');
+import StringValueConverter = require('Controls/Input/DateTime/StringValueConverter');
+import dateUtils = require('Controls/Utils/Date');
+   
 
    /**
     * Model for 'Controls/Input/DateTime' control.
@@ -130,5 +123,5 @@ define('Controls/Input/DateTime/Model', [
 
    });
 
-   return ModuleClass;
-});
+   export = ModuleClass;
+

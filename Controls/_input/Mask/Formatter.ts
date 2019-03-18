@@ -1,9 +1,6 @@
-define('Controls/Input/Mask/Formatter',
-   [
-   ],
-   function() {
 
-      'use strict';
+
+      
 
       var _private = {
 
@@ -165,6 +162,5 @@ define('Controls/Input/Mask/Formatter',
 
       Formatter._private = _private;
 
-      return Formatter;
-   }
-);
+      export = Formatter;
+   

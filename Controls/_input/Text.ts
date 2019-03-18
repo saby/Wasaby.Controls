@@ -1,12 +1,8 @@
-define('Controls/Input/Text',
-   [
-      'Env/Env',
-      'Controls/Input/Base',
-      'Types/entity',
-      'Controls/Input/Text/ViewModel'
-   ],
-   function(Env, Base, entity, ViewModel) {
-      'use strict';
+import Env = require('Env/Env');
+import Base = require('Controls/Input/Base');
+import entity = require('Types/entity');
+import ViewModel = require('Controls/Input/Text/ViewModel');
+      
 
       /**
        * Controls that allows user to enter single-line text.
@@ -102,5 +98,5 @@ define('Controls/Input/Text',
          return optionTypes;
       };
 
-      return Text;
-   });
+      export = Text;
+   

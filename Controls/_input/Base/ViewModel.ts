@@ -1,12 +1,8 @@
-define('Controls/Input/Base/ViewModel',
-   [
-      'Core/core-merge',
-      'Core/core-clone',
-      'Core/core-simpleExtend',
-      'Core/helpers/Object/isEqual'
-   ],
-   function(merge, clone, simpleExtend, isEqual) {
-      'use strict';
+import merge = require('Core/core-merge');
+import clone = require('Core/core-clone');
+import simpleExtend = require('Core/core-simpleExtend');
+import isEqual = require('Core/helpers/Object/isEqual');
+      
 
       var _private = {
          setValue: function(self, value) {
@@ -144,5 +140,5 @@ define('Controls/Input/Base/ViewModel',
          }
       });
 
-      return ViewModel;
-   });
+      export = ViewModel;
+   

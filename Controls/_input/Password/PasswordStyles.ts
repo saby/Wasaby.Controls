@@ -1,8 +1,4 @@
-define('Controls/Input/Password/PasswordStyles',
-   [
 
-   ],
-   function() {
       /**
        * @interface Controls/Input/Password/PasswordStyles
        * @css @font-size_PasswordInput-showPassword "View password" icon size.
@@ -11,5 +7,4 @@ define('Controls/Input/Password/PasswordStyles',
        * @public
        * @author Журавлев М.С.
        */
-   }
-);
+   

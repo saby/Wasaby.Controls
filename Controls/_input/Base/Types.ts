@@ -1,4 +1,4 @@
-define('Controls/Input/Base/Types', [], function() {
+
    /**
     * @typedef {Object} Selection
     * @property {Number} start The beginning of the selected portion of the field's text. The value specifies the index of the first selected character.
@@ -43,4 +43,4 @@ define('Controls/Input/Base/Types', [], function() {
     * @type {Function} CallbackForField
     * @param {Node} field The field being processed.
     */
-});
+

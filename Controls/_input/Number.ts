@@ -1,12 +1,8 @@
-define('Controls/Input/Number',
-   [
-      'Env/Env',
-      'Controls/Input/Base',
-      'Types/entity',
-      'Controls/Input/Number/ViewModel'
-   ],
-   function(Env, Base, entity, ViewModel) {
-      'use strict';
+import Env = require('Env/Env');
+import Base = require('Controls/Input/Base');
+import entity = require('Types/entity');
+import ViewModel = require('Controls/Input/Number/ViewModel');
+      
 
       /**
        * Controls that allows user to enter single-line number.
@@ -170,5 +166,5 @@ define('Controls/Input/Number',
          return optionTypes;
       };
 
-      return NumberInput;
-   });
+      export = NumberInput;
+   

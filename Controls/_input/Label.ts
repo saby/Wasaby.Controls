@@ -1,14 +1,9 @@
-define('Controls/Label',
-   [
-      'Env/Env',
-      'Core/Control',
-      'Types/entity',
-      'wml!Controls/Label/Label',
-
-      'css!theme?Controls/Label/Label'
-   ],
-   function(Env, Control, entity, template) {
-      'use strict';
+import Env = require('Env/Env');
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import template = require('wml!Controls/Label/Label');
+import 'css!theme?Controls/Label/Label';
+      
 
       /**
        * Label.
@@ -95,5 +90,5 @@ define('Controls/Label',
          };
       };
 
-      return Label;
-   });
+      export = Label;
+   

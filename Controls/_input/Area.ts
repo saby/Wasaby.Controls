@@ -1,21 +1,12 @@
-define('Controls/Input/Area',
-   [
-      'Env/Env',
-      'Types/entity',
-      'Controls/Input/Text',
-      'Core/helpers/Function/runDelayed',
-
-      'wml!Controls/Input/Area/Area',
-      'wml!Controls/Input/Area/Field',
-      'wml!Controls/Input/Area/ReadOnly',
-
-      'Controls/Decorator/WrapURLs'
-   ],
-   function(
-      Env, entity, Text, runDelayed,
-      template, fieldTemplate, readOnlyFieldTemplate
-   ) {
-      'use strict';
+import Env = require('Env/Env');
+import entity = require('Types/entity');
+import Text = require('Controls/Input/Text');
+import runDelayed = require('Core/helpers/Function/runDelayed');
+import template = require('wml!Controls/Input/Area/Area');
+import fieldTemplate = require('wml!Controls/Input/Area/Field');
+import readOnlyFieldTemplate = require('wml!Controls/Input/Area/ReadOnly');
+import 'Controls/Decorator/WrapURLs';
+      
 
       /**
        * A component for entering multi-line text.
@@ -248,5 +239,5 @@ define('Controls/Input/Area',
          return optionTypes;
       };
 
-      return Area;
-   });
+      export = Area;
+   

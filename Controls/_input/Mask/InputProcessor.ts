@@ -1,10 +1,6 @@
-define('Controls/Input/Mask/InputProcessor',
-   [
-      'Controls/Input/Mask/Formatter'
-   ],
-   function(Formatter) {
+import Formatter = require('Controls/Input/Mask/Formatter');
 
-      'use strict';
+      
 
       var
          _private = {
@@ -233,6 +229,5 @@ define('Controls/Input/Mask/InputProcessor',
 
       InputProcessor._private = _private;
 
-      return InputProcessor;
-   }
-);
+      export = InputProcessor;
+   
