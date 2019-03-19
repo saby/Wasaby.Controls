@@ -13,6 +13,10 @@ define('Controls/Popup/Opener/InfoBox/resources/template',
             // todo For Compatible. Remove after https://online.sbis.ru/opendoc.html?guid=dedf534a-3498-4b93-b09c-0f36f7c91ab5
             this._notify('sendResult', [{ type: 'close' }], { bubbling: true });
             this._notify('close');
+         },
+         _sendResult: function(event) {
+            this._notify('sendResult', [event], {bubbling: true});
          }
+
       });
    });

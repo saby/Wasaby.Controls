@@ -26,7 +26,10 @@ define('Controls/Popup/Previewer/OpenerTemplate',
          },
 
          _sendResult: function(event) {
-            this._notify('sendResult', [event], { bubbling: true });
+            //TODO will be fixed by https://online.sbis.ru/opendoc.html?guid=f8c3dd17-7321-4519-94b5-4a57534833eb
+            if(!this._options.isPopupInfoBox) {
+               this._notify('sendResult', [event], {bubbling: true});
+            }
          }
       });
 
