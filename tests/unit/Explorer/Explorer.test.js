@@ -481,6 +481,13 @@ define([
                   items: [2]
                })
             });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+            explorer._options.itemsDragNDrop = true;
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [2]
+               })
+            });
             assert.isTrue(explorer._dragOnBreadCrumbs);
 
             //drag not in root
