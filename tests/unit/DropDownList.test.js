@@ -60,6 +60,18 @@ define(['Controls/Dropdown/resources/template/DropdownList', 'Types/collection']
 
    describe('Controls/Dropdown/resources/template/DropdownList', function() {
 
+      describe('DropdownList::constructor', function() {
+         let config2 = {
+            showHeader: true,
+            headConfig: { icon: 'icon-add' },
+            parentProperty: 'parent',
+            rootKey: null,
+            iconPadding: { null: [null, 'icon-small'] }
+         };
+         let ddl = getDropDownListWithConfig(config2);
+         assert.equal(ddl._headConfig.icon, 'icon-add icon-small');
+      });
+
       describe('DropdownList::_beforeUpdate', function() {
 
          it('_itemMouseEnter', function() {

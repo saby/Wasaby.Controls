@@ -198,6 +198,7 @@ var _private = {
                 keyProperty: newOptions.keyProperty,
                 parentProperty: newOptions.parentProperty,
                 nodeProperty: newOptions.nodeProperty,
+                iconSize: newOptions.iconSize,
                 showClose: true
             }
         };
