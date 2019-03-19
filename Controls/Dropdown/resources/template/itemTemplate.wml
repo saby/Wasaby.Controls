@@ -4,9 +4,21 @@
                  controls-DropdownList__row_{{multiLine ? 'multiLine' : 'singleLine'}} theme_{{_options.theme}}">
 
    <ws:if data="{{contentTemplate}}">
-      <ws:partial
-              template="{{contentTemplate}}"
-              itemData="{{itemData}}"/>
+      <!--If contentTemplate is a string, then use Async to load required module-->
+      <ws:if data="{{(contentTemplate.charAt)}}">
+         <Controls.Container.Async templateName="{{contentTemplate}}">
+            <ws:partial
+                template="{{content.resolvedTemplate}}"
+                itemData="{{itemData}}"
+            />
+         </Controls.Container.Async>
+      </ws:if>
+      <ws:else>
+         <ws:partial
+             template="{{contentTemplate}}"
+             itemData="{{itemData}}"
+         />
+      </ws:else>
    </ws:if>
    <ws:else>
       <ws:if data="{{itemData.icon || (iconPadding[itemData.getPropValue(itemData.item, parentProperty)])[1]}}">

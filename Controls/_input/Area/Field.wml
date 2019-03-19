@@ -1,0 +1,32 @@
+<div name="fieldWrapper" class="controls-Area__fieldWrapper controls-Area__field_theme_{{options.theme}}_margin">
+   <div class="controls-Area__fakeField
+               controls-Area__minHeight_theme_{{options.theme}}_countLines_{{options.minLines}}_size_{{options.size}}">
+      <ws:if data="{{value}}">{{value}}{{emptySymbol}}</ws:if>
+      <ws:else data="{{options.placeholder}}">
+         <ws:partial template="{{placeholderTemplate}}"/>
+      </ws:else>
+      <ws:else>{{emptySymbol}}</ws:else>
+   </div>
+   <textarea
+      wrap="hard"
+      spellcheck="true"
+      name="{{fieldName}}"
+      value="{{calculateValueForTemplate()}}"
+      class="controls-InputBase__nativeField_theme_{{options.theme}} controls-Area__realField
+                   {{hidePlaceholderUsingCSS ? 'controls-InputBase__nativeField_hideCustomPlaceholder'}}"
+      placeholder="{{hidePlaceholderUsingCSS ? emptySymbol}}"
+      on:keyup="_keyUpHandler()"
+      on:click="_clickHandler()"
+      on:input="_inputHandler()"
+      on:select="_selectHandler()"
+      on:keydown="_keyDownHandler()"
+      on:focusin="_focusInHandler()"
+      on:focusout="_focusOutHandler()"
+      on:mousedown="_mouseDownHandler()"
+   ></textarea>
+   <ws:if data="{{!value}}">
+      <div class="controls-InputBase__placeholder">
+         <ws:partial template="{{placeholderTemplate}}" on:click="_placeholderClickHandler()"/>
+      </div>
+   </ws:if>
+</div>

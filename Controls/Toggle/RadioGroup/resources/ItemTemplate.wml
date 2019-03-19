@@ -5,8 +5,7 @@
     </ws:if>
     <ws:else>
         <span attr:class="controls-RadioItem__caption_{{selected ? 'selected' : 'unselected'}}_{{readOnly ? 'disabled' : 'enabled'}}
-                          controls-RadioItem__caption">
-            {{item[displayProperty || 'title']}}
+                          controls-RadioItem__caption">{{item[displayProperty || 'title']}}
         </span>
     </ws:else>
 </span>
