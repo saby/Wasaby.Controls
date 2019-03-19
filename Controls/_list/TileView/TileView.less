@@ -35,6 +35,7 @@
    overflow: hidden;
    white-space: nowrap;
    text-overflow: ellipsis;
+   flex-shrink: 0;
 }
 
 .controls-TileView__imageWrapper {
@@ -70,6 +71,15 @@
 
 .controls-TileView__item_fixed {
    position: fixed;
+}
+
+.controls-TileView__item_flex {
+   display: flex;
+   flex-direction: column;
+}
+
+.controls-TileView__imageWrapper_fixed {
+   height: 100%;
 }
 
 .controls-TileView__title_invisible {

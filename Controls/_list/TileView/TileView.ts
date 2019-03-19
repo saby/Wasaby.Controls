@@ -153,7 +153,7 @@ var TileView = ListView.extend({
             itemContainer = event.target.closest('.controls-TileView__item');
             itemContainerRect = itemContainer.getBoundingClientRect();
             containerRect = document.documentElement.getBoundingClientRect();
-            itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient());
+            itemSize = ItemSizeUtils.getItemSize(itemContainer, this._getZoomCoefficient(), this._options.tileMode);
             this._prepareHoveredItem(itemData, itemContainerRect, itemSize, containerRect);
         }
     },
