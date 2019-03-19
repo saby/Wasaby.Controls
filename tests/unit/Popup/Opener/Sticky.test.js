@@ -468,6 +468,34 @@ define(
             assert.equal(Object.keys(position).length, 2);
          });
 
+         it ('Sticky [new position] with body scroll', () => {
+            StickyStrategy._private.getWindowSizes = () => ({
+               width: 1000,
+               height: 1000
+            });
+            var targetC = {
+               top: 400,
+               left: 400,
+               bottom: 410,
+               right: 410,
+               width: 10,
+               height: 10,
+               leftScroll: 50
+            };
+
+            // 3 position
+            let cfg = getPositionConfig();
+            cfg.corner.horizontal = 'right';
+            cfg.corner.vertical = 'bottom';
+            cfg.align.vertical.side = 'bottom';
+            cfg.align.horizontal.side = 'left';
+            let position = StickyStrategy.getPosition(cfg, targetC);
+            assert.equal(position.top, 410);
+            assert.equal(position.right, 640);
+            assert.equal(Object.keys(position).length, 2);
+         });
+
+
          it ('Sticky [new position] with margins', () => {
             StickyStrategy._private.getWindowSizes = () => ({
                width: 1000,
@@ -519,7 +547,7 @@ define(
             position = StickyStrategy.getPosition(cfg, targetCoords);
             targetCoords.topScroll = 0;
             assert.equal(position.left, 400);
-            assert.equal(position.bottom, 610);
+            assert.equal(position.bottom, 620);
             assert.equal(Object.keys(position).length, 2);
          });
 
