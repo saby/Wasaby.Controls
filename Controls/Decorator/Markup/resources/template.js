@@ -29,6 +29,33 @@ define('Controls/Decorator/Markup/resources/template', [
       }
    }
 
+   // We are not ready to remove "decoratedlink". Old tasks and messages can still contain it.
+   // BL can't replace all "decoratedlink" with simple link, there are too many of them.
+   function replaceDecoratedLinks(value) {
+      if (!Array.isArray(value)) {
+         return value;
+      }
+      var newValue = [],
+         found = false;
+      for (var i = 0; i < value.length; ++i) {
+         if (value[i] && value[i][0] === 'decoratedlink') {
+            found = true;
+            newValue.push(['a',
+               {
+                  'class': 'asLink',
+                  rel: 'noreferrer',
+                  href: value[i][1].href,
+                  target: '_blank'
+               },
+               value[i][1].href
+            ]);
+         } else {
+            newValue.push(value[i]);
+         }
+      }
+      return found ? newValue : value;
+   }
+
    function recursiveMarkup(value, attrsToDecorate, key, parent) {
       var valueToBuild = resolverMode && resolver ? resolver(value, parent, resolverParams) : value,
          wasResolved,
@@ -41,6 +68,7 @@ define('Controls/Decorator/Markup/resources/template', [
       }
       wasResolved = value !== valueToBuild;
       resolverMode ^= wasResolved;
+      valueToBuild = replaceDecoratedLinks(valueToBuild);
       var children = [];
       if (Array.isArray(valueToBuild[0])) {
          for (i = 0; i < valueToBuild.length; ++i) {
