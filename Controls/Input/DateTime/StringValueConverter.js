@@ -41,6 +41,17 @@ define('Controls/Input/DateTime/StringValueConverter', [
          return true;
       },
 
+      getFullYearBy2DigitsYear: function(valueYear) {
+         var
+            curYear = (new Date()).getFullYear(),
+            shortCurYear = curYear % 100,
+            curCentury = (curYear - shortCurYear);
+
+         // Если год задаётся двумя числами, то считаем что это текущий век
+         // если год меньше или равен текущему году + 10, иначе это прошлый век.
+         return valueYear <= shortCurYear + 10 ? curCentury + valueYear : (curCentury - 100) + valueYear;
+      },
+
       parseString: function(self, str) {
          var valueModel = {
                year: { str: null, value: 1900, valid: false },
@@ -50,9 +61,6 @@ define('Controls/Input/DateTime/StringValueConverter', [
                minutes: { str: null, value: 0, valid: false },
                seconds: { str: null, value: 0, valid: false }
             },
-            curYear = (new Date()).getFullYear(),
-            shortCurYear = curYear % 100,
-            curCentury = (curYear - shortCurYear),
             maskItems = self._mask.split(/[.: /]/g),
             strItems = str.split(/[.: /]/g),
             i, valueObject;
@@ -64,10 +72,7 @@ define('Controls/Input/DateTime/StringValueConverter', [
                valueObject.valid = true;
                valueObject.value = parseInt(strItems[i], 10);
                if (maskItems[i] === 'YY') {
-                  // Если год задаётся двумя числами, то считаем что это текущий век
-                  // если год меньше или равен текущему году + 10, иначе это прошлый век.
-                  valueObject.value = valueObject.value <= shortCurYear + 10
-                     ? curCentury + valueObject.value : (curCentury - 100) + valueObject.value;
+                  valueObject.value = _private.getFullYearBy2DigitsYear(valueObject.value);
                } else if (maskItems[i] === 'MM') {
                   valueObject.value -= 1;
                }
@@ -136,13 +141,9 @@ define('Controls/Input/DateTime/StringValueConverter', [
                return;
             }
             itemValue = parseInt(valueModel.year.str.replace(self._replacerRegExp, ' '), 10);
-            valueSearchNull = valueModel.year.str.split(itemValue)[0].indexOf('0');
-            if (!isNaN(itemValue) && itemValue < 100 && valueSearchNull == -1) {
-               if (itemValue <= (new Date()).getFullYear() + 10 - 2000) {
-                  setValue(valueModel.year, 2000 + itemValue);
-               } else {
-                  setValue(valueModel.year, 1900 + itemValue);
-               }
+            valueSearchNull = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
+            if (!isNaN(itemValue) && itemValue < 100 && valueSearchNull) {
+               setValue(valueModel.year, _private.getFullYearBy2DigitsYear(itemValue));
             } else {
                return;
             }
