@@ -8,6 +8,11 @@
   .controls-Grid_master {
     padding-right: 0;
   }
+  .controls-itemActionsV_style_master {
+    //because of selected item border in Grid is realized by box-shadow, itemAction overlaps bottom shadow by z-index
+    //best solution is to increase bottom position of itemAction by border bottom width in old grid master
+    bottom: @border-width_List-masterList-item-bottom;
+  }
   .controls-Grid__cell_master {
     border-top-width: 0;
   }

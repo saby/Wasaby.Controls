@@ -418,7 +418,8 @@ define([
                }),
                cfg = {
                   parentProperty: 'parent',
-                  root: null
+                  root: null,
+                  itemsDragNDrop: true,
                };
 
             explorer = new Explorer(cfg);
@@ -470,12 +471,15 @@ define([
             assert.isFalse(explorer._dragOnBreadCrumbs);
 
             //drag in the root
+            explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
                entity: new DragEntity({
                   items: [1]
                })
             });
             assert.isFalse(explorer._dragOnBreadCrumbs);
+
+            explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
                entity: new DragEntity({
                   items: [2]
@@ -483,15 +487,28 @@ define([
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
 
+            explorer._dragOnBreadCrumbs = false;
+            explorer._options.itemsDragNDrop = false;
+            explorer._documentDragStart({}, {
+               entity: new DragEntity({
+                  items: [2]
+               })
+            });
+            assert.isFalse(explorer._dragOnBreadCrumbs);
+            explorer._options.itemsDragNDrop = true;
+
             //drag not in root
             explorer._root = 'notnull';
 
+            explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
                entity: new DragEntity({
                   items: [1]
                })
             });
             assert.isTrue(explorer._dragOnBreadCrumbs);
+
+            explorer._dragOnBreadCrumbs = false;
             explorer._documentDragStart({}, {
                entity: new DragEntity({
                   items: [2]
