@@ -1,7 +1,7 @@
 /// <amd-module name="Controls/_progress/StateIndicator" />
 /**
  * Progress state indicator
- * <a href="/materials/demo-ws4-stateindicator">Demo-example</a>.
+ * <a href="/materials/demo/demo-ws4-stateindicator">Demo-example</a>.
  * @class Controls/_progress/StateIndicator 
  * @extends Core/Control
  * @author Колесов В.А.
@@ -32,6 +32,7 @@
 
 import Control = require('Core/Control');
 import entity = require('Types/entity');
+import env = require('Env/Env');
 import template = require('wml!Controls/_progress/StateIndicator/StateIndicator');
 
 var defaultColors = [
@@ -105,10 +106,10 @@ var defaultColors = [
          var sum = 0;  
 
          if (isNaN(opts.scale)) {
-            throw new Error('Scale [' + opts.scale + '] is incorrect, it is non-numeric value');
-         }    
-         if (opts.scale > 100 || opts.scale < 1) {
-            throw new Error('Scale [' + opts.scale + '] is incorrect, it must be an integer in range [1..100]');
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it is non-numeric value');
+         }
+         if (opts.scale > 100 || opts.scale < 1) {           
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Scale [' + opts.scale + '] is incorrect, it must be an integer in range [1..100]');
          }         
        
          sum = opts.data.map(Object).reduce(function(sum, d) {
@@ -116,19 +117,19 @@ var defaultColors = [
             }, 0);
             
          if (isNaN(sum)) {
-            throw new Error('Data [' + opts.data + '] is incorrect, it contains non-numeric values');
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect, it contains non-numeric values');            
          }
          if (sum > 100) {
-            throw new Error('Data [' + opts.data + '] is incorrect. Values total is greater than 100%');
+            env.IoC.resolve('ILogger').error('StateIndicator', 'Data is incorrect. Values total is greater than 100%');            
          }
       }
    };
    
-var StateIndicator = Control.extend(
+var StateIndicator = Control.extend( /** @lends Controls/_progress/StateIndicator.prototype */ 
    {
 
       /**
-       * @event _mouseEnterIndicatorHandler appears when mouse enters sectors of indicator
+       * @event itemEnter appears when mouse enters sectors of indicator
        * @param {Env/Event:Object} eventObject event descriptor.              
        * 
        */
@@ -142,7 +143,8 @@ var StateIndicator = Control.extend(
       },
 
       _beforeUpdate: function(opts) {
-         this.applyNewState(opts);
+         if (opts.data!==this._options.data||opts.scale!==this._options.scale)
+            this.applyNewState(opts);
       },
 
       _mouseEnterIndicatorHandler: function(e) {
