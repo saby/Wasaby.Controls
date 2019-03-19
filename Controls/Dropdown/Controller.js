@@ -208,7 +208,7 @@ define('Controls/Dropdown/Controller',
             function itemsLoadCallback(items) {
                if (items.getCount() === 1) {
                   _private.selectItem.call(self, [items.at(0)]);
-               } else {
+               } else if (items.getCount() > 1) {
                   open();
                }
             }

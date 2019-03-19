@@ -91,33 +91,26 @@ define('Controls/Popup/Opener/BaseOpener',
             }
          },
 
-         _isPopupCreating: function() {
-            return ManagerController.isPopupCreating(this._getCurrentPopupId());
-         },
-
          _openPopup: function(cfg, controller) {
             var self = this;
             this._requireModules(cfg, controller).addCallback(function(result) {
                var
                   popupId = self._options.displayMode === 'single' ? self._getCurrentPopupId() : null;
 
-               if (!self._isPopupCreating()) {
-                  cfg._vdomOnOldPage = self._options._vdomOnOldPage;
-                  Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
-                     self._toggleIndicator(false);
-                     if (self._useVDOM()) {
-                        self._popupIds.push(result);
-
-                        // Call redraw to create emitter on scroll after popup opening
-                        self._forceUpdate();
-                     } else {
-                        self._action = result;
-                     }
-                  });
-               } else {
-                  ManagerController.updateOptionsAfterInitializing(self._getCurrentPopupId(), cfg);
+               cfg._vdomOnOldPage = self._options._vdomOnOldPage;
+               Base.showDialog(result.template, cfg, result.controller, popupId, self).addCallback(function(result) {
                   self._toggleIndicator(false);
-               }
+                  if (self._useVDOM()) {
+                     if (self._popupIds.indexOf(result) === -1) {
+                        self._popupIds.push(result);
+                     }
+
+                     // Call redraw to create emitter on scroll after popup opening
+                     self._forceUpdate();
+                  } else {
+                     self._action = result;
+                  }
+               });
                return result;
             });
          },
@@ -414,7 +407,11 @@ define('Controls/Popup/Opener/BaseOpener',
 
       Base._openPopup = function(popupId, cfg, controller, def) {
          if (popupId) {
-            popupId = ManagerController.update(popupId, cfg);
+            if (ManagerController.isPopupCreating(popupId)) {
+               ManagerController.updateOptionsAfterInitializing(popupId, cfg);
+            } else {
+               popupId = ManagerController.update(popupId, cfg);
+            }
          } else {
             popupId = ManagerController.show(cfg, controller);
          }
