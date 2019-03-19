@@ -1,7 +1,9 @@
 [{
   "include": [
     "Controls/Application",
-    "Controls/Application/*"
+    "Controls/Application/*",
+    "Controls/Container/Async",
+    "Controls/Container/Async/*"
   ],
   "exclude": [
     "wml!Controls/Application/CompatibleScripts",
