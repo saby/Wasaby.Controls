@@ -5,13 +5,12 @@ define('Controls/Popup/Opener/Stack/StackController',
       'Types/collection',
       'Controls/Popup/TargetCoords',
       'Core/Deferred',
-      'Env/Env',
       'Core/core-clone',
       'Vdom/Vdom',
       'wml!Controls/Popup/Opener/Stack/StackContent',
       'css!theme?Controls/Popup/Opener/Stack/Stack'
    ],
-   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, Env, cClone, Vdom) {
+   function(BaseController, StackStrategy, collection, TargetCoords, Deferred, cClone, Vdom) {
       'use strict';
       var HAS_ANIMATION = false;
       var STACK_CLASS = 'controls-Stack';
