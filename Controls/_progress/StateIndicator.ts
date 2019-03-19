@@ -25,11 +25,9 @@
  * @ignoreEvents onFocusIn onFocusOut onKeyPressed onReady onResize onStateChanged onTooltipContentRequest
  * @ignoreEvents onDragIn onDragStart onDragStop onDragMove onDragOut
  * 
- * @ignoreOptions colorState
  *
  * @public
- * @control
- * @initial
+ * @demo Controls-demo/StateIndicator/StateIndicatorDemo
  */
 
 import Control = require('Core/Control');

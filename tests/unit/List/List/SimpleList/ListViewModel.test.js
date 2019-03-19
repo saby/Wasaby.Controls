@@ -47,6 +47,39 @@ define([
          assert.equal(model.getLastItem(), model.getItems().at(2));
       });
 
+      it('_calcItemVersion', function() {
+         var
+            version,
+            cfg = {
+               items: new collection.RecordSet({
+                  rawData: data,
+                  idProperty: 'id'
+               }),
+               keyProperty: 'id',
+               displayProperty: 'title'
+            },
+            model = new ListViewModel(cfg),
+            item = model.getItemDataByItem(model.getItemById(1));
+
+         model._markedKey = 1;
+         version = model._calcItemVersion(item, item.key);
+         assert.exists(version, 'MARKED');
+
+         model.setDragEntity({
+            getItems: function() {
+               return [1, 2];
+            }
+         });
+         version = model._calcItemVersion(item, item.key);
+         assert.exists(version, 'DRAG_ITEM');
+
+         model._dragTargetPosition = {
+            item: item.item
+         };
+         version = model._calcItemVersion(item, item.key);
+         assert.exists(version, 'DRAG_POSITION');
+      });
+
       it('getCurrent', function() {
          var cfg = {
             items: data,

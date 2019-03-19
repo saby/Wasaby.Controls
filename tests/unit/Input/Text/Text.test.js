@@ -33,12 +33,12 @@ define(
             Text.getOptionTypes();
             Text.getDefaultOptions();
          });
-         it('The model belongs to the "Controls/Input/Text/ViewModel" class.', function() {
+         it('The model belongs to the "Controls/_input/Text/ViewModel" class.', function() {
             ctrl._beforeMount({
                value: ''
             });
 
-            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/Input/Text/ViewModel'));
+            assert.isTrue(instance.instanceOfModule(ctrl._viewModel, 'Controls/_input/Text/ViewModel'));
          });
          describe('Click event', function() {
             beforeEach(function() {

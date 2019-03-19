@@ -880,7 +880,11 @@ define('Controls/Popup/Compatible/CompoundAreaForOldTpl/CompoundArea',
                }
 
                if (this._options.autoCloseOnHide === false) {
-                  this._toggleVisible(false);
+                  if (this._isVisible !== false) {
+                     this._toggleVisible(false);
+                     this._notifyCompound('onClose', arg);
+                     this._notifyCompound('onAfterClose', arg);
+                  }
                } else if (this._childControl && !this._childControl.isDestroyed()) {
                   // Закрытие панели могут вызвать несколько раз подряд
                   if (this._isClosing) {
