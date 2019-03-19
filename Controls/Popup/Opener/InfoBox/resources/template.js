@@ -15,7 +15,7 @@ define('Controls/Popup/Opener/InfoBox/resources/template',
             this._notify('close');
          },
          _sendResult: function(event) {
-            this._notify('sendResult', [event], {bubbling: true});
+            this._notify('sendResult', [event], { bubbling: true });
          }
 
       });
