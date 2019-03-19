@@ -66,6 +66,9 @@ define('Controls/Explorer', [
             }
             self._forceUpdate();
          },
+         getRoot: function(self) {
+            return self._options.hasOwnProperty('root') ? self._options.root : self._root;
+         },
          dataLoadCallback: function(self, data) {
             var metaData = data.getMetaData();
             if (metaData.path && metaData.path.getCount() > 0) {
@@ -87,7 +90,7 @@ define('Controls/Explorer', [
          },
          setViewMode: function(self, viewMode) {
             if (viewMode === 'search') {
-               _private.setRoot(self, _private.getRoot(self));
+               _private.setRoot(self, _private.getDataRoot(self));
             }
             self._viewMode = viewMode;
             self._viewName = VIEW_NAMES[viewMode];
@@ -98,16 +101,13 @@ define('Controls/Explorer', [
                _private.setRoot(self, self._breadCrumbsItems[self._breadCrumbsItems.length - 1].get(self._options.parentProperty));
             }
          },
-         getCurrentRoot: function(self) {
-            return self._options.hasOwnProperty('root') ? self._options.root : self._root;
-         },
-         getRoot: function(self) {
+         getDataRoot: function(self) {
             var result;
 
             if (self._breadCrumbsItems && self._breadCrumbsItems.length > 0) {
                result = self._breadCrumbsItems[0].get(self._options.parentProperty);
             } else {
-               result = _private.getCurrentRoot(self);
+               result = _private.getRoot(self);
             }
 
             return result;
@@ -116,7 +116,7 @@ define('Controls/Explorer', [
             var
                item,
                itemFromRoot = true,
-               root = _private.getRoot(self);
+               root = _private.getDataRoot(self);
 
             for (var i = 0; i < dragItems.length; i++) {
                item = self._items.getRecordById(dragItems[i]);
@@ -180,8 +180,8 @@ define('Controls/Explorer', [
             _private.setRoot(this, cfg.root);
          }
       },
-      _getCurrentRoot: function() {
-         return _private.getCurrentRoot(this);
+      _getRoot: function() {
+         return _private.getRoot(this);
       },
       _dragHighlighter: function(itemKey) {
          return this._dragOnBreadCrumbs && this._hoveredBreadCrumb === itemKey ? 'controls-BreadCrumbsView__dropTarget' : '';
@@ -199,7 +199,7 @@ define('Controls/Explorer', [
          if (cInstance.instanceOfModule(dragObject.entity, 'Controls/DragNDrop/Entity/Items')) {
 
             //No need to show breadcrumbs when dragging items from the root, being in the root of the registry.
-            this._dragOnBreadCrumbs = _private.getCurrentRoot(this) !== _private.getRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
+            this._dragOnBreadCrumbs = _private.getRoot(this) !== _private.getDataRoot(this) || !_private.dragItemsFromRoot(this, dragObject.entity.getItems());
          }
       },
       _hoveredCrumbChanged: function(event, item) {

@@ -124,23 +124,46 @@ define([
       it('_private.getRoot', function() {
          var
             cfg = {
-               parentProperty: 'parent',
-               root: 'root'
+               root: 'rootFromOptions'
             },
             explorer = new Explorer(cfg);
 
          explorer.saveOptions(cfg);
+         explorer._root = 'rootFromState';
+         assert.equal(Explorer._private.getRoot(explorer), 'rootFromOptions');
 
-         assert.equal(Explorer._private.getRoot(explorer), 'root');
+         delete cfg.root;
+         explorer.saveOptions(cfg);
+         assert.equal(Explorer._private.getRoot(explorer), 'rootFromState');
+      });
+
+      it('_private.getDataRoot', function() {
+         var
+            cfg = {
+               parentProperty: 'parent',
+               root: 'rootFromOptions'
+            },
+            explorer = new Explorer(cfg);
+
+         explorer.saveOptions(cfg);
+         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromOptions');
+
+         delete cfg.root;
+         explorer.saveOptions(cfg);
+         explorer._root = 'rootFromState';
+         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromState');
 
          explorer._breadCrumbsItems = [new entityLib.Model({
             rawData: {
-               id: 2,
-               parent: 1
+               parent: 'rootFromBreadCrumbs'
             },
             idProperty: 'id'
          })];
-         assert.equal(Explorer._private.getRoot(explorer), 1);
+         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
+
+         cfg.root = 'rootFromOptions';
+         explorer.saveOptions(cfg);
+         assert.equal(Explorer._private.getDataRoot(explorer), 'rootFromBreadCrumbs');
       });
 
       it('itemsReadyCallback', function() {
@@ -171,12 +194,18 @@ define([
                root: 'someNewRoot',
                viewMode: 'tree'
             },
-            instance = new Explorer(cfg);
+            instance = new Explorer(cfg),
+            rootFromState = instance._root;
+
          instance.saveOptions(cfg);
-         instance._beforeMount(cfg);
-         assert.equal(instance._root, 'rootNode');
+         instance._beforeUpdate(cfg);
+         assert.equal(instance._options.root, 'rootNode');
+         assert.equal(instance._root, rootFromState);
+
+         instance.saveOptions(newCfg);
          instance._beforeUpdate(newCfg);
-         assert.equal(instance._root, 'someNewRoot');
+         assert.equal(instance._options.root, 'someNewRoot');
+         assert.equal(instance._root, rootFromState);
       });
 
       it('setViewMode', function() {
@@ -535,7 +564,7 @@ define([
             assert.isTrue(explorer._dragOnBreadCrumbs);
 
             //drag not in root
-            explorer._root = 'notnull';
+            explorer._options.root = 'notnull';
 
             explorer._documentDragStart({}, {
                entity: new DragEntity({

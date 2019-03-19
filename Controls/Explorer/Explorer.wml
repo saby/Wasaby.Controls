@@ -8,7 +8,7 @@
                                  on:hoveredItemChanged="_hoveredCrumbChanged()"
                                  on:arrowActivated="_notifyHandler('arrowActivated')"
                                  on:itemClick="_onBreadCrumbsClick()">
-         <Controls.List.TreeControl root="{{_getCurrentRoot()}}"
+         <Controls.List.TreeControl root="{{_getRoot()}}"
                                     scope="{{_options}}"
                                     header="{{content.header}}"
                                     name="treeControl"
