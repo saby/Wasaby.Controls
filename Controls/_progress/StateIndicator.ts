@@ -30,6 +30,32 @@
  * @demo Controls-demo/StateIndicator/StateIndicatorDemo
  */
 
+/**
+ * @name Controls/_progress/StateIndicator#scale
+ * @cfg {Number} Defines percent count shown by each sector. 
+ * @remark
+ * An integer from 1 to 100. 
+ * @example       
+ * Scale of 5 will set indicator with 20 sectors 
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator scale="{{5}}"/>      
+ * </pre>
+ */
+
+/**
+ * @typedef {Object} IndicatorCategory
+ * @property {Number} value=0 Percents of the corresponding category
+ * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
+ * @property {String} title='' category note
+ */
+ 
+/**
+ * @name Controls/_progress/StateIndicator#data
+ * @cfg {Array.<IndicatorCategory>} Array of indicator categories
+ * <pre class="brush:html">
+ *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]]}}"/>      
+ * </pre>
+ */
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import env = require('Env/Env');
@@ -125,9 +151,8 @@ var defaultColors = [
       }
    };
    
-var StateIndicator = Control.extend( /** @lends Controls/_progress/StateIndicator.prototype */ 
+var StateIndicator = Control.extend( 
    {
-
       /**
        * @event itemEnter appears when mouse enters sectors of indicator
        * @param {Env/Event:Object} eventObject event descriptor.              
@@ -165,31 +190,8 @@ var StateIndicator = Control.extend( /** @lends Controls/_progress/StateIndicato
 
 StateIndicator.getDefaultOptions = function getDefaultOptions() {
    return {
-      theme: "default",
-      /**
-       * @cfg {Number} Defines percent count shown by each sector. 
-       * @remark
-       * An integer from 1 to 100. 
-       * @example       
-       * Scale of 5 will set indicator with 20 sectors 
-       * <pre class="brush:html">
-       *   <Controls.progress:StateIndicator scale="{{5}}"/>      
-       * </pre>
-       */
-      scale: 10,
-
-      /**
-       * @typedef {Object} IndicatorCategory
-       * @property {Number} value=0 Percents of the corresponding category
-       * @property {String} className='' Name of css class, that will be applied to sectors of this category. If not specified, default color will be used
-       * @property {String} title='' category note
-       */
-      /**
-       * @cfg {Array.<IndicatorCategory>} Array of indicator categories
-       * <pre class="brush:html">
-       *   <Controls.progress:StateIndicator data="{{[{value: 10, className: '', title: 'done'}]]}}"/>      
-       * </pre>
-       */
+      theme: "default",      
+      scale: 10,      
       data: [{value:0, title:'', className:''}],
    };
 };
