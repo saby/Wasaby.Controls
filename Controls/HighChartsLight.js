@@ -5,11 +5,12 @@ define('Controls/HighChartsLight',
       'Env/Env',
       'Core/core-clone',
       'browser!/cdn/Highcharts/7.0.3/highcharts.js',
+      'browser!/cdn/Highcharts/7.0.3/highcharts-more.js',
       'Core/Date',
       'css!theme?Controls/HighChartsLight/HighChartsLight',
       'i18n!Controls/HighChartsLight'
    ],
-   function(Control, template, Env, cClone, Highcharts) {
+   function(Control, template, Env, cClone, Highcharts, More) {
       'use strict';
 
       /**
@@ -73,6 +74,7 @@ define('Controls/HighChartsLight',
 
             _afterMount: function(config) {
                this._notify('register', ['controlResize', this, this._reflow], {bubbling: true});
+               More(Highcharts);
                Highcharts.setOptions({
                   lang: {
                      numericSymbols: ['', '', '', '', '', ''],

@@ -8,9 +8,8 @@ define('Controls/Popup/Compatible/Layer', [
    'Core/RightsManager',
    'Core/ExtensionsManager',
    'Core/moduleStubs',
-   'Types/source',
-   'Types/chain'
-], function(Deferred, ParallelDeferred, Env, RightsManager, ExtensionsManager, moduleStubs, source, chain) {
+   'Types/source'
+], function(Deferred, ParallelDeferred, Env, RightsManager, ExtensionsManager, moduleStubs, source) {
    'use strict';
 
    var loadDeferred;
