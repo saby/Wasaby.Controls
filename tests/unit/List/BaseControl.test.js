@@ -139,7 +139,6 @@ define([
             assert.deepEqual(filter2, ctrl._options.filter, 'incorrect filter after updating');
             assert.equal(ctrl._viewModelConstructor, TreeViewModel);
             assert.isTrue(cInstance.instanceOfModule(ctrl._listViewModel, 'Controls/_list/Tree/TreeViewModel'));
-            assert.isTrue(ctrl._hasUndrawChanges);
             setTimeout(function() {
                assert.isTrue(dataLoadFired, 'dataLoadCallback is not fired');
                ctrl._children.listView = {
@@ -150,7 +149,6 @@ define([
                   }
                };
                ctrl._afterUpdate({});
-               assert.isFalse(ctrl._hasUndrawChanges);
                ctrl._beforeUnmount();
                done();
             }, 100);
@@ -709,6 +707,15 @@ define([
          var ctrl = new BaseControl(cfg);
          ctrl.saveOptions(cfg);
          ctrl._beforeMount(cfg);
+         ctrl._container = {
+            closest: function(selector) {
+               if (selector === '.controls-Scroll__content') {
+                  return {
+                     scrollHeight: 10
+                  };
+               }
+            }
+         };
 
          setTimeout(function() {
             BaseControl._private.loadToDirection(ctrl, 'up');
@@ -719,7 +726,7 @@ define([
          }, 100);
       });
 
-      it('onScrollLoadEdge', function(done) {
+      it('items should get loaded when a user scrolls to the bottom edge of the list', function(done) {
          var rs = new collection.RecordSet({
             idProperty: 'id',
             rawData: data
@@ -757,17 +764,16 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = true;
+            /**
+             * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
+             * we'll reset it here manually.
+             */
+            ctrl._loadedItems = null;
+
             BaseControl._private.onScrollLoadEdge(ctrl, 'down');
             setTimeout(function() {
-               assert.equal(3, ctrl._listViewModel.getCount(), 'Items are loaded, but should not');
-
-               ctrl._hasUndrawChanges = false;
-               BaseControl._private.onScrollLoadEdge(ctrl, 'down');
-               setTimeout(function() {
-                  assert.equal(6, ctrl._listViewModel.getCount(), 'Items wasn\\\'t load');
-                  done();
-               }, 100);
+               assert.equal(6, ctrl._listViewModel.getCount(), 'Items weren\\\'t loaded');
+               done();
             }, 100);
          }, 100);
       });
@@ -810,7 +816,12 @@ define([
 
          // два таймаута, первый - загрузка начального рекордсета, второй - на последюущий запрос
          setTimeout(function() {
-            ctrl._hasUndrawChanges = false; // _afterUpdate
+            /**
+             * _beforeMount will load some items, so _loadedItems will get set. Normally, it will reset in _afterUpdate, but since we don't have lifecycle in tests,
+             * we'll reset it here manually.
+             */
+            ctrl._loadedItems = null;
+
             BaseControl._private.onScrollLoadEdgeStart(ctrl, 'down');
             BaseControl._private.checkLoadToDirectionCapability(ctrl);
             setTimeout(function() {
