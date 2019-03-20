@@ -110,7 +110,7 @@ var _private = {
    autocomplete: function(self, valueModel, autocompleteType, required) {
       var now = new Date(),
          maskType = _private.getMaskType(self._mask),
-         item, itemValue, valueSearchNull;
+         item, itemValue, isZeroAtBeginning;
 
       var getDate = function(autocompliteDefaultDate) {
          autocompliteDefaultDate = autocompliteDefaultDate || now.getDate();
@@ -131,12 +131,16 @@ var _private = {
       };
 
       if (self._mask.indexOf('YYYY') !== -1 && !valueModel.year.valid) {
+
+         // If there is a Replacer between the numbers, then the year is incorrect
          if (self._replacerBetweenCharsRegExp.test(valueModel.year.str)) {
             return;
          }
+
+         // Two-digit years auto-complete if there are no zeros at the beginning
          itemValue = parseInt(valueModel.year.str.replace(self._replacerRegExp, ' '), 10);
-         valueSearchNull = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
-         if (!isNaN(itemValue) && itemValue < 100 && valueSearchNull) {
+         isZeroAtBeginning = valueModel.year.str.split(itemValue)[0].indexOf('0') === -1;
+         if (!isNaN(itemValue) && itemValue < 100 && isZeroAtBeginning) {
             setValue(valueModel.year, _private.getFullYearBy2DigitsYear(itemValue));
          } else {
             return;
