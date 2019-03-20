@@ -1256,7 +1256,7 @@ var BaseControl = Control.extend(/** @lends Controls/List/BaseControl.prototype 
         // При перерисовке элемента списка фокус улетает на body. Сейчас так восстаначливаем фокус. Выпилить после решения
         // задачи https://online.sbis.ru/opendoc.html?guid=38315a8d-2006-4eb8-aeb3-05b9447cd629
         var target = domEvent.target;
-        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true') {
+        if (target.tagName !== 'INPUT' && target.tagName !== 'TEXTAREA' && target.getAttribute('contenteditable') !== 'true' && !target.closest('.controls-InputRender')) {
             this._focusTimeout = setTimeout(() => {
                 this._children.fakeFocusElem.focus();
             }, 0);
