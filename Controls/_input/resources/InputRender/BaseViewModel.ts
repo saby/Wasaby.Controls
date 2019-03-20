@@ -1,22 +1,15 @@
-define('Controls/Input/resources/InputRender/BaseViewModel',
-   [
-      'Core/core-simpleExtend',
-      'Types/entity'
-   ],
-   function(
-      simpleExtend,
-      entity
-   ) {
-      'use strict';
+import simpleExtend = require('Core/core-simpleExtend');
+import entity = require('Types/entity');
+      
 
       /**
        * Базовый класс ViewModel для InputRender
-       * @class Controls/Input/resources/InputRender/BaseViewModel
+       * @class Controls/_inputs/resources/InputRender/BaseViewModel
        * @private
        * @author Журавлев М.С.
        */
 
-      return simpleExtend.extend([entity.VersionableMixin], {
+      export = simpleExtend.extend([entity.VersionableMixin], {
          constructor: function(options) {
             this._options = options || {};
          },
@@ -51,5 +44,4 @@ define('Controls/Input/resources/InputRender/BaseViewModel',
             this._nextVersion();
          }
       });
-   }
-);
+   

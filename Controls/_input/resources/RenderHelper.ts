@@ -1,7 +1,5 @@
-define('Controls/Input/resources/RenderHelper',
-   [],
-   function() {
-      'use strict';
+
+      
 
       var _private = {
          isCorrectlySplit: function(split, oldValue, newValue) {
@@ -124,5 +122,5 @@ define('Controls/Input/resources/RenderHelper',
 
       };
 
-      return RenderHelper;
-   });
+      export = RenderHelper;
+   

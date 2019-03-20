@@ -1,22 +1,18 @@
-define('Controls/Input/resources/InputRender/InputRender',
-   [
-      'Core/Control',
-      'Types/entity',
-      'Controls/Utils/tmplNotify',
-      'wml!Controls/Input/resources/InputRender/InputRender',
-      'Controls/Input/resources/RenderHelper',
-      'Env/Env',
-      'Controls/Utils/hasHorizontalScroll',
-      'Env/Event',
-      'css!theme?Controls/Input/resources/InputRender/InputRender'
-   ],
-   function(Control, entity, tmplNotify, template, RenderHelper, Env, hasHorizontalScrollUtil, EnvEvent) {
-      'use strict';
+import Control = require('Core/Control');
+import entity = require('Types/entity');
+import tmplNotify = require('Controls/Utils/tmplNotify');
+import template = require('wml!Controls/_inputs/resources/InputRender/InputRender');
+import RenderHelper = require('Controls/_inputs/resources/RenderHelper');
+import Env = require('Env/Env');
+import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
+import EnvEvent = require('Env/Event');
+import 'css!theme?Controls/_inputs/resources/InputRender/InputRender';
+      
 
       /**
-       * @class Controls/Input/resources/InputRender/InputRender
+       * @class Controls/_inputs/resources/InputRender/InputRender
        * @extends Core/Control
-       * @mixes Controls/Input/resources/InputRender/InputRenderStyles
+       * @mixes Controls/_inputs/resources/InputRender/InputRenderStyles
        * @control
        * @private
        * @category Input
@@ -355,5 +351,5 @@ define('Controls/Input/resources/InputRender/InputRender',
 
       InputRender._private = _private;
 
-      return InputRender;
-   });
+      export = InputRender;
+   

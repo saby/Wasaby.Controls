@@ -1,10 +1,6 @@
-define('Controls/Input/resources/InputRender/InputRenderStyles',
-   [
 
-   ],
-   function() {
       /**
-       * @interface Controls/Input/resources/InputRender/InputRenderStyles
+       * @interface Controls/_inputs/resources/InputRender/InputRenderStyles
        * @css @height_InputRender_m Height of the medium sized input field.
        * @css @height_InputRender_l Height of the large sized input field.
        * @css @height_InputRender_default Height of the default sized input field.
@@ -40,5 +36,4 @@ define('Controls/Input/resources/InputRender/InputRenderStyles',
        * @public
        * @author Журавлев М.С.
        */
-   }
-);
+   

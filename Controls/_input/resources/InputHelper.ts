@@ -1,10 +1,8 @@
-define('Controls/Input/resources/InputHelper',
-   [],
-   function() {
 
-      'use strict';
 
-      return {
+      
+
+      export = {
 
          /**
           * Хелпер для вставки текста в поле ввода. В нём происходит вставка и выставляется позиция каретки dom-элемета
@@ -20,5 +18,4 @@ define('Controls/Input/resources/InputHelper',
             return inputRender.paste(textToPaste, selectionStart, selectionEnd);
          }
       };
-   }
-);
+   
