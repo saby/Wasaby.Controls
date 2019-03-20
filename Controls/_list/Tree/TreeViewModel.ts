@@ -364,13 +364,13 @@ var
             }
 
 
-           if (current.item.get && current.item.get(current.nodeProperty) !== null) {
-              if (current.isExpanded) {
+           if (current.item.get) {
+              if (current.item.get(current.nodeProperty) !== null && current.isExpanded) {
                  current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
               }
+              var itemParent = current.dispItem.getParent();
               var itemParentKey = current.item.get(current.parentProperty);
-              if (this._options.nodeFooterTemplate || this._hasMoreStorage && this._hasMoreStorage[itemParentKey]) {
-                 var itemParent = current.dispItem.getParent();
+              if (!itemParent.isRoot() && (this._options.nodeFooterTemplate || this._hasMoreStorage && this._hasMoreStorage[itemParentKey])) {
                  var itemParentChilds = this._hierarchyRelation.getChildren(itemParentKey, this._items);
                  if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
                     current.nodeFooter = {
