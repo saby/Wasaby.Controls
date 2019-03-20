@@ -4,7 +4,7 @@ import entity = require('Types/entity');
 
       /**
        * Базовый класс ViewModel для InputRender
-       * @class Controls/_inputs/resources/InputRender/BaseViewModel
+       * @class Controls/_input/resources/InputRender/BaseViewModel
        * @private
        * @author Журавлев М.С.
        */

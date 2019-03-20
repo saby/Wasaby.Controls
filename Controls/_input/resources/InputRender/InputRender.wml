@@ -44,7 +44,7 @@
             <ws:if data="{{ !_options.viewModel.getDisplayValue() && !_options.readOnly}}">
                <ws:partial
                   attr:class="{{ _options.multiline ? 'controls-InputRender__placeholder_multiLine' : 'controls-InputRender__placeholder_singleLine'}} {{ _options.textAlign === 'right' ? 'controls-InputRender__field_textAlign_right' }}"
-                  template="wml!Controls/_inputs/resources/CustomPlaceholder"
+                  template="wml!Controls/_input/resources/CustomPlaceholder"
                   placeholder="{{ _options.placeholder }}"
                   attr:tabindex="{{-1}}"
                   on:click="_clickPlaceholderHandler()"

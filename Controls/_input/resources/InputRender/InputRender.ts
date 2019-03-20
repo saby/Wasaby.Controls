@@ -1,18 +1,18 @@
 import Control = require('Core/Control');
 import entity = require('Types/entity');
 import tmplNotify = require('Controls/Utils/tmplNotify');
-import template = require('wml!Controls/_inputs/resources/InputRender/InputRender');
-import RenderHelper = require('Controls/_inputs/resources/RenderHelper');
+import template = require('wml!Controls/_input/resources/InputRender/InputRender');
+import RenderHelper = require('Controls/_input/resources/RenderHelper');
 import Env = require('Env/Env');
 import hasHorizontalScrollUtil = require('Controls/Utils/hasHorizontalScroll');
 import EnvEvent = require('Env/Event');
-import 'css!theme?Controls/_inputs/resources/InputRender/InputRender';
+import 'css!theme?Controls/_input/resources/InputRender/InputRender';
       
 
       /**
-       * @class Controls/_inputs/resources/InputRender/InputRender
+       * @class Controls/_input/resources/InputRender/InputRender
        * @extends Core/Control
-       * @mixes Controls/_inputs/resources/InputRender/InputRenderStyles
+       * @mixes Controls/_input/resources/InputRender/InputRenderStyles
        * @control
        * @private
        * @category Input

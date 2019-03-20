@@ -1,6 +1,6 @@
 
       /**
-       * @interface Controls/_inputs/resources/InputRender/InputRenderStyles
+       * @interface Controls/_input/resources/InputRender/InputRenderStyles
        * @css @height_InputRender_m Height of the medium sized input field.
        * @css @height_InputRender_l Height of the large sized input field.
        * @css @height_InputRender_default Height of the default sized input field.
