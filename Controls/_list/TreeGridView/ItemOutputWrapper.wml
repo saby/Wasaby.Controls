@@ -19,9 +19,9 @@
       <ws:partial template="itemOutputLocalTemplate"
          currentItemTemplate="{{itemOutputWrapper}}"
          currentNode="{{currentNode}}"/>
-      <ws:if data="{{!!currentNode.footerStorage}}">
-         <ws:partial template="{{'wml!Controls/_list/TreeGridView/NodeFooter'}}" itemData="{{currentNode}}"/>
-      </ws:if>
+   </ws:if>
+   <ws:if data="{{!!currentNode.nodeFooter}}">
+      <ws:partial template="{{'wml!Controls/_list/TreeGridView/NodeFooter'}}" itemData="{{currentNode.nodeFooter}}"/>
    </ws:if>
 </ws:template>
 <ws:for data="; listModel.isEnd() && !listModel.getCurrent().isGroup && (currentNode === undefined || listModel.getCurrent().item[listModel.getCurrent().parentProperty] === currentNode.item.getId()) ;">

@@ -364,23 +364,31 @@ var
             }
 
 
-            if (current.item.get && current.item.get(current.nodeProperty) !== null) {
-                if (current.isExpanded) {
-                    current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
-
+           if (current.item.get && current.item.get(current.nodeProperty) !== null) {
+              if (current.isExpanded) {
+                 current.hasChildren = this._display.getChildren(current.dispItem).getCount() || (this._editingItemData && this._editingItemData.item.get(current.parentProperty) === current.key);
+              }
+              var itemParentKey = current.item.get(current.parentProperty);
+              if (this._options.nodeFooterTemplate || this._hasMoreStorage && this._hasMoreStorage[itemParentKey]) {
+                 var itemParent = current.dispItem.getParent();
+                 var itemParentChilds = this._hierarchyRelation.getChildren(itemParentKey, this._items);
+                 if (itemParentChilds && itemParentChilds[itemParentChilds.length - 1].getId() === current.key) {
+                    current.nodeFooter = {
+                       key: itemParentKey,
+                       item: itemParent.getContents(),
+                       dispItem: itemParent,
+                       multiSelectVisibility: current.multiSelectVisibility,
+                       level: itemParent.getLevel() - 1
+                    };
                     if (this._options.nodeFooterTemplate) {
-                        current.footerStorage = {};
-                        current.footerStorage.template = this._options.nodeFooterTemplate;
+                       current.nodeFooter.template = this._options.nodeFooterTemplate;
                     }
-
-                    if (this._hasMoreStorage && this._hasMoreStorage[current.item.getId()]) {
-                        if (!current.footerStorage) {
-                            current.footerStorage = {};
-                        }
-                        current.footerStorage.hasMoreStorage = this._hasMoreStorage[current.item.getId()];
+                    if (this._hasMoreStorage && this._hasMoreStorage[itemParentKey]) {
+                       current.nodeFooter.hasMoreStorage = this._hasMoreStorage[itemParentKey];
                     }
-                }
-            }
+                 }
+              }
+           }
             return current;
         },
 
