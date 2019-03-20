@@ -9,18 +9,13 @@ define(
          it('contentMousedownHandler', () => {
             let PWInstance = new Previewer();
             var result;
-            var preventDefault = function() {};
-            var stopPropagation = function() {};
             PWInstance._isPopupOpened = function() {
                return false;
             };
             PWInstance._debouncedAction = function(method, args) {
                result = true;
             };
-            var event = new SyntheticEvent({
-               preventDefault: preventDefault,
-               stopPropagation: stopPropagation
-            });
+            var event = new SyntheticEvent(null, {});
             PWInstance._options.trigger = 'click';
             PWInstance._contentMousedownHandler(event);
             assert.deepEqual(result, true);
@@ -31,6 +26,7 @@ define(
             PWInstance._options.trigger = 'hoverAndClick';
             PWInstance._contentMousedownHandler(event);
             assert.deepEqual(result, true);
+            PWInstance.destroy();
          });
       });
    }
