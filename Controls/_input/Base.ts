@@ -320,6 +320,26 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
             data.delete = displayValue.substring(start, end);
             data.before = displayValue.substring(0, start);
             data.after = displayValue.substring(end, displayValue.length);
+         },
+
+         getTextWidth: function(element, value) {
+            element.innerHTML = value;
+            var width = element.scrollWidth;
+            element.innerHTML = '';
+
+            return width;
+         },
+
+         getTextWidthThroughCreationElement: function(value) {
+            var element = document.createElement('div');
+            element.classList.add('controls-InputBase__forCalc');
+            element.innerHTML = value;
+
+            document.body.appendChild(element);
+            var width = element.scrollWidth;
+            document.body.removeChild(element);
+
+            return width;
          }
       };
 
@@ -423,13 +443,15 @@ import readOnlyFieldTemplate = require('wml!Controls/_input/Base/ReadOnly');
           * @private
           */
          _getTextWidth: function(value) {
-            var block = this._children.forCalc;
+            var element = this._children.forCalc;
 
-            block.innerHTML = value;
-            var width = block.scrollWidth;
-            block.innerHTML = '';
-
-            return width;
+            /**
+             * The element for calculations is available only at the moment of field focusing.
+             * The reason is that the main call occurs during input when the field is in focus.
+             * At other times, the element will be used very rarely. So for the rare cases
+             * it is better to create it yourself.
+             */
+            return element ? _private.getTextWidth(element, value) : _private.getTextWidthThroughCreationElement(value);
          },
 
          /**
