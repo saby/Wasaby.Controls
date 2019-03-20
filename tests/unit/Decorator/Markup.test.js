@@ -260,6 +260,13 @@ define([
             assert.isTrue(equalsHtml(Converter.jsonToHtml([]), ''));
             assert.isTrue(equalsHtml(Converter.jsonToHtml(), ''));
          });
+         it('decoratedlink tag', function() {
+            var json = [['p', ['decoratedlink', { href: 'https://ya.ru', image: 'any' }]]],
+               goodSimpleHtml = '<div><p><a href="https://ya.ru" class="asLink" rel="noreferrer" target="_blank">https://ya.ru</a></p></div>',
+               goodDecoratedLinkHtml = '<div><p>' + decoratedLinkHtml + '</p></div>';
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json), goodSimpleHtml));
+            assert.isTrue(equalsHtml(Converter.jsonToHtml(json, linkDecorateResolver), goodDecoratedLinkHtml));
+         });
          it('only text', function() {
             // TODO: remove case in https://online.sbis.ru/opendoc.html?guid=a8a904f8-6c0d-4754-9e02-d53da7d32c99.
             assert.equal(Converter.jsonToHtml(['']), '<div><p></p></div>');
